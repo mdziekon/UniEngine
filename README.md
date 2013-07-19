@@ -1,9 +1,9 @@
 UniEngine (PL)
 ==============
 
-Silnik "OGame-podobnej" gry przegl¹darkowej  
+Silnik "OGame-podobnej" gry przegladarkowej  
 
-Opis silnika wkrótce...
+Opis silnika wkrotce...
 
 Wymagania
 ---------
@@ -12,8 +12,8 @@ Serwer MySQL w wersji co najmniej 5
 
 Zalecane
 --------
-Zainstalowany modu³ APC dla PHP  
-W³asny, p³atny serwer (VPS lub serwer dedykowany)
+Zainstalowany modul APC dla PHP  
+Wlasny, platny serwer (VPS lub serwer dedykowany)
 
 UniEngine (EN)
 ==============
