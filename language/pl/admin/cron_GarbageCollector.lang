@@ -1,0 +1,13 @@
+<?
+
+$_Lang['Title'] = 'Garbage Collector';
+
+$_Lang['Result_Parse'] .= 'Czas wykonywania: %s s.<br/>';
+$_Lang['Result_Parse'] .= 'Usunięte wiadomości: %s<br/>';
+$_Lang['Result_Parse'] .= 'Usunięte symulacje: %s<br/>';
+$_Lang['Result_Parse'] .= 'Usunięte zaproszenia do sojuszu: %s<br/>';
+$_Lang['Result_Parse'] .= 'Usunięte wpisy Ochrony Logowania: %s<br/>';
+$_Lang['Result_Parse'] .= 'Usunięte Opuszczone Planety: %s<br/>';
+$_Lang['Result_Parse'] .= '<br/>Tabela czasowa:<br/>%s';
+
+?>

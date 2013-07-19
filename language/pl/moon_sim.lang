@@ -1,0 +1,17 @@
+<? 
+
+$_Lang['Title']                  = 'Symulator Niszczenia Księżyców';
+
+$_Lang['Table1_Diameter']        = 'Średnica Księżyca (km.)';
+$_Lang['Table1_ShipCount']       = 'Ilość Gwiazd Śmierci';
+$_Lang['Table1_Simulate']        = 'Symuluj';
+$_Lang['Table2_Result']          = 'Wynik Symulacji';
+$_Lang['Table2_Diameter']        = 'Średnica Księżyca';
+$_Lang['Table2_MoonChance']      = 'Szansa na Zniszczenie Księżyca';
+$_Lang['Table2_FleetChance']     = 'Szansa na Zniszczenie Floty';
+$_Lang['Table2_Km']              = 'km.';
+
+$_Lang['Error_BadDataGiven']     = 'Nie podany wszystkich wymaganych danych!';
+$_Lang['Error_DiameterTooBig']   = 'Średnica Księżyca nie może przekraczać 10.000 km.';
+
+?>

@@ -1,0 +1,54 @@
+<?
+
+$_Lang['Report_list_title'] = 'System Raportowania';
+$_Lang['Report_list_list'] = 'Lista raportów';
+$_Lang['Report_list_clear'] = 'Usuń wszystko';
+$_Lang['Report_show_all'] = 'Pokaż wszystkie';
+$_Lang['Report_show_no_made'] = 'Tylko nie wykonane';
+$_Lang['Report_noreports'] = 'Brak raportów!';
+$_Lang['Report_ID'] = 'ID';
+$_Lang['Report_Date'] = 'Wysłano';
+$_Lang['Report_Sender'] = 'Od';
+$_Lang['Report_Type'] = 'Typ';
+$_Lang['Report_Element'] = 'Element';
+$_Lang['Report_User'] = 'Gracz';
+$_Lang['Report_Info'] = 'Dodatkowe informacje';
+$_Lang['Report_Status'] = 'Status';
+$_Lang['Report_Actions'] = 'Akcje';
+
+$_Lang['Report_reply_subject'] = 'Odpowiedź na Raport nr.%s';
+$_Lang['Report_reply_input'] = 'Ta wiadomość jest odpowiedzią na twój Raport:'."\n\n";
+
+$_Lang['Report_deleted'] = 'Raport usunięty';
+$_Lang['Report_no_status_given'] = 'Nie podano statusu';
+$_Lang['Report_status_changed'] = 'Status zmieniony';
+$_Lang['Report_noexist'] = 'Raport nie istnieje';
+
+$_Lang['Report_types'] = array
+(
+	'Gracz - Wiadomość',
+	'Gracz - Bash',
+	'Gracz - Push',
+	'Gracz - inne',
+	'System - błąd wiadomości',
+	'System - błąd gry',
+	'System - błąd SMTP',
+	'Inne',
+	'Gracz - Wiadomośc na Chacie'
+);
+$_Lang['Report_statuslist']= array
+(
+	'Oczekuje',
+	'',
+	'',
+	'',
+	'',
+	'',
+	'',
+	'',
+	'',
+	'Sprawdzone<br/><b>Odrzucone</b>',
+	'Wykonane'
+);
+
+?>

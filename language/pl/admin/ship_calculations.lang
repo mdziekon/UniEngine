@@ -1,0 +1,28 @@
+<? 
+
+$_Lang['Page_Title']                         = 'Porównywanie Statków';
+
+$_Lang['Selector_Title']                     = 'Wybierz statki z listy';
+$_Lang['Selector_MainShip']                  = 'Statek Główny';
+$_Lang['Selector_SecondShip']                = 'Statek - Cel';
+$_Lang['Selector_Send']                      = 'Porównaj';
+$_Lang['Table_SelectShip']                   = 'Wybierz statek, do którego chcesz porównać inne jednostki...';
+$_Lang['Table_BadShip']                      = 'Taka jednostka nie istnieje! Wybierz poprawną...';
+
+$_Lang['Headers_ID']                         = 'ID';
+$_Lang['Headers_Name']                       = 'Nazwa';
+$_Lang['Headers_MetalRatio']                 = 'Metal';
+$_Lang['Headers_CrystalRatio']               = 'Kryształ';
+$_Lang['Headers_DeuteriumRatio']             = 'Deuter';
+$_Lang['Headers_TotalPriceRatio']            = 'Cena';
+$_Lang['Headers_ForceRatio']                 = 'Moc';
+$_Lang['Headers_ShieldRatio']                = 'Tarcza';
+$_Lang['Headers_HullRatio']                  = 'Pancerz';
+$_Lang['Headers_StorageRatio']               = 'Ładowność';
+$_Lang['Headers_SpeedRatio']                 = 'Prędkość';
+$_Lang['Headers_FuelRatio']                  = 'Paliwo';
+$_Lang['Headers_DestroyInSingleShot']        = 'Skuteczność';
+$_Lang['Headers_RapidFireValue']             = 'SD';
+$_Lang['Headers_CompareProfitability']       = 'Porównanie opłacalności';
+
+?>

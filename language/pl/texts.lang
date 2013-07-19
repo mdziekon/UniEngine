@@ -1,0 +1,11 @@
+<? 
+
+$_Lang['Texts']              = 
+    array();
+
+$_Lang['Error_TextNoExist']  = 'Taki tekst nie istnieje!';
+$_Lang['Error_BadID']        = 'Podano niepoprawne dane!';
+$_Lang['PageTitle']          = 'Artykuł: ';
+$_Lang['PageTitleError']     = 'Artykuły';
+
+?>

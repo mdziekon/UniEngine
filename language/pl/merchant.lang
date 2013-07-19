@@ -1,0 +1,57 @@
+<?php
+
+$_Lang['Trader_Title']               = 'Handlarz';
+
+$_Lang['Trader_DoSell']              = 'Sprzedaj';
+$_Lang['Trader_DoBuy']               = 'Kup';
+$_Lang['Trader_UsesLeft']			= 'Ilość transakcji Handlarza';
+
+$_Lang['Trader_Uses_Infinite']		= 'Nieskończona';
+$_Lang['Trader_Uses_InStandBy']		= 'W zapasie';
+$_Lang['Trader_Uses_BuyMore']		= 'Kup więcej transakcji u Handlowca';
+$_Lang['Trader_Uses_BlockedBuy']		= 'Aby korzystać z Handlarza, wykup Konto Pro lub transakcje u Handlowca!';
+
+$_Lang['Trader_BadResType']          = 'Niepoprawny typ surowców!';
+$_Lang['Trader_BadResMode']          = 'Niepoprawny typ transakcji!';
+$_Lang['Trader_ResMinus']            = 'Nie można podawać ujemnych surowców!';
+$_Lang['Trader_ResZero']             = 'Nie podano surowców do wymiany!';
+$_Lang['Trader_ResZero2']            = 'Podano za mało surowców aby dokonać wymiany!';
+$_Lang['Trader_NoEnoughMetal']       = 'Nie masz odpowiedniej ilości Metalu!';
+$_Lang['Trader_NoEnoughCrystal']     = 'Nie masz odpowiedniej ilości Kryształu!';
+$_Lang['Trader_NoEnoughDeuterium']   = 'Nie masz odpowiedniej ilości Deuteru!';
+$_Lang['Trader_Done']                = 'Transakcja wykonana pomyślnie!';
+
+$_Lang['Trader_SellMet']             = 'Sprzedaj: Metal';
+$_Lang['Trader_SellCry']             = 'Sprzedaj: Kryształ';
+$_Lang['Trader_SellDeu']             = 'Sprzedaj: Deuter';
+$_Lang['Trader_BuyMet']              = 'Kup: Metal';
+$_Lang['Trader_BuyCry']              = 'Kup: Kryształ';
+$_Lang['Trader_BuyDeu']              = 'Kup: Deuter';
+
+$_Lang['Trader_PercentMode']         = 'Stosunek zamiany';
+$_Lang['MainResource_Mode1']         = 'Ilość surowca do <b class="orange">Sprzedania</b>';
+$_Lang['MainResource_Mode2']         = 'Ilość surowca do <b class="orange">Kupienia</b>';
+$_Lang['OtherResources_Mode1']       = 'Zamiana na';
+$_Lang['OtherResources_Mode2']       = 'Zamiana z';
+
+$_Lang['Trader_Needen']              = 'Potrzebna ilość';
+$_Lang['Trader_Receiving']           = 'Otrzymasz';
+$_Lang['Trader_GoBack']              = 'Powrót';
+$_Lang['Trader_Max']                 = 'Max';
+$_Lang['Trader_Zero']                = 'Zero';
+
+$_Lang['Trader_CantUseTrader']		= '<b class="red">Aby korzystać z Handlarza, musisz mieć wykupione pakiety transakcji od Handlowca lub Konto Pro!</b>';
+
+$_Lang['mod_ma_title'] = "Handlarz";
+$_Lang['mod_ma_typer'] = "Sprzedaj";
+$_Lang['mod_ma_rates'] = "Preferowany przelicznik 4:2:1";
+$_Lang['mod_ma_buton'] = "Handluj";
+$_Lang['mod_ma_noten'] = "Brak surowca";
+$_Lang['mod_ma_done']  = "Dziękujemy za zaufanie i polecamy się na przyszłość.";
+$_Lang['mod_ma_error'] = "Błąd";
+$_Lang['mod_ma_donet'] = "Tranzakcja wykonana pomyślnie!";
+$_Lang['mod_ma_excha'] = "Dokonaj tranzakcji";
+$_Lang['mod_ma_cours'] = "Przelicznik";
+$_Lang['mod_ma_nbre']  = "Szereg !!!";
+
+?>

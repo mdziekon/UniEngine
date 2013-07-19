@@ -1,0 +1,26 @@
+<?php
+
+$_Lang['Page_Title']		= 'Logowanie';
+$_Lang['Body_Username']	= 'Nick';
+$_Lang['Body_Password']	= 'Hasło';
+$_Lang['Body_Remember']	= 'Zapamiętaj mnie';
+$_Lang['Body_Submit']	= 'Zaloguj';
+$_Lang['Body_LostPass']	= 'Zapomniałeś Hasła?';
+$_Lang['Body_LostCode']	= 'Nie otrzymałeś Linku Aktywacyjnego?';
+$_Lang['Body_ServerOffline'] = 'Serwer jest wyłączony';
+
+$_Lang['Body_Contact']	= 'Kontakt';
+$_Lang['Body_Register']	= 'Rejestracja';
+
+$_Lang['Err_Title']					= 'Błąd Logowania';
+$_Lang['Login_FailPassword']			= 'Podano niepoprawne hasło!<br/><a href="login.php">Powrót</a>';
+$_Lang['Login_FailUser']				= 'Taki gracz nie istnieje!<br/><a href=login.php>Powrót</a>';
+$_Lang['Login_FailCookiePassword']	= 'Błędnie zapisane hasło Gracza, proszę zalogować się ponownie!<br /><a href="login.php">Powrót</a>';
+$_Lang['Login_FailCookieUser']		= 'Błędnie zapisane dane Gracza, proszę zalogować się ponownie!<br/><a href=login.php>Powrót</a>';
+$_Lang['Login_BadSignsUser']			= 'Podano niepoprawny Login!<br/><a href=login.php>Powrót</a>';
+$_Lang['Login_BadUniversum']			= 'Próba logowania na niepoprawne Universum!';
+$_Lang['Login_UniversumNotStarted']	= 'To Universum startuje w dniu<br/>%s o godzinie %s.<br/>W oczekiwaniu na otwarcie Serwera, polecamy zapraszać swoich znajomych do wspólnej rozgrywki poprzez otrzymany w Wiadomości Aktywacyjnej <u>Link Polecający</u>.';
+$_Lang['Login_FailLoginProtection']	= 'System zablokował Ci dalszą możliwość logowania, ponieważ 5 razy nie udało Ci się zalogować do gry!<br/>Musisz odczekać <b class="orange">5 minut</b> do następnej próby logowania.';
+$_Lang['Login_UnknownError']			= 'Wystąpił nieznany błąd, prosimy o kontakt z Administracją!';
+
+?>

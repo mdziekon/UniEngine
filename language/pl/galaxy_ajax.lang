@@ -1,0 +1,90 @@
+<? 
+
+// Ajax Success
+$_Lang['ajax_send_600_1']    = 'Wysłano sondy szpiegowskie (xyz) na wskazane koordynaty replace_target!';
+$_Lang['ajax_send_600_2']    = 'Wysłano recyklery (xyz) na wskazane koordynaty replace_target!';
+$_Lang['ajax_send_600_3']    = 'Wysłano statek kolonizacyjny na wskazaną planetę replace_target!';
+$_Lang['ajax_send_600_4']	= 'Wysłano atak rakietowy na wskazaną planetę replace_target!';
+
+// Ajax Error
+$_Lang['ajax_send_601']      = 'Nie jesteś zalogowany!';
+$_Lang['ajax_send_602']      = 'Podano złą misję!';
+$_Lang['ajax_send_603']      = 'Podano nieprawidłową galaktykę, system planetarny lub planetę!';
+$_Lang['ajax_send_604']      = 'Nie rozpoznano, czy chodziło Ci o planetę, księżyc czy pole zniszczeń!';
+$_Lang['ajax_send_605']      = 'Nieprawidłowa ilość statków!';
+$_Lang['ajax_send_606_1']    = 'Nie masz żadnych sond szpiegowskich!';
+$_Lang['ajax_send_606_2']    = 'Nie masz żadnych recyklerów!';
+$_Lang['ajax_send_606_3']    = 'Nie masz żadnych statków kolonizacyjnych!';
+$_Lang['ajax_send_607']      = 'Nie masz wystarczającej ilości deuteru!';
+$_Lang['ajax_send_608']      = 'Nie masz wystarczającej ilości miejsca na deuter!';
+$_Lang['ajax_send_609']      = 'Nie możesz wysyłać więcej flot - osiągnięto limit flot w ruchu!';
+$_Lang['ajax_send_610']      = 'Podana ilość statków do wysłania jest równa zeru - odśwież stronę!';
+$_Lang['ajax_send_611']      = 'Na koordynatach replace_target nie ma pola zniszczeń!';
+$_Lang['ajax_send_612']      = 'Szczątki można zbierać tylko z pól zniszczeń!';
+$_Lang['ajax_send_613']      = 'Możesz szpiegować tylko planety i księżyce!';
+$_Lang['ajax_send_614']      = 'Wybrana planeta (lub księżyc) nie jest zasiedlona!';
+$_Lang['ajax_send_615']      = 'Nie możesz szpiegować samego siebie!';
+$_Lang['ajax_send_616']      = 'Nie możesz szpiegować swojego sojusznika!';
+$_Lang['ajax_send_617']      = 'Nie możesz szpiegować zbanowanego gracza (z urlopem)!';
+$_Lang['ajax_send_618']      = 'Nie możesz szpiegować gracza na urlopie!';
+$_Lang['ajax_send_619']      = 'Ten gracz jest jeszcze pod ochroną systemu!';
+$_Lang['ajax_send_620']      = 'Nie możesz nikogo szpiegować, póki jesteś pod ochroną systemu!';
+$_Lang['ajax_send_621']      = 'Gracz jest zbyt słaby!';
+$_Lang['ajax_send_622']      = 'Gracz jest zbyt silny!';
+$_Lang['ajax_send_623']      = 'Administrator nie może szpiegować graczy!';
+$_Lang['ajax_send_624']      = 'Ta planeta jest już zajęta!';
+$_Lang['ajax_send_625']      = 'Nie można szpiegować Administratora!';
+$_Lang['ajax_send_626']      = 'Blokada Flot jest aktywna!';
+$_Lang['ajax_send_627']      = 'Ten gracz jest pod ochroną Blokady Flot!';
+$_Lang['ajax_send_628']      = 'Globalna Blokada Flot jest aktywna!';
+$_Lang['ajax_send_629']      = 'Szpiegowanie Konta Testowego Administracji jest zabronione z Widoku Galaktyki!';
+$_Lang['ajax_send_630']      = 'Nie możesz szpiegować gracza, dla którego nie obliczono jeszcze Statystyk lub nie Aktywował swojego konta!';
+$_Lang['ajax_send_631']      = 'Nie możesz nikogo szpiegować, póki Statystyki twojego konta nie zostaną obliczone!<br/>Jeśli ten stan utrzymuje się dłużej niż 15 minut, zgłoś to Administracji!';
+$_Lang['ajax_send_632']      = 'Nie możesz nikogo szpiegować, póki jesteś objęty Ochroną Nowego Gracza!';
+$_Lang['ajax_send_633']      = 'Ten gracz jest objęty Ochroną Nowego Gracza!';
+$_Lang['ajax_send_634']      = 'Ten gracz jest objęty Ochroną Nowego Gracza - nie logował się jeszcze do gry!';
+$_Lang['ajax_send_635']      = 'Ten gracz jest objęty Ochroną Poblokadową!';
+$_Lang['ajax_send_636']      = 'Twoje konto jest objęte Blokadą Flot!';
+$_Lang['ajax_send_637']      = 'Ten gracz jest objęty Blokadą Flot!';
+$_Lang['ajax_send_638']      = 'Twoja planeta jest objęta Blokadą Flot!';
+$_Lang['ajax_send_639']      = 'Twój księżyc jest objęty Blokadą Flot!';
+$_Lang['ajax_send_640']      = 'Ta planeta jest objęta Blokadą Flot!';
+$_Lang['ajax_send_641']      = 'Ten księżyc jest objęty Blokadą Flot!';
+$_Lang['ajax_send_642']		= 'Ten gracz jest zbanowany z urlopem!';
+$_Lang['ajax_send_643']		= 'Ten gracz jest na urlopie!';
+$_Lang['ajax_send_644']		= 'Nie możesz atakować gracza z własnego sojuszu!';
+$_Lang['ajax_send_645']		= 'Nie możesz atakować samego siebie!';
+$_Lang['ajax_send_646']		= 'Nie masz wystarczającej ilości rakiet!';
+$_Lang['ajax_send_647']		= 'Cel jest poza zasięgiem!';
+$_Lang['ajax_send_648']		= 'Nie masz opracowanej technologii Napędu Impulsowego!';
+$_Lang['ajax_send_649']		= 'Nie masz silosu rakietowego!';
+$_Lang['ajax_send_650']		= 'Podana planeta nie istnieje!';
+$_Lang['ajax_send_651']		= 'Nie podano ilości rakiet do wysłania!';
+$_Lang['ajax_send_652']		= 'Wprowadzono niepoprawne dane!';
+$_Lang['ajax_send_653']		= 'Nie możesz nikogo atakować, póki jesteś objęty Ochroną Nowego Gracza!';
+$_Lang['ajax_send_654']		= 'Ten gracz jest objęty Ochroną Nowego Gracza!';
+$_Lang['ajax_send_655']		= 'Ten gracz nie logował się jeszcze do gry!';
+$_Lang['ajax_send_656']		= 'Nie możesz atakować słabszego gracza!';
+$_Lang['ajax_send_657']		= 'Nie możesz atakować, póki jesteś pod ochroną systemu!';
+$_Lang['ajax_send_658']		= 'Nie możesz atakować silniejszego gracza!';
+$_Lang['ajax_send_659']		= 'Administrator nie może przeprowadzać ataków rakietowych!';
+$_Lang['ajax_send_660']		= 'Nie można przeprowadzać ataków rakietowych na planety Administratorów!';
+$_Lang['ajax_send_661']		= 'Nie możesz wysyłać żadnych flot, dopóki nie aktywujesz swojego konta!';
+$_Lang['ajax_send_662']      = 'Nie możesz atakować gracza, dla którego nie obliczono jeszcze Statystyk lub nie Aktywował swojego konta!';
+$_Lang['ajax_send_663']      = 'Nie możesz nikogo atakować, póki Statystyki twojego konta nie zostaną obliczone!<br/>Jeśli ten stan utrzymuje się dłużej niż 15 minut, zgłoś to Administracji!';
+
+$_Lang['ajax_send_694']		= 'Wystąpił nieznany błąd!';
+$_Lang['ajax_send_695']		= 'Wystąpił błąd podczas pobierania danych Galaktyki!';
+$_Lang['ajax_send_696']		= 'Twoje żądanie przekroczyło limit czasu połączenia, spróbuj ponownie za chwilę...';
+$_Lang['ajax_send_697']		= 'Wystąpił błąd podczas pobierania twoich danych - skontaktuj się z Administracją!';
+$_Lang['ajax_send_698']      = 'Wystąpił błąd podczas wysyłania żądania!';
+$_Lang['ajax_send_699']      = 'Ta funkcja nie jest jeszcze gotowa!';
+
+$_Lang['ajax_moon_sign']     = 'Księżyc';
+
+$_Lang['icoTip_missile']		= 'Atak Rakietowy';
+$_Lang['icoTip_spy']			= 'Szpieguj Planetę';
+$_Lang['icoTip_msg']			= 'Napisz do Gracza';
+$_Lang['icoTip_buddy']		= 'Dodaj do Znajomych';
+
+?>

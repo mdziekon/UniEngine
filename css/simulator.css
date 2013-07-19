@@ -1,0 +1,32 @@
+.point {
+    cursor: pointer;
+}
+.chgSlot {
+    border: 1px solid #A1A1A1;
+    cursor: pointer;
+}
+.bold {
+    font-weight: 700;
+    color: orange;
+}
+.ta_r {
+    text-align: right;
+}
+.ta_l {
+    text-align: left;
+}
+.hide {
+    display: none;
+}
+.r_l {
+    width: 21%;
+}
+.r_i {
+    width: 29%;
+}
+.r_b {
+    width: 50%;
+}
+.pad1 {
+    padding: 0px;
+}

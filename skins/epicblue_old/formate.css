@@ -1,0 +1,205 @@
+/* OGAME: Epic Blue XX (IE Version) Skin per "OGame": www.ogame.it ; Skin by Goten ; Italian Skin © ; per proposte, lamentele, suggerimenti, consigli:  Goten_ssj9999@hotmail.com */
+., #, td, th, textarea, body, table{font-family:Tahoma,sans-serif;font-size:11px;}
+img{border:0px;}
+p table{border:0px;}
+p td{text-align:center;font-size:11px;font-family:Tahoma,sans-serif;}
+table table{border:0px;}
+table table td{font-size:11px;font-family:Tahoma,sans-serif;}
+#body_left_menu{background-position:top left;}
+body{color:#E6EBFB;margin-top:1px;margin-left:1px;background-color:#040E1E;background-image:url(img/background.jpg);background-attachment:fixed;background-repeat:no-repeat;background-position:top right;font-size:11px;font-family:Tahoma,sans-serif;}
+body form table th table input{width:60px;}
+#content th, #content td{font-size:11px;font-family:Tahoma,sans-serif;background-color:transparent;empty-cells:show;border:0px;}
+#content th{background-image:url(img/background_dark.jpg);}
+#content td.b, #content td.l, #content td.k, #content th{border:1px #415680 solid;font-size:11px;font-family:Tahoma,sans-serif;background-image:url(img/background_dark.jpg);background-attachment:fixed;background-repeat:no-repeat;background-position:top right;}
+#content th.s table tbody tr th{border:0px;}
+#content td.c{border:1px #415680 solid;font-size:11px;font-family:Tahoma,sans-serif;background-image:url(img/bg.jpg);background-attachment:fixed;background-repeat:no-repeat;background-position:top right;}
+th, td.a, td.b, td.c, td.f, select, td.g, td.h, td.i, td.j, td.k, td.l, td.m, td.n, td.o, td.q, td.r, td.v, .style td, textarea, p td, table.s th img, table[border="1"] td{border:1px solid #415680;font-size:11px;font-family:Tahoma,sans-serif;}
+th, td.a, td.b, td.c, td.f, select, td.g, td.h, td.i, td.j, td.k, td.m, td.o, td.q, td.r, td.v, td.s, .style td, p td, table[border="1"] td{background-color:#344566;}
+th{text-align:center;padding-left:3px;padding-right:3px;}
+td.a{height:39px;text-align:center;}
+td.b{padding:3px;}
+td.c{font-weight:bold;color:#E6EBFB;padding-left:3px;background-color:#243556;}
+td.f, select, textarea{color:#E6EBFB;background-color:#344566;}
+textarea{width:100%;}
+td.k input{text-align:left;}
+td.g{font-weight:bold;text-align:right;color:#E6EBFB;}
+td.h{text-align:center;color:#E6EBFB;}
+td.i{text-align:center;color:#E6EBFB;}
+td.j{text-align:center;color:#E6EBFB;}
+td.k, td.k input{text-align:center;color:#E6EBFB;}
+td.l{background-color:#344566;color:#E6EBFB;vertical-align:top;padding:3px;background-image:url(img/bg2.gif);}
+td.m{font-weight:bold;text-align:right;width:86px;color:#E6EBFB;}
+td.n{font-weight:bold;text-align:right;width:89px;text-align:center;color:#E6EBFB;}
+td.o{text-align:center;color:#E6EBFB;}
+td.q{font-weight:bold;font-size:11px;font-family:Tahoma,sans-serif;text-align:center;vertical-align:middle;color:#E6EBFB;}
+td.r{text-align:right;color:#E6EBFB;}
+td.v{font-weight:bold;text-align:right;color:#f7f7f7;}
+td.s{color:#E6EBFB;}
+table.s th{border:0px;}
+table.s th img{width:89px;height:89px;}
+div.z{font-weight:bold;color:#E6EBFB;}
+a{color:#E6EBFB;text-decoration:none;font-weight:bold;}
+a.s{color:#E6EBFB;}
+a.t{color:#E6EBFB;}
+a:hover{color:#CDD7F8;text-decoration:underline;}
+#leftMenu .style td{color:#E6EBFB;border-top:0px;height:0px;font-size:11px;font-family:Tahoma,sans-serif;}
+#leftMenu .style td:hover{background-image:url(img/link.gif);background-position:center;background-repeat:no-repeat;}
+#leftMenu .style div a{height:100%;width:100%;color:#f2f2f2;font-size:11px;font-family:Tahoma,sans-serif;}
+#leftMenu .style div a:link{height:100%;width:100%;color:#f2f2f2;font-size:11px;font-family:Tahoma,sans-serif;}
+#leftMenu .style div a:visited{height:100%;width:100%;color:#f2f2f2;font-size:11px;font-family:Tahoma,sans-serif;}
+#leftMenu .style div a:hover{background-color:#415680;height:100%;width:100%;text-decoration:none;font-size:11px;font-family:Tahoma,sans-serif;color:#E6EBFB;}
+#leftMenu .style center a:hover{text-decoration:none;}
+#leftMenu .style p{margin-top:1px;}
+h1{font-size:11px;font-family:Tahoma,sans-serif;border-bottom:0px #344566;width:98%;text-transform:capitalize;}
+input, select, textarea{border:1px solid #415680;font-size:11px;font-family:Tahoma,sans-serif;color:#E6EBFB;text-align:left;background-color:#344566;}
+input:hover{background-color:#415680;}
+input[value="richiama"]{margin-top:10px;}
+input{text-align:center;}
+input[name="searchtext"], input[name="to"], input[name="betreff"], input[name="dpath"], input[name="hp"], input[name="logo"]{text-align:left;}
+table[width="519"] tr th form{margin-top:10px;}
+#WzBoDy{background-image:url(img/background_dark.jpg);background-attachment:fixed;background-repeat:no-repeat;background-position:top right;border-color:0px !important;width:auto !important;}
+#WzBoDy td{background-image:url(img/background_dark.jpg);background-attachment:fixed;background-repeat:no-repeat;background-position:top right;border:0px;color:#E6EBFB;font-family:Tahoma,sans-serif;font-size:11px;}
+#WzBoDy td.c{background-image:url(img/bg.jpg);}
+#WzBoDy th{background-image:url(img/background_dark.jpg);background-attachment:fixed;background-repeat:no-repeat;background-position:top right;color:#E6EBFB;font-family:Tahoma,sans-serif;font-size:11px;}
+#WzTtDiV{width:auto !important;}
+tr.flight th span.owndeploy{color:#00FF00;}
+tr.flight th span.owntransport{color:#00FF00;}
+tr.flight th span.ownattack{color:#FFD700;}
+tr.flight th span.attack{color:#FF0000;}
+tr.flight th span.ownespionage{color:#00FF00;}
+tr.flight th span.espionage{color:#FF4500;}
+tr.flight th span.ownharvest{color:#00FF00;}
+tr.flight th span.owncolony{color:#00FF00;}
+tr.flight th span.ownfederation{color:orange;}
+tr.flight th span.federation{color:#FF0000;}
+tr.flight th span.owndestroy{color:#00FF00;}
+tr.flight th span.destroy{color:#FFA500;}
+tr.flight th span.ownhold{color:#6495ED;}
+tr th span.ownmissile{color:#00FF00;}
+tr th span.missile{color:#FFA500;}
+tr.return th span{color:#A0FFA0;}
+tr.flight th span a{color:#FFFFFF;}
+tr.return th span a{color:#FFFFFF;}
+.allymember{color:lime;}
+.noob{color:#A0FFA0;}
+.strong{color:#FFA0A0;}
+.vacation{color:skyblue;}
+.inactive{color:#CCCCCC;}
+.longinactive{color:#999999;}
+.banned{text-decoration:line-through;}
+.warning{color:#FFA500;text-decoration:blink;}
+.notice{color:#FFFF00;text-decoration:blink;}
+td[width="85"]{width:0;padding-top:0px;padding-bottom:0px;padding-left:10px;padding-right:10px;}
+select[name="planettype"] option[value="1"]{color:#0099FF}
+select[name="planettype"] option[value="2"]{color:#996600}
+select[name="planettype"] option[value="3"]{color:#999999}
+select[name="speed"] option[value="12"]{color:#00FF00}
+select[name="speed"] option[value="11"]{color:#00FF00}
+select[name="speed"] option[value="10"]{color:#00FF00}
+select[name="speed"] option[value="9"]{color:#33FF00}
+select[name="speed"] option[value="8"]{color:#66FF00}
+select[name="speed"] option[value="7"]{color:#99FF00}
+select[name="speed"] option[value="6"]{color:#CCFF00}
+select[name="speed"] option[value="5"]{color:#FFFF00}
+select[name="speed"] option[value="4"]{color:#FFCC00}
+select[name="speed"] option[value="3"]{color:#FF9900}
+select[name="speed"] option[value="2"]{color:#FF6600}
+select[name="speed"] option[value="1"]{color:#FF3300}
+select[name="speed"] option[value="0.5"]{color:#FF3300}
+select[name="speed"] option[value="0.25"]{color:#FF3300}
+select[name="speed"] option[value="0"]{color:#FF0000}
+select[name="auftr"] option[value="10"]{background:transparent}
+select[name="auftr"] option[value="9"]{background:transparent}
+select[name="auftr"] option[value="8"]{background:transparent}
+select[name="auftr"] option[value="7"]{background:transparent}
+select[name="auftr"] option[value="6"]{background:transparent}
+select[name="auftr"] option[value="5"]{background:transparent}
+select[name="auftr"] option[value="4"]{background:transparent}
+select[name="auftr"] option[value="3"]{background:transparent}
+select[name="auftr"] option[value="2"]{background:transparent}
+select[name="auftr"] option[value="1"]{background:transparent}
+select[name="auftr"] option[value="0"]{background:transparent}
+select[name="newrang"] option[value="10"]{background:transparent}
+select[name="newrang"] option[value="20"]{background:transparent}
+select[name="newrang"] option[value="30"]{background:transparent}
+select[name="newrang"] option[value="40"]{background:transparent}
+td font a:active{background:#EEEEEE;color:#888888;}
+td font a:hover{background:#29315F;color:white;}
+select[name="type"] option[value="playername"]{color:#00FF00}
+select[name="type"] option[value="planetname"]{color:#0099FF}
+select[name="type"] option[value="allytag"]{color:#FF0000}
+select[name="type"] option[value="allyname"]{color:#FFCC33}
+select[name="who"] option[value="player"]{color:#0099FF}
+select[name="who"] option[value="ally"]{color:#FF0000}
+select[name="type"] option[value="pts"]{color:#FF0000}
+select[name="type"] option[value="flt"]{color:#00FF00}
+select[name="type"] option[value="res"]{color:#00FFFF}
+select[name="start"] option[value="1"]{color:#00FF00}
+select[name="start"] option[value="101"]{color:#00FF33}
+select[name="start"] option[value="201"]{color:#33FF33}
+select[name="start"] option[value="301"]{color:#66FF33}
+select[name="start"] option[value="401"]{color:#99FF33}
+select[name="start"] option[value="501"]{color:#99FF00}
+select[name="start"] option[value="601"]{color:#CCFF00}
+select[name="start"] option[value="701"]{color:#FFFF00}
+select[name="start"] option[value="801"]{color:#FFEA00}
+select[name="start"] option[value="901"]{color:#FFCC00}
+select[name="start"] option[value="1001"]{color:#FF9900}
+select[name="start"] option[value="1101"]{color:#FF8300}
+select[name="start"] option[value="1201"]{color:#FF6600}
+select[name="start"] option[value="1301"]{color:#FF3300}
+select[name="start"] option[value="1401"]{color:#FF0000}
+select[name="start"] option[value="1501"]{color:#EF0000}
+select[name="start"] option[value="1601"]{color:#DF0000}
+select[name="start"] option[value="1701"]{color:#CF0000}
+select[name="start"] option[value="1801"]{color:#BF0000}
+select[name="start"] option[value="1901"]{color:#AF0000}
+select[name="start"] option[value="2001"]{color:#9F0000}
+select[name="start"] option{color:#8F0000}
+select[name="u"] option[value="2"]{color:#FF0000}
+select[name="u"] option[value="1"]{color:#FFFF00}
+select[name="u"] option[value="0"]{color:#00FF00}
+option[value="100"]{color:#00FF00}
+option[value="90"]{color:#33FF00}
+option[value="80"]{color:#66FF00}
+option[value="70"]{color:#99FF00}
+option[value="60"]{color:#CCFF00}
+option[value="50"]{color:#FFFF00}
+option[value="40"]{color:#FFCC00}
+option[value="30"]{color:#FF9900}
+option[value="20"]{color:#FF6600}
+option[value="10"]{color:#FF3300}
+option[value="0"]{color:#FF0000}
+select[name="auftr"] option[value="1"]{color:#00FF00}
+select[name="auftr"] option[value="2"]{color:#33FF00}
+select[name="auftr"] option[value="3"]{color:#66FF00}
+select[name="auftr"] option[value="4"]{color:#99FF00}
+select[name="auftr"] option[value="5"]{color:#CCFF00}
+select[name="auftr"] option[value="6"]{color:#FFFF00}
+select[name="auftr"] option[value="7"]{color:#FFCC00}
+select[name="auftr"] option[value="8"]{color:#FF9900}
+select[name="auftr"] option[value="9"]{color:#FF6600}
+select[name="auftr"] option[value="10"]{color:#FF3300}
+select[name="auftr"] option[value="11"]{color:#FF0000}
+select[name="auftr"] option[value="12"]{color:#EF0000}
+select[name="auftr"] option[value="13"]{color:#DF0000}
+select[name="auftr"] option[value="14"]{color:#CF0000}
+select[name="auftr"] option[value="15"]{color:#BF0000}
+select[name="auftr"] option{color:#AF0000}
+select[name="r"] option[value="0"]{color:#E6EBFB}
+select[name="r"] option[value="10"]{color:#E6EBFB}
+select[name="r"] option[value="20"]{color:#E6EBFB}
+select[name="pziel"] option[value="0"]{color:#E6EBFB}
+select[name="bew"] option[value="0"]{color:#E6EBFB}
+select[name="bewforce"] option[value="0"]{color:#E6EBFB}
+select[name="settings_sort"] option[value="0"]{color:#FF0000}
+select[name="settings_sort"] option[value="1"]{color:#00FFFF}
+select[name="settings_sort"] option[value="2"]{color:#00FF00}
+select[name="settings_order"] option[value="0"]{color:#FFAA00}
+select[name="settings_order"] option[value="1"]{color:#FFFF00}
+tbody td td > a:first-child{color:#E6EBFB;}
+th + th font[color="#87CEEB"]{color:#00FFFF}
+th a[href="#"]{text-decoration:none}
+a{outline:0;}
+a img{border:0;}
+span.noresources{text-decoration:underline;font-weight:bold;color:#E6EBFB;}

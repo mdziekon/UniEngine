@@ -1,0 +1,75 @@
+.ta_left {
+    text-align: left;
+}
+.ta_cent {
+    text-align: center;
+}
+.red {
+    color: red;
+}
+.lime {
+    color: lime;
+}
+.orange {
+    color: orange;
+}
+.pad {
+    padding: 5px;
+}
+.pad3 {
+    padding: 3px 10px;
+    font-weight: bold;
+}
+.marg_top {
+    margin-top: 5px;
+}
+.mark {
+    width: 33%;
+}
+.deTab {
+    width: 30%;
+}
+.deCont {
+    width: 70%;
+}
+.markHover, .deTabHover {
+    background-color: #455B87;
+    border-color: #526EA3; 
+}
+.markSelect, .deTabSelect {
+    background-color: #4E6797;
+    border-color: #607BAF;
+}
+
+.mark, .hand, .deTab {
+    cursor: pointer;
+}
+.smsCode {
+    font-size: 120%;
+    color: orange;
+}
+input.deInputs {
+    background-color: #455B87;
+    border: 1px solid #A1A1A1;
+    width: 150px;
+    padding: 8px;
+    font-weight: bold;
+    margin: 1px;
+}
+input.deInputs:hover, input.deInputs:focus {
+    background-color: #4E6797;
+}
+input.deInputs[name="code"] {
+    text-transform: uppercase;
+    background-image: url('../images/mobile.png');
+    background-repeat: no-repeat;
+    background-position: 1px;
+}
+input.deInputs[type="submit"] {
+    color: lime;
+    padding: 4px;
+}
+.bl {
+    visibility: hidden;
+    height: 10px;
+}

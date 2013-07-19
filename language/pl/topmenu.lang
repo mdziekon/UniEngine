@@ -1,0 +1,45 @@
+<?php
+
+$_Lang['logout']         = 'Wyloguj';
+$_Lang['player']         = 'Gracz';
+$_Lang['friends']        = 'Znajomi';
+$_Lang['options']        = 'Ustawienia';
+$_Lang['stats']          = 'Statystyki';
+$_Lang['search']         = 'Szukaj';
+$_Lang['notes']          = 'Notatki';
+$_Lang['rules']          = 'Regulamin';
+$_Lang['contact']        = 'Kontakt';
+$_Lang['chat']           = 'Chat';
+$_Lang['admin_cp']       = '<b style="color: lime;">AdminPanel</b>';
+$_Lang['go_cp']          = '<b style="color: lime;">GO Panel</b>';
+$_Lang['sgo_cp']         = '<b style="color: lime;">SGO Panel</b>';
+$_Lang['forum']          = 'Forum';
+$_Lang['banned']         = 'Zbanowani';
+$_Lang['ReportLink']     = 'System Raportowania';
+$_Lang['Polls']          = 'Ankiety';
+
+$_Lang['ServerTimeTxt']  = 'Aktualny czas serwera';
+
+$_Lang['ChatTitle']      = 'Chat dla graczy';
+$_Lang['FriendsTitle']   = 'Lista twoich znajomych';
+$_Lang['NotesTitle']     = 'Twoje notatki';
+$_Lang['StatsTitle']     = 'Tabela statystyk';
+$_Lang['SearchTitle']    = 'Uniwersalna wyszukiwarka';
+$_Lang['RulesTitle']     = 'Regulamin serwera';
+$_Lang['ContactTitle']   = 'Kontakt z zarządem serwera';
+$_Lang['OptionsTitle']   = 'Ustawienia twojego konta';
+$_Lang['LogoutTitle']    = 'Wyloguj się';
+$_Lang['AdminLinkTitle'] = 'Panel Administratora';
+$_Lang['GOLinkTitle']    = 'Panel Game Operatora';
+$_Lang['SGOLinkTitle']   = 'Panel Super Game Operatora';
+$_Lang['ForumTitle']     = 'Oficjalne Forum gry';
+$_Lang['BannedTitle']    = 'Lista zbanowanych graczy';
+$_Lang['PollsTitle']     = 'Wspomóż rozwój serwera odpowiadając na ankiety od Administracji!';
+$_Lang['ReportTitle']    = 'Zgłoś przewinienie gracza lub błąd w grze!';
+
+$_Lang['Pro']            = 'Konto Pro';
+$_Lang['ProTitle']       = 'Sprawdź czas trwania twojego konta Pro oraz dodatkowe informacje';
+$_Lang['Free']           = 'Konto Free';
+$_Lang['FreeTitle']      = 'Sprawdź, dlaczego warto zakupić konto Pro!';
+
+?>

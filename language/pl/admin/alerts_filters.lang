@@ -1,0 +1,111 @@
+<? 
+
+$_Lang['PageTitle']                      = 'Zarządzanie Filtrami Alertów';
+
+$_Lang['Filters_List']                   = 'Lista Filtrów';
+$_Lang['Filters_Add']                    = 'Dodawanie Filtra';
+$_Lang['Filters_Edit']                   = 'Edycja Filtra';
+
+$_Lang['Filters_GoAdd']                  = 'Dodaj nowy Filtr';
+
+$_Lang['Cmd_GoToAlerts']                 = 'Powrót do Listy Alertów';
+$_Lang['CMD_Delete_Title']               = 'Usuń ten filtr';
+$_Lang['CMD_Edit_Title']                 = 'Edytuj ten filtr';
+$_Lang['CMD_Clear']                      = 'Wyczyść kod';
+$_Lang['CMD_GoBack']                     = 'Powrót do Listy';
+$_Lang['CMD_SelectAll']                  = 'Zaznacz wszystkie';
+$_Lang['CMD_DeleteAll']                  = 'Usuń zaznaczone';
+
+$_Lang['No_Filters_ThisPage']            = 'Na tej stronie nie ma Filtrów!';
+$_Lang['No_Filters']                     = 'Brak Filtrów!';
+
+$_Lang['Filter_ID']                      = 'ID';
+$_Lang['Filter_Date']                    = 'Dodano';
+$_Lang['Filter_Enabled']                 = 'Aktywny?';
+$_Lang['Filter_ActionType']              = 'Akcja';
+$_Lang['Filter_Conditions']              = 'Warunki Akcji';
+$_Lang['Filter_UseCount']                = 'Ilość użyć';
+$_Lang['Filter_Actions']                 = 'Opcje';
+
+$_Lang['WhatWithSelected']               = 'Zaznaczone';
+
+$_Lang['Disabled']                       = 'Wyłączony';
+$_Lang['Enabled']                        = 'Włączony';
+
+$_Lang['QuickConditions']                = 'Szybkie Warunki';
+$_Lang['FilterCode']                     = 'Kod Filtra';
+$_Lang['ActionType']                     = 'Akcja Filtra';
+$_Lang['TurnOff']                        = 'Wyłącz Filtr';
+
+$_Lang['Condition_1']                    = 'Gracz "X" jest na liście';
+$_Lang['Condition_2']                    = 'IP "X" jest na liście';
+$_Lang['Condition_3']                    = 'Gracz "X" wysyła flotę';
+$_Lang['Condition_4']                    = 'Planeta Gracza "X" jest celem floty';
+$_Lang['Condition_5']                    = 'Gracz "X" logował się z IP "Y" mniej lub równo "Z" razy';
+$_Lang['Condition_6']					= 'Miejsce wykrycia warunków to "X"';
+$_Lang['Condition_7']					= 'Kod wysyłający Alert to "X"';
+
+$_Lang['CondSelector_6_1']				= 'fleet3.php';
+$_Lang['CondSelector_6_2']				= 'galaxyfleet.php';
+$_Lang['CondSelector_6_3']				= 'sendmissile.php';
+$_Lang['CondSelector_6_4']				= 'overview.php';
+
+$_Lang['CondSelector_7_1']				= 'fleet3.php';
+$_Lang['CondSelector_7_2']				= 'galaxyfleet.php';
+$_Lang['CondSelector_7_3']				= 'sendmissile.php';
+$_Lang['CondSelector_7_4']				= 'Multikonto (overview.php)';
+$_Lang['CondSelector_7_5']				= 'ProxyLogin (overview.php)';
+
+$_Lang['Give_UserID']                    = 'Podaj ID gracza';
+$_Lang['Give_IPID']                      = 'Podaj ID adresu IP';
+$_Lang['Give_LogIPCount']                = 'Podaj kolejno (oddziel przecinkami): ID Gracza, ID adresu IP, Ilość logowań';
+
+$_Lang['AddFilter']                      = 'Dodaj Filtr';
+$_Lang['EditFilter']                     = 'Zapisz zmiany';
+$_Lang['CheckFilter']                    = 'Sprawdź Filtr';
+$_Lang['AddCondition']                   = 'Dodaj Warunek';
+
+$_Lang['Alert_GiveValFirst']             = 'Musisz podać argument dla tego warunku!';
+$_Lang['AreYouSure_Clear']               = 'Czy jesteś pewien, że chcesz wyczyścić kod filtra?';
+$_Lang['AreYouSure_Add']                 = 'Czy jesteś pewien, że chcesz dodać ten filtr?';
+$_Lang['AreYouSure_Delete1']             = 'Czy jesteś pewien, że chcesz usunąć ten filtr?';
+$_Lang['AreYouSure_DeleteSelected']      = 'Czy jesteś pewien, że chcesz usunąć zaznaczone filtry?';
+$_Lang['AreYouSure_Edit']                = 'Czy jesteś pewien, że chcesz zapisać zmiany w tym filtrze?';
+
+$_Lang['Warn_BadSyntax_BracketOpen']     = 'Wykryto niepoprawną składnię - niedomknięte nawiasy!';
+$_Lang['Warn_BadSyntax_BracketClose']    = 'Wykryto niepoprawną składnię - za dużo zamknięć nawiasów!';
+$_Lang['Warn_BadSyntax_1']               = 'Wykryto niepoprawną składnię funkcji <u>%s</u>! [Błędy: %s]';
+$_Lang['Warn_ArgBadSyntax_1']            = 'Funkcja <u>%s</u> jako argument przyjmuje tylko liczby całkowite! [Błędy: %s]';
+$_Lang['Warn_NotAllSelectsDeleted']      = 'Zaznaczone wiadomości zostały usunięte! [Usunięto %s z %s]';
+
+$_Lang['Error_BadAction']                = 'Musisz wybrać poprawną akcję Filtra!';
+$_Lang['Error_CodeEmpty']                = 'Kod Filtra jest pusty!';
+$_Lang['Error_NoSuchFilter']             = 'Filtr o podanym ID nie istnieje!';
+$_Lang['Error_BadFilterID']              = 'Niepoprawne ID Filtra!';
+$_Lang['Error_NothingDeleted']           = 'Nic nie zostało usunięte!';
+$_Lang['Error_Nothing2Delete']           = 'Nie wybrano nic do usunięcia!';
+$_Lang['Error_NothingSelected']          = 'Nic nie zostało zaznaczone!';
+$_Lang['Error_IDIsMalformed']            = 'Wysłane dane są niepoprawne!';
+$_Lang['Error_NoIDGiven']                = 'Podano niepoprawne ID!';
+
+$_Lang['Info_FilterAdded']               = 'Filtr dodany pomyślnie!';
+$_Lang['Info_FilterDeleted']             = 'Filtr usunięty!';
+$_Lang['Info_AllSelectsDeleted']         = 'Zaznaczone wiadomości zostały usunięte!';
+$_Lang['Info_CodeLooksFine']             = 'Kod wygląda na poprawny';
+$_Lang['Info_FilterEdited']              = 'Filtr został zmieniony!';
+
+$_Lang['PerPage']                        = 'Na stronę';
+$_Lang['Pages']                          = 'Strony';
+$_Lang['Prev']                           = '&#171;';
+$_Lang['Next']                           = '&#187;';
+
+$_Lang['ActionTypes']                    = array
+                                            (
+                                                '1' => 'Ignoruj',
+                                                '2' => 'Ignoruj i nie blokuj floty',
+                                            );
+                                    
+$_Lang['ActionType_2']                   = &$_Lang['ActionTypes'][2];
+$_Lang['ActionType_1']                   = &$_Lang['ActionTypes'][1];
+
+?>

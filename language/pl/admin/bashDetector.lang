@@ -1,0 +1,34 @@
+<?
+
+$_Lang['Page_Title'] = 'Wykrywanie Bashu';
+
+$_Lang['Table_Sender'] = 'Atakujący';
+$_Lang['Table_Owner'] = 'Obrońca';
+$_Lang['Table_Date'] = 'Data';
+$_Lang['Table_Submit'] = 'Analizuj';
+$_Lang['Table_Result'] = 'Wynik Analizy';
+
+$_Lang['Table_Head_ID'] = 'ID Floty';
+$_Lang['Table_Head_Date'] = 'Data ataku';
+$_Lang['Table_Head_Mission'] = 'Misja';
+$_Lang['Table_Head_Target'] = 'Cel';
+$_Lang['Table_Head_ReportID'] = 'ID Raportu';
+
+$_Lang['FleetRow_PlanetTypes'][1] = 'P';
+$_Lang['FleetRow_PlanetTypes'][3] = 'K';
+$_Lang['FleetRow_PlanetDeleted'] = '<b class="red">Usunięto</b>';
+$_Lang['UserRow_Deleted'] = '<b class="red">Usunięty</b>';
+
+$_Lang['Info_NoFleetRows'] = 'Nie znaleziono pasujących Ataków...';
+
+$_Lang['Analysis_Info'] = 'Analiza Ataków między graczami: <b class="skyblue">%s</b> (<a href="user_info.php?uid=%s" target="_blank">#%s</a>) [Atakujący], a <b class="skyblue">%s</b> (<a href="user_info.php?uid=%s" target="_blank">#%s</a>) [Obrońca], w dniu <b class="skyblue">%s</b>';
+$_Lang['Analysis_BashNotFound'] = '<b class="lime">Bash nie został wykryty...</b>';
+$_Lang['Analysis_BashFound'] = '<b class="red">Bash został wykryty!</b><br/>[<a class="red" href="banuser.php?ids=%s"><img src="../images/lock.png" style="vertical-align: middle"/> Zbanuj Atakującego</a>]';
+$_Lang['Analysis_BadInput'] = '<b class="orange">Analiza nieprzeprowadzona! Wprowadzono niepoprawne dane...</b>';
+$_Lang['Analysis_BadSenderName'] = '<b class="red">Podany Atakujący nie istnieje!</b>';
+$_Lang['Analysis_BadOwnerName'] = '<b class="red">Podany Obrońca nie istnieje!</b>';
+
+$_Lang['Analysis_List_UserBash'] = 'Przekroczono limit ataków na Gracza (Ilość: %s / Dozwolone: %s)';
+$_Lang['Analysis_List_PlanetBash'] = 'Przekroczono limit ataków na "%s" [%s:%s:%s][%s] (#%s) (Ilość: %s / Dozwolone: %s)';
+
+?>

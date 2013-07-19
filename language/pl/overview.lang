@@ -1,0 +1,276 @@
+<?php
+
+// Header titles
+$_Lang['Overview']                   = 'Podgląd';
+$_Lang['ServerInfo']                 = 'Informacje o serwerze';
+$_Lang['StatsRecount']               = 'Obliczanie <a href="stats.php">Statystyk</a>';
+$_Lang['YourAccount']                = 'Twoje konto';
+$_Lang['Statistics']                 = 'Statystyki';
+$_Lang['YourBattles']                = 'Statystyki Wojenne';
+$_Lang['RefLinksHeader']             = 'Sygnatura i Link Polecający';
+$_Lang['SignatureTitle']             = 'Kod Sygnatury (BBCode)';
+$_Lang['RefLinkTitle']               = 'Czysty link Polecający';
+$_Lang['SignatureInfo']              = 'Poniżej znajdują się kody sygnatury i linku polecającego twojego konta (możesz wkleić je np. do sygnatury na Forum).<br/>Za każdego poleconego gracza dostajesz prowizję Ciemnej Energii!';
+$_Lang['ResourcesTransport']         = 'Transport wszystkich surowców z tej planety';
+$_Lang['OtherPlanets_header']        = 'Pozostałe planety';
+$_Lang['MoreInfo']                   = 'Pozostałe informacje';
+
+$_Lang['RefferingInfo']              = 'Polecając grę swoim znajomym zdobywasz Ciemną Energię, którą możesz przeznaczyć na różne dodatki!';
+
+// InBox Titles & Data
+$_Lang['Box_online']                 = 'Online';
+$_Lang['Box_todayActive']            = 'Aktywni dziś';
+$_Lang['Box_onlineRecord']           = 'Rekord Online';
+$_Lang['Box_userCount']              = 'Ilość graczy';
+
+$_Lang['Box_Morale_Header']			= 'Twoje Morale';
+$_Lang['Box_Morale_InfoTitle']		= 'Informacje o Moralach';
+$_Lang['Box_Morale_NoChanges']		= 'Brak zmian';
+$_Lang['Box_Morale_DropStartIn_Pos']	= 'Spadek za <b id="bxxmorale">%s</b>';
+$_Lang['Box_Morale_DropStartIn_Neg']	= 'Wzrost za <b id="bxxmorale">%s</b>';
+$_Lang['Box_Morale_Dropping_Pos']	= '<b class="red">&dArr;</b> Spadek (2%%/h) [<b id="bxxmorale">%s</b>]';
+$_Lang['Box_Morale_Dropping_Neg']	= '<b class="lime">&uArr;</b> Wzrost (1%%/h) [<b id="bxxmorale">%s</b>]';
+$_Lang['Box_Morale_Points']			= 'Poziom rozwoju Imperium:<br/><b class="grey">%s pkt.</b>';
+
+$_Lang['Box_youPlaySince']           = 'Grasz od';
+$_Lang['_youPlaySince_1day']         = 'dzień';
+$_Lang['_youPlaySince_2days']        = 'dni';
+$_Lang['Box_proAccount']             = 'Konto Pro';
+$_Lang['Box_refferedUsers']          = 'Poleceni gracze';
+
+$_Lang['Box_planetData']             = 'Dane o ';
+$_Lang['_planetData_planet']         = 'planecie';
+$_Lang['_planetData_moon']           = 'księżycu';
+$_Lang['_overview_planet']           = 'planety';
+$_Lang['_overview_moon']             = 'księżyca';
+$_Lang['_planetData_changename']     = 'Zmień nazwę';
+$_Lang['_planetData_leave']          = 'Porzuć Kolonię';
+$_Lang['Box_planetCoords']           = 'Koordynaty';
+$_Lang['Box_planetDiameter']         = 'Średnica';
+$_Lang['diameter_unit']              = 'km.';
+$_Lang['Box_planetBuildFields']      = 'Zabudowa';
+$_Lang['Box_planetTemps']            = 'Temperatura';
+$_Lang['Box_planetOrbit']            = 'Orbita';
+$_Lang['_emptyOrbit']                = '-';
+$_Lang['TipTip_Switch2Moon']         = 'Przełącz na Księżyc';
+$_Lang['TipTip_Switch2Planet']       = 'Przełącz na Planetę';
+$_Lang['Box_planetDebris']           = 'Szczątki na orbicie';
+$_Lang['_planetDebrisLink']          = 'Przejdź do Galaktyki';
+$_Lang['NoDebris']                   = 'Brak';
+
+$_Lang['Box_statGeneral']            = 'Ogólne';
+$_Lang['Box_statFleet']              = 'Flota';
+$_Lang['Box_statDefense']            = 'Obrona';
+$_Lang['Box_statBuildings']          = 'Budynki';
+$_Lang['Box_statResearch']           = 'Badania';
+$_Lang['_statUnit']                  = 'pkt.';
+
+$_Lang['Box_battlesAll']             = 'Stoczone bitwy';
+$_Lang['Box_battlesWon']             = 'Zwycięstwa';
+$_Lang['Box_battlesACSWon']          = 'Zwycięstwa grupowe';
+$_Lang['Box_battlesDraw']            = 'Remisy';
+$_Lang['Box_battlesLost']            = 'Porażki';
+$_Lang['Box_battlesInAlly']			= 'Bitwy w Sojuszu';
+$_Lang['Box_missileAttacks']			= 'Ataki Rakietowe';
+
+$_Lang['Box_transRequired']          = 'Potrzeba';
+$_Lang['Box_transMissing_Stay']      = '<span style="color: red;">Brakuje</span> / <span style="color: lime;">Pozostanie</span>';
+$_Lang['QuickResSend_Button']        = 'Wyślij Wszystkie Surowce na Planetę %s [%s:%s:%s]';
+
+$_Lang['Box_fromAdmins']             = 'Od Zarządu';
+$_Lang['Box_lastChanges']            = 'Ostatnie zmiany';
+$_Lang['Box_buttons']                = 'TopListy';
+
+$_Lang['Watch_lastchanges_onBlip']   = 'Obserwuj nasz serwer na Blipie';
+
+$_Lang['DelFirstQueue']                          = 'Przerwij';
+$_Lang['CannotDeletePremiumBuilding_Warning']    = 'Nie można przerwać budowy, która wymagała Ciemnej Energii!';
+$_Lang['completed']                              = 'Zakończono';
+$_Lang['BuildJS_Complete']                       = 'Zakończono'; 
+$_Lang['BuildJS_Continue']                       = 'Kontynuuj';  
+
+// Free PremiumItems Box
+$_Lang['FreePremItem_Text']          = 'Otrzymałeś Darmowe Towary Premium [%s] (Konto Pro, Oficerowie itp.) od Systemu lub Administracji!<br/>Przejdź do Sklepu aby przejrzeć listę!';
+
+// Vacation Mode Box
+$_Lang['VacationModeBox_Text']		= 'Twoje konto jest obecnie w <a class="orange" href="settings.php"><u>Trybie Urlopu</u></a>';
+
+// NewUser Protection Box
+$_Lang['NewUserProtection_Alert']	= 'Czy jesteś pewien, że chcesz zdjąć Ochronę twojego konta?\nTa akcja jest nieodwracalna...';
+$_Lang['NewUserProtection_Text']     = 'Twoje konto jest objęte Ochroną Nowych Graczy (przez <span id="bxxnewprotect">%s</span>)<br/>Oznacza to, że nikt nie może atakować twojego konta przez ten okres czasu.<br/><a href="?cancelprotection=1" onclick="return confirm(\''.$_Lang['NewUserProtection_Alert'].'\');">Zdejmij Ochronę ze swojego konta</a>';
+$_Lang['NewUserProtection_Canceled'] = 'Ochrona Nowych Graczy została zdjęta z twojego konta!';
+
+// Activation Info Box
+$_Lang['ActivationInfo_Text']		= 'Twoje konto nie zostało jeszcze Aktywowane przez link nadesłany w EMailu!<br/>Do czasu aktywacji konta, nie możesz wysyłać żadnych flot oraz nikt nie może Cię atakować.<br/>Jeśli nie aktywujesz swojego konta w przeciągu 12 godzin, zostanie ono zablokowane do czasu aktywacji.';
+
+// NewMsgBox
+$_Lang['MsgBox_YouHave']             = 'Masz';
+$_Lang['MsgBox_New']                 = 'now'; // Nową/nowe/nowych
+$_Lang['MsgBox_New_1']               = 'ą';
+$_Lang['MsgBox_New_2_4']             = 'e';
+$_Lang['MsgBox_New_5']               = 'ych';
+$_Lang['MsgBox_Unreaden']            = 'nieprzeczytan'; //Nieprzeczytaną/nieprzeczytane/nieprzeczytanych
+$_Lang['MsgBox_Unreaden_1']          = 'ą';
+$_Lang['MsgBox_Unreaden_2_4']        = 'e';
+$_Lang['MsgBox_Unreaden_5']          = 'ych';
+$_Lang['MsgBox_Msg']                 = 'wiadomość';
+$_Lang['MsgBox_Msgs']                = 'wiadomości';
+
+// New Polls
+$_Lang['PollBox_You_can_vote_in_new_polls']  = 'Pojawił%s się now%s ankiet%s, w któr%s możesz oddać swój głos!';
+$_Lang['PollBox_One']                        = array('a', 'a', 'a', 'ej');
+$_Lang['PollBox_More']                       = array('y', 'e', 'y', 'ych');
+
+// ServerInformations
+$_Lang['Info_CountedEvery']          = 'Obliczane co 15 minut';
+$_Lang['RefferedList']               = 'Lista graczy';
+
+// Ogólne
+$_Lang['cancel']                  = "Anuluj";
+$_Lang['Planet']                  = "Planeta";
+$_Lang['Moon']                    = "Księżyc";
+$_Lang['Free']                    = "Oczekuje";
+$_Lang['Diameter']                = "Średnica";
+$_Lang['fields']                  = "pól";
+$_Lang['Temperature']             = "Temperatura";
+$_Lang['approx']                  = "env.";
+$_Lang['to']                      = "by";
+$_Lang['Centigrade']              = "C";
+$_Lang['Position']                = "Pozycja";
+$_Lang['Points']                  = "Punkty";
+$_Lang['Rank']                    = "Miejsce";
+$_Lang['of']                      = "z";
+
+
+$_Lang['Error']                   = "Błąd";
+
+// --- Rename Planet ---
+$_Lang['Rename_Title']               = 'Zmień Nazwę';
+$_Lang['Rename_TitleMain']           = 'Podgląd - Zmień Nazwę';
+$_Lang['Rename_GoBack']              = 'Powrót do Podglądu';
+$_Lang['Rename_CurrentName']         = 'Nazwa i Pozycja %s';
+$_Lang['Rename_NewName']             = 'Nowa nazwa<br/>(3-20 znaków)';
+$_Lang['Rename_Submit']              = ' Zmień ';
+
+$_Lang['Rename_Planet']              = 'Planety';
+$_Lang['Rename_Moon']                = 'Księżyca';
+
+$_Lang['RenamePlanet_0Lenght']       = 'Nowa nazwa nie może być pusta!';
+$_Lang['RenamePlanet_TooShort']      = 'Nazwa nie może być krótsza niż 3 znaki!';
+$_Lang['RenamePlanet_TooLong']       = 'Nazwa nie może przekraczać 20 znaków!';
+$_Lang['RenamePlanet_BadSigns']      = 'Podano niedozwolone znaki!<br/>Dozwolone są: litery (w tym Polskie), cyfry, spacje myślniki i podkreślenia';
+$_Lang['RenamePlanet_SameName']      = 'Nowa nazwa jest taka sama jak poprzednia!';
+$_Lang['RenamePlanet_NameSaved']     = 'Nowa nazwa została zapisana!';
+
+$_Lang['Rename_TipTip']              = 'Zmień Nazwę';
+// ---
+// --- Abandon Planet ---
+$_Lang['Abandon_Title']              = 'Porzucanie Kolonii';
+$_Lang['Abandon_TitleMain']          = 'Podgląd - Porzucanie Kolonii';
+$_Lang['Abandon_GoBack']             = &$_Lang['Rename_GoBack'];
+$_Lang['Abandon_Desc']               = 'Aby porzucić tą Kolonię (<b class="orange">%s %s %s</b>), musisz podać swoje hasło<br/>(Zabezpieczenie przed niepowołanym usunięciem przez osoby obce)';
+$_Lang['Abandon_GivePassword']       = 'Podaj swoje hasło';
+$_Lang['Abandon_Submit']             = ' Porzuć ';
+$_Lang['Abandon_Confirm']            = 'Wszystkie surowce, budynki oraz floty stacjonujące na tej Kolonii zostaną utracone!';
+
+$_Lang['Abandon_Planet']             = 'planeta';
+$_Lang['Abandon_Moon']               = 'księżyc';
+
+$_Lang['Abandon_TechHere']           = 'Nie możesz porzucić Planety na której przeprowadzane jest badanie!';
+$_Lang['Abandon_SQLError']           = 'Wystąpił błąd Systemu!<br/>Prosimy o natychmiastowy kontakt z Administracją!';
+$_Lang['Abandon_FlyingFleetsHere']   = 'Nie możesz porzucić Kolonii, na której odbywa się ruch flot!';
+$_Lang['Abandon_FlyingFleetsMoon']   = 'Nie możesz porzucić tej Planety, ponieważ na Księżycu odbywa się ruch flot!';
+$_Lang['Abandon_BadPlanetrowData']   = 'Wystąpił nieprzewidziany błąd Systemu!<br/>Prosimy o natychmiastowy kontakt z Administracją!';
+$_Lang['Abandon_CantAbandonMother']  = 'Nie możesz porzucić Planety Matki!';
+$_Lang['Abandon_BadPassword']        = 'Podano niepoprawne hasło!';
+$_Lang['Abandon_NoPassword']         = 'Musisz podać hasło!';
+
+$_Lang['Abandon_ColonyAbandoned']    = 'Kolonia została porzucona! Powracam na Planetę Matkę...';
+
+// ---
+
+$_Lang['Disallowed_signs']        = "Podano niedozwolone znaki! Dozwolone są jedynie litery (+ polskie znaki), cyfry, spacja, podkreślenie i myślnik!";
+$_Lang['No_planettype']           = "Brak oznaczenia planety!";
+
+$_Lang['ov_temp_from']            = "od";
+$_Lang['ov_temp_unit']            = "&deg;C";
+$_Lang['ov_temp_to']              = "do";
+
+//Planeta
+$_Lang['colony_abandon']          = "Porzucenie kolonii";
+$_Lang['ov_rena_dele']            = "Porzucenie kolonii - potwierdzenie";
+$_Lang['functions']               = "Funkcja";
+$_Lang['coords']                  = "Współrzędne";
+$_Lang['your_planet']             = "Ta planeta";
+$_Lang['colony_abandon']          = "Porzucenie kolonii";
+$_Lang['deleteplanet']            = "Porzuć!";
+$_Lang['security_query']          = "Zastosowanie zabezpieczeń";
+$_Lang['name']                    = "Nazwa";
+$_Lang['namer']                   = "Zmień nazwę";
+$_Lang['password']                = "Potwierdź hasło";
+$_Lang['confirm_planet_delete']   = "Potwierdź porzucenie planety";
+$_Lang['confirmed_with_password'] = "Potwierdź twoje hasło";
+
+
+// Rename planet
+$_Lang['deletemessage_ok']    = "Twoja kolonia została porzucona!";
+$_Lang['deletemessage_wrong'] = "Nie można porzucić planety matki!";
+$_Lang['deletemessage_fail']  = "Podano nieprawidłowe hasło!";
+$_Lang['cannot_delete_when_fleets_flying']   = 'Nie możesz porzucić kolonii jeśli chociaż jedna flota leci na nią lub została z niej wysłana!';
+$_Lang['cannot_delete_mysql_problems']       = 'Nie można porzucić kolonii - wystąpił problem z bazą danych!';
+
+//Zarządzanie flot
+$_Lang['ov_fleet']            = "flot";
+$_Lang['ov_fleet2']           = 'flota';
+$_Lang['ov_une']              = "Jedna z Twoich ";
+$_Lang['ov_une_phalanx']      = 'Jedna z ';
+$_Lang['ov_vennant']          = " lecąca ";
+$_Lang['ov_planet_to']        = "z planety ";
+$_Lang['ov_moon_to']          = "z księżyca ";
+$_Lang['ov_atteint']          = " osiągnie ";
+$_Lang['ov_planet_to_target'] = "planetę ";
+$_Lang['ov_moon_to_target']   = "księżyc ";
+$_Lang['ov_debris_to_target'] = "pole zniszczeń ";
+$_Lang['ov_explo_to_target']  = "przestrzeń ";
+$_Lang['ov_mission']          = "<br/>Misja: ";
+
+$_Lang['ov_explo_stay']       = " bada ";
+$_Lang['ov_onorbit_stay']     = ' ochrania ';
+$_Lang['ov_explo_mission']    = "<br/>Misja: ";
+
+$_Lang['ov_rentrant']         = " wraca ";
+$_Lang['ov_planet_from']      = "z planety ";
+$_Lang['ov_moon_from']        = "z księżyca ";
+$_Lang['ov_debris_from']      = "z pola zniszczeń ";
+$_Lang['ov_explo_from']       = "z ekspedycji ";
+$_Lang['ov_back_planet']      = " na planetę ";
+$_Lang['ov_back_moon']        = " na księżyc ";
+
+$_Lang['ov_une_hostile']      = "Obca ";
+$_Lang['ov_hostile']          = " od gracza ";
+$_Lang['ov_message']          = "Napisz wiadomość";
+
+$_Lang['this_planet']         = "Ta planeta";
+$_Lang['this_moon']           = "Ten księżyc";
+
+$_Lang['stats_are_empty']     = ' <acronym style="cursor: pointer;" title="Statystyki nie zostały jeszcze przeliczone dla twojego konta!">[?]</acronym>';
+$_Lang['multiacc_with']       = 'MultiKonto z';
+
+$_Lang['ProAccTill']          = 'Aktywne do<br/>';
+$_Lang['NoProAccSince']       = 'Wygasło<br/>';
+$_Lang['NoProAccEver']        = '<span style="color: red;">Brak<br/>Konta Pro</span>';
+$_Lang['ProAccBuyMore']       = 'Przedłuż';
+$_Lang['ProAccBuyFirst']      = 'Wykup';
+$_Lang['ProAccBuyNext']       = 'Wznów';
+
+$_Lang['StatImg_user_noexists'] = 'Gracz nie istnieje!';
+
+$_Lang['AdminAlertsBox']      = 'Masz <a style="color: black;" href="admin/report_list.php">%s nowych Raportów</a>, <a style="color: black;" href="admin/declare_list.php">%s nowych Deklaracji</a> i <a style="color: black;" href="admin/alerts_list.php">%s nowych Alertów Systemowych</a> do przejrzenia!';
+
+$_Lang['MailChange_Title']    = 'Proces Zmiany Adresu Email';
+$_Lang['MailChange_Text']     = '<b style="color: lime;">Na twoim koncie został aktywowany proces zmiany Adresu Email. Aby zakończyć ten proces, musisz potwierdzić aktywność Nowego Adresu Email oraz rzeczywistą chęć zmiany ze Starego Adresu Email.<br/>Jeśli nie użyjesz Linku Aktywacyjnego wysłanego na Stary Adres Email (np. przez brak dostępu do tej skrzynki), będziesz mógł zrobić to po 7 dniach od rozpoczęcią procesu w tym miejscu.</b>';
+$_Lang['MailChange_Inf1']     = 'Nie potwierdziłeś jeszcze aktywności Nowego Adresu Email!';
+$_Lang['MailChange_Inf2']     = 'Potwierdzenie zmiany Adresu będzie możliwe dnia %s z tego miejsca<br/>(lub wcześniej, jeśli użyjesz Linku Aktywacyjnego wysłanego na Stary Adres Email)';
+$_Lang['MailChange_Buto']     = 'Zakończ Proces Zmiany Adresu Email';
+
+?>

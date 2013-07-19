@@ -1,0 +1,15 @@
+.mID
+{
+    font-size: 8px;
+}
+/* Buttons Declarations */
+.sth:not(.nohide) {
+    display: none;
+}
+.tipBin, .tipEye, .tipCopy {
+    cursor: help;
+}
+.hover {
+    background-color: #3D5076 !important;
+    border-color: #496392 !important;
+}

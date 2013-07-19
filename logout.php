@@ -1,0 +1,34 @@
+<?php
+
+define('INSIDE', true);
+
+$_AllowInVacationMode = true;
+$_DontCheckPolls = true;
+$_DontShowMenus = true;
+$_DontForceRulesAcceptance = true;
+
+$_EnginePath = './';
+include($_EnginePath.'common.php');
+ 
+	loggedCheck(); 
+	includeLang('logout');
+
+	setcookie($_GameConfig['COOKIE_NAME'], '', time() - 100000, '/', '', 0);
+
+	if($_GET['kicked'] == '1')
+	{
+		$Msg = $_Lang['You_have_been_kicked'];
+	}
+	else if($_GET['badip'] == 1)
+	{
+		header('Location: login.php');
+		safeDie();
+	}
+	else
+	{
+		$Msg = $_Lang['see_you'];
+	}
+
+	message($Msg, $_Lang['session_closed'], 'login.php');
+
+?>

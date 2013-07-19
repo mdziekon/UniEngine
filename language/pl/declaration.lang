@@ -1,0 +1,38 @@
+<?php
+
+$_Lang['Title']                          = 'Deklaracja gry z jednego IP';
+
+$_Lang['DeclarationInfo']                = 'Wpisz Nazwy wszystkich graczy, którzy grają z tobą na jednym komputerze, dzielą z tobą jedno łącze lub sporadycznie mogą wchodzić do gry w tych samych miejscach co ty (np. twój dom, kawiarenki Internetowe).<br/>Oddzielaj nazwy przecinkami i nie dopisuj siebie.';
+
+$_Lang['DeclarationType']                = 'Powód';
+$_Lang['OnePC']                          = 'Jeden komputer';
+$_Lang['OneIP']                          = 'Jedno łącze Internetowe';
+$_Lang['SamePlaces']                     = 'Te same miejsca gry (szkoła, kawiarenki itp.)';
+$_Lang['Others']                         = 'Inne (Należy wysłać wyjaśnienie tej opcji do Administracji)';
+$_Lang['OccasionalLogons']               = 'Sporadyczne logowania (sąsiedzkie wizity, gra w szkole itp.)';
+
+$_Lang['SubmitDeclaration']              = 'Prześlij Deklarację';
+
+$_Lang['Error_Empty_Userlist']           = 'Nie wpisano żadnych graczy!';
+$_Lang['Error_Type_NotSelected']         = 'Powód nie został wybrany!';
+$_Lang['Error_Bad_DeclarationType']      = 'Niepoprawny powód!';
+$_Lang['Error_BadUserlist_Sent']         = 'Wysłano niepoprawną listę graczy!';
+$_Lang['Error_BadUsernames']             = 'Podane poniżej Nazwy graczy są niepoprawne lub gracze znajdują się już w jakiejś Deklaracji! Sprawdź listę i wyślij  ponownie deklarację:<br/>%s';
+$_Lang['Error_UsersNotFound']            = 'Wpisane Nazwy Graczy nie występują w Bazie Danych!<br/>Proszę sprawdzić czy zostały one wpisane poprawnie!';
+$_Lang['Error_OnlyUFound']               = 'Musisz podać nazwy innych graczy!';
+$_Lang['Error_DeclarationRejected']      = 'Twoja ostatnia deklaracja została odrzucona przez Administracje!';
+$_Lang['Error_DeclarationRejected_other']= 'Ostatnia deklaracja, w której byłeś zapisany została odrzucona przez Administrację!';
+
+$_Lang['Msg_DeclarationRemoved']         = 'Deklaracja wycofana!';
+$_Lang['Msg_DeclarationLeft']            = 'Wypisałeś się z Deklaracji!';
+
+$_Lang['Declaration_added']              = 'Deklaracja dodana! Teraz czekaj na jej akceptację!';
+$_Lang['Users_dont_exists']              = 'Żaden z podanych graczy nie istnieje!';
+$_Lang['Cannot_add_second_declare']      = 'Nie możesz dodać drugiej Deklaracji!<br/>Jeśli chcesz zmienić coś w obecnej, kliknij poniższy link i złóż nową deklarację.<br/><br/><a href="?cmd=rmv">Wycofaj Deklarację</a>';
+$_Lang['Cannot_add_second_declare_other']= 'Nie możesz dodać drugiej Deklaracji!<br/>Jeśli chcesz wystąpić z obecnej Deklaracji i złożyć inną, kliknij poniższy link i złóż nową deklarację.<br/><br/><a href="?cmd=rmv">Wycofaj Deklarację</a>';
+$_Lang['Multi_validated']                = '<b class="lime">Twoja deklaracja została zaakceptowana!</b><br/>Jeśli chcesz zmienić coś w obecnej deklaracji (dodać lub usunąć gracza), kliknij w poniższy link i złóż deklarację ponownie.<br/><br/><a href="?cmd=rmv">Wycofaj Deklarację</a>';
+$_Lang['Multi_validated_other']          = '<b class="lime">Deklaracja, którą złożył gracz %s została zaakceptowana!</b><br/>Jeśli chcesz wypisać się z tej deklaracji i złożyć inną, kliknij w poniższy link.<br/><br/><a href="?cmd=rmv">Wycofaj Deklarację</a>';
+$_Lang['Declaration_awaiting']           = '<b class="orange">Twoja deklaracja czeka na akceptację przez Administratora!</b><br/>Jeśli chcesz ją poprawić, kliknij w poniższy link i złóż deklarację ponownie.<br/><br/><a href="?cmd=rmv">Wycofaj Deklarację</a>';
+$_Lang['Declaration_awaiting_other']     = '<b class="orange">Deklaracja, którą złożył gracz %s czeka na akceptację przez Administratora!</b><br/>Jeśli chcesz wypisać się z tej deklaracji i złożyć inną, kliknij w poniższy link.<br/><br/><a href="?cmd=rmv">Wycofaj Deklarację</a>';
+
+?>

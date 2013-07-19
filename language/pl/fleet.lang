@@ -1,0 +1,295 @@
+<?php
+
+// fleet.php
+$_Lang['fl_title']                               = 'Floty';
+$_Lang['fl_expttl']                              = 'ekspedycje';
+$_Lang['fl_acs_title']                           = 'Związek Flot (ACS)';
+$_Lang['fl_id']                                  = 'Nr.';
+$_Lang['fl_mission']                             = 'Misja';
+$_Lang['fl_count']                               = 'Flota';
+$_Lang['fl_from']                                = 'Start';
+$_Lang['fl_dest']                                = 'Cel';
+$_Lang['fl_dest_t']                              = 'Powrót';
+$_Lang['fl_back_t']                              = 'Czas powrotu';
+$_Lang['fl_back_in']                             = 'Czas lotu';
+$_Lang['fl_order']                               = 'Rozkazy';
+
+$_Lang['fl_fleetinfo_ships']                     = 'Statki';
+$_Lang['fl_fleetinfo_resources']                 = 'Surowce';
+$_Lang['fl_fleetinfo_joinedships']               = 'Przyłączone statki';
+$_Lang['fl_totalStorage']                        = 'Łączna ładowność';
+
+$_Lang['fl_get_to']                              = '(Leci)';
+$_Lang['fl_get_to_ttl']                          = 'Leci do celu';
+$_Lang['fl_back_to']                             = '(Wraca)';
+$_Lang['fl_back_to_ttl']                         = 'Wraca do bazy startowej';
+$_Lang['fl_stay_to']                             = '(Stacjonuje)';
+$_Lang['fl_stay_to_ttl']                         = 'Stacjonuje na orbicie';
+$_Lang['fl_explore_to']                          = '(Bada)';
+$_Lang['fl_explore_to_ttl']                      = 'Bada przestrzeń';
+$_Lang['fl_doing_job']                           = '(Wykonuje)';
+$_Lang['fl_doing_job_ttl']                       = 'Wykonuje swoje zadanie';
+$_Lang['fl_cameback']                            = '(Powróciła)';
+$_Lang['fl_cameback_ttl']                        = 'Flota powróciła do bazy startowej';
+
+$_Lang['fl_associate']                           = 'Związek';
+$_Lang['fl_back_from_stay']                      = 'Wycofaj';
+$_Lang['fl_noslotfree']                          = 'Wszystkie sloty zajęte!';
+$_Lang['fl_notback']                             = 'Flota nie została zawrócona!';
+$_Lang['fl_onlyyours']                           = 'Nie możesz zawrócić tej floty!';
+$_Lang['fl_missiles_cannot_go_back']             = 'Rakiety nie mogą zostać zawrócone!';
+$_Lang['fl_isback']                              = 'Flota zawrócona!';
+$_Lang['fl_isback2']                             = 'Flota wycofana!';
+$_Lang['fl_sback']                               = 'Zawróć';
+$_Lang['fl_sback2']                              = 'Wycofaj';
+$_Lang['fl_error']                               = 'Błąd';
+$_Lang['fl_new_miss']                            = 'Wybierz flotę do misji';
+$_Lang['fl_fleet_typ']                           = 'Nazwa statku';
+$_Lang['fl_fleet_count']                         = 'Ilość';
+$_Lang['fl_noplanetrow']                         = 'Brak Danych o Planecie! Proszę zgłosić ten błąd Administracji!';
+$_Lang['fl_fleetspeed']                          = 'Prędkość';
+$_Lang['fl_selmax']                              = 'Max';
+$_Lang['fl_selnone']                             = 'Zero';
+$_Lang['fl_goback']								= 'Cofnij';
+$_Lang['fl_continue']                            = 'Dalej';
+$_Lang['fl_noships']                             = 'Brak Statków';
+$_Lang['fl_nofreeslots']                         = 'Brak wolnych Slotów';
+$_Lang['fl_unselectall']                         = 'Żadne';
+$_Lang['fl_selectall']                           = 'Wszystkie';
+$_Lang['fl_already_cameback']                    = 'Flota już wróciła';
+
+$_Lang['fl_flytargettime']                       = 'Cel za';
+$_Lang['fl_flystaytime']							= 'Wycofanie za';
+$_Lang['fl_flygobacktime']                       = 'Powrót za';
+$_Lang['fl_flyretreattime']                      = 'Zawróć';
+
+$_Lang['fl_coordplanet']                         = 'Planeta';
+$_Lang['fl_coordmoon']                           = 'Księżyc';
+$_Lang['fl_coorddebris']                         = 'Pole Zniszczeń';
+
+// ACS Handling
+$_Lang['fl_acs_fleets']                          = 'Floty';
+$_Lang['fl_select_acs']                          = 'Wybierz związek';
+
+$_Lang['fl_acs_cannot_join_time_extended']       = 'Nie można dołączyć do tego związku - doleciał już do celu!';
+$_Lang['fl_acs_noid']                            = 'Nie podano, którą flotą mam zarządzać!';
+$_Lang['fl_acs_noexist']                         = 'Taka flota nie istnieje!';
+$_Lang['fl_acs_badmission']                      = 'Tej floty nie da się połączyć!';
+$_Lang['fl_acs_timeup']                          = 'Ta flota dotarła już do swojego celu!';
+$_Lang['fl_acs_changename']                      = 'Zmień nazwę związku';
+$_Lang['fl_acs_changename_save']                 = 'Zapisz zmiany';
+$_Lang['fl_acs_addplayer']                       = 'Zaproś gracza do Związku';
+$_Lang['fl_acs_removeplayer']                    = 'Usuń gracza ze Związku';
+$_Lang['fl_acs_users_management']                = 'Zarządzanie uczestnikami';
+$_Lang['fl_acs_invited_title']                   = 'Zaproszeni gracze';
+$_Lang['fl_acs_users_2invite']                   = 'Gracze, których możesz zaprosić';
+$_Lang['fl_acs_invite_title']                    = 'Zaproś gracza';
+$_Lang['fl_acs_warning_users']                   = '(Maksymalnie 4 innych graczy w Związku)';
+$_Lang['fl_acs_username']                        = 'Nick gracza';
+$_Lang['fl_acs_user_save']                       = 'Zaproś';
+$_Lang['fl_acs_maxusers']                        = 'Zaproszono maksymalną ilość graczy!';
+$_Lang['fl_acs_not_created']                     = 'Związek nie został jeszcze nazwany!';
+$_Lang['fl_acs_now_name']                        = 'Nazwa związku';
+$_Lang['fl_acs_noname']                          = '- brak nazwy -';
+$_Lang['fl_acs_joinnow']                         = 'Dołącz flotę';
+
+$_Lang['fl_acs_error_badsigns_name']             = 'W nazwie związku dozwolone są tylko litery, cyfry, podkreślenia oraz myślniki!';
+$_Lang['fl_acs_error_empty_name']                = 'Nazwa związku jest pusta!';
+$_Lang['fl_acs_error_shortname']                 = 'Nazwa związku jest za krótka!';
+$_Lang['fl_acs_error_badsigns_user']             = 'Podano zakazane znaki w nazwie nicku gracza!';
+$_Lang['fl_acs_error_cannotinviteuser']          = 'Nie możesz zaprosić tego gracza do wspólnego ataku!<br/>Możesz zapraszać tylko sojuszników i znajomych z BuddyListy...';
+$_Lang['fl_acs_error_useronlist']                = 'Ten gracz jest już na liście tego związku!';
+$_Lang['fl_acs_error_usernoexists']              = 'Taki gracz nie istnieje!';
+$_Lang['fl_acs_error_nomoreusers']               = 'Nie możesz zaprosić więcej niż 4 graczy do jednego związku!';
+$_Lang['fl_acs_error_not_creater']               = 'Najpierw nazwij ten związek!';
+$_Lang['fl_acs_error_inviting_yourself']         = 'Nie możesz zapraszać samego siebie!';
+
+$_Lang['fl_acs_created_or_updated_row']          = 'Związek został utworzony lub zaktualizowany!';
+$_Lang['fl_acs_user_hasbeen_invited']            = 'Gracz został zaproszony!';
+$_Lang['fl_acs_changesSaved']                    = 'Zmiany zostały zapisane!';
+$_Lang['fl_acs_cantkick_joined']                 = 'Nie możesz wyrzucać ze związku graczy, którzy wysłali już swoje floty!';
+
+$_Lang['fl_acs_leader']                          = 'Założyciel';
+$_Lang['fl_acs_joined']                          = 'Dołączył';
+$_Lang['fl_acs_invited']                         = 'Zaproszony';
+
+$_Lang['fl_acs_fleetcount_extended']             = 'W jednym związku może uczestniczyć maksymalnie 16 flot!';
+$_Lang['fl_acs_badcoordinates']                  = 'Podano nieprawidłowe koordynaty ataku!';
+$_Lang['fl_acs_cannot_join_this_group']          = 'Nie zostałeś zaproszony do tego związku!';
+$_Lang['fl_acs_bad_group_id']                    = 'Nieprawidłowy związek flot!';
+$_Lang['fl_acs_fleet_is_tooslow']                = 'Twoja flota jest zbyt wolna lub przekroczono maksymalny czas dołączania do związku!';
+
+$_Lang['fl_SendAllResources']                    = 'Transportuj Surowce';
+
+// fleet1.php
+// -----------------------
+$_Lang['fl1_NoEnoughShips']                      = 'Nie masz wystarczającej ilości statków!';
+$_Lang['fl1_CantSendUnflyable']                  = 'Nie można wysyłać pojazdów, które nie posiadają silników!';
+$_Lang['fl1_BadShipGiven']                       = 'Podano niepoprawne dane na temat statków!';
+$_Lang['fl1_NoShipsGiven']                       = 'Nie wybrano statków!';
+
+$_Lang['fl1_ACSJoiningFleet']                    = 'Ta Flota będzie dołączona do związku flot "%s" atakującego koordynaty [%s:%s:%s]';
+$_Lang['fl1_ACSTimeUp']                          = 'Ten związek flot dotarł już do celu!';
+$_Lang['fl1_ACSNoExist']                         = 'Taki związek flot nie istnieje!';
+
+$_Lang['fl1_currentTime']                        = 'Obecny czas';
+
+$_Lang['fl1_targetGalaxy']                       = 'Galaktyka';
+$_Lang['fl1_targetSystem']                       = 'System';
+$_Lang['fl1_targetPlanet']                       = 'Planeta';
+
+$_Lang['fl_reachtime']                           = 'Czas przylotu';
+$_Lang['fl_comebacktime']                        = 'Czas powrotu';
+$_Lang['fl_fleet1_ttl']                         = 'Wyślij Flotę';
+$_Lang['fl_speed']                               = 'Prędkość (%)';
+$_Lang['fl_planet']                              = 'Planeta';
+$_Lang['fl_ruins']                               = 'Pole zniszczeń';
+$_Lang['fl_moon']                                = 'Księżyc';
+$_Lang['fl_dist']                                = 'Odległość';
+$_Lang['fl_fltime']                              = 'Czas trwania (odcinek)';
+$_Lang['fl_deute_need']                          = 'Zużycie deuteru';
+$_Lang['fl_speed_max']                           = 'Max. prędkość';
+$_Lang['fl_max_load']                            = 'Ładowność';
+$_Lang['fl_fast_link']                           = 'Szybkie linki';
+$_Lang['fl_no_quick_links']                      = 'Brak przydatnych linków';
+$_Lang['fl_no_shortcuts']                        = 'Brak zapisanych linków';
+$_Lang['fl_no_planets']                          = 'Brak kolonii';
+$_Lang['fl_your_planets']                        = 'Twoje kolonie';
+$_Lang['fl_your_shortcuts']                      = 'Twoje zapisane linki';
+$_Lang['fl_add_shortcut']                        = 'Zarządzaj';
+$_Lang['moon_sign']                              = 'K';
+$_Lang['debris_sign']                            = 'PZ';
+$_Lang['planet_sign']                            = 'P';
+
+$_Lang['DropdownList_Moon_sign']                 = 'K';
+$_Lang['fl_dropdown_select']                     = 'Wybierz';
+
+// fleet2.php
+$_Lang['fl_ressources']                          = 'Surowce';
+$_Lang['fl_allressources']                       = 'Wszystkie surowce';
+$_Lang['fl2_allResZero']                         = 'Zero surowców';
+$_Lang['fl_bad_fleet_speed']                     = 'Nieprawidłowa prędkość floty!';
+$_Lang['fl2_targeterror']                        = 'Podano niepoprawne koordynaty celu!';
+$_Lang['fl2_cantsendsamecoords']                 = 'Koordynaty celu nie mogą być takie same jak koordynaty obecnej planety!';
+$_Lang['fl2_NoEnoughFuel']                       = 'Posiadasz za mało Deuteru, aby wysłać tą Flotę!';
+$_Lang['fl2_Have2UseQuantumGate']                = 'Aby móc wysłać tą flotę musisz użyć Bramy Kwantowej,<br/>ponieważ nie masz odpowiedniej ilości Deuteru lub wystarczającej ilości miejsca w ładowniach!';
+$_Lang['fl2_NoEnoughStorage']                    = 'Posiadasz za mało miejsca na Deuter w ładowniach, aby wysłać tą Flotę!';
+$_Lang['fl2_FlyTimeInfo']                        = 'W przypadku użycia Bramy Kwantowej i wykonania Skoku Czasoprzestrzennego, drugi licznik wskazuje czas, jaki flota będzie wracać z powrotem.';
+
+$_Lang['fl2_title']                              = 'Wyślij Flotę z ';
+$_Lang['fl2_sendfromplanet']                     = 'planety';
+$_Lang['fl2_sendfrommoon']                       = 'księżyca';
+$_Lang['fl2_emptyplanet']                        = 'Niezamieszkała';
+$_Lang['fl2_target_abandoned_1']					= 'Porzucona planeta';
+$_Lang['fl2_target_abandoned_3']					= 'Porzucony księżyc';
+$_Lang['fl2_debrisfield']                        = 'Pole zniszczeń';
+
+$_Lang['fl2_flightTime']                         = 'Czas lotu<br />(w jedną stronę)';
+$_Lang['fl2_destination']                        = 'Cel lotu';
+$_Lang['fl2_targetowner']                        = 'Właściciel Celu';
+
+$_Lang['fl2_SendButton']                         = 'Wyślij Flotę';
+
+$_Lang['fl2_confirm_allypact_attack']			= 'Czy jesteś pewien, że chcesz zaatakować gracza, który należy do Sojuszu posiadającego Pakt z twoim Sojuszem?';
+$_Lang['fl2_testacctarget']                      = 'Uwaga!\nPodane koordynaty należą do jednego z Kont Testowych Administracji Gry!\nJakiekolwiek Ruchy Flot na te obiekty bez pozwolenia Administracji będą surowo karane!';
+
+// fleet3.php
+$_Lang['fl3_TargetReach']                        = 'Data dotarcia do Celu (jeden odcinek)';
+$_Lang['fl3_BackTime']                           = 'Data powrotu (dwa odcinki)';
+$_Lang['fl3_ShipsList']                          = 'Wysłane statki';
+
+$_Lang['fl3_NoMissionSelected']                  = 'Nie wybrano Misji Floty!';
+$_Lang['fl3_NoMoreFreeSlots']                    = 'Brak wolnych slotów dla Flot!';
+$_Lang['fl3_NoMoreFreeExpedSlots']               = 'Brak wolnych slotów dla Ekspedycji!';
+$_Lang['fl3_ExpeditionsAreOff']                  = 'Ekspedycje zostały tymczasowo wyłączone!';
+$_Lang['fl3_BadResourcesGiven']                  = 'Źle wprowadzono ilość surowców!';
+$_Lang['fl3_PlanetNoEnoughmetal']                = 'Nie masz wystarczającej ilości Metalu!';
+$_Lang['fl3_PlanetNoEnoughcrystal']              = 'Nie masz wystarczającej ilości Kryształu!';
+$_Lang['fl3_PlanetNoEnoughdeuterium']            = 'Nie masz wystarczającej ilości Deuteru!';
+$_Lang['fl3_NoUsernameBug']                      = 'Przepraszamy, ale wystąpił błąd w Bazie Danych!<br/>Prosimy o natychmiastowy kontakt z Administracją!';
+$_Lang['fl3_BlockAccNotActivated']				= 'Nie możesz wysyłać żadnych flot, dopóki nie aktywujesz swojego konta!';
+
+$_Lang['fl3_CantAttackDebris']                   = 'Nie możesz zaatakować Pola Zniszczeń!';
+$_Lang['fl3_CantAttackNonUsed']                  = 'Nie możesz zaatakować niezamieszkałej Planety/Księżyca!';
+$_Lang['fl3_CantAttackYourself']                 = 'Nie możesz atakować samego siebie!';
+$_Lang['fl3_CantACSDebris']                      = &$_Lang['fl3_CantAttackDebris'];
+$_Lang['fl3_CantACSNonUsed']                     = &$_Lang['fl3_CantAttackNonUsed'];
+$_Lang['fl3_CantACSYourself']                    = &$_Lang['fl3_CantAttackYourself'];
+$_Lang['fl3_CantTransportDebris']                = 'Nie możesz transportować niczego na Pole Zniszczeń!';
+$_Lang['fl3_CantTransportNonUsed']               = 'Nie możesz transportować niczego na niezamieszkałą Planetę/Księżyc!';
+$_Lang['fl3_CantTransportSpyProbes']             = 'Nie możesz używać samych Sond Szpiegowskich do transportu!';
+$_Lang['fl3_CantStayDebris']                     = 'Nie możesz stacjonować na Polu Zniszczeń!';
+$_Lang['fl3_CantStayNonUsed']                    = 'Nie możesz stacjonować na niezamieszkałej Planecie/Księżycu!';
+$_Lang['fl3_CantStayNonYourself']                = 'Nie możesz stacjonować na nieswojej Planecie/Księżycu!';
+$_Lang['fl3_CantProtectDebris']                  = 'Nie możesz zatrzymywać floty na Polu Zniszczeń!';
+$_Lang['fl3_CantProtectNonUsed']                 = 'Nie możesz zatrzymywać floty na niezamieszkałej Planecie/Księżycu!';
+$_Lang['fl3_CantProtectYourself']                = 'Nie możesz zatrzymywać floty na swojej Planecie/Księżycu!<br/>Wybierz misję "Stacjonuj"!';
+$_Lang['fl3_CantProtectNonFriend']               = 'Aby móc zatrzymywać flotę, gracz musi być twoim Sojusznikiem lub mieć Cię na swojej BuddyLiście!';
+$_Lang['fl3_CantSpyDebris']                      = 'Nie możesz szpiegować Pola Zniszczeń!';
+$_Lang['fl3_CantSpyNonUsed']                     = 'Nie możesz szpiegować niezamieszkałej Planety/Księżyca!';
+$_Lang['fl3_CantSpyYourself']                    = 'Nie możesz szpiegować samego siebie!';
+$_Lang['fl3_CantSpyProbesCount']                 = 'Nie możesz szpiegować statkami innymi niż Sondy Szpiegowskie!';
+$_Lang['fl3_CantSettleOnUsed']                   = 'Nie możesz kolonizować zamieszkałej Planety!';
+$_Lang['fl3_CantSettleNonPlanet']                = 'Nie możesz kolonizować Księżyców ani Pól Zniszczeń!';
+$_Lang['fl3_CantSettleNoShips']                  = 'Aby skolonizować Planetę musisz wysłać Statki Kolonizacyjne!';
+$_Lang['fl3_CantRecycleNonDebris']               = 'Nie możesz zbierać szczątków z Planet ani Księżyców!';
+$_Lang['fl3_CantRecycleNoShip']                  = 'Aby zebrać Pole Zniszczeń musisz wysłać Recyklery!';
+$_Lang['fl3_CantDestroyDebris']                  = 'Nie możesz niszczyć Pola Zniszczeń!';
+$_Lang['fl3_CantDestroyNonUsed']                 = 'Na tej pozycji nie ma Księżyca!';
+$_Lang['fl3_CantDestroyYourself']                = 'Nie możesz niszczyć swojego Księżyca!';
+$_Lang['fl3_CantDestroyNonMoon']                 = 'Nie możesz niszczyć Planet!';
+$_Lang['fl3_CantDestroyNoShip']                  = 'Aby móc zniszczyć Księżyc, musisz wysłać co najmniej jedną Gwiazdę Śmierci!';
+$_Lang['fl3_BadMissionSelected']                 = 'Wybrano niepoprawną Misję!';
+
+$_Lang['fl3_NoDebrisFieldHere']                  = 'Na tej pozycji nie ma Pola Zniszczeń!';
+$_Lang['fl3_Expedition_Min1H']                   = 'Ekspedycja musi trwać minimum godzinę!';
+$_Lang['fl3_Expedition_Max12H']                  = 'Ekspedycja nie może trwać więcej niż 12 godzin!';
+$_Lang['fl3_Holding_BadTime']                    = 'Niepoprawny czas zatrzymania floty!';
+$_Lang['fl3_CantSendVacation']                   = 'Nie możesz wysłać floty do gracza na urlopie!';
+$_Lang['fl3_CantSendBanned']                     = 'Nie możesz wysłać floty do Zbanowanego gracza (Ban z urlopem)!';
+$_Lang['fl3_CantSendAlly']                       = 'Nie możesz wysyłać agresywnej floty do swojego sojusznika!';
+$_Lang['fl3_ProtectHIStatNotCalc']               = 'Nie możesz atakować gracza, dla którego nie obliczono jeszcze Statystyk lub nie Aktywował swojego konta!';
+$_Lang['fl3_ProtectURStatNotCalc']               = 'Nie możesz nikogo atakować dopóki Statystyki twojego konta nie zostaną obliczone!<br/>Jeśli ten stan utrzymuje się dłużej niż 15 minut, zgłoś to Administracji!';
+$_Lang['fl3_ProtectHIWeak']                      = 'Nie możesz atakować tego gracza!<br/>Nie przekroczył on jeszcze progu minimalnego (%s pkt.)';
+$_Lang['fl3_ProtectUR2Strong']                   = 'Nie możesz atakować tego gracza!<br/>Gracz ten jest dla Ciebie za słaby (ponad %s x słabszy)!';
+$_Lang['fl3_ProtectHI2Strong']                   = 'Nie możesz atakować tego gracza!<br/>Gracz ten jest dla Ciebie za silny (ponad %s x silniejszy)!';
+$_Lang['fl3_ProtectURWeak']                      = 'Nie możesz jeszcze nikogo atakować!<br/>Najpierw musisz przekroczyć próg minimalny (%s pkt.)';
+$_Lang['fl3_ProtectAdminCant']                   = 'Administrator nie może nikogo atakować!';
+$_Lang['fl3_ProtectCantAdmin']                   = 'Nie możesz atakować Administracji!';
+$_Lang['fl3_ProtectPlanetProtect']               = 'Ta Planeta jest pod protekcją Obsługi Gry!';
+$_Lang['fl3_ProtectNewTimeYou']                  = 'Nie możesz nikogo atakować, póki jesteś objęty Ochroną Nowego Gracza!<br/>(Musisz odczekać jeszcze %s)';
+$_Lang['fl3_ProtectNewTimeHe']                   = 'Ten gracz jest objęty Ochroną Nowego Gracza!<br/>(Musisz odczekać jeszcze %s)';
+$_Lang['fl3_ProtectNewTimeHe2']                  = 'Ten gracz jest objęty Ochroną Nowego Gracza!<br/>(Ten gracz nie logował się jeszcze do gry!)';
+$_Lang['fl3_SpaceTimeJumpGalaxy']                = 'Skok Czasoprzestrzenny można wykonać tylko w tej samej Galaktyce!';
+$_Lang['fl3_QuantumDisallowAttack']              = 'Nie można wykonać Skoku Czasoprzestrzennego z Agresywną Misją!';
+$_Lang['fl3_NoQuantumGate']                      = 'Brak Bramy Kwantowej!';
+$_Lang['fl3_NoEnoughFuel']                       = 'Nie masz wystarczająca dużo Deuteru dla tej floty (jako paliwa)!';
+$_Lang['fl3_NoEnoughtStorage4Fuel']              = 'Ta flota nie możesz pomieścić takiej ilości Deuteru (jako paliwa)!';
+$_Lang['fl3_NoEnoughStorage4Res']                = 'Ta flota nie możesz pomieścić załadowanych surowców!';
+$_Lang['fl3_ACSFleet2Slow']                      = 'Twoja flota jest zbyt wolna żeby dołączyć do tego Związku!';
+$_Lang['MultiAlert']                             = '<b class="red">MultiAlarm!</b>';
+
+$_Lang['fl3_Protect_AttackLimitTotal']           = 'Nie możesz już dziś atakować tego gracza!<br/>(%s)';
+$_Lang['fl3_Protect_AttackLimitSingle']          = 'Nie możesz już dziś atakować tej planety/księżyca tego gracza!<br/>(%s)';
+$_Lang['fl3_Protect_AttackLimitTotalFly']        = 'Nie możesz wysłać większej ilości flot na tego gracza!<br/>(%s)';
+$_Lang['fl3_Protect_AttackLimitSingleFly']       = 'Nie możesz wysłać większej ilości flot tą planetę/księżyc tego gracza!<br/>(%s)';
+$_Lang['fl3_Protect_AttackLimit_bashLimit']      = 'Blokada Bashu';
+$_Lang['fl3_Protect_AttackLimit_antifarm']       = 'Ochrona słabszych graczy';
+
+$_Lang['fl_bad_mission']                         = 'Błędna misja !';
+$_Lang['fl_fleet_send']                          = 'Flota została wysłana';
+$_Lang['fl_expe_staytime']                       = 'Czas zatrzymania';
+$_Lang['fl_expe_hours']                          = '&nbsp;godzina(y)';
+
+$_Lang['QuantumGateHead']                        = 'Brama Kwantowa';
+$_Lang['QuantumInfo']                            = 'Redukcja zużycia deuteru do <b class="lime">zera</b><br/>Redukcja czasu trwania misji do <b class="lime">1 sekundy</b><br/><br/><b class="orange">Zastosowania:</b><br/>- Nieograniczone czasowo misje Transportuj, Stacjonuj i Zatrzymaj między dwoma planetami posiadającymi Bramę<br/>- Skok Czasoprzestrzenny dla misji Transportuj, Stacjonuj i Zatrzymaj skraca o połowę czas lotu i zużycie deuteru (jeśli Planeta-Cel nie ma Bramy Kwantowej)';
+$_Lang['QuantumGateUse']                         = 'Użyj';
+$_Lang['CannotUseQuantumGate']                   = 'Nie możesz użyć Bramy Kwantowej!';
+$_Lang['CannotUseQuantumGateTill']               = 'Nie możesz teraz wykonać Skoku Czasoprzestrzennego przez Bramę Kwantową!<br/><br/>Następny Skok przez Bramę Kwantową będzie dostępny:<br/>%s';
+$_Lang['QGOnlyInOwnGalaxy']                      = 'Brama Kwantowa może być użyta tylko do przeskoku w tej Galaktyce!';
+$_Lang['GateReadyToUse']                         = 'Brama Kwantowa gotowa do skoku';
+$_Lang['GateReadyToUseIn']                       = 'Brama Kwantowa gotowa do skoku za';
+
+$_Lang['JavaGoback']                             = '<br/><br/><a href="javascript:history.go(-1)">Powrót</a>';
+
+?>

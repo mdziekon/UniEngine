@@ -1,0 +1,164 @@
+.SpyExpand {
+    float: right;
+    cursor: pointer;
+    border: 1px solid #415680;
+    background: #344566;
+}
+.point, .thAct {
+    cursor: pointer;
+}
+.convert, .report, .report2, .reply, .reply2, .ignore, .date {
+    padding-left: 20px !important;
+}
+.convert {
+    background: url('../images/convert.png') no-repeat 0 -0.5pt; 
+}
+.report, .report2 {
+    background: url('../images/warning.png') no-repeat 0 -1pt; 
+}
+.delete {
+    cursor: pointer; 
+    background: url('../images/delete.png') no-repeat 0 1pt; 
+    padding-left: 15px !important;
+}
+.reply {
+    background: url('../images/reply.png') no-repeat 0 0pt; 
+}
+.reply2 {
+	background: url('../images/users.png') no-repeat 0 0pt; 
+}
+.ignore {
+    background: url('../images/ban.png') no-repeat 0 -0.5pt;
+}
+.date {
+	background: url('../images/calendar.png') no-repeat 0 0;
+}
+.hov {
+	padding: 3px;
+	cursor: pointer;
+}
+.hov:hover {
+	background-color: #49608D;
+}
+.hov > a:hover {
+	text-decoration: none;
+	color: #E6EBFB;
+}
+
+.pagebut {
+    padding: 4px;
+    border: 1px solid #415680;
+    background: #344566;
+}
+.fwb {
+    font-weight: 700;
+}
+.stl {
+    width: 24%;
+    text-align: left;
+}
+.stv {
+    width: 25%;
+    text-align: right;
+}
+.tleft {
+	text-align: left;
+}
+.sth {
+    width: 90%;
+    margin: 1px auto;
+}
+/* Elements Declarations */
+#msgCont {
+	margin: -2px;
+}
+.thAct {
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+}
+.thImg {
+	margin: -2px 5px 0px 5px;
+	vertical-align: middle;
+}
+.eFrom {
+    padding: 3px;
+}
+.eDate {
+    padding: 3px 0px 3px 8px !important;
+}
+.msgrow {
+	padding: 5px 3px !important;
+}
+.fLeft {
+    float: left;
+}
+.fRigh {
+    float: right;
+}
+.invBR {
+    visibility: hidden;
+    height: 3px;
+}
+.sBR {
+	font-size: 1px;
+	padding: 0px;
+}
+.inv {
+    visibility: hidden;
+}
+.hide, .cpe, .load {
+	display: none;
+}
+.eMark {
+    width: 10px;
+}
+.eMark > input {
+	cursor: pointer;
+}
+.nomarg {
+    margin: 0px !important;
+}
+.isNew > th, .isNew > td, .thAct:hover {
+	background-color: #40547C;
+	border-color: #4C6798;
+}
+.lnBr {
+	border-left: 1px solid white;
+	opacity: 0.2;
+}
+/* Colors Declarations */
+.c0 {
+    background: #FFFF00 !important; 
+}
+.c1 {
+    background: #FF6699 !important; 
+}
+.c2 {
+    background: #FF3300 !important; 
+}
+.c3 {
+    background: #FF9900 !important; 
+}
+.c4 {
+    background: #9540BF !important; 
+}
+.c5 {
+    background: #009933 !important; 
+}
+.c15 {
+    background: #6661FF !important; 
+}
+.c50 {
+    background: skyblue !important; 
+}
+.c70 {
+    background: #75F121 !important; 
+}
+.c80 {
+    background: white !important; 
+}
+.c100 {
+    background: #ABABAB !important; 
+}

@@ -1,0 +1,14 @@
+<?php
+
+$_Lang['AddMoon_Title'] = 'Tworzenie księżyców';
+$_Lang['AddMoon_PlanetID'] = 'ID planety';
+$_Lang['AddMoon_Name'] = 'Nadaj nazwę (puste - domyślna)';
+$_Lang['AddMoon_Diameter'] = 'Średnica (puste - losowa)';
+$_Lang['AddMoon_Submit'] = 'Stwórz';
+$_Lang['AddMoon_Success'] = 'Księżyc został stworzony';
+$_Lang['AddMoon_Fail_NoPlanet'] = 'Taka planeta nie istnieje!';
+$_Lang['AddMoon_Fail_MoonExists'] = 'Ta planeta ma już księżyc!';
+$_Lang['AddMoon_Fail_NameBadSigns'] = 'System nie może zaakceptować takiej nazwy!';
+$_Lang['AddMoon_Fail_BadID'] = 'Niepoprawne ID planety!';
+
+?>

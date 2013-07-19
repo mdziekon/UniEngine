@@ -1,0 +1,21 @@
+<?php
+
+$_Lang['Table_Title']            = 'Informacje';
+$_Lang['reftable']               = 'Lista poleconych graczy';
+
+$_Lang['reftable_desc']          = 'W tym miejscu możesz sprawdzić status polecenia graczy, którzy zarejestrowali się do gry poprzez twój link polecający.';
+
+$_Lang['referring_info']         = 'Gdy polecisz do gry nowego gracza, zostaje on dodany do listy poniżej.<br/>Gdy tylko doładuje swoje konto Ciemną Energią, ty od razu dostaniesz prowizję od tego doładowania!<br/><br/>Obecnie prowizja wynosi <b class="lime">%s%%</b> od każdego doładowania Ciemnej Energii.';
+
+$_Lang['your_referral_link_is']  = 'Oto twój link polecający:';
+
+$_Lang['Who']                    = 'Nick Gracza';
+$_Lang['Date']                   = 'Data Rejestracji';
+$_Lang['Provisions_Granted']     = 'Całkowita otrzymana Prowizja';
+
+$_Lang['DEUnits']                = 'j. Ciemnej Energii';
+$_Lang['UserDeleted']            = 'Konto Usunięte';
+
+$_Lang['referred_noone']         = 'Nie poleciłeś nikogo!';
+
+?>

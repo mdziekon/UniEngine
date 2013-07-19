@@ -1,0 +1,266 @@
+OTHER LICENSES
+==============
+
+* Font Roboto
+cache/img/signatures/static/font_roboto*
+
+Roboto
+Christian Robertson - https://plus.google.com/110879635926653430880/about
+Apache License, version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.html
+
+---
+* Smarty
+class/Smarty/*
+
+(Copy from file class/Smarty/Smarty.class.php)
+
+Project:     Smarty: the PHP compiling template engine
+File:        Smarty.class.php
+SVN:         $Id: Smarty.class.php 3794 2010-11-15 22:54:59Z uwe.tews@googlemail.com $
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+For questions, help, comments, discussion, etc., please join the
+Smarty mailing list. Send a blank e-mail to
+smarty-discussion-subscribe@googlegroups.com
+
+@link http://www.smarty.net/
+@copyright 2008 New Digital Group, Inc.
+@author Monte Ohrt <monte at ohrt dot com> 
+@author Uwe Tews 
+@package Smarty
+@version 3.0.5
+
+---
+* jQuery UI CSS
+css/ui-lightness/*
+
+(Copy from file css/ui-lightness/jquery-ui.css)
+
+jQuery UI CSS Framework 1.8.20
+
+Copyright 2012, AUTHORS.txt (http://jqueryui.com/about)
+Dual licensed under the MIT or GPL Version 2 licenses.
+http://jquery.org/license
+
+http://docs.jquery.com/UI/Theming/API
+
+---
+* reCaptcha
+includes/recaptchalib.php
+
+(Copy from file includes/recaptchalib.php)
+
+This is a PHP library that handles calling reCAPTCHA.
+   - Documentation and latest version
+         http://recaptcha.net/plugins/php/
+   - Get a reCAPTCHA API Key
+         https://www.google.com/recaptcha/admin/create
+   - Discussion group
+         http://groups.google.com/group/recaptcha
+
+Copyright (c) 2007 reCAPTCHA -- http://recaptcha.net
+AUTHORS:
+  Mike Crawford
+  Ben Maurer
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+---
+* PHPMailer
+includes/phpmailer/*
+
+(Copy from file includes/phpmailer/class.phpmailer.php)
+.---------------------------------------------------------------------------.
+|  Software: PHPMailer - PHP email class                                    |
+|   Version: 5.1                                                            |
+|   Contact: via sourceforge.net support pages (also www.worxware.com)      |
+|      Info: http://phpmailer.sourceforge.net                               |
+|   Support: http://sourceforge.net/projects/phpmailer/                     |
+| ------------------------------------------------------------------------- |
+|     Admin: Andy Prevost (project admininistrator)                         |
+|   Authors: Andy Prevost (codeworxtech) codeworxtech@users.sourceforge.net |
+|          : Marcus Bointon (coolbru) coolbru@users.sourceforge.net         |
+|   Founder: Brent R. Matzelle (original founder)                           |
+| Copyright (c) 2004-2009, Andy Prevost. All Rights Reserved.               |
+| Copyright (c) 2001-2003, Brent R. Matzelle                                |
+| ------------------------------------------------------------------------- |
+|   License: Distributed under the Lesser General Public License (LGPL)     |
+|            http://www.gnu.org/copyleft/lesser.html                        |
+| This program is distributed in the hope that it will be useful - WITHOUT  |
+| ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or     |
+| FITNESS FOR A PARTICULAR PURPOSE.                                         |
+| ------------------------------------------------------------------------- |
+| We offer a number of paid services (www.worxware.com):                    |
+| - Web Hosting on highly optimized fast and secure servers                 |
+| - Technology Consulting                                                   |
+| - Oursourcing (highly qualified programmers and graphic designers)        |
+'---------------------------------------------------------------------------'
+
+---
+* AreWeFastYet
+includes/functions/MakeGraphs.php
+css/graphs.css
+templates/default_template/Graphs_Body.tpl (code between the last <script> tag)
+
+https://github.com/dvander/arewefastyet
+
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this
+file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+---
+* jQuery Cookie Plugin
+scripts/jquery.cookie.js
+
+jQuery Cookie Plugin v1.2
+https://github.com/carhartl/jquery-cookie
+
+Copyright 2011, Klaus Hartl
+Dual licensed under the MIT or GPL Version 2 licenses.
+http://www.opensource.org/licenses/mit-license.php
+http://www.opensource.org/licenses/GPL-2.0
+
+---
+* jQuery Farbtastic Color Picker
+scripts/jquery.farbtastic.js
+
+Farbtastic Color Picker 1.2
+© 2008 Steven Wittens
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+---
+* jQuery Flot
+scripts/jquery.flot.min.js
+
+Javascript plotting library for jQuery, v. 0.7.
+
+Released under the MIT license by IOLA, December 2007.
+
+---
+* jQuery
+scripts/jquery.js
+(also may be included in other files as minified version)
+
+jQuery JavaScript Library v1.7.2
+http://jquery.com/
+
+Copyright 2011, John Resig
+Dual licensed under the MIT or GPL Version 2 licenses.
+http://jquery.org/license
+
+Includes Sizzle.js
+http://sizzlejs.com/
+Copyright 2011, The Dojo Foundation
+Released under the MIT, BSD, and GPL Licenses.
+
+Date: Wed Mar 21 12:46:34 2012 -0700
+
+---
+* jQuery qTip
+scripts/jquery.qtip.js
+
+qTip2 - Pretty powerful tooltips
+http://craigsworks.com/projects/qtip2/
+
+Version: nightly
+Copyright 2009-2010 Craig Michael Thompson - http://craigsworks.com
+
+Dual licensed under MIT or GPLv2 licenses
+  http://en.wikipedia.org/wiki/MIT_License
+  http://en.wikipedia.org/wiki/GNU_General_Public_License
+
+Date: Mon Jun 18 08:09:07.0000000000 2012
+
+---
+* jQuery TableSorter
+scripts/jquery.tablesorter.min.js
+
+TableSorter 2.0 - Client-side table sorting with ease!
+Version 2.0.5b
+@requires jQuery v1.2.3
+
+Copyright (c) 2007 Christian Bach
+Examples and docs at: http://tablesorter.com
+Dual licensed under the MIT and GPL licenses:
+http://www.opensource.org/licenses/mit-license.php
+http://www.gnu.org/licenses/gpl.html
+
+---
+* jQuery Textarea Characters Counter Plugin
+scripts/jquery.textareaCounter.plugin.js
+
+jQuery Textarea Characters Counter Plugin v 2.0
+Examples and documentation at: http://roy-jin.appspot.com/jsp/textareaCounter.jsp
+Copyright (c) 2010 Roy Jin
+Version: 2.0 (11-JUN-2010)
+Dual licensed under the MIT and GPL licenses:
+http://www.opensource.org/licenses/mit-license.php
+http://www.gnu.org/licenses/gpl.html
+Requires: jQuery v1.4.2 or later
+
+---
+* jQuery TipTip
+scripts/jquery.tipTip.js
+
+TipTip
+Copyright 2010 Drew Wilson
+www.drewwilson.com
+code.drewwilson.com/entry/tiptip-jquery-plugin
+Version 1.3   -   Updated: Mar. 23, 2010
+This TipTip jQuery plug-in is dual licensed under the MIT and GPL licenses:
+  http://www.opensource.org/licenses/mit-license.php
+  http://www.gnu.org/licenses/gpl.html
+
+---
+* OverLib
+scripts/overlib.js
+
+http://www.bosrup.com/web/overlib/?License
+
+---
+* Skins
+skins/*
+
+Licences can be found in .css files of styles in "skins" directory

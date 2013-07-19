@@ -1,0 +1,127 @@
+/* Elements */
+.delMsg {
+	background: url('../images/delete.png') no-repeat 0.5pt 1.5pt;
+	padding-left: 12px;
+}
+.reportMsg {
+	background: url('../images/warning.png') no-repeat;
+	padding-left: 16px;
+}
+.edit {
+	background: url('../images/edit.png') no-repeat 0.5pt 0pt;
+	padding-left: 16px;
+}
+.smile, .usrRef, .delMsg, .reportMsg {
+	cursor: pointer;
+}
+.smile {
+	width: 12px;
+	height: 12px;
+}
+.usrInv {
+	text-decoration: line-through !important;
+}
+.usrInv:hover {
+	text-decoration: none !important;
+}
+
+/* Chat BoxModel Logic */
+.dt,.usr {
+	width: 1%;
+}
+.msg {
+	width: 99%;
+	font-weight: normal;
+}
+.fNorm {
+	font-weight: normal;
+}
+.aright {
+	text-align: right;
+}
+.aleft {
+	text-align: left;
+}
+.upperBox {
+	border-bottom: 2px dotted #A1AFCE !important;
+}
+#sbTable {
+	width: 100%;
+}
+#sbTable > tbody > tr:not(:nth-child(1)).lastSeen > th {
+	border-top: 2px solid #A1AFCE !important;
+}
+#sbTable > tbody > tr > th, .upperBox {
+	border: none;
+	padding: 3px 4px;
+	border-bottom: 1px solid #6F85B3;
+}
+#sbTable > tbody > tr:nth-child(even) > th, .upperBox {
+	background-color: #4A5F8C;
+}
+#sbTable > tbody > tr:nth-child(odd) > th {
+	background-color: #3F5178;
+}
+
+#shoutbox {
+	vertical-align: text-top;
+	height: 360px;
+	overflow: auto;
+	position: relative;
+}
+
+#onlineBox {
+	padding-left: 15px;
+	padding-right: 15px;
+	text-align: left;
+}
+#errorBox {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	padding-left: 0px;
+	padding-right: 0px;
+	color: red;
+}
+#activityBox {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+}
+
+#msgText {
+	width: 98%;
+	height: 32px;
+}
+#msgSend {
+	width: 80%;
+	padding: 2px;
+	font-weight: 700;
+}
+
+#setBox > label {
+	margin-right: 10px;
+}
+.setChg {
+	vertical-align: text-top;
+	margin: 0 5px 0 0;
+}
+.hide {
+	display: none;
+}
+
+/* Effects */
+.doFadeIn {
+	opacity: 0.001;
+}
+
+/* User Colors */
+.usrColor_0 {color: #BFBFBF;}
+.usrColor_20 {color: lime;}
+.usrColor_50 {color: lime;}
+.usrColor_70 {color: skyblue;}
+.usrColor_90 {color: orange;}
+.usrColor_100 {color: orange;}
+.usrColor_110 {color: red;}
+.usrColor_120 {color: red;}

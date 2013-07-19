@@ -1,0 +1,592 @@
+<?php
+
+	$_Lang['Ally_FunctionNotReady']	= 'Ta funkcja nie jest jeszcze gotowa!';
+
+// Ally Information
+
+    $_Lang['AInfo_Title']            = 'Informacje o Sojuszu';
+    
+    // Messages
+    $_Lang['AInfo_NoSelector']       = 'Nie podano ani Tagu ani Identyfikatora Sojuszu!';
+    $_Lang['AInfo_BadID']            = 'Podano niepoprawny Identyfikator Sojuszu!';
+    $_Lang['AInfo_BadTag']           = 'Podany Tag jest niepoprawny!';
+    $_Lang['AInfo_NoExist']          = 'Taki Sojusz nie istnieje!';
+    
+    $_Lang['AInfo_MembersCount']     = 'Ilość członków';
+    
+    $_Lang['AInfo_NoAllyDesc']       = 'Brak opisu sojuszu';
+    
+    $_Lang['AInfo_WebPage']          = 'Strona Domowa';
+    $_Lang['AInfo_MakeRequest']      = 'Złóż podanie do tego Sojuszu';
+    $_Lang['AInfo_BelongToAlly']     = 'Należysz do tego Sojuszu!';
+    $_Lang['AInfo_RequestNotAllow']  = 'Ten Sojusz zablokował możliwośc składania podań!';
+
+// Ally Creation
+    
+    $_Lang['AMake_Title']            = 'Tworzenie Sojuszu';
+    
+    $_Lang['AMake_Tag']              = 'Tag Sojuszu (od 3 do 8 znaków)';
+    $_Lang['AMake_Name']             = 'Nazwa Sojuszu (do 35 znaków)';
+    $_Lang['AMake_Submit']           = 'Stwórz Sojusz!';
+    
+    $_Lang['AMake_TagShort']         = 'Tag musi mieć przynajmniej 3 znaki!';
+    $_Lang['AMake_TagLong']          = 'Tag nie może mieć więcej niż 8 znaków!';
+    $_Lang['AMake_BadTag']           = 'Tag jest niepoprawny!';
+    $_Lang['AMake_NoName']           = 'Musisz podać nazwę Sojuszu!';
+    $_Lang['AMake_NameLong']         = 'Nazwa Sojuszu nie może być dłuższa niż 35 znaków!';
+    $_Lang['AMake_BadName']          = 'Nazwa Sojuszu jest niepoprawna!<br/>(Może się składać jedynie ze znaków alfanumerycznych, polskich znaków, spacji, myślnika i podkreślenia)';
+    $_Lang['AMake_TagExists']        = 'Sojusz o tagu %s już istnieje!<br/>Wybierz inny tag';
+    $_Lang['AMake_NameExists']       = 'Sojusz o nazwie %s już istnieje!<br/>Wybierz inną nazwę';
+    
+    $_Lang['AMake_Done']             = 'Sojusz %s [%s] został poprawnie założony!';
+    
+    $_Lang['AMake_AllyLeader']       = 'Założyciel';
+    $_Lang['AMake_AllyNewComer']     = 'Nowy członek';
+
+// Ally Search Form
+
+    $_Lang['AFind_Title']            = 'Wyszukiwarka Sojuszów';
+    
+    $_Lang['AFind_Search']           = 'Szukaj';
+    
+    $_Lang['AFind_Tag']              = 'Tag';
+    $_Lang['AFind_Name']             = 'Nazwa';
+    $_Lang['AFind_Count']            = 'Ilość członków';
+    
+    $_Lang['AFind_BadSigns']         = 'W polu wyszukiwania można korzystać tylko<br/>ze znaków alfanumerycznych, polskich znaków, spacji, myślnika i podkreślenia!';
+	$_Lang['AFind_NothingFound']		= 'Nic nie znaleziono...';
+	
+// Ally Default Menu
+
+    $_Lang['AMenu_MakeAlly']         = 'Tworzenie własnego Sojuszu';
+    $_Lang['AMenu_LookFor']          = 'Szukaj Sojuszu';
+	
+	$_Lang['AMenu_Inv_Head']			= 'Zaproszenia do Sojuszy';
+	$_Lang['AMenu_Inv_Sender']		= 'Sojusz (Gracz zapraszający)';
+	$_Lang['AMenu_Inv_Date']			= 'Data';
+	$_Lang['AMenu_Inv_State']		= 'Status';
+	$_Lang['AMenu_Inv_Actions']		= 'Akcje';
+	
+	$_Lang['AMenu_Inv_Accept'] = 'Akceptuj zaproszenie';
+	$_Lang['AMenu_Inv_Reject'] = 'Odrzuć zaproszenie';
+	
+	$_Lang['AMenu_Inv_NoRows']		= 'Nie zostałeś nigdzie zaproszony...';
+	$_Lang['AMenu_Inv_States']['1']	= '<b class="lime">Oczekuje</b>';
+	$_Lang['AMenu_Inv_States']['-1']	= '<b class="orange">Odrzucone</b>';
+	$_Lang['AMenu_Inv_States']['-2'] = '<b class="red">Wycofane</b>';
+	$_Lang['AMenu_Inv_States']['-3'] = '<b class="red">Wycofane</b>';
+	
+	$_Lang['AMenu_Inv_MsgAcceptSuccess'] = 'Zaproszenie zostało przyjęte!';
+	$_Lang['AMenu_Inv_MsgRejectSuccess'] = 'Zaproszenie zostało odrzucone!';
+	$_Lang['AMenu_Inv_MsgNotFound'] = 'Zaproszenie nie istnieje!';
+	$_Lang['AMenu_Inv_MsgBadID'] = 'Podano niepoprawne dane!';
+
+// Ally Create Request
+    
+    $_Lang['AApp_Title']             = 'Pisanie podania do sojuszu';
+    
+    $_Lang['AApp_WriteRequest']      = 'Pisanie podania do sojuszu %s [%s]';
+    
+    $_Lang['AApp_Message']           = 'Wiadomość';
+    $_Lang['AApp_Chars']             = 'znaków';
+    $_Lang['AApp_Help']              = 'Pomoc';
+    $_Lang['AApp_UseExample']        = 'Wczytaj ponownie Formułę Podania';
+    $_Lang['AApp_Send']              = 'Złóż podanie!';
+    
+    $_Lang['AApp_NoSample']          = 'Sojusz nie ma wzoru podania!';
+    
+    $_Lang['AApp_BadID']             = 'Podano niepoprawny Identyfikator Sojuszu!';
+    $_Lang['AApp_AllyNoExists']      = 'Taki Sojusz nie istnieje!';
+    $_Lang['AApp_AllyBlockRequest']  = &$_Lang['AInfo_RequestNotAllow'];
+    $_Lang['AApp_NoText']            = 'Musisz podać treść podania!';
+    $_Lang['AApp_Done']              = 'Twoje podanie zostało wysłane.<br/>Teraz czekaj na rozpatrzenie podania<br/>(zostaniesz powiadomiony o tym poprzez Wiadomość)';
+
+// Ally Waiting Request
+
+    $_Lang['AReq_Title']             = 'Twoje podanie';
+    
+    $_Lang['AReq_Cancel']            = 'Wycofaj podanie';
+    $_Lang['AReq_Sure']              = 'Czy jesteś pewien, że chcesz wycofać swoje podanie?';
+    
+    $_Lang['AReq_Canceled']          = 'Wycofałeś swoje podanie do sojuszu %s [%s]!';
+    $_Lang['AReq_Waiting']           = 'Już złożyłeś podanie do sojuszu <a href="?mode=ainfo&amp;a=%s">%s</a> [%s].<br/>Poczekaj na decyzje o przyjęciu lub wycofaj podanie.';
+
+// ---------------------------------
+    
+    $_Lang['Ally_Title']             = 'Sojusz';
+    
+    $_Lang['Ally_GetAllyError']      = 'Wystąpił błąd podczas pobierania danych o Sojuszu!<br/>Możliwe, że Sojusz został usunięty.<br/>W razie dalszych problemów lub wątpliwości prosimy o kontakt z Administracją!';
+
+// Leaving the Ally
+
+    $_Lang['Ally_Leave_MAdminInfo']  = 'Właściciel Sojuszu nie może go opuścić!';
+    $_Lang['Ally_Leave_Done']        = 'Właśnie opuściłeś Sojusz %s!';
+
+// Showing Ally Members List (for User)
+    
+    $_Lang['Ally_ML_Title']          = 'Lista członków Sojuszu';
+    $_Lang['Ally_ML_WinTitle']       = 'Sojusz - Lista członków';
+    $_Lang['Ally_ML_Count']          = 'Ilość';
+    
+    $_Lang['Ally_ML_Name']           = 'Nazwa gracza';
+    $_Lang['Ally_ML_Rank']           = 'Ranga';
+    $_Lang['Ally_ML_Points']         = 'Punkty';
+    $_Lang['Ally_ML_Planet']         = 'Współrzędne';
+    $_Lang['Ally_ML_RegTime']        = 'Przystąpienie';
+    $_Lang['Ally_ML_Online']         = 'Aktywność';
+    $_Lang['Ally_ML_Action']         = 'Akcja';
+    
+    $_Lang['Ally_ML_Write']          = 'Napisz Wiadomość do tego gracza';
+    $_Lang['Ally_ML_isOnline']       = 'Online';
+    $_Lang['Ally_ML_Mins']           = 'min (AFK)';
+    $_Lang['Ally_ML_isOffline']      = 'Offline';
+    $_Lang['Ally_ML_Days']           = 'd.';
+
+// Showing Ally Wars & Pacts List
+
+    $_Lang['Ally_Pacts_WinTitle']    = 'Sojusz - Lista Paktów';
+    
+    $_Lang['AWNP_Wars']              = 'Wojny';
+    $_Lang['AWNP_Pacts']             = 'Pakty';
+    
+    $_Lang['AWNP_DeclareWar']        = 'Wypowiedz wojnę';
+    $_Lang['AWNP_NewPact']			= 'Zaproponuj pakt innemu Sojuszowy';
+    
+    $_Lang['AWNP_AllyName']          = 'Nazwa Sojuszu';
+	$_Lang['AWNP_Date']				= 'Data wysłania/aktywacji';
+	$_Lang['AWNP_Type']				= 'Typ Paktu';
+    $_Lang['AWNP_Status']            = 'Status';
+	$_Lang['AWNP_Actions']			= 'Akcje';
+	
+	$_Lang['AWNP_Types'][1]			= 'Nieagresja';
+	$_Lang['AWNP_Types'][2]			= 'Handlowy';
+	$_Lang['AWNP_Types'][3]			= 'Obronny';
+	$_Lang['AWNP_Types'][4]			= 'Militarny';
+	
+	$_Lang['AWNP_States']['active']	= '<b class="lime">Aktywny</b>';
+	$_Lang['AWNP_States']['my_2']	= '<b class="skyblue">Oczekuje na potwierdzenie zmiany Typu (%s)</b>';
+	$_Lang['AWNP_States']['my_0']	= '<b class="skyblue">Oczekuje na potwierdzenie</b>';
+	$_Lang['AWNP_States']['their_2'] = '<b class="orange">Oczekuje na decyzję co do zmiany Typu (%s)</b>';
+	$_Lang['AWNP_States']['their_0'] = '<b class="orange">Oczekuje na decyzję</b>';
+    
+	$_Lang['AWNP_Actions_remove'] = 'Rozwiąż Pakt';
+	$_Lang['AWNP_Actions_rollback'] = 'Wycofaj propozycję';
+	$_Lang['AWNP_Actions_stopchange'] = 'Wycofaj prośbę o zmianę Paktu';
+	$_Lang['AWNP_Actions_accept'] = 'Akceptuj propozycję';
+	$_Lang['AWNP_Actions_refuse'] = 'Odrzuć propozycję';
+	$_Lang['AWNP_Actions_change'] = 'Zaproponuj zmianę Typu Paktu';
+	
+	$_Lang['AllyPacts_Msg_CantManage'] = 'Nie masz odpowiednich uprawnień!';
+	$_Lang['AllyPacts_Msg_BadAID'] = 'Podano niepoprawny Identyfikator Sojuszu!';
+	$_Lang['AllyPacts_Msg_BadCMD'] = 'Podano niepoprawne dane!';
+	$_Lang['AllyPacts_Msg_PactDoesntExist'] = 'Taki Pakt nie istnieje!';
+	$_Lang['AllyPacts_Msg_PactRollback_Active'] = 'Nie można wycofać propozycji, ponieważ została już zaakceptowana!';
+	$_Lang['AllyPacts_Msg_PactRollback_NotSender'] = 'Nie można wycofać nie swojej propozycji!';
+	$_Lang['AllyPacts_Msg_PactAccept_Sender'] = 'Nie można zaakceptować propozycji wysłanej przez siebie!';
+	$_Lang['AllyPacts_Msg_PactAccept_NothingToAccept'] = 'Brak propozycji do zaakceptowania!';
+	$_Lang['AllyPacts_Msg_PactRefuse_Sender'] = 'Nie można odrzucić propozycji wysłanej przez siebie!';
+	$_Lang['AllyPacts_Msg_PactRefuse_NothingToAccept'] = 'Brak propozycji do odrzucenia!';
+	$_Lang['AllyPacts_Msg_PactRemove_NonActive'] = 'Ten Pakt nie jest jeszcze aktywny!';
+	$_Lang['AllyPacts_Msg_PactChange_NothingToStop'] = 'Brak propozycji do wycofania!';
+	
+	$_Lang['AllyPacts_Msg_OK_Rollback'] = 'Propozycja Paktu została wycofana!';
+	$_Lang['AllyPacts_Msg_OK_Accept_NewPact'] = 'Przyjęto propozycję nowego Paktu!';
+	$_Lang['AllyPacts_Msg_OK_Accept_NewType'] = 'Przyjęto propozycję zmiany Typu Paktu!';
+	$_Lang['AllyPacts_Msg_OK_Refuse_NewPact'] = 'Odrzucono propozycję nowego Paktu!';
+	$_Lang['AllyPacts_Msg_OK_Refuse_NewType'] = 'Odrzucono propozycję zmiany Typu Paktu!';
+	$_Lang['AllyPacts_Msg_OK_Remove'] = 'Poprawnie rozwiązano Pakt!';
+	$_Lang['AllyPacts_Msg_OK_StopChange'] = 'Wycofano propozycję zmiany Typu Paktu!';
+	
+    $_Lang['AWNP_NoWars']            = 'Brak prowadzonych wojen';
+    $_Lang['AWNP_NoPacts']           = 'Brak paktów';
+
+// Creating a New Pact
+	$_Lang['Ally_PactNew_Title']		= 'Sojusz - Propozycja Paktu';
+	
+	$_Lang['Ally_PactNew_Body_Head'] = 'Wyślij propozycję nowego Paktu do innego Sojuszu';
+	$_Lang['Ally_PactNew_Body_Ally'] = 'Nazwa Sojuszu';
+	$_Lang['Ally_PactNew_Body_Type'] = 'Typ Paktu';
+	$_Lang['Ally_PactNew_Body_Submit'] = 'Wyślij propozycję';
+	
+	$_Lang['Ally_PactNew_Type_1']	= 'Pakt o nieagresji';
+	$_Lang['Ally_PactNew_Type_2']	= 'Pakt handlowy';
+	$_Lang['Ally_PactNew_Type_3']	= 'Pakt obronny';
+	$_Lang['Ally_PactNew_Type_4']	= 'Pakt militarny';
+	
+	$_Lang['Ally_PactNew_TypeDesc_1'] = 'Określa stosunki między sojuszami jako "neutralne".<br/>W przypadku próby ataku na członka drugiego sojuszu, gracz otrzymuje ostrzeżenie przed atakiem.';
+	$_Lang['Ally_PactNew_TypeDesc_2'] = 'Określa stosunki między sojuszami jako "handlowe".<br/>Umożliwia łatwiejszą wymianę surowców poprzez Bramy Kwantowe należących do graczy drugiego Sojuszu.<br/><b>Przejmuje również cechy pozostałych, niższych paktów.</b>';
+	$_Lang['Ally_PactNew_TypeDesc_3'] = 'Określa stosunki między sojuszami jako "przyjazne".<br/>Umożliwia stacjonowanie na orbitach planet i księżyców należących do graczy drugiego sojuszu.<br/><b>Przejmuje również cechy pozostałych, niższych paktów.</b>';
+	$_Lang['Ally_PactNew_TypeDesc_4'] = 'Określa stosunki między sojuszami jako "przyjazne".<br/>Umożliwia nawiązywanie Związków Flot (ACS) z graczami drugiego sojuszu.<br/>Gdy jeden z sojuszy znajduje się w Stanie Wojny z innym, drugi sojusz również uczestniczy w tej wojnie.<br/><b>Przejmuje również cechy pozostałych, niższych paktów.</b>';
+	
+	$_Lang['Ally_PactNew_Error_EmptyName'] = 'Nie podano nazwy Sojuszu!';
+	$_Lang['Ally_PactNew_Error_AllyDoesntExist'] = 'Taki Sojusz nie istnieje!';
+	$_Lang['Ally_PactNew_Error_PactAlreadySent'] = 'Nie możesz wysłać kolejnej propozycji do tego Sojuszu!';
+	$_Lang['Ally_PactNew_Error_AllyInWar'] = 'Nie możesz wysłać propozycji Paktu do sojuszu, z którym obecnie prowadzicie Wojnę!';
+	$_Lang['Ally_PactNew_Error_BadType'] = 'Podano niepoprawny Typ Paktu!';
+	$_Lang['Ally_PactNew_Error_AllySame'] = 'Nie można proponować Paktu samemu sobie!';
+	$_Lang['Ally_PactNew_Error_BadName'] = 'Niepoprawna nazwa Sojuszu!';
+	
+	$_Lang['Ally_PactNew_Success'] = 'Wysłano propozycję nowego Paktu do Sojuszu <a href="?mode=ainfo&amp;a=%s" target="_blank">%s</a>!';
+	
+// Changing existing Pact
+	
+	$_Lang['Ally_PactChange_Title'] = 'Sojusz - Zmiana Typu Paktu';
+	
+	$_Lang['Ally_PactChange_Body_Head'] = 'Wyślij propozycję zmiany Typu Paktu';
+	$_Lang['Ally_PactChange_Body_Ally'] = 'Sojusz';
+	$_Lang['Ally_PactChange_Body_CurrentType'] = 'Obecny Typ Paktu';
+	$_Lang['Ally_PactChange_Body_Submit'] = 'Wyślij propozycję zmiany';
+	
+	$_Lang['Ally_PactChange_BadAID'] = 'Podano niepoprawny Identyfikator Paktu';
+	$_Lang['Ally_PactChange_PactDoesntExist'] = 'Taki Pakt nie istnieje!';
+	$_Lang['Ally_PactChange_PactChangeAwaiting'] = 'Propozycja zmiany Typu Paktu została już wysłana.<br/>Jeśli chcesz ją zmienić, najpierw wycofaj poprzednią propozycję.';
+	
+	$_Lang['Ally_PactChange_Msg_Ok_Higher'] = '<b class="lime">Propozycja zmiany Typu Paktu została wysłana do drugiego Sojuszu!</b>';
+	$_Lang['Ally_PactChange_Msg_Ok_Lower'] = '<b class="lime">Typ Paktu został zmieniony!</b>';
+	$_Lang['Ally_PactChange_Msg_TypeSame'] = 'Nie można zmienić na ten sam Typ co obecnie!';
+	$_Lang['Ally_PactChange_Msg_TypeBad'] = 'Podano niepoprawny Typ Paktu!';
+	$_Lang['Ally_PactChange_Msg_TypeAlreadyProposed'] = 'Drugi Sojusz zaproponował dokładnie ten sam Typ Paktu do zmiany.<br/>Jeśli chcesz zmienić Typ, zaakceptuj ich propozycję...';
+	
+// Sending MassMessage to Members
+    
+    $_Lang['Ally_WR_Title']          = 'Wyślij Wiadomość do Sojuszników';
+    $_Lang['Ally_WR_WinTitle']       = 'Sojusz - Wiadomość do Sojuszników';
+    
+    $_Lang['Ally_WR_SendTo']         = 'Wyślij do (Ranga)';
+    $_Lang['Ally_WR_Every1']         = 'Wszystkich Sojuszników';
+    $_Lang['Ally_WR_Text']           = 'Treść wiadomości';
+    $_Lang['Ally_WR_Chars']          = 'znaków';
+    $_Lang['Ally_WR_Clear']          = 'Wyczyść';
+    $_Lang['Ally_WR_Button']         = 'Wyślij';
+    
+    $_Lang['Ally_WR_Subject']        = 'Wiadomość od sojusznika ';
+    
+    $_Lang['Ally_WR_Done']           = '<b class="lime">Wiadomość została wysłana do następujących sojuszników:</b><br/>';
+    $_Lang['Ally_WR_RankHasNoUsers'] = 'Żaden członek sojuszu nie ma tej Rangi!';
+    $_Lang['Ally_WR_NoRankSelect']   = 'Musisz wybrać do kogo chcesz wysłać wiadomość';
+    $_Lang['Ally_WR_MsgEmpty']       = 'Wiadomość nie może być pusta!';
+
+	// Inviting other Users
+	
+	$_Lang['Ally_INV_Title']			= 'Sojusz - Wyślij Zaproszenie';
+	
+	$_Lang['Ally_INV_Header']		= 'Wyślij Zaproszenie';
+	$_Lang['Ally_INV_Username']		= 'Gracz';
+	$_Lang['Ally_INV_Text']			= 'Treść zaproszenia';
+	$_Lang['Ally_INV_Length']		= 'Limit';
+	$_Lang['Ally_INV_Clear']			= 'Wyczyść';
+	$_Lang['Ally_INV_Submit']		= 'Zaproś';
+	
+	$_Lang['Ally_INV_Msg_Success']	= 'Gracz <a href="profile.php?uid=%s" target="_blank">%s</a> został zaproszony!';
+	$_Lang['Ally_INV_Msg_AlreadyInvited'] = 'Ten gracz został już zaproszony do twojego Sojuszu!';
+	$_Lang['Ally_INV_Msg_EmptyText'] = 'Musisz podać treść zaproszenia!';
+	$_Lang['Ally_INV_Msg_UserInAlly'] = 'Nie możesz zaprosić tego gracza!';
+	$_Lang['Ally_INV_Msg_UserNoExists'] = 'Taki gracz nie istnieje!';
+	$_Lang['Ally_INV_Msg_BadInput'] = 'Wprowadzono niepoprawne dane gracza!';
+	
+	// Invites List
+	
+	$_Lang['Ally_INVList_Title']		= 'Sojusz - Lista Zaproszeń';
+	
+	$_Lang['Ally_INVList_Head'] = 'Lista wysłanych zaproszeń';
+	$_Lang['Ally_INVList_UserOwner']	= 'Zaproszony gracz';
+	$_Lang['Ally_INVList_UserSender'] = 'Zaproszony przez';
+	$_Lang['Ally_INVList_Date'] = 'Data';
+	$_Lang['Ally_INVList_State'] = 'Status';
+	$_Lang['Ally_INVList_Actions'] = 'Akcje';
+	
+	$_Lang['Ally_INVList_NoRows'] = 'Brak Zaproszeń';
+	
+	$_Lang['Ally_INVList_States']['-3']	= '<b class="red">Wycofane przez członka wyższego rangą</b>';
+	$_Lang['Ally_INVList_States']['-2']	= '<b class="red">Wycofane przez zapraszającego</b>';
+	$_Lang['Ally_INVList_States']['-1']	= '<b class="red">Odrzucone przez zaproszonego</b>';
+	$_Lang['Ally_INVList_States']['0']	= '<b class="lime">Przyjęte</b>';
+	$_Lang['Ally_INVList_States']['1']	= '<b class="orange">Oczekuje</b>';
+	
+	$_Lang['Ally_INVList_ActionDel'] = 'Wycofaj zaproszenie';
+	$_Lang['Ally_INVList_MsgSuccess'] = 'Zaproszenie wycofane!';
+	$_Lang['Ally_INVList_MsgCantDel'] = 'Nie możesz wycofać tego zaproszenia!';
+	$_Lang['Ally_INVList_MsgNotFound'] = 'Nie znaleziono takiego zaproszenia!';
+	$_Lang['Ally_INVList_MsgBadID'] = 'Podano niepoprawne dane!';
+	
+// ---------------------------------
+
+// Front Page
+
+    $_Lang['AFP_YouAlly']            = 'Twój Sojusz';
+    
+    $_Lang['AFP_Name']               = 'Nazwa';
+    $_Lang['AFP_Tag']                = 'TAG';
+    $_Lang['AFP_Members']            = 'Ilość członków';
+    $_Lang['AFP_YourRank']           = 'Twoja Ranga';
+    $_Lang['AFP_WebPage']            = 'Strona sojuszu';
+    $_Lang['AFP_ExternalSec']        = 'Obszar Zewnętrzny';
+    $_Lang['AFP_InnerSec']           = 'Obszar Wewnętrzny';
+    
+    $_Lang['AFP_NoAllyDesc']         = &$_Lang['AInfo_NoAllyDesc'];
+    $_Lang['AFP_NoAllyInner']        = 'Brak tekstu wewnętrzenego';
+    
+    $_Lang['AFP_MemberOptions']      = 'Lista funkcji';
+    $_Lang['AFP_MembersList']        = 'Pokaż listę członków';
+	$_Lang['AFP_InvitesList']		= 'Pokaż wysłane zaproszenia';
+	$_Lang['AFP_InviteUser']			= 'Zaproś do Sojuszu';
+    $_Lang['AFP_PactsList']			= 'Lista Paktów Sojuszu';
+    $_Lang['AFP_SendMail']           = 'Wyślij wiadomość do Sojuszników';
+	$_Lang['AFP_AllyChat']			= 'Chat Sojuszowy';
+    $_Lang['AFP_AllyAdmin']          = 'Zarządzanie sojuszem';
+    $_Lang['AFP_ReqList']            = 'Pokaż podania do Sojuszu';
+    
+    $_Lang['AFP_LeaveAlly']          = 'Opuść Sojusz';
+    $_Lang['AFP_LeaveButton']        = 'Kliknij, aby opuścić ten sojusz';
+    $_Lang['AFP_SureWantLeave']      = 'Czy jesteś pewien, że chcesz opuścić ten sojusz?';
+    
+    $_Lang['AFP_CollExp']            = 'Rozwiń / Zwiń';
+
+// ---------------------------------
+
+// Ally Admin - Front Page
+
+    $_Lang['ADM_Title']              = &$_Lang['AFP_AllyAdmin'];
+    
+    $_Lang['ADM_FrontPage']          = 'Ustawienia Ogólne';
+    $_Lang['ADM_AllyInfo']           = 'Zmień Informacje o Sojuszu';
+    $_Lang['ADM_MembersList']        = 'Zarządzanie Członkami';
+    $_Lang['ADM_ChangeRanks']        = 'Zarządzanie Rangami';
+    $_Lang['ADM_ReqList']            = 'Zarządzanie Podaniami';
+    
+    $_Lang['ADM_Texts']              = 'Zarządzanie Tekstami Sojuszu';
+    $_Lang['ADM_ExternalText']       = 'Zewnętrzny (opis)';
+    $_Lang['ADM_InternalText']       = 'Wewnętrzny';
+    $_Lang['ADM_RequestText']        = 'Podanie do Sojuszu';
+    
+    $_Lang['ADM_Characters']         = &$_Lang['Ally_WR_Chars'];
+    $_Lang['ADM_Clear']              = &$_Lang['Ally_WR_Clear'];
+    $_Lang['ADM_SaveAll']            = 'Zapisz wszystkie zmiany';
+    $_Lang['ADM_SaveOne']            = 'Zapisz zmiany ';
+    $_Lang['ADM_SaveMark1']          = $_Lang['ADM_SaveOne'].'Tekstu Zewnętrzenego';
+    $_Lang['ADM_SaveMark2']          = $_Lang['ADM_SaveOne'].'Tekstu Wewnętrzenego';
+    $_Lang['ADM_SaveMark3']          = $_Lang['ADM_SaveOne'].'Podania do Sojuszu';
+    
+    $_Lang['ADM_ReqSettings']        = 'Ustawienia Podań';
+    $_Lang['ADM_AllyOpen4Req']       = 'Przyjmowanie nowych podań';
+    $_Lang['ADM_NewComerRank']       = 'Domyślna Ranga nowych członków';
+    $_Lang['ADM_AllyOpen4ReqInfo']   = 'Jeśli ta opcja jest ustawiona na "Blokuj", nikt nie będzie mógł złożyć nowego podania do Sojuszu.<br/><b>(Stare podania nie zostaną odrzucone!)</b>';
+    $_Lang['ADM_AllyOpen_Accept']    = 'Akceptuj';
+    $_Lang['ADM_AllyOpen_Block']     = 'Blokuj';
+    
+    $_Lang['ADM_ReqSetNoAccess']     = 'Nie masz odpowiednich uprawnień do zarządzania tymi opcjami!';
+    $_Lang['ADM_ReqSetOpenBadOption']= 'Wybrano niepoprawną opcję przyjmowania podań!';
+    $_Lang['ADM_ReqSetBadRank']      = 'Wybrano niepoprawną rangę!';
+    $_Lang['ADM_RankNoExist']        = 'Taka ranga nie istnieje!';
+    $_Lang['ADM_OnlyAdminCanSetThis']= 'Tylko Lider sojuszu może ustawić tą rangę!';
+    $_Lang['ADM_ReqSetRankChanged']  = 'Domyślna ranga dla nowych członków zmieniona!';
+    $_Lang['ADM_ReqSetOpenChanged']  = 'Opcja przyjmowania nowych podań została zmieniona!';
+    
+    $_Lang['ADM_HandOver']           = 'Przekaż Sojusz';
+    $_Lang['ADM_SelectNewLeader']    = 'Wybierz nowego Lidera Sojuszu';
+    
+    $_Lang['ADM_DeleteAlly']         = 'Usuń Sojusz';
+    $_Lang['ADM_Click2Delete']       = 'Kliknij, aby Usunąć Sojusz';
+    $_Lang['ADM_SureWantDelete']     = 'Czy jesteś pewien, że chcesz Usunąć ten Sojusz?';
+    
+    $_Lang['ADM_ExtTextCutted']      = 'Tekst Zewnętrzny został skrócony do 5000 znaków!';
+    $_Lang['ADM_ExtTextChanged']     = 'Tekst Zewnętrzny został zmieniony!';
+    $_Lang['ADM_ExtTextNotChanged']  = 'Tekst Zewnętrzny nie został zmieniony.';
+    $_Lang['ADM_IntTextCutted']      = 'Tekst Wewnętrzny został skrócony do 5000 znaków!';
+    $_Lang['ADM_IntTextChanged']     = 'Tekst Wewnętrzny został zmieniony!';
+    $_Lang['ADM_IntTextNotChanged']  = 'Tekst Wewnętrzny nie został zmieniony.';
+    $_Lang['ADM_ReqTextCutted']      = 'Tekst Podania został skrócony do 2000 znaków!';
+    $_Lang['ADM_ReqTextChanged']     = 'Tekst Podania został zmieniony!';
+    $_Lang['ADM_ReqTextNotChanged']  = 'Tekst Podania nie został zmieniony.';
+    $_Lang['ADM_NothingChanged']     = 'Nic nie zostało zmienione.';
+    $_Lang['ADM_TextChgNoAccess']    = 'Nie masz odpowiednich uprawnień do zarządzania tekstami sojuszu!';
+    
+// Ally Admin - Change AllyData
+
+    $_Lang['ADM_ChangeName']         = 'Zmień nazwę Sojuszu';
+    $_Lang['ADM_NewName']            = 'Nowa nazwa';
+    $_Lang['ADM_NewNameLimits']      = 'do 35 znaków';
+    $_Lang['ADM_ChangeNameButton']   = 'Zapisz nową nazwę!';
+    
+    $_Lang['ADM_ChangeTag']          = 'Zmień tag Sojuszu';
+    $_Lang['ADM_NewTag']             = 'Nowy tag';
+    $_Lang['ADM_NewTagLimits']       = 'od 3 do 8 znaków';
+    $_Lang['ADM_ChangeTagButton']    = 'Zapisz nowy tag!';
+    
+    $_Lang['ADM_ChangeGeneral']      = 'Zmień ustawienia ogólne';
+    $_Lang['ADM_WebSite']            = 'Strona Domowa sojuszu';
+    $_Lang['ADM_WebSiteReveal']      = 'Strona Domowa tylko dla członków';
+    $_Lang['ADM_LogoURL']            = 'Logo sojuszu (link)';
+    $_Lang['ADM_ChangeGeneralButton']= 'Zapisz zmiany';
+    
+    $_Lang['ADM_OnlyLeaderChangeName'] = 'Tylko Właściciel Sojuszu może zmieniać jego nazwę!';
+    $_Lang['ADM_NewNameEmpty']       = 'Nie podano nowej nazwy Sojuszu!';
+    $_Lang['ADM_NewNameLong']        = 'Nowa nazwa Sojuszu nie może być dłuższa niż 35 znaków!';
+    $_Lang['ADM_BadNewName']         = 'Nowa nazwa Sojuszu jest niepoprawna!';
+    $_Lang['ADM_NewNameNotFree']     = 'Taka nazwa Sojuszu jest już zajęta!';
+    $_Lang['ADM_SameName']           = 'Nowa nazwa Sojuszu nie może być taka sama jak poprzednia!';
+    $_Lang['ADM_AllyNameChanged']    = 'Nazwa Sojuszu została zmieniona!';
+    
+    $_Lang['ADM_OnlyLeaderChangeTag']= 'Tylko Właściciel Sojuszu może zmieniać jego tag!';
+    $_Lang['ADM_NewTagEmpty']        = 'Nie podano nowego tagu Sojuszu!';
+    $_Lang['ADM_NewTagLong']         = 'Nowy Tag Sojuszu nie może być dłuższy niż 8 znaków!';
+    $_Lang['ADM_NewTagShort']        = 'Nowy Tag Sojuszu nie może być krótszy niż 3 znaki!';
+    $_Lang['ADM_BadNewTag']          = 'Nowy Tag Sojuszu jest niepoprawny!';
+    $_Lang['ADM_NewTagNotFree']      = 'Taki Tag Sojuszu jest już zajęty!';
+    $_Lang['ADM_SameTag']            = 'Nowy Tag Sojuszu nie może być taki sam jak poprzedni!';
+    $_Lang['ADM_AllyTagChanged']     = 'Tag Sojuszu został zmieniony!';
+    
+    $_Lang['ADM_BadNewWebsite']      = 'Podana Strona Domowa nie wygląda na poprawny URL!';
+    $_Lang['ADM_BadNewLogo']         = 'Podane Logo nie wygląda na poprawny URL!';
+    $_Lang['ADM_AllyInfoChanged']    = 'Zmiany zostały zapisane!';
+    $_Lang['ADM_AllyInfoNotChanged'] = 'Nic nie zostało zmienione!';
+
+// Ally Admin - HandOver Ally
+
+    $_Lang['ADM_HandOverTitle']      = 'Przekaż władzę w Sojuszu';
+    
+    $_Lang['ADM_OnlyOwnerInAlly']    = 'Nie możesz oddać Sojuszu, bo jesteś w nim sam!';
+    $_Lang['ADM_SureHandOver']       = 'Czy jesteś pewien, że chcesz przekazać władzę w Sojuszu?\nPo przekazaniu władzy twoja Ranga zostanie zmieniona na obecną rangę twojego następcy!';
+    $_Lang['ADM_NoUserSelect']       = 'Musisz wybrać gracza, który będzie twoim następcą!';
+    
+    $_Lang['ADM_SelectNewOwner']     = 'Wybierz nowego Lidera';
+    $_Lang['ADM_SelectFirstOption']  = 'Wybierz';
+    $_Lang['ADM_DoHandOver']         = 'Przekaż władze w Sojuszu!';
+    $_Lang['ADM_FallBack']           = 'Wycofaj się z przekazania Sojuszu';
+    
+    $_Lang['ADM_HandOverDone']       = 'Władza w Sojuszu została przekazana!';
+    $_Lang['ADM_BadUserIDHO']        = 'Wybrano niepoprawną opcję!';
+    $_Lang['ADM_NoUserIDHO']         = 'Musisz wybrać swojego następcę!';
+    
+// Ally Admin - Delete Ally
+
+    $_Lang['ADM_AllyDeleted']        = 'Sojusz został usunięty!';
+
+// Ally Admin - Members Management
+    
+    $_Lang['ADM_SaveRankChanges']    = 'Zapisz zmiany Rang';
+    $_Lang['ADM_KickMember']         = 'Wyrzuć tego członka z Sojuszu';
+    $_Lang['ADM_SureWantKick']       = 'Czy jesteś pewien, że chcesz wyrzucić tego członka z Sojuszu?';
+    
+    $_Lang['ADM_MemberXKicked']      = 'Gracz %s został wyrzucony z Sojuszu!';
+    $_Lang['ADM_CantKickRank']       = 'Nie możesz wyrzucić tego gracza!<br/>Jego ranga ma takie same lub wyższe uprawnienia niż twoje!';
+    $_Lang['ADM_CantKickBadAlly']    = 'Nie możesz wyrzucić tego gracza!';
+    $_Lang['ADM_CantKickBadUser']    = 'Nie możesz wyrzucić tego gracza!';
+    $_Lang['ADM_CantKickBadID']      = 'Podano niepoprawne dane o graczu!';
+    $_Lang['ADM_CantKickYourself']   = 'Nie możesz wyrzucić samego siebie!';
+    $_Lang['ADM_YouCantKick']        = 'Nie masz uprawnień do wyrzucania z Sojuszu!';
+    
+    $_Lang['ADM_YouCantMListMod']    = 'Nie masz uprawnień do zmian Rang Sojuszników!';
+    $_Lang['ADM_MListModBadData']    = 'Przekazano niepoprawne dane!';
+    $_Lang['ADM_MListModBadData2']   = 'Nie możesz zmieniać Rang tych graczy!';
+    $_Lang['ADM_MListModAllDone']    = 'Wszystkie zmiany w Rangach zostały zapisane!';
+    $_Lang['ADM_MListModNAllDone']   = 'Zmiany w Rangach zostały zapisane!<br/><b class="orange">Rangi niektórych graczy nie mogły być zmienione...</b>';
+
+// Ally Admin - RequestList
+
+    $_Lang['ADM_ReqList_Title']      = 'Oczekujące Podania do Sojuszu';
+    
+    $_Lang['ADM_RequestsCount']      = &$_Lang['Ally_ML_Count'];
+    
+    $_Lang['ADM_RL_Username']        = 'Nazwa gracza';
+    $_Lang['ADM_RL_StatPos']         = 'Pozycja w Statystykach';
+    $_Lang['ADM_RL_SendDate']        = 'Data wysłania podania';
+    $_Lang['ADM_RL_points']          = 'pkt.';
+    
+    $_Lang['ADM_RL_Accept']          = 'Przyjmij podanie';
+    $_Lang['ADM_RL_Refuse']          = 'Odrzuć podanie';
+    $_Lang['ADM_RL_RejectReason']    = 'Powód odrzucenia (opcjonalne)';
+    $_Lang['ADM_RL_Save']            = 'Zatwierdź';
+    
+    $_Lang['ADM_RL_ReqAccepted']     = 'Podanie gracza <u>%s</u> zostało zaakceptowane!';
+    $_Lang['ADM_RL_ReqRejected']     = 'Podanie gracza <u>%s</u> zostało odrzucone!';
+    $_Lang['ADM_RL_UserNotInAlly']   = 'Podano niepoprawne dane!';
+    $_Lang['ADM_RL_UserNoExist']     = 'Taki gracz nie istnieje!';
+    $_Lang['ADM_RL_BadOption']       = 'Wybrano niepoprawną opcję!';
+    $_Lang['ADM_RL_BadID']           = 'Podano niepoprawne dane!';
+    $_Lang['ADM_RL_NoManageAccess']  = 'Nie masz odpowiednich uprawnień do zarządzania Podaniami!';
+    
+    $_Lang['ADM_RL_NoReason']        = 'Osoba odrzucająca twoje podanie nie podała powodu...';
+    
+    $_Lang['ADM_RL_NoRequests']      = 'Brak oczekujących Podań!';
+
+// Ally Admin - RankList
+    
+    $_Lang['ADM_RankList_Title']     = 'Zarządzanie Listą Rang';
+    $_Lang['ADM_RanksCount']         = 'Ilość';
+    $_Lang['ADM_RankList_AddNew']    = 'Dodaj nową Rangę';
+    
+    $_Lang['ADM_RkL_Name']           = 'Nazwa';
+    $_Lang['ADM_RkL_Action']         = 'Akcja';
+    $_Lang['ADM_RkL_UsersCount']     = 'Ilość';
+    $_Lang['ADM_RkL_MemCount']       = 'Ilość graczy z tą Rangą';
+    
+    $_Lang['ADM_RkL_Info1']          = '<b class="dash">Prawa Administracyjne</b><br/>Aktywuje wszystkie inne przywileje<br/><br/><u>Uaktywnia</u>:<br/>&#187; Zwiększony zakres zarządzania Członkami i Rangami (ograniczenie tylko w stosunku do ludzi z tym przywilejem)<br/>&#187; Zarządzanie ustawieniami Podań';
+    $_Lang['ADM_RkL_Info2']          = '<b class="dash">Wyświetlanie Listy Członków</b><br/><br/><u>Uaktywnia</u>:<br/>&#187; Oglądanie listy członków sojuszu';
+    $_Lang['ADM_RkL_Info3']          = '<b class="dash">Wyświetlanie Statusu Online Członków</b><br/><br/><u>Uaktywnia</u>:<br/>&#187; Wyświetlanie Statusu Online na liście członków';
+    $_Lang['ADM_RkL_Info4']          = '<b class="dash">Wiadomość Masowa do Członków</b><br/><br/><u>Uaktywnia</u>:<br/>&#187; Wysyłanie zbiorowej wiadomości do członków sojuszu';
+    $_Lang['ADM_RkL_Info5']          = '<b class="dash">Zarządzanie Opcjami Sojuszu</b><br/><br/><u>Uaktywnia</u>:<br/>&#187; Możliwość zmiany Tekstów Sojuszu, Strony Domowej i Loga';
+    $_Lang['ADM_RkL_Info6']          = '<b class="dash">Przeglądanie Podań</b><br/><br/><u>Uaktywnia</u>:<br/>&#187; Możliwość podglądu Podań do Sojuszu<br/>&#187; Możliwość podglądu wszystkich zaproszeń do Sojuszu';
+    $_Lang['ADM_RkL_Info7']          = '<b class="dash">Zarządzanie Podaniami</b><br/><br/><u>Uaktywnia</u>:<br/>&#187; Możliwość akceptacji lub odrzucania Podań do Sojuszu<br/>&#187; Możliwość wycofania wszystkich zaproszeń do Sojuszu';
+    $_Lang['ADM_RkL_Info8']          = '<b class="dash">Zarządzanie Listą Członków</b><br/><br/><u>Uaktywnia</u>:<br/>&#187; Możliwość zmiany Rang poszczególnych członków (nie można zmieniać rang członków z tym przywilejem)';
+    $_Lang['ADM_RkL_Info9']          = '<b class="dash">Zarządzanie Rangami</b><br/><br/><u>Uaktywnia</u>:<br/>&#187; Dodawanie nowych Rang<br/>&#187; Zarządzanie istniejącymi Rangami';
+    $_Lang['ADM_RkL_Info10']         = '<b class="dash">Wyrzucanie Członków</b><br/><br/><u>Uaktywnia</u>:<br/>&#187; Możliwość wyrzucenia członka z Sojuszu (nie można wyrzucić członka, który też posiada ten przywilej)';
+    $_Lang['ADM_RkL_Info11']         = '<b class="dash">Zarządzanie Wojnami i Paktami</b><br/><br/><u>Uaktywnia</u>:<br/>&#187; Możliwość wypowiedzenia lub przerwania wojny z innym sojuszem<br/>&#187; Możliwość zawiązania lub rozwiązania paktów z innym sojuszem';
+    $_Lang['ADM_RkL_Info12']         = '<b class="dash">Wysyłanie Zaproszeń</b><br/><br/><u>Uaktywnia</u>:<br/>&#187; Możliwość zapraszania nowych graczy do Sojuszu<br/>&#187; Możliwość przeglądania i wycofywania własnych zaproszeń do Sojuszu';
+	$_Lang['ADM_RkL_Info13']			= '<b class="dash">Chat Sojuszowy</b><br/><br/><u>Uaktywnia</u>:<br/>&#187; Możliwość korzystania z Chatu Sojuszowego<br/>(o ile jest aktywny)';
+	
+    $_Lang['ADM_RkL_Delete']         = 'Usuń';
+    $_Lang['ADM_RkL_RUSure']         = 'Czy jesteś pewien, że chcesz usunąc tą rangę?';
+    $_Lang['ADM_RkL_RUSure2']        = 'Czy jesteś pewien, że chcesz zapisać zmiany w rangach?';
+    $_Lang['ADM_RkL_AddRank']        = 'Dodaj';
+    
+    $_Lang['ADM_RkL_ChangeAdminRk']  = 'Nie można edytować praw Rangi Lidera Sojuszu!';
+    $_Lang['ADM_RkL_DeleteAdminRk']  = 'Nie można usunąć Rangi Lidera Sojuszu!';
+    $_Lang['ADM_RkL_DeleteDefNewRk'] = 'Nie można usunąć domyślnej Rangi dla nowych członków - najpierw trzeba ją zmienić!';
+    $_Lang['ADM_RkL_NoAccess2Chg']   = 'Nie masz uprawnień by zmienić to uprawnienie!';
+    $_Lang['ADM_RkL_NoAccess2ACh']   = 'Nie masz uprawnień by przydzielić to uprawnienie!';
+    $_Lang['ADM_RkL_NoAccess2Del']   = 'Nie masz uprawnień by usunąć tą rangę!';
+    $_Lang['ADM_RkL_NoAccess2Nam']   = 'Nie masz uprawnień by zmienić nazwę tej rangi!';
+    
+    $_Lang['ADM_RkL_AddedRank']      = 'Nowa Ranga została dodana!';
+    $_Lang['ADM_RkL_BadOptGiven']    = 'Podano niepoprawne uprawnienie dla Rangi!';
+    $_Lang['ADM_RkL_ForbiddenOptGiven'] = 'Jedno z uprawnień, które chciałeś dodać jest dla Ciebie niedostępne!';
+    $_Lang['ADM_RkL_RankExists']     = 'Ranga o takiej nazwie już istnieje!';
+    $_Lang['ADM_RkL_ForbiddenSigns'] = 'Podano niedozwolone znaki w nazwie Rangi!';
+    $_Lang['ADM_RkL_NameLong']       = 'Nazwa Rangi nie może być dłuższa niż 50 znaków!';
+    $_Lang['ADM_RkL_NameShort']      = 'Nazwa Rangi nie może być krótsza niż 3 znaki!';
+    
+    $_Lang['ADM_RkL_RankDeleted']    = 'Ranga usunięta!';
+    $_Lang['ADM_RkL_RankDelete_na_nodel']    = 'Nie masz odpowiednich uprawnień by usunąć tą Rangę!';
+    $_Lang['ADM_RkL_RankDelete_adm_nodel']   = 'Nie można usunąć Rangi Lidera Sojuszu!';
+    $_Lang['ADM_RkL_RankDelete_nc_nodel']    = 'Nie można usunąc Rangi dla Nowych Członków Sojuszu - trzeba ją najpierw zmienić!';
+    $_Lang['ADM_RkL_RankNoExists']   = 'Taka Ranga nie istnieje!';
+    $_Lang['ADM_RkL_BadRankIDGiven'] = 'Podano niepoprawne dane!';
+    
+    $_Lang['ADM_RkL_PosChgSaved']    = 'Zmiany zostały zapisane!';
+    $_Lang['ADM_RkL_AllChgSaved']    = 'Wszystkie zmiany zostały zapisane!';
+    $_Lang['ADM_RkL_NothingChanged'] = 'Brak zmian do zapisania.';
+    $_Lang['ADM_RkL_ChgErrors']      = 'W czasie sprawdzania danych wystąpiło kilka błędów. Możliwe, próbowałeś zmienić dane do których nie masz uprawnień...';
+    $_Lang['ADM_RkL_EmptyData']      = 'Nie podano danych do zapisu!';
+    
+    $_Lang['ADM_RkL_BadPostAction']  = 'Niepoprawna Akcja!';
+
+// Ally Admin - Others
+
+    $_Lang['ADM_BadEditSelected']    = 'Niepoprawne dane!';
+
+// Global
+
+$_Lang['GoBack']                     = 'Powrót';
+$_Lang['Ally_AccessDenied']          = 'Nie masz dostępu do tej funkcji!';
+$_Lang['Ally_Desc']                  = 'Opis Sojuszu';
+$_Lang['Ally']                       = 'Sojusz';
+
+$_Lang['Pages']                      = 'Strony';
+$_Lang['next']                       = 'Następna';
+$_Lang['prev']                       = 'Poprzednia';
+
+$_Lang['Tag']                        = 'Tag';
+$_Lang['Name']                       = 'Nazwa';
+
+?>

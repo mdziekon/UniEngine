@@ -1,0 +1,25 @@
+<?
+
+$_Lang['Page_Title'] = 'Skracanie Banów';
+
+$_Lang['Form_UserInput'] = 'Gracze, którym skrócić Bana<br/>(Oddziel przecinkami)<br/>(ID podawaj w nawiasach [])';
+$_Lang['Form_Option'] = 'Opcja skracania';
+$_Lang['Form_OptDate'] = 'Do podanej Daty';
+$_Lang['Form_OptTimeSpan'] = 'O podany Czas';
+$_Lang['Form_PickDate'] = 'Wybierz Datę';
+$_Lang['Form_Days'] = 'Dni';
+$_Lang['Form_Hours'] = 'Godziny';
+$_Lang['Form_Minutes'] = 'Minuty';
+$_Lang['Form_Seconds'] = 'Sekundy';
+$_Lang['Form_Unban'] = 'Skróć';
+
+$_Lang['Msg_Update1OK'] = 'Ban Gracza %s został skrócony!';
+$_Lang['Msg_UpdateMOK'] = 'Bany Graczy %s zostały skrócone!';
+$_Lang['Error_NoOne2Update'] = 'Nie znaleziono graczy, którym możnaby skrócić Bany!';
+$_Lang['Error_BadSearch'] = 'Niepoprawne dane wyszukiwania!';
+$_Lang['Error_EmptySearch'] = 'Nie podano graczy do wyszukania!';
+$_Lang['Error_BadType'] = 'Niepoprawny typ skracania!';
+$_Lang['Error_BadNewEndTime'] = 'Nowa Data Bana nie może być starsza niż obecna chwila!';
+$_Lang['Error_BadPeriod'] = 'Podano niepoprawny czas, o który skrócić Bany!';
+
+?>

@@ -1,0 +1,32 @@
+.resRed {
+    color: red;
+}
+span.percent {
+    width: 100%; right: 39px; position: absolute; top: 2px; z-index: 1; text-align: right;
+}
+input.percent {
+    width: 50px; position: relative; background: transparent; text-align: right; z-index: 2; padding-right: 18px;
+}
+.modif {
+    font-weight: bold; width: 15px; position: relative; z-index: 2;
+}
+.w80x {
+    width: 80px;
+}
+.w120x {
+    width: 120px;
+}
+.resInput {
+    width: 300px;
+    padding: 2px;
+}
+.posRel {
+    position: relative;
+}
+.brLine {
+    font-size: 0px;
+    padding: 0px;
+}
+.inv {
+    visibility: hidden;
+}
