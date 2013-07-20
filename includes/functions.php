@@ -871,7 +871,8 @@ function CreateAccessLog($RootPath = '', $Prepend2Filename = '')
 	$CurrentScreen = $_User['new_screen_settings'];
 
 	// --- Get CurrentFile Name ---
-	$FileName = $Prepend2Filename.end(explode('/', $_SERVER['SCRIPT_NAME'])).str_replace($_SERVER['SCRIPT_NAME'], '', $_SERVER['REQUEST_URI']);
+	$ScriptRequestData = explode('/', $_SERVER['SCRIPT_NAME']);
+	$FileName = $Prepend2Filename.end($ScriptRequestData).str_replace($_SERVER['SCRIPT_NAME'], '', $_SERVER['REQUEST_URI']);
 	$PageHash = md5($FileName);
 
 	// --- Set CurrentLog Name & Path ---
