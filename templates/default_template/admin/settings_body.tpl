@@ -8,7 +8,7 @@ var JSLang = {'JS_ConfirmNeeded': '{JS_ConfirmNeeded}', 'TP_timeOnlyTitle': 'Wyb
 <link rel="stylesheet" type="text/css" href="../css/admin/settings_body-2.0.0.1.min.css" />
 <link rel="stylesheet" type="text/css" href="../css/ui-lightness/jquery-ui.min.css" />
 <br />
-<form action="" method="post" id="thisForm">
+<form action="settings.php" method="post" id="thisForm">
 	<input type="hidden" name="opt_save" value="1" />
 	<table width="800">
 		<tbody {Msg_Hide}>
@@ -20,7 +20,7 @@ var JSLang = {'JS_ConfirmNeeded': '{JS_ConfirmNeeded}', 'TP_timeOnlyTitle': 'Wyb
 			</tr>
 		</tbody>		
 		<tr>
-			<td class="c" colspan="3">{adm_opt_game_settings}</td>
+			<td class="c" colspan="3">{Body_Title}</td>
 		</tr>
 		<tr>
 			<td class="c tRight tdLabel">{Headers_EnforceConfigReload}</td>
