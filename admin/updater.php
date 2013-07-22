@@ -36,7 +36,6 @@ include($_EnginePath.'common.php');
 	if(!empty($updatesFound))
 	{
 		define('IN_UPDATER', true);
-		$updateQueries = array();
 		
 		foreach($updatesFound as $version)
 		{
