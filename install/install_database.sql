@@ -1259,6 +1259,7 @@ INSERT INTO `{prefix}_config` (`config_name`, `config_value`) VALUES
 ('last_rules_changes', '0'),
 ('EngineInfo_Version', '1.0.0'),
 ('EngineInfo_BuildNo', '1'),
+('UniEngine_Updater_LastUpdateApplied', '0'),
 ('cron_GC_LastOptimize', UNIX_TIMESTAMP());
 
 -- --------------------------------------------------------

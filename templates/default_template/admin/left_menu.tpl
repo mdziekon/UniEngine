@@ -49,4 +49,5 @@
 	<tr><td><a href="autostatbuilder.php" class="lime">{ACP_StatBuilder}</a></td></tr>
 	<tr><td><a href="autogziplogs.php" class="lime">{ACP_AccessLogPacker}</a></td></tr>
 	<tr><td><a href="cron_GarbageCollector.php" class="lime">{ACP_GarbageCollector}</a></td></tr>
+	<tr><td><a href="updater.php" class="orange">{ACP_Updater}</a></td></tr>
 </table>

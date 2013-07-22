@@ -120,6 +120,7 @@ $_Lang['ACP_ScriptsList']		= 'Lista Skryptów';
 $_Lang['ACP_StatBuilder']		= 'Przeliczenie Statystyk';
 $_Lang['ACP_AccessLogPacker']	= 'Pakowanie Logów';
 $_Lang['ACP_GarbageCollector']	= 'Zbieranie Nieużytków';
+$_Lang['ACP_Updater']			= 'Aktualizator';
 $_Lang['ACP_GoBack']			= 'Powrót';
 $_Lang['ACP_BansList']			= 'Dziennik Banów';
 
