@@ -89,7 +89,7 @@ function PlanetResourceUpdate($CurrentUser, &$CurrentPlanet, $UpdateTime, $Simul
 		$TextIfEmpty = 'return "0";';
 		foreach($_Vars_ElementCategories['prod'] as $ElementID)
 		{
-			$BuildLevelFactor = $CurrentPlanet[$_Vars_GameElements[$ElementID].'_porcent'];
+			$BuildLevelFactor = $CurrentPlanet[$_Vars_GameElements[$ElementID].'_workpercent'];
 			$BuildLevel = $CurrentPlanet[$_Vars_GameElements[$ElementID]];
 
 			if($BuildLevel <= 0)
@@ -323,11 +323,11 @@ function PlanetResourceUpdate($CurrentUser, &$CurrentPlanet, $UpdateTime, $Simul
 		{ 
 			foreach($_Vars_ElementCategories['prod'] as $ProdID)
 			{
-				if($_Vars_GameElements[$ProdID].'_porcent' == $Key)
+				if($_Vars_GameElements[$ProdID].'_workpercent' == $Key)
 				{
 					$CalcDiff = array();
 
-					$BuildLevelFactor = $CurrentPlanet[$_Vars_GameElements[$ProdID].'_porcent'];
+					$BuildLevelFactor = $CurrentPlanet[$_Vars_GameElements[$ProdID].'_workpercent'];
 					$BuildLevel = $CurrentPlanet[$_Vars_GameElements[$ProdID]];
 
 					if($BuildLevel <= 0)

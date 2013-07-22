@@ -45,7 +45,7 @@ include($_EnginePath.'common.php');
 				}
 				if(preg_match('/^[a-zA-Z\_]{1,}$/D', $Field))
 				{
-					$FieldName = $Field.'_porcent';
+					$FieldName = $Field.'_workpercent';
 					if(isset($CurrentPlanet[$FieldName]))
 					{
 						if(!in_array($Value, $ValidList['percent']))
@@ -58,7 +58,7 @@ include($_EnginePath.'common.php');
 							$SetPercents[$CurrentPlanet['id']][$FieldName] = array('old' => $CurrentPlanet[$FieldName], 'new' => $Value);
 							$CurrentPlanet[$FieldName]= $Value;
 							$UpdatePlanet[] = "`{$FieldName}` = '{$Value}'";
-							$FieldName= str_replace('_porcent', '', $FieldName);
+							$FieldName= str_replace('_workpercent', '', $FieldName);
 							$InsertDevLog[] = "{$FieldName},{$Value}";
 						}
 					}
@@ -142,7 +142,7 @@ include($_EnginePath.'common.php');
 					$CurrRow[$Loop]['zero_level'] = ' class="red"';
 				}
 
-				$BuildLevelFactor = $CurrentPlanet[$_Vars_GameElements[$ProdID].'_porcent'];
+				$BuildLevelFactor = $CurrentPlanet[$_Vars_GameElements[$ProdID].'_workpercent'];
 				$BuildLevel = $CurrentPlanet[$_Vars_GameElements[$ProdID]];
 
 				$metal = abs(floor( eval ( $_Vars_ResProduction[$ProdID]['formule']['metal'] ) * ( $_GameConfig['resource_multiplier'] ) * (($CurrentUser['geologist_time'] > $Now) ? 1.15 : 1) ) );
@@ -220,13 +220,13 @@ include($_EnginePath.'common.php');
 				$CurrentPlanet['crystal_perhour'] += $crystal;
 				$CurrentPlanet['deuterium_perhour'] += $deuterium;
 
-				$Field = $_Vars_GameElements[$ProdID] ."_porcent";
+				$Field = $_Vars_GameElements[$ProdID] ."_workpercent";
 				$CurrRow[$Loop]['name'] = $_Vars_GameElements[$ProdID];
-				$CurrRow[$Loop]['porcent']= $CurrentPlanet[$Field];
+				$CurrRow[$Loop]['workpercent']= $CurrentPlanet[$Field];
 				for($Option = 10; $Option >= 0; $Option -= 1)
 				{
 					$OptValue = $Option * 10;
-					if($Option == $CurrRow[$Loop]['porcent'])
+					if($Option == $CurrRow[$Loop]['workpercent'])
 					{
 						$OptSelected = ' selected=selected';
 					}

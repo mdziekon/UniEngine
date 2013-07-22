@@ -149,7 +149,7 @@ include($_EnginePath.'common.php');
 		$TextIfEmpty = 'return "0";';
 		foreach($_Vars_ElementCategories['prod'] as $ElementID)
 		{
-			$BuildLevelFactor = $CurrentPlanet[$_Vars_GameElements[$ElementID].'_porcent'];
+			$BuildLevelFactor = $CurrentPlanet[$_Vars_GameElements[$ElementID].'_workpercent'];
 			$BuildLevel = $CurrentPlanet[$_Vars_GameElements[$ElementID]];
 
 			if($BuildLevel <= 0)
@@ -430,7 +430,7 @@ include($_EnginePath.'common.php');
 							}
 							else
 							{
-								$PlanetsDumpData[$PlanetID][$_Vars_GameElements[$resID].'_porcent'] = 0;
+								$PlanetsDumpData[$PlanetID][$_Vars_GameElements[$resID].'_workpercent'] = 0;
 							}
 						}
 					}
@@ -453,7 +453,7 @@ include($_EnginePath.'common.php');
 					foreach($PlanetData['p'] as $ElementData)
 					{
 						$ElementData = explode(',', $ElementData);
-						$PlanetsDumpData[$PlanetID][$_Vars_GameElements[$ElementData[0]].'_porcent'] = $ElementData[1];
+						$PlanetsDumpData[$PlanetID][$_Vars_GameElements[$ElementData[0]].'_workpercent'] = $ElementData[1];
 					}
 
 					if($Resources[0] > 0)
@@ -884,7 +884,7 @@ include($_EnginePath.'common.php');
 
 						foreach($_Vars_ElementCategories['prod'] as $ProdID)
 						{
-							$PlanetsDumpData[$Log['PlanetID']][$_Vars_GameElements[$ProdID].'_porcent'] = 10;
+							$PlanetsDumpData[$Log['PlanetID']][$_Vars_GameElements[$ProdID].'_workpercent'] = 10;
 						}
 
 						$PlanetsDumpData[$Log['PlanetID']]['last_update'] = $Log['Date'];
@@ -1013,7 +1013,7 @@ include($_EnginePath.'common.php');
 							$Exploded = explode(',', $Exploded);
 							if($Log['Code'] == 1)
 							{
-								$PlanetsDumpData[$Log['PlanetID']][$Exploded[0].'_porcent'] = $Exploded[1];
+								$PlanetsDumpData[$Log['PlanetID']][$Exploded[0].'_workpercent'] = $Exploded[1];
 							}
 							else if($Log['Code'] == 2)
 							{
@@ -1021,7 +1021,7 @@ include($_EnginePath.'common.php');
 								{
 									if($ThisData['planet_type'] == 1)
 									{
-										$PlanetsDumpData[$ThisPlanetID][$Exploded[0].'_porcent'] = $Exploded[1];
+										$PlanetsDumpData[$ThisPlanetID][$Exploded[0].'_workpercent'] = $Exploded[1];
 									}
 								}
 							}

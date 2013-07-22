@@ -79,7 +79,7 @@ if(mysql_num_rows($GetUsers) > 0)
 					{
 						foreach($Array as $ElementID)
 						{
-							$Point['planets'][$PlanetData['id']]['p'][] = $ElementID.','.$PlanetData[$_Vars_GameElements[$ElementID].'_porcent'];
+							$Point['planets'][$PlanetData['id']]['p'][] = $ElementID.','.$PlanetData[$_Vars_GameElements[$ElementID].'_workpercent'];
 						}
 					}
 				}

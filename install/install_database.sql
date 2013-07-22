@@ -712,12 +712,12 @@ CREATE TABLE IF NOT EXISTS `{prefix}_planets` (
   `large_shield_dome` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `antiballistic_missile` bigint(20) unsigned NOT NULL DEFAULT '0',
   `interplanetary_missile` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `metal_mine_porcent` tinyint(3) unsigned NOT NULL DEFAULT '10',
-  `crystal_mine_porcent` tinyint(3) unsigned NOT NULL DEFAULT '10',
-  `deuterium_synthesizer_porcent` tinyint(3) unsigned NOT NULL DEFAULT '10',
-  `solar_plant_porcent` tinyint(3) unsigned NOT NULL DEFAULT '10',
-  `fusion_reactor_porcent` tinyint(3) unsigned NOT NULL DEFAULT '10',
-  `solar_satellite_porcent` tinyint(3) unsigned NOT NULL DEFAULT '10',
+  `metal_mine_workpercent` tinyint(3) unsigned NOT NULL DEFAULT '10',
+  `crystal_mine_workpercent` tinyint(3) unsigned NOT NULL DEFAULT '10',
+  `deuterium_synthesizer_workpercent` tinyint(3) unsigned NOT NULL DEFAULT '10',
+  `solar_plant_workpercent` tinyint(3) unsigned NOT NULL DEFAULT '10',
+  `fusion_reactor_workpercent` tinyint(3) unsigned NOT NULL DEFAULT '10',
+  `solar_satellite_workpercent` tinyint(3) unsigned NOT NULL DEFAULT '10',
   `lunar_base` int(10) unsigned NOT NULL DEFAULT '0',
   `sensor_phalanx` int(10) unsigned NOT NULL DEFAULT '0',
   `jumpgate` int(10) unsigned NOT NULL DEFAULT '0',
@@ -1259,7 +1259,7 @@ INSERT INTO `{prefix}_config` (`config_name`, `config_value`) VALUES
 ('last_rules_changes', '0'),
 ('EngineInfo_Version', '1.0.0'),
 ('EngineInfo_BuildNo', '1'),
-('UniEngine_Updater_LastUpdateApplied', '0'),
+('UniEngine_Updater_LastUpdateApplied', '1'),
 ('cron_GC_LastOptimize', UNIX_TIMESTAMP());
 
 -- --------------------------------------------------------
