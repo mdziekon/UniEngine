@@ -238,8 +238,10 @@ include($_EnginePath.'common.php');
 			krsort($MessageRows);
 		}
 		
-		$LastSeenID = array_pop(array_keys($MessageRows));
-		$FirstSeenID = array_shift(array_keys($MessageRows));
+		$TempIDGetter = array_keys($MessageRows);
+		$LastSeenID = array_pop($TempIDGetter);
+		$TempIDGetter = array_keys($MessageRows);
+		$FirstSeenID = array_shift($TempIDGetter);
 		
 		$CurrentPage = floor($_Pagination_LeftSideCount / $_Limit_PerPage) + 1;
 		$TheoreticalLeftSideCount = (($CurrentPage - 1) * $_Limit_PerPage);
