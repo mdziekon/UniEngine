@@ -10,6 +10,7 @@
 		<meta name="keywords" content="KEYWORDS" />
 		<meta http-equiv="Content-Language" content="pl" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		{PHP_Meta}
 		<script type="text/javascript" src="{AdminBack}js/main.normal-1.0.0.1.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="{AdminBack}css/main.normal-1.0.1.1.min.css" />
 		<script>var PHPVar = {ServerTimeTxt: '{ServerTimeTxt}', ServerTimestamp: {ServerTimestamp}};</script>

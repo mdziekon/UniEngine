@@ -357,8 +357,9 @@ function message($Message, $Title = 'Error', $RedirectLocation = '', $RedirectTi
 	$parse['title'] = $Title;
 	$parse['mes'] = $Message;
 
+	DisplayHelper_DoRedirect($RedirectLocation, $RedirectTime);
 	$page .= parsetemplate(gettemplate('sysmessage_body'), $parse);
-	display($page, $Title, false, (($RedirectLocation != '') ? '<meta http-equiv="refresh" content="'.$RedirectTime.';URL=\''.$RedirectLocation.'\';">' : ''), $AdminPage);
+	display($page, $Title, false, $IsAdminMsg);
 }
 
 function display($PageCode, $PageTitle = '', $ShowTopResourceBar = true, $IsAdminPage = false)
@@ -372,7 +373,8 @@ function display($PageCode, $PageTitle = '', $ShowTopResourceBar = true, $IsAdmi
 	{
 		$_SkinPath = DEFAULT_SKINPATH;
 	}
-
+	
+	$ProbablyOnAdminPage = false;
 	preg_match('#(admin\/)?([^\/]{1,})\.php#si', $_SERVER['SCRIPT_NAME'], $match);
 	$pageurl = $match[2];
 	if(empty($pageurl))
@@ -420,6 +422,7 @@ function display($PageCode, $PageTitle = '', $ShowTopResourceBar = true, $IsAdmi
 	$Parse['SkinPath'] = $_SkinPath;
 	$Parse['PHP_InjectAfterBody'] = GlobalTemplate_GetAfterBody()."\n";
 	$Parse['PHP_InjectIntoBottomMenu'] = GlobalTemplate_GetBottomMenuInjection();
+	$Parse['PHP_Meta'] = DisplayHelper_GetRedirect();
 
 	if(!empty($_BenchTool) AND $_GET['showbenchresult'] == 'true')
 	{
@@ -722,6 +725,25 @@ function ShowLeftMenu($Template = 'left_menu')
 	return $Menu;
 }
 
+function DisplayHelper_DoRedirect($Location, $Delay)
+{
+	global $UEV_DisplayHelper_DoRedirect;
+	
+	$UEV_DisplayHelper_DoRedirect = array('location' => $Location, 'delay' => $Delay);
+}
+function DisplayHelper_GetRedirect()
+{
+	global $UEV_DisplayHelper_DoRedirect;
+	
+	if(!empty($UEV_DisplayHelper_DoRedirect['location']))
+	{
+		return '<meta http-equiv="refresh" content="'.$UEV_DisplayHelper_DoRedirect['delay'].';URL=\''.$UEV_DisplayHelper_DoRedirect['location'].'\';">';
+	}
+	else
+	{
+		return '';
+	}
+}
 function GlobalTemplate_AppendToAfterBody($code)
 {
 	global $_Templates_InsertJustAfterBody;
