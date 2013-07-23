@@ -188,7 +188,7 @@ $(document).ready(function()
 	
 	$('.aDel').click(function()
 	{
-		var Return = confirm(JSLang['AreYouSure_Delete']);
+		var Return = confirm(JSLang['Userlist_ConfirmDelete']);
 		if(Return === true)
 		{
 			$('input[name="deleteID"]').val($(this).attr('id').replace('delID_', ''));
