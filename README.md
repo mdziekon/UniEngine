@@ -3,7 +3,7 @@ UniEngine (PL)
 
 Silnik "OGame-podobnej" gry przegladarkowej  
 
-**Informacje o silniku**:
+**Informacje o silniku**:  
 [[PL] Mozliwosci silnika](https://github.com/Michciu/UniEngine/wiki/%5BPL%5D-Mo%C5%BCliwo%C5%9Bci-silnika)
 
 Wymagania
