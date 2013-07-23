@@ -139,7 +139,7 @@ define('NONACTIVE_DELETETIME'						, 604800); // 7d
 define('FIELDS_BY_MOONBASIS_LEVEL'					, 4);
 define('FIELDS_ADDED_BY_TERRAFORMER'				, 5);
 // How much time must pass, untill Planet will be deleted? (0 means instant deletion on Abandon) [Seconds]
-define('PLANET_ABANDONTIME'							, 300); // 5min
+define('PLANET_ABANDONTIME'							, 0);
 // Maximal number of planets per user
 define('MAX_PLAYER_PLANETS'							, 10);
 
