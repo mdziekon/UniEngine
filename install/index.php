@@ -36,6 +36,15 @@ else
 {
 	$_RequirementsCheckFails['PHPVersion'] = false;
 }
+if(ini_get('short_open_tag') != '1')
+{
+	$_RequirementsCheckPassed = false;
+	$_RequirementsCheckFails['ShortOpenTag'] = true;
+}
+else
+{
+	$_RequirementsCheckFails['ShortOpenTag'] = false;
+}
 if(is_writable('../'.$_Install_ConfigFile.'.php'))
 {
 	$_RequirementsCheckFails['ConfigWritable'] = false;
