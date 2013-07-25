@@ -1,4 +1,4 @@
-<? 
+<?php
 
 function PostResearchSaveChanges($ThePlanet, $IsCurrentPlanet = true, $UpdateUser = false)
 {

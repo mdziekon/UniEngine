@@ -1,4 +1,4 @@
-<?
+<?php
 
 // For safety, if we don't have this function, we need to create one
 if(!function_exists('apc_exists') AND UNIENGINE_HASAPC)

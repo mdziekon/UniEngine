@@ -1,4 +1,4 @@
-<?
+<?php
 
 function Tasks_CheckUservar(&$UserVar)
 {

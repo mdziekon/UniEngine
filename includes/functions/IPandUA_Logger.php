@@ -1,4 +1,4 @@
-<?
+<?php
 
 function IPandUA_Logger($UserData, $Failed = false)
 {

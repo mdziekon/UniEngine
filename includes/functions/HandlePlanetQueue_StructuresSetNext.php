@@ -1,4 +1,4 @@
-<? 
+<?php
 
 function HandlePlanetQueue_StructuresSetNext(&$ThePlanet, &$TheUser, $CurrentTime, $RunStandAlone = false)
 {

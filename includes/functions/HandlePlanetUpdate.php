@@ -1,4 +1,4 @@
-<? 
+<?php
 
 function HandlePlanetUpdate(&$ThePlanet, &$TheUser, $CurrentTime = false, $ForMultiUpdate = false)
 {

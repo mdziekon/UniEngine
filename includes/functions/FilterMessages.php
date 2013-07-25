@@ -1,4 +1,4 @@
-<? 
+<?php
 
 function FilterMessages($Message, $Mode = 1, $Replace = '***')
 {

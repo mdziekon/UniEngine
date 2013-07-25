@@ -1,4 +1,4 @@
-<?
+<?php
 
 function HandlePlanetQueue_CreateQueueList($CurrentTime, $ThePlanet)
 {

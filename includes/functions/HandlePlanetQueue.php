@@ -1,4 +1,4 @@
-<?
+<?php
 
 function HandlePlanetQueue(&$ThePlanet, &$TheUser, $CurrentTime = false, $ForMultiUpdate = false)
 {

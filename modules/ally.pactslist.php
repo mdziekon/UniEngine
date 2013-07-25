@@ -1,4 +1,4 @@
-<?
+<?php
 
 if(IN_ALLYPAGE !== true)
 {

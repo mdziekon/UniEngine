@@ -1,4 +1,4 @@
-<? 
+<?php
 
 function HandlePlanetUpdate_MultiUpdate($Results, $TheUser, $ClearVars = false, $UpdateUserVar = false)
 {

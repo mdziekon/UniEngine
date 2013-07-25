@@ -1,4 +1,4 @@
-<? 
+<?php
 
 function HandlePlanetQueue_TechnologySetNext(&$ThePlanet, &$TheUser, $CurrentTime, $RunStandAlone = false)
 {

@@ -1,4 +1,4 @@
-<? 
+<?php
 
 function CreatePaginationArray($TotalCount, $PerPageCount, $ThisPage, $MaxPages)
 {

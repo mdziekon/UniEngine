@@ -1,4 +1,4 @@
-<?
+<?php
 
 function AlertUtils_IPIntersect($FirstUserID, $SecondUserID, $ExcludeRules = array())
 {

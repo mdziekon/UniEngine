@@ -1,4 +1,4 @@
-<? 
+<?php
 
 function TechQueue_Add(&$ThePlanet, &$TheUser, $TechID)
 {

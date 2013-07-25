@@ -1,4 +1,4 @@
-<? 
+<?php
 
 function TechQueue_Remove(&$ThePlanet, &$TheUser, $ElementID, $CurrentTime)
 {

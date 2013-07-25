@@ -1,4 +1,4 @@
-<? 
+<?php
 
 function HandlePlanetQueue_OnTechnologyEnd(&$ThePlanet, &$TheUser, $CurrentTime)
 {

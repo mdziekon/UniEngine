@@ -1,4 +1,4 @@
-<? 
+<?php
  
 function FleetControl_Retreat($FleetSelector, $InstandRetreat = false)
 {

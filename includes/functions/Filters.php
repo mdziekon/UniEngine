@@ -1,4 +1,4 @@
-<?
+<?php
 
 function Filter_Users($String = '', $Type = '', $Flags = array())
 {	

@@ -1,4 +1,4 @@
-<?
+<?php
 
 function Chat_CheckAccess($RoomID, $ThisUser)
 {

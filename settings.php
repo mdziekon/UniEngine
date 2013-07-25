@@ -1,4 +1,4 @@
-<?
+<?php
 
 define('INSIDE', true);
 
