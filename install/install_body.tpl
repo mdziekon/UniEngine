@@ -238,7 +238,7 @@
 						</tr>
 						<tr>
 							<th>{Label_Uni_NoobProtectionBasicTimeLimit}</th>
-							<th><input type="text" name="set_uni_noobprt_basictime" value="{set_uni_noobprt_basictime}" {PHP_BadVal_set_dbconfig_host} tabindex="29"/></th>
+							<th><input type="text" name="set_uni_noobprt_basictime" value="{set_uni_noobprt_basictime}" {PHP_BadVal_set_uni_noobprt_basictime} tabindex="29"/></th>
 							<th>{Tip_Uni_NoobProtectionBasicTimeLimit}</th>
 						</tr>
 						<tr>
