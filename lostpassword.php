@@ -27,23 +27,24 @@ include($_EnginePath.'common.php');
 		message($_Lang['Cannot_usethis_till_logged'], $_Lang['Title_System'], 'overview.php', 3);
 	}
 
-	if($_POST)
+	if(isset($_POST['email']))
 	{
 		$email = trim($_POST['email']);
 		if(!empty($email))
 		{
 			if(is_email($email))
 			{
-				$email = mysql_escape_string($email);
+				$email = mysql_real_escape_string($email);
 				$Result = doquery("SELECT `id`, `username`, `last_send_newpass` FROM {{table}} WHERE `email` = '{$email}';", 'users', true);
-				if($Result)
+				if($Result['id'] > 0)
 				{
 					if(($Result['last_send_newpass'] + TIME_HOUR) < time())
 					{
 						$Signs = 'abcdefghijklmnoprstuwxyz0123456789';
 						$Length = 7;
 						$Count = strlen($Signs)-1;
-
+						
+						$NewPass = '';
 						for($i = 0; $i < $Length; ++$i)
 						{
 							$NewPass .= $Signs[mt_rand(0, $Count)];
@@ -84,7 +85,7 @@ include($_EnginePath.'common.php');
 		}
 		message($Msg, $_Lang['ResetPass']);
 	}
-	else
+	else if(isset($_GET['code']))
 	{
 		$_GET['code'] = trim($_GET['code']);
 		if(!empty($_GET['code']))
@@ -111,14 +112,13 @@ include($_EnginePath.'common.php');
 			}
 			message($Msg, $_Lang['ResetPass']);
 		}
-		else
-		{
-			$parse = $_Lang;
-			$parse['GameURL'] = GAMEURL_STRICT;
-			$parse['servername'] = $_GameConfig['game_name'];
-			$page .= parsetemplate(gettemplate('lostpassword'), $parse);
-			display($page, $_Lang['ResetPass'], false);
-		}
+	}
+	else
+	{
+		$parse = $_Lang;
+		$parse['GameURL'] = GAMEURL_STRICT;
+		$parse['servername'] = $_GameConfig['game_name'];
+		display(parsetemplate(gettemplate('lostpassword'), $parse), $_Lang['ResetPass'], false);
 	}
 
 ?>

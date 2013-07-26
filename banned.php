@@ -9,6 +9,7 @@ include($_EnginePath.'common.php');
 
 	includeLang('banned');
 	$parse = $_Lang;
+	$parse['Rows'] = '';
 	$RowTPL = gettemplate('bans_row');
 
 	$SelectFields = '`bans`.`Reason`, `bans`.`StartTime`, `bans`.`EndTime`, `bans`.`GiverID`, `users`.`username`, `users2`.`username` AS `GiverUsername`';
@@ -48,7 +49,6 @@ include($_EnginePath.'common.php');
 	}
 
 	$page = parsetemplate(gettemplate('banned_body'), $parse);
-
 	display($page, $_Lang['ban_title'], false);
 
 ?>

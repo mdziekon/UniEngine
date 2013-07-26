@@ -13,7 +13,8 @@ include($_EnginePath.'common.php');
 
 	function BuildRessourcePage($CurrentUser, &$CurrentPlanet)
 	{
-		global $_Lang, $_Vars_ResProduction, $_Vars_GameElements, $_Vars_ElementCategories, $_GameConfig, $_POST, $_Vars_Prices, $Now, $SetPercents, $UserDev_Log;
+		global	$_Lang, $_POST, $_GameConfig, $Now, $SetPercents, $UserDev_Log,
+				$_Vars_ResProduction, $_Vars_GameElements, $_Vars_ElementCategories, $_Vars_Prices;
 
 		includeLang('resources');
 
@@ -29,18 +30,23 @@ include($_EnginePath.'common.php');
 		}
 
 		$ValidList['percent'] = array (0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100);
-		$SubQry = false;
 		if($_POST)
 		{
 			if(isOnVacation())
 			{
 				message($_Lang['Vacation_WarnMsg'], $_Lang['Vacation']);
 			}
-
+			
+			$Post_SetUsage2All = false;
+			
 			foreach($_POST as $Field => $Value)
 			{
 				if($Field == 'setUsage2All')
 				{
+					if($Value == 'on')
+					{
+						$Post_SetUsage2All = true;
+					}
 					continue;
 				}
 				if(preg_match('/^[a-zA-Z\_]{1,}$/D', $Field))
@@ -53,12 +59,12 @@ include($_EnginePath.'common.php');
 							message($_Lang['Hacking_attempt'], $_Lang['Warning'], 'resources.php', 3);
 						}
 						$Value = $Value / 10;
-						if($CurrentPlanet[$FieldName] != $Value OR $_POST['setUsage2All'] == 'on')
+						if($CurrentPlanet[$FieldName] != $Value || $Post_SetUsage2All)
 						{
 							$SetPercents[$CurrentPlanet['id']][$FieldName] = array('old' => $CurrentPlanet[$FieldName], 'new' => $Value);
-							$CurrentPlanet[$FieldName]= $Value;
+							$CurrentPlanet[$FieldName] = $Value;
 							$UpdatePlanet[] = "`{$FieldName}` = '{$Value}'";
-							$FieldName= str_replace('_workpercent', '', $FieldName);
+							$FieldName = str_replace('_workpercent', '', $FieldName);
 							$InsertDevLog[] = "{$FieldName},{$Value}";
 						}
 					}
@@ -71,7 +77,7 @@ include($_EnginePath.'common.php');
 			if(!empty($UpdatePlanet))
 			{
 				$UpdatePercentIDs[] = $CurrentPlanet['id'];
-				if($_POST['setUsage2All'] == 'on')
+				if($Post_SetUsage2All)
 				{
 					$SelectOtherPlanets = doquery("SELECT * FROM {{table}} WHERE `id_owner` = {$CurrentUser['id']} AND `planet_type` = 1 AND `id` != {$CurrentPlanet['id']};", 'planets');
 					if(mysql_num_rows($SelectOtherPlanets) > 0)
@@ -95,13 +101,14 @@ include($_EnginePath.'common.php');
 					}
 					else
 					{
+						$Post_SetUsage2All = false;
 						$_POST['setUsage2All'] = 'off';
 					}
 				}
-				$QryUpdatePlanet= "UPDATE {{table}} SET ";
+				$QryUpdatePlanet = "UPDATE {{table}} SET ";
 				$QryUpdatePlanet .= implode(', ', $UpdatePlanet);
 				$QryUpdatePlanet .= " WHERE ";
-				if($_POST['setUsage2All'] == 'on')
+				if($Post_SetUsage2All)
 				{
 					$SetCode = 2;
 				}
@@ -120,9 +127,9 @@ include($_EnginePath.'common.php');
 
 		// -------------------------------------------------------------------------------------------------------
 		// Calculate Storage
-		$CurrentPlanet['metal_max'] = floor (BASE_STORAGE_SIZE * pow (1.7, $CurrentPlanet[ $_Vars_GameElements[22] ] ));
-		$CurrentPlanet['crystal_max'] = floor (BASE_STORAGE_SIZE * pow (1.7, $CurrentPlanet[ $_Vars_GameElements[23] ] ));
-		$CurrentPlanet['deuterium_max'] = floor (BASE_STORAGE_SIZE * pow (1.7, $CurrentPlanet[ $_Vars_GameElements[24] ] ));
+		$CurrentPlanet['metal_max'] = floor(BASE_STORAGE_SIZE * pow (1.7, $CurrentPlanet[$_Vars_GameElements[22]]));
+		$CurrentPlanet['crystal_max'] = floor(BASE_STORAGE_SIZE * pow (1.7, $CurrentPlanet[$_Vars_GameElements[23]]));
+		$CurrentPlanet['deuterium_max'] = floor(BASE_STORAGE_SIZE * pow (1.7, $CurrentPlanet[$_Vars_GameElements[24]]));
 
 		// -------------------------------------------------------------------------------------------------------
 		$parse['resource_row'] = '';
@@ -220,9 +227,10 @@ include($_EnginePath.'common.php');
 				$CurrentPlanet['crystal_perhour'] += $crystal;
 				$CurrentPlanet['deuterium_perhour'] += $deuterium;
 
-				$Field = $_Vars_GameElements[$ProdID] ."_workpercent";
+				$Field = $_Vars_GameElements[$ProdID]."_workpercent";
 				$CurrRow[$Loop]['name'] = $_Vars_GameElements[$ProdID];
-				$CurrRow[$Loop]['workpercent']= $CurrentPlanet[$Field];
+				$CurrRow[$Loop]['workpercent'] = $CurrentPlanet[$Field];
+				$CurrRow[$Loop]['option'] = '';
 				for($Option = 10; $Option >= 0; $Option -= 1)
 				{
 					$OptValue = $Option * 10;
@@ -460,7 +468,7 @@ include($_EnginePath.'common.php');
 
 		$parse['metal_basic_income'] = prettyNumber($parse['metal_basic_income']);
 		$parse['crystal_basic_income'] = prettyNumber($parse['crystal_basic_income']);
-		$parse['deuterium_basic_income'] = prettyNumber($parse['metal_basic_incdeuterium_basic_incomeome']);
+		$parse['deuterium_basic_income'] = prettyNumber($parse['deuterium_basic_income']);
 		$parse['energy_basic_income']= prettyNumber($parse['energy_basic_income']);
 
 		if($CurrentUser['geologist_time'] > $Now)

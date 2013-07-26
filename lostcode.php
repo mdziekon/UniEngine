@@ -26,14 +26,14 @@ include($_EnginePath.'common.php');
 		message($_Lang['Cannot_usethis_till_logged'], $_Lang['Title_System'], 'overview.php', 3);
 	}
 
-	if($_POST)
+	if(isset($_POST['email']))
 	{
 		$email = trim($_POST['email']);
 		if(!empty($email))
 		{
 			if(is_email($email))
 			{
-				$email = mysql_escape_string($email);
+				$email = mysql_real_escape_string($email);
 				$Result = doquery("SELECT `id`,`activation_code`, `last_send_activationcode` FROM {{table}} WHERE `email` = '{$email}';", 'users', true);
 				if($Result)
 				{
@@ -86,7 +86,6 @@ include($_EnginePath.'common.php');
 		$parse = $_Lang;
 		$parse['GameURL'] = $_GameConfig['game_name'];
 		$parse['servername'] = $_GameConfig['game_name'];
-		$page .= parsetemplate(gettemplate('lostcode'), $parse);
-		display($page, $_Lang['Title'], false);
+		display(parsetemplate(gettemplate('lostcode'), $parse), $_Lang['Title'], false);
 	}
 ?>

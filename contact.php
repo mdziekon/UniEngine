@@ -9,7 +9,7 @@ $_DontForceRulesAcceptance = true;
 $_EnginePath = './';
 include($_EnginePath.'common.php');
 
-	if($_User['is_banned'] == 1)
+	if(isset($_User['is_banned']) && $_User['is_banned'] == 1)
 	{
 		$_DontShowMenus = true;
 	}
@@ -19,7 +19,9 @@ include($_EnginePath.'common.php');
 	$BodyTPL = gettemplate('contact_body');
 	$RowsTPL = gettemplate('contact_body_rows');
 	$parse = $_Lang;
+	$parse['InsertRows'] = '';
 
+	$QrySelectUser = '';
 	$QrySelectUser .= "SELECT `username`, `email`, `authlevel` ";
 	$QrySelectUser .= "FROM {{table}} ";
 	$QrySelectUser .= "WHERE `authlevel` > 0 ORDER BY `authlevel` DESC;";

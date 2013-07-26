@@ -13,29 +13,33 @@ include($_EnginePath.'common.php');
 	includeLang('rules');
 	$TPL = gettemplate('rules_body');
 
-	if(isLogged() AND $_ForceRulesAcceptBox === true)
+	if(isLogged() && isset($_ForceRulesAcceptBox) && $_ForceRulesAcceptBox === true)
 	{
 		$IsInDelete = ($_User['is_ondeletion'] == 1 ? true : false);
 
-		if($_GET['cmd'] == 'decline')
+		if(isset($_GET['cmd']))
 		{
-			if($IsInDelete !== true)
+			if($_GET['cmd'] == 'decline')
 			{
-				$_User['deletion_endtime'] = time() + (ACCOUNT_DELETION_TIME * TIME_DAY);
-				doquery("UPDATE {{table}} SET `is_ondeletion` = 1, `deletion_endtime` = {$_User['deletion_endtime']} WHERE `id` = {$_User['id']} LIMIT 1;", 'users');
-				$IsInDelete = true;
-				$_User['is_ondeletion'] = 1;
+				if($IsInDelete !== true)
+				{
+					$_User['deletion_endtime'] = time() + (ACCOUNT_DELETION_TIME * TIME_DAY);
+					doquery("UPDATE {{table}} SET `is_ondeletion` = 1, `deletion_endtime` = {$_User['deletion_endtime']} WHERE `id` = {$_User['id']} LIMIT 1;", 'users');
+					$IsInDelete = true;
+					$_User['is_ondeletion'] = 1;
+				}
 			}
-		}
-		else if($_GET['cmd'] == 'accept')
-		{
-			if($IsInDelete === true)
+			else if($_GET['cmd'] == 'accept')
 			{
-				$AddToUpdate = ", `is_ondeletion` = 0, `deletion_endtime` = 0";
+				$AddToUpdate = '';
+				if($IsInDelete === true)
+				{
+					$AddToUpdate = ", `is_ondeletion` = 0, `deletion_endtime` = 0";
+				}
+				doquery("UPDATE {{table}} SET `rules_accept_stamp` = {$_GameConfig['last_rules_changes']} {$AddToUpdate} WHERE `id` = {$_User['id']} LIMIT 1;", 'users');
+				header('Location: overview.php');
+				safeDie();
 			}
-			doquery("UPDATE {{table}} SET `rules_accept_stamp` = {$_GameConfig['last_rules_changes']} {$AddToUpdate} WHERE `id` = {$_User['id']} LIMIT 1;", 'users');
-			header('Location: overview.php');
-			safeDie();
 		}
 
 		if($_User['is_ondeletion'] == 1)
