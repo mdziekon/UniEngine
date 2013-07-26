@@ -42,10 +42,10 @@ function PlanetSizeRandomiser($Position, $HomeWorld = false)
 		$ClassicBase = 150;
 		$SettingSize = $_GameConfig['initial_fields'];
 		$PlanetRatio = floor(($ClassicBase / $SettingSize) * 10000) / 100;
-		$RandomMin = array(90,125,125, 205,205,205,205,205,225,205,165,155,145, 80,125);
-		$RandomMax = array(91,135,135, 280,280,270,220,220,230,225,180,170,200,420,190);
-		$CalculMin = floor($RandomMin[$Position - 1] + ( $RandomMin[$Position - 1] * $PlanetRatio) / 100);
-		$CalculMax = floor($RandomMax[$Position - 1] + ( $RandomMax[$Position - 1] * $PlanetRatio) / 100);
+		$RandomMin = array(90, 125, 125, 205, 205, 205, 205, 205, 225, 205, 165, 155, 145, 80, 125);
+		$RandomMax = array(91, 135, 135, 280, 280, 270, 220, 220, 230, 225, 180, 170, 200, 420, 190);
+		$CalculMin = floor($RandomMin[$Position - 1] + ($RandomMin[$Position - 1] * $PlanetRatio) / 100);
+		$CalculMax = floor($RandomMax[$Position - 1] + ($RandomMax[$Position - 1] * $PlanetRatio) / 100);
 		$RandomSize = mt_rand($CalculMin, $CalculMax);
 		$MaxAddon = mt_rand(0, 110);
 		$MinAddon = mt_rand(0, 60);
@@ -65,13 +65,13 @@ function PlanetSizeRandomiser($Position, $HomeWorld = false)
 
 function CreateOnePlanetRecord($Galaxy, $System, $Position, $PlanetOwnerID, $PlanetName = '', $HomeWorld = false, $AdditionalResources = false, $GetPlanetData = false, $DontCheckExistence = false)
 {
-	global $_Lang;
+	global $_Lang, $_GameConfig;
 
 	// First, check if there is no planet on that position
 	if($DontCheckExistence !== true)
 	{
 		$QrySelectPlanet = "SELECT `id` FROM {{table}} WHERE `galaxy` = '{$Galaxy}' AND `system` = '{$System}' AND `planet` = '{$Position}';";
-		$PlanetExist = doquery( $QrySelectPlanet, 'planets', true);
+		$PlanetExist = doquery($QrySelectPlanet, 'planets', true);
 	}
 	else
 	{
@@ -81,7 +81,7 @@ function CreateOnePlanetRecord($Galaxy, $System, $Position, $PlanetOwnerID, $Pla
 	// If this position is free, let's make a new planet!
 	if(!$PlanetExist)
 	{
-		$planet = PlanetSizeRandomiser ($Position, $HomeWorld);
+		$planet = PlanetSizeRandomiser($Position, $HomeWorld);
 		$planet['diameter'] = ($planet['field_max'] ^ (14 / 1.5)) * 75 ;
 		if($HomeWorld)
 		{
@@ -149,9 +149,9 @@ function CreateOnePlanetRecord($Galaxy, $System, $Position, $PlanetOwnerID, $Pla
 		$PlanetClass = array('planet');
 		$planet['temp_maxi'] = rand(30, 100);
 		$planet['temp_max'] = $planet['temp_min'] + $planet['temp_maxi'];
-		$planet['image'] = $PlanetType[ rand( 0, count( $PlanetType ) -1 ) ];
-		$planet['image'] .= $PlanetClass[ rand( 0, count( $PlanetClass ) - 1 ) ];
-		$planet['image'] .= $PlanetDesign[ rand( 0, count( $PlanetDesign ) - 1 ) ];
+		$planet['image'] = $PlanetType[rand(0, count($PlanetType) -1)];
+		$planet['image'] .= $PlanetClass[rand(0, count($PlanetClass) - 1)];
+		$planet['image'] .= $PlanetDesign[rand(0, count($PlanetDesign) - 1)];
 		$planet['name'] = ($PlanetName == '') ? $_Lang['sys_colo_defaultname'] : $PlanetName;
 
 		$QryInsertPlanet = "INSERT INTO {{table}} SET ";
