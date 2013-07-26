@@ -13,7 +13,7 @@ $_Lang['LoginPage_Text']    .= '<b class="minw">Czasowa Ochrona nowych Graczy:</
 $_Lang['LoginPage_Text']    .= '<b class="minw"><b class="help" title="Po osiągnięciu tej ilości punktów nie będą obowiązywały żadne ograniczenia punktowe co do ataków na lub przez Ciebie">Próg procentowej Ochrony:</b></b> <b class="lime">{Protection_PointsLimit} pkt.</b><br/>';
 $_Lang['LoginPage_Text']    .= '</span><br/><br/>';
 //$_Lang['LoginPage_Text']    .= '<center><b class="red">Jako prezent dostajesz całkowicie darmowe Konto Pro na okres 10-ciu dni, które możesz aktywować w dowolnym momencie gry!</b></center><br/><br/>';
-$_Lang['LoginPage_Text']    .= '<b>Jeśli jesteś nowym graczem</b>, z pewnością zainteresuje Cię wykonanie <a class="orange" href="tasks.php?cat=1"><b>&#187; Zadań Wprowadzających</b></a>, które pomogą Ci odnaleźć się w świecie '.GAMENAME.' i nauczą podstaw gry.<br/>';
+$_Lang['LoginPage_Text']    .= '<b>Jeśli jesteś nowym graczem</b>, z pewnością zainteresuje Cię wykonanie <a class="orange" href="tasks.php?cat=1"><b>&#187; Zadań Wprowadzających</b></a>, które pomogą Ci odnaleźć się w świecie '.$_GameConfig['game_name'].' i nauczą podstaw gry.<br/>';
 $_Lang['LoginPage_Text']    .= '<center><b>Życzymy udanych łowów i powodzenia w grze!</b></center>';
 
 $_Lang['LoginPage_Input']    = 'Rozpocznij grę!';
