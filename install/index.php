@@ -36,12 +36,12 @@ else
 {
 	$_RequirementsCheckFails['PHPVersion'] = false;
 }
-//if(error_reporting() & E_NOTICE)
+if(error_reporting() & E_NOTICE)
 {
-	//$_RequirementsCheckPassed = false;
-	//$_RequirementsCheckFails['PHPNoticesOff'] = true;
+	$_RequirementsCheckPassed = false;
+	$_RequirementsCheckFails['PHPNoticesOff'] = true;
 }
-//else
+else
 {
 	$_RequirementsCheckFails['PHPNoticesOff'] = false;
 }
