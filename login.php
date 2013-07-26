@@ -92,7 +92,18 @@ include($_EnginePath.'common.php');
 		if($UserData['id'] > 0)
 		{
 			include_once($_EnginePath.'/includes/functions/IPandUA_Logger.php');
-			require($_EnginePath.'config.php');	
+			if(LOCALHOST)
+			{
+				require($_EnginePath.'config.localhost.php');
+			}
+			else if(TESTSERVER)
+			{
+				require($_EnginePath.'config.testserver.php');
+			}
+			else
+			{
+				require($_EnginePath.'config.php');
+			}	
 			$PasswordOK = false;
 			if($Search['mode'] == 1 AND $UserData['password'] == $Search['password'])
 			{

@@ -7,7 +7,18 @@ function CheckUserSessionCookie()
 	$_DontShowMenus = true;
 
 	$UserRow = false;
-	require($_EnginePath.'config.php');
+	if(LOCALHOST)
+	{
+		require($_EnginePath.'config.localhost.php');
+	}
+	else if(TESTSERVER)
+	{
+		require($_EnginePath.'config.testserver.php');
+	}
+	else
+	{
+		require($_EnginePath.'config.php');
+	}
 	if(isset($_COOKIE[$_GameConfig['COOKIE_NAME']]))
 	{
 		$TheCookie = explode('/%/', $_COOKIE[$_GameConfig['COOKIE_NAME']]);
