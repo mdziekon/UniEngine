@@ -20,7 +20,7 @@ function gettemplate($templatename)
 
 function includeLang($filename, $Return = false)
 {
-	global $_EnginePath, $_User;
+	global $_EnginePath, $_User, $_GameConfig;
 
 	if(!$Return)
 	{

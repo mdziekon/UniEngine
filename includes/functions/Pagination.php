@@ -136,18 +136,18 @@ function ParsePaginationArray($PaginationArray, $Page, $ElementTemplate, $ViewOp
 	{
 		// Initialization
 		global $_Lang;	
-		if(empty($_Lang['Pagination_Prev']))
+		if(!isset($_Lang['Pagination_Prev']))
 		{
 			$_Lang['Pagination_Prev'] = '&#171;';
 		}
-		if(empty($_Lang['Pagination_Next']))
+		if(!isset($_Lang['Pagination_Next']))
 		{
 			$_Lang['Pagination_Next'] = '&#187;';
 		}
 		$ReplaceFind = array('{$Classes}', '{$Value}', '{$ShowValue}');
 		$Return = array();
 		
-		if($ViewOptions['OffsetValues'] === true)
+		if(isset($ViewOptions['OffsetValues']) && $ViewOptions['OffsetValues'] === true)
 		{
 			$ValuesAsOffset = true;
 		}
@@ -157,7 +157,7 @@ function ParsePaginationArray($PaginationArray, $Page, $ElementTemplate, $ViewOp
 		}
 		
 		// Parsing		
-		if($PaginationArray['hasPrev'])
+		if(isset($PaginationArray['hasPrev']) && $PaginationArray['hasPrev'])
 		{
 			$Return[] = str_replace($ReplaceFind, array('', ($ValuesAsOffset ? -1 : ($Page - 1)), $_Lang['Pagination_Prev']), $ElementTemplate);
 		}
@@ -182,7 +182,7 @@ function ParsePaginationArray($PaginationArray, $Page, $ElementTemplate, $ViewOp
 				$Return[] = $ViewOptions['Breaker_View'];
 			}
 		}
-		if($PaginationArray['hasNext'])
+		if(isset($PaginationArray['hasNext']) && $PaginationArray['hasNext'])
 		{
 			$Return[] = str_replace($ReplaceFind, array('', ($ValuesAsOffset ? 1 : ($Page + 1)), $_Lang['Pagination_Next']), $ElementTemplate);
 		}

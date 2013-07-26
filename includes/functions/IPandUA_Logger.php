@@ -1,23 +1,24 @@
 <?php
 
-function IPandUA_Logger($UserData, $Failed = false)
+function IPandUA_Logger($TheUser, $Failed = false)
 {
-	if($UserData['id'] <= 0)
+	if(!isset($TheUser['id']) || $TheUser['id'] <= 0)
 	{
 		return false;
 	}
-	if($UserData['isAI'] == 1)
+	if(isset($TheUser['isAI']) && $TheUser['isAI'] == 1)
 	{
 		return false;
 	}
 
 	global $_SERVER;
 	$IPHash = md5($_SERVER['REMOTE_ADDR']);
-	$UAValu = mysql_real_escape_string($_SERVER['HTTP_USER_AGENT']);
-	$UAHash = md5($UAValu);
+	$UAVal = mysql_real_escape_string($_SERVER['HTTP_USER_AGENT']);
+	$UAHash = md5($UAVal);
+	$InsertIPandUAQuery = '';
 	$InsertIPandUAQuery .= "INSERT INTO {{table}} (`Type`, `Value`, `ValueHash`) VALUES ";
 	$InsertIPandUAQuery .= "('ip', '{$_SERVER['REMOTE_ADDR']}', '{$IPHash}'), ";
-	$InsertIPandUAQuery .= "('ua', '{$UAValu}', '{$UAHash}') ";
+	$InsertIPandUAQuery .= "('ua', '{$UAVal}', '{$UAHash}') ";
 	$InsertIPandUAQuery .= "ON DUPLICATE KEY UPDATE ";
 	$InsertIPandUAQuery .= "`SeenCount` = `SeenCount` + 1;";
 	doquery($InsertIPandUAQuery, 'used_ip_and_ua');
@@ -35,9 +36,10 @@ function IPandUA_Logger($UserData, $Failed = false)
 		}
 	}
 
-	$SelectEnterLog = doquery("SELECT `ID` FROM {{table}} WHERE `User_ID` = {$UserData['id']} AND `IP_ID` = {$UsedIP_ID} AND `UA_ID` = {$UsedUA_ID};", 'user_enterlog', true);
+	$SelectEnterLog = doquery("SELECT `ID` FROM {{table}} WHERE `User_ID` = {$TheUser['id']} AND `IP_ID` = {$UsedIP_ID} AND `UA_ID` = {$UsedUA_ID};", 'user_enterlog', true);
 	$ServerStamp = $TextServerStamp = ServerStamp();
 	
+	$AddToStamp = array();
 	if($Failed === true)
 	{
 		$AddToStamp[] = 'F';
@@ -53,6 +55,7 @@ function IPandUA_Logger($UserData, $Failed = false)
 		{
 			$Query_InsertLog_Array[] = "`FailCount` = `FailCount` + 1";
 		}
+		$Query_InsertLog = '';
 		$Query_InsertLog .= "UPDATE {{table}} SET ";
 		$Query_InsertLog_Array[] = "`Times` = CONCAT(`Times`, ',{$TextServerStamp}')";
 		$Query_InsertLog_Array[] = "`Count` = `Count` + 1";
@@ -66,8 +69,9 @@ function IPandUA_Logger($UserData, $Failed = false)
 		{
 			$Query_InsertLog_Array[] = "`FailCount` = 1";
 		}
+		$Query_InsertLog = '';
 		$Query_InsertLog .= "INSERT INTO {{table}} SET ";
-		$Query_InsertLog_Array[] = "`User_ID` = {$UserData['id']}";
+		$Query_InsertLog_Array[] = "`User_ID` = {$TheUser['id']}";
 		$Query_InsertLog_Array[] = "`IP_ID` = {$UsedIP_ID}";
 		$Query_InsertLog_Array[] = "`UA_ID` = {$UsedUA_ID}";
 		$Query_InsertLog_Array[] = "`Times` = '{$TextServerStamp}'";

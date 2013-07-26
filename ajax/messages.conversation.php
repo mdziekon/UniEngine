@@ -16,17 +16,19 @@ include($_EnginePath.'common.php');
 	{
 		safeDie(json_encode($Array));
 	}
-
+	
+	$ExcludeIDs = array();
+	
 	if(!isLogged())
 	{
 		ajaxReturn(array('Err' => '001'));
 	}
-	$ThreadID = round($_GET['tid']);
+	$ThreadID = (isset($_GET['tid']) ? round($_GET['tid']) : 0);
 	if($ThreadID <= 0)
 	{
 		ajaxReturn(array('Err' => '002'));
 	}
-	if(!empty($_GET['exc']))
+	if(isset($_GET['exc']) && !empty($_GET['exc']))
 	{
 		$Temp = explode(',', $_GET['exc']);
 		foreach($Temp as $Value)
@@ -38,11 +40,13 @@ include($_EnginePath.'common.php');
 			}
 		}
 	}
-	if(!empty($_GET['mid']))
+	$MaxMessageID = 0;
+	if(isset($_GET['mid']) && !empty($_GET['mid']))
 	{
 		$MaxMessageID = round($_GET['mid']);
 	}
-	if($_GET['nc'] == '1')
+	$_ThisCategory = 0;
+	if(isset($_GET['nc']) && $_GET['nc'] == '1')
 	{
 		$_ThisCategory = 100;
 	}
@@ -83,6 +87,7 @@ include($_EnginePath.'common.php');
 		{ 
 			$parseMSG = array();			
 			// Message sent by User
+			$AddFrom = '';
 			if(!empty($CurMess['from']))
 			{
 				$AddFrom = ' '.$CurMess['from'];
@@ -127,7 +132,8 @@ include($_EnginePath.'common.php');
 				$parseMSG['CurrMSG_HideCheckbox'] = 'class="inv"';
 			}
 			$parseMSG['CurrMSG_send'] = sprintf(($CurMess['id_owner'] == $_User['id'] ? $_Lang['mess_send_date'] : $_Lang['mess_sendbyyou_date']), $parseMSG['CurrMSG_date'], $parseMSG['CurrMSG_time']);
-			if($CurMess['id_owner'] == $_User['id']){
+			if($CurMess['id_owner'] == $_User['id'])
+			{
 				if($CurMess['id_sender'] != $_User['id'])
 				{
 					$parseMSG['CurrMSG_buttons'][] = "<span class=\"hov\"><a class=\"reply\" href=\"messages.php?mode=write&amp;replyto=".($CurMess['Thread_ID'] > 0 ? $CurMess['Thread_ID'] : $CurMess['id'])."\">{$_Lang['mess_reply']}</a></span>";
@@ -193,11 +199,8 @@ include($_EnginePath.'common.php');
 		{
 			$AllMessages[] = parsetemplate($MsgTPL, $MessageData); 
 		}
-		$page .= implode('', $AllMessages);
-		$Messages = null;
-		$AllMessages = null;
 		
-		ajaxReturn(array('Code' => $page));
+		ajaxReturn(array('Code' => implode('', $AllMessages)));
 	}
     
 ?>

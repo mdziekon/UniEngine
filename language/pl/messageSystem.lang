@@ -1,5 +1,6 @@
 <?php
 
+$_Lang['BattleReport_AttackerNormal'] = '';
 $_Lang['BattleReport_AttackerNormal'] .= "<center><a href=\"#\" onclick=\"f('battlereport.php?id=%s', ''); return false;\"><span style=\"color: %s\">{$_Lang['sys_mess_attack_report']} [%s:%s:%s] [%s]</span></a><br/><br/>";
 $_Lang['BattleReport_AttackerNormal'] .= "<span class=\"red\">{$_Lang['sys_perte_attaquant']}: %s</span> <b>|</b> <span class=\"lime\">{$_Lang['sys_perte_defenseur']}: %s</span><br/>";
 $_Lang['BattleReport_AttackerNormal'] .= "<b>[{$_Lang['sys_gain']}]</b> {$_Lang['Metal']}: <b style=\"color: #adaead;\">%s</b> <b>|</b> {$_Lang['Crystal']}: <b style=\"color: #ef51ef;\">%s</b> <b>|</b> {$_Lang['Deuterium']}: <b style=\"color: #f77542;\">%s</b><br/>";
@@ -57,11 +58,6 @@ $_Lang['msg_const']['msgs'] = array
 	'023' => 'Sojusz %s zaakceptował twoje podanie o członkostwo!',
 	'024' => 'Sojusz %s odrzucił twoje podanie o członkostwo!<br/>Powód: %s',
 
-	'025' => $_Lang['atk_a_rep'],
-	'026' => $_Lang['atk_d_rep'],
-	'027' => $_Lang['des_a_rep'],
-	'028' => $_Lang['des_d_rep'],
-
 	'029' => 'Wroga flota z %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a> została dostrzeżona w pobliżu %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a><br/><br/>Szansa na przechwycenie sond: %s',
 
 	'030' => 'Jedna z Twoich flot osiągnęła %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a>.<br/>Dostarczyła <b>%s</b> jednostek metalu, <b>%s</b> jednostek kryształu i <b>%s</b> jednostek deuteru.',
@@ -77,8 +73,6 @@ $_Lang['msg_const']['msgs'] = array
 
 	'038' => '<b>Właśnie ktoś zarejestrował się do gry z twojego linku polecającego!</b><br/><br/>Jeśli chcesz sprawdzić kto zarejestował się z twojego linku, przejdź do sekcji <a href="ref_table.php" class="orange"><u>Poleceni gracze</u></a>.<br/>W tym miejscu możesz także sprawdzić, ile Ciemnej Energii otrzymałeś już dzięki tej osobie!',
 	'039' => 'Gratulacje!<br/>Polecony przez Ciebie użytkownik <b>%s</b> przekroczył jeden z progów punktowych (%s), dlatego dostajesz za to <b>%s jednostek Ciemnej Energii</b>!<br/><br/>Pamiętaj, że możesz zapraszać nieskończoną ilość użytkowników do gry!',
-
-	'040' => $_Lang['def_rep'],
 	
 	// ACS Invitation
 	'041' => 'Gracz %s zaprosił Cię do wspólnego ataku na %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a><br/><br/>Jeśli chcesz sporzystać z jego propozycji, zaatakuj %s, jako misję wybierz <a class="orange" href="fleet.php?galaxy=%s&system=%s&planet=%s&planettype=%s&target_mission=2"><b>Atak związku</b></a> a następnie wybierz z listy związek o nazwie <b class="lime">"%s"</b>.',
@@ -104,14 +98,6 @@ $_Lang['msg_const']['msgs'] = array
 	'059' => 'Twoja ekspedycja trafiła na opuszczone i nieco zniszczone statki.<br/>Niestety, nie udało się uruchomić żadnego z nich - uszkodzenia były zbyt poważne, by nadawały się do naprawy...',
 	'060' => 'Twoja ekspedycja przeszukała kryjówkę piratów. Zostawili oni w hangarach kilka statków.<br/>Niestety, ich stan pozostawiał wiele do życzenia - nie nadawały się one do dalszej eksploatacji...',
 	'061' => 'Twoja ekspedycja nie znalazła niczego godnego uwagi na krańcach tego układu planetarnego.<br/>Niestety, błąd w obliczeniach nawigatorów spowodował, że flota obrała nieodpowiednią drogę powrotną na ojczystą planetę, przez co czas powrotu wydłużył się o:<br/>%s',
-
-	'062' => $_Lang['atk_a_rep_new'],
-	'063' => $_Lang['atk_d_rep_new'],
-	'064' => $_Lang['des_a_rep_new'],
-	'065' => $_Lang['des_d_rep_new'],
-	'066' => $_Lang['def_rep_new'],
-
-	'068' => $_Lang['attack_msg_planet_owner'], 
 
 	'069' => 'Gracz %s zaprosił Cię do wspólnego ataku na %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a><br/><br/>Jeśli chcesz sporzystać z jego propozycji, zaatakuj %s, jako misję wybierz <a class="orange" href="fleet.php?galaxy=%s&system=%s&planet=%s&planettype=%s&target_mission=2"><b>Atak związku</b></a> a następnie wybierz z listy związek o nazwie <a href="fleet.php?joinacs=%s" class="lime">"%s"</a> (Kliknij w tą nazwę aby bezpośrednio dołączyć do związku)',
 

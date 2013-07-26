@@ -34,6 +34,7 @@ $_Lang['SpyRes_Msg_ab_empty'] = '<table class="sth nohide" cellspacing="0"><tr><
 $_Lang['SpyRes_Msg_ab_empty'] .= '<td class="c red center pad5" colspan="5">%s</td>';
 
 $_Lang['SpyRes_Oth'] = '<table class="sth" cellspacing="0"><tr><td class="c" colspan="%s">%s</td></tr>';
+$_Lang['SpyRes_Mor'] = '';
 $_Lang['SpyRes_Mor'] .= '<table class="sth" cellspacing="0"><tr><td class="c" colspan="5">Morale</td></tr>';
 $_Lang['SpyRes_Mor'] .= '<tr><td class="stl">Obecny Poziom</td><td class="stv">%s%%</td><td>&nbsp;</td>';
 $_Lang['SpyRes_Mor'] .= '<td class="stl">Nastroje obywateli</td><td class="stv">%s</td></tr>';

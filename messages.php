@@ -16,11 +16,20 @@ include($_EnginePath.'common.php');
 	includeLang('FleetMission_MissileAttack');
 	
 	$parse = &$_Lang;
+	$parse['Insert_Styles'] = '';
+	$parse['Insert_CategoryList'] = '';
+	$CreateSimForms = '';
 	$SetTitle = $_Lang['mess_pagetitle_read'];
 	
 	$Now = time();	
 
 	$MessageType = array(100, 0, 1, 2, 3, 4, 5, 15, 50, 70, 80);
+	foreach($MessageType as $TypeID)
+	{
+		$MsgCounter['total'][$TypeID] = 0;
+		$MsgCounter['threaded'][$TypeID] = 0;
+		$MsgCounter['unread'][$TypeID] = 0;
+	}
 	$_CanBeThreaded = array(1, 80, 100);
 	$TitleColor = array
 	(
@@ -35,18 +44,22 @@ include($_EnginePath.'common.php');
 	
 	$_UseThreads = ($_User['settings_UseMsgThreads'] == 1 ? true : false);
 	
-	$_ThisCategory = intval($_GET['messcat']);
-	$DeleteWhat = $_POST['deletemessages'];
-	if(!empty($DeleteWhat) OR $_POST['delid'] > 0)
+	$_ThisCategory = (isset($_GET['messcat']) ? intval($_GET['messcat']) : 0);
+	$DeleteWhat = (isset($_POST['deletemessages']) ? $_POST['deletemessages'] : '');
+	if(!empty($DeleteWhat) || (isset($_POST['delid']) && $_POST['delid'] > 0))
 	{
 		$_GET['mode'] = 'delete';
-		if($_POST['delid'] > 0)
+		if(isset($_POST['delid']) && $_POST['delid'] > 0)
 		{
 			$_POST['deletemessages'] = '';
 		}
 	}
 	$CreatedForms = 0;
-
+	
+	if(!isset($_GET['mode']))
+	{
+		$_GET['mode'] = '';
+	}
 	switch($_GET['mode'])
 	{
 		case 'write':
@@ -75,6 +88,7 @@ include($_EnginePath.'common.php');
 				}
 				if($ReplyID > 0)
 				{
+					$GetReplyMsg = '';
 					$GetReplyMsg .= "SELECT `m`.`id`, `m`.`Thread_ID`, `m`.`subject`, `m`.`text`, `u`.`id` AS `user_id`, `u`.`username`, `u`.`authlevel` FROM {{table}} AS `m` ";
 					$GetReplyMsg .= "LEFT JOIN `{{prefix}}users` AS `u` ON `u`.`id` = IF(`m`.`id_owner` != {$_User['id']}, `m`.`id_owner`, `m`.`id_sender`) ";
 					$GetReplyMsg .= "WHERE (`m`.`id` = {$ReplyID} OR `m`.`Thread_ID` = {$ReplyID}) AND (`m`.`id_owner` = {$_User['id']} OR `m`.`id_sender` = {$_User['id']}) AND `deleted` = false LIMIT 1;";
@@ -141,7 +155,7 @@ include($_EnginePath.'common.php');
 						{
 							$FormData['username'] = $CheckUser['username'];
 							$FormData['uid'] = $UserID;
-							$FormData['authlevel'] = $ReplyMsg['authlevel'];
+							$FormData['authlevel'] = (isset($ReplyMsg['autolevel']) ? $ReplyMsg['authlevel'] : 0);
 							if($UIDFromPost === false)
 							{
 								$FormData['lock_username'] = true;
@@ -159,7 +173,7 @@ include($_EnginePath.'common.php');
 					}
 				}
 				
-				if(!empty($_POST['uname']) AND $_POST['uname'] != $FormData['username'])
+				if(!empty($_POST['uname']) && (!isset($FormData['username']) || $_POST['uname'] != $FormData['username']))
 				{
 					$FormData['username'] = '';
 					$FormData['uid'] = '';
@@ -174,7 +188,7 @@ include($_EnginePath.'common.php');
 						{
 							$FormData['username'] = $UserName;
 							$FormData['uid'] = $CheckUser['id'];
-							$FormData['authlevel'] = $ReplyMsg['authlevel'];
+							$FormData['authlevel'] = (isset($ReplyMsg['autolevel']) ? $ReplyMsg['authlevel'] : 0);
 							$AllowSend = true;
 						}
 						else
@@ -189,7 +203,7 @@ include($_EnginePath.'common.php');
 				}				
 			}
 			
-			if($FormData['uid'] > 0 AND $FormData['uid'] == $_User['id'])
+			if(isset($FormData['uid']) && $FormData['uid'] > 0 && $FormData['uid'] == $_User['id'])
 			{
 				$FormData['username'] = '';
 				$FormData['uid'] = '';
@@ -198,7 +212,7 @@ include($_EnginePath.'common.php');
 				$AllowSend = false;
 			}
 			$FormData['type'] = 1;
-			if($_POST['send_as_admin_msg'] == 'on')
+			if(isset($_POST['send_as_admin_msg']) && $_POST['send_as_admin_msg'] == 'on')
 			{
 				if(!CheckAuth('supportadmin'))
 				{
@@ -212,11 +226,11 @@ include($_EnginePath.'common.php');
 				}
 			}
 			
-			$_POST['text'] = stripslashes(trim($_POST['text']));
-			$_POST['subject'] = stripslashes(trim($_POST['subject']));
+			$_POST['text'] = (isset($_POST['text']) ? stripslashes(trim($_POST['text'])) : '');
+			$_POST['subject'] = (isset($_POST['subject']) ? stripslashes(trim($_POST['subject'])) : '');
 			if(get_magic_quotes_gpc())
 			{
-				$_POST['text']= stripslashes($_POST['text']);
+				$_POST['text'] = stripslashes($_POST['text']);
 				$_POST['subject'] = stripslashes($_POST['subject']);
 			}
 
@@ -226,9 +240,9 @@ include($_EnginePath.'common.php');
 			}
 			$FormData['text'] = substr(strip_tags($_POST['text']), 0, $_MaxLength_Text);
 			
-			if($_POST['send_msg'] == '1')
+			if(isset($_POST['send_msg']))
 			{
-				if($FormData['uid'] == 0 AND empty($MsgBox))
+				if((!isset($FormData['uid']) || $FormData['uid'] == 0) && empty($MsgBox))
 				{
 					$MsgBox[] = array('color' => 'red', 'text' => $_Lang['Errors_NoUserID']);
 					$AllowSend = false;
@@ -254,8 +268,9 @@ include($_EnginePath.'common.php');
 					}
 				}
 				
-				if($FormData['uid'] > 0 AND !CheckAuth('user', AUTHCHECK_HIGHER) AND !CheckAuth('user', AUTHCHECK_HIGHER, $FormData))
+				if(isset($FormData['uid']) && $FormData['uid'] > 0 && !CheckAuth('user', AUTHCHECK_HIGHER) AND !CheckAuth('user', AUTHCHECK_HIGHER, $FormData))
 				{
+					$Query_IgnoreSystem = '';
 					$Query_IgnoreSystem .= "SELECT `OwnerID` FROM {{table}} WHERE ";
 					$Query_IgnoreSystem .= "(`OwnerID` = {$_User['id']} AND `IgnoredID` = {$FormData['uid']}) OR ";
 					$Query_IgnoreSystem .= "(`OwnerID` = {$FormData['uid']} AND `IgnoredID` = {$_User['id']}) ";
@@ -284,8 +299,8 @@ include($_EnginePath.'common.php');
 					$FormSend['subject'] = $FormData['subject'];
 					$FormSend['text'] = $FormData['text'];
 					$FormSend['uid'] = $FormData['uid'];
-					$FormSend['Thread_ID'] = $FormData['replyto'];
-					$FormSend['Thread_IsLast'] = ($FormData['replyto'] > 0 ? 1 : 0);
+					$FormSend['Thread_ID'] = (isset($FormData['replyto']) ? $FormData['replyto'] : 0);
+					$FormSend['Thread_IsLast'] = ($FormSend['Thread_ID'] > 0 ? 1 : 0);
 					
 					if($FormSend['Thread_ID'] > 0)
 					{
@@ -301,23 +316,24 @@ include($_EnginePath.'common.php');
 					
 					Cache_Message($FormSend['uid'], $_User['id'], $Now, $FormSend['type'], '', $FormSend['subject'], $FormSend['text'], $FormSend['Thread_ID'], $FormSend['Thread_IsLast']);
 					
-					preg_match('#'.$_Lang['mess_answer_prefix'].'\[([0-9]{1,})\]\: #si', $FormData['subject'], $ThisMatch);
-					$FormData['subject'] = preg_replace('#'.$_Lang['mess_answer_prefix'].'\[[0-9]{1,}\]\: #si', $_Lang['mess_answer_prefix'].'['.($ThisMatch[1] + 1).']: ', $FormData['subject']);
-					
+					if(preg_match('#'.$_Lang['mess_answer_prefix'].'\[([0-9]{1,})\]\: #si', $FormData['subject'], $ThisMatch))
+					{
+						$FormData['subject'] = preg_replace('#'.$_Lang['mess_answer_prefix'].'\[[0-9]{1,}\]\: #si', $_Lang['mess_answer_prefix'].'['.($ThisMatch[1] + 1).']: ', $FormData['subject']);
+					}
 					$MsgBox[] = array('color' => 'lime', 'text' => $_Lang['Info_MsgSend']);
 				}
 			}
 			
-			$parse['FormInsert_username'] = $FormData['username'];
-			$parse['FormInsert_uid'] = $FormData['uid'];
-			$parse['FormInsert_replyto'] = $FormData['replyto'];
-			$parse['FormInsert_subject'] = $FormData['subject'];
-			$parse['FormInsert_text'] = $FormData['text'];
-			if($FormData['lock_username'] === true)
+			$parse['FormInsert_username'] = (isset($FormData['username']) ? $FormData['username'] : '');
+			$parse['FormInsert_uid'] = (isset($FormData['uid']) ? $FormData['uid'] : '');
+			$parse['FormInsert_replyto'] = (isset($FormData['replyto']) ? $FormData['replyto'] : '');
+			$parse['FormInsert_subject'] = (isset($FormData['subject']) ? $FormData['subject'] : '');
+			$parse['FormInsert_text'] = (isset($FormData['text']) ? $FormData['text'] : '');
+			if(isset($FormData['lock_username']) && $FormData['lock_username'] === true)
 			{
 				$parse['FormInsert_LockUsername'] = 'disabled';
 			}
-			if($FormData['lock_subject'] === true)
+			if(isset($FormData['lock_subject']) && $FormData['lock_subject'] === true)
 			{
 				$parse['FormInsert_LockSubject'] = 'disabled';
 			}
@@ -345,11 +361,11 @@ include($_EnginePath.'common.php');
 			$_Lang['FormInsert_MaxSigns'] = $_MaxLength_Text;
 			if($_GameConfig['enable_bbcode'] == 1)
 			{ 
-				$page .= parsetemplate(gettemplate('messages_pm_form_bb'), $parse);
+				$page = parsetemplate(gettemplate('messages_pm_form_bb'), $parse);
 			}
 			else
 			{
-				$page .= parsetemplate(gettemplate('messages_pm_form'), $parse);
+				$page = parsetemplate(gettemplate('messages_pm_form'), $parse);
 			}
 		// It's done!
 		break;
@@ -359,6 +375,7 @@ include($_EnginePath.'common.php');
 			
 			$_ThisCategory = intval($_POST['category']);
 			$DeleteWhat = $_POST['deletemessages'];
+			$ActionBreak = false;
 			if(in_array($DeleteWhat, array('deleteall', 'deleteallcat', 'setallread', 'setcatread')))
 			{
 				$TimeStamp = round($_POST['time']);
@@ -692,13 +709,13 @@ include($_EnginePath.'common.php');
 			{
 				$_PerPage = $_User['settings_msgperpage'];
 			}
-			if(!empty($_POST['page']))
+			if(isset($_POST['page']) && !empty($_POST['page']))
 			{
 				$_ThisPage = intval($_POST['page']);
 			}
 			else
 			{
-				$_ThisPage = intval($_GET['page']);
+				$_ThisPage = isset($_GET['page']) ? intval($_GET['page']) : 0;
 			}
 
 			$PageTPL = gettemplate('message_list');
@@ -765,6 +782,7 @@ include($_EnginePath.'common.php');
 				$Start = ($_ThisPage - 1) * $_PerPage;
 			}
 			
+			$Pagination = '';
 			if($MsgCount > $_PerPage)
 			{
 				include_once($_EnginePath.'includes/functions/Pagination.php');
@@ -777,7 +795,6 @@ include($_EnginePath.'common.php');
 			}
 			
 			$parse['ThisPage'] = $_ThisPage;
-			$parse['MsgBox'] = $InsertMsgBox;
 			$parse['MessCategory'] = $_ThisCategory;
 			$parse['MessCategoryColor'] = $TitleColor[$_ThisCategory];
 			$parse['Pagination'] = $Pagination;
@@ -786,10 +803,6 @@ include($_EnginePath.'common.php');
 			// Let's show Messages!
 			if($MsgCount > 0)
 			{
-				if($ShowNoMSGsOnthatPage > 0)
-				{
-					$MsgInfos[] = sprintf($_Lang['MsgList_NoMsgsOnThatPage'], $ShowNoMSGsOnthatPage);
-				}
 				if($_ThisCategory == 100)
 				{
 					$GetMsgsType = '!= 80';
@@ -798,6 +811,7 @@ include($_EnginePath.'common.php');
 				{
 					$GetMsgsType = "= {$_ThisCategory}";
 				}
+				$Query_GetMessages = '';
 				$Query_GetMessages .= "SELECT `m`.*, `u`.`username`, `u`.`authlevel` FROM {{table}} AS `m` ";
 				$Query_GetMessages .= "LEFT JOIN `{{prefix}}users` AS `u` ON `u`.`id` = `m`.`id_sender` ";
 				if($_UseThreads)
@@ -838,6 +852,7 @@ include($_EnginePath.'common.php');
 					{
 						$ThreadsIDs = implode(', ', $CheckThreads);
 						$ExcludeIDs = implode(', ', $CheckThreadsExclude);
+						$Query_GetThreaded = '';
 						$Query_GetThreaded .= "SELECT `m`.*, `u`.`username`, `u`.`authlevel` FROM {{table}} AS `m` ";
 						$Query_GetThreaded .= "LEFT JOIN `{{prefix}}users` AS `u` ON `u`.`id` = `m`.`id_sender` ";
 						$Query_GetThreaded .= "WHERE `m`.`deleted` = false AND `m`.`id_owner` = {$_User['id']} AND `read` = false AND `m`.`Thread_ID` IN ({$ThreadsIDs}) AND `m`.`id` NOT IN ({$ExcludeIDs}) ";
@@ -934,6 +949,7 @@ include($_EnginePath.'common.php');
 						else
 						{
 							// Message sent by User
+							$AddFrom = '';
 							if(!empty($CurMess['from']))
 							{
 								$AddFrom = ' '.$CurMess['from'];
@@ -1017,7 +1033,7 @@ include($_EnginePath.'common.php');
 							$parseMSG['CurrMSG_buttons'] = implode('<span class="lnBr"></span>', $parseMSG['CurrMSG_buttons']);
 						}
 							
-						if($CurMess['isAdditional'] === true)
+						if(isset($CurMess['isAdditional']) && $CurMess['isAdditional'] === true)
 						{
 							$parseMSG['isAdditional'] = true;
 						}
@@ -1076,7 +1092,7 @@ include($_EnginePath.'common.php');
 					$ThreadMsgTPL = gettemplate('message_mailbox_threaded');
 					foreach($Messages as $ThisKey => $MessageData)
 					{
-						if($MessageData['isAdditional'] === true)
+						if(isset($MessageData['isAdditional']) && $MessageData['isAdditional'] === true)
 						{
 							$ExcludeThreadIDs[$MessageData['Thread_ID']][] = $MessageData['CurrMSG_ID'];
 							$Messages[$ThreadMap[$MessageData['Thread_ID']]]['AddMSG_parsed'][] = parsetemplate($MsgTPL, $MessageData); 
@@ -1085,7 +1101,7 @@ include($_EnginePath.'common.php');
 					}						
 					foreach($Messages as $MessageData)
 					{
-						if($_UseThreads AND $MessageData['Thread_ID'] > 0)
+						if($_UseThreads && isset($MessageData['Thread_ID']) && $MessageData['Thread_ID'] > 0)
 						{
 							if(!empty($MessageData['AddMSG_parsed']))
 							{
@@ -1154,12 +1170,12 @@ include($_EnginePath.'common.php');
 					$MsgBoxData[] = "<span class=\"red\">{$Data}</span>";
 				}
 			}
-
+			
+			$InsertMsgBox = '';
 			if(!empty($MsgBoxData))
 			{
 				$InsertMsgBox = '<tr><th colspan="3" class="pad5">'.implode('<br/>', $MsgBoxData).'</th></tr><tr><td class="inv" style="height: 5px;"></td></tr>';
 			}
-
 			$parse['content'] = $page;
 			$parse['MsgBox'] = $InsertMsgBox;
 
@@ -1194,6 +1210,7 @@ include($_EnginePath.'common.php');
 				}
 				else
 				{
+					
 					$MsgCounter['threaded'][$Counter['type']] += $Counter['Count'];
 				}
 				$MsgCounter['total'][$Counter['type']] += $Counter['Count'];
