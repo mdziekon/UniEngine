@@ -676,7 +676,7 @@ include($_EnginePath.'common.php');
 									}
 								}
 								HandlePlanetUpdate_MultiUpdate($Results, $_User);
-								if($_User['techQueue_firstEndTime'] > 0)
+								if($_User['techQueue_EndTime'] > 0)
 								{
 									$FoundBlockingPlanets[$PlanetsData['id']] = $GeneratePlanetName[$_User['techQueue_Planet']];
 								}

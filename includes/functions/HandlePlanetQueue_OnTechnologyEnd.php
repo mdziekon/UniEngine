@@ -19,10 +19,10 @@ function HandlePlanetQueue_OnTechnologyEnd(&$ThePlanet, &$TheUser, $CurrentTime)
 
 			$TheUser[$_Vars_GameElements[$ElementID]] += 1;
 			$TheUser['techQueue_Planet'] = '0';
-			$TheUser['techQueue_firstEndTime'] = '0';
+			$TheUser['techQueue_EndTime'] = '0';
 			$HPQ_UserUpdatedFields[] = $_Vars_GameElements[$ElementID];
 			$HPQ_UserUpdatedFields[] = 'techQueue_Planet';
-			$HPQ_UserUpdatedFields[] = 'techQueue_firstEndTime';
+			$HPQ_UserUpdatedFields[] = 'techQueue_EndTime';
 			$HFUU_UsersToUpdate[$TheUser['id']] = true;
 
 			$UserDev_Log[] = array('PlanetID' => '0', 'Date' => $BuildEndTime, 'Place' => 5, 'Code' => '0', 'ElementID' => $ElementID);

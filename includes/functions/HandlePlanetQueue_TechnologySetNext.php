@@ -13,7 +13,7 @@ function HandlePlanetQueue_TechnologySetNext(&$ThePlanet, &$TheUser, $CurrentTim
 		$HPQ_PlanetUpdatedFields[] = 'techQueue';
 		$HPQ_PlanetUpdatedFields[] = 'techQueue_firstEndTime';
 		$HPQ_UserUpdatedFields[] = 'techQueue_Planet';
-		$HPQ_UserUpdatedFields[] = 'techQueue_firstEndTime';
+		$HPQ_UserUpdatedFields[] = 'techQueue_EndTime';
 		$HFUU_UsersToUpdate[$TheUser['id']] = true;
 		
 		$Queue = explode(';', $ThePlanet['techQueue']);
@@ -171,14 +171,14 @@ function HandlePlanetQueue_TechnologySetNext(&$ThePlanet, &$TheUser, $CurrentTim
 				$ThePlanet['techQueue'] = implode(';', $Queue);
 				$ThePlanet['techQueue_firstEndTime'] = $ElementEndTime;
 				$TheUser['techQueue_Planet'] = $ThePlanet['id'];
-				$TheUser['techQueue_firstEndTime'] = $ElementEndTime;
+				$TheUser['techQueue_EndTime'] = $ElementEndTime;
 			}
 			else
 			{
 				$ThePlanet['techQueue'] = '';
 				$ThePlanet['techQueue_firstEndTime'] = '0';
 				$TheUser['techQueue_Planet'] = '0';
-				$TheUser['techQueue_firstEndTime'] = '0';
+				$TheUser['techQueue_EndTime'] = '0';
 			}
 		}
 	}
@@ -198,7 +198,7 @@ function HandlePlanetQueue_TechnologySetNext(&$ThePlanet, &$TheUser, $CurrentTim
 		}
 		if($NeedUpdateUser === true)
 		{
-			doquery("UPDATE {{table}} SET `techQueue_firstEndTime` = '{$TheUser['techQueue_firstEndTime']}', `techQueue_Planet` = '{$TheUser['techQueue_Planet']}', `darkEnergy` = '{$TheUser['darkEnergy']}' WHERE `id` = {$TheUser['id']};", 'users');
+			doquery("UPDATE {{table}} SET `techQueue_EndTime` = '{$TheUser['techQueue_EndTime']}', `techQueue_Planet` = '{$TheUser['techQueue_Planet']}', `darkEnergy` = '{$TheUser['darkEnergy']}' WHERE `id` = {$TheUser['id']};", 'users');
 		}
 	}
 

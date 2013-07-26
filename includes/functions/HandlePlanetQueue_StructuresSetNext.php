@@ -72,7 +72,7 @@ function HandlePlanetQueue_StructuresSetNext(&$ThePlanet, &$TheUser, $CurrentTim
 								$BlockBuilding = true;
 								$BlockReason = 6;
 							}
-							else if($ElementID == 31 AND $TheUser['techQueue_Planet'] > 0 AND $TheUser['techQueue_firstEndTime'] > 0 AND $_GameConfig['BuildLabWhileRun'] != 1)
+							else if($ElementID == 31 AND $TheUser['techQueue_Planet'] > 0 AND $TheUser['techQueue_EndTime'] > 0 AND $_GameConfig['BuildLabWhileRun'] != 1)
 							{
 								$BlockBuilding = true;
 								$BlockReason = 7;

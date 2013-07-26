@@ -4,7 +4,7 @@ function TechQueue_Add(&$ThePlanet, &$TheUser, $TechID)
 {
 	global $_Vars_GameElements;
 
-	if($TheUser['techQueue_firstEndTime'] > 0 AND $TheUser['techQueue_Planet'] != $ThePlanet['id'])
+	if($TheUser['techQueue_EndTime'] > 0 AND $TheUser['techQueue_Planet'] != $ThePlanet['id'])
 	{
 		return false;
 	}

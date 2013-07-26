@@ -37,7 +37,7 @@ include($_EnginePath.'common.php');
 		$_Planet = array();
 	}
 	HandleFullUserUpdate($_User, $_Planet, $GetLabPlanet);
-	if(isset($_User['techQueue_firstEndTime']) && $_User['techQueue_firstEndTime'] > 0)
+	if(isset($_User['techQueue_EndTime']) && $_User['techQueue_EndTime'] > 0)
 	{
 		$InResearch = true;
 		$ResearchPlanet = &$GetLabPlanet;

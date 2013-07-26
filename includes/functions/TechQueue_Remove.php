@@ -41,7 +41,7 @@ function TechQueue_Remove(&$ThePlanet, &$TheUser, $ElementID, $CurrentTime)
 						if($QueueLength == 1)
 						{
 							$TheUser['techQueue_Planet'] = '0';
-							$TheUser['techQueue_firstEndTime'] = '0';
+							$TheUser['techQueue_EndTime'] = '0';
 						}
 						$RemovedTime = $QueueElement[3] - $CurrentTime;
 					}

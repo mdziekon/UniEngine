@@ -275,7 +275,7 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
 				if($Element == 31)
 				{
 					// Block Lab Upgrade is Research running (and Config dont allow that)
-					if($CurrentUser['techQueue_Planet'] > 0 AND $CurrentUser['techQueue_firstEndTime'] > 0 AND $_GameConfig['BuildLabWhileRun'] != 1)
+					if($CurrentUser['techQueue_Planet'] > 0 AND $CurrentUser['techQueue_EndTime'] > 0 AND $_GameConfig['BuildLabWhileRun'] != 1)
 					{ 
 						$parse['click'] = "<span class=red>{$_Lang['in_working']}</span>";
 					}

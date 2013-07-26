@@ -72,7 +72,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 						{
 							$AddMode = false;
 						}
-						if($ElementID == 31 AND $CurrentUser['techQueue_Planet'] > 0 AND $CurrentUser['techQueue_firstEndTime'] > 0 AND $_GameConfig['BuildLabWhileRun'] != 1)
+						if($ElementID == 31 AND $CurrentUser['techQueue_Planet'] > 0 AND $CurrentUser['techQueue_EndTime'] > 0 AND $_GameConfig['BuildLabWhileRun'] != 1)
 						{
 							$BlockCommand = true;
 						}
@@ -473,7 +473,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 				$HideButton_QuickBuild = true;
 				$HideButton_Destroy = true;
 			}
-			if($ElementID == 31 AND $CurrentUser['techQueue_Planet'] > 0 AND $CurrentUser['techQueue_firstEndTime'] > 0 AND $_GameConfig['BuildLabWhileRun'] != 1)
+			if($ElementID == 31 AND $CurrentUser['techQueue_Planet'] > 0 AND $CurrentUser['techQueue_EndTime'] > 0 AND $_GameConfig['BuildLabWhileRun'] != 1)
 			{
 				$BlockReason[] = $_Lang['ListBox_Disallow_LabResearch'];
 				$ElementParser['BuildButtonColor'] = 'buildDo_Gray';

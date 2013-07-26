@@ -14,10 +14,10 @@ function PostResearchSaveChanges($ThePlanet, $IsCurrentPlanet = true, $UpdateUse
 
 	if(!empty($UpdateUser) AND $UpdateUser['id'] > 0)
 	{
-		$QryUpdatePlanet = "UPDATE {{table}} SET ";
-		$QryUpdatePlanet .= "`techQueue_Planet` = '0', `techQueue_firstEndTime` = '0' ";
-		$QryUpdatePlanet .= "WHERE `id` = {$UpdateUser['id']};";
-		doquery($QryUpdatePlanet, 'users');
+		$QryUpdateUser = "UPDATE {{table}} SET ";
+		$QryUpdateUser .= "`techQueue_Planet` = '0', `techQueue_EndTime` = '0' ";
+		$QryUpdateUser .= "WHERE `id` = {$UpdateUser['id']};";
+		doquery($QryUpdateUser, 'users');
 	}
 }
 

@@ -9,7 +9,7 @@ function DeleteSelectedPlanetorMoon()
 	{
 		return array('result' => false, 'reason' => 'planetID');
 	}
-	if($_User['techQueue_firstEndTime'] > 0 AND $_User['techQueue_Planet'] == $_Planet['id'])
+	if($_User['techQueue_EndTime'] > 0 AND $_User['techQueue_Planet'] == $_Planet['id'])
 	{
 		return array('result' => false, 'reason' => 'tech');
 	}

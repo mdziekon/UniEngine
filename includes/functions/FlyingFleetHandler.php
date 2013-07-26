@@ -307,7 +307,7 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 					$Temp1 = array_keys($PrepareData['users'], $_User['id']);
 					unset($PrepareData['users'][$Temp1[0]]);
 					$_FleetCache['users'][$_User['id']] = $_User;
-					if($_User['techQueue_firstEndTime'] > 0)
+					if($_User['techQueue_EndTime'] > 0)
 					{
 						$PrepareData['planets'][] = $_User['techQueue_Planet'];
 					}
@@ -329,7 +329,7 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 					while($FetchData = mysql_fetch_assoc($Result_PrepUsers))
 					{
 						$_FleetCache['users'][$FetchData['id']] = $FetchData;
-						if($FetchData['techQueue_firstEndTime'] > 0)
+						if($FetchData['techQueue_EndTime'] > 0)
 						{
 							$PrepareData['planets'][] = $FetchData['techQueue_Planet'];
 						}
