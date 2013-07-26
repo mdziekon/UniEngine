@@ -142,7 +142,7 @@ function ShowTopNavigationBar($CurrentUser, $CurrentPlanet)
 		$parse['Energy_total'] = prettyNumber($CurrentPlanet['energy_max']);
 		
 		// > Metal
-		if($CurrentPlanet['metal'] > $CurrentPlanet['metal_max'])
+		if($CurrentPlanet['metal'] >= $CurrentPlanet['metal_max'])
 		{
 			$parse['ShowCount_Metal'] = colorRed(prettyNumber($CurrentPlanet['metal']));
 			$parse['ShowStore_Metal'] = colorRed(prettyNumber($CurrentPlanet['metal_max']));
@@ -154,7 +154,7 @@ function ShowTopNavigationBar($CurrentUser, $CurrentPlanet)
 		}
 		
 		// > Crystal
-		if($CurrentPlanet['crystal'] > $CurrentPlanet['crystal_max'])
+		if($CurrentPlanet['crystal'] >= $CurrentPlanet['crystal_max'])
 		{
 			$parse['ShowCount_Crystal'] = colorRed(prettyNumber($CurrentPlanet['crystal']));
 			$parse['ShowStore_Crystal'] = colorRed(prettyNumber($CurrentPlanet['crystal_max']));
@@ -166,7 +166,7 @@ function ShowTopNavigationBar($CurrentUser, $CurrentPlanet)
 		}
 		
 		// > Deuterium
-		if($CurrentPlanet['deuterium'] > $CurrentPlanet['deuterium_max'])
+		if($CurrentPlanet['deuterium'] >= $CurrentPlanet['deuterium_max'])
 		{
 			$parse['ShowCount_Deuterium'] = colorRed(prettyNumber($CurrentPlanet['deuterium']));
 			$parse['ShowStore_Deuterium'] = colorRed(prettyNumber($CurrentPlanet['deuterium_max']));
