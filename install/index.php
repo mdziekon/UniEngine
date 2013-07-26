@@ -36,12 +36,12 @@ else
 {
 	$_RequirementsCheckFails['PHPVersion'] = false;
 }
-if(error_reporting() & E_NOTICE)
+//if(error_reporting() & E_NOTICE)
 {
-	$_RequirementsCheckPassed = false;
-	$_RequirementsCheckFails['PHPNoticesOff'] = true;
+	//$_RequirementsCheckPassed = false;
+	//$_RequirementsCheckFails['PHPNoticesOff'] = true;
 }
-else
+//else
 {
 	$_RequirementsCheckFails['PHPNoticesOff'] = false;
 }
@@ -111,7 +111,7 @@ else
 {
 	$_Lang['PHP_HideInfoBox'] = 'display: none;';
 	
-	if($_POST['install'] == '1')
+	if(isset($_POST['install']))
 	{
 		// Check if every needed field is not empty
 		$_Install_RequiredFields = array
@@ -126,27 +126,27 @@ else
 		{
 			$_Lang[$key] = $value;
 		}
-		if($_POST['set_const_recaptcha_enable'] == 'on')
+		if(isset($_POST['set_const_recaptcha_enable']) && $_POST['set_const_recaptcha_enable'] == 'on')
 		{
 			$_Lang['set_const_recaptcha_enable'] = 'checked';
 		}
-		if($_POST['set_uni_mailactivationneeded'] == 'on')
+		if(isset($_POST['set_uni_mailactivationneeded']) && $_POST['set_uni_mailactivationneeded'] == 'on')
 		{
 			$_Lang['set_uni_mailactivationneeded'] = 'checked';
 		}
-		if($_POST['set_uni_telemetryenable'] == 'on')
+		if(isset($_POST['set_uni_telemetryenable']) && $_POST['set_uni_telemetryenable'] == 'on')
 		{
 			$_Lang['set_uni_telemetryenable'] = 'checked';
 		}
-		if($_POST['set_uni_noobprt_enable'] == 'on')
+		if(isset($_POST['set_uni_noobprt_enable']) && $_POST['set_uni_noobprt_enable'] == 'on')
 		{
 			$_Lang['set_uni_noobprt_enable'] = 'checked';
 		}
-		if($_POST['set_uni_antifarmenable'] == 'on')
+		if(isset($_POST['set_uni_antifarmenable']) && $_POST['set_uni_antifarmenable'] == 'on')
 		{
 			$_Lang['set_uni_antifarmenable'] = 'checked';
 		}
-		if($_POST['set_uni_antibashenable'] == 'on')
+		if(isset($_POST['set_uni_antibashenable']) && $_POST['set_uni_antibashenable'] == 'on')
 		{
 			$_Lang['set_uni_antibashenable'] = 'checked';
 		}
@@ -155,12 +155,12 @@ else
 		{
 			$_Install_RequiredFields[] = 'set_const_uniid';
 		}
-		if($_POST['set_const_recaptcha_enable'] == 'on')
+		if(isset($_POST['set_const_recaptcha_enable']) && $_POST['set_const_recaptcha_enable'] == 'on')
 		{
 			$_Install_RequiredFields[] = 'set_const_recaptcha_public';
 			$_Install_RequiredFields[] = 'set_const_recaptcha_private';
 		}
-		if($_POST['set_uni_noobprt_enable'] == 'on')
+		if(isset($_POST['set_uni_noobprt_enable']) && $_POST['set_uni_noobprt_enable'] == 'on')
 		{
 			$_Install_RequiredFields[] = 'set_uni_noobprt_basictime';
 			$_Install_RequiredFields[] = 'set_uni_noobprt_basicmultiplier';
@@ -168,13 +168,13 @@ else
 			$_Install_RequiredFields[] = 'set_uni_noobprt_idledays';
 			$_Install_RequiredFields[] = 'set_uni_noobprt_firstlogin';
 		}
-		if($_POST['set_uni_antifarmenable'] == 'on')
+		if(isset($_POST['set_uni_antifarmenable']) && $_POST['set_uni_antifarmenable'] == 'on')
 		{
 			$_Install_RequiredFields[] = 'set_uni_antifarmratio';
 			$_Install_RequiredFields[] = 'set_uni_antifarmtotalcount';
 			$_Install_RequiredFields[] = 'set_uni_antifarmplanetcount';
 		}
-		if($_POST['set_uni_antibashenable'] == 'on')
+		if(isset($_POST['set_uni_antibashenable']) && $_POST['set_uni_antibashenable'] == 'on')
 		{
 			$_Install_RequiredFields[] = 'set_uni_antibashinterval';
 			$_Install_RequiredFields[] = 'set_uni_antibashtotalcount';
@@ -184,7 +184,7 @@ else
 		$_Install_CanProceed = true;
 		foreach($_Install_RequiredFields as $Value)
 		{
-			if(empty($_POST[$Value]))
+			if(!isset($_POST[$Value]) || empty($_POST[$Value]))
 			{
 				$_Install_CanProceed = false;
 				$_Lang['PHP_BadVal_'.$Value] = 'class="redBorder"';
@@ -248,7 +248,7 @@ else
 				$_Install_CanProceed = false;
 				$_Lang['PHP_BadVal_set_uni_missiledebris'] = 'class="redBorder"';
 			}
-			if($_POST['set_uni_noobprt_enable'] == 'on')
+			if(isset($_POST['set_uni_noobprt_enable']) && $_POST['set_uni_noobprt_enable'] == 'on')
 			{
 				if($_Install_Vars['set_uni_noobprt_basictime'] <= 0)
 				{
@@ -276,7 +276,7 @@ else
 					$_Lang['PHP_BadVal_set_uni_noobprt_firstlogin'] = 'class="redBorder"';
 				}
 			}
-			if($_POST['set_uni_antifarmenable'] == 'on')
+			if(isset($_POST['set_uni_antifarmenable']) && $_POST['set_uni_antifarmenable'] == 'on')
 			{
 				if($_Install_Vars['set_uni_antifarmratio'] <= 0)
 				{
@@ -294,7 +294,7 @@ else
 					$_Lang['PHP_BadVal_set_uni_antifarmplanetcount'] = 'class="redBorder"';
 				}
 			}
-			if($_POST['set_uni_antibashenable'] == 'on')
+			if(isset($_POST['set_uni_antibashenable']) && $_POST['set_uni_antibashenable'] == 'on')
 			{
 				if($_Install_Vars['set_uni_antibashinterval'] <= 0)
 				{
@@ -343,8 +343,8 @@ else
 							'AutoTool_StatBuilder_Hash' => md5($_POST['set_uni_autotoolpass_statbuilder']),
 							'AutoTool_GC_Hash' => md5($_POST['set_uni_autotoolpass_gc']),
 							'GameName' => $_POST['set_uni_gamename'],
-							'Reg_RequireEmailConfirm' => ($_POST['set_uni_mailactivationneeded'] == 'on' ? 'true' : 'false'),
-							'Reg_RecaptchaEnabled' => ($_POST['set_const_recaptcha_enable'] == 'on' ? 'true' : 'false'),
+							'Reg_RequireEmailConfirm' => (isset($_POST['set_uni_mailactivationneeded']) && $_POST['set_uni_mailactivationneeded'] == 'on' ? 'true' : 'false'),
+							'Reg_RecaptchaEnabled' => (isset($_POST['set_const_recaptcha_enable']) && $_POST['set_const_recaptcha_enable'] == 'on' ? 'true' : 'false'),
 							'Reg_Recaptcha_Private' => $_POST['set_const_recaptcha_private'],
 							'Reg_Recaptcha_Public' => $_POST['set_const_recaptcha_public'],
 							'InsertServerMainOpenTime' => time()
@@ -376,21 +376,21 @@ else
 									'Config_MissileDebris' => $_Install_Vars['set_uni_missiledebris'],
 									'Config_InitialFields' => $_Install_Vars['set_uni_motherfields'],
 									'Config_CookieName' => preg_replace('/\s+/', '', strtoupper($_POST['set_uni_gamename'])).'_CK',
-									'Config_NoobProtection_Enable' => ($_POST['set_uni_noobprt_enable'] == 'on' ? '1' : '0'),
+									'Config_NoobProtection_Enable' => (isset($_POST['set_uni_noobprt_enable']) && $_POST['set_uni_noobprt_enable'] == 'on' ? '1' : '0'),
 									'Config_NoobProtection_BasicLimit_Time' => $_Install_Vars['set_uni_noobprt_basictime'],
 									'Config_NoobProtection_BasicLimit_Multiplier' => $_Install_Vars['set_uni_noobprt_basicmultiplier'],
 									'Config_NoobProtection_ProtectionRemove' => $_Install_Vars['set_uni_noobprt_remove'],
 									'Config_NoobProtection_IdleDaysProtection' => $_Install_Vars['set_uni_noobprt_idledays'],
 									'Config_NoobProtection_FirstLoginProtection' => $_Install_Vars['set_uni_noobprt_firstlogin'],
-									'Config_AntiFarm_Enable' => ($_POST['set_uni_antifarmenable'] == 'on' ? '1' : '0'),
+									'Config_AntiFarm_Enable' => (isset($_POST['set_uni_antifarmenable']) && $_POST['set_uni_antifarmenable'] == 'on' ? '1' : '0'),
 									'Config_AntiFarm_UserStatsRate' => $_Install_Vars['set_uni_antifarmratio'],
 									'Config_AntiFarm_CountTotal' => $_Install_Vars['set_uni_antifarmtotalcount'],
 									'Config_AntiFarm_CountPlanet' => $_Install_Vars['set_uni_antifarmplanetcount'],
-									'Config_BashLimit_Enabled' => ($_POST['set_uni_antibashenable'] == 'on' ? '1' : '0'),
+									'Config_BashLimit_Enabled' => (isset($_POST['set_uni_antibashenable']) && $_POST['set_uni_antibashenable'] == 'on' ? '1' : '0'),
 									'Config_BashLimit_Interval' => $_Install_Vars['set_uni_antibashinterval'],
 									'Config_BashLimit_CountTotal' => $_Install_Vars['set_uni_antibashtotalcount'],
 									'Config_BashLimit_CountPlanet' => $_Install_Vars['set_uni_antibashplanetcount'],
-									'Config_TelemetryEnabled' => ($_POST['set_uni_telemetryenable'] == 'on' ? '1' : '0'),
+									'Config_TelemetryEnabled' => (isset($_POST['set_uni_telemetryenable']) && $_POST['set_uni_telemetryenable'] == 'on' ? '1' : '0'),
 									'AdminUser_name' => $_POST['set_admin_username'],
 									'AdminUser_passhash' => md5($_POST['set_admin_password']),
 									'AdminUser_email' => $_POST['set_admin_email'],
