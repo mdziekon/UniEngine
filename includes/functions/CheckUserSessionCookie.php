@@ -17,6 +17,7 @@ function CheckUserSessionCookie()
 			includeLang('cookies');
 			message($_Lang['cookies']['Error1'], $_Lang['cookies']['Title']);
 		}
+		$Query_GetUser = '';
 		$Query_GetUser .= "SELECT `user`.*, `stats`.`total_rank`, `stats`.`total_points`, `ally`.`ally_name`, `ally`.`ally_owner`, `ally`.`ally_ranks`, `ally`.`ally_ChatRoom_ID` ";
 		$Query_GetUser .= "FROM {{table}} AS `user` ";
 		$Query_GetUser .= "LEFT JOIN `{{prefix}}statpoints` AS `stats` ON `user`.`id` = `stats`.`id_owner` AND `stats`.`stat_type` = '1' ";
@@ -33,6 +34,10 @@ function CheckUserSessionCookie()
 		$UserRow = mysql_fetch_assoc($UserResult);
 		
 		// Check if Password is correct
+		if(!isset($__ServerConnectionSettings['secretword']))
+		{
+			$__ServerConnectionSettings['secretword'] = '';
+		}
 		if(md5("{$UserRow['password']}--{$__ServerConnectionSettings['secretword']}") !== $TheCookie[2])
 		{
 			includeLang('cookies');
@@ -58,6 +63,7 @@ function CheckUserSessionCookie()
 			$UserRow['new_screen_settings'] = $_COOKIE['var_1124'];
 		}
 		
+		$Query_UpdateUser = '';
 		$Query_UpdateUser .= "UPDATE {{table}} SET ";
 		$Query_UpdateUser .= "`onlinetime` = UNIX_TIMESTAMP(), ";
 		$Query_UpdateUser .= "`current_page` = '".mysql_real_escape_string($_SERVER['REQUEST_URI'])."', ";

@@ -76,7 +76,7 @@ function HandlePlanetQueue(&$ThePlanet, &$TheUser, $CurrentTime = false, $ForMul
 	{
 		if($NeedUpdate === true)
 		{
-			$Return = true;
+			return true;
 		}
 	}
 	else
@@ -105,8 +105,6 @@ function HandlePlanetQueue(&$ThePlanet, &$TheUser, $CurrentTime = false, $ForMul
 			$HPQ_UserUpdatedFields = array();
 		}
 	}
-
-	return $Return;
 }
 
 ?>

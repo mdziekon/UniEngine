@@ -8,6 +8,8 @@ function GalaxyRowPlanetName($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Gala
 	if($GalaxyRow['id_planet'] > 0)
 	{
 		$Now = $Time;
+		$Activity = '';
+		$NameColor = '';
 		if($TPLPlanet === false)
 		{
 			$TPLPlanet = gettemplate('galaxy_row_planetname');

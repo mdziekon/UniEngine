@@ -1,4 +1,4 @@
-<?
+<?php
 
 $_Lang['Ban_Header']                 = 'Informacja Systemowa';
 $_Lang['Ban_AccBanned']              = 'Twoje konto zostało Zbanowane!';

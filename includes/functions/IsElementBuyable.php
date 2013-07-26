@@ -1,37 +1,50 @@
 <?php
 
-function IsElementBuyable($CurrentUser, $CurrentPlanet, $Element, $Incremental = true, $ForDestroy = false, $GetPremiumData = false)
+function IsElementBuyable($TheUser, $ThePlanet, $ElementID, $Incremental = true, $ForDestroy = false, $GetPremiumData = false)
 {
-	global $_Vars_Prices, $_Vars_GameElements;
+	global $_Vars_Prices, $_Vars_GameElements, $_Vars_ElementCategories;
 
-	if(isOnVacation($CurrentUser))
+	if(isOnVacation($TheUser))
 	{
 		return false;
 	}
 
 	if($Incremental)
 	{
-		$level = ($CurrentPlanet[$_Vars_GameElements[$Element]]) ? $CurrentPlanet[$_Vars_GameElements[$Element]] : $CurrentUser[$_Vars_GameElements[$Element]];
+		$level = 0;
+		if(in_array($ElementID, $_Vars_ElementCategories['tech']))
+		{
+			if(isset($TheUser[$_Vars_GameElements[$ElementID]]))
+			{
+				$level = $TheUser[$_Vars_GameElements[$ElementID]];
+			}
+		}
+		else
+		{
+			if(isset($ThePlanet[$_Vars_GameElements[$ElementID]]))
+			{
+				$level = $ThePlanet[$_Vars_GameElements[$ElementID]];
+			}
+		}
 	}
 	if($ForDestroy === true)
 	{
 		$level -= 1;
 	}
 
-	$RetValue = true;
 	$array = array('metal', 'crystal', 'deuterium', 'energy_max');
 
 	foreach($array as $ResType)
 	{
-		if($_Vars_Prices[$Element][$ResType] != 0)
+		if(isset($_Vars_Prices[$ElementID][$ResType]) && $_Vars_Prices[$ElementID][$ResType] > 0)
 		{
 			if($Incremental)
 			{
-				$cost[$ResType] = floor($_Vars_Prices[$Element][$ResType] * pow($_Vars_Prices[$Element]['factor'], $level));
+				$cost[$ResType] = floor($_Vars_Prices[$ElementID][$ResType] * pow($_Vars_Prices[$ElementID]['factor'], $level));
 			}
 			else
 			{
-				$cost[$ResType] = floor($_Vars_Prices[$Element][$ResType]);
+				$cost[$ResType] = floor($_Vars_Prices[$ElementID][$ResType]);
 			}
 
 			if($ForDestroy)
@@ -39,9 +52,9 @@ function IsElementBuyable($CurrentUser, $CurrentPlanet, $Element, $Incremental =
 				$cost[$ResType] = floor($cost[$ResType] / 2);
 			}
 
-			if($cost[$ResType] > $CurrentPlanet[$ResType])
+			if($cost[$ResType] > $ThePlanet[$ResType])
 			{
-				$RetValue = false;
+				return false;
 			}
 		}
 	}
@@ -49,13 +62,13 @@ function IsElementBuyable($CurrentUser, $CurrentPlanet, $Element, $Incremental =
 	if($GetPremiumData)
 	{
 		global $_Vars_PremiumBuildingPrices;
-		if($_Vars_PremiumBuildingPrices[$Element] > $CurrentUser['darkEnergy'])
+		if(isset($_Vars_PremiumBuildingPrices[$ElementID]) && $_Vars_PremiumBuildingPrices[$ElementID] > $TheUser['darkEnergy'])
 		{
-			$RetValue = false;
+			return false;
 		}
 	}
 
-	return $RetValue;
+	return true;
 }
 
 ?>

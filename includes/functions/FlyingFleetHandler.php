@@ -86,6 +86,7 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 	}
 
 	// Select all my Recycling & Colonizing Fleets
+	$Query_MyGalaxyFleets = '';
 	$Query_MyGalaxyFleets .= "SELECT `fleet_mission`, `fleet_end_id_galaxy`, `fleet_end_galaxy`, `fleet_end_system`, `fleet_end_planet` FROM {{table}} WHERE ";
 	$Query_MyGalaxyFleets .= "`fleet_mission` IN (7, 8) AND `fleet_owner` = {$planet['id_owner']};";
 	$Result_MyGalaxyFleets = doquery($Query_MyGalaxyFleets, 'fleets');

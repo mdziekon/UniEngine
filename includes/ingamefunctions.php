@@ -8,7 +8,7 @@ include($FIP.'CheckUserSession.php');
 include($FIP.'TasksFunctions.php');
 
 // Rest
-if($_UseMinimalCommon !== true)
+if(!isset($_UseMinimalCommon) || $_UseMinimalCommon !== true)
 {
 	include($FIP.'HandlePlanetQueue.php');
 	include($FIP.'HandlePlanetQueue_CreateQueueList.php');

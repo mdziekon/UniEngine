@@ -1,4 +1,4 @@
-<?
+<?php
 
 $_Lang['BattleReport_AttackerNormal'] .= "<center><a href=\"#\" onclick=\"f('battlereport.php?id=%s', ''); return false;\"><span style=\"color: %s\">{$_Lang['sys_mess_attack_report']} [%s:%s:%s] [%s]</span></a><br/><br/>";
 $_Lang['BattleReport_AttackerNormal'] .= "<span class=\"red\">{$_Lang['sys_perte_attaquant']}: %s</span> <b>|</b> <span class=\"lime\">{$_Lang['sys_perte_defenseur']}: %s</span><br/>";

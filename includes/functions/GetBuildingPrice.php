@@ -1,12 +1,26 @@
 <?php
 
-function GetBuildingPrice($CurrentUser, $CurrentPlanet, $Element, $Incremental = true, $ForDestroy = false, $GetPremiumData = false)
+function GetBuildingPrice($TheUser, $ThePlanet, $ElementID, $Incremental = true, $ForDestroy = false, $GetPremiumData = false)
 {
-	global $_Vars_Prices, $_Vars_GameElements;
+	global $_Vars_Prices, $_Vars_GameElements, $_Vars_ElementCategories;
 
 	if($Incremental)
 	{
-		$level = ($CurrentPlanet[$_Vars_GameElements[$Element]]) ? $CurrentPlanet[$_Vars_GameElements[$Element]] : $CurrentUser[$_Vars_GameElements[$Element]];
+		$level = 0;
+		if(in_array($ElementID, $_Vars_ElementCategories['tech']))
+		{
+			if(isset($TheUser[$_Vars_GameElements[$ElementID]]))
+			{
+				$level = $TheUser[$_Vars_GameElements[$ElementID]];
+			}
+		}
+		else
+		{
+			if(isset($ThePlanet[$_Vars_GameElements[$ElementID]]))
+			{
+				$level = $ThePlanet[$_Vars_GameElements[$ElementID]];
+			}
+		}
 	}
 	if($ForDestroy == true)
 	{
@@ -16,26 +30,33 @@ function GetBuildingPrice($CurrentUser, $CurrentPlanet, $Element, $Incremental =
 	$array = array('metal', 'crystal', 'deuterium', 'energy_max');
 	foreach($array as $ResType)
 	{
-		if($Incremental)
+		if(isset($_Vars_Prices[$ElementID][$ResType]) && $_Vars_Prices[$ElementID][$ResType] > 0)
 		{
-			$cost[$ResType] = floor($_Vars_Prices[$Element][$ResType] * pow($_Vars_Prices[$Element]['factor'], $level));
+			if($Incremental)
+			{
+				$cost[$ResType] = floor($_Vars_Prices[$ElementID][$ResType] * pow($_Vars_Prices[$ElementID]['factor'], $level));
+			}
+			else
+			{
+				$cost[$ResType] = floor($_Vars_Prices[$ElementID][$ResType]);
+			}
+
+			if($ForDestroy == true)
+			{
+				$cost[$ResType] = floor($cost[$ResType] / 2);
+			}
 		}
 		else
 		{
-			$cost[$ResType] = floor($_Vars_Prices[$Element][$ResType]);
-		}
-
-		if($ForDestroy == true)
-		{
-			$cost[$ResType] = floor($cost[$ResType] / 2);
+			$cost[$ResType] = 0;
 		}
 	}
 	if($GetPremiumData)
 	{
 		global $_Vars_PremiumBuildingPrices;
-		if($_Vars_PremiumBuildingPrices[$Element] > 0)
+		if(isset($_Vars_PremiumBuildingPrices[$ElementID]) && $_Vars_PremiumBuildingPrices[$ElementID] > 0)
 		{
-			$cost['darkEnergy'] = $_Vars_PremiumBuildingPrices[$Element];
+			$cost['darkEnergy'] = $_Vars_PremiumBuildingPrices[$ElementID];
 		}
 	}
 

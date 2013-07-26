@@ -7,7 +7,7 @@ function HandleFullUserUpdate(&$TheUser, &$ThePlanet, &$TheLabPlanet = false, $C
 		$CurrentTime = time();
 	}
 	
-	if($TheUser['techQueue_firstEndTime'] > 0 AND $TheUser['techQueue_Planet'] != $ThePlanet['id'])
+	if(isset($TheUser['techQueue_firstEndTime']) && $TheUser['techQueue_firstEndTime'] > 0 && $TheUser['techQueue_Planet'] != $ThePlanet['id'])
 	{
 		if(empty($TheLabPlanet))
 		{

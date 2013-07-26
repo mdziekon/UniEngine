@@ -1,4 +1,4 @@
-<?
+<?php
 
 $_Lang['sys_attacker_lostunits'] = "Agresor stracił %s surowców.";
 $_Lang['sys_defender_lostunits'] = "Obrońca stracił %s surowców.";

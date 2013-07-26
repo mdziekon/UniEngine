@@ -9,7 +9,7 @@ function GalaxyRowActions($GalaxyRowPlanet, $GalaxyRowPlayer, $Galaxy, $System, 
 		$TPL = gettemplate('galaxy_row_action');
 	}
 
-	if($GalaxyRowPlanet['id'] > 0 AND $GalaxyRowPlayer['id'] != $_User['id'])
+	if(isset($GalaxyRowPlanet['id']) && $GalaxyRowPlanet['id'] > 0 && $GalaxyRowPlayer['id'] != $_User['id'])
 	{
 		$Parse = array
 		(

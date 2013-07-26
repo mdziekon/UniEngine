@@ -1,4 +1,4 @@
-<? 
+<?php
 
 $_Lang['Title']              = 'Raport';
 $_Lang['Table_title']        = 'Wyślij raport';

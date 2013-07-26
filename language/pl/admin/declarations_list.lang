@@ -1,4 +1,4 @@
-<?
+<?php
 
 $_Lang['declaration_title']	= 'Zgłoszenia MultiKont';
 $_Lang['declaration_noexist'] = 'Taka deklaracja nie istnieje!';

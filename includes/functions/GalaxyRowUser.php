@@ -20,7 +20,7 @@ function GalaxyRowUser($GalaxyRowPlanet, $GalaxyRowUser, $MyBuddies, $SFBStatus)
 		}
 	}
 
-	if($GalaxyRowPlanet['id_owner'] > 0)
+	if(isset($GalaxyRowPlanet['id_owner']) && $GalaxyRowPlanet['id_owner'] > 0)
 	{
 		$NoobProt = $_GameConfig['noobprotection'];
 		$NoobTime = $_GameConfig['noobprotectiontime'];
@@ -33,7 +33,7 @@ function GalaxyRowUser($GalaxyRowPlanet, $GalaxyRowUser, $MyBuddies, $SFBStatus)
 		$UserPoints['total_rank'] = $_User['total_rank'];
 		$User2Points['total_points'] = $GalaxyRowUser['total_points'];
 		$User2Points['total_rank'] = $GalaxyRowUser['total_rank']; 
-
+		
 		if($GalaxyRowUser['is_banned'] == 1 OR isOnVacation($GalaxyRowUser))
 		{
 			if(isOnVacation($GalaxyRowUser))
@@ -170,7 +170,7 @@ function GalaxyRowUser($GalaxyRowPlanet, $GalaxyRowUser, $MyBuddies, $SFBStatus)
 			'UserID'			=> $GalaxyRowUser['id'],
 			'Lang_User'			=> $_Lang['gl_username'],
 			'Username'			=> $GalaxyRowUser['username'],
-			'NameClass'			=> $NameClasses[0]['class'],
+			'NameClass'			=> (isset($NameClasses) ? $NameClasses[0]['class'] : ''),
 			'AddOldUsername'	=> ($GalaxyRowUser['old_username_expire'] > $Time ? ' <acronym class=point title=\"'.$_Lang['Old_username_is'].': '.$GalaxyRowUser['old_username'].'\">(?)</acronym>' : ''),
 			'Lang_Profile'		=> $_Lang['gl_showprofile'],
 			'Lang_Message'		=> $_Lang['gl_sendmess'],
@@ -185,7 +185,7 @@ function GalaxyRowUser($GalaxyRowPlanet, $GalaxyRowUser, $MyBuddies, $SFBStatus)
 			'Hide_Message'		=> ' class=hide',
 			'Hide_Buddy'		=> ' class=hide',
 			'Hide_InviteToAlly' => ' class=hide',
-			'Insert_MoraleBox'	=> $MoraleBox
+			'Insert_MoraleBox'	=> (isset($MoraleBox) ? $MoraleBox : '')
 		);
 		if($GalaxyRowUser['id'] != $_User['id'])
 		{

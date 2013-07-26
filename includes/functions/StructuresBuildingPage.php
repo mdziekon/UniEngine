@@ -76,6 +76,10 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 						{
 							$BlockCommand = true;
 						}
+						else
+						{
+							$BlockCommand = false;
+						}
 						if($BlockCommand !== true)
 						{
 							include($_EnginePath.'includes/functions/AddBuildingToQueue.php');
@@ -155,10 +159,10 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 						'EndTitleHour'			=> $_Lang['Queue_EndTitleHour'],
 						'EndDateExpand'			=> prettyDate('d m Y', $BuildEndTime, 1),
 						'EndTimeExpand'			=> date('H:i:s', $BuildEndTime),
-						'PremBlock'				=> ($_Vars_PremiumBuildings[$ElementID] == 1 ? 'premblock' : ''),
+						'PremBlock'				=> (isset($_Vars_PremiumBuildings[$ElementID]) && $_Vars_PremiumBuildings[$ElementID] == 1 ? 'premblock' : ''),
 						'ListID'				=> $ListID,
 						'PlanetID'				=> $CurrentPlanet['id'],
-						'CancelText'			=> ($_Vars_PremiumBuildings[$ElementID] == 1 ? $_Lang['Queue_Cancel_CantCancel'] : ($ThisForDestroy ? $_Lang['Queue_Cancel_Destroy'] : $_Lang['Queue_Cancel_Build']))
+						'CancelText'			=> (isset($_Vars_PremiumBuildings[$ElementID]) && $_Vars_PremiumBuildings[$ElementID] == 1 ? $_Lang['Queue_Cancel_CantCancel'] : ($ThisForDestroy ? $_Lang['Queue_Cancel_Destroy'] : $_Lang['Queue_Cancel_Build']))
 					);
 				}
 				else
@@ -189,7 +193,11 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 					$LockResources['crystal'] += $GetResourcesToLock['crystal'];
 					$LockResources['deuterium'] += $GetResourcesToLock['deuterium'];
 				}
-
+				
+				if(!isset($LevelModifiers[$ElementID]))
+				{
+					$LevelModifiers[$ElementID] = 0;
+				}
 				if($ThisForDestroy)
 				{
 					$LevelModifiers[$ElementID] += 1;
@@ -206,13 +214,14 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 			}
 			$PreviousBuildEndTime = $BuildEndTime;
 		}
-		$CurrentPlanet['metal'] -= $LockResources['metal'];
-		$CurrentPlanet['crystal'] -= $LockResources['crystal'];
-		$CurrentPlanet['deuterium'] -= $LockResources['deuterium'];
+		$CurrentPlanet['metal'] -= (isset($LockResources['metal']) ? $LockResources['metal'] : 0);
+		$CurrentPlanet['crystal'] -= (isset($LockResources['crystal']) ? $LockResources['crystal'] : 0);
+		$CurrentPlanet['deuterium'] -= (isset($LockResources['deuterium']) ? $LockResources['deuterium'] : 0);
 
 		$Queue['lenght'] = $QueueIndex;
 		if(!empty($QueueParser))
 		{
+			$Parse['Create_Queue'] = '';
 			foreach($QueueParser as $QueueID => $QueueData)
 			{
 				if($QueueID == 0)
@@ -321,7 +330,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 			$ElementParser['ElementName'] = $_Lang['tech'][$ElementID];
 			$ElementParser['ElementID'] = $ElementID;
 			$ElementParser['ElementLevel'] = prettyNumber($CurrentPlanet[$_Vars_GameElements[$ElementID]]);
-			$ElementParser['ElementRealLevel'] = prettyNumber($CurrentPlanet[$_Vars_GameElements[$ElementID]] + $LevelModifiers[$ElementID]);
+			$ElementParser['ElementRealLevel'] = prettyNumber($CurrentPlanet[$_Vars_GameElements[$ElementID]] + (isset($LevelModifiers[$ElementID]) ? $LevelModifiers[$ElementID] : 0));
 			$ElementParser['BuildLevel'] = prettyNumber($CurrentPlanet[$_Vars_GameElements[$ElementID]] + 1);
 			$ElementParser['DestroyLevel'] = prettyNumber($CurrentPlanet[$_Vars_GameElements[$ElementID]] - 1);
 			$ElementParser['Desc'] = $_Lang['res']['descriptions'][$ElementID];
@@ -350,7 +359,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 				unset($ElementParser['levelmodif']);
 			}
 
-			if(!($_Vars_MaxBuildingLevels[$ElementID] > 0 AND $NextLevel > $_Vars_MaxBuildingLevels[$ElementID]))
+			if(!(isset($_Vars_MaxBuildingLevels[$ElementID]) && $_Vars_MaxBuildingLevels[$ElementID] > 0 && $NextLevel > $_Vars_MaxBuildingLevels[$ElementID]))
 			{
 				$ElementParser['ElementPrice'] = GetBuildingPrice($CurrentUser, $CurrentPlanet, $ElementID, true, false, true);
 				foreach($ElementParser['ElementPrice'] as $Key => $Value)
@@ -391,8 +400,12 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 							'ResColor' => $ResColor,
 							'Value' => prettyNumber($Value),
 							'ResMinusColor' => $ResMinusColor,
-							'MinusValue' => $MinusValue
+							'MinusValue' => $MinusValue,
 						);
+						if(!isset($ElementParser['ElementPriceDiv']))
+						{
+							$ElementParser['ElementPriceDiv'] = '';
+						}
 						$ElementParser['ElementPriceDiv'] .= parsetemplate($TPL['infobox_req_res'], $ElementParser['ElementPrices']);
 					}
 				}
@@ -407,7 +420,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 				$ElementParser['BuildWarn_Color'] = 'red';
 				$ElementParser['BuildWarn_Text'] = $_Lang['ListBox_Disallow_MaxLevelReached'];
 			}
-			if($CurrentLevel == 0 OR $_Vars_IndestructibleBuildings[$ElementID])
+			if($CurrentLevel == 0 || (isset($_Vars_IndestructibleBuildings[$ElementID]) && $_Vars_IndestructibleBuildings[$ElementID]))
 			{
 				$HideButton_Destroy = true;
 			}
@@ -553,6 +566,10 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 						$ElementParser['Create_DestroyTips_Res'] .= parsetemplate($TPL['infobox_req_destres'], $ElementParser['ElementPrices']);
 					}
 				}
+				if(!isset($Parse['Create_DestroyTips']))
+				{
+					$Parse['Create_DestroyTips'] = '';
+				}
 				$Parse['Create_DestroyTips'] .= parsetemplate($TPL['infobox_req_desttable'], array
 				(
 					'ElementID' => $ElementID,
@@ -630,6 +647,14 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 				}
 				// Calculate Difference
 				$Production = prettyNumber($Production[1] - $Production[0]);
+				if(!isset($Needs[1]))
+				{
+					$Needs[1] = 0;
+				}
+				if(!isset($Needs[0]))
+				{
+					$Needs[0] = 0;
+				}
 				$Needs = prettyNumber($Needs[1] - $Needs[0]);
 
 				if($ElementID >= 1 AND $ElementID <= 3)
@@ -668,9 +693,9 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 			$CurrentPlanet[$_Vars_GameElements[$ElementID]] += $Modifier;
 		}
 	}
-	$CurrentPlanet['metal'] += $LockResources['metal'];
-	$CurrentPlanet['crystal'] += $LockResources['crystal'];
-	$CurrentPlanet['deuterium'] += $LockResources['deuterium'];
+	$CurrentPlanet['metal'] += (isset($LockResources['metal']) ? $LockResources['metal'] : 0);
+	$CurrentPlanet['crystal'] += (isset($LockResources['crystal']) ? $LockResources['crystal'] : 0);
+	$CurrentPlanet['deuterium'] += (isset($LockResources['deuterium']) ? $LockResources['deuterium'] : 0);
 
 	// Create Structures List
 	$ThisRowIndex = 0;
@@ -684,11 +709,19 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 			$InRowCount = 0;
 		}
 
+		if(!isset($StructureRows[$ThisRowIndex]['Elements']))
+		{
+			$StructureRows[$ThisRowIndex]['Elements'] = '';
+		}
 		$StructureRows[$ThisRowIndex]['Elements'] .= $ParsedData;
 		$InRowCount += 1;
 	}
 	if($InRowCount < $ElementsPerRow)
 	{
+		if(!isset($StructureRows[$ThisRowIndex]['Elements']))
+		{
+			$StructureRows[$ThisRowIndex]['Elements'] = '';
+		}
 		$StructureRows[$ThisRowIndex]['Elements'] .= str_repeat($TPL['list_hidden'], ($ElementsPerRow - $InRowCount));
 	}
 	foreach($StructureRows as $Index => $Data)

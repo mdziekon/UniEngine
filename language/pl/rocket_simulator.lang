@@ -1,4 +1,4 @@
-<? 
+<?php
 
 $_Lang['Title']              = 'Symulator Ataków Rakietowych';
 

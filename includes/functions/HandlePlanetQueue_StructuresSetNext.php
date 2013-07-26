@@ -2,7 +2,8 @@
 
 function HandlePlanetQueue_StructuresSetNext(&$ThePlanet, &$TheUser, $CurrentTime, $RunStandAlone = false)
 {
-	global	$_Vars_GameElements, $_Lang, $_GameConfig, $_Vars_IndestructibleBuildings, $_Vars_MaxBuildingLevels, $_Vars_PremiumBuildings, $_Vars_PremiumBuildingPrices,
+	global	$_Vars_GameElements, $_Lang, $_GameConfig, $_Vars_IndestructibleBuildings, $_Vars_MaxBuildingLevels,
+			$_Vars_PremiumBuildings, $_Vars_PremiumBuildingPrices,
 			$UserDev_Log, $HPQ_PlanetUpdatedFields, $HPQ_UserUpdatedFields, $HFUU_UsersToUpdate;
 
 	$Return = false;
@@ -41,7 +42,7 @@ function HandlePlanetQueue_StructuresSetNext(&$ThePlanet, &$TheUser, $CurrentTim
 			{
 				if($ForDestroy === true)
 				{
-					if($_Vars_IndestructibleBuildings[$ElementID] != 1)
+					if(!isset($_Vars_IndestructibleBuildings[$ElementID]) || $_Vars_IndestructibleBuildings[$ElementID] != 1)
 					{
 						if($ThePlanet[$_Vars_GameElements[$ElementID]] <= 0)
 						{
@@ -61,17 +62,17 @@ function HandlePlanetQueue_StructuresSetNext(&$ThePlanet, &$TheUser, $CurrentTim
 					{
 						if($ThePlanet['field_current'] < $MaxFields)
 						{
-							if($_Vars_MaxBuildingLevels[$ElementID] > 0 AND $ElementLevel > $_Vars_MaxBuildingLevels[$ElementID])
+							if(isset($_Vars_MaxBuildingLevels[$ElementID]) && $ElementLevel > $_Vars_MaxBuildingLevels[$ElementID])
 							{
 								$BlockBuilding = true;
 								$BlockReason = 5;
 							}
-							elseif($_Vars_PremiumBuildings[$ElementID] == 1 AND $_Vars_PremiumBuildingPrices[$ElementID] > 0 AND $TheUser['darkEnergy'] < $_Vars_PremiumBuildingPrices[$ElementID])
+							else if(isset($_Vars_PremiumBuildings[$ElementID]) && $_Vars_PremiumBuildings[$ElementID] == 1 && isset($_Vars_PremiumBuildingPrices[$ElementID]) && $_Vars_PremiumBuildingPrices[$ElementID] > 0 AND $TheUser['darkEnergy'] < $_Vars_PremiumBuildingPrices[$ElementID])
 							{
 								$BlockBuilding = true;
 								$BlockReason = 6;
 							}
-							elseif($ElementID == 31 AND $TheUser['techQueue_Planet'] > 0 AND $TheUser['techQueue_firstEndTime'] > 0 AND $_GameConfig['BuildLabWhileRun'] != 1)
+							else if($ElementID == 31 AND $TheUser['techQueue_Planet'] > 0 AND $TheUser['techQueue_firstEndTime'] > 0 AND $_GameConfig['BuildLabWhileRun'] != 1)
 							{
 								$BlockBuilding = true;
 								$BlockReason = 7;
@@ -102,7 +103,7 @@ function HandlePlanetQueue_StructuresSetNext(&$ThePlanet, &$TheUser, $CurrentTim
 				$ThePlanet['metal'] -= $RemoveRes['metal'];
 				$ThePlanet['crystal'] -= $RemoveRes['crystal'];
 				$ThePlanet['deuterium'] -= $RemoveRes['deuterium'];
-				if($_Vars_PremiumBuildings[$ElementID] == 1 AND $_Vars_PremiumBuildingPrices[$ElementID] > 0)
+				if(isset($_Vars_PremiumBuildings[$ElementID]) && $_Vars_PremiumBuildings[$ElementID] == 1 && isset($_Vars_PremiumBuildingPrices[$ElementID]) && $_Vars_PremiumBuildingPrices[$ElementID] > 0)
 				{
 					$NeedUpdateUser = true;
 					$TheUser['darkEnergy'] -= $_Vars_PremiumBuildingPrices[$ElementID];
@@ -232,7 +233,7 @@ function HandlePlanetQueue_StructuresSetNext(&$ThePlanet, &$TheUser, $CurrentTim
 			}
 		}
 		
-		if($NeedQueueRebuild === true)
+		if(isset($NeedQueueRebuild))
 		{
 			foreach($Queue as $QueueRow)
 			{
@@ -258,6 +259,7 @@ function HandlePlanetQueue_StructuresSetNext(&$ThePlanet, &$TheUser, $CurrentTim
 		$Return = false;
 		if($NeedUpdate === true)
 		{
+			$Query_Update = '';
 			$Query_Update .= "UPDATE {{table}} SET ";
 			$Query_Update .= "`metal` = '{$ThePlanet['metal']}', `crystal` = '{$ThePlanet['crystal']}', `deuterium` = '{$ThePlanet['deuterium']}', ";
 			$Query_Update .= "`buildQueue` = '{$ThePlanet['buildQueue']}', `buildQueue_firstEndTime` = '{$ThePlanet['buildQueue_firstEndTime']}' ";
@@ -266,7 +268,7 @@ function HandlePlanetQueue_StructuresSetNext(&$ThePlanet, &$TheUser, $CurrentTim
 
 			$Return = true;
 		}
-		if($NeedUpdateUser === true)
+		if(isset($NeedUpdateUser))
 		{
 			doquery("UPDATE {{table}} SET `darkEnergy` = '{$TheUser['darkEnergy']}' WHERE `id` = {$TheUser['id']};", 'users');
 		}

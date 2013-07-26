@@ -48,7 +48,7 @@ function isLogged()
 {
 	global $_User;
 
-	if($_User['id'] > 0)
+	if(isset($_User['id']) && $_User['id'] > 0)
 	{
 		return TRUE;
 	}
@@ -139,21 +139,21 @@ function CheckAuth($Type, $CheckMode = AUTHCHECK_NORMAL, $TheUser = false)
 	
 	if($CheckMode == AUTHCHECK_NORMAL)
 	{
-		if($TheUser['authlevel'] >= $TypesArray[$Type])
+		if(isset($TheUser['authlevel']) && $TheUser['authlevel'] >= $TypesArray[$Type])
 		{
 			return true;
 		}
 	}
 	else if($CheckMode == AUTHCHECK_HIGHER)
 	{
-		if($TheUser['authlevel'] > $TypesArray[$Type])
+		if(isset($TheUser['authlevel']) && $TheUser['authlevel'] > $TypesArray[$Type])
 		{
 			return true;
 		}
 	}
 	else if($CheckMode == AUTHCHECK_EXACT)
 	{
-		if($TheUser['authlevel'] == $TypesArray[$Type])
+		if(isset($TheUser['authlevel']) && $TheUser['authlevel'] == $TypesArray[$Type])
 		{
 			return true;
 		}
@@ -353,7 +353,6 @@ function message($Message, $Title = 'Error', $RedirectLocation = '', $RedirectTi
 {
 	global $page;
 	
-	$parse['color'] = $color;
 	$parse['title'] = $Title;
 	$parse['mes'] = $Message;
 
@@ -369,6 +368,7 @@ function display($PageCode, $PageTitle = '', $ShowTopResourceBar = true, $IsAdmi
 	
 	if(!empty($_BenchTool)){ $_BenchTool->simpleCountStart(false, 'telemetry__d'); }
 	
+	$DisplayPage = '';
 	if(empty($_SkinPath))
 	{
 		$_SkinPath = DEFAULT_SKINPATH;
@@ -424,13 +424,14 @@ function display($PageCode, $PageTitle = '', $ShowTopResourceBar = true, $IsAdmi
 	$Parse['PHP_InjectIntoBottomMenu'] = GlobalTemplate_GetBottomMenuInjection();
 	$Parse['PHP_Meta'] = DisplayHelper_GetRedirect();
 
-	if(!empty($_BenchTool) AND $_GET['showbenchresult'] == 'true')
+	if(!empty($_BenchTool) AND (isset($_GET['showbenchresult']) && $_GET['showbenchresult'] == 'true'))
 	{
 		$PageCode .= '{PLACE_BENCHRESULT_HERE}';
 	}
 
 	$DisplayPage .= $PageCode;
 
+	$TopMenuAdmin = false;
 	if($_DontShowMenus === true)
 	{
 		$TPL = gettemplate('game_main_body_simple');
@@ -447,7 +448,7 @@ function display($PageCode, $PageTitle = '', $ShowTopResourceBar = true, $IsAdmi
 		{
 			$Parse['title'] = $PageTitle.' - '.$_GameConfig['game_name'];
 		}
-		$Parse['game_content_replace']= $DisplayPage;
+		$Parse['game_content_replace'] = $DisplayPage;
 		$Page = parsetemplate($TPL, $Parse);
 	}
 	else
@@ -465,22 +466,23 @@ function display($PageCode, $PageTitle = '', $ShowTopResourceBar = true, $IsAdmi
 			$Parse['Insert_AllyChat_MsgCount'] = '0';
 			
 			if(!defined('IN_ERROR'))
-			{		
+			{
+				$Query_Counters = array('', '', '');
 				if($_DisplaySettings['dontShow_MainChat_MsgCount'] !== true)
 				{
-					$Query_Counters[1] .= "(SELECT '1' AS `Type`, COUNT(`msg`.`ID`) AS `Count` ";
-					$Query_Counters[1] .= "FROM `{{prefix}}chat_messages` AS `msg` ";
-					$Query_Counters[1] .= "LEFT JOIN `{{prefix}}chat_online` AS `visit` ON `visit`.`RID` = 0 AND `visit`.`UID` = {$_User['id']} ";
-					$Query_Counters[1] .= "WHERE `msg`.`RID` = 0 AND `msg`.`TimeStamp_Add` > IF(`visit`.`LastOnline` > 0, `visit`.`LastOnline`, 0))";
+					$Query_Counters[0] .= "(SELECT '1' AS `Type`, COUNT(`msg`.`ID`) AS `Count` ";
+					$Query_Counters[0] .= "FROM `{{prefix}}chat_messages` AS `msg` ";
+					$Query_Counters[0] .= "LEFT JOIN `{{prefix}}chat_online` AS `visit` ON `visit`.`RID` = 0 AND `visit`.`UID` = {$_User['id']} ";
+					$Query_Counters[0] .= "WHERE `msg`.`RID` = 0 AND `msg`.`TimeStamp_Add` > IF(`visit`.`LastOnline` > 0, `visit`.`LastOnline`, 0))";
 				}
 				if($_User['ally_ChatRoom_ID'] > 0 AND $_DisplaySettings['dontShow_AllyChat_MsgCount'] !== true)
 				{
-					$Query_Counters[2] .= "(SELECT '2' AS `Type`, COUNT(`msg`.`ID`) AS `Count` ";
-					$Query_Counters[2] .= "FROM `{{prefix}}chat_messages` AS `msg` ";
-					$Query_Counters[2] .= "LEFT JOIN `{{prefix}}chat_online` AS `visit` ON `visit`.`RID` = {$_User['ally_ChatRoom_ID']} AND `visit`.`UID` = {$_User['id']} ";
-					$Query_Counters[2] .= "WHERE `msg`.`RID` = {$_User['ally_ChatRoom_ID']} AND `msg`.`TimeStamp_Add` > IF(`visit`.`LastOnline` > 0, `visit`.`LastOnline`, 0))";
+					$Query_Counters[1] .= "(SELECT '2' AS `Type`, COUNT(`msg`.`ID`) AS `Count` ";
+					$Query_Counters[1] .= "FROM `{{prefix}}chat_messages` AS `msg` ";
+					$Query_Counters[1] .= "LEFT JOIN `{{prefix}}chat_online` AS `visit` ON `visit`.`RID` = {$_User['ally_ChatRoom_ID']} AND `visit`.`UID` = {$_User['id']} ";
+					$Query_Counters[1] .= "WHERE `msg`.`RID` = {$_User['ally_ChatRoom_ID']} AND `msg`.`TimeStamp_Add` > IF(`visit`.`LastOnline` > 0, `visit`.`LastOnline`, 0))";
 				}
-				$Query_Counters[3] .= "(SELECT '3' AS `Type`, COUNT(*) AS `Count` FROM `{{prefix}}buddy` WHERE `owner` = {$_User['id']} AND `active` = 0)";
+				$Query_Counters[2] .= "(SELECT '3' AS `Type`, COUNT(*) AS `Count` FROM `{{prefix}}buddy` WHERE `owner` = {$_User['id']} AND `active` = 0)";
 				
 				$Query_Counters = implode(' UNION ', $Query_Counters);
 				$GetCounters = doquery($Query_Counters, '');
@@ -638,7 +640,7 @@ function display($PageCode, $PageTitle = '', $ShowTopResourceBar = true, $IsAdmi
 	if(!empty($_BenchTool))
 	{
 		$BenchResult = $_BenchTool->ReturnResult();
-		if($_GET['showbenchresult'] == 'true')
+		if(isset($_GET['showbenchresult']) && $_GET['showbenchresult'] == 'true')
 		{
 			$Page = str_replace('{PLACE_BENCHRESULT_HERE}', $BenchResult, $Page);
 		}
@@ -856,7 +858,7 @@ function CreateAccessLog($RootPath = '', $Prepend2Filename = '')
 	global $_User, $_SERVER, $_POST;
 
 	// --- Look for or Create LogDir ---
-	if($_User['id'] > 0)
+	if(isset($_User['id']) && $_User['id'] > 0)
 	{
 		$Log_UserID = str_pad($_User['id'], 6, '0', STR_PAD_LEFT);
 	}
@@ -869,7 +871,7 @@ function CreateAccessLog($RootPath = '', $Prepend2Filename = '')
 	if(!(file_exists($Log_DirName) AND is_dir($Log_DirName)))
 	{
 		mkdir($Log_DirName);
-		file_put_contents($Log_DirName.'/index.php', '<? header("Location: ../index.php"); ?>');
+		file_put_contents($Log_DirName.'/index.php', '<?php header("Location: ../index.php"); ?>');
 	}
 
 	// --- Get Current Date and Time ---
@@ -890,7 +892,7 @@ function CreateAccessLog($RootPath = '', $Prepend2Filename = '')
 	}
 	// --- Create other data ---
 	$CurrentBrowser = addslashes(trim($_SERVER['HTTP_USER_AGENT']));
-	$CurrentScreen = $_User['new_screen_settings'];
+	$CurrentScreen = (isset($_User['new_screen_settings']) ? $_User['new_screen_settings'] : '');
 
 	// --- Get CurrentFile Name ---
 	$ScriptRequestData = explode('/', $_SERVER['SCRIPT_NAME']);
@@ -901,11 +903,11 @@ function CreateAccessLog($RootPath = '', $Prepend2Filename = '')
 	$Log_FileName = "Log_U_{$Log_UserID}_D_{$CDay}.php";
 	$Log_FilePath = "{$Log_DirName}/{$Log_FileName}";
 	$LastDataFilepath = $Log_DirName.'/GetLastData.php';
+	$WriteLogDataFile = false;
 	if(!file_exists($Log_FilePath))
 	{
 		// This Log is not created yet
 		$AddDie = true;
-		$LastLoggedIP = '';
 		$WriteLogDataFile = true;
 	}
 	else
@@ -920,10 +922,31 @@ function CreateAccessLog($RootPath = '', $Prepend2Filename = '')
 		else
 		{
 			// Data about last log are empty
-			$LastLoggedIP = '';
 			$WriteLogDataFile = true;
 		}
 	}
+	
+	if(!isset($LastLoggedIP))
+	{
+		$LastLoggedIP = '';
+	}
+	if(!isset($LastBrowser))
+	{
+		$LastBrowser = '';
+	}
+	if(!isset($LastScreenSettings))
+	{
+		$LastScreenSettings = '';
+	}
+	if(!isset($LastPageHash))
+	{
+		$LastPageHash = '';
+	}
+	if(!isset($LastPostHash))
+	{
+		$LastPostHash = '';
+	}
+	
 	$LogFile = fopen($Log_FilePath, 'a');
 	$FileSize = filesize($Log_FilePath);
 	$LogDataNow = '';
@@ -933,7 +956,7 @@ function CreateAccessLog($RootPath = '', $Prepend2Filename = '')
 	}
 	else
 	{
-		$LogDataNow = '<? header("Location: ../index.php"); die(\'\');/*'."\n";
+		$LogDataNow = '<?php header("Location: ../index.php"); die(\'\');/*'."\n";
 	}
 	if($LastLoggedIP != $_SERVER['REMOTE_ADDR'] OR $LastPageHash != $PageHash OR $LastPostHash != $PostHash OR $CurrentBrowser != $LastBrowser OR $CurrentScreen != $LastScreenSettings)
 	{
@@ -957,7 +980,7 @@ function CreateAccessLog($RootPath = '', $Prepend2Filename = '')
 	}
 	if($WriteLogDataFile === true)
 	{
-		file_put_contents($LastDataFilepath, "<? \$LastLoggedIP = '{$_SERVER['REMOTE_ADDR']}'; \$LastBrowser = '{$CurrentBrowser}'; \$LastScreenSettings = '{$CurrentScreen}'; \$LastPageHash = '{$PageHash}'; \$LastPostHash = '{$PostHash}'; ?>");
+		file_put_contents($LastDataFilepath, "<?php \$LastLoggedIP = '{$_SERVER['REMOTE_ADDR']}'; \$LastBrowser = '{$CurrentBrowser}'; \$LastScreenSettings = '{$CurrentScreen}'; \$LastPageHash = '{$PageHash}'; \$LastPostHash = '{$PostHash}'; ?>");
 	}
 	if($LastPageHash === $PageHash)
 	{
@@ -1098,7 +1121,7 @@ function Handler_UserDevLogs()
 			{
 				$ThisData['AdditionalData'] = "'{$ThisData['AdditionalData']}'";
 			}
-			if($ThisData['UserID'] > 0)
+			if(isset($ThisData['UserID']) && $ThisData['UserID'] > 0)
 			{
 				$SetUser = $ThisData['UserID'];
 			}

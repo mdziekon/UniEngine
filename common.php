@@ -76,7 +76,7 @@ else
 define('VERSION', $_GameConfig['EngineInfo_Version']);
 define('REVISION' , $_GameConfig['EngineInfo_BuildNo']);
 
-if($InLogin !== true)
+if(!defined('UEC_INLOGIN'))
 {
 	$_User = CheckUserSession();
 }
@@ -117,7 +117,15 @@ if($_GameConfig['game_disable'] AND !CheckAuth('supportadmin'))
 	}
 	message(($_GameConfig['close_reason'] ? nl2br($_Lang['ServerIsClosed'].'<br/>'.$_GameConfig['close_reason']) : $_Lang['ServerIsClosed']), $_GameConfig['game_name']);
 }
-	
+
+if(!isset($_SetAccessLogPath))
+{
+	$_SetAccessLogPath = '';
+}
+if(!isset($_SetAccessLogPreFilename))
+{
+	$_SetAccessLogPreFilename = '';
+}
 CreateAccessLog($_SetAccessLogPath, $_SetAccessLogPreFilename);
 
 if(!empty($_GameConfig['banned_ip_list']))
@@ -190,6 +198,7 @@ if(isLogged())
 	}
 
 	// Cookie Blockade
+	$ShowBlockadeInfo_CookieStyle = false;
 	if(!empty($_COOKIE[COOKIE_BLOCK]))
 	{
 		if($_COOKIE[COOKIE_BLOCK] === (COOKIE_BLOCK_VAL.md5($_User['id'])) AND $_User['block_cookies'] == 0)
@@ -226,9 +235,9 @@ if(isLogged())
 	}
 	
 	// --- Handle Tasks ---
-	if($_UseMinimalCommon !== true)
+	if(!isset($_UseMinimalCommon) || $_UseMinimalCommon !== true)
 	{
-		if($_DontShowMenus !== true)
+		if(!isset($_DontShowMenus) || $_DontShowMenus !== true)
 		{
 			if(!empty($_User['tasks_done_parsed']['locked']))
 			{ 
@@ -350,7 +359,7 @@ if(isLogged())
 	}
 	// --- Handling Tasks ends here ---
 	
-	if($_AllowInVacationMode != true)
+	if(!isset($_AllowInVacationMode) || $_AllowInVacationMode != true)
 	{
 		// If this place do not allow User to be in VacationMode, show him a message if it's necessary
 		if(isOnVacation())
@@ -365,7 +374,7 @@ if(isLogged())
 		}
 	}
 	
-	if($_UseMinimalCommon !== true)
+	if(!isset($_UseMinimalCommon) || $_UseMinimalCommon !== true)
 	{
 		// Change Planet (if user wants to do this)
 		SetSelectedPlanet($_User);
@@ -395,7 +404,7 @@ if(isLogged())
 		}
 		$_GalaxyRow = doquery("SELECT * FROM {{table}} WHERE {$GalaxyRowWhere};", 'galaxy', true);
 
-		if($_BlockFleetHandler !== true)
+		if(!isset($_BlockFleetHandler) || $_BlockFleetHandler !== true)
 		{
 			$FleetHandlerReturn = FlyingFleetHandler($_Planet); 
 			if($FleetHandlerReturn['ThisMoonDestroyed'] === true)
@@ -417,11 +426,11 @@ if(isLogged())
 			}
 		}
 
-		if($_DontForceRulesAcceptance !== true)
+		if(!isset($_DontForceRulesAcceptance) || $_DontForceRulesAcceptance !== true)
 		{
 			if($_GameConfig['enforceRulesAcceptance'] == '1' AND $_GameConfig['last_rules_changes'] > 0 AND $_User['rules_accept_stamp'] < $_GameConfig['last_rules_changes'])
 			{
-				if($_DontShowRulesBox === true)
+				if(isset($_DontShowRulesBox) && $_DontShowRulesBox === true)
 				{
 					message($_Lang['RulesAcceptBox_CantUseFunction'], $_Lang['SystemInfo']);
 				}
@@ -440,10 +449,11 @@ if(isLogged())
 			}
 		}
 
-		if($_DontCheckPolls !== TRUE)
+		if(!isset($_DontCheckPolls) || $_DontCheckPolls !== true)
 		{
 			if($_User['isAI'] != 1 AND $_User['register_time'] < ($Common_TimeNow - TIME_DAY))
 			{
+				$Query_SelectPolls = '';
 				$Query_SelectPolls .= "SELECT `votes`.`id` AS `vote_id` FROM {{table}} AS `polls` ";
 				$Query_SelectPolls .= "LEFT JOIN `{{prefix}}poll_votes` AS `votes` ON `votes`.`poll_id` = `polls`.`id` AND `votes`.`user_id` = {$_User['id']} ";
 				$Query_SelectPolls .= "WHERE `polls`.`open` = 1 AND `polls`.`obligatory` = 1;";

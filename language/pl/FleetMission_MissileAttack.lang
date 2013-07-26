@@ -1,4 +1,4 @@
-<?
+<?php
 
 $_Lang['MIP_A_M_Cap']= 'Twoje rakiety międzyplanetarne <b>(%s)</b> zostały przechwycone przez przeciwrakiety obrońcy!';
 $_Lang['MIP_D_M_Cap']= 'Rakiety międzyplanetarne agresora <b>(%s)</b> zostały przechwycone przez twoje przeciwrakiety!';

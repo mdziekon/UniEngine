@@ -26,8 +26,9 @@ function includeLang($filename, $Return = false)
 	{
 		global $_Lang;
 	}
-
-	if($_User['lang'] != '')
+	
+	$SelLanguage = DEFAULT_LANG;
+	if(isset($_User['lang']) && $_User['lang'] != '')
 	{
 		$SelLanguage = $_User['lang'];
 	}
@@ -266,6 +267,8 @@ function CreateFleetPopupedFleetLink($FleetRow, $Texte)
 // String-related functions
 function pretty_time($Seconds, $ChronoType = false, $Format = false)
 {
+	$Time = '';
+	
 	$Seconds = floor($Seconds);
 	$Days = floor($Seconds / TIME_DAY);
 	$Seconds -= $Days * TIME_DAY;
@@ -289,29 +292,37 @@ function pretty_time($Seconds, $ChronoType = false, $Format = false)
 
 	if($ChronoType === false)
 	{
+		$DAllowed = array
+		(
+			'd' => false,
+			'h' => false,
+			'm' => false,
+			's' => false
+		);
+		
 		if($Format)
 		{
-			if(strstr($Format, 'd') === FALSE)
+			if(strstr($Format, 'd') === false)
 			{
 				$DAllowed['d'] = true;
 			}
-			if(strstr($Format, 'h') === FALSE)
+			if(strstr($Format, 'h') === false)
 			{
 				$DAllowed['h'] = true;
 			}
-			if(strstr($Format, 'm') === FALSE)
+			if(strstr($Format, 'm') === false)
 			{
 				$DAllowed['m'] = true;
 			}
-			if(strstr($Format, 's') === FALSE)
+			if(strstr($Format, 's') === false)
 			{
 				$DAllowed['s'] = true;
 			}
 		}
-
+		
 		if($Days > 0 AND ($DAllowed['d'] !== true))
 		{
-			$Time = "{$Days}d ";
+			$Time .= "{$Days}d ";
 		}
 		if($DAllowed['h'] !== true)
 		{
@@ -377,7 +388,7 @@ function pretty_time_hour($seconds, $NoSpace = false)
 function prettyMonth($month, $variant = '0')
 {
 	global $_Lang;
-	if($_Lang['pretty_months_loaded'] !== true)
+	if(!isset($_Lang['pretty_months_loaded']))
 	{
 		includeLang('months');
 	}

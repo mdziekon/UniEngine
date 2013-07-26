@@ -1,4 +1,4 @@
-<? 
+<?php
 
 $_Lang['Bash_Title']                 = 'Lista dzisiejszych Ataków';
 

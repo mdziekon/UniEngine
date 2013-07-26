@@ -173,6 +173,7 @@ include($_EnginePath.'common.php');
 	$ScriptTPL = gettemplate('galaxy_scripts');
 	$ScriptLang = includeLang('galaxy_ajax', true);
 	$ScriptLang['SkinPath'] = $_SkinPath;
+	$ScriptLang['Insert_ReponseCodes'] = '';
 	foreach($ScriptLang as $Key => $Value)
 	{
 		if(strstr($Key, 'ajax_send_') !== false)

@@ -10,7 +10,7 @@ function GalaxyRowAlly($GalaxyRowUser, $MyAllyPacts)
 		$TPL = gettemplate('galaxy_row_ally');
 	}
 
-	if($GalaxyRowUser['ally_id'] > 0)
+	if(isset($GalaxyRowUser['ally_id']) && $GalaxyRowUser['ally_id'] > 0)
 	{
 		if(!empty($GalaxyRowUser['ally_web']) AND ($GalaxyRowUser['ally_web_reveal'] == 1 OR $GalaxyRowUser['ally_id'] == $_User['ally_id']))
 		{
@@ -29,7 +29,7 @@ function GalaxyRowAlly($GalaxyRowUser, $MyAllyPacts)
 			'AllyPosition'			=> (string) ($GalaxyRowUser['ally_total_rank'] + 0),
 			'AllyPositionPretty'	=> (string) ($GalaxyRowUser['ally_total_rank'] + 0),
 			'Lang_Stats'			=> $_Lang['gl_stats'],
-			'AllyWeb'				=> $AllyWeb,
+			'AllyWeb'				=> (isset($AllyWeb) ? $AllyWeb : ''),
 			'Lang_Web'				=> $_Lang['gl_ally_web'],
 			'Hide_AllyWeb'			=> ($GalaxyRowUser['ally_web_reveal'] != 1 ? ' class=hide' : ''),
 			'AllyTag'				=> $GalaxyRowUser['ally_tag'],

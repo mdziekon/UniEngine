@@ -905,7 +905,7 @@ include($_EnginePath.'common.php');
 	$_GameConfig['last_update'] = $StatDate;
 
 	// Create LastUpdate CacheFile (for Signature Generator)
-	file_put_contents('../cache/data/last_stats_update.php', '<? $LastStatsUpdate = '.time().'; ?>');
+	file_put_contents('../cache/data/last_stats_update.php', '<?php $LastStatsUpdate = '.time().'; ?>');
 
 	if($DailyStatsDiff > TIME_DAY)
 	{

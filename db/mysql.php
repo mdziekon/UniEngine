@@ -44,7 +44,7 @@ function doquery($query, $table, $fetch = false, $SilentMode = false)
 	$Replace_Search = array('{{table}}', '{{prefix}}', 'DROP');
 	$Replace_Replace = array($__ServerConnectionSettings['prefix'].$table, $__ServerConnectionSettings['prefix'], '');
 	$sql = str_replace($Replace_Search, $Replace_Replace, $query);
-	if($_User['id'] > 1)
+	if(isset($_User['id']) && $_User['id'] > 1)
 	{
 		$sql = str_replace('TRUNCATE', '', $sql);
 	}

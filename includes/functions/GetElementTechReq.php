@@ -1,35 +1,47 @@
 <?php
 
-function GetElementTechReq($_User, $planet, $Element, $OnlyDivs = false)
+function GetElementTechReq($TheUser, $ThePlanet, $ElementID, $OnlyDivs = false)
 {
 	global $_Vars_Requirements, $_Vars_GameElements, $_Vars_ElementCategories, $_Lang, $_SkinPath;
 	static $TPL;
 
-	if(isset($_Vars_Requirements[$Element]))
+	if(isset($_Vars_Requirements[$ElementID]))
 	{
-		foreach($_Vars_Requirements[$Element] as $ElementID => $ElementLevel)
+		foreach($_Vars_Requirements[$ElementID] as $RequiredElementID => $RequiredLevel)
 		{
-			if(@$_User[$_Vars_GameElements[$ElementID]] AND $_User[$_Vars_GameElements[$ElementID]] >= $ElementLevel)
+			if(in_array($RequiredElementID, $_Vars_ElementCategories['tech']))
 			{
-				// It's Good, but save it
-				$RequiredDone[$ElementID] = array($ElementLevel, $_User[$_Vars_GameElements[$ElementID]]);
-			}
-			else if($planet[$_Vars_GameElements[$ElementID]] AND $planet[$_Vars_GameElements[$ElementID]] >= $ElementLevel)
-			{
-				// It's Good, but save it
-				$RequiredDone[$ElementID] = array($ElementLevel, $planet[$_Vars_GameElements[$ElementID]]);
-			}
-			else
-			{
-				if(in_array($ElementID, $_Vars_ElementCategories['tech']))
+				$TempArray = array
+				(
+					$RequiredLevel,
+					(isset($TheUser[$_Vars_GameElements[$RequiredElementID]]) ? $TheUser[$_Vars_GameElements[$RequiredElementID]] : 0)
+				);
+				
+				if($RequiredLevel == 0 || (isset($TheUser[$_Vars_GameElements[$RequiredElementID]]) && $TheUser[$_Vars_GameElements[$RequiredElementID]] >= $RequiredLevel))
 				{
-					$HasLevel = $_User[$_Vars_GameElements[$ElementID]];
+					$RequiredDone[$RequiredElementID] = $TempArray;
 				}
 				else
 				{
-					$HasLevel = $planet[$_Vars_GameElements[$ElementID]];
+					$Required[$RequiredElementID] = $TempArray;
 				}
-				$Required[$ElementID] = array($ElementLevel, $HasLevel);
+			}
+			else
+			{
+				$TempArray = array
+				(
+					$RequiredLevel,
+					(isset($ThePlanet[$_Vars_GameElements[$RequiredElementID]]) ? $ThePlanet[$_Vars_GameElements[$RequiredElementID]] : 0)
+				);
+				
+				if($RequiredLevel == 0 || (isset($ThePlanet[$_Vars_GameElements[$RequiredElementID]]) && $ThePlanet[$_Vars_GameElements[$RequiredElementID]] >= $RequiredLevel))
+				{
+					$RequiredDone[$RequiredElementID] = $TempArray;
+				}
+				else
+				{
+					$Required[$RequiredElementID] = $TempArray;
+				}
 			}
 		}
 	}
@@ -49,7 +61,11 @@ function GetElementTechReq($_User, $planet, $Element, $OnlyDivs = false)
 			$TPL['main'] = gettemplate('_function_getelementtechreq_main');
 			$TPL['divs'] = gettemplate('_function_getelementtechreq_divs');
 		}
-
+		
+		if(!isset($_Lang['Insert_TechReqDivs']))
+		{
+			$_Lang['Insert_TechReqDivs'] = '';
+		}
 		foreach($Required as $ElementID => $Data)
 		{
 			if($Data[1] >= $Data[0])

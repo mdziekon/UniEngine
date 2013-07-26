@@ -1,7 +1,7 @@
 <?php
 
 // UserMenu Links
-$_Lang['Multiverse']		= '<b>'.$_GameConfig['game_name'].'</b> Uni';
+$_Lang['Multiverse']		= '<b>'.(isset($_GameConfig) ? $_GameConfig['game_name'] : '').'</b> Uni';
 $_Lang['Overview']			= 'Podgląd';
 $_Lang['Buildings']			= 'Budynki';
 $_Lang['Research']			= 'Badania';

@@ -2,8 +2,11 @@
 
 function ShowGalaxyRows($Galaxy, $System, $HighlightPlanet = false)
 {
-	global $planetcount, $_User, $_EnginePath;
-
+	global $planetcount, $_User;
+	
+	$Result = '';
+	
+	$UserNeedenFields = '';
 	$UserNeedenFields .= "`usr`.`id` as `user_id`, `usr`.`username`, `usr`.`old_username`, `usr`.`old_username_expire`, `usr`.`ally_id`, ";
 	$UserNeedenFields .= "`usr`.`is_banned`, `usr`.`is_onvacation`, `usr`.`onlinetime`, ";
 	$UserNeedenFields .= "`usr`.`avatar`, `usr`.`authlevel`, `usr`.`activation_code`, ";
@@ -14,8 +17,10 @@ function ShowGalaxyRows($Galaxy, $System, $HighlightPlanet = false)
 	$UserNeedenFields .= "`ally`.`ally_name`, `ally`.`ally_web`, `ally`.`ally_web_reveal`, `ally`.`ally_tag`, `ally`.`ally_members`";
 	$PlanetNeedenFields = '`pl`.`id`, `pl`.`name`, `pl`.`name`, `pl`.`id_owner`, `pl`.`galaxy`, `pl`.`last_update`, `pl`.`image`';
 
+	$Query_Galaxies		= '';
 	$Query_Galaxies		.= "SELECT `planet`, `id_planet`, `metal`, `crystal`, `id_moon`, `hide_planet` FROM {{table}} ";
 	$Query_Galaxies		.= "WHERE `galaxy` = {$Galaxy} AND `system` = {$System} ORDER BY `planet` ASC;";
+	$Query_Planets		= '';
 	$Query_Planets		.= "SELECT {$PlanetNeedenFields}, {$UserNeedenFields} FROM {{table}} AS `pl` ";
 	$Query_Planets		.= "LEFT JOIN `{{prefix}}users` AS `usr` ON `usr`.`id` = `pl`.`id_owner` ";
 	$Query_Planets		.= "LEFT JOIN `{{prefix}}alliance` AS `ally` ON `ally`.`id` = `usr`.`ally_id` ";
@@ -23,13 +28,17 @@ function ShowGalaxyRows($Galaxy, $System, $HighlightPlanet = false)
 	$Query_Planets		.= "LEFT JOIN `{{prefix}}statpoints` AS `ally_stats` ON `ally_stats`.`stat_type` = 2 AND `ally_stats`.`id_owner` = `usr`.`ally_id` ";
 	$Query_Planets		.= "WHERE `pl`.`galaxy` = {$Galaxy} AND `pl`.`system` = {$System} AND `pl`.`planet_type` = 1 ";
 	$Query_Planets		.= "ORDER BY `pl`.`planet` ASC;";
+	$Query_Moons		= '';
 	$Query_Moons		.= "SELECT `id`, `name`, `planet`, `temp_min`, `diameter` FROM {{table}} ";
 	$Query_Moons		.= "WHERE `galaxy` = {$Galaxy} AND `system` = {$System} AND `planet_type` = 3 ORDER BY `planet` ASC;";
+	$Query_SFB			= '';
 	$Query_SFB			.= "SELECT `ID`, `StartTime`, `BlockMissions`, `EndTime` FROM {{table}} ";
 	$Query_SFB			.= "WHERE `Type` = 1 AND `StartTime` <= UNIX_TIMESTAMP() AND `EndTime` <= UNIX_TIMESTAMP() AND `PostEndTime` > UNIX_TIMESTAMP() ";
 	$Query_SFB			.= "ORDER BY `EndTime` DESC LIMIT 1;";
+	$Query_Buddy		= '';
 	$Query_Buddy		.= "SELECT `sender`, `owner` FROM {{table}} ";
 	$Query_Buddy		.= "WHERE `active` = 1 AND (`sender` = {$_User['id']} OR `owner` = {$_User['id']});";
+	$Query_AllyPacts	= '';
 	$Query_AllyPacts	.= "SELECT IF(`AllyID_Sender` = {$_User['ally_id']}, `AllyID_Owner`, `AllyID_Sender`) AS `AllyID`, `Type` ";
 	$Query_AllyPacts	.= "FROM {{table}} WHERE (`AllyID_Sender` = {$_User['ally_id']} OR `AllyID_Owner` = {$_User['ally_id']}) AND `Active` = 1;";
 
@@ -93,13 +102,13 @@ function ShowGalaxyRows($Galaxy, $System, $HighlightPlanet = false)
 				{
 					$RowData = '';
 					$RowData .= GalaxyRowPos($Galaxy, $System, $Planet);
-					$RowData .= GalaxyRowPlanet(false, $GalaxyRowPlanet, $GalaxyRowPlayer, $Galaxy, $System, $Planet, 1, $MyBuddies, $MyAllyPacts);
-					$RowData .= GalaxyRowPlanetName(false, $GalaxyRowPlanet, $GalaxyRowPlayer, $Galaxy, $System, $Planet, 1, $MyBuddies);
-					$RowData .= GalaxyRowMoon(false, $GalaxyRowMoon, $GalaxyRowPlayer, $Galaxy, $System, $Planet, 3, $MyBuddies, $MyAllyPacts);
+					$RowData .= GalaxyRowPlanet(false, array(), array(), $Galaxy, $System, $Planet, 1, $MyBuddies, $MyAllyPacts);
+					$RowData .= GalaxyRowPlanetName(false, array(), array(), $Galaxy, $System, $Planet, 1, $MyBuddies);
+					$RowData .= GalaxyRowMoon(false, array(), array(), $Galaxy, $System, $Planet, 3, $MyBuddies, $MyAllyPacts);
 					$RowData .= GalaxyRowDebris(false, $Galaxy, $System, $Planet, 2);
-					$RowData .= GalaxyRowUser($GalaxyRowPlanet, $GalaxyRowPlayer, $MyBuddies, $SFBStatus); 
-					$RowData .= GalaxyRowAlly($GalaxyRowPlayer, $MyAllyPacts); 
-					$RowData .= GalaxyRowActions($GalaxyRowPlanet, $GalaxyRowPlayer, $Galaxy, $System, $Planet, $MyBuddies);
+					$RowData .= GalaxyRowUser(array(), array(), $MyBuddies, $SFBStatus); 
+					$RowData .= GalaxyRowAlly(array(), $MyAllyPacts); 
+					$RowData .= GalaxyRowActions(array(), array(), $Galaxy, $System, $Planet, $MyBuddies);
 
 					$Result .= parsetemplate($RowTPL, array('Data' => $RowData, 'SetHighlight' => ($Planet == $HighlightPlanet ? ' class="rowHighlight"' : '')));
 
@@ -114,7 +123,8 @@ function ShowGalaxyRows($Galaxy, $System, $HighlightPlanet = false)
 			if($GalaxyRow['planet'] == $Planet)
 			{
 				$RowData = '';
-
+				
+				$GalaxyRowMoon = array();
 				if($GalaxyRow['id_planet'] != 0)
 				{
 					$GalaxyRowPlanet = mysql_fetch_assoc($PlanetsResult);

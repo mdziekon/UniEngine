@@ -1,4 +1,4 @@
-<? 
+<?php
 
 $_Lang['FirstLogin_Title']   = 'Powitanie';
 $_Lang['LoginPage_Header']   = 'Witamy w '.$_GameConfig['game_name'].'!';

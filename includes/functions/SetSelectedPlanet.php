@@ -4,11 +4,12 @@ function SetSelectedPlanet(&$CurrentUser, $Security = false)
 {
 	global $_GET;
 
+	$SelectPlanet = 0;
 	if($Security !== false)
 	{
 		$SelectPlanet = $Security;
 	}
-	else
+	else if(isset($_GET['cp']))
 	{
 		$SelectPlanet = round($_GET['cp']);
 	}

@@ -1,4 +1,4 @@
-<?
+<?php
 
 $_Lang['ErrorsList_Title'] = "Błędy SQL";
 $_Lang['ErrorsList_Clear'] = "Czyść";

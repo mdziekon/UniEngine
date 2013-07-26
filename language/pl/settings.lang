@@ -1,4 +1,4 @@
-<? 
+<?php
 
 $_Lang['Page_Title']                 = 'Ustawienia konta';
 $_Lang['NickChange_Title']           = 'Zmiana Nazwy Użytkownika';

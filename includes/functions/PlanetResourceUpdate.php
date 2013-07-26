@@ -84,7 +84,14 @@ function PlanetResourceUpdate($CurrentUser, &$CurrentPlanet, $UpdateTime, $Simul
 		$MaxDeuteriumStorage = $CurrentPlanet['deuterium_max'] * MAX_OVERFLOW;
 
 		// Calculate Income from Mines, Power Plants, Extractors etc.
-		$Caps = array();
+		$Caps = array
+		(
+			'metal_perhour' => 0,
+			'crystal_perhour' => 0,
+			'deuterium_perhour' => 0,
+			'energy_used' => 0,
+			'energy_max' => 0
+		);
 		$BuildTemp = $CurrentPlanet['temp_max'];
 		$TextIfEmpty = 'return "0";';
 		foreach($_Vars_ElementCategories['prod'] as $ElementID)
@@ -282,6 +289,7 @@ function PlanetResourceUpdate($CurrentUser, &$CurrentPlanet, $UpdateTime, $Simul
 		$Builded = HandleShipyardQueue($CurrentUser, $CurrentPlanet, $ProductionTime, $UpdateTime);
 
 		// Update planet
+		$QryUpdatePlanet = '';
 		$QryUpdatePlanet .= "UPDATE {{table}} SET ";
 		$QryUpdatePlanet .= "`metal` = '{$CurrentPlanet['metal']}', ";
 		$QryUpdatePlanet .= "`crystal` = '{$CurrentPlanet['crystal']}', ";

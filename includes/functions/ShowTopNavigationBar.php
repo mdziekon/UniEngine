@@ -10,7 +10,10 @@ function ShowTopNavigationBar($CurrentUser, $CurrentPlanet)
 		{
 			return false;
 		}
-
+		
+		// Create strings
+		$PlanetListOption_Mode = (isset($_GET['mode']) ? '&amp;mode='.$_GET['mode'] : '');
+		
 		// Update Planet Resources
 		$IsOnVacation = isOnVacation($CurrentUser);
 		PlanetResourceUpdate($CurrentUser, $CurrentPlanet, time());
@@ -23,6 +26,7 @@ function ShowTopNavigationBar($CurrentUser, $CurrentPlanet)
 		$parse['planetlist'] = '';
 				
 		$ThisUsersPlanets = SortUserPlanets($CurrentUser);
+		$OtherType_ID = 0;
 		while($CurPlanet = mysql_fetch_assoc($ThisUsersPlanets))
 		{
 			if($CurPlanet['galaxy'] == $CurrentPlanet['galaxy'] AND $CurPlanet['system'] == $CurrentPlanet['system'] AND $CurPlanet['planet'] == $CurrentPlanet['planet'])
@@ -55,7 +59,7 @@ function ShowTopNavigationBar($CurrentUser, $CurrentPlanet)
 				{
 					$ThisPlanetSelected = '';
 				}
-				$parse['planetlist'] .= "\n<option {$ThisPlanetSelected} value=\"?cp={$CurPlanet['id']}&amp;mode={$_GET['mode']}&amp;re=0\">{$CurPlanet['name']} [{$CurPlanet['galaxy']}:{$CurPlanet['system']}:{$CurPlanet['planet']}]&nbsp;&nbsp;</option>";
+				$parse['planetlist'] .= "\n<option {$ThisPlanetSelected} value=\"?cp={$CurPlanet['id']}{$PlanetListOption_Mode}&amp;re=0\">{$CurPlanet['name']} [{$CurPlanet['galaxy']}:{$CurPlanet['system']}:{$CurPlanet['planet']}]&nbsp;&nbsp;</option>";
 			}
 		}
 		if($CurrentUser['planet_sort_moons'] == 1)
@@ -97,7 +101,7 @@ function ShowTopNavigationBar($CurrentUser, $CurrentPlanet)
 							$ThisPlanetPos = $_Lang['PlanetList_MoonSign'];
 						}
 					}
-					$parse['planetlist'] .= "\n<option {$ThisPlanetSelected} value=\"?cp={$CurPlanet['id']}&amp;mode={$_GET['mode']}\">{$CurPlanet['name']} [{$ThisPlanetPos}]&nbsp;&nbsp;</option>";
+					$parse['planetlist'] .= "\n<option {$ThisPlanetSelected} value=\"?cp={$CurPlanet['id']}{$PlanetListOption_Mode}\">{$CurPlanet['name']} [{$ThisPlanetPos}]&nbsp;&nbsp;</option>";
 				}
 				unset($ParsedPlanetList);
 			}
@@ -395,6 +399,7 @@ function ShowTopNavigationBar($CurrentUser, $CurrentPlanet)
 		}
 
 		// Messages Counter
+		$Query_MsgCount = '';
 		$Query_MsgCount .= "SELECT COUNT(*) AS `Count` FROM {{table}} WHERE ";
 		$Query_MsgCount .= "`id_owner` = {$CurrentUser['id']} AND ";
 		$Query_MsgCount .= "`deleted` = false AND ";
@@ -412,9 +417,9 @@ function ShowTopNavigationBar($CurrentUser, $CurrentPlanet)
 		}
 
 		$TopBar = parsetemplate(gettemplate('topnav'), $parse);
+		
+		return $TopBar;
 	}
-
-	return $TopBar;
 }
 
 ?>

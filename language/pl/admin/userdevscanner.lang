@@ -1,4 +1,4 @@
-<? 
+<?php
 
 $_Lang['UserDevScanner_Title']               = 'Skanowanie rozwoju Gracza';
 

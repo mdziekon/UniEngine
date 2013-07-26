@@ -27,6 +27,7 @@ include($_EnginePath.'common.php');
 
 	$parse = array();
 
+	$ChangesList = '';
 	foreach($_Lang['changelog'] as $Version => $Desc)
 	{
 		$parse['version_number'] = $Version;
@@ -39,8 +40,6 @@ include($_EnginePath.'common.php');
 	$parse['InfoTable'] = $SubFrame;
 	$parse['ChangesList'] = $ChangesList;
 
-	$page .= parsetemplate(gettemplate('changelog_body'), $parse);
-
-	display($page, 'ChangeLog', false);
+	display(parsetemplate(gettemplate('changelog_body'), $parse), 'ChangeLog', false);
 
 ?>

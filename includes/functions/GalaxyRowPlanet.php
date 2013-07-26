@@ -60,7 +60,7 @@ function GalaxyRowPlanet($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Galaxy, 
 			$Links[] = array('prio' => 4, 'txt' => "<a href=fleet.php?galaxy={$Galaxy}&amp;system={$System}&amp;planet={$Planet}&amp;planettype={$PlanetType}&amp;target_mission=1>{$_Lang['type_mission'][1]}</a>");
 			if($GalaxyRowPlanet['id_owner'] > 0)
 			{
-				if(($GalaxyRowUser['ally_id'] == $_User['ally_id'] AND $_User['ally_id'] > 0) OR in_array($GalaxyRowUser['id'], $MyBuddies) OR $MyAllyPacts[$GalaxyRowUser['ally_id']] >= 3)
+				if(($GalaxyRowUser['ally_id'] == $_User['ally_id'] AND $_User['ally_id'] > 0) OR in_array($GalaxyRowUser['id'], $MyBuddies) OR (isset($MyAllyPacts[$GalaxyRowUser['ally_id']]) && $MyAllyPacts[$GalaxyRowUser['ally_id']] >= 3))
 				{
 					$Links[] = array('prio' => 5, 'txt' => "<a href=fleet.php?galaxy={$Galaxy}&system={$System}&planet={$Planet}&planettype={$PlanetType}&target_mission=5>{$_Lang['type_mission'][5]}</a>");
 				}
@@ -94,6 +94,7 @@ function GalaxyRowPlanet($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Galaxy, 
 			'PlanetImg'		=> $GalaxyRowPlanet['image'],
 			'RowCount'		=> count($Links),
 			'FirstLink'		=> $Links[0]['txt'],
+			'OtherLinks'	=> ''
 		);
 
 		foreach($Links as $Index => $Data)

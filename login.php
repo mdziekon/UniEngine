@@ -1,8 +1,8 @@
 <?php
 
 define('INSIDE', true);
+define('UEC_INLOGIN', true);
 
-$InLogin = true;
 $_DontShowMenus = true;
 
 $_EnginePath = './';
@@ -139,6 +139,7 @@ include($_EnginePath.'common.php');
 	{
 		if($Search['mode'] == 1 AND !empty($Search['IPHash']))
 		{
+			$Query_UpdateLoginProtection = '';
 			$Query_UpdateLoginProtection .= "INSERT INTO {{table}} (`IP`, `Date`, `FailCount`) VALUES ('{$Search['IPHash']}', UNIX_TIMESTAMP(), 1) ";
 			$Query_UpdateLoginProtection .= "ON DUPLICATE KEY UPDATE ";
 			$Query_UpdateLoginProtection .= "`FailCount` = IF(`Date` < (UNIX_TIMESTAMP() - ".LOGINPROTECTION_LOCKTIME."), 1, IF(`FailCount` < ".LOGINPROTECTION_MAXATTEMPTS.", `FailCount` + 1, `FailCount`)), ";

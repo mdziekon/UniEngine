@@ -143,6 +143,7 @@ class phpBench
 
 			$Echo .= '<tr><th class="c"><b>Init Mem</b></th><th class="c"><b>#0</b><th class="c">&nbsp;</th><th class="c">&nbsp;</th><th class="c"><b>'.$this->InitMem.'</b></th></tr>';
 
+			$TotalTime = 0;
 			foreach($this->TimeArray as $key => $val)
 			{
 				$TotalTime += $val;
@@ -194,7 +195,7 @@ class phpBench
 						}
 						$PreviousKey = $Index;
 
-						if($Data['assoc'] == true)
+						if(isset($Data['assoc']) && $Data['assoc'] == true)
 						{
 							$ThisTime = $this->SimpleCountArray[end($PreviousParentID)]['result'];
 						}
@@ -202,7 +203,7 @@ class phpBench
 						{
 							$ThisTime = $TotalTime;
 						}
-						$Echo .= '<tr><th class="c '.($Data['assoc'] == true ? 'orange' : '').'">Pomiar'.(!empty($Data['name']) ? '<br/>['.$Data['name'].']' : '').'</th><th class="c '.($Data['assoc'] == true ? 'orange' : '').'"><b>#'.($Index+1).'</b></th><th class="c '.($Data['assoc'] == true ? 'orange' : '').'"><b>&#187; '.$Data['assocLevel'].'</b></th>';
+						$Echo .= '<tr><th class="c '.(isset($Data['assoc']) && $Data['assoc'] == true ? 'orange' : '').'">Pomiar'.(!empty($Data['name']) ? '<br/>['.$Data['name'].']' : '').'</th><th class="c '.(isset($Data['assoc']) && $Data['assoc'] == true ? 'orange' : '').'"><b>#'.($Index+1).'</b></th><th class="c '.(isset($Data['assoc']) && $Data['assoc'] == true ? 'orange' : '').'"><b>&#187; '.$Data['assocLevel'].'</b></th>';
 						$Echo .= '<th class="c">'.sprintf('%0.20f', $Data['result']).' s.<br/>('.sprintf('%0.8f', ($Data['result']/$ThisTime) * 100).'%)</th><th class="c">'.$Data['startram'].' / '.$Data['endram'].'</th></tr>';
 					}
 				}

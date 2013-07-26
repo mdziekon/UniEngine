@@ -1,4 +1,4 @@
-<? 
+<?php
 
 // Ajax Success
 $_Lang['ajax_send_600_1']    = 'Wysłano sondy szpiegowskie (xyz) na wskazane koordynaty replace_target!';

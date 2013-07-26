@@ -20,6 +20,7 @@ function ShowGalaxyMISelector($Galaxy, $System, $Planet, $AvailableMissiles, $Hi
 		'MSelector_Close'		=> $_Lang['MSelector_Close'],
 		'Input_MissileCount'	=> prettyNumber($AvailableMissiles),
 		'Input_HideMissileForm'	=> ($HideSelector === true ? 'class="hide"' : ''),
+		'Input_Targets'			=> ''
 	);
 	foreach($_Vars_ElementCategories['defense'] as $ElementID)
 	{

@@ -10,7 +10,7 @@ include($_EnginePath.'common.php');
 	loggedCheck();
 	includeLang('buildings');
 
-	if($_POST['chgView'] == '1')
+	if(isset($_POST['chgView']) && $_POST['chgView'] == '1')
 	{
 		if($_POST['mode'] == '0' OR $_POST['mode'] == '1')
 		{
@@ -32,15 +32,23 @@ include($_EnginePath.'common.php');
 	);
 	GlobalTemplate_AppendToBottomMenuInjection(parsetemplate(gettemplate('buildings_compact_viewselector_body'), $ViewSelectorPHP));
 	
+	if(!isset($_Planet))
+	{
+		$_Planet = array();
+	}
 	HandleFullUserUpdate($_User, $_Planet, $GetLabPlanet);
-	if($_User['techQueue_firstEndTime'] > 0)
+	if(isset($_User['techQueue_firstEndTime']) && $_User['techQueue_firstEndTime'] > 0)
 	{
 		$InResearch = true;
 		$ResearchPlanet = &$GetLabPlanet;
 	}
 
 	$OldViewMode = ($_User['settings_DevelopmentOld'] == 1 ? true : false);
-
+	
+	if(!isset($_GET['mode']))
+	{
+		$_GET['mode'] = '';
+	}
 	switch($_GET['mode'])
 	{
 		case 'fleet':

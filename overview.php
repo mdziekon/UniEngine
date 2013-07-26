@@ -189,7 +189,7 @@ include($_EnginePath.'common.php');
 		display(parsetemplate($TPL, $_Lang), $_Lang['FirstLogin_Title'], false);
 	}
 	
-	$mode = $_GET['mode'];
+	$mode = (isset($_GET['mode']) ? $_GET['mode'] : '');
 
 	includeLang('resources');
 	includeLang('overview');
@@ -212,7 +212,7 @@ include($_EnginePath.'common.php');
 				$parse['Rename_CurrentName'] = sprintf($parse['Rename_CurrentName'], $parse['Rename_Moon']);
 			}
 
-			if($_POST['action'] == 'do')
+			if(isset($_POST['action']) && $_POST['action'] == 'do')
 			{
 				// User wants to change planets name
 				$NewName = trim($_POST['set_newname']);
@@ -268,7 +268,7 @@ include($_EnginePath.'common.php');
 
 			$parse['Rename_Ins_CurrentName'] = "{$_Planet['name']} <a href=\"galaxy.php?mode=3&amp;galaxy={$_Planet['galaxy']}&amp;system={$_Planet['system']}&amp;planet={$_Planet['planet']}\">[{$_Planet['galaxy']}:{$_Planet['system']}:{$_Planet['planet']}]</a>";
 
-			$page .= parsetemplate(gettemplate('overview_rename'), $parse);
+			$page = parsetemplate(gettemplate('overview_rename'), $parse);
 			display($page, $_Lang['Rename_TitleMain']);
 			break;
 		case 'abandon':
@@ -376,7 +376,7 @@ include($_EnginePath.'common.php');
 			$parse['Abandon_Desc'] = sprintf($parse['Abandon_Desc'], ($_Planet['planet_type'] == 1 ? $_Lang['Abandon_Planet'] : $_Lang['Abandon_Moon']), $_Planet['name'], "<a class=\"orange\" href=\"galaxy.php?mode=3&amp;galaxy={$_Planet['galaxy']}&amp;system={$_Planet['system']}&amp;planet={$_Planet['planet']}\">[{$_Planet['galaxy']}:{$_Planet['system']}:{$_Planet['planet']}]</a>");
 			$parse['Abandon_Ins_Pass'] = $_User['password'];
 
-			$page .= parsetemplate(gettemplate('overview_deleteplanet'), $parse);
+			$page = parsetemplate(gettemplate('overview_deleteplanet'), $parse);
 			display($page, $_Lang['Abandon_TitleMain']);
 			break;
 		default:
@@ -423,6 +423,8 @@ include($_EnginePath.'common.php');
 				$Query_AdminBoxCheck[] = "SELECT COUNT(*) AS `Count`, 3 AS `Type` FROM `{{prefix}}system_alerts` WHERE `status` = 0";
 				$Query_AdminBoxCheck = implode(' UNION ', $Query_AdminBoxCheck);
 				$Result_AdminBoxCheck = doquery($Query_AdminBoxCheck, '');
+				
+				$AdminBoxTotalCount = 0;
 				while($AdminBoxData = mysql_fetch_assoc($Result_AdminBoxCheck))
 				{
 					$AdminBox[$AdminBoxData['Type']] = $AdminBoxData['Count'];
@@ -692,7 +694,7 @@ include($_EnginePath.'common.php');
 			$parse['set_user_total_rank'] = $StatRecord['total_rank'];
 
 			// Build Rank changes
-			if($StatRecord['build_rank'] > 0)
+			if(isset($StatRecord['build_rank']) && $StatRecord['build_rank'] > 0)
 			{
 				$ile = $StatRecord['build_old_rank'] - $StatRecord['build_rank'];
 				if($ile > 0)
@@ -717,7 +719,7 @@ include($_EnginePath.'common.php');
 			$parse['set_user_br'] = $StatRecord['build_rank'];
 
 			// Fleet rank changes
-			if($StatRecord['fleet_rank'] > 0)
+			if(isset($StatRecord['fleet_rank']) && $StatRecord['fleet_rank'] > 0)
 			{
 				$ile = $StatRecord['fleet_old_rank'] - $StatRecord['fleet_rank'];
 				if($ile > 0)
@@ -742,7 +744,7 @@ include($_EnginePath.'common.php');
 			$parse['set_user_fr'] = $StatRecord['fleet_rank'];
 
 			// Defense rank changes
-			if($StatRecord['defs_rank'] > 0)
+			if(isset($StatRecord['defs_rank']) && $StatRecord['defs_rank'] > 0)
 			{
 				$ile = $StatRecord['defs_old_rank'] - $StatRecord['defs_rank'];
 				if($ile > 0)
@@ -767,7 +769,7 @@ include($_EnginePath.'common.php');
 			$parse['set_user_dr'] = $StatRecord['defs_rank'];
 
 			// Research rank changes
-			if($StatRecord['tech_rank'] > 0)
+			if(isset($StatRecord['tech_rank']) && $StatRecord['tech_rank'] > 0)
 			{
 				$ile = $StatRecord['tech_old_rank'] - $StatRecord['tech_rank'];
 				if($ile > 0)
@@ -887,7 +889,8 @@ include($_EnginePath.'common.php');
 				$parse['Hide_QuickResButton'] = ' style="display: none;"';
 			}
 
-			// --- Flying Fleets Table ---			
+			// --- Flying Fleets Table ---
+			$Query_GetFleets = '';
 			$Query_GetFleets .= "SELECT `fl`.*, `pl1`.`name` AS `start_name`, `pl2`.`name` AS `end_name`, `acs`.`fleets_id`, `usr`.`username` AS `owner_name` ";
 			$Query_GetFleets .= "FROM {{table}} AS `fl`";
 			$Query_GetFleets .= "LEFT JOIN `{{prefix}}planets` AS `pl1` ON `pl1`.`id` = `fl`.`fleet_start_id` ";

@@ -1,34 +1,31 @@
 <?php
 
-// Function checks if User has enough TechLevel to do this Element
-function IsTechnologieAccessible($_User, $planet, $Element)
+function IsTechnologieAccessible($TheUser, $ThePlanet, $ElementID)
 {
-	global $_Vars_Requirements, $_Vars_GameElements;
+	global $_Vars_Requirements, $_Vars_GameElements, $_Vars_ElementCategories;
 
-	if(isset($_Vars_Requirements[$Element]))
+	if(isset($_Vars_Requirements[$ElementID]))
 	{
-		$enabled = true;
-		foreach($_Vars_Requirements[$Element] as $ElementID => $ElementLevel)
-		{ 
-			if(@$_User[$_Vars_GameElements[$ElementID]] && $_User[$_Vars_GameElements[$ElementID]] >= $ElementLevel)
+		foreach($_Vars_Requirements[$ElementID] as $RequiredElementID => $RequiredLevel)
+		{
+			if(in_array($RequiredElementID, $_Vars_ElementCategories['tech']))
 			{
-				
-			}
-			else if($planet[$_Vars_GameElements[$ElementID]] && $planet[$_Vars_GameElements[$ElementID]] >= $ElementLevel)
-			{
-				$enabled = true;
+				if(!($RequiredLevel == 0 || (isset($TheUser[$_Vars_GameElements[$RequiredElementID]]) && $TheUser[$_Vars_GameElements[$RequiredElementID]] >= $RequiredLevel)))
+				{
+					return false;
+				}
 			}
 			else
 			{
-				return false;
+				if(!($RequiredLevel == 0 || (isset($ThePlanet[$_Vars_GameElements[$RequiredElementID]]) && $ThePlanet[$_Vars_GameElements[$RequiredElementID]] >= $RequiredLevel)))
+				{
+					return false;
+				}
 			}
 		}
-		return $enabled;
 	}
-	else
-	{
-		return true;
-	}
+	
+	return true;
 }
 
 ?>
