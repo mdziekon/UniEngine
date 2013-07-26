@@ -106,6 +106,7 @@ $_Lang['CheckError_Success'] = 'Zaliczony';
 $_Lang['CheckError_Fail'] = 'Niezaliczony';
 
 $_Lang['Requirements_PHPVersion'] = 'Wersja PHP przynajmniej 5.4';
+$_Lang['Requirements_PHPNoticesOff'] = 'Powiadomienia PHP (PHP Notice) wyłączone';
 $_Lang['Requirements_ConfigWritable'] = 'Plik "config.php" / "config.localhost.php" umożliwia zapis do niego (CHMOD 777)';
 $_Lang['Requirements_ConstantsWritable'] = 'Plik "includes/constants.php" umożliwia zapis do niego (CHMOD 777)';
 $_Lang['Requirements_RegisterWritable'] = 'Plik "js/register.js" umożliwia zapis do niego (CHMOD 777)';

@@ -36,6 +36,15 @@ else
 {
 	$_RequirementsCheckFails['PHPVersion'] = false;
 }
+if(error_reporting() & E_NOTICE)
+{
+	$_RequirementsCheckPassed = false;
+	$_RequirementsCheckFails['PHPNoticesOff'] = true;
+}
+else
+{
+	$_RequirementsCheckFails['PHPNoticesOff'] = false;
+}
 if(is_writable('../'.$_Install_ConfigFile.'.php'))
 {
 	$_RequirementsCheckFails['ConfigWritable'] = false;
