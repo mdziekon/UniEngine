@@ -22,11 +22,11 @@ $OnlineCheck = 30;
 	$Now = time();
 	$OnlineCheck = $Now - $OnlineCheck;
 
-	$RoomID = intval($_GET['rid']);
-	$FirstID = round($_GET['fID']);
-	$LastID = round($_GET['lID']);
-	$LastGet = intval($_GET['lGet']) + SERVER_MAINOPEN_TSTAMP;
-	$LastCount = intval($_GET['lCnt']);
+	$RoomID = (isset($_GET['rid']) ? intval($_GET['rid']) : 0);
+	$FirstID = (isset($_GET['fID']) ? round($_GET['fID']) : 0);
+	$LastID = (isset($_GET['lID']) ? round($_GET['lID']) : 0);
+	$LastGet = (isset($_GET['lGet']) ? intval($_GET['lGet']) + SERVER_MAINOPEN_TSTAMP : SERVER_MAINOPEN_TSTAMP);
+	$LastCount = (isset($_GET['lCnt']) ? intval($_GET['lCnt']) : 0);
 
 	$isInit = ($FirstID == 0 && $LastID == 0 ? true : false);
 	if($RoomID < 0)
@@ -52,21 +52,22 @@ $OnlineCheck = 30;
 	}
 	if($FirstID < 0)
 	{
-	$FirstID = 0;
+		$FirstID = 0;
 	}
 	if($LastID < 0)
 	{
-	$LastID = 0;
+		$LastID = 0;
 	}
 	if($LastGet < 0)
 	{
-	$LastGet = 0;
+		$LastGet = 0;
 	}
 	if($LastCount < 0)
 	{
-	$LastCount = 0;
+		$LastCount = 0;
 	}
 
+	$Query_GetMessages = '';
 	$Query_GetMessages .= "SELECT `chat`.*, `user`.`username`, `user`.`authlevel` ";
 	$Query_GetMessages .= "FROM {{table}} AS `chat` ";
 	$Query_GetMessages .= "LEFT JOIN `{{prefix}}users` AS `user` ON `user`.`id` = `chat`.`UID` ";
@@ -137,7 +138,7 @@ $OnlineCheck = 30;
 				}
 			}
 
-			if(empty($UsersArray[$Message['UID']]))
+			if(!isset($UsersArray[$Message['UID']]))
 			{
 				$UsersArray[$Message['UID']] = array('username' => $Message['username'], 'authlevel' => GetAuthLabel($Message), 'isNew' => $isNew);
 			}
@@ -149,7 +150,7 @@ $OnlineCheck = 30;
 				}
 			}
 
-			$Message['Text'] = bbcodeChat($Message['Text'], $AllowedBBCode);
+			$Message['Text'] = bbcodeChat($Message['Text']);
 
 			$Messages[$Message['ID']] = array('id' => floatval($Message['ID']), 'u' => intval($Message['UID']), 'd' => $Message['TimeStamp_Add'] - SERVER_MAINOPEN_TSTAMP, 't' => $Message['Text']);
 
@@ -203,6 +204,7 @@ $OnlineCheck = 30;
 		}
 	}
 
+	$Query_GetOnline = '';
 	$Query_GetOnline .= "SELECT `chat`.`UID`, `user`.`username`, `user`.`authlevel`, `user`.`chat_GhostMode`, `user`.`chat_GhostMode_DontCount` ";
 	$Query_GetOnline .= "FROM {{table}} AS `chat` ";
 	$Query_GetOnline .= "LEFT JOIN `{{prefix}}users` AS `user` ON `user`.`id` = `chat`.`UID` ";
@@ -219,6 +221,10 @@ $OnlineCheck = 30;
 			}
 			if($UserOn['chat_GhostMode_DontCount'] == 0 OR $UserOn['chat_GhostMode'] == 0 OR CheckAuth('user', AUTHCHECK_HIGHER))
 			{
+				if(!isset($Return['onlCnt']))
+				{
+					$Return['onlCnt'] = 0;
+				}
 				$Return['onlCnt'] += 1;
 			}
 			if($UserOn['chat_GhostMode'] == 1 AND !CheckAuth('user', AUTHCHECK_HIGHER))
@@ -232,7 +238,8 @@ $OnlineCheck = 30;
 			{
 				$UserOn['return'][3] = 1;
 			}
-			$UserOn['returnMax'] = array_pop(array_keys($UserOn['return']));
+			$Temp = array_keys($UserOn['return']);
+			$UserOn['returnMax'] = array_pop($Temp);
 			for($i = 0; $i <= $UserOn['returnMax']; $i += 1)
 			{
 				if(empty($UserOn['return'][$i]))
@@ -244,6 +251,7 @@ $OnlineCheck = 30;
 		}
 	}
 	
+	$Query_UpdateOnline = '';
 	$Query_UpdateOnline .= "INSERT INTO {{table}} VALUES ({$RoomID}, {$_User['id']}, {$Now}) ";
 	$Query_UpdateOnline .= "ON DUPLICATE KEY UPDATE ";
 	$Query_UpdateOnline .= "`LastOnline` = VALUES(`LastOnline`);";

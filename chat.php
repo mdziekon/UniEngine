@@ -15,7 +15,7 @@ include($_EnginePath.'common.php');
 	includeLang('months');
 	$BodyTPL = gettemplate('chat_body');
 
-	$RoomID = intval($_GET['rid']);
+	$RoomID = (isset($_GET['rid']) ? intval($_GET['rid']) : 0);
 	if($RoomID <= 0)
 	{
 		$RoomID = 0;
@@ -38,6 +38,7 @@ include($_EnginePath.'common.php');
 		}
 	}
 
+	$Query_GetFirstID = '';
 	$Query_GetFirstID .= "SELECT `msg`.`ID` FROM {{table}} AS `msg` ";
 	$Query_GetFirstID .= "LEFT JOIN `{{prefix}}chat_online` AS `visit` ON `visit`.`RID` = {$RoomID} AND `visit`.`UID` = {$_User['id']} ";
 	$Query_GetFirstID .= "WHERE `msg`.`TimeStamp_Add` <= `visit`.`LastOnline` AND `msg`.`RID` = {$RoomID} ";

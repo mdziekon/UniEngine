@@ -17,10 +17,10 @@ include($_EnginePath.'common.php');
 		message($_Lang['sys_noalloaw'], $_Lang['sys_noaccess']);
 	}
 	
-	$EditID = round($_GET['mode']);
-	if($EditID > 0 AND $_GET['save'] == '1')
+	$EditID = (isset($_GET['mode']) ? round($_GET['mode']) : 0);
+	if($EditID > 0 && isset($_GET['save']))
 	{
-		$NewMessage = mysql_escape_string($_POST['message']);
+		$NewMessage = mysql_real_escape_string($_POST['message']);
 		doquery("UPDATE {{table}} SET `Text` = '{$NewMessage}', `TimeStamp_Edit` = UNIX_TIMESTAMP() WHERE `ID` = {$EditID} LIMIT 1;", 'chat_messages');
 		header('Location: chat.php');
 	}

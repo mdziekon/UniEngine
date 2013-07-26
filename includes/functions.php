@@ -515,7 +515,7 @@ function display($PageCode, $PageTitle = '', $ShowTopResourceBar = true, $IsAdmi
 				}
 			}
 			
-			if($_User['ally_ChatRoom_ID'] > 0 AND $_DisplaySettings['dontShow_AllyChat_Link'] !== true)
+			if($_User['ally_ChatRoom_ID'] > 0 && (!isset($_DisplaySettings['dontShow_AllyChat_Link']) || $_DisplaySettings['dontShow_AllyChat_Link'] !== true))
 			{
 				$InsertAllyChatLink = false;
 				if($_User['ally_owner'] == $_User['id'])

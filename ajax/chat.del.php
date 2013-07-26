@@ -19,23 +19,29 @@ include($_EnginePath.'common.php');
 	{
 		if(CheckAuth('supportadmin'))
 		{
-			$GivenID = round($_GET['id']);
-
-			$Result = doquery("DELETE FROM {{table}} WHERE `ID` = {$GivenID} LIMIT 1;", 'chat_messages');
-			if($Result !== false)
+			$GivenID = (isset($_GET['id']) ? round($_GET['id']) : 0);
+			if($GivenID > 0)
 			{
-				if(mysql_affected_rows() == 1)
+				$Result = doquery("DELETE FROM {{table}} WHERE `ID` = {$GivenID} LIMIT 1;", 'chat_messages');
+				if($Result !== false)
 				{
-					echo '1';
+					if(mysql_affected_rows() == 1)
+					{
+						echo '1';
+					}
+					else
+					{
+						echo '2';
+					}
 				}
 				else
 				{
-					echo '2';
+					echo '3';
 				}
 			}
 			else
 			{
-				echo '3';
+				echo '2';
 			}
 		}
 		else

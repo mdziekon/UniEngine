@@ -17,12 +17,12 @@ include($_EnginePath.'common.php');
 	{
 		safeDie('4'); // Not logged in
 	}
-	if(empty($_POST['msg']))
+	if(!isset($_POST['msg']) || empty($_POST['msg']))
 	{
 		safeDie('3'); // Message Empty
 	}
 	
-	$RoomID = intval($_POST['rid']);
+	$RoomID = (isset($_POST['rid']) ? intval($_POST['rid']) : 0);
 	if($RoomID < 0)
 	{
 		$RoomID = 0;

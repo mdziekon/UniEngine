@@ -283,7 +283,7 @@ include($_EnginePath.'common.php');
 			$parse['Abandon_Ins_MsgHide'] = 'style="display: none;"';
 			$parse['Abandon_Ins_MsgTxt'] = false;
 
-			if($_POST['action'] == 'do')
+			if(isset($_POST['action']) && $_POST['action'] == 'do')
 			{
 				$parse['Abandon_Ins_MsgColor'] = 'red';
 				// Check if given password is good
@@ -497,6 +497,7 @@ include($_EnginePath.'common.php');
 
 			if(!empty($ShowSystemMsg))
 			{
+				$parse['SystemMsgBox'] = '';
 				foreach($ShowSystemMsg as $SystemMsg)
 				{
 					$parse['SystemMsgBox'] .= '<tr><th colspan="3" class="pad5 '.$SystemMsg['col'].'">'.$SystemMsg['txt'].'</th></tr>';

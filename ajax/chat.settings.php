@@ -39,6 +39,7 @@ include($_EnginePath.'common.php');
 		}
 		if(!empty($ToChange))
 		{
+			$UpdateQuery = '';
 			$UpdateQuery .= "UPDATE {{table}} SET ";
 			foreach($ToChange as $Key => $Val)
 			{
