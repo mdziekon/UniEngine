@@ -17,7 +17,7 @@ function doquery($query, $table, $fetch = false, $SilentMode = false)
 		{
 			require($_EnginePath.'config.localhost.php');
 		}
-		elseif(TESTSERVER)
+		else if(TESTSERVER)
 		{
 			require($_EnginePath.'config.testserver.php');
 		}

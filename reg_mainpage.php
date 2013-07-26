@@ -72,8 +72,8 @@ include($_EnginePath.'common.php');
 			$ThisInfobox['Insert_UniName']			= $UniNo;
 		}
 		
-		$parse['Insert_UniInfo_Boxes'] .= parsetemplate($TPL_UniInfoBox, $ThisInfobox);
-		$parse['Insert_UniSelectors'] .= parsetemplate($TPL_UniSelector, $ThisInfobox);
+		$parse['Insert_UniInfo_Boxes'] = parsetemplate($TPL_UniInfoBox, $ThisInfobox);
+		$parse['Insert_UniSelectors'] = parsetemplate($TPL_UniSelector, $ThisInfobox);
 		
 		$UniIterator += 1;
 	}

@@ -43,6 +43,7 @@ include($_EnginePath.'common.php');
 		doquery("UPDATE {{table}} SET `last_update` = {$Now} WHERE `id_owner` = {$_User['id']} LIMIT 1;", 'planets');
 		
 		$NewUserProtectionTime = $Now + $_GameConfig['Protection_NewPlayerTime'];
+		$Query_UpdateUser = '';
 		$Query_UpdateUser .= "UPDATE {{table}} SET ";
 		$Query_UpdateUser .= "`first_login` = {$Now}, ";
 		$Query_UpdateUser .= "`NoobProtection_EndTime` = {$NewUserProtectionTime} ";
@@ -150,7 +151,7 @@ include($_EnginePath.'common.php');
 		
 		// Check, if this IP is Proxy
 		$IPHash = md5($_SERVER['REMOTE_ADDR']);
-		$Query_CheckProxy .= "SELECT `ID`, `isProxy` FROM {{table}} WHERE `ValueHash` = '{$IPHash}' LIMIT 1;";
+		$Query_CheckProxy = "SELECT `ID`, `isProxy` FROM {{table}} WHERE `ValueHash` = '{$IPHash}' LIMIT 1;";
 		$Result_CheckProxy = doquery($Query_CheckProxy, 'used_ip_and_ua', true);
 		if($Result_CheckProxy['ID'] > 0 AND $Result_CheckProxy['isProxy'] == 1)
 		{

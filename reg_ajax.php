@@ -16,18 +16,22 @@ include($_EnginePath.'common.php');
 	
 	header('access-control-allow-origin: *');
 	
-	if($_GET['register'] == 1)
+	if(isset($_GET['register']))
 	{
+		$JSONResponse = null;
+		$JSONResponse['Errors'] = array();
+		
 		// User is trying to register
-		$Username = trim($_GET['username']);
-		$Password = trim($_GET['password']);
-		$Email = trim($_GET['email']);
+		$Username = (isset($_GET['username']) ? trim($_GET['username']) : null);
+		$Password = (isset($_GET['password']) ? trim($_GET['password']) : null);
+		$Email = (isset($_GET['email']) ? trim($_GET['email']) : null);
 		$CheckEmail = $Email;
 		$Email = mysql_real_escape_string($Email);
-		$Rules = $_GET['rules'];
-		$GalaxyNo = intval($_GET['galaxy']);
+		$Rules = (isset($_GET['rules']) ? $_GET['rules'] : null);
+		$GalaxyNo = (isset($_GET['galaxy']) ? intval($_GET['galaxy']) : null);
 
 		// Check if Username is correct
+		$UsernameGood = false;
 		if(strlen($Username) < 4)
 		{
 			// Username is too short
@@ -60,6 +64,7 @@ include($_EnginePath.'common.php');
 		}
 		
 		// Check if EMail is correct
+		$EmailGood = false;
 		$BannedDomains = str_replace('.', '\.', $_GameConfig['BannedMailDomains']);
 		if(empty($Email))
 		{
@@ -114,6 +119,14 @@ include($_EnginePath.'common.php');
 		if(REGISTER_RECAPTCHA_ENABLE)
 		{
 			// Check if reCaptcha is correct
+			if(!isset($_GET['recaptcha_challenge_field']))
+			{
+				$_GET['recaptcha_challenge_field'] = null;
+			}
+			if(!isset($_GET['recaptcha_response_field']))
+			{
+				$_GET['recaptcha_response_field'] = null;
+			}
 			$resp = recaptcha_check_answer(REGISTER_RECAPTCHA_PRIVATEKEY, $_SERVER['REMOTE_ADDR'], $_GET['recaptcha_challenge_field'], $_GET['recaptcha_response_field']);
 			if(!$resp->is_valid)
 			{
@@ -124,35 +137,34 @@ include($_EnginePath.'common.php');
 
 		if($EmailGood === true AND $UsernameGood === true)
 		{
+			$Query_CheckExistance = '';
 			$Query_CheckExistance .= "SELECT `username`, `email` FROM {{table}} ";
 			$Query_CheckExistance .= "WHERE `username` = '{$Username}' OR `email` = '{$Email}' LIMIT 2;";
 			$Result_CheckExistance = doquery($Query_CheckExistance, 'users');
 			if(mysql_num_rows($Result_CheckExistance) > 0)
 			{
-				$Array_CheckExistance = array('username' => array(), 'email' => array());
 				while($FetchData = mysql_fetch_assoc($Result_CheckExistance))
 				{
-					$Array_CheckExistance['username'][] = strtolower($FetchData['username']);
-					$Array_CheckExistance['email'][] = strtolower($FetchData['email']);
-				}
-				
-				if(in_array(strtolower($Username), $Array_CheckExistance['username']))
-				{
-					// Username is used
-					$JSONResponse['Errors'][] = 11;
-					$JSONResponse['BadFields'][] = 'username';
-				}
-				if(in_array(strtolower($Email), $Array_CheckExistance['email']))
-				{
-					// EMail is used
-					$JSONResponse['Errors'][] = 12;
-					$JSONResponse['BadFields'][] = 'email';
+					if(strtolower($FetchData['username']) == strtolower($Username))
+					{
+						// Username is used
+						$JSONResponse['Errors'][] = 11;
+						$JSONResponse['BadFields'][] = 'username';
+					}
+					else
+					{
+						// EMail is used
+						$JSONResponse['Errors'][] = 12;
+						$JSONResponse['BadFields'][] = 'email';
+					}
 				}
 			}
 		}
 
 		if(empty($JSONResponse['Errors']))
 		{
+			unset($JSONResponse['Errors']);
+			
 			// Check Galaxy
 			$SystemsRange = 25;
 			$SystemRandom = mt_rand(1, MAX_SYSTEM_IN_GALAXY);
@@ -174,6 +186,7 @@ include($_EnginePath.'common.php');
 			$Position_NonFreeCount = 0;
 			$Position_TotalCount = (($System_Higher - $System_Lower) + 1) * (($Planet_Higher - $Planet_Lower) + 1);
 
+			$Query_CheckGalaxy1 = '';
 			$Query_CheckGalaxy1 .= "SELECT `system`, `planet` FROM {{table}} ";
 			$Query_CheckGalaxy1 .= "WHERE `galaxy` = {$GalaxyNo} AND ";
 			$Query_CheckGalaxy1 .= "`system` BETWEEN {$System_Lower} AND {$System_Higher} AND ";
@@ -193,7 +206,7 @@ include($_EnginePath.'common.php');
 				{
 					$System = mt_rand($System_Lower, $System_Higher);
 					$Planet = mt_rand($Planet_Lower, $Planet_Higher);
-					if($Position_NonFree["{$System}:{$Planet}"] !== true)
+					if(!isset($Position_NonFree["{$System}:{$Planet}"]))
 					{
 						$PosFound = true;
 					}
@@ -206,6 +219,7 @@ include($_EnginePath.'common.php');
 				$Position_NonFreeCount = 0;
 				$Position_TotalCount = MAX_SYSTEM_IN_GALAXY * (($Planet_Higher - $Planet_Lower) + 1);
 				
+				$Query_CheckGalaxy2 = '';
 				$Query_CheckGalaxy2 .= "SELECT `system`, `planet` FROM {{table}} ";
 				$Query_CheckGalaxy2 .= "WHERE `galaxy` = {$GalaxyNo} AND ";
 				$Query_CheckGalaxy2 .= "`planet` BETWEEN {$Planet_Lower} AND {$Planet_Higher};";
@@ -224,7 +238,7 @@ include($_EnginePath.'common.php');
 					{
 						$System = mt_rand(1, MAX_SYSTEM_IN_GALAXY);
 						$Planet = mt_rand($Planet_Lower, $Planet_Higher);
-						if($Position_NonFree["{$System}:{$Planet}"] !== true)
+						if(!isset($Position_NonFree["{$System}:{$Planet}"]))
 						{
 							$PosFound = true;
 						}
@@ -245,6 +259,7 @@ include($_EnginePath.'common.php');
 					}
 					$Position_TotalCount = MAX_SYSTEM_IN_GALAXY * count($Planet_PosArray);
 					
+					$Query_CheckGalaxy3 = '';
 					$Query_CheckGalaxy3 .= "SELECT `system`, `planet` FROM {{table}} ";
 					$Query_CheckGalaxy3 .= "WHERE `galaxy` = {$GalaxyNo} AND ";
 					$Query_CheckGalaxy3 .= "`planet` NOT BETWEEN {$Planet_Lower} AND {$Planet_Higher};";
@@ -263,7 +278,7 @@ include($_EnginePath.'common.php');
 						{
 							$System = mt_rand(1, MAX_SYSTEM_IN_GALAXY);
 							$Planet = $Planet_PosArray[array_rand($Planet_PosArray)];
-							if($Position_NonFree["{$System}:{$Planet}"] !== true)
+							if(!isset($Position_NonFree["{$System}:{$Planet}"]))
 							{
 								$PosFound = true;
 							}
@@ -274,6 +289,7 @@ include($_EnginePath.'common.php');
 			
 			if($PosFound)
 			{
+				$Query_InsertUser = '';
 				$Query_InsertUser .= "INSERT INTO {{table}} SET ";
 				$Query_InsertUser .= "`username` = '{$Username}', ";
 				$Query_InsertUser .= "`email` = '{$Email}', ";
@@ -301,6 +317,7 @@ include($_EnginePath.'common.php');
 				
 				// Update Config
 				$_GameConfig['users_amount'] += 1;
+				$Query_UpdateConfig = '';
 				$Query_UpdateConfig .= "UPDATE {{table}} ";
 				$Query_UpdateConfig .= "SET `config_value` = {$_GameConfig['users_amount']} ";
 				$Query_UpdateConfig .= "WHERE `config_name` = 'users_amount';";
@@ -308,12 +325,12 @@ include($_EnginePath.'common.php');
 				$_MemCache->GameConfig = $_GameConfig;
 
 				// Update User with new data
-				if($_COOKIE[REFERING_COOKIENAME] > 0)
+				if(isset($_COOKIE[REFERING_COOKIENAME]) && $_COOKIE[REFERING_COOKIENAME] > 0)
 				{
 					$RefID = round($_COOKIE[REFERING_COOKIENAME]);
 					if($RefID > 0)
 					{
-						$Query_SelectReferrer .= "SELECT `id` FROM {{table}} WHERE `id` = {$RefID} LIMIT 1;";
+						$Query_SelectReferrer = "SELECT `id` FROM {{table}} WHERE `id` = {$RefID} LIMIT 1;";
 						$Result_SelectReferrer = doquery($Query_SelectReferrer, 'users', true);
 						if($Result_SelectReferrer['id'] > 0)
 						{
@@ -332,7 +349,7 @@ include($_EnginePath.'common.php');
 
 							$Query_InsertRefData_Matches = 'null';
 
-							$Query_SelectIPMatches .= "SELECT `ID` FROM {{table}} WHERE `Type` = 'ip' AND `Value` IN (".implode(',', $UserIPs).");";
+							$Query_SelectIPMatches = "SELECT `ID` FROM {{table}} WHERE `Type` = 'ip' AND `Value` IN (".implode(',', $UserIPs).");";
 							$Result_SelectIPMatches = doquery($Query_SelectIPMatches, 'used_ip_and_ua');
 							if(mysql_num_rows($Result_SelectIPMatches) > 0)
 							{
@@ -341,7 +358,7 @@ include($_EnginePath.'common.php');
 									$MatchedIPIDs[] = $FetchData['ID'];
 								}
 
-								$Query_SelectEnterLogMatches .= "SELECT `ID` FROM {{table}} WHERE `IP_ID` IN (".implode(',', $MatchedIPIDs).");";
+								$Query_SelectEnterLogMatches = "SELECT `ID` FROM {{table}} WHERE `IP_ID` IN (".implode(',', $MatchedIPIDs).");";
 								$Result_SelectEnterLogMatches = doquery($Query_SelectEnterLogMatches, 'user_enterlog');
 								if(mysql_num_rows($Result_SelectEnterLogMatches) > 0)
 								{
@@ -353,7 +370,8 @@ include($_EnginePath.'common.php');
 									$Query_InsertRefData_Matches = '\''.implode(',', $MatchedEnterLogIDs).'\'';
 								}
 							}
-
+							
+							$Query_InsertRefData = '';
 							$Query_InsertRefData .= "INSERT INTO {{table}} SET ";
 							$Query_InsertRefData .= "`referrer_id` = {$RefID}, ";
 							$Query_InsertRefData .= "`newuser_id` = {$UserID}, ";
@@ -390,7 +408,8 @@ include($_EnginePath.'common.php');
 				{
 					$Query_UpdateUser_Fields[] = "`activation_code` = ''";
 				}
-
+				
+				$Query_UpdateUser = '';
 				$Query_UpdateUser .= "UPDATE {{table}} SET ";
 				$Query_UpdateUser .= implode(', ', $Query_UpdateUser_Fields);
 				$Query_UpdateUser .= " WHERE `id` = {$UserID} LIMIT 1;";
@@ -418,7 +437,18 @@ include($_EnginePath.'common.php');
 				
 				if(SERVER_MAINOPEN_TSTAMP <= $Now)
 				{
-					require($_EnginePath.'config.php');
+					if(LOCALHOST)
+					{
+						require($_EnginePath.'config.localhost.php');
+					}
+					else if(TESTSERVER)
+					{
+						require($_EnginePath.'config.testserver.php');
+					}
+					else
+					{
+						require($_EnginePath.'config.php');
+					}
 					$cookie = $UserID.'/%/'.$Username.'/%/'.md5(md5($Password).'--'.$__ServerConnectionSettings['secretword']).'/%/0';				
 					$JSONResponse['Code'] = 1;
 					$JSONResponse['Cookie'][] = array('Name' => $_GameConfig['COOKIE_NAME'], 'Value' => $cookie);

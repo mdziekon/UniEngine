@@ -15,11 +15,11 @@ include($_EnginePath.'common.php');
 
 	setcookie($_GameConfig['COOKIE_NAME'], '', time() - 100000, '/', '', 0);
 
-	if($_GET['kicked'] == '1')
+	if(isset($_GET['kicked']))
 	{
 		$Msg = $_Lang['You_have_been_kicked'];
 	}
-	else if($_GET['badip'] == 1)
+	else if(isset($_GET['badip']))
 	{
 		header('Location: login.php');
 		safeDie();

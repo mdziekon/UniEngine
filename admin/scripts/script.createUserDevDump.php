@@ -1,6 +1,6 @@
-<?
+<?php
 
-if(IN_SCRIPTRUNNER !== true AND IN_USERFIRSTLOGIN !== true)
+if(!defined('IN_SCRIPTRUNNER') && !defined('IN_USERFIRSTLOGIN'))
 {
 	header("Location: ../index.php");
 	die();
@@ -10,8 +10,8 @@ $Now = time();
 
 $StartTime = microtime(true);
 
-$SelectedUID = intval($_GET['uid']);
-if(!empty($InnerUIDSet))
+$SelectedUID = (isset($_GET['uid']) ? intval($_GET['uid']) : 0);
+if(isset($InnerUIDSet) && !empty($InnerUIDSet))
 {
 	$SelectedUID = $InnerUIDSet;
 }
@@ -69,7 +69,7 @@ if(mysql_num_rows($GetUsers) > 0)
 					{
 						foreach($Array as $ElementID)
 						{
-							if($PlanetData[$_Vars_GameElements[$ElementID]] > 0)
+							if(isset($PlanetData[$_Vars_GameElements[$ElementID]]) && $PlanetData[$_Vars_GameElements[$ElementID]] > 0)
 							{
 								$Point['planets'][$PlanetData['id']]['f'][] = "{$ElementID},{$PlanetData[$_Vars_GameElements[$ElementID]]}";
 							}
@@ -87,7 +87,7 @@ if(mysql_num_rows($GetUsers) > 0)
 				{
 					foreach($Array as $BuildID)
 					{
-						if($PlanetData[$_Vars_GameElements[$BuildID]] > 0)
+						if(isset($PlanetData[$_Vars_GameElements[$BuildID]]) && $PlanetData[$_Vars_GameElements[$BuildID]] > 0)
 						{
 							$Point['planets'][$PlanetData['id']]['b'][] = "{$BuildID},{$PlanetData[$_Vars_GameElements[$BuildID]]}";
 						}
@@ -118,7 +118,7 @@ if(mysql_num_rows($GetUsers) > 0)
 		}
 	}
 
-	if(!empty($DevDump))
+	if(isset($DevDump) && !empty($DevDump))
 	{
 		if($SelectedUID > 0)
 		{
@@ -137,15 +137,15 @@ if(mysql_num_rows($GetUsers) > 0)
 			$TempElements = array();
 			foreach($DevData['planets'] as $PlanetID => $Data)
 			{
-				if(!empty($Data['b']))
+				if(isset($Data['b']) && !empty($Data['b']))
 				{
 					$DevData['planets'][$PlanetID]['b'] = implode(';', $Data['b']);
 				}
-				if(!empty($Data['p']))
+				if(isset($Data['p']) && !empty($Data['p']))
 				{
 					$DevData['planets'][$PlanetID]['p'] = implode(';', $Data['p']);
 				}
-				if(!empty($Data['f']))
+				if(isset($Data['f']) && !empty($Data['f']))
 				{
 					$DevData['planets'][$PlanetID]['f'] = implode(';', $Data['f']);
 				}
@@ -166,24 +166,24 @@ if(mysql_num_rows($GetUsers) > 0)
 
 		$EndTime = microtime(true);
 
-		if($SkipDumpMsg !== true)
+		if(!isset($SkipDumpMsg) || $SkipDumpMsg !== true)
 		{
-			message('User Development Dump creation <b class="lime">DONE</b><br/>Generated in: '.sprintf('%0.10f', ($EndTime - $StartTime)), $Script);
+			message('User Development Dump creation <b class="lime">DONE</b><br/>Generated in: '.sprintf('%0.10f', ($EndTime - $StartTime)), '');
 		}
 	}
 	else
 	{
-		if($SkipDumpMsg !== true)
+		if(!isset($SkipDumpMsg) || $SkipDumpMsg !== true)
 		{
-			message('<b class="red">No Data to Insert!</b>', $Script); 
+			message('<b class="red">No Data to Insert!</b>', ''); 
 		}
 	}
 }
 else
 {
-	if($SkipDumpMsg !== true)
+	if(!isset($SkipDumpMsg) || $SkipDumpMsg !== true)
 	{
-		message('<b class="red">Users not Found!</b>', $Script);
+		message('<b class="red">Users not Found!</b>', '');
 	} 
 }
 

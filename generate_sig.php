@@ -22,8 +22,8 @@ function ReturnImage($ImagePath)
 $CachePath = './cache/img/signatures/';
 $_EnginePath = './';
 
-$UID = round($_GET['uid']);
-$SigLang = $_GET['lang'];
+$UID = (isset($_GET['uid']) ? round($_GET['uid']) : 0);
+$SigLang = (isset($_GET['lang']) ? $_GET['lang'] : null);
 $DefaultLang = 'pl';
 
 if(!in_array($SigLang, array('pl')))
@@ -56,8 +56,7 @@ if($UID > 0)
 	// Load DB Driver & Lang
 	if(substr(sprintf('%o', fileperms($CachePath.'pl')), -4) != '0777')
 	{
-		$Chmod = @chmod($CachePath.'pl', 0777);
-		if(!$Chmod)
+		if(!chmod($CachePath.'pl', 0777))
 		{
 			ReturnImage("{$CachePath}static/signature_{$SigLang}_error4.png");
 		}
