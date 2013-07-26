@@ -13,6 +13,7 @@ Serwer MySQL w wersji co najmniej 5
 
 Zalecane
 --------
+Brak doklejania treści do stron przez serwer (np. reklam doklejanych na darmowych hostingach)  
 Zainstalowany modul APC dla PHP  
 Wlasny, platny serwer (VPS lub serwer dedykowany)
 
@@ -30,6 +31,7 @@ MySQL Server, MySQL version at least 5
 
 Recommended
 -----------
+No code appending to pages by the server (np. ads appended on some free hosting sites)  
 Installed APC module for PHP  
 Own, paid server (VPS or dedicated server)
 
