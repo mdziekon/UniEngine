@@ -67,6 +67,14 @@ include($_EnginePath.'common.php');
 			$SetTitle = $_Lang['mess_pagetitle_send'];
 			$AllowSend = false;
 			
+			$FormData['username'] = null;
+			$FormData['uid'] = null;
+			$FormData['replyto'] = 0;
+			$FormData['subject'] = null;
+			$FormData['text'] = null;
+			$FormData['lock_username'] = false;
+			$FormData['lock_subject'] = false;
+			
 			if(empty($_POST['subject']) AND !empty($_GET['subject']))
 			{
 				$_POST['subject'] = $_GET['subject'];
@@ -155,7 +163,7 @@ include($_EnginePath.'common.php');
 						{
 							$FormData['username'] = $CheckUser['username'];
 							$FormData['uid'] = $UserID;
-							$FormData['authlevel'] = (isset($ReplyMsg['autolevel']) ? $ReplyMsg['authlevel'] : 0);
+							$FormData['authlevel'] = $CheckUser['authlevel'];
 							if($UIDFromPost === false)
 							{
 								$FormData['lock_username'] = true;
@@ -173,7 +181,7 @@ include($_EnginePath.'common.php');
 					}
 				}
 				
-				if(!empty($_POST['uname']) && (!isset($FormData['username']) || $_POST['uname'] != $FormData['username']))
+				if(!empty($_POST['uname']) && $_POST['uname'] != $FormData['username'])
 				{
 					$FormData['username'] = '';
 					$FormData['uid'] = '';
@@ -188,7 +196,7 @@ include($_EnginePath.'common.php');
 						{
 							$FormData['username'] = $UserName;
 							$FormData['uid'] = $CheckUser['id'];
-							$FormData['authlevel'] = (isset($ReplyMsg['autolevel']) ? $ReplyMsg['authlevel'] : 0);
+							$FormData['authlevel'] = $CheckUser['authlevel'];
 							$AllowSend = true;
 						}
 						else
@@ -203,7 +211,7 @@ include($_EnginePath.'common.php');
 				}				
 			}
 			
-			if(isset($FormData['uid']) && $FormData['uid'] > 0 && $FormData['uid'] == $_User['id'])
+			if($FormData['uid'] > 0 && $FormData['uid'] == $_User['id'])
 			{
 				$FormData['username'] = '';
 				$FormData['uid'] = '';
@@ -242,7 +250,7 @@ include($_EnginePath.'common.php');
 			
 			if(isset($_POST['send_msg']))
 			{
-				if((!isset($FormData['uid']) || $FormData['uid'] == 0) && empty($MsgBox))
+				if($FormData['uid'] == 0 && empty($MsgBox))
 				{
 					$MsgBox[] = array('color' => 'red', 'text' => $_Lang['Errors_NoUserID']);
 					$AllowSend = false;
@@ -268,7 +276,7 @@ include($_EnginePath.'common.php');
 					}
 				}
 				
-				if(isset($FormData['uid']) && $FormData['uid'] > 0 && !CheckAuth('user', AUTHCHECK_HIGHER) AND !CheckAuth('user', AUTHCHECK_HIGHER, $FormData))
+				if($FormData['uid'] > 0 && !CheckAuth('user', AUTHCHECK_HIGHER) AND !CheckAuth('user', AUTHCHECK_HIGHER, $FormData))
 				{
 					$Query_IgnoreSystem = '';
 					$Query_IgnoreSystem .= "SELECT `OwnerID` FROM {{table}} WHERE ";
@@ -299,7 +307,7 @@ include($_EnginePath.'common.php');
 					$FormSend['subject'] = $FormData['subject'];
 					$FormSend['text'] = $FormData['text'];
 					$FormSend['uid'] = $FormData['uid'];
-					$FormSend['Thread_ID'] = (isset($FormData['replyto']) ? $FormData['replyto'] : 0);
+					$FormSend['Thread_ID'] = $FormData['replyto'];
 					$FormSend['Thread_IsLast'] = ($FormSend['Thread_ID'] > 0 ? 1 : 0);
 					
 					if($FormSend['Thread_ID'] > 0)
@@ -324,16 +332,16 @@ include($_EnginePath.'common.php');
 				}
 			}
 			
-			$parse['FormInsert_username'] = (isset($FormData['username']) ? $FormData['username'] : '');
-			$parse['FormInsert_uid'] = (isset($FormData['uid']) ? $FormData['uid'] : '');
-			$parse['FormInsert_replyto'] = (isset($FormData['replyto']) ? $FormData['replyto'] : '');
-			$parse['FormInsert_subject'] = (isset($FormData['subject']) ? $FormData['subject'] : '');
-			$parse['FormInsert_text'] = (isset($FormData['text']) ? $FormData['text'] : '');
-			if(isset($FormData['lock_username']) && $FormData['lock_username'] === true)
+			$parse['FormInsert_username'] = $FormData['username'];
+			$parse['FormInsert_uid'] = $FormData['uid'];
+			$parse['FormInsert_replyto'] = $FormData['replyto'];
+			$parse['FormInsert_subject'] = $FormData['subject'];
+			$parse['FormInsert_text'] = $FormData['text'];
+			if($FormData['lock_username'] === true)
 			{
 				$parse['FormInsert_LockUsername'] = 'disabled';
 			}
-			if(isset($FormData['lock_subject']) && $FormData['lock_subject'] === true)
+			if($FormData['lock_subject'] === true)
 			{
 				$parse['FormInsert_LockSubject'] = 'disabled';
 			}
