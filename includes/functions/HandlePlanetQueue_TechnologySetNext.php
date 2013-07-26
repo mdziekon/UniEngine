@@ -2,14 +2,18 @@
 
 function HandlePlanetQueue_TechnologySetNext(&$ThePlanet, &$TheUser, $CurrentTime, $RunStandAlone = false)
 {
-	global $_Lang, $_Vars_GameElements, $_Vars_MaxBuildingLevels, $_Vars_PremiumBuildings, $_Vars_PremiumBuildingPrices, $UserDev_Log, $HPQ_PlanetUpdatedFields, $HPQ_UserUpdatedFields, $HFUU_UsersToUpdate;
+	global $_Lang, $_Vars_GameElements, $_Vars_MaxElementLevel, $_Vars_PremiumBuildings, $_Vars_PremiumBuildingPrices, $UserDev_Log, $HPQ_PlanetUpdatedFields, $HPQ_UserUpdatedFields, $HFUU_UsersToUpdate;
 
 	$Return = false;
 	$RemovedTime = 0;
-
+	
+	$NeedUpdate = false;
+	$NeedUpdateUser = false;
+	
 	if($ThePlanet['techQueue_firstEndTime'] == 0 AND !empty($ThePlanet['techQueue']))
 	{
 		$NeedUpdate = true;
+		$NeedQueueRebuild = false;
 		$HPQ_PlanetUpdatedFields[] = 'techQueue';
 		$HPQ_PlanetUpdatedFields[] = 'techQueue_firstEndTime';
 		$HPQ_UserUpdatedFields[] = 'techQueue_Planet';
@@ -34,12 +38,12 @@ function HandlePlanetQueue_TechnologySetNext(&$ThePlanet, &$TheUser, $CurrentTim
 			{
 				if(IsTechnologieAccessible($TheUser, $ThePlanet, $ElementID))
 				{
-					if($_Vars_MaxBuildingLevels[$ElementID] > 0 AND $ElementLevel > $_Vars_MaxBuildingLevels[$ElementID])
+					if(isset($_Vars_MaxElementLevel[$ElementID]) && $ElementLevel > $_Vars_MaxElementLevel[$ElementID])
 					{
 						$BlockResearch = true;
 						$BlockReason = 1;
 					}
-					elseif($_Vars_PremiumBuildings[$ElementID] == 1 AND $_Vars_PremiumBuildingPrices[$ElementID] > 0 AND $TheUser['darkEnergy'] < $_Vars_PremiumBuildingPrices[$ElementID])
+					else if(isset($_Vars_PremiumBuildings[$ElementID]) && $_Vars_PremiumBuildings[$ElementID] == 1 && isset($_Vars_PremiumBuildingPrices[$ElementID]) AND $TheUser['darkEnergy'] < $_Vars_PremiumBuildingPrices[$ElementID])
 					{
 						$BlockResearch = true;
 						$BlockReason = 2;
@@ -66,7 +70,7 @@ function HandlePlanetQueue_TechnologySetNext(&$ThePlanet, &$TheUser, $CurrentTim
 				$ThePlanet['metal'] -= $RemoveRes['metal'];
 				$ThePlanet['crystal'] -= $RemoveRes['crystal'];
 				$ThePlanet['deuterium'] -= $RemoveRes['deuterium'];
-				if($_Vars_PremiumBuildings[$ElementID] == 1 AND $_Vars_PremiumBuildingPrices[$ElementID] > 0)
+				if(isset($_Vars_PremiumBuildings[$ElementID]) && $_Vars_PremiumBuildings[$ElementID] == 1 && isset($_Vars_PremiumBuildingPrices[$ElementID]))
 				{
 					$TheUser['darkEnergy'] -= $_Vars_PremiumBuildingPrices[$ElementID];
 					$HPQ_UserUpdatedFields[] = 'darkEnergy';
@@ -188,6 +192,7 @@ function HandlePlanetQueue_TechnologySetNext(&$ThePlanet, &$TheUser, $CurrentTim
 		$Return = false;
 		if($NeedUpdate === true)
 		{
+			$Query_Update = '';
 			$Query_Update .= "UPDATE {{table}} SET ";
 			$Query_Update .= "`metal` = '{$ThePlanet['metal']}', `crystal` = '{$ThePlanet['crystal']}', `deuterium` = '{$ThePlanet['deuterium']}', ";
 			$Query_Update .= "`techQueue` = '{$ThePlanet['techQueue']}', `techQueue_firstEndTime` = '{$ThePlanet['techQueue_firstEndTime']}' ";

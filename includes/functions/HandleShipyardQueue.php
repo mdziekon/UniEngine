@@ -56,6 +56,10 @@ function HandleShipyardQueue($TheUser, &$ThePlanet, $ProductionTime, $EndTime)
 			{
 				$ThePlanet['shipyardQueue_additionalWorkTime'] -= $AllBuildedTime;
 				$WorkTime -= $AllBuildedTime;
+				if(!isset($Builded[$ElementID]))
+				{
+					$Builded[$ElementID] = 0;
+				}
 				$Builded[$ElementID] += $AllBuilded;
 				$ThePlanet[$_Vars_GameElements[$ElementID]] += $AllBuilded;
 				if($LeftToBuild == 0)
@@ -102,10 +106,15 @@ function HandleShipyardQueue($TheUser, &$ThePlanet, $ProductionTime, $EndTime)
 				'mainCheck' => function($JobArray, $ThisCat, $TaskID, $JobID) use ($TheUser, $Builded)
 				{
 					global $UserTasksUpdate;
-					if(!empty($UserTasksUpdate[$TheUser['id']]['status'][$ThisCat][$TaskID][$JobID]))
+					if(isset($UserTasksUpdate[$TheUser['id']]['status'][$ThisCat][$TaskID][$JobID]) && !empty($UserTasksUpdate[$TheUser['id']]['status'][$ThisCat][$TaskID][$JobID]))
 					{
 						$TheUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] = $UserTasksUpdate[$TheUser['id']]['status'][$ThisCat][$TaskID][$JobID];
-					}						
+					}
+					
+					if(!isset($TheUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID]))
+					{
+						$TheUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] = 0;
+					}
 					$TheUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] += $Builded[$JobArray['elementID']];
 					if($TheUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] < $JobArray['count'])
 					{

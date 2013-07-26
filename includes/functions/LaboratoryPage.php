@@ -2,12 +2,15 @@
 
 function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 {
-	global $_EnginePath, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories, $_SkinPath, $_GameConfig, $_GET;
+	global	$_EnginePath, $_Lang,
+			$_Vars_GameElements, $_Vars_ElementCategories, $_Vars_MaxElementLevel,
+			$_SkinPath, $_GameConfig, $_GET;
 	
 	include($_EnginePath.'includes/functions/GetElementTechReq.php');
 	
 	$Now = time();
 	$Parse = &$_Lang;
+	$Parse['Create_Queue'] = '';
 	$ShowElementID = 0;
 
 	// Constants
@@ -43,6 +46,14 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 	}
 	
 	// Get OtherPlanets with Lab
+	$OtherLabs_ConnectedLabs = 0;
+	$OtherLabs_ConnectedLabsLevel = 0;
+	$OtherLabs_TotalLabsLevel = 0;
+	$OtherLabs_LabsCount = 0;
+	
+	$LabInQueue_CheckID = 0;
+	
+	$Query_GetOtherLabs = '';
 	$Query_GetOtherLabs .= "SELECT `id`, `buildQueue`, `{$_Vars_GameElements[31]}` FROM {{table}} ";
 	$Query_GetOtherLabs .= "WHERE `id_owner` = {$CurrentUser['id']} AND `planet_type` = 1;";
 	$Result_GetOtherLabs = doquery($Query_GetOtherLabs, 'planets');
@@ -66,7 +77,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 		{
 			rsort($OtherLabs_Levels);
 			$OtherLabs_ConnectedLabsCount = 1 + $CurrentUser[$_Vars_GameElements[123]];
-			$OtherLabs_ConnectedLabs = 0;
 			foreach($OtherLabs_Levels as $ThisLabLevel)
 			{
 				if($OtherLabs_ConnectedLabs < $OtherLabs_ConnectedLabsCount)
@@ -134,7 +144,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 			{
 				$TheCommand = $_GET['cmd'];
 				$TechID = intval($_GET['tech']);
-				$QueueElementID = intval($_GET['el']);
+				$QueueElementID = (isset($_GET['el']) ? intval($_GET['el']) : -1);
 
 				if((in_array($TechID, $_Vars_ElementCategories['tech']) AND $TheCommand == 'search') OR ($TheCommand == 'cancel' AND $QueueElementID >= 0))
 				{
@@ -176,7 +186,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 		}
 	}
 
-	if($ResearchPlanet['id'] != $CurrentPlanet['id'] AND $InResearch === true)
+	if($InResearch === true && $ResearchPlanet['id'] != $CurrentPlanet['id'])
 	{
 		$ResearchInThisLab = false;
 	}
@@ -187,7 +197,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 	// End of - Execute Commands
 
 	// Parse Queue
-	$CurrentQueue = $ResearchPlanet['techQueue'];
+	$CurrentQueue = (isset($ResearchPlanet['techQueue']) ? $ResearchPlanet['techQueue'] : false);
 	if(!empty($CurrentQueue))
 	{
 		$CurrentQueue = explode(';', $CurrentQueue);
@@ -228,8 +238,8 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 						'EndTitleHour'			=> $_Lang['Queue_EndTitleHour'],
 						'EndDateExpand'			=> prettyDate('d m Y', $BuildEndTime, 1),
 						'EndTimeExpand'			=> date('H:i:s', $BuildEndTime),
-						'PremBlock'				=> ($_Vars_PremiumBuildings[$ElementID] == 1 ? 'premblock' : ''),
-						'CancelText'			=> ($_Vars_PremiumBuildings[$ElementID] == 1 ? $_Lang['Queue_Cancel_CantCancel'] : $_Lang['Queue_Cancel_Research'])
+						'PremBlock'				=> (isset($_Vars_PremiumBuildings[$ElementID]) && $_Vars_PremiumBuildings[$ElementID] == 1 ? 'premblock' : ''),
+						'CancelText'			=> (isset($_Vars_PremiumBuildings[$ElementID]) && $_Vars_PremiumBuildings[$ElementID] == 1 ? $_Lang['Queue_Cancel_CantCancel'] : $_Lang['Queue_Cancel_Research'])
 					);
 				}
 				else
@@ -257,7 +267,11 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 					$LockResources['crystal'] += $GetResourcesToLock['crystal'];
 					$LockResources['deuterium'] += $GetResourcesToLock['deuterium'];
 				}
-
+				
+				if(!isset($LevelModifiers[$ElementID]))
+				{
+					$LevelModifiers[$ElementID] = 0;
+				}
 				$LevelModifiers[$ElementID] -= 1;
 				$CurrentUser[$_Vars_GameElements[$ElementID]] += 1;
 
@@ -265,9 +279,9 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 			}
 			$PreviousBuildEndTime = $BuildEndTime;
 		}
-		$CurrentPlanet['metal'] -= $LockResources['metal'];
-		$CurrentPlanet['crystal'] -= $LockResources['crystal'];
-		$CurrentPlanet['deuterium'] -= $LockResources['deuterium'];
+		$CurrentPlanet['metal'] -= (isset($LockResources['metal']) ? $LockResources['metal'] : 0);
+		$CurrentPlanet['crystal'] -= (isset($LockResources['crystal']) ? $LockResources['crystal'] : 0);
+		$CurrentPlanet['deuterium'] -= (isset($LockResources['deuterium']) ? $LockResources['deuterium'] : 0);
 
 		$Queue['lenght'] = $QueueIndex;
 		if(!empty($QueueParser))
@@ -339,6 +353,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 		'InfoBox_BuildTime'			=> $_Lang['InfoBox_ResearchTime'],
 		'InfoBox_ShowTechReq'		=> $_Lang['InfoBox_ShowTechReq'],
 		'InfoBox_ShowResReq'		=> $_Lang['InfoBox_ShowResReq'],
+		'ElementPriceDiv'			=> ''
 	);
 
 	foreach($_Vars_ElementCategories['tech'] as $ElementID)
@@ -358,7 +373,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 		$ElementParser['ElementName'] = $_Lang['tech'][$ElementID];
 		$ElementParser['ElementID'] = $ElementID;
 		$ElementParser['ElementLevel'] = prettyNumber($CurrentUser[$_Vars_GameElements[$ElementID]]);
-		$ElementParser['ElementRealLevel'] = prettyNumber($CurrentUser[$_Vars_GameElements[$ElementID]] + $LevelModifiers[$ElementID]);
+		$ElementParser['ElementRealLevel'] = prettyNumber($CurrentUser[$_Vars_GameElements[$ElementID]] + (isset($LevelModifiers[$ElementID]) ? $LevelModifiers[$ElementID] : 0));
 		$ElementParser['BuildLevel'] = prettyNumber($CurrentUser[$_Vars_GameElements[$ElementID]] + 1);
 		$ElementParser['Desc'] = $_Lang['res']['descriptions'][$ElementID];
 		$ElementParser['BuildButtonColor'] = 'buildDo_Green';
@@ -372,7 +387,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 			unset($ElementParser['levelmodif']);
 		}
 
-		if(!($_Vars_MaxBuildingLevels[$ElementID] > 0 AND $NextLevel > $_Vars_MaxBuildingLevels[$ElementID]))
+		if(!(isset($_Vars_MaxElementLevel[$ElementID]) && $_Vars_MaxElementLevel[$ElementID] > 0 && $NextLevel > $_Vars_MaxElementLevel[$ElementID]))
 		{
 			$ElementParser['ElementPrice'] = GetBuildingPrice($CurrentUser, $CurrentPlanet, $ElementID, true, false, true);
 			foreach($ElementParser['ElementPrice'] as $Key => $Value)
@@ -539,9 +554,9 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 			$CurrentUser[$_Vars_GameElements[$ElementID]] += $Modifier;
 		}
 	}
-	$CurrentPlanet['metal'] += $LockResources['metal'];
-	$CurrentPlanet['crystal'] += $LockResources['crystal'];
-	$CurrentPlanet['deuterium'] += $LockResources['deuterium'];
+	$CurrentPlanet['metal'] += (isset($LockResources['metal']) ? $LockResources['metal'] : 0);
+	$CurrentPlanet['crystal'] += (isset($LockResources['crystal']) ? $LockResources['crystal'] : 0);
+	$CurrentPlanet['deuterium'] += (isset($LockResources['deuterium']) ? $LockResources['deuterium'] : 0);
 
 	// Create List
 	$ThisRowIndex = 0;
@@ -554,7 +569,11 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 			$ThisRowIndex += 2;
 			$InRowCount = 0;
 		}
-
+		
+		if(!isset($StructureRows[$ThisRowIndex]['Elements']))
+		{
+			$StructureRows[$ThisRowIndex]['Elements'] = '';
+		}
 		$StructureRows[$ThisRowIndex]['Elements'] .= $ParsedData;
 		$InRowCount += 1;
 	}

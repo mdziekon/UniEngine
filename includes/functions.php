@@ -467,9 +467,9 @@ function display($PageCode, $PageTitle = '', $ShowTopResourceBar = true, $IsAdmi
 			
 			if(!defined('IN_ERROR'))
 			{
-				$Query_Counters = array('', '', '');
 				if($_DisplaySettings['dontShow_MainChat_MsgCount'] !== true)
 				{
+					$Query_Counters[0] = '';
 					$Query_Counters[0] .= "(SELECT '1' AS `Type`, COUNT(`msg`.`ID`) AS `Count` ";
 					$Query_Counters[0] .= "FROM `{{prefix}}chat_messages` AS `msg` ";
 					$Query_Counters[0] .= "LEFT JOIN `{{prefix}}chat_online` AS `visit` ON `visit`.`RID` = 0 AND `visit`.`UID` = {$_User['id']} ";
@@ -477,12 +477,13 @@ function display($PageCode, $PageTitle = '', $ShowTopResourceBar = true, $IsAdmi
 				}
 				if($_User['ally_ChatRoom_ID'] > 0 AND $_DisplaySettings['dontShow_AllyChat_MsgCount'] !== true)
 				{
+					$Query_Counters[1] = '';
 					$Query_Counters[1] .= "(SELECT '2' AS `Type`, COUNT(`msg`.`ID`) AS `Count` ";
 					$Query_Counters[1] .= "FROM `{{prefix}}chat_messages` AS `msg` ";
 					$Query_Counters[1] .= "LEFT JOIN `{{prefix}}chat_online` AS `visit` ON `visit`.`RID` = {$_User['ally_ChatRoom_ID']} AND `visit`.`UID` = {$_User['id']} ";
 					$Query_Counters[1] .= "WHERE `msg`.`RID` = {$_User['ally_ChatRoom_ID']} AND `msg`.`TimeStamp_Add` > IF(`visit`.`LastOnline` > 0, `visit`.`LastOnline`, 0))";
 				}
-				$Query_Counters[2] .= "(SELECT '3' AS `Type`, COUNT(*) AS `Count` FROM `{{prefix}}buddy` WHERE `owner` = {$_User['id']} AND `active` = 0)";
+				$Query_Counters[2] = "(SELECT '3' AS `Type`, COUNT(*) AS `Count` FROM `{{prefix}}buddy` WHERE `owner` = {$_User['id']} AND `active` = 0)";
 				
 				$Query_Counters = implode(' UNION ', $Query_Counters);
 				$GetCounters = doquery($Query_Counters, '');

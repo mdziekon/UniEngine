@@ -1020,6 +1020,10 @@ include($_EnginePath.'common.php');
 					{
 						if($InCurrentRow == 0)
 						{
+							if(!isset($parse['OtherPlanets']))
+							{
+								$parse['OtherPlanets'] = '';
+							}
 							$parse['OtherPlanets'] .= '<tr>';
 						}
 						$parse['OtherPlanets'] .= '<th>'.$PlanetsData['name'].'<br/>';

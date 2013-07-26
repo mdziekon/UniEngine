@@ -42,6 +42,11 @@ include($_EnginePath.'common.php');
 		$InResearch = true;
 		$ResearchPlanet = &$GetLabPlanet;
 	}
+	else
+	{
+		$InResearch = false;
+		$ResearchPlanet = false;
+	}
 
 	$OldViewMode = ($_User['settings_DevelopmentOld'] == 1 ? true : false);
 	

@@ -3,7 +3,7 @@
 function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 {
 	global	$_Lang, $_SkinPath, $_GameConfig, $_GET, $_EnginePath,
-			$_Vars_GameElements, $_Vars_ElementCategories, $_Vars_ResProduction, $_Vars_MaxBuildingLevels, $_Vars_PremiumBuildings, $_Vars_IndestructibleBuildings;
+			$_Vars_GameElements, $_Vars_ElementCategories, $_Vars_ResProduction, $_Vars_MaxElementLevel, $_Vars_PremiumBuildings, $_Vars_IndestructibleBuildings;
 	
 	include($_EnginePath.'includes/functions/GetElementTechReq.php');
 	
@@ -359,7 +359,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 				unset($ElementParser['levelmodif']);
 			}
 
-			if(!(isset($_Vars_MaxBuildingLevels[$ElementID]) && $_Vars_MaxBuildingLevels[$ElementID] > 0 && $NextLevel > $_Vars_MaxBuildingLevels[$ElementID]))
+			if(!(isset($_Vars_MaxElementLevel[$ElementID]) && $_Vars_MaxElementLevel[$ElementID] > 0 && $NextLevel > $_Vars_MaxElementLevel[$ElementID]))
 			{
 				$ElementParser['ElementPrice'] = GetBuildingPrice($CurrentUser, $CurrentPlanet, $ElementID, true, false, true);
 				foreach($ElementParser['ElementPrice'] as $Key => $Value)

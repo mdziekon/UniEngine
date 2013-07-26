@@ -27,6 +27,7 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
 	}
 	$Parse = &$_Lang;
 	$Parse['SkinPath'] = $_SkinPath;
+	$Parse['Create_Queue'] = '';
 
 	// Constants
 	$ElementsPerRow = 7;
@@ -108,7 +109,7 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
 	// Execute Commands
 	if(!isOnVacation($CurrentUser))
 	{
-		if($_POST['cmd'] == 'exec')
+		if(isset($_POST['cmd']) && $_POST['cmd'] == 'exec')
 		{ 
 			$AddedInQueue = false;
 			$AddedSomething = false;
@@ -183,7 +184,11 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
 
 									$Ressource = GetElementRessources($ElementID, $Count);
 									$AddedSomething = true;
-
+									
+									if(!isset($UpdateAchievements[$ElementID]))
+									{
+										$UpdateAchievements[$ElementID] = 0;
+									}
 									$UpdateAchievements[$ElementID] += $Count;
 									$addToBHangar = "{$ElementID},{$Count};";								
 									$CurrentPlanet['metal'] -= $Ressource['metal'];
@@ -206,6 +211,7 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
 						$QryAchievementsKey[] = "`build_{$Key}`";
 						$QryAchievementsArr[] = "`build_{$Key}` = `build_{$Key}` + VALUES(`build_{$Key}`)";
 					}
+					$QryAchievements = '';
 					$QryAchievements .= "INSERT INTO {{table}} (`A_UserID`, ".implode(', ', $QryAchievementsKey).") VALUES ({$CurrentUser['id']}, ".implode(', ', $UpdateAchievements).")";
 					$QryAchievements .= " ON DUPLICATE KEY UPDATE ";
 					$QryAchievements .= implode(', ', $QryAchievementsArr);
@@ -222,10 +228,11 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
 
 	// Parse Queue
 	$CurrentQueue = $CurrentPlanet['shipyardQueue'];
+	$QueueIndex = 0;
+	$TotalTime = 0;
 	if(!empty($CurrentQueue))
 	{
 		$CurrentQueue = explode(';', $CurrentQueue);
-		$QueueIndex = 0;
 		foreach($CurrentQueue as $QueueID => $QueueData)
 		{
 			if(empty($QueueData))
@@ -322,6 +329,7 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
 		'InfoBox_MaxConstructible'	=> $_Lang['InfoBox_MaxConstructible'],
 		'InfoBox_ShowTechReq'		=> $_Lang['InfoBox_ShowTechReq'],
 		'InfoBox_ShowResReq'		=> $_Lang['InfoBox_ShowResReq'],
+		'ElementPriceDiv'			=> ''
 	);
 
 	$TabIndex = 1;
@@ -505,7 +513,11 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
 			$ThisRowIndex += 2;
 			$InRowCount = 0;
 		}
-
+		
+		if(!isset($StructureRows[$ThisRowIndex]['Elements']))
+		{
+			$StructureRows[$ThisRowIndex]['Elements'] = '';
+		}
 		$StructureRows[$ThisRowIndex]['Elements'] .= $ParsedData;
 		$InRowCount += 1;
 	}
@@ -531,7 +543,7 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
 	{
 		$Parse['P_AllowPrettyInputBox'] = 'false';
 	}
-	$Parse['Create_QueueJSArray'] = json_encode($QueueJSArray);
+	$Parse['Create_QueueJSArray'] = json_encode(isset($QueueJSArray) ? $QueueJSArray : null);
 	$Parse['Create_LastJSQueueID'] = ($QueueIndex > 0 ? $QueueIndex : '0');
 	$Parse['Create_MetalMax'] = floor($CurrentPlanet['metal']);
 	$Parse['Create_CrystalMax'] = floor($CurrentPlanet['crystal']);

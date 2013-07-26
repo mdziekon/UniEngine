@@ -3,7 +3,7 @@
 function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
 {
 	global	$_EnginePath, $_Vars_ResProduction, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories,
-			$_SkinPath, $_GameConfig, $_GET, $_Vars_PremiumBuildingPrices, $_Vars_MaxBuildingLevels, $_Vars_PremiumBuildings;
+			$_SkinPath, $_GameConfig, $_GET, $_Vars_PremiumBuildingPrices, $_Vars_MaxElementLevel, $_Vars_PremiumBuildings;
 	
 	include($_EnginePath.'includes/functions/GetElementTechReq.php');
 	include($_EnginePath.'includes/functions/GetElementPrice.php');
@@ -280,9 +280,9 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
 						$parse['click'] = "<span class=red>{$_Lang['in_working']}</span>";
 					}
 				}
-				if(!empty($_Vars_MaxBuildingLevels[$Element]))
+				if(!empty($_Vars_MaxElementLevel[$Element]))
 				{
-					if($NextBuildLevel > $_Vars_MaxBuildingLevels[$Element])
+					if($NextBuildLevel > $_Vars_MaxElementLevel[$Element])
 					{
 						$parse['click'] = "<span class=red>{$_Lang['onlyOneLevel']}</span>";
 						$skip = true;

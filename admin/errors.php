@@ -19,9 +19,9 @@ include($_EnginePath.'common.php');
 	}
 
 	$TPL_Row = gettemplate('admin/errors_row');
-
-	$DeleteID = round(floatval($_GET['delete']));
-	$DoDeleteAll = ($_GET['deleteall'] == 'yes' ? true : false);
+	
+	$DeleteID = (isset($_GET['delete']) ? round(floatval($_GET['delete'])) : 0);
+	$DoDeleteAll = (isset($_GET['deleteall']) && $_GET['deleteall'] == 'yes' ? true : false);
 
 	if($DeleteID > 0)
 	{
@@ -34,7 +34,8 @@ include($_EnginePath.'common.php');
 
 	$Query_GetErrors = doquery("SELECT * FROM {{table}} LIMIT 100;", 'errors');
 	$i = 0;
-
+	
+	$parse['errors_list'] = '';
 	while($ErrorData = mysql_fetch_assoc($Query_GetErrors))
 	{
 		++$i;

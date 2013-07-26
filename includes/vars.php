@@ -46,7 +46,7 @@ if(defined('INSIDE'))
 		41	=> 1,
 	);
 
-	$_Vars_MaxBuildingLevels = array
+	$_Vars_MaxElementLevel = array
 	(
 		50	=> 1,
 	);

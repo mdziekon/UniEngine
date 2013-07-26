@@ -2,7 +2,7 @@
 
 function HandlePlanetQueue_StructuresSetNext(&$ThePlanet, &$TheUser, $CurrentTime, $RunStandAlone = false)
 {
-	global	$_Vars_GameElements, $_Lang, $_GameConfig, $_Vars_IndestructibleBuildings, $_Vars_MaxBuildingLevels,
+	global	$_Vars_GameElements, $_Lang, $_GameConfig, $_Vars_IndestructibleBuildings, $_Vars_MaxElementLevel,
 			$_Vars_PremiumBuildings, $_Vars_PremiumBuildingPrices,
 			$UserDev_Log, $HPQ_PlanetUpdatedFields, $HPQ_UserUpdatedFields, $HFUU_UsersToUpdate;
 
@@ -62,7 +62,7 @@ function HandlePlanetQueue_StructuresSetNext(&$ThePlanet, &$TheUser, $CurrentTim
 					{
 						if($ThePlanet['field_current'] < $MaxFields)
 						{
-							if(isset($_Vars_MaxBuildingLevels[$ElementID]) && $ElementLevel > $_Vars_MaxBuildingLevels[$ElementID])
+							if(isset($_Vars_MaxElementLevel[$ElementID]) && $ElementLevel > $_Vars_MaxElementLevel[$ElementID])
 							{
 								$BlockBuilding = true;
 								$BlockReason = 5;

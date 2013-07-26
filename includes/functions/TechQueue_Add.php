@@ -35,6 +35,10 @@ function TechQueue_Add(&$ThePlanet, &$TheUser, $TechID)
 				$StartTime = $QueueElement[3];
 			}
 		}
+		else
+		{
+			$StartTime = 0;
+		}
 		if($StartTime <= 0)
 		{
 			$StartTime = time();
