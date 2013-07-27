@@ -14,15 +14,11 @@ include($_EnginePath.'common.php');
 		message($_Lang['ThisPageOnlyForPro'], $_Lang['ProAccount']);
 	}
 
-	if($_GET['type'] != 1 AND $_GET['type'] != 3)
+	if(!isset($_GET['type']) || ($_GET['type'] != 1 && $_GET['type'] != 3))
 	{
 		$_GET['type'] = 1;
 	}
 
-	if(empty($_GET['type']))
-	{
-		$_GET['type'] = '1';
-	}
 	$SelectedRows = doquery("SELECT * FROM {{table}} WHERE `id_owner` = {$_User['id']} AND `planet_type` = '{$_GET['type']}';", 'planets');
 	if(mysql_num_rows($SelectedRows) == 0)
 	{
@@ -180,17 +176,37 @@ include($_EnginePath.'common.php');
 		);
 		for($k = 0; $k < 8; $k += 1)
 		{
+			if(!isset($parse['row_'.$f[$k]]))
+			{
+				$parse['row_'.$f[$k]] = '';
+			}
 			$data['parsed'] = parsetemplate($TPL_Row_StdInfo[$f[$k]], $datat[$k]);
 			$parse['row_'.$f[$k]] .= parsetemplate($TPL_Row_PlanetCell, $data);
 		}
 
 		foreach($_Vars_ElementCategories['allowedBuild'] as $ElementID)
 		{
+			if(!isset($r[$ElementID]))
+			{
+				$r[$ElementID] = '';
+			}
 			$data['text'] = prettyNumber($p[$_Vars_GameElements[$ElementID]])." <span class=\"fr\"><a href=\"buildings.php?cp={$p['id']}&amp;re=0&amp;cmd=insert&amp;building={$ElementID}\" class=\"lime\">+</a></span>";
 			$r[$ElementID] .= $ElementTHStart.$data['text'].'</th>';
 		}
 		foreach($_Vars_ElementCategories['fleetNdef'] as $ElementID)
 		{
+			if(!isset($r[$ElementID]))
+			{
+				$r[$ElementID] = '';
+			}
+			if(in_array($ElementID, $_Vars_ElementCategories['fleet']))
+			{
+				$restype = 'fleet';
+			}
+			else
+			{
+				$restype = 'defense';
+			}
 			$data['text'] = "<a href=\"buildings.php?mode={$restype}&cp={$p['id']}&amp;re=0\">".prettyNumber($p[$_Vars_GameElements[$ElementID]])."</a>";
 			$r[$ElementID] .= $ElementTHStart.$data['text'].'</th>';
 		}
@@ -202,6 +218,10 @@ include($_EnginePath.'common.php');
 	{
 		foreach($_Vars_ElementCategories[$m[$j]] as $i)
 		{
+			if(!isset($parse[$n[$j]]))
+			{
+				$parse[$n[$j]] = '';
+			}
 			$data['ElementID'] = $i;
 			$data['ElementName'] = $_Lang['tech'][$i];
 			$data['PlanetsCells'] = $r[$i];
@@ -209,8 +229,6 @@ include($_EnginePath.'common.php');
 		}
 	}
 
-	$page .= parsetemplate(gettemplate('empire_table'), $parse);
-
-	display($page, $_Lang['empire_vision'], false);
+	display(parsetemplate(gettemplate('empire_table'), $parse), $_Lang['empire_vision'], false);
 
 ?>

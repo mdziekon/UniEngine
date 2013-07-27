@@ -9,14 +9,14 @@ include($_EnginePath.'common.php');
 
 	$PerPage = 30;
 	
-	$Search_Value = trim($_GET['searchtext']);
+	$Search_Value = (isset($_GET['searchtext']) ? trim($_GET['searchtext']) : null);
 	$SearchTextUnsecure = $Search_Value;
 	
 	$TypeAllow = array('playername', 'allytag', 'allyname');
-	$Type = trim($_GET['type']);
+	$Type = (isset($_GET['type']) ? trim($_GET['type']) : null);
 	$Type = (in_array($Type, $TypeAllow)) ? $Type : 'playername';
 
-	if(empty($_GET['page']))
+	if(!isset($_GET['page']))
 	{
 		$ThisPage = 1;
 	}
@@ -75,6 +75,7 @@ include($_EnginePath.'common.php');
 			break;
 	}
 
+	$Results = null;
 	if(!empty($Search_Value))
 	{
 		if(empty($Search_CheckRegExp) OR preg_match($Search_CheckRegExp, $Search_Value))
@@ -101,7 +102,7 @@ include($_EnginePath.'common.php');
 						if($RowData['old_username_expire'] > $Now){
 							$RowData['username'] .= ' <acronym style="cursor: pointer;" title="'.$_Lang['Old_username_is'].': '.$RowData['old_username'].'">(?)</acronym>';
 						}
-						$RowData['ally_name'] = ($RowData['ally_id'] > 0 ? "<a href=\"alliance.php?mode=ainfo&a={$s['ally_id']}\">{$s['ally_name']}</a>" : '&nbsp;');
+						$RowData['ally_name'] = ($RowData['ally_id'] > 0 ? "<a href=\"alliance.php?mode=ainfo&a={$RowData['ally_id']}\">{$RowData['ally_name']}</a>" : '&nbsp;');
 						if($RowData['rank'] > 0){
 							$RowData['position'] = "<a href=\"stats.php?start={$RowData['rank']}\">{$RowData['rank']}</a>";
 						} else {
@@ -148,13 +149,16 @@ include($_EnginePath.'common.php');
 	}
 
 	//Rest of things...
-	$_Lang['type_playername'] = ($_GET['type'] == 'playername') ? ' SELECTED' : '';
-	$_Lang['type_allytag'] = ($_GET['type'] == 'allytag') ? ' SELECTED' : '';
-	$_Lang['type_allyname'] = ($_GET['type'] == 'allyname') ? ' SELECTED' : '';
+	if(isset($_GET['type']))
+	{
+		$_Lang['type_playername'] = ($_GET['type'] == 'playername') ? ' SELECTED' : '';
+		$_Lang['type_allytag'] = ($_GET['type'] == 'allytag') ? ' SELECTED' : '';
+		$_Lang['type_allyname'] = ($_GET['type'] == 'allyname') ? ' SELECTED' : '';
+	}
 	$_Lang['searchtext'] = $SearchTextUnsecure;
 	$_Lang['search_results'] = $Results;
 	$rc['found_results'] = $_Lang['found_results'];
-	$rc['results_count'] = $Get_Count['count'];
+	$rc['results_count'] = (isset($Get_Count['count']) ? $Get_Count['count'] : 0);
 	$TPL_Count = gettemplate('search_results_count');
 	
 	if(!empty($Results))
@@ -174,11 +178,11 @@ include($_EnginePath.'common.php');
 		}
 	}
 	
-	if($Indicators_NothingFound === true)
+	if(isset($Indicators_NothingFound))
 	{
 		$_Lang['search_results_count'] = parsetemplate($TPL_Count, array('found_results' => $_Lang['nothing_found']));
 	}
-	if($Indicators_BadSigns === true)
+	if(isset($Indicators_BadSigns))
 	{
 		$_Lang['search_results_count'] = parsetemplate($TPL_Count, array('found_results' => $_Lang['badsigns_given']));
 	}
