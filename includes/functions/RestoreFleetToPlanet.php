@@ -11,7 +11,7 @@ function RestoreFleetToPlanet($FleetRow, $Start = true, &$_FleetCache = array())
 		$ThisShip = explode(',', $ThisShip);
 		if($ThisShip[1] > 0)
 		{
-			$UpdatePlanet[$_Vars_GameElements[$ThisShip[0]]] += $ThisShip[1];
+			$UpdatePlanet[$_Vars_GameElements[$ThisShip[0]]] = $ThisShip[1];
 			$DevArray[] = "{$ThisShip[0]},{$ThisShip[1]}";
 		}
 	}
@@ -19,17 +19,17 @@ function RestoreFleetToPlanet($FleetRow, $Start = true, &$_FleetCache = array())
 	if($FleetRow['fleet_resource_metal'] > 0)
 	{
 		$DevArray[] = 'M,'.$FleetRow['fleet_resource_metal'];
-		$UpdatePlanet['metal'] += $FleetRow['fleet_resource_metal'];
+		$UpdatePlanet['metal'] = $FleetRow['fleet_resource_metal'];
 	}
 	if($FleetRow['fleet_resource_crystal'] > 0)
 	{
 		$DevArray[] = 'C,'.$FleetRow['fleet_resource_crystal'];
-		$UpdatePlanet['crystal'] += $FleetRow['fleet_resource_crystal'];
+		$UpdatePlanet['crystal'] = $FleetRow['fleet_resource_crystal'];
 	}
 	if($FleetRow['fleet_resource_deuterium'] > 0)
 	{
 		$DevArray[] = 'D,'.$FleetRow['fleet_resource_deuterium'];
-		$UpdatePlanet['deuterium'] += $FleetRow['fleet_resource_deuterium'];
+		$UpdatePlanet['deuterium'] = $FleetRow['fleet_resource_deuterium'];
 	}
 	
 	if(!empty($UpdatePlanet))
@@ -63,6 +63,10 @@ function RestoreFleetToPlanet($FleetRow, $Start = true, &$_FleetCache = array())
 				if(empty($_FleetCache['addToPlanets']['fields']) OR !in_array($Key, $_FleetCache['addToPlanets']['fields']))
 				{
 					$_FleetCache['addToPlanets']['fields'][] = $Key;
+				}
+				if(!isset($_FleetCache['addToPlanets']['data'][$PlanetID][$Key]))
+				{
+					$_FleetCache['addToPlanets']['data'][$PlanetID][$Key] = 0;
 				}
 				$_FleetCache['addToPlanets']['data'][$PlanetID][$Key] += $Value;
 			}

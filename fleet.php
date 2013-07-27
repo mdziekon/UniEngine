@@ -30,8 +30,14 @@ include($_EnginePath.'common.php');
 	$FleetRowTPL	= str_replace(array('fl_fleetinfo_ships', 'fl_flytargettime', 'fl_flygobacktime', 'fl_flystaytime', 'fl_flyretreattime'), array($_Lang['fl_fleetinfo_ships'], $_Lang['fl_flytargettime'], $_Lang['fl_flygobacktime'], $_Lang['fl_flystaytime'], $_Lang['fl_flyretreattime']), $FleetRowTPL);
 	$FleetResTPL	= str_replace(array('TitleMain', 'TitleMetal', 'TitleCrystal', 'TitleDeuterium'), array($_Lang['fl_fleetinfo_resources'], $_Lang['Metal'], $_Lang['Crystal'], $_Lang['Deuterium']), $FleetResTPL); 			
 	$ShipRowTPL		= str_replace(array('fl_fleetspeed', 'fl_selmax', 'fl_selnone'), array($_Lang['fl_fleetspeed'], $_Lang['fl_selmax'], $_Lang['fl_selnone']), $ShipRowTPL);
-
+	
+	$_Lang['ShipsRow'] = '';
+	$InsertChronoApplets = '';
+	
 	$Hide			= ' class="hide"';
+	
+	$FlyingFleetsCount = 0;
+	$FlyingExpeditions = 0;
 
 	$missiontype = array
 	(
@@ -68,8 +74,12 @@ include($_EnginePath.'common.php');
 	}
 
 	// Show RetreatBox (when fleet was retreated)
-	if($_GET['ret'] == '1')
+	if(isset($_GET['ret']))
 	{
+		if(!isset($_GET['m']))
+		{
+			$_GET['m'] = 0;
+		}
 		switch($_GET['m'])
 		{
 			case 1:
@@ -90,6 +100,10 @@ include($_EnginePath.'common.php');
 			default:
 				$RetreatMessage = $_Lang['fl_notback'];
 				break;
+		}
+		if(!isset($_GET['c']))
+		{
+			$_GET['c'] = 0;
 		}
 		switch($_GET['c'])
 		{
@@ -130,12 +144,19 @@ include($_EnginePath.'common.php');
 	$_Lang['P_FlyingFleetsCount']	= (string)($FlyingFleetsCount + 0);
 	$_Lang['P_FlyingExpeditions']	= (string)($FlyingExpeditions + 0);
 
-	// Gestion des flottes du joueur actif
+	// Get own fleets
 	$FL = 'fleet_';
 	$FS = $FL.'start_';
 	$FE = $FL.'end_';
 	$FR = $FL.'resource_';
-	$fq = doquery("SELECT `{$FL}id`, `{$FL}mess`, `{$FL}mission`, `{$FL}start_time`, `{$FL}end_time`, `{$FL}end_stay`, `{$FL}send_time`, `{$FL}array`, `{$FL}amount`, `{$FS}galaxy`, `{$FS}system`, `{$FS}planet`, `{$FS}type`, `{$FE}stay`, `{$FE}galaxy`, `{$FE}system`, `{$FE}planet`, `{$FE}type`, `{$FR}metal`, `{$FR}crystal`, `{$FR}deuterium` FROM {{table}} WHERE `fleet_owner` = {$_User[id]} ORDER BY `{$FS}time` ASC, `fleet_id` ASC;", 'fleets');
+	$Query_GetFleets = '';
+	$Query_GetFleets .= "SELECT `{$FL}id`, `{$FL}mess`, `{$FL}mission`, `{$FL}start_time`, `{$FL}end_time`, `{$FL}end_stay`, `{$FL}send_time`, `{$FL}array`, `{$FL}amount`, ";
+	$Query_GetFleets .= "`{$FS}galaxy`, `{$FS}system`, `{$FS}planet`, `{$FS}type`, ";
+	$Query_GetFleets .= "`{$FE}stay`, `{$FE}galaxy`, `{$FE}system`, `{$FE}planet`, `{$FE}type`, ";
+	$Query_GetFleets .= "`{$FR}metal`, `{$FR}crystal`, `{$FR}deuterium` ";
+	$Query_GetFleets .= "FROM {{table}} WHERE `fleet_owner` = {$_User['id']} ORDER BY `{$FS}time` ASC, `fleet_id` ASC;";
+	$Result_GetFleets = doquery($Query_GetFleets, 'fleets');
+
 	$i = 0;
 	$ACSCounter = 1;
 
@@ -307,7 +328,7 @@ include($_EnginePath.'common.php');
 		}	
 	}
 	
-	while($f = mysql_fetch_assoc($fq))
+	while($f = mysql_fetch_assoc($Result_GetFleets))
 	{
 		$FleetRow = array();
 		$AdditionalFleets = array();
@@ -551,7 +572,7 @@ include($_EnginePath.'common.php');
 		}
 	}
 	 
-	if($_POST['acsmanage'] == 'open')
+	if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
 	{
 		$ACSMsgCol = 'red';
 		$_Lang['P_HideACSBoxOnError'] = $Hide;
@@ -897,7 +918,7 @@ include($_EnginePath.'common.php');
 		// Don't Allow to use this function to NonPro Players
 		$_GET['quickres'] = 0;
 	}
-	if($_GET['quickres'] == 1)
+	if(isset($_GET['quickres']) && $_GET['quickres'] == 1)
 	{
 		$_Lang['P_SetQuickRes'] = '1';
 		$TotalResStorage = floor($_Planet['metal']) + floor($_Planet['crystal']) + floor($_Planet['deuterium']);
@@ -967,7 +988,7 @@ include($_EnginePath.'common.php');
 		$_Lang['P_SetQuickRes'] = '0';
 	}
 
-	if($_POST['gobackUsed'] == 1)
+	if(isset($_POST['gobackUsed']))
 	{
 		if(!empty($_POST['FleetArray']))
 		{
@@ -1027,9 +1048,9 @@ include($_EnginePath.'common.php');
 	}
 	$_Lang['Insert_ShipsData'] = json_encode($ShipsData);
 
-	$_Lang['P_HideNoSlotsInfo']= $Hide;
-	$_Lang['P_HideSendShips']= $Hide;
-	$_Lang['P_HideNoShipsInfo']= $Hide;
+	$_Lang['P_HideNoSlotsInfo'] = $Hide;
+	$_Lang['P_HideSendShips'] = $Hide;
+	$_Lang['P_HideNoShipsInfo'] = $Hide;
 	if(!empty($_Lang['ShipsRow']))
 	{
 		if($FlyingFleetsCount >= $_Lang['P_MaxFleetSlots'])
@@ -1048,7 +1069,7 @@ include($_EnginePath.'common.php');
 
 	$_Lang['ChronoAppletsScripts'] = $InsertChronoApplets;
 
-	if($_POST['gobackUsed'] == 1)
+	if(isset($_POST['gobackUsed']))
 	{
 		$GoBackVars = array
 		(
@@ -1074,14 +1095,14 @@ include($_EnginePath.'common.php');
 	}
 	else
 	{
-		$_Lang['P_Galaxy'] = intval($_GET['galaxy']);
-		$_Lang['P_System'] = intval($_GET['system']);
-		$_Lang['P_Planet'] = intval($_GET['planet']);
-		$_Lang['P_PlType'] = intval($_GET['planettype']);
-		$_Lang['P_Mission'] = intval($_GET['target_mission']);
-		if($_GET['quickres'] == 1)
+		$_Lang['P_Galaxy'] = (isset($_GET['galaxy']) ? intval($_GET['galaxy']) : null);
+		$_Lang['P_System'] = (isset($_GET['system']) ? intval($_GET['system']) : null);
+		$_Lang['P_Planet'] = (isset($_GET['planet']) ? intval($_GET['planet']) : null);
+		$_Lang['P_PlType'] = (isset($_GET['planettype']) ? intval($_GET['planettype']) : null);
+		$_Lang['P_Mission'] = (isset($_GET['target_mission']) ? intval($_GET['target_mission']) : null);
+		if(isset($_GET['quickres']))
 		{
-			if($_GET['target_mission'] != 3)
+			if(isset($_GET['target_mission']) && $_GET['target_mission'] != 3)
 			{
 				if($_User['settings_mainPlanetID'] != $_Planet['id'])
 				{
@@ -1095,6 +1116,7 @@ include($_EnginePath.'common.php');
 			}
 		} 
 	}
+	
 	if(!isPro())
 	{
 		$_Lang['P_HideQuickRes'] = 'hide';

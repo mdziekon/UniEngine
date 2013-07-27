@@ -407,7 +407,7 @@ if(isLogged())
 		if(!isset($_BlockFleetHandler) || $_BlockFleetHandler !== true)
 		{
 			$FleetHandlerReturn = FlyingFleetHandler($_Planet); 
-			if($FleetHandlerReturn['ThisMoonDestroyed'] === true)
+			if(isset($FleetHandlerReturn['ThisMoonDestroyed']) && $FleetHandlerReturn['ThisMoonDestroyed'])
 			{
 				// Redirect User to Planet (from Destroyed Moon)
 				SetSelectedPlanet($_User, $_User['id_planet']);

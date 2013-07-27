@@ -8,7 +8,7 @@ include($_EnginePath.'common.php');
 
 	loggedCheck();
 
-	if($_POST['sending_fleet'] != '1' AND $_POST['gobackUsed'] != '1')
+	if((!isset($_POST['sending_fleet']) || $_POST['sending_fleet'] != '1') && (!isset($_POST['gobackUsed']) || $_POST['gobackUsed'] != '1'))
 	{
 		header('Location: fleet.php');
 		safeDie();
@@ -21,16 +21,22 @@ include($_EnginePath.'common.php');
 	$ErrorTitle = &$_Lang['fl_error'];
 	$Hide = ' class="hide"';
 	
+	$FleetHiddenBlock = '';
+	
+	$Fleet['count'] = 0;
+	$Fleet['storage'] = 0;
+	$Fleet['FuelStorage'] = 0;
+	
 	if(MORALE_ENABLED)
 	{
 		Morale_ReCalculate($_User, $Now);
 	}
 	
-	if($_POST['gobackUsed'] == '1')
+	if(isset($_POST['gobackUsed']))
 	{
 		$_POST['quickres'] = $_POST['useQuickRes'];
-		$_POST['target_mission'] = $_POST['mission'];
-		$_POST['getacsdata'] = $_POST['acs_id'];
+		$_POST['target_mission'] = (isset($_POST['mission']) ? $_POST['mission'] : 0);
+		$_POST['getacsdata'] = (isset($_POST['acs_id']) ? $_POST['acs_id'] : 0);
 		
 		$_Set_DefaultSpeed = $_POST['speed'];
 		if(!empty($_POST['FleetArray']))
@@ -53,9 +59,9 @@ include($_EnginePath.'common.php');
 			'resource1' => $_POST['resource1'],
 			'resource2' => $_POST['resource2'],
 			'resource3' => $_POST['resource3'],
-			'usequantumgate' => $_POST['usequantumgate'],
-			'expeditiontime' => $_POST['expeditiontime'],
-			'holdingtime' => $_POST['holdingtime']
+			'usequantumgate' => (isset($_POST['usequantumgate']) ? $_POST['usequantumgate'] : null),
+			'expeditiontime' => (isset($_POST['expeditiontime']) ? $_POST['expeditiontime'] : null),
+			'holdingtime' => (isset($_POST['holdingtime']) ? $_POST['holdingtime'] : null)
 		);
 	}
 	if(!empty($_POST['gobackVars']))
@@ -180,7 +186,8 @@ include($_EnginePath.'common.php');
 	arsort($SpeedsAvailable);
 
 	$_Lang['P_HideACSJoining'] = $Hide;
-	$GetACSData = intval($_POST['getacsdata']); 
+	$GetACSData = intval($_POST['getacsdata']);
+	$SetPosNotEmpty = false;
 	if($GetACSData > 0)
 	{
 		$ACSData = doquery("SELECT `id`, `name`, `end_galaxy`, `end_system`, `end_planet`, `end_type`, `start_time` FROM {{table}} WHERE `id` = {$GetACSData};", 'acs', true);
@@ -215,8 +222,8 @@ include($_EnginePath.'common.php');
 		$SetPos['g'] = intval($_POST['galaxy']);
 		$SetPos['s'] = intval($_POST['system']);
 		$SetPos['p'] = intval($_POST['planet']);
-		$SetPos['t'] = intval($_POST['planet_type']);
-		if(!in_array($SetPos['t'], array(1, 2, 3)))
+		$SetPos['t'] = (isset($_POST['planet_type']) ? intval($_POST['planet_type']) : 0);
+		if(!in_array($SetPos['t'], array(1, 2, 3)) && isset($_POST['planettype']))
 		{
 			$SetPos['t'] = intval($_POST['planettype']);
 		}
@@ -352,7 +359,7 @@ include($_EnginePath.'common.php');
 
 		if(!empty($OtherPlanetsList))
 		{
-			$_Lang['FastLinks_Planets'] = '<select class="updateInfo fastLink" id="fl_sel1" '.$_Lang['P_DisableCoordSel'].'>';
+			$_Lang['FastLinks_Planets'] = '<select class="updateInfo fastLink" id="fl_sel1" '.(isset($_Lang['P_DisableCoordSel']) ? $_Lang['P_DisableCoordSel'] : 0).'>';
 			$_Lang['FastLinks_Planets'] .= '<option value="-">- '.$_Lang['fl_dropdown_select'].' -</option>';
 			foreach($OtherPlanetsList as $PlanetData)
 			{
@@ -367,7 +374,7 @@ include($_EnginePath.'common.php');
 
 		if(!empty($ShortcutList))
 		{
-			$_Lang['FastLinks_ShortCuts'] = '<select class="updateInfo fastLink" id="fl_sel2" '.$_Lang['P_DisableCoordSel'].'>';
+			$_Lang['FastLinks_ShortCuts'] = '<select class="updateInfo fastLink" id="fl_sel2" '.(isset($_Lang['P_DisableCoordSel']) ? $_Lang['P_DisableCoordSel'] : 0).'>';
 			$_Lang['FastLinks_ShortCuts'] .= '<option value="-">- '.$_Lang['fl_dropdown_select'].' -</option>';
 			foreach($ShortcutList as $PlanetData)
 			{

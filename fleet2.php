@@ -18,7 +18,7 @@ include($_EnginePath.'common.php');
 	if(!empty($_POST['gobackVars']))
 	{
 		$_POST['gobackVars'] = json_decode(base64_decode($_POST['gobackVars']), true);
-		if($_POST['fromEnd'] == '1')
+		if(isset($_POST['fromEnd']))
 		{
 			$_POST['quickres'] = $_POST['gobackVars']['useQuickRes'];
 			$_POST['target_mission'] = $_POST['gobackVars']['mission'];
@@ -45,6 +45,8 @@ include($_EnginePath.'common.php');
 	$Now = time();
 	$ErrorTitle = &$_Lang['fl_error'];
 	$Hide = ' class="hide"';
+	
+	$_Lang['MissionSelectors'] = '';
 	
 	if(MORALE_ENABLED)
 	{
@@ -116,7 +118,7 @@ include($_EnginePath.'common.php');
 		// Set Positions for Inputs
 		$_Lang['Target_'.$Type] = $Value;
 	}
-	if($TargetError === true)
+	if(isset($TargetError))
 	{
 		message($_Lang['fl2_targeterror'], $ErrorTitle, 'fleet.php', 3);
 	}
@@ -154,6 +156,7 @@ include($_EnginePath.'common.php');
 	$OwnerFriend				= false;
 	$OwnerHasMarcantilePact		= false;
 	$AllyPactWarning			= false;
+	$CheckPlanetOwnerQuery = '';
 	$CheckPlanetOwnerQuery .= "SELECT `planets`.`id`, `planets`.`id_owner` AS `owner`, `planets`.`name` AS `name`, `quantumgate`, ";
 	$CheckPlanetOwnerQuery .= "`users`.`ally_id`, `users`.`username` as `username`, `buddy1`.`active` AS `active1`, `buddy2`.`active` AS `active2` ";
 	if($_User['ally_id'] > 0)
@@ -207,6 +210,10 @@ include($_EnginePath.'common.php');
 	}
 	
 	// Parse Fleet Array
+	$Fleet['count'] = 0;
+	$Fleet['storage'] = 0;
+	$Fleet['FuelStorage'] = 0;
+	
 	$Fleet['array'] = explode(';', $_POST['FleetArray']);
 	$FleetArray = array();
 	if(!empty($Fleet['array']) AND (array)$Fleet['array'] === $Fleet['array'])
@@ -336,6 +343,7 @@ include($_EnginePath.'common.php');
 		}
 	}
 
+	$allowUseQuantumGate = false;
 	if(!empty($AvailableMissions))
 	{
 		if($_Planet['quantumgate'] == 1)
@@ -384,7 +392,7 @@ include($_EnginePath.'common.php');
 				$_Lang['P_UserHave2UseQuantumGate'] = '1';
 			}
 		}
-		if($AllowNoEnoughDeuterium !== true)
+		if(!isset($AllowNoEnoughDeuterium))
 		{
 			message($_Lang['fl2_NoEnoughFuel'], $ErrorTitle, 'fleet.php', 3);
 		}
@@ -536,7 +544,7 @@ include($_EnginePath.'common.php');
 	$_Lang['ResSortArrayAll'] = '['.implode(', ', $Temp).']';
 	$_Lang['ResSortArrayNoDeu'] = '['.implode(', ', $Temp2).']'; 
 
-	if($allowUseQuantumGate === true)
+	if($allowUseQuantumGate)
 	{ 
 		$NextUseTimestamp = ($_Planet['quantumgate_lastuse'] + ($QuantumGateInterval * 3600)) - $Now;
 		if($NextUseTimestamp < 0)
@@ -605,7 +613,7 @@ include($_EnginePath.'common.php');
 		$_Lang['P_HideNoMissionInfo'] = $Hide;
 	}
 
-	if($EnableTestAccWarning === true)
+	if(isset($EnableTestAccWarning))
 	{
 		$_Lang['CreateTestACCAlert'] = 'alert("'.$_Lang['fl2_testacctarget'].'");';
 	}

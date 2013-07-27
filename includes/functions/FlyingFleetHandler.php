@@ -1,8 +1,8 @@
 <?php
 
-function FlyingFleetHandler(&$planet, $PassedID = array())
+function FlyingFleetHandler(&$planet, $IncludeFleetsFromEndIDs = array())
 {
-	global $UserStatsPattern, $UserStatsData, $ChangeCoordinatesForFleets, $_Vars_ElementCategories, $_BenchTool, $_Cache;
+	global $UserStatsPattern, $UserStatsData, $ChangeCoordinatesForFleets, $_Vars_ElementCategories, $_BenchTool, $_Cache, $_GalaxyRow;;
 
 	if(!empty($_BenchTool)){ $_BenchTool->simpleCountStart(false, 'telemetry__f0'); }
 	
@@ -52,6 +52,7 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 	{
 		if($ElementID >= 500)
 		{
+			// Exclude missiles
 			break;
 		}
 		$ThisKey1 = 'destroyed_'.$ElementID;
@@ -67,45 +68,63 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 	$CreateAchievementKeys = implode(', ', $CreateAchievementKeys);
 	$UserStatsData = false;
 	
-	// Get all Non-mine ACS MainFleets
-	$QryGetACS = "SELECT `main_fleet_id`, `end_target_id` FROM {{table}} WHERE `owner_id` != {$planet['id_owner']} AND `user_joined` LIKE '%|{$planet['id_owner']}|%';";
-	$GetACS = doquery($QryGetACS, 'acs');
-	if(mysql_num_rows($GetACS) > 0)
+	// --- Get all "not own" Fleets, which can interact with own Target
+	$InsertGalaxyIDs = array();
+	$InsertGalaxyPos = array();
+	$AdditionalIDs = array();
+	$NotOwnFleetsGetter_FleetEndIDs = array();
+	
+	if(!empty($IncludeFleetsFromEndIDs))
 	{
-		while($ACSData = mysql_fetch_assoc($GetACS))
+		$NotOwnFleetsGetter_FleetEndIDs = array_merge($NotOwnFleetsGetter_FleetEndIDs, $IncludeFleetsFromEndIDs);
+	}
+	
+	// Get all not own ACS MainFleets (we participate in that ACS)
+	$Query_GetACS = '';
+	$Query_GetACS .= "SELECT `main_fleet_id`, `end_target_id` FROM {{table}} ";
+	$Query_GetACS .= "WHERE `owner_id` != {$planet['id_owner']} AND `user_joined` LIKE '%|{$planet['id_owner']}|%'; -- FlyingFleetHandler.php [#01]";
+	$Result_GetACS = doquery($Query_GetACS, 'acs');
+	if(mysql_num_rows($Result_GetACS) > 0)
+	{
+		while($FetchData = mysql_fetch_assoc($Result_GetACS))
 		{
-			if($ACSData['end_target_id'] == $planet['id'])
+			if($FetchData['end_target_id'] == $planet['id'])
 			{
 				continue;
 			}
 			else
 			{
-				$AdditionalIDs[] = $ACSData['main_fleet_id'];
+				$AdditionalIDs[] = $FetchData['main_fleet_id'];
 			}
 		}
 	}
 
-	// Select all my Recycling & Colonizing Fleets
+	// Select all my Recycling & Colonizing Fleets to check if other fleets do not fly to this position too
 	$Query_MyGalaxyFleets = '';
-	$Query_MyGalaxyFleets .= "SELECT `fleet_mission`, `fleet_end_id_galaxy`, `fleet_end_galaxy`, `fleet_end_system`, `fleet_end_planet` FROM {{table}} WHERE ";
-	$Query_MyGalaxyFleets .= "`fleet_mission` IN (7, 8) AND `fleet_owner` = {$planet['id_owner']};";
+	$Query_MyGalaxyFleets .= "SELECT `fleet_mission`, `fleet_end_id_galaxy`, `fleet_end_galaxy`, `fleet_end_system`, `fleet_end_planet` FROM {{table}} ";
+	$Query_MyGalaxyFleets .= "WHERE `fleet_mission` IN (7, 8) AND `fleet_owner` = {$planet['id_owner']}; -- FlyingFleetHandler.php [#02]";
 	$Result_MyGalaxyFleets = doquery($Query_MyGalaxyFleets, 'fleets');
 	if(mysql_num_rows($Result_MyGalaxyFleets) > 0)
 	{
-		$InsertGalaxyIDs = array();
-		$InsertGalaxyPos = array();
 		while($FetchData = mysql_fetch_assoc($Result_MyGalaxyFleets))
 		{
 			if($FetchData['fleet_mission'] == 7)
 			{
-				$ThisArray = array('g' => $FetchData['fleet_end_galaxy'], 's' => $FetchData['fleet_end_system'], 'p' => $FetchData['fleet_end_planet']);
+				// Colonization
+				$ThisArray = array
+				(
+					'g' => $FetchData['fleet_end_galaxy'],
+					's' => $FetchData['fleet_end_system'],
+					'p' => $FetchData['fleet_end_planet']
+				);
 				if(!in_array($ThisArray, $InsertGalaxyPos))
 				{
 					$InsertGalaxyPos[] = $ThisArray;
 				}
 			}
-			elseif($FetchData['fleet_mission'] == 8)
+			else if($FetchData['fleet_mission'] == 8)
 			{
+				// Debris recycling
 				if(!in_array($FetchData['fleet_end_id_galaxy'], $InsertGalaxyIDs))
 				{
 					$InsertGalaxyIDs[] = $FetchData['fleet_end_id_galaxy'];
@@ -113,64 +132,38 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 			}
 		}
 	}
-	
-	// Select all my Recycling Fleets (Get GalaxyID & FleetID Only!)
-	$QryPreCounter = "SELECT `fleet_end_id_galaxy` FROM {{table}} WHERE `fleet_end_id_galaxy` > 0 AND `fleet_owner` = {$planet['id_owner']} AND `fleet_mission` IN (8);";
-	$PreCountedRecycles = doquery($QryPreCounter, 'fleets');
-	if(mysql_num_rows($PreCountedRecycles) > 0)
-	{
-		$InsertGalaxyIDs = array();
-		while($MyRecycles = mysql_fetch_assoc($PreCountedRecycles))
-		{
-			if(!in_array($MyRecycles['fleet_end_id_galaxy'], $InsertGalaxyIDs))
-			{
-				$InsertGalaxyIDs[] = $MyRecycles['fleet_end_id_galaxy'];
-			}
-		}
-	}
 
-	// --- Get all Non-mine Fleets, which can interact with my Target
-	// 1. Get My Fleets with EndIDs
-	$QryPreCounter = "SELECT `fleet_end_id` FROM {{table}} WHERE ( ";
-	$QryPreCounter .= "`fleet_owner` = {$planet['id_owner']} ";
+	// Get all EndIDs from my fleets or ACS flights which I have joined
+	$Query_GetMyFleets = '';
+	$Query_GetMyFleets .= "SELECT `fleet_end_id` FROM {{table}} WHERE ( ";
+	$Query_GetMyFleets .= "`fleet_owner` = {$planet['id_owner']} ";
 	if(!empty($AdditionalIDs))
 	{
+		// We need to add position from all ACS flights we participate in
 		$ImplodeAddIDS = implode(',', $AdditionalIDs);
-		$QryPreCounter .= "OR `fleet_id` IN ({$ImplodeAddIDS}) ";
+		$Query_GetMyFleets .= "OR `fleet_id` IN ({$ImplodeAddIDS}) ";
 	}
-	$QryPreCounter .= ") AND `fleet_end_id` > 0 AND `fleet_mission` IN (1, 6, 7, 9, 10) ";
-	$QryPreCounter .= "AND (`fleet_start_time` <= UNIX_TIMESTAMP() OR `fleet_end_time` <= UNIX_TIMESTAMP());";
-	$PreCountedCoords = doquery($QryPreCounter, 'fleets');
-
-	$AllAdditionalEndIDs = array();
-
-	if(!empty($PassedID))
+	$Query_GetMyFleets .= ") AND `fleet_end_id` > 0 AND `fleet_mission` IN (1, 6, 7, 9, 10) ";
+	$Query_GetMyFleets .= "AND (`fleet_start_time` <= UNIX_TIMESTAMP() OR `fleet_end_time` <= UNIX_TIMESTAMP()); -- FlyingFleetHandler.php [#03]";
+	$Result_GetMyFleets = doquery($Query_GetMyFleets, 'fleets');
+	if(mysql_num_rows($Result_GetMyFleets) > 0)
 	{
-		foreach($PassedID as $GivenID)
+		while($FetchData = mysql_fetch_assoc($Result_GetMyFleets))
 		{
-			if(!in_array($GivenID, $AllAdditionalEndIDs))
+			if(!in_array($FetchData['fleet_end_id'], $NotOwnFleetsGetter_FleetEndIDs))
 			{
-				$AllAdditionalEndIDs[] = $GivenID;
+				$NotOwnFleetsGetter_FleetEndIDs[] = $FetchData['fleet_end_id'];
 			}
 		}
 	}
-	if(mysql_num_rows($PreCountedCoords) > 0)
+	
+	if(!empty($NotOwnFleetsGetter_FleetEndIDs) OR !empty($InsertGalaxyIDs) OR !empty($InsertGalaxyPos))
 	{
-		while($PreCountedData = mysql_fetch_assoc($PreCountedCoords))
+		// Get All non-mine Fleets (FleetIDs)
+		if(!empty($NotOwnFleetsGetter_FleetEndIDs))
 		{
-			if(!in_array($PreCountedData['fleet_end_id'], $AllAdditionalEndIDs))
-			{
-				$AllAdditionalEndIDs[] = $PreCountedData['fleet_end_id'];
-			}
-		}
-	}
-	if(!empty($AllAdditionalEndIDs) OR !empty($InsertGalaxyIDs) OR !empty($InsertGalaxyPos))
-	{
-		// 2. Get All non-mine Fleets (FleetIDs)
-		if(!empty($AllAdditionalEndIDs))
-		{
-			$AllAdditionalEndIDs = implode(',', $AllAdditionalEndIDs);
-			$QryPreCounterWhere[] = "(`fleet_start_id` IN ({$AllAdditionalEndIDs}) OR `fleet_end_id` IN ({$AllAdditionalEndIDs}))";
+			$NotOwnFleetsGetter_FleetEndIDs = implode(',', $NotOwnFleetsGetter_FleetEndIDs);
+			$QryPreCounterWhere[] = "(`fleet_start_id` IN ({$NotOwnFleetsGetter_FleetEndIDs}) OR `fleet_end_id` IN ({$NotOwnFleetsGetter_FleetEndIDs}))";
 		}
 		if(!empty($InsertGalaxyIDs))
 		{
@@ -186,32 +179,23 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 			$TempPos = implode(' OR ', $TempPos);
 			$QryPreCounterWhere[] = "(`fleet_mission` = 7 AND ({$TempPos}))";
 		}
-		$QryPreCounter = "SELECT `fleet_id` FROM {{table}} ";
-		$QryPreCounter .= "WHERE ( ".implode(' OR ', $QryPreCounterWhere)." ) ";
-		$QryPreCounter .= "AND `fleet_owner` != {$planet['id_owner']} ";
-		if(!empty($AdditionalIDs))
+		$Query_GetNotOwnFleets = '';
+		$Query_GetNotOwnFleets .= "SELECT `fleet_id` FROM {{table}} ";
+		$Query_GetNotOwnFleets .= "WHERE ( ".implode(' OR ', $QryPreCounterWhere)." ) ";
+		$Query_GetNotOwnFleets .= "AND `fleet_owner` != {$planet['id_owner']} ";
+		$Query_GetNotOwnFleets .= ";  -- FlyingFleetHandler.php [#04]";
+		$Result_GetNotOwnFleets = doquery($Query_GetNotOwnFleets, 'fleets');
+		if(mysql_num_rows($Result_GetNotOwnFleets) > 0)
 		{
-			$ImplodeAddIDS = implode(',', $AdditionalIDs);
-			$QryPreCounter .= "AND `fleet_id` NOT IN ({$ImplodeAddIDS}) ";
-		}
-		$QryPreCounter .= ";";
-		$PreCountedFleets = doquery($QryPreCounter, 'fleets');
-		if(mysql_num_rows($PreCountedFleets) > 0)
-		{
-			if(empty($AdditionalIDs))
+			while($FetchData = mysql_fetch_assoc($Result_GetNotOwnFleets))
 			{
-				$AdditionalIDs = array();
-			}
-			while($PreCountedData = mysql_fetch_assoc($PreCountedFleets))
-			{
-				if(!in_array($PreCountedData['fleet_id'], $AdditionalIDs))
+				if(!in_array($FetchData['fleet_id'], $AdditionalIDs))
 				{
-					$AdditionalIDs[] = $PreCountedData['fleet_id'];
+					$AdditionalIDs[] = $FetchData['fleet_id'];
 				}
 			}
 		}
 	}
-	// ---
 
 	// -------------------------------------------------------------------------------------
 	// --- Main Fleet Getter Query ---------------------------------------------------------
@@ -228,51 +212,56 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 	$Fields[] = "`planet2`.`name` AS `endtarget_planet_name`, `planet2`.`id_owner` AS `endtarget_planet_owner`";
 	$Fields = implode(', ', $Fields);
 
-	$QryFleet = "SELECT {$Fields} FROM {{table}} ";
-	$QryFleet.= "LEFT JOIN {{prefix}}users AS `usr` ON `usr`.`id` = {{table}}.fleet_owner ";
-	$QryFleet.= "LEFT JOIN {{prefix}}alliance AS `ally` ON `usr`.`ally_id` = `ally`.`id` ";
-	$QryFleet.= "LEFT JOIN {{prefix}}acs ON {{prefix}}acs.main_fleet_id = {{table}}.fleet_id ";
-	$QryFleet.= "LEFT JOIN {{prefix}}planets AS `planet1` ON `planet1`.`id` = `fleet_start_id` ";
-	$QryFleet.= "LEFT JOIN {{prefix}}planets AS `planet2` ON `planet2`.`id` = `fleet_end_id` ";
-	$QryFleet.= "WHERE ";
-	$QryFleet.= "( `fleet_start_time` <= UNIX_TIMESTAMP() OR `fleet_end_time` <= UNIX_TIMESTAMP() ) AND ";
-	$QryFleet.= "( `fleet_start_id` = {$planet['id']} OR `fleet_end_id` = {$planet['id']} ";
+	$Query_GetAllFleets = '';
+	$Query_GetAllFleets .= "SELECT {$Fields} FROM {{table}} ";
+	$Query_GetAllFleets .= "LEFT JOIN {{prefix}}users AS `usr` ON `usr`.`id` = {{table}}.fleet_owner ";
+	$Query_GetAllFleets .= "LEFT JOIN {{prefix}}alliance AS `ally` ON `usr`.`ally_id` = `ally`.`id` ";
+	$Query_GetAllFleets .= "LEFT JOIN {{prefix}}acs ON {{prefix}}acs.main_fleet_id = {{table}}.fleet_id ";
+	$Query_GetAllFleets .= "LEFT JOIN {{prefix}}planets AS `planet1` ON `planet1`.`id` = `fleet_start_id` ";
+	$Query_GetAllFleets .= "LEFT JOIN {{prefix}}planets AS `planet2` ON `planet2`.`id` = `fleet_end_id` ";
+	$Query_GetAllFleets .= "WHERE ";
+	$Query_GetAllFleets .= "( `fleet_start_time` <= UNIX_TIMESTAMP() OR `fleet_end_time` <= UNIX_TIMESTAMP() ) AND ";
+	$Query_GetAllFleets .= "( `fleet_start_id` = {$planet['id']} OR `fleet_end_id` = {$planet['id']} ";
 	if(!empty($AdditionalIDs))
 	{
-		$QryFleet.= "OR `fleet_id` IN (".implode(',', $AdditionalIDs).") ";
+		$Query_GetAllFleets .= "OR `fleet_id` IN (".implode(',', $AdditionalIDs).") ";
 	}
-	$QryFleet.= "OR `fleet_owner` = {$planet['id_owner']} OR `fleet_target_owner` = {$planet['id_owner']} );";
-	$FleetResult = doquery($QryFleet, 'fleets');
+	$Query_GetAllFleets .= "OR `fleet_owner` = {$planet['id_owner']} OR `fleet_target_owner` = {$planet['id_owner']} );  -- FlyingFleetHandler.php [#05]";
+	$Result_GetAllFleets = doquery($Query_GetAllFleets, 'fleets');
 
 	if(!empty($_BenchTool)){ $_BenchTool->simpleCountStop(); }
-	if(mysql_num_rows($FleetResult) > 0)
+	
+	if(mysql_num_rows($Result_GetAllFleets) > 0)
 	{
 		if(!empty($_BenchTool)){ $_BenchTool->simpleCountStart(false, 'telemetry__f1'); }
 		
 		include('MissionCheckCalculation.php');
-		$Now = time();
+		$FleetCalcTimestamp = time();
 		$RowNo = 0;
-		while($ThisFleet = mysql_fetch_assoc($FleetResult))
+		$PrepareData = array();
+		
+		while($ThisFleet = mysql_fetch_assoc($Result_GetAllFleets))
 		{
-			$PrepareReturn = MissionCheckCalculation($ThisFleet, $Now);
+			$PrepareReturn = MissionCheckCalculation($ThisFleet, $FleetCalcTimestamp);
 			foreach($PrepareReturn as $Key => $Value)
 			{
 				if($Key == 'timeSort')
 				{
+					$_FleetCache['fleetRowStatus'][$ThisFleet['fleet_id']]['calcCount'] = 0;
 					foreach($Value as $Key2 => $Value2)
 					{
 						$FleetTimes[$Key2] = array('rowNo' => $RowNo, 'type' => $Value2);
 						$_FleetCache['fleetRowStatus'][$ThisFleet['fleet_id']]['calcCount'] += 1;
 					}
 				}
-				elseif($Key == 'acsFleets')
+				else if($Key == 'acsFleets')
 				{
 					foreach($Value as $Key2 => $Value2)
 					{
 						$PrepareData[$Key][$Key2] = $Value2;
 					}
 				}
-				elseif($Key == 'taskData')
+				else if($Key == 'taskData')
 				{
 					foreach($Value as $Value2)
 					{
@@ -296,7 +285,37 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 		{
 			ksort($FleetTimes, SORT_STRING);
 			include('RestoreFleetToPlanet.php');
-			doquery("LOCK TABLE {{table}}fleet_archive WRITE, {{table}}fleets AS `get_ids` WRITE, {{table}}acs WRITE, {{table}}battle_reports WRITE, {{table}}errors WRITE, {{table}}fleets WRITE, {{table}}planets WRITE, {{table}}galaxy WRITE ,{{table}}users WRITE, {{table}}users AS `users` WRITE, {{table}}alliance AS `ally` WRITE, {{table}}achievements_stats WRITE, {{table}}user_developmentlog WRITE", '');
+			
+			$QueryData_LockTables = array
+			(
+				'fleet_archive' => null, 
+				'fleets' => 'get_ids', 
+				'acs' => null, 
+				'battle_reports' => null, 
+				'errors' => null, 
+				'fleets' => null, 
+				'planets' => null, 
+				'galaxy' => null, 
+				'users' => null, 
+				'users' => 'users', 
+				'alliance' => 'ally', 
+				'achievements_stats' => null, 
+				'user_developmentlog' => null
+			);
+			foreach($QueryData_LockTables as $LockTables_Key => $LockTables_Value)
+			{
+				if($LockTables_Value === null)
+				{
+					$QueryData_LockTablesJoin[] = "`{{prefix}}{$LockTables_Key}` WRITE";
+				}
+				else
+				{
+					$QueryData_LockTablesJoin[] = "`{{prefix}}{$LockTables_Key}` AS `{$LockTables_Value}` WRITE";
+				}
+			}
+			$QueryData_LockTablesJoin = implode(', ', $QueryData_LockTablesJoin);
+			$Query_LockTables = "LOCK TABLE {$QueryData_LockTablesJoin};  -- FlyingFleetHandler.php [#06]";
+			doquery($Query_LockTables, '');
 
 			// --- Prepare $_FleetCache ---
 			if(!empty($PrepareData['users']))
@@ -313,7 +332,7 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 					}
 					if($_User['ally_id'] > 0)
 					{
-						$Query_GetMyAllyTag = "SELECT `ally_tag` FROM {{table}} AS `ally` WHERE `id` = {$_User['ally_id']} LIMIT 1; -- FlyingFleetHandler [Q01]";
+						$Query_GetMyAllyTag = "SELECT `ally_tag` FROM {{table}} AS `ally` WHERE `id` = {$_User['ally_id']} LIMIT 1; -- FlyingFleetHandler.php [#07]";
 						$Result_GetMyAllyTag = doquery($Query_GetMyAllyTag, 'alliance', true);
 						$_FleetCache['users'][$_User['id']]['ally_tag'] = $Result_GetMyAllyTag['ally_tag'];
 					}
@@ -322,9 +341,10 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 				{
 					$Temp1 = implode(',', $PrepareData['users']);
 					$Temp2 = count($PrepareData['users']);
+					$Query_PrepUsers = '';
 					$Query_PrepUsers .= "SELECT `users`.*, `ally`.`ally_tag` FROM {{table}} AS `users` ";
 					$Query_PrepUsers .= "LEFT JOIN `{{prefix}}alliance` AS `ally` ON `users`.`ally_id` = `ally`.`id` ";
-					$Query_PrepUsers .= "WHERE `users`.`id` IN ({$Temp1}) LIMIT {$Temp2}; -- FlyingFleetHandler [Q02]";
+					$Query_PrepUsers .= "WHERE `users`.`id` IN ({$Temp1}) LIMIT {$Temp2}; -- FlyingFleetHandler.php [#08]";
 					$Result_PrepUsers = doquery($Query_PrepUsers, 'users');
 					while($FetchData = mysql_fetch_assoc($Result_PrepUsers))
 					{
@@ -340,7 +360,7 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 			{
 				$Temp1 = implode(',', $PrepareData['addPlanets']);
 				$Temp2 = count($PrepareData['addPlanets']);
-				$Query_PrepAddPlanets = "SELECT `id_planet`, `id_moon` FROM {{table}} WHERE `id_moon` IN ({$Temp1}) LIMIT {$Temp2}; -- FlyingFleetHandler [Q03]";
+				$Query_PrepAddPlanets = "SELECT `id_planet`, `id_moon` FROM {{table}} WHERE `id_moon` IN ({$Temp1}) LIMIT {$Temp2}; -- FlyingFleetHandler.php [#09]";
 				$Result_PrepAddPlanets = doquery($Query_PrepAddPlanets, 'galaxy');
 				while($FetchData = mysql_fetch_assoc($Result_PrepAddPlanets))
 				{
@@ -361,7 +381,7 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 				{
 					$Temp1 = implode(',', $PrepareData['planets']);
 					$Temp2 = count($PrepareData['planets']);
-					$Query_PrepPlanets = "SELECT * FROM {{table}} WHERE `id` IN ({$Temp1}) LIMIT {$Temp2}; -- FlyingFleetHandler [Q04]";
+					$Query_PrepPlanets = "SELECT * FROM {{table}} WHERE `id` IN ({$Temp1}) LIMIT {$Temp2}; -- FlyingFleetHandler.php [#10]";
 					$Result_PrepPlanets = doquery($Query_PrepPlanets, 'planets');
 					while($FetchData = mysql_fetch_assoc($Result_PrepPlanets))
 					{
@@ -372,6 +392,7 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 			if(!empty($PrepareData['defFleets']))
 			{
 				$Temp1 = implode(',', $PrepareData['defFleets']);
+				$Query_PrepDefFleets = '';
 				$Query_PrepDefFleets .= "SELECT `fleet_id`, `fleet_owner`, `fleet_array`, `fleet_end_id`, `username`, `ally_tag`, ";
 				$Query_PrepDefFleets .= "`morale_level`, `morale_droptime`, `morale_lastupdate`, ";
 				$Query_PrepDefFleets .= "`tech_weapons`, `tech_armour`, `tech_shielding`, `tech_laser`, `tech_ion`, `tech_plasma`, `tech_antimatter`, ";
@@ -383,7 +404,7 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 				$Query_PrepDefFleets .= "`fleet_end_id` IN ({$Temp1}) AND ";
 				$Query_PrepDefFleets .= "`fleet_mission` = 5 AND ";
 				$Query_PrepDefFleets .= "`fleet_start_time` <= UNIX_TIMESTAMP() AND ";
-				$Query_PrepDefFleets .= "`fleet_end_stay` > UNIX_TIMESTAMP(); -- FlyingFleetHandler [Q05]";
+				$Query_PrepDefFleets .= "`fleet_end_stay` > UNIX_TIMESTAMP(); -- FlyingFleetHandler.php [#11]";
 				$Result_PrepDefFleets = doquery($Query_PrepDefFleets, 'fleets');
 				while($FetchData = mysql_fetch_assoc($Result_PrepDefFleets))
 				{
@@ -403,7 +424,8 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 					}
 				}
 				$Temp2 = count($Temp1);
-				$Temp1 = implode(',', $Temp1);			
+				$Temp1 = implode(',', $Temp1);
+				$Query_PrepACSFleets = '';
 				$Query_PrepACSFleets .= "SELECT `fleet_id`, `fleet_owner`, `fleet_array`, `username`, `ally_id`, `ally_tag`, ";
 				$Query_PrepACSFleets .= "`morale_level`, `morale_points`, `morale_droptime`, `morale_lastupdate`, ";
 				$Query_PrepACSFleets .= "`fleet_start_galaxy`, `fleet_start_system`, `fleet_start_planet`, `fleet_resource_metal`, `fleet_resource_crystal`, `fleet_resource_deuterium`, ";
@@ -411,7 +433,7 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 				$Query_PrepACSFleets .= "FROM {{table}} ";
 				$Query_PrepACSFleets .= "LEFT JOIN {{prefix}}users as `users` ON `users`.`id` = `fleet_owner` ";
 				$Query_PrepACSFleets .= "LEFT JOIN {{prefix}}alliance AS `ally` ON `users`.`ally_id` = `ally`.`id` ";
-				$Query_PrepACSFleets .= "WHERE `fleet_id` IN ({$Temp1}) LIMIT {$Temp2}; -- FlyingFleetHandler [Q06]";
+				$Query_PrepACSFleets .= "WHERE `fleet_id` IN ({$Temp1}) LIMIT {$Temp2}; -- FlyingFleetHandler.php [#12]";
 				$Result_PrepACSFleets = doquery($Query_PrepACSFleets, 'fleets');
 				while($FetchData = mysql_fetch_assoc($Result_PrepACSFleets))
 				{
@@ -441,8 +463,9 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 				{
 					$Temp2 = count($Temp1);
 					$Temp1 = implode(',', $Temp1);
+					$Query_PrepUserTasks = '';
 					$Query_PrepUserTasks .= "SELECT `id`, `tasks_done` FROM {{table}} ";
-					$Query_PrepUserTasks .= "WHERE `id` IN ({$Temp1}) LIMIT {$Temp2}; -- FlyingFleetHandler [Q07]";
+					$Query_PrepUserTasks .= "WHERE `id` IN ({$Temp1}) LIMIT {$Temp2}; -- FlyingFleetHandler.php [#13]";
 					$Result_PrepUserTasks = doquery($Query_PrepUserTasks, 'users');
 					while($FetchData = mysql_fetch_assoc($Result_PrepUserTasks))
 					{
@@ -452,7 +475,6 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 			}
 			if(!empty($PrepareData['galaxy']))
 			{
-				global $_GalaxyRow;
 				if(in_array($_GalaxyRow['galaxy_id'], $PrepareData['galaxy']))
 				{
 					$Temp1 = array_keys($PrepareData['galaxy'], $_GalaxyRow['galaxy_id']);
@@ -468,7 +490,9 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 				{
 					$Temp1 = implode(',', $PrepareData['galaxy']);
 					$Temp2 = count($PrepareData['galaxy']);
-					$Query_PrepGalaxy = "SELECT `galaxy_id`, `id_planet`, `id_moon`, `metal`, `crystal` FROM {{table}} WHERE `galaxy_id` IN ({$Temp1}) LIMIT {$Temp2}; -- FlyingFleetHandler [Q08]";
+					$Query_PrepGalaxy = '';
+					$Query_PrepGalaxy .= "SELECT `galaxy_id`, `id_planet`, `id_moon`, `metal`, `crystal` FROM {{table}} ";
+					$Query_PrepGalaxy .= "WHERE `galaxy_id` IN ({$Temp1}) LIMIT {$Temp2}; -- FlyingFleetHandler.php [#14]";
 					$Result_PrepGalaxy = doquery($Query_PrepGalaxy, 'galaxy');
 					while($FetchData = mysql_fetch_assoc($Result_PrepGalaxy))
 					{
@@ -483,10 +507,13 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 			}
 			// ---
 			$Fleets2Delete = array();
+			$ACS2Delete = array();
 			foreach($FleetTimes as $CalculationData)
 			{
-				mysql_data_seek($FleetResult, $CalculationData['rowNo']);
-				$CurrentFleet = mysql_fetch_assoc($FleetResult);
+				// Investigate if mysql_data_seek should be replaced by HashMap of Fleets (for O(1) access to FleetRow instead of O(n))
+				// May cause bad impact on memory usage
+				mysql_data_seek($Result_GetAllFleets, $CalculationData['rowNo']);
+				$CurrentFleet = mysql_fetch_assoc($Result_GetAllFleets);
 				$CurrentFleet['calcType'] = $CalculationData['type'];
 
 				if(!empty($ChangeCoordinatesForFleets))
@@ -510,151 +537,159 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 							$CurrentFleet['fleet_end_type'] = 1;
 							if($CurrentFleet['fleet_mission'] == 9)
 							{
-								$CurrentFleet['fleet_mission']= 1;
+								$CurrentFleet['fleet_mission'] = 1;
 							}
 						}
 					}
 				}
 
-				$return = false;
-
+				$MissionReturn = false;
 				switch($CurrentFleet['fleet_mission'])
 				{
 					case 1:
+					{
 						if($CurrentFleet['fleets_count'] > 0)
 						{
 							// Mission : Group Attack
-							if($Inc_MissionGroupAttack !== true)
+							if(!isset($Inc_MissionGroupAttack))
 							{
 								$Inc_MissionGroupAttack = true;
 								include('MissionCaseGroupAttack.php');
 							}
-							if($Inc_Function_CreateOneMoonRecord !== true)
+							if(!isset($Inc_Function_CreateOneMoonRecord))
 							{
 								$Inc_Function_CreateOneMoonRecord = true;
 								include('CreateOneMoonRecord.php');
 							}
-							$return = MissionCaseGroupAttack($CurrentFleet, $_FleetCache);
-							if(!empty($return['DeleteACS']))
+							$MissionReturn = MissionCaseGroupAttack($CurrentFleet, $_FleetCache);
+							if(!empty($MissionReturn['DeleteACS']))
 							{
-								$ACS2Delete[] = $return['DeleteACS'];
+								$ACS2Delete[] = $MissionReturn['DeleteACS'];
 							}
 						}
 						else
 						{
 							// Mission : Attack
-							if($Inc_MissionAttack !== true)
+							if(!isset($Inc_MissionAttack))
 							{
 								$Inc_MissionAttack = true;
 								include('MissionCaseAttack.php');
 							}
-							if($Inc_Function_CreateOneMoonRecord !== true)
+							if(!isset($Inc_Function_CreateOneMoonRecord))
 							{
 								$Inc_Function_CreateOneMoonRecord = true;
 								include('CreateOneMoonRecord.php');
 							}
-							$return = MissionCaseAttack($CurrentFleet, $_FleetCache);
+							$MissionReturn = MissionCaseAttack($CurrentFleet, $_FleetCache);
 							if($CurrentFleet['acs_id'] > 0)
 							{
 								$ACS2Delete[] = $CurrentFleet['acs_id'];
 							}
 						}
 						break;
-
+					}
 					case 2:
+					{
 						// Mission : Attack in Group (Joined fleet)
 						// Make ReturnUpdate only if main fleet (GroupAttack Leader) was calculated
 						if($CurrentFleet['calcType'] == 3)
 						{
-							if($Inc_MissionAttack !== true)
+							if(!isset($Inc_MissionAttack))
 							{
 								$Inc_MissionAttack = true;
 								include('MissionCaseAttack.php');
 							}
-							$return = MissionCaseAttack($CurrentFleet, $_FleetCache);
+							$MissionReturn = MissionCaseAttack($CurrentFleet, $_FleetCache);
 						}
 						break;
-
+					}
 					case 3:
+					{
 						// Mission: Transport
-						if($Inc_MissionTransport !== true)
+						if(!isset($Inc_MissionTransport))
 						{
 							$Inc_MissionTransport = true;
 							include('MissionCaseTransport.php');
 						}
-						if($CurrentFleet['calcType'] == 1 AND $Inc_Function_StoreGoodsToPlanet !== true)
+						if($CurrentFleet['calcType'] == 1 && !isset($Inc_Function_StoreGoodsToPlanet))
 						{
 							$Inc_Function_StoreGoodsToPlanet = true;
 							include('StoreGoodsToPlanet.php');
 						}
-						$return = MissionCaseTransport($CurrentFleet, $_FleetCache);
+						$MissionReturn = MissionCaseTransport($CurrentFleet, $_FleetCache);
 						break;
-
+					}
 					case 4:
+					{
 						// Mission: Stay
-						if($Inc_MissionStay !== true)
+						if(!isset($Inc_MissionStay))
 						{
 							$Inc_MissionStay = true;
 							include('MissionCaseStay.php');
 						}
-						$return = MissionCaseStay($CurrentFleet, $_FleetCache);
+						$MissionReturn = MissionCaseStay($CurrentFleet, $_FleetCache);
 						break;
-
+					}
 					case 5:
+					{
 						// Mission: Stay and Defend (for allys)
-						if($Inc_MissionStayAlly !== true)
+						if(!isset($Inc_MissionStayAlly))
 						{
 							$Inc_MissionStayAlly = true;
 							include('MissionCaseStayAlly.php');
 						}
-						$return = MissionCaseStayAlly($CurrentFleet, $_FleetCache);
+						$MissionReturn = MissionCaseStayAlly($CurrentFleet, $_FleetCache);
 						break;
-
+					}
 					case 6:
+					{
 						// Mission: Spy
-						if($Inc_MissionSpy !== true)
+						if(!isset($Inc_MissionSpy))
 						{
 							$Inc_MissionSpy = true;
 							include('MissionCaseSpy.php');
 						}
-						$return = MissionCaseSpy($CurrentFleet, $_FleetCache);
+						$MissionReturn = MissionCaseSpy($CurrentFleet, $_FleetCache);
 						break;
-
+					}
 					case 7:
+					{
 						// Mission: Colonisation
-						if($Inc_MissionColonisation !== true)
+						if(!isset($Inc_MissionColonisation))
 						{
 							$Inc_MissionColonisation = true;
 							include('MissionCaseColonisation.php');
 							include('CreateOnePlanetRecord.php');
 						}
-						$return = MissionCaseColonisation($CurrentFleet, $_FleetCache);
+						$MissionReturn = MissionCaseColonisation($CurrentFleet, $_FleetCache);
 						break;
-
+					}
 					case 8:
+					{
 						// Mission: Recycling
-						if($Inc_MissionRecycling !== true)
+						if(!isset($Inc_MissionRecycling))
 						{
 							$Inc_MissionRecycling = true;
 							include('MissionCaseRecycling.php');
 						}
-						$return = MissionCaseRecycling($CurrentFleet, $_FleetCache);
+						$MissionReturn = MissionCaseRecycling($CurrentFleet, $_FleetCache);
 						break;
-
+					}
 					case 9:
+					{
 						// Mission: Moon destruction
-						if($Inc_MissionDestruction !== true)
+						if(!isset($Inc_MissionDestruction))
 						{
 							$Inc_MissionDestruction = true;
 							include('MissionCaseDestruction.php');
 						}
-						if($Inc_Function_CreateOneMoonRecord !== true)
+						if(!isset($Inc_Function_CreateOneMoonRecord))
 						{
 							$Inc_Function_CreateOneMoonRecord = true;
 							include('CreateOneMoonRecord.php');
 						}
-						$return = MissionCaseDestruction($CurrentFleet, $_FleetCache);
-						if($return['MoonDestroyed'] === true)
+						$MissionReturn = MissionCaseDestruction($CurrentFleet, $_FleetCache);
+						if($MissionReturn['MoonDestroyed'] === true)
 						{
 							if($CurrentFleet['fleet_end_id'] == $planet['id'])
 							{
@@ -662,36 +697,40 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 							}
 						}
 						break;
-
+					}
 					case 10:
+					{
 						// Mission: Interplanetar Attack
-						if($Inc_MissionMIP !== true)
+						if(!isset($Inc_MissionMIP))
 						{
 							$Inc_MissionMIP = true;
 							include('MissionCaseMIP.php');
 						}
-						$return = MissionCaseMIP($CurrentFleet, $_FleetCache);				
+						$MissionReturn = MissionCaseMIP($CurrentFleet, $_FleetCache);				
 						break;
-
+					}
 					case 15:
+					{
 						// Mission: Expedition
-						if($Inc_MissionExpedition === false)
+						if(!isset($Inc_MissionExpedition))
 						{
 							$Inc_MissionExpedition = true;
 							include('MissionCaseExpedition.php');
 						}
-						$return = MissionCaseExpedition($CurrentFleet);
+						$MissionReturn = MissionCaseExpedition($CurrentFleet);
 						break;
-
-					default: 
+					}
+					default:
+					{
 						// Bad mission number!!!
 						$Fleets2Delete[] = $CurrentFleet['fleet_id'];
 						break;
+					}
 				}
 				
-				if(!empty($return['FleetsToDelete']))
+				if(!empty($MissionReturn['FleetsToDelete']))
 				{
-					foreach($return['FleetsToDelete'] as $ThisID)
+					foreach($MissionReturn['FleetsToDelete'] as $ThisID)
 					{
 						if(!in_array($ThisID, $Fleets2Delete))
 						{
@@ -700,12 +739,12 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 					}
 				}
 				
-				if(!empty($return['FleetArchive']))
+				if(!empty($MissionReturn['FleetArchive']))
 				{
-					foreach($return['FleetArchive'] as $FleetID => $ArchiveData)
+					foreach($MissionReturn['FleetArchive'] as $FleetID => $ArchiveData)
 					{
 						$ThisResult = array_merge($FleetArchive_Pattern, $ArchiveData);
-						if(empty($Updater_FleetArchive[$FleetID]))
+						if(!isset($Updater_FleetArchive[$FleetID]))
 						{
 							$Updater_FleetArchive[$FleetID] = $ThisResult;
 						}
@@ -775,8 +814,9 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 				$TempArray = implode(', ', $TempArray);
 				$TempArray3 = implode(', ', $TempArray3);
 				$TempArray4 = implode(', ', $TempArray4);
+				$Query_AddToPlanets = '';
 				$Query_AddToPlanets .= "INSERT INTO {{table}} (`id`, {$TempArray3}) VALUES {$TempArray}";
-				$Query_AddToPlanets .= " ON DUPLICATE KEY UPDATE {$TempArray4}; -- FlyingFleetHandler [Q09]";
+				$Query_AddToPlanets .= " ON DUPLICATE KEY UPDATE {$TempArray4}; -- FlyingFleetHandler.php [#15]";
 				doquery($Query_AddToPlanets, 'planets');
 			}			
 			if(!empty($_FleetCache['galaxy']) AND $_FleetCache['updated']['galaxy'] === true)
@@ -791,11 +831,12 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 				}
 				if(!empty($TempArray))
 				{
+					$Query_UpdCachedGalaxy = '';
 					$Query_UpdCachedGalaxy .= "INSERT INTO {{table}} (`galaxy_id`, `metal`, `crystal`) VALUES ";
 					$Query_UpdCachedGalaxy .= implode(', ', $TempArray);
 					$Query_UpdCachedGalaxy .= " ON DUPLICATE KEY UPDATE ";
 					$Query_UpdCachedGalaxy .= "`metal` = VALUES(`metal`), ";
-					$Query_UpdCachedGalaxy .= "`crystal` = VALUES(`crystal`); -- FlyingFleetHandler [Q10]";
+					$Query_UpdCachedGalaxy .= "`crystal` = VALUES(`crystal`); -- FlyingFleetHandler.php [#16]";
 					doquery($Query_UpdCachedGalaxy, 'galaxy');
 				}
 			}
@@ -803,14 +844,14 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 			{
 				$Temp2 = count($_FleetCache['deleteMoons']);
 				$Temp1 = implode(',', $_FleetCache['deleteMoons']);
-				$Query_DeleteMoons = "DELETE FROM {{table}} WHERE `id` IN ({$Temp1}) LIMIT {$Temp2}; -- FlyingFleetHandler [Q11]";
+				$Query_DeleteMoons = "DELETE FROM {{table}} WHERE `id` IN ({$Temp1}) LIMIT {$Temp2}; -- FlyingFleetHandler.php [#17]";
 				doquery($Query_DeleteMoons, 'planets');
 			}
 			if(!empty($_FleetCache['moonGalaxyUpdate']))
 			{
 				$Temp2 = count($_FleetCache['moonGalaxyUpdate']);
 				$Temp1 = implode(',', $_FleetCache['moonGalaxyUpdate']);
-				$Query_UpdMoonGalaxy = "UPDATE {{table}} SET `id_moon` = 0 WHERE `id_planet` IN ({$Temp1}) LIMIT {$Temp2}; -- FlyingFleetHandler [Q12]";
+				$Query_UpdMoonGalaxy = "UPDATE {{table}} SET `id_moon` = 0 WHERE `id_planet` IN ({$Temp1}) LIMIT {$Temp2}; -- FlyingFleetHandler.php [#18]";
 				doquery($Query_UpdMoonGalaxy, 'galaxy');
 			}
 			if(!empty($_FleetCache['moonUserUpdate']))
@@ -821,8 +862,9 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 					$TempArray[] = "({$ThisUser}, {$ThisID})";
 				}
 				$TempArray = implode(',', $TempArray);
+				$Query_UpdMoonUser = '';
 				$Query_UpdMoonUser .= "INSERT INTO {{table}} (`id`, `current_planet`) VALUES {$TempArray} ";
-				$Query_UpdMoonUser .= "ON DUPLICATE KEY UPDATE `current_planet` = VALUES(`current_planet`); -- FlyingFleetHandler [Q13]";
+				$Query_UpdMoonUser .= "ON DUPLICATE KEY UPDATE `current_planet` = VALUES(`current_planet`); -- FlyingFleetHandler.php [#19]";
 				doquery($Query_UpdMoonUser, 'users');
 			}
 			if(!empty($_FleetCache['MoraleCache']))
@@ -833,11 +875,12 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 					$TempArray[] = "({$ThisUserID}, {$ThisData['level']}, {$ThisData['droptime']}, {$ThisData['lastupdate']})";
 				}
 				$TempArray = implode(',', $TempArray);
+				$Query_UpdUserMorale = '';
 				$Query_UpdUserMorale .= "INSERT INTO {{table}} (`id`, `morale_level`, `morale_droptime`, `morale_lastupdate`) VALUES {$TempArray} ";
 				$Query_UpdUserMorale .= "ON DUPLICATE KEY UPDATE ";
 				$Query_UpdUserMorale .= "`morale_level` = VALUES(`morale_level`), ";
 				$Query_UpdUserMorale .= "`morale_droptime` = VALUES(`morale_droptime`), ";
-				$Query_UpdUserMorale .= "`morale_lastupdate` = VALUES(`morale_lastupdate`); -- FlyingFleetHandler [Q14]";
+				$Query_UpdUserMorale .= "`morale_lastupdate` = VALUES(`morale_lastupdate`); -- FlyingFleetHandler.php [#20]";
 				doquery($Query_UpdUserMorale, 'users');
 			}
 			
@@ -874,6 +917,7 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 					$TempArray[] = "({$ThisID}, {$ThisData['fleet_amount']}, {$ThisData['fleet_array']}, {$ThisData['fleet_mess']}, {$ThisData['fleet_resource_metal']}, {$ThisData['fleet_resource_crystal']}, {$ThisData['fleet_resource_deuterium']})";
 				}
 				$TempArray = implode(',', $TempArray);
+				$Query_UpdateFleets = '';
 				$Query_UpdateFleets .= "INSERT INTO {{table}} (`fleet_id`, `fleet_amount`, `fleet_array`, `fleet_mess`, `fleet_resource_metal`, `fleet_resource_crystal`, `fleet_resource_deuterium`) ";
 				$Query_UpdateFleets .= "VALUES {$TempArray} ";
 				$Query_UpdateFleets .= "ON DUPLICATE KEY UPDATE ";
@@ -882,12 +926,12 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 				$Query_UpdateFleets .= "`fleet_mess` = IF(VALUES(`fleet_mess`) = 0, `fleet_mess`, VALUES(`fleet_mess`)), ";
 				$Query_UpdateFleets .= "`fleet_resource_metal` = `fleet_resource_metal` + VALUES(`fleet_resource_metal`), ";
 				$Query_UpdateFleets .= "`fleet_resource_crystal` = `fleet_resource_crystal` + VALUES(`fleet_resource_crystal`), ";
-				$Query_UpdateFleets .= "`fleet_resource_deuterium` = `fleet_resource_deuterium` + VALUES(`fleet_resource_deuterium`); -- FlyingFleetHandler [Q14]";
+				$Query_UpdateFleets .= "`fleet_resource_deuterium` = `fleet_resource_deuterium` + VALUES(`fleet_resource_deuterium`); -- FlyingFleetHandler.php [#21]";
 				doquery($Query_UpdateFleets, 'fleets');
 			}
 			// ---
 			
-			if($FleetHandlerReturn['ThisMoonDestroyed'] !== true)
+			if(!isset($FleetHandlerReturn['ThisMoonDestroyed']))
 			{
 				if(!empty($_FleetCache['planets'][$planet['id']]))
 				{
@@ -895,10 +939,10 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 				}
 				else
 				{
-					$planet = doquery("SELECT * FROM {{table}} WHERE `id` = {$planet['id']};", 'planets', true);
+					$planet = doquery("SELECT * FROM {{table}} WHERE `id` = {$planet['id']}; -- FlyingFleetHandler.php [#22]", 'planets', true);
 				}
 			}
-			if($_GalaxyRow['galaxy_id'] > 0 AND !empty($_FleetCache['galaxy'][$_GalaxyRow['galaxy_id']]))
+			if(isset($_GalaxyRow['galaxy_id']) && $_GalaxyRow['galaxy_id'] > 0 AND !empty($_FleetCache['galaxy'][$_GalaxyRow['galaxy_id']]))
 			{
 				$_GalaxyRow['metal'] = $_FleetCache['galaxy'][$_GalaxyRow['galaxy_id']]['metal'];
 				$_GalaxyRow['crystal'] = $_FleetCache['galaxy'][$_GalaxyRow['galaxy_id']]['crystal'];
@@ -948,12 +992,14 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 					$Qry_Updater_FleetArchive_Array2[] = "`{$FieldName}` = IF((VALUES(`{$FieldName}`) = \"!noupd!\"), `{$FieldName}`, IF(SUBSTRING(VALUES(`{$FieldName}`), 1, 1) = '+', CONCAT(`{$FieldName}`, SUBSTRING(VALUES(`{$FieldName}`), 2)), VALUES(`{$FieldName}`)))";
 				}
 				$Qry_Updater_FleetArchive .= implode(', ', $Qry_Updater_FleetArchive_Array2);
+				$Qry_Updater_FleetArchive .= "; -- FlyingFleetHandler.php [#23]";
 				doquery($Qry_Updater_FleetArchive, 'fleet_archive');
 			}
 
 			if(!empty($UserStatsData))
 			{
-				$QryUsersStats = "INSERT INTO {{table}} (`A_UserID`, `ustat_raids_won`, `ustat_raids_draw`, `ustat_raids_lost`, `ustat_raids_acs_won`, `ustat_raids_inAlly`, `ustat_raids_missileAttack`, `ustat_moons_destroyed`, `ustat_moons_created`, `ustat_other_expeditions_count`, {$CreateAchievementKeys}) VALUES ";
+				$QryUsersStats = '';
+				$QryUsersStats .= "INSERT INTO {{table}} (`A_UserID`, `ustat_raids_won`, `ustat_raids_draw`, `ustat_raids_lost`, `ustat_raids_acs_won`, `ustat_raids_inAlly`, `ustat_raids_missileAttack`, `ustat_moons_destroyed`, `ustat_moons_created`, `ustat_other_expeditions_count`, {$CreateAchievementKeys}) VALUES ";
 				foreach($UserStatsData as $UserID => $Data)
 				{
 					if($UserID <= 0)
@@ -986,21 +1032,21 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 				$QryUsersStats .= "`ustat_other_expeditions_count` = `ustat_other_expeditions_count` + VALUES(`ustat_other_expeditions_count`)";
 				if(!empty($UserStatsUpQuery))
 				{
-				$QryUsersStats .= ", ".implode(', ', $UserStatsUpQuery);
+					$QryUsersStats .= ", ".implode(', ', $UserStatsUpQuery);
 				}
-				$QryUsersStats .= ';';
+				$QryUsersStats .= '; -- FlyingFleetHandler.php [#24]';
 				doquery($QryUsersStats, 'achievements_stats');
 			}
 
 			if(!empty($ACS2Delete))
 			{
-				doquery("DELETE FROM {{table}} WHERE `id` IN (".implode(', ', $ACS2Delete).");", 'acs');
+				doquery("DELETE FROM {{table}} WHERE `id` IN (".implode(', ', $ACS2Delete)."); -- FlyingFleetHandler.php [#25]", 'acs');
 			}
 			if(!empty($Fleets2Delete))
 			{
-				doquery("DELETE FROM {{table}} WHERE `fleet_id` IN (".implode(', ', $Fleets2Delete).");", 'fleets');
+				doquery("DELETE FROM {{table}} WHERE `fleet_id` IN (".implode(', ', $Fleets2Delete)."); -- FlyingFleetHandler.php [#26]", 'fleets');
 			}
-			doquery('UNLOCK TABLES', '');
+			doquery('UNLOCK TABLES; -- FlyingFleetHandler.php [#27]', '');
 
 			if(!empty($_Cache['Messages']))
 			{
@@ -1010,7 +1056,11 @@ function FlyingFleetHandler(&$planet, $PassedID = array())
 		}
 		
 		if(!empty($_BenchTool)){ $_BenchTool->simpleCountStop(); }
-
+		
+		if(!isset($FleetHandlerReturn))
+		{
+			$FleetHandlerReturn = array();
+		}
 		return $FleetHandlerReturn;
 	}
 }

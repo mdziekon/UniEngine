@@ -75,9 +75,9 @@ function MissionCaseTransport($FleetRow, &$_FleetCache)
 		{
 			$CachePointer = &$_FleetCache['updateFleets'][$FleetRow['fleet_id']];
 			$CachePointer['fleet_mess'] = 1;
-			$CachePointer['fleet_resource_metal'] -= $FleetRow['fleet_resource_metal'];
-			$CachePointer['fleet_resource_crystal'] -= $FleetRow['fleet_resource_crystal'];
-			$CachePointer['fleet_resource_deuterium'] -= $FleetRow['fleet_resource_deuterium'];
+			$CachePointer['fleet_resource_metal'] = -$FleetRow['fleet_resource_metal'];
+			$CachePointer['fleet_resource_crystal'] = -$FleetRow['fleet_resource_crystal'];
+			$CachePointer['fleet_resource_deuterium'] = -$FleetRow['fleet_resource_deuterium'];
 		}
 		else
 		{

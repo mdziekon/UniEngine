@@ -43,12 +43,12 @@ include($_EnginePath.'common.php');
 	$Target['type'] = intval($_POST['planettype']);
 	$Fleet['Speed'] = floatval($_POST['speed']);
 	$Fleet['array'] = explode(';', $_POST['FleetArray']);
-	$Fleet['UseQuantum'] = ($_POST['usequantumgate'] == 'on' ? true : false);
+	$Fleet['UseQuantum'] = (isset($_POST['usequantumgate']) && $_POST['usequantumgate'] == 'on' ? true : false);
 	$Fleet['resources'] = array('metal' => $_POST['resource1'], 'crystal' => $_POST['resource2'], 'deuterium' => $_POST['resource3']);
 	$Fleet['ExpeTime'] = intval($_POST['expeditiontime']);
 	$Fleet['HoldTime'] = intval($_POST['holdingtime']);
-	$Fleet['ACS_ID'] = floor(floatval($_POST['acs_id']));
-	$Fleet['Mission'] = intval($_POST['mission']);
+	$Fleet['ACS_ID'] = isset($_POST['acs_id']) ? floor(floatval($_POST['acs_id'])) : 0;
+	$Fleet['Mission'] = isset($_POST['mission']) ? intval($_POST['mission']) : 0;
 
 	$Protections['enable'] = (bool) $_GameConfig['noobprotection'];
 	$Protections['basicLimit'] = $_GameConfig['noobprotectiontime'] * 1000;
@@ -81,6 +81,10 @@ include($_EnginePath.'common.php');
 	}
 
 	// --- Get FlyingFleets Count
+	$FlyingFleetsCount = 0;
+	$FlyingExpeditions = 0;
+	
+	$Query_GetFleets = '';
 	$Query_GetFleets .= "SELECT `fleet_mission`, `fleet_target_owner`, `fleet_end_id`, `fleet_mess` FROM {{table}} ";
 	$Query_GetFleets .= "WHERE `fleet_owner` = {$_User['id']};";
 	$Result_GetFleets = doquery($Query_GetFleets, 'fleets');
@@ -93,6 +97,14 @@ include($_EnginePath.'common.php');
 		}
 		if(in_array($FleetData['fleet_mission'], array(1, 2, 9)) AND $FleetData['fleet_mess'] == 0)
 		{
+			if(!isset($FlyingFleetsData[$FleetData['fleet_target_owner']]['count']))
+			{
+				$FlyingFleetsData[$FleetData['fleet_target_owner']]['count'] = 0;
+			}
+			if(!isset($FlyingFleetsData[$FleetData['fleet_target_owner']][$FleetData['fleet_end_id']]))
+			{
+				$FlyingFleetsData[$FleetData['fleet_target_owner']][$FleetData['fleet_end_id']] = 0;
+			}
 			$FlyingFleetsData[$FleetData['fleet_target_owner']]['count'] += 1;
 			$FlyingFleetsData[$FleetData['fleet_target_owner']][$FleetData['fleet_end_id']] += 1;
 		}
@@ -171,7 +183,7 @@ include($_EnginePath.'common.php');
 			break;
 		}
 	}
-	if($TargetError === true)
+	if(isset($TargetError))
 	{
 		messageRed($_Lang['fl2_targeterror'], $ErrorTitle);
 	}
@@ -215,6 +227,7 @@ include($_EnginePath.'common.php');
 	if($Fleet['Mission'] != 8)
 	{
 		// This is not a Recycling Mission, so check Planet Data
+		$Query_CheckPlanetOwner = '';
 		$Query_CheckPlanetOwner .= "SELECT `pl`.`id` AS `id`, `pl`.`id_owner` AS `owner`, `pl`.`name` AS `name`, `pl`.`quantumgate`, ";
 		$Query_CheckPlanetOwner .= "`users`.`ally_id`, `users`.`onlinetime`, `users`.`username` as `username`, `users`.`user_lastip` as `lastip`, `users`.`is_onvacation`, `users`.`is_banned`, `users`.`authlevel`, `users`.`first_login`, `users`.`NoobProtection_EndTime`, `users`.`multiIP_DeclarationID`, ";
 		$Query_CheckPlanetOwner .= "`stats`.`total_rank`, `stats`.`total_points`, `buddy1`.`active` AS `active1`, `buddy2`.`active` AS `active2` ";
@@ -294,6 +307,7 @@ include($_EnginePath.'common.php');
 	$SFBSelectWhere[] = "(`Type` = 2 AND `ElementID` = {$_User['id']} AND `EndTime` > UNIX_TIMESTAMP())";
 	$SFBSelectWhere[] = "(`Type` = 3 AND `ElementID` = {$_Planet['id']} AND `EndTime` > UNIX_TIMESTAMP())";
 
+	$SFBSelect = '';
 	$SFBSelect .= "SELECT `Type`, `BlockMissions`, `Reason`, `StartTime`, `EndTime`, `PostEndTime`, `ElementID`, `DontBlockIfIdle` FROM {{table}} WHERE `StartTime` <= UNIX_TIMESTAMP() AND ";
 	$SFBSelect .= implode(' OR ', $SFBSelectWhere);
 	$SFBSelect .= " ORDER BY `Type` ASC, `EndTime` DESC;";
@@ -374,6 +388,11 @@ include($_EnginePath.'common.php');
 	}
 	
 	// --- Parse Fleet Array
+	$Fleet['count'] = 0;
+	$Fleet['storage'] = 0;
+	$Fleet['FuelStorage'] = 0;
+	$Fleet['TotalResStorage'] = 0;
+	
 	$FleetArray = array();
 	if(!empty($Fleet['array']) AND (array)$Fleet['array'] === $Fleet['array'])
 	{
@@ -494,10 +513,9 @@ include($_EnginePath.'common.php');
 	$Throw = false;
 	if($Fleet['Mission'] == 2 AND in_array(2, $AvailableMissions))
 	{
-		$ACSID = $Fleet['ACS_ID'];
-		if($ACSID > 0)
+		if($Fleet['ACS_ID'] > 0)
 		{
-			$CheckACS = doquery("SELECT {{table}}.*, `fleets`.`fleet_send_time` AS `mf_start_time` FROM {{table}} LEFT JOIN {{prefix}}fleets AS `fleets` ON `fleets`.`fleet_id` = {{table}}.`main_fleet_id` WHERE {{table}}.`id` = {$ACSID} LIMIT 1;", 'acs', true);
+			$CheckACS = doquery("SELECT {{table}}.*, `fleets`.`fleet_send_time` AS `mf_start_time` FROM {{table}} LEFT JOIN {{prefix}}fleets AS `fleets` ON `fleets`.`fleet_id` = {{table}}.`main_fleet_id` WHERE {{table}}.`id` = {$Fleet['ACS_ID']} LIMIT 1;", 'acs', true);
 			if($CheckACS)
 			{
 				if($CheckACS['owner_id'] == $_User['id'] OR strstr($CheckACS['users'], '|'.$_User['id'].'|') !== FALSE)
@@ -1149,7 +1167,7 @@ include($_EnginePath.'common.php');
 	$Fleet['SetStayTime'] = ($Fleet['StayTime'] > 0 ? $Fleet['SetCalcTime'] + $Fleet['StayTime'] : '0');
 	$Fleet['SetBackTime'] = $Fleet['SetCalcTime'] + $Fleet['StayTime'] + $DurationBack;
 
-	if($UpdateACS === true)
+	if(isset($UpdateACS))
 	{
 		$NewEndTime = $Fleet['SetCalcTime'];
 		$OldFlightTime = $CheckACS['start_time_org'] - $CheckACS['mf_start_time'];
@@ -1227,6 +1245,7 @@ include($_EnginePath.'common.php');
 			
 			if($_User['multiIP_DeclarationID'] > 0 AND $_User['multiIP_DeclarationID'] == $TargetData['multiIP_DeclarationID'])
 			{
+				$Query_CheckDeclaration = '';
 				$Query_CheckDeclaration .= "SELECT `id` FROM {{table}} WHERE ";
 				$Query_CheckDeclaration .= "`status` = 1 AND `id` = {$_User['multiIP_DeclarationID']} ";
 				$Query_CheckDeclaration .= "LIMIT 1;";				
@@ -1262,7 +1281,7 @@ include($_EnginePath.'common.php');
 		}
 	}
 	
-	if($LockFleetSending !== true)
+	if(!isset($LockFleetSending))
 	{		
 		$FleetArray = array();
 		foreach($Fleet['array'] as $ShipID => $ShipCount)
@@ -1285,6 +1304,7 @@ include($_EnginePath.'common.php');
 			$TargetData['galaxy_id'] = '0';
 		}
 
+		$Query_Insert = '';
 		$Query_Insert .= "INSERT INTO {{table}} SET ";
 		$Query_Insert .= "`fleet_owner` = {$_User['id']}, ";
 		$Query_Insert .= "`fleet_mission` = {$Fleet['Mission']}, ";
@@ -1407,6 +1427,7 @@ include($_EnginePath.'common.php');
 			$_Alert['MultiAlert']['Type'] = 1;
 		}
 		
+		$Query_AlertOtherUsers = '';
 		$Query_AlertOtherUsers .= "SELECT DISTINCT `User_ID` FROM {{table}} WHERE ";
 		$Query_AlertOtherUsers .= "`User_ID` NOT IN ({$_User['id']}, {$TargetData['owner']}) AND ";
 		$Query_AlertOtherUsers .= "`IP_ID` IN (".implode(', ', $CheckIntersection['Intersect']).") AND ";
@@ -1423,12 +1444,12 @@ include($_EnginePath.'common.php');
 		Alerts_Add(1, $Now, $_Alert['MultiAlert']['Type'], 1, $_Alert['MultiAlert']['Importance'], $_User['id'], $_Alert['MultiAlert']['Data']);
 	}
 	
-	if($ShowMultiAlert === true)
+	if(isset($ShowMultiAlert))
 	{
 		messageRed($_Lang['MultiAlert'], $_Lang['fl_error']);
 	}
 
-	if($UpdateACS === true)
+	if(isset($UpdateACS))
 	{
 		if(!empty($CheckACS['fleets_id']))
 		{
@@ -1455,7 +1476,7 @@ include($_EnginePath.'common.php');
 
 		if(!empty($UpdateACSRow))
 		{
-			doquery("UPDATE {{table}} SET ".implode(', ', $UpdateACSRow)." WHERE `id` = {$ACSID};", 'acs');
+			doquery("UPDATE {{table}} SET ".implode(', ', $UpdateACSRow)." WHERE `id` = {$Fleet['ACS_ID']};", 'acs');
 		}
 
 		if(!empty($UpdateACSFleets))
@@ -1477,8 +1498,9 @@ include($_EnginePath.'common.php');
 	{
 		$QuantumGate_Used = '0';
 	}
+	$QryArchive = '';
 	$QryArchive .= "INSERT INTO {{table}} (`Fleet_ID`, `Fleet_Owner`, `Fleet_Mission`, `Fleet_Array`, `Fleet_Time_Send`, `Fleet_Time_Start`, `Fleet_Time_Stay`, `Fleet_Time_End`, `Fleet_Start_ID`, `Fleet_Start_Galaxy`, `Fleet_Start_System`, `Fleet_Start_Planet`, `Fleet_Start_Type`, `Fleet_Start_Res_Metal`, `Fleet_Start_Res_Crystal`, `Fleet_Start_Res_Deuterium`, `Fleet_End_ID`, `Fleet_End_ID_Galaxy`, `Fleet_End_Galaxy`, `Fleet_End_System`, `Fleet_End_Planet`, `Fleet_End_Type`, `Fleet_End_Owner`, `Fleet_ACSID`, `Fleet_Info_HadSameIP_Ever`, `Fleet_Info_HadSameIP_Ever_Filtred`, `Fleet_Info_HadSameIP_OnSend`, `Fleet_Info_UsedTeleport`) VALUES ";
-	$QryArchive .= " ({$LastFleetID}, {$_User['id']}, {$Fleet['Mission']}, '{$Fleet['array']}', {$Now}, {$Fleet['SetCalcTime']}, {$Fleet['SetStayTime']}, {$Fleet['SetBackTime']}, {$_Planet['id']}, {$_Planet['galaxy']}, {$_Planet['system']}, {$_Planet['planet']}, {$_Planet['planet_type']}, {$Fleet['resources']['metal']}, {$Fleet['resources']['crystal']}, {$Fleet['resources']['deuterium']}, '{$TargetData['id']}', '{$TargetData['galaxy_id']}', {$Target['galaxy']}, {$Target['system']}, {$Target['planet']}, {$Target['type']}, '{$TargetData['owner']}', '{$ACSID}', {$IPIntersectionFound}, {$IPIntersectionFiltred}, {$IPIntersectionNow}, {$QuantumGate_Used}) ";
+	$QryArchive .= " ({$LastFleetID}, {$_User['id']}, {$Fleet['Mission']}, '{$Fleet['array']}', {$Now}, {$Fleet['SetCalcTime']}, {$Fleet['SetStayTime']}, {$Fleet['SetBackTime']}, {$_Planet['id']}, {$_Planet['galaxy']}, {$_Planet['system']}, {$_Planet['planet']}, {$_Planet['planet_type']}, {$Fleet['resources']['metal']}, {$Fleet['resources']['crystal']}, {$Fleet['resources']['deuterium']}, '{$TargetData['id']}', '{$TargetData['galaxy_id']}', {$Target['galaxy']}, {$Target['system']}, {$Target['planet']}, {$Target['type']}, '{$TargetData['owner']}', '{$Fleet['ACS_ID']}', {$IPIntersectionFound}, {$IPIntersectionFiltred}, {$IPIntersectionNow}, {$QuantumGate_Used}) ";
 
 	if(!empty($UpdateACSFleets))
 	{
@@ -1505,6 +1527,7 @@ include($_EnginePath.'common.php');
 	$_Planet['crystal'] -= $Fleet['resources']['crystal'];
 	$_Planet['deuterium'] -= ($Fleet['resources']['deuterium'] + $Consumption);
 
+	$_Lang['ShipsRows'] = '';
 	foreach($FleetArrayCopy as $ShipID => $ShipCount)
 	{
 		$_Planet[$_Vars_GameElements[$ShipID]] -= $ShipCount;
@@ -1518,6 +1541,7 @@ include($_EnginePath.'common.php');
 		}
 	}
 
+	$QryUpdatePlanet = '';
 	$QryUpdatePlanet .= "UPDATE {{table}} SET ";
 	$QryUpdatePlanet .= implode(', ', $FleetRemover).', ';
 	$QryUpdatePlanet .= "`metal` = '{$_Planet['metal']}', ";

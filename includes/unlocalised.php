@@ -152,6 +152,7 @@ function GetShipConsumption($Ship, $Player)
 
 function GetFleetConsumption($FleetArray, $SpeedFactor, $MissionDuration, $MissionDistance, $Player)
 {
+	$consumption = 0;
 	foreach($FleetArray as $Ship => $Count)
 	{
 		if($Ship > 0)
@@ -169,6 +170,7 @@ function GetFleetConsumption($FleetArray, $SpeedFactor, $MissionDuration, $Missi
 
 function GetStartAdressLink($FleetRow, $FleetType, $FromWindow = false)
 {
+	$Link = '';
 	$Link .= "<a ".(($FromWindow === true) ? "onclick=\"opener.location = this.href; opener.focus(); return false;\"" : '')." href=\"galaxy.php?mode=3&galaxy={$FleetRow['fleet_start_galaxy']}&system={$FleetRow['fleet_start_system']}&planet={$FleetRow['fleet_start_planet']}\" class=\"{$FleetType}\" >";
 	$Link .= "[{$FleetRow['fleet_start_galaxy']}:{$FleetRow['fleet_start_system']}:{$FleetRow['fleet_start_planet']}]</a>";
 	return $Link;
@@ -176,6 +178,7 @@ function GetStartAdressLink($FleetRow, $FleetType, $FromWindow = false)
 
 function GetTargetAdressLink($FleetRow, $FleetType, $FromWindow = false)
 {
+	$Link = '';
 	$Link .= "<a ".(($FromWindow === true) ? "onclick=\"opener.location = this.href; opener.focus(); return false;\"" : '')." href=\"galaxy.php?mode=3&galaxy={$FleetRow['fleet_end_galaxy']}&system={$FleetRow['fleet_end_system']}&planet={$FleetRow['fleet_end_planet']}\" class=\"{$FleetType}\" >";
 	$Link .= "[{$FleetRow['fleet_end_galaxy']}:{$FleetRow['fleet_end_system']}:{$FleetRow['fleet_end_planet']}]</a>";
 	return $Link;
@@ -185,6 +188,7 @@ function BuildHostileFleetPlayerLink($FleetRow, $FromWindow = false)
 {
 	global $_Lang, $_SkinPath;
 
+	$Link = '';
 	$Link .= $FleetRow['owner_name']." ";
 	$Link .= "<a ".(($FromWindow === true) ? "onclick=\"opener.location = this.href; opener.focus(); return false;\"" : '')." href=\"messages.php?mode=write&uid={$FleetRow['fleet_owner']}\">";
 	$Link .= "<img src=\"{$_SkinPath}/img/m.gif\" alt=\"{$_Lang['ov_message']}\" title=\"{$_Lang['ov_message']}\" border=\"0\"></a>";
@@ -193,6 +197,7 @@ function BuildHostileFleetPlayerLink($FleetRow, $FromWindow = false)
 
 function CreatePlanetLink($Galaxy, $System, $Planet)
 {
+	$Link = '';
 	$Link .= "<a href=\"galaxy.php?mode=3&galaxy={$Galaxy}&system={$System}&planet={$Planet}\">";
 	$Link .= "[{$Galaxy}:{$System}:{$Planet}]</a>";
 	return $Link;

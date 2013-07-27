@@ -16,6 +16,9 @@ function InsertJavaScriptChronoApplet($Type, $Ref, $Value, $FixedTime = false, $
 			return true;
 		}
 	}
+	
+	$ReverseChrono = '';
+	$InsertCallback = '';
 
 	if($FixedTime)
 	{
