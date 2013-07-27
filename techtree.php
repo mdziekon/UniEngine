@@ -8,7 +8,8 @@ $_EnginePath = './';
 include($_EnginePath.'common.php');
 
 	loggedCheck();
-
+	
+	$page = '';
 	$HeadTpl = gettemplate('techtree_head');
 	$RowTpl = gettemplate('techtree_row');
 	foreach($_Lang['tech'] as $Element => $ElementName)

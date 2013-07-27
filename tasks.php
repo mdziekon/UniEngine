@@ -18,9 +18,9 @@ include($_EnginePath.'common.php');
 	$_Lang['MsgBox_Text'] = '&nbsp;';
 	$ShowMsgBox = false;
 
-	$Mode = $_GET['mode'];
+	$Mode = (isset($_GET['mode']) ? $_GET['mode'] : null);
 
-	if($_GET['skipcat'] > 0)
+	if(isset($_GET['skipcat']) && $_GET['skipcat'] > 0)
 	{
 		$SkipCatID = intval($_GET['skipcat']);
 		if(!empty($_Vars_TasksData[$SkipCatID]))
@@ -93,7 +93,8 @@ include($_EnginePath.'common.php');
 		}
 
 		// User shows Active Tasks
-		if($_GET['cat'] > 0)
+		$SelectCat = 0;
+		if(isset($_GET['cat']) && $_GET['cat'] > 0)
 		{
 			$SelectCat = intval($_GET['cat']);
 			if(empty($_Vars_TasksData[$SelectCat]))
@@ -177,6 +178,7 @@ include($_EnginePath.'common.php');
 
 			if(!empty($_Lang['TasksCatRewards'][$SelectCat]))
 			{
+				$_Lang['Input_CatRewards'] = '';
 				foreach($_Lang['TasksCatRewards'][$SelectCat] as $CatReward)
 				{
 					$_Lang['Input_CatRewards'] .= "&#149; {$CatReward}<br/>";
@@ -210,6 +212,8 @@ include($_EnginePath.'common.php');
 
 			$_Lang['SetActiveTask'] = '1';
 			
+			$_Lang['Input_CreateTaskRows'] = '';
+			
 			$TaskLoop = 1;
 			$TabRow = 1;
 			foreach($_Vars_TasksData[$SelectCat]['tasks'] as $TaskID => $TaskData)
@@ -217,6 +221,10 @@ include($_EnginePath.'common.php');
 				$TaskNOs[$TaskID] = $TaskLoop;
 
 				$ThisTask = array();
+				$ThisTask['Input_JobsToDo'] = '';
+				$ThisTask['Input_FirstToDo'] = '';
+				$ThisTask['AddTaskNo'] = '';
+				$ThisTask['AddCatLink'] = '';
 
 				if($ShowLog === true)
 				{
@@ -268,7 +276,7 @@ include($_EnginePath.'common.php');
 									$Job = str_replace('{AddClass}', '', $Job);
 								}
 								
-								if($_User['tasks_done_parsed']['status'][$SelectCat][$TaskID][$JobID] > 0)
+								if(isset($_User['tasks_done_parsed']['status'][$SelectCat][$TaskID][$JobID]) && $_User['tasks_done_parsed']['status'][$SelectCat][$TaskID][$JobID] > 0)
 								{
 									$CurrentStatus = prettyNumber($_User['tasks_done_parsed']['status'][$SelectCat][$TaskID][$JobID]);
 									$TotalCount = prettyNumber($_Vars_TasksData[$SelectCat]['tasks'][$TaskID]['jobs'][$JobID][$_Vars_TasksData[$SelectCat]['tasks'][$TaskID]['jobs'][$JobID]['statusField']]);
@@ -326,7 +334,7 @@ include($_EnginePath.'common.php');
 									$ThisTask['Input_FirstToDo'] .= "&#149; {$_Lang['Tab01_CatSel_DoCategory']} {$ThisTask['CreateTaskCatName']}<br/>";
 								}
 							}
-							elseif($ReqData['type'] == 'TASK')
+							else if($ReqData['type'] == 'TASK')
 							{
 								if(!Tasks_IsDone($ReqData['elementID'], $_User))
 								{
@@ -377,6 +385,7 @@ include($_EnginePath.'common.php');
 				$TaskLoop += 1;
 			}
 			
+			$_Lang['Input_CreateTasksList_FurtherRows'] = '';
 			foreach($_Lang['Insert_TasksList'] as $RowIndex => $RowTabs)
 			{
 				if($RowIndex == 1)
@@ -398,11 +407,11 @@ include($_EnginePath.'common.php');
 			}
 			$_Lang['Insert_TaskListRowspan'] = count($_Lang['Insert_TasksList']);
 
-			if($SetActiveTask > $_Lang['SetActiveTask'])
+			if(isset($SetActiveTask) && $SetActiveTask > $_Lang['SetActiveTask'])
 			{
 				$_Lang['SetActiveTask'] = $SetActiveTask;
 			}
-			if($_GET['showtask'] > 0)
+			if(isset($_GET['showtask']) && $_GET['showtask'] > 0)
 			{
 				$_GET['showtask'] = intval($_GET['showtask']);
 				if(!empty($_Vars_TasksData[$SelectCat]['tasks'][$_GET['showtask']]))
@@ -423,7 +432,8 @@ include($_EnginePath.'common.php');
 				$PageTPL = gettemplate('tasks_list_showcats_list_done');
 			}
 			$TaskCatTPL = gettemplate('tasks_list_showcats_list_cattab');
-
+			
+			$_Lang['Input_CreateTaskCatsList'] = '';
 			foreach($_Vars_TasksData as $TaskCat => $TaskCatData)
 			{
 				$TaskCatData['DoneCount'] = '0';

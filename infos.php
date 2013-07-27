@@ -220,6 +220,7 @@ include($_EnginePath.'common.php');
 	{
 		global $_Lang, $_Vars_CombatData, $TPL_RapidFire_Row;
 		
+		$ResultString = '';
 		foreach($_Vars_CombatData[$BuildID]['sd'] as $ElementID => $Count)
 		{
 			if($Count > 1)
@@ -242,9 +243,10 @@ include($_EnginePath.'common.php');
 	{
 		global $_Lang, $_Vars_CombatData, $TPL_RapidFire_Row;
 		
+		$ResultString = '';
 		foreach($_Vars_CombatData as $ShipID => $Data)
 		{
-			if($Data['sd'][$BuildID] > 1)
+			if(isset($Data['sd'][$BuildID]) && $Data['sd'][$BuildID] > 1)
 			{
 				$Data['sd'][$BuildID] = prettyNumber($Data['sd'][$BuildID]);
 				$ResultString .= parsetemplate($TPL_RapidFire_Row, array
@@ -494,9 +496,16 @@ include($_EnginePath.'common.php');
 			
 			$ThisElement_SpeedCalc = GetFleetMaxSpeed(array(), $BuildID, $_User, true);
 			
-			$ThisElement_EngineTech = $ThisElement_SpeedCalc['info'][$BuildID]['engine']['tech'];
-			
-			$ThisElement_Modifiers_Speed = ($_Vars_TechSpeedModifiers[$ThisElement_EngineTech] * $_User[$_Vars_GameElements[$ThisElement_EngineTech]]);
+			$ThisElement_EngineTech = null;
+			if(isset($ThisElement_SpeedCalc['info'][$BuildID]['engine']['tech']))
+			{
+				$ThisElement_EngineTech = $ThisElement_SpeedCalc['info'][$BuildID]['engine']['tech'];
+			}
+			$ThisElement_Modifiers_Speed = 0;
+			if(!empty($ThisElement_EngineTech))
+			{
+				$ThisElement_Modifiers_Speed = ($_Vars_TechSpeedModifiers[$ThisElement_EngineTech] * $_User[$_Vars_GameElements[$ThisElement_EngineTech]]);
+			}
 			
 			$parse['Insert_Speed_Modifier'] = $ThisElement_Modifiers_Speed * 100;
 			$parse['Insert_Storage_Base'] = prettyNumber($ThisElement_Storage);
@@ -548,7 +557,7 @@ include($_EnginePath.'common.php');
 	if(!isOnVacation($_User))
 	{
 		// Missile Destroy Function
-		if($Show_DestroyMissiles === true)
+		if(isset($Show_DestroyMissiles))
 		{
 			if($_Planet[$_Vars_GameElements[$BuildID]] > 0)
 			{
@@ -623,7 +632,7 @@ include($_EnginePath.'common.php');
 		// Building Destroy Function
 		if($DestroyTPL != '')
 		{
-			if($_Planet[$_Vars_GameElements[$BuildID]] > 0 AND $_Vars_IndestructibleBuildings[$BuildID] != 1)
+			if($_Planet[$_Vars_GameElements[$BuildID]] > 0 && (!isset($_Vars_IndestructibleBuildings[$BuildID]) || $_Vars_IndestructibleBuildings[$BuildID] != 1))
 			{
 				$NeededRessources = GetBuildingPrice($_User, $_Planet, $BuildID, true, true);
 				$DestroyTime = GetBuildingTime($_User, $_Planet, $BuildID) / 2;
