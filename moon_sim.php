@@ -12,7 +12,7 @@ include($_EnginePath.'common.php');
 	$_Lang['HideResult'] = 'style="display: none;"';
 	$_Lang['HideError'] = 'style="display: none;"';
 
-	if($_POST['simulate'] == 'yes')
+	if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
 	{ 
 		$_Lang['Input_RawDiameter'] = $_POST['diameter'];
 		$_Lang['Input_RawShipCount'] = $_POST['ship_count'];

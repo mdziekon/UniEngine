@@ -8,8 +8,14 @@ include($_EnginePath.'common.php');
 	loggedCheck();
 
 	includeLang('rocket_simulator');
-
-	if($_POST['simulate'] == 'yes')
+	
+	$DefTech = null;
+	$AtkTech = null;
+	$IPMissilesOrg = null;
+	$ICMissiles = null;
+	$Target = 0;
+	
+	if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
 	{
 		$FatalError = false;
 		$TotalDefsCount = 0;
@@ -204,7 +210,7 @@ include($_EnginePath.'common.php');
 	$_Lang['DefTech']= $_Lang['tech'][111];
 	$_Lang['AtkTech']= $_Lang['tech'][109];
 
-	$PrepareTargetList .= '<option value="0">'.$_Lang['Everythink'].'</option>';
+	$PrepareTargetList = '<option value="0">'.$_Lang['Everythink'].'</option>';
 
 	if($DefTech > 0)
 	{
@@ -223,14 +229,21 @@ include($_EnginePath.'common.php');
 		$_Lang['SetICM'] = $ICMissiles;
 	}
 
+	$_Lang['DefenceRows'] = '';
 	foreach($_Vars_GameElements as $ID => $DBName)
 	{
 		if(!empty($DBName))
 		{
 			if($ID > 400 AND $ID < 500 AND !empty($_Lang['tech'][$ID]))
 			{
-				$_Lang['DefenceRows'] .= '<tr><th class="leftAl">'.$_Lang['tech'][$ID].':</th><th class="leftAl"><input '.($PlanetDefSys[$ID] > 0 ? 'value="'.$PlanetDefSys[$ID].'"' : '').' name="def[sys]['.$ID.']" type="text"/> '.(($Attack['Destroyed'][$ID] > 0) ? ('<span style="padding-left: 10px;">-'.prettyNumber($Attack['Destroyed'][$ID]).'</span>') : '').'</th>';
-				if($TargetSel !== true)
+				$ThisRow_InsertValue = null;
+				if(isset($PlanetDefSys[$ID]) && $PlanetDefSys[$ID] > 0)
+				{
+					$ThisRow_InsertValue = ' value="'.$PlanetDefSys[$ID].'"';
+				}
+				
+				$_Lang['DefenceRows'] .= '<tr><th class="leftAl">'.$_Lang['tech'][$ID].':</th><th class="leftAl"><input '.$ThisRow_InsertValue.' name="def[sys]['.$ID.']" type="text"/> '.((isset($Attack['Destroyed'][$ID]) && $Attack['Destroyed'][$ID] > 0) ? ('<span style="padding-left: 10px;">-'.prettyNumber($Attack['Destroyed'][$ID]).'</span>') : '').'</th>';
+				if(!isset($TargetSel))
 				{
 					$_Lang['DefenceRows'] .= '<th class="leftAl">'.$_Lang['MainTarget'].'</th><th class="leftAl"><select name="atk[target]">{$PrepareTargetList}</select></th>';
 					$TargetSel = true;

@@ -21,28 +21,34 @@ include($_EnginePath.'common.php');
 	$Parse = $_Lang;
 	$PageTPL = gettemplate('report');
 
-	if($_POST['mode'] == 'send_report')
+	if(isset($_POST['mode']) && $_POST['mode'] == 'send_report')
 	{
 		$Sent = false;
 
-		if(!in_array($_POST['type'], $AllowedTypes))
+		if(!isset($_POST['type']) || !in_array($_POST['type'], $AllowedTypes))
 		{
 			$ShowMSG = $_Lang['Error_badtype']; 
 		}
 		else
 		{
 			$ReportType = $_POST['type'];
-
+			
+			if($ReportType != 1 && $ReportType != 9)
+			{
+				$Parse['Input_HideType1'] = ' disabled';
+				$Parse['select_type_'.$AllowedTypes[0]] = '';
+			}
+			
 			$UserID = '0';
 			$IsUsernameNeeded = in_array($ReportType, $NeedUsername);
 			
-			if(!empty($_POST['reported_username']) OR $IsUsernameNeeded)
+			if(!empty($_POST['reported_username']) || $IsUsernameNeeded)
 			{
 				if($IsUsernameNeeded)
 				{
 					$AllowGo = false;
 				}
-				if($IsUsernameNeeded AND empty($_POST['reported_username']))
+				if($IsUsernameNeeded && empty($_POST['reported_username']))
 				{
 					$ShowMSG = $_Lang['Error_nousername'];
 				}
@@ -98,14 +104,15 @@ include($_EnginePath.'common.php');
 							$ElementID = '0';
 						}
 
-						$QrySendReport .= "INSERT INTO {{table}} SET ";
-						$QrySendReport .= "`date` = UNIX_TIMESTAMP(), ";
-						$QrySendReport .= "`sender_id` = {$_User['id']}, ";
-						$QrySendReport .= "`report_type` = ".($TypesFlip[$ReportType] + 1).", ";
-						$QrySendReport .= "`report_element` = {$ElementID}, ";
-						$QrySendReport .= "`report_user` = {$UserID}, ";
-						$QrySendReport .= "`user_info` = '".trim(mysql_real_escape_string(strip_tags(stripslashes($_POST['user_info']))))."';";
-						doquery($QrySendReport, 'reports');
+						$Query_SendReport = '';
+						$Query_SendReport .= "INSERT INTO {{table}} SET ";
+						$Query_SendReport .= "`date` = UNIX_TIMESTAMP(), ";
+						$Query_SendReport .= "`sender_id` = {$_User['id']}, ";
+						$Query_SendReport .= "`report_type` = ".($TypesFlip[$ReportType] + 1).", ";
+						$Query_SendReport .= "`report_element` = {$ElementID}, ";
+						$Query_SendReport .= "`report_user` = {$UserID}, ";
+						$Query_SendReport .= "`user_info` = '".trim(mysql_real_escape_string(strip_tags(stripslashes($_POST['user_info']))))."';";
+						doquery($Query_SendReport, 'reports');
 
 						$Sent = true;
 					}
@@ -141,6 +148,7 @@ include($_EnginePath.'common.php');
 				$Parse['get_uid'] = $SelectUIDData['username'];
 			}
 		}
+		$Type = 0;
 		if(!empty($_GET['type']))
 		{
 			$Type = intval($_GET['type']);
@@ -151,7 +159,7 @@ include($_EnginePath.'common.php');
 			$Parse['post_user_info'] = $_GET['info'];
 		}
 
-		if(($Type != 1 AND $Type != 9) OR $Parse['get_eid'] <= 0)
+		if(($Type != 1 && $Type != 9) || $Parse['get_eid'] <= 0)
 		{
 			$Parse['Input_HideType1'] = ' disabled';
 			$Parse['select_type_'.$AllowedTypes[0]] = '';

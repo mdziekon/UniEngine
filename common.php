@@ -460,6 +460,7 @@ if(isLogged())
 				$SelectObligatoryPolls = doquery($Query_SelectPolls, 'polls');
 				if(mysql_num_rows($SelectObligatoryPolls) > 0)
 				{
+					$PollsCount = 0;
 					while($SelectObligatoryPollsData = mysql_fetch_assoc($SelectObligatoryPolls))
 					{
 						if($SelectObligatoryPollsData['vote_id'] <= 0)

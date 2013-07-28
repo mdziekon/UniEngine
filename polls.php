@@ -14,9 +14,10 @@ include($_EnginePath.'common.php');
 	
 	$_BackLink = 'polls.php';
 	
-	$PollID = intval($_GET['pid']);
+	$PollID = (isset($_GET['pid']) ? intval($_GET['pid']) : 0);
 	if($PollID > 0)
 	{
+		$Query_PollData = '';
 		$Query_PollData .= "SELECT `poll`.*, `votes`.`id` AS `vote_id`, `votes`.`answer` ";
 		$Query_PollData .= "FROM {{table}} AS `poll` ";
 		$Query_PollData .= "LEFT JOIN `{{prefix}}poll_votes` AS `votes` ON `votes`.`poll_id` = `poll`.`id` AND `votes`.`user_id` = {$_User['id']} ";
@@ -46,14 +47,14 @@ include($_EnginePath.'common.php');
 			message($_Lang['Error_NoAnswers'], $_Lang['Title'], $_BackLink, 3);
 		}
 		
-		if($_POST['send'] == 1)
+		if(isset($_POST['send']) && $_POST['send'] == 1)
 		{
 			$_BackLink = 'polls.php?pid='.$PollID;
 			if($SelectPoll['open'] != 1)
 			{
 				message($_Lang['Poll_is_closed'], $_Lang['Title'], $_BackLink, 3);
 			}
-			if($_POST['vote'] != null)
+			if(isset($_POST['vote']) && $_POST['vote'] != null)
 			{
 				if($SelectPoll['Opt_Multivote'] == 0)
 				{
@@ -101,6 +102,8 @@ include($_EnginePath.'common.php');
 		else
 		{
 			$IsOpen = ($SelectPoll['open'] == 1 ? true : false);
+			$AllVotes = 0;
+			
 			if($SelectPoll['show_results'] == 1 OR CheckAuth('supportadmin'))
 			{
 				$ShowResult = true;
@@ -108,6 +111,7 @@ include($_EnginePath.'common.php');
 				if(CheckAuth('supportadmin'))
 				{
 					$TPL_Voting_Username = gettemplate('polls_voting_username');
+					$Query_GetVotes = '';
 					$Query_GetVotes .= "SELECT `votes`.`answer`, `votes`.`user_id` AS `uid`, `users`.`username` ";
 					$Query_GetVotes .= "FROM {{table}} AS `votes` ";
 					$Query_GetVotes .= "LEFT JOIN `{{prefix}}users` AS `users` ON `votes`.`user_id` = `users`.`id` ";
@@ -118,6 +122,10 @@ include($_EnginePath.'common.php');
 						$Votes['answer'] = explode(',', $Votes['answer']);
 						foreach($Votes['answer'] as $ThisAnswer)
 						{
+							if(!isset($Results[$ThisAnswer]))
+							{
+								$Results[$ThisAnswer] = 0;
+							}
 							$Results[$ThisAnswer] += 1;
 							$AllVotes += 1;
 							if(empty($Votes['username']))
@@ -130,6 +138,7 @@ include($_EnginePath.'common.php');
 				}
 				else
 				{
+					$Query_GetVotes = '';
 					$Query_GetVotes .= "SELECT `answer`, COUNT(*) AS `Count` ";
 					$Query_GetVotes .= "FROM {{table}} ";
 					$Query_GetVotes .= "WHERE `poll_id` = {$PollID} ";
@@ -141,6 +150,10 @@ include($_EnginePath.'common.php');
 					{
 						while($Votes = mysql_fetch_assoc($SelectVotes))
 						{
+							if(!isset($Results[$Votes['answer']]))
+							{
+								$Results[$Votes['answer']] = 0;
+							}
 							$Results[$Votes['answer']] += $Votes['Count'];
 							$AllVotes += $Votes['Count'];
 						}
@@ -152,6 +165,10 @@ include($_EnginePath.'common.php');
 							$Votes['answer'] = explode(',', $Votes['answer']);
 							foreach($Votes['answer'] as $ThisAnswer)
 							{
+								if(!isset($Results[$ThisAnswer]))
+								{
+									$Results[$ThisAnswer] = 0;
+								}
 								$Results[$ThisAnswer] += $Votes['Count'];
 								$AllVotes += $Votes['Count'];
 							}
@@ -205,8 +222,8 @@ include($_EnginePath.'common.php');
 				$VotingResult = '';
 				if($ShowResult === true)
 				{
-					$ThisValue['voteResult_Count'] = ($Results[$Key] > 0 ? $Results[$Key] : '0');
-					$ThisValue['voteResult_Percent'] = (($AllVotes > 0) ? round(($Results[$Key]/$AllVotes) * 100, 1) : '0');					
+					$ThisValue['voteResult_Count'] = (isset($Results[$Key]) && $Results[$Key] > 0 ? $Results[$Key] : '0');
+					$ThisValue['voteResult_Percent'] = ((isset($Results[$Key]) && $AllVotes > 0) ? round(($Results[$Key] / $AllVotes) * 100, 1) : '0');					
 					if($SelectPoll['vote_id'] > 0 AND in_array($Key, $SelectPoll['userAnswers']))
 					{
 						$ThisValue['voteResult_Color'] = 'orange';
@@ -245,6 +262,7 @@ include($_EnginePath.'common.php');
 	}
 	else
 	{
+		$Query_GetPolls = '';
 		$Query_GetPolls .= "SELECT `poll`.`id`, `poll`.`name`, `poll`.`time`, `poll`.`open`, `poll`.`show_results`, `poll`.`obligatory`, `votes`.`id` AS `vote_id` ";
 		$Query_GetPolls .= "FROM `{{table}}` AS `poll` ";
 		$Query_GetPolls .= "LEFT JOIN `{{prefix}}poll_votes` AS `votes` ON `votes`.`poll_id` = `poll`.`id` AND `votes`.`user_id` = {$_User['id']} ";

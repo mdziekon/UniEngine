@@ -50,7 +50,7 @@ include($_EnginePath.'common.php');
 
 	$parse['ShowError'] = 'display: none;';
 
-	if($_GET['cmd'] == 'rmv')
+	if(isset($_GET['cmd']) && $_GET['cmd'] == 'rmv')
 	{
 		if($Validating === true AND ($IsInValidationProcess['status'] == 0 OR $IsInValidationProcess['status'] == 1))
 		{
@@ -117,17 +117,17 @@ include($_EnginePath.'common.php');
 		}
 	}
 
-	if($_POST['mode'] == 'addit')
+	if(isset($_POST['mode']) && $_POST['mode'] == 'addit')
 	{
 		if($_User['multi_validated'] !== 1)
 		{
-			if($Validating === false OR $IsInValidationProcess['status'] == -1)
-			{ 
+			if($Validating === false || (isset($IsInValidationProcess['status']) && $IsInValidationProcess['status'] == -1))
+			{
 				if(empty($_POST['userslist']))
 				{
 					message($_Lang['Error_Empty_Userlist'], $_Lang['Title'], 'declaration.php', 3);
 				}
-				if($_POST['declaration_type'] <= 0)
+				if(!isset($_POST['declaration_type']) || $_POST['declaration_type'] <= 0)
 				{
 					message($_Lang['Error_Type_NotSelected'], $_Lang['Title'], 'declaration.php', 3);
 				}
@@ -243,9 +243,9 @@ include($_EnginePath.'common.php');
 		}
 	}
 
-	if($Validating === false OR $IsInValidationProcess['status'] == -1)
+	if($Validating === false || $IsInValidationProcess['status'] == -1)
 	{
-		if($IsInValidationProcess['status'] == -1 AND empty($BadUsernames))
+		if(isset($IsInValidationProcess['status']) && $IsInValidationProcess['status'] == -1 && empty($BadUsernames))
 		{
 			$parse['ShowError'] = '';
 			if($IsDeclarationOwner === false)
@@ -259,8 +259,11 @@ include($_EnginePath.'common.php');
 			$parse['ErrorColor'] = 'orange';
 		}
 
-		$parse['InsertUserslist'] = $_POST['userslist'];
-		$parse['InsertType_'.$_POST['declaration_type']] = 'checked';
+		$parse['InsertUserslist'] = (isset($_POST['userslist']) ? $_POST['userslist'] : null);
+		if(isset($_POST['declaration_type']))
+		{
+			$parse['InsertType_'.$_POST['declaration_type']] = 'checked';
+		}
 
 		$Page = parsetemplate($PageTpl, $parse);
 	}

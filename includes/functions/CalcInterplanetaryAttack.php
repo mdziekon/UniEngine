@@ -102,6 +102,10 @@ function CalcInterplanetaryAttack($TargetDefTech, $AttackerMiliTech, $IPMissiles
 			}
 			else
 			{
+				if(!isset($Destroyed[$ID]))
+				{
+					$Destroyed[$ID] = 0;
+				}
 				$TempMissiles = floor($Missiles / $Missiles4EnoughForce);
 				$Destroyed[$ID] += floor($DefsPerSqMeter[$ID] * $MissileRange * $TempMissiles);
 				$UsedMissiles = $Missiles;
@@ -114,31 +118,38 @@ function CalcInterplanetaryAttack($TargetDefTech, $AttackerMiliTech, $IPMissiles
 			break;
 		}
 	} 
-
+	
+	$DestroyedTotal = 0;
+	$Metal = 0;
+	$Crystal = 0;
+	$Deuterium = 0;
+	
 	foreach($DefSystemsPlanet as $ID => $Count)
 	{
-		if($Destroyed[$ID] > $Count)
+		$ThisDef_Destroyed = (isset($Destroyed[$ID]) ? $Destroyed[$ID] : 0);
+		if($ThisDef_Destroyed > $Count)
 		{
+			$ThisDef_Destroyed = $Count;
 			$Destroyed[$ID] = $Count;
 		}
-		$LeftDefs[$ID] = $Count - $Destroyed[$ID];
-		$DestroyedTotal += $Destroyed[$ID];
-		$Metal += $Destroyed[$ID] * $_Vars_Prices[$ID]['metal'];
-		$Crystal += $Destroyed[$ID] * $_Vars_Prices[$ID]['crystal'];
-		$Deuterium += $Destroyed[$ID] * $_Vars_Prices[$ID]['deuterium'];
+		$LeftDefs[$ID] = $Count - $ThisDef_Destroyed;
+		$DestroyedTotal += $ThisDef_Destroyed;
+		$Metal			+= $ThisDef_Destroyed * $_Vars_Prices[$ID]['metal'];
+		$Crystal		+= $ThisDef_Destroyed * $_Vars_Prices[$ID]['crystal'];
+		$Deuterium		+= $ThisDef_Destroyed * $_Vars_Prices[$ID]['deuterium'];
 	}
 
-	$DebrisField['metal'] += floor($Metal * ($DebrisPercent / 100));
-	$DebrisField['crystal'] += floor($Crystal * ($DebrisPercent / 100));
+	$DebrisField['metal']	= floor($Metal * ($DebrisPercent / 100));
+	$DebrisField['crystal'] = floor($Crystal * ($DebrisPercent / 100));
 
-	$return['LeftDefs'] = $LeftDefs; //How much defence systems left on a Planet
-	$return['Destroyed'] = $Destroyed; //How much defence systems has been lost
-	$return['DestroyedTotal'] = $DestroyedTotal; //How much defence systems has been lost (in one number)
-	$return['Metal_loss'] = $Metal; //How much metal has been lost (for each def sys)
-	$return['Crystal_loss'] = $Crystal; //How much crystal has been lost (for each def sys)
-	$return['Deuterium_loss'] = $Deuterium; //How much deuterium has been lost (for each def sys)
-	$return['IPM_Range'] = $MissileRange; // What is the Range of Missiles
-	$return['Debris'] = $DebrisField; // Create DebrisField
+	$return['LeftDefs']			= $LeftDefs; //How much defence systems left on a Planet
+	$return['Destroyed']		= $Destroyed; //How much defence systems has been lost
+	$return['DestroyedTotal']	= $DestroyedTotal; //How much defence systems has been lost (in one number)
+	$return['Metal_loss']		= $Metal; //How much metal has been lost (for each def sys)
+	$return['Crystal_loss']		= $Crystal; //How much crystal has been lost (for each def sys)
+	$return['Deuterium_loss']	= $Deuterium; //How much deuterium has been lost (for each def sys)
+	$return['IPM_Range']		= $MissileRange; // What is the Range of Missiles
+	$return['Debris']			= $DebrisField; // Create DebrisField
 
 	return $return;
 }

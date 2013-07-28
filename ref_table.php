@@ -11,17 +11,22 @@ include($_EnginePath.'common.php');
 
 	includeLang('reftable');
 	$_Lang['skinpath'] = $_SkinPath;
+	$_Lang['Rows'] = '';
 
-	$RefList = doquery("SELECT `ref`.*, `users`.username FROM {{table}} AS `ref` LEFT JOIN {{prefix}}users AS `users` ON `users`.`id` = `ref`.`newuser_id` WHERE `ref`.`referrer_id` = {$_User['id']};", 'referring_table');
+	$Query_SelectRows = '';
+	$Query_SelectRows .= "SELECT `ref`.*, `users`.username FROM {{table}} AS `ref` ";
+	$Query_SelectRows .= "LEFT JOIN {{prefix}}users AS `users` ON `users`.`id` = `ref`.`newuser_id` ";
+	$Query_SelectRows .= " WHERE `ref`.`referrer_id` = {$_User['id']};";	
+	$Result_SelectRows = doquery($Query_SelectRows, 'referring_table');
 
 	$_Lang['referralLink'] = GAMEURL . 'index.php?r='.$_User['id'];
 	$_Lang['referring_info'] = sprintf($_Lang['referring_info'], (REFERING_PROVISION * 100));
 
-	if(mysql_num_rows($RefList) > 0)
+	if(mysql_num_rows($Result_SelectRows) > 0)
 	{
 		$RowTPL = gettemplate('ref_table_row');
 
-		while($NewUser = mysql_fetch_assoc($RefList))
+		while($NewUser = mysql_fetch_assoc($Result_SelectRows))
 		{
 			if(!empty($NewUser['username']))
 			{
