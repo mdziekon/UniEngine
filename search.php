@@ -39,6 +39,7 @@ include($_EnginePath.'common.php');
 	switch($Type)
 	{
 		case 'playername':
+		{
 			$table = gettemplate('search_user_table');
 			$row = gettemplate('search_user_row');
 			$NeedenFields = "`ally`.`ally_name`, `planet`.`name`, `stat`.`total_rank` AS `rank`";
@@ -51,7 +52,9 @@ include($_EnginePath.'common.php');
 			$Query_Table = 'users';
 			$Search_CheckRegExp = REGEXP_USERNAME;
 			break;
+		}
 		case 'allytag':
+		{
 			$table = gettemplate('search_ally_table');
 			$row = gettemplate('search_ally_row');
 			$NeedenFields = "`stat`.`total_points` AS `ally_points`";
@@ -62,7 +65,9 @@ include($_EnginePath.'common.php');
 			$Query_Table = 'alliance';
 			$Search_CheckRegExp = REGEXP_ALLYNAMEANDTAG;
 			break;
+		}
 		case 'allyname':
+		{
 			$table = gettemplate('search_ally_table');
 			$row = gettemplate('search_ally_row');
 			$NeedenFields = "`stat`.`total_points` AS `ally_points`";
@@ -73,6 +78,7 @@ include($_EnginePath.'common.php');
 			$Query_Table = 'alliance';
 			$Search_CheckRegExp = REGEXP_ALLYNAMEANDTAG;
 			break;
+		}
 	}
 
 	$Results = null;
@@ -103,9 +109,12 @@ include($_EnginePath.'common.php');
 							$RowData['username'] .= ' <acronym style="cursor: pointer;" title="'.$_Lang['Old_username_is'].': '.$RowData['old_username'].'">(?)</acronym>';
 						}
 						$RowData['ally_name'] = ($RowData['ally_id'] > 0 ? "<a href=\"alliance.php?mode=ainfo&a={$RowData['ally_id']}\">{$RowData['ally_name']}</a>" : '&nbsp;');
-						if($RowData['rank'] > 0){
+						if($RowData['rank'] > 0)
+						{
 							$RowData['position'] = "<a href=\"stats.php?start={$RowData['rank']}\">{$RowData['rank']}</a>";
-						} else {
+						}
+						else
+						{
 							$RowData['position'] = $NotCounted;
 						}
 						$RowData['skinpath'] = $_SkinPath;
