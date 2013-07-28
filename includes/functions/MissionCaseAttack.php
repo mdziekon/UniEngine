@@ -60,6 +60,8 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 		$CurrentUserID = $FleetRow['fleet_owner'];
 		$DefendersIDs[] = $TargetUser['id'];
 		$AttackersIDs[] = $FleetRow['fleet_owner'];
+		$AttackingFleets = array();
+		$DefendingFleets = array();
 		
 		$DefendingTechs[0] = array
 		(
@@ -358,7 +360,21 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 		// Get the calculations time
 		$EndTime = microtime(true);
 		$totaltime = sprintf('%0.6f', $EndTime - $StartTime);
-
+		
+		$RealDebrisMetalAtk = 0;
+		$RealDebrisCrystalAtk = 0;
+		$RealDebrisDeuteriumAtk = 0;
+		$RealDebrisMetalDef = 0;
+		$RealDebrisCrystalDef = 0;
+		$RealDebrisDeuteriumDef = 0;
+		$TotalMoonChance = 0;
+		$TotalLostMetal = 0;
+		$TotalLostCrystal = 0;
+		$DebrisMetalDef = 0;
+		$DebrisCrystalDef = 0;
+		
+		$MoonHasBeenCreated = false;
+		
 		$RoundsData		= $Combat['rounds'];
 		$Result			= $Combat['result'];
 		$AtkShips		= $Combat['AttackerShips'];
@@ -378,10 +394,14 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 				$QryUpdateFleets[0]['mess'] = '1';
 				if($Count > 0)
 				{
+					if(!isset($QryUpdateFleets[0]['count']))
+					{
+						$QryUpdateFleets[0]['count'] = 0;
+					}
 					$QryUpdateFleets[0]['array'][] = "{$ID},{$Count}";
 					$QryUpdateFleets[0]['count'] += $Count;
 				}
-				if($Result === COMBAT_ATK AND $_Vars_Prices[$ID]['cantPillage'] !== true)
+				if($Result === COMBAT_ATK && (!isset($_Vars_Prices[$ID]['cantPillage']) || $_Vars_Prices[$ID]['cantPillage'] !== true))
 				{
 					$FleetStorage += $_Vars_Prices[$ID]['capacity'] * $Count;
 				}
@@ -523,17 +543,17 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 					if($StolenMet > 0)
 					{
 						$UserDev_UpFl[$FleetRow['fleet_id']][] = 'M,'.$StolenMet;
-						$TriggerTasksCheck['BATTLE_COLLECT_METAL'] += $StolenMet;
+						$TriggerTasksCheck['BATTLE_COLLECT_METAL'] = $StolenMet;
 					}
 					if($StolenCry > 0)
 					{
 						$UserDev_UpFl[$FleetRow['fleet_id']][] = 'C,'.$StolenCry;
-						$TriggerTasksCheck['BATTLE_COLLECT_CRYSTAL'] += $StolenCry;
+						$TriggerTasksCheck['BATTLE_COLLECT_CRYSTAL'] = $StolenCry;
 					}
 					if($StolenDeu > 0)
 					{
 						$UserDev_UpFl[$FleetRow['fleet_id']][] = 'D,'.$StolenDeu;
-						$TriggerTasksCheck['BATTLE_COLLECT_DEUTERIUM'] += $StolenDeu;
+						$TriggerTasksCheck['BATTLE_COLLECT_DEUTERIUM'] = $StolenDeu;
 					}
 
 					$QryUpdateFleets[0]['metal'] = $StolenMet;
@@ -619,6 +639,10 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 								$ThisCount = $Count;
 								if($Count > 0)
 								{
+									if(!isset($QryUpdateFleets[$i]['count']))
+									{
+										$QryUpdateFleets[$i]['count'] = 0;
+									}
 									$QryUpdateFleets[$i]['array'][] = "{$ID},{$Count}";
 									$QryUpdateFleets[$i]['count'] += $Count;
 								}
@@ -730,6 +754,18 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 						$CachePointer['fleet_array'] = $Data['array'];
 						$CachePointer['fleet_amount'] = $Data['count'];
 						$CachePointer['fleet_mess'] = $Data['mess'];
+						if(!isset($CachePointer['fleet_resource_metal']))
+						{
+							$CachePointer['fleet_resource_metal'] = 0;
+						}
+						if(!isset($CachePointer['fleet_resource_crystal']))
+						{
+							$CachePointer['fleet_resource_crystal'] = 0;
+						}
+						if(!isset($CachePointer['fleet_resource_deuterium']))
+						{
+							$CachePointer['fleet_resource_deuterium'] = 0;
+						}
 						$CachePointer['fleet_resource_metal'] += $Data['metal'];
 						$CachePointer['fleet_resource_crystal'] += $Data['crystal'];
 						$CachePointer['fleet_resource_deuterium'] += $Data['deuterium'];
@@ -861,7 +897,7 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 		}
 
 		// Create debris field on the orbit
-		if($TotalLostMetal > 0 OR $TotalLostCrystal > 0)
+		if($TotalLostMetal > 0 || $TotalLostCrystal > 0)
 		{
 			if($TotalLostCrystal == 0)
 			{
@@ -884,6 +920,15 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 				
 			if($_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']] > 0)
 			{
+				if(!isset($_FleetCache['galaxy'][$_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']]]['metal']))
+				{
+					$_FleetCache['galaxy'][$_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']]]['metal'] = 0;
+				}
+				if(!isset($_FleetCache['galaxy'][$_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']]]['crystal']))
+				{
+					$_FleetCache['galaxy'][$_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']]]['crystal'] = 0;
+				}
+				
 				$_FleetCache['galaxy'][$_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']]]['metal'] += $TotalLostMetal;
 				$_FleetCache['galaxy'][$_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']]]['crystal'] += $TotalLostCrystal;
 				$_FleetCache['galaxy'][$_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']]]['updated'] = true;
@@ -891,6 +936,7 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 			}
 			else
 			{
+				$Query_UpdateGalaxy = '';
 				$Query_UpdateGalaxy .= "UPDATE {{table}} SET `metal` = `metal` + {$TotalLostMetal}, `crystal` = `crystal` + {$TotalLostCrystal} ";
 				$Query_UpdateGalaxy .= "WHERE `{$Query_UpdateGalaxy_SearchField}` = {$FleetRow['fleet_end_id']} LIMIT 1; ";
 				$Query_UpdateGalaxy .= "-- MISSION ATTACK [Q02][FID: {$FleetRow['fleet_id']}]";					
@@ -1189,6 +1235,14 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 			{
 				if(!empty($ShotDown['atk']['d'][0]))
 				{
+					if(!isset($TriggerTasksCheck['BATTLE_DESTROY_MILITARYUNITS']))
+					{
+						$TriggerTasksCheck['BATTLE_DESTROY_MILITARYUNITS'] = 0;
+					}
+					if(!isset($TriggerTasksCheck['BATTLE_DESTROY_MOREEXPENSIVEFLEET_SOLO']))
+					{
+						$TriggerTasksCheck['BATTLE_DESTROY_MOREEXPENSIVEFLEET_SOLO'] = 0;
+					}
 					foreach($ShotDown['atk']['d'][0] as $ShipID => $ShipCount)
 					{
 						$TriggerTasksCheck['BATTLE_DESTROY_MOREEXPENSIVEFLEET_SOLO'] += (($_Vars_Prices[$ShipID]['metal'] + $_Vars_Prices[$ShipID]['crystal'] + $_Vars_Prices[$ShipID]['deuterium']) * $ShipCount);					
@@ -1261,7 +1315,7 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 			prettyNumber($RealDebrisMetalAtk + $RealDebrisCrystalAtk + $RealDebrisDeuteriumAtk),
 			prettyNumber($RealDebrisCrystalDef + $RealDebrisMetalDef + $RealDebrisDeuteriumDef), 
 			prettyNumber($StolenMet), prettyNumber($StolenCry), prettyNumber($StolenDeu),
-			prettyNumber($TotalLostMetal), prettyNumber($TotalLostCrystal),
+			prettyNumber(isset($TotalLostMetal) ? $TotalLostMetal : 0), prettyNumber(isset($TotalLostCrystal) ? $TotalLostCrystal : 0), 
 			$ReportHasHLinkRelative, $ReportHasHLinkReal
 		);
 		$Message = json_encode($Message);
@@ -1281,7 +1335,7 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 			}
 			else
 			{
-				if(count($DefSysLostIDs) == 1)
+				if(!isset($DefSysLostIDs) || count($DefSysLostIDs) == 1)
 				{
 					$RebuildReport = $_Lang['no_loses_in_defence'];
 				}
@@ -1325,7 +1379,7 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 				$ThisTaskUser['id'] = $FleetRow['fleet_owner'];
 			}
 			
-			if($TriggerTasksCheck['BATTLE_WIN'])
+			if(isset($TriggerTasksCheck['BATTLE_WIN']))
 			{
 				Tasks_TriggerTask($ThisTaskUser, 'BATTLE_WIN', array
 				(
@@ -1335,7 +1389,7 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 					}
 				));
 			}
-			if($TriggerTasksCheck['BATTLE_WINORDRAW_SOLO_TOTALLIMIT'] AND $TotalMoonChance > 0)
+			if(isset($TriggerTasksCheck['BATTLE_WINORDRAW_SOLO_TOTALLIMIT']) && $TotalMoonChance > 0)
 			{
 				Tasks_TriggerTask($ThisTaskUser, 'BATTLE_WINORDRAW_SOLO_TOTALLIMIT', array
 				(
@@ -1345,10 +1399,10 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 					}
 				));
 			}
-			if($TriggerTasksCheck['BATTLE_WINORDRAW_SOLO_LIMIT'] OR $TriggerTasksCheck['BATTLE_WINORDRAW_LIMIT'])
+			if(isset($TriggerTasksCheck['BATTLE_WINORDRAW_SOLO_LIMIT']) || isset($TriggerTasksCheck['BATTLE_WINORDRAW_LIMIT']))
 			{
 				$Debris_Total_Def = ($DebrisMetalDef + $DebrisCrystalDef) / COMBAT_MOONPERCENT_RESOURCES;
-				if($TriggerTasksCheck['BATTLE_WINORDRAW_SOLO_LIMIT'])
+				if(isset($TriggerTasksCheck['BATTLE_WINORDRAW_SOLO_LIMIT']))
 				{
 					Tasks_TriggerTask($ThisTaskUser, 'BATTLE_WINORDRAW_SOLO_LIMIT', array
 					(
@@ -1362,7 +1416,7 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 						}
 					));
 				}
-				if($TriggerTasksCheck['BATTLE_WINORDRAW_LIMIT'])
+				if(isset($TriggerTasksCheck['BATTLE_WINORDRAW_LIMIT']))
 				{
 					Tasks_TriggerTask($ThisTaskUser, 'BATTLE_WINORDRAW_LIMIT', array
 					(
@@ -1377,7 +1431,7 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 					));
 				}
 			}
-			if($TriggerTasksCheck['BATTLE_COLLECT_METAL'] > 0)
+			if(isset($TriggerTasksCheck['BATTLE_COLLECT_METAL']) && $TriggerTasksCheck['BATTLE_COLLECT_METAL'] > 0)
 			{
 				$TaskTemp = $TriggerTasksCheck['BATTLE_COLLECT_METAL'];
 				Tasks_TriggerTask($ThisTaskUser, 'BATTLE_COLLECT_METAL', array
@@ -1388,7 +1442,7 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 					}
 				));
 			}
-			if($TriggerTasksCheck['BATTLE_COLLECT_CRYSTAL'] > 0)
+			if(isset($TriggerTasksCheck['BATTLE_COLLECT_CRYSTAL']) && $TriggerTasksCheck['BATTLE_COLLECT_CRYSTAL'] > 0)
 			{
 				$TaskTemp = $TriggerTasksCheck['BATTLE_COLLECT_CRYSTAL'];
 				Tasks_TriggerTask($ThisTaskUser, 'BATTLE_COLLECT_CRYSTAL', array
@@ -1399,7 +1453,7 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 					}
 				));
 			}
-			if($TriggerTasksCheck['BATTLE_COLLECT_DEUTERIUM'] > 0)
+			if(isset($TriggerTasksCheck['BATTLE_COLLECT_DEUTERIUM']) && $TriggerTasksCheck['BATTLE_COLLECT_DEUTERIUM'] > 0)
 			{
 				$TaskTemp = $TriggerTasksCheck['BATTLE_COLLECT_DEUTERIUM'];
 				Tasks_TriggerTask($ThisTaskUser, 'BATTLE_COLLECT_DEUTERIUM', array
@@ -1410,7 +1464,7 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 					}
 				));
 			}
-			if($TriggerTasksCheck['CREATE_MOON'])
+			if(isset($TriggerTasksCheck['CREATE_MOON']))
 			{
 				Tasks_TriggerTask($ThisTaskUser, 'CREATE_MOON', array
 				(
@@ -1420,7 +1474,7 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 					}
 				));
 			}
-			if($TriggerTasksCheck['CREATE_MOON_FRIENDLY'])
+			if(isset($TriggerTasksCheck['CREATE_MOON_FRIENDLY']))
 			{
 				Tasks_TriggerTask($ThisTaskUser, 'CREATE_MOON_FRIENDLY', array
 				(
@@ -1430,7 +1484,7 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 					}
 				));
 			}
-			if($TriggerTasksCheck['BATTLE_DESTROY_MILITARYUNITS'] > 0)
+			if(isset($TriggerTasksCheck['BATTLE_DESTROY_MILITARYUNITS']) && $TriggerTasksCheck['BATTLE_DESTROY_MILITARYUNITS'] > 0)
 			{
 				$TaskTemp = $TriggerTasksCheck['BATTLE_DESTROY_MILITARYUNITS'];
 				Tasks_TriggerTask($ThisTaskUser, 'BATTLE_DESTROY_MILITARYUNITS', array
@@ -1441,8 +1495,9 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 					}
 				));
 			}
-			if($TriggerTasksCheck['BATTLE_DESTROY_MOREEXPENSIVEFLEET_SOLO'] > 0)
+			if(isset($TriggerTasksCheck['BATTLE_DESTROY_MOREEXPENSIVEFLEET_SOLO']) && $TriggerTasksCheck['BATTLE_DESTROY_MOREEXPENSIVEFLEET_SOLO'] > 0)
 			{
+				$TaskTemp2 = 0;
 				foreach($AttackingFleets[0] as $ShipID => $ShipCount)
 				{
 					$TaskTemp2 += (($_Vars_Prices[$ShipID]['metal'] + $_Vars_Prices[$ShipID]['crystal'] + $_Vars_Prices[$ShipID]['deuterium']) * $ShipCount);
@@ -1467,7 +1522,7 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 		}
 	}
 
-	if($FleetRow['calcType'] == 3 AND $_FleetCache['fleetRowStatus'][$FleetRow['fleet_id']]['isDestroyed'] !== true)
+	if($FleetRow['calcType'] == 3 && (!isset($_FleetCache['fleetRowStatus'][$FleetRow['fleet_id']]['isDestroyed']) || $_FleetCache['fleetRowStatus'][$FleetRow['fleet_id']]['isDestroyed'] !== true))
 	{
 		if(!empty($_FleetCache['fleetRowUpdate'][$FleetRow['fleet_id']]))
 		{

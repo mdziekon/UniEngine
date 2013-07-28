@@ -32,6 +32,7 @@ include($_EnginePath.'common.php');
 	$ShipRowTPL		= str_replace(array('fl_fleetspeed', 'fl_selmax', 'fl_selnone'), array($_Lang['fl_fleetspeed'], $_Lang['fl_selmax'], $_Lang['fl_selnone']), $ShipRowTPL);
 	
 	$_Lang['ShipsRow'] = '';
+	$_Lang['FlyingFleetsRows'] = '';
 	$InsertChronoApplets = '';
 	
 	$Hide			= ' class="hide"';
@@ -211,6 +212,7 @@ include($_EnginePath.'common.php');
 			$AdditionalFleetsCount = 0;
 
 			$FleetRow = array();
+			$FleetRow['FleetDetails'] = '';
 
 			$i += 1;
 			$FleetRow['FleetNo'] = $i;
@@ -331,6 +333,7 @@ include($_EnginePath.'common.php');
 	while($f = mysql_fetch_assoc($Result_GetFleets))
 	{
 		$FleetRow = array();
+		$FleetRow['FleetDetails'] = '';
 		$AdditionalFleets = array();
 		$AdditionalFleetsCount = 0;
 		$Orders = '';
@@ -341,7 +344,7 @@ include($_EnginePath.'common.php');
 		{
 			$FleetRow['FleetMissionColor']= 'orange';
 		}
-		if($ChangeMission[$f['fleet_id']] === TRUE)
+		if(isset($ChangeMission[$f['fleet_id']]))
 		{
 			$f['fleet_mission'] = 2;
 		}
@@ -382,7 +385,7 @@ include($_EnginePath.'common.php');
 			$FleetRow['FleetBehaviourTxt'] = $_Lang['fl_get_to'];
 		}
 
-		if($ChangeMission[$f['fleet_id']] === TRUE)
+		if(isset($ChangeMission[$f['fleet_id']]))
 		{
 			$f['fleet_mission'] = 1;
 		} 
@@ -538,7 +541,7 @@ include($_EnginePath.'common.php');
 				$Orders = '&nbsp;';
 			}
 		}
-		if($FleetRow['AllowRetreat'] === true)
+		if(isset($FleetRow['AllowRetreat']) && $FleetRow['AllowRetreat'] === true)
 		{
 			if($FleetRow['RetreatType'] == 1 AND $FleetTargetIn > 0)
 			{
@@ -562,7 +565,7 @@ include($_EnginePath.'common.php');
 	$_Lang['P_HideNoFreeSlots'] = $Hide;	
 	if($i == 0)
 	{
-		$_Lang['FlyingFleetsRows']= '<tr><th colspan="8">-</th></tr>';
+		$_Lang['FlyingFleetsRows'] = '<tr><th colspan="8">-</th></tr>';
 	}
 	else
 	{
@@ -1046,7 +1049,7 @@ include($_EnginePath.'common.php');
 			$_Lang['ShipsRow'] .= parsetemplate($ShipRowTPL, $ThisShip);
 		}
 	}
-	$_Lang['Insert_ShipsData'] = json_encode($ShipsData);
+	$_Lang['Insert_ShipsData'] = json_encode(isset($ShipsData) ? $ShipsData : null);
 
 	$_Lang['P_HideNoSlotsInfo'] = $Hide;
 	$_Lang['P_HideSendShips'] = $Hide;

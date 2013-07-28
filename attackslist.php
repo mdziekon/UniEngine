@@ -49,11 +49,19 @@ include($_EnginePath.'common.php');
 				}
 			}
 			$Pointer = &$Records[$Fleet['Fleet_End_Owner']];
+			if(!isset($Pointer['TotalCount']))
+			{
+				$Pointer['TotalCount'] = 0;
+			}
 			$Pointer['TotalCount'] += 1;
 			$GetEndID = $Fleet['Fleet_End_ID'];
 			if($Fleet['Fleet_End_ID_Changed'] > 0)
 			{
 				$GetEndID = $Fleet['Fleet_End_ID_Changed'];
+			}
+			if(!isset($Pointer['Planets'][$GetEndID]['Count']))
+			{
+				$Pointer['Planets'][$GetEndID]['Count'] = 0;
 			}
 			$Pointer['Planets'][$GetEndID]['Count'] += 1;
 
@@ -67,7 +75,14 @@ include($_EnginePath.'common.php');
 				{
 					$Fleet['Fleet_End_Type'] = 1;
 				}
-				$GetPlanetnames[$GetEndID] = array('id' => $GetEndID, 'galaxy' => $Fleet['Fleet_End_Galaxy'], 'system' => $Fleet['Fleet_End_System'], 'planet' => $Fleet['Fleet_End_Planet'], 'type' => $Fleet['Fleet_End_Type']);
+				$GetPlanetnames[$GetEndID] = array
+				(
+					'id' => $GetEndID,
+					'galaxy' => $Fleet['Fleet_End_Galaxy'],
+					'system' => $Fleet['Fleet_End_System'],
+					'planet' => $Fleet['Fleet_End_Planet'],
+					'type' => $Fleet['Fleet_End_Type']
+				);
 			}
 		}
 	}

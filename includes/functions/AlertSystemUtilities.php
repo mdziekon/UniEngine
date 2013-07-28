@@ -2,6 +2,7 @@
 
 function AlertUtils_IPIntersect($FirstUserID, $SecondUserID, $ExcludeRules = array())
 {
+	$Query_SelectIPs = '';
 	$Query_SelectIPs .= "SELECT `User_ID`, `IP_ID`, (`Count` - `FailCount`) AS `SumCount`, `LastTime` ";
 	$Query_SelectIPs .= "FROM {{table}} WHERE ";
 	$Query_SelectIPs .= "`User_ID` IN ({$FirstUserID}, {$SecondUserID}) AND ";
@@ -17,9 +18,14 @@ function AlertUtils_IPIntersect($FirstUserID, $SecondUserID, $ExcludeRules = arr
 	$IPLogData = array();	
 	while($FetchData = mysql_fetch_assoc($Result_SelectIPs))
 	{
+		if(!isset($IPLogData[$FetchData['User_ID']][$FetchData['IP_ID']]['Count']))
+		{
+			$IPLogData[$FetchData['User_ID']][$FetchData['IP_ID']]['Count'] = 0;
+		}
+		
 		$ForIntersection[$FetchData['User_ID']][$FetchData['IP_ID']] = $FetchData['IP_ID'];
 		$IPLogData[$FetchData['User_ID']][$FetchData['IP_ID']]['Count'] += $FetchData['SumCount'];
-		if($IPLogData[$FetchData['User_ID']][$FetchData['IP_ID']]['LastTime'] < $FetchData['LastTime'])
+		if(!isset($IPLogData[$FetchData['User_ID']][$FetchData['IP_ID']]['LastTime']) || $IPLogData[$FetchData['User_ID']][$FetchData['IP_ID']]['LastTime'] < $FetchData['LastTime'])
 		{
 			$IPLogData[$FetchData['User_ID']][$FetchData['IP_ID']]['LastTime'] = $FetchData['LastTime'];
 		}
@@ -83,7 +89,7 @@ function AlertUtils_CheckFilters($FiltersData, $CacheSettings = array())
 {
 	static $_FiltersCache = array();
 	
-	if($CacheSettings['DontLoad_OnlyIfCacheEmpty'] === true)
+	if(isset($CacheSettings['DontLoad_OnlyIfCacheEmpty']) && $CacheSettings['DontLoad_OnlyIfCacheEmpty'] === true)
 	{
 		if(empty($_FiltersCache))
 		{
@@ -91,7 +97,7 @@ function AlertUtils_CheckFilters($FiltersData, $CacheSettings = array())
 		}
 	}
 	
-	if($CacheSettings['DontLoad'] !== true)
+	if(!isset($CacheSettings['DontLoad']) || $CacheSettings['DontLoad'] !== true)
 	{
 		foreach($FiltersData as $Type => $Value)
 		{
@@ -119,6 +125,7 @@ function AlertUtils_CheckFilters($FiltersData, $CacheSettings = array())
 			}
 		}
 
+		$Query_GetFilters = '';
 		$Query_GetFilters .= "SELECT `ID`, `ActionType`, `EvalCode` FROM {{table}} WHERE `Enabled` = 1 AND ";
 		$Query_GetFilters .= "(`SearchData` = ''";
 		if(!empty($FilterSearch))
@@ -149,7 +156,7 @@ function AlertUtils_CheckFilters($FiltersData, $CacheSettings = array())
 			}
 		}
 	}
-	if($CacheSettings['UseCache'] === true)
+	if(isset($CacheSettings['UseCache']) && $CacheSettings['UseCache'] === true)
 	{
 		if(!empty($_FiltersCache))
 		{

@@ -25,13 +25,21 @@ include($_EnginePath.'common.php');
 	$parse['InsertMaxDeuterium']	= explode('.', sprintf('%f', floor($CurrentPlanet['deuterium'])));
 	$parse['InsertMaxDeuterium']	= (string)$parse['InsertMaxDeuterium'][0];
 	
-	if($_GET['step'] == 2 AND $_POST['exchange'] == 'yes')
+	if(isset($_GET['step']) && $_GET['step'] == 2 && isset($_POST['exchange']) && $_POST['exchange'] == 'yes')
 	{
 		if(!isPro($CurrentUser) AND $CurrentUser['trader_usesCount'] <= 0)
 		{
 			message($_Lang['Trader_CantUseTrader'], $_Lang['Trader_Title']);
 		}
 		
+		if(!isset($_POST['res']))
+		{
+			$_POST['res'] = 0;
+		}
+		if(!isset($_POST['mode']))
+		{
+			$_POST['mode'] = 0;
+		}
 		$_POST['res'] = intval($_POST['res']);
 
 		if(!in_array($_POST['res'], array(1, 2, 3)))
@@ -49,17 +57,17 @@ include($_EnginePath.'common.php');
 
 		if(empty($parse['TraderMsg_Text']))
 		{
-			$TradeMet = floor(str_replace('.', '', $_POST['met']));
-			$TradeCry = floor(str_replace('.', '', $_POST['cry']));
-			$TradeDeut = floor(str_replace('.', '', $_POST['deu']));
+			$TradeMet = (isset($_POST['met']) ? floor(str_replace('.', '', $_POST['met'])) : 0);
+			$TradeCry = (isset($_POST['cry']) ? floor(str_replace('.', '', $_POST['cry'])) : 0);
+			$TradeDeut = (isset($_POST['deu']) ? floor(str_replace('.', '', $_POST['deu'])) : 0);
 
-			if($TradeMet < 0 OR $TradeCry < 0 OR $TradeDeut < 0)
+			if($TradeMet < 0 || $TradeCry < 0 || $TradeDeut < 0)
 			{
 				$parse['TraderMsg_Hide'] = '';
 				$parse['TraderMsg_Color'] = 'red';
 				$parse['TraderMsg_Text'] = $_Lang['Trader_ResMinus'];
 			}
-			if($TradeMet == 0 AND $TradeCry == 0 AND $TradeDeut == 0)
+			if($TradeMet == 0 && $TradeCry == 0 && $TradeDeut == 0)
 			{
 				$parse['TraderMsg_Hide'] = '';
 				$parse['TraderMsg_Color'] = 'red';
@@ -253,13 +261,14 @@ include($_EnginePath.'common.php');
 						}
 					}
 
-					$QryUpdatePlanet = "UPDATE {{table}} SET ";
-					$QryUpdatePlanet .= "`metal` = '{$CurrentPlanet['metal']}', ";
-					$QryUpdatePlanet .= "`crystal` = '{$CurrentPlanet['crystal']}', ";
-					$QryUpdatePlanet .= "`deuterium` = '{$CurrentPlanet['deuterium']}' ";
-					$QryUpdatePlanet .= "WHERE ";
-					$QryUpdatePlanet .= "`id` = '{$CurrentPlanet['id']}';";
-					doquery($QryUpdatePlanet , 'planets');
+					$Query_UpdatePlanet = '';
+					$Query_UpdatePlanet = "UPDATE {{table}} SET ";
+					$Query_UpdatePlanet .= "`metal` = '{$CurrentPlanet['metal']}', ";
+					$Query_UpdatePlanet .= "`crystal` = '{$CurrentPlanet['crystal']}', ";
+					$Query_UpdatePlanet .= "`deuterium` = '{$CurrentPlanet['deuterium']}' ";
+					$Query_UpdatePlanet .= "WHERE ";
+					$Query_UpdatePlanet .= "`id` = '{$CurrentPlanet['id']}';";
+					doquery($Query_UpdatePlanet , 'planets');
 					
 					if($_POST['mode'] == 1)
 					{
@@ -297,18 +306,18 @@ include($_EnginePath.'common.php');
 		$_GET['res'] = $_POST['res'];
 	}
 	
-	if($_GET['step'] == 2)
+	if(isset($_GET['step']) && $_GET['step'] == 2)
 	{
 		if(!isPro($CurrentUser) AND $CurrentUser['trader_usesCount'] <= 0)
 		{
 			message($_Lang['Trader_CantUseTrader'], $_Lang['Trader_Title']);
 		}
 		
-		if($_GET['mode'] != 1 AND $_GET['mode'] != 2)
+		if(!isset($_GET['mode']) || ($_GET['mode'] != 1 && $_GET['mode'] != 2))
 		{
 			$_GET['mode'] = 1;
 		}
-		if(!in_array($_GET['res'], array(1, 2, 3)))
+		if(!isset($_GET['res']) || !in_array($_GET['res'], array(1, 2, 3)))
 		{
 			$_GET['res'] = 1;
 		}
@@ -319,6 +328,7 @@ include($_EnginePath.'common.php');
 		switch($_GET['res'])
 		{
 			case '1':
+			{
 				// Metal
 				$PageTPL = gettemplate('merchant_metal');
 				$parse['mod_ma_res_a'] = '2';
@@ -339,7 +349,9 @@ include($_EnginePath.'common.php');
 				$parse['Insert_ResA'] = 'cry';
 				$parse['Insert_ResB'] = 'deu';
 				break;
+			}
 			case '2':
+			{
 				// Crystal
 				$PageTPL = gettemplate('merchant_crystal');
 				$parse['mod_ma_res_a'] = '0.5';
@@ -360,7 +372,9 @@ include($_EnginePath.'common.php');
 				$parse['Insert_ResA'] = 'met';
 				$parse['Insert_ResB'] = 'deu';
 				break;
+			}
 			case '3':
+			{
 				// Deuterium
 				$PageTPL = gettemplate('merchant_deuterium');
 				$parse['mod_ma_res_a'] = '0.25';
@@ -381,11 +395,12 @@ include($_EnginePath.'common.php');
 				$parse['Insert_ResA'] = 'met';
 				$parse['Insert_ResB'] = 'cry';
 				break;
+			}
 		}
 	}
 	else
 	{
-		if($_GET['show'] == 'ok')
+		if(isset($_GET['show']) && $_GET['show'] == 'ok')
 		{
 			$parse['TraderMsg_Hide'] = '';
 			$parse['TraderMsg_Color'] = 'lime';

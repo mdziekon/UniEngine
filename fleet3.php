@@ -467,7 +467,7 @@ include($_EnginePath.'common.php');
 	{
 		if($UsedPlanet)
 		{
-			if($Fleet['count'] > $Fleet['array'][210])
+			if(!isset($Fleet['array'][210]) || $Fleet['count'] > $Fleet['array'][210])
 			{
 				$AvailableMissions[] = 3;
 			}
@@ -479,11 +479,11 @@ include($_EnginePath.'common.php');
 				{
 					$AvailableMissions[] = 5;
 				}
-				if($Fleet['count'] == $Fleet['array'][210])
+				if(isset($Fleet['array'][210]) && $Fleet['count'] == $Fleet['array'][210])
 				{
 					$AvailableMissions[] = 6;
 				}
-				if($Target['type'] == 3 AND $Fleet['array'][214] > 0)
+				if($Target['type'] == 3 && isset($Fleet['array'][214]) && $Fleet['array'][214] > 0)
 				{
 					$AvailableMissions[] = 9;
 				}
@@ -1250,8 +1250,12 @@ include($_EnginePath.'common.php');
 				$Query_CheckDeclaration .= "`status` = 1 AND `id` = {$_User['multiIP_DeclarationID']} ";
 				$Query_CheckDeclaration .= "LIMIT 1;";				
 				$CheckDeclaration = doquery($Query_CheckDeclaration, 'declarations', true);
+				$DeclarationID = $CheckDeclaration['id'];
 			}
-			$DeclarationID = $CheckDeclaration['id'];
+			else
+			{
+				$DeclarationID = 0;
+			}
 			
 			$FilterResult = AlertUtils_CheckFilters($FiltersData);
 			if($FilterResult['FilterUsed'])
@@ -1267,7 +1271,7 @@ include($_EnginePath.'common.php');
 				$DontShowAlert = true;
 			}
 			
-			if($DontSendAlert !== true)
+			if(!isset($DontSendAlert))
 			{
 				$SendAlert = true;
 			}				

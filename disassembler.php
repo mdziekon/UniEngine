@@ -22,7 +22,7 @@ include($_EnginePath.'common.php');
 	PlanetResourceUpdate($_User, $CurrentPlanet, time());
 
 	// Parse Command & Disassembly
-	if($_POST['cmd'] == 'exec')
+	if(isset($_POST['cmd']) && $_POST['cmd'] == 'exec')
 	{
 		$SomethinkAdded = false;
 		if(!empty($_POST['elem']))
@@ -183,6 +183,10 @@ include($_EnginePath.'common.php');
 				$InRowCount = 0;
 			}
 
+			if(!isset($StructureRows[$Type][$ThisRowIndex]['Elements']))
+			{
+				$StructureRows[$Type][$ThisRowIndex]['Elements'] = '';
+			}
 			$StructureRows[$Type][$ThisRowIndex]['Elements'] .= $ParsedData;
 			$InRowCount += 1;
 		}

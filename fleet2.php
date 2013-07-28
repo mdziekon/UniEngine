@@ -288,7 +288,7 @@ include($_EnginePath.'common.php');
 	{
 		if($UsedPlanet)
 		{
-			if($Fleet['count'] > $Fleet['array'][210])
+			if(!isset($Fleet['array'][210]) || $Fleet['count'] > $Fleet['array'][210])
 			{
 				$AvailableMissions[] = 3;
 			}
@@ -299,11 +299,11 @@ include($_EnginePath.'common.php');
 				{
 					$AvailableMissions[] = 5;
 				}
-				if($Fleet['count'] == $Fleet['array'][210])
+				if(isset($Fleet['array'][210]) && $Fleet['count'] == $Fleet['array'][210])
 				{
 					$AvailableMissions[] = 6;
 				}
-				if($Target['type'] == 3 AND $Fleet['array'][214] > 0)
+				if($Target['type'] == 3 && isset($Fleet['array'][214]) && $Fleet['array'][214] > 0)
 				{
 					$AvailableMissions[] = 9;
 				}

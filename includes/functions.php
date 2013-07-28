@@ -1298,6 +1298,7 @@ function Handler_SystemAlerts()
 		
 		if(!empty($Query_Insert_Values))
 		{
+			$Query_Insert = '';
 			$Query_Insert .= "INSERT INTO {{table}} (`ID`, `Sender`, `Date`, `Type`, `Code`, `Importance`, `Status`, `User_ID`, `Other_Data`) VALUES ";
 			$Query_Insert .= implode(', ', $Query_Insert_Values);
 			doquery($Query_Insert, 'system_alerts');

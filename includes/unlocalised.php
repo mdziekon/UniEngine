@@ -146,8 +146,8 @@ function GetShipConsumption($Ship, $Player)
 	if(!empty($_Vars_Prices[$Ship]['engine']))
 	{
 		foreach($_Vars_Prices[$Ship]['engine'] as $EngineData)
-		{
-			if($Player[$_Vars_GameElements[$EngineData['tech']]] >= $EngineData['minlevel'])
+		{			
+			if(!isset($EngineData['tech']) || $Player[$_Vars_GameElements[$EngineData['tech']]] >= $EngineData['minlevel'])
 			{
 				$Consumption = $EngineData['consumption'];
 				break;

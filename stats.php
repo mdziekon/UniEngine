@@ -14,20 +14,22 @@ include($_EnginePath.'common.php');
 	$Now = time();
 
 	$parse = $_Lang;
-	$who = (isset($_POST['who'])) ? $_POST['who'] : $_GET['who'];
+	$parse['stat_values'] = '';
+	
+	$who = (isset($_POST['who']) ? $_POST['who'] : ((isset($_GET['who']) ? $_GET['who'] : null)));
 	if($who != 1 AND $who != 2)
 	{
 		$who = 1;
 	}
-	$type = (isset($_POST['type']))? $_POST['type']: $_GET['type'];
+	$type = (isset($_POST['type']) ? $_POST['type'] : ((isset($_GET['type']) ? $_GET['type'] : null)));
 	if(!isset($type))
 	{
 		$type= 1;
 	}
-	$range = (isset($_POST['range'])) ? $_POST['range'] : $_GET['range'];
+	$range = (isset($_POST['range']) ? $_POST['range'] : ((isset($_GET['range']) ? $_GET['range'] : null)));
 	if(!isset($range))
 	{
-		if($_GET['start'] > 0)
+		if(isset($_GET['start']))
 		{
 			$range = intval($_GET['start']);
 		}
@@ -47,55 +49,55 @@ include($_EnginePath.'common.php');
 	$parse['LastWhoVal'] = $who;
 
 	$parse['type'] = '<option value="1"'. (($type == 1) ? ' selected' : '') .'>'. $_Lang['stat_main'] .'</option>';
-	$parse['type'].= '<option value="2"'. (($type == 2) ? ' selected' : '') .'>'. $_Lang['stat_fleet'].'</option>';
-	$parse['type'].= '<option value="3"'. (($type == 3) ? ' selected' : '') .'>'. $_Lang['stat_research'] .'</option>';
-	$parse['type'].= '<option value="4"'. (($type == 4) ? ' selected' : '') .'>'. $_Lang['stat_building'] .'</option>';
-	$parse['type'].= '<option value="5"'. (($type == 5) ? ' selected' : '') .'>'. $_Lang['stat_defenses'] .'</option>';
+	$parse['type'] .= '<option value="2"'. (($type == 2) ? ' selected' : '') .'>'. $_Lang['stat_fleet'].'</option>';
+	$parse['type'] .= '<option value="3"'. (($type == 3) ? ' selected' : '') .'>'. $_Lang['stat_research'] .'</option>';
+	$parse['type'] .= '<option value="4"'. (($type == 4) ? ' selected' : '') .'>'. $_Lang['stat_building'] .'</option>';
+	$parse['type'] .= '<option value="5"'. (($type == 5) ? ' selected' : '') .'>'. $_Lang['stat_defenses'] .'</option>';
 
 	if($type == 2)
 	{
-		$Order = 'fleet_points';
-		$Points = 'fleet_points';
-		$Counts = 'fleet_count';
-		$Rank = 'fleet_rank';
-		$OldRank = 'fleet_old_rank';
-		$YesterdayRank = 'fleet_yesterday_rank';
+		$Order			= 'fleet_points';
+		$Points			= 'fleet_points';
+		$Counts			= 'fleet_count';
+		$Rank			= 'fleet_rank';
+		$OldRank		= 'fleet_old_rank';
+		$YesterdayRank	= 'fleet_yesterday_rank';
 	}
 	else if($type == 3)
 	{
-		$Order = 'tech_points';
-		$Points = 'tech_points';
-		$Counts = 'tech_count';
-		$Rank = 'tech_rank';
-		$OldRank = 'tech_old_rank';
-		$YesterdayRank = 'tech_yesterday_rank';
+		$Order			= 'tech_points';
+		$Points			= 'tech_points';
+		$Counts			= 'tech_count';
+		$Rank			= 'tech_rank';
+		$OldRank		= 'tech_old_rank';
+		$YesterdayRank	= 'tech_yesterday_rank';
 	}
 	else if($type == 4)
 	{
-		$Order = 'build_points';
-		$Points = 'build_points';
-		$Counts = 'build_count';
-		$Rank = 'build_rank';
-		$OldRank = 'build_old_rank';
-		$YesterdayRank = 'build_yesterday_rank';
+		$Order			= 'build_points';
+		$Points			= 'build_points';
+		$Counts			= 'build_count';
+		$Rank			= 'build_rank';
+		$OldRank		= 'build_old_rank';
+		$YesterdayRank	= 'build_yesterday_rank';
 	}
 	else if($type == 5)
 	{
-		$Order = 'defs_points';
-		$Points = 'defs_points';
-		$Counts = 'defs_count';
-		$Rank = 'defs_rank';
-		$OldRank = 'defs_old_rank';
-		$YesterdayRank = 'defs_yesterday_rank';
+		$Order			= 'defs_points';
+		$Points			= 'defs_points';
+		$Counts			= 'defs_count';
+		$Rank			= 'defs_rank';
+		$OldRank		= 'defs_old_rank';
+		$YesterdayRank	= 'defs_yesterday_rank';
 	}
 	else
 	{
-	 	$Order = 'total_points';
-		$Points = 'total_points';
-		$Counts = 'total_count';
-		$Rank = 'total_rank';
-		$OldRank = 'total_old_rank';
-		$YesterdayRank = 'total_yesterday_rank';
+	 	$Order			= 'total_points';
+		$Points			= 'total_points';
+		$Counts			= 'total_count';
+		$Rank			= 'total_rank';
+		$OldRank		= 'total_old_rank';
+		$YesterdayRank	= 'total_yesterday_rank';
 	}
 
 	$SelectCount = doquery("SELECT COUNT(`id_owner`) AS `count` FROM {{table}} WHERE `stat_type` = {$who};", 'statpoints', true);

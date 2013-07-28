@@ -70,7 +70,11 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 						arsort($ShipsSD['d'][$User][$ID]);
 					}
 				}
-				$DefenderShips[$User][$ID] = $Count; 
+				$DefenderShips[$User][$ID] = $Count;
+				if(!isset($DefShipsTypes[$ID]))
+				{
+					$DefShipsTypes[$ID] = 0;
+				}
 				$DefShipsTypes[$ID] += 1;
 				$DefShipsTypesOwners[$ID][$User] = 1;
 				$DefShipsTypesCount[$ID][$User] = $Count;
@@ -153,7 +157,11 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 						arsort($ShipsSD['d'][$User][$ID]);
 					}
 				}
-				$AttackerShips[$User][$ID] = $Count; 
+				$AttackerShips[$User][$ID] = $Count;
+				if(!isset($AtkShipsTypes[$ID]))
+				{
+					$AtkShipsTypes[$ID] = 0;
+				}
 				$AtkShipsTypes[$ID] += 1;
 				$AtkShipsTypesOwners[$ID][$User] = 1;
 				$AtkShipsTypesCount[$ID][$User] = $Count;
@@ -1148,7 +1156,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 		'return' => true, 'AttackerShips' => $AttackerShips, 'DefenderShips' => $DefenderShips,
 		'rounds' => $Rounds, 'result' => $BattleResult,
 		'AtkLose' => $AtkLoseCount, 'DefLose' => $DefLoseCount, 'DefSysLost' => $PlanetDefSysLost,
-		'ShotDown' => $ShotDown, 'ForceContribution' => $ForceContribution
+		'ShotDown' => (isset($ShotDown) ? $ShotDown : null), 'ForceContribution' => (isset($ForceContribution) ? $ForceContribution : null)
 	);
 }
 
