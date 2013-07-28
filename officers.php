@@ -9,6 +9,7 @@ include($_EnginePath.'common.php');
 
 	includeLang('officers');
 	$_Lang['skinpath'] = $_SkinPath;
+	$_Lang['ParsedOfficers'] = '';
 	$RowTPL = gettemplate('officers_row');
 	$BuyTPL = gettemplate('officers_buy');
 	$Now = time();

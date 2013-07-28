@@ -8,6 +8,8 @@ include($_EnginePath.'common.php');
 	loggedCheck();
 
 	includeLang('simulator');
+	$_Lang['rows'] = '';
+	$_Lang['SimResult'] = '';
 
 	$TechEquivalents = array
 	(
@@ -33,7 +35,7 @@ include($_EnginePath.'common.php');
 		$_POST['spyreport'] = null;
 	}
 	
-	if($_POST['simulate'] == 'yes')
+	if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
 	{
 		$Calculate = true;
 
@@ -321,9 +323,11 @@ include($_EnginePath.'common.php');
 			$MoonDestructionCount = false;
 			$Loop = 1;
 
-			if($IncludeCombatEngine !== true)
+			if(!isset($IncludeCombatEngine))
 			{
 				include($_EnginePath.'includes/CombatEngineAres.php');
+				include($_EnginePath.'includes/functions/CreateBattleReport.php');
+				$IncludeCombatEngine = true;
 			}
 
 			$SimData['atk_win'] = 0;
@@ -333,15 +337,16 @@ include($_EnginePath.'common.php');
 			$SimData['max_rounds'] = 0;
 			$SimData['min_rounds'] = 99;
 
-			$SimData['total_lost_atk'] = array();
-			$SimData['total_lost_def'] = array();
+			$SimData['total_lost_atk'] = array('met' => 0, 'cry' => 0, 'deu' => 0);
+			$SimData['total_lost_def'] = array('met' => 0, 'cry' => 0, 'deu' => 0);
 			$SimData['ship_lost_atk'] = 0;
 			$SimData['ship_lost_def'] = 0;
 			$SimData['ship_lost_atk_min'] = 99999999999999999999.0;
 			$SimData['ship_lost_atk_max'] = 0;
 			$SimData['ship_lost_def_min'] = 99999999999999999999.0;
 			$SimData['ship_lost_def_max'] = 0;
-
+			
+			$TotalTime = 0;
 			for($i = 1; $i <= $Loop; $i += 1)
 			{
 				$MoonChance = false;
@@ -382,10 +387,12 @@ include($_EnginePath.'common.php');
 				$DebrisCrystalAtk = 0;
 				$RealDebrisMetalAtk = 0;
 				$RealDebrisCrystalAtk = 0;
+				$RealDebrisDeuteriumAtk = 0;
 				$DebrisMetalDef = 0;
 				$DebrisCrystalDef = 0;
 				$RealDebrisMetalDef = 0;
 				$RealDebrisCrystalDef = 0;
+				$RealDebrisDeuteriumDef = 0;
 
 				$AtkShips = $Combat['AttackerShips'];
 				$DefShips = $Combat['DefenderShips'];
@@ -513,11 +520,6 @@ include($_EnginePath.'common.php');
 				}
 				$ReportData['rounds'] = $RoundsData;
 
-				if($IncludeCombatEngine !== true)
-				{
-					include($_EnginePath.'includes/functions/CreateBattleReport.php');
-				}
-
 				$ReportID = CreateBattleReport($ReportData, array('atk' => $_User['id'], 'def' => 0), 0, true);
 
 				$parse = $_Lang;
@@ -526,7 +528,7 @@ include($_EnginePath.'common.php');
 				$AllReports[] = $ReportID;
 				if($i == $Loop)
 				{
-					$parse['time'] = sprintf('%0.6f',$TotalTime);
+					$parse['time'] = sprintf('%0.6f', $TotalTime);
 				}
 				else
 				{
@@ -556,14 +558,14 @@ include($_EnginePath.'common.php');
 			$SimData['ship_lost_def_min'] = prettyNumber($SimData['ship_lost_def_min']);
 			$SimData['ship_lost_atk_max'] = prettyNumber($SimData['ship_lost_atk_max']);
 			$SimData['ship_lost_atk_min'] = prettyNumber($SimData['ship_lost_atk_min']);
-			$SimData['total_lost_atk_met'] = prettyNumber(round($SimData['total_lost_atk']['met']/$Loop));
-			$SimData['total_lost_atk_cry'] = prettyNumber(round($SimData['total_lost_atk']['cry']/$Loop));
-			$SimData['total_lost_atk_deu'] = prettyNumber(round($SimData['total_lost_atk']['deu']/$Loop));
-			$SimData['total_lost_def_met'] = prettyNumber(round($SimData['total_lost_def']['met']/$Loop));
-			$SimData['total_lost_def_cry'] = prettyNumber(round($SimData['total_lost_def']['cry']/$Loop));
-			$SimData['total_lost_def_deu'] = prettyNumber(round($SimData['total_lost_def']['deu']/$Loop));
-			$SimData['ship_lost_atk'] = prettyNumber(round($SimData['ship_lost_atk']/$Loop));
-			$SimData['ship_lost_def'] = prettyNumber(round($SimData['ship_lost_def']/$Loop));
+			$SimData['total_lost_atk_met'] = prettyNumber(round($SimData['total_lost_atk']['met'] / $Loop));
+			$SimData['total_lost_atk_cry'] = prettyNumber(round($SimData['total_lost_atk']['cry'] / $Loop));
+			$SimData['total_lost_atk_deu'] = prettyNumber(round($SimData['total_lost_atk']['deu'] / $Loop));
+			$SimData['total_lost_def_met'] = prettyNumber(round($SimData['total_lost_def']['met'] / $Loop));
+			$SimData['total_lost_def_cry'] = prettyNumber(round($SimData['total_lost_def']['cry'] / $Loop));
+			$SimData['total_lost_def_deu'] = prettyNumber(round($SimData['total_lost_def']['deu'] / $Loop));
+			$SimData['ship_lost_atk'] = prettyNumber(round($SimData['ship_lost_atk'] / $Loop));
+			$SimData['ship_lost_def'] = prettyNumber(round($SimData['ship_lost_def'] / $Loop));
 			$SimData['rounds'] = round($SimData['rounds']/$Loop);
 			if($MoonCreationCount !== FALSE)
 			{
@@ -637,10 +639,13 @@ include($_EnginePath.'common.php');
 
 		for($techs = 1; $techs <= $TechCount; $techs += 1)
 		{
+			$ThisRow_InsertValue_Atk = isset($_POST['atk_techs'][$i][$techs]) ? $_POST['atk_techs'][$i][$techs] : null;
+			$ThisRow_InsertValue_Def = isset($_POST['def_techs'][$i][$techs]) ? $_POST['def_techs'][$i][$techs] : null;
+			
 			$parse['RowText'] = $_Lang['Techs'][$techs];
-			$parse['RowInput'] = "<input type=\"text\" tabindex=\"{REP1_O{$i}_{$InsertTabIndex1}}\" name=\"atk_techs[{$i}][{$techs}]\" value=\"{$_POST['atk_techs'][$i][$techs]}\" autocomplete=\"off\" />";
+			$parse['RowInput'] = "<input type=\"text\" tabindex=\"{REP1_O{$i}_{$InsertTabIndex1}}\" name=\"atk_techs[{$i}][{$techs}]\" value=\"{$ThisRow_InsertValue_Atk}\" autocomplete=\"off\" />";
 			$parse['RowText2'] = $_Lang['Techs'][$techs];
-			$parse['RowInput2'] = "<input type=\"text\" tabindex=\"{REP2_O{$i}_{$InsertTabIndex2}}\" name=\"def_techs[{$i}][{$techs}]\" value=\"{$_POST['def_techs'][$i][$techs]}\" autocomplete=\"off\" />";
+			$parse['RowInput2'] = "<input type=\"text\" tabindex=\"{REP2_O{$i}_{$InsertTabIndex2}}\" name=\"def_techs[{$i}][{$techs}]\" value=\"{$ThisRow_InsertValue_Def}\" autocomplete=\"off\" />";
 
 			$ThisSlot['txt'] .= parsetemplate($TPL_Row, $parse);
 			$InsertTabIndex1 += 1;
@@ -655,12 +660,16 @@ include($_EnginePath.'common.php');
 
 		foreach($_Vars_ElementCategories['fleet'] as $Ships)
 		{
+			$ThisRow_InsertValue_Def = isset($_POST['def_ships'][$i][$Ships]) ? $_POST['def_ships'][$i][$Ships] : null;
+			
 			if(!empty($_Vars_Prices[$Ships]['engine']))
 			{
+				$ThisRow_InsertValue_Atk = isset($_POST['atk_ships'][$i][$Ships]) ? $_POST['atk_ships'][$i][$Ships] : null;
+				
 				$parse['RowText'] = $_Lang['tech'][$Ships];
-				$parse['RowInput'] = "<input type=\"text\" tabindex=\"{REP1_O{$i}_{$InsertTabIndex1}}\" name=\"atk_ships[{$i}][{$Ships}]\" value=\"{$_POST['atk_ships'][$i][$Ships]}\" autocomplete=\"off\" class=\"pad2 fl\" /> <span class=\"fr\">(<span class=\"clnOne point\">{$_Lang['Button_Min']}</span> / <span class=\"maxOne point\">{$_Lang['Button_Max']}</span>)</span>";
+				$parse['RowInput'] = "<input type=\"text\" tabindex=\"{REP1_O{$i}_{$InsertTabIndex1}}\" name=\"atk_ships[{$i}][{$Ships}]\" value=\"{$ThisRow_InsertValue_Atk}\" autocomplete=\"off\" class=\"pad2 fl\" /> <span class=\"fr\">(<span class=\"clnOne point\">{$_Lang['Button_Min']}</span> / <span class=\"maxOne point\">{$_Lang['Button_Max']}</span>)</span>";
 				$parse['RowText2'] = $_Lang['tech'][$Ships];
-				$parse['RowInput2'] = "<input type=\"text\" tabindex=\"{REP2_O{$i}_{$InsertTabIndex2}}\" name=\"def_ships[{$i}][{$Ships}]\" value=\"{$_POST['def_ships'][$i][$Ships]}\" autocomplete=\"off\" class=\"pad2 fl\" /> <span class=\"fr\">(<span class=\"clnOne point\">{$_Lang['Button_Min']}</span> / <span class=\"maxOne point\">{$_Lang['Button_Max']}</span>)</span>";
+				$parse['RowInput2'] = "<input type=\"text\" tabindex=\"{REP2_O{$i}_{$InsertTabIndex2}}\" name=\"def_ships[{$i}][{$Ships}]\" value=\"{$ThisRow_InsertValue_Def}\" autocomplete=\"off\" class=\"pad2 fl\" /> <span class=\"fr\">(<span class=\"clnOne point\">{$_Lang['Button_Min']}</span> / <span class=\"maxOne point\">{$_Lang['Button_Max']}</span>)</span>";
 
 				$ThisSlot['txt'] .= parsetemplate($TPL_Row, $parse);
 				$InsertTabIndex1 += 1;
@@ -670,7 +679,7 @@ include($_EnginePath.'common.php');
 			{
 				$parse['RowText'] = '-';
 				$parse['RowText2'] = $_Lang['tech'][$Ships];
-				$parse['RowInput2'] = "<input type=\"text\" tabindex=\"{REP2_O{$i}_{$InsertTabIndex2}}\" name=\"def_ships[{$i}][{$Ships}]\" value=\"{$_POST['def_ships'][$i][$Ships]}\" autocomplete=\"off\" class=\"pad2 fl\" /> <span class=\"fr\">(<span class=\"clnOne point\">{$_Lang['Button_Min']}</span> / <span class=\"maxOne point\">{$_Lang['Button_Max']}</span>)</span>";
+				$parse['RowInput2'] = "<input type=\"text\" tabindex=\"{REP2_O{$i}_{$InsertTabIndex2}}\" name=\"def_ships[{$i}][{$Ships}]\" value=\"{$ThisRow_InsertValue_Def}\" autocomplete=\"off\" class=\"pad2 fl\" /> <span class=\"fr\">(<span class=\"clnOne point\">{$_Lang['Button_Min']}</span> / <span class=\"maxOne point\">{$_Lang['Button_Max']}</span>)</span>";
 
 				$ThisSlot['txt'] .= parsetemplate($TPL_NoLeft, $parse);
 				$InsertTabIndex2 += 1;
@@ -688,10 +697,12 @@ include($_EnginePath.'common.php');
 				{
 					continue;
 				}
-
+				
+				$ThisRow_InsertValue_Def = isset($_POST['def_ships'][$i][$Ships]) ? $_POST['def_ships'][$i][$Ships] : null;
+				
 				$parse['RowText'] = '-';
 				$parse['RowText2'] = $_Lang['tech'][$Ships];
-				$parse['RowInput2'] = "<input type=\"text\" tabindex=\"{REP2_O{$i}_{$InsertTabIndex2}}\" name=\"def_ships[{$i}][{$Ships}]\" value=\"{$_POST['def_ships'][$i][$Ships]}\" autocomplete=\"off\" class=\"pad2 fl\" /> <span class=\"fr\">(<span class=\"clnOne point\">{$_Lang['Button_Min']}</span> / <span class=\"maxOne point\">{$_Lang['Button_Max']}</span>)</span>";
+				$parse['RowInput2'] = "<input type=\"text\" tabindex=\"{REP2_O{$i}_{$InsertTabIndex2}}\" name=\"def_ships[{$i}][{$Ships}]\" value=\"{$ThisRow_InsertValue_Def}\" autocomplete=\"off\" class=\"pad2 fl\" /> <span class=\"fr\">(<span class=\"clnOne point\">{$_Lang['Button_Min']}</span> / <span class=\"maxOne point\">{$_Lang['Button_Max']}</span>)</span>";
 
 				$ThisSlot['txt'] .= parsetemplate($TPL_NoLeft, $parse);
 				$InsertTabIndex2 += 1;
