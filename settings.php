@@ -340,6 +340,9 @@ include($_EnginePath.'common.php');
 					}
 					if($SkinPath != $_User['skinpath'])
 					{
+						$_SkinPath = $SkinPath;
+						$ChangeSet['skinpath'] = $SkinPath;
+						$_Lang['skinpath'] = $SkinPath;
 						$ChangeSetTypes['skinpath'] = 's';
 					}
 					else
