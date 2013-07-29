@@ -30,6 +30,7 @@ function GalaxyRowDebris($GalaxyRow, $Galaxy, $System, $Planet, $PlanetType)
 				$RecSended = $RecyclerCount;
 			}
 
+			$BackgroundColor = null;
 			if($TotalDebris >= 10000000)
 			{
 				$BackgroundColor = 'bgBig';

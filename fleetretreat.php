@@ -11,7 +11,7 @@ include($_EnginePath.'common.php');
 
 	$SetColor = 1;
 	$SetMsg = 1;
-	$FleetID = floor(floatval($_POST['fleetid']));
+	$FleetID = (isset($_POST['fleetid']) ? floor(floatval($_POST['fleetid'])) : 0);
 
 	if($FleetID > 0)
 	{

@@ -414,7 +414,11 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 
 			foreach($AttackingFleets[0] as $ID => $Count)
 			{
-				$Difference = $Count - $AtkShips[0][$ID];
+				$Difference = $Count;
+				if(isset($AtkShips[0][$ID]))
+				{
+					$Difference -= $AtkShips[0][$ID];
+				}
 				if($Difference > 0)
 				{
 					$QryUpdateFleets[0]['array_lost'][] = "{$ID},{$Difference}";
@@ -799,6 +803,8 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 		// Calculate looses - attacker
 		if(!empty($AtkLost))
 		{
+			$DebrisMetalAtk = 0;
+			$DebrisCrystalAtk = 0;
 			foreach($AtkLost as $ID => $Count)
 			{
 				if(in_array($ID, $_Vars_ElementCategories['fleet']))
@@ -918,7 +924,7 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 				$CacheKey = 'byMoon';
 			}
 				
-			if($_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']] > 0)
+			if(isset($_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']]) && $_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']] > 0)
 			{
 				if(!isset($_FleetCache['galaxy'][$_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']]]['metal']))
 				{

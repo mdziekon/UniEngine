@@ -54,10 +54,10 @@ include($_EnginePath.'common.php');
 	}
 	
 	// Check, if Target Data are correct
-	$Target['galaxy'] = intval($_POST['galaxy']);
-	$Target['system'] = intval($_POST['system']);
-	$Target['planet'] = intval($_POST['planet']);
-	$Target['type'] = intval($_POST['planettype']);
+	$Target['galaxy'] = (isset($_POST['galaxy']) ? intval($_POST['galaxy']) : null);
+	$Target['system'] = (isset($_POST['system']) ? intval($_POST['system']) : null);
+	$Target['planet'] = (isset($_POST['planet']) ? intval($_POST['planet']) : null);
+	$Target['type'] = (isset($_POST['planettype']) ? intval($_POST['planettype']) : null);
 
 	$GetACSData = intval($_POST['getacsdata']); 
 	if($GetACSData > 0)
@@ -628,6 +628,7 @@ include($_EnginePath.'common.php');
 	}
 	if(in_array(2, $AvailableMissions))
 	{
+		$_Lang['CreateACSList'] = '';
 		foreach($ACSList as $ID => $Name)
 		{
 			$_Lang['CreateACSList'] .= '<option value="'.$ID.'" '.($GetACSData == $ID ? 'selected' : '').'>'.$Name.'</option>';

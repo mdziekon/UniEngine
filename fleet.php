@@ -404,6 +404,10 @@ include($_EnginePath.'common.php');
 					if(!empty($Ships))
 					{
 						$Ships = explode(',', $Ships);
+						if(!isset($AdditionalFleets[$Ships[0]]))
+						{
+							$AdditionalFleets[$Ships[0]] = 0;
+						}
 						$AdditionalFleets[$Ships[0]] += $Ships[1];
 					}
 				}
@@ -512,7 +516,7 @@ include($_EnginePath.'common.php');
 			if(in_array($f['fleet_id'], $AddJoinButton))
 			{
 				$ACS_GetID = array_keys($AddJoinButton, $f['fleet_id']);
-				if($_POST['getacsdata'] > 0 AND $_POST['getacsdata'] == $ACS_GetID[0])
+				if(isset($_POST['getacsdata']) && $_POST['getacsdata'] > 0 && $_POST['getacsdata'] == $ACS_GetID[0])
 				{
 					$JoinThisACS = ' checked';
 				}
@@ -600,6 +604,7 @@ include($_EnginePath.'common.php');
 							$ACSJustCreated = true;
 
 							$CreateACSName = substr($_User['username'].' '.date('d.m.Y H:i', $Now), 0, 50);
+							$QryCreateACSRow = '';
 							$QryCreateACSRow .= "INSERT INTO {{table}} SET `name` = '{$CreateACSName}', `main_fleet_id` = {$FleetID}, `owner_id` = {$_User['id']}, ";
 							$QryCreateACSRow .= "`start_time_org` = {$Fleet4ACS['fleet_start_time']}, `start_time` = `start_time_org`, `end_target_id` = {$Fleet4ACS['fleet_end_id']}, ";
 							$QryCreateACSRow .= "`end_galaxy` = {$Fleet4ACS['fleet_end_galaxy']}, `end_system` = {$Fleet4ACS['fleet_end_system']}, `end_planet` = {$Fleet4ACS['fleet_end_planet']}, `end_type` = {$Fleet4ACS['fleet_end_type']};";
@@ -628,6 +633,7 @@ include($_EnginePath.'common.php');
 						{
 							$Data_GetInvitableUsers['AllyID'][] = $_User['ally_id'];
 							
+							$Query_GetAllyPacts = '';
 							$Query_GetAllyPacts .= "SELECT IF(`AllyID_Sender` = {$_User['ally_id']}, `AllyID_Owner`, `AllyID_Sender`) AS `AllyID`, `Type` ";
 							$Query_GetAllyPacts .= "FROM {{table}} WHERE ";
 							$Query_GetAllyPacts .= "(`AllyID_Sender` = {$_User['ally_id']} OR `AllyID_Owner` = {$_User['ally_id']}) AND `Active` = 1 AND `Type` >= ".ALLYPACT_MILITARY;
@@ -642,12 +648,14 @@ include($_EnginePath.'common.php');
 							}
 							
 							$Data_GetInvitableUsers['AllyID'] = implode(', ', $Data_GetInvitableUsers['AllyID']);
+							$Query_GetInvitableUsers[0] = '';
 							$Query_GetInvitableUsers[0] .= "(";
 							$Query_GetInvitableUsers[0] .= "SELECT `id`, `username` FROM `{{prefix}}users` ";
 							$Query_GetInvitableUsers[0] .= "WHERE `ally_id` IN ({$Data_GetInvitableUsers['AllyID']}) AND `id` != {$_User['id']}";
 							$Query_GetInvitableUsers[0] .= ")";
 						}
 						
+						$Query_GetInvitableUsers[1] = '';
 						$Query_GetInvitableUsers[1] .= "(";
 						$Query_GetInvitableUsers[1] .= "SELECT ";
 						$Query_GetInvitableUsers[1] .= "IF(`buddy`.`sender` = {$_User['id']}, `buddy`.`owner`, `buddy`.`sender`) AS `id`, ";
@@ -670,7 +678,7 @@ include($_EnginePath.'common.php');
 							}
 						}
 
-						if($ACSJustCreated !== true)
+						if(!isset($ACSJustCreated) || $ACSJustCreated !== true)
 						{
 							if(!empty($GetACSRow['users']))
 							{
@@ -699,6 +707,7 @@ include($_EnginePath.'common.php');
 							{
 								$Data_GetEmptyUsernames['count'] = count($Data_GetEmptyUsernames['ids']);
 								$Data_GetEmptyUsernames['ids'] = implode(',', $Data_GetEmptyUsernames['ids']);
+								$Query_GetEmptyUsernames = '';
 								$Query_GetEmptyUsernames .= "SELECT `id`, `username` FROM {{table}} ";
 								$Query_GetEmptyUsernames .= "WHERE `id` IN ({$Data_GetEmptyUsernames['ids']}) ";
 								$Query_GetEmptyUsernames .= "LIMIT {$Data_GetEmptyUsernames['count']}; -- fleet.php|GetEmptyUsernames";
@@ -732,7 +741,7 @@ include($_EnginePath.'common.php');
 									}
 								}
 							}
-							if($_POST['acsuserschanged'] == '1')
+							if(isset($_POST['acsuserschanged']) && $_POST['acsuserschanged'] == '1')
 							{
 								if(!empty($_POST['acs_users']))
 								{
@@ -742,7 +751,7 @@ include($_EnginePath.'common.php');
 									foreach($ExplodeUsers as $ACSUserID)
 									{
 										$ACSUserID = intval($ACSUserID);
-										if($InvitableUsers[$ACSUserID]['id'] > 0)
+										if(isset($InvitableUsers[$ACSUserID]['id']) && $InvitableUsers[$ACSUserID]['id'] > 0)
 										{
 											if($UsersCount < MAX_ACS_JOINED_PLAYERS)
 											{
@@ -767,7 +776,7 @@ include($_EnginePath.'common.php');
 											}
 										}
 									} 
-									if($BreakUsersUpdate !== true)
+									if(!isset($BreakUsersUpdate) || $BreakUsersUpdate !== true)
 									{
 										foreach($JSACSUsers as $UserID => $UserData)
 										{

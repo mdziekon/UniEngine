@@ -305,7 +305,7 @@ function FleetControl_Retreat($FleetSelector, $InstandRetreat = false)
 		// Make Updates
 		if(!empty($UpdateFleets))
 		{
-			$Query_UpdateFleets= "INSERT INTO {{table}} (`fleet_id`, `fleet_start_time`, `fleet_end_stay`, `fleet_end_time`, `fleet_target_owner`, `fleet_mess`, `fleet_mission`) VALUES ";
+			$Query_UpdateFleets = "INSERT INTO {{table}} (`fleet_id`, `fleet_start_time`, `fleet_end_stay`, `fleet_end_time`, `fleet_target_owner`, `fleet_mess`, `fleet_mission`) VALUES ";
 			$Pattern_UpdateFleets = array('fleet_id' => null, 'fleet_start_time' => null, 'fleet_end_stay' => null, 'fleet_end_time' => null, 'fleet_target_owner' => null, 'fleet_mess' => null, 'fleet_mission' => null);
 			foreach($UpdateFleets as $Data)
 			{
