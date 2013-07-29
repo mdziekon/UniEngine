@@ -40,6 +40,10 @@ if($UID > 0)
 		if(file_exists('./cache/data/last_stats_update.php'))
 		{
 			include('./cache/data/last_stats_update.php');
+			if(!isset($LastStatsUpdate))
+			{
+				$LastStatsUpdate = 0;
+			}
 		}
 		else
 		{
@@ -88,11 +92,11 @@ if($UID > 0)
 
 	$Constants = array
 	(
-		'UserYTop' => 10,
-		'AllyYTop' => 34,
-		'UniPosYTop' => 3,
-		'Width' => 468,
-		'Padding' => 6,
+		'UserYTop'		=> 10,
+		'AllyYTop'		=> 34,
+		'UniPosYTop'	=> 3,
+		'Width'			=> 468,
+		'Padding'		=> 6,
 	);
 
 	// Get Data
@@ -103,14 +107,6 @@ if($UID > 0)
 		copy("{$CachePath}static/signature_{$SigLang}_error2.png", $UserFile);
 		ReturnImage($UserFile);
 	} 
-	if($UserData['ally_id'] > 0)
-	{
-		$UserAlly = doquery("SELECT `ally_name`, `ally_tag` FROM {{table}} WHERE `id` = {$UserData['ally_id']} LIMIT 1;", 'alliance', true);
-		if(!empty($UserAlly['ally_tag']))
-		{
-			$Texts['Ally'] = "{$_Lang['Ally']}: {$UserAlly['ally_tag']}";
-		}
-	}
 	$UserStat = doquery("SELECT `total_rank`, `total_points` FROM {{table}} WHERE `id_owner` = {$UID} AND `stat_type` = 1 LIMIT 1;", 'statpoints', true);
 	if($UserStat['total_rank'] <= 0)
 	{
@@ -128,6 +124,15 @@ if($UID > 0)
 	$Texts['Points'] = number_format($UserStat['total_points'], 0, '', '.').' '.$_Lang['Points'];
 	$Texts['Position'] = $_Lang['Position'].': '.number_format($UserStat['total_rank'], 0, '', '.');
 	$Texts['Uni'] = $_Lang['Universum'];
+	$Texts['Ally'] = null;
+	if($UserData['ally_id'] > 0)
+	{
+		$UserAlly = doquery("SELECT `ally_name`, `ally_tag` FROM {{table}} WHERE `id` = {$UserData['ally_id']} LIMIT 1;", 'alliance', true);
+		if(!empty($UserAlly['ally_tag']))
+		{
+			$Texts['Ally'] = "{$_Lang['Ally']}: {$UserAlly['ally_tag']}";
+		}
+	}
  
 	foreach($Texts as $ThisKey => &$ThisValue)
 	{

@@ -179,6 +179,30 @@ function Tasks_ParseRewards($RewardData, &$UpdateArray)
 	if($RewardData['type'] == 'RESOURCES')
 	{
 		// Add Resources
+		if(!isset($UpdateArray['planet']['metal']))
+		{
+			$UpdateArray['planet']['metal'] = 0;
+		}
+		if(!isset($UpdateArray['planet']['crystal']))
+		{
+			$UpdateArray['planet']['crystal'] = 0;
+		}
+		if(!isset($UpdateArray['planet']['deuterium']))
+		{
+			$UpdateArray['planet']['deuterium'] = 0;
+		}
+		if(!isset($UpdateArray['devlog']['M']))
+		{
+			$UpdateArray['devlog']['M'] = 0;
+		}
+		if(!isset($UpdateArray['devlog']['C']))
+		{
+			$UpdateArray['devlog']['C'] = 0;
+		}
+		if(!isset($UpdateArray['devlog']['D']))
+		{
+			$UpdateArray['devlog']['D'] = 0;
+		}
 		$UpdateArray['planet']['metal'] += $RewardData['met'];
 		$UpdateArray['devlog']['M'] += $RewardData['met'];
 		$UpdateArray['planet']['crystal'] += $RewardData['cry'];
@@ -186,20 +210,36 @@ function Tasks_ParseRewards($RewardData, &$UpdateArray)
 		$UpdateArray['planet']['deuterium'] += $RewardData['deu'];
 		$UpdateArray['devlog']['D'] += $RewardData['deu'];
 	}
-	elseif($RewardData['type'] == 'PLANET_ELEMENT')
+	else if($RewardData['type'] == 'PLANET_ELEMENT')
 	{
 		// Add Ships or Defenses
+		if(!isset($UpdateArray['planet'][$_Vars_GameElements[$RewardData['elementID']]]))
+		{
+			$UpdateArray['planet'][$_Vars_GameElements[$RewardData['elementID']]] = 0;
+		}
+		if(!isset($UpdateArray['devlog'][$RewardData['elementID']]))
+		{
+			$UpdateArray['devlog'][$RewardData['elementID']] = 0;
+		}
 		$UpdateArray['planet'][$_Vars_GameElements[$RewardData['elementID']]] += $RewardData['count'];
 		$UpdateArray['devlog'][$RewardData['elementID']] += $RewardData['count'];
 	}
-	elseif($RewardData['type'] == 'PREMIUM_ITEM')
+	else if($RewardData['type'] == 'PREMIUM_ITEM')
 	{
 		// Add Free PremiumItem
 		$UpdateArray['free_premium'][] = $RewardData['elementID'];
 	}
-	elseif($RewardData['type'] == 'PREMIUM_RESOURCE')
+	else if($RewardData['type'] == 'PREMIUM_RESOURCE')
 	{
 		// Add Free Dark Energy
+		if(!isset($UpdateArray['devlog']['DE']))
+		{
+			$UpdateArray['devlog']['DE'] = 0;
+		}
+		if(!isset($UpdateArray['user']['darkEnergy']))
+		{
+			$UpdateArray['user']['darkEnergy'] = 0;
+		}
 		$UpdateArray['devlog']['DE'] += $RewardData['value'];
 		$UpdateArray['user']['darkEnergy'] += $RewardData['value'];
 	}

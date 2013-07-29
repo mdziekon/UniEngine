@@ -195,6 +195,7 @@ $_Lang['BuyMoreDE']              = 'Dokup Ciemną Energię!';
 
 $_Lang['ChangeYourNick']         = 'Zmiana Nicka';
 $_Lang['GoBack']                 = 'Powrót do Ustawień Konta';
+$_Lang['NickChange_Info']		 = '';
 $_Lang['NickChange_Info']		.= '&bull; Koszt zmiany Nicka: <b class="orange">10</b> jednostek Ciemnej Energii<br/>';
 $_Lang['NickChange_Info']		.= '&bull; Informacja o twoim Starym Nicku będzie widoczna przez następne 7 dni<br/>';
 $_Lang['NickChange_Info']		.= '&bull; Nowy Nick musi być zgodny z <a class="red" href="rules.php" target="_blank">Regulaminem</a><br/>';

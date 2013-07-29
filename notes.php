@@ -11,14 +11,14 @@ include($_EnginePath.'common.php');
 	includeLang('notes');
 	
 	$Parse = &$_Lang;
-	$Command = $_GET['cmd'];
+	$Command = (isset($_GET['cmd']) ? $_GET['cmd'] : null);
 	$_PerPage = 10;
 	$_MaxLengthTitle = 128;
 	$_MaxLengthNote = 5000;
 	$_PriorityArray = array(1 => 'lime', 2 => 'orange', 3 => 'red');
 	$_Priorities = array(1, 2, 3);
 	
-	if($_POST['send'] == 1)
+	if(isset($_POST['send']) && $_POST['send'] == 1)
 	{
 		$InsertClean['title'] = substr(trim(stripslashes($_POST['title'])), 0, $_MaxLengthTitle);
 		$InsertClean['priority'] = intval($_POST['priority']);
@@ -34,7 +34,7 @@ include($_EnginePath.'common.php');
 		// Show selected Note
 		$TPL_Default = gettemplate('notes_form');
 		
-		$GetID = round($_GET['id']);
+		$GetID = (isset($_GET['id']) ? round($_GET['id']) : 0);
 		if($GetID <= 0)
 		{
 			message($_Lang['Errors_BadIDGiven'], $_Lang['Title'], 'notes.php', 3);
@@ -50,7 +50,7 @@ include($_EnginePath.'common.php');
 			message($_Lang['Errors_NoteNotYour'], $_Lang['Title'], 'notes.php', 3);
 		}
 		
-		if($_POST['send'] == 1)
+		if(isset($_POST['send']) && $_POST['send'] == 1)
 		{			
 			if(!empty($Insert['title']))
 			{
@@ -62,8 +62,14 @@ include($_EnginePath.'common.php');
 					{
 						$Get_Row['text'] = $InsertClean['text'];
 						
-						$Query = "UPDATE {{table}} SET `title` = '{$Insert['title']}', `priority` = {$Insert['priority']}, `text` = '{$Insert['text']}', `time` = UNIX_TIMESTAMP() WHERE `id` = {$GetID};";
-						doquery($Query, 'notes');
+						$Query_UpdateNote = '';
+						$Query_UpdateNote .= "UPDATE {{table}} SET ";
+						$Query_UpdateNote .= "`title` = '{$Insert['title']}', ";
+						$Query_UpdateNote .= "`priority` = {$Insert['priority']}, ";
+						$Query_UpdateNote .= "`text` = '{$Insert['text']}', ";
+						$Query_UpdateNote .= "`time` = UNIX_TIMESTAMP() ";
+						$Query_UpdateNote .= "WHERE `id` = {$GetID};";
+						doquery($Query_UpdateNote, 'notes');
 						
 						$Parse['Input_MsgText'] = $_Lang['Msg_EditSuccess'];
 						$Parse['Input_MsgColor'] = 'lime';
@@ -101,16 +107,22 @@ include($_EnginePath.'common.php');
 		// Add new note
 		$TPL_Default = gettemplate('notes_form');
 		
-		if($_POST['send'] == 1)
+		if(isset($_POST['send']) && $_POST['send'] == 1)
 		{			
 			if(!empty($Insert['title']))
 			{
 				if(in_array($Insert['priority'], $_Priorities))
 				{
 					if(!empty($Insert['text']))
-					{						
-						$Query = "INSERT INTO {{table}} SET `owner` = {$_User['id']}, `time` = UNIX_TIMESTAMP(), `priority` = {$Insert['priority']}, `title` = '{$Insert['title']}', `text` = '{$Insert['text']}';";
-						doquery($Query, 'notes');
+					{
+						$Query_InsertNote = '';
+						$Query_InsertNote .= "INSERT INTO {{table}} SET ";
+						$Query_InsertNote .= "`owner` = {$_User['id']}, ";
+						$Query_InsertNote .= "`time` = UNIX_TIMESTAMP(), ";
+						$Query_InsertNote .= "`priority` = {$Insert['priority']}, ";
+						$Query_InsertNote .= "`title` = '{$Insert['title']}', ";
+						$Query_InsertNote .= "`text` = '{$Insert['text']}';";
+						doquery($Query_InsertNote, 'notes');
 						
 						header('Location: ?added=true');
 						safeDie();
@@ -134,9 +146,12 @@ include($_EnginePath.'common.php');
 			}
 		}
 		
-		$Parse['Input_Title'] = $InsertClean['title'];
-		$Parse['Input_PrioritySelect_'.$InsertClean['priority']] = 'selected';
-		$Parse['Input_Text'] = $InsertClean['text'];
+		if(isset($InsertClean))
+		{
+			$Parse['Input_Title'] = $InsertClean['title'];
+			$Parse['Input_PrioritySelect_'.$InsertClean['priority']] = 'selected';
+			$Parse['Input_Text'] = $InsertClean['text'];
+		}
 		
 		$Parse['Input_InsertCMD'] = '?cmd=add';
 		$Parse['Input_InsertTitle'] = $_Lang['Title_AddRow'];
@@ -147,7 +162,7 @@ include($_EnginePath.'common.php');
 	{
 		$Command = '';
 		
-		if($_POST['action'] == 2)
+		if(isset($_POST['action']) && $_POST['action'] == 2)
 		{
 			// Delete all notes
 			
@@ -219,7 +234,7 @@ include($_EnginePath.'common.php');
 		{
 			$TPL_List_Row = gettemplate('notes_list_row');
 			
-			$ThisPage = intval($_GET['page']);
+			$ThisPage = (isset($_GET['page']) ? intval($_GET['page']) : 0);
 			if($ThisPage < 1)
 			{
 				$ThisPage = 1;
@@ -231,15 +246,19 @@ include($_EnginePath.'common.php');
 				$SkipCount = 0;
 			}
 			
-			$GetNotes = doquery("SELECT * FROM {{table}} WHERE `owner` = {$_User['id']} ORDER BY `priority` DESC, `time` DESC LIMIT {$SkipCount}, {$_PerPage};", 'notes');
-			while($NoteData = mysql_fetch_assoc($GetNotes))
+			$Query_GetNotes = '';
+			$Query_GetNotes .= "SELECT * FROM {{table}} ";
+			$Query_GetNotes .= "WHERE `owner` = {$_User['id']} ";
+			$Query_GetNotes .= "ORDER BY `priority` DESC, `time` DESC LIMIT {$SkipCount}, {$_PerPage};";			
+			$Result_GetNotes = doquery($Query_GetNotes, 'notes');
+			while($NoteData = mysql_fetch_assoc($Result_GetNotes))
 			{
 				$NoteData = array
 				(
-					'ID' => $NoteData['id'],
-					'TitleColor' => $_PriorityArray[$NoteData['priority']],
-					'Title' => $NoteData['title'],
-					'Date' => prettyDate('d m Y, H:i:s', $NoteData['time'], 1)
+					'ID'			=> $NoteData['id'],
+					'TitleColor'	=> $_PriorityArray[$NoteData['priority']],
+					'Title'			=> $NoteData['title'],
+					'Date'			=> prettyDate('d m Y, H:i:s', $NoteData['time'], 1)
 				);
 				
 				$Parse['Input_NotesList'][] = parsetemplate($TPL_List_Row, $NoteData);
@@ -267,7 +286,7 @@ include($_EnginePath.'common.php');
 		}
 	}
 	
-	if($_GET['added'] == 'true')
+	if(isset($_GET['added']) && $_GET['added'] == 'true')
 	{
 		$Parse['Input_MsgText'] = $_Lang['Msg_AddSuccess'];
 		$Parse['Input_MsgColor'] = 'lime';

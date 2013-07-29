@@ -38,8 +38,8 @@ include($_EnginePath.'common.php');
 	$_PerPage = 15;
 	$_MaxLength = 1000;
 	
-	$Command = $_GET['cmd'];
-	$UID = intval($_GET['uid']);
+	$Command = (isset($_GET['cmd']) ? $_GET['cmd'] : null);
+	$UID = (isset($_GET['uid']) ? intval($_GET['uid']) : 0);
 			
 	if($Command == 'accept')
 	{
@@ -72,7 +72,7 @@ include($_EnginePath.'common.php');
 			$Parse['Insert_MsgBoxColor'] = 'red';
 		}
 	}
-	elseif($Command == 'refuse')
+	else if($Command == 'refuse')
 	{
 		$Command = '';
 		if($UID > 0)
@@ -100,7 +100,7 @@ include($_EnginePath.'common.php');
 			$Parse['Insert_MsgBoxColor'] = 'red';
 		}
 	}
-	elseif($Command == 'rmv')
+	else if($Command == 'rmv')
 	{
 		$Command = '';
 		if($UID > 0)
@@ -128,7 +128,7 @@ include($_EnginePath.'common.php');
 			$Parse['Insert_MsgBoxColor'] = 'red';
 		}
 	}
-	elseif($Command == 'del')
+	else if($Command == 'del')
 	{
 		$Command = '';
 		if($UID > 0)
@@ -151,7 +151,7 @@ include($_EnginePath.'common.php');
 			$Parse['Insert_MsgBoxColor'] = 'red';
 		}
 	}
-	elseif($Command != 'edit' AND $Command != 'add')
+	else if($Command != 'edit' AND $Command != 'add')
 	{
 		$Command = '';
 	}
@@ -170,7 +170,7 @@ include($_EnginePath.'common.php');
 		{
 			$TPL_BuddyRow = gettemplate('buddy_list_row');
 			
-			$ThisPage = intval($_GET['page']);
+			$ThisPage = (isset($_GET['page']) ? intval($_GET['page']) : 0);
 			if($ThisPage < 1)
 			{
 				$ThisPage = 1;
@@ -181,6 +181,7 @@ include($_EnginePath.'common.php');
 				$ThisPage = 1;
 				$LimitStart = 0;
 			}
+			$AddPage2Link = '';
 			if($ThisPage > 1)
 			{
 				$AddPage2Link = '&amp;page='.$ThisPage;
@@ -303,7 +304,7 @@ include($_EnginePath.'common.php');
 			}
 		}		
 	}
-	elseif($Command == 'edit' OR $Command == 'add')
+	else if($Command == 'edit' OR $Command == 'add')
 	{
 		$TPL_Default = gettemplate('buddy_form');
 		
@@ -356,7 +357,7 @@ include($_EnginePath.'common.php');
 			$Parse['Insert_Text'] = $CheckBuddy['text'];
 		}
 		
-		if($_POST['send'] == '1')
+		if(isset($_POST['send']) && $_POST['send'] == '1')
 		{
 			$InsertClean['Text'] = substr(trim(stripslashes($_POST['text'])), 0, $_MaxLength);
 			$Insert['Text'] = mysql_real_escape_string($InsertClean['Text']);
@@ -370,7 +371,7 @@ include($_EnginePath.'common.php');
 					header('Location: ?msg=add');
 					safeDie();
 				}
-				elseif($Command == 'edit')
+				else if($Command == 'edit')
 				{
 					doquery("UPDATE {{table}} SET `text` = '{$Insert['Text']}', `date` = UNIX_TIMESTAMP() WHERE `sender` = {$CheckBuddy['sender']} AND `owner` = {$CheckBuddy['owner']} LIMIT 1;", 'buddy');
 					
@@ -390,7 +391,7 @@ include($_EnginePath.'common.php');
 		$Parse['Insert_MaxLength'] = $_MaxLength;
 	}
 	
-	if($_GET['msg'] == 'add')
+	if(isset($_GET['msg']) && $_GET['msg'] == 'add')
 	{
 		$Parse['Insert_MsgBoxText'] = $_Lang['Success_Sent'];
 		$Parse['Insert_MsgBoxColor'] = 'lime';

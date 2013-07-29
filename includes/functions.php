@@ -1144,7 +1144,6 @@ function Handler_UserTasksUpdate()
 	
 	if(!empty($UserTasksUpdate))
 	{
-		$UserTasks_UpdateQuery = "INSERT INTO {{table}} (`id`, `tasks_done`) VALUES ";
 		foreach($UserTasksUpdate as $UserID => $UserData)
 		{
 			if($UserID == $_User['id'])
@@ -1162,7 +1161,12 @@ function Handler_UserTasksUpdate()
 				{					
 					foreach($CatData as $TaskID => $TaskJobs)
 					{
-						if((count($UserParsedTasks['jobs'][$CatID][$TaskID]) + count($TaskJobs)) == count($_Vars_TasksData[$CatID]['tasks'][$TaskID]['jobs']))
+						$TotalCount = count($TaskJobs);
+						if(isset($UserParsedTasks['jobs'][$CatID][$TaskID]))
+						{
+							$TotalCount += count($UserParsedTasks['jobs'][$CatID][$TaskID]);
+						}
+						if($TotalCount == count($_Vars_TasksData[$CatID]['tasks'][$TaskID]['jobs']))
 						{
 							$UserParsedTasks['locked'][$CatID][] = $TaskID;
 							unset($UserParsedTasks['jobs'][$CatID][$TaskID]);
@@ -1259,7 +1263,10 @@ function Handler_UserTasksUpdate()
 		}
 		if(!empty($UserTasks_UpdateArray))
 		{
-			$UserTasks_UpdateQuery .= implode(', ', $UserTasks_UpdateArray)." ON DUPLICATE KEY UPDATE `tasks_done` = VALUES(`tasks_done`);";
+			$UserTasks_UpdateQuery = '';
+			$UserTasks_UpdateQuery .= "INSERT INTO {{table}} (`id`, `tasks_done`) VALUES ";
+			$UserTasks_UpdateQuery .= implode(', ', $UserTasks_UpdateArray);
+			$UserTasks_UpdateQuery .= " ON DUPLICATE KEY UPDATE `tasks_done` = VALUES(`tasks_done`);";
 			doquery($UserTasks_UpdateQuery, 'users');
 		}
 	}

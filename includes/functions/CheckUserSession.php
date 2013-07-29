@@ -13,22 +13,27 @@ function CheckUserSession()
 		{
 			if($Result['ban_endtime'] > $Now)
 			{
-				if(strstr($_SERVER['SCRIPT_NAME'], 'logout.php') !== FALSE OR strstr($_SERVER['SCRIPT_NAME'], 'contact.php') !== FALSE)
+				if(strstr($_SERVER['SCRIPT_NAME'], 'logout.php') !== false || strstr($_SERVER['SCRIPT_NAME'], 'contact.php') !== false)
 				{
-					$GetScriptName = end(explode('/', $_SERVER['SCRIPT_NAME']));
-					if($GetScriptName == 'logout.php' OR $GetScriptName == 'contact.php')
+					$GetScriptNameExplode = explode('/', $_SERVER['SCRIPT_NAME']);
+					$GetScriptName = end($GetScriptNameExplode);
+					if($GetScriptName == 'logout.php' || $GetScriptName == 'contact.php')
 					{
 						$DontBlockIfBanned = true;
 					}
 				}
 
-				if($DontBlockIfBanned !== true)
+				if(!isset($DontBlockIfBanned))
 				{
 					includeLang('bannedUser');
 					include("{$_EnginePath}/includes/functions/InsertJavaScriptChronoApplet.php");
 					$_SkinPath = DEFAULT_SKINPATH;
-
-					$Ban = doquery("SELECT `Ban`.*, `users`.`username` AS `GiverName` FROM {{table}} AS `Ban` LEFT JOIN `{{prefix}}users` AS `users` ON `users`.`id` = `Ban`.`GiverID` AND `Ban`.`GiverID` > 0 WHERE `UserID` = '{$Result['id']}' AND `Active` = 1 ORDER BY `ID` DESC LIMIT 1;", 'bans', true);
+					
+					$Query_GetBanInfo = '';
+					$Query_GetBanInfo .= "SELECT `Ban`.*, `users`.`username` AS `GiverName` FROM {{table}} AS `Ban` ";
+					$Query_GetBanInfo .= "LEFT JOIN `{{prefix}}users` AS `users` ON `users`.`id` = `Ban`.`GiverID` AND `Ban`.`GiverID` > 0 ";
+					$Query_GetBanInfo .= "WHERE `UserID` = '{$Result['id']}' AND `Active` = 1 ORDER BY `ID` DESC LIMIT 1;";					
+					$Ban = doquery($Query_GetBanInfo, 'bans', true);
 
 					$Parse = $_Lang;
 					$Parse['Insert_StartTime']	= prettyDate('d m Y \o H:i:s', $Ban['StartTime'], 1);

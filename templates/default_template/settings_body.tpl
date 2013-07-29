@@ -293,7 +293,7 @@ var TemplateData = {'SaveOnlyThis': '{SaveOnlyThis}', 'SaveAll': '{SaveAll}', 'u
 			<tr>
 				<th>{ActivateVacationMode}</th>
 				<th><input type="checkbox" name="vacation_activate"/></th>
-				<th class="lal" colspan="2" style="width: 60%;">{VacationInfo}<br /><br />{YouWillBeAbleToComeBack}: <span class="skyblue" id="vacationBack"></span></th>
+				<th class="lal" colspan="2" style="width: 60%;">{VacationInfo}<br /><br />{YouWillBeAbleToComeBack}: <span class="skyblue" id="vacationBack">{PHP_Insert_VacationComeback}</span></th>
 			</tr>
 			<tr>
 				<td class="c center" colspan="4">{AccountDelete}</td>

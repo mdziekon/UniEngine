@@ -10,26 +10,33 @@ include($_EnginePath.'common.php');
 
 	includeLang('galacticshop');
 	$_Lang['skinpath'] = $_SkinPath;
+	
+	$_Lang['Articles'] = '';
+	
+	$DontGetDarkEnergy = false;
 
 	$AdditionalPlanets = $_User['additional_planets'];
 	$_Lang['shop_items'][9]['price'] = $_Lang['shop_items'][9]['price_array'][$AdditionalPlanets]; 
 
-	if($_GET['darkenergy_bought'] == 'true')
+	if(isset($_GET['darkenergy_bought']) && $_GET['darkenergy_bought'] == 'true')
 	{
-		$_Lang['showMsg'] = sprintf($_Lang['AddSuccess'], $_Lang['_Added'.intval($_GET['count']).'DEUnits']);
+		$_Lang['showMsg'] = sprintf($_Lang['AddSuccess'], $_Lang['_Added'.(isset($_GET['count']) ? intval($_GET['count']) : 0).'DEUnits']);
 	}
-
-	if($_GET['show'] == 'deform')
+	
+	if(isset($_GET['show']))
 	{
-		$_Lang['SetActiveMarker'] = '01';
-	}
-	else if($_GET['show'] == 'shop')
-	{
-		$_Lang['SetActiveMarker'] = '02';
-	}
-	else if($_GET['show'] == 'free')
-	{
-		$_Lang['SetActiveMarker'] = '03';
+		if($_GET['show'] == 'deform')
+		{
+			$_Lang['SetActiveMarker'] = '01';
+		}
+		else if($_GET['show'] == 'shop')
+		{
+			$_Lang['SetActiveMarker'] = '02';
+		}
+		else if($_GET['show'] == 'free')
+		{
+			$_Lang['SetActiveMarker'] = '03';
+		}
 	}
 
 	$GetFreeItems = doquery("SELECT * FROM {{table}} WHERE `UserID` = {$_User['id']} AND `Used` = false;", 'premium_free');
@@ -38,6 +45,10 @@ include($_EnginePath.'common.php');
 		$GetUsernames = array();
 		while($Free = mysql_fetch_assoc($GetFreeItems))
 		{
+			if(!isset($_Lang['FreeItemsList'][$Free['ID']]))
+			{
+				$_Lang['FreeItemsList'][$Free['ID']] = '';
+			}
 			$_Lang['FreeItemsList'][$Free['ID']] .= '<tr><td class="b pad ta_left lime" colspan="2"><b>'.$_Lang['shop_items'][$Free['ItemID']]['name'].''.($_Lang['shop_items'][$Free['ItemID']]['duration'] !== false ? '<br/>'.$_Lang['FreeDuration'].': '.$_Lang['shop_items'][$Free['ItemID']]['duration'] : '').'</b></td>';
 			$_Lang['FreeItemsList'][$Free['ID']] .= '<td class="b pad ta_left" colspan="2"><b>{USERID_'.$Free['GivenBy'].'}<br/>'.prettyDate('d m Y - H:i:s', $Free['GiveDate'], 1).'</b></td>';
 			$_Lang['FreeItemsList'][$Free['ID']] .= '<td class="b pad ta_cent" colspan="2"><input type="button" class="pad3 freeItemUse" id="freeid_'.$Free['ID'].'" value="'.$_Lang['FreeItemUse'].'"/></td></tr>';
@@ -265,9 +276,9 @@ include($_EnginePath.'common.php');
 						{
 							if((array)$_Lang['shop_items'][$ItemID] === $_Lang['shop_items'][$ItemID])
 							{
-								if($_Lang['shop_items'][$ItemID]['buyable'] !== false OR $DontGetDarkEnergy === true)
+								if((!isset($_Lang['shop_items'][$ItemID]['buyable']) || $_Lang['shop_items'][$ItemID]['buyable'] !== false) || $DontGetDarkEnergy === true)
 								{
-									if($_User['darkEnergy'] >= $_Lang['shop_items'][$ItemID]['price'] OR $DontGetDarkEnergy === true)
+									if($_User['darkEnergy'] >= $_Lang['shop_items'][$ItemID]['price'] || $DontGetDarkEnergy === true)
 									{
 										// ProAccounts
 										if($ItemID == 1 OR $ItemID == 2 OR $ItemID == 11 OR $ItemID == 13)
@@ -539,13 +550,13 @@ include($_EnginePath.'common.php');
 	{
 		foreach($_Lang['shop_items'] as $key => $val)
 		{
-			if($val['buyable'] !== false)
+			if(!isset($val['buyable']) || $val['buyable'] !== false)
 			{
 				$_Lang['Articles'] .= '<tr><td class="b" style="text-align: left;" colspan="1"><b style="color: lime;">'.$val['name'].'</b></td>';
 				$_Lang['Articles'] .= '<td colspan="4" class="b" style="text-align: left;">'.$val['desc'].'</td>';
 				if(empty($val['action']))
 				{
-					if($val['price'] > 0 OR $val['price'] === 0)
+					if($val['price'] > 0 || $val['price'] === 0)
 					{
 						$_Lang['Articles'] .= '<td colspan="1" class="b" style="text-align: center;"><b>'.$val['price'].'</b> '.$_Lang['DEprice'].'<br/><input type="submit" class="pad3 marg_top" name="buyitem_'.$key.'" value="'.$_Lang['BuyIT'].'" onclick="return confirm(\''.$_Lang['AreYouSure'].'\');"/></td></tr>';
 					}
@@ -571,8 +582,12 @@ include($_EnginePath.'common.php');
 		$_Lang['Articles'] = '<tr><td class="b" colspan="6" style="text-align: center;"><b>'.$_Lang['NoItemsOnStock'].'</b></td></tr>';
 	}
 
-	if($_GET['darkenergy_bought'] == 'true')
+	if(isset($_GET['darkenergy_bought']) && $_GET['darkenergy_bought'] == 'true')
 	{
+		if(!isset($_GET['count']))
+		{
+			$_GET['count'] = 5;
+		}
 		$CheckDEFormTabs = array(5 => '01', 15 => '02', 25 => '03', 45 => '04');
 		$_Lang['SetActiveFormTab'] = $CheckDEFormTabs[$_GET['count']];
 	}

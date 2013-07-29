@@ -536,6 +536,7 @@ include($_EnginePath.'common.php');
 			$Polls = doquery("SELECT {{table}}.`id`, `votes`.`id` AS `vote_id` FROM {{table}} LEFT JOIN {{prefix}}poll_votes AS `votes` ON `votes`.`poll_id` = {{table}}.id AND `votes`.`user_id` = {$_User['id']} WHERE {{table}}.`open` = 1 ORDER BY {{table}}.`time` DESC;", 'polls');
 			if(mysql_num_rows($Polls) > 0)
 			{
+				$AvailablePolls = 0;
 				while($PollData = mysql_fetch_assoc($Polls))
 				{
 					if($PollData['vote_id'] <= 0)

@@ -15,14 +15,24 @@ include($_EnginePath.'common.php');
 
 	$Now = time();
 	$LogonLIMIT	= 20;
-
+	$MaxEspionageProbesCount = 9999;
+	
+	$_Lang['ServerSkins'] = '';
+	$_Lang['QuickRes_PlanetList'] = '';
+	$_Lang['CreateResSortList'] = '';
+	
 	$_Lang['MD5OldPass'] = $_User['password'];
 	$_Lang['ShowOldEmail'] = $_User['email'];
 	$_User['skinpath'] = $_SkinPath;
 	$_Lang['skinpath'] = $_User['skinpath'];
 	$_Lang['VacationDays'] = 3;
+	$_Lang['PHP_Insert_VacationComeback'] = $Now + ($_Lang['VacationDays'] * TIME_DAY);
+	$_Lang['PHP_Insert_VacationComeback'] = date('d.m.Y', $_Lang['PHP_Insert_VacationComeback'])." {$_Lang['atHour']} ".date('h:i:s', $_Lang['PHP_Insert_VacationComeback']);
 	$ForceGoingOnVacationMsg = false;
-
+	
+	$ChangeNotDone = 0;
+	$ChangeSetCount = 0;
+	
 	$SkinNames = array('xnova' => 'XNova', 'epicblue' => 'EpicBlue Fresh', 'epicblue_old' => 'EpicBlue Standard');
 
 	$SkinDir = scandir('./skins/');
@@ -53,7 +63,7 @@ include($_EnginePath.'common.php');
 		$_Lang['QuickRes_PlanetList'] .= "<option value=\"{$Planets['id']}\" {sel_planet_{$Planets['id']}}>{$Planets['name']} [{$Planets['galaxy']}:{$Planets['system']}:{$Planets['planet']}]</option>";
 	}
 
-	$Mode = $_GET['mode'];
+	$Mode = (isset($_GET['mode']) ? $_GET['mode'] : null);
 
 	if(!isOnVacation())
 	{
@@ -62,6 +72,7 @@ include($_EnginePath.'common.php');
 			// General View
 			$CheckMailChange = doquery("SELECT `ID`, `Date` FROM {{table}} WHERE `UserID` = {$_User['id']} AND `ConfirmType` = 0 LIMIT 1;", 'mailchange', true);
 			
+			$Query_IgnoreSystem = '';
 			$Query_IgnoreSystem .= "SELECT `ignore`.`IgnoredID`, `user`.`username` FROM {{table}} AS `ignore` ";
 			$Query_IgnoreSystem .= "JOIN `{{prefix}}users` AS `user` ON `ignore`.`IgnoredID` = `user`.`id` ";
 			$Query_IgnoreSystem .= "WHERE `ignore`.`OwnerID` = {$_User['id']};";
@@ -74,14 +85,14 @@ include($_EnginePath.'common.php');
 				}
 			}
 			
-			if($_POST['save'] == 'yes' OR !empty($_GET['ignoreadd']))
+			if((isset($_POST['save']) && $_POST['save'] == 'yes') || !empty($_GET['ignoreadd']))
 			{
 				if($_POST['saveType'] == $_Lang['SaveAll'])
 				{
-					$_Lang['SetActiveMarker'] = $_POST['markActive'];
+					$_Lang['SetActiveMarker'] = (isset($_POST['markActive']) ? $_POST['markActive'] : null);
 
 					// Settings for Tab01
-					if($_POST['change_pass'] == 'on')
+					if(isset($_POST['change_pass']) && $_POST['change_pass'] == 'on')
 					{
 						$_POST['give_newpass'] = trim($_POST['give_newpass']);
 						if(md5($_POST['give_oldpass']) == $_User['password'])
@@ -95,7 +106,7 @@ include($_EnginePath.'common.php');
 										$ChangeSet['password'] = md5($_POST['give_newpass']);
 										$ChangeSetTypes['password'] = 's';
 										$InfoMsgs[] = $_Lang['Pass_Changed_plzlogout'];
-										setcookie($_GameConfig['COOKIE_NAME'], '', time - 3600, '/', '');
+										setcookie($_GameConfig['COOKIE_NAME'], '', $Now - 3600, '/', '');
 									}
 									else
 									{
@@ -118,7 +129,7 @@ include($_EnginePath.'common.php');
 						}
 					}
 
-					if($_POST['change_mail'] == 'on')
+					if(isset($_POST['change_mail']) && $_POST['change_mail'] == 'on')
 					{
 						if($CheckMailChange['ID'] <= 0)
 						{
@@ -221,7 +232,7 @@ include($_EnginePath.'common.php');
 						}
 					}
 
-					if($_POST['stop_email_change'] == 'on')
+					if(isset($_POST['stop_email_change']) && $_POST['stop_email_change'] == 'on')
 					{
 						if($CheckMailChange['ID'] > 0)
 						{
@@ -235,7 +246,7 @@ include($_EnginePath.'common.php');
 						}
 					}
 
-					if($_POST['ipcheck_deactivate'] == 'on')
+					if(isset($_POST['ipcheck_deactivate']) && $_POST['ipcheck_deactivate'] == 'on')
 					{
 						$IPCheckDeactivate = '1';
 					}
@@ -281,7 +292,7 @@ include($_EnginePath.'common.php');
 						$ChangeNotDone += 1;
 					}
 
-					if($_POST['planet_sort_moons'] == 'on')
+					if(isset($_POST['planet_sort_moons']) && $_POST['planet_sort_moons'] == 'on')
 					{
 						$PlanetSortMoons = '1';
 					}
@@ -329,7 +340,6 @@ include($_EnginePath.'common.php');
 					}
 					if($SkinPath != $_User['skinpath'])
 					{
-						$ChangeSet['skinpath'] = $SkinPath;
 						$ChangeSetTypes['skinpath'] = 's';
 					}
 					else
@@ -337,7 +347,7 @@ include($_EnginePath.'common.php');
 						$ChangeNotDone += 1;
 					}
 
-					if($_POST['use_skin'] == 'on')
+					if(isset($_POST['use_skin']) && $_POST['use_skin'] == 'on')
 					{
 						$UseSkin = '1';
 					}
@@ -369,7 +379,7 @@ include($_EnginePath.'common.php');
 						$ChangeNotDone += 1;
 					}
 
-					if($_POST['development_old'] == 'on')
+					if(isset($_POST['development_old']) && $_POST['development_old'] == 'on')
 					{
 						$DevelopmentOld = '1';
 					}
@@ -386,7 +396,7 @@ include($_EnginePath.'common.php');
 						$ChangeNotDone += 1;
 					}
 
-					if($_POST['build_expandedview_use'] == 'on')
+					if(isset($_POST['build_expandedview_use']) && $_POST['build_expandedview_use'] == 'on')
 					{
 						$BuildExpandedView = '1';
 					}
@@ -403,7 +413,7 @@ include($_EnginePath.'common.php');
 						$ChangeNotDone += 1;
 					}
 
-					if($_POST['pretty_fleet_use'] == 'on')
+					if(isset($_POST['pretty_fleet_use']) && $_POST['pretty_fleet_use'] == 'on')
 					{
 						$UsePrettyFleet = '1';
 					}
@@ -421,9 +431,9 @@ include($_EnginePath.'common.php');
 					}
 
 					$ChangeNotDone += 1;
-					if($_POST['resSort_changed'] == '1')
+					if(isset($_POST['resSort_changed']) && $_POST['resSort_changed'] == '1')
 					{
-						$_POST['resSort_array'] = trim($_POST['resSort_array']);
+						$_POST['resSort_array'] = (isset($_POST['resSort_array']) ? trim($_POST['resSort_array']) : null);
 						if(preg_match('/^[a-z]{3}\,[a-z]{3}\,[a-z]{3}$/D', $_POST['resSort_array']))
 						{
 							$CheckData = explode(',', $_POST['resSort_array']);
@@ -481,7 +491,7 @@ include($_EnginePath.'common.php');
 						$ChangeNotDone += 1;
 					}
 
-					if($_POST['msg_spyexpand'] == 'on')
+					if(isset($_POST['msg_spyexpand']) && $_POST['msg_spyexpand'] == 'on')
 					{
 						$MsgExpandSpyReports = '1';
 					}
@@ -498,7 +508,7 @@ include($_EnginePath.'common.php');
 						$ChangeNotDone += 1;
 					}
 
-					if($_POST['msg_usethreads'] == 'on')
+					if(isset($_POST['msg_usethreads']) && $_POST['msg_usethreads'] == 'on')
 					{
 						$MsgUseMsgThreads = '1';
 					}
@@ -521,9 +531,9 @@ include($_EnginePath.'common.php');
 					{
 						$SpyCount = 1;
 					}
-					else if($SpyCount > 9999)
+					else if($SpyCount > $MaxEspionageProbesCount)
 					{
-						$SpyCount = 9999;
+						$SpyCount = $MaxEspionageProbesCount;
 					}
 					if($SpyCount != $_User['settings_spyprobescount'])
 					{
@@ -534,7 +544,7 @@ include($_EnginePath.'common.php');
 						$ChangeNotDone += 1;
 					}
 
-					if($_POST['use_ajaxgalaxy'] == 'on')
+					if(isset($_POST['use_ajaxgalaxy']) && $_POST['use_ajaxgalaxy'] == 'on')
 					{
 						$UseAJAXGalaxy = '1';
 					}
@@ -550,7 +560,7 @@ include($_EnginePath.'common.php');
 					{
 						$ChangeNotDone += 1;
 					}	
-					if($_POST['show_useravatars'] == 'on')
+					if(isset($_POST['show_useravatars']) && $_POST['show_useravatars'] == 'on')
 					{
 						$ShowUserAvatars = '1';
 					}
@@ -567,7 +577,7 @@ include($_EnginePath.'common.php');
 						$ChangeNotDone += 1;
 					}
 
-					if($_POST['short_spy'] == 'on')
+					if(isset($_POST['short_spy']) && $_POST['short_spy'] == 'on')
 					{
 						$ShortcutSpy = '1';
 					}
@@ -584,7 +594,7 @@ include($_EnginePath.'common.php');
 						$ChangeNotDone += 1;
 					}
 
-					if($_POST['short_write'] == 'on')
+					if(isset($_POST['short_write']) && $_POST['short_write'] == 'on')
 					{
 						$ShortcutWrite = '1';
 					}
@@ -601,7 +611,7 @@ include($_EnginePath.'common.php');
 						$ChangeNotDone += 1;
 					}
 
-					if($_POST['short_buddy'] == 'on')
+					if(isset($_POST['short_buddy']) && $_POST['short_buddy'] == 'on')
 					{
 						$ShortcutBuddy = '1';
 					}
@@ -618,7 +628,7 @@ include($_EnginePath.'common.php');
 						$ChangeNotDone += 1;
 					}
 
-					if($_POST['short_rocket'] == 'on')
+					if(isset($_POST['short_rocket']) && $_POST['short_rocket'] == 'on')
 					{
 						$ShortcutRocket = '1';
 					}
@@ -637,9 +647,9 @@ include($_EnginePath.'common.php');
 					
 					// Settings for Tab04
 					$_Lang['SetActiveMarker'] = '04';
-					if($_POST['vacation_activate'] == 'on' OR $_POST['delete_activate'] == 'on')
+					if((isset($_POST['vacation_activate']) && $_POST['vacation_activate'] == 'on') || (isset($_POST['delete_activate']) && $_POST['delete_activate'] == 'on'))
 					{
-						if($_POST['vacation_activate'] == 'on')
+						if(isset($_POST['vacation_activate']) && $_POST['vacation_activate'] == 'on')
 						{
 							$allowVacation = true;
 							if(($_User['vacation_leavetime'] + TIME_DAY) >= $Now)
@@ -658,7 +668,7 @@ include($_EnginePath.'common.php');
 							if($allowVacation === true)
 							{
 								// Update All Planets/Moons before VacationMode (don't do that if previous conditions are not fulfilled)
-								$AllPlanets= doquery("SELECT * FROM {{table}} WHERE `id_owner` = {$_User['id']};", 'planets');
+								$AllPlanets = doquery("SELECT * FROM {{table}} WHERE `id_owner` = {$_User['id']};", 'planets');
 
 								$Results['planets'] = array(); 
 								while($PlanetsData = mysql_fetch_assoc($AllPlanets))
@@ -696,12 +706,12 @@ include($_EnginePath.'common.php');
 								$ChangeSet['vacation_type']	= '0';
 
 								$ChangeSetCount += 1;
-								$ForceGoingOnVacationMsg= true;
+								$ForceGoingOnVacationMsg = true;
 
 								$UserDev_Log[] = array('PlanetID' => '0', 'Date' => $Now, 'Place' => 26, 'Code' => '1', 'ElementID' => '0');
 							}
 						} 
-						if($_POST['delete_activate'] == 'on')
+						if(isset($_POST['delete_activate']) && $_POST['delete_activate'] == 'on')
 						{
 							if($_User['is_ondeletion'] == 0)
 							{
@@ -791,7 +801,7 @@ include($_EnginePath.'common.php');
 						}
 					}
 				}
-				else if(!empty($_GET['ignoreadd']) OR $_POST['saveType'] == 'ignore' OR $_POST['saveType'] == 'delignore')
+				else if(!empty($_GET['ignoreadd']) || $_POST['saveType'] == 'ignore' || $_POST['saveType'] == 'delignore')
 				{ 
 					// Settings for Tab05 (IgnoreList Management) 
 					$DontShow_NoChanges = true;
@@ -802,7 +812,7 @@ include($_EnginePath.'common.php');
 					
 					if($_POST['saveType'] == 'delignore')
 					{
-						if(!empty($_POST['del_ignore']) AND (array)$_POST['del_ignore'] === $_POST['del_ignore'])
+						if(!empty($_POST['del_ignore']) && (array)$_POST['del_ignore'] === $_POST['del_ignore'])
 						{
 							foreach($_POST['del_ignore'] as $Values)
 							{
@@ -829,6 +839,7 @@ include($_EnginePath.'common.php');
 								$IgnoreSystem_Deleted_Count = count($IgnoreSystem_Deleted);
 								$IgnoreSystem_Deleted = implode(',', $IgnoreSystem_Deleted);
 								
+								$Query_DeleteIgnores = '';
 								$Query_DeleteIgnores .= "DELETE FROM {{table}} WHERE ";
 								$Query_DeleteIgnores .= "`OwnerID` = {$_User['id']} AND `IgnoredID` IN ({$IgnoreSystem_Deleted}) LIMIT {$IgnoreSystem_Deleted_Count};";
 								doquery($Query_DeleteIgnores, 'ignoresystem');
@@ -854,13 +865,14 @@ include($_EnginePath.'common.php');
 						}
 						else
 						{
-							$IgnoreUser = trim($_POST['ignore_username']);
+							$IgnoreUser = (isset($_POST['ignore_username']) ? trim($_POST['ignore_username']) : null);
 							$InputType = 'un';
 						}
 						if((strtolower($IgnoreUser) != strtolower($_User['username']) AND $InputType == 'un') OR ($IgnoreUser != $_User['id'] AND $InputType == 'id'))
 						{
 							if((preg_match(REGEXP_USERNAME_ABSOLUTE, $IgnoreUser) AND $InputType == 'un') OR ($IgnoreUser > 0 AND $InputType == 'id'))
 							{
+								$Query_CheckUser = '';
 								$Query_CheckUser .= "SELECT `id`, `username`, `authlevel` FROM {{table}} ";
 								$Query_CheckUser .= "WHERE ";
 								if($InputType == 'un')
@@ -919,7 +931,7 @@ include($_EnginePath.'common.php');
 						{
 							eval('$_User[$Key] = '.(str_replace('UNIX_TIMESTAMP()', $Now, $Value)).';');
 						}
-						if($ChangeSetTypes[$Key] == 's')
+						if(isset($ChangeSetTypes[$Key]) && $ChangeSetTypes[$Key] == 's')
 						{
 							$Value = "'{$Value}'";
 						}
@@ -944,7 +956,7 @@ include($_EnginePath.'common.php');
 				}
 				else
 				{
-					if($DontShow_NoChanges !== true)
+					if(!isset($DontShow_NoChanges) || $DontShow_NoChanges !== true)
 					{
 						$NoticeMsgs[] = $_Lang['Info_NoChanges'];
 					}
@@ -1147,7 +1159,12 @@ include($_EnginePath.'common.php');
 			}
 			
 			// Logons List
-			$GetLogons = doquery("SELECT `Log`.*, `IPTable`.`Value` FROM {{table}} AS `Log` LEFT JOIN `{{prefix}}used_ip_and_ua` AS `IPTable` ON `Log`.`IP_ID` = `IPTable`.`ID` WHERE `Log`.`User_ID` = {$_User['id']} ORDER BY `Log`.`LastTime` DESC LIMIT {$LogonLIMIT};", 'user_enterlog');
+			$Query_GetLogons = '';
+			$Query_GetLogons .= "SELECT `Log`.*, `IPTable`.`Value` FROM {{table}} AS `Log` ";
+			$Query_GetLogons .= "LEFT JOIN `{{prefix}}used_ip_and_ua` AS `IPTable` ON `Log`.`IP_ID` = `IPTable`.`ID` ";
+			$Query_GetLogons .= "WHERE `Log`.`User_ID` = {$_User['id']} ";
+			$Query_GetLogons .= "ORDER BY `Log`.`LastTime` DESC LIMIT {$LogonLIMIT};";			
+			$GetLogons = doquery($Query_GetLogons, 'user_enterlog');
 			if(mysql_num_rows($GetLogons) > 0)
 			{
 				while($LogonData = mysql_fetch_assoc($GetLogons))
@@ -1162,7 +1179,7 @@ include($_EnginePath.'common.php');
 						}
 						$Temp = explode('|', $Temp);
 						$ThisTime = SERVER_MAINOPEN_TSTAMP + $Temp[0];
-						$LogonList[] = array('Time' => $ThisTime, 'IP' => $LogonData['Value'], 'State' => ($Temp[1] == 'F' ? false : true));
+						$LogonList[] = array('Time' => $ThisTime, 'IP' => $LogonData['Value'], 'State' => (isset($Temp[1]) && $Temp[1] == 'F' ? false : true));
 						$LogonTimes[] = $ThisTime;
 						$LimitCounter -= 1;
 					}
@@ -1215,7 +1232,7 @@ include($_EnginePath.'common.php');
 			$TPL_FleetColors_Row = gettemplate('settings_fleetcolors_row');
 			if(!empty($_User['settings_FleetColors']))
 			{
-				if($FleetColors_NeedChange === true)
+				if(isset($FleetColors_NeedChange) && $FleetColors_NeedChange === true)
 				{
 					$_User['settings_FleetColors'] = stripslashes($_User['settings_FleetColors']);
 				}
@@ -1225,11 +1242,11 @@ include($_EnginePath.'common.php');
 			{
 				$_Lang['Insert_FleetColors_Pickers'][] = parsetemplate($TPL_FleetColors_Row, array
 				(
-					'MissionName' => $_Lang['type_mission'][$MissionID],
-					'MissionID' => $MissionID,
-					'Value_OwnFly' => $FleetColors['ownfly'][$MissionID],
-					'Value_OwnComeback' => $FleetColors['owncb'][$MissionID],
-					'Value_NonOwn' => $FleetColors['nonown'][$MissionID]
+					'MissionName'		=> $_Lang['type_mission'][$MissionID],
+					'MissionID'			=> $MissionID,
+					'Value_OwnFly'		=> (isset($FleetColors['ownfly'][$MissionID]) ? $FleetColors['ownfly'][$MissionID] : null),
+					'Value_OwnComeback' => (isset($FleetColors['owncb'][$MissionID]) ? $FleetColors['owncb'][$MissionID] : null),
+					'Value_NonOwn'		=> (isset($FleetColors['nonown'][$MissionID]) ? $FleetColors['nonown'][$MissionID] : null)
 				));
 			}
 			$_Lang['Insert_FleetColors_Pickers'] = implode('', $_Lang['Insert_FleetColors_Pickers']);
@@ -1273,7 +1290,7 @@ include($_EnginePath.'common.php');
 
 				doquery("UPDATE {{table}} SET `darkEnergy` = `darkEnergy` - 10, `username` = '{$NewNick}', `old_username` = '{$_User['username']}', `old_username_expire` = UNIX_TIMESTAMP() + (7*24*60*60) WHERE `id` = {$_User['id']} LIMIT 1;", 'users');
 				doquery("INSERT INTO {{table}} VALUES(NULL, {$_User['id']}, UNIX_TIMESTAMP(), '{$NewNick}', '{$_User['username']}');", 'nick_changelog');
-				setcookie($_GameConfig['COOKIE_NAME'], '', time - 3600, '/', '');
+				setcookie($_GameConfig['COOKIE_NAME'], '', $Now - 3600, '/', '');
 				message($_Lang['NewNick_saved'], $_Lang['NickChange_Title'], 'login.php');
 			}
 			else
@@ -1294,7 +1311,6 @@ include($_EnginePath.'common.php');
 				}
 				
 				// Informations box
-				$_Lang['DarkEnergy_Status'] = sprintf($_Lang['DarkEnergy_Status'], ($_User['darkEnergy'] >= 10) ? 'lime' : 'red', $_User['darkEnergy']);
 				display(parsetemplate(gettemplate('settings_changenick'), $_Lang), $_Lang['NickChange_Title'], false);
 			}
 		}
@@ -1302,11 +1318,10 @@ include($_EnginePath.'common.php');
 	else
 	{
 		// User is on Vacation
-
 		if($Mode == 'exit')
 		{
 			// User is trying to remove Vacation mode
-			if($_POST['exit_modus'] == 'on' AND canTakeVacationOff($Now))
+			if(isset($_POST['exit_modus']) && $_POST['exit_modus'] == 'on' && canTakeVacationOff($Now))
 			{
 				doquery("UPDATE {{table}} SET `is_onvacation` = '0', `vacation_starttime` = '0', `vacation_endtime` = '0', `vacation_leavetime` = IF(`vacation_type` = 2, 0, UNIX_TIMESTAMP()) WHERE `id` = {$_User['id']} LIMIT 1;", 'users'); 
 				doquery("UPDATE {{table}} SET `last_update` = UNIX_TIMESTAMP() WHERE `id_owner` = {$_User['id']}", 'planets');
