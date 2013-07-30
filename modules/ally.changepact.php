@@ -25,6 +25,7 @@ if(IN_ALLYPAGE !== true)
 		if(!empty($RanksID))
 		{
 			$RanksID = implode(',', $RanksID);
+			$Query_GetUsers = '';
 			$Query_GetUsers .= "SELECT `id` FROM {{table}} WHERE ";
 			$Query_GetUsers .= "`ally_id` = {$AllyID} AND `ally_rank_id` IN ({$RanksID})";
 			$Query_GetUsers .= "; -- ally.changepact.php|SendNotification|GetUsers";
@@ -46,12 +47,13 @@ if(IN_ALLYPAGE !== true)
 		message($_Lang['Ally_AccessDenied'], $MsgTitle, 'alliance.php', 3);
 	}
 	
-	$Manage_AID = intval($_GET['aid']);
+	$Manage_AID = (isset($_GET['aid']) ? intval($_GET['aid']) : 0);
 	if($Manage_AID <= 0 OR $Manage_AID == $Ally['id'])
 	{
 		message($_Lang['Ally_PactChange_BadAID'], $_Lang['Ally_PactChange_Title'], 'alliance.php?mode=pactslist', 3);
 	}
 	
+	$Query_GetPactData = '';
 	$Query_GetPactData .= "SELECT `pact`.*, `ally`.`ally_name`, `ally`.`ally_ranks` FROM {{table}} AS `pact` ";
 	$Query_GetPactData .= "LEFT JOIN `{{prefix}}alliance` AS `ally` ON `ally`.`id` = IF(`pact`.`AllyID_Sender` = {$Ally['id']}, `pact`.`AllyID_Owner`, `pact`.`AllyID_Sender`) ";
 	$Query_GetPactData .= "WHERE ";
@@ -65,7 +67,7 @@ if(IN_ALLYPAGE !== true)
 	}
 	
 	$Manage_IsSender = ($Result_GetPactData['AllyID_Sender'] == $Ally['id'] ? true : false);
-	if(($Manage_IsSender AND $Result_GetPactData['Change_Sender'] > 0) OR (!$Manage_IsSender AND $Result_GetPactData['Change_Owner'] > 0))
+	if(($Manage_IsSender && $Result_GetPactData['Change_Sender'] > 0) || (!$Manage_IsSender && $Result_GetPactData['Change_Owner'] > 0))
 	{
 		message($_Lang['Ally_PactChange_PactChangeAwaiting'], $_Lang['Ally_PactChange_Title'], 'alliance.php?mode=pactslist', 3);
 	}
@@ -75,7 +77,7 @@ if(IN_ALLYPAGE !== true)
 	$_Lang['Insert_CurrentOption_'.$Result_GetPactData['Type']] = 'style="color: orange" selected';
 	$_Lang['Insert_CurrentType'] = $_Lang['Ally_PactNew_Type_'.$Result_GetPactData['Type']];
 	
-	if($_POST['sent'] == 1)
+	if(isset($_POST['sent']) && $_POST['sent'] == 1)
 	{
 		$NewPact_Msg['color'] = 'red';
 		$Manage_NewType = intval($_POST['type']);
@@ -96,7 +98,8 @@ if(IN_ALLYPAGE !== true)
 						$CheckOtherField = 'Change_Sender';
 					}
 					if($Result_GetPactData[$CheckOtherField] != $Manage_NewType)
-					{					
+					{
+						$Query_UpdatePactType = '';
 						$Query_UpdatePactType .= "UPDATE {{table}} SET ";
 						$Query_UpdatePactType .= "`{$UpdateField}` = {$Manage_NewType} ";
 						$Query_UpdatePactType .= "WHERE ";
@@ -121,6 +124,7 @@ if(IN_ALLYPAGE !== true)
 				}
 				else
 				{
+					$Query_UpdatePactType = '';
 					$Query_UpdatePactType .= "UPDATE {{table}} SET ";
 					$Query_UpdatePactType .= "`Type` = {$Manage_NewType} ";
 					$Query_UpdatePactType .= "WHERE ";
@@ -150,6 +154,7 @@ if(IN_ALLYPAGE !== true)
 		}
 	}
 
+	$_Lang['Insert_MsgBox'] = '';
 	if(!empty($NewPact_Msg))
 	{
 		$_Lang['Insert_MsgBox'] .= parsetemplate(gettemplate('_singleRow'), array('Colspan' => 2, 'Classes' => 'pad5 '.$NewPact_Msg['color'], 'Text' => $NewPact_Msg['text']));

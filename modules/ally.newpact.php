@@ -11,7 +11,7 @@ if(IN_ALLYPAGE !== true)
 		message($_Lang['Ally_AccessDenied'], $MsgTitle, 'alliance.php', 3);
 	}
 
-	if($_POST['sent'] == 1)
+	if(isset($_POST['sent']))
 	{
 		$NewPact_Msg['color'] = 'red';
 		if(!empty($_POST['allyname']))
@@ -25,6 +25,7 @@ if(IN_ALLYPAGE !== true)
 					{
 						$NewPact_Type = $_POST['type'];
 
+						$Query_NewPact_CheckAlly = '';
 						$Query_NewPact_CheckAlly .= "SELECT `id`, `ally_ranks` FROM {{table}} WHERE `ally_name` = '{$NewPact_CheckAlly}' LIMIT 1;";
 						$Query_NewPact_CheckAlly .= " -- alliance.php|NewPact|CheckAlly";
 						$Result_NewPact_CheckAlly = doquery($Query_NewPact_CheckAlly, 'alliance', true);
@@ -33,6 +34,7 @@ if(IN_ALLYPAGE !== true)
 							$NewPact_AllyID = $Result_NewPact_CheckAlly['id'];
 							$NewPact_AllyRanks = json_decode($Result_NewPact_CheckAlly['ally_ranks'], true);
 
+							$Query_NewPact_CheckPacts = '';
 							$Query_NewPact_CheckPacts .= "(";
 							$Query_NewPact_CheckPacts .= "SELECT COUNT(*) AS `Count`, 1 AS `Type` FROM `{{prefix}}ally_pacts` WHERE ";
 							$Query_NewPact_CheckPacts .= "(`AllyID_Sender` = {$Ally['id']} AND `AllyID_Owner` = {$NewPact_AllyID}) OR ";
@@ -58,8 +60,9 @@ if(IN_ALLYPAGE !== true)
 								}
 							}
 
-							if($CantGoFurther !== true)
+							if(!isset($CantGoFurther))
 							{
+								$Query_NewPact_CreatePact = '';
 								$Query_NewPact_CreatePact .= "INSERT INTO {{table}} SET ";
 								$Query_NewPact_CreatePact .= "`AllyID_Sender` = {$Ally['id']}, ";
 								$Query_NewPact_CreatePact .= "`AllyID_Owner` = {$NewPact_AllyID}, ";
@@ -82,6 +85,7 @@ if(IN_ALLYPAGE !== true)
 								if(!empty($NewPact_RankIDs))
 								{
 									$NewPact_RankIDs = implode(',', $NewPact_RankIDs);
+									$Query_NewPact_GetUsers = '';
 									$Query_NewPact_GetUsers .= "SELECT `id` FROM {{table}} WHERE ";
 									$Query_NewPact_GetUsers .= "`ally_id` = {$NewPact_AllyID} AND `ally_rank_id` IN ({$NewPact_RankIDs})";
 									$Query_NewPact_GetUsers .= "; -- alliance.php|NewPact|GetUsers";
@@ -131,6 +135,7 @@ if(IN_ALLYPAGE !== true)
 		}
 	}
 
+	$_Lang['Insert_MsgBox'] = '';
 	if(!empty($NewPact_Msg))
 	{
 		$_Lang['Insert_MsgBox'] .= parsetemplate(gettemplate('_singleRow'), array('Colspan' => 2, 'Classes' => 'pad5 '.$NewPact_Msg['color'], 'Text' => $NewPact_Msg['text']));

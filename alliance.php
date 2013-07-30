@@ -16,8 +16,8 @@ include($_EnginePath.'common.php');
 	$RankNameRegExp			= '/^[a-zA-Z0-9'.REGEXP_POLISHSIGNS.'\ \-\_\.]+$/D';
 	$Sanitize4SQLSearch		= '#(_){1}#si';
 	$Sanitize4SQLReplace	= '\\\$1';
-	$mode					= $_GET['mode'];
-	$edit					= $_GET['edit'];
+	$mode					= (isset($_GET['mode']) ? $_GET['mode'] : null);
+	$edit					= (isset($_GET['edit']) ? $_GET['edit'] : null);
 	$_MaxLength_Text		= 5000;
 	$_MaxLength_Request		= 2000;
 	$_MaxLength_MassMsg		= 5000;
@@ -42,183 +42,7 @@ include($_EnginePath.'common.php');
 
 	// --- Ally informations - Requested by User
 
-	function createMembersList($Admin = false)
-	{
-		global $_GET, $_Lang, $_ThisUserRank, $Ally, $Time, $_SkinPath, $_User;
-
-		$SortType = intval($_GET['stype']);
-		$SortMode = $_GET['smode'];
-
-		$ThisSorting = 'class="sortHigh"';
-		switch($SortType)
-		{
-			case 1:
-				$SortBy = '`username`';
-				$_Lang['sortByName'] = $ThisSorting;
-				break;
-			case 2:
-				$SortBy = '`ally_rank_id`';
-				$_Lang['sortByRank'] = $ThisSorting;
-				break;
-			case 3:
-				$SortBy = '`total_points`';
-				$_Lang['sortByPoints'] = $ThisSorting;
-				break;
-			case 4:
-				$SortBy = '`ally_register_time`';
-				$_Lang['sortByRegTime'] = $ThisSorting;
-				break;
-			case 5:
-				if($_ThisUserRank['mlist_online'] === true)
-				{
-					$SortBy = '`onlinetime`';
-					$_Lang['sortByOnline'] = $ThisSorting;
-				}
-				else
-				{
-					$SortBy = '`id`';
-				}
-				break;
-			case 6:
-				$SortBy = 'CONCAT(LPAD(`galaxy`, 2, \'0\'), LPAD(`system`, 3, \'0\'), LPAD(`planet`, 2, \'0\'))';
-				$_Lang['sortByPlanet'] = $ThisSorting;
-				break;
-			default:
-				$SortBy = '`id`';
-				break;
-		}
-		switch($SortMode)
-		{
-			case 'desc':
-				$SortHow = 'DESC';
-				$_Lang['sortRev'] = 'asc';
-				break;
-			default:
-				$SortHow = 'ASC';
-				$_Lang['sortRev'] = 'desc';
-				break;
-		}
-
-		$needenFields = "`Users`.`id` AS `id`, `Users`.`username` AS `username`, `Users`.`galaxy` AS `galaxy`, `Users`.`system` AS `system`, `Users`.`planet` AS `planet`, `Users`.`onlinetime` AS `onlinetime`, `Users`.`ally_register_time`, `Users`.`ally_rank_id` AS `ally_rank_id`, `Points`.`total_points` AS `total_points`";
-		$MembersList = doquery("SELECT {$needenFields} FROM {{table}} AS `Users` LEFT JOIN `{{prefix}}statpoints` AS `Points` ON `Users`.`id` = `Points`.`id_owner` AND `Points`.`stat_type` = '1' WHERE `Users`.`ally_id` = {$_User['ally_id']} ORDER BY {$SortBy} {$SortHow};", 'users');
-		$_Lang['members_count'] = $Ally['ally_members'];
-
-		if($Admin === false)
-		{
-			$RowTPL = gettemplate('alliance_memberslist_row');
-		}
-		else
-		{
-			$RowTPL = gettemplate('alliance_admin_memberslist_row');
-
-			global $AllowedRanksChange;
-			if($_ThisUserRank['mlist_mod'] === true AND !empty($AllowedRanksChange) AND count($AllowedRanksChange) > 1)
-			{
-				$CreateChangeRankList = '<select name="change_rank[{SET_ID}]">';
-				foreach($AllowedRanksChange as $RankID)
-				{
-					$CreateChangeRankList .= "<option value=\"{$RankID}\" {SET_SELECT_{$RankID}}>{$Ally['ally_ranks'][$RankID]['name']}</option>";
-				}
-				$CreateChangeRankList .= '</select>';
-			}
-
-			if($_ThisUserRank['cankick'] === true AND !empty($AllowedRanksChange))
-			{
-				$CreateKickButton = '<a href="?mode=admin&amp;edit=members&amp;kick={SET_ID}" class="kick"></a>';
-			}
-
-			if(empty($AllowedRanksChange) OR ($_ThisUserRank['cankick'] !== true AND $_ThisUserRank['mlist_mod'] !== true))
-			{
-				$AllowedRanksChange = array();
-			}
-		} 
-
-		$CounterLoop = 1;
-		while($FetchData = mysql_fetch_assoc($MembersList))
-		{
-			$FetchData['i'] = $CounterLoop;
-			$FetchData['skinpath'] = $_SkinPath;
-			$FetchData['write'] = $_Lang['Ally_ML_Write'];
-			if($Admin === true AND !empty($CreateChangeRankList) AND in_array($FetchData['ally_rank_id'], $AllowedRanksChange))
-			{
-				$SetRankSelector = str_replace(array('{SET_SELECT_'.$FetchData['ally_rank_id'].'}', '{SET_ID}'), array('selected', $FetchData['id']), $CreateChangeRankList);
-				$SetRankSelector = preg_replace('#\{SET\_SELECT\_[0-9]+\}#si', '', $SetRankSelector);
-
-				$FetchData['rank'] = $SetRankSelector;
-			}
-			else
-			{
-				$FetchData['rank'] = $Ally['ally_ranks'][$FetchData['ally_rank_id']]['name'];
-			}
-			$FetchData['points'] = prettyNumber($FetchData['total_points']);
-			$FetchData['reg_time'] = prettyDate('d m Y', $FetchData['ally_register_time'], 1);
-
-			if($_ThisUserRank['mlist_online'] === true)
-			{
-				if($FetchData['onlinetime'] >= ($Time - TIME_ONLINE))
-				{
-					$FetchData['onlinetime'] = $_Lang['Ally_ML_isOnline'];
-					$FetchData['onlinecolor'] = 'lime';
-				}
-				else if($FetchData['onlinetime'] >= ($Time - 3600))
-				{
-					$FetchData['onlinetime'] = floor(($Time - $FetchData['onlinetime']) / 60).' '.$_Lang['Ally_ML_Mins'];
-					$FetchData['onlinecolor'] = 'orange';
-				}
-				else if($FetchData['onlinetime'] >= ($Time - TIME_DAY))
-				{
-					$FetchData['onlinetime'] = $_Lang['Ally_ML_isOffline'];
-					$FetchData['onlinecolor'] = 'red';
-				}
-				else
-				{
-					$FetchData['onlinetime'] = floor(($Time - $FetchData['onlinetime']) / TIME_DAY).' '.$_Lang['Ally_ML_Days'];
-					$FetchData['onlinecolor'] = 'red';
-				}
-			}
-			else
-			{
-				$FetchData['onlinetime'] = '---';
-				$FetchData['onlinecolor'] = 'orange';
-			}
-			if($Admin === true)
-			{
-				if(in_array($FetchData['ally_rank_id'], $AllowedRanksChange) AND $FetchData['id'] != $_User['id'])
-				{
-					$FetchData['actions'] = str_replace('{SET_ID}', $FetchData['id'], $CreateKickButton);
-				}
-				else
-				{
-					$FetchData['actions'] = '&nbsp;';
-				}
-			}
-
-			$_Lang['Rows'] .= parsetemplate($RowTPL, $FetchData);
-			$CounterLoop += 1;
-		}
-	}
-
-	function CheckJobsDone($JobType, $UserID)
-	{
-		global $_User, $GlobalParsedTasks, $_Vars_TasksData, $UserTasksUpdate;
-
-		if($_User['id'] == $UserID)
-		{
-			$CurrentUser = $_User;
-		}
-		else
-		{
-			if(empty($GlobalParsedTasks[$UserID]['tasks_done_parsed']))
-			{
-				$GetUserTasksDone = doquery("SELECT `tasks_done` FROM {{table}} WHERE `id` = {$UserID} LIMIT 1;", 'users', true);
-				Tasks_CheckUservar($GetUserTasksDone);
-				$GlobalParsedTasks[$UserID] = $GetUserTasksDone;
-			}
-			$CurrentUser = $GlobalParsedTasks[$UserID];
-			$CurrentUser['id'] = $UserID;
-		}
-		Tasks_TriggerTask($CurrentUser, $JobType);
-	}
+	include($_EnginePath.'includes/functions/AlliancePageFunctions.php');
 
 	if($mode == 'ainfo')
 	{
@@ -226,9 +50,9 @@ include($_EnginePath.'common.php');
 		$MsgTitle = &$_Lang['AInfo_Title'];
 
 		// Check if User has given enough data
-		$AllyID = intval($_GET['a']);
-		$AllyTag = trim($_GET['tag']);
-		if(empty($AllyID) AND empty($AllyTag))
+		$AllyID = (isset($_GET['a']) ? intval($_GET['a']) : 0);
+		$AllyTag = (isset($_GET['tag']) ? trim($_GET['tag']) : null);
+		if(empty($AllyID) && empty($AllyTag))
 		{
 			message($_Lang['AInfo_NoSelector'], $MsgTitle);
 		}
@@ -250,6 +74,7 @@ include($_EnginePath.'common.php');
 		}
 
 		// Get Ally Data
+		$Query_AInfo_AllyRow = '';
 		$Query_AInfo_AllyRow .= "SELECT `id`, `ally_name`, `ally_tag`, `ally_image`, `ally_description`, `ally_web`, `ally_web_reveal`, `ally_members`, `ally_request_notallow` ";
 		$Query_AInfo_AllyRow .= "FROM {{table}} WHERE {$AllySelector} LIMIT 1;";
 		$AllyRow = doquery($Query_AInfo_AllyRow, 'alliance', true);
@@ -274,7 +99,7 @@ include($_EnginePath.'common.php');
 		{
 			$_Lang['ally_description'] = $_Lang['AInfo_NoAllyDesc'];
 		}
-		if(!empty($AllyRow['ally_web']) AND ($AllyRow['ally_web_reveal'] == 1 OR $_User['ally_id'] == $AllyRow['id']))
+		if(!empty($AllyRow['ally_web']) && ($AllyRow['ally_web_reveal'] == 1 || $_User['ally_id'] == $AllyRow['id']))
 		{
 			$AllyRow['ally_web'] = stripslashes($AllyRow['ally_web']);
 			$_Lang['ally_web'] = "<tr><th>{$_Lang['AInfo_WebPage']}</th><th><a href=\"{$AllyRow['ally_web']}\" rel=\"nofollow\">{$AllyRow['ally_web']}</a></th></tr>";
@@ -294,7 +119,7 @@ include($_EnginePath.'common.php');
 				$_Lang['Insert_Actions'] = "<tr><th colspan=\"2\" class=\"pad5 red\">{$_Lang['AInfo_RequestNotAllow']}</th></tr>";
 			}
 		}
-		else if($_User['ally_id'] > 0 AND $_User['ally_id'] == $AllyRow['id'])
+		else if($_User['ally_id'] > 0 && $_User['ally_id'] == $AllyRow['id'])
 		{
 			$_Lang['Insert_Actions'] = "<tr><th colspan=\"2\" class=\"pad5\"><a href=\"alliance.php\" class=\"lime\">{$_Lang['AInfo_BelongToAlly']}</a></th></tr>";
 		}
@@ -318,7 +143,7 @@ include($_EnginePath.'common.php');
 			if($mode == 'make')
 			{
 				// User wants to Make alliance 
-				if($_GET['yes'] == 1)
+				if(isset($_GET['yes']))
 				{
 					// User sent data
 					$MsgTitle = &$_Lang['AMake_Title'];
@@ -353,6 +178,7 @@ include($_EnginePath.'common.php');
 						message($_Lang['AMake_BadName'], $MsgTitle, 'alliance.php?mode=make', 3);
 					}
 
+					$Query_ACreate_Check = '';
 					$Query_ACreate_Check .= "SELECT `ally_tag`, `ally_name` FROM {{table}} ";
 					$Query_ACreate_Check .= "WHERE `ally_tag` = '{$CreateTag}' OR `ally_name` = '{$CreateName}' LIMIT 2;";
 
@@ -387,6 +213,7 @@ include($_EnginePath.'common.php');
 					}
 					$AllyCreate_RanksArray = mysql_real_escape_string(json_encode($AllyCreate_RanksArray));
 
+					$Query_ACreate_Create = '';
 					$Query_ACreate_Create .= "INSERT INTO {{table}} SET ";
 					$Query_ACreate_Create .= "`ally_name` = '{$CreateName}', ";
 					$Query_ACreate_Create .= "`ally_tag`= '{$CreateTag}', ";
@@ -399,15 +226,18 @@ include($_EnginePath.'common.php');
 					$Result_GetLastID = doquery("SELECT LAST_INSERT_ID() AS `ID`;", 'alliance', true);
 					$Result_GetLastID = $Result_GetLastID['ID'];
 
+					$Query_ACreate_MakeChatRoom = '';
 					$Query_ACreate_MakeChatRoom .= "INSERT INTO {{table}} SET ";
 					$Query_ACreate_MakeChatRoom .= "`AccessType` = 1, ";
 					$Query_ACreate_MakeChatRoom .= "`AccessCheck` = {$Result_GetLastID};";
 					doquery($Query_ACreate_MakeChatRoom, 'chat_rooms');
 
+					$Query_ACreate_UpdateAlly = '';
 					$Query_ACreate_UpdateAlly .= "UPDATE {{table}} SET `ally_ChatRoom_ID` = LAST_INSERT_ID() ";
 					$Query_ACreate_UpdateAlly .= "WHERE `id` = {$Result_GetLastID} LIMIT 1;";
 					doquery($Query_ACreate_UpdateAlly, 'alliance');
 
+					$Query_ACreate_UpdateUser = '';
 					$Query_ACreate_UpdateUser .= "UPDATE {{table}} SET ";
 					$Query_ACreate_UpdateUser .= "`ally_id` = {$Result_GetLastID}, ";
 					$Query_ACreate_UpdateUser .= "`ally_register_time` = UNIX_TIMESTAMP() ";
@@ -422,17 +252,18 @@ include($_EnginePath.'common.php');
 				{
 					// Show Form
 					$Page = parsetemplate(gettemplate('alliance_make'), $_Lang);
-					display($Page, $_Lang['make_alliance']);
+					display($Page, $_Lang['AMake_Title']);
 				}
 			}
 			else if($mode == 'search')
 			{
 				// Ally search engine
+				$searchText = null;
 				if(!empty($_POST['searchtext']))
 				{
 					$searchText = trim($_POST['searchtext']);
 				}
-				else
+				else if(!empty($_GET['searchtext']))
 				{
 					$searchText = trim($_GET['searchtext']);
 				}
@@ -449,7 +280,7 @@ include($_EnginePath.'common.php');
 						message($_Lang['AFind_BadSigns'], $_Lang['AFind_Title'], 'alliance.php?mode=search', 3);
 					}
 
-					$sPage = intval($_GET['spage']);
+					$sPage = (isset($_GET['spage']) ? intval($_GET['spage']) : 0);
 					if($sPage < 1)
 					{
 						$sPage = 1;
@@ -457,6 +288,7 @@ include($_EnginePath.'common.php');
 					$perPage = 20;
 					$startFrom = ($sPage - 1) * $perPage;
 
+					$Query_ASearch_Count = '';
 					$Query_ASearch_Count .= "SELECT COUNT(*) AS `Count` FROM {{table}} ";
 					$Query_ASearch_Count .= "WHERE `ally_name` LIKE '%{$ProtectedSearchText}%' OR `ally_tag` LIKE '%{$ProtectedSearchText}%';";
 
@@ -471,12 +303,14 @@ include($_EnginePath.'common.php');
 							$startFrom = ($sPage - 1) * $perPage;
 						}
 
+						$Query_ASearch_Search = '';
 						$Query_ASearch_Search .= "SELECT `id`, `ally_tag`, `ally_name`, `ally_members` FROM {{table}} ";
 						$Query_ASearch_Search .= "WHERE ally_name LIKE '%{$ProtectedSearchText}%' or ally_tag LIKE '%{$ProtectedSearchText}%' LIMIT {$startFrom}, {$perPage};";
 
 						$Result_ASearch_Search = doquery($Query_ASearch_Search, 'alliance');
 
 						$SearchRowTPL = gettemplate('alliance_searchresult_row');
+						$_Lang['result'] = '';
 						while($Result = mysql_fetch_assoc($Result_ASearch_Search))
 						{
 							$SanitizeSearch = preg_replace($TagOrNameSanitize, '\\\$1', $searchText);
@@ -499,7 +333,7 @@ include($_EnginePath.'common.php');
 					}
 					else
 					{
-						$_Lang['result'] .= "<tr><th class=\"pad2 orange\" colspan=\"3\">{$_Lang['AFind_NothingFound']}</th></tr>";
+						$_Lang['result'] = "<tr><th class=\"pad2 orange\" colspan=\"3\">{$_Lang['AFind_NothingFound']}</th></tr>";
 					}
 					$Page .= parsetemplate(gettemplate('alliance_searchresult_table'), $_Lang);
 				}
@@ -510,12 +344,13 @@ include($_EnginePath.'common.php');
 				// Send Request
 				$MsgTitle = &$_Lang['AApp_Title'];
 
-				$AllyID = intval($_GET['allyid']);
+				$AllyID = (isset($_GET['allyid']) ? intval($_GET['allyid']) : 0);
 				if($AllyID <= 0)
 				{
 					message($_Lang['AApp_BadID'], $MsgTitle);
 				}
 
+				$Query_AApply_Check = '';
 				$Query_AApply_Check .= "SELECT `id`, `ally_name`, `ally_tag`, `ally_request`, `ally_request_notallow` FROM {{table}} ";
 				$Query_AApply_Check .= "WHERE `id` = {$AllyID} LIMIT 1;";
 
@@ -529,7 +364,7 @@ include($_EnginePath.'common.php');
 					message($_Lang['AApp_AllyBlockRequest'], $MsgTitle);
 				}
 
-				if($_POST['send'] == 'yes' AND $_POST['action'] != $_Lang['AApp_UseExample'])
+				if(isset($_POST['send']) && $_POST['send'] == 'yes' && (!isset($_POST['action']) || $_POST['action'] != $_Lang['AApp_UseExample']))
 				{
 					$RequestText = strip_tags(stripslashes(trim($_POST['text'])));
 					if(!empty($RequestText))
@@ -558,11 +393,12 @@ include($_EnginePath.'common.php');
 			{
 				// Show Default Menu & Invites List
 
-				if($_GET['cmd'] == 'inv_accept' OR $_GET['cmd'] == 'inv_reject')
+				if(isset($_GET['cmd']) && ($_GET['cmd'] == 'inv_accept' || $_GET['cmd'] == 'inv_reject'))
 				{
-					$Inv_AllyID = intval($_GET['aid']);
+					$Inv_AllyID = (isset($_GET['aid']) ? intval($_GET['aid']) : 0);
 					if($Inv_AllyID > 0)
 					{
+						$Query_InvUse_Check = '';
 						$Query_InvUse_Check .= "SELECT `ai`.`SenderID`, `ally`.`ally_new_rank_id`, `ally`.`ally_ChatRoom_ID`FROM `{{table}}` AS `ai` ";
 						$Query_InvUse_Check .= "LEFT JOIN `{{prefix}}alliance` AS `ally` ON `ally`.`id` = `ai`.`AllyID` ";
 						$Query_InvUse_Check .= "WHERE `ai`.`OwnerID` = {$_User['id']} AND `ai`.`AllyID` = {$Inv_AllyID} AND `ai`.`State` = 1;";
@@ -576,6 +412,7 @@ include($_EnginePath.'common.php');
 								doquery("UPDATE {{table}} SET `State` = IF(`AllyID` = {$Inv_AllyID}, 0, -1) WHERE `OwnerID` = {$_User['id']} AND `State` = 1 LIMIT 1;", 'ally_invites');
 								if($Result_InvUse_Check['ally_ChatRoom_ID'] > 0)
 								{
+									$Query_UpdateChatRoomOnline = '';
 									$Query_UpdateChatRoomOnline .= "INSERT INTO {{table}} VALUES ({$Result_InvUse_Check['ally_ChatRoom_ID']}, {$_User['id']}, UNIX_TIMESTAMP()) ";
 									$Query_UpdateChatRoomOnline .= "ON DUPLICATE KEY UPDATE ";
 									$Query_UpdateChatRoomOnline .= "`LastOnline` = VALUES(`LastOnline`);";
@@ -603,6 +440,7 @@ include($_EnginePath.'common.php');
 					}
 				}
 
+				$Query_InvList_Get = '';
 				$Query_InvList_Get .= "SELECT `ai`.*, `u`.`username` AS `Sender_Name`, `a`.`ally_name` AS `Ally_Name` FROM {{table}} AS `ai` ";
 				$Query_InvList_Get .= "LEFT JOIN `{{prefix}}users` AS `u` ON `u`.`id` = `ai`.`SenderID` ";
 				$Query_InvList_Get .= "LEFT JOIN `{{prefix}}alliance` AS `a` ON `a`.`id` = `ai`.`AllyID` ";
@@ -702,6 +540,7 @@ include($_EnginePath.'common.php');
 		{
 			// This User is not Main AllyAdmin
 			$_ThisUserRank = $Ally['ally_ranks'][$_User['ally_rank_id']];
+			$_ThisUserRank['is_admin'] = false;
 		}
 
 		if($mode == 'exit')
@@ -757,15 +596,16 @@ include($_EnginePath.'common.php');
 			}
 
 			$_Lang['SelectedAll'] = 'selected';
-			if($_GET['send'] == '1')
+			$SendMass_Ranks = null;
+			$SendMass_Text = null;
+			if(isset($_GET['send']))
 			{
 				$_POST['text'] = stripslashes(trim($_POST['text']));
 				if(get_magic_quotes_gpc())
 				{
-					$_POST['text']= stripslashes($_POST['text']);
+					$_POST['text'] = stripslashes($_POST['text']);
 				}
 				$SendMass_Text = substr(strip_tags($_POST['text']), 0, $_MaxLength_Text);
-				$SendMass_Ranks = null;
 				if($_POST['rank_select'] != 'all')
 				{
 					$SendMass_Ranks = intval($_POST['rank_select']);
@@ -783,6 +623,7 @@ include($_EnginePath.'common.php');
 				{
 					if($SendMass_Ranks !== null)
 					{
+						$Query_AMassMsg_Members = '';
 						$Query_AMassMsg_Members .= "SELECT `id`, `username` FROM {{table}} ";
 						$Query_AMassMsg_Members .= "WHERE `ally_id` = {$_User['ally_id']} ";						
 						if($SendMass_Ranks !== true)
@@ -829,6 +670,7 @@ include($_EnginePath.'common.php');
 			}
 
 			$_Lang['PutMessage'] = $SendMass_Text;
+			$_Lang['OtherRanks'] = '';
 			foreach($Ally['ally_ranks'] as $Index => $Data)
 			{
 				if($SendMass_Ranks === $Index)
@@ -854,9 +696,9 @@ include($_EnginePath.'common.php');
 				message($_Lang['Ally_AccessDenied'], $MsgTitle, 'alliance.php', 3);
 			}
 
-			$Invite_Text = stripslashes(strip_tags(trim($_POST['text'])));
+			$Invite_Text = (isset($_POST['text']) ? stripslashes(strip_tags(trim($_POST['text']))) : null);
 			$_Lang['Insert_Text'] = $Invite_Text;
-			if(!empty($_GET['uid']) OR (!empty($_POST['uid']) AND $_POST['unamechanged'] != '1'))
+			if(!empty($_GET['uid']) || (!empty($_POST['uid']) && $_POST['unamechanged'] != '1'))
 			{
 				if(!empty($_POST['uid']))
 				{
@@ -872,7 +714,7 @@ include($_EnginePath.'common.php');
 					$Query_AInvite_CheckUserWhere = "`id` = {$Invite_UID}";
 				}
 			}
-			elseif(!empty($_POST['username']))
+			else if(!empty($_POST['username']))
 			{
 				$Invite_UName = trim($_POST['username']);
 				if(preg_match(REGEXP_USERNAME_ABSOLUTE, $Invite_UName))
@@ -891,7 +733,7 @@ include($_EnginePath.'common.php');
 					{
 						$_Lang['Insert_UID'] = $Invite_UID = $Result_AInvite_CheckUser['id'];
 						$_Lang['Insert_Username'] = $Result_AInvite_CheckUser['username'];
-						if($Invite_FromGet === true)
+						if(isset($Invite_FromGet))
 						{
 							$_Lang['Insert_LockUsername'] = 'disabled';
 						}
@@ -902,11 +744,13 @@ include($_EnginePath.'common.php');
 							{
 								$Invite_Text = substr($Invite_Text, 0, $_MaxLength_Invitation);
 
+								$Query_AInvite_CheckInvite = '';
 								$Query_AInvite_CheckInvite .= "SELECT COUNT(*) AS `Count` FROM {{table}} WHERE ";
 								$Query_AInvite_CheckInvite .= "`AllyID` = {$Ally['id']} AND `OwnerID` = {$Invite_UID} AND `State` = 1;";
 								$Result_AInvite_CheckInvite = doquery($Query_AInvite_CheckInvite, 'ally_invites', true);
 								if($Result_AInvite_CheckInvite['Count'] <= 0)
 								{
+									$Query_AInvite_Insert = '';
 									$Query_AInvite_Insert .= "INSERT INTO {{table}} (`AllyID`, `OwnerID`, `SenderID`, `Date`) VALUES ";
 									$Query_AInvite_Insert .= "({$Ally['id']}, {$Invite_UID}, {$_User['id']}, UNIX_TIMESTAMP()) ";
 									$Query_AInvite_Insert .= "ON DUPLICATE KEY UPDATE `AllyID` = `AllyID`;";
@@ -947,7 +791,7 @@ include($_EnginePath.'common.php');
 			}
 			else
 			{
-				if($_GET['send'] == '1')
+				if(isset($_GET['send']))
 				{
 					$MsgBox = array('text' => $_Lang['Ally_INV_Msg_BadInput'], 'col' => 'red');
 				}
@@ -970,6 +814,7 @@ include($_EnginePath.'common.php');
 				$InvList_DelID = intval($_GET['del']);
 				if($InvList_DelID > 0)
 				{
+					$Query_InvList_Delete = '';
 					$Query_InvList_Delete .= "SELECT `SenderID` FROM {{table}} ";
 					$Query_InvList_Delete .= "WHERE `AllyID` = {$Ally['id']} AND `OwnerID` = {$InvList_DelID} AND `State` = 1 LIMIT 1;";
 					$Result_InvList_Delete = doquery($Query_InvList_Delete, 'ally_invites', true);
@@ -1004,6 +849,7 @@ include($_EnginePath.'common.php');
 				}
 			}
 
+			$Query_InvList_Get = '';
 			$Query_InvList_Get .= "SELECT `ai`.*, `u1`.`username` AS `Owner_Name`, `u2`.`username` AS `Sender_Name` FROM {{table}} AS `ai` ";
 			$Query_InvList_Get .= "LEFT JOIN `{{prefix}}users` AS `u1` ON `u1`.`id` = `ai`.`OwnerID` ";
 			$Query_InvList_Get .= "LEFT JOIN `{{prefix}}users` AS `u2` ON `u2`.`id` = `ai`.`SenderID` ";
@@ -1078,7 +924,7 @@ include($_EnginePath.'common.php');
 				$_Lang['HideLookReq'] = 'hide';
 				$Hiding += 1;
 			}
-			if($Hiding == 4)
+			if(isset($Hiding) && $Hiding == 4)
 			{
 				message($_Lang['Ally_AccessDenied'], $MsgTitle, 'alliance.php', 3);
 			}
@@ -1104,10 +950,11 @@ include($_EnginePath.'common.php');
 					$NewcomerRankSet[] = $RankID;
 				}
 
-				if($_POST['change'] == 'texts')
+				if(isset($_POST['change']) && $_POST['change'] == 'texts')
 				{
 					if($_ThisUserRank['admingen'] === true)
 					{
+						$NotChanged = 0;
 						if($_POST['mode'] == 'saveAll' OR ($_POST['mode'] == 'saveOne' AND $_POST['saveonly'] == 'Mark01'))
 						{
 							$TempText = trim(strip_tags(stripslashes($_POST['ext_text'])));
@@ -1187,11 +1034,13 @@ include($_EnginePath.'common.php');
 						$Warnings[] = $_Lang['ADM_TextChgNoAccess'];
 					}
 				}
-				else if($_POST['change'] == 'reqset')
+				else if(isset($_POST['change']) && $_POST['change'] == 'reqset')
 				{
 					if($_ThisUserRank['like_admin'] === true)
 					{
 						// Set, if Ally is open for new Requests
+						$NotChanged = 0;
+						
 						$SetAllyOpen = intval($_POST['allyOpen']);
 						if($SetAllyOpen == 0 OR $SetAllyOpen == 1)
 						{
@@ -1305,6 +1154,8 @@ include($_EnginePath.'common.php');
 				{
 					$_Lang['HideTextsSet'] = 'hide';
 				}
+				$_Lang['NewComersRankRows'] = '';
+				$DisabledCount = 0;
 				foreach($NewcomerRankSet as $RankID)
 				{
 					$ThisSetDisabled = '';
@@ -1322,7 +1173,7 @@ include($_EnginePath.'common.php');
 				}
 				if(empty($_Lang['DisableReqSetInputs']) AND count($NewcomerRankSet) == $DisabledCount)
 				{
-					$_Lang['DisableReqSetRanks'] ='disabled';
+					$_Lang['DisableReqSetRanks'] = 'disabled';
 				}
 				if($Ally['ally_request_notallow'] == 0)
 				{
@@ -1356,7 +1207,7 @@ include($_EnginePath.'common.php');
 						$_Lang['HideChangeTag'] = 'hide';
 					}
 
-					if($_POST['change'] == 'name')
+					if(isset($_POST['change']) && $_POST['change'] == 'name')
 					{
 						if($Ally['ally_owner'] != $_User['id'])
 						{
@@ -1405,7 +1256,7 @@ include($_EnginePath.'common.php');
 							}
 						}
 					}
-					else if($_POST['change'] == 'tag')
+					else if(isset($_POST['change']) && $_POST['change'] == 'tag')
 					{
 						if($Ally['ally_owner'] != $_User['id'])
 						{
@@ -1462,7 +1313,7 @@ include($_EnginePath.'common.php');
 							}
 						}
 					}
-					else if($_POST['change'] == 'general')
+					else if(isset($_POST['change']) && $_POST['change'] == 'general')
 					{
 						if(empty($_POST['website']))
 						{
@@ -1491,7 +1342,7 @@ include($_EnginePath.'common.php');
 							$ChangeQuery[] = "`ally_web` = '{$NewWebsite}'";
 							$Ally['ally_web'] = $NewWebsite;
 						}
-						$RevealWebsite = ($_POST['website_reveal'] == 'on' ? 1 : 0);
+						$RevealWebsite = (isset($_POST['website_reveal']) && $_POST['website_reveal'] == 'on' ? 1 : 0);
 						if($RevealWebsite != $Ally['ally_web_reveal'])
 						{
 							$ChangeQuery[] = "`ally_web_reveal` = {$RevealWebsite}";
@@ -1538,22 +1389,31 @@ include($_EnginePath.'common.php');
 					}
 
 					$_Lang['HideInfoBox_name'] = 'hide';
-					$_Lang['HideInfoBox_tag']= 'hide';
-					$_Lang['HideInfoBox_general']= 'hide';
-					switch($_POST['change'])
+					$_Lang['HideInfoBox_tag'] = 'hide';
+					$_Lang['HideInfoBox_general'] = 'hide';
+					if(isset($_POST['change']))
 					{
-						case 'name':
-							$TextBoxes = 'name';
-							$_Lang['HideInfoBox_name'] = '';
-							break;
-						case 'tag':
-							$TextBoxes = 'tag';
-							$_Lang['HideInfoBox_tag']= '';
-							break;
-						case 'general':
-							$TextBoxes = 'general';
-							$_Lang['HideInfoBox_general']= '';
-							break;
+						switch($_POST['change'])
+						{
+							case 'name':
+							{
+								$TextBoxes = 'name';
+								$_Lang['HideInfoBox_name'] = '';
+								break;
+							}
+							case 'tag':
+							{
+								$TextBoxes = 'tag';
+								$_Lang['HideInfoBox_tag']= '';
+								break;
+							}
+							case 'general':
+							{
+								$TextBoxes = 'general';
+								$_Lang['HideInfoBox_general']= '';
+								break;
+							}
+						}
 					}
 
 					if(!empty($Errors))
@@ -1577,6 +1437,10 @@ include($_EnginePath.'common.php');
 						}
 						else
 						{
+							if(!isset($_Lang['InfoBox_'.$TextBoxes]))
+							{
+								$_Lang['InfoBox_'.$TextBoxes] = '';
+							}
 							$_Lang['InfoBox_'.$TextBoxes] .= (empty($_Lang['InfoBox_'.$TextBoxes]) ? '' : '<br/>').'<b class="lime">'.implode('<br/>', $Info).'</b>';
 						}
 					}
@@ -1599,10 +1463,12 @@ include($_EnginePath.'common.php');
 						message($_Lang['ADM_OnlyOwnerInAlly'], $MsgTitle, 'alliance.php?mode=admin', 3);
 					}
 
+					$Query_AHandOver_Members = '';
 					$Query_AHandOver_Members .= "SELECT `id`, `username`, `ally_rank_id` FROM {{table}} ";
 					$Query_AHandOver_Members .= "WHERE `ally_id` = {$Ally['id']} AND `id` != {$_User['id']};";
 
 					$Result_AHandOver_Members = doquery($Query_AHandOver_Members, 'users');
+					$_Lang['UserList'] = '';
 					while($FetchData = mysql_fetch_assoc($Result_AHandOver_Members))
 					{
 						$_Lang['UserList'] .= "<option value=\"{$FetchData['id']}\">{$FetchData['username']} ({$Ally['ally_ranks'][$FetchData['ally_rank_id']]['name']})</option>";
@@ -1610,7 +1476,7 @@ include($_EnginePath.'common.php');
 					}
 
 					$_Lang['HideError'] = 'hide';
-					if($_POST['send'] == 'yes')
+					if(isset($_POST['send']) && $_POST['send'] == 'yes')
 					{
 						$NewOwner = intval($_POST['new_owner']);
 						if($NewOwner > 0)
@@ -1773,9 +1639,14 @@ include($_EnginePath.'common.php');
 						$_Lang['InfoBoxText']= $InfoBoxTxt;
 						$_Lang['InfoBoxColor'] = $InfoBoxCol;
 					}
-					else if($_POST['send'] == 'yes')
+					else if(isset($_POST['send']) && $_POST['send'] == 'yes')
 					{
 						$InfoBoxCol = 'red';
+						
+						$ErrorsChanging = 0;
+						$RankIsSame = 0;
+						$ErrorsSaving = 0;
+						
 						if($_ThisUserRank['mlist_mod'] === true)
 						{
 							foreach($_POST['change_rank'] as $UserID => $NewRank)
@@ -1817,7 +1688,7 @@ include($_EnginePath.'common.php');
 
 									if(!empty($DoChange))
 									{
-										$UpdateQuery= "INSERT INTO {{table}} (`id`, `ally_rank_id`) VALUES ";
+										$UpdateQuery = "INSERT INTO {{table}} (`id`, `ally_rank_id`) VALUES ";
 										foreach($DoChange as $UserID => $RankID)
 										{
 											$UpdateQueryArr[] = "({$UserID}, {$RankID})";
@@ -1876,7 +1747,7 @@ include($_EnginePath.'common.php');
 				else if($edit == 'reqlist')
 				{
 					// User wants to Look at Requests
-					if($_GET['from'] != 'front')
+					if(!isset($_GET['from']) || $_GET['from'] != 'front')
 					{
 						$GoBackTo = 'alliance.php?mode=admin';
 						$_Lang['GoBackLink'] = '?mode=admin';
@@ -1912,6 +1783,7 @@ include($_EnginePath.'common.php');
 												doquery("UPDATE {{table}} SET `ally_members` = `ally_members` + 1 WHERE `id` = {$Ally['id']};", 'alliance');
 												if($Ally['ally_ChatRoom_ID'] > 0)
 												{
+													$Query_UpdateChatRoomOnline = '';
 													$Query_UpdateChatRoomOnline .= "INSERT INTO {{table}} VALUES ({$Ally['ally_ChatRoom_ID']}, {$RequestUser}, UNIX_TIMESTAMP()) ";
 													$Query_UpdateChatRoomOnline .= "ON DUPLICATE KEY UPDATE ";
 													$Query_UpdateChatRoomOnline .= "`LastOnline` = VALUES(`LastOnline`);";
@@ -1988,8 +1860,8 @@ include($_EnginePath.'common.php');
 						$_Lang['HideInfoBox']= 'hide';
 					}
 
-					$SortType = intval($_GET['stype']);
-					$SortMode = $_GET['smode'];
+					$SortType = (isset($_GET['stype']) ? intval($_GET['stype']) : null);
+					$SortMode = (isset($_GET['smode']) ? intval($_GET['smode']) : null);
 
 					$ThisSorting = 'class="sortHigh"';
 					switch($SortType)
@@ -2022,6 +1894,7 @@ include($_EnginePath.'common.php');
 						break;
 					}
 
+					$Query_ARequests_Get = '';
 					$Query_ARequests_Get .= "SELECT `id`, `username`, `ally_register_time`, `ally_request_text`, `Stats`.`total_rank`, `Stats`.`total_points` FROM {{table}} ";
 					$Query_ARequests_Get .= "LEFT JOIN {{prefix}}statpoints AS `Stats` ON `Stats`.`id_owner` = {{table}}.`id` AND `Stats`.`stat_type` = 1 ";
 					$Query_ARequests_Get .= "WHERE `ally_request` = {$Ally['id']} ORDER BY {$SortBy} {$SortHow};";
@@ -2044,6 +1917,7 @@ include($_EnginePath.'common.php');
 					if($ReqCount > 0)
 					{
 						$_Lang['HideNoRequests'] = 'hide';
+						$_Lang['RequestRows'] = '';
 						while($Request = mysql_fetch_assoc($GetRequests))
 						{
 							$Request['ally_request_text'] = stripslashes($Request['ally_request_text']);
@@ -2159,7 +2033,7 @@ include($_EnginePath.'common.php');
 											$BreakBadOpt = false; 
 											for($i = 1; $i < $Ally['ally_ranks_count']; $i += 1)
 											{
-												if($_POST['opt'][$i] == 'on')
+												if(isset($_POST['opt'][$i]) && $_POST['opt'][$i] == 'on')
 												{
 													if(in_array($i, $DefaultDisabledOpt))
 													{
@@ -2251,6 +2125,10 @@ include($_EnginePath.'common.php');
 					{
 						if(!empty($_POST['chgData']))
 						{
+							$ChangingErrors = 0;
+							$NoChanges = 0;
+							$RankNoExists = 0;
+							
 							foreach($Ally['ally_ranks'] as $RankData)
 							{
 								$ExistingNames[] = strtolower($RankData['name']);
@@ -2340,7 +2218,7 @@ include($_EnginePath.'common.php');
 									{
 										for($i = 1; $i < $Ally['ally_ranks_count']; $i += 1)
 										{
-											$RankChgData[$i] = ($RankChgData[$i] == 'on' ? true : false);
+											$RankChgData[$i] = (isset($RankChgData[$i]) && $RankChgData[$i] == 'on' ? true : false);
 											if($RankChgData[$i] !== $Ally['ally_ranks_org'][$RankID][$i])
 											{
 												if(in_array($i, $DefaultDisabledOpt))
@@ -2479,7 +2357,7 @@ include($_EnginePath.'common.php');
 
 								if($ThisCanDelete)
 								{
-									if($RanksCountArray[$RankID] > 0)
+									if(isset($RanksCountArray[$RankID]) && $RanksCountArray[$RankID] > 0)
 									{
 										$RanksCountArray[$Ally['ally_new_rank_id']] += $RanksCountArray[$RankID];
 										doquery("UPDATE {{table}} SET `ally_rank_id` = {$Ally['ally_new_rank_id']} WHERE `ally_id` = {$Ally['id']} AND `ally_rank_id` = {$RankID};", 'users');
@@ -2524,6 +2402,8 @@ include($_EnginePath.'common.php');
 				}
 
 				$RowTPL = gettemplate('alliance_admin_ranklist_row');
+				$_Lang['RanksRows'] = '';
+				$RanksCount = 0;
 				foreach($Ally['ally_ranks'] as $RankID => $RankData)
 				{
 					$ThisRank = array();
@@ -2626,7 +2506,7 @@ include($_EnginePath.'common.php');
 					{
 						$ThisRank['DeleteButton'] = '<input type="button" class="delButton" id="del_'.$RankID.'" value="'.$_Lang['ADM_RkL_Delete'].'" />';
 					}
-					if($RanksCountArray[$RankID] > 0)
+					if(isset($RanksCountArray[$RankID]) && $RanksCountArray[$RankID] > 0)
 					{
 						$ThisRank['MembersCount'] = $RanksCountArray[$RankID];
 					}

@@ -34,6 +34,7 @@ if(IN_ALLYPAGE !== true)
 		if(!empty($RanksID))
 		{
 			$RanksID = implode(',', $RanksID);
+			$Query_GetUsers = '';
 			$Query_GetUsers .= "SELECT `id` FROM {{table}} WHERE ";
 			$Query_GetUsers .= "`ally_id` = {$AllyID} AND `ally_rank_id` IN ({$RanksID})";
 			$Query_GetUsers .= "; -- ally.pactslist.php|SendNotification|GetUsers";
@@ -50,17 +51,18 @@ if(IN_ALLYPAGE !== true)
 		}
 	}
 
-	if($_GET['do'] == 1)
+	if(isset($_GET['do']))
 	{
 		$_MsgBox['color'] = 'red';
 		if($CanManage)
 		{
-			$Manage_CMD = intval($_GET['cmd']);
-			$Manage_AID = intval($_GET['aid']);
+			$Manage_CMD = (isset($_GET['cmd']) ? intval($_GET['cmd']) : null);
+			$Manage_AID = (isset($_GET['aid']) ? intval($_GET['aid']) : null);
 			if($Manage_AID > 0)
 			{
 				if(in_array($Manage_CMD, array(1, 2, 3, 4, 5)))
 				{
+					$Query_CheckPact = '';
 					$Query_CheckPact .= "SELECT `pact`.*, `ally`.`ally_ranks` FROM {{table}} AS `pact` ";
 					$Query_CheckPact .= "LEFT JOIN `{{prefix}}alliance` AS `ally` ON ";
 					$Query_CheckPact .= "`ally`.`id` = IF(`pact`.`AllyID_Sender` = {$Ally['id']}, `pact`.`AllyID_Owner`, `pact`.`AllyID_Sender`) ";
@@ -77,7 +79,8 @@ if(IN_ALLYPAGE !== true)
 						{
 							// User wants to Remove this Pact
 							if($Result_CheckPact['Active'] == 1)
-							{								
+							{
+								$Query_RemovePact = '';
 								$Query_RemovePact .= "DELETE FROM {{table}} WHERE ";
 								$Query_RemovePact .= "`AllyID_Sender` = {$Result_CheckPact['AllyID_Sender']} AND ";
 								$Query_RemovePact .= "`AllyID_Owner` = {$Result_CheckPact['AllyID_Owner']} ";
@@ -99,13 +102,14 @@ if(IN_ALLYPAGE !== true)
 								$_MsgBox['text'] = $_Lang['AllyPacts_Msg_PactRemove_NonActive'];
 							}
 						}
-						elseif($Manage_CMD == 2)
+						else if($Manage_CMD == 2)
 						{
 							// User wants to RollBack this Pact
 							if($Manage_IsSender)
 							{
 								if($Result_CheckPact['Active'] == 0)
 								{
+									$Query_RollbackPact = '';
 									$Query_RollbackPact .= "DELETE FROM {{table}} WHERE ";
 									$Query_RollbackPact .= "`AllyID_Sender` = {$Result_CheckPact['AllyID_Sender']} AND ";
 									$Query_RollbackPact .= "`AllyID_Owner` = {$Result_CheckPact['AllyID_Owner']} ";
@@ -145,6 +149,7 @@ if(IN_ALLYPAGE !== true)
 							}
 							if($Result_CheckPact[$Manage_CheckField] > 0)
 							{
+								$Query_UpdatePactType = '';
 								$Query_UpdatePactType .= "UPDATE {{table}} SET ";
 								$Query_UpdatePactType .= "`{$Manage_CheckField}` = 0 ";
 								$Query_UpdatePactType .= "WHERE ";
@@ -168,7 +173,7 @@ if(IN_ALLYPAGE !== true)
 								$_MsgBox['text'] = $_Lang['AllyPacts_Msg_PactChange_NothingToStop'];
 							}
 						}
-						elseif($Manage_CMD == 4)
+						else if($Manage_CMD == 4)
 						{
 							// User wants to Accept new Pact proposal or change type proposal
 							if($Result_CheckPact['Active'] == 0)
@@ -176,6 +181,7 @@ if(IN_ALLYPAGE !== true)
 								if(!$Manage_IsSender)
 								{
 									// User wants to Accept new Pact proposal
+									$Query_AcceptNewPact = '';
 									$Query_AcceptNewPact .= "UPDATE {{table}} SET ";
 									$Query_AcceptNewPact .= "`Active` = 1, `Date` = {$Time} ";
 									$Query_AcceptNewPact .= "WHERE ";
@@ -212,6 +218,7 @@ if(IN_ALLYPAGE !== true)
 								}
 								if($Manage_NewType > 0)
 								{
+									$Query_UpdatePactType = '';
 									$Query_UpdatePactType .= "UPDATE {{table}} SET ";
 									$Query_UpdatePactType .= "`Type` = {$Manage_NewType}, ";
 									$Query_UpdatePactType .= "`Change_Owner` = 0, ";
@@ -238,7 +245,7 @@ if(IN_ALLYPAGE !== true)
 								}
 							}
 						}
-						elseif($Manage_CMD == 5)
+						else if($Manage_CMD == 5)
 						{
 							// User wants to Refuse new Pact proposal or change type proposal
 							if($Result_CheckPact['Active'] == 0)
@@ -246,6 +253,7 @@ if(IN_ALLYPAGE !== true)
 								if(!$Manage_IsSender)
 								{
 									// User wants to Refuse new Pact proposal
+									$Query_RefuseNewPact = '';
 									$Query_RefuseNewPact .= "DELETE FROM {{table}} WHERE ";
 									$Query_RefuseNewPact .= "`AllyID_Sender` = {$Result_CheckPact['AllyID_Sender']} AND ";
 									$Query_RefuseNewPact .= "`AllyID_Owner` = {$Result_CheckPact['AllyID_Owner']} ";
@@ -282,6 +290,7 @@ if(IN_ALLYPAGE !== true)
 								}
 								if($Manage_NewType > 0)
 								{
+									$Query_UpdatePactType = '';
 									$Query_UpdatePactType .= "UPDATE {{table}} SET ";
 									$Query_UpdatePactType .= "`$Manage_TypeField` = 0 ";
 									$Query_UpdatePactType .= "WHERE ";
@@ -341,12 +350,14 @@ if(IN_ALLYPAGE !== true)
 		$ThisColspan = 4;
 	}
 	
+	$_Lang['Insert_MsgBox'] = '';
 	if(!empty($_MsgBox))
 	{
 		$_Lang['Insert_MsgBox'] .= parsetemplate(gettemplate('_singleRow'), array('Colspan' => $ThisColspan, 'Classes' => 'pad5 '.$_MsgBox['color'], 'Text' => $_MsgBox['text']));
 		$_Lang['Insert_MsgBox'] .= parsetemplate(gettemplate('_singleRow'), array('Colspan' => $ThisColspan, 'Classes' => 'inv', 'Text' => ''));
 	}
 
+	$Query_GetPacts = '';
 	$Query_GetPacts .= "SELECT `pacts`.*, `ally`.`ally_name` ";
 	$Query_GetPacts .= "FROM {{table}} AS `pacts` ";
 	$Query_GetPacts .= "LEFT JOIN `{{prefix}}alliance` AS `ally` ";
