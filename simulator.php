@@ -368,7 +368,6 @@ include($_EnginePath.'common.php');
 			$TotalTime = 0;
 			for($i = 1; $i <= $Loop; $i += 1)
 			{
-				$MoonChance = false;
 				$MoonHasBeenCreated = false;
 				$MoonHasBeenDestroyed = false;
 				$chance = 0;
@@ -412,6 +411,9 @@ include($_EnginePath.'common.php');
 				$RealDebrisMetalDef = 0;
 				$RealDebrisCrystalDef = 0;
 				$RealDebrisDeuteriumDef = 0;
+				
+				$TotalLostMetal = 0;
+				$TotalLostCrystal = 0;
 
 				$AtkShips = $Combat['AttackerShips'];
 				$DefShips = $Combat['DefenderShips'];
@@ -499,7 +501,15 @@ include($_EnginePath.'common.php');
 						$_Lang['Winner_Name'] = $_Lang['WonBy_Draw'];
 						break;
 				}
-
+				
+				$FleetDebris = $TotalLostCrystal + $TotalLostMetal;
+				$MoonChance = floor($FleetDebris / COMBAT_MOONPERCENT_RESOURCES);
+				$TotalMoonChance = $MoonChance;
+				if($MoonChance > 20)
+				{
+					$MoonChance = 20;
+				}
+				
 				$ReportData = array();
 
 				$ReportData['init']['usr']['atk'] = $AttackersData;
@@ -515,7 +525,7 @@ include($_EnginePath.'common.php');
 				$ReportData['init']['deb_met'] = $TotalLostMetal;
 				$ReportData['init']['deb_cry'] = $TotalLostCrystal;
 				$ReportData['init']['moon_chance'] = $MoonChance;
-				$ReportData['init']['total_moon_chance'] = $MoonChance;
+				$ReportData['init']['total_moon_chance'] = $TotalMoonChance;
 				$ReportData['init']['moon_created'] = $MoonHasBeenCreated;
 				$ReportData['init']['moon_destroyed'] = $MoonHasBeenDestroyed;
 				$ReportData['init']['moon_des_chance'] = ($chance >= 0 ? (($chance == 0) ? '0' : $chance) : false);
