@@ -48,7 +48,7 @@ var AllowPrettyInputBox = {Insert_AllowPrettyInputBox};
         {gate_fleet_rows}
         <tr>
         	<th colspan="4" class="pad5">
-                <input value="{gate_jump_btn}" type="submit" id="formSubmit"/>
+                <input value="{gate_jump_btn}" class="{PHP_JumpGate_SubmitColor}" type="submit" id="formSubmit"/>
             </th>
         </tr>
         </tbody>

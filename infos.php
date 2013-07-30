@@ -596,11 +596,11 @@ include($_EnginePath.'common.php');
 					}
 					$parse['gate_time_script'] = InsertJavaScriptChronoApplet('Gate', '1', $RestString['value']);
 					$parse['gate_wait_time'] = $_Lang['gate_nextjump_timer'].' <div id="bxxGate1">'.pretty_time($RestString['value'], true).'</div>';
-					
+					$parse['PHP_JumpGate_SubmitColor'] = 'orange';
 				}
 				else
 				{
-					
+					$parse['PHP_JumpGate_SubmitColor'] = 'lime';
 					$parse['gate_time_script'] = '';
 					$parse['gate_wait_time'] = '';
 					$parse['Gate_HideNextJumpTimer'] = 'style="display: none;"';
