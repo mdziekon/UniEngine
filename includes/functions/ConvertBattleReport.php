@@ -7,7 +7,7 @@ function ConvertBattleReport($Report, $Settings)
 	static $LangIncluded = false;
 	if(!$LangIncluded)
 	{
-		includeLang('readBattleReport');
+		//includeLang('readBattleReport');
 		$LangIncluded = true;
 	}
 	
@@ -15,7 +15,7 @@ function ConvertBattleReport($Report, $Settings)
 	$Attacker = explode(',', $Report['id_owner1']);
 	$Defender = explode(',', $Report['id_owner2']);
 	$Disallow_Attacker = $Report['disallow_attacker'];
-	if((!in_array($_User['id'], $Attacker) AND !in_array($_User['id'], $Defender)) OR (in_array($_User['id'], $Attacker) AND $Disallow_Attacker == '1'))
+	if((!in_array($_User['id'], $Attacker) && !in_array($_User['id'], $Defender)) || (in_array($_User['id'], $Attacker) && $Disallow_Attacker == '1'))
 	{
 		message("<b class=\"red\">{$_Lang['BattleReportConverter_CannotConvert']}</b>", $_Lang['Title_System']);
 	}
@@ -131,15 +131,16 @@ function ConvertBattleReport($Report, $Settings)
 							$ThisLists_Defense = true;
 						}
 						$DiffCounter = '';
-						if($Data[$TypeKey]['ships'][$UserID][$ShipID] < $ShipInitCount)
+						$CurrentCount = (isset($Data[$TypeKey]['ships'][$UserID][$ShipID]) ? $Data[$TypeKey]['ships'][$UserID][$ShipID] : 0);
+						if($CurrentCount < $ShipInitCount)
 						{
-							$DiffCounter = ' (- '.prettyNumber($ShipInitCount - $Data[$TypeKey]['ships'][$UserID][$ShipID]).')';
-							if($Data[$TypeKey]['ships'][$UserID][$ShipID] == 0)
+							$DiffCounter = ' (- '.prettyNumber($ShipInitCount - $CurrentCount).')';
+							if($CurrentCount == 0)
 							{
 								$DiffCounter = "[color=red]{$DiffCounter}[/color]";
 							}
 						}
-						$ReportCode .= "[b][color=#{$UnitColors[$ShipID]}]{$_Lang['tech'][$ShipID]}: ".prettyNumber($Data[$TypeKey]['ships'][$UserID][$ShipID])."[/color]{$DiffCounter}[/b]\n";
+						$ReportCode .= "[b][color=#{$UnitColors[$ShipID]}]{$_Lang['tech'][$ShipID]}: ".prettyNumber($CurrentCount)."[/color]{$DiffCounter}[/b]\n";
 					}
 					$ReportCode .= "\n";
 				}
@@ -153,58 +154,60 @@ function ConvertBattleReport($Report, $Settings)
 	}
 
 	$ReportCode .= "\n";
+	
+	$AtkLostColStart = $AtkLostColEnd = $DefLostColStart = $DefLostColEnd = '';	
 	if($LostUnits['atk'] > $LostUnits['def'])
 	{
-		$AtkLostCol = '[color=red]';
-		$AtkLostEnd = '[/color]';
+		$AtkLostColStart = '[color=red]';
+		$AtkLostColEnd = '[/color]';
 	}
-	elseif($LostUnits['atk'] == $LostUnits['def'])
+	else if($LostUnits['atk'] == $LostUnits['def'])
 	{
-		$AtkLostCol = '[color=orange]';
-		$AtkLostEnd = '[/color]';
-		$DefLostCol = '[color=orange]';
-		$DefLostEnd = '[/color]';
+		$AtkLostColStart = '[color=orange]';
+		$AtkLostColEnd = '[/color]';
+		$DefLostColStart = '[color=orange]';
+		$DefLostColEnd = '[/color]';
 	}
 	else
 	{
-		$DefLostCol = '[color=red]';
-		$DefLostEnd = '[/color]';
+		$DefLostColStart = '[color=red]';
+		$DefLostColEnd = '[/color]';
 	}
 	$TotalLostUnits = $LostUnits['atk'] + $LostUnits['def'];
 
-	$StrAttackerUnits = sprintf($_Lang['Conv_atk_lostUnits'], $AtkLostCol.prettyNumber($LostUnits['atk']).$AtkLostEnd, ($TotalLostUnits > 0 ? sprintf('%0.2f', ($LostUnits['atk'] / $TotalLostUnits) * 100) : '0.00'));
-	$StrDefenderUnits = sprintf($_Lang['Conv_def_lostUnits'], $DefLostCol.prettyNumber($LostUnits['def']).$DefLostEnd, ($TotalLostUnits > 0 ? sprintf('%0.2f', ($LostUnits['def'] / $TotalLostUnits) * 100) : '0.00'));
-	$StrRuins = sprintf($_Lang['sys_gcdrunits'], '[b]'.prettyNumber($Debris['met']).'[/b]', $_Lang['Metal_rec'], '[b]'.prettyNumber($Debris['cry']).'[/b]', $_Lang['Crystal_rec']);
+	$StrAttackerUnits = sprintf($_Lang['Conv_atk_lostUnits'], $AtkLostColStart.prettyNumber($LostUnits['atk']).$AtkLostColEnd, ($TotalLostUnits > 0 ? sprintf('%0.2f', ($LostUnits['atk'] / $TotalLostUnits) * 100) : '0.00'));
+	$StrDefenderUnits = sprintf($_Lang['Conv_def_lostUnits'], $DefLostColStart.prettyNumber($LostUnits['def']).$DefLostColEnd, ($TotalLostUnits > 0 ? sprintf('%0.2f', ($LostUnits['def'] / $TotalLostUnits) * 100) : '0.00'));
+	$StrRuins = sprintf($_Lang['Conv_DebrisField'], '[b]'.prettyNumber($Debris['met']).'[/b]', $_Lang['Metal_rec'], '[b]'.prettyNumber($Debris['cry']).'[/b]', $_Lang['Crystal_rec']);
 	$DebrisField = "{$StrAttackerUnits}\n{$StrDefenderUnits}\n{$StrRuins}";
 
+	$MoonCreationChanceText = false;
 	if($MoonChance !== false)
 	{
 		if($TotalMoonChance > $MoonChance)
 		{
-			$ChanceMoon = sprintf($_Lang['Conv_moon_high'], $MoonChance, prettyNumber($TotalMoonChance));
+			$MoonCreationChanceText = sprintf($_Lang['Conv_moon_high'], $MoonChance, prettyNumber($TotalMoonChance));
 		}
 		else
 		{
-			$ChanceMoon = sprintf($_Lang['Conv_moon_reg'], $MoonChance);
+			$MoonCreationChanceText = sprintf($_Lang['Conv_moon_reg'], $MoonChance);
 		}
-	}
-	else
-	{
-		$ChanceMoon = false;
 	}
 
 	if($CreatedMoon === true)
 	{
-		$GottenMoon = $_Lang['Conv_moonbuild'];
+		$MoonCreationText = $_Lang['Conv_moonbuild'];
 	}
 	else
 	{
-		$GottenMoon = false;
+		$MoonCreationText = false;
 	}
 
+	$MoonDestroyText = '';
 	switch($Result)
 	{
-		case COMBAT_ATK: // Attacker won the battle
+		case COMBAT_ATK:
+		{
+			// Attacker won the battle
 			$Pillage = sprintf($_Lang['sys_stealed_ressources'], '[b]'.prettyNumber($Stolen['met']).'[/b]', $_Lang['Metal_rec'], '[b]'.prettyNumber($Stolen['cry']).'[/b]', $_Lang['Crystal_rec'], '[b]'.prettyNumber($Stolen['deu']).'[/b]', $_Lang['Deuterium_rec']);
 			$ReportCode .= "[b]{$_Lang['sys_attacker_won']}[/b]\n{$Pillage}\n";
 			$ReportCode .= $DebrisField."\n";
@@ -233,22 +236,29 @@ function ConvertBattleReport($Report, $Settings)
 				$MoonDestroyText .= sprintf($_Lang['sys_destruc_rip'], '[b]'.$DestroyFleetChance.'[/b]')."\n";
 			}
 			break;
-		case COMBAT_DEF: // Defender won the battle
+		}
+		case COMBAT_DEF:
+		{
+			// Defender won the battle
 			$ReportCode .= "[b]{$_Lang['sys_defender_won']}[/b]\n";
 			$ReportCode .= $DebrisField."\n";
 			break;
-		case COMBAT_DRAW; // It's a draw!
+		}
+		case COMBAT_DRAW:
+		{
+			// It's a draw!
 			$ReportCode .= "[b]{$_Lang['sys_both_won']}[/b]\n";
 			$ReportCode .= $DebrisField."\n";
 			break;
+		}
 	}
-	if($ChanceMoon)
+	if($MoonCreationChanceText)
 	{
-		$ReportCode .= $ChanceMoon."\n";
+		$ReportCode .= $MoonCreationChanceText."\n";
 	}
-	if($GottenMoon)
+	if($MoonCreationText)
 	{
-		$ReportCode .= $GottenMoon."\n";
+		$ReportCode .= $MoonCreationText."\n";
 	}
 	if($IsOnMoon)
 	{

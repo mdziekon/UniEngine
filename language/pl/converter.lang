@@ -16,6 +16,8 @@ $_Lang['Conv_after_x_rounds']= '[i][b]Po %s rundach[/b]...[/i]';
 $_Lang['Conv_atk_lostUnits'] = "Agresor stracił [b]%s[/b] surowców ([b]%s%%[/b] wszystkich strat)";
 $_Lang['Conv_def_lostUnits'] = "Obrońca stracił [b]%s[/b] surowców ([b]%s%%[/b] wszystkich strat)";
 
+$_Lang['Conv_DebrisField'] = "Pola zniszczeń zawierające %s jednostek %s i %s jednostek %s zostały utworzone na orbicie planety.";
+
 $_Lang['Conv_moon_reg']      = "Prawdopodobieństwo powstania księżyca wynosi: [b]%s[/b]%%";
 $_Lang['Conv_moon_high']     = "Prawdopodobieństwo powstania księżyca wynosi: [b]%s[/b]%% ([b][size=medium][color=orange]%s[/color][/size][/b]%%)";
 $_Lang['Conv_moonbuild']     = "[b]Utworzył się księżyc na orbicie tej planety![/b]";

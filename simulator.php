@@ -46,7 +46,7 @@ include($_EnginePath.'common.php');
 				$UserTemp = $User - 1;
 				foreach($TechEquivalents as $TechID => $TechKey)
 				{
-					if($Vals[$TechID] <= 0)
+					if(!isset($Vals[$TechID]) || $Vals[$TechID] <= 0)
 					{
 						$Value = 0;
 					}
@@ -71,7 +71,7 @@ include($_EnginePath.'common.php');
 				$UserTemp = $User - 1;
 				foreach($TechEquivalents as $TechID => $TechKey)
 				{
-					if($Vals[$TechID] <= 0)
+					if(!isset($Vals[$TechID]) || $Vals[$TechID] <= 0)
 					{
 						$Value = 0;
 					}
@@ -118,7 +118,7 @@ include($_EnginePath.'common.php');
 					{
 						foreach($TechEquivalents as $TechID => $TechKey)
 						{
-							if($Vals[$TechID] <= 0)
+							if(!isset($Vals[$TechID]) || $Vals[$TechID] <= 0)
 							{
 								$Value = 0;
 							}
@@ -172,7 +172,7 @@ include($_EnginePath.'common.php');
 					{
 						foreach($TechEquivalents as $TechID => $TechKey)
 						{
-							if($Vals[$TechID] <= 0)
+							if(!isset($Vals[$TechID]) || $Vals[$TechID] <= 0)
 							{
 								$Value = 0;
 							}
@@ -496,12 +496,14 @@ include($_EnginePath.'common.php');
 				$ReportData['init']['deb_met'] = $TotalLostMetal;
 				$ReportData['init']['deb_cry'] = $TotalLostCrystal;
 				$ReportData['init']['moon_chance'] = $MoonChance;
+				$ReportData['init']['total_moon_chance'] = $MoonChance;
 				$ReportData['init']['moon_created'] = $MoonHasBeenCreated;
 				$ReportData['init']['moon_destroyed'] = $MoonHasBeenDestroyed;
 				$ReportData['init']['moon_des_chance'] = ($chance >= 0 ? (($chance == 0) ? '0' : $chance) : false);
 				$ReportData['init']['fleet_destroyed'] = $RIPDestroyedByMoon;
 				$ReportData['init']['fleet_des_chance'] = ($chance2 >= 0 ? (($chance2 == 0) ? '0' : $chance2) : false);
 				$ReportData['init']['planet_name'] = 'Planeta';
+				$ReportData['init']['onMoon'] = false;
 				$ReportData['init']['atk_lost'] = $RealDebrisMetalAtk + $RealDebrisCrystalAtk + $RealDebrisDeuteriumAtk;
 				$ReportData['init']['def_lost'] = $RealDebrisMetalDef + $RealDebrisCrystalDef + $RealDebrisDeuteriumDef;
 

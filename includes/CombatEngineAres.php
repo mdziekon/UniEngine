@@ -308,14 +308,14 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 				$TUser = $Temp[1];
 
 				// Here calculating, if it's ACS and more than one user have this ShipType 
-				if($DefShipsTypes[$TShip] > 1 AND $AssignmentCalc[$TShip] == false)
+				if($DefShipsTypes[$TShip] > 1 && !isset($AssignmentCalc[$TShip]))
 				{
 					$TShipTotalCount = 0;
 					$TShipKeys = false;
 					foreach($DefShipsTypesOwners[$TShip] as $Owner => $NotImportant)
 					{
 						$ThisKey = "{$TShip}|{$Owner}";
-						$CalcCount = ($DefShipsTypesCount[$TShip][$Owner] - $AlreadyDestroyedDef[$ThisKey]);
+						$CalcCount = ($DefShipsTypesCount[$TShip][$Owner] - (isset($AlreadyDestroyedDef[$ThisKey]) ? $AlreadyDestroyedDef[$ThisKey] : 0));
 						$TShipKeys[$ThisKey] = $CalcCount;
 						$TShipTotalCount += $CalcCount; 
 					}
@@ -374,13 +374,13 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 							$DefShields[$TKey] = array('left' => true, 'shield' => 0);
 						}
 						$LeftForce = $AvailableForce - $Force2TDShield;
-						if($ACount < ($DefShipsTypesCount[$TShip][$TUser] - $AlreadyDestroyedDef[$TKey]))
+						if($ACount < ($DefShipsTypesCount[$TShip][$TUser] - (isset($AlreadyDestroyedDef[$TKey]) ? $AlreadyDestroyedDef[$TKey] : 0)))
 						{
 							$Able2Destroy = $ACount;
 						}
 						else
 						{
-							$Able2Destroy = ($DefShipsTypesCount[$TShip][$TUser] - $AlreadyDestroyedDef[$TKey]);
+							$Able2Destroy = ($DefShipsTypesCount[$TShip][$TUser] - (isset($AlreadyDestroyedDef[$TKey]) ? $AlreadyDestroyedDef[$TKey] : 0));
 						}
 						$NeedForce = ($DefShipsHull[$TKey] * $Able2Destroy);
 						if(isset($DefHullDmg[$TKey]))
@@ -440,7 +440,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 						$ForceContribution['atk'][$AUser] += $UsedForce;
 						$ShotDown['atk']['d'][$AUser][$TShip] += $Destroyed;
 						$ShotDown['def']['l'][$TUser][$TShip] += $Destroyed;
-						if($Destroyed == ($DefShipsTypesCount[$TShip][$TUser] - $AlreadyDestroyedDef[$TKey]))
+						if($Destroyed == ($DefShipsTypesCount[$TShip][$TUser] - (isset($AlreadyDestroyedDef[$TKey]) ? $AlreadyDestroyedDef[$TKey] : 0)))
 						{
 							unset($DefShipsForce_Copy[$TKey]);
 							if(isset($DefHullDmg[$TKey]))
@@ -510,7 +510,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 							foreach($DefShipsTypesOwners[$TShip] as $Owner => $NotImportant)
 							{
 								$ThisKey = "{$TShip}|{$Owner}";
-								$CalcCount = ($DefShipsTypesCount[$TShip][$Owner] - $AlreadyDestroyedDef[$ThisKey]);
+								$CalcCount = ($DefShipsTypesCount[$TShip][$Owner] - (isset($AlreadyDestroyedDef[$ThisKey]) ? $AlreadyDestroyedDef[$ThisKey] : 0));
 								if($DefShipsTypes[$TShip] > 1)
 								{
 									$TShipKeys[$ThisKey] = $CalcCount;
@@ -525,14 +525,18 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 									$Force2TDShield = $DefShipsShield[$ThisKey] * $CalcCount;
 								}
 								$RapidForce4Shield[$Owner] = $Force2TDShield;
-								$RapidForce4Hull[$Owner] = ($CalcCount * $DefShipsHull[$ThisKey]) - ($DefHullDmg[$ThisKey] * $DefShipsHull[$ThisKey]); 
+								$RapidForce4Hull[$Owner] = $CalcCount * $DefShipsHull[$ThisKey];
+								if(isset($DefHullDmg[$ThisKey]))
+								{
+									$RapidForce4Hull[$Owner] -= $DefHullDmg[$ThisKey] * $DefShipsHull[$ThisKey];
+								}
 								$RapidForceMinShoots[$Owner] = $CalcCount; 
 
 								$TotalForceNeed += ($RapidForce4Shield[$Owner] + $RapidForce4Hull[$Owner]);
 								$TotalShootsNeed += $RapidForceMinShoots[$Owner];
 							}
 
-							$TotalAvailableShoots = floor(($AtkShipsTypesCount[$AShip][$AUser] * $ShipsSD['a'][$AUser][$AShip][$TShip]) * (1 - $AtkDontShootRF[$AKey]));
+							$TotalAvailableShoots = floor(($AtkShipsTypesCount[$AShip][$AUser] * $ShipsSD['a'][$AUser][$AShip][$TShip]) * (1 - (isset($AtkDontShootRF[$AKey]) ? $AtkDontShootRF[$AKey] : 0)));
 							$TotalAvailableForce = $TotalAvailableShoots * $AForce;
 
 							if($TotalAvailableShoots > $TotalShootsNeed)
@@ -551,6 +555,10 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 									else
 									{
 										$TotalEverAvailableShoots = $AtkShipsTypesCount[$AShip][$AUser] * $ShipsSD['a'][$AUser][$AShip][$TShip];
+										if(!isset($AtkDontShootRF[$AKey]))
+										{
+											$AtkDontShootRF[$AKey] = 0;
+										}
 										$AtkDontShootRF[$AKey] += $GainedShoots / $TotalEverAvailableShoots;
 									}
 								}
@@ -629,13 +637,13 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 												$DefShields[$TKey] = array('left' => true, 'shield' => 0);
 											}
 											$LeftForce = $AvailableForce - $Force2TDShield;
-											if($ACount < ($DefShipsTypesCount[$TShip][$TUser] - $AlreadyDestroyedDef[$TKey]))
+											if($ACount < ($DefShipsTypesCount[$TShip][$TUser] - (isset($AlreadyDestroyedDef[$TKey]) ? $AlreadyDestroyedDef[$TKey] : 0)))
 											{
 												$Able2Destroy = $ACount;
 											}
 											else
 											{
-												$Able2Destroy = ($DefShipsTypesCount[$TShip][$TUser] - $AlreadyDestroyedDef[$TKey]);
+												$Able2Destroy = ($DefShipsTypesCount[$TShip][$TUser] - (isset($AlreadyDestroyedDef[$TKey]) ? $AlreadyDestroyedDef[$TKey] : 0));
 											}
 											$NeedForce = ($DefShipsHull[$TKey] * $Able2Destroy);
 											if(isset($DefHullDmg[$TKey]))
@@ -695,7 +703,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 											$ForceContribution['atk'][$AUser] += $UsedForce;
 											$ShotDown['atk']['d'][$AUser][$TShip] += $Destroyed;
 											$ShotDown['def']['l'][$TUser][$TShip] += $Destroyed;
-											if($Destroyed == ($DefShipsTypesCount[$TShip][$TUser] - $AlreadyDestroyedDef[$TKey]))
+											if($Destroyed == ($DefShipsTypesCount[$TShip][$TUser] - (isset($AlreadyDestroyedDef[$TKey]) ? $AlreadyDestroyedDef[$TKey] : 0)))
 											{
 												unset($DefShipsForce_Copy[$TKey]);
 												if(isset($DefHullDmg[$TKey]))
@@ -767,14 +775,14 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 				$TUser = $Temp[1];
 
 				// Here calculating, if it's ACS and more than one user have this ShipType 
-				if($AtkShipsTypes[$TShip] > 1 AND $AssignmentCalc[$TShip] == false)
+				if($AtkShipsTypes[$TShip] > 1 && !isset($AssignmentCalc[$TShip]))
 				{
 					$TShipTotalCount = 0;
 					$TShipKeys = false;
 					foreach($AtkShipsTypesOwners[$TShip] as $Owner => $NotImportant)
 					{
 						$ThisKey = "{$TShip}|{$Owner}";
-						$CalcCount = ($AtkShipsTypesCount[$TShip][$Owner] - $AlreadyDestroyedAtk[$ThisKey]);
+						$CalcCount = ($AtkShipsTypesCount[$TShip][$Owner] - (isset($AlreadyDestroyedAtk[$ThisKey]) ? $AlreadyDestroyedAtk[$ThisKey] : 0));
 						$TShipKeys[$ThisKey] = $CalcCount;
 						$TShipTotalCount += $CalcCount; 
 					}
@@ -833,13 +841,13 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 							$AtkShields[$TKey] = array('left' => true, 'shield' => 0);
 						}
 						$LeftForce = $AvailableForce - $Force2TDShield;
-						if($ACount < ($AtkShipsTypesCount[$TShip][$TUser] - $AlreadyDestroyedAtk[$TKey]))
+						if($ACount < ($AtkShipsTypesCount[$TShip][$TUser] - (isset($AlreadyDestroyedAtk[$TKey]) ? $AlreadyDestroyedAtk[$TKey] : 0)))
 						{
 							$Able2Destroy = $ACount;
 						}
 						else
 						{
-							$Able2Destroy = ($AtkShipsTypesCount[$TShip][$TUser] - $AlreadyDestroyedAtk[$TKey]);
+							$Able2Destroy = ($AtkShipsTypesCount[$TShip][$TUser] - (isset($AlreadyDestroyedAtk[$TKey]) ? $AlreadyDestroyedAtk[$TKey] : 0));
 						}
 						$NeedForce = ($AtkShipsHull[$TKey] * $Able2Destroy);
 						if(isset($AtkHullDmg[$TKey]))
@@ -899,7 +907,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 						$ForceContribution['def'][$AUser] += $UsedForce;
 						$ShotDown['def']['d'][$AUser][$TShip] += $Destroyed;
 						$ShotDown['atk']['l'][$TUser][$TShip] += $Destroyed;
-						if($Destroyed == ($AtkShipsTypesCount[$TShip][$TUser] - $AlreadyDestroyedAtk[$TKey]))
+						if($Destroyed == ($AtkShipsTypesCount[$TShip][$TUser] - (isset($AlreadyDestroyedAtk[$TKey]) ? $AlreadyDestroyedAtk[$TKey] : 0)))
 						{
 							unset($AtkShipsForce_Copy[$TKey]);
 							if(isset($AtkHullDmg[$TKey]))
@@ -969,7 +977,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 							foreach($AtkShipsTypesOwners[$TShip] as $Owner => $NotImportant)
 							{
 								$ThisKey = "{$TShip}|{$Owner}";
-								$CalcCount = ($AtkShipsTypesCount[$TShip][$Owner] - $AlreadyDestroyedAtk[$ThisKey]);
+								$CalcCount = ($AtkShipsTypesCount[$TShip][$Owner] - (isset($AlreadyDestroyedAtk[$ThisKey]) ? $AlreadyDestroyedAtk[$ThisKey] : 0));
 								if($AtkShipsTypes[$TShip] > 1)
 								{
 									$TShipKeys[$ThisKey] = $CalcCount;
@@ -984,14 +992,18 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 									$Force2TDShield = $AtkShipsShield[$ThisKey] * $CalcCount;
 								}
 								$RapidForce4Shield[$Owner] = $Force2TDShield;
-								$RapidForce4Hull[$Owner] = ($CalcCount * $AtkShipsHull[$ThisKey]) - ($AtkHullDmg[$ThisKey] * $AtkShipsHull[$ThisKey]); 
+								$RapidForce4Hull[$Owner] = $CalcCount * $AtkShipsHull[$ThisKey];
+								if(isset($AtkHullDmg[$ThisKey]))
+								{
+									$RapidForce4Hull[$Owner] -= $AtkHullDmg[$ThisKey] * $AtkShipsHull[$ThisKey];
+								}
 								$RapidForceMinShoots[$Owner] = $CalcCount; 
 
 								$TotalForceNeed += ($RapidForce4Shield[$Owner] + $RapidForce4Hull[$Owner]);
 								$TotalShootsNeed += $RapidForceMinShoots[$Owner];
 							}
 
-							$TotalAvailableShoots = floor(($DefShipsTypesCount[$AShip][$AUser] * $ShipsSD['d'][$AUser][$AShip][$TShip]) * (1 - $DefDontShootRF[$AKey]));
+							$TotalAvailableShoots = floor(($DefShipsTypesCount[$AShip][$AUser] * $ShipsSD['d'][$AUser][$AShip][$TShip]) * (1 - (isset($DefDontShootRF[$AKey]) ? $DefDontShootRF[$AKey] : 0)));
 							$TotalAvailableForce = $TotalAvailableShoots * $AForce;
 
 							if($TotalAvailableShoots > $TotalShootsNeed)
@@ -1010,6 +1022,10 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 									else
 									{
 										$TotalEverAvailableShoots = $DefShipsTypesCount[$AShip][$AUser] * $ShipsSD['d'][$AUser][$AShip][$TShip];
+										if(!isset($DefDontShootRF[$AKey]))
+										{
+											$DefDontShootRF[$AKey] = 0;
+										}
 										$DefDontShootRF[$AKey] += $GainedShoots / $TotalEverAvailableShoots;
 									}
 								}
@@ -1088,13 +1104,13 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 												$AtkShields[$TKey] = array('left' => true, 'shield' => 0);
 											}
 											$LeftForce = $AvailableForce - $Force2TDShield;
-											if($ACount < ($AtkShipsTypesCount[$TShip][$TUser] - $AlreadyDestroyedAtk[$TKey]))
+											if($ACount < ($AtkShipsTypesCount[$TShip][$TUser] - (isset($AlreadyDestroyedAtk[$TKey]) ? $AlreadyDestroyedAtk[$TKey] : 0)))
 											{
 												$Able2Destroy = $ACount;
 											}
 											else
 											{
-												$Able2Destroy = ($AtkShipsTypesCount[$TShip][$TUser] - $AlreadyDestroyedAtk[$TKey]);
+												$Able2Destroy = ($AtkShipsTypesCount[$TShip][$TUser] - (isset($AlreadyDestroyedAtk[$TKey]) ? $AlreadyDestroyedAtk[$TKey] : 0));
 											}
 											$NeedForce = ($AtkShipsHull[$TKey] * $Able2Destroy);
 											if(isset($AtkHullDmg[$TKey]))
@@ -1154,7 +1170,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 											$ForceContribution['def'][$AUser] += $UsedForce;
 											$ShotDown['def']['d'][$AUser][$TShip] += $Destroyed;
 											$ShotDown['atk']['l'][$TUser][$TShip] += $Destroyed;
-											if($Destroyed == ($AtkShipsTypesCount[$TShip][$TUser] - $AlreadyDestroyedAtk[$TKey]))
+											if($Destroyed == ($AtkShipsTypesCount[$TShip][$TUser] - (isset($AlreadyDestroyedAtk[$TKey]) ? $AlreadyDestroyedAtk[$ThisKey] : 0)))
 											{
 												unset($AtkShipsForce_Copy[$TKey]);
 												if(isset($AtkHullDmg[$TKey]))

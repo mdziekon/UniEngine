@@ -11,13 +11,13 @@ function ReadBattleReport($Report)
 		$LangIncluded = true;
 	}
 	
-	if($_User['rw_breakline'] == 0)
+	if(!isset($_User['rw_breakline']) || $_User['rw_breakline'] == 0)
 	{
 		$_User['rw_breakline'] = 999;
 	}
 
 	// Temp variables
-	$Attacker = explode(',', $Report['id_owner1']);
+	$Attacker = (isset($Report['id_owner1']) ? explode(',', $Report['id_owner1']) : array());
 	if(in_array($_User['id'], $Attacker) AND $Report['disallow_attacker'] == '1')
 	{
 		return "<br/><th class=\"pad5 red\">{$_Lang['sys_mess_attacker_lost_in_1_round']}</th>";
@@ -71,6 +71,7 @@ function ReadBattleReport($Report)
 
 	$Title = sprintf($_Lang['sys_attack_title'], prettyDate('(d m Y - H:i:s)', $ReportData['init']['date'], 1));
 	$UsersFighting = implode(', ', $Usernames['atk']).' <b class="vsBig">'.$_Lang['sys_battle_versus'].'</b> '.implode(', ', $Usernames['def']);
+	$ReportCode = '';
 	$ReportCode .= "<table align=\"center\"><tr><th class=\"br1\"></th></tr><tr><th class=\"pad5\">{$Title}</th></tr><tr><th class=\"br0\"></th></tr><tr><tr><th class=\"pad5\">{$UsersFighting}</th></tr><th class=\"br3\"></th></tr>";
 
 	if($Rounds === (array)$Rounds)
@@ -105,7 +106,8 @@ function ReadBattleReport($Report)
 				$Pointer['TotalForceFactor'] = 1;
 				$Pointer['TotalShieldFactor'] = 1;
 				
-				if($UserVal['morale'] !== null)
+				$Pointer['morale'] = null;
+				if(isset($UserVal['morale']) && $UserVal['morale'] !== null)
 				{
 					// Bonuses
 					if($UserVal['morale'] >= MORALE_BONUS_FLEETPOWERUP1)
@@ -150,7 +152,7 @@ function ReadBattleReport($Report)
 					// If ShipsArray is OK (has some ships)
 					foreach($Users[$TypeKey] as $UserID => $UserData)
 					{
-						if($Destroyed[$TypeKey][$UserID] === true)
+						if(isset($Destroyed[$TypeKey][$UserID]))
 						{
 							continue;
 						}
@@ -170,7 +172,7 @@ function ReadBattleReport($Report)
 							{
 								$ShipsLoop += 1;
 								$ShipsCount -= 1;
-								if($ShipCalculations[$TypeKey][$UserID][$ShipID]['done'] !== true)
+								if(!isset($ShipCalculations[$TypeKey][$UserID][$ShipID]))
 								{
 									// Calculate ShipValues if it's our first time here
 									$ForceUpgrade = 0;
@@ -187,7 +189,6 @@ function ReadBattleReport($Report)
 									}
 									$ShipCalculations[$TypeKey][$UserID][$ShipID] = array
 									(
-										'done'=> true,
 										'name'=> $_Lang['tech'][$ShipID],
 										'force' => floor($_Vars_CombatData[$ShipID]['attack'] * ($UserData['techval']['atk'] + $ForceUpgrade) * $UserData['TotalForceFactor']),
 										'shield'=> floor($_Vars_CombatData[$ShipID]['shield'] * $UserData['techval']['shield'] * $UserData['TotalShieldFactor']),
@@ -235,7 +236,7 @@ function ReadBattleReport($Report)
 					// ShipArray is empty (no ships at all)
 					foreach($Users[$TypeKey] as $UserID => $UserData)
 					{
-						if($Destroyed[$TypeKey][$UserID] === true)
+						if(isset($Destroyed[$TypeKey][$UserID]))
 						{
 							continue;
 						}

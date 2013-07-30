@@ -449,10 +449,14 @@ function String2Array($String)
 	$String = explode(';', $String);
 	foreach($String as $Data)
 	{
+		if(empty($Data))
+		{
+			break;
+		}
 		$Data = explode(',', $Data);
 		$Array[$Data[0]] = $Data[1];
 	}
-	return $Array;
+	return (isset($Array) ? $Array : null);
 }
 
 ?>

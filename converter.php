@@ -29,7 +29,7 @@ include($_EnginePath.'common.php');
 
 				$Settings = array
 				(
-					'colorTheme' => ($_POST['colorTheme'] == '2' ? 2 : 1),
+					'colorTheme' => (isset($_POST['colorTheme']) && $_POST['colorTheme'] == '2' ? 2 : 1),
 					'colorArray' => null
 				);
 				$Settings['colorArray'] = $_Lang['Conv_Colors'][$Settings['colorTheme']];
