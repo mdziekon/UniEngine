@@ -8,6 +8,10 @@ include($_EnginePath.'common.php');
 	loggedCheck();
 
 	include($_EnginePath.'includes/functions/ShowGalaxyRows.php');
+	include($_EnginePath.'includes/functions/ShowGalaxySelector.php');
+	include($_EnginePath.'includes/functions/ShowGalaxyMISelector.php');
+	include($_EnginePath.'includes/functions/ShowGalaxyTitles.php');
+	include($_EnginePath.'includes/functions/ShowGalaxyFooter.php');
 	include($_EnginePath.'includes/functions/GalaxyRowPos.php');
 	include($_EnginePath.'includes/functions/GalaxyRowPlanet.php');
 	include($_EnginePath.'includes/functions/GalaxyRowPlanetName.php');
@@ -16,11 +20,9 @@ include($_EnginePath.'common.php');
 	include($_EnginePath.'includes/functions/GalaxyRowUser.php');
 	include($_EnginePath.'includes/functions/GalaxyRowAlly.php');
 	include($_EnginePath.'includes/functions/GalaxyRowActions.php');
-	include($_EnginePath.'includes/functions/ShowGalaxySelector.php');
-	include($_EnginePath.'includes/functions/ShowGalaxyMISelector.php');
-	include($_EnginePath.'includes/functions/ShowGalaxyTitles.php');
-	include($_EnginePath.'includes/functions/GalaxyLegendPopup.php');
-	include($_EnginePath.'includes/functions/ShowGalaxyFooter.php');
+	include($_EnginePath.'includes/functions/GalaxyLegendPopup.php');	
+	include($_EnginePath.'includes/functions/GetMissileRange.php');
+	include($_EnginePath.'includes/functions/GetPhalanxRange.php');
 
 	includeLang('galaxy');
 

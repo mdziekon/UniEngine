@@ -17,6 +17,7 @@ include($_EnginePath.'common.php');
 		global $_Vars_GameElements, $_Lang, $_Vars_ElementCategories;
 
 		$RowsTPL = gettemplate('gate_fleet_rows');
+		$Result = '';
 		foreach($_Vars_ElementCategories['fleet'] as $ShipID)
 		{
 			if($CurrentPlanet[$_Vars_GameElements[$ShipID]] > 0)
@@ -43,6 +44,7 @@ include($_EnginePath.'common.php');
 	{
 		global $_Vars_GameElements;
 		
+		$Query_GetMoons = '';
 		$Query_GetMoons .= "SELECT `id`, `galaxy`, `system`, `planet`, `name`, `{$_Vars_GameElements[43]}`, `last_jump_time` FROM {{table}} WHERE ";
 		$Query_GetMoons .= "`id_owner` = {$CurrentUser['id']} AND `id` != {$CurrentPlanet['id']} AND `planet_type` = 3;";
 		$MoonList = doquery($Query_GetMoons, 'planets');
@@ -50,6 +52,7 @@ include($_EnginePath.'common.php');
 		if(mysql_num_rows($MoonList) > 0)
 		{
 			$TPL_MoonsList = gettemplate('infos_teleport_moonslist');
+			$Combo = '';
 			
 			while($CurMoon = mysql_fetch_assoc($MoonList))
 			{
@@ -593,9 +596,11 @@ include($_EnginePath.'common.php');
 					}
 					$parse['gate_time_script'] = InsertJavaScriptChronoApplet('Gate', '1', $RestString['value']);
 					$parse['gate_wait_time'] = $_Lang['gate_nextjump_timer'].' <div id="bxxGate1">'.pretty_time($RestString['value'], true).'</div>';
+					
 				}
 				else
 				{
+					
 					$parse['gate_time_script'] = '';
 					$parse['gate_wait_time'] = '';
 					$parse['Gate_HideNextJumpTimer'] = 'style="display: none;"';

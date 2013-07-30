@@ -15,7 +15,7 @@ include($_EnginePath.'common.php');
 
 	$TPL = '<style>{Style}</style><br/><table width="800"><tr><td class="b pad5">{Text}</td></tr></table>';
 
-	$TextID = intval($_GET['id']);
+	$TextID = (isset($_GET['id']) ? intval($_GET['id']) : 0);
 	if($TextID > 0)
 	{
 		if(!empty($_Lang['Texts'][$TextID]))

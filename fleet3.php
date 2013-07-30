@@ -18,6 +18,7 @@ include($_EnginePath.'common.php');
 	{
 		global $_POST, $_Lang;
 		$_POST = base64_encode(json_encode($_POST));
+		$GoBackForm = '';
 		$GoBackForm .= '<form action="fleet2.php" method="post"><input type="hidden" name="fromEnd" value="1"/>';
 		$GoBackForm .= '<input type="hidden" name="gobackVars" value="'.$_POST.'"/>';
 		$GoBackForm .= '<input class="orange pad5" style="font-weight: bold;" type="submit" value="&laquo; '.$_Lang['fl_goback'].'"/>';

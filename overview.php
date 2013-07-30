@@ -401,7 +401,7 @@ include($_EnginePath.'common.php');
 			// --- New User Protection Box
 			if($_User['NoobProtection_EndTime'] > $Now)
 			{
-				if($_GET['cancelprotection'] == '1')
+				if(isset($_GET['cancelprotection']) && $_GET['cancelprotection'] == '1')
 				{
 					$_User['NoobProtection_EndTime'] = $Now;
 					$Query_UpdateUser = "UPDATE {{table}} SET `NoobProtection_EndTime` = {$Now} WHERE `id` = {$_User['id']} LIMIT 1;";
@@ -550,7 +550,7 @@ include($_EnginePath.'common.php');
 				}
 			}
 
-			// --- Get users activiti informations -----------------------------------------------------------
+			// --- Get users activity informations -----------------------------------------------------------
 			$TodaysStartTimeStamp = mktime(0, 0, 0);
 			$OnlineUsers = doquery("SELECT IF(`onlinetime` >= (UNIX_TIMESTAMP() - (".TIME_ONLINE.")), 1, 0) AS `current_online` FROM {{table}} WHERE `onlinetime` >= {$TodaysStartTimeStamp};", 'users');
 			$TodayActive = mysql_num_rows($OnlineUsers);
@@ -729,7 +729,7 @@ include($_EnginePath.'common.php');
 				{
 					$ile = "<span class=\"lime\">(+{$ile})</span>";
 				}
-				elseif($ile < 0)
+				else if($ile < 0)
 				{
 					$ile = "<span class=\"red\">({$ile})</span>";
 				}
@@ -754,7 +754,7 @@ include($_EnginePath.'common.php');
 				{
 					$ile = "<span class=\"lime\">(+{$ile})</span>";
 				}
-				elseif($ile < 0)
+				else if($ile < 0)
 				{
 					$ile = "<span class=\"red\">({$ile})</span>";
 				}
@@ -779,7 +779,7 @@ include($_EnginePath.'common.php');
 				{
 					$ile = "<span class=\"lime\">(+{$ile})</span>";
 				}
-				elseif($ile < 0)
+				else if($ile < 0)
 				{
 					$ile = "<span class=\"red\">({$ile})</span>";
 				}
@@ -994,14 +994,15 @@ include($_EnginePath.'common.php');
 			{
 				$QryPlanets .= "`id` {$Order}";
 			}
-			elseif($Sort == 1)
+			else if($Sort == 1)
 			{
 				$QryPlanets .= "`galaxy`, `system`, `planet`, `planet_type` {$Order}";
 			}
-			elseif($Sort == 2)
+			else if($Sort == 2)
 			{
 				$QryPlanets .= "`name` {$Order}";
 			}
+			$parse['OtherPlanets'] = '';
 			$AllOtherPlanets = doquery($QryPlanets, 'planets');
 			if(mysql_num_rows($AllOtherPlanets) > 0)
 			{
@@ -1023,10 +1024,6 @@ include($_EnginePath.'common.php');
 					{
 						if($InCurrentRow == 0)
 						{
-							if(!isset($parse['OtherPlanets']))
-							{
-								$parse['OtherPlanets'] = '';
-							}
 							$parse['OtherPlanets'] .= '<tr>';
 						}
 						$parse['OtherPlanets'] .= '<th>'.$PlanetsData['name'].'<br/>';
@@ -1107,7 +1104,8 @@ include($_EnginePath.'common.php');
 				$CurrBuild = explode(',', $BuildQueue[0]);
 				$RestTime = $_Planet['buildQueue_firstEndTime'] - $Now;
 				$PlanetID = $_Planet['id'];
-
+				
+				$Build = '';
 				$Build .= InsertJavaScriptChronoApplet('pl', 'this', $RestTime, false, false, 'function() { SetTimer = \"<b class=lime>'.$_Lang['BuildJS_Complete'].'</b>\"; document.getElementById(\"dlink\").innerHTML = \'<a href=\"overview.php?planet='.$PlanetID.'\">'.$_Lang['BuildJS_Continue'].'</a>\'; window.setTimeout(\'document.location.href=\"overview.php?planet='.$PlanetID.'\";\', 1000); }');
 				$Build .= $_Lang['tech'][$CurrBuild[0]].' ('.$CurrBuild[1].')';
 				$Build .= '<br /><div id="bxxplthis" class="z">'.pretty_time($RestTime, true).'</div>';

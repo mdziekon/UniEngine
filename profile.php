@@ -21,7 +21,7 @@ include($_EnginePath.'common.php');
 	$PageTitle = $_Lang['PageTitle'];
 	$_Lang['skinpath'] = $_SkinPath;
 
-	$UserID = round($_GET['uid']);
+	$UserID = (isset($_GET['uid']) ? round($_GET['uid']) : 0);
 	if($UserID <= 0)
 	{
 		message($_Lang['Error_NoUIDGiven'], $PageTitle);
@@ -32,7 +32,11 @@ include($_EnginePath.'common.php');
 	}
 	else
 	{
-		$GetUser = doquery("SELECT {{table}}.*, `stats`.`total_rank`, `stats`.`total_points` FROM {{table}} LEFT JOIN {{prefix}}statpoints AS `stats` ON {{table}}.`id` = `id_owner` AND `stat_type` = '1' WHERE `id` = {$UserID};", 'users', true);
+		$Query_GetUser = '';
+		$Query_GetUser .= "SELECT {{table}}.*, `stats`.`total_rank`, `stats`.`total_points` FROM {{table}} ";
+		$Query_GetUser .= "LEFT JOIN {{prefix}}statpoints AS `stats` ON {{table}}.`id` = `id_owner` AND `stat_type` = '1' ";
+		$Query_GetUser .= "WHERE `id` = {$UserID};";		
+		$GetUser = doquery($Query_GetUser, 'users', true);
 	}
 	if($GetUser['id'] != $UserID)
 	{
@@ -103,7 +107,7 @@ include($_EnginePath.'common.php');
 	$_Lang['User_MotherPlanet'] = $GetMotherPlanet['name'];
 	if($UserIsBuddy)
 	{
-		if($GetUser['onlinetime'] >= ($Now - 900))
+		if($GetUser['onlinetime'] >= ($Now - TIME_ONLINE))
 		{
 			$_Lang['User_ShowBuddyOption'] = $_Lang['Table_Buddy'].' <a class="lime" href="buddy.php">'.$_Lang['Table_Online'].'</a>';
 		}
@@ -128,7 +132,7 @@ include($_EnginePath.'common.php');
 	}
 	if(!isOnVacation($GetUser))
 	{
-		$_Lang['HideVacations']= $Hide;
+		$_Lang['HideVacations'] = $Hide;
 	}
 	if($GetUser['is_banned'] != 1)
 	{
@@ -151,15 +155,20 @@ include($_EnginePath.'common.php');
 	}
 	else
 	{
-		$_Lang['User_FightsWonP']= '0';
+		$_Lang['User_FightsWonP'] = '0';
 		$_Lang['User_FightsWonACSP'] = '0';
 		$_Lang['User_FightsDrawP'] = '0';
 		$_Lang['User_FightsLostP'] = '0';
-		$_Lang['User_FightsInAllyP']		= '0';
+		$_Lang['User_FightsInAllyP'] = '0';
 	}
 	$_Lang['User_MissileAttacks'] = prettyNumber($SelectAchievements['ustat_raids_missileAttack']);
 	$_Lang['User_MoonsCreated'] = prettyNumber($SelectAchievements['ustat_moons_created']);
 	$_Lang['User_MoonsDestroyed'] = prettyNumber($SelectAchievements['ustat_moons_destroyed']);
+	
+	$_Lang['User_ShotDownUnits'] = '';
+	$_Lang['User_LostUnits'] = '';
+	$_Lang['User_WarBalance'] = '';	
+	
 	if(!empty($SelectAchievements))
 	{
 		foreach($SelectAchievements as $Key => $Value)
@@ -220,19 +229,19 @@ include($_EnginePath.'common.php');
 	if($GetStats['fleet_rank'] <= 0)
 	{
 		$_Lang['User_FleetsRange'] = '0';
-		$_Lang['User_FleetsPosition']= $_Lang['Table_PosZero'];
+		$_Lang['User_FleetsPosition'] = $_Lang['Table_PosZero'];
 	}
 	else
 	{
 		$_Lang['User_FleetsRange'] = $GetStats['fleet_rank'];
-		$_Lang['User_FleetsPosition']= prettyNumber($GetStats['fleet_rank']);
+		$_Lang['User_FleetsPosition'] = prettyNumber($GetStats['fleet_rank']);
 	}
-	$_Lang['User_PointsFleets']= prettyNumber($GetStats['fleet_points']);
+	$_Lang['User_PointsFleets'] = prettyNumber($GetStats['fleet_points']);
 
 	if($GetStats['tech_rank'] <= 0)
 	{
 		$_Lang['User_ResearchRange'] = '0';
-		$_Lang['User_ResearchPosition']= $_Lang['Table_PosZero'];
+		$_Lang['User_ResearchPosition'] = $_Lang['Table_PosZero'];
 	}
 	else
 	{

@@ -6,8 +6,8 @@ $_EnginePath = './';
 include($_EnginePath.'common.php');
 
 	loggedCheck();
-
-	if($_POST['sending_fleet'] != '1' AND $_POST['fromEnd'] != '1')
+	
+	if((!isset($_POST['sending_fleet']) || $_POST['sending_fleet'] != '1') && (!isset($_POST['fromEnd']) || $_POST['fromEnd'] != '1'))
 	{
 		header('Location: fleet.php');
 		safeDie();
@@ -22,7 +22,7 @@ include($_EnginePath.'common.php');
 		{
 			$_POST['quickres'] = $_POST['gobackVars']['useQuickRes'];
 			$_POST['target_mission'] = $_POST['gobackVars']['mission'];
-			$_POST['getacsdata'] = $_POST['gobackVars']['acs_id'];
+			$_POST['getacsdata'] = (isset($_POST['gobackVars']['acs_id']) ? $_POST['gobackVars']['acs_id'] : null);
 			$_POST['FleetArray'] = $_POST['gobackVars']['FleetArray'];
 			$_POST['galaxy'] = $_POST['gobackVars']['galaxy'];
 			$_POST['system'] = $_POST['gobackVars']['system'];
@@ -33,7 +33,7 @@ include($_EnginePath.'common.php');
 		$_Lang['SelectHolding_'.$_POST['gobackVars']['holdingtime']] = 'selected';
 		$_Lang['SelectExpedition_'.$_POST['gobackVars']['expeditiontime']] = 'selected';
 		$_Lang['SelectResources'] = json_encode(array('resource1' => $_POST['gobackVars']['resource1'], 'resource2' => $_POST['gobackVars']['resource2'], 'resource3' => $_POST['gobackVars']['resource3']));
-		if($_POST['gobackVars']['usequantumgate'] == 'on')
+		if(isset($_POST['gobackVars']['usequantumgate']) && $_POST['gobackVars']['usequantumgate'] == 'on')
 		{
 			$_Lang['SelectQuantumGate'] = 'true';
 		}			

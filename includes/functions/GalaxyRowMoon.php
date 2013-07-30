@@ -54,6 +54,7 @@ function GalaxyRowMoon($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Galaxy, $S
 			'Diameter'			=> prettyNumber($GalaxyRowPlanet['diameter']),
 			'Diameter_Units'	=> $_Lang['diameter_units'],
 			'RowCount'			=> (count($Links) + 2),
+			'Links'				=> ''
 		);
 		foreach($Links as $Index => $Data)
 		{

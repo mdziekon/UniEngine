@@ -17,38 +17,50 @@ include($_EnginePath.'common.php');
 	$PageTPL = gettemplate('phalanx_body');
 	$PageTitle = $_Lang['Page_Title'];
 
-	$PhalanxMoon = &$_Planet;
+	$ThisMoon = &$_Planet;
 	$Now = time();
 	$ScanCost = PHALANX_DEUTERIUMCOST;
 	if(CheckAuth('supportadmin'))
 	{
 		$ScanCost = 0;
-		$PhalanxMoon['sensor_phalanx'] = 50;
+		$ThisMoon['sensor_phalanx'] = 50;
 	}
 
-	if($PhalanxMoon['planet_type'] == 3)
+	if($ThisMoon['planet_type'] == 3)
 	{
-		if($PhalanxMoon['sensor_phalanx'] > 0)
+		if($ThisMoon['sensor_phalanx'] > 0)
 		{
 			$parse = $_Lang;
-			$ThisCoords = array('galaxy' => $PhalanxMoon['galaxy'], 'system' => $PhalanxMoon['system'], 'planet' => $PhalanxMoon['planet']);
-			$ThisPhalanx = $PhalanxMoon['sensor_phalanx'];
-			$TargetInfo = array('galaxy' => intval($_GET['galaxy']), 'system' => intval($_GET['system']), 'planet' => intval($_GET['planet']));
+			$ThisCoords = array
+			(
+				'galaxy' => $ThisMoon['galaxy'],
+				'system' => $ThisMoon['system'],
+				'planet' => $ThisMoon['planet']
+			);
+			$ThisPhalanx = $ThisMoon['sensor_phalanx'];
+			$TargetData = array
+			(
+				'galaxy' => (isset($_GET['galaxy']) ? intval($_GET['galaxy']) : 0),
+				'system' => (isset($_GET['system']) ? intval($_GET['system']) : 0),
+				'planet' => (isset($_GET['planet']) ? intval($_GET['planet']) : 0)
+			);
+			
+			include($_EnginePath.'includes/functions/GetPhalanxRange.php');
+			$RangeDown = $ThisCoords['system'] - GetPhalanxRange($ThisPhalanx);
+			$RangeUp = $ThisCoords['system'] + GetPhalanxRange($ThisPhalanx);
 
-			$RangeDown = $ThisCoords['system'] - (pow($ThisPhalanx, 2) - 1);
-			$RangeUp = $ThisCoords['system'] + (pow($ThisPhalanx, 2) - 1);
-
-			if($TargetInfo['galaxy'] < 1 OR $TargetInfo['galaxy'] > MAX_GALAXY_IN_WORLD OR $TargetInfo['system'] < 1 OR $TargetInfo['system'] > MAX_SYSTEM_IN_GALAXY OR $TargetInfo['planet'] < 1 OR $TargetInfo['planet'] > MAX_PLANET_IN_SYSTEM)
+			$DenyScan = false;
+			if($TargetData['galaxy'] < 1 OR $TargetData['galaxy'] > MAX_GALAXY_IN_WORLD OR $TargetData['system'] < 1 OR $TargetData['system'] > MAX_SYSTEM_IN_GALAXY OR $TargetData['planet'] < 1 OR $TargetData['planet'] > MAX_PLANET_IN_SYSTEM)
 			{
 				$DenyScan = true;
 				$WhyDoNotScan = $_Lang['PhalanxError_BadCoordinates'];
 			}
-			if($TargetInfo['galaxy'] != $ThisCoords['galaxy'])
+			if($TargetData['galaxy'] != $ThisCoords['galaxy'])
 			{
 				$DenyScan = true;
 				$WhyDoNotScan = $_Lang['PhalanxError_GalaxyOutOfRange'];
 			}
-			if($TargetInfo['system'] > $RangeUp OR $TargetInfo['system'] < $RangeDown)
+			if($TargetData['system'] > $RangeUp OR $TargetData['system'] < $RangeDown)
 			{
 				$DenyScan = true;
 				$WhyDoNotScan = $_Lang['PhalanxError_TargetOutOfRange'];
@@ -60,42 +72,43 @@ include($_EnginePath.'common.php');
 
 			if($DenyScan !== true)
 			{
+				$Query_GetTarget = '';
 				$Query_GetTarget .= "SELECT `pl`.`id`, `pl`.`id_owner`, `pl`.`name`, `pl`.`galaxy`, `pl`.`system`, `pl`.`planet`, `users`.`username` ";
 				$Query_GetTarget .= "FROM {{table}} AS `pl` ";
 				$Query_GetTarget .= "LEFT JOIN {{prefix}}users AS `users` ON `users`.`id` = `pl`.`id_owner` ";
 				$Query_GetTarget .= "WHERE ";
-				$Query_GetTarget .= "`pl`.`galaxy` = {$TargetInfo['galaxy']} AND ";
-				$Query_GetTarget .= "`pl`.`system` = {$TargetInfo['system']} AND ";
-				$Query_GetTarget .= "`pl`.`planet` = {$TargetInfo['planet']} AND ";
+				$Query_GetTarget .= "`pl`.`galaxy` = {$TargetData['galaxy']} AND ";
+				$Query_GetTarget .= "`pl`.`system` = {$TargetData['system']} AND ";
+				$Query_GetTarget .= "`pl`.`planet` = {$TargetData['planet']} AND ";
 				$Query_GetTarget .= "`pl`.`planet_type` = 1 ";
 				$Query_GetTarget .= "LIMIT 1; -- Phalanx|GetTarget";
-				$TargetInfo = doquery($Query_GetTarget, 'planets', true);
+				$Result_GetTarget = doquery($Query_GetTarget, 'planets', true);
 				
-				$TargetName = $TargetInfo['name'];
-				$TargetID = $TargetInfo['id'];
+				$TargetName = $Result_GetTarget['name'];
+				$TargetID = $Result_GetTarget['id'];
 				if($TargetID > 0)
 				{			 
 					// Calculate Fleets
-					FlyingFleetHandler($PhalanxMoon, array($TargetID));
+					FlyingFleetHandler($ThisMoon, array($TargetID));
 					$_DontShowMenus = true;
-					if($PhalanxMoon['id'] > 0)
+					if($ThisMoon['id'] > 0)
 					{
-						if($PhalanxMoon['deuterium'] >= $ScanCost)
+						if($ThisMoon['deuterium'] >= $ScanCost)
 						{
 							if($ScanCost > 0)
 							{
-								$PhalanxMoon['deuterium'] -= $ScanCost;
+								$ThisMoon['deuterium'] -= $ScanCost;
 								doquery("UPDATE {{table}} SET `deuterium` = `deuterium` - {$ScanCost} WHERE `id` = {$_User['current_planet']};", 'planets');
 								
-								$UserDev_Log[] = array('PlanetID' => $PhalanxMoon['id'], 'Date' => $Now, 'Place' => 29, 'Code' => '0', 'ElementID' => '0', 'AdditionalData' => '');
+								$UserDev_Log[] = array('PlanetID' => $ThisMoon['id'], 'Date' => $Now, 'Place' => 29, 'Code' => '0', 'ElementID' => '0', 'AdditionalData' => '');
 							}
 							
-							$parse['Insert_Coord_Galaxy'] = $TargetInfo['galaxy'];
-							$parse['Insert_Coord_System'] = $TargetInfo['system'];
-							$parse['Insert_Coord_Planet'] = $TargetInfo['planet'];
-							if($TargetInfo['id_owner'] > 0)
+							$parse['Insert_Coord_Galaxy'] = $Result_GetTarget['galaxy'];
+							$parse['Insert_Coord_System'] = $Result_GetTarget['system'];
+							$parse['Insert_Coord_Planet'] = $Result_GetTarget['planet'];
+							if($Result_GetTarget['id_owner'] > 0)
 							{
-								$parse['Insert_OwnerName'] = "({$TargetInfo['username']})";
+								$parse['Insert_OwnerName'] = "({$Result_GetTarget['username']})";
 								$parse['Insert_TargetName'] = $TargetName;
 							}
 							else
@@ -106,9 +119,9 @@ include($_EnginePath.'common.php');
 							$parse['Insert_My_Galaxy'] = $ThisCoords['galaxy'];
 							$parse['Insert_My_System'] = $ThisCoords['system'];
 							$parse['Insert_My_Planet'] = $ThisCoords['planet'];
-							$parse['Insert_MyMoonName'] = $PhalanxMoon['name'];
-							$parse['Insert_DeuteriumAmount'] = prettyNumber($PhalanxMoon['deuterium']);
-							if($PhalanxMoon['deuterium'] >= $ScanCost)
+							$parse['Insert_MyMoonName'] = $ThisMoon['name'];
+							$parse['Insert_DeuteriumAmount'] = prettyNumber($ThisMoon['deuterium']);
+							if($ThisMoon['deuterium'] >= $ScanCost)
 							{
 								$parse['Insert_DeuteriumColor'] = 'lime';
 							}
@@ -123,19 +136,21 @@ include($_EnginePath.'common.php');
 							$JoinOwnerName = "LEFT JOIN {{prefix}}users AS `usr` ON `usr`.`id` = {{table}}.`fleet_owner`";
 							$JoinACS = "LEFT JOIN {{prefix}}acs AS `get_acs` ON `main_fleet_id` = `fleet_id`";
 
-							$QryLookFleets .= "SELECT {{table}}.*, `planet1`.`name` as `start_name`, `planet2`.`name` as `end_name`, `get_acs`.`fleets_id`, `usr`.`username` AS `owner_name` ";
-							$QryLookFleets .= "FROM {{table}} ";
-							$QryLookFleets .= "{$JoinStartNames} {$JoinEndNames} {$JoinOwnerName} {$JoinACS} ";
-							$QryLookFleets .= "WHERE ";
-							$QryLookFleets .= "`fleet_start_id` = {$TargetID} OR `fleet_end_id` = {$TargetID} ";
-							$QryLookFleets .= "; -- Phalanx|GetFleets";
-							$FleetToTarget = doquery($QryLookFleets, 'fleets');
+							$Query_GetFleets = '';
+							$Query_GetFleets .= "SELECT {{table}}.*, `planet1`.`name` as `start_name`, `planet2`.`name` as `end_name`, `get_acs`.`fleets_id`, `usr`.`username` AS `owner_name` ";
+							$Query_GetFleets .= "FROM {{table}} ";
+							$Query_GetFleets .= "{$JoinStartNames} {$JoinEndNames} {$JoinOwnerName} {$JoinACS} ";
+							$Query_GetFleets .= "WHERE ";
+							$Query_GetFleets .= "`fleet_start_id` = {$TargetID} OR `fleet_end_id` = {$TargetID} ";
+							$Query_GetFleets .= "; -- Phalanx|GetFleets";
+							$Result_GetFleets = doquery($Query_GetFleets, 'fleets');
 							
 							$parse['phl_fleets_table'] = $_Lang['PhalanxInfo_NoMovements'];
-							if(mysql_num_rows($FleetToTarget) > 0)
+							if(mysql_num_rows($Result_GetFleets) > 0)
 							{
 								include($_EnginePath.'includes/functions/BuildFleetEventTable.php');
-								while($FleetRow = mysql_fetch_assoc($FleetToTarget))
+								$Record = 0;
+								while($FleetRow = mysql_fetch_assoc($Result_GetFleets))
 								{
 									$Record += 1;
 
@@ -143,7 +158,7 @@ include($_EnginePath.'common.php');
 									$StayTime = $FleetRow['fleet_end_stay'];
 									$EndTime = $FleetRow['fleet_end_time'];
 
-									if($FleetRow['fleet_owner'] == $TargetInfo['id_owner'])
+									if($FleetRow['fleet_owner'] == $Result_GetTarget['id_owner'])
 									{
 										$FleetType = true;
 									}

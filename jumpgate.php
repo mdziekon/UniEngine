@@ -15,7 +15,7 @@ include($_EnginePath.'common.php');
 		message($Text, $_Lang['tech'][43], 'infos.php?gid=43', 4);
 	}
 	
-	if($_POST['dojump'] != 'yes')
+	if(isset($_POST['dojump']) && $_POST['dojump'] != 'yes')
 	{
 		ShowMessage($_Lang['GateJump_NotDoing']);
 	}
@@ -34,7 +34,7 @@ include($_EnginePath.'common.php');
 	{
 		ShowMessage("{$_Lang['GateJump_Moon1NotReach']} {$This_JumpState['string']}");
 	}
-	$Target_ID = round($_POST['jumpto']);
+	$Target_ID = (isset($_POST['jumpto']) ? round($_POST['jumpto']) : 0);
 	if($Target_ID <= 0)
 	{
 		ShowMessage($_Lang['GateJump_BadIDGiven']);
@@ -90,14 +90,17 @@ include($_EnginePath.'common.php');
 	$Query_UpdateThis_Fields[] = "`last_jump_time` = {$JumpData_Time}";
 	$Query_UpdateTarget_Fields[] = "`last_jump_time` = {$JumpData_Time}";
 	
+	$Query_UpdateThis = '';
 	$Query_UpdateThis .= "UPDATE {{table}} SET ";
 	$Query_UpdateThis .= implode(', ', $Query_UpdateThis_Fields);
 	$Query_UpdateThis .= " WHERE `id` = {$_Planet['id']} LIMIT 1;";
 	
+	$Query_UpdateTarget = '';
 	$Query_UpdateTarget .= "UPDATE {{table}} SET ";
 	$Query_UpdateTarget .= implode(', ', $Query_UpdateTarget_Fields);
 	$Query_UpdateTarget .= " WHERE `id` = {$Target_ID} LIMIT 1;";
 	
+	$Query_UpdateUser = '';
 	$Query_UpdateUser .= "UPDATE {{table}} SET `current_planet` = {$Target_ID} ";
 	$Query_UpdateUser .= "WHERE `id` = {$_User['id']} LIMIT 1;";
 	
@@ -105,7 +108,7 @@ include($_EnginePath.'common.php');
 	
 	doquery($Query_UpdateThis, 'planets');
 	doquery($Query_UpdateTarget, 'planets');
-	if($_POST['changemoon'] == 'on')
+	if(isset($_POST['changemoon']) && $_POST['changemoon'] == 'on')
 	{
 		doquery($Query_UpdateUser, 'users');
 	}

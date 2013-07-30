@@ -6,10 +6,10 @@ array
 	
 );
 
-$ID = intval($_GET['id']);
+$ID = (isset($_GET['id']) ? intval($_GET['id']) : 0);
 if(!empty($redirects[$ID]))
 {
-	if($ID == 0 AND !empty($_GET['rule']))
+	if($ID == 0 AND isset($_GET['rule']))
 	{
 		$Add = '#rule'.$_GET['rule'];
 	}
