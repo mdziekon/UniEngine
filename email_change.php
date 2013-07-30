@@ -17,21 +17,21 @@ include($_EnginePath.'common.php');
 		message($_Lang['Info_havetobelogged'], $Title, 'login.php', 4);
 	}
 
-	if(empty($_GET['hash']))
+	if(!isset($_GET['hash']) || empty($_GET['hash']))
 	{
 		message($_Lang['Info_noenoughtdata'], $Title, 'overview.php', 4);
 	}
 
 	$HashType = $_GET['hash'];
-	$Key = $_GET['key'];
+	$Key = (isset($_GET['key']) ? $_GET['key'] : null);
 
-	if($HashType != 'old' AND $HashType != 'new' AND $HashType != 'none')
+	if($HashType != 'old' && $HashType != 'new' && $HashType != 'none')
 	{
 		message($_Lang['Info_baddata'], $Title, 'overview.php', 4);
 	}
 	else
 	{
-		if($HashType == 'old' OR $HashType == 'new')
+		if($HashType == 'old' || $HashType == 'new')
 		{
 			if(!preg_match('/^[0-9a-zA-Z]{32}$/D', $Key))
 			{

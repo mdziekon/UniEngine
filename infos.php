@@ -566,6 +566,7 @@ include($_EnginePath.'common.php');
 			{
 				$TPL_DestroyRockets_Body = gettemplate('destroy_rockets_table');
 				$TPL_DestroyRockets_Row = gettemplate('destroy_rockets_row');
+				$parse['DestroyRockets_Insert_Rows'] = '';
 				foreach($_Vars_ElementCategories['rockets'] as $ThisID)
 				{
 					$parse['DestroyRockets_ID'] = $ThisID;

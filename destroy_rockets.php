@@ -14,8 +14,8 @@ include($_EnginePath.'common.php');
 		message($_Lang['NoSilo'], $_Lang['Title'], 'infos.php?gid=44', 3);
 	}
 
-	$destroy[502] = round($_POST['destroy']['502']);
-	$destroy[503] = round($_POST['destroy']['503']);
+	$destroy[502] = (isset($_POST['destroy']['502']) ? round($_POST['destroy']['502']) : 0);
+	$destroy[503] = (isset($_POST['destroy']['503']) ? round($_POST['destroy']['503']) : 0);
 
 	if($destroy[502] < 0 OR $destroy[503] < 0)
 	{
@@ -31,7 +31,7 @@ include($_EnginePath.'common.php');
 		$destroy[503] = $_Planet['interplanetary_missile'];
 	}
 
-	if($destroy[502] == 0 AND $destroy[503] == 0)
+	if($destroy[502] == 0 && $destroy[503] == 0)
 	{
 		message($_Lang['NothingDestroyed'], $_Lang['Title'], 'infos.php?gid=44', 3);
 	}
@@ -49,6 +49,7 @@ include($_EnginePath.'common.php');
 	
 	$UserDev_Log[] = array('PlanetID' => $_User['current_planet'], 'Date' => time(), 'Place' => 28, 'Code' => '0', 'ElementID' => '0', 'AdditionalData' => implode(';', $CreateLogArray));
 	
+	$Query_DeleteMissiles = '';
 	$Query_DeleteMissiles .= "UPDATE {{table}} SET ";
 	$Query_DeleteMissiles .= "`antiballistic_missile` = `antiballistic_missile` - {$destroy[502]}, ";
 	$Query_DeleteMissiles .= "`interplanetary_missile` = `interplanetary_missile` - {$destroy[503]} ";

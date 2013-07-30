@@ -13,7 +13,7 @@ include($_EnginePath.'common.php');
 	loggedCheck();
 
 	$Title = $_Lang['BattleConverter_title']; 
-	$ReportID = floor(floatval(trim($_GET['id'])));
+	$ReportID = (isset($_GET['id']) ? floor(floatval(trim($_GET['id']))) : 0);
 
 	if($ReportID > 0)
 	{
@@ -27,7 +27,11 @@ include($_EnginePath.'common.php');
 				include_once($_EnginePath.'includes/functions/ConvertBattleReport.php');
 				$_Lang['Title'] = $_Lang['BattleConverter_title'];
 
-				$Settings = array('colorTheme' => ($_POST['colorTheme'] == '2' ? 2 : 1));
+				$Settings = array
+				(
+					'colorTheme' => ($_POST['colorTheme'] == '2' ? 2 : 1),
+					'colorArray' => null
+				);
 				$Settings['colorArray'] = $_Lang['Conv_Colors'][$Settings['colorTheme']];
 				$_Lang['Set_ColorTheme_'.$Settings['colorTheme'].'_Check'] = 'selected';
 

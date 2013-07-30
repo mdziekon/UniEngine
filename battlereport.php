@@ -13,14 +13,15 @@ include($_EnginePath.'common.php');
 	$TPL_Body = gettemplate('battlereport_body');
 	$TPL_Error = gettemplate('battlereport_error');
 
-	$ReportID = floor(floatval(trim($_GET['id'])));
-	$ReportHash = trim($_GET['hash']);
-	if($_GET['sim'] == 1 OR empty($ReportHash) OR !preg_match('/^[a-zA-Z0-9]{32}$/D', $ReportHash))
+	$ReportID = (isset($_GET['id']) ? floor(floatval(trim($_GET['id']))) : 0);
+	$ReportHash = (isset($_GET['hash']) ? trim($_GET['hash']) : null);
+	$IsSimulation = isset($_GET['sim']);
+	if($IsSimulation || empty($ReportHash) || !preg_match('/^[a-zA-Z0-9]{32}$/D', $ReportHash))
 	{
 		$ReportHash = false;
 	}
 
-	if($ReportID > 0 OR $ReportHash !== false)
+	if($ReportID > 0 || $ReportHash !== false)
 	{
 		if($ReportHash !== false)
 		{
@@ -30,16 +31,17 @@ include($_EnginePath.'common.php');
 		{
 			$WHERE = "`ID` = {$ReportID}";
 		}
-		$Report = doquery("SELECT * FROM {{table}} WHERE {$WHERE};", (($_GET['sim'] == 1) ? 'sim_' : '').'battle_reports', true);
+		$Report = doquery("SELECT * FROM {{table}} WHERE {$WHERE};", ($IsSimulation ? 'sim_' : '').'battle_reports', true);
 
 		if($Report)
 		{
-			if($_GET['sim'] == 1)
+			$DisallowView = false;
+			if($IsSimulation == 1)
 			{
 				if($Report['time'] < time())
 				{
 					doquery("DELETE FROM {{table}} WHERE `time` < UNIX_TIMESTAMP();", 'sim_battle_reports');
-					$DisAllow = true;
+					$DisallowView = true;
 					$Reason = 'deleted';
 				}
 			}
@@ -59,12 +61,12 @@ include($_EnginePath.'common.php');
 					}
 					if(!in_array($_User['id'], $AllowedOwners) AND !CheckAuth('supportadmin'))
 					{
-						$DisAllow = true;
+						$DisallowView = true;
 						$Reason = 'notyour';
 					}
 				}
 			}
-			if($DisAllow !== true)
+			if($DisallowView !== true)
 			{
 				include($_EnginePath.'includes/functions/ReadBattleReport.php');
 				$ParsePage['Content'] = ReadBattleReport($Report);

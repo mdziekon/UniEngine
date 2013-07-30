@@ -9,7 +9,7 @@ include($_EnginePath.'common.php');
 
 	$Activated = false;
 
-	$_GET['code'] = trim($_GET['code']);
+	$_GET['code'] = (isset($_GET['code']) ? trim($_GET['code']) : null);
 	if(!empty($_GET['code']))
 	{
 		if(preg_match('/^[0-9a-zA-Z]{32}$/D', $_GET['code']))

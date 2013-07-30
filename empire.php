@@ -99,7 +99,9 @@ include($_EnginePath.'common.php');
 		}
 		$production_level = 0.01 * $production_level;
 
-		$StoreColor = array();
+		$StoreColor = array('metal' => '', 'crystal' => '', 'deuterium' => '');
+		$AddSign = array('metal' => '', 'crystal' => '', 'deuterium' => '');
+		$BaseProduct = array('metal' => 0, 'crystal' => 0, 'deuterium' => 0);
 		if($p['planet_type'] == 1)
 		{
 			$BaseProduct['metal'] = ($p['metal_perhour'] * $production_level) + $BasicIncome['metal'];
@@ -115,7 +117,6 @@ include($_EnginePath.'common.php');
 				else if($Value == 0)
 				{
 					$ProductColor[$Type] = 'orange';
-					$AddSign[$Type] = '';
 				}
 				else
 				{
@@ -165,10 +166,38 @@ include($_EnginePath.'common.php');
 			array('Name' => $p['name']),
 			array('G' => $p['galaxy'], 'S' => $p['system'], 'P' => $p['planet']),
 			array('Current' => $p['field_current'], 'Max' => $p['field_max']),
-			array('ID' => $p['id'], 'res' => prettyNumber($p['metal']), 'overflow' => $StoreColor['metal'], 'color' => $ProductColor['metal'], 'sign' => $AddSign['metal'], 'production' => prettyNumber($BaseProduct['metal'])),
-			array('ID' => $p['id'], 'res' => prettyNumber($p['crystal']), 'overflow' => $StoreColor['crystal'], 'color' => $ProductColor['crystal'], 'sign' => $AddSign['crystal'], 'production' => prettyNumber($BaseProduct['crystal'])),
-			array('ID' => $p['id'], 'res' => prettyNumber($p['deuterium']), 'overflow' => $StoreColor['deuterium'], 'color' => $ProductColor['deuterium'], 'sign' => $AddSign['deuterium'], 'production' => prettyNumber($BaseProduct['deuterium'])),
-			array('color' => $EnergyColor, 'val' => prettyNumber($EnergyTotal))
+			array
+			(
+				'ID' => $p['id'],
+				'res' => prettyNumber($p['metal']),
+				'overflow' => $StoreColor['metal'],
+				'color' => $ProductColor['metal'],
+				'sign' => $AddSign['metal'],
+				'production' => prettyNumber($BaseProduct['metal'])
+			),
+			array
+			(
+				'ID' => $p['id'],
+				'res' => prettyNumber($p['crystal']),
+				'overflow' => $StoreColor['crystal'],
+				'color' => $ProductColor['crystal'],
+				'sign' => $AddSign['crystal'],
+				'production' => prettyNumber($BaseProduct['crystal'])
+			),
+			array
+			(
+				'ID' => $p['id'],
+				'res' => prettyNumber($p['deuterium']),
+				'overflow' => $StoreColor['deuterium'],
+				'color' => $ProductColor['deuterium'],
+				'sign' => $AddSign['deuterium'],
+				'production' => prettyNumber($BaseProduct['deuterium'])
+			),
+			array
+			(
+				'color' => $EnergyColor,
+				'val' => prettyNumber($EnergyTotal)
+			)
 		);
 		$f = array
 		(
