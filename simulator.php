@@ -197,6 +197,25 @@ include($_EnginePath.'common.php');
 			$Calculate = false;
 			$BreakMSG = $_Lang['Break_noDEFShips'];
 		}
+		
+		foreach($AttackersData as $UserTemp => $Data)
+		{
+			if(empty($AttackingFleets[$UserTemp]))
+			{
+				unset($AttackingFleets[$UserTemp]);
+				unset($AttackingTechs[$UserTemp]);
+				unset($AttackersData[$UserTemp]);
+			}
+		}
+		foreach($DefendersData as $UserTemp => $Data)
+		{
+			if(empty($DefendingFleets[$UserTemp]))
+			{
+				unset($DefendingFleets[$UserTemp]);
+				unset($DefendingTechs[$UserTemp]);
+				unset($DefendersData[$UserTemp]);
+			}
+		}
 
 		if(empty($AttackingFleets) OR (empty($DefendingFleets)))
 		{
