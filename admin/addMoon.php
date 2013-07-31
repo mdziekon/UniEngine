@@ -18,7 +18,7 @@ include($_EnginePath.'common.php');
 
 	$PageTpl = gettemplate('admin/addMoon');
 
-	if($_POST['sent'] == '1')
+	if(isset($_POST['sent']) && $_POST['sent'] == '1')
 	{
 		$_Lang['PHP_Ins_PlanetID'] = $_POST['planetID'];
 		$_Lang['PHP_Ins_Name'] = $_POST['name'];

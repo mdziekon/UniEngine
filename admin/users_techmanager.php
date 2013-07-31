@@ -26,11 +26,11 @@ include($_EnginePath.'common.php');
 		1 => &$Items_Technologies,
 	);
 	
-	if($_POST['sent'] == 1)
+	if(isset($_POST['sent']) && $_POST['sent'] == 1)
 	{
 		$UserID = round($_POST['userID']);
 		$TabID = intval($_POST['tab']);
-		$ThisCMD = $_POST['cmd'];
+		$ThisCMD = (isset($_POST['cmd']) ? $_POST['cmd'] : null);
 		
 		$_Lang['Insert_PreviousUserID'] = $UserID;
 		$_Lang['Insert_SelectCMD_'.$ThisCMD] = 'checked';
@@ -44,6 +44,7 @@ include($_EnginePath.'common.php');
 				{
 					if(!empty($_POST['res'][$TabID]))
 					{
+						$Query_GetUser = '';
 						$Query_GetUser .= "SELECT `id`, `username` ";
 						$Query_GetUser .= "FROM {{table}} WHERE `id` = {$UserID} LIMIT 1; -- admin/user_techmanager.php - Query #1";
 						$Result_GetUser = doquery($Query_GetUser, 'users', true);
@@ -73,6 +74,7 @@ include($_EnginePath.'common.php');
 							{
 								if($ThisCMD == 'add')
 								{
+									$Query_Update = '';
 									$Query_Update .= "UPDATE {{table}} SET ";
 									foreach($Query_Update_Data as $ThisID => $ThisValue)
 									{
@@ -83,6 +85,7 @@ include($_EnginePath.'common.php');
 								}
 								else if($ThisCMD == 'set')
 								{
+									$Query_Update = '';
 									$Query_Update .= "UPDATE {{table}} SET ";
 									foreach($Query_Update_Data as $ThisID => $ThisValue)
 									{
@@ -99,6 +102,7 @@ include($_EnginePath.'common.php');
 										$Query_Update_Values[] = $ThisValue;
 										$Query_Update_Set[] = "`{$_Vars_GameElements[$ThisID]}` = IF(VALUES(`{$_Vars_GameElements[$ThisID]}`) > `{$_Vars_GameElements[$ThisID]}`, 0, `{$_Vars_GameElements[$ThisID]}` - VALUES(`{$_Vars_GameElements[$ThisID]}`))";
 									}
+									$Query_Update = '';
 									$Query_Update .= "INSERT INTO {{table}} (`id`, ".implode(', ', $Query_Update_Fields).") ";
 									$Query_Update .= "VALUES ({$UserID}, ".implode(', ', $Query_Update_Values).") ";
 									$Query_Update .= "ON DUPLICATE KEY UPDATE ";
@@ -162,6 +166,7 @@ include($_EnginePath.'common.php');
 		}
 	}
 	
+	$_Lang['Insert_Rows_Technologies'] = '';
 	foreach($Items_Technologies as $ItemID)
 	{
 		$_Lang['Insert_Rows_Technologies'] .= parsetemplate($TPL_Row, array

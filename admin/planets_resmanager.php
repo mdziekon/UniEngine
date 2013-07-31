@@ -33,11 +33,11 @@ include($_EnginePath.'common.php');
 		4 => &$Items_Defense
 	);
 	
-	if($_POST['sent'] == 1)
+	if(isset($_POST['sent']) && $_POST['sent'] == 1)
 	{
 		$PlanetID = round($_POST['planetID']);
 		$TabID = intval($_POST['tab']);
-		$ThisCMD = $_POST['cmd'];
+		$ThisCMD = (isset($_POST['cmd']) ? $_POST['cmd'] : null);
 		
 		$_Lang['Insert_PreviousPlanetID'] = $PlanetID;
 		$_Lang['Insert_SelectCMD_'.$ThisCMD] = 'checked';
@@ -51,6 +51,7 @@ include($_EnginePath.'common.php');
 				{
 					if(!empty($_POST['res'][$TabID]))
 					{
+						$Query_GetPlanet = '';
 						$Query_GetPlanet .= "SELECT `pl`.`id`, `pl`.`name`, `pl`.`id_owner`, `user`.`username`, ";
 						$Query_GetPlanet .= "`pl`.`galaxy`, `pl`.`system`, `pl`.`planet`, `pl`.`planet_type` ";
 						$Query_GetPlanet .= "FROM {{table}} AS `pl` ";
@@ -87,6 +88,7 @@ include($_EnginePath.'common.php');
 							{
 								if($ThisCMD == 'add')
 								{
+									$Query_Update = '';
 									$Query_Update .= "UPDATE {{table}} SET ";
 									if($TabID == 1)
 									{
@@ -107,6 +109,7 @@ include($_EnginePath.'common.php');
 								}
 								else if($ThisCMD == 'set')
 								{
+									$Query_Update = '';
 									$Query_Update .= "UPDATE {{table}} SET ";
 									if($TabID == 1)
 									{
@@ -145,6 +148,7 @@ include($_EnginePath.'common.php');
 											$Query_Update_Set[] = "`{$_Vars_GameElements[$ThisID]}` = IF(VALUES(`{$_Vars_GameElements[$ThisID]}`) > `{$_Vars_GameElements[$ThisID]}`, 0, `{$_Vars_GameElements[$ThisID]}` - VALUES(`{$_Vars_GameElements[$ThisID]}`))";
 										}
 									}
+									$Query_Update = '';
 									$Query_Update .= "INSERT INTO {{table}} (`id`, ".implode(', ', $Query_Update_Fields).") ";
 									$Query_Update .= "VALUES ({$PlanetID}, ".implode(', ', $Query_Update_Values).") ";
 									$Query_Update .= "ON DUPLICATE KEY UPDATE ";
@@ -214,6 +218,7 @@ include($_EnginePath.'common.php');
 		}
 	}
 	
+	$_Lang['Insert_Rows_Res'] = '';
 	foreach($Items_Resources as $ItemID => $ItemName)
 	{
 		$_Lang['Insert_Rows_Res'] .= parsetemplate($TPL_Row, array
@@ -223,6 +228,7 @@ include($_EnginePath.'common.php');
 			'ResID' => $ItemID
 		));
 	}
+	$_Lang['Insert_Rows_Buildings'] = '';
 	foreach($Items_Buildings as $ItemID)
 	{
 		$_Lang['Insert_Rows_Buildings'] .= parsetemplate($TPL_Row, array
@@ -232,6 +238,7 @@ include($_EnginePath.'common.php');
 			'ResID' => $ItemID
 		));
 	}
+	$_Lang['Insert_Rows_Fleet'] = '';
 	foreach($Items_Fleet as $ItemID)
 	{
 		$_Lang['Insert_Rows_Fleet'] .= parsetemplate($TPL_Row, array
@@ -241,6 +248,7 @@ include($_EnginePath.'common.php');
 			'ResID' => $ItemID
 		));
 	}
+	$_Lang['Insert_Rows_Defense'] = '';
 	foreach($Items_Defense as $ItemID)
 	{
 		$_Lang['Insert_Rows_Defense'] .= parsetemplate($TPL_Row, array
