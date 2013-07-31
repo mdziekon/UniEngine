@@ -71,22 +71,22 @@ function SpyTarget($TargetArray, $Mode, $TitleString, $UserInfo = array())
 		$ReturnArray[] = $ReturnData;
 		$LookAtLoop = false;
 	}
-	elseif($Mode == 1)
+	else if($Mode == 1)
 	{
 		// Show Ships
 		$ElementArrays[] = $_Vars_ElementCategories['fleet'];
 		$AddToSim = true;
 	}
-	elseif($Mode == 2)
+	else if($Mode == 2)
 	{
 		$ElementArrays[] = $_Vars_ElementCategories['defense'];
 		$AddToSim = true;
 	}
-	elseif($Mode == 3)
+	else if($Mode == 3)
 	{
 		$ElementArrays[] = $_Vars_ElementCategories['build'];
 	}
-	elseif($Mode == 4)
+	else if($Mode == 4)
 	{
 		$ElementArrays[] = $_Vars_ElementCategories['tech'];
 		$AddToSim = array(109, 110, 111, 120, 121, 122, 125, 126, 199);
@@ -120,18 +120,20 @@ function SpyTarget($TargetArray, $Mode, $TitleString, $UserInfo = array())
 		$LookAtLoop = false;
 	}
 
+	$Count = 0;
 	if($LookAtLoop == true)
 	{
 		$ReturnArray[] = array('{SpyRes_Oth}', ((2 * SPY_REPORT_ROW) + (SPY_REPORT_ROW - 1)), $TitleString);
 
-		$Count = 0;
+		$ArrayString = null;
 		if(!empty($ElementArrays))
 		{
 			foreach($ElementArrays as $ThisArray)
 			{
+				$row = 0;
 				foreach($ThisArray as $ElementID)
 				{
-					if($TargetArray[$_Vars_GameElements[$ElementID]] > 0)
+					if(isset($TargetArray[$_Vars_GameElements[$ElementID]]) && $TargetArray[$_Vars_GameElements[$ElementID]] > 0)
 					{
 						if($row == 0)
 						{

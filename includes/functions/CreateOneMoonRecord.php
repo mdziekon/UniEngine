@@ -17,16 +17,15 @@ function CreateOneMoonRecord($Galaxy, $System, $Planet, $Owner, $MoonName, $Chan
 			{
 				$Diameter_Min = 2000 + ($Chance * 100);
 				$Diameter_Max = 6000 + ($Chance * 200);
-
-				$LosujetS = rand(10, 45);
-				$mintemp = $MoonPlanet['temp_min'] - $LosujetS;
-				$maxtemp = $MoonPlanet['temp_max'] - $LosujetS;
 				$Diameter = rand($Diameter_Min, $Diameter_Max);
 			}
 			else
 			{
 				$Diameter = $SetDiameter;
 			}
+			$RandTemp = rand(10, 45);
+			$mintemp = $MoonPlanet['temp_min'] - $RandTemp;
+			$maxtemp = $MoonPlanet['temp_max'] - $RandTemp;
 			
 			if(empty($MoonName))
 			{

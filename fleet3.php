@@ -264,15 +264,15 @@ include($_EnginePath.'common.php');
 				}
 				else
 				{
-					if($CheckPlanetOwner['AllyPact1'] >= ALLYPACT_NONAGGRESSION OR $CheckPlanetOwner['AllyPact2'] >= ALLYPACT_NONAGGRESSION)
+					if((isset($CheckPlanetOwner['AllyPact1']) && $CheckPlanetOwner['AllyPact1'] >= ALLYPACT_NONAGGRESSION) || (isset($CheckPlanetOwner['AllyPact2']) && $CheckPlanetOwner['AllyPact2'] >= ALLYPACT_NONAGGRESSION))
 					{
 						$OwnerIsAlliedUser = true;
 					}					
-					if($CheckPlanetOwner['AllyPact1'] >= ALLYPACT_MERCANTILE OR $CheckPlanetOwner['AllyPact2'] >= ALLYPACT_MERCANTILE)
+					if((isset($CheckPlanetOwner['AllyPact1']) && $CheckPlanetOwner['AllyPact1'] >= ALLYPACT_MERCANTILE) || (isset($CheckPlanetOwner['AllyPact2']) && $CheckPlanetOwner['AllyPact2'] >= ALLYPACT_MERCANTILE))
 					{
 						$OwnerHasMarcantilePact = true;
 					}
-					if(($CheckPlanetOwner['active1'] == 1 OR $CheckPlanetOwner['active2'] == 1) OR ($CheckPlanetOwner['ally_id'] == $_User['ally_id'] AND $_User['ally_id'] > 0) OR ($CheckPlanetOwner['AllyPact1'] >= ALLYPACT_DEFENSIVE OR $CheckPlanetOwner['AllyPact2'] >= ALLYPACT_DEFENSIVE))
+					if(($CheckPlanetOwner['active1'] == 1 OR $CheckPlanetOwner['active2'] == 1) OR ($CheckPlanetOwner['ally_id'] == $_User['ally_id'] AND $_User['ally_id'] > 0) OR ((isset($CheckPlanetOwner['AllyPact1']) && $CheckPlanetOwner['AllyPact1'] >= ALLYPACT_DEFENSIVE) || (isset($CheckPlanetOwner['AllyPact2']) && $CheckPlanetOwner['AllyPact2'] >= ALLYPACT_DEFENSIVE)))
 					{
 						$OwnerFriend = true;
 						if($CheckPlanetOwner['active1'] == 1 OR $CheckPlanetOwner['active2'] == 1)

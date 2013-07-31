@@ -291,7 +291,11 @@ function Tasks_TriggerTask_MainCheck_Progressive($JobArray, $ThisCat, $TaskID, $
 	if(!empty($UserTasksUpdate[$ThisUser['id']]['status'][$ThisCat][$TaskID][$JobID]))
 	{
 		$ThisUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] = $UserTasksUpdate[$ThisUser['id']]['status'][$ThisCat][$TaskID][$JobID];
-	}						
+	}
+	if(!isset($ThisUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID]))
+	{
+		$ThisUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] = 0;
+	}
 	$ThisUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] += $Value;
 	if($ThisUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] < $JobArray[$JobArray['statusField']])
 	{

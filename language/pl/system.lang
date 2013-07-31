@@ -45,6 +45,7 @@ $_Lang['BR_Target_1'] = 'Planeta';
 $_Lang['BR_Target_3'] = 'Księżyc';
 $_Lang['no_loses_in_defence'] = 'Brak strat w obronie';
 $_Lang['nothing_have_been_rebuilt'] = 'Nic nie zostało odbudowane';
+$_Lang['moon_has_been_destroyed'] = 'Księżyc został zniszczony!';
 
 $_Lang['Old_username_is'] = 'Dawniej znany jako';
 $_Lang['ThisPageOnlyForPro'] = 'Ta funkcja jest dostępna tylko dla posiadaczy <a href="aboutpro.php">Konta Pro</a>!';

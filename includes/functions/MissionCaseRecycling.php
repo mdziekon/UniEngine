@@ -2,15 +2,13 @@
 
 function MissionCaseRecycling($FleetRow, &$_FleetCache)
 {
-	global $_Vars_Prices, $UserDev_Log, $_User, $GlobalParsedTasks, $UserTasksUpdate, $_Vars_TasksData; 
+	global $_Vars_Prices, $UserDev_Log, $_User, $GlobalParsedTasks; 
 	
 	$Return = array();
 	$Now = time();
 
 	if($FleetRow['calcType'] == 1)
-	{
-		$TriggerTasksCheck = false;
-		
+	{		
 		$Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_Calculated_Mission'] = true;
 		$Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_Calculated_Mission_Time'] = $Now;
 
@@ -64,7 +62,15 @@ function MissionCaseRecycling($FleetRow, &$_FleetCache)
 			{
 				$RecycledGoods['crystal'] = $TargetGalaxy['crystal'];
 			}
-				
+			
+			if(!isset($_FleetCache['galaxy'][$FleetRow['fleet_end_id_galaxy']]['metal']))
+			{
+				$_FleetCache['galaxy'][$FleetRow['fleet_end_id_galaxy']]['metal'] = 0;
+			}
+			if(!isset($_FleetCache['galaxy'][$FleetRow['fleet_end_id_galaxy']]['crystal']))
+			{
+				$_FleetCache['galaxy'][$FleetRow['fleet_end_id_galaxy']]['crystal'] = 0;
+			}
 			$_FleetCache['galaxy'][$FleetRow['fleet_end_id_galaxy']]['metal'] -= $RecycledGoods['metal'];
 			$_FleetCache['galaxy'][$FleetRow['fleet_end_id_galaxy']]['crystal'] -= $RecycledGoods['crystal'];
 			$_FleetCache['galaxy'][$FleetRow['fleet_end_id_galaxy']]['updated'] = true;
@@ -156,12 +162,20 @@ function MissionCaseRecycling($FleetRow, &$_FleetCache)
 			// Create UpdateFleet record for $_FleetCache
 			$CachePointer = &$_FleetCache['updateFleets'][$FleetRow['fleet_id']];
 			$CachePointer['fleet_mess'] = 1;
+			if(!isset($CachePointer['fleet_resource_metal']))
+			{
+				$CachePointer['fleet_resource_metal'] = 0;
+			}
+			if(!isset($CachePointer['fleet_resource_crystal']))
+			{
+				$CachePointer['fleet_resource_crystal'] = 0;
+			}
 			$CachePointer['fleet_resource_metal'] += $RecycledGoods['metal'];
 			$CachePointer['fleet_resource_crystal'] += $RecycledGoods['crystal'];
 		}
 		else
 		{
-			if($RecycledGoods['metal'] > 0 OR $RecycledGoods['crystal'] > 0)
+			if($RecycledGoods['metal'] > 0 || $RecycledGoods['crystal'] > 0)
 			{
 				$_FleetCache['fleetRowUpdate'][$FleetRow['fleet_id']] = array
 				(

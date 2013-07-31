@@ -691,7 +691,7 @@ function FlyingFleetHandler(&$planet, $IncludeFleetsFromEndIDs = array())
 							include('CreateOneMoonRecord.php');
 						}
 						$MissionReturn = MissionCaseDestruction($CurrentFleet, $_FleetCache);
-						if($MissionReturn['MoonDestroyed'] === true)
+						if(isset($MissionReturn['MoonDestroyed']) && $MissionReturn['MoonDestroyed'] === true)
 						{
 							if($CurrentFleet['fleet_end_id'] == $planet['id'])
 							{

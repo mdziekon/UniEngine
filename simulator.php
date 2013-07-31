@@ -30,8 +30,8 @@ include($_EnginePath.'common.php');
 	if(!empty($_POST['spyreport']))
 	{
 		$_POST['spyreport'] = json_decode(stripslashes($_POST['spyreport']), true);
-		$_POST['def_techs'][1] = $_POST['spyreport']['tech'];
-		$_POST['def_ships'][1] = $_POST['spyreport']['ships'];	
+		$_POST['def_techs'][1] = (isset($_POST['spyreport']['tech']) ? $_POST['spyreport']['tech'] : null);
+		$_POST['def_ships'][1] = (isset($_POST['spyreport']['ships']) ? $_POST['spyreport']['ships'] : null);
 		$_POST['spyreport'] = null;
 	}
 	

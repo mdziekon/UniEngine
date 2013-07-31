@@ -27,6 +27,7 @@ function MissionCaseSpy($FleetRow, &$_FleetCache)
 		$TargetPlanet = &$_FleetCache['planets'][$FleetRow['fleet_end_id']];
 		$TargetUser = &$_FleetCache['users'][$FleetRow['fleet_target_owner']];
 		
+		$Morale_IsEmptyReport = false;
 		if(MORALE_ENABLED)
 		{
 			Morale_ReCalculate($FleetRow, $FleetRow['fleet_start_time']);
@@ -64,6 +65,7 @@ function MissionCaseSpy($FleetRow, &$_FleetCache)
 		}
 			
 		// Select All Defending Fleets on the Orbit from $_FleetCache
+		$DefendingFleets = array();
 		if(!empty($_FleetCache['defFleets'][$FleetRow['fleet_end_id']]))
 		{
 			global $_Vars_GameElements;
@@ -74,6 +76,10 @@ function MissionCaseSpy($FleetRow, &$_FleetCache)
 					$TempShips = String2Array($FleetData['fleet_array']);
 					foreach($TempShips as $ShipID => $ShipCount)
 					{
+						if(!isset($DefendingFleets[$_Vars_GameElements[$ShipID]]))
+						{
+							$DefendingFleets[$_Vars_GameElements[$ShipID]] = 0;
+						}
 						$DefendingFleets[$_Vars_GameElements[$ShipID]] += $ShipCount;
 					}
 				}
@@ -98,6 +104,7 @@ function MissionCaseSpy($FleetRow, &$_FleetCache)
 		}
 		Tasks_TriggerTask($CurrentUser, 'SPY_OTHER_USER');
 
+		$ShipsCount = 0;
 		$FleetArray = explode(';', $FleetRow['fleet_array']);
 		foreach($FleetArray as $FleetData)
 		{
@@ -288,6 +295,7 @@ function MissionCaseSpy($FleetRow, &$_FleetCache)
 
 			if(!empty($SimData))
 			{
+				$Message['sim'] = '';
 				foreach($SimData as $ID => $Count)
 				{
 					$Message['sim'] .= "{$ID},{$Count};";
@@ -321,7 +329,7 @@ function MissionCaseSpy($FleetRow, &$_FleetCache)
 				{						
 					if(empty($UserStatsData[$FleetRow['fleet_owner']]))
 					{
-						$UserStatsData[$FleetRow['fleet_owner']]= $UserStatsPattern;
+						$UserStatsData[$FleetRow['fleet_owner']] = $UserStatsPattern;
 					}
 					if(empty($UserStatsData[$TargetPlanet['id_owner']]))
 					{
@@ -343,15 +351,25 @@ function MissionCaseSpy($FleetRow, &$_FleetCache)
 						$Query_UpdateGalaxy_SearchField = 'id_moon';
 						$CacheKey = 'byMoon';
 					}
-						
-					if($_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']] > 0)
+					
+					if(isset($_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']]) && $_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']] > 0)
 					{
+						if(!isset($_FleetCache['galaxy'][$_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']]]['metal']))
+						{
+							$_FleetCache['galaxy'][$_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']]]['metal'] = 0;
+						}
+						if(!isset($_FleetCache['galaxy'][$_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']]]['crystal']))
+						{
+							$_FleetCache['galaxy'][$_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']]]['crystal'] = 0;
+						}
+					
 						$_FleetCache['galaxy'][$_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']]]['crystal'] += $SpyToolDebris;
 						$_FleetCache['galaxy'][$_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']]]['updated'] = true;
 						$_FleetCache['updated']['galaxy'] = true;
 					}
 					else
 					{
+						$Query_UpdateGalaxy = '';
 						$Query_UpdateGalaxy .= "UPDATE {{table}} SET `crystal` = `crystal` + {$SpyToolDebris} ";
 						$Query_UpdateGalaxy .= "WHERE `{$Query_UpdateGalaxy_SearchField}` = {$FleetRow['fleet_end_id']} LIMIT 1; ";
 						$Query_UpdateGalaxy .= "MISSION SPY [Q01][FID: {$FleetRow['fleet_id']}]";					
@@ -376,7 +394,7 @@ function MissionCaseSpy($FleetRow, &$_FleetCache)
 			}
 		}
 	}
-	if($FleetRow['calcType'] == 3 AND $_FleetCache['fleetRowStatus'][$FleetRow['fleet_id']]['isDestroyed'] !== true)
+	if($FleetRow['calcType'] == 3 && (!isset($_FleetCache['fleetRowStatus'][$FleetRow['fleet_id']]['isDestroyed']) || $_FleetCache['fleetRowStatus'][$FleetRow['fleet_id']]['isDestroyed'] !== true))
 	{
 		$Return['FleetsToDelete'][] = $FleetRow['fleet_id'];
 		$Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_Calculated_ComeBack'] = true;

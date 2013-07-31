@@ -13,13 +13,15 @@ function MissionCaseColonisation($FleetRow, &$_FleetCache)
 	{
 		$Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_Calculated_Mission'] = true;
 		$Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_Calculated_Mission_Time'] = $Now;
-			
+		
+		$Query_CheckGalaxy = '';
 		$Query_CheckGalaxy .= "SELECT `galaxy_id` FROM {{table}} WHERE ";
 		$Query_CheckGalaxy .= "`galaxy` = {$FleetRow['fleet_end_galaxy']} AND `system` = {$FleetRow['fleet_end_system']} AND `planet` = {$FleetRow['fleet_end_planet']} ";
 		$Query_CheckGalaxy .= "LIMIT 1; -- MISSION COLONIZATION [Q01]";
 		$CheckGalaxy = doquery($Query_CheckGalaxy, 'galaxy', true);			
 		if($CheckGalaxy['galaxy_id'] <= 0)
 		{
+			$Query_GetUserData = '';
 			$Query_GetUserData .= "SELECT COUNT(*) AS `Data`, 1 AS `Type` FROM `{{prefix}}planets` WHERE `id_owner` = {$FleetRow['fleet_owner']} AND `planet_type` = 1 ";
 			if($_User['id'] != $FleetRow['fleet_owner'])
 			{
@@ -123,9 +125,9 @@ function MissionCaseColonisation($FleetRow, &$_FleetCache)
 						$UpdateFleet['fleet_mess'] = 1;
 						$UpdateFleet['fleet_array'] = $NewFleet;
 						$UpdateFleet['fleet_amount'] = $FleetRow['fleet_amount'] - 1;
-						$UpdateFleet['fleet_resource_metal'] = -1 * $FleetRow['fleet_resource_metal'];
-						$UpdateFleet['fleet_resource_crystal'] = -1 * $FleetRow['fleet_resource_crystal'];
-						$UpdateFleet['fleet_resource_deuterium'] = -1 * $FleetRow['fleet_resource_deuterium'];
+						$UpdateFleet['fleet_resource_metal'] = -$FleetRow['fleet_resource_metal'];
+						$UpdateFleet['fleet_resource_crystal'] = -$FleetRow['fleet_resource_crystal'];
+						$UpdateFleet['fleet_resource_deuterium'] = -$FleetRow['fleet_resource_deuterium'];
 
 						$Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_Array_Changes'] = '"D;208,1"';
 						$Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_Info_HasLostShips'] = true;
@@ -201,6 +203,18 @@ function MissionCaseColonisation($FleetRow, &$_FleetCache)
 				$CachePointer['fleet_array'] = $UpdateFleet['fleet_array'];
 				$CachePointer['fleet_amount'] = $UpdateFleet['fleet_amount'];
 				$CachePointer['fleet_mess'] = $UpdateFleet['fleet_mess'];
+				if(!isset($CachePointer['fleet_resource_metal']))
+				{
+					$CachePointer['fleet_resource_metal'] = 0;
+				}
+				if(!isset($CachePointer['fleet_resource_crystal']))
+				{
+					$CachePointer['fleet_resource_crystal'] = 0;
+				}
+				if(!isset($CachePointer['fleet_resource_deuterium']))
+				{
+					$CachePointer['fleet_resource_deuterium'] = 0;
+				}
 				$CachePointer['fleet_resource_metal'] += $UpdateFleet['fleet_resource_metal'];
 				$CachePointer['fleet_resource_crystal'] += $UpdateFleet['fleet_resource_crystal'];
 				$CachePointer['fleet_resource_deuterium'] += $UpdateFleet['fleet_resource_deuterium'];
@@ -219,7 +233,7 @@ function MissionCaseColonisation($FleetRow, &$_FleetCache)
 		}
 	}
 
-	if($FleetRow['calcType'] == 3 AND $_FleetCache['fleetRowStatus'][$FleetRow['fleet_id']]['isDestroyed'] !== true)
+	if($FleetRow['calcType'] == 3 && (!isset($_FleetCache['fleetRowStatus'][$FleetRow['fleet_id']]['isDestroyed']) || $_FleetCache['fleetRowStatus'][$FleetRow['fleet_id']]['isDestroyed'] !== true))
 	{
 		if(!empty($_FleetCache['fleetRowUpdate'][$FleetRow['fleet_id']]))
 		{

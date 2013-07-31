@@ -269,6 +269,10 @@ include($_EnginePath.'common.php');
 						if(!empty($Ships))
 						{
 							$Ships = explode(',', $Ships);
+							if(!isset($AdditionalFleets[$Ships[0]]))
+							{
+								$AdditionalFleets[$Ships[0]] = 0;
+							}
 							$AdditionalFleets[$Ships[0]] += $Ships[1];
 						}
 					}
@@ -282,6 +286,10 @@ include($_EnginePath.'common.php');
 				if(!empty($Ships))
 				{
 					$Ships = explode(',', $Ships);
+					if(!isset($AdditionalFleets[$Ships[0]]))
+					{
+						$AdditionalFleets[$Ships[0]] = 0;
+					}
 					$AdditionalFleets[$Ships[0]] += $Ships[1];
 				}
 			}
@@ -311,20 +319,15 @@ include($_EnginePath.'common.php');
 			$FleetRow['FleetFlyTargetTime'] = '<b class="lime flRi" id="bxxft_'.$i.'">'.pretty_time($FleetRow['FleetFlyTargetTime'], true, 'D').'</b>';
 			$FleetRow['FleetHideComeBackTime'] = $FleetRow['FleetHideTargetorBackTime'] = $FleetRow['FleetHideStayTime'] = $FleetRow['FleetHideRetreatTime'] = $Hide;
 
-			if($f['fleet_mess'] == 0)
+
+			$JoinThisACS = '';
+			if((isset($_GET['joinacs']) && $_GET['joinacs'] == $ACSData['id']) || (isset($_POST['getacsdata']) && $_POST['getacsdata'] > 0 && isset($_POST['getacsdata']) && $_POST['getacsdata'] == $ACSData['id']))
 			{
-				$JoinThisACS = '';
-				if($_GET['joinacs'] == $ACSData['id'] OR ($_POST['getacsdata'] > 0 AND $_POST['getacsdata'] == $ACSData['id']))
-				{
-					$JoinThisACS = ' checked';
-					$_Lang['SetJoiningACSID'] = $ACSData['id'];
-				}
-				$FleetRow['FleetOrders'] = "<input type=\"radio\" value=\"{$ACSData['id']}\" class=\"setACS_ID pad5\" name=\"acs_select\"{$JoinThisACS}><br/>{$_Lang['fl_acs_joinnow']}";
+				$JoinThisACS = ' checked';
+				$_Lang['SetJoiningACSID'] = $ACSData['id'];
 			}
-			else
-			{
-				$FleetRow['FleetOrders'] = '&nbsp;';
-			}
+			$FleetRow['FleetOrders'] = "<input type=\"radio\" value=\"{$ACSData['id']}\" class=\"setACS_ID pad5\" name=\"acs_select\"{$JoinThisACS}><br/>{$_Lang['fl_acs_joinnow']}";
+
 
 			$_Lang['FlyingFleetsRows'] .= parsetemplate($FleetRowTPL, $FleetRow);
 		}	
@@ -1096,13 +1099,13 @@ include($_EnginePath.'common.php');
 			}
 		}
 		
-		$_Lang['SetJoiningACSID'] = $_POST['getacsdata'];
-		$_Lang['P_Galaxy'] = $_POST['galaxy'];
-		$_Lang['P_System'] = $_POST['system'];
-		$_Lang['P_Planet'] = $_POST['planet'];
-		$_Lang['P_PlType'] = $_POST['planettype'];
-		$_Lang['P_Mission'] = $_POST['target_mission'];
-		$_Lang['P_SetQuickRes'] = $_POST['quickres'];
+		$_Lang['SetJoiningACSID'] = (isset($_POST['getacsdata']) ? $_POST['getacsdata'] : null);
+		$_Lang['P_Galaxy'] = (isset($_POST['galaxy']) ? $_POST['galaxy'] : null);
+		$_Lang['P_System'] = (isset($_POST['system']) ? $_POST['system'] : null);
+		$_Lang['P_Planet'] = (isset($_POST['planet']) ? $_POST['planet'] : null);
+		$_Lang['P_PlType'] = (isset($_POST['planettype']) ? $_POST['planettype'] : null);
+		$_Lang['P_Mission'] = (isset($_POST['target_mission']) ? $_POST['target_mission'] : null);
+		$_Lang['P_SetQuickRes'] = (isset($_POST['quickres']) ? $_POST['quickres'] : null);
 		$_Lang['P_GoBackVars'] = base64_encode(json_encode($GoBackVars));
 	}
 	else

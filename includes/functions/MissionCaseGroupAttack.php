@@ -53,6 +53,8 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 			}
 		}
 
+		$AttackingFleets = array();
+		$DefendingFleets = array();
 		// Create data arrays for attacker and main defender
 		$DefendersIDs[] = $TargetUser['id'];
 		
@@ -189,9 +191,9 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 		$AttackersIDs[] = $FleetRow['fleet_owner'];
 		$AttackingFleetOwners[$FleetRow['fleet_id']] = $FleetRow['fleet_owner'];
 		$AttackingFleetID[0] = $FleetRow['fleet_id'];
-		$AttackingFleetRes[$FleetRow['fleet_id']]['metal'] = $FleetRow['fleet_resouce_metal'];
-		$AttackingFleetRes[$FleetRow['fleet_id']]['crystal'] = $FleetRow['fleet_resouce_crystal'];
-		$AttackingFleetRes[$FleetRow['fleet_id']]['deuterium'] = $FleetRow['fleet_resouce_deuterium'];
+		$AttackingFleetRes[$FleetRow['fleet_id']]['metal'] = (isset($FleetRow['fleet_resouce_metal']) ? $FleetRow['fleet_resouce_metal'] : 0);
+		$AttackingFleetRes[$FleetRow['fleet_id']]['crystal'] = (isset($FleetRow['fleet_resouce_crystal']) ? $FleetRow['fleet_resouce_crystal'] : 0);
+		$AttackingFleetRes[$FleetRow['fleet_id']]['deuterium'] = (isset($FleetRow['fleet_resouce_deuterium']) ? $FleetRow['fleet_resouce_deuterium'] : 0);
 		
 		$AttackingTechs[0] = array
 		(
@@ -225,9 +227,9 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 			foreach($_FleetCache['acsFleets'][$FleetRow['fleet_id']] as $FleetData)
 			{
 				$AttackingFleets[$i] = String2Array($FleetData['fleet_array']);
-				$AttackingFleetRes[$FleetData['fleet_id']]['metal'] = $FleetData['fleet_resouce_metal'];
-				$AttackingFleetRes[$FleetData['fleet_id']]['crystal'] = $FleetData['fleet_resouce_crystal'];
-				$AttackingFleetRes[$FleetData['fleet_id']]['deuterium'] = $FleetData['fleet_resouce_deuterium'];
+				$AttackingFleetRes[$FleetData['fleet_id']]['metal'] = (isset($FleetData['fleet_resouce_metal']) ? $FleetData['fleet_resouce_metal'] : 0);
+				$AttackingFleetRes[$FleetData['fleet_id']]['crystal'] = (isset($FleetData['fleet_resouce_crystal']) ? $FleetData['fleet_resouce_crystal'] : 0);
+				$AttackingFleetRes[$FleetData['fleet_id']]['deuterium'] = (isset($FleetData['fleet_resouce_deuterium']) ? $FleetData['fleet_resouce_deuterium'] : 0);
 				$AttackingFleetID[$i] = $FleetData['fleet_id'];
 				$AttackingTechs[$i] = array
 				(
@@ -497,7 +499,21 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 		// Get the calculations time
 		$EndTime = microtime(true);
 		$totaltime = sprintf('%0.6f', $EndTime - $StartTime);
-
+		
+		$RealDebrisMetalAtk = 0;
+		$RealDebrisCrystalAtk = 0;
+		$RealDebrisDeuteriumAtk = 0;
+		$RealDebrisMetalDef = 0;
+		$RealDebrisCrystalDef = 0;
+		$RealDebrisDeuteriumDef = 0;
+		$TotalMoonChance = 0;
+		$TotalLostMetal = 0;
+		$TotalLostCrystal = 0;
+		$DebrisMetalDef = 0;
+		$DebrisCrystalDef = 0;
+		
+		$MoonHasBeenCreated = false;
+		
 		$RoundsData			= $Combat['rounds'];
 		$Result				= $Combat['result'];
 		$AtkShips			= $Combat['AttackerShips'];
@@ -512,6 +528,10 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 
 		$i = 0;
 		// Parse result data - attackers fleet
+		$TotalMetStolen = 0;
+		$TotalCryStolen = 0;
+		$TotalDeuStolen = 0;
+		
 		if(!empty($AtkShips))
 		{
 			if($Result === COMBAT_ATK)
@@ -555,7 +575,11 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 
 					foreach($AttackingFleets[$User] as $ID => $Count)
 					{
-						$Difference = $Count - $Ships[$ID];
+						$Difference = $Count;
+						if(isset($Ships[$ID]))
+						{
+							$Difference -= $Ships[$ID];
+						}
 						if($Difference > 0)
 						{
 							$QryUpdateFleets[$i]['array_lost'][] = "{$ID},{$Difference}";
@@ -570,15 +594,19 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 					{
 						if($Count > 0)
 						{
+							if(!isset($QryUpdateFleets[$i]['count']))
+							{
+								$QryUpdateFleets[$i]['count'] = 0;
+							}
 							$QryUpdateFleets[$i]['array'][] = "{$ID},{$Count}";
 							$QryUpdateFleets[$i]['count'] += $Count;
 						}
-						if($Result === COMBAT_ATK AND $_Vars_Prices[$ID]['cantPillage'] !== true)
+						if($Result === COMBAT_ATK && (!isset($_Vars_Prices[$ID]['cantPillage']) || $_Vars_Prices[$ID]['cantPillage'] !== true))
 						{
 							$FleetStorage += $_Vars_Prices[$ID]['capacity'] * $Count;
 						}
 
-						if($Count < $AttackingFleets[0][$ID])
+						if($Count < $AttackingFleets[$User][$ID])
 						{
 							$UserDev_UpFl[$AttackingFleetID[$User]][] = $ID.','.($AttackingFleets[$User][$ID] - $Count);
 						}
@@ -668,13 +696,13 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 							if($MaxDeuSteal > ($StoragePerResource + $AllowTakeMoreDeu))
 							{
 								$QryUpdateFleets[$i]['deuterium'] = floor($StoragePerResource + $AllowTakeMoreDeu);
-								$MaxDeuSteal -=$QryUpdateFleets[$i]['deuterium'];
+								$MaxDeuSteal -= $QryUpdateFleets[$i]['deuterium'];
 								$TotalDeuStolen += $QryUpdateFleets[$i]['deuterium'];
 							}
 							else
 							{
 								$QryUpdateFleets[$i]['deuterium'] = floor($MaxDeuSteal);
-								$MaxDeuSteal -=$QryUpdateFleets[$i]['deuterium'];
+								$MaxDeuSteal -= $QryUpdateFleets[$i]['deuterium'];
 								$TotalDeuStolen += $QryUpdateFleets[$i]['deuterium'];
 							}
 
@@ -684,16 +712,28 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 
 							if($QryUpdateFleets[$i]['metal'] > 0)
 							{
+								if(!isset($TriggerTasksCheck[$AttackingFleetOwners[$AttackingFleetID[$User]]]['BATTLE_COLLECT_METAL']))
+								{
+									$TriggerTasksCheck[$AttackingFleetOwners[$AttackingFleetID[$User]]]['BATTLE_COLLECT_METAL'] = 0;
+								}
 								$UserDev_UpFl[$AttackingFleetID[$User]][] = 'M,'.$QryUpdateFleets[$i]['metal'];
 								$TriggerTasksCheck[$AttackingFleetOwners[$AttackingFleetID[$User]]]['BATTLE_COLLECT_METAL'] += $QryUpdateFleets[$i]['metal'];
 							}
 							if($QryUpdateFleets[$i]['crystal'] > 0)
 							{
+								if(!isset($TriggerTasksCheck[$AttackingFleetOwners[$AttackingFleetID[$User]]]['BATTLE_COLLECT_CRYSTAL']))
+								{
+									$TriggerTasksCheck[$AttackingFleetOwners[$AttackingFleetID[$User]]]['BATTLE_COLLECT_CRYSTAL'] = 0;
+								}
 								$UserDev_UpFl[$AttackingFleetID[$User]][] = 'C,'.$QryUpdateFleets[$i]['crystal'];
 								$TriggerTasksCheck[$AttackingFleetOwners[$AttackingFleetID[$User]]]['BATTLE_COLLECT_CRYSTAL'] += $QryUpdateFleets[$i]['crystal'];
 							}
 							if($QryUpdateFleets[$i]['deuterium'] > 0)
 							{
+								if(!isset($TriggerTasksCheck[$AttackingFleetOwners[$AttackingFleetID[$User]]]['BATTLE_COLLECT_DEUTERIUM']))
+								{
+									$TriggerTasksCheck[$AttackingFleetOwners[$AttackingFleetID[$User]]]['BATTLE_COLLECT_DEUTERIUM'] = 0;
+								}
 								$UserDev_UpFl[$AttackingFleetID[$User]][] = 'D,'.$QryUpdateFleets[$i]['deuterium'];
 								$TriggerTasksCheck[$AttackingFleetOwners[$AttackingFleetID[$User]]]['BATTLE_COLLECT_DEUTERIUM'] += $QryUpdateFleets[$i]['deuterium'];
 							} 
@@ -818,6 +858,10 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 								$ThisCount = $Count;
 								if($Count > 0)
 								{
+									if(!isset($QryUpdateFleets[$i]['count']))
+									{
+										$QryUpdateFleets[$i]['count'] = 0;
+									}
 									$QryUpdateFleets[$i]['array'][] = "{$ID},{$Count}";
 									$QryUpdateFleets[$i]['count'] += $Count;
 								}
@@ -929,6 +973,18 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 						$CachePointer['fleet_array'] = $Data['array'];
 						$CachePointer['fleet_amount'] = $Data['count'];
 						$CachePointer['fleet_mess'] = $Data['mess'];
+						if(!isset($CachePointer['fleet_resource_metal']))
+						{
+							$CachePointer['fleet_resource_metal'] = 0;
+						}
+						if(!isset($CachePointer['fleet_resource_crystal']))
+						{
+							$CachePointer['fleet_resource_crystal'] = 0;
+						}
+						if(!isset($CachePointer['fleet_resource_deuterium']))
+						{
+							$CachePointer['fleet_resource_deuterium'] = 0;
+						}
 						$CachePointer['fleet_resource_metal'] += $Data['metal'];
 						$CachePointer['fleet_resource_crystal'] += $Data['crystal'];
 						$CachePointer['fleet_resource_deuterium'] += $Data['deuterium'];
@@ -936,9 +992,9 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 						{
 							$CachePointer = &$_FleetCache['fleetRowUpdate'][$Data['id']];
 							$CachePointer['fleet_array'] = $Data['array'];
-							$CachePointer['fleet_resource_metal'] = $_FleetCache['acsFleets'][$Data['id']]['fleet_resource_metal'] + $Data['metal'];
-							$CachePointer['fleet_resource_crystal'] = $_FleetCache['acsFleets'][$Data['id']]['fleet_resource_crystal'] + $Data['crystal'];
-							$CachePointer['fleet_resource_deuterium'] = $_FleetCache['acsFleets'][$Data['id']]['fleet_resource_deuterium'] + $Data['deuterium'];
+							$CachePointer['fleet_resource_metal'] = (isset($_FleetCache['acsFleets'][$Data['id']]['fleet_resource_metal']) ? $_FleetCache['acsFleets'][$Data['id']]['fleet_resource_metal'] : 0) + $Data['metal'];
+							$CachePointer['fleet_resource_crystal'] = (isset($_FleetCache['acsFleets'][$Data['id']]['fleet_resource_crystal']) ? $_FleetCache['acsFleets'][$Data['id']]['fleet_resource_crystal'] : 0) + $Data['crystal'];
+							$CachePointer['fleet_resource_deuterium'] = (isset($_FleetCache['acsFleets'][$Data['id']]['fleet_resource_deuterium']) ? $_FleetCache['acsFleets'][$Data['id']]['fleet_resource_deuterium'] : 0) + $Data['deuterium'];
 						}
 					}
 				}
@@ -978,6 +1034,8 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 		// Calculate looses - attacker
 		if(!empty($AtkLost))
 		{
+			$DebrisMetalAtk = 0;
+			$DebrisCrystalAtk = 0;
 			foreach($AtkLost as $ID => $Count)
 			{
 				if(in_array($ID, $_Vars_ElementCategories['fleet']))
@@ -1112,7 +1170,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 		}
 
 		// Create debris field on the orbit
-		if($TotalLostMetal > 0 OR $TotalLostCrystal > 0)
+		if($TotalLostMetal > 0 || $TotalLostCrystal > 0)
 		{
 			if($TotalLostCrystal == 0)
 			{
@@ -1132,9 +1190,18 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 				$Query_UpdateGalaxy_SearchField = 'id_moon';
 				$CacheKey = 'byMoon';
 			}
-				
-			if($_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']] > 0)
+			
+			if(isset($_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']]) && $_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']] > 0)
 			{
+				if(!isset($_FleetCache['galaxy'][$_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']]]['metal']))
+				{
+					$_FleetCache['galaxy'][$_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']]]['metal'] = 0;
+				}
+				if(!isset($_FleetCache['galaxy'][$_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']]]['crystal']))
+				{
+					$_FleetCache['galaxy'][$_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']]]['crystal'] = 0;
+				}
+
 				$_FleetCache['galaxy'][$_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']]]['metal'] += $TotalLostMetal;
 				$_FleetCache['galaxy'][$_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']]]['crystal'] += $TotalLostCrystal;
 				$_FleetCache['galaxy'][$_FleetCache['galaxyMap'][$CacheKey][$FleetRow['fleet_end_id']]]['updated'] = true;
@@ -1142,6 +1209,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 			}
 			else
 			{
+				$Query_UpdateGalaxy = '';
 				$Query_UpdateGalaxy .= "UPDATE {{table}} SET `metal` = `metal` + {$TotalLostMetal}, `crystal` = `crystal` + {$TotalLostCrystal} ";
 				$Query_UpdateGalaxy .= "WHERE `{$Query_UpdateGalaxy_SearchField}` = {$FleetRow['fleet_end_id']} LIMIT 1; ";
 				$Query_UpdateGalaxy .= "-- MISSION GROUP_ATTACK [Q02][FID: {$FleetRow['fleet_id']}]";					
@@ -1399,6 +1467,10 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 						{
 							$UserID = $AttackingFleetOwners[$AttackingFleetID[$UserID]];
 						}
+						if(!isset($ForceUsed_Array[$UserID]))
+						{
+							$ForceUsed_Array[$UserID] = 0;
+						}
 						$ForceUsed_Array[$UserID] += $UsedForce;
 					}
 					$AttackersCount -= ($AttackersCount - count($ForceUsed_Array));
@@ -1430,7 +1502,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 				$ReportColor = 'green';
 				$ReportColor2 = 'red';
 			}
-			elseif($Result === COMBAT_DRAW)
+			else if($Result === COMBAT_DRAW)
 			{
 				foreach($AttackersIDs as $UserID)
 				{
@@ -1450,7 +1522,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 				$ReportColor = 'orange';
 				$ReportColor2 = 'orange';
 			}
-			elseif($Result === COMBAT_DEF)
+			else if($Result === COMBAT_DEF)
 			{
 				foreach($AttackersIDs as $UserID){
 					$UserStatsData[$UserID]['raids_lost'] += 1;
@@ -1510,6 +1582,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 				}
 			}
 			
+			$DestroyedDefendersShips_TotalPrice = 0;
 			if(!empty($ShotDown['atk']['d']))
 			{
 				foreach($ShotDown['atk']['d'] as $UserID => $DestShips)
@@ -1521,6 +1594,10 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 						else
 					{
 						$ThisUserID = $AttackingFleetOwners[$AttackingFleetID[$UserID]];
+					}
+					if(!isset($TriggerTasksCheck[$ThisUserID]['BATTLE_DESTROY_MILITARYUNITS']))
+					{
+						$TriggerTasksCheck[$ThisUserID]['BATTLE_DESTROY_MILITARYUNITS'] = 0;
 					}
 					foreach($DestShips as $ShipID => $ShipCount)
 					{
@@ -1587,12 +1664,12 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 				$ReportColor = 'green';
 				$ReportColor2 = 'red';
 			}
-			elseif($Result === COMBAT_DRAW)
+			else if($Result === COMBAT_DRAW)
 			{
 				$ReportColor = 'orange';
 				$ReportColor2 = 'orange';
 			}
-			elseif($Result === COMBAT_DEF)
+			else if($Result === COMBAT_DEF)
 			{
 				$ReportColor = 'red';
 				$ReportColor2 = 'green';
@@ -1626,7 +1703,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 			}
 			else
 			{
-				if(count($DefSysLostIDs) == 1)
+				if(!isset($DefSysLostIDs) || count($DefSysLostIDs) == 1)
 				{
 					$RebuildReport = $_Lang['no_loses_in_defence'];
 				}
@@ -1658,7 +1735,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 			prettyNumber($RealDebrisMetalAtk + $RealDebrisCrystalAtk + $RealDebrisDeuteriumAtk),
 			prettyNumber($RealDebrisCrystalDef + $RealDebrisMetalDef + $RealDebrisDeuteriumDef), 
 			prettyNumber($TotalMetStolen), prettyNumber($TotalCryStolen), prettyNumber($TotalDeuStolen),
-			prettyNumber($TotalLostMetal), prettyNumber($TotalLostCrystal),
+			prettyNumber(isset($TotalLostMetal) ? $TotalLostMetal : 0), prettyNumber(isset($TotalLostCrystal) ? $TotalLostCrystal : 0), 
 			$ReportHasHLinkRelative, $ReportHasHLinkReal
 		);
 		$Message = json_encode($Message);
@@ -1695,7 +1772,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 					$ThisTaskUser['isACSLeader'] = true;
 				}
 				
-				if($TriggerTasksData['BATTLE_WIN'])
+				if(isset($TriggerTasksData['BATTLE_WIN']))
 				{
 					Tasks_TriggerTask($ThisTaskUser, 'BATTLE_WIN', array
 					(
@@ -1705,7 +1782,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 						}
 					));
 				}
-				if($TriggerTasksData['BATTLE_WINORDRAW_LIMIT'])
+				if(isset($TriggerTasksData['BATTLE_WINORDRAW_LIMIT']))
 				{
 					Tasks_TriggerTask($ThisTaskUser, 'BATTLE_WINORDRAW_LIMIT', array
 					(
@@ -1719,7 +1796,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 						}
 					));
 				}
-				if($TriggerTasksData['BATTLE_WINORDRAW_ACS_LIMIT'])
+				if(isset($TriggerTasksData['BATTLE_WINORDRAW_ACS_LIMIT']))
 				{
 					Tasks_TriggerTask($ThisTaskUser, 'BATTLE_WINORDRAW_ACS_LIMIT', array
 					(
@@ -1737,7 +1814,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 						}
 					));
 				}				
-				if($TriggerTasksData['BATTLE_COLLECT_METAL'] > 0)
+				if(isset($TriggerTasksData['BATTLE_COLLECT_METAL']) && $TriggerTasksData['BATTLE_COLLECT_METAL'] > 0)
 				{
 					$TaskTemp = $TriggerTasksData['BATTLE_COLLECT_METAL'];
 					Tasks_TriggerTask($ThisTaskUser, 'BATTLE_COLLECT_METAL', array
@@ -1748,7 +1825,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 						}
 					));
 				}
-				if($TriggerTasksData['BATTLE_COLLECT_CRYSTAL'] > 0)
+				if(isset($TriggerTasksData['BATTLE_COLLECT_CRYSTAL']) && $TriggerTasksData['BATTLE_COLLECT_CRYSTAL'] > 0)
 				{
 					$TaskTemp = $TriggerTasksData['BATTLE_COLLECT_CRYSTAL'];
 					Tasks_TriggerTask($ThisTaskUser, 'BATTLE_COLLECT_CRYSTAL', array
@@ -1759,7 +1836,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 						}
 					));
 				}
-				if($TriggerTasksData['BATTLE_COLLECT_DEUTERIUM'] > 0)
+				if(isset($TriggerTasksData['BATTLE_COLLECT_DEUTERIUM']) && $TriggerTasksData['BATTLE_COLLECT_DEUTERIUM'] > 0)
 				{
 					$TaskTemp = $TriggerTasksData['BATTLE_COLLECT_DEUTERIUM'];
 					Tasks_TriggerTask($ThisTaskUser, 'BATTLE_COLLECT_DEUTERIUM', array
@@ -1770,7 +1847,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 						}
 					));
 				}
-				if($TriggerTasksData['CREATE_MOON'])
+				if(isset($TriggerTasksData['CREATE_MOON']) && $TriggerTasksData['CREATE_MOON'])
 				{
 					Tasks_TriggerTask($ThisTaskUser, 'CREATE_MOON', array
 					(
@@ -1780,7 +1857,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 						}
 					));
 				}
-				if($TriggerTasksData['CREATE_MOON_FRIENDLY'])
+				if(isset($TriggerTasksData['CREATE_MOON_FRIENDLY']) && $TriggerTasksData['CREATE_MOON_FRIENDLY'])
 				{
 					Tasks_TriggerTask($ThisTaskUser, 'CREATE_MOON_FRIENDLY', array
 					(
@@ -1790,7 +1867,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 						}
 					));
 				}
-				if($TriggerTasksData['BATTLE_DESTROY_MILITARYUNITS'] > 0)
+				if(isset($TriggerTasksData['BATTLE_DESTROY_MILITARYUNITS']) && $TriggerTasksData['BATTLE_DESTROY_MILITARYUNITS'] > 0)
 				{
 					$TaskTemp = $TriggerTasksData['BATTLE_DESTROY_MILITARYUNITS'];
 					Tasks_TriggerTask($ThisTaskUser, 'BATTLE_DESTROY_MILITARYUNITS', array
@@ -1801,7 +1878,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 						}
 					));
 				}
-				if($TriggerTasksData['BATTLE_DESTROY_MOREEXPENSIVEFLEET_ACS'] > 0)
+				if(isset($TriggerTasksData['BATTLE_DESTROY_MOREEXPENSIVEFLEET_ACS']) && $TriggerTasksData['BATTLE_DESTROY_MOREEXPENSIVEFLEET_ACS'] > 0)
 				{
 					$TaskTemp2 = 0;
 					foreach($AttackingFleets as $FleetIndex => $FleetArray)
@@ -1836,7 +1913,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 		}
 	}
 	
-	if($FleetRow['calcType'] == 3 AND $_FleetCache['fleetRowStatus'][$FleetRow['fleet_id']]['isDestroyed'] !== true)
+	if($FleetRow['calcType'] == 3 && (!isset($_FleetCache['fleetRowStatus'][$FleetRow['fleet_id']]['isDestroyed']) || $_FleetCache['fleetRowStatus'][$FleetRow['fleet_id']]['isDestroyed'] !== true))
 	{
 		if(!empty($_FleetCache['fleetRowUpdate'][$FleetRow['fleet_id']]))
 		{

@@ -44,7 +44,7 @@ function MissionCaseMIP($FleetRow, &$_FleetCache)
 		
 		if(!$IsAbandoned)
 		{
-			$IdleHours = floor(($FleetRow['fleet_start_time'] - $TargetUser['onlinetime']) / 3600);
+			$IdleHours = floor(($FleetRow['fleet_start_time'] - $TargetUser['onlinetime']) / TIME_HOUR);
 			if($IdleHours > 0)
 			{
 				$Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_End_Owner_IdleHours'] = $IdleHours;
@@ -94,7 +94,7 @@ function MissionCaseMIP($FleetRow, &$_FleetCache)
 				{
 					$IPMissiles += $key[1];
 				}
-				elseif($key[0] == 'primary_target')
+				else if($key[0] == 'primary_target')
 				{
 					$PrimaryTarget = intval($key[1]);
 					if($PrimaryTarget == 0)
@@ -240,8 +240,16 @@ function MissionCaseMIP($FleetRow, &$_FleetCache)
 						$AttackerReport[] = prettyNumber($Attack['Debris']['metal']).' {MIP_Units} {MIP_DebMet}';
 						$AttackerReport[] = prettyNumber($Attack['Debris']['crystal']).' {MIP_Units} {MIP_DebCry}';
 
-						if($_FleetCache['galaxyMap']['byPlanet'][$FleetRow['fleet_end_id']] > 0)
+						if(isset($_FleetCache['galaxyMap']['byPlanet'][$FleetRow['fleet_end_id']]) && $_FleetCache['galaxyMap']['byPlanet'][$FleetRow['fleet_end_id']] > 0)
 						{
+							if(!isset($_FleetCache['galaxy'][$_FleetCache['galaxyMap']['byPlanet'][$FleetRow['fleet_end_id']]]['metal']))
+							{
+								$_FleetCache['galaxy'][$_FleetCache['galaxyMap']['byPlanet'][$FleetRow['fleet_end_id']]]['metal'] = 0;
+							}
+							if(!isset($_FleetCache['galaxy'][$_FleetCache['galaxyMap']['byPlanet'][$FleetRow['fleet_end_id']]]['crystal']))
+							{
+								$_FleetCache['galaxy'][$_FleetCache['galaxyMap']['byPlanet'][$FleetRow['fleet_end_id']]]['crystal'] = 0;
+							}
 							$_FleetCache['galaxy'][$_FleetCache['galaxyMap']['byPlanet'][$FleetRow['fleet_end_id']]]['metal'] += $Attack['Debris']['metal'];
 							$_FleetCache['galaxy'][$_FleetCache['galaxyMap']['byPlanet'][$FleetRow['fleet_end_id']]]['crystal'] += $Attack['Debris']['crystal'];
 							$_FleetCache['galaxy'][$_FleetCache['galaxyMap']['byPlanet'][$FleetRow['fleet_end_id']]]['updated'] = true;
@@ -249,6 +257,7 @@ function MissionCaseMIP($FleetRow, &$_FleetCache)
 						}
 						else
 						{
+							$Query_UpdateGalaxy = '';
 							$Query_UpdateGalaxy .= "UPDATE {{table}} SET `metal` = `metal` + {$Attack['Debris']['metal']}, `crystal` = `crystal` + {$Attack['Debris']['crystal']} ";
 							$Query_UpdateGalaxy .= "WHERE `id_planet` = {$FleetRow['fleet_end_id']} LIMIT 1; ";
 							$Query_UpdateGalaxy .= "-- MISSION MIP [Q01][FID: {$FleetRow['fleet_id']}]";					

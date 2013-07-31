@@ -29,10 +29,21 @@ include($_EnginePath.'common.php');
 			$_POST['planet'] = $_POST['gobackVars']['planet'];
 			$_POST['planettype'] = $_POST['gobackVars']['planettype'];
 			$_POST['speed'] = $_POST['gobackVars']['speed'];
-		}		
-		$_Lang['SelectHolding_'.$_POST['gobackVars']['holdingtime']] = 'selected';
-		$_Lang['SelectExpedition_'.$_POST['gobackVars']['expeditiontime']] = 'selected';
-		$_Lang['SelectResources'] = json_encode(array('resource1' => $_POST['gobackVars']['resource1'], 'resource2' => $_POST['gobackVars']['resource2'], 'resource3' => $_POST['gobackVars']['resource3']));
+		}
+		if(isset($_POST['gobackVars']['holdingtime']))
+		{
+			$_Lang['SelectHolding_'.$_POST['gobackVars']['holdingtime']] = 'selected';
+		}
+		if(isset($_POST['gobackVars']['expeditiontime']))
+		{
+			$_Lang['SelectExpedition_'.$_POST['gobackVars']['expeditiontime']] = 'selected';
+		}
+		$_Lang['SelectResources'] = json_encode(array
+		(
+			'resource1' => (isset($_POST['gobackVars']['resource1']) ? $_POST['gobackVars']['resource1'] : null),
+			'resource2' => (isset($_POST['gobackVars']['resource2']) ? $_POST['gobackVars']['resource2'] : null),
+			'resource3' => (isset($_POST['gobackVars']['resource3']) ? $_POST['gobackVars']['resource3'] : null)
+		));
 		if(isset($_POST['gobackVars']['usequantumgate']) && $_POST['gobackVars']['usequantumgate'] == 'on')
 		{
 			$_Lang['SelectQuantumGate'] = 'true';
@@ -194,15 +205,15 @@ include($_EnginePath.'common.php');
 					$EnableTestAccWarning = true;
 				}
 			}
-			if($CheckPlanetOwner['AllyPact1'] >= ALLYPACT_NONAGGRESSION OR $CheckPlanetOwner['AllyPact2'] >= ALLYPACT_NONAGGRESSION)
+			if((isset($CheckPlanetOwner['AllyPact1']) && $CheckPlanetOwner['AllyPact1'] >= ALLYPACT_NONAGGRESSION) || (isset($CheckPlanetOwner['AllyPact2']) && $CheckPlanetOwner['AllyPact2'] >= ALLYPACT_NONAGGRESSION))
 			{
 				$AllyPactWarning = true;
 			}
-			if($CheckPlanetOwner['AllyPact1'] >= ALLYPACT_MERCANTILE OR $CheckPlanetOwner['AllyPact2'] >= ALLYPACT_MERCANTILE)
+			if((isset($CheckPlanetOwner['AllyPact1']) && $CheckPlanetOwner['AllyPact1'] >= ALLYPACT_MERCANTILE) || (isset($CheckPlanetOwner['AllyPact2']) && $CheckPlanetOwner['AllyPact2'] >= ALLYPACT_MERCANTILE))
 			{
 				$OwnerHasMarcantilePact = true;
 			}
-			if(($CheckPlanetOwner['active1'] == 1 OR $CheckPlanetOwner['active2'] == 1) OR ($CheckPlanetOwner['ally_id'] == $_User['ally_id'] AND $_User['ally_id'] > 0) OR ($CheckPlanetOwner['AllyPact1'] >= ALLYPACT_DEFENSIVE OR $CheckPlanetOwner['AllyPact2'] >= ALLYPACT_DEFENSIVE))
+			if(($CheckPlanetOwner['active1'] == 1 OR $CheckPlanetOwner['active2'] == 1) OR ($CheckPlanetOwner['ally_id'] == $_User['ally_id'] AND $_User['ally_id'] > 0) OR ((isset($CheckPlanetOwner['AllyPact1']) && $CheckPlanetOwner['AllyPact1'] >= ALLYPACT_DEFENSIVE) || (isset($CheckPlanetOwner['AllyPact2']) && $CheckPlanetOwner['AllyPact2'] >= ALLYPACT_DEFENSIVE)))
 			{
 				$OwnerFriend = true;
 			}

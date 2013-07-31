@@ -28,6 +28,8 @@ include($_EnginePath.'common.php');
 		CreateReturn('661');
 	}
 
+	$Now = time();
+	
 	$FlyingFleets = doquery("SELECT COUNT(`fleet_id`) as `Number` FROM {{table}} WHERE `fleet_owner` = '{$_User['id']}';", 'fleets', true);
 	$FlyingFleets = $FlyingFleets['Number'];
 	$MaxFleets = 1 + $_User[$_Vars_GameElements[108]] + (($_User['admiral_time'] > $Now) ? 2 : 0);
@@ -62,8 +64,6 @@ include($_EnginePath.'common.php');
 	include($_EnginePath.'includes/functions/GetMissileRange.php');
 	$MissilesRange = GetMissileRange();
 	$FlightTime = round(((30 + (60 * $Dist)) * 2500) / $_GameConfig['game_speed']);
-
-	$Now = time();
  
 	if($Missiles <= 0)
 	{

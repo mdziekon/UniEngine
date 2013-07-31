@@ -39,7 +39,7 @@ function MissionCaseStay($FleetRow, &$_FleetCache)
 		$LandingTime = $FleetRow['fleet_start_time'];
 	} 
 
-	if($FleetRow['calcType'] == 3 AND $_FleetCache['fleetRowStatus'][$FleetRow['fleet_id']]['isDestroyed'] !== true)
+	if($FleetRow['calcType'] == 3 && (!isset($_FleetCache['fleetRowStatus'][$FleetRow['fleet_id']]['isDestroyed']) || $_FleetCache['fleetRowStatus'][$FleetRow['fleet_id']]['isDestroyed'] !== true))
 	{
 		$Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_Calculated_ComeBack'] = true;
 		$Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_Calculated_ComeBack_Time'] = $Now;
@@ -66,6 +66,7 @@ function MissionCaseStay($FleetRow, &$_FleetCache)
 	if($DoFleetDelete === true)
 	{
 		$Return['FleetsToDelete'][] = $FleetRow['fleet_id'];
+		// Check Task
 		if($FleetRow['fleet_start_type'] == 3 AND $FleetRow['fleet_end_type'] == 3 AND ($LandingTime - $FleetRow['fleet_send_time']) > 21600)
 		{
 			if($_User['id'] == $FleetRow['fleet_owner'])
