@@ -10,7 +10,8 @@ $_EnginePath= './../';
 include($_EnginePath.'common.php');
 
 	includeLang('admin');
-
+	$_Lang['ChronoApplets'] = '';
+	
 	if(CheckAuth('go'))
 	{	
 		includeLang('admin/user_info');
@@ -61,6 +62,7 @@ include($_EnginePath.'common.php');
 			}
 		}
 
+		$Query_GetUser = '';
 		$Query_GetUser .= "SELECT `user`.*, `planet`.`name` AS `mothername`, ";
 		$Query_GetUser .= "`ally`.`ally_name`, `ally`.`ally_name` AS `ally_request_name`, `ally`.`ally_owner` AS `ally_owner`, ";
 		$Query_GetUser .= "`inviter`.`username` AS `inviter_username` ";
@@ -183,19 +185,19 @@ include($_EnginePath.'common.php');
 
 		// - Last Activity
 		$OnlineDiff = $Now - $Data['onlinetime'];
-		if($OnlineDiff >= 2419200)
+		if($OnlineDiff >= 28 * TIME_DAY)
 		{
 			$OLColor = 'red';
 		}
-		else if($OnlineDiff >= 604800)
+		else if($OnlineDiff >= 7 * TIME_DAY)
 		{
 			$OLColor = '#FFA0A0';
 		}
-		else if($OnlineDiff >= 86400)
+		else if($OnlineDiff >= TIME_DAY)
 		{
 			$OLColor = 'orange';
 		}
-		else if($OnlineDiff > 900)
+		else if($OnlineDiff > TIME_ONLINE)
 		{
 			$OLColor = 'yellow';
 		}
@@ -203,14 +205,14 @@ include($_EnginePath.'common.php');
 		{
 			$OLColor = 'lime';
 		}
-		$OnlineDiffText= '<span style=color:'.$OLColor.'>('.pretty_time($OnlineDiff).' '.$_Lang['_ago'].')</span>';
+		$OnlineDiffText = '<span style=color:'.$OLColor.'>('.pretty_time($OnlineDiff).' '.$_Lang['_ago'].')</span>';
 		if($OLColor == 'lime')
 		{
-			$OnlineDiffText= "<a class=\"help\" title=\"{$_Lang['ShowOnline']}\" href=\"userlist.php?online=on\">{$OnlineDiffText}</a>";
+			$OnlineDiffText = "<a class=\"help\" title=\"{$_Lang['ShowOnline']}\" href=\"userlist.php?online=on\">{$OnlineDiffText}</a>";
 		}
 		if(CheckAuth('supportadmin'))
 		{
-			$OnlineDiffText= "{$OnlineDiffText}<br/>{$Data['current_page']}<br/><a class=\"aLog\" href=\"browse_actionlogs.php?uid={$UID}\">{$_Lang['ShowLogs']}</a>";
+			$OnlineDiffText = "{$OnlineDiffText}<br/>{$Data['current_page']}<br/><a class=\"aLog\" href=\"browse_actionlogs.php?uid={$UID}\">{$_Lang['ShowLogs']}</a>";
 		}
 		$Player['LastActivity'] = prettyDate('d m Y, H:i:s', $Data['onlinetime'], 1)."<br/>{$OnlineDiffText}";
 		// - END - Last Activy
@@ -264,6 +266,7 @@ include($_EnginePath.'common.php');
 			$Player['Vacations']= $_Lang['Inactive'];
 		}
 
+		$Player['Ban'] = '';
 		if($Data['is_banned'] == 1)
 		{
 			if($Data['ban_endtime'] < $Now)
@@ -563,6 +566,7 @@ include($_EnginePath.'common.php');
 
 			include("{$_EnginePath}/includes/functions/InsertJavaScriptChronoApplet.php");
 
+			$AllFleetParse = '';
 			foreach($Data['fleets'] as $FleetID => $FleetData)
 			{
 				$FleetParse = false;

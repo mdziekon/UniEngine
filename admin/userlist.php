@@ -47,7 +47,7 @@ include($_EnginePath.'common.php');
 		}
 	}
 	
-	if($_POST['cmd'] == 'sort' AND !empty($_POST['type']) AND $_POST['nosort'] != 'on')
+	if(isset($_POST['cmd']) && $_POST['cmd'] == 'sort' AND !empty($_POST['type']) AND (!isset($_POST['nosort']) || $_POST['nosort'] != 'on'))
 	{
 		if(in_array($_POST['type'], $AllowedSortTypes))
 		{
@@ -65,7 +65,7 @@ include($_EnginePath.'common.php');
 		$parse['DontShowNoSort'] = 'inv';
 	}
 
-	if(empty($_POST['mode']) OR $_POST['nosort'] == 'on')
+	if(empty($_POST['mode']) || (isset($_POST['nosort']) && $_POST['nosort'] == 'on'))
 	{
 		$parse['sort_mode'] = 'asc';
 		$SortMode = 'ASC';
@@ -149,7 +149,7 @@ include($_EnginePath.'common.php');
 		$parse['perPageSelect_0'] = 'selected';
 	}
 
-	$CurrentPage = intval($_POST['page']);
+	$CurrentPage = (isset($_POST['page']) ? intval($_POST['page']) : 0);
 	if($CurrentPage < 1)
 	{
 		$CurrentPage = 1;
@@ -169,12 +169,12 @@ include($_EnginePath.'common.php');
 
 	include($_EnginePath.'includes/functions/Filters.php');
 	
-	if(strstr($_POST['preserve'], 'over=yes') !== false)
+	if(isset($_POST['preserve']) && strstr($_POST['preserve'], 'over=yes') !== false)
 	{
 		$_GET['over'] = 'yes';
 	}
 	
-	if($_GET['over'] == 'yes')
+	if(isset($_GET['over']) && $_GET['over'] == 'yes')
 	{
 		$_POST['online_yes'] = 'on';
 		$parse['FormPreserve'][] = 'over=yes';
@@ -185,29 +185,29 @@ include($_EnginePath.'common.php');
 		$parse['FormPreserve'] = implode('|', $parse['FormPreserve']);
 	}
 	
-	$Search['Flags']['strict']		= ($_POST['strict'] == 'on'				? true	: false);
-	$Search['Flags']['utableOnly']	= ($_POST['anyip'] == 'on'				? false : true);
-	$Search['Flags']['isOnline']	= ($_POST['online_yes'] == 'on'			? true	: ($_POST['online_no'] == 'on'			? false : null));
-	$Search['Flags']['onVacation']	= ($_POST['onvacation_yes'] == 'on'		? true	: ($_POST['onvacation_no'] == 'on'		? false : null));
-	$Search['Flags']['isBanned']	= ($_POST['isbanned_yes'] == 'on'		? true	: ($_POST['isbanned_no'] == 'on'			? false : null));
-	$Search['Flags']['isAI']		= ($_POST['isai_yes'] == 'on'			? true	: ($_POST['isai_no'] == 'on'				? false : null));
-	$Search['Flags']['inDeletion']	= ($_POST['isdeleting_yes'] == 'on'		? true	: ($_POST['isdeleting_no'] == 'on'		? false : null));
-	$Search['Flags']['inAlly']		= ($_POST['isinally_yes'] == 'on'		? true	: ($_POST['isinally_no'] == 'on'			? false : null));
-	$Search['Flags']['isActive']	= ($_POST['isactive_yes'] == 'on'		? true	: ($_POST['isactive_no'] == 'on'			? false : null));
-	$Search['Flags']['allyRequest'] = ($_POST['allyinrequest_yes'] == 'on'	? true	: ($_POST['allyinrequest_no'] == 'on'	? false : null));
-	if($_POST['search_by'] == 'ally')
+	$Search['Flags']['strict']		= (isset($_POST['strict'])				&& $_POST['strict'] == 'on'				? true	: false);
+	$Search['Flags']['utableOnly']	= (isset($_POST['anyip'])				&& $_POST['anyip'] == 'on'				? false : true);
+	$Search['Flags']['isOnline']	= (isset($_POST['online_yes'])			&& $_POST['online_yes'] == 'on'			? true	: (isset($_POST['online_no'])			&& $_POST['online_no'] == 'on'			? false : null));
+	$Search['Flags']['onVacation']	= (isset($_POST['onvacation_yes'])		&& $_POST['onvacation_yes'] == 'on'		? true	: (isset($_POST['onvacation_no'])		&& $_POST['onvacation_no'] == 'on'		? false : null));
+	$Search['Flags']['isBanned']	= (isset($_POST['isbanned_yes'])		&& $_POST['isbanned_yes'] == 'on'		? true	: (isset($_POST['isbanned_no'])			&& $_POST['isbanned_no'] == 'on'		? false : null));
+	$Search['Flags']['isAI']		= (isset($_POST['isai_yes'])			&& $_POST['isai_yes'] == 'on'			? true	: (isset($_POST['isai_no'])				&& $_POST['isai_no'] == 'on'			? false : null));
+	$Search['Flags']['inDeletion']	= (isset($_POST['isdeleting_yes'])		&& $_POST['isdeleting_yes'] == 'on'		? true	: (isset($_POST['isdeleting_no'])		&& $_POST['isdeleting_no'] == 'on'		? false : null));
+	$Search['Flags']['inAlly']		= (isset($_POST['isinally_yes'])		&& $_POST['isinally_yes'] == 'on'		? true	: (isset($_POST['isinally_no'])			&& $_POST['isinally_no'] == 'on'		? false : null));
+	$Search['Flags']['isActive']	= (isset($_POST['isactive_yes'])		&& $_POST['isactive_yes'] == 'on'		? true	: (isset($_POST['isactive_no'])			&& $_POST['isactive_no'] == 'on'		? false : null));
+	$Search['Flags']['allyRequest'] = (isset($_POST['allyinrequest_yes'])	&& $_POST['allyinrequest_yes'] == 'on'	? true	: (isset($_POST['allyinrequest_no'])	&& $_POST['allyinrequest_no'] == 'on'	? false : null));
+	if(isset($_POST['search_by']) && $_POST['search_by'] == 'ally')
 	{
 		$parse['searchBySelect_ally'] = $_Selected;
-		if($_POST['allysearch_name'] == 'on' AND $_POST['allysearch_tag'] == 'on')
+		if(isset($_POST['allysearch_name']) && isset($_POST['allysearch_tag']) && $_POST['allysearch_name'] == 'on' && $_POST['allysearch_tag'] == 'on')
 		{
 			$_POST['search_by'] = 'astring';
 		}
-		elseif($_POST['allysearch_name'] == 'on')
+		else if(isset($_POST['allysearch_name']) && $_POST['allysearch_name'] == 'on')
 		{
 			$_POST['search_by'] = 'aname';
 			$parse['AllySearch_tag_Checked'] = '';
 		}
-		elseif($_POST['allysearch_tag'] == 'on')
+		else if(isset($_POST['allysearch_tag']) && $_POST['allysearch_tag'] == 'on')
 		{
 			$_POST['search_by'] = 'atag';
 			$parse['AllySearch_name_Checked'] = '';
@@ -221,19 +221,19 @@ include($_EnginePath.'common.php');
 		$parse['AllySearchTypeDisplay'] = '';
 		$parse['AllyInRequestDisplay'] = '';
 	}
-	if($_POST['search_by'] == 'aid')
+	if(isset($_POST['search_by']) && $_POST['search_by'] == 'aid')
 	{
 		$parse['AllyInRequestDisplay'] = '';
 	}
 	
 	// Check settings in Form
-	if($_POST['strict'] == 'on')
+	if(isset($_POST['strict']) && $_POST['strict'] == 'on')
 	{
 		$parse['StrictChecked'] = $_Checked;
 	}
-	if($_POST['online_yes'] == 'on')
+	if(isset($_POST['online_yes']) && $_POST['online_yes'] == 'on')
 	{
-		if($_GET['over'] == 'yes')
+		if(isset($_GET['over']) && $_GET['over'] == 'yes')
 		{
 			$parse['UsingOverviewShortcut'] = 'orange';
 		}
@@ -242,80 +242,80 @@ include($_EnginePath.'common.php');
 			$parse['Online_Yes_Checked'] = $_Checked;
 		}
 	}
-	if($_POST['online_no'] == 'on')
+	if(isset($_POST['online_no']) && $_POST['online_no'] == 'on')
 	{
 		$parse['Online_No_Checked'] = $_Checked;
 	}
-	if($_POST['onvacation_yes'] == 'on')
+	if(isset($_POST['onvacation_yes']) && $_POST['onvacation_yes'] == 'on')
 	{
 		$parse['OnVacation_Yes_Checked'] = $_Checked;
 	}
-	if($_POST['onvacation_no'] == 'on')
+	if(isset($_POST['onvacation_no']) && $_POST['onvacation_no'] == 'on')
 	{
 		$parse['OnVacation_No_Checked'] = $_Checked;
 	}
-	if($_POST['isbanned_yes'] == 'on')
+	if(isset($_POST['isbanned_yes']) && $_POST['isbanned_yes'] == 'on')
 	{
 		$parse['IsBanned_Yes_Checked'] = $_Checked;
 	}
-	if($_POST['isbanned_no'] == 'on')
+	if(isset($_POST['isbanned_no']) && $_POST['isbanned_no'] == 'on')
 	{
 		$parse['IsBanned_No_Checked'] = $_Checked;
 	}
-	if($_POST['isai_yes'] == 'on')
+	if(isset($_POST['isai_yes']) && $_POST['isai_yes'] == 'on')
 	{
 		$parse['IsAi_Yes_Checked'] = $_Checked;
 	}
-	if($_POST['isai_no'] == 'on')
+	if(isset($_POST['isai_no']) && $_POST['isai_no'] == 'on')
 	{
 		$parse['IsAi_No_Checked'] = $_Checked;
 	}
-	if($_POST['isdeleting_yes'] == 'on')
+	if(isset($_POST['isdeleting_yes']) && $_POST['isdeleting_yes'] == 'on')
 	{
 		$parse['IsDeleting_Yes_Checked'] = $_Checked;
 	}
-	if($_POST['isdeleting_no'] == 'on')
+	if(isset($_POST['isdeleting_no']) && $_POST['isdeleting_no'] == 'on')
 	{
 		$parse['IsDeleting_No_Checked'] = $_Checked;
 	}
-	if($_POST['isinally_yes'] == 'on')
+	if(isset($_POST['isinally_yes']) && $_POST['isinally_yes'] == 'on')
 	{
 		$parse['IsInAlly_Yes_Checked'] = $_Checked;
 	}
-	if($_POST['isinally_no'] == 'on')
+	if(isset($_POST['isinally_no']) && $_POST['isinally_no'] == 'on')
 	{
 		$parse['IsInAlly_No_Checked'] = $_Checked;
 	}
-	if($_POST['isactive_yes'] == 'on')
+	if(isset($_POST['isactive_yes']) && $_POST['isactive_yes'] == 'on')
 	{
 		$parse['IsActive_Yes_Checked'] = $_Checked;
 	}
-	if($_POST['isactive_no'] == 'on')
+	if(isset($_POST['isactive_no']) && $_POST['isactive_no'] == 'on')
 	{
 		$parse['IsActive_No_Checked'] = $_Checked;
 	}
-	if($_POST['anyip'] == 'on')
+	if(isset($_POST['anyip']) && $_POST['anyip'] == 'on')
 	{
 		$parse['AnyIPChecked'] = $_Checked;
 	}
-	if($_POST['allysearch_name'] == 'on')
+	if(isset($_POST['allysearch_name']) && $_POST['allysearch_name'] == 'on')
 	{
 		$parse['AllySearch_name_Checked'] = $_Checked;
 	}
-	if($_POST['allysearch_tag'] == 'on')
+	if(isset($_POST['allysearch_tag']) && $_POST['allysearch_tag'] == 'on')
 	{
 		$parse['AllySearch_tag_Checked'] = $_Checked;
 	}
-	if($_POST['allyinrequest_yes'] == 'on')
+	if(isset($_POST['allyinrequest_yes']) && $_POST['allyinrequest_yes'] == 'on')
 	{
 		$parse['AllyInRequest_Yes_Checked'] = $_Checked;
 	}
-	if($_POST['allyinrequest_no'] == 'on')
+	if(isset($_POST['allyinrequest_no']) && $_POST['allyinrequest_no'] == 'on')
 	{
 		$parse['AllyInRequest_No_Checked'] = $_Checked;
 	}	
 	
-	$parse['search_user_val'] = $_POST['search_user'];
+	$parse['search_user_val'] = (isset($_POST['search_user']) ? $_POST['search_user'] : null);
 	
 	$UserFields = array
 	(
@@ -335,20 +335,20 @@ include($_EnginePath.'common.php');
 	else
 	{
 		$Search['mode'] = 2;
-		$Search['string'] = $_POST['search_user'];	
+		$Search['string'] = $_POST['search_user'];
 		if($_POST['search_by'] == 'uid')
 		{
 			$Search['type'] = 'uid';
 		}
-		elseif($_POST['search_by'] == 'astring' OR $_POST['search_by'] == 'aname' OR $_POST['search_by'] == 'atag')
+		else if($_POST['search_by'] == 'astring' || $_POST['search_by'] == 'aname' || $_POST['search_by'] == 'atag')
 		{
 			$Search['type'] = $_POST['search_by'];
 		}
-		elseif($_POST['search_by'] == 'aid')
+		else if($_POST['search_by'] == 'aid')
 		{
 			$Search['type'] = 'aid';
 		}
-		elseif($_POST['search_by'] == 'ip')
+		else if($_POST['search_by'] == 'ip')
 		{
 			$Search['type'] = 'ipstring';
 			$parse['AnyIPDisplay'] = '';
@@ -367,9 +367,9 @@ include($_EnginePath.'common.php');
 	
 	if(!empty($_POST['massAction']))
 	{
-		if($_POST['massAction'] == 'ban' OR $_POST['massAction'] == 'unban')
+		if($_POST['massAction'] == 'ban' || $_POST['massAction'] == 'unban')
 		{
-			if($_POST['useAllFiltered'] == '1')
+			if(isset($_POST['useAllFiltered']) && $_POST['useAllFiltered'] == '1')
 			{
 				if($FilterResult !== true AND $FilterResult !== false)
 				{
@@ -399,7 +399,7 @@ include($_EnginePath.'common.php');
 				{
 					header('Location: banuser.php?ids='.$PassIDs);
 				}
-				elseif($_POST['massAction'] == 'unban')
+				else if($_POST['massAction'] == 'unban')
 				{
 					header('Location: unbanuser.php?ids='.$PassIDs);
 				}
@@ -457,34 +457,35 @@ include($_EnginePath.'common.php');
 
 	if($SelectCount > 0)
 	{
-		while($UserData = mysql_fetch_assoc($query)){
+		while($UserData = mysql_fetch_assoc($query))
+		{
 			$Users[$UserData['id']] = 
-				array
-				(
-					'username'			=> $UserData['username'],
-					'ally_id'			=> $UserData['ally_id'],
-					'ally_request'		=> $UserData['ally_request'],
-					'authlevel'			=> $UserData['authlevel'],
-					'email'				=> $UserData['email'],
-					'email_2'			=> $UserData['email_2'],
-					'uagent'			=> $UserData['user_agent'],
-					'resolution'		=> $UserData['screen_settings'],
-					'ip_at_reg'			=> $UserData['ip_at_reg'],
-					'user_lastip'		=> $UserData['user_lastip'],
-					'register_time'		=> $UserData['register_time'],
-					'onlinetime'		=> $UserData['onlinetime'],
-					'current_page'		=> $UserData['current_page'],
-					'is_banned'			=> $UserData['is_banned'], 
-					'ban_endtime'		=> $UserData['ban_endtime'],
-					'vacation'			=> $UserData['is_onvacation'],
-					'vacation_since'	=> $UserData['vacation_starttime'],
-					'vacation_endtime'	=> $UserData['vacation_endtime'],
-					'is_ondeletion'		=> $UserData['is_ondeletion'],
-					'deletion_endtime'	=> $UserData['deletion_endtime'],
-					'pro_till'			=> $UserData['pro_time'],
-					'multi_validated'	=> $UserData['multi_validated'],
-					'activation_code'	=> $UserData['activation_code'],
-				);
+			array
+			(
+				'username'			=> $UserData['username'],
+				'ally_id'			=> $UserData['ally_id'],
+				'ally_request'		=> $UserData['ally_request'],
+				'authlevel'			=> $UserData['authlevel'],
+				'email'				=> $UserData['email'],
+				'email_2'			=> $UserData['email_2'],
+				'uagent'			=> $UserData['user_agent'],
+				'resolution'		=> $UserData['screen_settings'],
+				'ip_at_reg'			=> $UserData['ip_at_reg'],
+				'user_lastip'		=> $UserData['user_lastip'],
+				'register_time'		=> $UserData['register_time'],
+				'onlinetime'		=> $UserData['onlinetime'],
+				'current_page'		=> $UserData['current_page'],
+				'is_banned'			=> $UserData['is_banned'], 
+				'ban_endtime'		=> $UserData['ban_endtime'],
+				'vacation'			=> $UserData['is_onvacation'],
+				'vacation_since'	=> $UserData['vacation_starttime'],
+				'vacation_endtime'	=> $UserData['vacation_endtime'],
+				'is_ondeletion'		=> $UserData['is_ondeletion'],
+				'deletion_endtime'	=> $UserData['deletion_endtime'],
+				'pro_till'			=> $UserData['pro_time'],
+				'multi_validated'	=> $UserData['multi_validated'],
+				'activation_code'	=> $UserData['activation_code'],
+			);
 			
 			if(!empty($UserData['ip_at_reg']))
 			{
@@ -535,11 +536,11 @@ include($_EnginePath.'common.php');
 		}
 		if(!empty($GetIPsWhere['user_lastip']))
 		{
-			$GetIPsQuery[]  = "SELECT `user_lastip` AS `ip`, COUNT(`user_lastip`) AS `count`, '1' AS `type` FROM {{table}} WHERE `user_lastip` IN ({$GetIPsWhere['user_lastip']}) GROUP BY `user_lastip`";
+			$GetIPsQuery[] = "SELECT `user_lastip` AS `ip`, COUNT(`user_lastip`) AS `count`, '1' AS `type` FROM {{table}} WHERE `user_lastip` IN ({$GetIPsWhere['user_lastip']}) GROUP BY `user_lastip`";
 		}
 		if(!empty($GetIPsWhere['ip_at_reg']))
 		{
-			$GetIPsQuery[] .= "SELECT `ip_at_reg` AS `ip`, COUNT(`ip_at_reg`) AS `count`, '2' AS `type` FROM {{table}} WHERE `ip_at_reg` IN ({$GetIPsWhere['ip_at_reg']}) GROUP BY `ip_at_reg`";
+			$GetIPsQuery[] = "SELECT `ip_at_reg` AS `ip`, COUNT(`ip_at_reg`) AS `count`, '2' AS `type` FROM {{table}} WHERE `ip_at_reg` IN ({$GetIPsWhere['ip_at_reg']}) GROUP BY `ip_at_reg`";
 		}		
 		
 		if(!empty($GetIPsQuery))
@@ -572,16 +573,17 @@ include($_EnginePath.'common.php');
 				while($Data = mysql_fetch_assoc($Result))
 				{
 					$Allys[$Data['id']] = 
-						array
-						(
-							'name'=> $Data['ally_name'],
-							'owner' => $Data['ally_owner']
-						);
+					array
+					(
+						'name'=> $Data['ally_name'],
+						'owner' => $Data['ally_owner']
+					);
 				}
 			}
 		}
 	}
 
+	$parse['adm_ul_table'] = '';
 	if(!empty($Users))
 	{
 		$ThisDate['d'] = date('d');
@@ -594,7 +596,7 @@ include($_EnginePath.'common.php');
 		{
 			$HasHigherAuthlevel = ($Data['authlevel'] > $_User['authlevel'] ? true : false);
 			
-			if($IPsList['user_lastip'][$Data['user_lastip']] > 1)
+			if(isset($IPsList['user_lastip'][$Data['user_lastip']]) && $IPsList['user_lastip'][$Data['user_lastip']] > 1)
 			{
 				if($Data['multi_validated'] == 1)
 				{
@@ -609,7 +611,7 @@ include($_EnginePath.'common.php');
 			{
 				$ColorIP = 'lime';
 			}
-			if($IPsList['ip_at_reg'][$Data['ip_at_reg']] > 1)
+			if(isset($IPsList['ip_at_reg'][$Data['ip_at_reg']]) && $IPsList['ip_at_reg'][$Data['ip_at_reg']] > 1)
 			{
 				if($Data['multi_validated'] == 1)
 				{
@@ -635,11 +637,11 @@ include($_EnginePath.'common.php');
 			{
 				$AddClass4Name = ' orange';
 			}
-			elseif($Data['ban_endtime'] > $Now)
+			else if($Data['ban_endtime'] > $Now)
 			{
 				$AddClass4Name = ' banned';
 			}
-			elseif($Data['vacation'] == 1)
+			else if($Data['vacation'] == 1)
 			{
 				$AddClass4Name = ' vacations';
 			}
@@ -721,7 +723,7 @@ include($_EnginePath.'common.php');
 			if($Data['register_time'] > 0)
 			{
 				$Bloc['adm_ul_data_regd'] = '';
-				$RegisterDays = floor(($Now - $Data['register_time']) / (24*60*60));
+				$RegisterDays = floor(($Now - $Data['register_time']) / TIME_DAY);
 				if($RegisterDays == 1)
 				{
 					$RegDays = $_Lang['_day'];
@@ -757,7 +759,7 @@ include($_EnginePath.'common.php');
 			// RowElement - Last Onlinetime
 			if($ThisDate['dmy'] == date('d.m.Y', $Data['onlinetime']))
 			{
-				if($Data['onlinetime'] >= ($Now - 900))
+				if($Data['onlinetime'] >= ($Now - TIME_ONLINE))
 				{
 					$OnlineDate = pretty_time($Now - $Data['onlinetime'], false, 'ms');
 				}
@@ -766,7 +768,7 @@ include($_EnginePath.'common.php');
 					$OnlineDate = $_Lang['_today'];
 				}
 			}
-			elseif($ThisDate['dmyp'] == date('d.m.Y', $Data['onlinetime']))
+			else if($ThisDate['dmyp'] == date('d.m.Y', $Data['onlinetime']))
 			{
 				$OnlineDate = $_Lang['_yesterday'];
 			}

@@ -17,7 +17,7 @@ function Filter_Users($String = '', $Type = '', $Flags = array())
 			$Search[] = $Value;
 		}
 	}
-	if(!empty($Type) AND empty($Search))
+	if(!empty($Type) && empty($Search))
 	{
 		// Type is given, but Search is empty
 		return false;
@@ -43,7 +43,7 @@ function Filter_Users($String = '', $Type = '', $Flags = array())
 			$Query['queryString'] = "FROM {{table}} WHERE `id` IN ({whereJoin}) {whereAddition}";
 			$Query['queryTable'] = 'users';
 		}
-		elseif($Type === 'uname')
+		else if($Type === 'uname')
 		{
 			$ThisRegexp = ($Flags['strict'] === true ? REGEXP_USERNAME_ABSOLUTE : REGEXP_USERNAME);
 			foreach($Search as $Value)
@@ -81,7 +81,7 @@ function Filter_Users($String = '', $Type = '', $Flags = array())
 			$Query['queryString'] = "FROM {{table}} WHERE ({whereJoin}) {whereAddition}";
 			$Query['queryTable'] = 'users';
 		}
-		elseif($Type === 'aid')
+		else if($Type === 'aid')
 		{
 			foreach($Search as $Value)
 			{
@@ -98,7 +98,7 @@ function Filter_Users($String = '', $Type = '', $Flags = array())
 			{
 				$ThisWhere = "(`ally_request` IN ({whereJoin}))";
 			}
-			elseif($Flags['allyRequest'] === false)
+			else if($Flags['allyRequest'] === false)
 			{
 				$ThisWhere = "(`ally_id` IN ({whereJoin}))";
 			}
@@ -110,7 +110,7 @@ function Filter_Users($String = '', $Type = '', $Flags = array())
 			$Query['queryString'] = "FROM {{table}} WHERE {$ThisWhere} {whereAddition}";
 			$Query['queryTable'] = 'users';
 		}
-		elseif($Type === 'astring')
+		else if($Type === 'astring')
 		{
 			foreach($Search as $Value)
 			{
@@ -134,7 +134,7 @@ function Filter_Users($String = '', $Type = '', $Flags = array())
 			{
 				$ThisJoin = "JOIN `{{prefix}}users` AS `users` ON `ally`.`id` = `users`.`ally_request`";
 			}
-			elseif($Flags['allyRequest'] === false)
+			else if($Flags['allyRequest'] === false)
 			{
 				$ThisJoin = "JOIN `{{prefix}}users` AS `users` ON `ally`.`id` = `users`.`ally_id`";
 			}
@@ -149,7 +149,7 @@ function Filter_Users($String = '', $Type = '', $Flags = array())
 			$Query['queryTable'] = 'alliance';
 			$Query['whereAdditionAlias'] = 'users';
 		}
-		elseif($Type === 'aname')
+		else if($Type === 'aname')
 		{
 			$ThisRegexp = ($Flags['strict'] === true ? REGEXP_ALLYNAME_ABSOLUTE : REGEXP_ALLYNAMEANDTAG);
 			foreach($Search as $Value)
@@ -188,7 +188,7 @@ function Filter_Users($String = '', $Type = '', $Flags = array())
 			{
 				$ThisJoin = "JOIN `{{prefix}}users` AS `users` ON `ally`.`id` = `users`.`ally_request`";
 			}
-			elseif($Flags['allyRequest'] === false)
+			else if($Flags['allyRequest'] === false)
 			{
 				$ThisJoin = "JOIN `{{prefix}}users` AS `users` ON `ally`.`id` = `users`.`ally_id`";
 			}
@@ -203,7 +203,7 @@ function Filter_Users($String = '', $Type = '', $Flags = array())
 			$Query['queryTable'] = 'alliance';
 			$Query['whereAdditionAlias'] = 'users';
 		}
-		elseif($Type === 'atag')
+		else if($Type === 'atag')
 		{
 			$ThisRegexp = ($Flags['strict'] === true ? REGEXP_ALLYTAG_ABSOLUTE : REGEXP_ALLYTAG);
 			foreach($Search as $Value)
@@ -242,7 +242,7 @@ function Filter_Users($String = '', $Type = '', $Flags = array())
 			{
 				$ThisJoin = "JOIN `{{prefix}}users` AS `users` ON `ally`.`id` = `users`.`ally_request`";
 			}
-			elseif($Flags['allyRequest'] === false)
+			else if($Flags['allyRequest'] === false)
 			{
 				$ThisJoin = "JOIN `{{prefix}}users` AS `users` ON `ally`.`id` = `users`.`ally_id`";
 			}
@@ -257,7 +257,7 @@ function Filter_Users($String = '', $Type = '', $Flags = array())
 			$Query['queryTable'] = 'alliance';
 			$Query['whereAdditionAlias'] = 'users';
 		}
-		elseif($Type === 'ipid')
+		else if($Type === 'ipid')
 		{
 			foreach($Search as $Value)
 			{
@@ -274,7 +274,7 @@ function Filter_Users($String = '', $Type = '', $Flags = array())
 			$Query['queryTable'] = 'user_enterlog';
 			$Query['whereAdditionAlias'] = 'users';
 		}
-		elseif($Type === 'ipstring')
+		else if($Type === 'ipstring')
 		{
 			foreach($Search as $Value)
 			{
@@ -346,7 +346,7 @@ function Filter_Users($String = '', $Type = '', $Flags = array())
 				$Query['whereAdditionAlias'] = 'users';
 			}
 		}
-		elseif($Type === 'umail')
+		else if($Type === 'umail')
 		{
 			$ThisRegexp = ($Flags['strict'] === true ? REGEXP_EMAIL_SIGNS : REGEXP_EMAIL_SIGNS);
 			foreach($Search as $Value)
@@ -395,7 +395,7 @@ function Filter_Users($String = '', $Type = '', $Flags = array())
 	}
 	
 	// Check, if we can go further
-	if(!empty($Search) AND empty($Query['whereData']))
+	if(!empty($Search) && empty($Query['whereData']))
 	{
 		// All given data was rejected
 		return false;
@@ -407,7 +407,7 @@ function Filter_Users($String = '', $Type = '', $Flags = array())
 	{
 		$Query['whereAddition'][] = '`isAI` = 1';
 	}
-	elseif($Flags['isAI'] === false)
+	else if($Flags['isAI'] === false)
 	{
 		$Query['whereAddition'][] = '`isAI` = 0';
 	}
@@ -416,7 +416,7 @@ function Filter_Users($String = '', $Type = '', $Flags = array())
 	{
 		$Query['whereAddition'][] = '`is_onvacation` = 1';
 	}
-	elseif($Flags['onVacation'] === false)
+	else if($Flags['onVacation'] === false)
 	{
 		$Query['whereAddition'][] = '`is_onvacation` = 0';
 	}
@@ -425,7 +425,7 @@ function Filter_Users($String = '', $Type = '', $Flags = array())
 	{
 		$Query['whereAddition'][] = '`is_ondeletion` = 1';
 	}
-	elseif($Flags['inDeletion'] === false)
+	else if($Flags['inDeletion'] === false)
 	{
 		$Query['whereAddition'][] = '`is_ondeletion` = 0';
 	}
@@ -434,7 +434,7 @@ function Filter_Users($String = '', $Type = '', $Flags = array())
 	{
 		$Query['whereAddition'][] = '`is_banned` = 1';
 	}
-	elseif($Flags['isBanned'] === false)
+	else if($Flags['isBanned'] === false)
 	{
 		$Query['whereAddition'][] = '`is_banned` = 0';
 	}
@@ -443,7 +443,7 @@ function Filter_Users($String = '', $Type = '', $Flags = array())
 	{
 		$Query['whereAddition'][] = '`activation_code` = \'\'';
 	}
-	elseif($Flags['isActive'] === false)
+	else if($Flags['isActive'] === false)
 	{
 		$Query['whereAddition'][] = '`activation_code` != \'\'';
 	}
@@ -464,7 +464,7 @@ function Filter_Users($String = '', $Type = '', $Flags = array())
 	{
 		$Query['whereAddition'][] = '`onlinetime` >= (UNIX_TIMESTAMP() - '.TIME_ONLINE.')';
 	}
-	elseif($Flags['isOnline'] === false)
+	else if($Flags['isOnline'] === false)
 	{
 		$Query['whereAddition'][] = '`onlinetime` < (UNIX_TIMESTAMP() - '.TIME_ONLINE.')';
 	}
@@ -506,9 +506,9 @@ function Filter_Users($String = '', $Type = '', $Flags = array())
 	}
 	else
 	{
-		$Query['queryString'] = str_replace('{whereData}', $Query['whereData'], $Query['queryString']);
+		$Query['queryString'] = str_replace('{whereData}', (isset($Query['whereData']) ? $Query['whereData'] : null), $Query['queryString']);
 	}
-	$Query['queryString'] = str_replace('{whereAddition}', $Query['whereAddition'], $Query['queryString']);
+	
 	$Query['queryString'] = "SELECT {$Query['querySelect']} {$Query['queryString']}; -- FilterQuery";
 
 	$Result = doquery($Query['queryString'], $Query['queryTable']);
