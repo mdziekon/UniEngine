@@ -296,7 +296,7 @@ function FlyingFleetHandler(&$planet, $IncludeFleetsFromEndIDs = array())
 				'fleets' => null, 
 				'planets' => null, 
 				'galaxy' => null, 
-				'users' => null, 
+				'users*' => null, 
 				'users' => 'users', 
 				'alliance' => 'ally', 
 				'achievements_stats' => null, 
@@ -304,6 +304,7 @@ function FlyingFleetHandler(&$planet, $IncludeFleetsFromEndIDs = array())
 			);
 			foreach($QueryData_LockTables as $LockTables_Key => $LockTables_Value)
 			{
+				$LockTables_Key = str_replace('*', '', $LockTables_Key);
 				if($LockTables_Value === null)
 				{
 					$QueryData_LockTablesJoin[] = "`{{prefix}}{$LockTables_Key}` WRITE";
@@ -443,6 +444,7 @@ function FlyingFleetHandler(&$planet, $IncludeFleetsFromEndIDs = array())
 			}
 			if(!empty($PrepareData['taskData']))
 			{
+				global $_User;
 				$Temp1 = array();
 				foreach($PrepareData['taskData'] as $UserID)
 				{

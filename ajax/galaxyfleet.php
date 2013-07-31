@@ -46,11 +46,11 @@ include($_EnginePath.'common.php');
 	{
 		CreateReturn('661');
 	}
-	$Galaxy		= intval($_POST['galaxy']);
-	$System		= intval($_POST['system']);
-	$Planet		= intval($_POST['planet']);
-	$Type		= intval($_POST['type']);
-	$Mission	= intval($_POST['mission']);
+	$Galaxy		= (isset($_POST['galaxy']) ? intval($_POST['galaxy']) : 0);
+	$System		= (isset($_POST['system']) ? intval($_POST['system']) : 0);
+	$Planet		= (isset($_POST['planet']) ? intval($_POST['planet']) : 0);
+	$Type		= (isset($_POST['type']) ? intval($_POST['type']) : 0);
+	$Mission	= (isset($_POST['mission']) ? intval($_POST['mission']) : 0);
 	$Time		= time();
 	if($Mission != 6 AND $Mission != 7 AND $Mission != 8)
 	{
@@ -86,7 +86,9 @@ include($_EnginePath.'common.php');
 
 	switch($Mission)
 	{
-		case 6: //Spy
+		case 6:
+		{
+			//Spy
 			if(!($Type == 1 OR $Type == 3))
 			{
 				CreateReturn('613');
@@ -103,6 +105,7 @@ include($_EnginePath.'common.php');
 			{
 				$Query_GetTarget_Galaxy = 'id_moon';
 			}
+			$Query_GetTarget = '';
 			$Query_GetTarget .= "SELECT `pl`.`id`, `pl`.`id_owner`, `galaxy`.`galaxy_id` FROM {{table}} AS `pl` ";
 			$Query_GetTarget .= "LEFT JOIN `{{prefix}}galaxy` AS `galaxy` ON `pl`.`id` = `galaxy`.`{$Query_GetTarget_Galaxy}` ";
 			$Query_GetTarget .= "WHERE `pl`.`galaxy` = {$Galaxy} AND `pl`.`system` = {$System} AND `pl`.`planet` = {$Planet} AND `pl`.`planet_type` = {$Type} ";
@@ -130,11 +133,11 @@ include($_EnginePath.'common.php');
 			$allyprotection = $_GameConfig['allyprotection'];
 			$noNoobProtect = $_GameConfig['no_noob_protect'];
 			$noIdleProtect = $_GameConfig['no_idle_protect'];
-			$noIdleProtect = $_GameConfig['no_idle_protect'];
 			$Protections['idleTime'] = $_GameConfig['no_idle_protect'] * TIME_DAY;
 
 			if($TargetUser > 0)
 			{
+				$Query_GetUser = '';
 				$Query_GetUser .= "SELECT `usr`.`ally_id`, `usr`.`is_onvacation`, `usr`.`is_banned`, `usr`.`onlinetime`, `usr`.`authlevel`, `usr`.`first_login`, `usr`.`NoobProtection_EndTime`, ";
 				$Query_GetUser .= "`stat`.`total_points`, `stat`.`total_rank` ";
 				$Query_GetUser .= "FROM {{table}} as `usr` ";
@@ -215,7 +218,7 @@ include($_EnginePath.'common.php');
 						{
 							CreateReturn('619'); //Player under n00b protection time
 						}
-						elseif($MyGameLevel < ($protectiontime * 1000))
+						else if($MyGameLevel < ($protectiontime * 1000))
 						{
 							CreateReturn('620'); //You are under n00b protection time
 						}
@@ -227,7 +230,7 @@ include($_EnginePath.'common.php');
 								{
 									CreateReturn('621'); //Player is too weak
 								}
-								elseif(($MyGameLevel * $protectionmulti) < $HeGameLevel)
+								else if(($MyGameLevel * $protectionmulti) < $HeGameLevel)
 								{
 									CreateReturn('622'); //Player is too strony
 								}
@@ -241,7 +244,10 @@ include($_EnginePath.'common.php');
 				}
 			}
 			break;
-		case 8: //Recycling
+		}
+		case 8:
+		{
+			//Recycling
 			$ShipID = 209;
 			if($Type != 2)
 			{
@@ -255,7 +261,10 @@ include($_EnginePath.'common.php');
 			}
 			$ShipCount = ceil(($GalaxyRow['metal'] + $GalaxyRow['crystal']) / $_Vars_Prices[$ShipID]['capacity']);
 			break;
-		case 7: //Colonization
+		}
+		case 7:
+		{
+			//Colonization
 			$ShipID = 208;
 			if($Type != 1)
 			{
@@ -269,6 +278,7 @@ include($_EnginePath.'common.php');
 			}
 			$ShipCount = 1;
 			break;
+		}
 	}
 
 	// Fleet Blockade System
@@ -285,6 +295,7 @@ include($_EnginePath.'common.php');
 	$SFBSelectWhere[] = "(`Type` = 2 AND `ElementID` = {$_User['id']} AND `EndTime` > UNIX_TIMESTAMP())";
 	$SFBSelectWhere[] = "(`Type` = 3 AND `ElementID` = {$CurrentPlanet['id']} AND `EndTime` > UNIX_TIMESTAMP())";
 
+	$SFBSelect = '';
 	$SFBSelect .= "SELECT `Type`, `BlockMissions`, `Reason`, `StartTime`, `EndTime`, `PostEndTime`, `ElementID`, `DontBlockIfIdle` FROM {{table}} WHERE `StartTime` <= UNIX_TIMESTAMP() AND ";
 	$SFBSelect .= implode(' OR ', $SFBSelectWhere);
 	$SFBSelect .= " ORDER BY `Type` ASC, `EndTime` DESC;";
@@ -318,7 +329,7 @@ include($_EnginePath.'common.php');
 							CreateReturn('628');
 						}
 					}
-					elseif($GetSFBData['PostEndTime'] > $Time)
+					else if($GetSFBData['PostEndTime'] > $Time)
 					{
 						// Post Blockade
 						if(in_array($Mission, $_Vars_FleetMissions['military']) AND $TargetUser > 0 AND
@@ -332,7 +343,7 @@ include($_EnginePath.'common.php');
 						}
 					}
 				}
-				elseif($GetSFBData['Type'] == 2)
+				else if($GetSFBData['Type'] == 2)
 				{
 					// Per User Blockade
 					if($GetSFBData['ElementID'] == $_User['id'])
@@ -344,7 +355,7 @@ include($_EnginePath.'common.php');
 						CreateReturn('637');
 					}
 				}
-				elseif($GetSFBData['Type'] == 3)
+				else if($GetSFBData['Type'] == 3)
 				{
 					// Per Planet Blockade
 					if($GetSFBData['ElementID'] == $CurrentPlanet['id'])
@@ -390,15 +401,24 @@ include($_EnginePath.'common.php');
 		//No ships
 		switch($Mission)
 		{
-			case 6: //Spy
+			case 6:
+			{
+				//Spy
 				$Return = '606_1';
 				break;
-			case 8: //Recycling
+			}
+			case 8:
+			{
+				//Recycling
 				$Return = '606_2';
 				break;
-			case 7: //Colonization
+			}
+			case 7:
+			{
+				//Colonization
 				$Return = '606_3';
 				break;
+			}
 		}
 		$Update = '1';
 		CreateReturn($Return);
@@ -499,7 +519,7 @@ include($_EnginePath.'common.php');
 		CreateReturn('607');
 	}
 
-	if($TargetID <= 0)
+	if(!isset($TargetID) || $TargetID <= 0)
 	{
 		$TargetID = '0';
 	}
@@ -511,6 +531,7 @@ include($_EnginePath.'common.php');
 	$FleetArray[$ShipID] = $ShipCount;
 	$FleetArrayQuery = Array2String($FleetArray);
 
+	$QryInsertFleet = '';
 	$QryInsertFleet .= "INSERT INTO {{table}} SET ";
 	$QryInsertFleet .= "`fleet_owner` = '{$_User['id']}', ";
 	$QryInsertFleet .= "`fleet_mission` = '{$Mission}', ";
@@ -540,6 +561,7 @@ include($_EnginePath.'common.php');
 	$LastFleetID = doquery("SELECT LAST_INSERT_ID() as `id`;", '', true);
 	$LastFleetID = $LastFleetID['id'];
 
+	$QryArchive = '';
 	$QryArchive .= "INSERT INTO {{table}} SET ";
 	$QryArchive .= "`Fleet_ID` = {$LastFleetID}, ";
 	$QryArchive .= "`Fleet_Owner` = {$_User['id']}, ";
@@ -564,6 +586,7 @@ include($_EnginePath.'common.php');
 
 	$CurrentPlanet['deuterium'] = $CurrentPlanet['deuterium'] - $consumption;
 
+	$QryUpdatePlanet = '';
 	$QryUpdatePlanet .= "UPDATE {{table}} SET ";
 	$QryUpdatePlanet .= "`{$_Vars_GameElements[$ShipID]}` = `{$_Vars_GameElements[$ShipID]}` - {$ShipCount}, ";
 	$QryUpdatePlanet .= "`deuterium` = '{$CurrentPlanet["deuterium"]}' ";
@@ -585,18 +608,27 @@ include($_EnginePath.'common.php');
 	$ActualFleets += 1;
 	switch($Mission)
 	{
-		case 6: //Spy
+		case 6:
+		{
+			//Spy
 			$Spy_Probes -= $ShipCount;
 			$Return = '600_1'; //OK
 			break;
-		case 8: //Recycling
+		}
+		case 8:
+		{
+			//Recycling
 			$Recyclers -= $ShipCount;
 			$Return = '600_2'; //OK
 			break;
-		case 7: //Colonization
+		}
+		case 7:
+		{
+			//Colonization
 			$Colonizers -= $ShipCount;
 			$Return = '600_3'; //OK
 			break;
+		}
 	}
 	$Update = '1';
 	if(empty($Return))

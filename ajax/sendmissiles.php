@@ -45,14 +45,14 @@ include($_EnginePath.'common.php');
 	$noIdleProtect = $_GameConfig['no_idle_protect'];
 	$Protections['idleTime'] = $_GameConfig['no_idle_protect'] * TIME_DAY;
 
-	$Galaxy = intval($_POST['galaxy']);
-	$System = intval($_POST['system']);
-	$Planet = intval($_POST['planet']);
+	$Galaxy = (isset($_POST['galaxy']) ? intval($_POST['galaxy']) : 0);
+	$System = (isset($_POST['system']) ? intval($_POST['system']) : 0);
+	$Planet = (isset($_POST['planet']) ? intval($_POST['planet']) : 0);
 	$Type = 1;
 
 	$Mission = 10;
-	$Missiles = round(str_replace('.', '', $_POST['count']));
-	$PrimTarget = intval($_POST['target']);
+	$Missiles = (isset($_POST['count']) ? round(str_replace('.', '', $_POST['count'])) : 0);
+	$PrimTarget = (isset($_POST['target']) ? intval($_POST['target']) : 0);
 	if($PrimTarget == 0)
 	{
 		$PrimTarget = '0';
@@ -90,6 +90,7 @@ include($_EnginePath.'common.php');
 		CreateReturn('646', '1');
 	}
 	
+	$Query_GetPlanet = '';
 	$Query_GetPlanet .= "SELECT `pl`.`id`, `pl`.`id_owner`, `galaxy`.`galaxy_id` FROM {{table}} AS `pl` ";
 	$Query_GetPlanet .= "LEFT JOIN `{{prefix}}galaxy` AS `galaxy` ON `galaxy`.`id_planet` = `pl`.`id` ";
 	$Query_GetPlanet .= "WHERE `pl`.`galaxy` = {$Galaxy} AND `pl`.`system` = {$System} AND `pl`.`planet` = {$Planet} AND `pl`.`planet_type` = {$Type} ";
@@ -107,6 +108,7 @@ include($_EnginePath.'common.php');
 	
 	if($PlanetData['id_owner'] > 0)
 	{
+		$Query_GetUser = '';
 		$Query_GetUser .= "SELECT `usr`.`is_onvacation`, `usr`.`is_banned`, `usr`.`ally_id`, `usr`.`first_login`, `usr`.`NoobProtection_EndTime`, `usr`.`onlinetime`, `usr`.`authlevel`, ";
 		$Query_GetUser .= "`stat`.`total_points`, `stat`.`total_rank` ";
 		$Query_GetUser .= "FROM {{table}} AS `usr` ";
@@ -177,7 +179,7 @@ include($_EnginePath.'common.php');
 				{
 					CreateReturn('656');
 				}
-				elseif($MyGameLevel < ($protectiontime * 1000))
+				else if($MyGameLevel < ($protectiontime * 1000))
 				{
 					CreateReturn('657');
 				}
@@ -189,7 +191,7 @@ include($_EnginePath.'common.php');
 						{
 							CreateReturn('656');
 						}
-						elseif(($MyGameLevel * $protectionmulti) < $HeGameLevel)
+						else if(($MyGameLevel * $protectionmulti) < $HeGameLevel)
 						{
 							CreateReturn('658');
 						}
@@ -220,6 +222,7 @@ include($_EnginePath.'common.php');
 	$SFBSelectWhere[] = "(`Type` = 2 AND `ElementID` = {$_User['id']} AND `EndTime` > UNIX_TIMESTAMP())";
 	$SFBSelectWhere[] = "(`Type` = 3 AND `ElementID` = {$_Planet['id']} AND `EndTime` > UNIX_TIMESTAMP())";
 
+	$SFBSelect = '';
 	$SFBSelect .= "SELECT `Type`, `BlockMissions`, `Reason`, `StartTime`, `EndTime`, `PostEndTime`, `ElementID`, `DontBlockIfIdle` FROM {{table}} WHERE `StartTime` <= UNIX_TIMESTAMP() AND ";
 	$SFBSelect .= implode(' OR ', $SFBSelectWhere);
 	$SFBSelect .= " ORDER BY `Type` ASC, `EndTime` DESC;";
@@ -254,13 +257,13 @@ include($_EnginePath.'common.php');
 							$BlockReason = $_Lang['SFB_Stop_GlobalBlockade'];
 						}
 					}
-					elseif($GetSFBData['PostEndTime'] > $Now)
+					else if($GetSFBData['PostEndTime'] > $Now)
 					{
 						// Post Blockade
 						if(in_array($Mission, $_Vars_FleetMissions['military']) AND $PlanetData['id_owner'] > 0 AND 
 						(
-								($AllMissionsBlocked !== true AND $HeDBRec['onlinetime'] > ($Now - $Protections['idleTime']) AND $HeDBRec['onlinetime'] < $GetSFBData['StartTime'])
-								OR 
+							($AllMissionsBlocked !== true AND $HeDBRec['onlinetime'] > ($Now - $Protections['idleTime']) AND $HeDBRec['onlinetime'] < $GetSFBData['StartTime'])
+							OR 
 							($AllMissionsBlocked === true AND $HeDBRec['onlinetime'] > ($Now - $Protections['idleTime']) AND $HeDBRec['onlinetime'] < $GetSFBData['EndTime'])
 						))
 						{
@@ -269,14 +272,14 @@ include($_EnginePath.'common.php');
 						}
 					}
 				}
-				elseif($GetSFBData['Type'] == 2)
+				else if($GetSFBData['Type'] == 2)
 				{
 					// Per User Blockade
 					$BlockFleet = true;
 					$BlockGivenReason = (empty($GetSFBData['Reason']) ? $_Lang['SFB_Stop_ReasonNotGiven'] : "\"{$GetSFBData['Reason']}\"");
 					$BlockReason = sprintf(($GetSFBData['ElementID'] == $_User['id'] ? $_Lang['SFB_Stop_UserBlockadeOwn'] : $_Lang['SFB_Stop_UserBlockade']), prettyDate('d m Y', $GetSFBData['EndTime'], 1), date('H:i:s', $GetSFBData['EndTime']), $BlockGivenReason);
 				}
-				elseif($GetSFBData['Type'] == 3)
+				else if($GetSFBData['Type'] == 3)
 				{
 					// Per Planet Blockade
 					$BlockFleet = true;
@@ -300,6 +303,7 @@ include($_EnginePath.'common.php');
 		}
 	}
 	
+	$CreateMIPAttack = '';
 	$CreateMIPAttack .= "INSERT INTO {{table}} SET ";
 	$CreateMIPAttack .= "`fleet_owner` = {$_User['id']}, ";
 	$CreateMIPAttack .= "`fleet_mission` = {$Mission}, ";
@@ -327,6 +331,7 @@ include($_EnginePath.'common.php');
 
 	doquery("UPDATE {{table}} SET `interplanetary_missile` = `interplanetary_missile` - {$Missiles} WHERE `id` = {$_Planet['id']};", 'planets');
 
+	$QryArchive = '';
 	$QryArchive .= "INSERT INTO {{table}} SET ";
 	$QryArchive .= "`Fleet_ID` = {$LastFleetID}, ";
 	$QryArchive .= "`Fleet_Owner` = {$_User['id']}, ";

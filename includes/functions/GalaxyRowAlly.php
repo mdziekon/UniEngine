@@ -20,7 +20,7 @@ function GalaxyRowAlly($GalaxyRowUser, $MyAllyPacts)
 		$Parse = array
 		(
 			'AllyID'				=> $GalaxyRowUser['ally_id'],
-			'AllyClass'				=> ($GalaxyRowUser['ally_id'] == $_User['ally_id'] ? 'lime' : ($MyAllyPacts[$GalaxyRowUser['ally_id']] > 0 ? 'skyblue' : '')),
+			'AllyClass'				=> ($GalaxyRowUser['ally_id'] == $_User['ally_id'] ? 'lime' : (isset($MyAllyPacts[$GalaxyRowUser['ally_id']]) && $MyAllyPacts[$GalaxyRowUser['ally_id']] > 0 ? 'skyblue' : '')),
 			'Lang_Ally'				=> $_Lang['Alliance'],
 			'AllyName'				=> $GalaxyRowUser['ally_name'],
 			'Lang_MemberCount'		=> $_Lang['gl_allymembers'],
