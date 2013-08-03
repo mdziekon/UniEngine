@@ -18,6 +18,7 @@ include($_EnginePath.'common.php');
 		$_User['morale_level'] = 0;
 	}
 	
+	$_Lang['Insert_MoraleColor'] = '';
 	if($_User['morale_level'] > 0)
 	{
 		$_Lang['Insert_MoraleColor'] = 'lime';
@@ -44,7 +45,6 @@ include($_EnginePath.'common.php');
 		'Table_Penalty_FleetShieldAttenuation2',
 		'Table_Penalty_FleetPowerAttenuation1',
 		'Table_Penalty_FleetPowerAttenuation2',
-		'Table_Penalty_FleetRFAttenuation1',
 		'Table_Penalty_FleetRFRemoval1',
 		'Table_Penalty_IdleResStealDrop1',
 		'Table_Penalty_AllResStealDrop1',
