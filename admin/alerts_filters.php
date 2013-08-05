@@ -1,5 +1,7 @@
 <?php
 
+// Real syntax parser should be implemented to check whole expression validity
+
 define('INSIDE', true);
 define('IN_ADMIN', true);
 

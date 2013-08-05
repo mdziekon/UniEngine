@@ -97,7 +97,7 @@ function()
         var SelectedCount = 0;
         $('input[name^="f"]').each(function()
         {
-            if($(this).attr('checked') === true){
+            if($(this).is(':checked') === true){
                 SelectedCount += 1;
             }
         });
