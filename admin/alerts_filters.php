@@ -108,10 +108,10 @@ include($_EnginePath.'common.php');
 	}
 
 	// Deleting is here
-	if($_GET['cmd'] == 'del')
+	if(isset($_GET['cmd']) && $_GET['cmd'] == 'del')
 	{
 		$_GET['cmd'] = '';
-		$DeleteID = intval($_GET['id']);
+		$DeleteID = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
 		if($DeleteID > 0)
 		{
@@ -133,7 +133,7 @@ include($_EnginePath.'common.php');
 			$MSGColor = 'red';
 		}
 	}
-	else if($_GET['cmd'] == 'delpost')
+	else if(isset($_GET['cmd']) && $_GET['cmd'] == 'delpost')
 	{
 		$_GET['cmd'] = '';
 		if(!empty($_POST['f']))
@@ -181,13 +181,13 @@ include($_EnginePath.'common.php');
 		}
 	}
 
-	if($_GET['cmd'] == 'add' OR $_GET['cmd'] == 'edit')
+	if(isset($_GET['cmd']) && ($_GET['cmd'] == 'add' OR $_GET['cmd'] == 'edit'))
 	{
 		$AllowProceed = false;
 		$WhatAreWeDoint = $_GET['cmd'];
 		if($_GET['cmd'] == 'edit')
 		{
-			$EditID = intval($_GET['id']);
+			$EditID = isset($_GET['id']) ? intval($_GET['id']) : 0;
 			if($EditID <= 0)
 			{
 				$_GET['cmd'] = '';
@@ -218,6 +218,7 @@ include($_EnginePath.'common.php');
 		{
 			$PageTPL = gettemplate('admin/alertsfilters_add');
 			$Parse = $_Lang;
+			$Parse['Rows'] = '';
 			if($WhatAreWeDoint == 'edit')
 			{
 				$Parse['InsertOnEdit'] = '<input type="hidden" name="editid" value="'.$EditID.'"/>';
@@ -231,11 +232,11 @@ include($_EnginePath.'common.php');
 				$Parse['ThisFormAction'] = '?cmd=add';
 			}
 
-			if($WhatAreWeDoint == 'add' OR ($WhatAreWeDoint == 'edit' AND $_POST['editid'] == $EditID))
+			if($WhatAreWeDoint == 'add' OR ($WhatAreWeDoint == 'edit' && isset($_POST['editid']) && $_POST['editid'] == $EditID))
 			{
-				$Code = trim(stripslashes($_POST['code']));
-				$Action = intval($_POST['action']);
-				$Enabled = ($_POST['turnoff'] == 'on' ? '0' : '1');
+				$Code = isset($_POST['code']) ? trim(stripslashes($_POST['code'])) : null;
+				$Action = isset($_POST['action']) ? intval($_POST['action']) : 0;
+				$Enabled = (isset($_POST['turnoff']) && $_POST['turnoff'] == 'on' ? '0' : '1');
 				$AllowSave = true;
 			}
 			else
@@ -252,7 +253,7 @@ include($_EnginePath.'common.php');
 				$Parse['TurnOffChecked'] = 'checked';
 			}
 
-			if($_POST['doWhat'] == 'check')
+			if(isset($_POST['doWhat']) && $_POST['doWhat'] == 'check')
 			{
 				$BracketOpenCount = substr_count($Code, '(');
 				$BracketCloseCount = substr_count($Code, ')');
@@ -325,7 +326,7 @@ include($_EnginePath.'common.php');
 					$Parse['System_MSG'] = '<tr><td class="c pad5 lime" colspan="8">'.$_Lang['Info_CodeLooksFine'].'</td></tr><tr class="inv"><td></td></tr>';
 				}
 			}
-			else if($_POST['doWhat'] == 'save')
+			else if(isset($_POST['doWhat']) && $_POST['doWhat'] == 'save')
 			{
 				if($WhatAreWeDoint == 'edit' AND $AllowSave === false)
 				{
@@ -446,6 +447,7 @@ include($_EnginePath.'common.php');
 					$EvalCode = addslashes($EvalCode);
 					$Code = addslashes($Code);
 
+					$SearchDataArray = '';
 					if(!empty($SearchData))
 					{
 						foreach($SearchData as $Type => $Values)
@@ -482,6 +484,7 @@ include($_EnginePath.'common.php');
 		$PageTPL = gettemplate('admin/alertsfilters_body');
 		$RowsTPL = gettemplate('admin/alertsfilters_rows');
 
+		$CurrentPage = 0;
 		if(!empty($_GET['page']))
 		{
 			$CurrentPage = intval($_GET['page']);
@@ -492,6 +495,7 @@ include($_EnginePath.'common.php');
 		}
 		$_Lang['CurrentPage'] = $CurrentPage;
 
+		$PerPage = 0;
 		if(!empty($_COOKIE['alertsfilter_pp']))
 		{
 			$PerPage = intval($_COOKIE['alertsfilter_pp']);
@@ -500,7 +504,7 @@ include($_EnginePath.'common.php');
 		{
 			$PerPage = 20;
 		}
-		if($_GET['pp'] > 0 AND $_GET['pp'] != $PerPage)
+		if(isset($_GET['pp']) && $_GET['pp'] > 0 && $_GET['pp'] != $PerPage)
 		{
 			$TempPerPage = intval($_GET['pp']);
 			if($TempPerPage > 0 AND $TempPerPage != $PerPage)
@@ -513,14 +517,12 @@ include($_EnginePath.'common.php');
 
 		$GetStart = (string) ((($CurrentPage - 1) * $PerPage) + 0);
 
-		if($BlockSelectQuery !== true)
-		{
-			$Query = doquery("SELECT * FROM {{table}} ORDER BY `Date` DESC LIMIT {$GetStart}, {$PerPage};", 'system_alerts_filters');
-			$GetCount = doquery("SELECT COUNT(`ID`) AS `Count` FROM {{table}};", 'system_alerts_filters', true);
-			$GetCount = $GetCount['Count'];
-		}
+		$Query = doquery("SELECT * FROM {{table}} ORDER BY `Date` DESC LIMIT {$GetStart}, {$PerPage};", 'system_alerts_filters');
+		$GetCount = doquery("SELECT COUNT(`ID`) AS `Count` FROM {{table}};", 'system_alerts_filters', true);
+		$GetCount = $GetCount['Count'];
 
 		$Parse = $_Lang;
+		$Parse['Rows'] = '';
 		if(!empty($MSG))
 		{
 			$Parse['System_MSG'] = '<tr><td class="c pad5" colspan="8" style="color: '.$MSGColor.'">'.$MSG.'</td></tr><tr class="inv"><td></td></tr>';
@@ -574,7 +576,7 @@ include($_EnginePath.'common.php');
 		}
 	}
 
-	$Page = parsetemplate( $PageTPL, $Parse );
+	$Page = parsetemplate($PageTPL, $Parse);
 	display($Page, $_Lang['PageTitle'], false, true);
 
 ?>

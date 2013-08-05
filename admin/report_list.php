@@ -17,7 +17,7 @@ include($_EnginePath.'common.php');
 	includeLang('admin');
 	includeLang('admin/reports_list');
 
-	if(empty($_GET['showall']) or $_GET['showall'] == 0)
+	if(empty($_GET['showall']) || $_GET['showall'] == 0)
 	{
 		$ShowAll = '0';
 	}
@@ -26,7 +26,7 @@ include($_EnginePath.'common.php');
 		$ShowAll = '1';
 	}
 
-	if($_GET['deleteall'] == 'yes')
+	if(isset($_GET['deleteall']) && $_GET['deleteall'] == 'yes')
 	{
 		doquery("TRUNCATE TABLE {{table}}", 'reports');
 	}
@@ -40,7 +40,7 @@ include($_EnginePath.'common.php');
 	if(!empty($_GET['action']))
 	{
 		$MSGColor = 'red';
-		$ID = floor(floatval($_GET['id']));
+		$ID = isset($_GET['id']) ? floor(floatval($_GET['id'])) : 0;
 		if($ID > 0)
 		{
 			$GetDeclaration = doquery("SELECT `id`, `status` FROM {{table}} WHERE `id` = {$ID} LIMIT 1;", 'reports');
@@ -54,7 +54,7 @@ include($_EnginePath.'common.php');
 						$MSGColor = 'lime';
 						break;
 					case 'change_status':
-						$Status = intval($_GET['set_status']);
+						$Status = isset($_GET['set_status']) ? intval($_GET['set_status']) : -1;
 						if($Status < 0)
 						{
 							$MSG = $_Lang['Report_no_status_given'];
@@ -79,6 +79,7 @@ include($_EnginePath.'common.php');
 		}
 	}
 
+	$ShowAllWhere = '';
 	if($ShowAll == '0')
 	{
 		$ShowAllWhere = "WHERE `status` NOT IN (9,10)";

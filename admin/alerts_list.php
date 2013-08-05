@@ -18,9 +18,10 @@ include($_EnginePath.'common.php');
 	$PageTitle = $_Lang['PageTitle'];
 
 	$Now = time();
+	$MSGColor = '';
 
 	$BlockSelectQuery = false; 
-	if($_GET['deleteall'] == 'yes')
+	if(isset($_GET['deleteall']) && $_GET['deleteall'] == 'yes')
 	{
 		doquery("TRUNCATE TABLE {{table}};", 'system_alerts');
 		doquery("OPTIMIZE TABLE {{table}};", 'system_alerts');
@@ -28,7 +29,7 @@ include($_EnginePath.'common.php');
 		safeDie();
 	}
 	
-	if($_GET['msg'] == 1)
+	if(isset($_GET['msg']) && $_GET['msg'] == 1)
 	{
 		$MSGColor = 'lime';
 		$MSG = $_Lang['Alert_Truncated'];
@@ -38,6 +39,7 @@ include($_EnginePath.'common.php');
 	$PageTPL = gettemplate('admin/alertslist_body');
 	$RowsTPL = gettemplate('admin/alertslist_rows');
 
+	$CurrentPage = 0;
 	if(!empty($_GET['page']))
 	{
 		$CurrentPage = intval($_GET['page']);
@@ -48,6 +50,7 @@ include($_EnginePath.'common.php');
 	}
 	$_Lang['CurrentPage'] = $CurrentPage;
 
+	$PerPage = 0;
 	if(!empty($_COOKIE['alertslist_pp']))
 	{
 		$PerPage = intval($_COOKIE['alertslist_pp']);
@@ -56,7 +59,7 @@ include($_EnginePath.'common.php');
 	{
 		$PerPage = 20;
 	}
-	if($_GET['pp'] > 0 AND $_GET['pp'] != $PerPage)
+	if(isset($_GET['pp']) && $_GET['pp'] > 0 && $_GET['pp'] != $PerPage)
 	{
 		$TempPerPage = intval($_GET['pp']);
 		if($TempPerPage > 0 AND $TempPerPage != $PerPage)
@@ -72,7 +75,7 @@ include($_EnginePath.'common.php');
 	if(!empty($_GET['action']))
 	{
 		$MSGColor = 'red';
-		$ID = intval($_GET['id']);
+		$ID = isset($_GET['id']) ? intval($_GET['id']) : 0;
 		if($ID > 0)
 		{
 			$ThisAction = $_GET['action'];
@@ -89,8 +92,9 @@ include($_EnginePath.'common.php');
 					$MSG = $_Lang['Alert_noexist'];
 				}
 			}
-			elseif($ThisAction == 'change_status')
+			else if($ThisAction == 'change_status')
 			{
+				$Query_GetAlert = '';
 				$Query_GetAlert .= "SELECT `ID`, `Status` FROM {{table}} ";
 				$Query_GetAlert .= "WHERE `ID` = {$ID} LIMIT 1;";				
 				$GetAlert = doquery($Query_GetAlert, 'system_alerts', true);
@@ -147,6 +151,7 @@ include($_EnginePath.'common.php');
 				$GetStart = 0;
 			}
 
+			$Query_GetAlerts = '';
 			$Query_GetAlerts .= "SELECT `Alerts`.*, `Users`.`username` AS `Username` ";
 			$Query_GetAlerts .= "FROM {{table}} AS `Alerts` ";
 			$Query_GetAlerts .= "LEFT JOIN {{prefix}}users AS `Users` ON `Alerts`.`User_ID` = `Users`.`id` ";
@@ -157,12 +162,13 @@ include($_EnginePath.'common.php');
 	}
 
 	$Parse = $_Lang;
+	$Parse['Rows'] = '';
 	if(!empty($MSG))
 	{
 		$Parse['System_MSG'] = '<tr><th class="pad5 '.$MSGColor.'" colspan="7">'.$MSG.'</th></tr><tr style="visibility: hidden;"><td style="height: 8px;"></td></tr>';
 	}
 
-	if($_TotalCount > 0)
+	if(isset($_TotalCount) && $_TotalCount > 0)
 	{
 		include_once($_EnginePath.'includes/functions/Pagination.php');			
 		$Pagin = CreatePaginationArray($_TotalCount, $PerPage, $CurrentPage, 7);
@@ -211,7 +217,7 @@ include($_EnginePath.'common.php');
 						$GetData['ips'][$IPData['IPID']] = $IPData['IPID'];
 					}
 				}
-				elseif($FetchData['Code'] == 2)
+				else if($FetchData['Code'] == 2)
 				{
 					$FetchData['mainusers'][$FetchData['Other_Data']['ReferrerID']] = $FetchData['Other_Data']['ReferrerID'];
 					$FetchData['alertusers'][$FetchData['Other_Data']['ReferrerID']] = $FetchData['Other_Data']['ReferrerID'];
@@ -269,6 +275,7 @@ include($_EnginePath.'common.php');
 		}
 		if(!empty($GetData['users']))
 		{
+			$Query_GetUsers = '';
 			$Query_GetUsers .= "SELECT `id`, `username` FROM {{table}} WHERE ";
 			$Query_GetUsers .= "`id` IN (".implode(', ', $GetData['users']).") ";
 			$Query_GetUsers .= "LIMIT ".count($GetData['users']).";";
@@ -290,6 +297,7 @@ include($_EnginePath.'common.php');
 		}
 		if(!empty($GetData['allys']))
 		{
+			$Query_GetAllys = '';
 			$Query_GetAllys .= "SELECT `id`, `ally_name`, `ally_tag` FROM {{table}} WHERE ";
 			$Query_GetAllys .= "`id` IN (".implode(', ', $GetData['allys']).") ";
 			$Query_GetAllys .= "LIMIT ".count($GetData['allys']).";";
@@ -311,6 +319,7 @@ include($_EnginePath.'common.php');
 		}
 		if(!empty($GetData['ips']))
 		{
+			$Query_GetIPs = '';
 			$Query_GetIPs .= "SELECT `ID`, `Value` FROM {{table}} WHERE ";
 			$Query_GetIPs .= "`ID` IN (".implode(', ', $GetData['ips']).") ";
 			$Query_GetIPs .= "LIMIT ".count($GetData['ips']).";";
@@ -325,6 +334,7 @@ include($_EnginePath.'common.php');
 		}
 		if(!empty($GetData['fleets']))
 		{
+			$Query_GetFleets = '';
 			$Query_GetFleets .= "SELECT `Fleet_ID`, `Fleet_Time_Start`, `Fleet_Calculated_Mission`, `Fleet_TurnedBack` ";
 			$Query_GetFleets .= "FROM {{table}} WHERE ";
 			$Query_GetFleets .= "`Fleet_ID` IN (".implode(', ', $GetData['fleets']).") ";
@@ -347,7 +357,7 @@ include($_EnginePath.'common.php');
 				{
 					// --- Fleet MultiAcc Detected ---
 					// Parse User - Alert Sender
-					if($DataArray['users'][$RowData['User_ID']]['deleted'] !== true)
+					if(!isset($DataArray['users'][$RowData['User_ID']]['deleted']))
 					{
 						$RowData['CodeVars'][0] = vsprintf($_Lang['AlertCodes_Texts']['UserLink'], array
 						(
@@ -367,7 +377,7 @@ include($_EnginePath.'common.php');
 						$_Lang['type_mission'][$RowData['Other_Data']['MissionID']]
 					));
 					// Parse User - Target Owner
-					if($DataArray['users'][$RowData['Other_Data']['TargetUserID']]['deleted'] !== true)
+					if(!isset($DataArray['users'][$RowData['Other_Data']['TargetUserID']]['deleted']))
 					{
 						$RowData['CodeVars'][2] = vsprintf($_Lang['AlertCodes_Texts']['UserLink'], array
 						(
@@ -394,7 +404,7 @@ include($_EnginePath.'common.php');
 						$RowData['CodeVars'][3] = $_Lang['AlertCodes_Texts']['FleetBlock_Blocked_Text'];
 					}
 					// Parse DeclarationID
-					if($RowData['Other_Data']['DeclarationID'] > 0)
+					if(isset($RowData['Other_Data']['DeclarationID']) && $RowData['Other_Data']['DeclarationID'] > 0)
 					{
 						$RowData['CodeVars'][4] = vsprintf($_Lang['AlertCodes_Texts']['MultiACCDeclaration_Exists_Text'], array
 						(
@@ -444,7 +454,7 @@ include($_EnginePath.'common.php');
 						
 						// Parse IP Intersection User - Alert Sender
 						$ThisIPData['SenderData']['LastTimeStamp'] = SERVER_MAINOPEN_TSTAMP + $ThisIPData['SenderData']['LastTime'];
-						if($DataArray['users'][$RowData['User_ID']]['deleted'] !== true)
+						if(!isset($DataArray['users'][$RowData['User_ID']]['deleted']))
 						{
 							$ThisIPData['UsersData'][] = vsprintf($_Lang['AlertCodes_Texts']['IPIntersect_UserExist'], array
 							(
@@ -462,7 +472,7 @@ include($_EnginePath.'common.php');
 						}
 						// Parse IP Intersection User - Target Owner
 						$ThisIPData['TargetData']['LastTimeStamp'] = SERVER_MAINOPEN_TSTAMP + $ThisIPData['TargetData']['LastTime'];
-						if($DataArray['users'][$RowData['Other_Data']['TargetUserID']]['deleted'] !== true)
+						if(!isset($DataArray['users'][$RowData['Other_Data']['TargetUserID']]['deleted']))
 						{
 							$ThisIPData['UsersData'][] = vsprintf($_Lang['AlertCodes_Texts']['IPIntersect_UserExist'], array
 							(
@@ -493,7 +503,7 @@ include($_EnginePath.'common.php');
 					{
 						foreach($RowData['Other_Data']['OtherUsers'] as $ThisUserID)
 						{
-							if($DataArray['users'][$ThisUserID]['deleted'] !== true)
+							if(!isset($DataArray['users'][$ThisUserID]['deleted']))
 							{
 								$RowData['CodeVars'][7][] = vsprintf($_Lang['AlertCodes_Texts']['UserLink'], array
 								(
@@ -520,17 +530,17 @@ include($_EnginePath.'common.php');
 						$RowData['CodeVars'][7] = $_Lang['AlertCodes_Texts']['OtherUsers_None'];
 					}
 				}
-				elseif($RowData['Code'] == 2)
+				else if($RowData['Code'] == 2)
 				{
 					// --- Register MultiAcc Detected ---
 					// Include Tasks Lang
-					if($_Included_TasksLang !== true)
+					if(!isset($_Included_TasksLang))
 					{
 						includeLang('tasks');
 						$_Included_TasksLang = true;
 					}					
 					// Parse User - New User
-					if($DataArray['users'][$RowData['User_ID']]['deleted'] !== true)
+					if(!isset($DataArray['users'][$RowData['User_ID']]['deleted']))
 					{
 						$RowData['CodeVars'][0] = vsprintf($_Lang['AlertCodes_Texts']['UserLink'], array
 						(
@@ -545,7 +555,7 @@ include($_EnginePath.'common.php');
 						));
 					}
 					// Parse User - Referrer User
-					if($DataArray['users'][$RowData['Other_Data']['ReferrerID']]['deleted'] !== true)
+					if(!isset($DataArray['users'][$RowData['Other_Data']['ReferrerID']]['deleted']))
 					{
 						$RowData['CodeVars'][1] = vsprintf($_Lang['AlertCodes_Texts']['UserLink'], array
 						(
@@ -617,7 +627,7 @@ include($_EnginePath.'common.php');
 						
 						// Parse IP Intersection User - New User
 						$ThisIPData['NewUser']['LastTimeStamp'] = SERVER_MAINOPEN_TSTAMP + $ThisIPData['NewUser']['LastTime'];
-						if($DataArray['users'][$RowData['User_ID']]['deleted'] !== true)
+						if(!isset($DataArray['users'][$RowData['User_ID']]['deleted']))
 						{
 							$ThisIPData['UsersData'][] = vsprintf($_Lang['AlertCodes_Texts']['IPIntersect_UserExist'], array
 							(
@@ -635,7 +645,7 @@ include($_EnginePath.'common.php');
 						}
 						// Parse IP Intersection User - Referrer User
 						$ThisIPData['OldUser']['LastTimeStamp'] = SERVER_MAINOPEN_TSTAMP + $ThisIPData['OldUser']['LastTime'];
-						if($DataArray['users'][$RowData['Other_Data']['ReferrerID']]['deleted'] !== true)
+						if(!isset($DataArray['users'][$RowData['Other_Data']['ReferrerID']]['deleted']))
 						{
 							$ThisIPData['UsersData'][] = vsprintf($_Lang['AlertCodes_Texts']['IPIntersect_UserExist'], array
 							(
@@ -667,7 +677,7 @@ include($_EnginePath.'common.php');
 					{
 						foreach($RowData['Other_Data']['OtherUsers'] as $ThisUserID)
 						{
-							if($DataArray['users'][$ThisUserID]['deleted'] !== true)
+							if(!isset($DataArray['users'][$ThisUserID]['deleted']))
 							{
 								$RowData['CodeVars'][5][] = vsprintf($_Lang['AlertCodes_Texts']['UserLink'], array
 								(
@@ -694,11 +704,11 @@ include($_EnginePath.'common.php');
 						$RowData['CodeVars'][5] = $_Lang['AlertCodes_Texts']['OtherUsers_None'];
 					}
 				}
-				elseif($RowData['Code'] == 3)
+				else if($RowData['Code'] == 3)
 				{
 					// --- Register with Proxy Detected ---
 					// Parse User - New User
-					if($DataArray['users'][$RowData['User_ID']]['deleted'] !== true)
+					if(!isset($DataArray['users'][$RowData['User_ID']]['deleted']))
 					{
 						$RowData['CodeVars'][0] = vsprintf($_Lang['AlertCodes_Texts']['UserLink'], array
 						(
@@ -723,7 +733,7 @@ include($_EnginePath.'common.php');
 				{
 					// --- ResourcePush Detected ---
 					// Parse User - Alert Sender
-					if($DataArray['users'][$RowData['User_ID']]['deleted'] !== true)
+					if(!isset($DataArray['users'][$RowData['User_ID']]['deleted']))
 					{
 						$RowData['CodeVars'][0] = vsprintf($_Lang['AlertCodes_Texts']['UserLink'], array
 						(
@@ -738,7 +748,7 @@ include($_EnginePath.'common.php');
 						));
 					}
 					// Parse User - Target Owner
-					if($DataArray['users'][$RowData['Other_Data']['TargetUserID']]['deleted'] !== true)
+					if(!isset($DataArray['users'][$RowData['Other_Data']['TargetUserID']]['deleted']))
 					{
 						$RowData['CodeVars'][1] = vsprintf($_Lang['AlertCodes_Texts']['UserLink'], array
 						(
@@ -755,7 +765,7 @@ include($_EnginePath.'common.php');
 					// Parse Users Acquaintance
 					if($RowData['Other_Data']['SameAlly'] > 0)
 					{
-						if($DataArray['allys'][$RowData['Other_Data']['SameAlly']]['deleted'] !== true)
+						if(!isset($DataArray['allys'][$RowData['Other_Data']['SameAlly']]['deleted']))
 						{
 							$RowData['CodeVars'][2][0] = vsprintf($_Lang['AlertCodes_Texts']['AllyLink'], array
 							(
@@ -775,7 +785,7 @@ include($_EnginePath.'common.php');
 					}
 					else if(!empty($RowData['Other_Data']['AllyPact']))
 					{
-						if($DataArray['allys'][$RowData['Other_Data']['AllyPact']['SenderAlly']]['deleted'] !== true)
+						if(!isset($DataArray['allys'][$RowData['Other_Data']['AllyPact']['SenderAlly']]['deleted']))
 						{
 							$RowData['CodeVars'][2][1][] = vsprintf($_Lang['AlertCodes_Texts']['AllyLink'], array
 							(
@@ -791,7 +801,7 @@ include($_EnginePath.'common.php');
 								$RowData['Other_Data']['AllyPact']['SenderAlly']
 							));
 						}
-						if($DataArray['allys'][$RowData['Other_Data']['AllyPact']['TargetAlly']]['deleted'] !== true)
+						if(!isset($DataArray['allys'][$RowData['Other_Data']['AllyPact']['TargetAlly']]['deleted']))
 						{
 							$RowData['CodeVars'][2][1][] = vsprintf($_Lang['AlertCodes_Texts']['AllyLink'], array
 							(
@@ -833,7 +843,7 @@ include($_EnginePath.'common.php');
 					}
 					$RowData['CodeVars'][5] = prettyNumber($RowData['Other_Data']['Stats']['Sender']['Position'] - $RowData['Other_Data']['Stats']['Target']['Position']);
 					// Parse Users StatsInfo
-					if($DataArray['users'][$RowData['User_ID']]['deleted'] !== true)
+					if(!isset($DataArray['users'][$RowData['User_ID']]['deleted']))
 					{
 						$RowData['CodeVars'][6] = vsprintf($_Lang['AlertCodes_Texts']['PushAlert_UserExist'], array
 						(
@@ -851,7 +861,7 @@ include($_EnginePath.'common.php');
 							prettyNumber($RowData['Other_Data']['Stats']['Sender']['Position'])
 						));
 					}
-					if($DataArray['users'][$RowData['Other_Data']['TargetUserID']]['deleted'] !== true)
+					if(!isset($DataArray['users'][$RowData['Other_Data']['TargetUserID']]['deleted']))
 					{
 						$RowData['CodeVars'][7] = vsprintf($_Lang['AlertCodes_Texts']['PushAlert_UserExist'], array
 						(
