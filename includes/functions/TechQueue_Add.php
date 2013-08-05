@@ -30,6 +30,10 @@ function TechQueue_Add(&$ThePlanet, &$TheUser, $TechID)
 			foreach($Queue as $QueueElement)
 			{
 				$QueueElement = explode(',', $QueueElement);
+				if(!isset($Modifier[$_Vars_GameElements[$QueueElement[0]]]))
+				{
+					$Modifier[$_Vars_GameElements[$QueueElement[0]]] = 0;
+				}
 				$Modifier[$_Vars_GameElements[$QueueElement[0]]] += 1;
 				$TheUser[$_Vars_GameElements[$QueueElement[0]]] += 1;
 				$StartTime = $QueueElement[3];

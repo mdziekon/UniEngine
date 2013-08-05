@@ -143,7 +143,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 			if($LabInQueue === false)
 			{
 				$TheCommand = $_GET['cmd'];
-				$TechID = intval($_GET['tech']);
+				$TechID = isset($_GET['tech']) ? intval($_GET['tech']) : 0;
 				$QueueElementID = (isset($_GET['el']) ? intval($_GET['el']) : -1);
 
 				if((in_array($TechID, $_Vars_ElementCategories['tech']) AND $TheCommand == 'search') OR ($TheCommand == 'cancel' AND $QueueElementID >= 0))
@@ -178,7 +178,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 						if(HandlePlanetQueue_TechnologySetNext($ResearchPlanet, $CurrentUser, $Now, true) === false)
 						{
 							include($_EnginePath.'includes/functions/PostResearchSaveChanges.php');
-							PostResearchSaveChanges($ResearchPlanet, ($ResearchPlanet['id'] == $CurrentPlanet['id'] ? true : false), $UpdateUser);
+							PostResearchSaveChanges($ResearchPlanet, ($ResearchPlanet['id'] == $CurrentPlanet['id'] ? true : false), isset($UpdateUser) ? $UpdateUser : false);
 						}
 					}
 				}
@@ -200,6 +200,10 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 	$CurrentQueue = (isset($ResearchPlanet['techQueue']) ? $ResearchPlanet['techQueue'] : false);
 	if(!empty($CurrentQueue))
 	{
+		$LockResources['metal'] = 0;
+		$LockResources['crystal'] = 0;
+		$LockResources['deuterium'] = 0;
+		
 		$CurrentQueue = explode(';', $CurrentQueue);
 		$QueueIndex = 0;
 		foreach($CurrentQueue as $QueueID => $QueueData)

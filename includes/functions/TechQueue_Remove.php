@@ -18,6 +18,7 @@ function TechQueue_Remove(&$ThePlanet, &$TheUser, $ElementID, $CurrentTime)
 		{
 			$NewQueue = array();
 			$TempUser = $TheUser;
+			$RemovedTime = 0;
 			foreach($Queue as $QueueID => $QueueElement)
 			{
 				$QueueElement = explode(',', $QueueElement);
@@ -63,7 +64,7 @@ function TechQueue_Remove(&$ThePlanet, &$TheUser, $ElementID, $CurrentTime)
 			}
 			$ThePlanet['techQueue'] = implode(';', $NewQueue);
 
-			return $RemovedID;
+			return isset($RemovedID) ? $RemovedID : null;
 		}
 	}
 
