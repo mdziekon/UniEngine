@@ -12,7 +12,7 @@ include($_EnginePath.'common.php');
 	includeLang('admin');
 	includeLang('admin/autogziplogs');
 
-	if(!(($_User['id'] > 0 AND CheckAuth('programmer')) || ($_User['id'] <= 0 && md5($_GET['pass']) == AUTOTOOL_ZIPLOGS_PASSWORDHASH)))
+	if(!((isset($_User['id']) && $_User['id'] > 0 AND CheckAuth('programmer')) || ((!isset($_User['id']) || $_User['id'] <= 0) && md5($_GET['pass']) == AUTOTOOL_ZIPLOGS_PASSWORDHASH)))
 	{
 		AdminMessage($_Lang['sys_noalloaw'], $_Lang['sys_noaccess']);
 	}

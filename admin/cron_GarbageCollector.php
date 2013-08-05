@@ -20,12 +20,12 @@ include($_EnginePath.'common.php');
 	$StartTime = microtime(true);
 	includeLang('admin/cron_GarbageCollector');
 	
-	if(!(($_User['id'] > 0 AND CheckAuth('programmer')) || ($_User['id'] <= 0 && md5($_GET['pass']) == AUTOTOOL_GARBAGECOLLECTOR_PASSWORDHASH)))
+	if(!((isset($_User['id']) && $_User['id'] > 0 AND CheckAuth('programmer')) || ((!isset($_User['id']) || $_User['id'] <= 0) && md5($_GET['pass']) == AUTOTOOL_GARBAGECOLLECTOR_PASSWORDHASH)))
 	{
 		AdminMessage($_Lang['sys_noalloaw'], $_Lang['sys_noaccess']);
 	}
 	
-	$ShowOutput = ($_User['id'] > 0 ? true : false);
+	$ShowOutput = (isset($_User['id']) && $_User['id'] > 0 ? true : false);
 	
 	// Settings
 	$Now = time();
@@ -251,7 +251,7 @@ include($_EnginePath.'common.php');
 	
 	if($ShowOutput)
 	{
-		$Counted .= '<center><table style="width: 100%;"><tbody>';
+		$Counted = '<center><table style="width: 100%;"><tbody>';
 		foreach($CountTime as $Key => $Data)
 		{
 			if(strstr($CounterNames[$Key], '>') == true)
@@ -260,7 +260,7 @@ include($_EnginePath.'common.php');
 			}
 			else
 			{
-				if($LastWasAssoc)
+				if(isset($LastWasAssoc) && $LastWasAssoc === true)
 				{
 					$Counted .= '<tr style="visibility: hidden;"><th></th></tr>';
 				}
