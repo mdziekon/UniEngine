@@ -15,6 +15,7 @@ include($_EnginePath.'common.php');
 	}
 
 	includeLang('admin/SFBSettings');
+	$_Lang['Insert_ChronoApplets'] = '';
 	$Now = time();
 	$TPL_List_NoElements = gettemplate('admin/SFBSettings_list_noelements');
 	$TPL_List_Headers = gettemplate('admin/SFBSettings_list_headers');
@@ -38,24 +39,24 @@ include($_EnginePath.'common.php');
 		if($_GET['cmd'] == 'add')
 		{
 			$_CMD = 2;
-			if($_POST['action'] == 'save')
+			if(isset($_POST['action']) && $_POST['action'] == 'save')
 			{
 				$_FormData_Type = intval($_POST['type']);
 				$_FormData_StartTime = strtotime($_POST['startTime_date']);
 				$_FormData_EndTime = strtotime($_POST['endTime_date']);
 				$_FormData_PostEndTime = strtotime($_POST['postEndTime_date']);
 				$_FormData_ElementID = round($_POST['elementID']);
-				$_FormData_DontBlockIfIdle = ($_POST['dontBlockIfIdle'] == 'on' ? 1 : 0);
+				$_FormData_DontBlockIfIdle = (isset($_POST['dontBlockIfIdle']) && $_POST['dontBlockIfIdle'] == 'on' ? 1 : 0);
 				$_FormData_Reason = $_POST['reason'];
 				if(!empty($_POST['mission']) AND (array)$_POST['mission'] === $_POST['mission'])
 				{
 					foreach($_POST['mission'] as $MissionID => $Data)
 					{
-					$MissionID = intval($MissionID);
-					if($Data == 'on' AND in_array($MissionID, $_Vars_FleetMissions['all']))
-					{
-						$_FormData_Missions[] = $MissionID;
-					}
+						$MissionID = intval($MissionID);
+						if($Data == 'on' AND in_array($MissionID, $_Vars_FleetMissions['all']))
+						{
+							$_FormData_Missions[] = $MissionID;
+						}
 					}
 				}
 				if($_FormData_StartTime <= $Now)
@@ -121,7 +122,7 @@ include($_EnginePath.'common.php');
 									}
 									$_FormData_Missions = implode(',', $_FormData_Missions);
 
-									$InsertSFB= "INSERT INTO {{table}} SET ";
+									$InsertSFB = "INSERT INTO {{table}} SET ";
 									$InsertSFB .= "`AdminID` = '{$_User['id']}', ";
 									$InsertSFB .= "`Type` = {$_FormData_Type},";
 									$InsertSFB .= "`BlockMissions` = '{$_FormData_Missions}',";
@@ -165,7 +166,7 @@ include($_EnginePath.'common.php');
 		else if($_GET['cmd'] == 'edit')
 		{
 			$_CMD = 3;
-			$RowID = round($_GET['id']);
+			$RowID = isset($_GET['id']) ? round($_GET['id']) : 0;
 			if($RowID > 0)
 			{
 				$GetEditRow = doquery("SELECT * FROM {{table}} WHERE `ID` = {$RowID} LIMIT 1;", 'smart_fleet_blockade', true);
@@ -217,12 +218,12 @@ include($_EnginePath.'common.php');
 							}
 						}
 
-						if($_POST['action'] == 'save')
+						if(isset($_POST['action']) && $_POST['action'] == 'save')
 						{
-							$_FormData_StartTime = strtotime($_POST['startTime_date']);
+							$_FormData_StartTime = isset($_POST['startTime_date']) ? strtotime($_POST['startTime_date']) : 0;
 							$_FormData_EndTime = strtotime($_POST['endTime_date']);
 							$_FormData_PostEndTime = strtotime($_POST['postEndTime_date']);
-							$_FormData_DontBlockIfIdle = ($_POST['dontBlockIfIdle'] == 'on' ? 1 : 0);
+							$_FormData_DontBlockIfIdle = (isset($_POST['dontBlockIfIdle']) && $_POST['dontBlockIfIdle'] == 'on' ? 1 : 0);
 							$_FormData_Reason = $_POST['reason'];
 							$_FormData_Missions = array();
 							if(!empty($_POST['mission']) AND (array)$_POST['mission'] === $_POST['mission'])
@@ -278,7 +279,7 @@ include($_EnginePath.'common.php');
 										}
 										$_FormData_Missions = implode(',', $_FormData_Missions);
 
-										$UpdateSFB= "UPDATE {{table}} SET ";
+										$UpdateSFB = "UPDATE {{table}} SET ";
 										$UpdateSFB .= "`BlockMissions` = '{$_FormData_Missions}',";
 										$UpdateSFB .= "`Reason` = '{$_FormData_Reason}',";
 										$UpdateSFB .= "`StartTime` = '{$_FormData_StartTime}', ";
@@ -396,6 +397,7 @@ include($_EnginePath.'common.php');
 		$TPL = gettemplate('admin/SFBSettings_body_manage');
 		$TPL_Manage_MissionSelector = gettemplate('admin/SFBSettings_body_manage_missionselector');
 	
+		$_Lang['Insert_MissionSelectors'] = '';
 		foreach($_Vars_FleetMissions['all'] as $MissionID)
 		{
 			$MissionSelector = array();
@@ -417,7 +419,7 @@ include($_EnginePath.'common.php');
 			$_Lang['Insert_MissionSelectors'] .= parsetemplate($TPL_Manage_MissionSelector, $MissionSelector);
 		}
 
-		if(in_array($_FormData_Type, $_AllowedTypes))
+		if(isset($_FormData_Type) && in_array($_FormData_Type, $_AllowedTypes))
 		{
 			$_Lang['Insert_Form_Select_Type_'.$_FormData_Type] = $_Selected;
 		}
@@ -437,7 +439,7 @@ include($_EnginePath.'common.php');
 		{
 			$_Lang['Insert_endTime_date'] = date('Y-m-d H:i:s', $_FormData_EndTime);
 		}
-		if($HidePostEndTime !== true)
+		if(!isset($HidePostEndTime))
 		{
 			if(empty($_FormData_PostEndTime))
 			{
@@ -452,7 +454,7 @@ include($_EnginePath.'common.php');
 		{
 			$_Lang['Insert_Form_ElementID'] = $_FormData_ElementID;
 		}
-		if($_FormData_DontBlockIfIdle == 1)
+		if(isset($_FormData_DontBlockIfIdle) && $_FormData_DontBlockIfIdle == 1)
 		{
 			$_Lang['Insert_Form_Select_DontBlockIfIdle'] = $_Checked;
 		}
@@ -475,27 +477,27 @@ include($_EnginePath.'common.php');
 
 	if(empty($_Lang['Insert_MsgBoxText']))
 	{
-		if($_GET['msg'] == 'addok')
+		if(isset($_GET['msg']) && $_GET['msg'] == 'addok')
 		{
 			$_Lang['Insert_MsgBoxText'] = $_Lang['SFB_Response_AddOK'];
 			$_Lang['Insert_MsgBoxColor'] = 'lime';
 		}
-		else if($_GET['msg'] == 'editok')
+		else if(isset($_GET['msg']) && $_GET['msg'] == 'editok')
 		{
 			$_Lang['Insert_MsgBoxText'] = $_Lang['SFB_Response_EditOK'];
 			$_Lang['Insert_MsgBoxColor'] = 'lime';
 		}
-		else if($_GET['msg'] == 'editold')
+		else if(isset($_GET['msg']) && $_GET['msg'] == 'editold')
 		{
 			$_Lang['Insert_MsgBoxText'] = $_Lang['SFB_Response_EditOldRow'];
 			$_Lang['Insert_MsgBoxColor'] = 'orange';
 		}
-		else if($_GET['msg'] == 'editnoid')
+		else if(isset($_GET['msg']) && $_GET['msg'] == 'editnoid')
 		{
 			$_Lang['Insert_MsgBoxText'] = $_Lang['SFB_Response_EditRowNoExists'];
 			$_Lang['Insert_MsgBoxColor'] = 'red';
 		}
-		else if($_GET['msg'] == 'editbadid')
+		else if(isset($_GET['msg']) && $_GET['msg'] == 'editbadid')
 		{
 			$_Lang['Insert_MsgBoxText'] = $_Lang['SFB_Response_EditBadID'];
 			$_Lang['Insert_MsgBoxColor'] = 'red';

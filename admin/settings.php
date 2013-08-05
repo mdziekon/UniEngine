@@ -97,7 +97,7 @@ include($_EnginePath.'common.php');
 		'BannedMailDomains' => function($Value){ if(!preg_match('/^[a-zA-Z0-9\.\_\-\|]{1,}$/D', $Value)){ return false; } return $Value; },
 	);
 	
-	if($_GET['configcachereload'] == 1)
+	if(isset($_GET['configcachereload']) && $_GET['configcachereload'] == 1)
 	{
 		$Query_GetGameConfig = "SELECT * FROM {{table}};";
 		$Result_GetGameConfig = doquery($Query_GetGameConfig, 'config');
@@ -110,11 +110,11 @@ include($_EnginePath.'common.php');
 		$_Lang['Msg_Color'] = 'lime';
 		$_Lang['Msg_Text'] = $_Lang['Messages_ConfigCacheReloaded'];
 	}
-	else if($_POST['opt_save'] == '1')
+	else if(isset($_POST['opt_save']) && $_POST['opt_save'] == '1')
 	{				
 		foreach($AllowedVars as $Name)
 		{
-			$Value = $_POST[$Name];
+			$Value = isset($_POST[$Name]) ? $_POST[$Name] : null;
 			if(in_array($Name, $AllowedVars))
 			{
 				if(!empty($_PreProcessor[$Name]))
@@ -129,7 +129,7 @@ include($_EnginePath.'common.php');
 				}
 				if($Value != $VarToCheck)
 				{
-					if($_Sanitizers[$Name] !== null)
+					if(isset($_Sanitizers[$Name]))
 					{
 						$Value = $_Sanitizers[$Name]($Value);
 					}
