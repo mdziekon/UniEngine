@@ -19,12 +19,14 @@ include($_EnginePath.'common.php');
 	}
 		
 	includeLang('admin/telemetry');
+	$_Lang['Places'] = '';
 
 	$Title = $_Lang['Page_Title'];
 
 	$_Lang['Hide_MessageBox'] = $_Lang['Hide_Headers'] = $Hide;
 	$_Lang['MessageBox_Color'] = 'red';
 
+	$PlaceID = 0;
 	if(!empty($_GET['pid']))
 	{
 		$_Lang['MessageBox_Text'] = $_Lang['Tele_Msg_BadPID'];
@@ -78,7 +80,7 @@ include($_EnginePath.'common.php');
 		{
 			$SelectDataLimit = preg_replace('#[^0-9\ \,]#si', '', $_POST['filter_limit']);
 		}
-		if($_POST['filter_jumps'] == 'on')
+		if(isset($_POST['filter_jumps']) && $_POST['filter_jumps'] == 'on')
 		{
 			$_POST['filter_jumps_min'] = str_replace(',', '.', $_POST['filter_jumps_min']);
 			$MinimalDiff = floatval($_POST['filter_jumps_min']);
@@ -90,6 +92,9 @@ include($_EnginePath.'common.php');
 			}
 		}
 
+		$InsertWhere = '';
+		$InsertOrder = '';
+		$InsertLimit = '';
 		if(!empty($SelectDataWhere))
 		{
 			$InsertWhere = " AND {$SelectDataWhere}";
@@ -155,11 +160,19 @@ include($_EnginePath.'common.php');
 						'user_id' => $DataPoint['UserID'],
 						'mode_id' => $ModesMap[$DataKey],
 						'score' => $TimeValue,
-						'orgstamp' => $DataPoints['TimeStamp'],
+						'orgstamp' => $DataPoint['TimeStamp'],
 						'stamp' => $CreateStamp
 					);
 					$GetUsernames[$DataPoint['UserID']] = $DataPoint['UserID'];
-
+					
+					if(!isset($AvgScores[$ModesMap[$DataKey]]))
+					{
+						$AvgScores[$ModesMap[$DataKey]] = 0;
+					}
+					if(!isset($AvgCounts[$ModesMap[$DataKey]]))
+					{
+						$AvgCounts[$ModesMap[$DataKey]] = 0;
+					}
 					$AvgScores[$ModesMap[$DataKey]] += $TimeValue;
 					$AvgCounts[$ModesMap[$DataKey]] += 1;
 				}
@@ -192,7 +205,7 @@ include($_EnginePath.'common.php');
 				$Modes[$ModeID]['avg'] = sprintf($_Lang['Tele_Legend_Avg'], sprintf('%0.3f', $Value));
 			}
 
-			if($DeleteScoreJumps === true)
+			if(isset($DeleteScoreJumps))
 			{
 				foreach($Scores as &$ScoreData)
 				{

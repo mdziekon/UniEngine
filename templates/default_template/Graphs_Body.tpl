@@ -54,7 +54,7 @@ function Graph() {
                 color: Modes[{$sv.mode}].color,
                 data: [
                 {foreach from=$v.graph->runs key=gk item=gv name=runs}
-                    {if $sv.scores[$gk]}[{$gk}, {$sv.scores[$gk]}]{if !$smarty.foreach.runs.last},{/if}{/if}
+                    {if isset($sv.scores[$gk])}[{$gk}, {$sv.scores[$gk]}]{if !$smarty.foreach.runs.last},{/if}{/if}
 					
                 {/foreach}
                 ]

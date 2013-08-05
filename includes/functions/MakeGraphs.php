@@ -164,7 +164,7 @@ class RunFilter
 		{
 			$HasRuns = true;
 			$Data['stamp'] = substr($Data['stamp'], 0, 30);
-			if(empty($StampsIDs[$Data['stamp']]) AND $StampsIDs[$Data['stamp']] !== 0)
+			if(empty($StampsIDs[$Data['stamp']]) && (!isset($StampsIDs[$Data['stamp']]) || $StampsIDs[$Data['stamp']] !== 0))
 			{
 				$StampsIDs[$Data['stamp']] = $RunMapID;
 				$RunMapID += 1;
@@ -222,7 +222,7 @@ class RunFilter
 		return $this->runmap[$run_id];
 	}
 
-	function FromGET($cx, $AllScores)
+	static function FromGET($cx, $AllScores)
 	{
 		return new RunFilter($cx, $AllScores);
 	}
