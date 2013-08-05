@@ -17,10 +17,11 @@ include($_EnginePath.'common.php');
 		$RowTPL = gettemplate('admin/FleetControl_row');
 
 		$Parse = $_Lang;
+		$Parse['ChronoApplets'] = '';
 
-		if($_POST['process'] == 1)
+		if(isset($_POST['process']) && $_POST['process'] == 1)
 		{
-			if($_POST['cmd'] == 1 OR $_POST['cmd'] == 2)
+			if(isset($_POST['cmd']) && ($_POST['cmd'] == 1 || $_POST['cmd'] == 2))
 			{
 				$UseFallback = ($_POST['cmd'] == 1 ? false : true);
 				
@@ -44,22 +45,26 @@ include($_EnginePath.'common.php');
 					{
 						include($_EnginePath.'includes/functions/FleetControl_Retreat.php');
 						$Result = FleetControl_Retreat("`fleet_id` IN (".implode(', ', $ActionArray).")", $UseFallback);
-						if($Result['Updates']['Fleets'] > 0)
+						if(isset($Result['Updates']['Fleets']) && $Result['Updates']['Fleets'] > 0)
 						{
 							$MessageUse = ($UseFallback ? $_Lang['SysMsg_XFleetsFallenBack'] : $_Lang['SysMsg_XFleetsRetreated']);
 							$SysMessage[] = array('color' => 'lime', 'text' => sprintf($MessageUse, prettyNumber($Result['Updates']['Fleets']), prettyNumber($Result['Rows'])));
-							if($Result['Updates']['ACS'] > 0 OR $Result['Deletes']['ACS'] > 0)
+							if((isset($Result['Updates']['ACS']) && $Result['Updates']['ACS'] > 0)  || (isset($Result['Deletes']['ACS']) && $Result['Deletes']['ACS'] > 0))
 							{
 								$MessageUse = ($UseFallback ? $_Lang['SysMsg_XACSChanged'] : $_Lang['SysMsg_XACSChanged']);
 								$SysMessage[] = array('color' => 'lime', 'text' => sprintf($MessageUse, prettyNumber($Result['Updates']['ACS']), prettyNumber($Result['Deletes']['ACS'])));
 							}
 							
-							if($_POST['sendNotice'] == 'on')
+							if(isset($_POST['sendNotice']) && $_POST['sendNotice'] == 'on')
 							{
-								$GetOnwersIDs = implode(', ', array_keys($Result['Types']));
-								$GetOwnersQuery = "SELECT `fleet_owner`, COUNT(`fleet_id`) AS `Count`, '1' AS `Type` FROM {{table}} WHERE `fleet_id` IN ({$GetOnwersIDs}) GROUP BY `fleet_owner`";
-								$GetOwnersQuery .= " UNION ";
-								$GetOwnersQuery .= "SELECT `fleet_owner`, COUNT(`fleet_id`) AS `Count`, '2' AS `Type` FROM {{table}} GROUP BY `fleet_owner`;";
+								$GetOwnersIDs = implode(', ', array_keys($Result['Types']));
+								$GetOwnersQuery = '';
+								$GetOwnersQuery .= "SELECT `fleet_owner`, COUNT(`fleet_id`) AS `Count`, '1' AS `Type` ";
+								$GetOwnersQuery .= "FROM {{table}} ";
+								$GetOwnersQuery .= "WHERE `fleet_id` IN ({$GetOwnersIDs}) GROUP BY `fleet_owner` ";
+								$GetOwnersQuery .= "UNION ";
+								$GetOwnersQuery .= "SELECT `fleet_owner`, COUNT(`fleet_id`) AS `Count`, '2' AS `Type` ";
+								$GetOwnersQuery .= "FROM {{table}} GROUP BY `fleet_owner`;";
 								
 								$GetOwners = doquery($GetOwnersQuery, 'fleets');
 								if(mysql_num_rows($GetOwners) > 0)
@@ -77,18 +82,8 @@ include($_EnginePath.'common.php');
 										continue;
 									}
 									
-									$SendMessages[] = array
-									(
-										'id_owner' => $UserID,
-										'id_sender' => '0',
-										'type' => 80,
-										'time' => $Now,
-										'from' => '002',
-										'subject' => '022',
-										'text' => json_encode(array('msg_id' => $ThisMsgID, 'args' => array(prettyNumber($UserData['1']), prettyNumber($UserData['2'])))),
-									);
-								}								
-								Cache_Message($SendMessages);
+									Cache_Message($UserID, '0', $Now, 80, '002', '022', json_encode(array('msg_id' => $ThisMsgID, 'args' => array(prettyNumber($UserData['1']), prettyNumber($UserData['2'])))));
+								}
 							}
 						}
 						else
@@ -119,9 +114,10 @@ include($_EnginePath.'common.php');
 		}
 		else
 		{
-			$Parse['Hide_Message']= 'inv';
+			$Parse['Hide_Message'] = 'inv';
 		}
-
+		
+		$HiddenOptions = 0;
 		if(!CheckAuth('supportadmin'))
 		{
 			$Parse['Hide_OptionRetreat'] = 'hide';
@@ -194,7 +190,8 @@ include($_EnginePath.'common.php');
 			$Now = time();
 
 			include("{$_EnginePath}/includes/functions/InsertJavaScriptChronoApplet.php");
-
+			
+			$AllFleetParse = '';
 			foreach($Data as $FleetID => $FleetData)
 			{
 				$FleetParse = false;
@@ -207,7 +204,7 @@ include($_EnginePath.'common.php');
 				$FleetParse['Fleet_Owner']= "<a href=\"user_info.php?uid={$FleetData['fleet_owner']}\">{$UsersNicks[$FleetData['fleet_owner']]}<br/>[{$FleetData['fleet_owner']}]</a>";
 
 				$FleetParse['Fleet_Mission'] = $_Lang['type_mission'][$FleetData['fleet_mission']];
-				if($ACSData[$FleetID] > 0)
+				if(isset($ACSData[$FleetID]) && $ACSData[$FleetID] > 0)
 				{
 					if($FleetData['fleet_mission'] == 1)
 					{
@@ -225,13 +222,13 @@ include($_EnginePath.'common.php');
 				}
 				if(($FleetData['fleet_start_time'] <= $Now AND $FleetData['fleet_mission'] != 5) OR ($FleetData['fleet_mission'] == 5 AND $FleetData['fleet_end_stay'] <= $Now))
 				{
-				$FleetParse['Fleet_Mission'] .= "<br/>[{$_Lang['Coming_back']}]";
+					$FleetParse['Fleet_Mission'] .= "<br/>[{$_Lang['Coming_back']}]";
 				}
 				if($FleetData['fleet_mission'] == 5)
 				{
 					if($FleetData['fleet_start_time'] <= $Now AND $FleetData['fleet_end_stay'] > $Now)
 					{
-						$FleetParse['Fleet_Mission'].= "<br/>(<span id=\"bxxs{$FleetID}\">".pretty_time($FleetData['fleet_end_stay'] - $Now, true, 'D')."</span>)";
+						$FleetParse['Fleet_Mission'] .= "<br/>(<span id=\"bxxs{$FleetID}\">".pretty_time($FleetData['fleet_end_stay'] - $Now, true, 'D')."</span>)";
 						$Parse['ChronoApplets'] .= InsertJavaScriptChronoApplet('s', $FleetID, $FleetData['fleet_end_stay'] - $Now);
 					}
 				}
@@ -261,7 +258,7 @@ include($_EnginePath.'common.php');
 				}
 				$FleetParse['Fleet_Start_Title'] = ($FleetData['fleet_start_type'] == '1' ? $_Lang['Start_from_planet'] : $_Lang['Start_from_moon']);
 				$FleetParse['Fleet_Start'] = "<a href=\"../galaxy.php?mode=3&amp;galaxy={$FleetData['fleet_start_galaxy']}&amp;system={$FleetData['fleet_start_system']}&amp;planet={$FleetData['fleet_start_planet']}\">[{$FleetData['fleet_start_galaxy']}:{$FleetData['fleet_start_system']}:{$FleetData['fleet_start_planet']}] ".($FleetData['fleet_start_type'] == '1' ? $_Lang['Planet_sign'] : $_Lang['Moon_sign'])."</a>";
-				$FleetParse['Fleet_Start'].= "<br/>".date('d.m.Y', $FleetData['fleet_send_time'])."<br/>".date('H:i:s', $FleetData['fleet_send_time'])."<br/>(<span id=\"bxxa{$FleetID}\">".pretty_time($Now - $FleetData['fleet_send_time'], true, 'D')."</span> {$_Lang['_ago']})";
+				$FleetParse['Fleet_Start'] .= "<br/>".date('d.m.Y', $FleetData['fleet_send_time'])."<br/>".date('H:i:s', $FleetData['fleet_send_time'])."<br/>(<span id=\"bxxa{$FleetID}\">".pretty_time($Now - $FleetData['fleet_send_time'], true, 'D')."</span> {$_Lang['_ago']})";
 				$Parse['ChronoApplets'] .= InsertJavaScriptChronoApplet('a', $FleetID, $FleetData['fleet_send_time'], true, true);
 
 				$FleetParse['Fleet_End_Title'] = ($FleetData['fleet_end_type'] == '1' ? $_Lang['Target_is_planet'] : ($FleetData['fleet_end_type'] == '2' ? $_Lang['Target_is_debris'] : $_Lang['Target_is_moon']));
@@ -275,11 +272,11 @@ include($_EnginePath.'common.php');
 					$FleetParse['Fleet_end_time_set'] = pretty_time($FleetData['fleet_start_time'] - $Now, true, 'D');
 					$Parse['ChronoApplets'] .= InsertJavaScriptChronoApplet('b', $FleetID, $FleetData['fleet_start_time'] - $Now);
 				}
-				$FleetParse['Fleet_End'].= "<br/>".date('d.m.Y', $FleetData['fleet_start_time'])."<br/>".date('H:i:s', $FleetData['fleet_start_time'])."<br/>(<span id=\"bxxb{$FleetID}\">{$FleetParse['Fleet_end_time_set']}</span>)";
+				$FleetParse['Fleet_End'] .= "<br/>".date('d.m.Y', $FleetData['fleet_start_time'])."<br/>".date('H:i:s', $FleetData['fleet_start_time'])."<br/>(<span id=\"bxxb{$FleetID}\">{$FleetParse['Fleet_end_time_set']}</span>)";
 
 				if($FleetData['fleet_target_owner'] > 0)
 				{
-					$FleetParse['Fleet_End_owner']= "{$UsersNicks[$FleetData['fleet_target_owner']]}<br/>[{$FleetData['fleet_target_owner']}]";
+					$FleetParse['Fleet_End_owner'] = "{$UsersNicks[$FleetData['fleet_target_owner']]}<br/>[{$FleetData['fleet_target_owner']}]";
 					if($FleetData['fleet_target_owner'] == $FleetData['fleet_owner'])
 					{
 						$FleetParse['Fleet_End_owner_color'] = 'lime';
@@ -311,7 +308,7 @@ include($_EnginePath.'common.php');
 					$FleetParse['Fleet_back_time_set'] = pretty_time($FleetData['fleet_end_time'] - $Now, true, 'D');
 					$Parse['ChronoApplets'] .= InsertJavaScriptChronoApplet('c', $FleetID, $FleetData['fleet_end_time'] - $Now);
 				}
-				$FleetParse['Fleet_Back_time'].= date('d.m.Y', $FleetData['fleet_end_time'])."<br/>".date('H:i:s', $FleetData['fleet_end_time'])."<br/>(<span id=\"bxxc{$FleetID}\">{$FleetParse['Fleet_back_time_set']}</span>)";
+				$FleetParse['Fleet_Back_time'] = date('d.m.Y', $FleetData['fleet_end_time'])."<br/>".date('H:i:s', $FleetData['fleet_end_time'])."<br/>(<span id=\"bxxc{$FleetID}\">{$FleetParse['Fleet_back_time_set']}</span>)";
 
 				$AllFleetParse .= parsetemplate($RowTPL, $FleetParse);
 			}
