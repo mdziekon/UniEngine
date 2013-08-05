@@ -20,8 +20,8 @@ include($_EnginePath.'common.php');
 	includeLang('FleetMission_MissileAttack');
 	includeLang('admin/messagelist');
 
-	$BodyTpl= gettemplate('admin/messagelist_body');
-	$RowsTpl= gettemplate('admin/messagelist_table_rows');
+	$BodyTpl = gettemplate('admin/messagelist_body');
+	$RowsTpl = gettemplate('admin/messagelist_table_rows');
 
 	$Prev		= (!empty($_POST['prev'])) ? true : false;
 	$Next		= (!empty($_POST['next'])) ? true : false;
@@ -29,13 +29,13 @@ include($_EnginePath.'common.php');
 	$DelSelSoft = (!empty($_POST['delsel_soft'])) ? true : false;
 	$SetRead	= (!empty($_POST['setsel_read'])) ? true : false;
 	$SetNotRead = (!empty($_POST['setsel_notread'])) ? true : false;
-	$CurrPage	= (!empty($_POST['curr'])) ? intval($_POST['curr']) : 1;
-	$Selected	= (!empty($_POST['sele']) OR $_POST['sele'] === '0') ? intval($_POST['sele']) : 100;
-	$SelType	= (!empty($_POST['type']) OR $_POST['type'] === '0') ? intval($_POST['type']) : 100;
-	$SelPage	= round($_POST['page_input']);
+	$CurrPage	= isset($_POST['curr']) ? intval($_POST['curr']) : 1;
+	$Selected	= isset($_POST['sele']) ? intval($_POST['sele']) : 100;
+	$SelType	= isset($_POST['type']) ? intval($_POST['type']) : 100;
+	$SelPage	= isset($_POST['page_input']) ? round($_POST['page_input']) : null;
 	if($SelPage < 1)
 	{
-		$SelPage = round($_POST['page_select']);
+		$SelPage = (isset($_POST['page_select']) ? round($_POST['page_select']) : 0);
 	}
 	if($SelPage < 1)
 	{
@@ -43,7 +43,7 @@ include($_EnginePath.'common.php');
 	}
 	if(empty($_POST))
 	{
-		if($_GET['mid'] > 0)
+		if(isset($_GET['mid']) && $_GET['mid'] > 0)
 		{
 			$MID = intval($_GET['mid']);
 			if($MID > 0)
@@ -53,7 +53,7 @@ include($_EnginePath.'common.php');
 		}
 	}
 
-	if($_POST['msg_id'] > 0)
+	if(isset($_POST['msg_id']) && $_POST['msg_id'] > 0)
 	{
 		$_POST['msg_id'] = intval($_POST['msg_id']);
 		if($_POST['msg_id'] <= 0)
@@ -61,9 +61,9 @@ include($_EnginePath.'common.php');
 			$_POST['msg_id'] = 0;
 		}
 	}
-	if($_POST['msg_id'] == 0)
+	if(!isset($_POST['msg_id']) || $_POST['msg_id'] == 0)
 	{
-		if($_POST['user_id'] > 0)
+		if(isset($_POST['user_id']) && $_POST['user_id'] > 0)
 		{
 			$_POST['user_id'] = intval($_POST['user_id']);
 			if($_POST['user_id'] <= 0)
@@ -77,7 +77,7 @@ include($_EnginePath.'common.php');
 		}
 		if($_POST['user_id'] == 0)
 		{
-			if($_GET['uid'] > 0)
+			if(isset($_GET['uid']) && $_GET['uid'] > 0)
 			{
 				$UID = intval($_GET['uid']);
 				if($UID > 0)
@@ -89,11 +89,11 @@ include($_EnginePath.'common.php');
 	}
 	
 	// Do actions in here!
-	if($DelSelSoft == true OR $DelSel == true OR $SetRead == true OR $SetNotRead == true)
+	if($DelSelSoft === true || $DelSel === true || $SetRead === true || $SetNotRead === true)
 	{
 		if(CheckAuth('supportadmin'))
 		{
-			if(!empty($_POST['sele']) AND (array)$_POST['sele'] === $_POST['sele'])
+			if(!empty($_POST['sele']) && (array)$_POST['sele'] === $_POST['sele'])
 			{
 				foreach($_POST['sele'] as $MessId => $Value)
 				{
@@ -122,24 +122,25 @@ include($_EnginePath.'common.php');
 					if(!empty($DeleteIDs))
 					{
 						$DeleteIDs = implode(',', $DeleteIDs);
-						if($DelSelSoft == true OR $DelSel == true)
+						$SelectThreads = false;
+						if($DelSelSoft === true || $DelSel === true)
 						{
 							$SelectThreads = doquery("SELECT `Thread_ID` FROM {{table}} WHERE `Thread_ID` > 0 AND `id` IN ({$DeleteIDs});", 'messages');
 						}
 
-						if($DelSelSoft == true)
+						if($DelSelSoft === true)
 						{
 							doquery("UPDATE {{table}} SET `deleted` = 1, `Thread_IsLast` = 0 WHERE `id` IN ({$DeleteIDs});", 'messages');
 						}
-						elseif($DelSel == true)
+						else if($DelSel === true)
 						{
 							doquery("DELETE FROM {{table}} WHERE `id` IN ({$DeleteIDs});", 'messages');
 						}
-						elseif($SetRead == true)
+						else if($SetRead === true)
 						{
 							doquery("UPDATE {{table}} SET `read` = 1 WHERE `id` IN ({$DeleteIDs});", 'messages');
 						}
-						elseif($SetNotRead == true)
+						else if($SetNotRead === true)
 						{
 							doquery("UPDATE {{table}} SET `read` = 0 WHERE `id` IN ({$DeleteIDs});", 'messages');
 						}
@@ -183,9 +184,9 @@ include($_EnginePath.'common.php');
 		$Selected = $SelType;
 		$ViewPage = 1;
 	}
-	elseif($CurrPage != $SelPage)
+	else if($CurrPage != $SelPage)
 	{
-		$ViewPage = ( !empty($SelPage) ) ? $SelPage : 1;
+		$ViewPage = !empty($SelPage) ? $SelPage : 1;
 	}
 
 	$ExcludedUsers = false;
@@ -237,13 +238,13 @@ include($_EnginePath.'common.php');
 		$DontBlockCopy = true;
 	} 
 	// $_POST['msg_id'] is SAFE for SQL
-	if($_POST['msg_id'] > 0)
+	if(isset($_POST['msg_id']) && $_POST['msg_id'] > 0)
 	{
 		$WhereClausures[] = "{{table}}.`id` = {$_POST['msg_id']}";
 		$DontBlockCopy = true;
 	}
 
-	if($DontBlockCopy !== true)
+	if(!isset($DontBlockCopy))
 	{
 		$WhereClausures[] = '`text` NOT LIKE \'{COPY_MSG_#%}\'';
 	}
@@ -256,7 +257,7 @@ include($_EnginePath.'common.php');
 	$Mess = doquery("SELECT COUNT(`id`) AS `max` FROM {{table}}{$WhereClausures};", 'messages', true);
 	$MaxPage = ceil(($Mess['max'] / $_PerPage));
 
-	if($_POST['stay'] == 'true')
+	if(isset($_POST['stay']) && $_POST['stay'] == 'true')
 	{
 		$Selected = $SelType;
 		$ViewPage = (!empty($SelPage)) ? $SelPage : 1;
@@ -278,7 +279,7 @@ include($_EnginePath.'common.php');
 			$ViewPage = 1;
 		}
 	}
-	elseif($Next == true)
+	else if($Next == true)
 	{
 		$CurrPage += 1;
 		if($CurrPage <= $MaxPage)
@@ -292,6 +293,7 @@ include($_EnginePath.'common.php');
 	}
 
 	$parse = $_Lang;
+	$parse['mlst_data_rows'] = '';
 	$parse['mlst_data_page'] = $ViewPage;
 	$parse['mlst_data_pagemax'] = $MaxPage;
 	$parse['mlst_data_sele'] = $Selected;
@@ -351,8 +353,8 @@ include($_EnginePath.'common.php');
 		if($row['id_sender'] == 0)
 		{
 			$MsgArray = json_decode($row['text'], true);
-			$row['from'] = $_Lang['msg_const']['senders']['system'][$row['from']];
-			$row['subject'] = $_Lang['msg_const']['subjects'][$row['subject']];
+			$row['from'] = (!empty($row['from']) ? $_Lang['msg_const']['senders']['system'][$row['from']] : '&nbsp;');
+			$row['subject'] = (!empty($row['subject']) ? $_Lang['msg_const']['subjects'][$row['subject']] : '&nbsp;');
 			if(empty($MsgArray['msg_text']))
 			{
 				if(!empty($MsgArray['msg_id']))
@@ -385,7 +387,7 @@ include($_EnginePath.'common.php');
 			if(CheckAuth('user', AUTHCHECK_HIGHER, $row))
 			{
 				$row['from'] = $_Lang['msg_const']['senders']['rangs'][GetAuthLabel($row)].' '.$row['username'].$AddFrom;
-				$row['subject'] = stripslashes($CurMess['subject']);
+				$row['subject'] = stripslashes($row['subject']);
 			}
 			else
 			{
@@ -418,7 +420,7 @@ include($_EnginePath.'common.php');
 			$bloc['mlst_status'][] = '<img src="../images/bin.png" class="tipBin"/>';
 		}
 		$bloc['mlst_id'] = $row['id'];
-		if($_POST['msg_id'] == $row['id'])
+		if(isset($_POST['msg_id']) && $_POST['msg_id'] == $row['id'])
 		{
 			$bloc['mlst_rowcolor'] = 'lime';
 		}
@@ -482,6 +484,7 @@ include($_EnginePath.'common.php');
 			}
 		}
 		
+		$JoinMsgs = '';
 		foreach($parse['mlst_data_rows'] as $RowData)
 		{
 			$JoinMsgs .= parsetemplate($RowsTpl, $RowData);
