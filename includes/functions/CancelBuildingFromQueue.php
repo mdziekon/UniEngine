@@ -20,7 +20,7 @@ function CancelBuildingFromQueue(&$CurrentPlanet, $CurrentUser)
 		$RemovedTime = $CanceledIDArray[3] - $Now;
 		$BuildMode = $CanceledIDArray[4]; // Element Build Mode (build/destroy)
 
-		if($_Vars_PremiumBuildings[$Element] == 1)
+		if(isset($_Vars_PremiumBuildings[$Element]) && $_Vars_PremiumBuildings[$Element] == 1)
 		{
 			return false;
 		}

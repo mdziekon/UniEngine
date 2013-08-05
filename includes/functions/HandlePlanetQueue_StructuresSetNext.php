@@ -257,7 +257,7 @@ function HandlePlanetQueue_StructuresSetNext(&$ThePlanet, &$TheUser, $CurrentTim
 	if($RunStandAlone === true)
 	{
 		$Return = false;
-		if($NeedUpdate === true)
+		if(isset($NeedUpdate))
 		{
 			$Query_Update = '';
 			$Query_Update .= "UPDATE {{table}} SET ";

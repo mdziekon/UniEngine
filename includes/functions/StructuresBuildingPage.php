@@ -113,6 +113,10 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 	$CurrentQueue = $CurrentPlanet['buildQueue'];
 	if(!empty($CurrentQueue))
 	{
+		$LockResources['metal'] = 0;
+		$LockResources['crystal'] = 0;
+		$LockResources['deuterium'] = 0;
+		
 		$CurrentQueue = explode(';', $CurrentQueue);
 		$QueueIndex = 0;
 		foreach($CurrentQueue as $QueueID => $QueueData)
