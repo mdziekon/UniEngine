@@ -6,6 +6,10 @@ $(document).ready(function()
 	
     $('a', MsgRows).each(function()
     {
+		if(typeof $(this).attr('href') === 'undefined' || $(this).attr('href') == '#')
+		{
+			return;
+		}
         $(this).attr('href', '../'+$(this).attr('href')).attr('target', '_blank');
     });
     
