@@ -65,7 +65,7 @@ function CheckUserSessionCookie()
 			$ExpireTime = 0;
 		}
 
-		if(!preg_match('/^[0-9]{1,4}\_[0-9]{1,4}\_[0-9]{1,3}$/D', $_COOKIE['var_1124']))
+		if(!isset($_COOKIE['var_1124']) || !preg_match('/^[0-9]{1,4}\_[0-9]{1,4}\_[0-9]{1,3}$/D', $_COOKIE['var_1124']))
 		{
 			$_COOKIE['var_1124'] = '';
 		}

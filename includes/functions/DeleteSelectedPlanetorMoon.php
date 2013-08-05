@@ -36,6 +36,7 @@ function DeleteSelectedPlanetorMoon()
 	}
 	
 	$Query_UpdateUser_Set[] = "`current_planet` = `id_planet`";
+	$Query_UpdateUser = '';
 	$Query_UpdateUser .= "UPDATE {{table}} SET ";
 	$Query_UpdateUser .= implode(', ', $Query_UpdateUser_Set);
 	$Query_UpdateUser .= " WHERE `id` = {$_User['id']} LIMIT 1;";
@@ -51,6 +52,7 @@ function DeleteSelectedPlanetorMoon()
 	$PlanetImplode = implode(',', $PlanetIDs);
 	if(PLANET_ABANDONTIME > 0 AND $_Planet['planet_type'] == 1)
 	{
+		$Query_UpdatePlanets = '';
 		$Query_UpdatePlanets .= "UPDATE {{table}} ";
 		$Query_UpdatePlanets .= "SET `id_owner` = 0, `abandon_time` = UNIX_TIMESTAMP() ";
 		$Query_UpdatePlanets .= "WHERE `id` IN ({$PlanetImplode}) LIMIT {$PlanetCount};";
