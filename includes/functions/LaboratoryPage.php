@@ -144,7 +144,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 			{
 				$TheCommand = $_GET['cmd'];
 				$TechID = isset($_GET['tech']) ? intval($_GET['tech']) : 0;
-				$QueueElementID = (isset($_GET['el']) ? intval($_GET['el']) : -1);
+				$QueueElementID = (isset($_GET['el']) ? intval($_GET['el']) : 0);
 
 				if((in_array($TechID, $_Vars_ElementCategories['tech']) AND $TheCommand == 'search') OR ($TheCommand == 'cancel' AND $QueueElementID >= 0))
 				{
