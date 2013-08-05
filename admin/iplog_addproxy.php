@@ -17,7 +17,7 @@ include($_EnginePath.'common.php');
 	includeLang('admin/iplog_addproxy');
 	$TPL_Body = gettemplate('admin/iplog_addproxy_body');
 	
-	if($_POST['sent'] == '1')
+	if(isset($_POST['sent']) && $_POST['sent'] == '1')
 	{
 		if(!empty($_POST['list']))
 		{
@@ -34,6 +34,7 @@ include($_EnginePath.'common.php');
 			
 			if(!empty($Query_AddIPs_Array))
 			{
+				$Query_AddIPs = '';
 				$Query_AddIPs .= "INSERT INTO {{table}} (`ID`, `Type`, `Value`, `ValueHash`, `SeenCount`, `isProxy`) VALUES ";
 				$Query_AddIPs .= implode(',', $Query_AddIPs_Array);
 				$Query_AddIPs .= " ON DUPLICATE KEY UPDATE ";
@@ -58,6 +59,7 @@ include($_EnginePath.'common.php');
 	
 	if(empty($_MsgBox))
 	{
+		$_MsgBox['Class'] = '';
 		$_MsgBox['Text'] = '&nbsp;';
 	}
 	$_Lang['Insert_MsgBox'] = parsetemplate(gettemplate('_singleRow'), array('Classes' => 'pad2 '.$_MsgBox['Class'], 'Colspan' => 2, 'Text' => $_MsgBox['Text']));

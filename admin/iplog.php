@@ -24,10 +24,13 @@ include($_EnginePath.'common.php');
 		$Proxy_IPID = intval($_POST['proxyEdit']);
 		if($Proxy_IPID > 0)
 		{
-			$Query_GetIP .= "SELECT `ID`, `isProxy` FROM {{table}} WHERE `ID` = {$Proxy_IPID} AND `Type` = 'ip' LIMIT 1;";
+			$Query_GetIP = '';
+			$Query_GetIP .= "SELECT `ID`, `isProxy` FROM {{table}} ";
+			$Query_GetIP .= "WHERE `ID` = {$Proxy_IPID} AND `Type` = 'ip' LIMIT 1;";
 			$Result_GetIP = doquery($Query_GetIP, 'used_ip_and_ua', true);
 			if($Result_GetIP['ID'] == $Proxy_IPID)
 			{
+				$Query_UpdateIP = '';
 				$Query_UpdateIP .= "UPDATE {{table}} SET ";
 				$Query_UpdateIP .= "`isProxy` = ".($Result_GetIP['isProxy'] == 1 ? 'false' : 'true')." ";
 				$Query_UpdateIP .= "WHERE `ID` = {$Proxy_IPID} LIMIT 1;";
@@ -57,13 +60,13 @@ include($_EnginePath.'common.php');
 			$_GET['ipid'] = $_POST['ipid'];
 		}
 			
-		if(empty($_GET['uid']) AND empty($_GET['ipid']))
+		if(empty($_GET['uid']) && empty($_GET['ipid']))
 		{
 			// Do Search and then Redirect to result page (if found)
 			$Search = explode('|', $_POST['search']);
 			$Search = array_map(function($val){return trim($val);}, $Search);
 
-			if($_POST['strict'] == '1')
+			if(isset($_POST['strict']) && $_POST['strict'] == '1')
 			{
 				$UseStrict = true;
 			}
@@ -107,7 +110,7 @@ include($_EnginePath.'common.php');
 						};
 					}
 				}
-				elseif($_POST['type'] == 'uid')
+				else if($_POST['type'] == 'uid')
 				{
 					$Query[0]['table'] = 'users';
 					$Query[0]['select'] = 'id';
@@ -125,7 +128,7 @@ include($_EnginePath.'common.php');
 						return false;
 					};
 				}
-				elseif($_POST['type'] == 'ipstr')
+				else if($_POST['type'] == 'ipstr')
 				{
 					$Query[0]['table'] = 'used_ip_and_ua';
 					$Query[0]['select'] = 'ID';
@@ -151,7 +154,7 @@ include($_EnginePath.'common.php');
 						return false;
 					};
 				}
-				elseif($_POST['type'] == 'ipid')
+				else if($_POST['type'] == 'ipid')
 				{
 					$Query[0]['table'] = 'user_enterlog';
 					$Query[0]['select'] = 'DISTINCT IP_ID';
@@ -201,7 +204,7 @@ include($_EnginePath.'common.php');
 								{
 									$Values = '\''.implode('|', $Temp).'\'';
 								}
-								elseif($QueryData['search'][$FieldID] == 'IN')
+								else if($QueryData['search'][$FieldID] == 'IN')
 								{
 									$Values = '('.implode(', ', $Temp).')';
 								}
@@ -262,7 +265,7 @@ include($_EnginePath.'common.php');
 			{
 				$_GET['uid'] = implode('|', $FoundData['uid']);
 			}
-			elseif(!empty($FoundData['ipid']))
+			else if(!empty($FoundData['ipid']))
 			{
 				$_GET['ipid'] = implode('|', $FoundData['ipid']);
 			}
@@ -303,21 +306,21 @@ include($_EnginePath.'common.php');
 				$_Lang['SortUIDMode'] = '&amp;mode='.($SortMode == 'asc' ? 'desc' : 'asc');
 				$_Lang['SortUIDModeClass'] = $SortMode;
 			}
-			elseif($SortType == 'ipid')
+			else if($SortType == 'ipid')
 			{
 				$Sortings['user']['ipid'] = true;
 				$Sortings['ip']['ipid'] = " ORDER BY `IP_ID` {$SortMode}";
 				$_Lang['SortIPIDMode'] = '&amp;mode='.($SortMode == 'asc' ? 'desc' : 'asc'); 
 				$_Lang['SortIPIDModeClass'] = $SortMode; 
 			}
-			elseif($SortType == 'logcount')
+			else if($SortType == 'logcount')
 			{
 				$Sortings['user']['logcount'] = true;
 				$Sortings['ip']['logcount'] = true;
 				$_Lang['SortLogCountMode'] = '&amp;mode='.($SortMode == 'asc' ? 'desc' : 'asc'); 
 				$_Lang['SortLogCountModeClass'] = $SortMode; 
 			}
-			elseif($SortType == 'logdate')
+			else if($SortType == 'logdate')
 			{
 				$Sortings['user']['logdate'] = true;
 				$Sortings['ip']['logdate'] = true;
@@ -350,7 +353,7 @@ include($_EnginePath.'common.php');
 		if(!empty($GetData['value']))
 		{
 			$GetData['type'] = 'user';
-			$GetData['query'] = "SELECT `id`, `username`, `ip_at_reg`, `user_lastip` FROM {{table}} WHERE `id` IN (".implode(', ', $GetData['value'])."){$Sortings['user']['uid']};";
+			$GetData['query'] = "SELECT `id`, `username`, `ip_at_reg`, `user_lastip` FROM {{table}} WHERE `id` IN (".implode(', ', $GetData['value']).")".(isset($Sortings['user']['uid']) ? $Sortings['user']['uid'] : null).";";
 			$GetData['table'] = 'users';
 			$GetData['tpl'] = 'user';
 		}
@@ -370,14 +373,17 @@ include($_EnginePath.'common.php');
 		if(!empty($GetData['value']))
 		{
 			$GetData['type'] = 'ip';
-			$GetData['query'] = "SELECT DISTINCT `logs`.`User_ID`, `logs`.`IP_ID`, `logs`.`Count`, `logs`.`LastTime`, `values`.`Value`, `values`.`isProxy`, `users`.`username` FROM {{table}} AS `logs` LEFT JOIN `{{prefix}}used_ip_and_ua` AS `values` ON `values`.`ID` = `logs`.`IP_ID` LEFT JOIN `{{prefix}}users` AS `users` ON `users`.`id` = `logs`.`User_ID` WHERE `IP_ID` IN (".implode(', ', $GetData['value'])."){$Sortings['ip']['uid']}{$Sortings['ip']['ipid']};";
+			$GetData['query'] = "SELECT DISTINCT `logs`.`User_ID`, `logs`.`IP_ID`, `logs`.`Count`, `logs`.`LastTime`, `values`.`Value`, `values`.`isProxy`, `users`.`username` FROM {{table}} AS `logs` LEFT JOIN `{{prefix}}used_ip_and_ua` AS `values` ON `values`.`ID` = `logs`.`IP_ID` LEFT JOIN `{{prefix}}users` AS `users` ON `users`.`id` = `logs`.`User_ID` WHERE `IP_ID` IN (".implode(', ', $GetData['value']).")".(isset($Sortings['ip']['uid']) ? $Sortings['ip']['uid'] : null).(isset($Sortings['ip']['ipid']) ? $Sortings['ip']['ipid'] : null).";";
 			$GetData['table'] = 'user_enterlog';
 			$GetData['tpl'] = 'ip';
 		}
 	}
 
-	$_Lang['Insert_Search_Value'] = $ThisUrl['search'];
-	$_Lang['Insert_Search_OptSel_'.$ThisUrl['type']] = 'selected';
+	$_Lang['Insert_Search_Value'] = (isset($ThisUrl['search']) ? $ThisUrl['search'] : '');
+	if(isset($ThisUrl['type']))
+	{
+		$_Lang['Insert_Search_OptSel_'.$ThisUrl['type']] = 'selected';
+	}
 
 	if(!empty($GetData))
 	{
@@ -402,7 +408,7 @@ include($_EnginePath.'common.php');
 				{
 					$Rows[] = $Data;
 				}
-				elseif($GetData['type'] == 'ip')
+				else if($GetData['type'] == 'ip')
 				{
 					if(empty($Data['username']))
 					{
@@ -419,8 +425,12 @@ include($_EnginePath.'common.php');
 						$Rows[$Data['User_ID']]['IP'][$Data['IP_ID']]['isProxy'] = ($Data['isProxy'] ? 'isProxy' : 'noProxy');
 						$Rows[$Data['User_ID']]['IP'][$Data['IP_ID']]['isProxyColor'] = ($Data['isProxy'] ? 'orange' : '');
 					}
+					if(!isset($Rows[$Data['User_ID']]['IP'][$Data['IP_ID']]['Count']))
+					{
+						$Rows[$Data['User_ID']]['IP'][$Data['IP_ID']]['Count'] = 0;
+					}
 					$Rows[$Data['User_ID']]['IP'][$Data['IP_ID']]['Count'] += $Data['Count'];
-					if($Data['LastTime'] > $Rows[$Data['User_ID']]['IP'][$Data['IP_ID']]['LastDateRaw'])
+					if(!isset($Rows[$Data['User_ID']]['IP'][$Data['IP_ID']]['LastDateRaw']) || $Data['LastTime'] > $Rows[$Data['User_ID']]['IP'][$Data['IP_ID']]['LastDateRaw'])
 					{
 						$Rows[$Data['User_ID']]['IP'][$Data['IP_ID']]['LastDateRaw'] = $Data['LastTime'];
 						$Rows[$Data['User_ID']]['IP'][$Data['IP_ID']]['LastDate'] = prettyDate('d m Y, H:i:s', $Data['LastTime'] + SERVER_MAINOPEN_TSTAMP, 1);
@@ -446,6 +456,10 @@ include($_EnginePath.'common.php');
 							$SubRows[$Data['User_ID']][$Data['IP_ID']] = $Data;
 							$SubRows[$Data['User_ID']][$Data['IP_ID']]['isProxy'] = ($Data['isProxy'] ? 'isProxy' : 'noProxy');
 							$SubRows[$Data['User_ID']][$Data['IP_ID']]['isProxyColor'] = ($Data['isProxy'] ? 'orange' : '');
+							if(!isset($IPTable[$Data['IP_ID']]))
+							{
+								$IPTable[$Data['IP_ID']] = 0;
+							}
 							$IPTable[$Data['IP_ID']] += 1;
 							$IPReverse[$Data['IP_ID']] = $Data['Value'];
 						}
@@ -453,13 +467,13 @@ include($_EnginePath.'common.php');
 						{
 							$SubRows[$Data['User_ID']][$Data['IP_ID']]['Count'] += $Data['Count'];
 						}
-						if($Data['LastTime'] > $SubRows[$Data['User_ID']][$Data['IP_ID']]['LastDateRaw'])
+						if(!isset($SubRows[$Data['User_ID']][$Data['IP_ID']]['LastDateRaw']) || $Data['LastTime'] > $SubRows[$Data['User_ID']][$Data['IP_ID']]['LastDateRaw'])
 						{
 							$SubRows[$Data['User_ID']][$Data['IP_ID']]['LastDateRaw'] = $Data['LastTime'];
 							$SubRows[$Data['User_ID']][$Data['IP_ID']]['LastDate'] = prettyDate('d m Y, H:i:s', $Data['LastTime'] + SERVER_MAINOPEN_TSTAMP, 1);
 						}
 					}	
-					if($Sortings['user']['logcount'] === true)
+					if(isset($Sortings['user']['logcount']) && $Sortings['user']['logcount'] === true)
 					{
 						if($SortMode == 'desc')
 						{
@@ -479,7 +493,7 @@ include($_EnginePath.'common.php');
 							array_multisort($SortArray, $SortMode, $SubRows[$Key]);
 						}
 					}
-					elseif($Sortings['user']['logdate'] === true)
+					else if(isset($Sortings['user']['logdate']) && $Sortings['user']['logdate'] === true)
 					{
 						if($SortMode == 'desc')
 						{
@@ -499,7 +513,7 @@ include($_EnginePath.'common.php');
 							array_multisort($SortArray, $SortMode, $SubRows[$Key]);
 						}
 					}
-					elseif($Sortings['user']['ipid'] === true)
+					else if(isset($Sortings['user']['ipid']) && $Sortings['user']['ipid'] === true)
 					{
 						foreach($SubRows as $Key => $Data)
 						{
@@ -515,13 +529,17 @@ include($_EnginePath.'common.php');
 					}
 				}
 			}
-			elseif($GetData['type'] == 'ip')
+			else if($GetData['type'] == 'ip')
 			{
 				foreach($Rows as $UserID => $UserData)
 				{
 					$SubRows[$UserID] = $UserData['IP'];
 					foreach($UserData['IP'] as $ThisData)
 					{
+						if(!isset($IPTable[$ThisData['IP_ID']]))
+						{
+							$IPTable[$ThisData['IP_ID']] = 0;
+						}
 						$IPTable[$ThisData['IP_ID']] += 1;
 						$IPReverse[$ThisData['IP_ID']] = $ThisData['Value'];
 					}
@@ -576,6 +594,10 @@ include($_EnginePath.'common.php');
 				{
 					$ThisData = array_merge($RowDataReduced, $ThisData);
 
+					if(!isset($RowNoTable[$TableKey]))
+					{
+						$RowNoTable[$TableKey] = 0;
+					}
 					$ThisData['RowNo'] = $RowNoTable[$TableKey] + 1;
 					$RowNoTable[$TableKey] += 1;
 					if($ThisData['RowNo'] % 2 == 0)
@@ -587,7 +609,7 @@ include($_EnginePath.'common.php');
 						$ThisData['EvenOrOdd'] = 'odd';
 					}
 
-					$ParsedRows[$TableKey] .= parsetemplate($RowTPL, $ThisData);
+					$ParsedRows[$TableKey] = parsetemplate($RowTPL, $ThisData);
 				}
 			}
 
