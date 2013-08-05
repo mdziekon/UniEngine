@@ -20,7 +20,7 @@ include($_EnginePath.'common.php');
 	$TPL_Body = gettemplate('admin/chatbrowser_body');
 	$TPL_MsgRow = gettemplate('admin/chatbrowser_msgrow');
 	
-	$_RoomID = intval($_GET['rid']);
+	$_RoomID = isset($_GET['rid']) ? intval($_GET['rid']) : 0;
 	if($_RoomID < 0)
 	{
 		$_RoomID = 0;
@@ -35,11 +35,11 @@ include($_EnginePath.'common.php');
 	$_Highlight = 0;
 	
 	// Form Handler
-	if($_POST['sent'] == 1)
+	if(isset($_POST['sent']) && $_POST['sent'] == 1)
 	{
 		$_ThisCMDs = array('DelSelected');
 		
-		if(!empty($_POST['cmd']) OR !in_array($_POST['cmd'], $_ThisCMDs))
+		if(!empty($_POST['cmd']) || !in_array($_POST['cmd'], $_ThisCMDs))
 		{
 			if($_POST['cmd'] == 'DelSelected')
 			{
@@ -57,7 +57,7 @@ include($_EnginePath.'common.php');
 				
 				if(!empty($DeleteMsgs))
 				{
-					$Query_DeleteMsgs .= "DELETE FROM {{table}} WHERE `ID` IN (".implode(',', $DeleteMsgs).") LIMIT ".count($DeleteMsgs).";";
+					$Query_DeleteMsgs = "DELETE FROM {{table}} WHERE `ID` IN (".implode(',', $DeleteMsgs).") LIMIT ".count($DeleteMsgs).";";
 					doquery($Query_DeleteMsgs, 'chat_messages');
 					
 					$DeletedCount = mysql_affected_rows();
@@ -102,7 +102,7 @@ include($_EnginePath.'common.php');
 		{
 			$_Pos_DefaultPos = false;
 			$_Pos_AddLeftSide = true;
-			if($_GET['this'] == '1')
+			if(isset($_GET['this']) && $_GET['this'] == '1')
 			{
 				$_Highlight = $LastID;
 				$_Pos_Where = " AND `chat`.`ID` <= {$LastID} ";
@@ -136,9 +136,10 @@ include($_EnginePath.'common.php');
 		}
 	}
 	
+	$PosOffset = 0;
 	if($_Pos_DefaultPos === false)
 	{
-		$PosOffset = round($_GET['off']);
+		$PosOffset = isset($_GET['off']) ? round($_GET['off']) : 0;
 		if($PosOffset < 0)
 		{
 			$PosOffset += 1;
@@ -162,7 +163,7 @@ include($_EnginePath.'common.php');
 		$_Limit_Offset = 0;
 	}
 	
-	$Query_GetTotalCount .= "SELECT COUNT(*) AS `Count` FROM {{table}} WHERE `RID` = {$_RoomID};";
+	$Query_GetTotalCount = "SELECT COUNT(*) AS `Count` FROM {{table}} WHERE `RID` = {$_RoomID};";
 	$Result_GetTotalCount = doquery($Query_GetTotalCount, 'chat_messages', true);
 	$_Pagination_TotalCount = $Result_GetTotalCount['Count'];
 	
@@ -170,6 +171,7 @@ include($_EnginePath.'common.php');
 	{
 		if(!empty($_Pos_LeftIDWhere))
 		{
+			$Query_GetLeftSideCount = '';
 			$Query_GetLeftSideCount .= "SELECT COUNT(*) AS `Count` FROM {{table}} WHERE ";
 			$Query_GetLeftSideCount .= "`RID` = {$_RoomID} AND `ID` {$_Pos_LeftIDWhere};";
 			$Result_GetLeftSideCount = doquery($Query_GetLeftSideCount, 'chat_messages', true);
@@ -179,11 +181,11 @@ include($_EnginePath.'common.php');
 		{
 			$_Pagination_LeftSideCount = 0;
 		}
-		if($_Pos_RemoveLeftSide === true)
+		if(isset($_Pos_RemoveLeftSide))
 		{
 			$_Pagination_LeftSideCount -= ($_Limit_Offset + $_Limit_PerPage);
 		}
-		if($_Pos_AddLeftSide === true)
+		if(isset($_Pos_AddLeftSide))
 		{
 			$_Pagination_LeftSideCount += ($_Limit_Offset);
 		}
@@ -204,6 +206,7 @@ include($_EnginePath.'common.php');
 			$_Pagination_LeftSideCount = $_Limit_Offset;
 		}
 		
+		$Query_GetMessages = '';
 		$Query_GetMessages .= "SELECT `chat`.*, `user`.`username`, `user`.`authlevel` FROM {{table}} AS `chat` ";
 		$Query_GetMessages .= "LEFT JOIN `{{prefix}}users` AS `user` ON `chat`.`UID` = `user`.`id` ";
 		$Query_GetMessages .= "WHERE ";
@@ -214,11 +217,12 @@ include($_EnginePath.'common.php');
 		$Result_GetMessages = doquery($Query_GetMessages, 'chat_messages');
 	}
 	
-	if($Result_GetMessages != null)
+	$Result_GetMessages_Count = 0;
+	if(isset($Result_GetMessages))
 	{
 		$Result_GetMessages_Count = mysql_num_rows($Result_GetMessages);
 	}
-	if($Result_GetMessages != null AND $Result_GetMessages_Count > 0)
+	if(isset($Result_GetMessages) && $Result_GetMessages_Count > 0)
 	{
 		include($_EnginePath.'includes/functions/BBcodeFunction.php');
 		include_once($_EnginePath.'includes/functions/Pagination.php');
@@ -240,7 +244,6 @@ include($_EnginePath.'common.php');
 		
 		$TempIDGetter = array_keys($MessageRows);
 		$LastSeenID = array_pop($TempIDGetter);
-		$TempIDGetter = array_keys($MessageRows);
 		$FirstSeenID = array_shift($TempIDGetter);
 		
 		$CurrentPage = floor($_Pagination_LeftSideCount / $_Limit_PerPage) + 1;
@@ -300,7 +303,7 @@ include($_EnginePath.'common.php');
 	}
 	
 	$_Lang['Insert_RoomID'] = $_RoomID;
-	if($CurrentPage > 0)
+	if(isset($CurrentPage) && $CurrentPage > 0)
 	{
 		$_Lang['Insert_ThisPage'] = $CurrentPage;
 	}

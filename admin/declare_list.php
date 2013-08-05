@@ -19,7 +19,7 @@ include($_EnginePath.'common.php');
 
 		if(!empty($_GET['action']))
 		{
-			$ID = floor(floatval($_GET['id']));
+			$ID = isset($_GET['id']) ? floor(floatval($_GET['id'])) : 0;
 			if($ID > 0)
 			{
 				$GetDeclaration = doquery("SELECT `users`, `status` FROM {{table}} WHERE `id` = {$ID} LIMIT 1;", 'declarations', true);
@@ -88,7 +88,8 @@ include($_EnginePath.'common.php');
 			}
 		}
 
-		if($_GET['cmd'] != 'showall')
+		$AddWhere = '';
+		if(!isset($_GET['cmd']) || $_GET['cmd'] != 'showall')
 		{
 			$AddWhere = ' WHERE `status` != -2 ';
 			$_Lang['AddShowAll'] = 'cmd=showall';
@@ -106,13 +107,11 @@ include($_EnginePath.'common.php');
 			$parse['system_msg'] = '<tr><td class="c" colspan="8" style="padding: 5px;">'.$MSG.'</td></tr><tr style="visibility: hidden;"><td><br/></td></tr>';
 		}
 		$i = 0;
-		$Color = 'lime';
 
 		if(mysql_num_rows($query) > 0)
 		{
 			while($u = mysql_fetch_assoc($query))
 			{
-
 				$UserTemp = explode(',', $u['users']);
 				foreach($UserTemp as $Key)
 				{
@@ -128,7 +127,6 @@ include($_EnginePath.'common.php');
 				}
 				if(!empty($u['all_present_users']))
 				{
-					$UserTemp = false;
 					$UserTemp = explode(',', $u['all_present_users']);
 					if(!empty($UserTemp))
 					{
@@ -207,11 +205,15 @@ include($_EnginePath.'common.php');
 				$Bloc['DeclarationStatus'] = $_Lang['DeclarationStatuses_'][(string)($Vars['status'] + 0)];
 				$Bloc['declaration_id'] = $Vars['id'];
 
-				$parse['adm_ul_table'] .= parsetemplate( $RowsTPL, $Bloc);
+				$parse['adm_ul_table'] .= parsetemplate($RowsTPL, $Bloc);
 				$i += 1;
 			}
 
 			$parse['adm_ul_count'] = $i;
+		}
+		else
+		{
+			$parse['adm_ul_table'] = '<tr><th colspan="8" style="padding: 3px; color: red;">'.$_Lang['Declarations_NothingFound'].'</th></tr>';
 		}
 
 		$page = parsetemplate( $PageTPL, $parse );

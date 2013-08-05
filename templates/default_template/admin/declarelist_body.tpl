@@ -2,7 +2,7 @@
 <table style="width: 900px;">
     {system_msg}
     <tr>
-        <td class="c" colspan="8">{Declarations_Header_Title}<span style="float: right;">[<a href="?{AddShowAll}">{Declarations_Header_ShowAll}</a>] [<a onclick="return confirm('{Declarations_Header_Confirm}');" href="DelDeclaration.php?deleteall=yes">{Declarations_Header_Clear}</a>]</span></td>
+        <td class="c" colspan="8">{Declarations_Header_Title}<span style="float: right;">[<a href="?{AddShowAll}">{Declarations_Header_ShowAll}</a>]</span></td>
     </tr>
     <tr>
         <th>{Declarations_Header_Owner}</th>

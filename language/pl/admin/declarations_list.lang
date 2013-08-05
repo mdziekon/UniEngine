@@ -33,5 +33,6 @@ $_Lang['Declarations_Header_Actions'] = 'Akcje';
 
 $_Lang['Declarations_NoUser'] = '<b class="red">Brak</b>';
 $_Lang['Declarations_EmptyUser'] = '<b class="red">Usunięte Konto</b>';
+$_Lang['Declarations_NothingFound'] = 'Brak deklaracji';
 
 ?>
