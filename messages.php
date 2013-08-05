@@ -968,7 +968,7 @@ include($_EnginePath.'common.php');
 							{
 								$GetMassMsgs[] = $ThisMatch[1];
 								$CopyMsgMap[$ThisMatch[1]][] = $CurMess['id'];
-								$CurMess['text'] = sprintf($_Lang['msg_const']['msgs']['err4'], $CopyData['id']);
+								$CurMess['text'] = sprintf($_Lang['msg_const']['msgs']['err4'], $CurMess['id']);
 							}
 							else
 							{

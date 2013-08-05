@@ -17,7 +17,7 @@ include($_EnginePath.'common.php');
 	
 	if(CheckAuth('supportadmin'))
 	{
-		if($_POST && $_GET['mode'] == "change")
+		if($_POST && isset($_GET['mode']) && $_GET['mode'] == "change")
 		{ 
 			// If Everything is OK, so set variables and send mails!
 			if(!empty($_POST['tresc']) AND !empty($_POST["temat"]))
@@ -57,7 +57,7 @@ include($_EnginePath.'common.php');
 		{ 
 			$parse = $_GameConfig;
 			$parse['skinpath'] = $_SkinPath; 
-			$page .= parsetemplate(gettemplate('admin/massmessage_body'), $parse); 
+			$page = parsetemplate(gettemplate('admin/massmessage_body'), $parse); 
 			display($page, 'MassMessage', false, true);
 		} 
 	}
