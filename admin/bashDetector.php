@@ -35,7 +35,7 @@ include($_EnginePath.'common.php');
 	}
 	
 	$_Lang['Insert_HideResults'] = 'display: none;';
-	if($_POST['send'] == 1)
+	if(isset($_POST['send']) && $_POST['send'] == 1)
 	{
 		$_Lang['Insert_HideResults'] = '';
 		
@@ -55,7 +55,7 @@ include($_EnginePath.'common.php');
 					$Set['SenderID'] = $Filter['sender'];
 				}
 			}
-			elseif(preg_match(REGEXP_USERNAME_ABSOLUTE, $Filter['sender']))
+			else if(preg_match(REGEXP_USERNAME_ABSOLUTE, $Filter['sender']))
 			{
 				$Query_GetUser = doquery("SELECT `id`, `username` FROM {{table}} WHERE `username` = '{$Filter['sender']}' LIMIT 1;", 'users', true);
 				if($Query_GetUser['id'] > 0)
@@ -84,7 +84,7 @@ include($_EnginePath.'common.php');
 					$Set['OwnerID'] = $Filter['owner'];
 				}
 			}
-			elseif(preg_match(REGEXP_USERNAME_ABSOLUTE, $Filter['owner']))
+			else if(preg_match(REGEXP_USERNAME_ABSOLUTE, $Filter['owner']))
 			{
 				$Query_GetUser = doquery("SELECT `id`, `username` FROM {{table}} WHERE `username` = '{$Filter['owner']}' LIMIT 1;", 'users', true);
 				if($Query_GetUser['id'] > 0)
@@ -145,6 +145,7 @@ include($_EnginePath.'common.php');
 			$Query_Where[] = "`Fleet_ReportID` > 0";
 			$Query_Where[] = "`Fleet_Destroyed_Reason` NOT IN (1, 4, 11)";
 			
+			$Query_GetFleets = '';
 			$Query_GetFleets .= "SELECT `Fleet_ID`, `Fleet_Mission`, `Fleet_Time_Start`, `Fleet_End_ID`, `Fleet_ReportID` ";
 			$Query_GetFleets .= "FROM {{table}} WHERE ";
 			$Query_GetFleets .= implode(' AND ', $Query_Where);
@@ -161,13 +162,17 @@ include($_EnginePath.'common.php');
 				while($FetchRow = mysql_fetch_assoc($Result_GetFleets))
 				{
 					$BashCountersUser += 1;
+					if(!isset($BashCountersPlanet[$FetchRow['Fleet_End_ID']]))
+					{
+						$BashCountersPlanet[$FetchRow['Fleet_End_ID']] = 0;
+					}
 					$BashCountersPlanet[$FetchRow['Fleet_End_ID']] += 1;
 					
 					if($BashCountersUser > $_BashLimit_PerUser)
 					{
 						$FoundBash = true;
 					}
-					elseif($BashCountersPlanet[$FetchRow['Fleet_End_ID']] > $_BashLimit_PerPlanet)
+					else if($BashCountersPlanet[$FetchRow['Fleet_End_ID']] > $_BashLimit_PerPlanet)
 					{
 						$FoundBash = true;
 					}
@@ -186,6 +191,7 @@ include($_EnginePath.'common.php');
 				{
 					$GetTargetsCount = count($GetTargets);
 					$GetTargets = implode(',', $GetTargets);
+					$Query_GetTargets = '';
 					$Query_GetTargets .= "SELECT `id`, `name`, `galaxy`, `system`, `planet`, `planet_type` FROM {{table}} ";
 					$Query_GetTargets .= "WHERE `id` IN ({$GetTargets}) LIMIT {$GetTargetsCount};";
 					
@@ -255,7 +261,7 @@ include($_EnginePath.'common.php');
 						$FleetData['Fleet_TargetPlanet'] = '0';
 						$FleetData['Fleet_TargetType'] = '-';
 					}
-					if($BashedUser !== true AND $BashedPlanets[$FleetData['Fleet_End_ID']] === true)
+					if(!isset($BashedUser) && isset($BashedPlanets[$FleetData['Fleet_End_ID']]))
 					{
 						$FleetData['BashClass'] = 'red';
 					}
