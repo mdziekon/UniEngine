@@ -25,7 +25,7 @@ include($_EnginePath.'common.php');
 	includeLang('admin');
 	includeLang('admin/autostatbuilder');
 	
-	if(!(($_User['id'] > 0 AND CheckAuth('programmer')) || ($_User['id'] <= 0 && md5($_GET['pass']) == AUTOTOOL_STATBUILDER_PASSWORDHASH)))
+	if(!((isset($_User['id']) && $_User['id'] > 0 AND CheckAuth('programmer')) || ((!isset($_User['id']) || $_User['id'] <= 0) && md5($_GET['pass']) == AUTOTOOL_STATBUILDER_PASSWORDHASH)))
 	{
 		AdminMessage($_Lang['sys_noalloaw'], $_Lang['sys_noaccess']);
 	}
@@ -53,8 +53,8 @@ include($_EnginePath.'common.php');
 	$DailyStatsDiff = $StatDate - $_GameConfig['last_stats_daily'];
 	$Loop			= 0;
 	
-	$ForceDailyStats	= ($_GET['force_yesterday'] == 'true' ? true : false);
-	$ShowOutput			= ($_User['id'] > 0 ? true : false);
+	$ForceDailyStats	= (isset($_GET['force_yesterday']) && $_GET['force_yesterday'] == 'true' ? true : false);
+	$ShowOutput			= (isset($_User['id']) && $_User['id'] > 0 ? true : false);
 	//END-OF-Initialization
 
 	/////////// USERS ///////////
@@ -241,7 +241,7 @@ include($_EnginePath.'common.php');
 					{
 						foreach($Points['BuildArr'] as $ID => $Level)
 						{
-							if($Level > $BuildingRecords[$ID]['lvl'])
+							if(!isset($BuildingRecords[$ID]['lvl']) || $Level > $BuildingRecords[$ID]['lvl'])
 							{
 								$BuildingRecords[$ID] = array('lvl' => $Level, 'user' => $CurUser['id']);
 							}
@@ -259,6 +259,10 @@ include($_EnginePath.'common.php');
 					{
 						foreach($Points['DefenseArr'] as $ID => $Count)
 						{
+							if(!isset($CurrentUserDefense[$ID]))
+							{
+								$CurrentUserDefense[$ID] = 0;
+							}
 							$CurrentUserDefense[$ID] += $Count;
 						}
 					}
@@ -274,6 +278,10 @@ include($_EnginePath.'common.php');
 					{
 						foreach($Points['FleetArr'] as $ID => $Count)
 						{
+							if(!isset($CurrentUserFleet[$ID]))
+							{
+								$CurrentUserFleet[$ID] = 0;
+							}
 							$CurrentUserFleet[$ID] += $Count;
 						}
 					}
@@ -292,7 +300,7 @@ include($_EnginePath.'common.php');
 			{
 				foreach($CurrentUserDefense as $ID => $Count)
 				{
-					if($Count > $DefenseRecords[$ID]['count'])
+					if(!isset($DefenseRecords[$ID]['count']) || $Count > $DefenseRecords[$ID]['count'])
 					{
 						$DefenseRecords[$ID] = array('count' => $Count, 'user' => $CurUser['id']);
 					}
@@ -321,6 +329,10 @@ include($_EnginePath.'common.php');
 				{
 					foreach($Points['FleetArr'] as $ID => $Count)
 					{
+						if(!isset($CurrentUserFleet[$ID]))
+						{
+							$CurrentUserFleet[$ID] = 0;
+						}
 						$CurrentUserFleet[$ID] += $Count;
 					}
 				}
@@ -333,7 +345,7 @@ include($_EnginePath.'common.php');
 		{
 			foreach($CurrentUserFleet as $ID => $Count)
 			{
-				if($Count > $FleetRecords[$ID]['count'])
+				if(!isset($FleetRecords[$ID]['count']) || $Count > $FleetRecords[$ID]['count'])
 				{
 					$FleetRecords[$ID] = array('count' => $Count, 'user' => $CurUser['id']);
 				}
@@ -373,6 +385,19 @@ include($_EnginePath.'common.php');
 
 		if($CurUser['ally_id'] > 0)
 		{
+			if(!isset($AllyStats[$CurUser['ally_id']]))
+			{
+				$AllyStats[$CurUser['ally_id']]['TechPoint'] = 0;
+				$AllyStats[$CurUser['ally_id']]['TechCount'] = 0;
+				$AllyStats[$CurUser['ally_id']]['BuildPoint'] = 0;
+				$AllyStats[$CurUser['ally_id']]['BuildCount'] = 0;
+				$AllyStats[$CurUser['ally_id']]['DefsPoint'] = 0;
+				$AllyStats[$CurUser['ally_id']]['DefsCount'] = 0;
+				$AllyStats[$CurUser['ally_id']]['FleetPoint'] = 0;
+				$AllyStats[$CurUser['ally_id']]['FleetCount'] = 0;
+				$AllyStats[$CurUser['ally_id']]['TotalPoint'] = 0;
+				$AllyStats[$CurUser['ally_id']]['TotalCount'] = 0;
+			}
 			$AllyStats[$CurUser['ally_id']]['TechPoint']	+= $TTechPoints;
 			$AllyStats[$CurUser['ally_id']]['TechCount']	+= $TTechCount;
 			$AllyStats[$CurUser['ally_id']]['BuildPoint']	+= $TBuildPoints;
@@ -406,6 +431,7 @@ include($_EnginePath.'common.php');
 	$CounterNames[] = '> Users Update';
 	$Bench->simpleCountStart();
 	
+	$Query_UpdateUsers = '';
 	$Query_UpdateUsers .= "INSERT INTO {{table}} (`id`, `morale_points`) VALUES ";
 	$Query_UpdateUsers .= implode(',', $UsersUpdate);
 	$Query_UpdateUsers .= "ON DUPLICATE KEY UPDATE ";
@@ -589,8 +615,26 @@ include($_EnginePath.'common.php');
 		$OldBuildRank	= $CurAlly['build_rank'];
 		$OldDefsRank	= $CurAlly['defs_rank'];
 		$OldFleetRank	= $CurAlly['fleet_rank'];
-
-		$Points			= $AllyStats[$CurAlly['id']];
+		
+		if(isset($AllyStats[$CurAlly['id']]))
+		{
+			$Points = $AllyStats[$CurAlly['id']];
+		}
+		else
+		{
+			$Points = array(
+				'TechCount' => 0,
+				'TechPoint' => 0,
+				'BuildCount' => 0,
+				'BuildPoint' => 0,
+				'DefsCount' => 0,
+				'DefsPoint' => 0,
+				'FleetCount' => 0,
+				'FleetPoint' => 0,
+				'TotalCount' => 0,
+				'TotalPoint' => 0
+			);
+		}
 
 		$TTechCount		= $Points['TechCount'];
 		$TTechPoints	= $Points['TechPoint'];
@@ -776,32 +820,32 @@ include($_EnginePath.'common.php');
 			if(($Element >= 1 AND $Element <= 39) OR $Element == 44)
 			{
 				// Buildings
-				$UserID = $BuildingRecords[$Element]['user'];
-				$ElementCount = $BuildingRecords[$Element]['lvl'];
+				$UserID = isset($BuildingRecords[$Element]['user']) ? $BuildingRecords[$Element]['user'] : null;
+				$ElementCount = isset($BuildingRecords[$Element]['lvl']) ? $BuildingRecords[$Element]['lvl'] : null;
 			}
 			elseif($Element >= 41 AND $Element <= 99 AND $Element != 44 AND $Element != 50)
 			{
 				// Special buildings
-				$UserID = $BuildingRecords[$Element]['user'];
-				$ElementCount = $BuildingRecords[$Element]['lvl'];
+				$UserID = isset($BuildingRecords[$Element]['user']) ? $BuildingRecords[$Element]['user'] : null;
+				$ElementCount = isset($BuildingRecords[$Element]['lvl']) ? $BuildingRecords[$Element]['lvl'] : null;
 			}
 			elseif($Element >= 101 AND $Element <= 199)
 			{
 				// Technology
-				$UserID = $TechRecords[$Element]['user'];
-				$ElementCount = $TechRecords[$Element]['lvl'];
+				$UserID = isset($TechRecords[$Element]['user']) ? $TechRecords[$Element]['user'] : null;
+				$ElementCount = isset($TechRecords[$Element]['lvl']) ? $TechRecords[$Element]['lvl'] : null;
 			}
 			elseif($Element >= 201 AND $Element <= 399)
 			{
 				// Fleets
-				$UserID = $FleetRecords[$Element]['user'];
-				$ElementCount = $FleetRecords[$Element]['count'];
+				$UserID = isset($FleetRecords[$Element]['user']) ? $FleetRecords[$Element]['user'] : null;
+				$ElementCount = isset($FleetRecords[$Element]['lvl']) ? $FleetRecords[$Element]['lvl'] : null;
 			}
 			elseif($Element >= 401 AND $Element <= 599 AND $Element != 407 AND $Element != 408 AND $Element != 409)
 			{
 				// Defences (Excluded: Shields)
-				$UserID = $DefenseRecords[$Element]['user'];
-				$ElementCount = $DefenseRecords[$Element]['count'];
+				$UserID = isset($DefenseRecords[$Element]['user']) ? $DefenseRecords[$Element]['user'] : null;
+				$ElementCount = isset($DefenseRecords[$Element]['lvl']) ? $DefenseRecords[$Element]['lvl'] : null;
 			}
 			else
 			{
@@ -922,7 +966,7 @@ include($_EnginePath.'common.php');
 	
 	if($ShowOutput)
 	{
-		$Counted .= '<center><table><tbody>';
+		$Counted = '<center><table><tbody>';
 		foreach($CountTime as $Key => $Data)
 		{
 			if(strstr($CounterNames[$Key], '>') == true)
@@ -931,7 +975,7 @@ include($_EnginePath.'common.php');
 			}
 			else
 			{
-				if($LastWasAssoc)
+				if(isset($LastWasAssoc) && $LastWasAssoc === true)
 				{
 					$Counted .= '<tr style="visibility: hidden;"><th></th></tr>';
 				}

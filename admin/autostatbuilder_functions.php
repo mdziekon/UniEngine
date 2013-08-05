@@ -7,6 +7,7 @@ function GetTechnoPoints($CurrentUser)
 
 	$TechCounts = 0;
 	$TechPoints = 0;
+	$TechArr = null;
 	foreach($_Vars_ElementCategories['tech'] AS $Techno)
 	{ 
 		$ThisLevel = $CurrentUser[$_Vars_GameElements[$Techno]];
@@ -77,6 +78,7 @@ function GetBuildPoints($CurrentPlanet)
 
 	$BuildCounts = 0;
 	$BuildPoints = 0;
+	$BuildArr = null;
 	foreach($_Vars_ElementCategories['build'] AS $Building)
 	{ 
 		$ThisLevel = $CurrentPlanet[$_Vars_GameElements[$Building]];
@@ -146,6 +148,7 @@ function GetDefensePoints($CurrentPlanet)
 
 	$DefenseCounts = 0;
 	$DefensePoints = 0;
+	$DefenseArr = null;
 	foreach($_Vars_ElementCategories['defense'] AS $Defense)
 	{
 		if($CurrentPlanet[$_Vars_GameElements[$Defense]] > 0)
@@ -169,6 +172,7 @@ function GetFleetPoints($CurrentPlanet)
 
 	$FleetCounts = 0;
 	$FleetPoints = 0;
+	$FleetArr = null;
 	foreach($_Vars_ElementCategories['fleet'] AS $Fleet)
 	{
 		if($CurrentPlanet[$_Vars_GameElements[$Fleet]] > 0)
@@ -192,6 +196,7 @@ function GetFleetPointsOnTour($CurrentFleet)
 
 	$FleetCounts = 0;
 	$FleetPoints = 0;
+	$FleetArr = null;
 
 	$Fleet = explode(';', $CurrentFleet);
 	foreach($Fleet as $Data)
