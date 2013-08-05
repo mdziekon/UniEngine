@@ -15,6 +15,7 @@ include($_EnginePath.'common.php');
 	}
 	
 	includeLang('admin/banslist');
+	$_Lang['Insert_Scripts'] = '';
 	$Now = time();
 	$_PerPage = 20;
 	$_Colspan = 9;
@@ -31,7 +32,7 @@ include($_EnginePath.'common.php');
 		$_POST['send'] = 'yes';
 	}
 	
-	if($_POST['send'] == 'yes')
+	if(isset($_POST['send']) && $_POST['send'] == 'yes')
 	{	
 		if(!empty($_POST['users']))
 		{
@@ -105,7 +106,7 @@ include($_EnginePath.'common.php');
 		}
 	}
 	
-	$_Page = intval($_POST['page']);
+	$_Page = isset($_POST['page']) ? intval($_POST['page']) : 0;
 	if($_Page < 1)
 	{
 		$_Page = 1;
@@ -146,7 +147,7 @@ include($_EnginePath.'common.php');
 			$RunQuery = true;
 		}
 	}
-	if($RunQuery)
+	if(isset($RunQuery))
 	{
 		if($Select_Start >= $TotalCount)
 		{
@@ -155,7 +156,7 @@ include($_EnginePath.'common.php');
 		}
 		
 		$SelectQuery  = "SELECT * FROM {{table}} ";
-		$SelectQuery .= $SelectWhere;
+		$SelectQuery .= isset($SelectWhere) ? $SelectWhere : '';
 		$SelectQuery .= "ORDER BY `Active` DESC, `EndTime` DESC LIMIT {$Select_Start}, {$_PerPage};";			
 		$SelectResult = doquery($SelectQuery, 'bans');
 	}

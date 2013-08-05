@@ -19,15 +19,18 @@ include($_EnginePath.'common.php');
 	$_Lang['HideInfoBox'] = ' class="hide"';
 	$Now = time();
 
-	if($_POST['send'] == 'yes')
+	if(isset($_POST['send']) && $_POST['send'] == 'yes')
 	{
 		$_Lang['HideInfoBox'] = '';
 		$_Lang['InsertInfoBoxText'] = 'red';
-		$Opt_RemoveVacation = ($_POST['vacoff'] == 'on' ? true : false);
+		$Opt_RemoveVacation = (isset($_POST['vacoff']) && $_POST['vacoff'] == 'on' ? true : false);
 		$_Lang['Insert_SearchBox'] = $_POST['users'];
 		
 		if(!empty($_POST['users']))
 		{
+			$UserErrors['badID'] = 0;
+			$UserErrors['badNick'] = 0;
+			
 			$Users = explode(',', $_POST['users']);
 			foreach($Users as $UserData)
 			{

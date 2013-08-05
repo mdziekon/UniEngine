@@ -22,13 +22,13 @@ include($_EnginePath.'common.php');
 	$_Lang['HideInfoBox'] = ' class="inv"';
 	$_Lang['InsertInfoBoxColor'] = 'red';
 
-	if($_POST['send'] == 'yes')
+	if(isset($_POST['send']) && $_POST['send'] == 'yes')
 	{
 		$_Lang['HideInfoBox'] = '';
 		$_POST['users']	= trim($_POST['users']);
 		$_Lang['Insert_SearchBox'] = $_POST['users'];
 		
-		if(in_array($_POST['reduce_type'], array('01', '02')))
+		if(isset($_POST['reduce_type']) && in_array($_POST['reduce_type'], array('01', '02')))
 		{
 			if($_POST['reduce_type'] == '01')
 			{
@@ -44,7 +44,7 @@ include($_EnginePath.'common.php');
 					$_Lang['InsertInfoBoxText'] = $_Lang['Error_BadNewEndTime'];
 				}
 			}
-			elseif($_POST['reduce_type'] == '02')
+			else if($_POST['reduce_type'] == '02')
 			{
 				// Reduce by given period of time
 				$Opt_ReduceType = 2;
@@ -68,10 +68,13 @@ include($_EnginePath.'common.php');
 			$_Lang['InsertInfoBoxText'] = $_Lang['Error_BadType'];
 		}
 		
-		if($DoSearch === true)
+		if(isset($DoSearch))
 		{
 			if(!empty($_POST['users']))
 			{
+				$UserErrors['badID'] = 0;
+				$UserErrors['badNick'] = 0;
+				
 				$Users = explode(',', $_POST['users']);
 				foreach($Users as $UserData)
 				{
@@ -122,7 +125,7 @@ include($_EnginePath.'common.php');
 								{
 									continue;
 								}
-								elseif($Opt_ReduceType == 2 AND ($Data['ban_endtime'] - $Opt_Period) <= $Now)
+								else if($Opt_ReduceType == 2 AND ($Data['ban_endtime'] - $Opt_Period) <= $Now)
 								{
 									continue;
 								}
@@ -187,7 +190,7 @@ include($_EnginePath.'common.php');
 		}
 		$_Lang['InsertUsernames'] = implode(',', $_Lang['InsertUsernames']);
 	}
-	elseif(!empty($_GET['user']))
+	else if(!empty($_GET['user']))
 	{
 		$_Lang['InsertUsernames'] = $_GET['user'];
 	}

@@ -22,21 +22,24 @@ include($_EnginePath.'common.php');
 	$_Lang['HideInfoBox'] = ' class="hide"';
 	$_Lang['InsertInfoBoxColor'] = 'red';
 
-	if($_POST['save'] == 'yes')
+	if(isset($_POST['save']) && $_POST['save'] == 'yes')
 	{
 		$_Lang['HideInfoBox'] = '';
 		$_POST['users']		= trim($_POST['users']);
 		$_POST['reason']	= trim($_POST['reason']);
 		$_Lang['Insert_SearchBox'] = $_POST['users'];
 		// Opts
-		$Opt_ExtendBan			= ($_POST['extend'] == 'on' ? true : false);
-		$Opt_OnVacation			= ($_POST['vacation'] == 'on' ? true : false);
-		$Opt_BanCookies			= ($_POST['cookies'] == 'on' ? true : false);
-		$Opt_FleetRetreat_Own	= ($_POST['fleet_retreat_own'] == 'on' ? true : false);
-		$Opt_FleetRetreat_All	= ($_POST['fleet_retreat_others'] == 'on' ? true : false);
+		$Opt_ExtendBan			= (isset($_POST['extend']) && $_POST['extend'] == 'on'								? true : false);
+		$Opt_OnVacation			= (isset($_POST['vacation']) && $_POST['vacation'] == 'on'							? true : false);
+		$Opt_BanCookies			= (isset($_POST['cookies']) && $_POST['cookies'] == 'on'							? true : false);
+		$Opt_FleetRetreat_Own	= (isset($_POST['fleet_retreat_own']) && $_POST['fleet_retreat_own'] == 'on'		? true : false);
+		$Opt_FleetRetreat_All	= (isset($_POST['fleet_retreat_others']) && $_POST['fleet_retreat_others'] == 'on'	? true : false);
 
 		if(!empty($_POST['users']))
 		{
+			$UserErrors['badID'] = 0;
+			$UserErrors['badNick'] = 0;
+			
 			$Users = explode(',', $_POST['users']);
 			foreach($Users as $UserData)
 			{
@@ -241,7 +244,7 @@ include($_EnginePath.'common.php');
 						{
 							include($_EnginePath.'includes/functions/FleetControl_Retreat.php');
 							$Result = FleetControl_Retreat(implode(' OR ', $RetreatSearch));
-							$_Lang['InsertInfoBoxText'] = sprintf(($BannedUsers > 1 ? $_Lang['Msg_BanMOK_wFleets'] : $_Lang['Msg_Ban1OK_wFleets']), $UserLinks, prettyNumber($Result['Updates']['Fleets']));
+							$_Lang['InsertInfoBoxText'] = sprintf(($BannedUsers > 1 ? $_Lang['Msg_BanMOK_wFleets'] : $_Lang['Msg_Ban1OK_wFleets']), $UserLinks, (isset($Result['Updates']['Fleets']) ? prettyNumber($Result['Updates']['Fleets']) : 0));
 						}
 						else
 						{
