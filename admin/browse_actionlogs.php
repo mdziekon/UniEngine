@@ -188,25 +188,25 @@ include($_EnginePath.'common.php');
 
 		if(!empty($_POST))
 		{
-			if($_POST['autoExpandArr'] == 'on')
+			if(isset($_POST['autoExpandArr']) && $_POST['autoExpandArr'] == 'on')
 			{
 				$AutoExpandArray = 'true';
 				$SetArrCookie = 'on';
 			}
 			else
 			{
-			$AutoExpandArray = 'false';
-			$SetArrCookie = 'off';
+				$AutoExpandArray = 'false';
+				$SetArrCookie = 'off';
 			}
-			if($_POST['autoExpandAmp'] == 'on')
+			if(isset($_POST['autoExpandAmp']) && $_POST['autoExpandAmp'] == 'on')
 			{
-			$AutoExpandAmper = 'true';
-			$SetAmpCookie = 'on';
+				$AutoExpandAmper = 'true';
+				$SetAmpCookie = 'on';
 			}
 			else
 			{
-			$AutoExpandAmper = 'false';
-			$SetAmpCookie = 'off';
+				$AutoExpandAmper = 'false';
+				$SetAmpCookie = 'off';
 			}
 			setcookie('autoExpandArr', $SetArrCookie, time() + 31536000);
 			setcookie('autoExpandAmp', $SetAmpCookie, time() + 31536000);
@@ -252,7 +252,7 @@ include($_EnginePath.'common.php');
 		$Parse['UID'] = $UID;
 		$_Lang['UID'] = $UID;
 		$UIDMarker = str_pad($UID, 6, '0', STR_PAD_LEFT);
-		$Date = $_GET['date'];
+		$Date = isset($_GET['date']) ? $_GET['date'] : null;
 
 		$LogExists = false;
 
@@ -260,7 +260,8 @@ include($_EnginePath.'common.php');
 		{
 			if(preg_match('/^[0-9\_]{10}$/D', $Date))
 			{
-				if($_GET['packed'] === 'true')
+				$Packed = '';
+				if(isset($_GET['packed']) && $_GET['packed'] === 'true')
 				{
 					$FilePath = "./../action_logs/logs_{$Date}/Log_U_{$UIDMarker}_D_{$Date}.php.gz";
 					$Packed = '&amp;packed=true';
@@ -452,7 +453,7 @@ include($_EnginePath.'common.php');
 					// POST Filtering
 					$FilterOn = false;
 					$OneFilterOn = false;
-					if($_POST['filter_time'] == 'on')
+					if(isset($_POST['filter_time']) && $_POST['filter_time'] == 'on')
 					{
 						$OneFilterOn = true;
 						$JoinFrom = ($_POST['from_hour'] * 3600) + ($_POST['from_min'] * 60) + $_POST['from_sec'];
@@ -489,7 +490,7 @@ include($_EnginePath.'common.php');
 						$EnableToFilter = 86400;
 					}
 					$FilterPlaceOn = false;
-					if($_POST['filter_place'] == 'on')
+					if(isset($_POST['filter_place']) && $_POST['filter_place'] == 'on')
 					{
 						if(!empty($_POST['filter_place_query']))
 						{
@@ -536,7 +537,7 @@ include($_EnginePath.'common.php');
 					}
 
 					// Pagination
-					$CurrentPage = intval($_GET['page']);
+					$CurrentPage = isset($_GET['page']) ? intval($_GET['page']) : 0;
 					if($CurrentPage > 1)
 					{
 						$AfterFilter = false;
@@ -787,7 +788,7 @@ include($_EnginePath.'common.php');
 								{
 									$_This['FileExplode'] = explode('?', $_This['File']);
 									$_This['File'] = $_This['FileExplode'][0];
-									$_This['Args_GET'] = $_This['FileExplode'][1];
+									$_This['Args_GET'] = isset($_This['FileExplode'][1]) ? $_This['FileExplode'][1] : null;
 									$Data_LastPOST = $LineData[4];
 									if($_This['Args_POST'] == 'N')
 									{
@@ -1072,8 +1073,12 @@ include($_EnginePath.'common.php');
 			// ---------------
 			// - Date Filter -
 			$FilterOn = false;
-			$FromDate = str_pad($_POST['from_yea'], 4, '0', STR_PAD_LEFT).'_'.str_pad($_POST['from_mon'], 2, '0', STR_PAD_LEFT).'_'.str_pad($_POST['from_day'], 2, '0', STR_PAD_LEFT);
-			$ToDate = str_pad($_POST['to_yea'], 4, '0', STR_PAD_LEFT).'_'.str_pad($_POST['to_mon'], 2, '0', STR_PAD_LEFT).'_'.str_pad($_POST['to_day'], 2, '0', STR_PAD_LEFT);
+			$FromDate	= str_pad(isset($_POST['from_yea']) ? $_POST['from_yea'] : null, 4, '0', STR_PAD_LEFT)
+						.'_'.str_pad(isset($_POST['from_mon']) ? $_POST['from_mon'] : null, 2, '0', STR_PAD_LEFT)
+						.'_'.str_pad(isset($_POST['from_day']) ? $_POST['from_day'] : null, 2, '0', STR_PAD_LEFT);
+			$ToDate		= str_pad(isset($_POST['to_yea']) ? $_POST['to_yea'] : null, 4, '0', STR_PAD_LEFT)
+						.'_'.str_pad(isset($_POST['to_mon']) ? $_POST['to_mon'] : null, 2, '0', STR_PAD_LEFT)
+						.'_'.str_pad(isset($_POST['to_day']) ? $_POST['to_day'] : null, 2, '0', STR_PAD_LEFT);
 			if(!preg_match('/^[0-9]{4}\_[0-9]{2}\_[0-9]{2}$/D', $FromDate) OR strstr($FromDate, '0000_') OR strstr($FromDate, '_00'))
 			{
 				$RegdayExp = explode('.', date('d.m.Y', $UserData['register_time']));
@@ -1124,7 +1129,7 @@ include($_EnginePath.'common.php');
 				}
 			}
 
-			if($_POST['filter'] != 'on')
+			if(isset($_POST['filter']) && $_POST['filter'] != 'on')
 			{
 				$Parse['FilteringDisplay'] = ' display: none;';
 			}
@@ -1189,6 +1194,7 @@ include($_EnginePath.'common.php');
 					$Logs = $NewLogs;
 				}
 
+				$Rows = '';
 				foreach($Logs as $Key => $Name)
 				{
 					$Row = false;
@@ -1227,7 +1233,7 @@ include($_EnginePath.'common.php');
 			$Parse['Content'] = $Rows;
 		}
 
-		$Parse['SetFiltering'] = $_POST['filter'];
+		$Parse['SetFiltering'] = isset($_POST['filter']) ? $_POST['filter'] : null;
 		$Parse['ThisPage'] = $ThisPage;
 		$Page = parsetemplate($MainTPL, $Parse);
 		display($Page, $_Lang['PageTitle'], false, true);
