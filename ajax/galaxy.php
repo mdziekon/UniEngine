@@ -57,7 +57,7 @@ include($_EnginePath.'common.php');
 	$CurrentRC = $_Planet['recycler'];
 	$CurrentSP = $_Planet['espionage_probe'];
 	$CurrentCS = $_Planet['colony_ship'];
-	$HavePhalanx = $_Planet['sensor_phalanx'];
+	$SensonPhalanxLevel = $_Planet['sensor_phalanx'];
 	$CurrentSystem = $_Planet['system'];
 	$CurrentGalaxy = $_Planet['galaxy'];
 	$CanDestroy = ($_Planet[$_Vars_GameElements[214]] > 0 ? true : false);

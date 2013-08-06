@@ -34,7 +34,7 @@ include($_EnginePath.'common.php');
 	$CurrentRC = $CurrentPlanet['recycler'];
 	$CurrentSP = $CurrentPlanet['espionage_probe'];
 	$CurrentCS = $CurrentPlanet['colony_ship'];
-	$HavePhalanx = $CurrentPlanet['sensor_phalanx'];
+	$SensonPhalanxLevel = $CurrentPlanet['sensor_phalanx'];
 	$CurrentSystem = $CurrentPlanet['system'];
 	$CurrentGalaxy = $CurrentPlanet['galaxy'];
 	$CanDestroy = ($CurrentPlanet[$_Vars_GameElements[214]] > 0 ? true : false);
@@ -59,7 +59,7 @@ include($_EnginePath.'common.php');
 	else if($mode === 1)
 	{
 		// User sent $_POST Data
-		if($_POST['galaxyLeft'] === 'dr')
+		if(isset($_POST['galaxyLeft']) && $_POST['galaxyLeft'] === 'dr')
 		{
 			if($_POST['galaxy'] <= 1 OR $_POST['galaxy'] > MAX_GALAXY_IN_WORLD)
 			{
@@ -71,7 +71,7 @@ include($_EnginePath.'common.php');
 				$galaxy = $_POST['galaxy'] - 1;
 			}
 		}
-		else if($_POST['galaxyRight'] === 'dr')
+		else if(isset($_POST['galaxyRight']) && $_POST['galaxyRight'] === 'dr')
 		{
 			if($_POST['galaxy'] >= MAX_GALAXY_IN_WORLD OR $_POST['galaxy'] < 1)
 			{
@@ -96,7 +96,7 @@ include($_EnginePath.'common.php');
 			}	
 		}
 
-		if($_POST['systemLeft'] === 'dr')
+		if(isset($_POST['systemLeft']) && $_POST['systemLeft'] === 'dr')
 		{
 			if($_POST['system'] <= 1 OR $_POST['system'] > MAX_SYSTEM_IN_GALAXY)
 			{
@@ -108,7 +108,7 @@ include($_EnginePath.'common.php');
 				$system = $_POST['system'] - 1;
 			}
 		}
-		else if($_POST['systemRight'] === 'dr')
+		else if(isset($_POST['systemRight']) && $_POST['systemRight'] === 'dr')
 		{
 			if($_POST['system'] >= MAX_SYSTEM_IN_GALAXY OR $_POST['system'] < 1)
 			{
@@ -132,11 +132,15 @@ include($_EnginePath.'common.php');
 				$system = 1;
 			}	
 		}
+		$planet = 0;
 	}
 	else if($mode === 2 OR $mode === 3)
 	{
 		// User sent $_GET Data
-		$_GET['galaxy'] = intval($_GET['galaxy']);
+		$_GET['galaxy'] = isset($_GET['galaxy']) ? intval($_GET['galaxy']) : 0;
+		$_GET['system'] = isset($_GET['system']) ? intval($_GET['system']) : 0;
+		$_GET['planet'] = isset($_GET['planet']) ? intval($_GET['planet']) : 0;
+		
 		if($_GET['galaxy'] > 0 AND $_GET['galaxy'] <= MAX_GALAXY_IN_WORLD)
 		{
 			$galaxy = $_GET['galaxy'];
@@ -144,8 +148,7 @@ include($_EnginePath.'common.php');
 		else
 		{
 			$galaxy = 1;
-		}	
-
+		}
 		if($_GET['system'] > 0 AND $_GET['system'] <= MAX_SYSTEM_IN_GALAXY)
 		{
 			$system = $_GET['system'];
@@ -154,15 +157,13 @@ include($_EnginePath.'common.php');
 		{
 			$system = 1;
 		}
-
-		$_GET['planet'] = intval($_GET['planet']);
 		if($_GET['planet'] > 0 AND $_GET['planet'] <= MAX_PLANET_IN_SYSTEM)
 		{
 			$planet = $_GET['planet'];
 		}
 		else
 		{
-			$planet = 1;
+			$planet = 0;
 		}
 	}
 

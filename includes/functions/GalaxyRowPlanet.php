@@ -2,7 +2,7 @@
 
 function GalaxyRowPlanet($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Galaxy, $System, $Planet, $PlanetType, $MyBuddies, $MyAllyPacts)
 {
-	global $_Lang, $_SkinPath, $_User, $CurrentMIP, $HavePhalanx, $CurrentSystem, $CurrentGalaxy;
+	global $_Lang, $_SkinPath, $_User, $CurrentMIP, $SensonPhalanxLevel, $CurrentSystem, $CurrentGalaxy;
 	static $TPL = false;
 	if($TPL === false)
 	{
@@ -11,13 +11,13 @@ function GalaxyRowPlanet($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Galaxy, 
 
 	if($GalaxyRow['id_planet'] > 0)
 	{
-		if($HavePhalanx > 0)
+		if($SensonPhalanxLevel > 0)
 		{
 			if($GalaxyRowUser['id'] != $_User['id'])
 			{
 				if($GalaxyRowPlanet['galaxy'] == $CurrentGalaxy)
 				{
-					$PhRange = GetPhalanxRange($HavePhalanx);
+					$PhRange = GetPhalanxRange($SensonPhalanxLevel);
 					$SystemLimitMin = $CurrentSystem - $PhRange;
 					if($SystemLimitMin < 1)
 					{

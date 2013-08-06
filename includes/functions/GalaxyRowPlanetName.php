@@ -2,7 +2,7 @@
 
 function GalaxyRowPlanetName($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Galaxy, $System, $Planet, $PlanetType, $MyBuddies)
 {
-	global $_Lang, $_User, $HavePhalanx, $CurrentSystem, $CurrentGalaxy, $Time;
+	global $_Lang, $_User, $SensonPhalanxLevel, $CurrentSystem, $CurrentGalaxy, $Time;
 	static $TPLPlanet = false, $TPLEmpty = false;
 
 	if($GalaxyRow['id_planet'] > 0)
@@ -62,9 +62,9 @@ function GalaxyRowPlanetName($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Gala
 			$Parse['AddHref'] = "href=\"fleet.php?galaxy={$Galaxy}&system={$System}&planet={$Planet}&planettype={$PlanetType}&target_mission=1\"";
 			$Parse['AddTitle'] = "title=\"{$_Lang['gl_attack']}\"";
 			
-			if($GalaxyRowPlanet['galaxy'] == $CurrentGalaxy AND $HavePhalanx > 0)
+			if($GalaxyRowPlanet['galaxy'] == $CurrentGalaxy AND $SensonPhalanxLevel > 0)
 			{
-				$PhRange = GetPhalanxRange($HavePhalanx);
+				$PhRange = GetPhalanxRange($SensonPhalanxLevel);
 				$SystemLimitMin = $CurrentSystem - $PhRange;
 				if($SystemLimitMin < 1)
 				{
