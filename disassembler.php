@@ -14,6 +14,7 @@ include($_EnginePath.'common.php');
 
 	$ElementsPerRow = 7;
 	$CurrentPlanet = &$_Planet;
+	$ElementPriceArray = null;
 
 	includeLang('buildings');
 	$Parse = &$_Lang;

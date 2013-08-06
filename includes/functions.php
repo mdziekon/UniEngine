@@ -1091,6 +1091,8 @@ function Handler_Telemetry($pageurl)
 		}
 		if($TelemetryPage['id'] > 0)
 		{
+			$ThisUserID = (isset($_User['id']) && $_User['id'] > 0) ? $_User['id'] : 0;
+			
 			if($FromCache !== true AND UNIENGINE_HASAPC)
 			{
 				$_MemCache->$TelemetryPage['cacheKey'] = $TelemetryPage['id'];
@@ -1099,7 +1101,7 @@ function Handler_Telemetry($pageurl)
 			{
 				$TelemetryData[$Key] = sprintf('%0.6f', $Data);
 			}
-			$TelemetryQuery = "INSERT INTO {{table}} VALUES (NULL, {$TelemetryPage['id']}, '{$_User['id']}', UNIX_TIMESTAMP(), '".json_encode($TelemetryData)."');";
+			$TelemetryQuery = "INSERT INTO {{table}} VALUES (NULL, {$TelemetryPage['id']}, {$ThisUserID}, UNIX_TIMESTAMP(), '".json_encode($TelemetryData)."');";
 			doquery($TelemetryQuery, 'telemetry_data');
 		}
 	}
