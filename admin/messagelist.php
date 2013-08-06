@@ -380,6 +380,7 @@ include($_EnginePath.'common.php');
 		}
 		else
 		{
+			$AddFrom = '';
 			if(!empty($row['from']))
 			{
 				$AddFrom = ' '.$row['from'];
