@@ -16,10 +16,13 @@ include($_EnginePath.'common.php');
 		includeLang('admin/ship_calculations');
 		$TPL = gettemplate('admin/ship_calculations_body');
 
-		if($_GET['ship'] > 0)
+		$ShipID = 0;
+		$TargetID = 0;
+		
+		if(isset($_GET['ship']) && $_GET['ship'] > 0)
 		{
 			$ShipID = intval($_GET['ship']);
-			$TargetID = intval($_GET['ship2']);
+			$TargetID = isset($_GET['ship2']) ? intval($_GET['ship2']) : 0;
 			if(!in_array($TargetID, $_Vars_ElementCategories['fleet']))
 			{
 				$TargetID = 0;
@@ -63,6 +66,7 @@ include($_EnginePath.'common.php');
 					}
 				}
 
+				$_Lang['Input_InsertRows'] = '';
 				foreach($_Vars_ElementCategories['fleet'] as $ID)
 				{
 					$Row = array();
@@ -196,6 +200,8 @@ include($_EnginePath.'common.php');
 			}
 		}
 
+		$_Lang['Input_Selector_ShipList'] = '';
+		$_Lang['Input_Selector_ShipList2'] = '';
 		foreach($_Vars_ElementCategories['fleet'] as $ID)
 		{
 			$_Lang['Input_Selector_ShipList'] .= "<option value=\"{$ID}\" ".($ID == $ShipID ? 'selected' : '').">{$_Lang['tech'][$ID]}</option>";

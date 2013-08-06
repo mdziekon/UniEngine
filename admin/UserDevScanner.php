@@ -144,7 +144,14 @@ include($_EnginePath.'common.php');
 		}
 
 		// Calculate additional income
-		$Caps = array();
+		$Caps = array
+		(
+			'metal_perhour' => 0,
+			'crystal_perhour' => 0,
+			'deuterium_perhour' => 0,
+			'energy_used' => 0,
+			'energy_max' => 0
+		);
 		$BuildTemp = $CurrentPlanet['temp_max']; 
 		$TextIfEmpty = 'return "0";';
 		foreach($_Vars_ElementCategories['prod'] as $ElementID)
@@ -182,8 +189,7 @@ include($_EnginePath.'common.php');
 				$Caps['energy_used'] += floor(eval($_Vars_ResProduction[$ElementID]['formule']['energy']));
 			}
 			else
-			{ 
-				$OldEnergyMax = $Caps['energy_max'];
+			{
 				if($ElementID != 12)
 				{
 					$Caps['energy_max'] += floor(eval($_Vars_ResProduction[$ElementID]['formule']['energy']) * $Multiplier_Energy);
@@ -326,11 +332,11 @@ include($_EnginePath.'common.php');
 
 		$CurrentPlanet['last_update'] = $EndTime;
 
-		return $Return;
+		return isset($Return) ? $Return : null;
 	}
 
-	$UID = $_POST['uid'];
-	$Username = $_POST['username'];
+	$UID = isset($_POST['uid']) ? $_POST['uid'] : 0;
+	$Username = isset($_POST['username']) ? $_POST['username'] : null;
 	if(!empty($UID) OR !empty($Username))
 	{
 		$Search = true;
@@ -436,9 +442,9 @@ include($_EnginePath.'common.php');
 					}
 
 					$Resources = explode(',', $PlanetData['res']);
-					$PlanetData['b'] = explode(';', $PlanetData['b']);
-					$PlanetData['p'] = explode(';', $PlanetData['p']);
-					$PlanetData['f'] = explode(';', $PlanetData['f']);
+					$PlanetData['b'] = isset($PlanetData['b']) ? explode(';', $PlanetData['b']) : array();
+					$PlanetData['p'] = isset($PlanetData['p']) ? explode(';', $PlanetData['p']) : array();
+					$PlanetData['f'] = isset($PlanetData['f']) ? explode(';', $PlanetData['f']) : array();
 
 					foreach($PlanetData['b'] as $ElementData)
 					{
@@ -493,7 +499,7 @@ include($_EnginePath.'common.php');
 				{
 					$UserData[$_Vars_GameElements[$TechID]] = 0;
 				}
-				$UserTechsDump = explode(';', $LoadLastDump['Techs']);
+				$UserTechsDump = !empty($LoadLastDump['Techs']) ? explode(';', $LoadLastDump['Techs']) : array();
 				foreach($UserTechsDump as $Exploded)
 				{
 					$Exploded = explode(',', $Exploded);
@@ -501,7 +507,16 @@ include($_EnginePath.'common.php');
 				}
 
 				$ScaningNo = 0;
-
+				$ScanLog['LogScanned'] = 0;
+				$ScanLog['ResUpdates'] = 0;
+				
+				$UsedResources = array
+				(
+					'metal' => 0,
+					'crystal' => 0,
+					'deuterium' => 0,
+				);
+				
 				while($Log = mysql_fetch_assoc($GetLogs))
 				{
 					$Log['Date'] += SERVER_MAINOPEN_TSTAMP;
@@ -513,7 +528,12 @@ include($_EnginePath.'common.php');
 					$ResUpdateReturn = false;
 					$ShipsChanged = false;
 					$ChangedShipsTypes = array();
-					$Needed = array();
+					$Needed = array
+					(	
+					'metal' => 0,
+						'crystal' => 0,
+						'deuterium' => 0,
+					);
 
 					// Main Checking Part
 					$Place = &$Log['Place'];
@@ -720,7 +740,12 @@ include($_EnginePath.'common.php');
 						}
 
 						$Fleet = explode(';', $Log['AdditionalData']);
-						$Removed = array();
+						$Removed = array
+						(
+							'metal' => 0,
+							'crystal' => 0,
+							'deuterium' => 0,
+						);
 
 						foreach($Fleet as $Ship)
 						{
@@ -1303,11 +1328,21 @@ include($_EnginePath.'common.php');
 					}
 
 					$ScanLog['LogScanned'] += 1;
+					if(!isset($ScanLog['ScannedPlaces'][$Place]))
+					{
+						$ScanLog['ScannedPlaces'][$Place] = 0;
+					}
 					$ScanLog['ScannedPlaces'][$Place] += 1;
 				}
 
 				$SummaryElements = array();
-
+				$SummaryNew['metal'] = 0;
+				$SummaryNew['crystal'] = 0;
+				$SummaryNew['deuterium'] = 0;
+				$SummaryLog['metal'] = 0;
+				$SummaryLog['crystal'] = 0;
+				$SummaryLog['deuterium'] = 0;
+				
 				while($PlanetNew = mysql_fetch_assoc($PlanetsNewData))
 				{
 					$PlanetNew['metal'] += 0;
@@ -1327,6 +1362,10 @@ include($_EnginePath.'common.php');
 						foreach($Values as $ItemID)
 						{
 							$PlanetNew[$_Vars_GameElements[$ItemID]] += 0;
+							if(!isset($SummaryNew[$ItemID]))
+							{
+								$SummaryNew[$ItemID] = 0;
+							}
 							$SummaryNew[$ItemID] += $PlanetNew[$_Vars_GameElements[$ItemID]];
 							if(!in_array($ItemID, $SummaryElements))
 							{
@@ -1356,6 +1395,10 @@ include($_EnginePath.'common.php');
 
 					if($PlanetData['metal'] != $CurrentPlanets[$PlanetID]['metal'])
 					{
+						if(!isset($AcceptableDifferences))
+						{
+							$AcceptableDifferences = 0;
+						}
 						$AcceptableDifferences += 1;
 						$Difference = $CurrentPlanets[$PlanetID]['metal'] - $PlanetData['metal'];
 						if(($Difference > 0 AND $Difference > 1) OR ($Difference < 0 AND $Difference < -1))
@@ -1407,6 +1450,10 @@ include($_EnginePath.'common.php');
 					}
 					if($PlanetData['crystal'] != $CurrentPlanets[$PlanetID]['crystal'])
 					{
+						if(!isset($AcceptableDifferences))
+						{
+							$AcceptableDifferences = 0;
+						}
 						$AcceptableDifferences += 1;
 						$Difference = $CurrentPlanets[$PlanetID]['crystal'] - $PlanetData['crystal'];
 						if(($Difference > 0 AND $Difference > 1) OR ($Difference < 0 AND $Difference < -1))
@@ -1458,6 +1505,10 @@ include($_EnginePath.'common.php');
 					}
 					if($PlanetData['deuterium'] != $CurrentPlanets[$PlanetID]['deuterium'])
 					{
+						if(!isset($AcceptableDifferences))
+						{
+							$AcceptableDifferences = 0;
+						}
 						$AcceptableDifferences += 1;
 						$Difference = $CurrentPlanets[$PlanetID]['deuterium'] - $PlanetData['deuterium'];
 						if(($Difference > 0 AND $Difference > 1) OR ($Difference < 0 AND $Difference < -1))
@@ -1518,6 +1569,10 @@ include($_EnginePath.'common.php');
 						{
 							if($Key != 'build')
 							{
+								if(!isset($SummaryLog[$ItemID]))
+								{
+									$SummaryLog[$ItemID] = 0;
+								}
 								$SummaryLog[$ItemID] += $PlanetData[$_Vars_GameElements[$ItemID]];
 								if(!in_array($ItemID, $SummaryElements))
 								{
@@ -1866,7 +1921,7 @@ include($_EnginePath.'common.php');
 						$ParseRowPattern = array('ModuleNumber' => '04', 'TextColor' => 'orange', 'Table2_LogID' => $_Lang['Table2_LogID']);
 					}
 					$LastLogIDLen = end($ScanData);
-					$LastLogIDLen = strlen($LastLogIDLen['LogID']);
+					$LastLogIDLen = isset($LastLogIDLen['LogID']) ? strlen($LastLogIDLen['LogID']) : 0;
 					reset($ScanData);
 					$_Lang['Table2_Final'.$ScanKey.'Count'] = count($ScanData);
 					foreach($ScanData as $Index => $Data)
@@ -1912,6 +1967,10 @@ include($_EnginePath.'common.php');
 							$ParseRow['IsCollapsed'] = 'collapsed';
 						}
 
+						if(!isset($_Lang['PHP_AllFound'.$ScanKey.'s']))
+						{
+							$_Lang['PHP_AllFound'.$ScanKey.'s'] = '';
+						}
 						$_Lang['PHP_AllFound'.$ScanKey.'s'] .= parsetemplate($ResultRowTPL, $ParseRow);
 					}
 				}
