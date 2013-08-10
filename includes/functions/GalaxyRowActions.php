@@ -11,6 +11,8 @@ function GalaxyRowActions($GalaxyRowPlanet, $GalaxyRowPlayer, $Galaxy, $System, 
 
 	if(isset($GalaxyRowPlanet['id']) && $GalaxyRowPlanet['id'] > 0 && $GalaxyRowPlayer['id'] != $_User['id'])
 	{
+		$HiddenOptions = $OptionsCount = 4;
+		
 		$Parse = array
 		(
 			'Hide_Spy'			=> ' hide',
@@ -40,6 +42,7 @@ function GalaxyRowActions($GalaxyRowPlanet, $GalaxyRowPlayer, $Galaxy, $System, 
 					$SystemLimitMax = $CurrentSystem + $MiRange;
 					if($System <= $SystemLimitMax AND $System >= $SystemLimitMin)
 					{
+						--$HiddenOptions;
 						$Parse['Hide_Rocket'] = '';
 					}
 				}
@@ -47,21 +50,31 @@ function GalaxyRowActions($GalaxyRowPlanet, $GalaxyRowPlayer, $Galaxy, $System, 
 		}
 		if($_User['settings_esp'] == 1)
 		{
+			--$HiddenOptions;
 			$Parse['Hide_Spy'] = '';
 		}
 		if($_User['settings_wri'] == 1 AND $GalaxyRowPlanet['id_owner'] > 0)
 		{
+			--$HiddenOptions;
 			$Parse['Hide_Msg'] = '';
 		}
 		if($_User['settings_bud'] == 1 AND $GalaxyRowPlanet['id_owner'] > 0)
 		{
 			if(!in_array($GalaxyRowPlayer['id'], $MyBuddies))
 			{
+				--$HiddenOptions;
 				$Parse['Hide_Buddy'] = '';
 			}
 		}
-
-		$Result = parsetemplate($TPL, $Parse);
+		
+		if($OptionsCount == $HiddenOptions)
+		{
+			$Result = '<th class="hiFnt">&nbsp;</th>';
+		}
+		else
+		{
+			$Result = parsetemplate($TPL, $Parse);
+		}
 	}
 	else
 	{
