@@ -155,9 +155,10 @@ include($_EnginePath.'common.php');
 		$Result_CheckProxy = doquery($Query_CheckProxy, 'used_ip_and_ua', true);
 		if($Result_CheckProxy['ID'] > 0 AND $Result_CheckProxy['isProxy'] == 1)
 		{
-			if($_Included_AlertSystemUtilities !== true)
+			if(!isset($_Included_AlertSystemUtilities))
 			{
 				include($_EnginePath.'includes/functions/AlertSystemUtilities.php');
+				$_Included_AlertSystemUtilities = true;
 			}
 			$FiltersData = array();
 			$FiltersData['place'] = 4;

@@ -235,6 +235,10 @@ include($_EnginePath.'common.php');
 						$GetData['ips'][$IPData['IPID']] = $IPData['IPID'];
 					}
 				}
+				else if($FetchData['Code'] == 3)
+				{
+					$GetData['ips'][$FetchData['Other_Data']['IPID']] = $FetchData['Other_Data']['IPID'];
+				}
 				else if($FetchData['Code'] == 4)
 				{
 					$FetchData['mainusers'][$FetchData['Other_Data']['TargetUserID']] = $FetchData['Other_Data']['TargetUserID'];

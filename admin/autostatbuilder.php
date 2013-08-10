@@ -180,11 +180,22 @@ include($_EnginePath.'common.php');
 		$CurrentUserDefense = array();
 		$CurrentUserFleet	= array();
 
-		$OldTotalRank	= $Stats[$CurUser['id']]['total_rank'];
-		$OldTechRank	= $Stats[$CurUser['id']]['tech_rank'];
-		$OldBuildRank	= $Stats[$CurUser['id']]['build_rank'];
-		$OldDefsRank	= $Stats[$CurUser['id']]['defs_rank'];
-		$OldFleetRank	= $Stats[$CurUser['id']]['fleet_rank']; 
+		if(!isset($Stats[$CurUser['id']]))
+		{
+			$OldTotalRank	= 0;
+			$OldTechRank	= 0;
+			$OldBuildRank	= 0;
+			$OldDefsRank	= 0;
+			$OldFleetRank	= 0;
+		}
+		else
+		{
+			$OldTotalRank	= $Stats[$CurUser['id']]['total_rank'];
+			$OldTechRank	= $Stats[$CurUser['id']]['tech_rank'];
+			$OldBuildRank	= $Stats[$CurUser['id']]['build_rank'];
+			$OldDefsRank	= $Stats[$CurUser['id']]['defs_rank'];
+			$OldFleetRank	= $Stats[$CurUser['id']]['fleet_rank'];
+		}
 
 		if($OnlyOnce)
 		{
@@ -375,11 +386,22 @@ include($_EnginePath.'common.php');
 		$Users[$Loop]['total_points']			= $GPoints;
 		$Users[$Loop]['total_count']			= $GCount;
 		$Users[$Loop]['total_old_rank']			= $OldTotalRank;
-		$Users[$Loop]['tech_yesterday_rank']	= $Stats[$CurUser['id']]['tech_yesterday_rank']; 
-		$Users[$Loop]['build_yesterday_rank']	= $Stats[$CurUser['id']]['build_yesterday_rank']; 
-		$Users[$Loop]['defs_yesterday_rank']	= $Stats[$CurUser['id']]['defs_yesterday_rank']; 
-		$Users[$Loop]['fleet_yesterday_rank']	= $Stats[$CurUser['id']]['fleet_yesterday_rank']; 
-		$Users[$Loop]['total_yesterday_rank']	= $Stats[$CurUser['id']]['total_yesterday_rank']; 
+		if(!isset($Stats[$CurUser['id']]))
+		{
+			$Users[$Loop]['tech_yesterday_rank']	= 0;
+			$Users[$Loop]['build_yesterday_rank']	= 0;
+			$Users[$Loop]['defs_yesterday_rank']	= 0;
+			$Users[$Loop]['fleet_yesterday_rank']	= 0;
+			$Users[$Loop]['total_yesterday_rank']	= 0;
+		}
+		else
+		{
+			$Users[$Loop]['tech_yesterday_rank']	= $Stats[$CurUser['id']]['tech_yesterday_rank']; 
+			$Users[$Loop]['build_yesterday_rank']	= $Stats[$CurUser['id']]['build_yesterday_rank']; 
+			$Users[$Loop]['defs_yesterday_rank']	= $Stats[$CurUser['id']]['defs_yesterday_rank']; 
+			$Users[$Loop]['fleet_yesterday_rank']	= $Stats[$CurUser['id']]['fleet_yesterday_rank']; 
+			$Users[$Loop]['total_yesterday_rank']	= $Stats[$CurUser['id']]['total_yesterday_rank'];
+		}
 		
 		$UsersUpdate[] = "({$CurUser['id']}, ".(floor((($TTechPoints + $TBuildPoints) / 2) + $TFleetPoints + ($TDefsPoints * (3/4)))).")";
 

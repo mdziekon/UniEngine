@@ -1024,7 +1024,7 @@ function Handler_Telemetry($pageurl)
 		{
 			if(strstr($Data['name'], 'telemetry_'))
 			{
-				if($Data['result'] > 0)
+				if(isset($Data['result']) && $Data['result'] > 0)
 				{
 					$TelemetryData[str_replace('telemetry_', '', $Data['name'])] = $Data['result'];
 				}

@@ -448,7 +448,7 @@ include($_EnginePath.'common.php');
 									break;
 								}
 							}
-							if($DisAllowResSort_Change !== true)
+							if(!isset($DisAllowResSort_Change))
 							{
 								$ChangeSet['settings_resSortArray'] = $_POST['resSort_array'];
 								$ChangeSetTypes['settings_resSortArray'] = 's';
@@ -944,7 +944,7 @@ include($_EnginePath.'common.php');
 					doquery("UPDATE {{table}} SET ".implode(', ', $UpdateQuery)." WHERE `id` = {$_User['id']};", 'users');
 					if($ForceGoingOnVacationMsg === TRUE)
 					{
-						message(($ShowDeletionInfo === true ? $_Lang['Vacation_GoingOnVacationsWithDeletion'] : $_Lang['Vacation_GoingOnVacations']), $_Lang['Vacations_Title'], 'settings.php', 3);
+						message((isset($ShowDeletionInfo) ? $_Lang['Vacation_GoingOnVacationsWithDeletion'] : $_Lang['Vacation_GoingOnVacations']), $_Lang['Vacations_Title'], 'settings.php', 3);
 					}
 
 					$ChangeSetCounted = count($ChangeSet) - $ChangeSetCount;

@@ -323,6 +323,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 	}
 	else
 	{
+		$CanAddToQueue = false;
 		$Parse['Create_Queue'] = parsetemplate($TPL['queue_topinfo'], array('InfoColor' => 'red', 'InfoText' => sprintf($_Lang['Queue_LabInQueue'], implode('<br/>', $LabInQueueAt))));
 	}
 	// End of - Parse Queue
