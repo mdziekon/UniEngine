@@ -213,7 +213,7 @@ include($_EnginePath.'common.php');
 		{
 			foreach($Points['TechArr'] as $TechID => $Level)
 			{
-				if($Level > $TechRecords[$TechID]['lvl'])
+				if(!isset($TechRecords[$TechID]['lvl']) || $Level > $TechRecords[$TechID]['lvl'])
 				{
 					$TechRecords[$TechID] = array('lvl' => $Level, 'user' => $CurUser['id']);
 				}

@@ -3,12 +3,12 @@
 function GetTechnoPoints($CurrentUser)
 {
 	global $_Vars_GameElements, $_Vars_Prices, $_Vars_ElementCategories;
-	static $unitsR, $Cached, $CachedFactors;
+	static $ResourcesCost, $Cached, $CachedFactors;
 
 	$TechCounts = 0;
 	$TechPoints = 0;
 	$TechArr = null;
-	foreach($_Vars_ElementCategories['tech'] AS $Techno)
+	foreach($_Vars_ElementCategories['tech'] as $Techno)
 	{ 
 		$ThisLevel = $CurrentUser[$_Vars_GameElements[$Techno]];
 		if($ThisLevel > 0)
@@ -18,17 +18,16 @@ function GetTechnoPoints($CurrentUser)
 			$TechArr[$Techno] = $ThisLevel;
 			$CacheEmpty = false;
 
-			if($Cached[$Techno][$ThisLevel] > 0)
+			if(isset($Cached[$Techno][$ThisLevel]))
 			{
 				// This Technology was already calculated on that level - get points from Cache
 				$TechPoints += $Cached[$Techno][$ThisLevel];
 				continue;
 			}
-			elseif(!empty($Cached[$Techno]))
+			else if(isset($Cached[$Techno]) && count($Cached[$Techno]) > 1)
 			{
 				// This Technology was calculated, but on lower level - get points from that level
-				$CopyCache = $Cached[$Techno];
-				$StartingLevel = array_pop(array_keys($CopyCache));
+				$StartingLevel = count($Cached[$Techno]);
 			}
 			else
 			{
@@ -37,14 +36,14 @@ function GetTechnoPoints($CurrentUser)
 				$CacheEmpty = true;
 			}
 
-			if($unitsR[$Techno])
+			if(isset($ResourcesCost[$Techno]))
 			{
-				$Units = $unitsR[$Techno];
+				$Units = $ResourcesCost[$Techno];
 			}
 			else
 			{
 				$Units = $_Vars_Prices[$Techno]['metal'] + $_Vars_Prices[$Techno]['crystal'] + $_Vars_Prices[$Techno]['deuterium'];
-				$unitsR[$Techno] = $Units;
+				$ResourcesCost[$Techno] = $Units;
 			}
 			if($CacheEmpty)
 			{
@@ -74,7 +73,7 @@ function GetTechnoPoints($CurrentUser)
 function GetBuildPoints($CurrentPlanet)
 {
 	global $_Vars_GameElements, $_Vars_Prices, $_Vars_ElementCategories;
-	static $unitsB, $Cached, $CachedFactors;
+	static $ResourcesCost, $Cached, $CachedFactors;
 
 	$BuildCounts = 0;
 	$BuildPoints = 0;
@@ -89,17 +88,16 @@ function GetBuildPoints($CurrentPlanet)
 			$BuildArr[$Building] = $ThisLevel;
 			$CacheEmpty = false;
 
-			if($Cached[$Building][$ThisLevel] > 0)
+			if(isset($Cached[$Building][$ThisLevel]))
 			{
 				// This Building was already calculated on that level - get points from Cache
 				$BuildPoints += $Cached[$Building][$ThisLevel];
 				continue;
 			}
-			elseif(!empty($Cached[$Building]))
+			else if(isset($Cached[$Building]) && count($Cached[$Building]) > 1)
 			{
 				// This Building was calculated, but on lower level - get points from that level
-				$CopyCache = $Cached[$Building];
-				$StartingLevel = array_pop(array_keys($CopyCache));
+				$StartingLevel = count($Cached[$Building]);
 			}
 			else
 			{
@@ -108,14 +106,14 @@ function GetBuildPoints($CurrentPlanet)
 				$CacheEmpty = true;
 			}
 
-			if($unitsB[$Building])
+			if(isset($ResourcesCost[$Building]))
 			{
-				$Units = $unitsB[$Building];
+				$Units = $ResourcesCost[$Building];
 			}
 			else
 			{
 				$Units = $_Vars_Prices[$Building]['metal'] + $_Vars_Prices[$Building]['crystal'] + $_Vars_Prices[$Building]['deuterium'];
-				$unitsB[$Building] = $Units;
+				$ResourcesCost[$Building] = $Units;
 			}
 			if($CacheEmpty)
 			{
@@ -149,7 +147,7 @@ function GetDefensePoints($CurrentPlanet)
 	$DefenseCounts = 0;
 	$DefensePoints = 0;
 	$DefenseArr = null;
-	foreach($_Vars_ElementCategories['defense'] AS $Defense)
+	foreach($_Vars_ElementCategories['defense'] as $Defense)
 	{
 		if($CurrentPlanet[$_Vars_GameElements[$Defense]] > 0)
 		{
@@ -173,7 +171,7 @@ function GetFleetPoints($CurrentPlanet)
 	$FleetCounts = 0;
 	$FleetPoints = 0;
 	$FleetArr = null;
-	foreach($_Vars_ElementCategories['fleet'] AS $Fleet)
+	foreach($_Vars_ElementCategories['fleet'] as $Fleet)
 	{
 		if($CurrentPlanet[$_Vars_GameElements[$Fleet]] > 0)
 		{
