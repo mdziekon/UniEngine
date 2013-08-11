@@ -1802,7 +1802,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 					(
 						'mainCheck' => function($JobArray, $ThisCat, $TaskID, $JobID) use ($ThisTaskUser, $Debris_Total_Def)
 						{
-							if($JobArray['hasToBeLeader'] === true AND $ThisTaskUser['isACSLeader'] !== true)
+							if(isset($JobArray['hasToBeLeader']) && $JobArray['hasToBeLeader'] === true && $ThisTaskUser['isACSLeader'] !== true)
 							{
 								return true;
 							}

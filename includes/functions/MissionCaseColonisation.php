@@ -159,7 +159,11 @@ function MissionCaseColonisation($FleetRow, &$_FleetCache)
 							if(!empty($UserTasksUpdate[$CurrentUser['id']]['status'][$ThisCat][$TaskID][$JobID]))
 							{
 								$CurrentUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] = $UserTasksUpdate[$CurrentUser['id']]['status'][$ThisCat][$TaskID][$JobID];
-							}						
+							}
+							if(!isset($CurrentUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID]))
+							{
+								$CurrentUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] = 0;
+							}
 							$CurrentUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] += 1;
 							if($CurrentUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] < $JobArray['count'])
 							{

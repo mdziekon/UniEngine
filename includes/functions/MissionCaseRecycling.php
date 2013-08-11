@@ -108,7 +108,11 @@ function MissionCaseRecycling($FleetRow, &$_FleetCache)
 						if(!empty($UserTasksUpdate[$ThisTaskUser['id']]['status'][$ThisCat][$TaskID][$JobID]))
 						{
 							$ThisTaskUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] = $UserTasksUpdate[$ThisTaskUser['id']]['status'][$ThisCat][$TaskID][$JobID];
-						}						
+						}
+						if(!isset($ThisTaskUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID]))
+						{
+							$ThisTaskUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] = 0;
+						}
 						$ThisTaskUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] += $TaskTemp;
 						if($ThisTaskUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] < $JobArray['count'])
 						{
@@ -129,7 +133,11 @@ function MissionCaseRecycling($FleetRow, &$_FleetCache)
 						if(!empty($UserTasksUpdate[$ThisTaskUser['id']]['status'][$ThisCat][$TaskID][$JobID]))
 						{
 							$ThisTaskUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] = $UserTasksUpdate[$ThisTaskUser['id']]['status'][$ThisCat][$TaskID][$JobID];
-						}						
+						}
+						if(!isset($ThisTaskUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID]))
+						{
+							$ThisTaskUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] = 0;
+						}
 						$ThisTaskUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] += $TaskTemp;
 						if($ThisTaskUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] < $JobArray['count'])
 						{
