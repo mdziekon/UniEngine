@@ -8,6 +8,7 @@ function ElementBuildListBox($CurrentUser, $CurrentPlanet)
 	$NbrePerType = array();
 	$NamePerType = array();
 	$TimePerType = array();
+	$QueueTime = 0;
 
 	foreach($ElementQueue as $ElementLine => $Element)
 	{
@@ -30,9 +31,7 @@ function ElementBuildListBox($CurrentUser, $CurrentPlanet)
 
 	$parse['pretty_time_b_hangar'] = pretty_time($QueueTime - $CurrentPlanet['shipyardQueue_additionalWorkTime']);
 
-	$text .= parsetemplate(gettemplate('buildings_script'), $parse);
-
-	return $text;
+	return parsetemplate(gettemplate('buildings_script'), $parse);
 }
 
 ?>

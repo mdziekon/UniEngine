@@ -77,12 +77,13 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePl
 			if($LabInQueue === false)
 			{
 				$TheCommand = $_GET['cmd'];
-				$TechID = intval($_GET['tech']);
-				$QueueElementID = intval($_GET['el']);
+				$TechID = isset($_GET['tech']) ? intval($_GET['tech']) : 0;
+				$QueueElementID = isset($_GET['el']) ? intval($_GET['el']) : 0;
 
 				if((in_array($TechID, $_Vars_ElementCategories['tech']) AND $TheCommand == 'search') OR ($TheCommand == 'cancel' AND $QueueElementID >= 0))
 				{
 					// Parse Commands
+					$UpdateUser = null;
 					if($TheCommand == 'cancel')
 					{
 						// User requested cancel Action
@@ -135,6 +136,7 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePl
 		$InResearch = false;
 	}
 
+	$TechnoList = '';
 	foreach($_Vars_ElementCategories['tech'] as $Tech)
 	{
 		$RowParse = $_Lang;
@@ -232,9 +234,8 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePl
 			$RowParse['TechRequirementsPlace'] = GetElementTechReq($CurrentUser, $CurrentPlanet, $Tech);
 		}
 
-		$TechnoList.= parsetemplate($TechRowTPL, $RowParse);
+		$TechnoList .= parsetemplate($TechRowTPL, $RowParse);
 	}
-
 	
 	$PageParse = $_Lang;
 	$PageParse['technolist'] = $TechnoList;
@@ -244,9 +245,7 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePl
 		$PageParse['Insert_QueueInfo'] = parsetemplate(gettemplate('_singleRow'), array('Classes' => 'pad5 red', 'Colspan' => 3, 'Text' => $_Lang['Queue_ListView_Info']));
 	}
 	
-	$Page .= parsetemplate(gettemplate('buildings_research'), $PageParse);
-
-	display($Page, $_Lang['Research']);
+	display(parsetemplate(gettemplate('buildings_research'), $PageParse), $_Lang['Research']);
 }
 
 ?>

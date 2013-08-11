@@ -4,6 +4,8 @@ function CancelBuildingFromQueue(&$CurrentPlanet, $CurrentUser)
 {
 	global $_Vars_PremiumBuildings, $_Vars_GameElements, $UserDev_Log;
 
+	$Element = null;
+	
 	$CurrentQueue = $CurrentPlanet['buildQueue'];
 	if($CurrentQueue != 0)
 	{

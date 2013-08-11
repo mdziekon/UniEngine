@@ -1,12 +1,26 @@
 <?php
 
-function GetRestPrice($_User, $planet, $Element, $userfactor = true)
+function GetRestPrice($TheUser, $ThePlanet, $ElementID, $userfactor = true)
 {
-	global $_Vars_Prices, $_Vars_GameElements, $_Lang;
+	global $_Vars_Prices, $_Vars_GameElements, $_Vars_ElementCategories, $_Lang;
 
+	$level = 0;
 	if($userfactor)
 	{
-		$level = ($planet[$_Vars_GameElements[$Element]]) ? $planet[$_Vars_GameElements[$Element]] : $_User[$_Vars_GameElements[$Element]];
+		if(in_array($ElementID, $_Vars_ElementCategories['tech']))
+		{
+			if(isset($TheUser[$_Vars_GameElements[$ElementID]]))
+			{
+				$level = $TheUser[$_Vars_GameElements[$ElementID]];
+			}
+		}
+		else
+		{
+			if(isset($ThePlanet[$_Vars_GameElements[$ElementID]]))
+			{
+				$level = $ThePlanet[$_Vars_GameElements[$ElementID]];
+			}
+		}
 	}
 
 	$array = array
@@ -20,24 +34,24 @@ function GetRestPrice($_User, $planet, $Element, $userfactor = true)
 	$text = "<br><font color=\"#7f7f7f\">{$_Lang['Rest_ress']}: ";
 	foreach($array as $ResType => $ResTitle)
 	{
-		if($_Vars_Prices[$Element][$ResType] != 0)
+		if(isset($_Vars_Prices[$ElementID][$ResType]) && $_Vars_Prices[$ElementID][$ResType] != 0)
 		{
 			$text .= $ResTitle . ": ";
 			if($userfactor)
 			{
-				$cost = floor($_Vars_Prices[$Element][$ResType] * pow($_Vars_Prices[$Element]['factor'], $level));
+				$cost = floor($_Vars_Prices[$ElementID][$ResType] * pow($_Vars_Prices[$ElementID]['factor'], $level));
 			}
 			else
 			{
-				$cost = floor($_Vars_Prices[$Element][$ResType]);
+				$cost = floor($_Vars_Prices[$ElementID][$ResType]);
 			}
-			if($cost > $planet[$ResType])
+			if($cost > $ThePlanet[$ResType])
 			{
-				$text .= "<b style=\"color: rgb(127, 95, 96);\">". prettyNumber($planet[$ResType] - $cost) ."</b> ";
+				$text .= "<b style=\"color: rgb(127, 95, 96);\">". prettyNumber($ThePlanet[$ResType] - $cost) ."</b> ";
 			}
 			else
 			{
-				$text .= "<b style=\"color: rgb(95, 127, 108);\">". prettyNumber($planet[$ResType] - $cost) ."</b> ";
+				$text .= "<b style=\"color: rgb(95, 127, 108);\">". prettyNumber($ThePlanet[$ResType] - $cost) ."</b> ";
 			}
 		}
 	}

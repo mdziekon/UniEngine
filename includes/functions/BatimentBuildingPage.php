@@ -5,6 +5,8 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
 	global	$_EnginePath, $_Vars_ResProduction, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories,
 			$_SkinPath, $_GameConfig, $_GET, $_Vars_PremiumBuildingPrices, $_Vars_MaxElementLevel, $_Vars_PremiumBuildings;
 	
+	$BuildingPage = '';
+	
 	include($_EnginePath.'includes/functions/GetElementTechReq.php');
 	include($_EnginePath.'includes/functions/GetElementPrice.php');
 	include($_EnginePath.'includes/functions/GetRestPrice.php');
@@ -110,6 +112,13 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
 
 	if(!empty($CurrentPlanet['buildQueue']))
 	{
+		$LockResources = array
+		(
+			'metal' => 0,
+			'crystal' => 0,
+			'deuterium' => 0
+		);
+		
 		$CurrentQueue = explode(';', $CurrentPlanet['buildQueue']);
 		foreach($CurrentQueue as $QueueIndex => $ThisBuilding)
 		{
@@ -133,6 +142,10 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
 				$LockResources['deuterium'] += $GetResourcesToLock['deuterium'];
 			}
 
+			if(!isset($LevelModifiers[$ElementID]))
+			{
+				$LevelModifiers[$ElementID] = 0;
+			}
 			if($BuildMode == 'destroy')
 			{
 				$LevelModifiers[$ElementID] += 1;
@@ -165,7 +178,7 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
 			$parse['skinpath'] = $_SkinPath;
 			$parse['i'] = $Element;
 			$BuildingLevel = $CurrentPlanet[$_Vars_GameElements[$Element]];
-			if($LevelModifiers[$Element] != 0)
+			if(isset($LevelModifiers[$Element]))
 			{
 				$PlanetLevel = $BuildingLevel + $LevelModifiers[$Element];
 			}
@@ -178,6 +191,9 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
 			if(in_array($Element, array(1, 2, 3, 4, 12)))
 			{
 				// Show energy on BuildingPage
+				$Prod[4] = null;
+				$Prod[3] = null;
+				$ActualNeedDeut = null;
 				$BuildLevelFactor = 10;
 				$BuildTemp = $CurrentPlanet['temp_max'];
 				$CurrentBuildtLvl = $BuildingLevel;
@@ -267,7 +283,7 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
 					}
 				} 
 
-				if($LevelModifiers[$Element] != 0)
+				if(isset($LevelModifiers[$Element]) && $LevelModifiers[$Element] != 0)
 				{
 					$parse['AddLevelPrice'] = "<b>[{$_Lang['level']}: {$NextBuildLevel}]</b><br/>";
 				} 
@@ -289,7 +305,7 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
 					}
 				}
 
-				if($_Vars_PremiumBuildings[$Element] == 1)
+				if(isset($_Vars_PremiumBuildings[$Element]) && $_Vars_PremiumBuildings[$Element] == 1)
 				{
 					$parse['rest_price'] = "<br/><font color=\"#7f7f7f\">{$_Lang['Rest_ress']}: {$_Lang['DarkEnergy']}";
 					$parse['price'] = "{$_Lang['Requires']}: {$_Lang['DarkEnergy']} <span class=\"noresources\">";
@@ -418,9 +434,7 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
 
 	$parse['BuildingsList'] = $BuildingPage;
 
-	$page .= parsetemplate(gettemplate('buildings_builds'), $parse);
-
-	display($page, $_Lang['Builds']);
+	display(parsetemplate(gettemplate('buildings_builds'), $parse), $_Lang['Builds']);
 }
 
 ?>

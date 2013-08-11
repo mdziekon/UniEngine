@@ -137,7 +137,11 @@ function HandleShipyardQueue($TheUser, &$ThePlanet, $ProductionTime, $EndTime)
 						if(!empty($UserTasksUpdate[$TheUser['id']]['status'][$ThisCat][$TaskID][$JobID]))
 						{
 							$TheUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] = $UserTasksUpdate[$TheUser['id']]['status'][$ThisCat][$TaskID][$JobID];
-						}						
+						}
+						if(!isset($TheUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID]))
+						{
+							$TheUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] = 0;
+						}
 						$TheUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] += $ThisCount;
 						if($TheUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] < $JobArray['count'])
 						{

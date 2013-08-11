@@ -64,6 +64,10 @@ function FleetBuildingPage(&$CurrentPlanet, $CurrentUser)
 								{
 									$AddedSomething = true;
 
+									if(!isset($UpdateAchievements[$Element]))
+									{
+										$UpdateAchievements[$Element] = 0;
+									}
 									$UpdateAchievements[$Element] += $Count;
 									$addToBHangar = "{$Element},{$Count};";								
 									$CurrentPlanet['metal'] -= $Ressource['metal'];
@@ -104,6 +108,7 @@ function FleetBuildingPage(&$CurrentPlanet, $CurrentUser)
 	$ElementRowTPL = gettemplate('buildings_fleet_row');
 	$ElementRowInputTPL = gettemplate('buildings_fleet_row_input');
 
+	$PageTable = '';
 	foreach($_Vars_ElementCategories['fleet'] as $Element)
 	{
 		$Row = array();
@@ -172,20 +177,20 @@ function FleetBuildingPage(&$CurrentPlanet, $CurrentUser)
 		$PageTable .= parsetemplate($ElementRowTPL, $Row);
 	}
 
+	$BuildQueue = '';
 	if($CurrentPlanet['shipyardQueue'] != '')
 	{
 		include($_EnginePath.'includes/functions/ElementBuildListBox.php');
-		$BuildQueue .= ElementBuildListBox($CurrentUser, $CurrentPlanet);
-	}	
+		$BuildQueue = ElementBuildListBox($CurrentUser, $CurrentPlanet);
+	}
 
 	$parse = $_Lang;
 
 	$parse['buildlist'] = $PageTable;
 	$parse['buildinglist'] = $BuildQueue;
 	$parse['QueueSize'] = $QueueSize;
-	$page .= parsetemplate(gettemplate('buildings_fleet'), $parse);	
 
-	display($page, $_Lang['Hangar']);	
+	display(parsetemplate(gettemplate('buildings_fleet'), $parse), $_Lang['Hangar']);	
 }
 
 ?>

@@ -59,7 +59,7 @@ function ShowBuildingQueue($CurrentPlanet, $CurrentUser)
 				$CreateRow .= '<td class="k">';
 				if($ListID == 1)
 				{
-					if($_Vars_PremiumBuildings[$Element] == 1)
+					if(isset($_Vars_PremiumBuildings[$Element]) && $_Vars_PremiumBuildings[$Element] == 1)
 					{
 						$LinkHref = '#';
 						$LinkOnClick = "alert('{$_Lang['CannotDeletePremiumBuilding_Warning']}'); return false;";

@@ -32,6 +32,9 @@ function DefensesBuildingPage(&$CurrentPlanet, $CurrentUser)
 	{
 		if(isset($_POST['fmenge']))
 		{
+			$Shields = array(408 => 0, 407 => 0);
+			$Missiles = array(502 => 0, 503 => 0);
+			
 			$AddedSomething = false;
 
 			$CurrentPlanet = doquery("SELECT * FROM {{table}} WHERE `id` = {$CurrentPlanet['id']} LIMIT 1;", 'planets', true);
@@ -144,6 +147,10 @@ function DefensesBuildingPage(&$CurrentPlanet, $CurrentUser)
 								{
 									$AddedSomething = true;
 
+									if(!isset($UpdateAchievements[$Element]))
+									{
+										$UpdateAchievements[$Element] = 0;
+									}
 									$UpdateAchievements[$Element] += $Count;
 									$CurrentPlanet['metal'] -= $Ressource['metal'];
 									$CurrentPlanet['crystal'] -= $Ressource['crystal'];
@@ -350,16 +357,17 @@ function DefensesBuildingPage(&$CurrentPlanet, $CurrentUser)
 		$PageTable .= parsetemplate($ElementRowTPL, $Row);
 	}
 
+	$BuildQueue = '';
 	if($CurrentPlanet['shipyardQueue'] != '')
 	{
 		include($_EnginePath.'includes/functions/ElementBuildListBox.php');
-		$BuildQueue .= ElementBuildListBox($CurrentUser, $CurrentPlanet);
+		$BuildQueue = ElementBuildListBox($CurrentUser, $CurrentPlanet);
 	}
 	$parse = $_Lang;
 	$parse['buildlist'] = $PageTable;
 	$parse['buildinglist'] = $BuildQueue;
 	$parse['QueueSize'] = $QueueSize;
-	$page .= parsetemplate(gettemplate('buildings_defense'), $parse);
-	display($page, $_Lang['Defense']);
+	
+	display(parsetemplate(gettemplate('buildings_defense'), $parse), $_Lang['Defense']);
 }
 ?>
