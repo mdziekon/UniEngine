@@ -56,45 +56,40 @@ include($_EnginePath.'common.php');
 
 	if($type == 2)
 	{
-		$Order			= 'fleet_points';
+		$Order			= 'fleet_rank';
 		$Points			= 'fleet_points';
-		$Counts			= 'fleet_count';
 		$Rank			= 'fleet_rank';
 		$OldRank		= 'fleet_old_rank';
 		$YesterdayRank	= 'fleet_yesterday_rank';
 	}
 	else if($type == 3)
 	{
-		$Order			= 'tech_points';
+		$Order			= 'tech_rank';
 		$Points			= 'tech_points';
-		$Counts			= 'tech_count';
 		$Rank			= 'tech_rank';
 		$OldRank		= 'tech_old_rank';
 		$YesterdayRank	= 'tech_yesterday_rank';
 	}
 	else if($type == 4)
 	{
-		$Order			= 'build_points';
+		$Order			= 'build_rank';
 		$Points			= 'build_points';
-		$Counts			= 'build_count';
 		$Rank			= 'build_rank';
 		$OldRank		= 'build_old_rank';
 		$YesterdayRank	= 'build_yesterday_rank';
 	}
 	else if($type == 5)
 	{
-		$Order			= 'defs_points';
+		$Order			= 'defs_rank';
 		$Points			= 'defs_points';
-		$Counts			= 'defs_count';
 		$Rank			= 'defs_rank';
 		$OldRank		= 'defs_old_rank';
 		$YesterdayRank	= 'defs_yesterday_rank';
 	}
 	else
 	{
-	 	$Order			= 'total_points';
+	 	$Order			= 'total_rank';
 		$Points			= 'total_points';
-		$Counts			= 'total_count';
 		$Rank			= 'total_rank';
 		$OldRank		= 'total_old_rank';
 		$YesterdayRank	= 'total_yesterday_rank';
@@ -144,7 +139,7 @@ include($_EnginePath.'common.php');
 		$UseKey = 'player';
 		$StatHeader = 'stat_playertable_header';
 		$NeedenFields = "{{prefix}}users.id, {{prefix}}users.username, {{prefix}}users.old_username, {{prefix}}users.old_username_expire, `ally`.`ally_name`, {{prefix}}users.ally_id, {{prefix}}users.is_banned, {{prefix}}users.is_onvacation, {{prefix}}users.ban_endtime, `users_stats`.*";
-		$GetQuery = "SELECT {{table}}.*, {$NeedenFields} FROM {{table}} LEFT JOIN {{prefix}}achievements_stats AS `users_stats` ON `users_stats`.`A_UserID` = {{table}}.id_owner LEFT JOIN {{prefix}}users ON {{prefix}}users.id = {{table}}.id_owner LEFT JOIN {{prefix}}alliance AS `ally` ON `ally`.`id` = {{prefix}}users.`ally_id` WHERE `stat_type` = '1' ORDER BY `{$Order}` DESC LIMIT {$start}, 100;";
+		$GetQuery = "SELECT {{table}}.*, {$NeedenFields} FROM {{table}} LEFT JOIN {{prefix}}achievements_stats AS `users_stats` ON `users_stats`.`A_UserID` = {{table}}.id_owner LEFT JOIN {{prefix}}users ON {{prefix}}users.id = {{table}}.id_owner LEFT JOIN {{prefix}}alliance AS `ally` ON `ally`.`id` = {{prefix}}users.`ally_id` WHERE `stat_type` = '1' ORDER BY `{$Order}` ASC LIMIT {$start}, 100;";
 		$RowTPL = gettemplate('stat_playertable');
 		$ColSpan = 10;
 	}
@@ -154,7 +149,7 @@ include($_EnginePath.'common.php');
 		$IsUser = false;
 		$UseKey = 'ally';
 		$StatHeader = 'stat_alliancetable_header';
-		$GetQuery = "SELECT {{table}}.*, {{prefix}}alliance.id AS `ally_id`, {{prefix}}alliance.ally_name, {{prefix}}alliance.ally_tag, {{prefix}}alliance.ally_members FROM {{table}} LEFT JOIN {{prefix}}alliance ON {{prefix}}alliance.id = {{table}}.id_owner WHERE `stat_type` = '2' ORDER BY `{$Order}` DESC LIMIT {$start}, 100;";
+		$GetQuery = "SELECT {{table}}.*, {{prefix}}alliance.id AS `ally_id`, {{prefix}}alliance.ally_name, {{prefix}}alliance.ally_tag, {{prefix}}alliance.ally_members FROM {{table}} LEFT JOIN {{prefix}}alliance ON {{prefix}}alliance.id = {{table}}.id_owner WHERE `stat_type` = '2' ORDER BY `{$Order}` ASC LIMIT {$start}, 100;";
 		$RowTPL = gettemplate('stat_alliancetable');
 		$ColSpan = 7;
 	}
@@ -230,7 +225,7 @@ include($_EnginePath.'common.php');
 				$parse['daychange'] = '+'.$ranking_daily;
 				$parse['DayChange_Color'] = 'green';
  			}
-			$parse['Points'] = prettyNumber($StatRow[$Order]);
+			$parse['Points'] = prettyNumber($StatRow[$Points]);
 			$parse['ally_id'] = $StatRow['ally_id'];
 
 			if($IsUser)
@@ -287,7 +282,7 @@ include($_EnginePath.'common.php');
 				$parse['ally_members'] = $StatRow['ally_members'];
 				if($StatRow['ally_members'] > 0)
 				{
-					$parse['ally_members_points']= prettyNumber(floor($StatRow[$Order] / $StatRow['ally_members']));
+					$parse['ally_members_points']= prettyNumber(floor($StatRow[$Points] / $StatRow['ally_members']));
 				}
 				else
 				{
