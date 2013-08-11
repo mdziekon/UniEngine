@@ -179,36 +179,45 @@ function Tasks_ParseRewards($RewardData, &$UpdateArray)
 	if($RewardData['type'] == 'RESOURCES')
 	{
 		// Add Resources
-		if(!isset($UpdateArray['planet']['metal']))
+		if(isset($RewardData['met']))
 		{
-			$UpdateArray['planet']['metal'] = 0;
+			if(!isset($UpdateArray['planet']['metal']))
+			{
+				$UpdateArray['planet']['metal'] = 0;
+			}
+			if(!isset($UpdateArray['devlog']['M']))
+			{
+				$UpdateArray['devlog']['M'] = 0;
+			}
+			$UpdateArray['planet']['metal'] += $RewardData['met'];
+			$UpdateArray['devlog']['M'] += $RewardData['met'];
 		}
-		if(!isset($UpdateArray['planet']['crystal']))
+		if(isset($RewardData['cry']))
 		{
-			$UpdateArray['planet']['crystal'] = 0;
+			if(!isset($UpdateArray['planet']['crystal']))
+			{
+				$UpdateArray['planet']['crystal'] = 0;
+			}
+			if(!isset($UpdateArray['devlog']['C']))
+			{
+				$UpdateArray['devlog']['C'] = 0;
+			}
+			$UpdateArray['planet']['crystal'] += $RewardData['cry'];
+			$UpdateArray['devlog']['C'] += $RewardData['cry'];
 		}
-		if(!isset($UpdateArray['planet']['deuterium']))
+		if(isset($RewardData['deu']))
 		{
-			$UpdateArray['planet']['deuterium'] = 0;
+			if(!isset($UpdateArray['planet']['deuterium']))
+			{
+				$UpdateArray['planet']['deuterium'] = 0;
+			}
+			if(!isset($UpdateArray['devlog']['D']))
+			{
+				$UpdateArray['devlog']['D'] = 0;
+			}
+			$UpdateArray['planet']['deuterium'] += $RewardData['deu'];
+			$UpdateArray['devlog']['D'] += $RewardData['deu'];
 		}
-		if(!isset($UpdateArray['devlog']['M']))
-		{
-			$UpdateArray['devlog']['M'] = 0;
-		}
-		if(!isset($UpdateArray['devlog']['C']))
-		{
-			$UpdateArray['devlog']['C'] = 0;
-		}
-		if(!isset($UpdateArray['devlog']['D']))
-		{
-			$UpdateArray['devlog']['D'] = 0;
-		}
-		$UpdateArray['planet']['metal'] += $RewardData['met'];
-		$UpdateArray['devlog']['M'] += $RewardData['met'];
-		$UpdateArray['planet']['crystal'] += $RewardData['cry'];
-		$UpdateArray['devlog']['C'] += $RewardData['cry'];
-		$UpdateArray['planet']['deuterium'] += $RewardData['deu'];
-		$UpdateArray['devlog']['D'] += $RewardData['deu'];
 	}
 	else if($RewardData['type'] == 'PLANET_ELEMENT')
 	{
