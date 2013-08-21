@@ -8,6 +8,7 @@ $_SetAccessLogPath = '../';
 $_EnginePath = './../';
 
 include($_EnginePath.'common.php');
+include($_EnginePath.'includes/functions/GetElementRessources.php');
 
 	if(!CheckAuth('go'))
 	{
