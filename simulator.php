@@ -198,22 +198,28 @@ include($_EnginePath.'common.php');
 			$BreakMSG = $_Lang['Break_noDEFShips'];
 		}
 		
-		foreach($AttackersData as $UserTemp => $Data)
+		if(isset($AttackersData))
 		{
-			if(empty($AttackingFleets[$UserTemp]))
+			foreach($AttackersData as $UserTemp => $Data)
 			{
-				unset($AttackingFleets[$UserTemp]);
-				unset($AttackingTechs[$UserTemp]);
-				unset($AttackersData[$UserTemp]);
+				if(empty($AttackingFleets[$UserTemp]))
+				{
+					unset($AttackingFleets[$UserTemp]);
+					unset($AttackingTechs[$UserTemp]);
+					unset($AttackersData[$UserTemp]);
+				}
 			}
 		}
-		foreach($DefendersData as $UserTemp => $Data)
+		if(isset($DefendersData))
 		{
-			if(empty($DefendingFleets[$UserTemp]))
+			foreach($DefendersData as $UserTemp => $Data)
 			{
-				unset($DefendingFleets[$UserTemp]);
-				unset($DefendingTechs[$UserTemp]);
-				unset($DefendersData[$UserTemp]);
+				if(empty($DefendingFleets[$UserTemp]))
+				{
+					unset($DefendingFleets[$UserTemp]);
+					unset($DefendingTechs[$UserTemp]);
+					unset($DefendersData[$UserTemp]);
+				}
 			}
 		}
 
