@@ -78,7 +78,7 @@ function HandlePlanetQueue_TechnologySetNext(&$ThePlanet, &$TheUser, $CurrentTim
 				$ThePlanet['techQueue'] = implode(';', $Queue);
 				$ThePlanet['techQueue_firstEndTime'] = $ElementEndTime;
 				$TheUser['techQueue_Planet'] = $ThePlanet['id'];
-				$TheUser['techQueue_firstEndTime'] = $ElementEndTime;
+				$TheUser['techQueue_EndTime'] = $ElementEndTime;
 
 				$UserDev_Log[] = array('PlanetID' => $ThePlanet['id'], 'Date' => $CurrentTime, 'Place' => 4, 'Code' => 1, 'ElementID' => $ElementID);
 
