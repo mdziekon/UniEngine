@@ -29,7 +29,6 @@ function SecureInput($Input)
 
 function isPro($_User = false)
 {
-	return true;
 	if($_User === false)
 	{
 		global $_User;
