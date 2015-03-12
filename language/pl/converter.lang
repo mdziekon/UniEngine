@@ -24,7 +24,7 @@ $_Lang['Conv_moonbuild']     = "[b]Utworzył się księżyc na orbicie tej plane
 
 $_Lang['Conv_battleonMoon'] = '[b]Bitwa odbyła się na Księżycu[/b]';
 
-$_Lang['Conv_generated_by']  = 'Wygenerowano przez [url=https://github.com/Michciu/UniEngine][b]LiteConverter[/b][/url] (ver. [b]1.2.1.1[/b])';
+$_Lang['Conv_generated_by']  = 'Wygenerowano przez [url=https://github.com/mdziekon/UniEngine][b]LiteConverter[/b][/url] (ver. [b]1.2.1.1[/b])';
 
 $_Lang['Set_ColorTheme']     = 'Schemat Kolorów Raportu';
 

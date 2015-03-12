@@ -4,7 +4,7 @@ UniEngine (PL)
 Silnik "OGame-podobnej" gry przegladarkowej  
 
 **Informacje o silniku**:  
-[[PL] Mozliwosci silnika](https://github.com/Michciu/UniEngine/wiki/%5BPL%5D-Mo%C5%BCliwo%C5%9Bci-silnika)
+[[PL] Mozliwosci silnika](https://github.com/mdziekon/UniEngine/wiki/%5BPL%5D-Mo%C5%BCliwo%C5%9Bci-silnika)
 
 Wymagania
 ---------
@@ -42,8 +42,8 @@ See LICENSE for the GNU GENERAL PUBLIC LICENSE.
 See OTHERLICENSES for the Licenses of included external resources.  
 
 UniEngine  
-Copyright 2010 - 2013 Michciu  
-https://github.com/Michciu  
+Copyright 2010 - 2013 mdziekon  
+https://github.com/mdziekon  
 
 Version 1.0 - Updated: July 18, 2013  
 This UniEngine is licensed under the GPL licenses:  

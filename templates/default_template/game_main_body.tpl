@@ -64,7 +64,7 @@
 				<a class="m6 lime" href="http://forum" title="{ForumTitle}" target="_blank">{forum}</a> | 
 				<a class="m6" href="{AdminBack}rules.php" title="{RulesTitle}" target="_blank">{rules}</a> | 
 				<a class="m6" href="{AdminBack}contact.php" title="{ContactTitle}">{contact}</a> | 
-				<a class="m6 skyblue" href="https://github.com/Michciu/UniEngine" target="_blank">Powered by UniEngine</a>
+				<a class="m6 skyblue" href="https://github.com/mdziekon/UniEngine" target="_blank">Powered by UniEngine</a>
 			</div>
 		</div>
 		<div class="pr t0 l0 w1 inv pad2">&nbsp;</div>

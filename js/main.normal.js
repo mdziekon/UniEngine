@@ -3,7 +3,7 @@
 // Insert jQuery.tipTip
 // Insert jQuery.qTip
 
-// GlobaScript.js (by Michciu)
+// GlobaScript.js (by mdziekon)
 // Google Analytics code goes here
 
 function createCookie(name, value, days)
@@ -23,7 +23,7 @@ function createCookie(name, value, days)
 }
 createCookie('var_1124', screen.width + '_' + screen.height + '_' + screen.colorDepth, 1);
 
-// Global.js (by Michciu)
+// Global.js (by mdziekon)
 $(document).ready(function ()
 {
 	$('#clockDiv').qtip(

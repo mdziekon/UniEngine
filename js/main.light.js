@@ -1,7 +1,7 @@
 // Insert Overlib
 // Insert jQuery
 
-// GlobaScript.js (by Michciu)
+// GlobaScript.js (by mdziekon)
 // Google Analytics code goes here
 
 function createCookie(name, value, days)

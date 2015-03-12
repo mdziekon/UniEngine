@@ -3,11 +3,11 @@
 /**
  * Combat Engine v.2
  * 
- * @author		Michciu
+ * @author		mdziekon
  * @version		2.2.2
  * @build		15
  * @status		Unused, incompatible with UniEngine
- * @copyright	2010 by Michciu [for UniEngine]
+ * @copyright	2010 by mdziekon [for UniEngine]
  * 
  */
 

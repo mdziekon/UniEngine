@@ -3,8 +3,8 @@
 /**
  * phpBench
  * 
- * @author		Michciu
- * @copyright	Michciu 2010 - 2011 [All rights reserved]
+ * @author		mdziekon
+ * @copyright	mdziekon 2010 - 2011 [All rights reserved]
  * @version		1.6.2.2
  */
  

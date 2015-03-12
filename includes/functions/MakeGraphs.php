@@ -5,8 +5,8 @@
  * MakeGraphs.php
  *
  * @version 1.0.3.1
- * @copyright 2012 by Michciu for UniEngine [https://github.com/Michciu/UniEngine]
- * @using awfy [http://hg.mozilla.org/users/danderson_mozilla.com/awfy] (adjusted by Michciu)
+ * @copyright 2012 by mdziekon for UniEngine [https://github.com/mdziekon/UniEngine]
+ * @using awfy [http://hg.mozilla.org/users/danderson_mozilla.com/awfy] (adjusted by mdziekon)
  */
 
 function MakeGraphs($Modes, $Scores, $Dimensions = array(), $OwnTooltipCode = false)

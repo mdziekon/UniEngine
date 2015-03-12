@@ -28,7 +28,7 @@ $_Lang['sys_msg_into_defs'] = 'obrońców';
 $_Lang['sys_x_times'] = 'y';
 $_Lang['sys_attack_wave'] = "%s %s raz%s z całkowitą mocą %s w %s. Tarcza %s pochłoneła %s punktów zniszczeń.";
 $_Lang['sys_battle_onMoon']				= 'Bitwa odbyła się na Księżycu';
-$_Lang['sys_raport_build_engine']= 'Walka obliczona przez <a href="https://github.com/Michciu/UniEngine" target="_blank" class="orange">ARES BattleEngine</a>';
+$_Lang['sys_raport_build_engine']= 'Walka obliczona przez <a href="https://github.com/mdziekon/UniEngine" target="_blank" class="orange">ARES BattleEngine</a>';
 $_Lang['sys_mess_attacker_lost_in_1_round']= 'Kontakt z atakującą flotą został zerwany!<br />(Twoja flota została zniszczona w pierwszej turze)';
 
 $_Lang['BattleReport_Morale_Attacker_Negative'] = 'Ze względu na dyspropocję w Poziomie rozwoju Imperium między Agresorem <b class="skyblue">%s</b> a Obrońcą (współczynnik: <b class="skyblue">%s</b>), ta walka była niehonorowa dla Agresora.<br/>Morale załogi Agresora spadają do poziomu <b class="red">%s%%</b>.';

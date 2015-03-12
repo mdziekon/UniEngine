@@ -3,11 +3,11 @@
 /**
  * A.R.E.S Combat Engine
  * 
- * @author		Michciu
+ * @author		mdziekon
  * @version		1.2.0.1
  * @build		41
  * @status		Release
- * @copyright	2011 - 2012 by Michciu [for UniEngine]
+ * @copyright	2011 - 2012 by mdziekon [for UniEngine]
  * 
  */
 
