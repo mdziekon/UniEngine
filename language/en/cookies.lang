@@ -1,0 +1,10 @@
+<?php
+
+$_Lang['cookies']['Title']   = 'Błąd Ciasteczek';
+$_Lang['cookies']['Error1']  = 'Błędne Cookies (Ciasteczek) [Error #001]. Usuń Cookies i spróbuj ponownie!<br/><br/><a href="login.php">Zaloguj się ponownie</a>!';
+$_Lang['cookies']['Error2']  = 'Błędne Cookies (Ciasteczek) [Error #002]. Usuń Cookies i spróbuj ponownie!<br/><br/><a href="login.php">Zaloguj się ponownie</a>!';
+$_Lang['cookies']['Error3']  = 'Błędne Cookies (Ciasteczek) [Error #003]. Usuń Cookies i spróbuj ponownie!<br/><br/><a href="login.php">Zaloguj się ponownie</a>!';
+$_Lang['cookies']['Error4']  = 'Błędne Cookies (Ciasteczek) [Error #004]. Usuń Cookies i spróbuj ponownie!<br/><br/><a href="login.php">Zaloguj się ponownie</a>!';
+$_Lang['cookies']['Error5']  = 'Błędne Cookies (Ciasteczek) [Error #005]. Usuń Cookies i spróbuj ponownie!<br/><br/><a href="login.php">Zaloguj się ponownie</a>!';
+
+?>

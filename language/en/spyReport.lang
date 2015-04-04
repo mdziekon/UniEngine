@@ -1,0 +1,53 @@
+<?php
+
+$_Lang['sys_spy_maretials']= "Wyszpiegowane surowce";
+$_Lang['sys_spy_fleet']= "Flota";
+$_Lang['sys_spy_deffleet']				= 'Stacjonujące Floty';
+$_Lang['sys_spy_defenses'] = "Obrona";
+
+$_Lang['spatk'] = '<table class="sth" align="center" cellspacing="0"><tr><td class="c center"><a class="orange" href="fleet.php?galaxy=%s&system=%s&planet=%s&planettype=%s&target_mission=1">'.$_Lang['type_mission'][1].'</a></td></tr></table>';
+$_Lang['spy_dest_dest'] = '<center class="red">Sondy szpiegowskie zniszczone!</center>';
+$_Lang['spdes1'] = '<table class="sth" align="center" cellspacing="0"><tr><td class="c center">Prawdopodobieństwo zestrzelenia sond: %s%%</td></tr></table>';
+$_Lang['spdes2'] = '<table class="sth" align="center" cellspacing="0"><tr><td class="c center">Prawdopodobieństwo zestrzelenia sond: %s%%<br/><b class="red">Sondy szpiegowskie zniszczone!</b></td></tr></table>';
+
+$_Lang['spy_res'] = 'Raport Szpiegowski z';
+$_Lang['Spy_Player'] = 'Gracz';
+$_Lang['Spy_Abandoned_1'] = 'Porzucona Planeta';
+$_Lang['Spy_Abandoned_3'] = 'Porzucony Księżyc';
+$_Lang['Spy_OnPlanet'] = 'planety';
+$_Lang['Spy_OnMoon'] = 'księżyca';
+$_Lang['Spy_Morale_EmptyReport'] = 'Podczas analizy zebranych informacji doszło do buntu wśród twojej załogi, spowodowanego niskimi moralami.<br/>Raport został utajniony...';
+
+$_Lang['SpyRes_Msg'] = '<table class="sth nohide" cellspacing="0"><tr><td class="c center pad5" colspan="5"><span>'.$_Lang['spy_res'].' %s "%s" <a class="orange" href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a> ('.$_Lang['Spy_Player'].': <a class="red" href="profile.php?uid=%s">%s</a>)<a class="SpyExpand"><img src="images/expand.png"/></a></td></tr></table><table class="sth"><tr>';
+$_Lang['SpyRes_Msg'] .= '<td class="stl">'.$_Lang['Metal'].'</td><td class="stv">%s</td><td>&nbsp;</td>';
+$_Lang['SpyRes_Msg'] .= '<td class="stl">'.$_Lang['Crystal'].'</td><td class="stv">%s</td></tr><tr>';
+$_Lang['SpyRes_Msg'] .= '<td class="stl">'.$_Lang['Deuterium'].'</td><td class="stv">%s</td><td>&nbsp;</td>';
+$_Lang['SpyRes_Msg'] .= '<td class="stl">'.$_Lang['Energy'].'</td><td class="stv">%s</td></tr>';
+$_Lang['SpyRes_Msg_ab']	= '<table class="sth nohide" cellspacing="0"><tr><td class="c center pad5" colspan="5"><span>'.$_Lang['spy_res'].' %s "%s" <a class="orange" href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a> (<b class="red">%s</b>)<a class="SpyExpand"><img src="images/expand.png"/></a></td></tr></table><table class="sth"><tr>';
+$_Lang['SpyRes_Msg_ab']	.= '<td class="stl">'.$_Lang['Metal'].'</td><td class="stv">%s</td><td>&nbsp;</td>';
+$_Lang['SpyRes_Msg_ab']	.= '<td class="stl">'.$_Lang['Crystal'].'</td><td class="stv">%s</td></tr><tr>';
+$_Lang['SpyRes_Msg_ab']	.= '<td class="stl">'.$_Lang['Deuterium'].'</td><td class="stv">%s</td><td>&nbsp;</td>';
+$_Lang['SpyRes_Msg_ab']	.= '<td class="stl">'.$_Lang['Energy'].'</td><td class="stv">%s</td></tr>';
+$_Lang['SpyRes_Msg_empty'] = '<table class="sth nohide" cellspacing="0"><tr><td class="c center pad5" colspan="5"><span>'.$_Lang['spy_res'].' %s "%s" <a class="orange" href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a> ('.$_Lang['Spy_Player'].': <a class="red" href="profile.php?uid=%s">%s</a>)<a class="SpyExpand"><img src="images/expand.png"/></a></td></tr></table><table class="sth"><tr>';
+$_Lang['SpyRes_Msg_empty'] .= '<td class="c red center pad5" colspan="5">%s</td>';
+$_Lang['SpyRes_Msg_ab_empty'] = '<table class="sth nohide" cellspacing="0"><tr><td class="c center pad5" colspan="5"><span>'.$_Lang['spy_res'].' %s "%s" <a class="orange" href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a> (<b class="red">%s</b>)<a class="SpyExpand"><img src="images/expand.png"/></a></td></tr></table><table class="sth"><tr>';
+$_Lang['SpyRes_Msg_ab_empty'] .= '<td class="c red center pad5" colspan="5">%s</td>';
+
+$_Lang['SpyRes_Oth'] = '<table class="sth" cellspacing="0"><tr><td class="c" colspan="%s">%s</td></tr>';
+$_Lang['SpyRes_Mor'] = '';
+$_Lang['SpyRes_Mor'] .= '<table class="sth" cellspacing="0"><tr><td class="c" colspan="5">Morale</td></tr>';
+$_Lang['SpyRes_Mor'] .= '<tr><td class="stl">Obecny Poziom</td><td class="stv">%s%%</td><td>&nbsp;</td>';
+$_Lang['SpyRes_Mor'] .= '<td class="stl">Nastroje obywateli</td><td class="stv">%s</td></tr>';
+$_Lang['SpyRes_Mor'] .= '<tr><td class="stl">Poziom rozwoju Imperium</td><td class="stv">%s pkt.</td><td>&nbsp;</td>';
+$_Lang['SpyRes_Mor'] .= '</tr>';
+$_Lang['SpyRes_Emp'] = '<table>';
+
+$_Lang['SpyRes_Morale_Mood_Positive'] = 'Pozytywne';
+$_Lang['SpyRes_Morale_Mood_Neutral'] = 'Neutralne';
+$_Lang['SpyRes_Morale_Mood_Negative'] = 'Negatywne';
+
+$_Lang['s_tdl'] = '<td class="stl">';
+$_Lang['s_tdr'] = '<td class="stv">';
+$_Lang['s_tdn'] = '<td>&nbsp;</td>';
+
+?>

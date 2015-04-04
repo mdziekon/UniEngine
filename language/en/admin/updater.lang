@@ -1,0 +1,8 @@
+<?php
+
+$_Lang['Updater_Title'] = 'Aktualizator';
+
+$_Lang['Updater_Done'] = 'Aktualizacja zakończona! Ostatni numer aktualizacji: %s.';
+$_Lang['Updater_NothingFound'] = 'Brak nowych plików aktualizacyjnych';
+
+?>

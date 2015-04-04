@@ -1,0 +1,16 @@
+<?php
+
+$_Lang['Page_Title'] = 'Odbanowywanie';
+
+$_Lang['Form_UserInput'] = 'Gracze do odbanowania<br/>(Oddziel przecinkami)<br/>(ID podawaj w nawiasach [])';
+$_Lang['Form_Other'] = 'Inne opcje';
+$_Lang['Form_RemoveVacation'] = 'Zdejmij Urlop';
+$_Lang['Form_Unban'] = 'Odbanuj';
+
+$_Lang['Msg_Unban1OK'] = 'Gracz %s został odbanowany!';
+$_Lang['Msg_UnbanMOK'] = 'Gracze %s zostali odbanowani!';
+$_Lang['Error_NoOne2Unban'] = 'Nie znaleziono graczy do odbanowania!';
+$_Lang['Error_BadSearch'] = 'Niepoprawne dane wyszukiwania!';
+$_Lang['Error_EmptySearch'] = 'Nie podano graczy do wyszukania!';
+
+?>

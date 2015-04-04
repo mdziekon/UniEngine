@@ -1,0 +1,95 @@
+<?php
+
+$_Lang['Title']                  = 'Symulator Walk';
+$_Lang['Settings']               = 'Opcje';
+$_Lang['SelectSlot']             = 'Zmień slot (Związek Flot - ACS)';
+$_Lang['ResultTitle']            = 'Wynik Symulacji';
+$_Lang['ShowHide']               = 'Ukryj/Pokaż';
+
+$_Lang['Slot']                   = 'Slot';
+$_Lang['Submit']                 = 'Przeprowadź symulację!';
+
+$_Lang['Attacker']               = 'Agresor nr. <span id="attacker_slot">1</span>';
+$_Lang['Defender']               = 'Obrońca nr. <span id="defender_slot">1</span> <span id="is_planet_owner">(Właściciel Planety/Księżyca)</span>';  
+$_Lang['PlanetOwner']            = '(Właściciel Planety/Księżyca)';           
+
+$_Lang['Attacker_Txt']           = 'Agresor ';
+$_Lang['Defender_Txt']           = 'Obrońca ';
+
+$_Lang['Morale']					= 'Morale';
+$_Lang['Morale_Level']			= 'Poziom morali';
+$_Lang['Technology']             = 'Technologie';
+$_Lang['Fleets']                 = 'Flota';
+$_Lang['Defense']                = 'Obrona';
+$_Lang['Techs'][1]               = 'Technologia bojowa';
+$_Lang['Techs'][2]               = 'Technologia ochronna';
+$_Lang['Techs'][3]               = 'Opancerzenie';
+$_Lang['Techs'][4]               = 'Technologia laserowa';
+$_Lang['Techs'][5]               = 'Technologia jonowa';
+$_Lang['Techs'][6]               = 'Technologia plazmowa';
+$_Lang['Techs'][7]               = 'Technologia Antymaterii';
+$_Lang['Techs'][8]               = 'Strumień Dezintegracyjny';
+$_Lang['Techs'][9]               = 'Rozwój grawitonów';
+
+$_Lang['FillMyTechs']            = 'Wypełnij moim poziomem technologii';
+$_Lang['FillMyFleets']           = 'Wypełnij moją flotą';
+$_Lang['Fill_Clean']             = 'Wyczyść';
+$_Lang['Button_Max']             = 'Max';
+$_Lang['Button_Min']             = 'Min';
+
+$_Lang['CalcTotalTime']          = 'Czas kalkulacji';
+$_Lang['Atk_won']                = 'Ilość walk wygranych przez Agresora(ów)';
+$_Lang['Def_won']                = 'Ilość walk wygranych przez Obrońcę(ów)';
+$_Lang['It_was_draw']            = 'Ilość remisów';
+$_Lang['Sim_count']              = 'Ilość symulacji';
+$_Lang['BattleWonBy']            = 'Walka wygrana przez';
+$_Lang['WonBy_Attacker']         = 'Agresora(ów)';
+$_Lang['WonBy_Defender']         = 'Obrońcę(ów)';
+$_Lang['WonBy_Draw']             = '- Remis -';
+
+$_Lang['See_last_BR']            = 'Zobacz ';
+$_Lang['BR_Info']                = 'Raporty usuwane są po 10 minutach od kalkulacji!';
+$_Lang['Show_all_BR']            = 'Pokaż wszystkie Raporty';
+$_Lang['save_reports']           = 'Zapisz wszystkie raporty (*) (wymagane Konto Pro)';
+$_Lang['save_reports_info']      = 'Jeśli zaznaczysz tą opcję, możesz obejrzeć każdy wygenerowany raport, ale możesz wygenerować ich tylko 1000 na 10 minut!';
+$_Lang['CloseWindow']            = 'Zamknij';
+
+$_Lang['Warn_noDeathStar']       = '- Symulacja niszczenia księżyca nie została przeprowadzona, brak Gwiazd Śmierci!';
+$_Lang['Warn_noMoonDiameter']    = '- Symulacja niszczenia księżyca nie została przeprowadzona, brak średnicy księżyca!';
+$_Lang['Warn_maxLoopCountExt']   = '- Na raz można przeprowadzić tylko 50 Symulacji!';
+$_Lang['Warn_noProForSaveAll']   = '- Opcja zapisu wszystkich Symulacji jest dostępna po zakupie Konta Pro!';
+$_Lang['Warn_generatedMaxNumRW'] = '- Zapisano już 1000 Symulacji w ciągu ostatnich 10 minut!';
+$_Lang['Break_noATKShips']       = 'Nie podano statków Agresora do symulacji!';
+$_Lang['Break_noDEFShips']       = 'Nie podano statków Obrońcy do symulacji!';
+$_Lang['Break_noDEFTechs']       = 'Nie podano technologii Obrońcy!';
+$_Lang['Break_noATKTechs']       = 'Nie podano technologii Agresora!';
+
+$_Lang['avg_atk_lost']           = 'Straty Agresora(ów)';
+$_Lang['avg_def_lost']           = 'Straty Obrońcy(ów)';
+$_Lang['avg_atk_ship_lost']      = 'Straty Agresora(ów) (statki)';
+$_Lang['avg_def_ship_lost']      = 'Straty Obrońcy(ów) (statki)';
+$_Lang['txt_rounds']             = 'Ilość Rund';
+$_Lang['txt_min']                = 'min';
+$_Lang['txt_max']                = 'max';
+$_Lang['avg_rounds']             = 'Średnia ilość rund';
+$_Lang['t_max_rounds']           = 'Maksymalna ilość rund';
+$_Lang['t_min_rounds']           = 'Minimalna ilość rund';
+
+$_Lang['units']                  = 'jednostek';
+$_Lang['ships']                  = 'statków';
+
+$_Lang['simulate_moon_build']    = 'Symuluj powstanie księżyca';
+$_Lang['moon_diameter']          = 'Średnica księżyca';
+$_Lang['moon_diameter_info']     = 'Podaj tylko w przypadku symulacji niszczenia księżyca!';
+$_Lang['Moon_created_x_times']   = 'Ilość stworzonych księżyców';
+$_Lang['Moon_destroyed_x_times'] = 'Ilość zniszczonych księżyców';
+
+$_Lang['BreakLineLight']         = '<tr style="visibility: hidden;"><td></td></tr>';
+$_Lang['BreakLine']              = '<tr style="visibility: hidden;"><td><br/></td></tr>';
+
+$_Lang['simulate_x_times']       = 'Ilość symulacji';
+$_Lang['simulate_moon_dest']     = 'Symuluj niszczenie księżyca';
+$_Lang['simulate_def_rebuild']   = 'Symuluj odbudowę obrony';
+$_Lang['def_has_engineer']       = 'Czy obrońca ma Mechanika?';
+
+?>

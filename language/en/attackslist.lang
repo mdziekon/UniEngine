@@ -1,0 +1,24 @@
+<?php
+
+$_Lang['Bash_Title']                 = 'Lista dzisiejszych Ataków';
+
+$_Lang['Bash_Desc']                  = 'Poniższa tabela przedstawia wykaz twoich dzisiejszych ataków na innych graczy, które podlegają Regule Bashu (Regulamin: <a href="rules.php#rule_3_6" target="_blank" class="orange">3.6. Bash</a>). Wszystkie ataki liczone są od północy (00:00)<br/>Pamiętaj, że po przekroczeniu Progu Bashu poszkodowany gracz może wnieść na Ciebie skargę...';
+
+$_Lang['Bash_Header']                = 'Lista Ataków';
+
+$_Lang['Bash_NoAttacksToday']        = 'Brak Ataków, które podlegają Regule Bashu';
+
+$_Lang['Bash_Username']              = 'Gracz / Planeta';
+$_Lang['Bash_BashCount']             = 'Ilość Ataków';
+$_Lang['Bash_Status']                = 'Status';
+$_Lang['Bash_CordPlanet']            = 'Planeta';
+$_Lang['Bash_CordMoon']              = 'Księżyc';
+
+$_Lang['Bash_StatusOKLeft']          = 'Pozostała ilość ataków: %s';
+$_Lang['Bash_Status0Left']           = 'Limit osiągnięty';
+$_Lang['Bash_StatusExceededUser']    = 'Limit ataków na gracza przekroczony!';
+$_Lang['Bash_StatusExceededPlanet']  = 'Limit ataków na %s przekroczony!';
+$_Lang['Bash_Exceeded_Planet']       = 'planetę';
+$_Lang['Bash_Exceeded_Moon']         = 'księżyc';
+
+?>
