@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * XNOVA 2015
+ * @url https://github.com/XxidroxX/Xnova
+ * TODO:  
+ */
 if(!empty($_GET['r']))
 {
 	$ID = intval($_GET['r']);

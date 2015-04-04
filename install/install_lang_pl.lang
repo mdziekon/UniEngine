@@ -1,6 +1,10 @@
 <?php
-
-$_Lang['PageTitle'] = 'Instalator silnika UniEngine';
+/**
+ * XNOVA 2015
+ * @url https://github.com/XxidroxX/Xnova
+ * TODO: translate
+ */
+$_Lang['PageTitle'] = 'Installer Xnova';
 
 $_Lang['Install_Info'] = 'Witamy w formularzu instalacyjnym silnika UniEngine!<br/><br/>Skoro widzisz ten komunikat, oznacza to, że ustawienia twojego serwera PHP są zgodne z wymaganiami.<br/><br/>Poniżej znajduje się kilkanaście pól tekstowych i opcji wyboru, za pomocą których skonfigurujesz swój serwer i utworzysz konto administratora w grze.<br/><br/>Prosimy uważnie przeczytać wszystkie informacje nt. każdego z pól, aby bezproblemowo przebrnąć przez proces instalacji.<br/><b style="color: orange;">(*) - pole wymagane</b>';
 

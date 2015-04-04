@@ -1,0 +1,90 @@
+<?php
+/**
+ * XNOVA 2015
+ * @url https://github.com/XxidroxX/Xnova
+ * TODO: check functions and move in a new file 
+ */
+if(!defined('INSIDE'))
+{
+	die('Access Denied!');
+}
+
+$_Lang['Title']							= 'Registration';
+
+$_Lang['Description']					= 'Free registration in the game '.$_GameConfig['game_name'];
+
+$_Lang['Universe']						= 'Universe';
+$_Lang['UniSelector']					= 'Universum';
+$_Lang['SelectUni_2']					= 'Universum 2';
+$_Lang['SelectUni_3']					= 'Universum 3';
+
+// Registration form
+$_Lang['registry']						= 'Registration';
+$_Lang['Input_Username']				= 'Username';
+$_Lang['Input_Passoword']				= 'Password';
+$_Lang['Input_Email']					= 'Email';
+$_Lang['Input_Galaxy']					= 'Galaxy';
+$_Lang['Input_Rules']					= 'Rules';
+$_Lang['signup']					    = ' Register ';
+
+$_Lang['UniInfo_GameSpeed']				= 'Game speed';
+$_Lang['UniInfo_ResSpeed']				= 'Resources speed';
+$_Lang['UniInfo_FleetSpeed']			= 'Fleet speed';
+$_Lang['UniInfo_StartDate']				= 'Start data';
+$_Lang['UniInfo_WorldSize']				= 'World size';
+$_Lang['UniInfo_ACSOn']					= 'ACS (Attacks and Defense)';
+$_Lang['UniInfo_RapidOn']				= 'Quick works'; //its correct?
+$_Lang['UniInfo_FleetDeb']				= 'Scrap Fleet';
+$_Lang['UniInfo_DefDeb']				= 'Scrap of the defense';
+$_Lang['UniInfo_MotherSize']			= 'Mother Planet fields';
+
+$_Lang['UniOpt_Active']					= 'Active';
+$_Lang['UniOpt_InActive']				= 'Inactive';
+$_Lang['UniInfo_MotherFields']			= 'field';
+
+$_Lang['ReCaptcha_instructions_visual']	= 'Type the code:';
+$_Lang['ReCaptcha_instructions_audio']	= 'Rewrite what you hear:';
+$_Lang['ReCaptcha_play_again']			= 'again';
+$_Lang['ReCaptcha_cant_hear_this']		= 'Download as MP3';
+$_Lang['ReCaptcha_visual_challenge']	= 'I want to rewrite the code from the image';
+$_Lang['ReCaptcha_audio_challenge']		= 'I want the code by ear';
+$_Lang['ReCaptcha_refresh_btn']			= 'The new code';
+$_Lang['ReCaptcha_help_btn']			= 'The Help';
+$_Lang['ReCaptcha_incorrect_try_again']	= 'Prescribed the wrong code, try again';
+
+$_Lang['JSLang'] = array
+(
+	'Info_RequestSent'			=> '<img src="./images/ajaxload.gif" style="margin-right: 10px;" /> Creating an account...',
+	
+	'Alert_UsernameShort'		=> 'Player name must be no longer than 3 characters!',
+	'Alert_UsernameLong'		=> 'Player name can not be longer than 64 characters!',
+	'Alert_PasswordShort'		=> 'The password must be longer than 3 characters!',
+	'Alert_NoEmail'				=> 'You must provide an active email address!',
+	'Alert_NoGalaxy'			=> 'You must specify where you want to start playing the Galaxy!',
+	'Alert_RulesNotAccepted'	=> 'You must accept the Terms and Conditions!',
+	'Alert_CaptchaNotWriten'	=> 'Not prescribed ReCaptcha code!',
+	'Alert_RequestTimeout'		=> 'Request timed out. Please try again in a few moments...',
+	'Alert_RequestError'		=> 'An error occurred while processing your request. Please contact the Administration...',
+	'Alert_JSONError'			=> 'An error occurred while processing server response. Please contact the Administration...',
+	
+	'Alert_RequestCode_1'		=> 'Player name must be no longer than 3 charactersi!',
+	'Alert_RequestCode_2'		=> 'Player name can not be longer than 64 characters!',
+	'Alert_RequestCode_3'		=> 'Player name contains illegal characters!',
+	'Alert_RequestCode_4'		=> 'The password must be longer than 3 characters!',
+	'Alert_RequestCode_5'		=> 'You must provide an active email address!',
+	'Alert_RequestCode_6'		=> 'EMail address contains illegal characters!',
+	'Alert_RequestCode_7'		=> 'EMail address looks incorrect!',
+	'Alert_RequestCode_8'		=> 'Sorry, but we do not accept temporary boxes...',
+	'Alert_RequestCode_9'		=> 'You must accept the Terms and Conditions!',
+	'Alert_RequestCode_10'		=> 'ReCaptcha rewritten code is incorrect!',
+	'Alert_RequestCode_11'		=> 'Such a player\'s name is already taken!',
+	'Alert_RequestCode_12'		=> 'This EMail address is already in use!',
+	'Alert_RequestCode_13'		=> 'You must specify where you want to start playing the Galaxy!',
+	'Alert_RequestCode_14'		=> 'Have exceeded the size of the Universe quoting the Galaxy!',
+	'Alert_RequestCode_15'		=> 'Sorry, but in this galaxy there is no longer available!',
+	
+	'Info_RequestCode_1'		=> 'Your account has been set up correctly, the transition will happen in a moment to the game...',
+	'Info_RequestCode_2'		=> 'Your account has been set up correctly. Now waiting for the opening of the Universe...',
+);
+
+?>

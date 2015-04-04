@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * XNOVA 2015
+ * @url https://github.com/XxidroxX/Xnova
+ * TODO:  
+ */
 include('includes/phpBench.php'); $_BenchTool = new phpBench();
 if(!empty($_BenchTool)){ $_BenchTool->simpleCountStart(false, 'telemetry__c'); }
 
@@ -32,10 +36,10 @@ $_DBLink		= '';
 $ForceIPnUALog	= false;
 $Common_TimeNow	= time();
 
-define('DEFAULT_SKINPATH'	, 'skins/epicblue/');
+define('DEFAULT_SKINPATH'	, 'skins/xnova/');
 define('TEMPLATE_DIR'		, 'templates/');
 define('TEMPLATE_NAME'		, 'default_template');
-define('DEFAULT_LANG'		, 'pl');
+define('DEFAULT_LANG'		, 'en');
 
 include($_EnginePath.'includes/constants.php');
 if(defined('INSTALL_NOTDONE'))

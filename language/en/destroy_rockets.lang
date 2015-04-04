@@ -1,0 +1,9 @@
+<?php
+
+$_Lang['Title']              = 'Niszczenie rakiet';
+$_Lang['NoSilo']             = 'Na tej planecie nie ma Silosu!';
+$_Lang['BadCountGiven']      = 'Podano nieprawidłową ilość rakiet!';
+$_Lang['NothingDestroyed']   = 'Żadne rakiety nie zostały zniszczone!';
+$_Lang['RocketsDestroyed']   = 'Zniszczono<br/>Przeciwrakiety (<b class="orange">%s</b>) oraz Rakiety Międzyplanetarne (<b class="orange">%s</b>)<br/>na Planecie "%s" [%s:%s:%s]!';
+
+?>

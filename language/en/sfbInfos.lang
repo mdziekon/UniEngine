@@ -1,0 +1,25 @@
+<?php
+
+$_Lang['sfb_Title']                          = 'Inteligentna Blokada Flot';
+$_Lang['sfb_GlobalText']                     = 'Obecnie na całym Universum trwa <b class="red">Blokada Flot</b>, która potrwa do dnia <b class="orange">%s</b>, do godziny <b class="orange">%s</b>.<br/>Blokada obejmuje %s. Więcej informacji o Blokadzie: <a href="redirect.php?id=5" target="_blank"><u>Link</u></a><br/>Powód blokady: %s';
+$_Lang['sfb_Mission_All']                    = '<b class="skyblue">wszystkie misje flot</b>';
+$_Lang['sfb_Mission_Aggresive']              = '<b class="skyblue">wszystkie agresywne misje flot</b>';
+$_Lang['sfb_Mission_Civil']                  = '<b class="skyblue">wszystkie cywilne misje flot</b>';
+$_Lang['sfb_Mission_Other']                  = 'następujące misje flot: <b class="skyblue">%s</b>';
+$_Lang['sfb_Mission_DontBlockIdle']          = ' (blokada nie obejmuje graczy <b class="skyblue">nieaktywnych</b>)';
+$_Lang['sfb_Mission_AggresiveDontBlockIdle'] = ' (blokada misji agresywnych nie obejmuje graczy <b class="skyblue">nieaktywnych</b>)';
+$_Lang['sfb_NoReason']                       = '- nie podano powodu -';
+
+$_Lang['sfb_Mission__1']     = 'Napad';
+$_Lang['sfb_Mission__2']     = 'Napad w Związku';
+$_Lang['sfb_Mission__3']     = 'Transport';
+$_Lang['sfb_Mission__4']     = 'Stacjonowanie';
+$_Lang['sfb_Mission__5']     = 'Zatrzymanie';
+$_Lang['sfb_Mission__6']     = 'Szpiegowanie';
+$_Lang['sfb_Mission__7']     = 'Kolonizacja';
+$_Lang['sfb_Mission__8']     = 'Zbierz szczątki';
+$_Lang['sfb_Mission__9']     = 'Niszczenie';
+$_Lang['sfb_Mission__10']    = 'Atak Rakietowy';
+$_Lang['sfb_Mission__15']    = 'Ekspedycja';
+
+?>

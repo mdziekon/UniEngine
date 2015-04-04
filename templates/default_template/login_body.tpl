@@ -27,7 +27,7 @@
 		<tr style="visibility: hidden;"><td style="font-size: 5px;">&nbsp;</td></tr>
 		<tr>
             <th colspan="2" class="pad5">
-                <a href="https://github.com/mdziekon/UniEngine" target="_blank" class="skyblue">Powered by UniEngine</a>
+                <a href="https://github.com/XxidroxX/Xnova---2015" target="_blank" class="skyblue">Powered by Xnova</a>
             </th>
         </tr>
     </table>

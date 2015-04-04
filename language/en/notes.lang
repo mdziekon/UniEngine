@@ -1,0 +1,44 @@
+<?php
+
+$_Lang['Title'] = 'Twoje Notatki';
+$_Lang['Title_EditRow'] = 'Edycja notatki';
+$_Lang['Title_AddRow'] = 'Dodaj notatkę';
+
+$_Lang['Link_AddNote'] = 'Dodaj nową notatkę';
+
+$_Lang['Headers_Title'] = 'Temat';
+$_Lang['Headers_Date'] = 'Data dodania';
+$_Lang['Headers_Priority'] = 'Priorytet';
+$_Lang['Headers_Text'] = 'Treść';
+$_Lang['Headers_Limit'] = 'Limit';
+
+$_Lang['Info_NoRows'] = 'Brak notatek';
+$_Lang['Info_SelectAll'] = 'Zaznacz/odznacz wszystko';
+
+$_Lang['Priority_1'] = 'Niski';
+$_Lang['Priority_2'] = 'Średni';
+$_Lang['Priority_3'] = 'Wysoki';
+
+$_Lang['Action_DeleteSelected'] = 'Usuń zaznaczone';
+$_Lang['Action_DeleteAll'] = 'Usuń wszystko';
+$_Lang['Action_Cancel'] = 'Wróć';
+$_Lang['Action_Save'] = 'Zapisz';
+$_Lang['Action_Submit'] = 'Wykonaj';
+
+$_Lang['JS_Confirm'] = 'Czy jesteś pewien, że chcesz usunąć wszystkie notatki?';
+
+$_Lang['Errors_BadIDGiven'] = 'Podano niepoprawny identyfikator!';
+$_Lang['Errors_IDNoExist'] = 'Taka notatka nie istnieje!';
+$_Lang['Errors_NoteNotYour'] = 'Nie możesz przeglądać tej notatki!';
+$_Lang['Errors_TitleEmpty'] = 'Tytuł nie może być pusty!';
+$_Lang['Errors_BadPriority'] = 'Niepoprawny priorytet!';
+$_Lang['Errors_TextEmpty'] = 'Treść nie może być pusta!';
+$_Lang['Errors_NothingToDelete'] = 'Brak notatek do usunięcia!';
+$_Lang['Errors_NothingDeleted'] = 'Nic nie zostało usunięte!';
+
+$_Lang['Msg_EditSuccess'] = 'Poprawnie zapisano zmiany!';
+$_Lang['Msg_AddSuccess'] = 'Notatka poprawnie zapisana!';
+$_Lang['Msg_DeleteAllSuccess'] = 'Notatki zostały usunięte!';
+$_Lang['Msg_DeleteSelectedSuccess'] = 'Zaznaczone notatki zostały usunięte!';
+
+?>

@@ -1,0 +1,50 @@
+<?php
+
+$_Lang['Header_FleetBlock'] = 'Blokada Flot';
+
+$_Lang['Body_Title'] = 'Konfiguracja serwera';
+$_Lang['Body_GameSettings'] = 'Ustawienia gry';
+
+$_Lang['Body_Save'] = 'Zapisz';
+
+$_Lang['Headers_EnforceConfigReload'] = 'Zarządzanie Cache Konfiguracji';
+$_Lang['Headers_EnforceConfigReload_Button'] = 'Wymuś przeładowanie Konfiguracji Serwera';
+$_Lang['Headers_EngineVersion'] = 'Wersja Silnika';
+$_Lang['Headers_EngineBuild'] = 'Build Silnika';
+$_Lang['Headers_CloseServer'] = 'Zamknij Serwer';
+$_Lang['Headers_CloseServerReason'] = 'Przyczyna zamknięcia';
+$_Lang['Headers_EnforceRulesAccept'] = 'Wymuś akceptację Regulaminu';
+$_Lang['Headers_EnforceRulesLastChange'] = 'Ostatnia zmiana Regulaminu';
+$_Lang['Headers_Telemetry'] = 'Włącz Telemetrię';
+$_Lang['Headers_BBCode'] = 'Włącz BBCode w Wiadomościach';
+$_Lang['Headers_OverviewAdminInfoEnabled'] = 'Podgląd - Pokaż Informacje od Zarządu';
+$_Lang['Headers_OverviewAdminInfoText'] = 'Podgląd - Tekst Informacji od Zarządu';
+$_Lang['Headers_OverviewBottomBannersEnabled'] = 'Podgląd - Pokaż Reklamy na Dole';
+$_Lang['Headers_OverviewBottomBannersText'] = 'Podgląd - Treść Reklam na Dole';
+$_Lang['Headers_BannedIPs'] = 'Zbanowanie Adresy IP';
+$_Lang['Headers_BannedMailDomains'] = 'Zbanowane Domeny EMail (SpamBox)';
+
+$_Lang['Headers_Game_GameSpeed'] = 'Prędkość Gry';
+$_Lang['Headers_Game_ResourceSpeed'] = 'Prędkość Wydobycia';
+$_Lang['Headers_Game_FleetSpeed'] = 'Prędkość Flot';
+$_Lang['Headers_Game_DebrisFleet'] = 'Złom z Floty';
+$_Lang['Headers_Game_DebrisDefence'] = 'Złom z Obrony';
+$_Lang['Headers_Game_DebrisDefenceMissile'] = 'Złom z Obrony (Atak Rakietowy)';
+$_Lang['Headers_Game_ResearchOnLabBuild'] = 'Blokuj Badania podczas rozbudowy';
+$_Lang['Headers_Game_StatPoints'] = 'Przelicznik surowców na Punkty';
+$_Lang['Headers_Game_InitialFields'] = 'Początkowa ilość pól';
+$_Lang['Headers_Game_BasicIncome_Metal'] = 'Podstawowe wydobycie Metalu';
+$_Lang['Headers_Game_BasicIncome_Crystal'] = 'Podstawowe wydobycie Kryształu';
+$_Lang['Headers_Game_BasicIncome_Deuterium'] = 'Podstawowe wydobycie Deuteru';
+$_Lang['Headers_Game_BasicIncome_Energy'] = 'Podstawowa produkcja Energii';
+
+$_Lang['Labels_DefaultOption'] = 'Domyślne';
+
+$_Lang['JS_ConfirmNeeded'] = 'Zmieniono ważne Ustawienia Serwera, czy jesteś pewien, że chcesz zapisać zmiany?';
+
+$_Lang['Messages_NoUpdateMade'] = 'Nie dokonano żadnych zmian!';
+$_Lang['Messages_UpdateSuccess'] = 'Zaktualizowano %s wartości!';
+$_Lang['Messages_NothingToUpdate'] = 'Nie ma potrzeby aktualizacji lub dane niepoprawne!';
+$_Lang['Messages_ConfigCacheReloaded'] = 'Cache konfiguracji serwera przeładowane!';
+
+?>

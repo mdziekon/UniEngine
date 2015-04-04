@@ -1,0 +1,37 @@
+<?php
+
+$_Lang['Title']              = 'Symulator Ataków Rakietowych';
+
+$_Lang['DataInput']          = 'Wprowadź dane';
+$_Lang['Sim_Result']         = 'Wynik Symulacji';
+
+$_Lang['Defender']           = 'Obrońca';
+$_Lang['Attacker']           = 'Agresor';
+
+$_Lang['InterceptMiss']      = 'Przeciwrakiety';
+$_Lang['InterplanetMiss']    = 'Rakiety międzyplanetarne';
+
+$_Lang['MainTarget']         = 'Główny cel ataku';
+$_Lang['Everythink']         = 'Wszystko';
+
+$_Lang['Submit']             = 'Przeprowadź Symulację!';
+
+$_Lang['No_IPM_Given']       = 'Nie podano ilości Rakiet Międzyplanetarnych!';
+$_Lang['No_Defs_Given']      = 'Nie wprowadzono żadnych Systemów Obronnych!';
+
+$_Lang['IPMissiles_Destroyed']   = 'Wszystkie Rakiety Międzyplanetarne zostały zniszczone!';
+$_Lang['IPMissiles_CapturedX']   = 'Ilość przechwyconych Rakiety Międzyplanetarnych: %s';
+
+$_Lang['Destroyed_Sys']          = '<u>Zniszczone Systemy Obronne</u>';
+$_Lang['Nothing_destroyed']      = '<u style="color: orange;">Nic nie zostało zniszczone!</u>';
+$_Lang['Destroyed_Sys_Count']    = '<u>Ilość utraconych jednostek</u>:';
+$_Lang['Lost_units_ICM']         = '<u>Stracone Surowce z Przeciwrakiet</u>';
+$_Lang['Lost_units_Sys']         = '<u>Stracone Surowce z Systemów Obronnych</u>';
+$_Lang['Range']                  = '<u>Pole rażenia rakiety</u>';
+$_Lang['DefDebris']              = '<u>Utworzone pole zniszczeń</u>';
+$_Lang['SquareMeters']           = 'metrów kwadratowych';
+$_Lang['Lost_units_IPM']         = '<u>Zużyte Surowce na Rakiety Międzyplanetarne</u>';
+
+$_Lang['units']                  = 'jednostek';
+
+?>

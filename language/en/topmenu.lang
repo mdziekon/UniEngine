@@ -1,0 +1,45 @@
+<?php
+
+$_Lang['logout']         = 'Logout';
+$_Lang['player']         = 'Player';
+$_Lang['friends']        = 'Friendlist';
+$_Lang['options']        = 'Options';
+$_Lang['stats']          = 'Stats';
+$_Lang['search']         = 'Search';
+$_Lang['notes']          = 'Notes';
+$_Lang['rules']          = 'Rules';
+$_Lang['contact']        = 'Contact';
+$_Lang['chat']           = 'Chat';
+$_Lang['admin_cp']       = '<b style="color: lime;">AdminPanel</b>';
+$_Lang['go_cp']          = '<b style="color: lime;">GO Panel</b>';
+$_Lang['sgo_cp']         = '<b style="color: lime;">SGO Panel</b>';
+$_Lang['forum']          = 'Forum';
+$_Lang['banned']         = 'Pillory';
+$_Lang['ReportLink']     = 'Report system';
+$_Lang['Polls']          = 'Polls';
+
+$_Lang['ServerTimeTxt']  = 'Server time';
+
+$_Lang['ChatTitle']      = 'Chat for player';
+$_Lang['FriendsTitle']   = 'List of your friends';
+$_Lang['NotesTitle']     = 'Your notes';
+$_Lang['StatsTitle']     = 'Table statistics';
+$_Lang['SearchTitle']    = 'universal search';
+$_Lang['RulesTitle']     = 'server rules';
+$_Lang['ContactTitle']   = 'Contact with the management server';
+$_Lang['OptionsTitle']   = 'Setup your account';
+$_Lang['LogoutTitle']    = 'Sign out';
+$_Lang['AdminLinkTitle'] = 'Admin panel';
+$_Lang['GOLinkTitle']    = 'Game Operator Panel';
+$_Lang['SGOLinkTitle']   = 'Super Game Operator Panel';
+$_Lang['ForumTitle']     = 'Official Game Forum';
+$_Lang['BannedTitle']    = 'List of banned players';
+$_Lang['PollsTitle']     = 'Support the development of the server responding to the survey of Administration!';
+$_Lang['ReportTitle']    = 'Report offense player or a bug in the game!';
+
+$_Lang['Pro']            = 'Account Pro';
+$_Lang['ProTitle']       = 'Check the duration of your Pro account and additional information';
+$_Lang['Free']           = 'Account Free';
+$_Lang['FreeTitle']      = 'Check out why you should buy a Pro account!';
+
+?>

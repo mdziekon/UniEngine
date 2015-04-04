@@ -1,0 +1,86 @@
+<?php
+
+$_Lang['PageTitle']  = 'Przeglądarka Logów Akcji';
+
+// Look
+$_Lang['LogBrowser']     = 'Przeglądarka';
+$_Lang['User']           = 'Gracz';
+$_Lang['Date']           = 'Data';
+$_Lang['Size']           = 'Rozmiar';
+$_Lang['TotalLogsCount'] = 'Całkowita ilość znalezionych logów tego gracza';
+$_Lang['SearchForLogs']  = 'Szukaj Logów tego gracza wg. dat';
+$_Lang['From']           = 'Od';
+$_Lang['To']             = 'Do';
+$_Lang['Submit']         = 'Szukaj';
+$_Lang['Reset']          = 'Resetuj';
+$_Lang['Packed']         = 'Spakowany';
+$_Lang['Actions']        = 'Akcje';
+
+$_Lang['Time']           = 'Czas';
+$_Lang['File']           = 'Plik';
+$_Lang['Data']           = 'Dane GET i POST';
+
+$_Lang['FilteringActive']    = 'Filtrowanie aktywne';
+$_Lang['Filters_Activate']   = 'Aktywuj';
+$_Lang['Filters_Comparision'] = 'Porównanie';
+$_Lang['Filters_Exclusion']  = 'Wykluczenie';
+$_Lang['Filters_RegExp']     = 'RegExp';
+$_Lang['Filters_CompareArgs']= 'Porównuj argumenty';
+$_Lang['Filters_Query']      = 'Fraza';
+$_Lang['Filters_Additional'] = 'Wyświetlanie';
+
+$_Lang['ShowingXofYRows']    = 'Ilość pokazanych wpisów: %s (Dostępne: %s | Wszystkie: %s)';
+
+$_Lang['Pages']              = 'Strony';
+$_Lang['Next']               = '&#187;';
+$_Lang['Prev']               = '&#171;';
+
+// Log Parser
+$_Lang['Log_IPSetToX']       = '<b class="orange">Używane IP: %s</b>';
+$_Lang['Log_IPChangedToX']   = '<b class="orange">Zmiana IP: %s</b>';
+$_Lang['Log_IPisCurentlyX']	= '<b class="orange">Aktualne IP: %s</b>';
+$_Lang['Log_BrowserStart']	= '<b class="orange">Używana przeglądarka: %s</b>';
+$_Lang['Log_BrowserCurrent'] = '<b class="orange">Aktualna przeglądarka: %s</b>';
+$_Lang['Log_BrowserChange']	= '<b class="orange">Zmiana przeglądarki: %s</b>';
+$_Lang['Log_ScreenChange']   = '<b class="orange">Zmiana rozdzielczości: %s</b>';
+$_Lang['Log_ScreenCurrent']	= '<b class="orange">Aktualna rozdzielczość: %s</b>';
+$_Lang['Log_TooManyLines']   = '<b class="red">Osiągnięto limit wyświetlanych Wpisów (%s)!</b>';
+$_Lang['Log_ReachedFilter']  = '<b class="red">Osiągnięto czas maksymalny (%s:%s:%s)!</b>';
+$_Lang['Log_No_GET_POST']    = 'Brak danych';
+$_Lang['Log_GETData']        = 'GET';
+$_Lang['Log_POSTData']       = 'POST';
+$_Lang['Log_Array']          = 'Tablica';
+$_Lang['Log_POST_UnserializeError']  = '<b style="color: red;">Błąd funkcji Unserialize!</b>';
+$_Lang['Log_UncompatibleFormat']     = 'Niekompatybilny format danych!';
+$_Lang['Log_BadFormatLines'] = '<b class="red">Pominięto wpisy o niepoprawnym formacie danych (ilość: %s)!</b>';
+
+$_Lang['ExpandArrays']       = 'Rozwiń Tablice';
+$_Lang['CollapseArrays']     = 'Zwiń Tablice';
+$_Lang['ExpandAmps']         = 'Rozwiń Ampersandy';
+$_Lang['CollapseAmps']       = 'Zwiń Ampersandy';
+$_Lang['ResendRequest']		= 'Wyślij to żądanie';
+
+$_Lang['ExpandAllArr']       = 'Rozwiń Tablice';
+$_Lang['CollapseAllArr']     = 'Zwiń Tablice';
+$_Lang['ExpandAllAmp']       = 'Rozwiń Ampersandy';
+$_Lang['CollapseAllAmp']     = 'Zwiń Ampersandy';
+
+$_Lang['AutoExpandArr']      = 'Auto Rozwijanie Tablic';
+$_Lang['AutoExpandAmp']      = 'Auto Rozwijanie Ampersandów';
+
+// Infos
+$_Lang['Info_NoLogsFilter'] = '<b class="red">Nie znaleziono pasujących Logów!</b>';
+$_Lang['Info_NoLogs']    = 'Brak Logów dla tego użytkownika!';
+$_Lang['Info_NoLogsForThatPeriod']   = 'Brak Logów dla tego użytkownika we wskazanym przedziale czasowym!';
+$_Lang['Info_RequestProceeding'] = 'Wysyłanie żądania...';
+
+// Errors
+$_Lang['Error_BadUID']           = 'Niepoprane ID Użytkownika!';
+$_Lang['Error_LogNoExists']      = 'Taki Log nie istnieje!';
+$_Lang['Error_BadDateFormat']    = 'Niepoprawny format Daty!';
+$_Lang['Error_ResendBadLine']	= '<b class="red">Niepoprawny numer linii!</b>';
+$_Lang['Error_ResendLineEmpty']	= 'Ta linia jest pusta!';
+$_Lang['Error_ResendLineBadFormat'] = 'Niepoprawny format linii!';
+$_Lang['Error_ResendLineBadRevScan'] = 'Podczas wstecznego skanowania wystąpił błąd!';
+
+?>

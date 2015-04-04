@@ -1,0 +1,35 @@
+<?php
+
+$_Lang['mail_text']         = 'Ten email został wygenerowany przez skrypt odzyskiwania kodu aktywacyjnego na <a href="'.GAMEURL_STRICT.'">'.$_GameConfig['game_name'].'</a><br /><br /><b>Twój nowy link aktywacyjny to:</b> {activationlink}<br/><br/>Jeśli to nie ty generowałeś ten link, zignoruj tą wiadomość<br/>Życzymy powodzenia w grze!';
+
+$_Lang['mail_template']     = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
+$_Lang['mail_template']    .= '<html>';
+$_Lang['mail_template']    .= '<head>';
+$_Lang['mail_template']    .= '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">';
+$_Lang['mail_template']    .= '</head>';
+$_Lang['mail_template']    .= '<body>';
+$_Lang['mail_template']    .= $_Lang['mail_text'];
+$_Lang['mail_template']    .= '</body>';
+$_Lang['mail_template']    .= '</html>';
+
+$_Lang['mail_title']        = 'Ponowna aktywacja';
+
+$_Lang['ResetCode'] = "Ponowne wysłanie linku aktywacyjnego";
+$_Lang['TextCode1'] = "Proszę o wpisanie adresu e-mail.";
+$_Lang['TextCode2'] = "Po wpisaniu mail'a kliknij generuj, a na adres e-mail dostaniesz wygenerowany nowy kod aktywacyjny.";
+$_Lang['email']    = "EMail";
+$_Lang['ButtonSendPass'] = "Generuj";
+$_Lang['CodeForm'] = "Formularz";
+$_Lang['Title']      = 'Generowanie kodu aktywacyjnego';
+
+$_Lang['go_back']                = '<br/><br/><a href="lostcode.php">Powrót</a>';
+
+$_Lang['new_code_sent']          = 'Nowy kod aktywacyjny został wysłany na podany Email!'.$_Lang['go_back'];
+$_Lang['smtp_error']             = 'Wystąpił błąd podczas wysyłania wiadomości Email:<br/>%s<br/>Proszę <a href="contact.php">skontaktować się z Administratorem</a>!'.$_Lang['go_back'];
+$_Lang['acc_already_activated']  = 'To konto jest już aktywne!'.$_Lang['go_back'];
+$_Lang['no_email_in_db']         = 'Podany Email nie pasuje do żadnego konta!'.$_Lang['go_back'];
+$_Lang['bad_email_given']        = 'Podano niepoprawny adres Email (sprawdź czy przez przypadek nie wpisałeś niedozwolonego znaku)!'.$_Lang['go_back'];
+$_Lang['no_mail_given']          = 'Nie podano adresu Email!'.$_Lang['go_back'];
+$_Lang['prevent_spaming']        = 'Przepraszamy, ale nowy kod aktywacyjny można wysyłać tylko raz co godzinę - zabezpieczenie przed SPAMem i niepotrzebnym obciążeniem serwera pocztowego.';
+
+?>
