@@ -1110,7 +1110,7 @@ include($_EnginePath.'common.php');
 				$Build .= InsertJavaScriptChronoApplet('pl', 'this', $RestTime, false, false, 'function() { SetTimer = \"<b class=lime>'.$_Lang['BuildJS_Complete'].'</b>\"; document.getElementById(\"dlink\").innerHTML = \'<a href=\"overview.php?planet='.$PlanetID.'\">'.$_Lang['BuildJS_Continue'].'</a>\'; window.setTimeout(\'document.location.href=\"overview.php?planet='.$PlanetID.'\";\', 1000); }');
 				$Build .= $_Lang['tech'][$CurrBuild[0]].' ('.$CurrBuild[1].')';
 				$Build .= '<br /><div id="bxxplthis" class="z">'.pretty_time($RestTime, true).'</div>';
-				if($_Vars_PremiumBuildings[$CurrBuild[0]] == 1)
+				if(isset($_Vars_PremiumBuildings[$CurrBuild[0]]) and $_Vars_PremiumBuildings[$CurrBuild[0]] == 1) //fix an error. This solution isn't corrent but work
 				{
 					$Build .= '<div id="dlink"><a class="red" style="cursor: pointer;" onclick="alert(\''.$_Lang['CannotDeletePremiumBuilding_Warning'].'\')">'.$_Lang['DelFirstQueue'].'</a></div>';
 				}

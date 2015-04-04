@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * XNOVA 2015
+ * @url https://github.com/XxidroxX/Xnova
+ * TODO: 
+ */
 define('INSIDE', true);
 define('UEC_INLOGIN', true);
 

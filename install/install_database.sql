@@ -1035,7 +1035,7 @@ CREATE TABLE IF NOT EXISTS `{prefix}_users` (
   `password` char(32) NOT NULL DEFAULT '',
   `email` varchar(64) NOT NULL DEFAULT '',
   `email_2` varchar(64) NOT NULL DEFAULT '',
-  `lang` varchar(8) NOT NULL DEFAULT 'pl',
+  `lang` varchar(8) NOT NULL DEFAULT 'en',
   `authlevel` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `isAI` tinyint(1) NOT NULL DEFAULT '0',
   `avatar` varchar(255) NOT NULL DEFAULT '',
@@ -1254,7 +1254,7 @@ INSERT INTO `{prefix}_config` (`config_name`, `config_value`) VALUES
 ('TelemetryEnabled', '{Config_TelemetryEnabled}'),
 ('enforceRulesAcceptance', '0'),
 ('last_rules_changes', '0'),
-('EngineInfo_Version', '1.0.0'),
+('EngineInfo_Version', '0.0.1'),
 ('EngineInfo_BuildNo', '1'),
 ('UniEngine_Updater_LastUpdateApplied', '1'),
 ('cron_GC_LastOptimize', UNIX_TIMESTAMP());
