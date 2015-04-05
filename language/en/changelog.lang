@@ -1,0 +1,33 @@
+<?php
+
+$_Lang['infolabel_resourcesspeed']	= 'Resources';
+$_Lang['infolabel_gamespeed']		= 'Game';
+$_Lang['infolabel_fleetspeed']		= 'Fleet';
+$_Lang['infolabel_shipyardqueue']	= 'Fleet queue';
+$_Lang['infolabel_buildingsqueue']	= 'Building queue';
+$_Lang['infolabel_noobprotection']	= 'Noob protection';
+$_Lang['infolabel_to']				= 'To';
+$_Lang['infolabel_points']			= 'points';
+$_Lang['infolabel_nonoobprotection'] = 'The overall picture of defense players';
+$_Lang['infolabel_from']				= 'From';
+$_Lang['infotip_nonoobprotection']	= 'From this point there are no restrictions for the attack on other players';
+$_Lang['infotip_noobprotection']		= 'Up to this point, no one can attack a player (he also can not perform military action). From that moment can attack players stronger or weaker than themselves by %s times their points';
+
+$_Lang['TipTip_Add'] = 'Dodano';
+$_Lang['TipTip_Fix'] = 'Naprawiono';
+$_Lang['TipTip_Upd'] = 'Zaktualizowano';
+$_Lang['TipTip_Opt'] = 'Zoptymalizowano';
+$_Lang['TipTip_Chg'] = 'Zmieniono';
+
+$_Lang['ServerInfo']	= 'Server Information';
+$_Lang['Title']			= 'ChangeLog and Server Information';
+$_Lang['Version']		= 'Version';
+$_Lang['Description']	= 'Description';
+$_Lang['Changelog']		= 'ChangeLog';
+$_Lang['changelog']		= array
+(
+	'<b class="lime">0.0.1<br/>by mdziekon/XxidroxX</b>' =>
+	'<img src="images/chglog_add.png" class="img"> <b>UniEngine/Xnova</b> - First public release (19th of July 2013) - new release by XxidroxX (04th of april 2015)',
+);
+
+?>

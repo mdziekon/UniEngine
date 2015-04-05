@@ -1,0 +1,30 @@
+<?php
+/**
+ * XNOVA 2015
+ * @url https://github.com/XxidroxX/Xnova
+ * STATUS: 100% translated
+ */
+$_Lang['Page_Title']		 = 'Login';
+$_Lang['Body_Username']   	 = 'Nick';
+$_Lang['Body_Password']	     = 'Password';
+$_Lang['Body_Remember']	     = 'Remember';
+$_Lang['Body_Submit']	     = 'Submit';
+$_Lang['Body_LostPass']	     = 'Lost password?';
+$_Lang['Body_LostCode']	     = 'Lost code?';
+$_Lang['Body_ServerOffline'] = 'Server offline';
+
+$_Lang['Body_Contact']	= 'Contact';
+$_Lang['Body_Register']	= 'Register';
+
+$_Lang['Err_Title']					= 'Login error';
+$_Lang['Login_FailPassword']			= 'You entered an invalid password!<br/><a href="login.php">Return</a>';
+$_Lang['Login_FailUser']				= 'This player does not exist!<br/><a href=login.php>Return</a>';
+$_Lang['Login_FailCookiePassword']	= 'Misspelled Player password, please log in again!<br /><a href="login.php">Return</a>';
+$_Lang['Login_FailCookieUser']		= 'Player data misspelled, please log in again!<br/><a href=login.php>Return</a>';
+$_Lang['Login_BadSignsUser']			= 'An invalid Login!<br/><a href=login.php>Return</a>';
+$_Lang['Login_BadUniversum']			= 'The attempt to log on incorrect Universe!';
+$_Lang['Login_UniversumNotStarted']	= 'It starts on Universum<br/>%s at %s.<br/>In anticipation of the opening of the Server, we invite their friends to play through the messages received Activation <u>Link Referrer</u>.';
+$_Lang['Login_FailLoginProtection']	= 'The system has locked you can still be logging, because 5 times you did not log in to the game!<br/>You must wait <b class="orange">5 minute</b> to the next logon attempt.';
+$_Lang['Login_UnknownError']			= 'An unknown error occurred, please contact the Administration!';
+
+?>

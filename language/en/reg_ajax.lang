@@ -1,0 +1,28 @@
+<?php
+
+$_Lang['RegMail_UniName'] = 'Universum 1';
+
+$_Lang['mail_title'] = $_GameConfig['game_name'].' - Rejestracja';
+
+$_Lang['mail_text'] = '';
+$_Lang['mail_text'] .= 'Witaj {login},<br/>dziękujemy za rejestrację w grze <a href="'.GAMEURL_STRICT.'">'.$_GameConfig['game_name'].'</a><br /><br />';
+$_Lang['mail_text'] .= '<b>Twój link aktywacyjny:</b> {activationlink}<br/><br/><b>Dane twojego konta</b><br/>';
+$_Lang['mail_text'] .= '<ul>';
+$_Lang['mail_text'] .= '<li><b>Świat Gry</b>: {Universe}</li>';
+$_Lang['mail_text'] .= '<li><b>Twój login</b>: {login}</li>';
+$_Lang['mail_text'] .= '<li><b>Twoje hasło:</b> {password}</li>';
+$_Lang['mail_text'] .= '<li><b>Twój link Polecający:</b> {UserRefLink}<br/>(Możesz zapraszać swoich znajomych już teraz)</li>';
+$_Lang['mail_text'] .= '</ul><br/><br/>';
+$_Lang['mail_text'] .= 'Team '.$_GameConfig['game_name'].' życzy powodzenia w grze!';
+
+$_Lang['mail_template'] = '';
+$_Lang['mail_template'] .= '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
+$_Lang['mail_template'] .= '<html><head>';
+$_Lang['mail_template'] .= '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">';
+$_Lang['mail_template'] .= '</head><body>';
+$_Lang['mail_template'] .= $_Lang['mail_text'];
+$_Lang['mail_template'] .= '</body></html>';
+
+$_Lang['MotherPlanet'] = 'Planeta Matka';
+
+?>

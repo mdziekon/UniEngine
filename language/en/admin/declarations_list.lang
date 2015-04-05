@@ -1,0 +1,38 @@
+<?php
+
+$_Lang['declaration_title']	= 'Zgłoszenia MultiKont';
+$_Lang['declaration_noexist'] = 'Taka deklaracja nie istnieje!';
+$_Lang['declaration_refused'] = '<b class="orange">Deklaracja odrzucona!</b>';
+$_Lang['declaration_accepted'] = '<b class="lime">Deklaracja zaakceptowana!</b>';
+$_Lang['declaration_deleted'] = '<b class="red">Deklaracja usunięta!</b>';
+$_Lang['declaration_noaffect'] = 'Nic nie zmieniono';
+$_Lang['declaration_deletedalready'] = 'Deklaracja jest już usunięta!';
+
+$_Lang['DeclarationReasons_'][1] = 'Jeden Komputer';
+$_Lang['DeclarationReasons_'][2] = 'Jedno Łącze';
+$_Lang['DeclarationReasons_'][3] = 'Te same miejsca gry';
+$_Lang['DeclarationReasons_'][4] = 'Inne';
+$_Lang['DeclarationReasons_'][5] = 'Sporadyczne logowania';
+
+$_Lang['DeclarationStatuses_']['-2'] = '<b class="red">Usunięte</b>';
+$_Lang['DeclarationStatuses_']['-1'] = '<b class="orange">Odrzucone</b>';
+$_Lang['DeclarationStatuses_']['0'] = '<b class="skyblue">Oczekuje</b>';
+$_Lang['DeclarationStatuses_']['1'] = '<b class="lime">Zatwierdzone</b>';
+
+$_Lang['Declarations_Header_Title'] = 'Lista zgłoszeń gry z jednego IP/Komputera';
+$_Lang['Declarations_Header_Confirm'] = 'Jesteś pewien?';
+$_Lang['Declarations_Header_Clear'] = 'Wyczyść';
+$_Lang['Declarations_Header_ShowAll'] = 'Pokaż wszystkie';
+$_Lang['Declarations_Header_HideDel'] = 'Ukryj usunięte';
+$_Lang['Declarations_Header_Owner'] = 'Zgłaszający';
+$_Lang['Declarations_Header_Others'] = 'Reszta Graczy';
+$_Lang['Declarations_Header_Date'] = 'Data zgłoszenia';
+$_Lang['Declarations_Header_Reason'] = 'Powód';
+$_Lang['Declarations_Header_Status'] = 'Status';
+$_Lang['Declarations_Header_Actions'] = 'Akcje';
+
+$_Lang['Declarations_NoUser'] = '<b class="red">Brak</b>';
+$_Lang['Declarations_EmptyUser'] = '<b class="red">Usunięte Konto</b>';
+$_Lang['Declarations_NothingFound'] = 'Brak deklaracji';
+
+?>

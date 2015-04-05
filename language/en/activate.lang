@@ -1,0 +1,10 @@
+<?php
+
+$_Lang['title']                  = 'Aktywacja';
+$_Lang['activation_completed']   = 'Aktywacja użytkownika %s przebiegła pomyślnie!<br/>Można już zalogować się na konto!';
+$_Lang['no_code_in_db']          = 'Taki kod aktywacyjny nie występuje w bazie danych!<br/>Jeśli to dobry kod, <a href="contact.php">skontaktuj się z Administracją</a>!';
+$_Lang['invalid_code_format']    = 'Podany kod jest niepoprawny!<br/>Jeśli to dobry kod, <a href="contact.php">skontaktuj się z Administracją</a>!';
+$_Lang['empty_code']             = 'Nie podano kodu aktywującego!';
+$_Lang['go_back']                = '<a href="index.php">Powrót</a>';
+
+?>
