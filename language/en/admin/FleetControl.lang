@@ -1,0 +1,55 @@
+<?php
+
+$_Lang['PageTitle']                  = 'Kontola Lotów Universum';
+
+$_Lang['Error_NoFleetsFound']        = 'Brak ruchów flot na Universum!';
+
+$_Lang['Fleet_ID']                   = 'ID';
+$_Lang['Fleet_Owner']                = 'Właściciel';
+$_Lang['Fleet_Mission']              = 'Misja';
+$_Lang['Fleet_Array']                = 'Skład';
+$_Lang['Fleet_Cargo']                = 'Ładunek';
+$_Lang['Fleet_Start']                = 'Start floty';
+$_Lang['Fleet_End']                  = 'Cel i czas dotarcia';
+$_Lang['Fleet_End_owner']            = 'Właściciel celu';
+$_Lang['Fleet_Start_time']           = 'Wylot';
+$_Lang['Fleet_Calc_time']            = 'Dotarcie do celu';
+$_Lang['Fleet_Back_time']            = 'Powrót';
+
+$_Lang['No_cargo']                   = 'Brak';
+$_Lang['See_cargo']                  = 'Zobacz';
+
+$_Lang['_ago']                       = 'temu';
+$_Lang['None']                       = 'Brak';
+
+$_Lang['Planet_sign']                = 'P';
+$_Lang['Debris_sign']                = 'D';
+$_Lang['Moon_sign']                  = 'K';
+$_Lang['Main_ACS_Fleet']             = 'Główna flota związku';
+$_Lang['Coming_back']                = 'Powrót';
+$_Lang['TargetAchieved']             = 'Cel osiągnięty';
+$_Lang['FleetCameBack']              = 'Misja zakończona';
+$_Lang['Not_calculated']             = 'Nie obliczona!';
+
+$_Lang['Start_from_planet']          = 'Start z Planety';
+$_Lang['Start_from_moon']            = 'Start z Księżyca';
+$_Lang['Target_is_planet']           = 'Cel to Planeta';
+$_Lang['Target_is_moon']             = 'Cel to Księżyc';
+$_Lang['Target_is_debris']           = 'Cel to Pole Zniszczeń';
+
+$_Lang['FleetControl_Refresh']       = 'Odśwież';
+$_Lang['FleetControl_Retreat']       = 'Zawróć lecące floty';
+$_Lang['FleetControl_Fallback']		= 'Wycofaj natychmiast';
+$_Lang['FleetControl_SendMsg']		= 'Wyślij powiadomienie do graczy';
+
+$_Lang['Ask_AreYouSure']             = 'Jesteś pewien?';
+
+$_Lang['SysMsg_AccessDenied']        = 'Nie masz odpowiednich uprawnień do wykonania tej akcji!';
+$_Lang['SysMsg_XFleetsRetreated']    = 'Floty zawrócone pomyślnie [Wycofano: %s / Znalezione: %s]';
+$_Lang['SysMsg_XFleetsFallenBack']	= 'Floty wycofane pomyślnie [Wycofano: %s / Znalezione: %s]';
+$_Lang['SysMsg_XACSChanged']         = '(W tym Floty Związku - Zaktualizowano: %s / Usunięto: %s)';
+$_Lang['SysMsg_0FleetsRetreated']    = 'Nie zawrócono żadnej Floty [Znalezione: %s]';
+$_Lang['SysMsg_0FleetsFallenBack']   = 'Nie wycofano żadnej Floty [Znalezione: %s]';
+$_Lang['SysMsg_NoValidFleetsGiven']  = 'Nie podano żadnej prawidłowej Floty!';
+
+?>

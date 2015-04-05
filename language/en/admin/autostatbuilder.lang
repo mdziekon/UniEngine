@@ -1,0 +1,6 @@
+<?php
+
+$_Lang['AutoStatBuilder_Title'] = "Generator Statystyk";
+$_Lang['AutoStatBuilder_BuildInfo'] = 'Czas wykonywania: %s s.<br/>Ostatnie dzienne podliczenie: %s temu (Różnica: %s s.)<br/><br/>Szczegółowa Tabela czasów:<br/> %s<br/>';
+
+?>

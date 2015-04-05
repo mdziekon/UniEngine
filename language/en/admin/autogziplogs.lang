@@ -1,0 +1,7 @@
+<?php
+
+$_Lang['AutoGZipLogs_Title'] = 'Kompresja Dzienników Dostępu';
+$_Lang['AutoGZipLogs_Success'] = 'Wszystkie stare dzienniki dostępów (AccessLogi) zostały skompresowane!<br/>Skompresowane pliki: %s<br/>Czas kompresowania: %s s.<br/>Przeszukiwane foldery:<br/>%s';
+$_Lang['AutoGZipLogs_NoDirs'] = 'brak';
+
+?>
