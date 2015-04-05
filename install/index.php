@@ -1,5 +1,4 @@
 <?php
-
 if(file_exists('lock'))
 {
 	die('"lock" file found');
@@ -19,7 +18,8 @@ else
 
 include('install_functions.php');
 
-$_UseLang = 'pl';
+// TODO: user, during installation, can select the language. Now english is the default language
+$_UseLang = 'en';
 
 includeLang();
 
@@ -35,15 +35,6 @@ if(version_compare(PHP_VERSION, '5.4.0') < 0)
 else
 {
 	$_RequirementsCheckFails['PHPVersion'] = false;
-}
-if(error_reporting() & E_NOTICE)
-{
-	$_RequirementsCheckPassed = false;
-	$_RequirementsCheckFails['PHPNoticesOff'] = true;
-}
-else
-{
-	$_RequirementsCheckFails['PHPNoticesOff'] = false;
 }
 if(is_writable('../'.$_Install_ConfigFile.'.php'))
 {

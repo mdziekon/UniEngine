@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * XNOVA 2015
+ * @url https://github.com/XxidroxX/Xnova
+ * TODO: check functions and move in a new file 
+ */
 if(!defined('IN_INSTALL'))
 {
 	die();
