@@ -26,8 +26,8 @@ $_Lang['Description']	= 'Opis zmian';
 $_Lang['Changelog']		= 'Dziennik zmian';
 $_Lang['changelog']		= array
 (
-	'<b class="lime">1.0.0<br/>by mdziekon</b>' =>
-	'<img src="images/chglog_add.png" class="img"> <b>UniEngine</b> - First public release (19th of July 2013)',
+	'<b class="lime">0.0.1<br/>by mdziekon/XxidroxX</b>' =>
+	'<img src="images/chglog_add.png" class="img"> <b>UniEngine/Xnova</b> - First public release (19th of July 2013) - new release by XxidroxX (04th of april 2015)',
 );
 
 ?>

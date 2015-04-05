@@ -1,0 +1,41 @@
+<?php
+
+$_Lang['Title']= 'Szybkie linki';
+
+$_Lang['Your_shortcuts'] = 'Twoje szybkie linki';
+$_Lang['add_new_shortcut'] = 'Dodaj nowy link';
+$_Lang['select_shortcut'] = 'Wybierz link';
+$_Lang['edit_shortcut'] = 'Edytuj';
+$_Lang['delete_shortcut'] = 'Usuń';
+$_Lang['are_you_sure'] = 'Czy jesteś pewien, że chcesz usunąć ten link?';
+$_Lang['goback'] = 'Powrót';
+$_Lang['no_shortcuts'] = '- Nie dodano jeszcze żadnych linków -';
+$_Lang['moon_sign'] = 'K';
+$_Lang['debris_sign'] = 'PZ';
+$_Lang['planet_sign'] = 'P';
+
+$_Lang['NameTip'] = 'Nazwa linku zawsze składa się z twojej nazwy oraz nazwy własnej celu (o ile cel istnieje)';
+$_Lang['Name'] = 'Nazwa <acronym title="'.$_Lang['NameTip'].'">(opcjonalna)</acronym>';
+$_Lang['Coordinates'] = 'Współrzędne';
+$_Lang['Adding_shortcut'] = 'Dodawanie nowego linku';
+$_Lang['Editing_shortcut'] = 'Edycja linku';
+$_Lang['Deleting_shortcut'] = 'Usuwanie linku';
+$_Lang['Add'] = 'Dodaj';
+$_Lang['Edit'] = 'Zapisz zmiany';
+
+$_Lang['list_planet'] = 'Planeta';
+$_Lang['list_debris'] = 'Pole zniszczeń';
+$_Lang['list_moon'] = 'Księżyc';
+
+$_Lang['Bad_coordinates'] = 'Podano niepoprawne koordynaty!';
+$_Lang['Forbidden_signs_in_name'] = 'Nazwa celu może składać się tylko z liter, cyfr, spacji, myślników i podkreśleń!';
+$_Lang['That_target_already_exists'] = 'Zapisałeś już taki cel!';
+$_Lang['Bad_ID_given'] = 'Podano nieprawidłowy link!';
+$_Lang['This_shortcut_is_not_yours'] = 'Ten link nie jest twój!';
+$_Lang['NothingChanged'] = 'Brak zmian do zapisania...';
+
+$_Lang['Shortcut_hasbeen_added'] = 'Link został dodany!';
+$_Lang['Link_hasbeen_deleted'] = 'Link został usunięty!';
+$_Lang['Shortcut_hasbeen_saved'] = 'Zmiany zostały zapisane!';
+
+?>

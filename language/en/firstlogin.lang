@@ -1,0 +1,21 @@
+<?php
+
+$_Lang['FirstLogin_Title']   = 'Powitanie';
+$_Lang['LoginPage_Header']   = 'Witamy w '.$_GameConfig['game_name'].'!';
+
+$_Lang['LoginPage_Text']     = '<center><b class="orange">Witaj serdecznie na jednym z serwerów '.$_GameConfig['game_name'].'!</b><br/><br/>';
+$_Lang['LoginPage_Text']    .= '<b>Jest to twoje pierwsze logowanie, dlatego też pragniemy przedstawić ustawienia tego Serwera:</b></center><br/>';
+$_Lang['LoginPage_Text']    .= '<span style="line-height: 18px;"><b class="minw">Universum:</b> <b class="lime">1</b><br/>';
+$_Lang['LoginPage_Text']    .= '<b class="minw">Prędkość gry:</b> <b class="lime">{GameSpeed}x</b><br/><b class="minw">Prędkość wydobycia:</b> <b class="lime">{ResSpeed}x</b><br/><b class="minw">Prędkość flot:</b> <b class="lime">{FleetSpeed}x</b><br/>';
+$_Lang['LoginPage_Text']    .= '<b class="minw">Złom z Floty:</b> <b class="lime">{FleetDebris}%</b><br/><b class="minw">Złom z Obrony:</b> <b class="help lime" title="Z ataków normalną flotą">{DefFlDebris}%</b> / <b class="help lime" title="Z ataków Rakietami Międzyplanetarnymi">{DefMiDebris}%</b><br/><b class="minw">Wielkość Planety Matki:</b> <b class="lime">{MotherSize} pól</b><br/>';
+$_Lang['LoginPage_Text']    .= '<b class="minw">Start Serwera:</b> <b class="lime">{OpenTime}</b><br/>';
+$_Lang['LoginPage_Text']    .= '<b class="minw">Czasowa Ochrona nowych Graczy:</b> <b class="lime">{Protection_NewPlayerTime}h</b><br/>';
+$_Lang['LoginPage_Text']    .= '<b class="minw"><b class="help" title="Po osiągnięciu tej ilości punktów nie będą obowiązywały żadne ograniczenia punktowe co do ataków na lub przez Ciebie">Próg procentowej Ochrony:</b></b> <b class="lime">{Protection_PointsLimit} pkt.</b><br/>';
+$_Lang['LoginPage_Text']    .= '</span><br/><br/>';
+//$_Lang['LoginPage_Text']    .= '<center><b class="red">Jako prezent dostajesz całkowicie darmowe Konto Pro na okres 10-ciu dni, które możesz aktywować w dowolnym momencie gry!</b></center><br/><br/>';
+$_Lang['LoginPage_Text']    .= '<b>Jeśli jesteś nowym graczem</b>, z pewnością zainteresuje Cię wykonanie <a class="orange" href="tasks.php?cat=1"><b>&#187; Zadań Wprowadzających</b></a>, które pomogą Ci odnaleźć się w świecie '.$_GameConfig['game_name'].' i nauczą podstaw gry.<br/>';
+$_Lang['LoginPage_Text']    .= '<center><b>Życzymy udanych łowów i powodzenia w grze!</b></center>';
+
+$_Lang['LoginPage_Input']    = 'Rozpocznij grę!';
+
+?>

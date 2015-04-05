@@ -1,0 +1,6 @@
+<?php
+
+$_Lang['MassMessage_Success'] = 'Wiadomość masowa została wysłana do %s użytkowników!';
+$_Lang['MassMessage_NoSufficientData'] = 'Nie podano wszystkich danych!';
+
+?>

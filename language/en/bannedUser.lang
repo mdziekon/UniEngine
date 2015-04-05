@@ -1,0 +1,24 @@
+<?php
+
+$_Lang['Ban_Header']                 = 'Informacja Systemowa';
+$_Lang['Ban_AccBanned']              = 'Twoje konto zostało Zbanowane!';
+$_Lang['Ban_StartTime']              = 'Data przyznania';
+$_Lang['Ban_EndTime']                = 'Data wygaśnięcia';
+$_Lang['Ban_Reason']                 = 'Powód';
+$_Lang['Ban_Giver']                  = 'Przyznany przez';
+$_Lang['Ban_AdditionalInfo']         = 'Jeśli masz jakieś wątpliwości lub pytania skontaktuj się z Administracją (<a href="contact.php"><u>Kontakt</u></a>) lub napisz odwołanie na <a href="redirect.php?id=3"><u>Forum</u></a>';
+$_Lang['Ban_Logout']                 = 'Wyloguj';   
+$_Lang['ban_bysys']                  = 'System';
+$_Lang['Ban_WithVacation']           = '<b style="color: #87CEEB">Ban został przyznany z Urlopem (z możliwością ręcznego zdjęcia)</b>';
+$_Lang['Ban_WithoutVacation']        = '<b class="red">Ban został przyznany bez Urlopu!</b>';
+$_Lang['Ban_RetreatedAll']           = 'Zawrócono wszystkie twoje Floty i Floty lecące na twoje współrzędne.';
+$_Lang['Ban_RetreatedOwn']           = 'Zawrócono tylko twoje Floty.';
+$_Lang['Ban_RetreatedOthers']        = 'Zawrócono tylko Floty lecące na twoje współrzedne.';
+$_Lang['Ban_RetreatedNone']          = '<b class="red">Nie zawrócono żadnych Flot!</b>';
+$_Lang['Ban_Reason_NotSpecified']	= '<b class="orange">Prosimy o kontakt z Administracją, w celu pozyskania dalszych szczegółów</b>';
+$_Lang['_timer']						= 'Za';
+
+$_Lang['Chrono_Day1']                        = 'dzień';
+$_Lang['Chrono_DayM']                        = 'dni';
+
+?>

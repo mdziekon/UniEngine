@@ -1,0 +1,26 @@
+<?php
+
+$_Lang['PageTitle'] = 'Zarządzanie środkami Planet';
+
+$_Lang['Table_PlanetID'] = 'ID Planety/Księżyca';
+$_Lang['Table_Tabs_1'] = 'Surowce';
+$_Lang['Table_Tabs_2'] = 'Budynki';
+$_Lang['Table_Tabs_3'] = 'Flota';
+$_Lang['Table_Tabs_4'] = 'Obrona';
+$_Lang['Table_CMD_Add'] = 'Dodaj';
+$_Lang['Table_CMD_Set'] = 'Ustaw';
+$_Lang['Table_CMD_Substract'] = 'Odejmij';
+$_Lang['Table_Submit'] = 'Wykonaj';
+
+$_Lang['MsgBox_UpdateOK_Planet'] = 'Planeta';
+$_Lang['MsgBox_UpdateOK_Moon'] = 'Księżyc';
+$_Lang['MsgBox_UpdateOK'] = '%s "%s" [%s:%s:%s] [#%s] (Gracz: <a href="user_info.php?uid=%s" target="_blank">%s [#%s]</a>) została poprawnie zaktualizowana (zaktualizowane pola: %s)!';
+$_Lang['MsgBox_UpdateNotAffected'] = '%s "%s" [%s:%s:%s] [#%s] (Gracz: <a href="user_info.php?uid=%s" target="_blank">%s [#%s]</a>) nie wymagała aktualizacji...';
+$_Lang['MsgBox_BadInput'] = 'Wprowadzone dane są niepoprawne!';
+$_Lang['MsgBox_PlanetDoesntExist'] = 'Taka Planeta/Księżyc nie istnieje!';
+$_Lang['MsgBox_EmptyInput'] = 'Nie podano pól do aktualizacji!';
+$_Lang['MsgBox_BadTabID'] = 'Niepoprawny identyfikator typu pól!';
+$_Lang['MsgBox_BadCMD'] = 'Nie wybrano poprawnego typu akcji!';
+$_Lang['MsgBox_BadPlanetID'] = 'Niepoprawny Identyfikator!';
+
+?>

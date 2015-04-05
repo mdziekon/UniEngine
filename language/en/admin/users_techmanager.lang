@@ -1,0 +1,21 @@
+<?php
+
+$_Lang['PageTitle'] = 'Zarządzanie technologiami Gracza';
+
+$_Lang['Table_UserID'] = 'ID Gracza';
+$_Lang['Table_Tabs_1'] = 'Technologie';
+$_Lang['Table_CMD_Add'] = 'Dodaj';
+$_Lang['Table_CMD_Set'] = 'Ustaw';
+$_Lang['Table_CMD_Substract'] = 'Odejmij';
+$_Lang['Table_Submit'] = 'Wykonaj';
+
+$_Lang['MsgBox_UpdateOK'] = 'Dane gracza <a href="user_info.php?uid=%s" target="_blank">%s [#%s]</a> zostały poprawnie zaktualizowane (zaktualizowane pola: %s)!';
+$_Lang['MsgBox_UpdateNotAffected'] = 'Dane gracza <a href="user_info.php?uid=%s" target="_blank">%s [#%s]</a> nie wymagały aktualizacji...';
+$_Lang['MsgBox_BadInput'] = 'Wprowadzone dane są niepoprawne!';
+$_Lang['MsgBox_PlanetDoesntExist'] = 'Taki gracz nie istnieje!';
+$_Lang['MsgBox_EmptyInput'] = 'Nie podano pól do aktualizacji!';
+$_Lang['MsgBox_BadTabID'] = 'Niepoprawny identyfikator typu pól!';
+$_Lang['MsgBox_BadCMD'] = 'Nie wybrano poprawnego typu akcji!';
+$_Lang['MsgBox_BadUserID'] = 'Niepoprawny Identyfikator!';
+
+?>

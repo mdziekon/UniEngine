@@ -1,0 +1,43 @@
+<?php
+
+$_Lang['Title']              = 'System Ankiet';
+
+$_Lang['voted_already']      = 'Oddano głos';
+$_Lang['poll_closed']        = 'Zakończona';
+$_Lang['no_polls']           = 'Brak Ankiet';
+$_Lang['select']             = '---';
+
+$_Lang['State_IsObligatory'] = '<img src="./images/warning.png" />';
+$_Lang['State_IsClosed']		= '<img src="./images/lock.png" />';
+$_Lang['State_IsVoted']		= '<img src="./images/tick.green.png" />';
+
+$_Lang['Tip_LockedVoted']	= 'Zakończona, Oddano głos';
+$_Lang['Tip_Locked']			= 'Zakończona';
+$_Lang['Tip_Voted']			= 'Oddano głos';
+$_Lang['Tip_Obligatory']		= 'Obowiązkowa';
+
+$_Lang['Poll_system_info']   = 'Administracja serwera od czasu do czasu tworzy ankiety, by sprawdzić, jak użytkownicy zareagują na przyszłe zmiany. Dzięki waszym opiniom jesteśmy w stanie stworzyć jeszcze bardziej dopasowaną grę do waszych potrzeb i upodobań...';
+$_Lang['Select_poll']        = 'Wybierz ankietę';
+$_Lang['Select']             = 'Wybierz';
+$_Lang['PollOption']         = 'Opcja';
+$_Lang['PollVotes']          = 'Oddane głosy';
+$_Lang['Votes']              = 'Głosy';
+$_Lang['GoBack']             = 'Powrót';
+$_Lang['ResultsAreHidden']   = 'Wyniki ankiety są ukryte.';
+$_Lang['ShowUsers']          = 'Gracze';
+
+$_Lang['Poll_doesnt_exist']  = 'Taka ankieta nie istnieje!';
+$_Lang['Poll_is_closed_for_view']    = 'Ankieta została zamknięta (także do wglądu)!';
+$_Lang['Poll_is_closed']     = 'Ankieta została już zakończona!';
+$_Lang['No_selected_answer'] = 'Wybrano niepoprawną opcję!';
+$_Lang['Error_BadSelection_Multi'] = 'Wybrano niepoprawne opcje!';
+$_Lang['Error_NoOptionSelected'] = 'Nie wybrano żadnej opcji!';
+$_Lang['Thx_for_voting']     = 'Dziękujemy za oddanie głosu!';
+$_Lang['Thx_for_chaning_vote']   = 'Twoja odpowiedź została zmieniona!';
+$_Lang['Error_NoAnswers'] = 'Przepraszamy, ale nie można wyświetlić tej ankiety!';
+
+$_Lang['Vote_now']           = 'Oddaj głos';
+$_Lang['Change_vote']        = 'Zmień swój głos';
+$_Lang['Submit_PollLocked']	= 'Nie można już głosować...';
+
+?>

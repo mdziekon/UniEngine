@@ -1,0 +1,22 @@
+<?php
+
+$_Lang['TextFirst']		= 'Przed chwilą wykonałeś';
+$_Lang['OneTask']		= 'zadanie';
+$_Lang['MoreTasks']		= 'zadania';
+$_Lang['TextSecond']		= 'z kategorii';
+
+$_Lang['CatLink']		= '"<i><a href="tasks.php?%s" style="color: black;">%s</a></i>"';
+
+$_Lang['Hide']			= 'Ukryj powiadomienie';
+
+$_Lang['Names']			= array
+(
+	1 => 'Wprowadzenie',
+	2 => 'Militaria',
+	3 => 'Ekonomia i Gospodarka',
+	4 => 'Rozwój naukowy',
+	5 => 'Wsparcie sojusznicze',
+	6 => 'Wsparcie Universum',
+);
+ 
+?>
