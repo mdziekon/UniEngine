@@ -48,3 +48,8 @@ https://github.com/mdziekon
 Version 1.0 - Updated: July 18, 2013  
 This UniEngine is licensed under the GPL licenses:  
   http://www.gnu.org/licenses/gpl.html
+  
+
+CONTRIBUTORS
+------------
+* Alessio <nicoales@live.it> (https://github.com/XxidroxX)
