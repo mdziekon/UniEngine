@@ -1,0 +1,13 @@
+{
+    "name": "mdziekon/uniengine",
+    "description": "OGame-like Game Engine",
+    "type": "project",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Michal Dziekonski",
+            "homepage": "https://github.com/mdziekon"
+        }
+    ],
+    "require": {}
+}

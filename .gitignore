@@ -5,3 +5,6 @@ tmp/
 
 # Ignore installation-related files
 install/lock
+
+# Ignore PHP-related files & directories
+/vendor/
