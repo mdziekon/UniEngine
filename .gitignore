@@ -1,0 +1,7 @@
+# Ignore data, log & temp directories
+action_logs/
+cache/
+tmp/
+
+# Ignore installation-related files
+install/lock
