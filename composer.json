@@ -12,5 +12,8 @@
     "require": {},
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.3"
+    },
+    "scripts": {
+        "ci-lint": "phpcs ./ --standard=phpcs.xml --extensions=php"
     }
 }
