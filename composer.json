@@ -9,5 +9,8 @@
             "homepage": "https://github.com/mdziekon"
         }
     ],
-    "require": {}
+    "require": {},
+    "require-dev": {
+        "squizlabs/php_codesniffer": "^3.3"
+    }
 }
