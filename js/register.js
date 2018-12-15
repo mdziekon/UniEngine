@@ -209,7 +209,7 @@ function regCallback(ResponseObject)
 	{
 		for(var CookieID in ResponseObject.Cookie)
 		{
-			$.cookie(ResponseObject.Cookie[CookieID].Name, ResponseObject.Cookie[CookieID].Value, { domain: '.{ReplaceDomain}'});
+			$.cookie(ResponseObject.Cookie[CookieID].Name, ResponseObject.Cookie[CookieID].Value, { domain: '.172.19.0.3'});
 		}
 	}
 		

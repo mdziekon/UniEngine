@@ -2,6 +2,12 @@
 <ruleset name="pcsg-generated-ruleset">
 <description>Created with the PHP Coding Standard Generator. http://edorian.github.com/php-coding-standard-generator/
 </description>
+<exclude-pattern>*/class/Smarty/*</exclude-pattern>
+<exclude-pattern>*/includes/phpmailer/*</exclude-pattern>
+<exclude-pattern>*/action_logs/*</exclude-pattern>
+<exclude-pattern>*/cache/*</exclude-pattern>
+<exclude-pattern>*/tmp/*</exclude-pattern>
+<exclude-pattern>*/vendor/*</exclude-pattern>
 <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
 <rule ref="Generic.WhiteSpace.ScopeIndent"/>
 <rule ref="PSR2.Files.EndFileNewline"/>

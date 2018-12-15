@@ -2,21 +2,21 @@
 
 function GalaxyRowPos($Galaxy, $System, $Planet)
 {
-	static $TPL = false;
-	
-	if($TPL === false)
-	{
-		$TPL = gettemplate('galaxy_row_pos');
-	}
+    static $TPL = false;
 
-	$Parse = array
-	(
-		'Galaxy' => $Galaxy,
-		'System' => $System,
-		'Planet' => $Planet,
-	);
+    if($TPL === false)
+    {
+        $TPL = gettemplate('galaxy_row_pos');
+    }
 
-	return parsetemplate($TPL, $Parse);
+    $Parse = array
+    (
+        'Galaxy' => $Galaxy,
+        'System' => $System,
+        'Planet' => $Planet,
+    );
+
+    return parsetemplate($TPL, $Parse);
 }
 
 ?>
