@@ -52,7 +52,6 @@ $i = $Query_GetCount['count'];
 if($i >= 100)
 {
     $parse['errors_list'] .= "<tr><th class=b colspan=4>{$_Lang['ErrorsList_TooManyErrors']}</th></tr>";
-    break;
 }
 
 $parse['errors_list'] .= "<tr><th class=b colspan=4>{$_Lang['ErrorsList_Count']}: {$i}</th></tr>";
