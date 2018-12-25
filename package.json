@@ -4,7 +4,7 @@
   "description": "OGame-like Game Engine",
   "main": "",
   "scripts": {
-      "ci-js-eslint": "eslint --quiet js/"
+      "ci-js-eslint": "eslint --quiet ./"
   },
   "repository": {
     "type": "git",
