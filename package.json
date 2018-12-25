@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/mdziekon/UniEngine/issues"
   },
-  "homepage": "https://github.com/mdziekon/UniEngine#readme"
+  "homepage": "https://github.com/mdziekon/UniEngine#readme",
+  "devDependencies": {
+    "eslint": "^5.11.0"
+  }
 }
