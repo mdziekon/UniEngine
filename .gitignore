@@ -7,4 +7,7 @@ tmp/
 install/lock
 
 # Ignore PHP-related files & directories
-/vendor/
+vendor/
+
+# Ignore JavaScript / Node.js -related files & directories
+node_modules/
