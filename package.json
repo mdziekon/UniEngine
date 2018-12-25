@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "OGame-like Game Engine",
   "main": "",
-  "scripts": {},
+  "scripts": {
+      "ci-js-eslint": "eslint --quiet js/"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mdziekon/UniEngine.git"
