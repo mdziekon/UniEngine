@@ -1,0 +1,20 @@
+{
+  "name": "uniengine",
+  "version": "1.0.0",
+  "description": "OGame-like Game Engine",
+  "main": "",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mdziekon/UniEngine.git"
+  },
+  "author": {
+    "name": "Michal Dziekonski",
+    "url": "https://github.com/mdziekon"
+  },
+  "license": "GPL-2.0",
+  "bugs": {
+    "url": "https://github.com/mdziekon/UniEngine/issues"
+  },
+  "homepage": "https://github.com/mdziekon/UniEngine#readme"
+}
