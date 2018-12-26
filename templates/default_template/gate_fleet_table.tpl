@@ -19,12 +19,12 @@ var AllowPrettyInputBox = {Insert_AllowPrettyInputBox};
             <th>{gate_dest_moon}</th>
             <th>
                 <select name="jumpto" class="jumpto">{gate_dest_moons}</select>
-           	</th>
+            </th>
         </tr>
-		<tr>
-			<th>{gate_changemoon}</th>
-			<th><input type="checkbox" name="changemoon" checked/></th>
-		</tr>
+        <tr>
+            <th>{gate_changemoon}</th>
+            <th><input type="checkbox" name="changemoon" checked/></th>
+        </tr>
     </table>
     <table width="600" class="tblNoMarg" {Gate_HideInfoBox}>
         <tr>
@@ -34,10 +34,10 @@ var AllowPrettyInputBox = {Insert_AllowPrettyInputBox};
     <table width="600" class="tblNoMarg" {Gate_HideShips}>
         <tbody>
         <tr>
-        	<td class="c" colspan="4">{gate_ship_sel}</td>
+            <td class="c" colspan="4">{gate_ship_sel}</td>
         </tr>
         <tr {Gate_HideNextJumpTimer}>
-        	<th colspan="4">{gate_wait_time}</th>
+            <th colspan="4">{gate_wait_time}</th>
         </tr>
         <tr>
             <th style="width: 35%;" class="pad2">{gate_title_ship}</th>
@@ -47,7 +47,7 @@ var AllowPrettyInputBox = {Insert_AllowPrettyInputBox};
         </tr>
         {gate_fleet_rows}
         <tr>
-        	<th colspan="4" class="pad5">
+            <th colspan="4" class="pad5">
                 <input value="{gate_jump_btn}" class="{PHP_JumpGate_SubmitColor}" type="submit" id="formSubmit"/>
             </th>
         </tr>

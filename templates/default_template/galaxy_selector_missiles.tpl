@@ -2,7 +2,7 @@
     <input type="hidden" name="m_galaxy" value="{Galaxy}"/>
     <input type="hidden" name="m_system" value="{System}"/>
     <input type="hidden" name="m_planet" value="{Planet}"/>
-    
+
     <table border="0" class="galWidth">
         <tr>
             <td class="c center" colspan="4"><span class="red">{MSelector_Title} [<b id="MissilePos">{ThisPos}</b>]</span> <b class="orange point" id="closeMF">({MSelector_Close})</b></td>

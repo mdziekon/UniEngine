@@ -2,7 +2,7 @@
 var AllowPrettyInputBox  = {P_AllowPrettyInputBox};
 var TotalPlanetResources = {P_TotalPlanetResources};
 var ACSUsersMax = {InsertACSUsersMax};
-var ACSUsers = {InsertACSUsers};    
+var ACSUsers = {InsertACSUsers};
 var JSLang = {'fl_coordplanet': '{fl_coordplanet}', 'fl_coordmoon': '{fl_coordmoon}', 'fl_coorddebris': '{fl_coorddebris}'};
 var ShipsData = {Insert_ShipsData};
 {InsertJSShipSet}
@@ -43,7 +43,7 @@ var ShipsData = {Insert_ShipsData};
         <th colspan="8">
             <b class="red">{fl_noslotfree}</b>
         </th>
-    </tr>    
+    </tr>
 </table>
 <br/>
 {Insert_ACSForm}
@@ -89,6 +89,6 @@ var ShipsData = {Insert_ShipsData};
     <input type="hidden" name="planet_type" value="{P_PlType}"/>
     <input type="hidden" name="target_mission" value="{P_Mission}"/>
     <input type="hidden" name="quickres" value="{P_SetQuickRes}"/>
-	<input type="hidden" name="gobackVars" value="{P_GoBackVars}"/>
+    <input type="hidden" name="gobackVars" value="{P_GoBackVars}"/>
     <input type="hidden" name="sending_fleet" value="1"/>
 </form>

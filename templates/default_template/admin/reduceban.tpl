@@ -16,12 +16,12 @@ var JSLang = {'TP_timeOnlyTitle': 'Wybierz Czas', 'timeText': 'Czas', 'hourText'
 </script>
 <script>
 $(document).ready(function()
-{	
-	var DateTimePickerSettings = 
-	{
-		timeFormat: 'hh:mm:ss',
-		showButtonPanel: false,
-		timeOnlyTitle: JSLang['TP_timeOnlyTitle'],
+{
+    var DateTimePickerSettings =
+    {
+        timeFormat: 'hh:mm:ss',
+        showButtonPanel: false,
+        timeOnlyTitle: JSLang['TP_timeOnlyTitle'],
         timeText: JSLang['timeText'],
         hourText: JSLang['hourText'],
         minuteText: JSLang['minuteText'],
@@ -30,33 +30,33 @@ $(document).ready(function()
         currentText: JSLang['currentText'],
         closeText: JSLang['closeText'],
         ampm: false,
-		showSecond: true,
-		beforeShow: function() {
-			setTimeout(function(){
-			$('#ui-datepicker-div').css({'z-index': 1000});    
-			},1);                    
-		}
-	};
-	
-	$('[name="recude_date"]').datetimepicker(DateTimePickerSettings);
-	
-	$('.Tab').click(function()
-	{
-		$('.Cont').hide(0);
-		$('.Tab').removeClass('TabSelect');
-		$('#'+$(this).attr('id').replace('Tab', 'Cont')).show(0);
-		$(this).addClass('TabSelect');
-		$('[name="reduce_type"]').val($(this).attr('id').replace('Tab', ''));
-	});
-	
-	if(SelectedTab == '' || $('#Tab'+SelectedTab).length == 0)
-	{
-		$('#Tab01').click();
-	}
-	else
-	{
-		$('#Tab'+SelectedTab).click();
-	}
+        showSecond: true,
+        beforeShow: function() {
+            setTimeout(function(){
+            $('#ui-datepicker-div').css({'z-index': 1000});
+            },1);
+        }
+    };
+
+    $('[name="recude_date"]').datetimepicker(DateTimePickerSettings);
+
+    $('.Tab').click(function()
+    {
+        $('.Cont').hide(0);
+        $('.Tab').removeClass('TabSelect');
+        $('#'+$(this).attr('id').replace('Tab', 'Cont')).show(0);
+        $(this).addClass('TabSelect');
+        $('[name="reduce_type"]').val($(this).attr('id').replace('Tab', ''));
+    });
+
+    if(SelectedTab == '' || $('#Tab'+SelectedTab).length == 0)
+    {
+        $('#Tab01').click();
+    }
+    else
+    {
+        $('#Tab'+SelectedTab).click();
+    }
 });
 </script>
 <script src="../scripts/jquery-ui.min.js" type="text/javascript"></script>
@@ -66,7 +66,7 @@ $(document).ready(function()
 <br />
 <form action="reduceban.php" method="post">
     <input type="hidden" name="send" value="yes"/>
-	<input type="hidden" name="reduce_type" value="01"/>
+    <input type="hidden" name="reduce_type" value="01"/>
     <table class="w600px">
         <tbody{HideInfoBox}>
             <tr>
@@ -86,46 +86,46 @@ $(document).ready(function()
         <tr>
             <td class="c" colspan="2">{Form_Option}</td>
         </tr>
-	</table>
-	<table class="w600px">
-		<th class="pad3 Tab" id="Tab01">{Form_OptDate}</th>
-		<th class="pad3 Tab" id="Tab02">{Form_OptTimeSpan}</th>
-	</table>
-	<table class="w600px">
+    </table>
+    <table class="w600px">
+        <th class="pad3 Tab" id="Tab01">{Form_OptDate}</th>
+        <th class="pad3 Tab" id="Tab02">{Form_OptTimeSpan}</th>
+    </table>
+    <table class="w600px">
         <tbody class="Cont" id="Cont01">
-			<tr>
-				<th class="pad2 th1">{Form_PickDate}</th>
-				<th class="pad2 th2">
-					<input type="text" name="recude_date" class="pad3" style="width: 150px;"/>
-				</th>
-			</tr>
-		</tbody>
-		<tbody class="Cont" id="Cont02">
-			<tr>
-				<th class="pad2">{Form_Days}</th>
-				<th class="pad2">
-					<input type="text" name="period_days" maxlength="4" style="width: 35px; padding: 3px;"/>
-				</th>
-			</tr>
-			<tr>
-				<th class="pad2">{Form_Hours}</th>
-				<th class="pad2">
-					<input type="text" name="period_hours" maxlength="2" style="width: 35px; padding: 3px;"/>
-				</th>
-			</tr>
-			<tr>
-				<th class="pad2">{Form_Minutes}</th>
-				<th class="pad2">
-					<input type="text" name="period_mins" maxlength="2" style="width: 35px; padding: 3px;"/>
-				</th>
-			</tr>
-			<tr>
-				<th class="pad2">{Form_Seconds}</th>
-				<th class="pad2">
-					<input type="text" name="period_secs" maxlength="2" style="width: 35px; padding: 3px;"/>
-				</th>
-			</tr>
-		</tbody>
+            <tr>
+                <th class="pad2 th1">{Form_PickDate}</th>
+                <th class="pad2 th2">
+                    <input type="text" name="recude_date" class="pad3" style="width: 150px;"/>
+                </th>
+            </tr>
+        </tbody>
+        <tbody class="Cont" id="Cont02">
+            <tr>
+                <th class="pad2">{Form_Days}</th>
+                <th class="pad2">
+                    <input type="text" name="period_days" maxlength="4" style="width: 35px; padding: 3px;"/>
+                </th>
+            </tr>
+            <tr>
+                <th class="pad2">{Form_Hours}</th>
+                <th class="pad2">
+                    <input type="text" name="period_hours" maxlength="2" style="width: 35px; padding: 3px;"/>
+                </th>
+            </tr>
+            <tr>
+                <th class="pad2">{Form_Minutes}</th>
+                <th class="pad2">
+                    <input type="text" name="period_mins" maxlength="2" style="width: 35px; padding: 3px;"/>
+                </th>
+            </tr>
+            <tr>
+                <th class="pad2">{Form_Seconds}</th>
+                <th class="pad2">
+                    <input type="text" name="period_secs" maxlength="2" style="width: 35px; padding: 3px;"/>
+                </th>
+            </tr>
+        </tbody>
         <tr class="inv"><td style="min-height: 5px;"></td></tr>
         <tr>
             <th class="pad5" colspan="2">

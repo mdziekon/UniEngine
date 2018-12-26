@@ -3,7 +3,7 @@
     <input type="hidden" name="action" value="do"/>
     <table style="width: 600px">
         <tr>
-        	<td class="c" colspan="2">{Rename_Title}<span style="float: right;">(<a class="orange" href="overview.php">{Rename_GoBack}</a>)</span></td>
+            <td class="c" colspan="2">{Rename_Title}<span style="float: right;">(<a class="orange" href="overview.php">{Rename_GoBack}</a>)</span></td>
         </tr>
         <tr {Rename_Ins_MsgHide}>
             <th colspan="2" class="pad5 {Rename_Ins_MsgColor}">{Rename_Ins_MsgTxt}</th>

@@ -1,31 +1,31 @@
 <script>
-var $_MaxLength = {Insert_MaxLength};	
+var $_MaxLength = {Insert_MaxLength};
 $(document).ready(function()
 {
-	$('#text').keydown(function()
-	{
-		var TextLength = $(this).val().length;
-		if(TextLength > $_MaxLength)
-		{
-			$(this).val($(this).val().substr(0, $_MaxLength));
-			TextLength = $_MaxLength;
-		}
-		$('#cntChars').html(TextLength);
-	}).keyup(function()
-	{
-		$(this).keydown();
-	}).change(function()
-	{
-		$(this).keydown();
-	});
-	
-	$('#text').keydown();
-	
-	$('#clear').click(function()
-	{
-		$('#text').val('').keydown();
-		return false;
-	});
+    $('#text').keydown(function()
+    {
+        var TextLength = $(this).val().length;
+        if(TextLength > $_MaxLength)
+        {
+            $(this).val($(this).val().substr(0, $_MaxLength));
+            TextLength = $_MaxLength;
+        }
+        $('#cntChars').html(TextLength);
+    }).keyup(function()
+    {
+        $(this).keydown();
+    }).change(function()
+    {
+        $(this).keydown();
+    });
+
+    $('#text').keydown();
+
+    $('#clear').click(function()
+    {
+        $('#text').val('').keydown();
+        return false;
+    });
 });
 </script>
 <br/>
@@ -44,7 +44,7 @@ $(document).ready(function()
                     {OtherRanks}
                 </select>
             </th>
-        </tr>        
+        </tr>
         <tr>
             <th class="pad2">
                 {Ally_WR_Text}<br />

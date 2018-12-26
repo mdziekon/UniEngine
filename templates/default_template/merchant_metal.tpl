@@ -4,7 +4,7 @@ var Maxmet = {InsertMaxMetal};
 var Maxcry = {InsertMaxCrystal};
 var Maxdeu = {InsertMaxDeuterium};
 var Mode = {InsertTraderMode};
-    
+
 var NameResM = '{Insert_ResM}';
 var NameResA = '{Insert_ResA}';
 var NameResB = '{Insert_ResB}';
@@ -27,11 +27,11 @@ var MaxResB = Max{Insert_ResB};
         </tr>
         <tr class="inv"><td style="font-size: 5px;">&nbsp;</td></tr>
         <tr>
-        	<td class="c" colspan="5"><b class="white">{Trader_Title}</b> [{Trader_ModeNRes}]<b class="fr" style="padding-right: 5px;"><a href="merchant.php">&#171; {Trader_GoBack}</a></b></td>
+            <td class="c" colspan="5"><b class="white">{Trader_Title}</b> [{Trader_ModeNRes}]<b class="fr" style="padding-right: 5px;"><a href="merchant.php">&#171; {Trader_GoBack}</a></b></td>
         </tr>
-		<tr>
-			<th colspan="5" class="pad5" style="text-align: left;"><span class="fl">{Trader_UsesLeft}: <b class="{Insert_TraderUsesColor}">{Insert_TraderUses}</b></span><span class="fr">{Insert_TraderRight}</span></th>
-		</tr>
+        <tr>
+            <th colspan="5" class="pad5" style="text-align: left;"><span class="fl">{Trader_UsesLeft}: <b class="{Insert_TraderUsesColor}">{Insert_TraderUses}</b></span><span class="fr">{Insert_TraderRight}</span></th>
+        </tr>
         <tr>
             <th>&nbsp;</th>
             <th>{Trader_PercentMode}</th>
@@ -42,20 +42,20 @@ var MaxResB = Max{Insert_ResB};
             <th colspan="5" class="brLine">&nbsp;</th>
         </tr>
         <tr>
-        	<th colspan="5">{InsertMainResource}:</th>
+            <th colspan="5">{InsertMainResource}:</th>
         </tr>
         <tr>
-        	<th><img src="{SkinPath}images/metall.gif"/><br />{Metal}</th>
+            <th><img src="{SkinPath}images/metall.gif"/><br />{Metal}</th>
             <th class="w120x">&nbsp;</th>
             <th><input name="met" id="MainRes" type="text" value="0" tabindex="1" class="resInput" autocomplete="off"/></th>
             <th><a href="#" id="maxmet">{Trader_Max}</a> / <a href="#" id="zeromet">{Trader_Zero}</a></th>
-        	<th>1</th>
+            <th>1</th>
         </tr>
         <tr>
-        	<th colspan="5">{InsertOtherResources}:</th>
+            <th colspan="5">{InsertOtherResources}:</th>
         </tr>
         <tr>
-        	<th><img src="{SkinPath}images/kristall.gif"/><br />{Crystal}</th>
+            <th><img src="{SkinPath}images/kristall.gif"/><br />{Crystal}</th>
             <th class="w120x">
                 <div class="posRel">
                     <input type="button" class="modif" value="-"/>
@@ -64,12 +64,12 @@ var MaxResB = Max{Insert_ResB};
                     <span class="percent">%</span>
                 </div>
             </th>
-        	<th><input name="cry" type="text" value="0" tabindex="2" class="resInput" autocomplete="off"/></th>
+            <th><input name="cry" type="text" value="0" tabindex="2" class="resInput" autocomplete="off"/></th>
             <th><a href="#" id="maxcry">{Trader_Max}</a> / <a href="#" id="zerocry">{Trader_Zero}</a></th>
-        	<th>{mod_ma_res_a}</th>
+            <th>{mod_ma_res_a}</th>
         </tr>
         <tr>
-        	<th><img src="{SkinPath}images/deuterium.gif"/><br />{Deuterium}</th>
+            <th><img src="{SkinPath}images/deuterium.gif"/><br />{Deuterium}</th>
             <th class="w120x">
                 <div class="posRel">
                     <input type="button" class="modif" value="-"/>
@@ -78,15 +78,15 @@ var MaxResB = Max{Insert_ResB};
                     <span class="percent">%</span>
                 </div>
             </th>
-        	<th><input name="deu" type="text" value="0" tabindex="3" class="resInput" autocomplete="off"/></th>
+            <th><input name="deu" type="text" value="0" tabindex="3" class="resInput" autocomplete="off"/></th>
             <th><a href="#" id="maxdeu">{Trader_Max}</a> / <a href="#" id="zerodeu">{Trader_Zero}</a></th>
-        	<th>{mod_ma_res_b}</th>
+            <th>{mod_ma_res_b}</th>
         </tr>
         <tr>
             <th colspan="5" class="brLine">&nbsp;</th>
         </tr>
         <tr>
-        	<th colspan="5"><input type="submit" value="{mod_ma_excha}" class="pad5 lime" style="font-weight: bold;" /></th>
+            <th colspan="5"><input type="submit" value="{mod_ma_excha}" class="pad5 lime" style="font-weight: bold;" /></th>
         </tr>
     </table>
 </form>

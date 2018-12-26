@@ -32,8 +32,8 @@
             </ul>
         </th>
         <th class="pad5 left">
-            <ul style="margin: 0px;"> 
-                <ul>   
+            <ul style="margin: 0px;">
+                <ul>
                     <li><a href="#rule_3_6">3.6. {Rules_Index_3_6}</a></li>
                     <li><a href="#rule_3_7">3.7. {Rules_Index_3_7}</a></li>
                     <li><a href="#rule_3_8">3.8. {Rules_Index_3_8}</a></li>
@@ -50,14 +50,14 @@
             </a>
         </th>
     </tr>
-    
+
     <tr id="rule_1">
         <td class="c padleft" colspan="2">1. {Rule_Titles_1}</td>
     </tr>
     <tr>
         <td class="b pad5" colspan="2">{Rules_1}</td>
     </tr>
-    
+
     <tr id="rule_2">
         <td class="c padleft" colspan="2">2. {Rule_Titles_2}</td>
     </tr>
@@ -73,7 +73,7 @@
     <tr>
         <td class="b pad5" colspan="2">{Rules_2_2}</td>
     </tr>
-    
+
     <tr id="rule_3">
         <td class="c padleft" colspan="2">3. {Rule_Titles_3}</td>
     </tr>
@@ -131,7 +131,7 @@
     <tr>
         <td class="b pad5" colspan="2">{Rules_3_9}</td>
     </tr>
-    
+
     <tr id="rule_4">
         <td class="c padleft" colspan="2">4. {Rule_Titles_4}</td>
     </tr>
@@ -153,20 +153,20 @@
     <tr>
         <td class="b pad5" colspan="2">{Rules_4_3}</td>
     </tr>
-    
+
     <tr id="rule_5">
         <td class="c padleft" colspan="2">5. {Rule_Titles_5}</td>
     </tr>
     <tr>
         <td class="b pad5" colspan="2">{Rules_5}</td>
     </tr>
-    
+
     <tr id="rule_5">
         <td class="c padleft" colspan="2">6. {Rule_Titles_6}</td>
     </tr>
     <tr>
         <td class="b pad5" colspan="2">{Rules_6}</td>
     </tr>
-    
+
 </table>
 <br />

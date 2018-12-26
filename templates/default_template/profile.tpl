@@ -12,13 +12,13 @@ $(document).ready(function()
     </tr>
     <tr>
         <th class="pad5" style="width: 350px;">
-            
+
             <div class="plImg" style="background: url('{User_Avatar}') no-repeat;">
                 <div{HideNoAvatar}>
                     <div class="w100p" style="height: 85px;"></div>
                     <div class="divBg">{Table_NoAvatar}</div>
                 </div>
-            </div>  
+            </div>
         </th>
         <th class="pad5" style="width: 350px;">
             <table class="w100p">
@@ -63,7 +63,7 @@ $(document).ready(function()
                         {User_ShowBuddyOption}
                     </th>
                 </tr>
-				<tr{HideAllyInvite}>
+                <tr{HideAllyInvite}>
                     <th colspan="2" class="pad5">
                         <a href="alliance.php?mode=invite&uid={User_ID}"><img src="images/newmail.png" class="icon"/>{Table_AllyInvite}</a>
                     </th>
@@ -78,7 +78,7 @@ $(document).ready(function()
                         <a href="report.php?type=4&amp;uid={User_ID}"><img src="images/warning.png" class="icon"/>{Table_Report}</a>
                     </th>
                 </tr>
-				{Insert_AdminInfoLink}
+                {Insert_AdminInfoLink}
             </table>
         </th>
     </tr>
@@ -115,7 +115,7 @@ $(document).ready(function()
                     <th class="pad2">{User_FightsLost}</th>
                     <th class="pad2">{User_FightsLostP}%</th>
                 </tr>
-				<tr>
+                <tr>
                     <td class="c pad2">{Table_FightsInAlly}</td>
                     <th class="pad2">{User_FightsInAlly}</th>
                     <th class="pad2">{User_FightsInAllyP}%</th>
@@ -123,11 +123,11 @@ $(document).ready(function()
                 <tr class="inv">
                     <th></th>
                 </tr>
-				<tr>
+                <tr>
                     <td class="c pad2">{Table_MissileAttacks}</td>
                     <th class="pad2" colspan="2">{User_MissileAttacks}</th>
                 </tr>
-				<tr class="inv">
+                <tr class="inv">
                     <th></th>
                 </tr>
                 <tr>
@@ -171,15 +171,15 @@ $(document).ready(function()
                 <tr class="inv">
                     <th></th>
                 </tr>
-				<tbody class="{Insert_MoraleHide}">
-				<tr>
+                <tbody class="{Insert_MoraleHide}">
+                <tr>
                     <td class="c pad2">{Table_MoralePoints}</td>
                     <th class="pad2" colspan="2">{User_MoralePoints}</th>
                 </tr>
-				<tr class="inv">
+                <tr class="inv">
                     <th></th>
                 </tr>
-				</tbody>
+                </tbody>
                 <tr>
                     <td class="c pad2 w42p">{Table_PositionFleets}</td>
                     <th class="pad2 w58p" colspan="2"><a href="stats.php?type=2&amp;range={User_FleetsRange}">{User_FleetsPosition}</a></th>

@@ -9,5 +9,5 @@
     </tr>
 </table>
 <table width="600">
-	{techtree_list}
+    {techtree_list}
 </table>

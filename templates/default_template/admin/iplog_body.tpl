@@ -1,144 +1,144 @@
 <style>
 .tbl {
-	width: 900px;
+    width: 900px;
 }
 .pad3 {
-	padding: 3px;
+    padding: 3px;
 }
 .pad2 {
-	padding: 2px;
+    padding: 2px;
 }
 .w100 {
-	width: 100%;
+    width: 100%;
 }
 .inv {
-	visibility: hidden;
+    visibility: hidden;
 }
 .hide {
-	display: none;
+    display: none;
 }
 .look {
-	background: url('../images/search.png') no-repeat 0pt 0pt;
+    background: url('../images/search.png') no-repeat 0pt 0pt;
 }
 .left {
-	text-align: left;
+    text-align: left;
 }
 .right {
-	text-align: right;
+    text-align: right;
 }
 .noProxy {
-	background: url('../images/ip.png') no-repeat 0pt 0pt;
+    background: url('../images/ip.png') no-repeat 0pt 0pt;
 }
 .isProxy {
-	background: url('../images/servers.png') no-repeat 0pt 0pt;
+    background: url('../images/servers.png') no-repeat 0pt 0pt;
 }
 .proxySet, .sortimg {
-	cursor: pointer;
+    cursor: pointer;
 }
 .sortimgasc {
-	background: url('../images/collapse.png') no-repeat 0pt 0pt;
+    background: url('../images/collapse.png') no-repeat 0pt 0pt;
 }
 .sortimgdesc {
-	background: url('../images/expand.png') no-repeat 0pt 0pt;
+    background: url('../images/expand.png') no-repeat 0pt 0pt;
 }
 .sortimg, .sortimgasc, .sortimgdesc, .look, .proxySet {
-	padding-left: 16px;
+    padding-left: 16px;
 }
 th.even {
-	background-color: #40547C;
-	border-color: #4C6798;
+    background-color: #40547C;
+    border-color: #4C6798;
 }
 th.break {
-	background-color: #27344D;
-	border-color: #344769;
+    background-color: #27344D;
+    border-color: #344769;
 }
 </style>
 <script>
-var JSLang = 
+var JSLang =
 {
-	'info_SetAsProxy': '{info_SetAsProxy}',
-	'info_SetAsNonProxy': '{info_SetAsNonProxy}'
+    'info_SetAsProxy': '{info_SetAsProxy}',
+    'info_SetAsNonProxy': '{info_SetAsNonProxy}'
 };
 </script>
 <script>
 $(document).ready(function()
 {
-	var ThisForm = $('#thisForm');
-	var DoSearch = false;
-	
-	var qtipStyles = 
-	{
-		style:
-		{
-			classes: 'tiptip_content'
-		},
-		show:
-		{
-			delay: 150,
-			effect: function()
-			{
-				$(this).fadeIn(150);
-			}
-		},
-		hide:
-		{
-			effect: function()
-			{
-				$(this).fadeOut(150);
-			}
-		},
-		position:
-		{
-			my: 'top center',
-			at: 'bottom center'
-		}
-	};
-	
-	$('.isProxy').qtip($.extend(qtipStyles, {content: JSLang['info_SetAsNonProxy']}));
-	$('.noProxy').qtip($.extend(qtipStyles, {content: JSLang['info_SetAsProxy']}));
-	
+    var ThisForm = $('#thisForm');
+    var DoSearch = false;
+
+    var qtipStyles =
+    {
+        style:
+        {
+            classes: 'tiptip_content'
+        },
+        show:
+        {
+            delay: 150,
+            effect: function()
+            {
+                $(this).fadeIn(150);
+            }
+        },
+        hide:
+        {
+            effect: function()
+            {
+                $(this).fadeOut(150);
+            }
+        },
+        position:
+        {
+            my: 'top center',
+            at: 'bottom center'
+        }
+    };
+
+    $('.isProxy').qtip($.extend(qtipStyles, {content: JSLang['info_SetAsNonProxy']}));
+    $('.noProxy').qtip($.extend(qtipStyles, {content: JSLang['info_SetAsProxy']}));
+
     $('.even').find('th').addClass('even');
-	$('[id^="doSort_"]').click(function()
-	{
-		$('input[name="sort"]').val($(this).attr('id').replace('doSort_', ''));
-		if($(this).hasClass('sortimgasc'))
-		{
-			$('input[name="mode"]').val('desc');
-		}
-		else
-		{
-			$('input[name="mode"]').val('asc');
-		}
-		ThisForm.submit();
-	});
-	$('.proxySet').click(function()
-	{
-		$('[name="proxyEdit"]').val($(this).attr('data-ipid'));
-		ThisForm.submit();
-	});
-	
-	$('#FormSubmit').click(function()
-	{
-		DoSearch = true;
-	});
-	
-	ThisForm.submit(function()
-	{
-		if(DoSearch === true)
-		{
-			$('[name="uid"],[name="ipid"]').val('');
-		}
-	});
+    $('[id^="doSort_"]').click(function()
+    {
+        $('input[name="sort"]').val($(this).attr('id').replace('doSort_', ''));
+        if($(this).hasClass('sortimgasc'))
+        {
+            $('input[name="mode"]').val('desc');
+        }
+        else
+        {
+            $('input[name="mode"]').val('asc');
+        }
+        ThisForm.submit();
+    });
+    $('.proxySet').click(function()
+    {
+        $('[name="proxyEdit"]').val($(this).attr('data-ipid'));
+        ThisForm.submit();
+    });
+
+    $('#FormSubmit').click(function()
+    {
+        DoSearch = true;
+    });
+
+    ThisForm.submit(function()
+    {
+        if(DoSearch === true)
+        {
+            $('[name="uid"],[name="ipid"]').val('');
+        }
+    });
 });
 </script>
 <br />
 <table class="tbl">
     <form action="iplog.php" method="post" id="thisForm">
-		<input type="hidden" name="uid" value="{Insert_Found_UID}"/>
-		<input type="hidden" name="ipid" value="{Insert_Found_IPID}"/>
-		<input type="hidden" name="sort" value="{Insert_SortType}"/>
-		<input type="hidden" name="mode" value="{Insert_SortMode}"/>
-		<input type="hidden" name="proxyEdit" value=""/>
+        <input type="hidden" name="uid" value="{Insert_Found_UID}"/>
+        <input type="hidden" name="ipid" value="{Insert_Found_IPID}"/>
+        <input type="hidden" name="sort" value="{Insert_SortType}"/>
+        <input type="hidden" name="mode" value="{Insert_SortMode}"/>
+        <input type="hidden" name="proxyEdit" value=""/>
         <tr>
             <td class="c" colspan="3">{Search_Title}</td>
         </tr>

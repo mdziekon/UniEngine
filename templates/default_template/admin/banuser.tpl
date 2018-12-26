@@ -51,7 +51,7 @@
                 <input type="text" name="period_secs" maxlength="2" style="width: 35px; padding: 3px;"/>
             </th>
         </tr>
-		<tr>
+        <tr>
             <th class="pad2">{Form_ExtendPrevious}</th>
             <th class="pad2">
                 <input type="checkbox" name="extend" checked=""/>

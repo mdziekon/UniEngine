@@ -72,7 +72,7 @@ $(document).ready(function()
             Idx += 1;
         });
     });
-    
+
     $('[class*="col"]').hover(
     function(){
         var ThisCol = $(this).attr('class').match(/col[0-9]{1,}/);
@@ -83,13 +83,13 @@ $(document).ready(function()
         $('.hoverV').removeClass('hoverV');
         $('.hoverTD').removeClass('hoverTD');
     });
-    
+
     if('{Input_EnableProfitabilitySort}' == 'true'){
         var InitSort = [[15,1]];
     } else {
         var InitSort = [];
     }
-    
+
     $('#tableSort').tablesorter({
         headers: {
             0: {sorter: false},
@@ -103,10 +103,10 @@ $(document).ready(function()
         cssDesc: 'sortdesc',
         sortList: InitSort
     });
-    
+
 });
 </script>
-<script type="text/javascript" src="../scripts/jquery.tablesorter.min.js"></script> 
+<script type="text/javascript" src="../scripts/jquery.tablesorter.min.js"></script>
 <br />
 <form action="" method="get" style="margin-bottom: 1px;">
     <table style="width: 1100px;">
@@ -137,7 +137,7 @@ $(document).ready(function()
     </table>
 </form>
 <table style="width: 1100px;" id="tableSort">
-    
+
     <thead>
         {Input_InsertHeaders}
     </thead>

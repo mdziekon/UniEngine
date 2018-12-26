@@ -4,9 +4,9 @@
 <form action="lostcode.php?action=1" method="post">
 <table width="400">
 <tbody><tr>
-	 <td class="c"><b>{CodeForm}</b></td>
+     <td class="c"><b>{CodeForm}</b></td>
 </tr><tr>
-	<th>{TextCode1}<br/>{TextCode2}</th>
+    <th>{TextCode1}<br/>{TextCode2}</th>
     </tr>
 <tr>
   <th>{email}: <input type="text" name="email" /></th>

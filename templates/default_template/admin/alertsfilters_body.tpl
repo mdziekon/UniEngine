@@ -39,7 +39,7 @@
     text-decoration: underline;
 }
 .pageForm {
-    margin: 0px; 
+    margin: 0px;
     padding: 6px;
 }
 .inv {
@@ -60,15 +60,15 @@ function()
     $('.edit').tipTip({delay: 0, content: '{CMD_Edit_Title}', edgeOffset: 10});
     $('.false').tipTip({delay: 0, content: '{Disabled}', edgeOffset: 10});
     $('.true').tipTip({delay: 0, content: '{Enabled}', edgeOffset: 10});
-    
+
     $('.info1').tipTip({delay: 0, content: '{Condition_1}', edgeOffset: 10});
     $('.info2').tipTip({delay: 0, content: '{Condition_2}', edgeOffset: 10});
     $('.info3').tipTip({delay: 0, content: '{Condition_3}', edgeOffset: 10});
     $('.info4').tipTip({delay: 0, content: '{Condition_4}', edgeOffset: 10});
     $('.info5').tipTip({delay: 0, content: '<center>{Condition_5}</center>', edgeOffset: 10});
-	$('.info6').tipTip({delay: 0, content: '{Condition_6}', edgeOffset: 10});
+    $('.info6').tipTip({delay: 0, content: '{Condition_6}', edgeOffset: 10});
     $('.info7').tipTip({delay: 0, content: '{Condition_7}', edgeOffset: 10});
-    
+
     $('.pagin').click(function()
     {
         $(this).parent().attr('action', '?page='+$(this).attr('name').replace('goto_', '')).submit();
@@ -120,7 +120,7 @@ function()
         <th colspan="8">
             <form action="" method="post" class="pageForm">
                 <b style="float: left;">
-                    {PerPage} 
+                    {PerPage}
                     <select class="perPage">
                         <option value="5" {perpage_select_5}>5</option>
                         <option value="10" {perpage_select_10}>10</option>
@@ -142,7 +142,7 @@ function()
         <th width="200px">{Filter_ActionType}</th>
         <th width="550px">{Filter_Conditions}</th>
         <th width="50px">{Filter_UseCount}</th>
-        <th width="50px">{Filter_Actions}</th>       
+        <th width="50px">{Filter_Actions}</th>
     </tr>
     <form action="?cmd=delpost" method="post">
         {Rows}
@@ -157,7 +157,7 @@ function()
         <th colspan="8">
             <form action="" method="post" class="pageForm">
                 <b style="float: left;">
-                    {PerPage} 
+                    {PerPage}
                     <select class="perPage">
                         <option value="5" {perpage_select_5}>5</option>
                         <option value="10" {perpage_select_10}>10</option>

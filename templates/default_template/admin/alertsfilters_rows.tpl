@@ -8,6 +8,6 @@
     <th>{UseCount}</th>
     <th>
         <a class="edit" href="?cmd=edit&amp;id={ID}"></a>&nbsp;
-        <a class="delete" href="?cmd=del&amp;id={ID}"></a> 
+        <a class="delete" href="?cmd=del&amp;id={ID}"></a>
     </th>
 </tr>

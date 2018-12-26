@@ -5,32 +5,32 @@ var MaxLength = {Insert_MaxLength};
 <link rel="stylesheet" type="text/css" href="css/buddy_form-2.0.0.1.min.css" />
 <br/>
 <form action="" method="post">
-	<input type="hidden" name="send" value="1"/>
-	<table style="width: 600px;">
-		<tr>
-			<td class="c center" colspan="2">{Headers_BuddyForm}
-		</tr>
-		<tr>
-			<th class="pad5 tRight">{Headers_Nick}</th>
-			<th class="pad5">{Insert_Username}</th>
-		</tr>
-		<tr>
-			<th class="pad2 tRight">{Headers_Text}<br/>({Headers_Limit}: <span id="Length">0</span> / {Insert_MaxLength})</th>
-			<th class="pad2"><textarea name="text" class="text pad2">{Insert_Text}</textarea></th>
-		</tr>
-		<tr>
-			<th class="pad5" colspan="2">
-				<input type="button" class="button orange" id="goBack" value="{Headers_Cancel}"/>
-				<input type="submit" class="button lime" value="{Headers_Send}"/>
-			</th>
-		</tr>
-		<tbody class="{Insert_MsgBoxHide}">
-			<tr class="inv">
-				<th>&nbsp;</th>
-			</tr>
-			<tr>
-				<th class="pad5 {Insert_MsgBoxColor}" colspan="2">{Insert_MsgBoxText}</th>
-			</tr>
-		</tbody>
-	</table>
+    <input type="hidden" name="send" value="1"/>
+    <table style="width: 600px;">
+        <tr>
+            <td class="c center" colspan="2">{Headers_BuddyForm}
+        </tr>
+        <tr>
+            <th class="pad5 tRight">{Headers_Nick}</th>
+            <th class="pad5">{Insert_Username}</th>
+        </tr>
+        <tr>
+            <th class="pad2 tRight">{Headers_Text}<br/>({Headers_Limit}: <span id="Length">0</span> / {Insert_MaxLength})</th>
+            <th class="pad2"><textarea name="text" class="text pad2">{Insert_Text}</textarea></th>
+        </tr>
+        <tr>
+            <th class="pad5" colspan="2">
+                <input type="button" class="button orange" id="goBack" value="{Headers_Cancel}"/>
+                <input type="submit" class="button lime" value="{Headers_Send}"/>
+            </th>
+        </tr>
+        <tbody class="{Insert_MsgBoxHide}">
+            <tr class="inv">
+                <th>&nbsp;</th>
+            </tr>
+            <tr>
+                <th class="pad5 {Insert_MsgBoxColor}" colspan="2">{Insert_MsgBoxText}</th>
+            </tr>
+        </tbody>
+    </table>
 </form>

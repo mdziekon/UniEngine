@@ -1,5 +1,5 @@
 <tr>
     <th colspan="4" class="c">
-        {RowText} 
+        {RowText}
     </th>
 </tr>

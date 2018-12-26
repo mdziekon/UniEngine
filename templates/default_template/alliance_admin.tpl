@@ -17,7 +17,7 @@
 }
 .markHover {
     background-color: #455B87;
-    border-color: #526EA3; 
+    border-color: #526EA3;
 }
 .markSelect {
     background-color: #4E6797;
@@ -37,7 +37,7 @@
     color: gray !important;
 }
 .markLink:hover {
-	text-decoration: none;
+    text-decoration: none;
 }
 </style>
 <script>
@@ -47,7 +47,7 @@ var $_MaxLength_ReqText = {Insert_MaxLength_ReqText};
 $(document).ready(function()
 {
     var SaveOneText = {Mark01: '{ADM_SaveMark1}', Mark02: '{ADM_SaveMark2}', Mark03: '{ADM_SaveMark3}'};
-    
+
     $('.collapsed').hide();
     $('.ceswitch').click(function()
     {
@@ -61,11 +61,11 @@ $(document).ready(function()
             $(this).addClass('collapse');
         }
     }).tipTip({maxWidth: 'auto', content: '{AFP_CollExp}', defaultPosition: 'right', delay: 500, edgeOffset: 8});
-    
+
     $('.helpreq').tipTip({maxWidth: '250px', content: '{ADM_AllyOpen4ReqInfo}', delay: 0, edgeOffset: 10});
     $('.disNCOpt').tipTip({maxWidth: '250px', content: '{ADM_OnlyAdminCanSetThis}', delay: 0, edgeOffset: 10, defaultPosition: 'left'});
     $('[name=allyOpen]:disabled, [name=newComerRank]:disabled').addClass('disabled');
-    
+
     $("[id^=Cont]").hide(0);
     $("#Mark{MarkSelect}").addClass('markSelect');
     $("#Cont{MarkSelect}").show(0);
@@ -73,7 +73,7 @@ $(document).ready(function()
     function()
     {
         if(!$(this).hasClass('markSelect')){
-            $(this).addClass('markHover'); 
+            $(this).addClass('markHover');
         }
     },
     function()
@@ -95,42 +95,42 @@ $(document).ready(function()
         $(this).parent().click();
         return false;
     });
-    
-	$('[name=ext_text], [name=int_text], [name=req_text]').keydown(function()
-	{
-		var TextLength = $(this).val().length;
-		var $_MaxLength = 0;
-		var CntChars = null;
-		if($(this).attr('name') == 'ext_text')
-		{
-			$_MaxLength = $_MaxLength_ExtText;
-			CntChars = $('#cntChars1');
-		}
-		else if($(this).attr('name') == 'int_text')
-		{
-			$_MaxLength = $_MaxLength_IntText;
-			CntChars = $('#cntChars2');
-		}
-		else if($(this).attr('name') == 'req_text')
-		{
-			$_MaxLength = $_MaxLength_ReqText;
-			CntChars = $('#cntChars3');
-		}
-		if(TextLength > $_MaxLength)
-		{
-			$(this).val($(this).val().substr(0, $_MaxLength));
-			TextLength = $_MaxLength;
-		}
-		CntChars.html(TextLength);
-	}).keyup(function()
-	{
-		$(this).keydown();
-	}).change(function()
-	{
-		$(this).keydown();
-	});
-	$('[name=ext_text], [name=int_text], [name=req_text]').keydown();
-	
+
+    $('[name=ext_text], [name=int_text], [name=req_text]').keydown(function()
+    {
+        var TextLength = $(this).val().length;
+        var $_MaxLength = 0;
+        var CntChars = null;
+        if($(this).attr('name') == 'ext_text')
+        {
+            $_MaxLength = $_MaxLength_ExtText;
+            CntChars = $('#cntChars1');
+        }
+        else if($(this).attr('name') == 'int_text')
+        {
+            $_MaxLength = $_MaxLength_IntText;
+            CntChars = $('#cntChars2');
+        }
+        else if($(this).attr('name') == 'req_text')
+        {
+            $_MaxLength = $_MaxLength_ReqText;
+            CntChars = $('#cntChars3');
+        }
+        if(TextLength > $_MaxLength)
+        {
+            $(this).val($(this).val().substr(0, $_MaxLength));
+            TextLength = $_MaxLength;
+        }
+        CntChars.html(TextLength);
+    }).keyup(function()
+    {
+        $(this).keydown();
+    }).change(function()
+    {
+        $(this).keydown();
+    });
+    $('[name=ext_text], [name=int_text], [name=req_text]').keydown();
+
     $('a[class^="clear_"]').click(function()
     {
         $('textarea.'+$(this).attr('class')).val('').keydown();
@@ -145,9 +145,9 @@ $(document).ready(function()
     {
         return confirm('{ADM_SureWantDelete}');
     });
-    
+
     if('{HideTextsSet}' != 'hide')
-	{
+    {
         $('#{GetLastMark}').click();
     }
 });
@@ -190,7 +190,7 @@ $(document).ready(function()
         <tr class="inv {HideWarnBox}">
             <td></td>
         </tr>
-        
+
         <tr class="{HideTextsSet}">
             <td class="c" colspan="3" id="texts_box"><b class="ceswitch collapse">{ADM_Texts}</b></td>
         </tr>
@@ -205,7 +205,7 @@ $(document).ready(function()
             </tr>
             <tr>
                 <th colspan="3">
-                    <textarea class="clear_1" name="ext_text" rows="5" cols="55">{Ext_Text}</textarea>  
+                    <textarea class="clear_1" name="ext_text" rows="5" cols="55">{Ext_Text}</textarea>
                 </th>
             </tr>
         </tbody>
@@ -215,7 +215,7 @@ $(document).ready(function()
             </tr>
             <tr>
                 <th colspan="3">
-                    <textarea class="clear_2" name="int_text" rows="5" cols="55">{Int_Text}</textarea>  
+                    <textarea class="clear_2" name="int_text" rows="5" cols="55">{Int_Text}</textarea>
                 </th>
             </tr>
         </tbody>
@@ -225,12 +225,12 @@ $(document).ready(function()
             </tr>
             <tr>
                 <th colspan="3">
-                    <textarea class="clear_3" name="req_text" rows="5" cols="55">{Req_Text}</textarea>  
+                    <textarea class="clear_3" name="req_text" rows="5" cols="55">{Req_Text}</textarea>
                 </th>
             </tr>
         </tbody>
         <tr class="texts_box {HideTextsSet}">
-            <th colspan="3" class="pad5"> 
+            <th colspan="3" class="pad5">
                 <input type="submit" class="saveAll" value="{ADM_SaveAll}"/>
                 <input type="submit" class="saveOne" value="{ADM_SaveOnly}"/>
             </th>
@@ -263,7 +263,7 @@ $(document).ready(function()
                 </th>
             </tr>
             <tr>
-                <th colspan="2" class="pad5"> 
+                <th colspan="2" class="pad5">
                     <input type="submit" class="bold" value="{ADM_ChangeGeneralButton}"/>
                 </th>
             </tr>

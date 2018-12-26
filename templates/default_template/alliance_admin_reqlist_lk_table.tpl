@@ -17,7 +17,7 @@
 }
 .markHover {
     background-color: #455B87;
-    border-color: #526EA3; 
+    border-color: #526EA3;
 }
 .markSelect {
     background-color: #4E6797;
@@ -33,12 +33,12 @@
 <script src="scripts/jquery.textareaCounter.plugin.js" type="text/javascript"></script>
 <script>
 $(document).ready(function()
-{    
-    $('.collapsed').hide();   
-     
+{
+    $('.collapsed').hide();
+
     $(".mark").hover(function()
     {
-        $(this).children().addClass('markHover'); 
+        $(this).children().addClass('markHover');
     }, function()
     {
         $(this).children().removeClass('markHover');
@@ -66,7 +66,7 @@ $(document).ready(function()
     <tr class="inv {HideInfoBox}">
         <td></td>
     </tr>
-            
+
     <tr>
         <td class="c" colspan="4">{ADM_ReqList_Title}<b style="float: right">({ADM_RequestsCount}: {RequestCount})</b></td>
     </tr>
@@ -77,7 +77,7 @@ $(document).ready(function()
         <th width="200px"><a href="?mode=admin&amp;edit=reqlist&amp;stype=3&amp;smode={sortRev}" {sortBySendDate}>{ADM_RL_SendDate}</a></th>
     </tr>
     {RequestRows}
-            
+
     <tr class="{HideNoRequests}">
         <th class="c pad5 red" colspan="4">{ADM_RL_NoRequests}</th>
     </tr>

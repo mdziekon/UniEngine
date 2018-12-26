@@ -5,6 +5,6 @@
         <td style="width: 350px;" class="c center">{AFind_Name}</td>
         <td style="width: 100px;" class="c center">{AFind_Count}</td>
     </tr>
-	<tbody id="results">{result}</tbody>
+    <tbody id="results">{result}</tbody>
     {pagination}
 </table>

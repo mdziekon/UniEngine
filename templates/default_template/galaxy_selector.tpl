@@ -20,7 +20,7 @@
                     </tr>
                 </table>
             </td>
-            <td class="a">            
+            <td class="a">
                 <table>
                     <tr>
                         <td class="c center" colspan="3">{Lang_System}</td>

@@ -91,4 +91,4 @@ DynamicCode['sBR'] = '<tr><th class="sBR" colspan="3">&nbsp;</th></tr>';
             </th>
         </tr>
     </table>
-</form>    
+</form>

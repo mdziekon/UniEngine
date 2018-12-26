@@ -13,9 +13,9 @@
     </th>
     <th class="pad2" colspan="2">
         {From} <input class="spad activ_filter_time" type="text" size="2" name="from_hour" value="{FromHour}" maxlength="2"/>:<input class="spad activ_filter_time" type="text" size="2" name="from_min" value="{FromMin}" maxlength="2"/>:
-        <input class="spad activ_filter_time" type="text" size="2" name="from_sec" value="{FromSec}" maxlength="2" style="margin-right: 30px;"/> 
+        <input class="spad activ_filter_time" type="text" size="2" name="from_sec" value="{FromSec}" maxlength="2" style="margin-right: 30px;"/>
         {To} <input class="spad activ_filter_time" type="text" size="2" name="to_hour" value="{ToHour}" maxlength="2"/>:<input class="spad activ_filter_time" type="text" size="2" name="to_min" value="{ToMin}" maxlength="2"/>:
-        <input class="spad activ_filter_time" type="text" size="2" name="to_sec" value="{ToSec}" maxlength="2"/> 
+        <input class="spad activ_filter_time" type="text" size="2" name="to_sec" value="{ToSec}" maxlength="2"/>
     </th>
 </tr>
 <tr>

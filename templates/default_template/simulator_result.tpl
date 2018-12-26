@@ -10,7 +10,7 @@
     <br/><br/>
     {CalcTotalTime}: {time}<br/><br />
     {BattleWonBy}: <span class="{Winner_Color}">{Winner_Name}</span><br /><br />
-    {txt_rounds}: {rounds} 
+    {txt_rounds}: {rounds}
     </td>
     <td colspan="2" class="c" style="padding: 5px;">
     {AddInfo}

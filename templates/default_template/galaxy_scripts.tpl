@@ -12,16 +12,16 @@ var UseAjax = {UseAjax};
 </script>
 <style>
 .icoSpy {
-	background: url('{SkinPath}img/e.gif') no-repeat 0px 0px;
+    background: url('{SkinPath}img/e.gif') no-repeat 0px 0px;
 }
 .icoMsg {
-	background: url('{SkinPath}img/m.gif') no-repeat 0px 1px;
+    background: url('{SkinPath}img/m.gif') no-repeat 0px 1px;
 }
 .icoBuddy {
-	background: url('{SkinPath}img/b.gif') no-repeat -1px 2px;
+    background: url('{SkinPath}img/b.gif') no-repeat -1px 2px;
 }
 .icoMissile {
-	background: url('{SkinPath}img/r.gif') no-repeat 0px 0px;
+    background: url('{SkinPath}img/r.gif') no-repeat 0px 0px;
 }
 </style>
 <link rel="stylesheet" type="text/css" href="css/galaxy-2.3.4.2.min.css" />

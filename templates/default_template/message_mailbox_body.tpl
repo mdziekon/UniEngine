@@ -5,7 +5,7 @@
     </th>
     <th class="eFrom">{CurrMSG_from}</th>
     <th>
-        {CurrMSG_subject} 
+        {CurrMSG_subject}
     </th>
 </tr>
 <tr{CurrMSG_IsUnread}>

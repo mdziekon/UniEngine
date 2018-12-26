@@ -18,15 +18,15 @@
     <input type="hidden" name="simulate" value="yes"/>
     <table width="800">
         <tbody>
-            {Result} 
+            {Result}
             <tr>
                 <td class="c" colspan="4">{Title}</td>
             </tr>
             <tr>
                 <th colspan="2" style="color: orange;">{Defender}</th>
                 <th colspan="2" style="color: orange;">{Attacker}</th>
-            </tr> 
-            <tr><th colspan="4" class="smallLine">&nbsp;</th></tr>           
+            </tr>
+            <tr><th colspan="4" class="smallLine">&nbsp;</th></tr>
             <tr>
                 <th class="leftAl" width="22%">{DefTech}:</th>
                 <th class="leftAl" width="28%"><input type="text" name="def[tech]" value="{SetDefTech}"/></th>
@@ -48,7 +48,7 @@
                 <th colspan="4" style="padding: 5px;">
                     <input type="submit" style="border: 1px solid #A1A1A1;" value="{Submit}"/>
                 </th>
-            </tr>   
+            </tr>
         </tbody>
     </table>
 </form>

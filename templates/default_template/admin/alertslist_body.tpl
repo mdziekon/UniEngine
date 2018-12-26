@@ -1,10 +1,10 @@
 <script>
-var JSLang = 
+var JSLang =
 {
-	'CMD_DelAll': '{CMD_DelAll}',
-	'CMD_Delete_Title': '{CMD_Delete_Title}',
-	'CMD_Show_Users_Title': '{CMD_Show_Users_Title}',
-	'CMD_Show_MainUsers_Title': '{CMD_Show_MainUsers_Title}'
+    'CMD_DelAll': '{CMD_DelAll}',
+    'CMD_Delete_Title': '{CMD_Delete_Title}',
+    'CMD_Show_Users_Title': '{CMD_Show_Users_Title}',
+    'CMD_Show_MainUsers_Title': '{CMD_Show_MainUsers_Title}'
 };
 var CurrentPage = {CurrentPage};
 </script>
@@ -20,7 +20,7 @@ var CurrentPage = {CurrentPage};
         <th colspan="7">
             <form action="" method="post" class="pageForm">
                 <b style="float: left;">
-                    {PerPage} 
+                    {PerPage}
                     <select class="perPage">
                         <option value="5" {perpage_select_5}>5</option>
                         <option value="10" {perpage_select_10}>10</option>
@@ -43,14 +43,14 @@ var CurrentPage = {CurrentPage};
         <th width="40px">{Alert_Importance}</th>
         <th width="600px">{Alert_Data}</th>
         <th width="75px">{Alert_Status}</th>
-        <th width="20px">&nbsp;</th>       
+        <th width="20px">&nbsp;</th>
     </tr>
         {Rows}
     <tr{HidePaginRow}>
         <th colspan="7">
             <form action="" method="post" class="pageForm">
                 <b style="float: left;">
-                    {PerPage} 
+                    {PerPage}
                     <select class="perPage">
                         <option value="5" {perpage_select_5}>5</option>
                         <option value="10" {perpage_select_10}>10</option>

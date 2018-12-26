@@ -44,57 +44,57 @@
     display: none;
 }
 .padOpt {
-	padding: 2px 10px;
+    padding: 2px 10px;
 }
 .checkBox {
-	margin: 0px 2px;
-	vertical-align: text-bottom;
+    margin: 0px 2px;
+    vertical-align: text-bottom;
 }
 .rightOpt {
-	margin: 4px 0px;
+    margin: 4px 0px;
 }
 </style>
 <script>
 $(document).ready(function()
 {
-	$(".help").tipTip({delay: 0, maxWidth: "200px", attribute: 'title'});
-	$(".fArr").tipTip({delay: 0, maxWidth: "300px", attribute: 'title'});
-	$(".fCar").tipTip({delay: 0, maxWidth: "500px", attribute: 'title'});
+    $(".help").tipTip({delay: 0, maxWidth: "200px", attribute: 'title'});
+    $(".fArr").tipTip({delay: 0, maxWidth: "300px", attribute: 'title'});
+    $(".fCar").tipTip({delay: 0, maxWidth: "500px", attribute: 'title'});
 
-	var SelectAllState = false;
-	var SelectableBoxes = $('.canSel,.selAll');
-	$('.selAll').click(function()
-	{
-		if(SelectAllState === false)
-		{
-			var SetCheck = true;
-		}
-		else
-		{
-			var SetCheck = false;
-		}
-		SelectAllState = SetCheck; 
-		SelectableBoxes.attr('checked', SetCheck);
-	});
+    var SelectAllState = false;
+    var SelectableBoxes = $('.canSel,.selAll');
+    $('.selAll').click(function()
+    {
+        if(SelectAllState === false)
+        {
+            var SetCheck = true;
+        }
+        else
+        {
+            var SetCheck = false;
+        }
+        SelectAllState = SetCheck;
+        SelectableBoxes.attr('checked', SetCheck);
+    });
 
-	$('.confirm').click(function()
-	{
-		return confirm('{Ask_AreYouSure}');
-	});
+    $('.confirm').click(function()
+    {
+        return confirm('{Ask_AreYouSure}');
+    });
 
-	$('.actionRetreat').click(function()
-	{
-		$('input[name="cmd"]').val('1');
-	});
-	$('.actionFallback').click(function()
-	{
-		$('input[name="cmd"]').val('2');
-	});
+    $('.actionRetreat').click(function()
+    {
+        $('input[name="cmd"]').val('1');
+    });
+    $('.actionFallback').click(function()
+    {
+        $('input[name="cmd"]').val('2');
+    });
 
-	$('.checkBox').click(function()
-	{
-		$('[class="'+$(this).attr('class')+'"]').attr('checked', $(this).is(':checked'));
-	});
+    $('.checkBox').click(function()
+    {
+        $('[class="'+$(this).attr('class')+'"]').attr('checked', $(this).is(':checked'));
+    });
 });
 </script>
 {ChronoApplets}
@@ -130,26 +130,26 @@ $(document).ready(function()
             <tr class="{Hide_AllOptions}">
                 <th class="pad2"><input type="checkbox" class="selAll"/></th>
                 <th class="padOpt" colspan="9">
-					<span class="fl">
-						<input type="submit" class="actionRetreat button confirm orange {Hide_OptionRetreat}" value="{FleetControl_Retreat}"/>
-						<input type="submit" class="actionFallback button confirm red {Hide_OptionFallback}" value="{FleetControl_Fallback}"/>
-					</span>
-					<span class="fr rightOpt">
-						{FleetControl_SendMsg} <input type="checkbox" name="sendNotice" class="checkBox cSendMsg" checked="checked"/>
-					</span>
+                    <span class="fl">
+                        <input type="submit" class="actionRetreat button confirm orange {Hide_OptionRetreat}" value="{FleetControl_Retreat}"/>
+                        <input type="submit" class="actionFallback button confirm red {Hide_OptionFallback}" value="{FleetControl_Fallback}"/>
+                    </span>
+                    <span class="fr rightOpt">
+                        {FleetControl_SendMsg} <input type="checkbox" name="sendNotice" class="checkBox cSendMsg" checked="checked"/>
+                    </span>
                 </th>
             </tr>
             {Rows}
             <tr class="{Hide_AllOptions}">
                 <th class="pad2"><input type="checkbox" class="selAll"/></th>
                 <th class="padOpt" colspan="9">
-					<span class="fl">
-						<input type="submit" class="actionRetreat button confirm orange {Hide_OptionRetreat}" value="{FleetControl_Retreat}"/>
-						<input type="submit" class="actionFallback button confirm red {Hide_OptionFallback}" value="{FleetControl_Fallback}"/>
-					</span>
-					<span class="fr rightOpt">
-						{FleetControl_SendMsg} <input type="checkbox" name="sendNotice" class="checkBox cSendMsg" checked="checked"/>
-					</span>
+                    <span class="fl">
+                        <input type="submit" class="actionRetreat button confirm orange {Hide_OptionRetreat}" value="{FleetControl_Retreat}"/>
+                        <input type="submit" class="actionFallback button confirm red {Hide_OptionFallback}" value="{FleetControl_Fallback}"/>
+                    </span>
+                    <span class="fr rightOpt">
+                        {FleetControl_SendMsg} <input type="checkbox" name="sendNotice" class="checkBox cSendMsg" checked="checked"/>
+                    </span>
                 </th>
             </tr>
         </tbody>

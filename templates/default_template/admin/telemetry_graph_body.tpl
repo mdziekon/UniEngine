@@ -9,10 +9,10 @@
 #Graph_legend > li {
     font-size: 10px;
     font-weight: 700;
-	margin: 2px 0px !important;
+    margin: 2px 0px !important;
 }
 .Graph_legend_label {
-	padding-left: 5px;
+    padding-left: 5px;
 }
 #Graph_Tooltip {
     font-size: 10px !important;

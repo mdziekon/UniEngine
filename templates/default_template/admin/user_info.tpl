@@ -13,7 +13,7 @@
 }
 .markHover {
     background-color: #455B87;
-    border-color: #526EA3; 
+    border-color: #526EA3;
 }
 .markSelect {
     background-color: #4E6797;
@@ -55,7 +55,7 @@
 }
 .aLog {
     padding-left: 18px;
-    background: url('../images/log.png') no-repeat; 
+    background: url('../images/log.png') no-repeat;
 }
 </style>
 <script>
@@ -68,7 +68,7 @@
             $(".mark").hover(
             function()
             {
-                $(this).addClass('markHover'); 
+                $(this).addClass('markHover');
             },
             function()
             {
@@ -80,7 +80,7 @@
                     $("[id^=Cont]").hide(0);
                     $("#"+$(this).attr('id').replace('Mark', 'Cont')).show(0);
                     $(this).removeClass('markHover').addClass('markSelect');
-                
+
             });
             $(".help").tipTip({delay: 0, maxWidth: "200px", attribute: 'title'});
             $(".fArr").tipTip({delay: 0, maxWidth: "300px", attribute: 'title'});
@@ -96,7 +96,7 @@
             <th class="pad mark" id="Mark03">{PlanetsInfo}</th>
             <th class="pad mark" id="Mark04">{FleetControl}</th>
         </tr>
-        
+
         <tr id="Cont01">
             <th colspan="4">
                 <table width="100%">
@@ -183,7 +183,7 @@
                 </table>
             </th>
         </tr>
-        
+
         <tr id="Cont02">
             <th colspan="4" class="pad">
                 {ShowInfoIfStatsUnavailable}
@@ -208,11 +208,11 @@
                             <th class="pad" colspan="2">{Points}</th>
                             <th class="pad" colspan="2">{PlayerGeneralPoints}</th>
                         </tr>
-                        
+
                         <tr style="visibility: hidden;">
                             <th></th>
                         </tr>
-                        
+
                         <tr>
                             <td class="pad c cent" colspan="2">{Buildings}</td>
                             <td class="pad c cent" colspan="2">{Fleet}</td>
@@ -247,11 +247,11 @@
                             <th class="pad infoTHN infoTHL">{GeneralPointsPercent}</th>
                             <th class="pad infoTHD">{PlayerFleetPercent}</th>
                         </tr>
-                        
+
                         <tr style="visibility: hidden;">
                             <th></th>
                         </tr>
-                        
+
                         <tr>
                             <td class="pad c cent" colspan="2">{Research}</td>
                             <td class="pad c cent" colspan="2">{Defence}</td>
@@ -290,18 +290,18 @@
                 </table>
             </th>
         </tr>
-        
+
         <tr id="Cont03">
             <th colspan="4" class="pad">
                 Planets Info
             </th>
         </tr>
-        
+
         <tr id="Cont04">
             <th colspan="4" class="pad">
                 {FleetControlContent}
             </th>
         </tr>
-        
+
     </tbody>
 </table>

@@ -3,13 +3,13 @@
     border: 2px solid black;
 }
 .tReqDiv {
-    float: left; 
+    float: left;
     margin-right: 2px;
     cursor: help;
 }
 .tReqImg {
-    width: 42px; 
-    height: 42px; 
+    width: 42px;
+    height: 42px;
     border: 1px solid #000;
 }
 .tReqBg {
@@ -32,7 +32,7 @@ $(document).ready(function()
             <td style="font-size: 1px;">&nbsp;</td>
         </tr>
     </tbody>
-	{Insert_QueueInfo}
+    {Insert_QueueInfo}
     <tr>
         <th>{ResearchTitle}</th>
         <th>&nbsp;</th>
