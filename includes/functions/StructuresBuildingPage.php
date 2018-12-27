@@ -567,7 +567,12 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                             }
                         }
                         $ElementParser['ElementPrices'] = array('Name' => $ResLangs[$Key], 'Color' => $ResColor, 'Value' => prettyNumber($Value));
-                        $ElementParser['Create_DestroyTips_Res'] .= parsetemplate($TPL['infobox_req_destres'], $ElementParser['ElementPrices']);
+                        $ElementParser['Create_DestroyTips_Res'] .= trim(
+                            parsetemplate(
+                                $TPL['infobox_req_destres'],
+                                $ElementParser['ElementPrices']
+                            )
+                        );
                     }
                 }
                 if(!isset($Parse['Create_DestroyTips']))
