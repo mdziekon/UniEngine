@@ -130,9 +130,15 @@ function taskMinifyJS () {
         "!./js/**/**.min.js"
     ])
         .pipe(terser(terserOptions))
+        .pipe(pluginHandleCacheBusting({
+            includedExtensions: ".min.js",
+            cacheBustingPart: ".cachebuster-",
+            deleteDuplicate: true,
+            logChanges: true
+        }))
         .pipe(rename({
             extname: (
-                ".cache-" + (+(new Date())) + ".min.js"
+                ".cachebuster-" + (+(new Date())) + ".min.js"
             )
         }))
         .pipe(gulp.dest("./js"));
