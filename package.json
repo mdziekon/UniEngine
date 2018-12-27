@@ -4,7 +4,8 @@
   "description": "OGame-like Game Engine",
   "main": "",
   "scripts": {
-      "ci-js-eslint": "eslint --quiet ./"
+    "ci-js-eslint": "eslint --quiet ./",
+    "build-js-minify": "gulp"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,10 @@
   },
   "homepage": "https://github.com/mdziekon/UniEngine#readme",
   "devDependencies": {
-    "eslint": "^5.11.0"
+    "eslint": "^5.11.0",
+    "gulp": "^4.0.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-terser": "^1.1.6",
+    "terser": "^3.13.1"
   }
 }
