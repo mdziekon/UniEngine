@@ -3,6 +3,12 @@
 const gulp = require("gulp");
 const terser = require("gulp-terser");
 const rename = require("gulp-rename");
+const filterStream = require("through2-filter");
+const PluginError = require("plugin-error");
+const fs = require("fs");
+const colors = require("ansi-colors");
+const flog = require("fancy-log");
+const del = require("del");
 
 const terserOptions = {
     "parse": {},
@@ -24,7 +30,101 @@ const terserOptions = {
     "warnings": false
 };
 
-function minifyJS () {
+//  options:
+//      - includedExtensions (String) [required]
+//          Extension to include when detecting cache busted files,
+//          should contain the leading "dot".
+//      - cacheBustingPart (String) [required]
+//          Part of the filename that is used to detect files' duplicates,
+//          should contain the leading "dot".
+//      - deleteDuplicate (Boolean) [default: false]
+//          If a previous duplicate exists, it will be removed.
+//      - logChanges (Boolean) [default: false]
+//          Fill log all file changes to the STDOUT
+//
+function pluginHandleCacheBusting (options = {}) {
+    const PLUGIN_NAME = "gulp-handle-cachebusting";
+
+    const defaultOpts = {
+        includedExtensions: undefined,
+        cacheBustingPart: undefined,
+        deleteDuplicate: false,
+        logChanges: false
+    };
+
+    const opts = { ...defaultOpts, ...options };
+
+    const perDirPreviousBustedFilesCache = {};
+
+    const log = function (...args) {
+        if (!opts.logChanges) {
+            return;
+        }
+
+        flog(...args);
+    };
+
+    const stream = filterStream.obj(function (file) {
+        if (file.isStream()) {
+            this.emit("error", new PluginError(PLUGIN_NAME, "Streams are not supported!"));
+            return;
+        }
+
+        if (!file.isBuffer()) {
+            return;
+        }
+
+        try {
+            const dirname = file.dirname;
+
+            if (!perDirPreviousBustedFilesCache[dirname]) {
+                perDirPreviousBustedFilesCache[dirname] = fs.readdirSync(dirname)
+                    .filter(function (filename) {
+                        return filename.endsWith(opts.includedExtensions);
+                    })
+                    .filter(function (filename) {
+                        return filename.includes(opts.cacheBustingPart);
+                    });
+            }
+
+            const dirFiles = perDirPreviousBustedFilesCache[dirname];
+
+            const dupFilename = dirFiles.find(function (filename) {
+                return filename.includes(file.stem);
+            });
+
+            if (!dupFilename) {
+                log(PLUGIN_NAME + ":", colors.green("✔ ") + file.relative);
+
+                return true;
+            }
+
+            const dupFilepath = file.dirname + "/" + dupFilename;
+            const dupBuffer = fs.readFileSync(dupFilepath);
+
+            const isExactDuplicate = file.contents.equals(dupBuffer);
+
+            if (!isExactDuplicate) {
+                log(PLUGIN_NAME + ":", colors.green("✔ ") + file.relative);
+            }
+
+            if (!isExactDuplicate && opts.deleteDuplicate) {
+                log(PLUGIN_NAME + ":", colors.green("🗑️ ") + dupFilepath);
+
+                del.sync([ dupFilepath ]);
+            }
+
+            return (!isExactDuplicate);
+        } catch (err) {
+            this.emit("error", new PluginError(PLUGIN_NAME, err));
+            return;
+        }
+    });
+
+    return stream;
+}
+
+function taskMinifyJS () {
     return gulp.src([
         "./js/**/**.js",
         "!./js/**/**.min.js"
@@ -38,10 +138,10 @@ function minifyJS () {
         .pipe(gulp.dest("./js"));
 }
 
-function defaultTask (cb) {
-    minifyJS();
+function taskDefault (cb) {
+    taskMinifyJS();
 
     cb();
 }
 
-exports.default = defaultTask;
+exports.default = taskDefault;
