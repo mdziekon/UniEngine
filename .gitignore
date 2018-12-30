@@ -8,6 +8,9 @@ install/lock
 
 # Ignore PHP-related files & directories
 vendor/
+
+# Files removed from further tracking
+# (based on https://stackoverflow.com/a/11366713/951007)
 config.php
 includes/constants.php
 
