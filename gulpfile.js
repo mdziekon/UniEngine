@@ -78,13 +78,19 @@ function pluginHandleCacheBusting (options = {}) {
             const dirname = file.dirname;
 
             if (!perDirPreviousBustedFilesCache[dirname]) {
-                perDirPreviousBustedFilesCache[dirname] = fs.readdirSync(dirname)
-                    .filter(function (filename) {
-                        return filename.endsWith(opts.includedExtensions);
-                    })
-                    .filter(function (filename) {
-                        return filename.includes(opts.cacheBustingPart);
-                    });
+                const dirExists = fs.existsSync(dirname);
+
+                if (dirExists) {
+                    perDirPreviousBustedFilesCache[dirname] = fs.readdirSync(dirname)
+                        .filter(function (filename) {
+                            return filename.endsWith(opts.includedExtensions);
+                        })
+                        .filter(function (filename) {
+                            return filename.includes(opts.cacheBustingPart);
+                        });
+                } else {
+                    perDirPreviousBustedFilesCache[dirname] = [];
+                }
             }
 
             const dirFiles = perDirPreviousBustedFilesCache[dirname];
