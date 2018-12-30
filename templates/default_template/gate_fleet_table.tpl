@@ -1,7 +1,7 @@
 <script>
 var AllowPrettyInputBox = {Insert_AllowPrettyInputBox};
 </script>
-<script src="js/infos_teleport-1.4.0.1.min.js" type="text/javascript"></script>
+<script src="js/infos_teleport.cachebuster-1545956361123.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="css/infos_teleport-1.4.0.1.min.css" />
 <br/>
 {gate_time_script}

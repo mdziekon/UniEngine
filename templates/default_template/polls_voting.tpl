@@ -1,4 +1,4 @@
-<script src="js/polls_voting-1.3.0.1.min.js" type="text/javascript"></script>
+<script src="js/polls_voting.cachebuster-1545956361123.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="css/polls_voting-1.3.0.1.min.css" />
 <br/>
 <form action="?pid={PollID}" method="post">

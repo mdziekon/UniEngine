@@ -5,8 +5,8 @@ var JS_Lang = {'mess_convert_title': '{mess_convert_title}', 'mess_report_e_titl
     'mess_reply_title': '{mess_reply_title}', 'mess_ignore_title': '{mess_ignore_title}', 'mess_report_title': '{mess_report_title}', 'mess_selectall_title': '{mess_selectall_title}',
     'Sure_WantDeleteAll': '{Sure_WantDeleteAll}', 'Sure_WantDeleteCat': '{Sure_WantDeleteCat}', 'tip_Deleted': '{tip_Deleted}', 'tip_Read': '{tip_Read}', 'tip_Copy': '{tip_Copy}'};
 </script>
-<script src="../js/messages-1.8.0.1.min.js"></script>
-<script src="../js/admin/messagelist.min.js"></script>
+<script src="../js/messages.cachebuster-1545956361123.min.js"></script>
+<script src="../js/admin/messagelist.cachebuster-1545956361123.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../css/messages-1.8.0.1.min.css" />
 <link rel="stylesheet" type="text/css" href="../css/admin/messagelist.min.css" />
 <br />

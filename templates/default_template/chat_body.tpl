@@ -1,5 +1,5 @@
 <link rel="stylesheet" type="text/css" href="css/chat-2.1.6.1.min.css" />
-<script type="text/javascript" src="js/chat-2.1.6.1.min.js"></script>
+<script type="text/javascript" src="js/chat.cachebuster-1545956361123.min.js"></script>
 <script>
 var YourNickname = '{Online_You_Name}';
 var JSLang =

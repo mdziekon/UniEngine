@@ -17,7 +17,7 @@ var AllyPact_AttackWarn = {Insert_AllyPact_AttackWarn};
 {QuantumGateJSArray}
 {CreateTestACCAlert}
 </script>
-<script src="js/fleet2-2.0.8.1.min.js"></script>
+<script src="js/fleet2.cachebuster-1545956361123.min.js"></script>
 <link rel="stylesheet" type="text/css" href="css/fleet2-2.0.4.1.min.css" />
 
 <form id="thisForm" action="fleet3.php" method="post">

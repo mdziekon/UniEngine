@@ -19,7 +19,7 @@ var RecaptchaOptions =
 var JSLang = {Insert_JSLang};
 </script>
 <script type="text/javascript" src="scripts/jquery.cookie-1.0.0.1.min.js"></script>
-<script src="js/register.js" type="text/javascript"></script>
+<script src="js/register.cachebuster-1545956361123.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="css/register-3.0.0.2.min.css" />
 <br/>
 <div>

@@ -1,4 +1,4 @@
-<script src="js/rules.min.js"></script>
+<script src="js/rules.cachebuster-1545956361123.min.js"></script>
 <link rel="stylesheet" type="text/css" href="css/rules.min.css" />
 {InsertRulesAcceptanceBox}
 <br/>

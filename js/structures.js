@@ -1,4 +1,4 @@
-/* globals AllowPrettyInputBox, ShowElementOnStartup, JSLang, ShipPrices, ShipTimes, RunQueueHandler, Resources */
+/* globals AllowPrettyInputBox, ShowElementOnStartup, JSLang, ShipPrices, ShipTimes, RunQueueHandler, Resources, QueueArray */
 
 $(document).ready(function () {
     // Internal Functions

@@ -7,7 +7,7 @@ $(document).ready(function()
     {Create_DestroyTips}
 });
 </script>
-<script src="js/structures.min.js" type="text/javascript"></script>
+<script src="js/structures.cachebuster-1545956361123.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="css/structures-1.1.0.1.min.css" />
 <div style="height: 6px;"></div>
 <div class="w900x">

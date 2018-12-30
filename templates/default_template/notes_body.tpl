@@ -1,7 +1,7 @@
 <script>
 var JSLang = {'JS_Confirm': '{JS_Confirm}'};
 </script>
-<script src="js/notes_body-2.0.0.1.min.js" type="text/javascript"></script>
+<script src="js/notes_body.cachebuster-1545956361123.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="css/notes_body-2.0.0.1.min.css" />
 <br/>
 <form id="thisForm" action="?cmd=delete" method="post">

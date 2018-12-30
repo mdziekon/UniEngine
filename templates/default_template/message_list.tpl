@@ -23,7 +23,7 @@ DynamicCode['sBR'] = '<tr><th class="sBR" colspan="3">&nbsp;</th></tr>';
     {SpyDisplay}
 }
 </style>
-<script src="js/messages-1.8.0.1.min.js"></script>
+<script src="js/messages.cachebuster-1545956361123.min.js"></script>
 <link rel="stylesheet" type="text/css" href="css/messages-1.8.0.1.min.css" />
 <form id="msg_form" action="messages.php" method="post" style="margin-top: 5px; margin-bottom: 0px;">
     <input name="time" value="{InsertTimestamp}" type="hidden"/>
