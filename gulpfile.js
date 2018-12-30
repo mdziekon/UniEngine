@@ -134,8 +134,11 @@ function taskMinifyJS () {
     return gulp.src([
         "./js/**/**.js",
         "!./js/**/**.min.js"
-    ])
+    ], { base: process.cwd() })
         .pipe(terser(terserOptions))
+        .pipe(rename(function (path) {
+            path.dirname = "dist/" + path.dirname;
+        }))
         .pipe(pluginHandleCacheBusting({
             includedExtensions: ".min.js",
             cacheBustingPart: ".cachebuster-",
@@ -147,7 +150,7 @@ function taskMinifyJS () {
                 ".cachebuster-" + (+(new Date())) + ".min.js"
             )
         }))
-        .pipe(gulp.dest("./js"));
+        .pipe(gulp.dest("./"));
 }
 
 function taskDefault (cb) {
