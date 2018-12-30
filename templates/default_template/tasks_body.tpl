@@ -24,7 +24,7 @@ var SkipConfirmText = '{Tab01_CatSel_SkipConfirm}';
     width: {Input_TaskTabWidth}px;
 }
 </style>
-<script src="js/tasks.cachebuster-1545956361123.min.js"></script>
+<script src="dist/js/tasks.cachebuster-1545956361123.min.js"></script>
 <link rel="stylesheet" type="text/css" href="css/tasks-1.2.0.1.min.css" />
 
 <table width="800" style="margin-top: 5px;">

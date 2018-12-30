@@ -3,7 +3,7 @@ var AllowPrettyInputBox  = {P_AllowPrettyInputBox};
 var JSLang = {'Metal': '{Metal}', 'Crystal': '{Crystal}', 'Deuterium': '{Deuterium}'};
 eval('var ShipPrices = {Create_InsertPrices}');
 </script>
-<script src="js/disassembler.cachebuster-1545956361123.min.js" type="text/javascript"></script>
+<script src="dist/js/disassembler.cachebuster-1545956361123.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="css/structures-1.1.0.1.min.css" />
 <div style="height: 6px;"></div>
 <div class="w870x">

@@ -1,7 +1,7 @@
 <script>
 var JSLang = {'TP_timeOnlyTitle': 'Wybierz Czas', 'timeText': 'Czas', 'hourText': 'Godzina','minuteText': 'Minuta','secondText': 'Sekunda','millisecText': 'Milisekunda','currentText': 'Teraz','closeText': 'Gotowe'};
 </script>
-<script src="../js/admin/SFBSettings_body_manage.cachebuster-1545956361123.min.js" type="text/javascript"></script>
+<script src="../dist/js/admin/SFBSettings_body_manage.cachebuster-1545956361123.min.js" type="text/javascript"></script>
 <script src="../scripts/jquery-ui.min.js" type="text/javascript"></script>
 <script src="../scripts/jquery-ui-timepicker-addon.min.js" type="text/javascript"></script>
 <script src="../scripts/jquery-ui-datepicker-pl.min.js" type="text/javascript"></script>

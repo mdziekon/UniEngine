@@ -5,7 +5,7 @@ var FlightDuration = 0;
 var maxIs = {'galaxy': {P_MaxGalaxy}, 'system': {P_MaxSystem}, 'planet': {P_MaxPlanet}};
 var JSLang = {'fl1_targetGalaxy': '{fl1_targetGalaxy}', 'fl1_targetSystem': '{fl1_targetSystem}', 'fl1_targetPlanet': '{fl1_targetPlanet}'};
 </script>
-<script src="js/fleet1.cachebuster-1545956361123.min.js"></script>
+<script src="dist/js/fleet1.cachebuster-1545956361123.min.js"></script>
 <link rel="stylesheet" type="text/css" href="css/fleet1-2.0.9.1.min.css" />
 
 <form id="thisForm" action="fleet2.php" method="post">

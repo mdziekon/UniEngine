@@ -1,7 +1,7 @@
 <script>
 var MaxLength = {Insert_MaxLength};
 </script>
-<script src="js/buddy_form.cachebuster-1545956361123.min.js" type="text/javascript"></script>
+<script src="dist/js/buddy_form.cachebuster-1545956361123.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="css/buddy_form-2.0.0.1.min.css" />
 <br/>
 <form action="" method="post">
