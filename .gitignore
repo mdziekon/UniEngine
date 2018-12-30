@@ -8,6 +8,8 @@ install/lock
 
 # Ignore PHP-related files & directories
 vendor/
+config.php
+includes/constants.php
 
 # Ignore JavaScript / Node.js -related files & directories
 node_modules/
