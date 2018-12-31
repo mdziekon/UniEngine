@@ -7,10 +7,10 @@ var OverrideTab = '{SetActiveMarker}';
 var TemplateData = {'SaveOnlyThis': '{SaveOnlyThis}', 'SaveAll': '{SaveAll}', 'use_skin_check': '{use_skin_check}', 'AYS_WantNoSkin': '{AYS_WantNoSkin}', 'skin_path': '{skin_path}', 'SetSkin_BadNetSkin': '{SetSkin_BadNetSkin}', 'SetSkin_BadLocSkin': '{SetSkin_BadLocSkin}', 'SetSkin_AjaxError': '{SetSkin_AjaxError}', 'IgnoreUserNow': '{IgnoreUserNow}', 'DeleteFromIgnoreList': '{DeleteFromIgnoreList}', 'atHour': '{atHour}'};
 </script>
 <script src="scripts/jquery-ui.min.js" type="text/javascript"></script>
-<script src="scripts/jquery.farbtastic-1.2.min.js" type="text/javascript"></script>
+<script src="libs/jquery-farbtastic/jquery.farbtastic-1.2.min.js" type="text/javascript"></script>
 <script src="dist/js/settings.cachebuster-1545956361123.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="css/settings-1.2.1.1.min.css" />
-<link rel="stylesheet" type="text/css" href="css/jquery.farbtastic-1.2.min.css" />
+<link rel="stylesheet" type="text/css" href="libs/jquery-farbtastic/jquery.farbtastic-1.2.min.css" />
 <br/>
 <form action="" method="post" style="margin: 0px;">
 <input type="hidden" name="save" value="yes"/>
