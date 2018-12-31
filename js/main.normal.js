@@ -1,11 +1,3 @@
-// Insert Overlib
-// Insert jQuery
-// Insert jQuery.tipTip
-// Insert jQuery.qTip
-
-// GlobaScript.js (by mdziekon)
-// Google Analytics code goes here
-
 /* globals PHPVar */
 
 function createCookie (name, value, days) {
