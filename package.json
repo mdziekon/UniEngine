@@ -5,6 +5,7 @@
   "main": "",
   "scripts": {
     "ci-js-eslint": "eslint --quiet ./",
+    "ci-css-stylelint": "stylelint \"./**/*.css\"",
     "build-js-minify": "gulp"
   },
   "repository": {
