@@ -11,7 +11,11 @@
         <meta http-equiv="Content-Language" content="pl" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         {PHP_Meta}
-        <script type="text/javascript" src="{AdminBack}js/main.normal-1.0.0.1.min.js"></script>
+        <script type="text/javascript" src="{AdminBack}scripts/overlib.min.js"></script>
+        <script type="text/javascript" src="{AdminBack}scripts/jquery.min.js"></script>
+        <script type="text/javascript" src="{AdminBack}scripts/jquery.tipTip.min.js"></script>
+        <script type="text/javascript" src="{AdminBack}scripts/jquery.qtip.pack.js"></script>
+        <script type="text/javascript" src="{AdminBack}dist/js/main.normal.cachebuster-1545956361123.min.js"></script>
         <link rel="stylesheet" type="text/css" href="{AdminBack}css/main.normal-1.0.1.1.min.css" />
         <script>var PHPVar = {ServerTimeTxt: '{ServerTimeTxt}', ServerTimestamp: {ServerTimestamp}};</script>
     </head>

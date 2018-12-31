@@ -11,7 +11,9 @@
         <meta http-equiv="Content-Language" content="pl" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         {PHP_Meta}
-        <script type="text/javascript" src="{AdminBack}js/main.light-1.0.0.1.min.js"></script>
+        <script type="text/javascript" src="{AdminBack}scripts/overlib.min.js"></script>
+        <script type="text/javascript" src="{AdminBack}scripts/jquery.min.js"></script>
+        <script type="text/javascript" src="{AdminBack}dist/js/main.light.cachebuster-1545956361123.min.js"></script>
         <link rel="stylesheet" type="text/css" href="{AdminBack}css/global.light.min.css" />
     </head>
     <body>
