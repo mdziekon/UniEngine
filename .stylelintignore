@@ -1,0 +1,10 @@
+# Third-party directories
+**/node_modules
+**/scripts
+**/vendor
+
+# Global ignore
+**/*.min.css
+
+# Skins ignore
+**/skins

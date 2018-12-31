@@ -29,6 +29,7 @@
     "gulp-rename": "^1.4.0",
     "gulp-terser": "^1.1.6",
     "plugin-error": "^1.0.1",
+    "stylelint": "^9.9.0",
     "terser": "^3.13.1",
     "through2-filter": "^3.0.0"
   }
