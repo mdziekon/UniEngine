@@ -106,7 +106,7 @@ $(document).ready(function()
 
 });
 </script>
-<script type="text/javascript" src="../scripts/jquery.tablesorter.min.js"></script>
+<script type="text/javascript" src="../libs/jquery-tablesorter/jquery.tablesorter.min.js"></script>
 <br />
 <form action="" method="get" style="margin-bottom: 1px;">
     <table style="width: 1100px;">
