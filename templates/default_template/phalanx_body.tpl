@@ -21,9 +21,9 @@
     padding: 8px;
 }
 </style>
-<script type="text/javascript" src="scripts/jquery.qtip.pack.js"></script>
+<script type="text/javascript" src="libs/jquery-qtip/jquery.qtip.pack.js"></script>
 <link rel="stylesheet" type="text/css" href="libs/jquery-tipTip/jquery.tipTip.min.css" />
-<link rel="stylesheet" type="text/css" href="css/jquery.qtip.min.css" />
+<link rel="stylesheet" type="text/css" href="libs/jquery-qtip/jquery.qtip.min.css" />
 <br/>
 <table style="width: 600px;">
     <tr>
