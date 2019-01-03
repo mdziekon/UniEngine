@@ -2,11 +2,11 @@
 var JSLang = {'JS_ConfirmNeeded': '{JS_ConfirmNeeded}', 'TP_timeOnlyTitle': 'Wybierz Czas', 'timeText': 'Czas', 'hourText': 'Godzina','minuteText': 'Minuta','secondText': 'Sekunda','millisecText': 'Milisekunda','currentText': 'Teraz','closeText': 'Gotowe'};
 </script>
 <script src="../dist/js/admin/settings_body.cachebuster-1545956361123.min.js" type="text/javascript"></script>
-<script src="../scripts/jquery-ui.min.js" type="text/javascript"></script>
+<script src="../libs/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
 <script src="../scripts/jquery-ui-timepicker-addon.min.js" type="text/javascript"></script>
 <script src="../scripts/jquery-ui-datepicker-pl.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="../css/admin/settings_body-2.0.0.1.min.css" />
-<link rel="stylesheet" type="text/css" href="../css/ui-lightness/jquery-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="../libs/jquery-ui/jquery-ui.min.css" />
 <br />
 <form action="settings.php" method="post" id="thisForm">
     <input type="hidden" name="opt_save" value="1" />

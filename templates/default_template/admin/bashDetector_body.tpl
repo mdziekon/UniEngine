@@ -34,9 +34,9 @@ $(document).ready(function()
     $('#srch_date').datepicker({maxDate: '0', beforeShow: function(){ setTimeout(function(){ $('#ui-datepicker-div').css({'z-index': 1000}); },1);}});
 });
 </script>
-<script src="../scripts/jquery-ui.min.js" type="text/javascript"></script>
+<script src="../libs/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
 <script src="../scripts/jquery-ui-datepicker-pl.min.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href="../css/ui-lightness/jquery-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="../libs/jquery-ui/jquery-ui.min.css" />
 <br/>
 <form action="?" method="post">
     <input type="hidden" name="send" value="1"/>

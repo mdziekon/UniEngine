@@ -2,11 +2,11 @@
 var JSLang = {'TP_timeOnlyTitle': 'Wybierz Czas', 'timeText': 'Czas', 'hourText': 'Godzina','minuteText': 'Minuta','secondText': 'Sekunda','millisecText': 'Milisekunda','currentText': 'Teraz','closeText': 'Gotowe'};
 </script>
 <script src="../dist/js/admin/banslist_body.cachebuster-1545956361123.min.js" type="text/javascript"></script>
-<script src="../scripts/jquery-ui.min.js" type="text/javascript"></script>
+<script src="../libs/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
 <script src="../scripts/jquery-ui-timepicker-addon.min.js" type="text/javascript"></script>
 <script src="../scripts/jquery-ui-datepicker-pl.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="../css/admin/banslist_body-1.0.0.1.min.css" />
-<link rel="stylesheet" type="text/css" href="../css/ui-lightness/jquery-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="../libs/jquery-ui/jquery-ui.min.css" />
 {Insert_Scripts}
 <br/>
 <form action="banslist.php" method="post" id="thisForm">
