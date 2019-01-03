@@ -1,4 +1,4 @@
-<script src="{$RootPaht}scripts/jquery.flot.min.js"></script>
+<script src="{$RootPaht}libs/jquery-flot/jquery.flot.min.js"></script>
 <link rel="stylesheet" type="text/css" href="{$RootPaht}css/graphs.min.css"/>
 <style>.Graph{literal}{{/literal}width:{$width}px; height:{$height}px;{literal}}{/literal}</style>
 <script type="text/javascript">
