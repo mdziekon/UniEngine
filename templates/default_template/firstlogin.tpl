@@ -8,7 +8,7 @@
     border-bottom: 1px dashed white;
 }
 </style>
-<script type="text/javascript" src="{AdminBack}scripts/jquery.js"></script>
+<script type="text/javascript" src="{AdminBack}libs/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="{AdminBack}libs/jquery-tipTip/jquery.tipTip.min.js"></script>
 <link rel="stylesheet" type="text/css" href="{AdminBack}libs/jquery-tipTip/jquery.tipTip.min.css" />
 <script>
