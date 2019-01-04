@@ -2,6 +2,7 @@
 **/node_modules
 **/scripts
 **/vendor
+**/libs
 
 # Global ignore
 **/*.min.css
