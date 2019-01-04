@@ -184,8 +184,4 @@ function taskMinifyCSS () {
         .pipe(gulp.dest("./"));
 }
 
-function taskDefault () {
-    return parallel(taskMinifyJS, taskMinifyCSS);
-}
-
 exports.default = parallel(taskMinifyJS, taskMinifyCSS);
