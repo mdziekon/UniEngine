@@ -78,8 +78,28 @@ $(document).ready(function()
             $('#subbr_'+ThisIDOnly).show();
         }
     });
-    $('[name=rjr]').textareaCount({'maxCharacterSize': 1000, 'displayFormat': '(#input/#max)'});
     $('[name=rjr]').mouseover();
+
+    var $RejectionMaxCount = 1000;
+
+    $('[name=rjr]').keydown(function()
+    {
+        var TextLength = $(this).val().length;
+        if(TextLength > $RejectionMaxCount)
+        {
+            $(this).val($(this).val().substr(0, $RejectionMaxCount));
+            TextLength = $RejectionMaxCount;
+        }
+        $(this).closest("form").find(".cntChars").html(TextLength);
+    }).keyup(function()
+    {
+        $(this).keydown();
+    }).change(function()
+    {
+        $(this).keydown();
+    });
+
+    $('[name=rjr]').keydown();
 });
 </script>
 <br/>
