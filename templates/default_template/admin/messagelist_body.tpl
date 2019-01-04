@@ -7,8 +7,8 @@ var JS_Lang = {'mess_convert_title': '{mess_convert_title}', 'mess_report_e_titl
 </script>
 <script src="../dist/js/messages.cachebuster-1545956361123.min.js"></script>
 <script src="../dist/js/admin/messagelist.cachebuster-1545956361123.min.js"></script>
-<link rel="stylesheet" type="text/css" href="../css/messages-1.8.0.1.min.css" />
-<link rel="stylesheet" type="text/css" href="../css/admin/messagelist.min.css" />
+<link rel="stylesheet" type="text/css" href="../dist/css/messages.cachebuster-1546565145290.min.css" />
+<link rel="stylesheet" type="text/css" href="../dist/css/admin/messagelist.cachebuster-1546564327123.min.css" />
 <br />
 <form action="" method="post" id="formID">
     <input type="hidden" name="curr" value="{mlst_data_page}"/>

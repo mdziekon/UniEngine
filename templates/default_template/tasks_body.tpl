@@ -25,7 +25,7 @@ var SkipConfirmText = '{Tab01_CatSel_SkipConfirm}';
 }
 </style>
 <script src="dist/js/tasks.cachebuster-1545956361123.min.js"></script>
-<link rel="stylesheet" type="text/css" href="css/tasks-1.2.0.1.min.css" />
+<link rel="stylesheet" type="text/css" href="dist/css/tasks.cachebuster-1546564327123.min.css" />
 
 <table width="800" style="margin-top: 5px;">
     <tr {MsgBox_Hide}>

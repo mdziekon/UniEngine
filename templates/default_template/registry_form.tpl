@@ -20,7 +20,7 @@ var JSLang = {Insert_JSLang};
 </script>
 <script type="text/javascript" src="libs/jquery-cookie/jquery.cookie-1.0.0.1.min.js"></script>
 <script src="dist/js/register.cachebuster-1545956361123.min.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href="css/register-3.0.0.2.min.css" />
+<link rel="stylesheet" type="text/css" href="dist/css/register.cachebuster-1546564327123.min.css" />
 <br/>
 <div>
     <h2 class="TextShadow">

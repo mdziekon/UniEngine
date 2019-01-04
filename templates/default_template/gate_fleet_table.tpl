@@ -2,7 +2,7 @@
 var AllowPrettyInputBox = {Insert_AllowPrettyInputBox};
 </script>
 <script src="dist/js/infos_teleport.cachebuster-1545956361123.min.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href="css/infos_teleport-1.4.0.1.min.css" />
+<link rel="stylesheet" type="text/css" href="dist/css/infos_teleport.cachebuster-1546564327123.min.css" />
 <br/>
 {gate_time_script}
 <form action="jumpgate.php" method="post">

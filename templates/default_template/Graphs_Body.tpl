@@ -1,5 +1,5 @@
 <script src="{$RootPaht}libs/jquery-flot/jquery.flot.min.js"></script>
-<link rel="stylesheet" type="text/css" href="{$RootPaht}css/graphs.min.css"/>
+<link rel="stylesheet" type="text/css" href="{$RootPaht}dist/css/graphs.cachebuster-1546564327123.min.css"/>
 <style>.Graph{literal}{{/literal}width:{$width}px; height:{$height}px;{literal}}{/literal}</style>
 <script type="text/javascript">
 {literal}

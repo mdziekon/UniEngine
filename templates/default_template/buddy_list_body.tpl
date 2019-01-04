@@ -2,7 +2,7 @@
 var JSLang = {'qTip_Edit': '{qTip_Edit}', 'qTip_Delete': '{qTip_Delete}', 'qTip_Remove': '{qTip_Remove}', 'qTip_Accept': '{qTip_Accept}', 'qTip_Refuse': '{qTip_Refuse}'};
 </script>
 <script src="dist/js/buddy_list.cachebuster-1545956361123.min.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href="css/buddy_list-2.0.0.1.min.css" />
+<link rel="stylesheet" type="text/css" href="dist/css/buddy_list.cachebuster-1546565145290.min.css" />
 <br/>
 <table style="width: 800px;">
     <tr>

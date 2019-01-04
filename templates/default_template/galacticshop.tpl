@@ -28,7 +28,7 @@ else
 }
 </script>
 <script src="dist/js/galacticshop.cachebuster-1545956361123.min.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href="css/galacticshop.min.css" />
+<link rel="stylesheet" type="text/css" href="dist/css/galacticshop.cachebuster-1546565145290.min.css" />
 <br />
 <table width="650">
     <tr>

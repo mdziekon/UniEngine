@@ -16,7 +16,7 @@
         <script type="text/javascript" src="{AdminBack}libs/jquery-tipTip/jquery.tipTip.min.js"></script>
         <script type="text/javascript" src="{AdminBack}libs/jquery-qtip/jquery.qtip.pack.js"></script>
         <script type="text/javascript" src="{AdminBack}dist/js/main.normal.cachebuster-1545956361123.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="{AdminBack}css/global.min.css" />
+        <link rel="stylesheet" type="text/css" href="{AdminBack}dist/css/global.cachebuster-1546565145290.min.css" />
         <link rel="stylesheet" type="text/css" href="{AdminBack}libs/jquery-tipTip/jquery.tipTip.min.css" />
         <link rel="stylesheet" type="text/css" href="{AdminBack}libs/jquery-qtip/jquery.qtip.min.css" />
         <script>var PHPVar = {ServerTimeTxt: '{ServerTimeTxt}', ServerTimestamp: {ServerTimestamp}};</script>

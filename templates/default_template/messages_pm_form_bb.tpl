@@ -2,7 +2,7 @@
 var $MaxLength_Text = {FormInsert_MaxSigns};
 </script>
 <script src="dist/js/messages_form.cachebuster-1545956361123.min.js" type="text/javascript"></script>
-<link href="css/messages_form-1.8.0.1.min.css" rel="stylesheet" type="text/css" />
+<link href="dist/css/messages_form.cachebuster-1546564327123.min.css" rel="stylesheet" type="text/css" />
 <br />
 <form action="messages.php?mode=write" method="post" id="thisForm">
     <input type="hidden" name="send_msg" value="1"/>

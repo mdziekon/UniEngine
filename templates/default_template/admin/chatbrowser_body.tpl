@@ -7,7 +7,7 @@ var JSLang =
 };
 </script>
 <script src="../dist/js/admin/chatbrowser_body.cachebuster-1545956361123.min.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href="../css/admin/chatbrowser_body-1.0.0.1.min.css" />
+<link rel="stylesheet" type="text/css" href="../dist/css/admin/chatbrowser_body.cachebuster-1546567692327.min.css" />
 <br/>
 <form id="thisForm" action="?rid={Insert_RoomID}&amp;page={Insert_ThisPage}" method="post">
     <input type="hidden" name="sent" value="1"/>

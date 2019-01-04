@@ -15,7 +15,7 @@ var MaxResA = Max{Insert_ResA};
 var MaxResB = Max{Insert_ResB};
 </script>
 <script src="dist/js/trader.cachebuster-1545956361123.min.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href="css/trader.min.css" />
+<link rel="stylesheet" type="text/css" href="dist/css/trader.cachebuster-1546564327123.min.css" />
 <br/>
 <form action="merchant.php?step=2" method="post">
     <input type="hidden" name="exchange" value="yes"/>

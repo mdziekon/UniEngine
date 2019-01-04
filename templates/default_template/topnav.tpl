@@ -10,7 +10,7 @@ $(document).ready(function()
 });
 </script>
 <script src="dist/js/resourceUpdate.cachebuster-1546213884373.min.js"></script>
-<link rel="stylesheet" type="text/css" href="css/topNav-1.2.4.1.min.css"/>
+<link rel="stylesheet" type="text/css" href="dist/css/topNav.cachebuster-1546564327123.min.css"/>
 <table>
     <tr>
         <td>

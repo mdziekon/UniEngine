@@ -5,7 +5,7 @@ var JSLang = {'TP_timeOnlyTitle': 'Wybierz Czas', 'timeText': 'Czas', 'hourText'
 <script src="../libs/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
 <script src="../libs/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.min.js" type="text/javascript"></script>
 <script src="../libs/jquery-ui-datepicker-pl/jquery-ui-datepicker-pl.min.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href="../css/admin/banslist_body-1.0.0.1.min.css" />
+<link rel="stylesheet" type="text/css" href="../dist/css/admin/banslist_body.cachebuster-1546564327123.min.css" />
 <link rel="stylesheet" type="text/css" href="../libs/jquery-ui/jquery-ui.min.css" />
 {Insert_Scripts}
 <br/>

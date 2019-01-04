@@ -24,4 +24,4 @@ var UseAjax = {UseAjax};
     background: url('{SkinPath}img/r.gif') no-repeat 0px 0px;
 }
 </style>
-<link rel="stylesheet" type="text/css" href="css/galaxy-2.3.4.2.min.css" />
+<link rel="stylesheet" type="text/css" href="dist/css/galaxy.cachebuster-1546564327123.min.css" />

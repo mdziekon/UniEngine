@@ -1,4 +1,4 @@
-<link rel="stylesheet" type="text/css" href="css/techtree.min.css" />
+<link rel="stylesheet" type="text/css" href="dist/css/techtree.cachebuster-1546564327123.min.css" />
 <script src="dist/js/techtree.cachebuster-1545956361123.min.js"></script>
 <table width="600" style="margin-top: 5px;">
     <tr>

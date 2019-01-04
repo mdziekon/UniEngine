@@ -4,7 +4,7 @@ $(document).ready(function()
     $('.warbalance').tipTip({maxWidth: 200, content: '<div class="center"><b>{Table_WarBalanceTip}</b></div>', defaultPosition: 'top', delay: 200, edgeOffset: 3});
 });
 </script>
-<link rel="stylesheet" type="text/css" href="css/profile-1.0.2.1.min.css" />
+<link rel="stylesheet" type="text/css" href="dist/css/profile.cachebuster-1546564327123.min.css" />
 <br />
 <table style="width: 700px;">
     <tr>

@@ -1,5 +1,5 @@
 <script src="dist/js/rules.cachebuster-1545956361123.min.js"></script>
-<link rel="stylesheet" type="text/css" href="css/rules.min.css" />
+<link rel="stylesheet" type="text/css" href="dist/css/rules.cachebuster-1546565145290.min.css" />
 {InsertRulesAcceptanceBox}
 <br/>
 <table style="width: 900px">

@@ -8,7 +8,7 @@ $(document).ready(function()
 });
 </script>
 <script src="dist/js/structures.cachebuster-1545956361123.min.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href="css/structures-1.1.0.1.min.css" />
+<link rel="stylesheet" type="text/css" href="dist/css/structures.cachebuster-1546565145290.min.css" />
 <div style="height: 6px;"></div>
 <div class="w900x">
     <div style="float: left; width: 600px;">

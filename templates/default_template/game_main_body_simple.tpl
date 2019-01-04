@@ -14,7 +14,7 @@
         <script type="text/javascript" src="{AdminBack}libs/overlib/overlib.min.js"></script>
         <script type="text/javascript" src="{AdminBack}libs/jquery/jquery.min.js"></script>
         <script type="text/javascript" src="{AdminBack}dist/js/main.light.cachebuster-1545956361123.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="{AdminBack}css/global.light.min.css" />
+        <link rel="stylesheet" type="text/css" href="{AdminBack}dist/css/global.light.cachebuster-1546564327123.min.css" />
     </head>
     <body>
         {PHP_InjectAfterBody}

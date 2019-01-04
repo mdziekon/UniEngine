@@ -1,4 +1,4 @@
-<link rel="stylesheet" type="text/css" href="css/chat-2.1.6.1.min.css" />
+<link rel="stylesheet" type="text/css" href="dist/css/chat.cachebuster-1546565145290.min.css" />
 <script type="text/javascript" src="dist/js/chat.cachebuster-1545956361123.min.js"></script>
 <script>
 var YourNickname = '{Online_You_Name}';

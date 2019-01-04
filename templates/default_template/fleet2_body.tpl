@@ -18,7 +18,7 @@ var AllyPact_AttackWarn = {Insert_AllyPact_AttackWarn};
 {CreateTestACCAlert}
 </script>
 <script src="dist/js/fleet2.cachebuster-1545956361123.min.js"></script>
-<link rel="stylesheet" type="text/css" href="css/fleet2-2.0.4.1.min.css" />
+<link rel="stylesheet" type="text/css" href="dist/css/fleet2.cachebuster-1546565145290.min.css" />
 
 <form id="thisForm" action="fleet3.php" method="post">
     <input type="hidden" name="sending_fleet"  value="1" />

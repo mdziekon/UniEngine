@@ -2,7 +2,7 @@
 var MaxNoteLength = {Input_MaxNoteLength};
 </script>
 <script src="dist/js/notes_form.cachebuster-1545956361123.min.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href="css/notes_form-2.0.0.1.min.css" />
+<link rel="stylesheet" type="text/css" href="dist/css/notes_form.cachebuster-1546564327123.min.css" />
 <br/>
 <form id="thisForm" action="{Input_InsertCMD}" method="post">
     <input type="hidden" name="send" value="1"/>

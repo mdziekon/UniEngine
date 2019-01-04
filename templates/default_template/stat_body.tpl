@@ -1,7 +1,7 @@
 <script>
 var JSVars = {'LastWhoVal': '{LastWhoVal}', 'QuickChangeInfo': '{QuickChangeInfo}', 'DailyChangeInfo': '{DailyChangeInfo}'};
 </script>
-<link rel="stylesheet" type="text/css" href="css/stats.min.css" />
+<link rel="stylesheet" type="text/css" href="dist/css/stats.cachebuster-1546564327123.min.css" />
 <script src="dist/js/stats.cachebuster-1545956361123.min.js"/></script>
 <br/>
 <form method="post" id="statForm">

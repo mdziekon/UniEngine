@@ -9,7 +9,7 @@ $(document).ready(function()
     });
 });
 </script>
-<link rel="stylesheet" type="text/css" href="css/overview-1.3.4.1.min.css" />
+<link rel="stylesheet" type="text/css" href="dist/css/overview.cachebuster-1546565145290.min.css" />
 <br />
 {P_SFBInfobox}
 <table width="750">
