@@ -23,7 +23,7 @@
     cursor: help;
 }
 .pagin, .aDel, .button, .massAction {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 .aMsgFind, .aBan, .aUnban, .aDel, .aPM, .aInfo, .allyOwn, .allyReq, .aLog {
@@ -45,14 +45,14 @@
     padding-top: 1px;
 }
 #massBan {
-	background: url('../../images/lock.png') no-repeat;
+    background: url('../../images/lock.png') no-repeat;
     padding-top: 1px;
-	padding-left: 18px !important;
+    padding-left: 18px !important;
 }
 #massUnban {
-	background: url('../../images/unlock.png') no-repeat;
+    background: url('../../images/unlock.png') no-repeat;
     padding-top: 1px;
-	padding-left: 18px !important;
+    padding-left: 18px !important;
 }
 .aUnban {
     background: url('../../images/unlock.png') no-repeat;
@@ -68,13 +68,13 @@
     background: url('../../images/user.png') no-repeat;
 }
 .allyOwn{
-    background: url('../../images/crown.png') no-repeat;  
+    background: url('../../images/crown.png') no-repeat;
 }
 .allyReq {
-    background: url('../../images/request.png') no-repeat; 
+    background: url('../../images/request.png') no-repeat;
 }
 .aLog {
-    background: url('../../images/log.png') no-repeat; 
+    background: url('../../images/log.png') no-repeat;
 }
 
 .pad {
@@ -84,65 +84,65 @@
     padding: 3px;
 }
 .opt {
-    width: 50%; 
-    text-align: left; 
+    width: 50%;
+    text-align: left;
     border: none;
-	padding-bottom: 3px;
+    padding-bottom: 3px;
 }
 .inv {
     visibility: hidden;
 }
 .hide {
-	display: none;
+    display: none;
 }
 .pagin, .button {
     border: 1px solid #415680;
     background: #344566;
 }
 .massAction {
-	border: 1px solid #415680;
+    border: 1px solid #415680;
     background-color: #344566;
 }
 .massAction:hover {
-	border: 1px solid #526EA3;
+    border: 1px solid #526EA3;
     background-color: #455B87;
 }
 .massAction > a:hover {
-	text-decoration: none;
+    text-decoration: none;
 }
 .pagin {
-	padding: 4px;
+    padding: 4px;
 }
 .button, .massAction {
-	padding: 5px;
+    padding: 5px;
 }
 .marg10 {
-	margin: 0px 10px;
+    margin: 0px 10px;
 }
 .negmarg {
-	margin: -2px;
+    margin: -2px;
 }
 .checkBox, .checkBoxOne, #c_nosort {
-	margin: 0px 2px;
-	vertical-align: text-bottom;
+    margin: 0px 2px;
+    vertical-align: text-bottom;
 }
 label, .vList > * {
-	-moz-user-select: none;
-	-khtml-user-select: none;
-	-webkit-user-select: none;
-	user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 .cBox {
-	width: 16px;
+    width: 16px;
 }
 .cBox > input {
-	margin: 0px;
+    margin: 0px;
 }
 .pad4 {
-	padding: 4px;
+    padding: 4px;
 }
 .pad3 {
-	padding: 3px;
+    padding: 3px;
 }
 
 .vdiv {
@@ -175,5 +175,5 @@ label, .vList > * {
     padding: 8px 20px;
 }
 .massLabel {
-	margin-right: 10px;
+    margin-right: 10px;
 }

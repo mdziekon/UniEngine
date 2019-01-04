@@ -1,21 +1,21 @@
 .pagin {
-	padding: 4px;
-	border: 1px solid #415680;
+    padding: 4px;
+    border: 1px solid #415680;
     background-color: #344566;
-	cursor: pointer;
+    cursor: pointer;
 }
 .pagin:hover {
-	border: 1px solid #526EA3;
+    border: 1px solid #526EA3;
     background-color: #455B87;
-	text-decoration: none;
+    text-decoration: none;
 }
 .pad3 {
-	padding: 3px;
+    padding: 3px;
 }
 .marg10 {
-	margin: 0px 10px;
+    margin: 0px 10px;
 }
 .ui-datepicker-calendar > thead > tr > th {
-	background: none;
-	color: black;
+    background: none;
+    color: black;
 }

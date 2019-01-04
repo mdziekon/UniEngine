@@ -1,61 +1,61 @@
 /* Pagination */
 .mr_20 {
-	margin-right: 20px;
+    margin-right: 20px;
 }
 .fatB {
-	font-weight: 700;
+    font-weight: 700;
 }
 .pagin {
-	border: 1px solid #415680;
-	padding: 4px 5px;
+    border: 1px solid #415680;
+    padding: 4px 5px;
 }
 .pagination {
-	padding: 7px;
+    padding: 7px;
 }
 /* Buttons */
 .delID {
-	line-height: 12px;
-	background: url('../../images/delete.png') no-repeat 0px 2px;
-	padding-left: 12px;
-	cursor: pointer;
+    line-height: 12px;
+    background: url('../../images/delete.png') no-repeat 0px 2px;
+    padding-left: 12px;
+    cursor: pointer;
 }
 
 /* Page */
 .hide {
-	display: none;
+    display: none;
 }
 .button {
-	font-weight: 700;
-	padding: 2px 10px;
+    font-weight: 700;
+    padding: 2px 10px;
 }
 .checkBox {
-	width: 25px;
+    width: 25px;
 }
 .msgUser {
-	padding: 3px 5px;
-	text-align: right;
-	width: 1px;
+    padding: 3px 5px;
+    text-align: right;
+    width: 1px;
 }
 .msgText {
-	text-align: left;
-	font-weight: normal;
-	padding: 3px 5px;
+    text-align: left;
+    font-weight: normal;
+    padding: 3px 5px;
 }
 .msgDate {
-	padding: 3px 5px;
-	text-align: right;
-	width: 200px;
+    padding: 3px 5px;
+    text-align: right;
+    width: 200px;
 }
 #Messages > tr > th:nth-child(5) {
-	width: 50px;
+    width: 50px;
 }
 #Messages > tr:nth-child(odd) > th {
-	background-color: #3D5076;
-	border-color: #496392;
+    background-color: #3D5076;
+    border-color: #496392;
 }
 .msgHighlight > th {
-	background-color: #4E6797 !important;
-	border-color: #607BAF !important;
+    background-color: #4E6797 !important;
+    border-color: #607BAF !important;
 }
 
 /* User Colors */

@@ -2,22 +2,22 @@
     font-size: 10%;
 }
 .tRight {
-	text-align: right;
-	padding-right: 5px;
+    text-align: right;
+    padding-right: 5px;
 }
 .tdLabel {
-	width: 30%;
+    width: 30%;
 }
 .thDefault {
-	width: 100px;
+    width: 100px;
 }
 .ui-datepicker-calendar > thead > tr > th {
-	background: none;
-	color: black;
+    background: none;
+    color: black;
 }
 .doReset {
-	cursor: pointer;
+    cursor: pointer;
 }
 .h80px {
-	height: 80px;
+    height: 80px;
 }

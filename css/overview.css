@@ -6,26 +6,26 @@
     width: 100%;
 }
 #thisPlImg {
-    width: 200px; 
+    width: 200px;
     height: 200px;
-	margin: 0 auto;
+    margin: 0 auto;
 }
 #plBox {
-	text-align: center;
-	width: 320px;
+    text-align: center;
+    width: 320px;
 }
 #plRename {
-	vertical-align: middle;
-	padding-left: 3px;
+    vertical-align: middle;
+    padding-left: 3px;
 }
 #plQueue {
-	width: 100%;
-	height: 180px;
-	position: relative;
+    width: 100%;
+    height: 180px;
+    position: relative;
 }
 #plQueueText {
-	position: absolute;
-	bottom: 0px;
+    position: absolute;
+    bottom: 0px;
 }
 .moon {
     background: url('../images/moon.png') no-repeat right;
@@ -38,24 +38,24 @@
     cursor: help;
 }
 .inv {
-	visibility: hidden;
+    visibility: hidden;
 }
 .invNF {
-	visibility: hidden;
-	font-size: 0px;
+    visibility: hidden;
+    font-size: 0px;
 }
 .pad3 {
-	padding: 3px;
+    padding: 3px;
 }
 .grey {
-	color: grey;
+    color: grey;
 }
 .refLink {
-	width: 90%;
-	font-weight: 700;
+    width: 90%;
+    font-weight: 700;
 }
 #quickres {
-	font-weight: 700;
-	padding: 3px 15px;
-	color: lime;
+    font-weight: 700;
+    padding: 3px 15px;
+    color: lime;
 }

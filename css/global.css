@@ -1,90 +1,90 @@
 .pf {
-	position: fixed;
+    position: fixed;
 }
 .pr {
-	position: relative;
+    position: relative;
 }
 .t0 {
-	top: 0;
+    top: 0;
 }
 .b0 {
-	bottom: 0;
+    bottom: 0;
 }
 .l0 {
-	left: 0;
+    left: 0;
 }
 .r0 {
-	right: 0;
+    right: 0;
 }
 .w1 {
-	width: 100%;
+    width: 100%;
 }
 .w2 {
-	width: 12%;
+    width: 12%;
 }
 .w8 {
-	width: 88%;
+    width: 88%;
 }
 .inv {
-	visibility: hidden;
+    visibility: hidden;
 }
 .fl {
-	float: left;
+    float: left;
 }
 .fr {
-	float: right;
+    float: right;
 }
 .z1 {
-	z-index: 100;
+    z-index: 100;
 }
 .bc {
-	background: #313E59;
-	padding: 2px;
+    background: #313E59;
+    padding: 2px;
 }
 .tmenu {
-	border-bottom: 1px solid #556C9B;
+    border-bottom: 1px solid #556C9B;
 }
 .bmenu {
-	border-top: 1px solid #556C9B;
+    border-top: 1px solid #556C9B;
 }
 .m6 {
-	margin: 8px;
+    margin: 8px;
 }
 .ml {
-	margin-left: 80px;
+    margin-left: 80px;
 }
 .mr {
-	margin-right: 80px;
+    margin-right: 80px;
 }
 .pad5 {
-	padding: 5px !important;
+    padding: 5px !important;
 }
 .pad2 {
-	padding: 2px;
+    padding: 2px;
 }
 .dil {
-	display: inline;
+    display: inline;
 }
 .pabs {
-	position: absolute;
+    position: absolute;
 }
 .lime {
-	color: lime !important;
+    color: lime !important;
 }
 .red {
-	color: red !important;
+    color: red !important;
 }
 .orange {
-	color: orange !important;
+    color: orange !important;
 }
 .white {
-	color: #FFF !important;
+    color: #FFF !important;
 }
 .skyblue {
-	color: #87CEEB !important;
+    color: #87CEEB !important;
 }
 .lightblue {
-	color: #ADD8E6 !important;
+    color: #ADD8E6 !important;
 }
 .center {
     text-align: center;
@@ -93,18 +93,18 @@
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
-    border-width: 1.5px; 
-    text-shadow: 2px 2px black;    
+    border-width: 1.5px;
+    text-shadow: 2px 2px black;
     padding: 3px;
 }
 .bgimg {
-	font-weight: bold;
+    font-weight: bold;
 }
 .wht{
-	background: #FFF !important;
+    background: #FFF !important;
 }
 .AllyChatLink {
-	background: url('../images/chat.png') no-repeat 0px 2px;
-	padding-left: 14px;
-	float: right;
+    background: url('../images/chat.png') no-repeat 0px 2px;
+    padding-left: 14px;
+    float: right;
 }

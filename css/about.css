@@ -1,11 +1,11 @@
 .aboutParagraphHead{
-  text-align:left;
-  font-weight:bold;
-  font-size:14px;
+    text-align:left;
+    font-weight:bold;
+    font-size:14px;
 }
 .storyParagraphHead{
-  text-align:left;
-  font-weight:bold;
+    text-align:left;
+    font-weight:bold;
     font-size:14px;
 }
 
@@ -21,36 +21,36 @@
 }
 
 .joinLink{
-font-weight:bold;
-font-size:14px;
-color:#497ec7;
-text-align:center;
-  display:block;
+    font-weight:bold;
+    font-size:14px;
+    color:#497ec7;
+    text-align:center;
+    display:block;
 }
 
 .joinLink:hover{
-  display:block;
-font-weight:bold;
-color:#FFFFFF;
+    display:block;
+    font-weight:bold;
+    color:#FFFFFF;
 }
 
 .imageLeft{
-float:left;
-margin-right:10px;
-margin-left:5px;
-margin-bottom:10px;
+    float:left;
+    margin-right:10px;
+    margin-left:5px;
+    margin-bottom:10px;
 }
 
 .imageRight{
-float:right;
-margin-left:10px;
+    float:right;
+    margin-left:10px;
 }
 .imageFirst{
-float:right;
-margin-left:10px;
-margin-top:20px;
+    float:right;
+    margin-left:10px;
+    margin-top:20px;
 }
 
 .bigImage{
-margin-left:8px;
+    margin-left:8px;
 }

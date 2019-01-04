@@ -6,8 +6,8 @@ body {
 }
 
 a {
-   color:#666666;
-   text-decoration: none;
+    color:#666666;
+    text-decoration: none;
 }
 a:hover {
     color:#ffffff;
@@ -24,14 +24,14 @@ a:hover {
 }
 
 #mainmenu {
-	position: absolute;
-	left: 270px;
-	top: 364px;
-	font-size: 12px;
-	font-weight: bold;
-	color:#b1daf2;
-	text-align: left;
-	width: 127px;
+    position: absolute;
+    left: 270px;
+    top: 364px;
+    font-size: 12px;
+    font-weight: bold;
+    color:#b1daf2;
+    text-align: left;
+    width: 127px;
 }
 
 
@@ -75,15 +75,15 @@ a:hover {
 }
 
 #title {
-	position: absolute;
-	left: 25px;
-	top: 7px;
-	font-family:Arial, Helvetica, sans-serif;
-	font-size: 21px;
-	font-weight: bold;
-	color: #b1daf2;
-	text-align: center;
-	width: 400px;
+    position: absolute;
+    left: 25px;
+    top: 7px;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size: 21px;
+    font-weight: bold;
+    color: #b1daf2;
+    text-align: center;
+    width: 400px;
 }
 
 #content {
@@ -99,11 +99,11 @@ a:hover {
 }
 
 #contentscroll {
-     overflow: auto;
-     height: 320px;
-     width: 405px;
+    overflow: auto;
+    height: 320px;
+    width: 405px;
 
-     padding-right: 10px;
+    padding-right: 10px;
 
 }
 
@@ -121,27 +121,27 @@ a:hover {
 }
 
 #text2 {
-	position: absolute;
-	left: 0px;
-	top: 105px;
-	font-family:Arial, Helvetica, sans-serif;
-	font-size: 12px;
-	color:#b1daf2;
-	text-align: left;
-	width: 400px;
+    position: absolute;
+    left: 0px;
+    top: 105px;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color:#b1daf2;
+    text-align: left;
+    width: 400px;
 
 }
 
 #login_input {
-	position: absolute;
-	left: 25px;
-	top: 28px;
-	font-family:Arial, Helvetica, sans-serif;
-	font-size: 10px;
-	color:#b1daf2;
-	text-align: left;
-	width: 400px;
-	right: 25px;
+    position: absolute;
+    left: 25px;
+    top: 28px;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    color:#b1daf2;
+    text-align: left;
+    width: 400px;
+    right: 25px;
 }
 
 #login_text_1 {
@@ -205,7 +205,7 @@ a:hover {
 }
 .menupoint {
     /*width:10px;*/
-   /* height:4px; */
+    /* height:4px; */
     padding-top:2px;
     padding-bottom:1px;
     padding-left:10px;
@@ -221,12 +221,12 @@ a:hover {
 }
 
 #mainmenu a {
-   padding-left:10px;
-   padding-top:2px;
-   padding-bottom:1px;
-   color:#b1daf2;
-   text-decoration: none;
-   display: block;
+    padding-left:10px;
+    padding-top:2px;
+    padding-bottom:1px;
+    color:#b1daf2;
+    text-decoration: none;
+    display: block;
 
 }
 
@@ -235,8 +235,8 @@ a:hover {
 }
 
 #login_input a {
-   color:#cccccc;
-   text-decoration: none;
+    color:#cccccc;
+    text-decoration: none;
 }
 #login_input a:hover {
     color:#ffffff;
@@ -264,7 +264,7 @@ img {
 
 
 img:hover {
-   /* border: 1px solid #ffffff;*/
+    /* border: 1px solid #ffffff;*/
 }
 
 a img:hover {
@@ -272,7 +272,7 @@ a img:hover {
 }
 
 .products {
-   /* display:none;*/
+    /* display:none;*/
 }
 
 .products img {
@@ -284,8 +284,8 @@ a img:hover {
 
 
 .products a {
-   color:#b5cfcd;
-   text-decoration: none;
+    color:#b5cfcd;
+    text-decoration: none;
 }
 .products a:hover {
     color:#ffffff;
@@ -339,9 +339,9 @@ a img:hover {
 
 
 table {
-	text-align: right;
-	color:#CCCCCC;
-	font-size: 10px;
+    text-align: right;
+    color:#CCCCCC;
+    font-size: 10px;
 }
 
 td .eingabe {
@@ -379,9 +379,9 @@ td .eingabe {
 }
 
 .headline {
-  text-align:center;
-  font-weight:bold;
-  font-size:14px;
+    text-align:center;
+    font-weight:bold;
+    font-size:14px;
 }
 
 #gimmik_1 {
@@ -417,9 +417,9 @@ td .eingabe {
 }
 
 .bildUeberschrift {
-     font-family:Arial, Helvetica, sans-serif;
-     font-size: 10px;
-     color:#b1daf2;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    color:#b1daf2;
 }
 
 #unis_content {
@@ -490,28 +490,28 @@ td .eingabe {
 
 input, select, textarea
 {
-	border               : 1px #545454 solid;
-	font-size            : 10px;
-	font-family          : Tahoma, sans-serif;
+    border               : 1px #545454 solid;
+    font-size            : 10px;
+    font-family          : Tahoma, sans-serif;
 }
 
 th, td.a, td.b, td.c, td.f, input, select, td.g,
 td.h, td.i, td.j, td.k, td.m, td.o, td.q, td.r,
 td.v, td.s, .style td, p td
 {
-  background-color     : #000000;
-  filter               : alpha(opacity=70);
-  -moz-opacity         : 0.7;
-  -khtml-opacity       : 0.7;
-  opacity              : 0.7;
+    background-color     : #000000;
+    filter               : alpha(opacity=70);
+    -moz-opacity         : 0.7;
+    -khtml-opacity       : 0.7;
+    opacity              : 0.7;
 }
 
 td.f, input, select, textarea
 {
-  color                : #FFFFFF;
-  background-color     : #1c1c1c;
-  filter               : alpha(opacity=70);
-  -moz-opacity         : 0.7;
-  -khtml-opacity       : 0.7;
-  opacity              : 0.7;
+    color                : #FFFFFF;
+    background-color     : #1c1c1c;
+    filter               : alpha(opacity=70);
+    -moz-opacity         : 0.7;
+    -khtml-opacity       : 0.7;
+    opacity              : 0.7;
 }

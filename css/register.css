@@ -1,83 +1,83 @@
 .pad2, #uniSel
 {
-	padding: 2px;
+    padding: 2px;
 }
 .pad3 {
-	padding: 3px;
+    padding: 3px;
 }
 .pad1
 {
-	padding: 5px;
+    padding: 5px;
 }
 #recaptcha_table *
 {
-	background: white;
+    background: white;
 }
 .fntBold, .recaptcha_input_area_text
 {
-	font-weight: bold;
+    font-weight: bold;
 }
 .wid
 {
-	width: 150px;
+    width: 150px;
 }
 .w90p {
-	width: 90%;
+    width: 90%;
 }
 .w40px {
-	width: 40px;
+    width: 40px;
 }
 .w350px {
-	width: 350px;
+    width: 350px;
 }
 .lal
 {
-	text-align: left;
+    text-align: left;
 }
 .TextRight {
-	text-align: right;
+    text-align: right;
 }
 .lime
 {
-	color: lime;
+    color: lime;
 }
 .orange
 {
-	color: orange;
+    color: orange;
 }
 .red
 {
-	color: red;
+    color: red;
 }
 
 .fl {
-	float: left;
+    float: left;
 }
 .fr {
-	float: right;
+    float: right;
 }
 
 #MsgSpace {
-	opacity: 0;
+    opacity: 0;
 }
 
 .UniInfo_Box {
-	display: inline-block;
-	width: 700px;
+    display: inline-block;
+    width: 700px;
 }
 .UniInfo_Section {
-	display: inline-block;
-	width: 48%;
+    display: inline-block;
+    width: 48%;
 }
 .UniInfo_Col {
-	float: left;
-	width: 49%;
+    float: left;
+    width: 49%;
 }
 .UniInfo_Col *, #form label:not(.recaptcha_input_area_text), #form input[type="submit"], #form input[type="button"], .TextShadow {
-	text-shadow: 1px 1px 2px black;
+    text-shadow: 1px 1px 2px black;
 }
 
 .BadInput {
-	border-color: red;
-	color: red;
+    border-color: red;
+    color: red;
 }

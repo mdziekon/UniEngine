@@ -18,7 +18,7 @@
 }
 .padS5 {
     padding-left: 5px !important;
-    padding-right: 5px !important; 
+    padding-right: 5px !important;
 }
 .fInfo, .maxShip, .maxShipAll, .noShip, .noShipAll {
     cursor: pointer;
@@ -72,5 +72,5 @@
 .SendButtom {
     font-weight: bold;
     padding: 5px;
-	width: 150px;
+    width: 150px;
 }
