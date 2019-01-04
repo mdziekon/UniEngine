@@ -30,7 +30,6 @@
     padding-left: 150px;
 }
 </style>
-<script src="scripts/jquery.textareaCounter.plugin.js" type="text/javascript"></script>
 <script>
 $(document).ready(function()
 {
