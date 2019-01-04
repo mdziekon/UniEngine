@@ -28,10 +28,10 @@
     bottom: 0px;
 }
 .moon {
-    background: url('../images/moon.png') no-repeat right;
+    background: url('../../images/moon.png') no-repeat right;
 }
 .planet {
-    background: url('../images/planet.png') no-repeat right;
+    background: url('../../images/planet.png') no-repeat right;
 }
 .moon, .planet {
     padding-right: 18px;

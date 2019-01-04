@@ -104,7 +104,7 @@
     background: #FFF !important;
 }
 .AllyChatLink {
-    background: url('../images/chat.png') no-repeat 0px 2px;
+    background: url('../../images/chat.png') no-repeat 0px 2px;
     padding-left: 14px;
     float: right;
 }

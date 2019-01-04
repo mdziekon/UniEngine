@@ -15,7 +15,7 @@
 /* Buttons */
 .delID {
     line-height: 12px;
-    background: url('../../images/delete.png') no-repeat 0px 2px;
+    background: url('../../../images/delete.png') no-repeat 0px 2px;
     padding-left: 12px;
     cursor: pointer;
 }

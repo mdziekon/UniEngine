@@ -1,14 +1,14 @@
 /* Elements */
 .delMsg {
-    background: url('../images/delete.png') no-repeat 0.5pt 1.5pt;
+    background: url('../../images/delete.png') no-repeat 0.5pt 1.5pt;
     padding-left: 12px;
 }
 .reportMsg {
-    background: url('../images/warning.png') no-repeat;
+    background: url('../../images/warning.png') no-repeat;
     padding-left: 16px;
 }
 .edit {
-    background: url('../images/edit.png') no-repeat 0.5pt 0pt;
+    background: url('../../images/edit.png') no-repeat 0.5pt 0pt;
     padding-left: 16px;
 }
 .smile, .usrRef, .delMsg, .reportMsg {

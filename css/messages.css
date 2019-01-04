@@ -11,27 +11,27 @@
     padding-left: 20px !important;
 }
 .convert {
-    background: url('../images/convert.png') no-repeat 0 -0.5pt;
+    background: url('../../images/convert.png') no-repeat 0 -0.5pt;
 }
 .report, .report2 {
-    background: url('../images/warning.png') no-repeat 0 -1pt;
+    background: url('../../images/warning.png') no-repeat 0 -1pt;
 }
 .delete {
     cursor: pointer;
-    background: url('../images/delete.png') no-repeat 0 1pt;
+    background: url('../../images/delete.png') no-repeat 0 1pt;
     padding-left: 15px !important;
 }
 .reply {
-    background: url('../images/reply.png') no-repeat 0 0pt;
+    background: url('../../images/reply.png') no-repeat 0 0pt;
 }
 .reply2 {
-    background: url('../images/users.png') no-repeat 0 0pt;
+    background: url('../../images/users.png') no-repeat 0 0pt;
 }
 .ignore {
-    background: url('../images/ban.png') no-repeat 0 -0.5pt;
+    background: url('../../images/ban.png') no-repeat 0 -0.5pt;
 }
 .date {
-    background: url('../images/calendar.png') no-repeat 0 0;
+    background: url('../../images/calendar.png') no-repeat 0 0;
 }
 .hov {
     padding: 3px;

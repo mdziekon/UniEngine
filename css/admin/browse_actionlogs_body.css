@@ -8,7 +8,7 @@
     padding: 2px;
 }
 .packed {
-    background: url('../../images/packed.png') no-repeat 0pt -0.5pt;
+    background: url('../../../images/packed.png') no-repeat 0pt -0.5pt;
     padding-left: 18px;
 }
 .val {

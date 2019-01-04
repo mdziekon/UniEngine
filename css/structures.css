@@ -239,7 +239,7 @@ div.infoResReq, div.infoTechReq {
     z-index: 2;
 }
 .maxDo {
-    background-image: url('../images/structures_color_max.png');
+    background-image: url('../../images/structures_color_max.png');
     background-repeat: no-repeat;
     position: absolute;
     bottom: 0px;
@@ -251,7 +251,7 @@ div.infoResReq, div.infoTechReq {
     background-position: 0 -16px;
 }
 .buildDo_Green, .buildDo_Orange, .buildDo_Red, .construct_Green {
-    background-image: url('../images/structures_color_big.png');
+    background-image: url('../../images/structures_color_big.png');
     background-repeat: no-repeat;
 }
 .buildDo_Green {
@@ -279,7 +279,7 @@ div.infoResReq, div.infoTechReq {
     background-position: 0 -350px;
 }
 .buildDo_Gray, .destroyDo_Gray, .construct_Gray {
-    background-image: url('../images/structures_gray_big.png');
+    background-image: url('../../images/structures_gray_big.png');
     background-repeat: no-repeat;
     cursor: default;
 }
@@ -302,7 +302,7 @@ div.infoResReq, div.infoTechReq {
     background-position: 0 -250px;
 }
 .ssDo.buildDo_Green, .ssDo.buildDo_Orange {
-    background-image: url('../images/structures_color_small.png');
+    background-image: url('../../images/structures_color_small.png');
     background-repeat: no-repeat;
 }
 .ssDo.buildDo_Green {

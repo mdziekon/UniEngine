@@ -30,10 +30,10 @@ b.float {
     padding-left: 21px;
 }
 .DoAccept {
-    background: url('../images/tick.green.png') no-repeat 3px 3px;
+    background: url('../../images/tick.green.png') no-repeat 3px 3px;
 }
 .DoDecline {
-    background: url('../images/delete.png') no-repeat 5px 5px;
+    background: url('../../images/delete.png') no-repeat 5px 5px;
 }
 .Acc_1 {
     padding: 5px !important;
