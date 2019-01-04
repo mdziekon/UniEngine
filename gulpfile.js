@@ -1,7 +1,9 @@
 /* globals require, exports */
 
 const gulp = require("gulp");
+const parallel = require("gulp").parallel;
 const terser = require("gulp-terser");
+const csso = require("gulp-csso");
 const rename = require("gulp-rename");
 const filterStream = require("through2-filter");
 const PluginError = require("plugin-error");
@@ -153,10 +155,37 @@ function taskMinifyJS () {
         .pipe(gulp.dest("./"));
 }
 
-function taskDefault (cb) {
-    taskMinifyJS();
+function taskMinifyCSS () {
+    const cssoOptions = {
+        restructure: false,
+        sourceMap: false,
+        debug: false
+    };
 
-    cb();
+    return gulp.src([
+        "./css/**/**.css",
+        "!./css/**/**.min.css"
+    ], { base: process.cwd() })
+        .pipe(csso(cssoOptions))
+        .pipe(rename(function (path) {
+            path.dirname = "dist/" + path.dirname;
+        }))
+        .pipe(pluginHandleCacheBusting({
+            includedExtensions: ".min.css",
+            cacheBustingPart: ".cachebuster-",
+            deleteDuplicate: true,
+            logChanges: true
+        }))
+        .pipe(rename({
+            extname: (
+                ".cachebuster-" + (+(new Date())) + ".min.css"
+            )
+        }))
+        .pipe(gulp.dest("./"));
 }
 
-exports.default = taskDefault;
+function taskDefault () {
+    return parallel(taskMinifyJS, taskMinifyCSS);
+}
+
+exports.default = parallel(taskMinifyJS, taskMinifyCSS);
