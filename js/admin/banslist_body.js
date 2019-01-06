@@ -2,7 +2,6 @@
 
 $(document).ready(function () {
     $(".pagin").click(function () {
-        FromPagination = true;
         $("input[name=\"page\"]").val($(this).attr("id").replace("page_", ""));
         $("#thisForm").submit();
     });
