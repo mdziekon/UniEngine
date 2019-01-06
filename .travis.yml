@@ -3,6 +3,7 @@ matrix:
         -
             # see http://about.travis-ci.org/docs/user/languages/php/ for more hints
             stage: Tests
+            dist: xenial
             language: php
 
             # list any PHP version you want to test against
@@ -21,6 +22,7 @@ matrix:
         -
             # see https://docs.travis-ci.com/user/languages/javascript-with-nodejs/ for more hints
             stage: Tests
+            dist: xenial
             language: node_js
 
             node_js:
