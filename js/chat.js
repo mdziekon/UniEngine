@@ -88,7 +88,7 @@ function padTime (str) {
     return str;
 }
 // > Parse given Data and create HTML Message
-function createMessage (MessageData, LastSeenID) {
+function createMessage (MessageData, curLastSeenID) {
     var MsgOpt = [];
     var AddLastMarker = "";
     var MsgDate = new Date((MessageData.d + ServerStamp) * 1000);
@@ -100,8 +100,8 @@ function createMessage (MessageData, LastSeenID) {
         MsgOpt.push("<a class=\"reportMsg\" href=\"#\" title=\"" + JSLang["ToolTip_ReportMsg"] + "\"></a>");
     }
 
-    if (typeof LastSeenID !== "undefined" && LastSeenID_Used === false) {
-        if (MessageData.id == LastSeenID) {
+    if (typeof curLastSeenID !== "undefined" && LastSeenID_Used === false) {
+        if (MessageData.id == curLastSeenID) {
             AddLastMarker = " lastSeen";
             LastSeenID_Used = true;
         }
