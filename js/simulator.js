@@ -1,5 +1,7 @@
 /* globals MyTechs, MyFleets, AllowPrettyInputBox, PlanetOwnerTxt, CurrentSlot */
 
+var local_CurrentSlot = CurrentSlot;
+
 function f (target_url, win_name) {
     var new_win = window.open(target_url,win_name,"resizable=yes,scrollbars=yes,menubar=no,toolbar=no,width=550,height=280,top=0,left=0");
     new_win.focus();
@@ -7,12 +9,12 @@ function f (target_url, win_name) {
 
 function fillMyTechs (type) {
     for (var TechID in MyTechs) {
-        $("[name=\"" + type + "_techs[" + CurrentSlot + "][" + TechID + "]\"]").val(MyTechs[TechID]);
+        $("[name=\"" + type + "_techs[" + local_CurrentSlot + "][" + TechID + "]\"]").val(MyTechs[TechID]);
     }
 }
 function fillMyFleets (type) {
     for (var ShipID in MyFleets) {
-        $("[name=\"" + type + "_ships[" + CurrentSlot + "][" + ShipID + "]\"]").val(MyFleets[ShipID]);
+        $("[name=\"" + type + "_ships[" + local_CurrentSlot + "][" + ShipID + "]\"]").val(MyFleets[ShipID]);
     }
 }
 function cleanTechs (type) {
@@ -117,10 +119,10 @@ $(document).ready(function () {
     $(".chgSlot").click(function () {
         var $ThisSlot = $(this).val().replace("#", "");
 
-        $("tbody#slot_" + CurrentSlot).addClass("hide");
+        $("tbody#slot_" + local_CurrentSlot).addClass("hide");
         $("tbody#slot_" + $ThisSlot).removeClass("hide");
 
-        CurrentSlot = $ThisSlot;
+        local_CurrentSlot = $ThisSlot;
         $("#attacker_slot").html($ThisSlot);
         $("#defender_slot").html($ThisSlot);
         if ($ThisSlot == 1) {
