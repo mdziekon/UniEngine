@@ -1,5 +1,6 @@
 /* globals AllowPrettyInputBox, UseAjax, GalaxySettings */
 /* globals nd */
+/* exported galaxy_submit, Phalanx */
 
 var BlockFunction = true;
 var HideTimeout = false;
