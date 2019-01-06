@@ -1,4 +1,4 @@
-/* globals JSLang */
+/* globals JSLang, CurrentPage */
 
 $(document).ready(function () {
     $(".delete.tipTitle").tipTip({delay: 0, maxWidth: "200px", content: JSLang["CMD_Delete_Title"]});
@@ -9,12 +9,15 @@ $(document).ready(function () {
         $(this).parent().attr("action", "?page=" + $(this).attr("name").replace("goto_", "")).submit();
     });
     $(".perPage").change(function () {
+        var AddPageAction;
+        var getPerPage = $(this).val();
+
         if (CurrentPage > 1) {
             AddPageAction = "page=" + CurrentPage + "&";
         } else {
             AddPageAction = "";
         }
-        getPerPage = $(this).val();
+
         $(this).parent().parent().attr("action", "?" + AddPageAction + "pp=" + getPerPage).submit();
     });
 
