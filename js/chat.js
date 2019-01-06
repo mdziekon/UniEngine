@@ -35,6 +35,8 @@ var GetTimeout_AddToIdle_Val = 1000;
 var GetTimeout_AddToActive_Val = 500;
 var AjaxSettings = { timeout: 4000 };
 
+var local_LastSeenID = LastSeenID;
+
 // TPL System
 var TPL_NicknameReplace = "<b class=\"skyblue\">$1</b>";
 
@@ -283,7 +285,7 @@ function showMessage () {
                                     if (Messages.lastID < msgID) {
                                         Messages.lastID = msgID;
                                     }
-                                    CombineMessages += createMessage(Response.newm[NewMsgIdx], LastSeenID);
+                                    CombineMessages += createMessage(Response.newm[NewMsgIdx], local_LastSeenID);
                                     Messages.msgCount += 1;
                                 }
                                 ShoutBoxTable.fadeTo(0, 0.001);
@@ -677,10 +679,10 @@ $(document).ready(function () {
         .blur(function () {
             // User is going Offline In-Tab
             TabActive = false;
-            if (LastSeenID < Messages.lastID) {
-                $("#sbmsg_" + LastSeenID).removeClass("lastSeen");
+            if (local_LastSeenID < Messages.lastID) {
+                $("#sbmsg_" + local_LastSeenID).removeClass("lastSeen");
                 $("#sbmsg_" + Messages.lastID).addClass("lastSeen");
-                LastSeenID = Messages.lastID;
+                local_LastSeenID = Messages.lastID;
             }
         })
         .focus(function () {
