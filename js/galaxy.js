@@ -250,7 +250,7 @@ $(document).ready(function () {
         .on("click", ".icoMissile", function () {
             nd(); //Close ToolTipMenu
             if (UseAjax === true) {
-                var RegExp = /galaxy\=([0-9]{1,3}).*?system\=([0-9]{1,3}).*?planet\=([0-9]{1,3})/gi;
+                var RegExp = /galaxy=([0-9]{1,3}).*?system=([0-9]{1,3}).*?planet=([0-9]{1,3})/gi;
                 var GetPos = RegExp.exec($(this).attr("href"));
 
                 var ThisPos = GetPos[1] + ":" + GetPos[2] + ":" + GetPos[3];
