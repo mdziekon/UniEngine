@@ -155,7 +155,7 @@ $(document).ready(function () {
 
     $(".sortLink").click(function (event) {
         event.preventDefault();
-        var RegExp = /^\?cmd\=sort\&type\=(.*?)\&mode\=(.*?)$/gi;
+        var RegExp = /^\?cmd=sort&type=(.*?)&mode=(.*?)$/gi;
         var ThisData = RegExp.exec($(this).attr("href"));
         $("input[name=\"type\"]").val(ThisData[1]);
         $("input[name=\"mode\"]").val(ThisData[2]);

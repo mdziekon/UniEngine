@@ -145,7 +145,7 @@ $(document).ready(function () {
     });
     $("input[type=\"reset\"]").click(function () {
         var loc = new String(window.location);
-        window.location = loc.replace(/(&amp;|&){1}page\=[0-9]+/, "");
+        window.location = loc.replace(/(&amp;|&){1}page=[0-9]+/, "");
     });
     $(".get").hover(function () {
         $(this).addClass("get_hover_name");
