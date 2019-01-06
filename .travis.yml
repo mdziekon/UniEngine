@@ -1,0 +1,35 @@
+matrix:
+    include:
+        -
+            # see http://about.travis-ci.org/docs/user/languages/php/ for more hints
+            stage: Tests
+            language: php
+
+            # list any PHP version you want to test against
+            php:
+                # main version should be kept as close as possible to supported OMV's PHP version
+                # and dependencies should be updated with --prefer-lowest to prevent being ahead
+                - "7.0"
+
+            # install project dependencies
+            install:
+                - composer install
+
+            script:
+                - composer run-script ci-php-phpcs
+
+        -
+            # see https://docs.travis-ci.com/user/languages/javascript-with-nodejs/ for more hints
+            stage: Tests
+            language: node_js
+
+            node_js:
+                - "11.6"
+
+            # install project dependencies
+            install:
+                - npm ci
+
+            script:
+                - npm run ci-js-eslint
+                - npm run ci-css-stylelint
