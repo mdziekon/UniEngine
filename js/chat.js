@@ -35,7 +35,7 @@ var GetTimeout_AddToIdle_Val = 1000;
 var GetTimeout_AddToActive_Val = 500;
 var AjaxSettings = { timeout: 4000 };
 
-var local_LastSeenID = LastSeenID;
+var local_LastSeenID;
 
 // TPL System
 var TPL_NicknameReplace = "<b class=\"skyblue\">$1</b>";
@@ -497,6 +497,8 @@ function AjaxAbort () {
 
 // Main Part
 $(document).ready(function () {
+    local_LastSeenID = LastSeenID;
+
     // Initialization
     $.ajaxSetup(AjaxSettings);
 

@@ -4,10 +4,10 @@ var SetMaxNow = false;
 var LastStorageLowerTh0 = false;
 var QuantumGateOptionModif = false;
 
-var FlightDurationTarget = FlightDuration;
-var FlightDurationGoback = FlightDuration;
-
 $(document).ready(function () {
+    var FlightDurationTarget = FlightDuration;
+    var FlightDurationGoback = FlightDuration;
+
     // Internal Functions
     function addDots (Value) {
         Value += "";

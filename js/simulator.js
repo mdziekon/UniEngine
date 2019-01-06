@@ -1,7 +1,7 @@
 /* globals MyTechs, MyFleets, AllowPrettyInputBox, PlanetOwnerTxt, CurrentSlot */
 /* exported f */
 
-var local_CurrentSlot = CurrentSlot;
+var local_CurrentSlot;
 
 function f (target_url, win_name) {
     var new_win = window.open(target_url,win_name,"resizable=yes,scrollbars=yes,menubar=no,toolbar=no,width=550,height=280,top=0,left=0");
@@ -30,6 +30,8 @@ function cleanFleets (type) {
 }
 
 $(document).ready(function () {
+    local_CurrentSlot = CurrentSlot;
+
     // Internal Functions
     function addDots (value) {
         value += "";
