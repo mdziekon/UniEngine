@@ -1,6 +1,8 @@
 /* globals AllowPrettyInputBox, ShowElementOnStartup, JSLang, ShipPrices, ShipTimes, RunQueueHandler, Resources, QueueArray */
 
 $(document).ready(function () {
+    var local_ShowElementOnStartup = ShowElementOnStartup;
+
     // Internal Functions
     function addDots (value) {
         value += "";
@@ -69,18 +71,18 @@ $(document).ready(function () {
     var QueueHandlerInterval = false;
     var CurrentQueueID = 1;
 
-    if (ShowElementOnStartup === "") {
+    if (local_ShowElementOnStartup === "") {
         if (window.location.href.indexOf("#b_id_") !== -1) {
-            ShowElementOnStartup = window.location.href.match(/.*?\#b_id_([0-9]{1,})/);
-            ShowElementOnStartup = ShowElementOnStartup[1];
+            local_ShowElementOnStartup = window.location.href.match(/.*?#b_id_([0-9]{1,})/);
+            local_ShowElementOnStartup = local_ShowElementOnStartup[1];
         }
     }
 
-    if ($("#ssEl_" + ShowElementOnStartup).length) {
-        nfoSelected = $("#nfoEl_" + ShowElementOnStartup, nfoMainElement);
+    if ($("#ssEl_" + local_ShowElementOnStartup).length) {
+        nfoSelected = $("#nfoEl_" + local_ShowElementOnStartup, nfoMainElement);
         nfoElement0.toggle();
         nfoLastVisible = nfoSelected.toggle().removeClass("hide");
-        $("#ssEl_" + ShowElementOnStartup).find(".ssImg, .ssBg, .ssLvl").addClass("ssSelect");
+        $("#ssEl_" + local_ShowElementOnStartup).find(".ssImg, .ssBg, .ssLvl").addClass("ssSelect");
     }
 
     $(".ssDiv").tipTip({delay: 100});
