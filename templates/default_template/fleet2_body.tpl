@@ -1,15 +1,10 @@
 <script>
 var ServerClientDifference = ({Now} * 1000) - new Date().getTime();
 var AllowPrettyInputBox = {P_AllowPrettyInputBox};
-var SetMaxNow = false;
-var LastStorageLowerTh0 = false;
-var QuantumGateOptionModif = false;
 var ResSortArrayAll = {ResSortArrayAll};
 var ResSortArrayNoDeu = {ResSortArrayNoDeu};
 var NeedQuantumGate = '{P_UserHave2UseQuantumGate}';
 var FlightDuration = {P_FlightDuration};
-var FlightDurationTarget = FlightDuration;
-var FlightDurationGoback = FlightDuration;
 var JSLang = {'fl2_FlyTimeInfo': '{fl2_FlyTimeInfo}', 'fl_coordplanet': '{fl_coordplanet}', 'fl_coordmoon': '{fl_coordplanet}', 'fl_coorddebris': '{fl_coorddebris}', 'confirm_allypact_attack': '{fl2_confirm_allypact_attack}'};
 var SetResources = {SelectResources};
 var SelectQuantumGate = {SelectQuantumGate};

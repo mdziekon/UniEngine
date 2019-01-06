@@ -1,4 +1,11 @@
-/* globals AllowPrettyInputBox, ServerClientDifference, JSLang, AllyPact_AttackWarn, SetResources, SelectQuantumGate, NeedQuantumGate, ResSortArrayAll, QuantumGateOptionModif, QuantumGateDeuteriumUse */
+/* globals AllowPrettyInputBox, ServerClientDifference, JSLang, AllyPact_AttackWarn, SetResources, SelectQuantumGate, NeedQuantumGate, ResSortArrayAll, QuantumGateDeuteriumUse, ResSortArrayNoDeu, FlightDuration */
+
+var SetMaxNow = false;
+var LastStorageLowerTh0 = false;
+var QuantumGateOptionModif = false;
+
+var FlightDurationTarget = FlightDuration;
+var FlightDurationGoback = FlightDuration;
 
 $(document).ready(function () {
     // Internal Functions
@@ -289,6 +296,10 @@ $(document).ready(function () {
         var NewStorageModifier  = QuantumGateDeuteriumUse[$(".mSelect:checked").val()];
         var ConsuptionModif_New = 0;
         var StorageModif_New    = 0;
+
+        var FlyTimeTargetModif;
+        var FlyTimeBackModif;
+
         if (NewStorageModifier !== undefined) {
             switch (NewStorageModifier) {
             case 0:
