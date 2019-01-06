@@ -1,3 +1,5 @@
+/* exported ReplaceArr, Update, ArrayReplace */
+
 var MToolTip = "";
 var CToolTip = "";
 var DToolTip = "";
