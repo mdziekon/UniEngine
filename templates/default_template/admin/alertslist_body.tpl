@@ -8,7 +8,7 @@ var JSLang =
 };
 var CurrentPage = {CurrentPage};
 </script>
-<script type="text/javascript" src="../dist/js/admin/alertslist_body.cachebuster-1545956361123.min.js"></script>
+<script type="text/javascript" src="../dist/js/admin/alertslist_body.cachebuster-1546739003831.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../dist/css/admin/alertslist_body.cachebuster-1546567692327.min.css" />
 <br />
 <table width="1000">

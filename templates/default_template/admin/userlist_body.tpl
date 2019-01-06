@@ -2,7 +2,7 @@
 var JSLang = {'SelectAllVisible': '{SelectAllVisible}', 'SelectAllFiltered': '{SelectAllFiltered}', 'SearchUserTip': '{SearchUserTip}', 'mEmail': '{mEmail}', 'xEmail': '{xEmail}', 'lastIP': '{lastIP}', 'regIP': '{regIP}', 'LoopupInfo': '{LoopupInfo}', 'ItsAllyOwner': '{ItsAllyOwner}', 'AllyRequested': '{AllyRequested}', 'PlayerIsBanned': '{PlayerIsBanned}', 'PlayerIsOnVacations': '{PlayerIsOnVacations}', 'Userlist_ConfirmDelete': '{Userlist_ConfirmDelete}', 'ToggleFilters': '{ToggleFilters}'};
 var DefaultPerPage = {DefaultPerPage};
 </script>
-<script src="../dist/js/admin/userlist_body.cachebuster-1545956361123.min.js" type="text/javascript"></script>
+<script src="../dist/js/admin/userlist_body.cachebuster-1546739003831.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="../dist/css/admin/userlist_body.cachebuster-1546567692327.min.css" />
 <br />
 <table width="900" class="negmarg">

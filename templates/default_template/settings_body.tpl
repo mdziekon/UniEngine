@@ -8,7 +8,7 @@ var TemplateData = {'SaveOnlyThis': '{SaveOnlyThis}', 'SaveAll': '{SaveAll}', 'u
 </script>
 <script src="libs/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
 <script src="libs/jquery-farbtastic/jquery.farbtastic-1.2.min.js" type="text/javascript"></script>
-<script src="dist/js/settings.cachebuster-1545956361123.min.js" type="text/javascript"></script>
+<script src="dist/js/settings.cachebuster-1546739003831.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="dist/css/settings.cachebuster-1546564327123.min.css" />
 <link rel="stylesheet" type="text/css" href="libs/jquery-farbtastic/jquery.farbtastic-1.2.min.css" />
 <br/>

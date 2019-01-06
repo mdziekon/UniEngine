@@ -9,7 +9,7 @@ eval('var ShipPrices = {Create_InsertPrices}');
 eval('var ShipTimes = {Create_InsertTimes}');
 eval('var QueueArray = {Create_QueueJSArray}');
 </script>
-<script src="dist/js/structures.cachebuster-1545956361123.min.js" type="text/javascript"></script>
+<script src="dist/js/structures.cachebuster-1546739003831.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="dist/css/structures.cachebuster-1546565145290.min.css" />
 <div style="height: 6px;"></div>
 <div class="w870x">
