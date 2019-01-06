@@ -1,20 +1,21 @@
 /* globals OldResSort, TemplateData, OverrideTab, OldPass, VacationMiliseconds */
 
 $(document).ready(function () {
+    var local_OverrideTab = OverrideTab;
+
     var setCat = $(".setCat");
     var setCatLabel = $(".setCat > :first-child");
     var Cont = $("table.tableCont:not(.visible)");
-    var HexTest = /^#[0-9A-Fa-f]{0,6}$/gi;
     var FCPickers = $("#fc_pickers");
     var ColorPickers = new Object;
     var ColorPickerDivs = new Object;
     var HideTimeout = false;
 
     if ($(document.location.hash).length > 0) {
-        OverrideTab = document.location.hash.replace("#Tab", "");
+        local_OverrideTab = document.location.hash.replace("#Tab", "");
     }
-    if (OverrideTab == "") {
-        OverrideTab = "01";
+    if (local_OverrideTab == "") {
+        local_OverrideTab = "01";
     }
 
     // Tab Handler
@@ -36,7 +37,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#Tab" + OverrideTab).click();
+    $("#Tab" + local_OverrideTab).click();
 
     if ($("[name=\"development_old\"]").is(":checked") === false) {
         $("[name=\"build_expandedview_use\"]").prop("disabled", true);
