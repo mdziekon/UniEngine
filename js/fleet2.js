@@ -107,7 +107,7 @@ $(document).ready(function () {
         var TimeCounter = new Date((DateObj.getTime() + (FlightDurationTarget * 1000)));
         var TimeCounter2 = new Date((DateObj.getTime() + ((FlightDurationTarget + FlightDurationGoback) * 1000)));
         var Years = ((TimeCounter.getFullYear()).toString()).substr(2, 2);
-        var Months = TimeCounter.getMonth();
+        var Months = TimeCounter.getMonth() + 1;
         var Days = TimeCounter.getDate();
         var Hours = TimeCounter.getHours();
         var Mins = TimeCounter.getMinutes();
@@ -147,7 +147,7 @@ $(document).ready(function () {
             }
         }
         var Years2 = ((TimeCounter2.getFullYear()).toString()).substr(2, 2);
-        var Months2 = TimeCounter2.getMonth();
+        var Months2 = TimeCounter2.getMonth() + 1;
         var Days2 = TimeCounter2.getDate();
         var Hours2 = TimeCounter2.getHours();
         var Mins2 = TimeCounter2.getMinutes();
