@@ -1,4 +1,5 @@
 /* globals MyTechs, MyFleets, AllowPrettyInputBox, PlanetOwnerTxt, CurrentSlot */
+/* exported f */
 
 var local_CurrentSlot = CurrentSlot;
 
