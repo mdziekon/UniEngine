@@ -17,39 +17,6 @@ $(document).ready(function () {
         return Value;
     }
 
-    // PHP2JS Port
-    function prettyTime (Seconds) {
-        var $Seconds    = parseFloat(Seconds);
-    	var $Days       = Math.floor($Seconds / 86400);
-
-        $Seconds   -= $Days * 86400;
-
-        var $Hours      = Math.floor($Seconds / 3600);
-
-        $Seconds   -= $Hours * 3600;
-
-        var $Minutes    = Math.floor($Seconds / 60);
-
-        $Seconds   -= $Minutes * 60;
-
-        if ($Hours < 10) {
-            $Hours = "0" + $Hours + "";
-        }
-        if ($Minutes < 10) {
-            $Minutes = "0" + $Minutes + "";
-        }
-        if ($Seconds < 10) {
-            $Seconds = "0" + $Seconds + "";
-        }
-        var $Time = "";
-        if ($Days > 0) {
-            $Time = $Days + "d ";
-        }
-        $Time += $Hours + "g " + $Minutes + "m " + $Seconds + "s";
-
-        return $Time;
-    }
-
     $.fn.prettyInputBox = function () {
         return this.each(function () {
             if (AllowPrettyInputBox !== undefined && AllowPrettyInputBox === true) {
