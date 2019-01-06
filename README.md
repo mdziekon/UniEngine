@@ -1,55 +1,92 @@
-UniEngine (PL)
-==============
+# UniEngine
 
-Silnik "OGame-podobnej" gry przegladarkowej  
+[![Build Status](https://travis-ci.org/mdziekon/UniEngine.svg?branch=master)](https://travis-ci.org/mdziekon/UniEngine)
 
-**Informacje o silniku**:  
-[[PL] Mozliwosci silnika](https://github.com/mdziekon/UniEngine/wiki/%5BPL%5D-Mo%C5%BCliwo%C5%9Bci-silnika)
+OGame-clone browser based game engine.
 
-Wymagania
----------
-Serwer PHP w wersji co najmniej 5.4  
-Serwer MySQL w wersji co najmniej 5
+---
 
-Zalecane
---------
-Brak doklejania treści do stron przez serwer (np. reklam doklejanych na darmowych hostingach)  
-Zainstalowany modul APC dla PHP  
-Wlasny, platny serwer (VPS lub serwer dedykowany)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Development guides](#development-guides)
 
-UniEngine (EN)
-==============
+- [Credits](#credits)
+- [License](#license)
 
-OGame-like browser based Game Engine  
+## Requirements
 
-Readme comming soon...
+- PHP
+    - >= 5.4
+    - < 7.0
+- MySQL
+    - >= 5
+- A webserver (eg. nginx)
 
-Requirements
-------------
-PHP Server, PHP version at least 5.4  
-MySQL Server, MySQL version at least 5
+### Development requirements
 
-Recommended
------------
-No code appending to pages by the server (np. ads appended on some free hosting sites)  
-Installed APC module for PHP  
-Own, paid server (VPS or dedicated server)
+- Composer
+    - >= 1.6
+- Node.js
+    - >= 11
 
-LICENSE
-=======
+## Installation
 
-See LICENSE for the GNU GENERAL PUBLIC LICENSE.  
-See OTHERLICENSES for the Licenses of included external resources.  
+1. Setup a webserver capable of running PHP scripts.
+    - ``php.ini`` file should have ``E_NOTICE`` reporting disabled, eg.:
+        - ``error_reporting = E_ALL & ~E_NOTICE & ~E_STRICT``
+    - PHP needs to have write permissions to these files / directories:
+        - ``config.php``
+            - (one-off, installation purposes)
+        - ``includes/constants.php``
+            - (one-off, installation purposes)
+        - ``tmp/``
+            - (permanent, eg. for Smarty cache)
+2. Setup a MySQL server.
+3. Create a DB user and DB database for your game server.
+4. Move source files of the project to your webserver's directory.
+5. Run installation wizard: http://your_server_address:port/install
+6. Remove ``install/`` directory
 
-UniEngine  
-Copyright 2010 - 2013 mdziekon  
-https://github.com/mdziekon  
+## Development guides
 
-Version 1.0 - Updated: July 18, 2013  
-This UniEngine is licensed under the GPL licenses:  
-  http://www.gnu.org/licenses/gpl.html
-  
+### Preparations
 
-CONTRIBUTORS
-------------
-* Alessio <nicoales@live.it> (https://github.com/XxidroxX)
+1. Install PHP dependencies:
+    - ``composer install``
+2. Install Node.js dependencies:
+    - ``npm ci``
+
+### Available scripts
+
+- Run PHP code linting (powered by PHP Code Sniffer)
+    - ``composer run-script ci-php-phpcs``
+- Run JavaScript code linting (powered by ESLint):
+    - ``npm run ci-js-eslint``
+- Run CSS code linting (powered by stylelint):
+    - ``npm run ci-css-stylelint``
+- Rebuild (minification + cachebusting) JS & CSS files:
+    - ``npm run build-minify``
+    - All files from ``js/`` and ``css/`` directories will be re-minified (only when actually changed) and saved in their respective ``dist/`` directories.
+    - _Note:_ when a file has no changes, this script **won't** remove the old minified & cachebusted file from ``dist/``. File replacement happens only if a source file has changes, or there is no result file yet.
+    - _Note:_ this script does **not** automatically replace filepaths in templates. For now, this has to be done manually by a developer.
+    - _Note:_ due to legacy reasons, all files in ``dist/`` are stored in the repo.
+
+---
+
+## Credits
+
+### Authors
+
+- Michał Dziekoński (https://github.com/mdziekon)
+
+### Contributors
+
+- Alessio <nicoales@live.it> (https://github.com/XxidroxX)
+
+## License
+
+GPL-2.0
+
+See ``LICENSE`` file for this project's license details.
+
+See ``OTHERLICENSES`` for the licenses of included external resources.
