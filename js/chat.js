@@ -139,10 +139,6 @@ function createMessage (MessageData, curLastSeenID) {
         "</tr>"
     );
 }
-// > Add Smiles
-function addSmiley (smiley) {
-    MsgBox.val(MsgBox.val() + smiley).focus();
-}
 // > Add Reference
 function AddReference (Text) {
     MsgBox.val(MsgBox.val() + Text + ": ").focus();
