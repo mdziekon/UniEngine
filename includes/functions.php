@@ -374,7 +374,7 @@ function display($PageCode, $PageTitle = '', $ShowTopResourceBar = true, $IsAdmi
     }
 
     $ProbablyOnAdminPage = false;
-    preg_match('#(admin\/)?([^\/]{1,})\.php#si', $_SERVER['SCRIPT_NAME'], $match);
+    preg_match('#(admin\/|ajax\/)?([^\/]{1,})\.php#si', $_SERVER['SCRIPT_NAME'], $match);
     $pageurl = $match[2];
     if(empty($pageurl))
     {
@@ -386,6 +386,10 @@ function display($PageCode, $PageTitle = '', $ShowTopResourceBar = true, $IsAdmi
         {
             $pageurl = 'admin/'.$pageurl;
             $ProbablyOnAdminPage = true;
+        }
+        if($match[1] == 'ajax/')
+        {
+            $pageurl = 'ajax/'.$pageurl;
         }
         $pageurl .= '.php';
     }
@@ -659,7 +663,7 @@ function safeDie($DieMsg = '')
 {
     global $_DBLink, $_BenchTool;
 
-    preg_match('#(admin\/)?([^\/]{1,})\.php#si', $_SERVER['SCRIPT_NAME'], $match);
+    preg_match('#(admin\/|ajax\/)?([^\/]{1,})\.php#si', $_SERVER['SCRIPT_NAME'], $match);
     $pageurl = $match[2];
     if(empty($pageurl))
     {
@@ -670,6 +674,10 @@ function safeDie($DieMsg = '')
         if($match[1] == 'admin/')
         {
             $pageurl = 'admin/'.$pageurl;
+        }
+        if($match[1] == 'ajax/')
+        {
+            $pageurl = 'ajax/'.$pageurl;
         }
         $pageurl .= '.php';
     }
