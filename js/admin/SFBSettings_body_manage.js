@@ -2,28 +2,20 @@
 
 $(document).ready(function () {
     function checkAllStates () {
-        var CheckedCount = 0;
-        var CheckedCivil = 0;
-        var CheckedMilitary = 0;
         var UncheckedCount = 0;
         var UncheckedCivil = 0;
         var UncheckedMilitary = 0;
 
         MissionSelectors.each(function () {
             if ($(this).is(":checked")) {
-                CheckedCount += 1;
-                if ($(this).hasClass("civil")) {
-                    CheckedCivil += 1;
-                } else {
-                    CheckedMilitary += 1;
-                }
+                return;
+            }
+
+            UncheckedCount += 1;
+            if ($(this).hasClass("civil")) {
+                UncheckedCivil += 1;
             } else {
-                UncheckedCount += 1;
-                if ($(this).hasClass("civil")) {
-                    UncheckedCivil += 1;
-                } else {
-                    UncheckedMilitary += 1;
-                }
+                UncheckedMilitary += 1;
             }
         });
 
