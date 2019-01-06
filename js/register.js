@@ -1,4 +1,5 @@
-/* globals JSLang */
+/* globals JSLang, Recaptcha */
+/* exported hideMsgBox, regCallback */
 
 var $Elements = {MsgSpace: null, MsgBox: null};
 
