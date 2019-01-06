@@ -9,25 +9,24 @@ OGame-clone browser based game engine.
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Development guides](#development-guides)
-
 - [Credits](#credits)
 - [License](#license)
 
 ## Requirements
 
 - PHP
-    - >= 5.4
-    - < 7.0
+    - ``>= 5.4``
+    - ``< 7.0``
 - MySQL
-    - >= 5
+    - ``>= 5``
 - A webserver (eg. nginx)
 
 ### Development requirements
 
 - Composer
-    - >= 1.6
+    - ``>= 1.6``
 - Node.js
-    - >= 11
+    - ``>= 11``
 
 ## Installation
 
