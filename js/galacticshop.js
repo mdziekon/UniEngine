@@ -1,6 +1,8 @@
 /* globals OverrideFormTab, OverrideMarker */
 
 $(document).ready(function () {
+    var local_OverrideMarker = OverrideMarker;
+
     // Delete NoJS Warning
     $(".JSWarning").hide(0);
 
@@ -30,7 +32,7 @@ $(document).ready(function () {
     var InHashSelected = $("[id*=\"" + document.location.hash.replace("#", "") + "\"]");
     if (InHashSelected.length > 0) {
         var InHashSelectedID = InHashSelected.attr("id").split("_");
-        OverrideMarker = InHashSelectedID[0].replace("Mark", "");
+        local_OverrideMarker = InHashSelectedID[0].replace("Mark", "");
     }
 
     $("[class^=Cont]").hide(0);
@@ -52,7 +54,7 @@ $(document).ready(function () {
             document.location.hash = ThisID[1];
         });
 
-    $("[id^=\"Mark" + OverrideMarker + "\"]").click();
+    $("[id^=\"Mark" + local_OverrideMarker + "\"]").click();
 
     $(".freeItemUse").click(function () {
         document.location = "?use_freeid=" + $(this).attr("id");
