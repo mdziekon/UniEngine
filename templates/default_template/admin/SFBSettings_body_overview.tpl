@@ -2,8 +2,8 @@
 <script>
 var JSLang = {'SFB_Help_PostEndTime': '{SFB_Help_PostEndTime}', 'SFB_Help_EndTime': '{SFB_Help_EndTime}', 'SFB_Confirm_Cancel': '{SFB_Confirm_Cancel}'};
 </script>
-<script src="../js/admin/SFBSettings_body_overview.min.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href="../css/admin/SFBSettings_body_overview.min.css" />
+<script src="../dist/js/admin/SFBSettings_body_overview.cachebuster-1545956361123.min.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="../dist/css/admin/SFBSettings_body_overview.cachebuster-1546567692327.min.css" />
 <br/>
 <table style="width: 1050px;">
     <tbody class="{Insert_HideMsgBox}">

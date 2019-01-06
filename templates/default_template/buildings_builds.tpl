@@ -3,13 +3,13 @@
     border: 2px solid #000;
 }
 .tReqDiv {
-    float: left; 
+    float: left;
     margin-right: 2px;
     cursor: help;
 }
 .tReqImg {
-    width: 42px; 
-    height: 42px; 
+    width: 42px;
+    height: 42px;
     border: 1px solid #000;
 }
 .tReqBg {
@@ -25,14 +25,14 @@ $(document).ready(function()
 <br/>
 {BuildListScript}
 <table width="650">
-	{BuildList}
-	<tr>
-		<th>{bld_usedcells}</th>
-		<th>
-			<span class="lime">{planet_field_current}</span> / <span class="red">{planet_field_max}</span> [{bld_theyare} {field_libre} {bld_cellfree}]
-		</th>
+    {BuildList}
+    <tr>
+        <th>{bld_usedcells}</th>
+        <th>
+            <span class="lime">{planet_field_current}</span> / <span class="red">{planet_field_max}</span> [{bld_theyare} {field_libre} {bld_cellfree}]
+        </th>
         <th style="width: 100px;">&nbsp;</th>
-	</tr>
-	{BuildingsList}
+    </tr>
+    {BuildingsList}
 </table>
 <br/>

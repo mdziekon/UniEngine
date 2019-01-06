@@ -2,7 +2,7 @@
 var useQuickRes = {useQuickRes};
 var jsLang = {'fl_coordplanet': '{fl_coordplanet}', 'fl_coordmoon': '{fl_coordmoon}', 'fl_coorddebris': '{fl_coorddebris}'};
 </script>
-<script src="js/fleet3.min.js"></script>
+<script src="dist/js/fleet3.cachebuster-1545956361123.min.js"></script>
 <link rel="stylesheet" type="text/css" href="css/fleet3.min.css" />
 
 <br/>

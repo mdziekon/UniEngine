@@ -38,12 +38,12 @@ function()
           })
         }
     });
-    
+
     var SelectedCond = '';
     var TrueSubmit = false;
-    
+
     $('.hide').hide();
-    
+
     $('#conditions').change(function()
     {
         $('#conditions option:selected').each(function()
@@ -69,7 +69,7 @@ function()
     {
         $(this).change();
     });
-    
+
     $('#addFilter').click(function()
     {
         TrueSubmit = true;
@@ -84,14 +84,14 @@ function()
         $('[name="doWhat"]').val('check');
         $('#thisForm').submit();
     });
-    
+
     $('.clear').click(function()
     {
         if(confirm('{AreYouSure_Clear}')){
             $("#code").val('');
         }
     });
-    
+
     $('#thisForm').submit(function()
     {
         if(TrueSubmit === false){
@@ -106,7 +106,7 @@ function()
                     $('#code').insertAtCaret($('#'+SelectedCond).val());
                 }
             }
-            
+
             return false;
         }
     });
@@ -132,7 +132,7 @@ function()
                     <option value="userIsSender(xyz)" id="cond3">{Condition_3}</option>
                     <option value="userIsTarget(xyz)" id="cond4">{Condition_4}</option>
                     <option value="logIPCount(xyz)" id="cond5">{Condition_5}</option>
-					<option value="inPlace(xyz)" id="cond6">{Condition_6}</option>
+                    <option value="inPlace(xyz)" id="cond6">{Condition_6}</option>
                     <option value="AlertSenderIs(xyz)" id="cond7">{Condition_7}</option>
                 </select>
                 <span class="nl hide">
@@ -150,24 +150,24 @@ function()
                 <span class="cond1 cond2 cond3 cond4 cond5 hide">
                      <input type="text" size="20" class="giveVal"/> <input type="submit" value="{AddCondition}"/>
                 </span>
-				<span class="cond6 hide">
+                <span class="cond6 hide">
                     <select class="giveVal">
-						<option value="1">{CondSelector_6_1}</option>
-						<option value="2">{CondSelector_6_2}</option>
-						<option value="3">{CondSelector_6_3}</option>
-						<option value="4">{CondSelector_6_4}</option>
-					</select> 
-					<input type="submit" value="{AddCondition}"/>
+                        <option value="1">{CondSelector_6_1}</option>
+                        <option value="2">{CondSelector_6_2}</option>
+                        <option value="3">{CondSelector_6_3}</option>
+                        <option value="4">{CondSelector_6_4}</option>
+                    </select>
+                    <input type="submit" value="{AddCondition}"/>
                 </span>
-				<span class="cond7 hide">
+                <span class="cond7 hide">
                     <select class="giveVal">
-						<option value="1">{CondSelector_7_1}</option>
-						<option value="2">{CondSelector_7_2}</option>
-						<option value="3">{CondSelector_7_3}</option>
-						<option value="4">{CondSelector_7_4}</option>
-						<option value="5">{CondSelector_7_5}</option>
-					</select> 
-					<input type="submit" value="{AddCondition}"/>
+                        <option value="1">{CondSelector_7_1}</option>
+                        <option value="2">{CondSelector_7_2}</option>
+                        <option value="3">{CondSelector_7_3}</option>
+                        <option value="4">{CondSelector_7_4}</option>
+                        <option value="5">{CondSelector_7_5}</option>
+                    </select>
+                    <input type="submit" value="{AddCondition}"/>
                 </span>
             </th>
         </tr>

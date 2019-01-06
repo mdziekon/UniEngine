@@ -1,8 +1,8 @@
 <style>
 .darkEnergy {
-    background-image: url('{skinpath}images/darkenergy.gif'); 
-    background-repeat: no-repeat; 
-    background-position: 10px center;  
+    background-image: url('{skinpath}images/darkenergy.gif');
+    background-repeat: no-repeat;
+    background-position: 10px center;
     text-align: left;
     padding: 6px;
     padding-left: 60px !important;
@@ -61,12 +61,12 @@ $(document).ready(function()
             </tr>
             {ParsedOfficers}
             <tr>
-            	<th colspan="2">
-            		<center style="padding: 10px;">
-            		{Buy}<br/>
+                <th colspan="2">
+                    <center style="padding: 10px;">
+                    {Buy}<br/>
                     <a href="galacticshop.php?show=shop" style="color: orange;">{BuyTitle}</a>
-            		</center>
-            	</th>
+                    </center>
+                </th>
             </tr>
         </tbody>
     </table>

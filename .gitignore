@@ -1,0 +1,18 @@
+# Ignore data, log & temp directories
+action_logs/
+cache/
+tmp/
+
+# Ignore installation-related files
+install/lock
+
+# Ignore PHP-related files & directories
+vendor/
+
+# Files removed from further tracking
+# (based on https://stackoverflow.com/a/11366713/951007)
+config.php
+includes/constants.php
+
+# Ignore JavaScript / Node.js -related files & directories
+node_modules/

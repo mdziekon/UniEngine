@@ -17,7 +17,7 @@
 }
 .markHover {
     background-color: #455B87;
-    border-color: #526EA3; 
+    border-color: #526EA3;
 }
 .markSelect {
     background-color: #4E6797;
@@ -37,16 +37,15 @@
     font-weight: bold;
 }
 </style>
-<script src="scripts/jquery.textareaCounter.plugin.js" type="text/javascript"></script>
 <script>
 $(document).ready(function()
-{    
-    $('.collapsed').hide();   
+{
+    $('.collapsed').hide();
     $('[id^=sub_], [class^=rjr_]').hide();
-     
+
     $(".mark").hover(function()
     {
-        $(this).children().addClass('markHover'); 
+        $(this).children().addClass('markHover');
     }, function()
     {
         $(this).children().removeClass('markHover');
@@ -64,7 +63,7 @@ $(document).ready(function()
     })
     .tipTip({maxWidth: 'auto', content: '{AFP_CollExp}', defaultPosition: 'left', delay: 500, edgeOffset: 8})
     .children().addClass('pad5');
-    
+
     $('[name=opt]').click(function()
     {
         var ThisID = $(this).attr('id');
@@ -77,9 +76,29 @@ $(document).ready(function()
             $('.rjr_'+ThisIDOnly).hide();
             $('#subbr_'+ThisIDOnly).show();
         }
-    });    
-    $('[name=rjr]').textareaCount({'maxCharacterSize': 1000, 'displayFormat': '(#input/#max)'});
+    });
     $('[name=rjr]').mouseover();
+
+    var $RejectionMaxCount = 1000;
+
+    $('[name=rjr]').keydown(function()
+    {
+        var TextLength = $(this).val().length;
+        if(TextLength > $RejectionMaxCount)
+        {
+            $(this).val($(this).val().substr(0, $RejectionMaxCount));
+            TextLength = $RejectionMaxCount;
+        }
+        $(this).closest("form").find(".cntChars").html(TextLength);
+    }).keyup(function()
+    {
+        $(this).keydown();
+    }).change(function()
+    {
+        $(this).keydown();
+    });
+
+    $('[name=rjr]').keydown();
 });
 </script>
 <br/>
@@ -90,7 +109,7 @@ $(document).ready(function()
     <tr class="inv {HideInfoBox}">
         <td></td>
     </tr>
-            
+
     <tr>
         <td class="c" colspan="4">{ADM_ReqList_Title}<b style="float: right">({ADM_RequestsCount}: {RequestCount})</b></td>
     </tr>
@@ -101,7 +120,7 @@ $(document).ready(function()
         <th width="200px"><a href="?mode=admin&amp;edit=reqlist&amp;stype=3&amp;smode={sortRev}" {sortBySendDate}>{ADM_RL_SendDate}</a></th>
     </tr>
     {RequestRows}
-            
+
     <tr class="{HideNoRequests}">
         <th class="c pad5 red" colspan="4">{ADM_RL_NoRequests}</th>
     </tr>

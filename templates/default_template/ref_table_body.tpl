@@ -16,7 +16,7 @@
             <td class="c" colspan="3">{Table_Title}</td>
         </tr>
         <tr>
-        	<th colspan="3" class="b pad">
+            <th colspan="3" class="b pad">
                 {reftable_desc}
                 <br /><br />
                 {your_referral_link_is}
@@ -28,7 +28,7 @@
         </tr>
         <tr><td style="visibility: hidden; font-size: 5px;">&nbsp;</td></tr>
         <tr>
-        	<td colspan="3" class="c">{reftable}</td>
+            <td colspan="3" class="c">{reftable}</td>
         </tr>
         <tr>
             <th class="c" style="width: 32%;">{Who}</th>

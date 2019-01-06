@@ -1,0 +1,11 @@
+# Third-party directories
+**/node_modules
+**/scripts
+**/vendor
+**/libs
+
+# Global ignore
+**/*.min.js
+
+# File-specific ignores
+gulpfile.js

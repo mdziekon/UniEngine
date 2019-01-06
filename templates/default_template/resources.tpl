@@ -21,25 +21,25 @@ $(document).ready(function()
     <table width="750">
         <tbody>
             <tr>
-            	<td class="c" colspan="6">{Production_of_resources_in_the_planet}</td>
+                <td class="c" colspan="6">{Production_of_resources_in_the_planet}</td>
             </tr>
             <tr>
                 <th height="22" colspan="6" style="padding: 5px;">{Production_level_t}: <b class="{production_level_barcolor}">{production_level}</b><br /><b style="color: #87CEEB;">{Res_GeologistBonus}: +{GeologistBonusPercent}%</b></th>
             </tr>
             <tr>
-            	<th height="22">&nbsp;</th>
-            	<th width="80">{Metal}</th>
-            	<th width="80">{Crystal}</th>
-            	<th width="80">{Deuterium}</th>
-            	<th width="80">{Energy}</th>
+                <th height="22">&nbsp;</th>
+                <th width="80">{Metal}</th>
+                <th width="80">{Crystal}</th>
+                <th width="80">{Deuterium}</th>
+                <th width="80">{Energy}</th>
                 <th width="80">{MineUsage}</th>
             </tr>
             <tr>
-            	<th height="22">{Basic_income}</th>
-            	<th><b>{metal_basic_income}</b></th>
-            	<th><b>{crystal_basic_income}</b></th>
-            	<th><b>{deuterium_basic_income}</b></th>
-            	<th><b>{energy_basic_income}</b></th>
+                <th height="22">{Basic_income}</th>
+                <th><b>{metal_basic_income}</b></th>
+                <th><b>{crystal_basic_income}</b></th>
+                <th><b>{deuterium_basic_income}</b></th>
+                <th><b>{energy_basic_income}</b></th>
                 <th><b>-</b></th>
             </tr>
             <tr>
@@ -50,19 +50,19 @@ $(document).ready(function()
                 <th colspan="6" style="height: 5px; font-size: 1%;">&nbsp;</th>
             </tr>
             <tr>
-            	<th height="22">{Stores_capacity}</th>
-            	<th>{metal_max}</th>
-            	<th>{crystal_max}</th>
-            	<th>{deuterium_max}</th>
-            	<th><b>-</b></th>
-            	<th><b>-</b></th>
+                <th height="22">{Stores_capacity}</th>
+                <th>{metal_max}</th>
+                <th>{crystal_max}</th>
+                <th>{deuterium_max}</th>
+                <th><b>-</b></th>
+                <th><b>-</b></th>
             </tr>
             <tr>
-            	<th height="22">{Total}:</th>
-            	<th><b>{metal_total}</b></th>
-            	<th><b>{crystal_total}</b></th>
-            	<th><b>{deuterium_total}</b></th>
-            	<th><b>{energy_total}</b></th>
+                <th height="22">{Total}:</th>
+                <th><b>{metal_total}</b></th>
+                <th><b>{crystal_total}</b></th>
+                <th><b>{deuterium_total}</b></th>
+                <th><b>{energy_total}</b></th>
                 <th>
                     <select style="font-weight: bold; width: 60px;" class="TotalUsage">
                         <option value="-">-</option>
@@ -77,7 +77,7 @@ $(document).ready(function()
                         <option value="20">20%</option>
                         <option value="10">10%</option>
                         <option value="0">0%</option>
-            		</select>
+                    </select>
                 </th>
             </tr>
             <tr>
@@ -94,27 +94,27 @@ $(document).ready(function()
 <table width="750">
     <tbody>
         <tr>
-        	<td class="c" colspan="4">{Widespread_production}</td>
+            <td class="c" colspan="4">{Widespread_production}</td>
         </tr><tr>
-        	<th>&nbsp;</th>
-        	<th>{Daily}</th>
-        	<th>{Weekly}</th>
-        	<th>{Monthly}</th>
+            <th>&nbsp;</th>
+            <th>{Daily}</th>
+            <th>{Weekly}</th>
+            <th>{Monthly}</th>
         </tr><tr>
-        	<th>{Metal}</th>
-        	<th>{daily_metal}</th>
-        	<th>{weekly_metal}</th>
-        	<th>{monthly_metal}</th>
+            <th>{Metal}</th>
+            <th>{daily_metal}</th>
+            <th>{weekly_metal}</th>
+            <th>{monthly_metal}</th>
         </tr><tr>
-        	<th>{Crystal}</th>
-        	<th>{daily_crystal}</th>
-        	<th>{weekly_crystal}</th>
-        	<th>{monthly_crystal}</th>
+            <th>{Crystal}</th>
+            <th>{daily_crystal}</th>
+            <th>{weekly_crystal}</th>
+            <th>{monthly_crystal}</th>
         </tr><tr>
-        	<th>{Deuterium}</th>
-        	<th>{daily_deuterium}</th>
-        	<th>{weekly_deuterium}</th>
-        	<th>{monthly_deuterium}</th>
+            <th>{Deuterium}</th>
+            <th>{daily_deuterium}</th>
+            <th>{weekly_deuterium}</th>
+            <th>{monthly_deuterium}</th>
         </tr>
     </tbody>
 </table>
@@ -122,28 +122,28 @@ $(document).ready(function()
 <table width="750">
     <tbody>
         <tr>
-        	<td class="c" colspan="4">{NeedenTransporters} {planet_type_res} {nazwa}</td>
+            <td class="c" colspan="4">{NeedenTransporters} {planet_type_res} {nazwa}</td>
         </tr>
         <tr>
-        	<th>&nbsp;</th>
-        	<th>{Needen}</th>
-        	<th>{YouHave}</th>
-        	<th>{Missing}</th>
+            <th>&nbsp;</th>
+            <th>{Needen}</th>
+            <th>{YouHave}</th>
+            <th>{Missing}</th>
         </tr><tr>
-        	<th>{small_cargo_name}</th>
-        	<th>{trans_s}</th>
-        	<th>{have_s}</th>
-        	<th>{missing_s}</th>
+            <th>{small_cargo_name}</th>
+            <th>{trans_s}</th>
+            <th>{have_s}</th>
+            <th>{missing_s}</th>
         </tr><tr>
-        	<th>{big_cargo_name}</th>
-        	<th>{trans_b}</th>
-        	<th>{have_b}</th>
-        	<th>{missing_b}</th>
+            <th>{big_cargo_name}</th>
+            <th>{trans_b}</th>
+            <th>{have_b}</th>
+            <th>{missing_b}</th>
         </tr><tr>
-        	<th>{mega_cargo_name}</th>
-        	<th>{trans_m}</th>
-        	<th>{have_m}</th>
-        	<th>{missing_m}</th>
+            <th>{mega_cargo_name}</th>
+            <th>{trans_m}</th>
+            <th>{have_m}</th>
+            <th>{missing_m}</th>
         </tr>
     </tbody>
 </table>
@@ -151,37 +151,37 @@ $(document).ready(function()
 <table width="750">
     <tbody>
         <tr>
-        	<td class="c" colspan="3">{Storage_state}</td>
+            <td class="c" colspan="3">{Storage_state}</td>
         </tr><tr>
-        	<th>{Metal}</th>
-        	<th>{metal_storage}</th>
-        	<th width="250">
-        		<div style="border: 1px solid rgb(153, 153, 255); width: 250px;">
-        		<div id="AlmMBar" style="background-color: {metal_storage_barcolor}; width: {metal_storage_bar}px;">
-        		&nbsp;
-        		</div>
-        		</div>
-        	</th>
+            <th>{Metal}</th>
+            <th>{metal_storage}</th>
+            <th width="250">
+                <div style="border: 1px solid rgb(153, 153, 255); width: 250px;">
+                <div id="AlmMBar" style="background-color: {metal_storage_barcolor}; width: {metal_storage_bar}px;">
+                &nbsp;
+                </div>
+                </div>
+            </th>
         </tr><tr>
-        	<th>{Crystal}</th>
-        	<th>{crystal_storage}</th>
-        	<th width="250">
-        		<div style="border: 1px solid rgb(153, 153, 255); width: 250px;">
-        		<div id="AlmCBar" style="background-color: {crystal_storage_barcolor}; width: {crystal_storage_bar}px;">
-        		&nbsp;
-        		</div>
-        		</div>
-        	</th>
+            <th>{Crystal}</th>
+            <th>{crystal_storage}</th>
+            <th width="250">
+                <div style="border: 1px solid rgb(153, 153, 255); width: 250px;">
+                <div id="AlmCBar" style="background-color: {crystal_storage_barcolor}; width: {crystal_storage_bar}px;">
+                &nbsp;
+                </div>
+                </div>
+            </th>
         </tr><tr>
-        	<th>{Deuterium}</th>
-        	<th>{deuterium_storage}</th>
-        	<th width="250">
-        		<div style="border: 1px solid rgb(153, 153, 255); width: 250px;">
-        		<div id="AlmDBar" style="background-color: {deuterium_storage_barcolor}; width: {deuterium_storage_bar}px;">
-        		&nbsp;
-        		</div>
-        		</div>
-        	</th>
+            <th>{Deuterium}</th>
+            <th>{deuterium_storage}</th>
+            <th width="250">
+                <div style="border: 1px solid rgb(153, 153, 255); width: 250px;">
+                <div id="AlmDBar" style="background-color: {deuterium_storage_barcolor}; width: {deuterium_storage_bar}px;">
+                &nbsp;
+                </div>
+                </div>
+            </th>
         </tr>
     </tbody>
 </table>

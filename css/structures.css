@@ -1,416 +1,416 @@
 .tReqDiv {
-	float: left; 
-	margin-right: 2px;
-	cursor: help;
+    float: left;
+    margin-right: 2px;
+    cursor: help;
 }
 .tReqImg {
-	width: 42px; 
-	height: 42px; 
-	border: 1px solid #000;
+    width: 42px;
+    height: 42px;
+    border: 1px solid #000;
 }
 .tReqBg {
-	background: #000;
+    background: #000;
 }
 .buildImg {
-	border: 2px solid #000;
+    border: 2px solid #000;
 }
 /* Structure Selectors */
 .ssDiv {
-	margin: 0 2px;
-	cursor: pointer;
-	width: 74px;
-	position: relative;
-	display: inline-block;
+    margin: 0 2px;
+    cursor: pointer;
+    width: 74px;
+    position: relative;
+    display: inline-block;
 }
 .ssImg {
-	width: 72px; 
-	height: 72px; 
-	border: 1px solid #000;
+    width: 72px;
+    height: 72px;
+    border: 1px solid #000;
 }
 .ssBg {
-	background: #000;
-	position: absolute;
-	bottom: 0px;
-	width: 72px;
-	opacity: 0.6;
-	z-index: 2;
-	bottom: 1px;
-	left: 1px;
+    background: #000;
+    position: absolute;
+    bottom: 0px;
+    width: 72px;
+    opacity: 0.6;
+    z-index: 2;
+    bottom: 1px;
+    left: 1px;
 }
 .ssBg.ship {
-	bottom: 16px;
+    bottom: 16px;
 }
 .ssLvl {
-	position: absolute;
-	width: 95%;
-	text-align: right;
-	font-size: 10px;
-	color: #E6E6E6;
-	z-index: 2;
-	bottom: 1px;
+    position: absolute;
+    width: 95%;
+    text-align: right;
+    font-size: 10px;
+    color: #E6E6E6;
+    z-index: 2;
+    bottom: 1px;
 }
 .ssLvl.count {
-	font-size: 10px;
-	bottom: 17px;
+    font-size: 10px;
+    bottom: 17px;
 }
 .ssLvl.count.bignum {
-	font-size: 8px;
-	bottom: 18px;
+    font-size: 8px;
+    bottom: 18px;
 }
 .ssInput {
-	width: 58px;
-	height: 16px;
-	position: relative;
-	left: -8px;
-	font-size: 8px;
+    width: 58px;
+    height: 16px;
+    position: relative;
+    left: -8px;
+    font-size: 8px;
 }
 .ssLvlMod {
-	text-align: left;
-	padding-left: 4px;
+    text-align: left;
+    padding-left: 4px;
 }
 .ssDis {
-	position: absolute;
-	z-index: 1;
-	top: 0px;
-	left: 0px;
+    position: absolute;
+    z-index: 1;
+    top: 0px;
+    left: 0px;
 }
 .dPart {
-	opacity: 0.5;
+    opacity: 0.5;
 }
 /* - Mouse States - */
 .ssBg.ssHover {
-	background-color: #4D4D4D;
+    background-color: #4D4D4D;
 }
 .ssLvl.ssHover {
-	color: white;
+    color: white;
 }
 img.ssHover {
-	border-color: #666666;
+    border-color: #666666;
 }
 .ssBg.ssSelect {
-	background-color: #999999;
-	opacity: 0.45;
+    background-color: #999999;
+    opacity: 0.45;
 }
 .ssLvl.ssSelect {
-	color: white;
+    color: white;
 }
 img.ssSelect {
-	border-color: #999999;
+    border-color: #999999;
 }
 /* --- */
 .brRow {
-	height: 4px;
+    height: 4px;
 }
 /* Queue */
 .premblock {
-	color: red;
+    color: red;
 }
 .queueinv {
-	font-size: 0px;
-	visibility: hidden;
+    font-size: 0px;
+    visibility: hidden;
 }
 .queueinv > td {
-	padding: 0px;
+    padding: 0px;
 }
 /* Info Box */
 .infoImg:not(.BigImg):not(.MediumImg), .infoDes, .infoDet:not(.detWarn) {
-	vertical-align: top;
+    vertical-align: top;
 }
 .infoDes.BigImg, .infoDes.MediumImg {
-	vertical-align: middle;
+    vertical-align: middle;
 }
 
 #plInfoName {
-	font-size: 13px;
-	text-shadow: 2px 2px 2px black;
+    font-size: 13px;
+    text-shadow: 2px 2px 2px black;
 }
 #plInfoDet, .infoDesName, .infoRight > * {
-	text-shadow: 1px 1px 2px black;
+    text-shadow: 1px 1px 2px black;
 }
 .plInfo_Label {
-	display: inline-block;
-	width: 200px;
+    display: inline-block;
+    width: 200px;
 }
 
 td.infoImg {
-	width: 130px;
-	height: 125px;
+    width: 130px;
+    height: 125px;
 }
 td.infoImg.BigImg {
-	width: 210px;
-	height: 205px;
+    width: 210px;
+    height: 205px;
 }
 td.infoImg.shipImg {
-	width: 90px;
-	height: 85px;
+    width: 90px;
+    height: 85px;
 }
 img.infoImg {
-	width: 120px;
-	height: 120px;
-	border: 2px solid black;
+    width: 120px;
+    height: 120px;
+    border: 2px solid black;
 }
 img.infoImg.BigImg {
-	width: 200px;
-	height: 200px;
-	border: 2px solid black;
+    width: 200px;
+    height: 200px;
+    border: 2px solid black;
 }
 img.infoImg.shipImg {
-	width: 80px;
-	height: 80px;
-	border: 2px solid black;
+    width: 80px;
+    height: 80px;
+    border: 2px solid black;
 }
 .infoDes {
-	text-align: left;
+    text-align: left;
 }
 .infoDesc {
-	font-size: 10px;
+    font-size: 10px;
 }
 .infoAction {
-	width: 160px;
+    width: 160px;
 }
 .infoDet {
-	padding-right: 4px;
-	padding-top: 3px;
-	border-top: 1px dashed #415680;
+    padding-right: 4px;
+    padding-top: 3px;
+    border-top: 1px dashed #415680;
 }
 .infoLeft {
-	float: left;
-	width: 66%;
-	margin-left: 2px;
-	text-align: left;
+    float: left;
+    width: 66%;
+    margin-left: 2px;
+    text-align: left;
 }
 .infoRight {
-	float: right;
-	width: 32%;
-	text-align: left;
-	border-left: 1px dashed #415680;
-	padding-left: 5px;
-	height: 100%;
+    float: right;
+    width: 32%;
+    text-align: left;
+    border-left: 1px dashed #415680;
+    padding-left: 5px;
+    height: 100%;
 }
 .infoRLab {
-	float: left;
+    float: left;
 }
 .infoRVal {
-	float: right;
+    float: right;
 }
 div.infoResReq, div.infoTechReq {
-	margin-top: 5px;
+    margin-top: 5px;
 }
 .infoResDiv {
-	display: inline-block;
-	margin-right: 8px;
-	text-align: center;
+    display: inline-block;
+    margin-right: 8px;
+    text-align: center;
 }
 .infoResImg {
-	margin-bottom: 3px;
+    margin-bottom: 3px;
 }
 .reqSelector {
-	cursor: pointer;
+    cursor: pointer;
 }
 .reqSelected {
-	color: orange;
+    color: orange;
 }
 .hide {
-	display: none !important;
+    display: none !important;
 }
 /* Info Buttons */
 .infoButton {
-	margin: 5px 0px;
-	display: inline-block;
-	width: 150px;
-	height: 50px;
-	position: relative;
+    margin: 5px 0px;
+    display: inline-block;
+    width: 150px;
+    height: 50px;
+    position: relative;
 }
 .infoButtonText {
-	display: inline-block;
-	margin-top: 7px;
-	width: 100%;
-	margin-left: -25%;
-	font-size: 12px;
-	text-shadow: 1px 1px 1px black;
-	color: white;
+    display: inline-block;
+    margin-top: 7px;
+    width: 100%;
+    margin-left: -25%;
+    font-size: 12px;
+    text-shadow: 1px 1px 1px black;
+    color: white;
 }
 .ssDo {
-	position: absolute;
-	top: 0.5px;
-	left: 0.5px;
-	width: 22px;
-	height: 15px;
-	z-index: 2;
+    position: absolute;
+    top: 0.5px;
+    left: 0.5px;
+    width: 22px;
+    height: 15px;
+    z-index: 2;
 }
 .maxDo {
-	background-image: url('../images/structures_color_max.png');
-	background-repeat: no-repeat;
-	position: absolute;
-	bottom: 0px;
-	right: 0px;
-	width: 16px;
-	height: 16px;
+    background-image: url('../../images/structures_color_max.png');
+    background-repeat: no-repeat;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 16px;
+    height: 16px;
 }
 .maxDo:hover {
-	background-position: 0 -16px;
+    background-position: 0 -16px;
 }
 .buildDo_Green, .buildDo_Orange, .buildDo_Red, .construct_Green {
-	background-image: url('../images/structures_color_big.png');
-	background-repeat: no-repeat;
+    background-image: url('../../images/structures_color_big.png');
+    background-repeat: no-repeat;
 }
 .buildDo_Green {
-	background-position: 0 0;
+    background-position: 0 0;
 }
 .buildDo_Green:hover {
-	background-position: 0 -50px;
+    background-position: 0 -50px;
 }
 .buildDo_Orange {
-	background-position: 0 -100px;
+    background-position: 0 -100px;
 }
 .buildDo_Orange:hover {
-	background-position: 0 -150px;
+    background-position: 0 -150px;
 }
 .buildDo_Red {
-	background-position: 0 -200px;
+    background-position: 0 -200px;
 }
 .buildDo_Red:hover {
-	background-position: 0 -250px;
+    background-position: 0 -250px;
 }
 .construct_Green {
-	background-position: 0 -300px;
+    background-position: 0 -300px;
 }
 .construct_Green:hover {
-	background-position: 0 -350px;
+    background-position: 0 -350px;
 }
 .buildDo_Gray, .destroyDo_Gray, .construct_Gray {
-	background-image: url('../images/structures_gray_big.png');
-	background-repeat: no-repeat;
-	cursor: default;
+    background-image: url('../../images/structures_gray_big.png');
+    background-repeat: no-repeat;
+    cursor: default;
 }
 .buildDo_Gray {
-	background-position: 0 0;
+    background-position: 0 0;
 }
 .buildDo_Gray:hover {
-	background-position: 0 -50px;
+    background-position: 0 -50px;
 }
 .destroyDo_Gray {
-	background-position: 0 -100px;
+    background-position: 0 -100px;
 }
 .destroyDo_Gray:hover {
-	background-position: 0 -150px;
+    background-position: 0 -150px;
 }
 .construct_Gray {
-	background-position: 0 -200px;
+    background-position: 0 -200px;
 }
 .construct_Gray:hover {
-	background-position: 0 -250px;
+    background-position: 0 -250px;
 }
 .ssDo.buildDo_Green, .ssDo.buildDo_Orange {
-	background-image: url('../images/structures_color_small.png');
-	background-repeat: no-repeat;
+    background-image: url('../../images/structures_color_small.png');
+    background-repeat: no-repeat;
 }
 .ssDo.buildDo_Green {
-	background-position: 0 0;
+    background-position: 0 0;
 }
 .ssDo.buildDo_Green:hover {
-	background-position: 0 -15px;
+    background-position: 0 -15px;
 }
 .ssDo.buildDo_Orange {
-	background-position: 0 -30px;
+    background-position: 0 -30px;
 }
 .ssDo.buildDo_Orange:hover {
-	background-position: 0 -45px;
+    background-position: 0 -45px;
 }
 .buildDo_Gray.destButton {
-	cursor: help;
+    cursor: help;
 }
 .destCost, .destTime {
-	margin-bottom: 3px;
-	width: 100%;
-	display: inline-block;
-	color: #A6A6A6;
-	text-align: center;
+    margin-bottom: 3px;
+    width: 100%;
+    display: inline-block;
+    color: #A6A6A6;
+    text-align: center;
 }
 .destTime {
-	margin-top: 3px;
+    margin-top: 3px;
 }
 .destLab {
-	float: left;
-	width: 65px;
-	display: inline-block;
+    float: left;
+    width: 65px;
+    display: inline-block;
 }
 .destVal {
-	float: right;
-	text-align: right;
-	display: inline-block;
+    float: right;
+    text-align: right;
+    display: inline-block;
 }
 .destTimeVal {
-	text-align: center;
-	display: inline-block;
-	width: 100%;
+    text-align: center;
+    display: inline-block;
+    width: 100%;
 }
 /* Misc */
 .pad1 {
-	padding: 1.5px;
+    padding: 1.5px;
 }
 .w100p {
-	width: 100%;
+    width: 100%;
 }
 .w50p {
-	width: 50%;
+    width: 50%;
 }
 .w20x {
-	width: 20px;
+    width: 20px;
 }
 .w50x {
-	width: 50px;
+    width: 50px;
 }
 .w900x {
-	width: 900px;
+    width: 900px;
 }
 .w870x {
-	width: 870px;
+    width: 870px;
 }
 .w290x {
-	width: 290px;
+    width: 290px;
 }
 .w260x {
-	width: 260px;
+    width: 260px;
 }
 .h100p {
-	height: 100%;
+    height: 100%;
 }
 .mb10 {
-	margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 .m7l {
-	margin-left: 7px;
+    margin-left: 7px;
 }
 .m7r {
-	margin-right: 7px;
+    margin-right: 7px;
 }
 .inv {
-	visibility: hidden;
+    visibility: hidden;
 }
 .endDate {
-	cursor: help;
+    cursor: help;
 }
 .text_left {
-	text-align: left;
+    text-align: left;
 }
 .resCounter {
-	margin-top: 4px;
+    margin-top: 4px;
 }
 .infoC {
-	display: inline-block;
-	width: 100%;
+    display: inline-block;
+    width: 100%;
 }
 .tabHover {
-	background-color: #455B87;
-	border-color: #526EA3;
-	cursor: pointer;
+    background-color: #455B87;
+    border-color: #526EA3;
+    cursor: pointer;
 }
 .tabSelect {
-	background-color: #4E6797;
-	border-color: #607BAF;
+    background-color: #4E6797;
+    border-color: #607BAF;
 }
 .linkImg {
-	vertical-align: middle;
-	padding-right: 3px;
+    vertical-align: middle;
+    padding-right: 3px;
 }

@@ -2,23 +2,23 @@
 
 /**
  * Combat Engine v.2
- * 
- * @author		mdziekon
- * @version		2.2.2
- * @build		15
- * @status		Unused, incompatible with UniEngine
- * @copyright	2010 by mdziekon [for UniEngine]
- * 
+ *
+ * @author      mdziekon
+ * @version     2.2.2
+ * @build       15
+ * @status      Unused, incompatible with UniEngine
+ * @copyright   2010 by mdziekon [for UniEngine]
+ *
  */
 
 function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFire = true){
     global $_Vars_Prices, $_Vars_CombatData;
-    
+
     $Rounds             = array();
     $AtkLoseCount       = array();
     $DefLoseCount       = array();
     $PlanetDefSysLost   = array();
-        
+
     if(!empty($Defender)){
         $DefendersCount = count($Defender);
         //$DefenderShips = array();
@@ -41,7 +41,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
         $DefendersCount = 1;
         $DefenderShips = false;
     }
-    
+
     if(!empty($Attacker)){
         $AttackersCount = count($Attacker);
         //$AttackerShips = array();
@@ -63,7 +63,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
     } else {
         return array('result' => false, 'error' => 'NO_ATTACKER');
     }
-    
+
     $RoundsLimit = BATTLE_MAX_ROUNDS + 1;
     for($i = 1; $i <= $RoundsLimit; $i += 1){
         $AttackerForce              = 0;
@@ -84,18 +84,18 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
         $DoNotCalcExplosion         = array();
         $AtkShipDestroyedInExplosion= false;
         $DefShipDestroyedInExplosion= false;
-        
+
         $Rounds[$i]['atk']['ships'] = $AttackerShips;
         $Rounds[$i]['def']['ships'] = $DefenderShips;
-        
+
         if($i > BATTLE_MAX_ROUNDS){
             break;
         }
-        
+
         if(empty($AttackerShips) OR empty($DefenderShips)){
             break;
         }
-        
+
         // Calculate Attacker(s) Force
         // --------------------------------------------
         // 1. Get Target
@@ -103,8 +103,8 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
         $AttackerTarget         = array_rand($DefenderShipList[$AttackerTargetUser]);
         $AttackerTargetIndex    = $AttackerTarget;
         $AttackerTarget         = $DefenderShipList[$AttackerTargetUser][$AttackerTarget];
-        
-        // 2. Calculate Force 
+
+        // 2. Calculate Force
         foreach($AttackerShips as $User => $Ships){
             foreach($Ships as $ID => $Count){
                 $AttackerForce += $Count * $_Vars_CombatData[$ID]['attack'] * $AttackerTech[$User]['tech_weapons'];
@@ -113,17 +113,17 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
         }
         // --------------------------------------------
         // End of Calculations for Attacker(s)
-        
-                
-        // Calculate Defender(s) Force 
+
+
+        // Calculate Defender(s) Force
         // --------------------------------------------
-        // 1. Get Target       
+        // 1. Get Target
         $DefenderTargetUser     = array_rand($AttackerUsers);
         $DefenderTarget         = array_rand($AttackerShipList[$DefenderTargetUser]);
         $DefenderTargetIndex    = $DefenderTarget;
         $DefenderTarget         = $AttackerShipList[$DefenderTargetUser][$DefenderTarget];
-               
-        // 2. Calculate Force      
+
+        // 2. Calculate Force
         foreach($DefenderShips as $User => $Ships){
             foreach($Ships as $ID => $Count){
                 $DefenderForce += $Count * $_Vars_CombatData[$ID]['attack'] * $DefenderTech[$User]['tech_weapons'];
@@ -132,7 +132,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
         }
         // --------------------------------------------
         // End of Calculations for Defender(s)
-        
+
         // --------------------------------------------
         // Calculate Destruction - Now firing Attacker
         $Rounds[$i]['atk']['force'] = $AttackerForce;
@@ -141,7 +141,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
             $ClearForce = false;
             $Destroyed = 0;
             $AttackerDestroyedTarget = false;
-            
+
             if($DefenderShield < 0){
                 $DefenderShield = $DefenderShips[$AttackerTargetUser][$AttackerTarget] * $_Vars_CombatData[$AttackerTarget]['shield'] * $DefenderTech[$AttackerTargetUser]['tech_shielding'];
                 if($DefenderShield > $AttackerForce){
@@ -153,7 +153,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 $DefenderShield -= $Rounds[$i]['def']['shield'];
             }
             if($AttackerForce <= 0){
-                break;       
+                break;
             }
             $HowManyCouldDestroy = $AttackerForce / ($ShipsHullValues[$AttackerTarget] * $DefenderTech[$AttackerTargetUser]['tech_armour']);
 
@@ -164,11 +164,11 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
             } else {
                 $HowManyCouldDestroyReal = floor($HowManyCouldDestroy);
                 $ChanceToBlow = $HowManyCouldDestroy - $HowManyCouldDestroyReal;
-                
+
                 if($ChanceToBlow < 1){
                     $ClearForce = true;
                 }
-                
+
                 if($HowManyCouldDestroy < 1 AND $SaveHullDmg['def'][$AttackerTargetUser][$AttackerTarget] > 0){
                     $ChanceToBlow += $SaveHullDmg['def'][$AttackerTargetUser][$AttackerTarget];
                 }
@@ -222,8 +222,8 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 }
             }
         }
-        
-        
+
+
         // Calculate Rapid Fire
         if($UseRapidFire){
             if($CalcAtkRapidFire){
@@ -244,13 +244,13 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                         }
                     }
                 }
-                
+
                 if($AttackerForce > 0){
                     $Destroyed = 0;
                     $AttackerDestroyedTarget = false;
-                    
+
                     $DefenderShipsLeft = $DefenderShips[$AttackerTargetUser][$AttackerTarget] - $DefenderLost[$AttackerTargetUser][$AttackerTarget];
-                    
+
                     if($DefenderShield < 0){
                         $DefenderShield = $DefenderShipsLeft * $_Vars_CombatData[$AttackerTarget]['shield'] * $DefenderTech[$AttackerTargetUser]['tech_shielding'];
                         if($DefenderShield > $AttackerForce){
@@ -267,12 +267,12 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                         }
                         $AttackerForce -= $DefenderShield;
                     }
-                    
+
                     $HowManyCouldDestroy = $AttackerForce / ($ShipsHullValues[$AttackerTarget] * $DefenderTech[$AttackerTargetUser]['tech_armour']);
                     if($HowManyCouldDestroy > $RapidFireMaxShips){
                         $HowManyCouldDestroy = $RapidFireMaxShips;
                     }
-                        
+
                     if($HowManyCouldDestroy >= $DefenderShipsLeft){
                         $Destroyed = $DefenderShipsLeft;
                         $SaveHullDmg['def'][$AttackerTargetUser][$AttackerTarget] = 0;
@@ -317,8 +317,8 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 }
             }
         }
-        
-        
+
+
         // Calculate ships Explosion (Def Ships)
         if(!empty($SaveHullDmg['def'])){
             foreach($SaveHullDmg['def'] as $User => $Ships){
@@ -332,7 +332,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                                 if($User == 0 AND $Ship > 400 AND $Ship < 500){
                                     $PlanetDefSysLost[$Ship] += 1;
                                 }
-                                
+
                                 if($DefenderLost[$User][$Ship] >= $DefenderShips[$User][$Ship]){
                                     unset($DefenderShipList[$User][$Ship]);
                                     if(empty($DefenderShipList[$User])){
@@ -346,21 +346,21 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 }
             }
         }
-        
-        
+
+
         // End of Calculations
         // --------------------------------------------
-        
+
         // --------------------------------------------
         // Calculate Destruction - Now firing Defender
-        
+
         $Rounds[$i]['def']['force'] = $DefenderForce;
         $Rounds[$i]['def']['count'] = $DefenderCount;
         while($DefenderForce > 0){
             $ClearForce = false;
             $Destroyed = 0;
             $DefenderDestroyedTarget = false;
-            
+
             if($AttackerShield < 0){
                 $AttackerShield = $AttackerShips[$DefenderTargetUser][$DefenderTarget] * $_Vars_CombatData[$DefenderTarget]['shield'] * $DefenderTech[$DefenderTargetUser]['tech_shielding'];
                 if($AttackerShield > $DefenderForce){
@@ -372,7 +372,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 $AttackerShield -= $Rounds[$i]['atk']['shield'];
             }
             if($DefenderForce <= 0){
-                break;       
+                break;
             }
             $HowManyCouldDestroy = $DefenderForce / ($ShipsHullValues[$DefenderTarget] * $AttackerTech[$DefenderTargetUser]['tech_armour']);
 
@@ -383,11 +383,11 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
             } else {
                 $HowManyCouldDestroyReal = floor($HowManyCouldDestroy);
                 $ChanceToBlow = $HowManyCouldDestroy - $HowManyCouldDestroyReal;
-                
+
                 if($ChanceToBlow < 1){
                     $ClearForce = true;
                 }
-                
+
                 if($HowManyCouldDestroy < 1 AND $SaveHullDmg['atk'][$DefenderTargetUser][$DefenderTarget] > 0){
                     $ChanceToBlow += $SaveHullDmg['atk'][$DefenderTargetUser][$DefenderTarget];
                 }
@@ -438,9 +438,9 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 }
             }
         }
-        
-        
-        // Calculate Rapid Fire     
+
+
+        // Calculate Rapid Fire
         if($UseRapidFire){
             if($CalcDefRapidFire){
                 $RapidFireMaxShips = 0;
@@ -459,14 +459,14 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                             }
                         }
                     }
-                }           
-                
+                }
+
                 if($DefenderForce > 0){
                     $Destroyed = 0;
                     $DefenderDestroyedTarget = false;
-                    
+
                     $AttackerShipsLeft = $AttackerShips[$DefenderTargetUser][$DefenderTarget] - $AttackerLost[$DefenderTargetUser][$DefenderTarget];
-                    
+
                     if($AttackerShield < 0){
                         $AttackerShield = $AttackerShipsLeft * $_Vars_CombatData[$DefenderTarget]['shield'] * $AttackerTech[$DefenderTargetUser]['tech_shielding'];
                         if($AttackerShield > $DefenderForce){
@@ -483,12 +483,12 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                         }
                         $DefenderForce -= $AttackerShield;
                     }
-                    
+
                     $HowManyCouldDestroy = $DefenderForce / ($ShipsHullValues[$DefenderTarget] * $AttackerTech[$DefenderTargetUser]['tech_armour']);
                     if($HowManyCouldDestroy > $RapidFireMaxShips){
                         $HowManyCouldDestroy = $RapidFireMaxShips;
                     }
-                        
+
                     if($HowManyCouldDestroy >= $AttackerShipsLeft){
                         $Destroyed = $AttackerShipsLeft;
                         $SaveHullDmg['def'][$DefenderTargetUser][$DefenderTarget] = 0;
@@ -530,8 +530,8 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 }
             }
         }
-        
-        // Calculate ships Explosion (Atk Ships)        
+
+        // Calculate ships Explosion (Atk Ships)
         if(!empty($SaveHullDmg['atk'])){
             foreach($SaveHullDmg['atk'] as $User => $Ships){
                 foreach($Ships as $Ship => $ExplosionChance){
@@ -541,7 +541,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                                 $SaveHullDmg['atk'][$User][$Ship] = 0;
                                 $AttackerLost[$User][$Ship] += 1;
                                 $AtkLoseCount[$Ship]        += 1;
-                                
+
                                 if($AttackerLost[$User][$Ship] >= $AttackerShips[$User][$Ship]){
                                     unset($AttackerShipList[$User][$Ship]);
                                     if(empty($AttackerShipList[$User])){
@@ -555,10 +555,10 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 }
             }
         }
-        
+
         // End of Calculations
         // --------------------------------------------
-        
+
         if(!empty($AttackerLost)){
             foreach($AttackerLost as $User => $Ships){
                 foreach($Ships as $ID => $Count){
@@ -572,7 +572,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 }
             }
         }
-        
+
         if(!empty($DefenderLost)){
             foreach($DefenderLost as $User => $Ships){
                 foreach($Ships as $ID => $Count){
@@ -585,17 +585,17 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                     }
                 }
             }
-        }   
-        
+        }
+
         if(empty($DefenderShipList)){
             unset($DefenderShips);
         }
         if(empty($AttackerShipList)){
             unset($AttackerShips);
         }
-          
+
     }
-    
+
     if((!empty($AttackerShips) AND !empty($DefenderShips)) OR (empty($AttackerShips) AND empty($DefenderShips))){
         $BattleResult = COMBAT_DRAW; // It's a Draw
     } elseif(empty($AttackerShips)){
@@ -605,7 +605,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
     } else {
         return array('result' => false, 'error' => 'BAD_COMBAT_RESULT');
     }
-    
+
     return array('return' => true, 'AttackerShips' => $AttackerShips, 'DefenderShips' => $DefenderShips, 'rounds' => $Rounds, 'result' => $BattleResult, 'AtkLose' => $AtkLoseCount, 'DefLose' => $DefLoseCount, 'DefSysLost' => $PlanetDefSysLost);
 }
 

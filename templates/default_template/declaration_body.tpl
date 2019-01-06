@@ -31,7 +31,7 @@
             </th>
         </tr>
         <tr>
-        	<th colspan="2" class="pad5"><input type="submit" value="{SubmitDeclaration}" /></th>
+            <th colspan="2" class="pad5"><input type="submit" value="{SubmitDeclaration}" /></th>
         </tr>
     </table>
 </form>

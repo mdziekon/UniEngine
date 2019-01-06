@@ -43,7 +43,7 @@
 .SendButtom {
     font-weight: bold;
     padding: 5px;
-	width: 150px;
+    width: 150px;
 }
 .nfoTH {
     width: 24%;
@@ -55,13 +55,13 @@
     cursor: help;
 }
 .moon {
-    background: url('../images/moon.png') no-repeat 0pt 0pt;
+    background: url('../../images/moon.png') no-repeat 0pt 0pt;
 }
 .planet {
-    background: url('../images/planet.png') no-repeat 0pt 0pt;
+    background: url('../../images/planet.png') no-repeat 0pt 0pt;
 }
 .debris {
-    background: url('../images/debris.png') no-repeat 0pt 0pt;
+    background: url('../../images/debris.png') no-repeat 0pt 0pt;
 }
 .moon, .planet, .debris {
     padding-left: 15px;

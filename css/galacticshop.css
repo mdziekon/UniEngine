@@ -34,7 +34,7 @@
 }
 .markHover, .deTabHover {
     background-color: #455B87;
-    border-color: #526EA3; 
+    border-color: #526EA3;
 }
 .markSelect, .deTabSelect {
     background-color: #4E6797;
@@ -61,7 +61,7 @@ input.deInputs:hover, input.deInputs:focus {
 }
 input.deInputs[name="code"] {
     text-transform: uppercase;
-    background-image: url('../images/mobile.png');
+    background-image: url('../../images/mobile.png');
     background-repeat: no-repeat;
     background-position: 1px;
 }

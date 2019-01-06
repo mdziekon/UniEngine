@@ -1,7 +1,7 @@
 #list > tr > th:not(.info) {
-	padding: 3px 10px;
-	text-align: left;
+    padding: 3px 10px;
+    text-align: left;
 }
 .obligatory > img, .locked > img, .voted > img {
-	vertical-align: middle;
+    vertical-align: middle;
 }

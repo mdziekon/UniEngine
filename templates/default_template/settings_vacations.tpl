@@ -5,7 +5,7 @@
             <tr>
                 <td class="c center" colspan="2" style="font-size: 16px;">{Vacations_Title}</td>
             </tr>
-				<th class="pad5" colspan="2">{Parse_Vacation_EndTime}</th>
+                <th class="pad5" colspan="2">{Parse_Vacation_EndTime}</th>
             <tr>
                 <th class="pad5">{exit_vacations}:</th>
                 <th><input type="checkbox" name="exit_modus" /></th>

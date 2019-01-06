@@ -14,7 +14,7 @@
     color: #FFCC33;
 }
 #galRows > tr:hover > th {
-	background-color: #4A5F8C !important;
+    background-color: #4A5F8C !important;
     border-color: #5573AA !important;
 }
 .rowHighlight > th {
@@ -22,15 +22,15 @@
     border-color: #5573AA !important;
 }
 .selTH {
-    border: 0px; 
+    border: 0px;
     padding: 0px;
 }
 .selInput {
-    height: 25px; 
+    height: 25px;
     font-weight: 700;
 }
 .selSub {
-    font-weight: 700; 
+    font-weight: 700;
     padding: 3px;
 }
 .galWidth {
@@ -67,7 +67,7 @@
     font-size: 0px !important;
 }
 .bigFnt {
-	font-size: 12px;
+    font-size: 12px;
 }
 .nowrap {
     white-space: nowrap;
@@ -85,8 +85,8 @@
     display: none;
 }
 #MissileForm {
-	margin: 0px;
+    margin: 0px;
 }
 .icoMissile, .icoSpy, .icoMsg, .icoBuddy {
-	padding-left: 16px;
+    padding-left: 16px;
 }

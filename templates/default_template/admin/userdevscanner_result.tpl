@@ -49,7 +49,7 @@
 <script>
 $(document).ready(function(){
     $('th').addClass('pad2');
-    
+
     $('.collapsed').hide();
     $('.ceswitch').click(function()
     {
@@ -113,7 +113,7 @@ $(document).ready(function(){
     <tr class="inv {PHP_HideFoundSummarys2}">
         <th>&nbsp;</th>
     </tr>
-    
+
     <tr{PHP_HideFoundFatals}>
         <td colspan="3" class="c"><b class="ceswitch collapse" id="ModuleNo01">&nbsp;</b>{Table2_FoundFatals} ({Table2_FinalFatalCount})</td>
     </tr>

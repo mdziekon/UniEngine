@@ -1,14 +1,14 @@
 <style>
 #infoBar {
-    width: 100%; 
-    position: fixed; 
-    top: -40px; 
-    left: 0px; 
-    background-color: infobackground; 
+    width: 100%;
+    position: fixed;
+    top: -40px;
+    left: 0px;
+    background-color: infobackground;
     border: 0px;
     border-bottom: 2px ridge threedlightshadow;
     color: infotext;
-    height: 32px; 
+    height: 32px;
     z-index: 1000;
     font-weight: bold;
 }

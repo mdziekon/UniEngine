@@ -1,7 +1,7 @@
 <br/>
 
-<table width="519" border="0" cellpadding="0" cellspacing="1"> 
-    <tr> 
+<table width="519" border="0" cellpadding="0" cellspacing="1">
+    <tr>
         <td class="c" height="20">{Your_shortcuts}</td>
     </tr>
     <tr>
@@ -18,7 +18,7 @@
                 <input type="button" value="{delete_shortcut}" onclick="document.getElementById('mode').value = 'delete'; if(confirm('{are_you_sure}')){ submit(); }"/>
             </form>
         </th>
-    </tr> 
+    </tr>
     <tr>
         <td class="c" height="20"><a href="fleet.php">{goback}</a></td>
     </tr>

@@ -13,46 +13,46 @@ $_EnginePath = '../';
 
 include($_EnginePath.'common.php');
 
-	loggedCheck(true);
+loggedCheck(true);
 
-	if(isLogged())
-	{
-		if(CheckAuth('supportadmin'))
-		{
-			$GivenID = (isset($_GET['id']) ? round($_GET['id']) : 0);
-			if($GivenID > 0)
-			{
-				$Result = doquery("DELETE FROM {{table}} WHERE `ID` = {$GivenID} LIMIT 1;", 'chat_messages');
-				if($Result !== false)
-				{
-					if(mysql_affected_rows() == 1)
-					{
-						echo '1';
-					}
-					else
-					{
-						echo '2';
-					}
-				}
-				else
-				{
-					echo '3';
-				}
-			}
-			else
-			{
-				echo '2';
-			}
-		}
-		else
-		{
-			echo '4';
-		}
-	}
-	else
-	{
-		echo '5';
-	}
-	safeDie();
+if(isLogged())
+{
+    if(CheckAuth('supportadmin'))
+    {
+        $GivenID = (isset($_GET['id']) ? round($_GET['id']) : 0);
+        if($GivenID > 0)
+        {
+            $Result = doquery("DELETE FROM {{table}} WHERE `ID` = {$GivenID} LIMIT 1;", 'chat_messages');
+            if($Result !== false)
+            {
+                if(mysql_affected_rows() == 1)
+                {
+                    echo '1';
+                }
+                else
+                {
+                    echo '2';
+                }
+            }
+            else
+            {
+                echo '3';
+            }
+        }
+        else
+        {
+            echo '2';
+        }
+    }
+    else
+    {
+        echo '4';
+    }
+}
+else
+{
+    echo '5';
+}
+safeDie();
 
 ?>

@@ -1,25 +1,25 @@
 <script>
-var JSVars = {'LastWhoVal': '{LastWhoVal}', 'QuickChangeInfo': '{QuickChangeInfo}', 'DailyChangeInfo': '{DailyChangeInfo}'};	
+var JSVars = {'LastWhoVal': '{LastWhoVal}', 'QuickChangeInfo': '{QuickChangeInfo}', 'DailyChangeInfo': '{DailyChangeInfo}'};
 </script>
-<link rel="stylesheet" type="text/css" href="css/stats.min.css" />
-<script src="js/stats.min.js"/></script>
+<link rel="stylesheet" type="text/css" href="dist/css/stats.cachebuster-1546564327123.min.css" />
+<script src="dist/js/stats.cachebuster-1545956361123.min.js"/></script>
 <br/>
 <form method="post" id="statForm">
     <table width="700">
         <tr>
-        	<td class="c center">{stat_header_txt} {stat_date}</td>
+            <td class="c center">{stat_header_txt} {stat_date}</td>
         </tr>
         <tr>
-        	<th align="center">
-            	<table style="width: 100%;">
-                	<tr class="pad2">
-                		<th style="width: 6%; border: none;">&nbsp;</th>
-                		<th width="14%">{stat_show}</th>
-                		<th width="14%"><select name="who">{who}</select></th>
-                		<th width="14%">{stat_by}</th>
-                		<th width="14%"><select name="type">{type}</select></th>
-                		<th width="14%">{stat_range}</th>
-                		<th width="18%">
+            <th align="center">
+                <table style="width: 100%;">
+                    <tr class="pad2">
+                        <th style="width: 6%; border: none;">&nbsp;</th>
+                        <th width="14%">{stat_show}</th>
+                        <th width="14%"><select name="who">{who}</select></th>
+                        <th width="14%">{stat_by}</th>
+                        <th width="14%"><select name="type">{type}</select></th>
+                        <th width="14%">{stat_range}</th>
+                        <th width="18%">
                             <span style="{HideRangeSelector}">
                                 <input type="button" id="prev" value="&#171;" style="font-weight: 700; width: 15px;"/>
                                 <select name="range" id="range">{range}</select>
@@ -29,10 +29,10 @@ var JSVars = {'LastWhoVal': '{LastWhoVal}', 'QuickChangeInfo': '{QuickChangeInfo
                                 <b>1 - {MaxPlace}</b>
                             </span>
                         </th>
-                		<th style="width: 6%; border: none;">&nbsp;</th>
-                	<tr>
-            	</table>
-        	</th>
+                        <th style="width: 6%; border: none;">&nbsp;</th>
+                    <tr>
+                </table>
+            </th>
         </tr>
     </table>
 </form>

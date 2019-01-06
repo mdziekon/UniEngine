@@ -2,7 +2,7 @@
 
 if(!defined('IN_UPDATER'))
 {
-	die();
+    die();
 }
 
 doquery("ALTER TABLE `{{prefix}}planets` CHANGE `metal_mine_porcent` `metal_mine_workpercent` tinyint(3) unsigned NOT NULL DEFAULT '10';", '');

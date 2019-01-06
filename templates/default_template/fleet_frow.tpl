@@ -21,8 +21,8 @@
         <span class="orange">{FleetEndTime}</span>
     </th>
     <th class="pad5">
-        <b{FleetHideTargetTime}><b class="flLe">fl_flytargettime</b>{FleetFlyTargetTime}<br /></b>  
-		<b{FleetHideStayTime}><b class="flLe">fl_flystaytime</b>{FleetFlyStayTime}<br /></b>
+        <b{FleetHideTargetTime}><b class="flLe">fl_flytargettime</b>{FleetFlyTargetTime}<br /></b>
+        <b{FleetHideStayTime}><b class="flLe">fl_flystaytime</b>{FleetFlyStayTime}<br /></b>
         <b{FleetHideComeBackTime}><b class="flLe">fl_flygobacktime</b>{FleetFlyBackTime}<br /></b>
         <b{FleetHideRetreatTime}><b class="flLe">fl_flyretreattime</b>{FleetRetreatTime}<br /></b>
     </th>

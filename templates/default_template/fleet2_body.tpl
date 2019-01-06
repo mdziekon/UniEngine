@@ -1,15 +1,10 @@
 <script>
 var ServerClientDifference = ({Now} * 1000) - new Date().getTime();
 var AllowPrettyInputBox = {P_AllowPrettyInputBox};
-var SetMaxNow = false;
-var LastStorageLowerTh0 = false;
-var QuantumGateOptionModif = false;
 var ResSortArrayAll = {ResSortArrayAll};
 var ResSortArrayNoDeu = {ResSortArrayNoDeu};
 var NeedQuantumGate = '{P_UserHave2UseQuantumGate}';
 var FlightDuration = {P_FlightDuration};
-var FlightDurationTarget = FlightDuration;
-var FlightDurationGoback = FlightDuration;
 var JSLang = {'fl2_FlyTimeInfo': '{fl2_FlyTimeInfo}', 'fl_coordplanet': '{fl_coordplanet}', 'fl_coordmoon': '{fl_coordplanet}', 'fl_coorddebris': '{fl_coorddebris}', 'confirm_allypact_attack': '{fl2_confirm_allypact_attack}'};
 var SetResources = {SelectResources};
 var SelectQuantumGate = {SelectQuantumGate};
@@ -17,8 +12,8 @@ var AllyPact_AttackWarn = {Insert_AllyPact_AttackWarn};
 {QuantumGateJSArray}
 {CreateTestACCAlert}
 </script>
-<script src="js/fleet2-2.0.8.1.min.js"></script>
-<link rel="stylesheet" type="text/css" href="css/fleet2-2.0.4.1.min.css" />
+<script src="dist/js/fleet2.cachebuster-1546740741336.min.js"></script>
+<link rel="stylesheet" type="text/css" href="dist/css/fleet2.cachebuster-1546565145290.min.css" />
 
 <form id="thisForm" action="fleet3.php" method="post">
     <input type="hidden" name="sending_fleet"  value="1" />
@@ -42,79 +37,79 @@ var AllyPact_AttackWarn = {Insert_AllyPact_AttackWarn};
     <br />
     {P_SFBInfobox}
     <table width="750" id="gTb">
-		<tr>
+        <tr>
             <td class="c" colspan="2">{fl2_title}{TitlePos}</td>
-		</tr>
-		<tr valign="top">
-    		<th width="300">
-        		<table width="100%" align="center">
-            		<tr>
+        </tr>
+        <tr valign="top">
+            <th width="300">
+                <table width="100%" align="center">
+                    <tr>
                         <td class="c" colspan="2">{fl_mission}</td>
-            		</tr>
-            		{MissionSelectors}
+                    </tr>
+                    {MissionSelectors}
                     <tr{P_HideNoMissionInfo}>
                         <th>
                             <b class="red">{fl_bad_mission}</b>
-            			</th>
-        			</tr>                    
+                        </th>
+                    </tr>
                     <tbody{P_HideQuantumGate}>
                         <tr>
                             <td class="c" colspan="2">{QuantumGateHead}</td>
                         </tr>
                         <tr>
-                    		<th class="QuantumInfo">
-                        		<input id="usequantumgate" type="checkbox" name="usequantumgate"/>
-                        		<label for="usequantumgate" class="mTxt">{QuantumGateUse}</label>
-                                <br/><br />                                
+                            <th class="QuantumInfo">
+                                <input id="usequantumgate" type="checkbox" name="usequantumgate"/>
+                                <label for="usequantumgate" class="mTxt">{QuantumGateUse}</label>
+                                <br/><br />
                                 <span class="lime {P_HideQuantumGateReady2Use}">{GateReadyToUse}</span>
                                 {InsertQuantumGateChronoApplet}
-                                <span class="orange {P_HideQuantumGateReady2UseIn}">{GateReadyToUseIn}:</span><br/><span id="bxxquantum0">{P_QuantumGateNextUse}</span>                                
+                                <span class="orange {P_HideQuantumGateReady2UseIn}">{GateReadyToUseIn}:</span><br/><span id="bxxquantum0">{P_QuantumGateNextUse}</span>
                             </th>
-                		</tr>  
-                    </tbody> 
-        		</table>
-    		</th>
-    		<th width="450">
-        		<table width="100%">
-            		<tr>
-                        <td colspan="3" class="c">{fl_ressources}</td>
-            		</tr>
+                        </tr>
+                    </tbody>
+                </table>
+            </th>
+            <th width="450">
+                <table width="100%">
                     <tr>
-                		<th width="90">{Metal}</th>
-                		<th width="90">
+                        <td colspan="3" class="c">{fl_ressources}</td>
+                    </tr>
+                    <tr>
+                        <th width="90">{Metal}</th>
+                        <th width="90">
                             <a id="setMax1" class="pointer">{fl_selmax}</a> / <a id="setZero1" class="pointer">{fl_selnone}</a>
                         </th>
-                		<th width="220">
+                        <th width="220">
                             <input class="resInput pad2" name="resource1" type="text" value="0" />
                         </th>
-            		</tr>
+                    </tr>
                     <tr>
-                		<th>{Crystal}</th>
-                		<th>
+                        <th>{Crystal}</th>
+                        <th>
                             <a id="setMax2" class="pointer">{fl_selmax}</a> / <a id="setZero2" class="pointer">{fl_selnone}</a>
                         </th>
-                		<th>
+                        <th>
                             <input class="resInput pad2" name="resource2" type="text" value="0" />
                         </th>
-            		</tr>
+                    </tr>
                     <tr>
-                		<th>{Deuterium}</th>
-                		<th>
+                        <th>{Deuterium}</th>
+                        <th>
                             <a id="setMax3" class="pointer">{fl_selmax}</a> / <a id="setZero3" class="pointer">{fl_selnone}</a>
                         </th>
-                		<th>
+                        <th>
                             <input class="resInput pad2" name="resource3" type="text" value="0" />
                         </th>
-            		</tr>
+                    </tr>
                     <tr class="inv">
                         <td></td>
                     </tr>
                     <tr>
-                		<th>{fl_max_load}</th>
-                		<th colspan="2">
+                        <th>{fl_max_load}</th>
+                        <th colspan="2">
                             <b id="FreeStorageShow" class="{SetDefaultFreeStorageColor}">{SetDefaultFreeStorage}</b>
                         </th>
-            		</tr>
+                    </tr>
                     <tr class="inv">
                         <td></td>
                     </tr>
@@ -122,15 +117,15 @@ var AllyPact_AttackWarn = {Insert_AllyPact_AttackWarn};
                         <th colspan="3">
                             <a id="setMaxAll" class="pointer">{fl_allressources}</a> / <a id="setZeroAll" class="pointer">{fl2_allResZero}</a>
                         </th>
-            		</tr>
-                    
+                    </tr>
+
                     <tbody{P_HideExpeditionTimers}>
                         <tr>
                             <td class="c" colspan="3">{fl_expe_staytime}</td>
-            			</tr>                    
-            			<tr>
-                			<th colspan="3">
-                    			<select name="expeditiontime">
+                        </tr>
+                        <tr>
+                            <th colspan="3">
+                                <select name="expeditiontime">
                                     <option value="1" {SelectExpedition_1}>1</option>
                                     <option value="2" {SelectExpedition_2}>2</option>
                                     <option value="3" {SelectExpedition_3}>3</option>
@@ -143,51 +138,51 @@ var AllyPact_AttackWarn = {Insert_AllyPact_AttackWarn};
                                     <option value="10" {SelectExpedition_10}>10</option>
                                     <option value="11" {SelectExpedition_11}>11</option>
                                     <option value="12" {SelectExpedition_12}>12</option>
-                    			</select>
-                    			{fl_expe_hours}
-                			</th>
-            			</tr>
+                                </select>
+                                {fl_expe_hours}
+                            </th>
+                        </tr>
                     </tbody>
-                    
+
                     <tbody{P_HideHoldingTimers}>
-                       	<tr>
+                           <tr>
                             <td class="c" colspan="3">{fl_expe_staytime}</td>
-            			</tr>
-            			<tr>
-                			<th colspan="3">
-                			<select name="holdingtime">
-                    			<option value="1" {SelectHolding_1}>1</option>
-                    			<option value="2" {SelectHolding_2}>2</option>
-                    			<option value="4" {SelectHolding_4}>4</option>
-                    			<option value="8" {SelectHolding_8}>8</option>
-                    			<option value="16" {SelectHolding_16}>16</option>
-                    			<option value="32" {SelectHolding_32}>32</option>
-                			</select>
-                			{fl_expe_hours}
-                			</th>
-            			</tr>
+                        </tr>
+                        <tr>
+                            <th colspan="3">
+                            <select name="holdingtime">
+                                <option value="1" {SelectHolding_1}>1</option>
+                                <option value="2" {SelectHolding_2}>2</option>
+                                <option value="4" {SelectHolding_4}>4</option>
+                                <option value="8" {SelectHolding_8}>8</option>
+                                <option value="16" {SelectHolding_16}>16</option>
+                                <option value="32" {SelectHolding_32}>32</option>
+                            </select>
+                            {fl_expe_hours}
+                            </th>
+                        </tr>
                     </tbody>
-                    
+
                     <tbody{P_HideACSJoinList}>
                         <tr>
                             <td class="c" colspan="3">{fl_select_acs}</td>
-            			</tr>
-            			<tr>
-                			<th colspan="3">
-                			<select name="acs_id">
+                        </tr>
+                        <tr>
+                            <th colspan="3">
+                            <select name="acs_id">
                                 {CreateACSList}
-                			</select>
-                			</th>
-            			</tr>
+                            </select>
+                            </th>
+                        </tr>
                     </tbody>
-                    
-        		</table>
-    		</th>
-		</tr>
+
+                </table>
+            </th>
+        </tr>
         <tr>
             <th colspan="2">
                 <table width="100%" align="center" id="InfoTable">
-            		<tr>
+                    <tr>
                         <th class="flyTimeNoInfo">{fl2_flightTime}</th>
                         <th class="flyTimeInfo">{fl2_flightTime}</th>
                         <th><b id="FlightTimeShow">{FlightTimeShow}</b> h</th>
@@ -209,7 +204,7 @@ var AllyPact_AttackWarn = {Insert_AllyPact_AttackWarn};
                         <th>{fl_deute_need}</th>
                         <th id="FuelUse">{ShowConsumption}</th>
                     </tr>
-        		</table>
+                </table>
             </th>
         </tr>
         <tr id="noDeutInfo">
@@ -217,9 +212,9 @@ var AllyPact_AttackWarn = {Insert_AllyPact_AttackWarn};
         </tr>
         <tr>
             <th colspan="2">
-				<input class="SendButtom orange" type="button" value="&laquo; {fl_goback}" id="goBack"/>
+                <input class="SendButtom orange" type="button" value="&laquo; {fl_goback}" id="goBack"/>
                 <input class="SendButtom lime" type="submit" value="{fl2_SendButton} &raquo;"/>
             </th>
-		</tr>
+        </tr>
     </table>
 </form>

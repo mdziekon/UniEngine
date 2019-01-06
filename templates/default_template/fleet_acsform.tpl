@@ -16,7 +16,7 @@
                 <th colspan="3" class="pad5">
                     <input type="text" name="acs_name" class="pad2" style="width: 95%;" maxlength="100"/>
                 </th>
-            </tr>            
+            </tr>
             <tr>
                 <td colspan="5" class="c"><span class="flLe">{fl_acs_users_management}</span> <span class="flRi orange">{fl_acs_warning_users}</span></td>
             </tr>
@@ -41,6 +41,6 @@
             </tr>
         </form>
     </tbody>
-    
+
     <tr class="inv"><td style="font-size: 8px;">&nbsp;</td></tr>
 </table>

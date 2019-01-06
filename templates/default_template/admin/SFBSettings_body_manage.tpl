@@ -1,12 +1,12 @@
-<script>   
-var JSLang = {'TP_timeOnlyTitle': 'Wybierz Czas', 'timeText': 'Czas', 'hourText': 'Godzina','minuteText': 'Minuta','secondText': 'Sekunda','millisecText': 'Milisekunda','currentText': 'Teraz','closeText': 'Gotowe'};    
+<script>
+var JSLang = {'TP_timeOnlyTitle': 'Wybierz Czas', 'timeText': 'Czas', 'hourText': 'Godzina','minuteText': 'Minuta','secondText': 'Sekunda','millisecText': 'Milisekunda','currentText': 'Teraz','closeText': 'Gotowe'};
 </script>
-<script src="../js/admin/SFBSettings_body_manage.min.js" type="text/javascript"></script>
-<script src="../scripts/jquery-ui.min.js" type="text/javascript"></script>
-<script src="../scripts/jquery-ui-timepicker-addon.min.js" type="text/javascript"></script>
-<script src="../scripts/jquery-ui-datepicker-pl.min.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href="../css/ui-lightness/jquery-ui.min.css" />
-<link rel="stylesheet" type="text/css" href="../css/admin/SFBSettings_body_manage.min.css" />
+<script src="../dist/js/admin/SFBSettings_body_manage.cachebuster-1546739003831.min.js" type="text/javascript"></script>
+<script src="../libs/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
+<script src="../libs/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.min.js" type="text/javascript"></script>
+<script src="../libs/jquery-ui-datepicker-pl/jquery-ui-datepicker-pl.min.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="../libs/jquery-ui/jquery-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="../dist/css/admin/SFBSettings_body_manage.cachebuster-1546567692327.min.css" />
 <br/>
 <form action="" method="post">
 <input type="hidden" name="action" value="save"/>
@@ -45,7 +45,7 @@ var JSLang = {'TP_timeOnlyTitle': 'Wybierz Czas', 'timeText': 'Czas', 'hourText'
             {Insert_MissionSelectors}
         </th>
     </tr>
-	<tr>
+    <tr>
         <td class="c pad5 tRight">{SFB_Labels_StartTime}</td>
         <th class="pad5 tLeft">
             <input type="text" class="w150px pad2 margR5px" name="startTime_date" value="{Insert_startTime_date}" {Insert_Disable_StartTime}/> {Insert_Current_StartTime}
@@ -61,7 +61,7 @@ var JSLang = {'TP_timeOnlyTitle': 'Wybierz Czas', 'timeText': 'Czas', 'hourText'
         <td class="c pad5 tRight">{SFB_Labels_PostEndTime}</td>
         <th class="pad5 tLeft">
             <span class="fl"><input type="text" class="w150px pad2 margR5px" name="postEndTime_date" value="{Insert_postEndTime_date}" {Insert_Disable_PostEndTime}/> {Insert_Current_PostEndTime}</span>
-            <span class="fr"><input type="button" class="pad2 button" id="postEndTime_Zero" value="{SFB_LabelsData_PostEndTime_Zero}" {Insert_Disable_PostEndTime}/> <input type="button" class="pad2 button" id="postEndTime_1Day" value="{SFB_LabelsData_PostEndTime_1Day}" {Insert_Disable_PostEndTime}/></span> 
+            <span class="fr"><input type="button" class="pad2 button" id="postEndTime_Zero" value="{SFB_LabelsData_PostEndTime_Zero}" {Insert_Disable_PostEndTime}/> <input type="button" class="pad2 button" id="postEndTime_1Day" value="{SFB_LabelsData_PostEndTime_1Day}" {Insert_Disable_PostEndTime}/></span>
         </th>
     </tr>
     <tr id="ElementIDPicker">
@@ -77,16 +77,16 @@ var JSLang = {'TP_timeOnlyTitle': 'Wybierz Czas', 'timeText': 'Czas', 'hourText'
         </th>
     </tr>
     <tr>
-	<td class="c pad5 tRight">{SFB_Labels_Reason}</td>
-	<th class="pad5 tLeft">
-	    <textarea class="pad2" name="reason" style="width: 50%; height: 120px;">{Insert_Form_Reason}</textarea>
-	</th>
+    <td class="c pad5 tRight">{SFB_Labels_Reason}</td>
+    <th class="pad5 tLeft">
+        <textarea class="pad2" name="reason" style="width: 50%; height: 120px;">{Insert_Form_Reason}</textarea>
+    </th>
     </tr>
     <tr>
-	<td class="c pad5 center" colspan="2">
-	    <input type="submit" class="pad5 lime" style="font-weight: bold; width: 120px;" value="{Insert_SubmitButton}"/>
-	    <input type="button" class="pad5 orange" id="goBack" style="font-weight: bold; width: 120px;" value="{SFB_Labels_CancelChanges}"/>
-	</td>
+    <td class="c pad5 center" colspan="2">
+        <input type="submit" class="pad5 lime" style="font-weight: bold; width: 120px;" value="{Insert_SubmitButton}"/>
+        <input type="button" class="pad5 orange" id="goBack" style="font-weight: bold; width: 120px;" value="{SFB_Labels_CancelChanges}"/>
+    </td>
     </tr>
 </table>
 </form>

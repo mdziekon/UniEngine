@@ -1,6 +1,6 @@
 <style>
 .hide {
-	display: none;
+    display: none;
 }
 </style>
 <br />
@@ -18,7 +18,7 @@
         <th>{Report_User}</th>
         <th>{Report_Info}</th>
         <th>{Report_Status}</th>
-        <th width="80px">{Report_Actions}</th>       
+        <th width="80px">{Report_Actions}</th>
     </tr>
         {adm_ul_table}
 </table>

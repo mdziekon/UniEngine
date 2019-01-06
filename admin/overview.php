@@ -9,14 +9,14 @@ $_EnginePath = '../';
 
 include($_EnginePath.'common.php');
 
-	if(CheckAuth('go'))
-	{
-		header('Location: userlist.php?over=yes');
-		safeDie();
-	}
-	else
-	{
-		AdminMessage($_Lang['sys_noalloaw'], $_Lang['sys_noaccess']);
-	}
+if(CheckAuth('go'))
+{
+    header('Location: userlist.php?over=yes');
+    safeDie();
+}
+else
+{
+    AdminMessage($_Lang['sys_noalloaw'], $_Lang['sys_noaccess']);
+}
 
 ?>

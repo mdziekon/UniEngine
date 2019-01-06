@@ -6,7 +6,7 @@
     vertical-align: middle;
 }
 .vEl {
-    background: url('../images/view_modes.png') no-repeat;
+    background: url('../../images/view_modes.png') no-repeat;
     width: 16px;
     height: 16px;
     display: inline-block;
@@ -15,7 +15,7 @@
     background-position: -16px 0;
 }
 .vArr {
-    background: url('../images/view_arrows.png') no-repeat;
+    background: url('../../images/view_arrows.png') no-repeat;
     width: 12px;
     height: 14px;
     display: inline-block;

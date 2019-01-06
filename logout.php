@@ -9,26 +9,26 @@ $_DontForceRulesAcceptance = true;
 
 $_EnginePath = './';
 include($_EnginePath.'common.php');
- 
-	loggedCheck(); 
-	includeLang('logout');
 
-	setcookie($_GameConfig['COOKIE_NAME'], '', time() - 100000, '/', '', 0);
+loggedCheck();
+includeLang('logout');
 
-	if(isset($_GET['kicked']))
-	{
-		$Msg = $_Lang['You_have_been_kicked'];
-	}
-	else if(isset($_GET['badip']))
-	{
-		header('Location: login.php');
-		safeDie();
-	}
-	else
-	{
-		$Msg = $_Lang['see_you'];
-	}
+setcookie($_GameConfig['COOKIE_NAME'], '', time() - 100000, '/', '', 0);
 
-	message($Msg, $_Lang['session_closed'], 'login.php');
+if(isset($_GET['kicked']))
+{
+    $Msg = $_Lang['You_have_been_kicked'];
+}
+else if(isset($_GET['badip']))
+{
+    header('Location: login.php');
+    safeDie();
+}
+else
+{
+    $Msg = $_Lang['see_you'];
+}
+
+message($Msg, $_Lang['session_closed'], 'login.php');
 
 ?>

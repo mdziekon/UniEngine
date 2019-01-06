@@ -1,9 +1,9 @@
-<script src="{$RootPaht}scripts/jquery.flot.min.js"></script>
-<link rel="stylesheet" type="text/css" href="{$RootPaht}css/graphs.min.css"/>
+<script src="{$RootPaht}libs/jquery-flot/jquery.flot.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{$RootPaht}dist/css/graphs.cachebuster-1546564327123.min.css"/>
 <style>.Graph{literal}{{/literal}width:{$width}px; height:{$height}px;{literal}}{/literal}</style>
 <script type="text/javascript">
 {literal}
-function Graph() {           
+function Graph() {
     var Vendors = [{/literal}
     {foreach from=$cx->vendors item=v}
     {literal}{{/literal}
@@ -11,7 +11,7 @@ function Graph() {
             vendor: "{$v.vendor}"
         {literal}}{/literal},
     {/foreach}{literal}
-    ];    
+    ];
 
     var Modes = [{/literal}
     {foreach from=$cx->modes item=v}
@@ -55,7 +55,7 @@ function Graph() {
                 data: [
                 {foreach from=$v.graph->runs key=gk item=gv name=runs}
                     {if isset($sv.scores[$gk])}[{$gk}, {$sv.scores[$gk]}]{if !$smarty.foreach.runs.last},{/if}{/if}
-					
+
                 {/foreach}
                 ]
             {literal}}{/literal}
@@ -120,7 +120,7 @@ function Graph() {
             y = (y + tipHeight - scrollTop > docHeight)
                 ? y - tipHeight - 5 - (yOffset * 2)
                 : y // account for bottom edge;
-            
+
             // account for right edge
             if (x + tipWidth - scrollLeft > docWidth) {
                 $('<div id="Graph_Tooltip">' + contents + '<\/div>').css( {
@@ -134,7 +134,7 @@ function Graph() {
                 }).appendTo("body").fadeIn(200);
             }
         }
-        
+
         $.plot(elt, graph.displays, options);
         elt.bind("plothover", function (event, pos, item) {
             if (!item) {
@@ -150,27 +150,27 @@ function Graph() {
                     (previousPoint[1] == item.datapoint[1])) {
                     return;
                 }
-    
+
                 previousPoint = item.datapoint;
                 $("#Graph_Tooltip").remove();
                 var x = item.datapoint[0];
                 var y = item.datapoint[1];
                 var text = '';
-                
+
                 var series = graph.series[item.seriesIndex];
                 var mode = Modes[series.mode];
                 var modeNo = series.mode;
                 var vendor = Vendors[mode.vendor];
-                
+
                 {/literal}
                 {if $OwnTooltipCode}{$OwnTooltipCode}{/if}
-                {literal}                
-                
+                {literal}
+
                 var RunResult = y;
                 var ModeName = mode.name;
                 var FullDate = graph.runs[x].fullDate;
-                
-                text = eval(ToolTipText);          
+
+                text = eval(ToolTipText);
                 showToolTip(item.pageX, item.pageY, text);
             }
         });
@@ -187,7 +187,7 @@ function Graph() {
     }
 
     $(document).ready(function () {
-        {/literal}        
+        {/literal}
         {foreach from=$graphs key=k item=v}
         drawGraph($("#{$k}"), Graphs.{$k}, '{$v.graphdata.units}', "{$v.graphdata.tooltiptext}");
         {/foreach}

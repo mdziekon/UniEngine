@@ -1,5 +1,5 @@
 <form action="" method="post">
-	<input type="hidden" name="uniSelect" value="{PHP_InsertUniCode}"/>
+    <input type="hidden" name="uniSelect" value="{PHP_InsertUniCode}"/>
     <table width="500" style="margin-top: 100px;">
         <tr>
             <td class="c center" colspan="2">{Page_Title}</td>
@@ -24,8 +24,8 @@
                 <a href="reg_mainpage.php">{Body_Register}</a> | <a href="contact.php">{Body_Contact}</a>
             </th>
         </tr>
-		<tr style="visibility: hidden;"><td style="font-size: 5px;">&nbsp;</td></tr>
-		<tr>
+        <tr style="visibility: hidden;"><td style="font-size: 5px;">&nbsp;</td></tr>
+        <tr>
             <th colspan="2" class="pad5">
                 <a href="https://github.com/mdziekon/UniEngine" target="_blank" class="skyblue">Powered by UniEngine</a>
             </th>

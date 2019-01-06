@@ -1,0 +1,105 @@
+{
+    "env": {
+        "browser": true,
+        "jquery": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 2015,
+        "sourceType": "script",
+        "ecmaFeatures": {}
+    },
+    "extends": "eslint:recommended",
+    "rules": {
+        "indent": [
+            "error",
+            4
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "double"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+        "semi-spacing": [
+            "error",
+            {
+                "before": false,
+                "after": true
+            }
+        ],
+        "space-before-blocks": [
+            "error",
+            "always"
+        ],
+        "space-before-function-paren": [
+            "error",
+            {
+                "anonymous": "always",
+                "named": "always",
+                "asyncArrow": "always"
+            }
+        ],
+        "space-in-parens": [
+            "error",
+            "never"
+        ],
+        "space-infix-ops": [
+            "error",
+            {
+                "int32Hint": false
+            }
+        ],
+        "space-unary-ops": [
+            "error",
+            {
+                "words": true,
+                "nonwords": false,
+                "overrides": {}
+            }
+        ],
+        "no-trailing-spaces": [
+            "error",
+            {
+                "skipBlankLines": false
+            }
+        ],
+        "block-spacing": [
+            "error",
+            "always"
+        ],
+        "brace-style": [
+            "error",
+            "1tbs",
+            {
+                "allowSingleLine": false
+            }
+        ],
+        "object-property-newline": [
+            "error",
+            {
+                "allowMultiplePropertiesPerLine": true
+            }
+        ],
+        "one-var-declaration-per-line": [
+            "error",
+            "always"
+        ],
+        "one-var": [
+            "error",
+            "never"
+        ],
+        "keyword-spacing": [
+            "error",
+            {
+                "before": true,
+                "after": true
+            }
+        ]
+    }
+}

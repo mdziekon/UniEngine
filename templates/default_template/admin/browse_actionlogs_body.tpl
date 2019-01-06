@@ -3,8 +3,8 @@
     var AutoExpandArray = {AutoExpandArray};
     var AutoExpandAmp = {AutoExpandAmp};
 </script>
-<script src="../js/admin/browse_actionlogs_body-2.0.4.1.min.js" type="text/javascript"></script>
-<link rel="stylesheet" type="text/css" href="../css/admin/browse_actionlogs_body-2.0.6.1.min.css" />
+<script src="../dist/js/admin/browse_actionlogs_body.cachebuster-1546739003831.min.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="../dist/css/admin/browse_actionlogs_body.cachebuster-1546567692327.min.css" />
 <br />
 <form action="{ThisPage}" method="post" style="margin: 0px;" id="thisForm">
     <input type="hidden" name="filter" value="{SetFiltering}"/>

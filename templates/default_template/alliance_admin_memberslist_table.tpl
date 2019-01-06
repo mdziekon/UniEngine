@@ -26,7 +26,7 @@
 }
 .markChanged {
     background-color: #455B87;
-    border-color: #526EA3; 
+    border-color: #526EA3;
 }
 .markChangedSel {
     background-color: #4E6797;
@@ -43,12 +43,12 @@
 $(document).ready(function()
 {
     var ChangesDone = 0;
-    
+
     $('[name^=change_rank]').each(function()
     {
         $(this).data('defVal', $(this).val());
     });
-    
+
     $('[name^=change_rank]').change(function()
     {
         if($(this).val() != $(this).data('defVal')){
@@ -84,11 +84,11 @@ $(document).ready(function()
         <tr class="inv {HideInfoBox}">
             <td></td>
         </tr>
-        
+
         <tr>
             <td class="c headPad" colspan="9">{Ally_ML_Title}<b style="float: right">({Ally_ML_Count}: {members_count})</b></td>
-    	</tr>
-    	<tr>
+        </tr>
+        <tr>
             <th>#</th>
             <th><a href="?mode=admin&amp;edit=members&amp;stype=1&amp;smode={sortRev}" {sortByName}>{Ally_ML_Name}</a></th>
             <th>&nbsp;</th>
@@ -98,15 +98,15 @@ $(document).ready(function()
             <th><a href="?mode=admin&amp;edit=members&amp;stype=4&amp;smode={sortRev}" {sortByRegTime}>{Ally_ML_RegTime}</a></th>
             <th><a href="?mode=admin&amp;edit=members&amp;stype=5&amp;smode={sortRev}" {sortByOnline}>{Ally_ML_Online}</a></th>
             <th>{Ally_ML_Action}</th>
-    	</tr>
-    	{Rows}
+        </tr>
+        {Rows}
         <tr>
             <th colspan="9" class="pad5">
                 <input type="submit" class="subBut subButDisabled" value="{ADM_SaveRankChanges}" disabled=""/>
             </th>
         </tr>
-    	<tr>
+        <tr>
             <td class="c" colspan="9">(<a href="?mode=admin">&#171; {GoBack}</a>)</td>
-    	</tr>
+        </tr>
     </table>
 </form>

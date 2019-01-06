@@ -1,119 +1,119 @@
 /* Elements */
 .delMsg {
-	background: url('../images/delete.png') no-repeat 0.5pt 1.5pt;
-	padding-left: 12px;
+    background: url('../../images/delete.png') no-repeat 0.5pt 1.5pt;
+    padding-left: 12px;
 }
 .reportMsg {
-	background: url('../images/warning.png') no-repeat;
-	padding-left: 16px;
+    background: url('../../images/warning.png') no-repeat;
+    padding-left: 16px;
 }
 .edit {
-	background: url('../images/edit.png') no-repeat 0.5pt 0pt;
-	padding-left: 16px;
+    background: url('../../images/edit.png') no-repeat 0.5pt 0pt;
+    padding-left: 16px;
 }
 .smile, .usrRef, .delMsg, .reportMsg {
-	cursor: pointer;
+    cursor: pointer;
 }
 .smile {
-	width: 12px;
-	height: 12px;
+    width: 12px;
+    height: 12px;
 }
 .usrInv {
-	text-decoration: line-through !important;
+    text-decoration: line-through !important;
 }
 .usrInv:hover {
-	text-decoration: none !important;
+    text-decoration: none !important;
 }
 
 /* Chat BoxModel Logic */
 .dt,.usr {
-	width: 1%;
+    width: 1%;
 }
 .msg {
-	width: 99%;
-	font-weight: normal;
+    width: 99%;
+    font-weight: normal;
 }
 .fNorm {
-	font-weight: normal;
+    font-weight: normal;
 }
 .aright {
-	text-align: right;
+    text-align: right;
 }
 .aleft {
-	text-align: left;
+    text-align: left;
 }
 .upperBox {
-	border-bottom: 2px dotted #A1AFCE !important;
+    border-bottom: 2px dotted #A1AFCE !important;
 }
 #sbTable {
-	width: 100%;
+    width: 100%;
 }
 #sbTable > tbody > tr:not(:nth-child(1)).lastSeen > th {
-	border-top: 2px solid #A1AFCE !important;
+    border-top: 2px solid #A1AFCE !important;
 }
 #sbTable > tbody > tr > th, .upperBox {
-	border: none;
-	padding: 3px 4px;
-	border-bottom: 1px solid #6F85B3;
+    border: none;
+    padding: 3px 4px;
+    border-bottom: 1px solid #6F85B3;
 }
 #sbTable > tbody > tr:nth-child(even) > th, .upperBox {
-	background-color: #4A5F8C;
+    background-color: #4A5F8C;
 }
 #sbTable > tbody > tr:nth-child(odd) > th {
-	background-color: #3F5178;
+    background-color: #3F5178;
 }
 
 #shoutbox {
-	vertical-align: text-top;
-	height: 360px;
-	overflow: auto;
-	position: relative;
+    vertical-align: text-top;
+    height: 360px;
+    overflow: auto;
+    position: relative;
 }
 
 #onlineBox {
-	padding-left: 15px;
-	padding-right: 15px;
-	text-align: left;
+    padding-left: 15px;
+    padding-right: 15px;
+    text-align: left;
 }
 #errorBox {
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	width: 100%;
-	padding-left: 0px;
-	padding-right: 0px;
-	color: red;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    padding-left: 0px;
+    padding-right: 0px;
+    color: red;
 }
 #activityBox {
-	position: absolute;
-	top: 0px;
-	right: 0px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
 }
 
 #msgText {
-	width: 98%;
-	height: 32px;
+    width: 98%;
+    height: 32px;
 }
 #msgSend {
-	width: 80%;
-	padding: 2px;
-	font-weight: 700;
+    width: 80%;
+    padding: 2px;
+    font-weight: 700;
 }
 
 #setBox > label {
-	margin-right: 10px;
+    margin-right: 10px;
 }
 .setChg {
-	vertical-align: text-top;
-	margin: 0 5px 0 0;
+    vertical-align: text-top;
+    margin: 0 5px 0 0;
 }
 .hide {
-	display: none;
+    display: none;
 }
 
 /* Effects */
 .doFadeIn {
-	opacity: 0.001;
+    opacity: 0.001;
 }
 
 /* User Colors */

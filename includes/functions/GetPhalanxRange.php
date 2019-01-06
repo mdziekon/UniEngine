@@ -2,7 +2,7 @@
 
 function GetPhalanxRange($PhalanxLevel)
 {
-	return ($PhalanxLevel * $PhalanxLevel) - 1;
+    return ($PhalanxLevel * $PhalanxLevel) - 1;
 }
 
 ?>

@@ -7,7 +7,7 @@
 }
 .markHover {
     background-color: #455B87;
-    border-color: #526EA3; 
+    border-color: #526EA3;
 }
 .markSelect {
     background-color: #4E6797;
@@ -75,10 +75,10 @@ input[type='text'] {
 </style>
 <script>
 $(document).ready(function()
-{        
+{
     $(".mark").hover(function()
     {
-        $(this).children().addClass('markHover'); 
+        $(this).children().addClass('markHover');
     }, function()
     {
         $(this).children().removeClass('markHover');
@@ -98,7 +98,7 @@ $(document).ready(function()
             $(this).removeClass('textFoc');
         }
     });
-    
+
     $('.delButton').click(function()
     {
         if(confirm('{ADM_RkL_RUSure}')){
@@ -111,9 +111,9 @@ $(document).ready(function()
         if(confirm('{ADM_RkL_RUSure2}')){
             $('.change').val('saveChg');
             $('.sendForm').submit();
-        } 
+        }
     });
-        
+
     $('[name^=chgData]:checkbox, [name^=opt]:checkbox').click(function()
     {
         if($(this).attr('name').indexOf('chgData') !== -1){
@@ -126,9 +126,9 @@ $(document).ready(function()
             var OptID    = $(this).attr('name').substr(4).replace(']', '');
             var SetName = 'opt';
         }
-        
+
         var isChecked = $('[name="'+$(this).attr('name')+'"]:checked').length;
-        
+
         if(isChecked == 1){
             if(OptID == 1){
                 $('[name^="'+SetName+'"]:checkbox').attr('checked', true);
@@ -144,9 +144,9 @@ $(document).ready(function()
                 $('[name^="'+SetName+'[3]"]:checkbox').attr('checked', false);
             }
             $('[name^="'+SetName+'[1]"]:checkbox').attr('checked', false);
-        }        
+        }
     });
-    
+
     $('.ico_1').tipTip({maxWidth: 250, minWidth: 250, edgeOffset: 10, delay: 0, content: '{ADM_RkL_Info1}'});
     $('.ico_2').tipTip({maxWidth: 250, minWidth: 250, edgeOffset: 10, delay: 0, content: '{ADM_RkL_Info2}'});
     $('.ico_3').tipTip({maxWidth: 250, minWidth: 250, edgeOffset: 10, delay: 0, content: '{ADM_RkL_Info3}'});
@@ -158,9 +158,9 @@ $(document).ready(function()
     $('.ico_9').tipTip({maxWidth: 250, minWidth: 250, edgeOffset: 10, delay: 0, content: '{ADM_RkL_Info9}'});
     $('.ico_10').tipTip({maxWidth: 250, minWidth: 250, edgeOffset: 10, delay: 0, content: '{ADM_RkL_Info10}'});
     $('.ico_11').tipTip({maxWidth: 250, minWidth: 250, edgeOffset: 10, delay: 0, content: '{ADM_RkL_Info11}'});
-	$('.ico_12').tipTip({maxWidth: 250, minWidth: 250, edgeOffset: 10, delay: 0, content: '{ADM_RkL_Info12}'});
-	$('.ico_13').tipTip({maxWidth: 250, minWidth: 250, edgeOffset: 10, delay: 0, content: '{ADM_RkL_Info13}'});
-    
+    $('.ico_12').tipTip({maxWidth: 250, minWidth: 250, edgeOffset: 10, delay: 0, content: '{ADM_RkL_Info12}'});
+    $('.ico_13').tipTip({maxWidth: 250, minWidth: 250, edgeOffset: 10, delay: 0, content: '{ADM_RkL_Info13}'});
+
     $('.na_nodel').tipTip({maxWidth: 200, edgeOffset: 10, delay: 0, content: '{ADM_RkL_NoAccess2Del}'});
     $('.na_nonam').tipTip({maxWidth: 200, edgeOffset: 10, delay: 0, content: '{ADM_RkL_NoAccess2Nam}'});
     $('.na_nochg').tipTip({maxWidth: 200, edgeOffset: 10, delay: 0, content: '{ADM_RkL_NoAccess2Chg}'});
@@ -168,7 +168,7 @@ $(document).ready(function()
     $('.adm_nochg').tipTip({maxWidth: 200, edgeOffset: 10, delay: 0, content: '{ADM_RkL_ChangeAdminRk}'});
     $('.adm_nodel').tipTip({maxWidth: 200, edgeOffset: 10, delay: 0, content: '{ADM_RkL_DeleteAdminRk}'});
     $('.nc_nodel').tipTip({maxWidth: 200, edgeOffset: 10, delay: 0, content: '{ADM_RkL_DeleteDefNewRk}'});
-    
+
     $('.memCount').tipTip({maxWidth: 250, edgeOffset: 10, delay: 0, content: '{ADM_RkL_MemCount}'});
 });
 </script>
@@ -196,8 +196,8 @@ $(document).ready(function()
         <th width="25px"><b class="ico_9"></b></th>
         <th width="25px"><b class="ico_10"></b></th>
         <th width="25px"><b class="ico_11"></b></th>
-		<th width="25px"><b class="ico_12"></b></th>
-		<th width="25px"><b class="ico_13"></b></th>
+        <th width="25px"><b class="ico_12"></b></th>
+        <th width="25px"><b class="ico_13"></b></th>
         <th width="100px">{ADM_RkL_Action}</th>
         <th width="200px"><b class="dash memCount">{ADM_RkL_UsersCount}</b></th>
     </tr>
@@ -228,8 +228,8 @@ $(document).ready(function()
             <th{DisableInfo9}><input type="checkbox" {CBox_9}/></th>
             <th{DisableInfo10}><input type="checkbox" {CBox_10}/></th>
             <th{DisableInfo11}><input type="checkbox" {CBox_11}/></th>
-			<th{DisableInfo12}><input type="checkbox" {CBox_12}/></th>
-			<th{DisableInfo13}><input type="checkbox" {CBox_13}/></th>
+            <th{DisableInfo12}><input type="checkbox" {CBox_12}/></th>
+            <th{DisableInfo13}><input type="checkbox" {CBox_13}/></th>
             <th><input type="submit" class="bold" value="{ADM_RkL_AddRank}"/></th>
             <th>-</th>
         </tr>

@@ -11,8 +11,8 @@
     <th{DisableInfo9}><input type="checkbox" {CBox_9}/></th>
     <th{DisableInfo10}><input type="checkbox" {CBox_10}/></th>
     <th{DisableInfo11}><input type="checkbox" {CBox_11}/></th>
-	<th{DisableInfo12}><input type="checkbox" {CBox_12}/></th>
-	<th{DisableInfo13}><input type="checkbox" {CBox_13}/></th>
+    <th{DisableInfo12}><input type="checkbox" {CBox_12}/></th>
+    <th{DisableInfo13}><input type="checkbox" {CBox_13}/></th>
     <th>{DeleteButton}</th>
     <th>{MembersCount}</th>
 </tr>

@@ -42,7 +42,7 @@ function toggleUsernameInput(switchon){
     <table width="600">
         <tbody>
             <tr>
-            	<td class="c" colspan="2"><span style="background: url('images/warning.png') no-repeat 0 0pt; padding-left: 20px;">{Table_title}</span></td>
+                <td class="c" colspan="2"><span style="background: url('images/warning.png') no-repeat 0 0pt; padding-left: 20px;">{Table_title}</span></td>
             </tr>
             <tr>
                 <th colspan="2">&nbsp;{Report_send_result}</th>
@@ -58,8 +58,8 @@ function toggleUsernameInput(switchon){
                         <option value="sys_badmsg" {select_type_sys_badmsg}>{Type_sys_badmsg}</option>
                         <option value="sys_error" {select_type_sys_error}>{Type_sys_error}</option>
                         <option value="mail_smtp" {select_type_mail_smtp}>{Type_mail_smtp}</option>
-						<option value="other" {select_type_other}>{Type_other}</option>
-						<option value="user_badmsg_chat" {Input_HideType1} {select_type_user_badmsg_chat}>{Type_user_badmsg_chat}</option>
+                        <option value="other" {select_type_other}>{Type_other}</option>
+                        <option value="user_badmsg_chat" {Input_HideType1} {select_type_user_badmsg_chat}>{Type_user_badmsg_chat}</option>
                     </select>
                 </th>
             </tr>

@@ -1,31 +1,31 @@
 .t_r {
-	text-align: right;
+    text-align: right;
 }
 .t_l {
-	text-align: left;
+    text-align: left;
 }
 .p_r {
-	padding-right: 5px;
+    padding-right: 5px;
 }
 .p_l {
-	padding-left: 5px;
+    padding-left: 5px;
 }
 .pad3 {
-	padding: 3px;
+    padding: 3px;
 }
 .inv {
-	visibility: hidden;
+    visibility: hidden;
 }
 .invBr {
-	height: 5px;
+    height: 5px;
 }
 #textBox {
-	width: 90%;
-	height: 100px;
+    width: 90%;
+    height: 100px;
 }
 #thisReset {
-	cursor: pointer;
+    cursor: pointer;
 }
 .w90p {
-	width: 90%;
+    width: 90%;
 }

@@ -10,7 +10,7 @@
         <th style="width: 130px;">{Declarations_Header_Date}</th>
         <th style="width: 100px;">{Declarations_Header_Reason}</th>
         <th style="width: 85px;">{Declarations_Header_Status}</th>
-        <th style="width: 90px;">{Declarations_Header_Actions}</th>       
+        <th style="width: 90px;">{Declarations_Header_Actions}</th>
     </tr>
     {adm_ul_table}
 </table>

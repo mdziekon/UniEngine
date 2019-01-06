@@ -3,8 +3,8 @@
 {Input_GalaxyMissileSelector}
 <table class="galWidth">
     {Input_GalaxyHeaders}
-	<tbody id="galRows">
+    <tbody id="galRows">
     {Input_GalaxyRows}
-	</tbody>	
+    </tbody>
     {Input_GalaxyFooter}
 </table>

@@ -25,7 +25,7 @@
 </style>
 <script>
 $(document).ready(function()
-{    
+{
     $('.collapsed').hide();
     $('.ceswitch').click(function()
     {

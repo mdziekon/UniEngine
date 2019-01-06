@@ -3,17 +3,17 @@
     border: 2px solid black;
 }
 .input {
-    text-align: center; 
+    text-align: center;
     width: 80px;
 }
 .tReqDiv {
-    float: left; 
+    float: left;
     margin-right: 2px;
     cursor: help;
 }
 .tReqImg {
-    width: 42px; 
-    height: 42px; 
+    width: 42px;
+    height: 42px;
     border: 1px solid #000;
 }
 .tReqBg {
@@ -22,9 +22,9 @@
 </style>
 <script>
 $(document).ready(function()
-{    
+{
     $('.tReqDiv').tipTip({attribute: 'title', delay: 50});
-    
+
     $('[name^="fmenge"]').focus(function(){
         if($(this).val() == '0'){
             $(this).val('');

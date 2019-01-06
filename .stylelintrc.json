@@ -1,0 +1,10 @@
+{
+    "rules": {
+        "indentation": [
+            4
+        ],
+        "linebreaks": "unix",
+        "no-eol-whitespace": true,
+        "no-missing-end-of-source-newline": true
+    }
+}
