@@ -20,7 +20,17 @@ function generateRandomHash($Length)
 
 function parseFile($filepath, $parseArray)
 {
-    return preg_replace('#\{([a-z0-9\-_]*?)\}#Ssie', '( ( isset($parseArray[\'\1\']) ) ? $parseArray[\'\1\'] : \'\' );', file_get_contents($filepath));
+    return preg_replace_callback(
+        '#\{([a-z0-9\-_]*?)\}#Ssi',
+        function ($matches) use ($parseArray) {
+            return (
+                isset($parseArray[$matches[1]]) ?
+                $parseArray[$matches[1]] :
+                ""
+            );
+        },
+        file_get_contents($filepath)
+    );
 }
 
 function display()

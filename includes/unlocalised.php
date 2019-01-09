@@ -8,7 +8,17 @@ function ReadFromFile($filename)
 
 function parsetemplate($template, $array)
 {
-    return preg_replace('#\{([a-z0-9\-_]*?)\}#Ssie', '( ( isset($array[\'\1\']) ) ? $array[\'\1\'] : \'\' );', $template);
+    return preg_replace_callback(
+        '#\{([a-z0-9\-_]*?)\}#Ssi',
+        function ($matches) use ($array) {
+            return (
+                isset($array[$matches[1]]) ?
+                $array[$matches[1]] :
+                ""
+            );
+        },
+        $template
+    );
 }
 
 function gettemplate($templatename)

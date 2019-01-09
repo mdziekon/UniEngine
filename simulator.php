@@ -750,8 +750,20 @@ for($i = 1; $i <= $MaxACSSlots; $i += 1)
     $_Lang['rows'] .= parsetemplate($TPL_Slot, $ThisSlot);
 }
 
-$_Lang['rows'] = preg_replace('#\{REP1_O([0-9]{1,})_([0-9]{1,})\}#Ssie', "($1 * 1000) + $2", $_Lang['rows']);
-$_Lang['rows'] = preg_replace('#\{REP2_O([0-9]{1,})_([0-9]{1,})\}#Ssie', '($1 * 1000) + $Offsets[\'$1\'] + $2', $_Lang['rows']);
+$_Lang['rows'] = preg_replace_callback(
+    '#\{REP1_O([0-9]{1,})_([0-9]{1,})\}#Ssi',
+    function ($matches) {
+        return ($matches[1] * 1000) + $matches[2];
+    },
+    $_Lang['rows']
+);
+$_Lang['rows'] = preg_replace_callback(
+    '#\{REP2_O([0-9]{1,})_([0-9]{1,})\}#Ssi',
+    function ($matches) use ($Offsets) {
+        return ($matches[1] * 1000) + $Offsets[$matches[1]] + $matches[2];
+    },
+    $_Lang['rows']
+);
 
 $_Lang['fill_with_mytechs'] = "var MyTechs = new Array();\nMyTechs[1] = ".(string)($_User['tech_weapons'] + 0).";\nMyTechs[3] = ".(string)($_User['tech_shielding'] + 0).";\nMyTechs[2] = ".(string)($_User['tech_armour'] + 0).";\nMyTechs[4] = ".(string)($_User['tech_laser'] + 0).";\nMyTechs[5] = ".(string)($_User['tech_ion'] + 0).";\nMyTechs[6] = ".(string)($_User['tech_plasma'] + 0).";\nMyTechs[7] = ".(string)($_User['tech_antimatter'] + 0).";\nMyTechs[8] = ".(string)($_User['tech_disintegration'] + 0).";\nMyTechs[9] = ".(string)($_User['tech_graviton'] + 0).";\n";
 $_Lang['fill_with_myfleets'] = "var MyFleets = new Array();\n";

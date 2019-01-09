@@ -825,8 +825,28 @@ function innerReplace($array, $replaceArray)
     {
         if(isset($array[$key]))
         {
-            $val = preg_replace('#\{([a-z0-9\-_]*?)\}\[([a-z0-9\-_]*?)\]#Ssie', '( ( isset($replaceArray[\'\1\'][\'\2\']) ) ? $replaceArray[\'\1\'][\'\2\'] : \'\' );', $val);
-            $val = preg_replace('#\{([a-z0-9\-_]*?)\}#Ssie', '( ( isset($replaceArray[\'\1\']) ) ? $replaceArray[\'\1\'] : \'\' );', $val);
+            $val = preg_replace_callback(
+                '#\{([a-z0-9\-_]*?)\}\[([a-z0-9\-_]*?)\]#Ssi',
+                function ($matches) use ($replaceArray) {
+                    return (
+                        isset($replaceArray[$matches[1]][$matches[2]]) ?
+                        $replaceArray[$matches[1]][$matches[2]] :
+                        ""
+                    );
+                },
+                $val
+            );
+            $val = preg_replace_callback(
+                '#\{([a-z0-9\-_]*?)\}#Ssi',
+                function ($matches) use ($replaceArray) {
+                    return (
+                        isset($replaceArray[$matches[1]]) ?
+                        $replaceArray[$matches[1]] :
+                        ""
+                    );
+                },
+                $val
+            );
 
             $ocurence = substr_count($val, '%s');
 
