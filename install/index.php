@@ -316,11 +316,11 @@ else
             if($_Install_CanProceed)
             {
                 // Try to establish a connection with DataBase Server
-                $_Install_DBLink = mysql_connect($_POST['set_dbconfig_host'], $_POST['set_dbconfig_user'], $_POST['set_dbconfig_pass']);
+                $_Install_DBLink = mysqli_connect($_POST['set_dbconfig_host'], $_POST['set_dbconfig_user'], $_POST['set_dbconfig_pass']);
                 if($_Install_DBLink !== false)
                 {
                     // Try to select game DataBase
-                    $_Install_DBSelect = mysql_select_db($_POST['set_dbconfig_name']);
+                    $_Install_DBSelect = $_Install_DBLink->select_db($_POST['set_dbconfig_name']);
                     if($_Install_DBSelect)
                     {
                         // Try to write all required data to files
@@ -402,7 +402,7 @@ else
 
                                 foreach($_Install_DoQueries as $ThisQuery)
                                 {
-                                    $_Install_QueryResult = mysql_query($ThisQuery);
+                                    $_Install_QueryResult = $_Install_DBLink->query($ThisQuery);
                                     if($_Install_QueryResult === false)
                                     {
                                         break;
