@@ -653,7 +653,7 @@ function display($PageCode, $PageTitle = '', $ShowTopResourceBar = true, $IsAdmi
 
     if(is_resource($_DBLink))
     {
-        mysql_close($_DBLink);
+        mysqli_close($_DBLink);
     }
     echo $Page;
     die();
@@ -696,7 +696,7 @@ function safeDie($DieMsg = '')
 
     if(isset($_DBLink))
     {
-        mysql_close($_DBLink);
+        mysqli_close($_DBLink);
     }
     die($DieMsg);
 }
