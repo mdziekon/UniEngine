@@ -299,7 +299,7 @@ if($SQLResult_GetSmartFleetBlockadeData->num_rows > 0)
 
         if($BlockFleet === true)
         {
-            message('<span class="red"><b>'.$BlockReason.$_Lang['SFB_Stop_LearnMore'].'</b></span>', $_Lang['SFB_BoxTitle'], 'galaxy.php', '-1');
+            CreateReturn('626');
         }
     }
 }
