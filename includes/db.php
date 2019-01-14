@@ -1,6 +1,6 @@
 <?php
 
-function doquery($query, $table, $fetch = false, $SilentMode = false)
+function doquery($query, $table, $fetch = false)
 {
     global $_DBLink, $_EnginePath, $_User;
     static $__ServerConnectionSettings, $debug = NULL;
@@ -29,33 +29,20 @@ function doquery($query, $table, $fetch = false, $SilentMode = false)
 
     if(!$_DBLink)
     {
-        if($SilentMode)
-        {
-            $_DBLink = @mysqli_connect(
-                $__ServerConnectionSettings['server'],
-                $__ServerConnectionSettings['user'],
-                $__ServerConnectionSettings['pass']
-            );
+        $_DBLink = mysqli_connect(
+            $__ServerConnectionSettings['server'],
+            $__ServerConnectionSettings['user'],
+            $__ServerConnectionSettings['pass']
+        );
 
-            @$_DBLink->select_db($__ServerConnectionSettings['name']);
+        if ($_DBLink->connect_errno) {
+            $debug->error(mysqli_error($_DBLink).'<br/>'.$query);
         }
-        else
-        {
-            $_DBLink = mysqli_connect(
-                $__ServerConnectionSettings['server'],
-                $__ServerConnectionSettings['user'],
-                $__ServerConnectionSettings['pass']
-            );
 
-            if ($_DBLink->connect_errno) {
-                $debug->error(mysqli_error($_DBLink).'<br/>'.$query);
-            }
+        $_DBLink->select_db($__ServerConnectionSettings['name']);
 
-            $_DBLink->select_db($__ServerConnectionSettings['name']);
-
-            if ($_DBLink->errno) {
-                $debug->error(mysqli_error($_DBLink).'<br/>'.$query);
-            }
+        if ($_DBLink->errno) {
+            $debug->error(mysqli_error($_DBLink).'<br/>'.$query);
         }
 
         $_DBLink->query("SET NAMES 'UTF8';");
@@ -68,34 +55,21 @@ function doquery($query, $table, $fetch = false, $SilentMode = false)
         $sql = str_replace('TRUNCATE', '', $sql);
     }
 
-    if($SilentMode)
-    {
-        $sqlquery = @$_DBLink->query($sql);
-    }
-    else
-    {
-        $sqlquery = $_DBLink->query($sql);
+    $sqlquery = $_DBLink->query($sql);
 
-        if ($_DBLink->errno) {
-            $debug->error(
-                mysqli_error($_DBLink) .
-                '<br/>' . $sql .
-                '<br/>File: ' . $_SERVER['REQUEST_URI'] .
-                '<br/>User: ' . $_User['username'] . '[' . $_User['id'] . ']<br/>'
-            );
-        }
+    if ($_DBLink->errno) {
+        $debug->error(
+            mysqli_error($_DBLink) .
+            '<br/>' . $sql .
+            '<br/>File: ' . $_SERVER['REQUEST_URI'] .
+            '<br/>User: ' . $_User['username'] . '[' . $_User['id'] . ']<br/>'
+        );
     }
 
     if($fetch)
     {
-        if($SilentMode)
-        {
-            $sqlrow = $sqlquery->fetch_array(MYSQLI_ASSOC);
-        }
-        else
-        {
-            $sqlrow = @$sqlquery->fetch_array(MYSQLI_ASSOC);
-        }
+        $sqlrow = $sqlquery->fetch_array(MYSQLI_ASSOC);
+
         return $sqlrow;
     }
     else
