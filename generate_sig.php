@@ -100,13 +100,17 @@ if($UID > 0)
     );
 
     // Get Data
-    $UserData = doquery("SELECT `username`, `ally_id` FROM {{table}} WHERE `id` = {$UID} LIMIT 1;", 'users', true, true);
-    if(empty($UserData['username']))
+    $SQLResult_GetUserData = doquery("SELECT `username`, `ally_id` FROM {{table}} WHERE `id` = {$UID} LIMIT 1;", 'users');
+
+    if($SQLResult_GetUserData->num_rows != 1)
     {
         // Throw Error: User don't exist
         copy("{$CachePath}static/signature_{$SigLang}_error2.png", $UserFile);
         ReturnImage($UserFile);
     }
+
+    $UserData = $SQLResult_GetUserData->fetch_assoc();
+
     $UserStat = doquery("SELECT `total_rank`, `total_points` FROM {{table}} WHERE `id_owner` = {$UID} AND `stat_type` = 1 LIMIT 1;", 'statpoints', true);
     if($UserStat['total_rank'] <= 0)
     {
