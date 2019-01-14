@@ -1,3 +1,3 @@
 <tr>
-    <th colspan="5">{YouCannotSeeThisMsg}</th>
+    <th colspan="6">{YouCannotSeeThisMsg}</th>
 </tr>
