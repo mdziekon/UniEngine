@@ -4,6 +4,23 @@ include('includes/phpBench.php'); $_BenchTool = new phpBench();
 if(!empty($_BenchTool)){ $_BenchTool->simpleCountStart(false, 'telemetry__c'); }
 
 session_start();
+
+ini_set('default_charset', 'UTF-8');
+
+$_GameConfig = array();
+$_User = array();
+$_Lang = array();
+$_DBLink = '';
+$ForceIPnUALog = false;
+$Common_TimeNow = time();
+
+define('DEFAULT_SKINPATH', 'skins/epicblue/');
+define('TEMPLATE_DIR', 'templates/');
+define('TEMPLATE_NAME', 'default_template');
+define('DEFAULT_LANG', 'pl');
+
+include($_EnginePath.'includes/constants.php');
+
 if($_SERVER['SERVER_ADDR'] == '127.0.0.1' OR $_SERVER['SERVER_ADDR'] == '::1')
 {
     // We are on Localhost
@@ -24,21 +41,6 @@ else
     }
 }
 
-ini_set('default_charset', 'UTF-8');
-
-$_GameConfig = array();
-$_User = array();
-$_Lang = array();
-$_DBLink = '';
-$ForceIPnUALog = false;
-$Common_TimeNow = time();
-
-define('DEFAULT_SKINPATH', 'skins/epicblue/');
-define('TEMPLATE_DIR', 'templates/');
-define('TEMPLATE_NAME', 'default_template');
-define('DEFAULT_LANG', 'pl');
-
-include($_EnginePath.'includes/constants.php');
 if(defined('INSTALL_NOTDONE'))
 {
     header('Location: ./install/');
