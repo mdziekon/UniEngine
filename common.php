@@ -19,6 +19,8 @@ define('TEMPLATE_DIR', 'templates/');
 define('TEMPLATE_NAME', 'default_template');
 define('DEFAULT_LANG', 'pl');
 
+if(!empty($_BenchTool)){ $_BenchTool->simpleCountStart(false, 'telemetry__c_maininc'); }
+
 include($_EnginePath.'includes/constants.php');
 
 if($_SERVER['SERVER_ADDR'] == '127.0.0.1' OR $_SERVER['SERVER_ADDR'] == '::1')
@@ -59,6 +61,8 @@ $_GET = SecureInput($_GET);
 include($_EnginePath.'includes/vars.php');
 include($_EnginePath.'includes/db.php');
 include($_EnginePath.'includes/strings.php');
+
+if(!empty($_BenchTool)){ $_BenchTool->simpleCountStop(); }
 
 // Load game configuration
 if(isset($_MemCache->GameConfig))

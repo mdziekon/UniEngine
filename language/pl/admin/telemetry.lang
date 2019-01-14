@@ -26,6 +26,7 @@ $_Lang['Tele_UsernameEmpty'] = 'Brak nazwy gracza';
 
 $_Lang['Tele_NameTranslation__t'] = 'Cały skrypt';
 $_Lang['Tele_NameTranslation__c'] = 'common.php';
+$_Lang['Tele_NameTranslation__c_maininc'] = 'common.php - main includes';
 $_Lang['Tele_NameTranslation__f0'] = 'Inicjacja flot';
 $_Lang['Tele_NameTranslation__f1'] = 'Przeliczanie flot';
 $_Lang['Tele_NameTranslation__d'] = 'Finalizacja';
