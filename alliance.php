@@ -241,6 +241,7 @@ if($_User['ally_id'] == 0)
                 $Query_ACreate_UpdateUser = '';
                 $Query_ACreate_UpdateUser .= "UPDATE {{table}} SET ";
                 $Query_ACreate_UpdateUser .= "`ally_id` = {$Result_GetLastID}, ";
+                $Query_ACreate_UpdateUser .= "`ally_rank_id` = 0, ";
                 $Query_ACreate_UpdateUser .= "`ally_register_time` = UNIX_TIMESTAMP() ";
                 $Query_ACreate_UpdateUser .= "WHERE `id` = {$_User['id']};";
                 doquery($Query_ACreate_UpdateUser, 'users');
