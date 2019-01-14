@@ -64,10 +64,14 @@ if(isset($_POST['send']) && $_POST['send'] == 'yes')
                 $Where[] = "`username` IN (".implode(', ', $GetUsers['name']).")";
             }
 
-            $CheckUsers = doquery("SELECT `id` FROM {{table}} WHERE ".implode(' OR ', $Where).";", 'users');
-            if(mysql_num_rows($CheckUsers) > 0)
+            $SQLResult_CheckUsers = doquery(
+                "SELECT `id` FROM {{table}} WHERE ".implode(' OR ', $Where).";",
+                'users'
+            );
+
+            if($SQLResult_CheckUsers->num_rows > 0)
             {
-                while($Data = mysql_fetch_assoc($CheckUsers))
+                while($Data = $SQLResult_CheckUsers->fetch_assoc())
                 {
                     $Filters['UserID'][] = $Data['id'];
                 }
@@ -122,10 +126,11 @@ if(!empty($Filters))
     }
     $SelectIDs .= "WHERE ".implode(' AND ', $QueryArr);
 
-    $SelectedIDs = doquery($SelectIDs, 'bans');
-    if(mysql_num_rows($SelectedIDs) > 0)
+    $SQLResult_SelectedIDs = doquery($SelectIDs, 'bans');
+
+    if($SQLResult_SelectedIDs->num_rows > 0)
     {
-        while($ThisRow = mysql_fetch_assoc($SelectedIDs))
+        while($ThisRow = $SQLResult_SelectedIDs->fetch_assoc())
         {
             $FilterIDs[] = $ThisRow['ID'];
         }
@@ -158,19 +163,19 @@ if(isset($RunQuery))
     $SelectQuery  = "SELECT * FROM {{table}} ";
     $SelectQuery .= isset($SelectWhere) ? $SelectWhere : '';
     $SelectQuery .= "ORDER BY `Active` DESC, `EndTime` DESC LIMIT {$Select_Start}, {$_PerPage};";
-    $SelectResult = doquery($SelectQuery, 'bans');
+    $SQLResult_GetBans = doquery($SelectQuery, 'bans');
 }
 else
 {
-    $SelectResult = false;
+    $SQLResult_GetBans = false;
 }
 
-if($SelectResult !== false)
+if($SQLResult_GetBans !== false)
 {
     $GetUsernames = array();
     $TPL_Row = gettemplate('admin/banslist_row');
 
-    while($Row = mysql_fetch_assoc($SelectResult))
+    while($Row = $SQLResult_GetBans->fetch_assoc())
     {
         if($Row['Active'] == 1)
         {
@@ -265,10 +270,14 @@ if($SelectResult !== false)
 
     if(!empty($GetUsernames))
     {
-        $ResultUsernames = doquery("SELECT `id`, `username` FROM {{table}} WHERE `id` IN (".implode(', ', $GetUsernames).");", 'users');
-        if($ResultUsernames != false)
+        $SQLResult_Usernames = doquery(
+            "SELECT `id`, `username` FROM {{table}} WHERE `id` IN (".implode(', ', $GetUsernames).");",
+            'users'
+        );
+
+        if($SQLResult_Usernames != false)
         {
-            while($UserData = mysql_fetch_assoc($ResultUsernames))
+            while($UserData = $SQLResult_Usernames->fetch_assoc())
             {
                 $UsernamesArray[$UserData['id']] = $UserData['username'];
             }

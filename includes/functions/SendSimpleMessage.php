@@ -17,8 +17,8 @@ function SendSimpleMessage($Owner, $Sender, $Time, $Type, $From, $Subject, $Mess
     $QryInsertMessage .= "`time` = {$Time}, ";
     $QryInsertMessage .= "`type` = {$Type}, ";
     $QryInsertMessage .= "`from` = '$From', ";
-    $QryInsertMessage .= "`subject` = '".mysql_real_escape_string($Subject)."', ";
-    $QryInsertMessage .= "`text` = '".mysql_real_escape_string($Message)."';";
+    $QryInsertMessage .= "`subject` = '" . (getDBLink()->escape_string($Subject)) . "', ";
+    $QryInsertMessage .= "`text` = '" . (getDBLink()->escape_string($Message)) . "';";
     doquery($QryInsertMessage, 'messages');
 
     if($GetMsgID === true)

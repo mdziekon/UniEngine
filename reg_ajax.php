@@ -26,7 +26,7 @@ if(isset($_GET['register']))
     $Password = (isset($_GET['password']) ? trim($_GET['password']) : null);
     $Email = (isset($_GET['email']) ? trim($_GET['email']) : null);
     $CheckEmail = $Email;
-    $Email = mysql_real_escape_string($Email);
+    $Email = getDBLink()->escape_string($Email);
     $Rules = (isset($_GET['rules']) ? $_GET['rules'] : null);
     $GalaxyNo = (isset($_GET['galaxy']) ? intval($_GET['galaxy']) : null);
 
@@ -137,13 +137,15 @@ if(isset($_GET['register']))
 
     if($EmailGood === true AND $UsernameGood === true)
     {
-        $Query_CheckExistance = '';
-        $Query_CheckExistance .= "SELECT `username`, `email` FROM {{table}} ";
-        $Query_CheckExistance .= "WHERE `username` = '{$Username}' OR `email` = '{$Email}' LIMIT 2;";
-        $Result_CheckExistance = doquery($Query_CheckExistance, 'users');
-        if(mysql_num_rows($Result_CheckExistance) > 0)
+        $Query_CheckExistence = '';
+        $Query_CheckExistence .= "SELECT `username`, `email` FROM {{table}} ";
+        $Query_CheckExistence .= "WHERE `username` = '{$Username}' OR `email` = '{$Email}' LIMIT 2;";
+
+        $Result_CheckExistence = doquery($Query_CheckExistence, 'users');
+
+        if($Result_CheckExistence->num_rows > 0)
         {
-            while($FetchData = mysql_fetch_assoc($Result_CheckExistance))
+            while($FetchData = $Result_CheckExistence->fetch_assoc())
             {
                 if(strtolower($FetchData['username']) == strtolower($Username))
                 {
@@ -192,9 +194,9 @@ if(isset($_GET['register']))
         $Query_CheckGalaxy1 .= "`system` BETWEEN {$System_Lower} AND {$System_Higher} AND ";
         $Query_CheckGalaxy1 .= "`planet` BETWEEN {$Planet_Lower} AND {$Planet_Higher};";
         $Result_CheckGalaxy1 = doquery($Query_CheckGalaxy1, 'galaxy');
-        if(mysql_num_rows($Result_CheckGalaxy1) > 0)
+        if($Result_CheckGalaxy1->num_rows > 0)
         {
-            while($FetchData = mysql_fetch_assoc($Result_CheckGalaxy1))
+            while($FetchData = $Result_CheckGalaxy1->fetch_assoc())
             {
                 $Position_NonFree["{$FetchData['system']}:{$FetchData['planet']}"] = true;
             }
@@ -224,9 +226,9 @@ if(isset($_GET['register']))
             $Query_CheckGalaxy2 .= "WHERE `galaxy` = {$GalaxyNo} AND ";
             $Query_CheckGalaxy2 .= "`planet` BETWEEN {$Planet_Lower} AND {$Planet_Higher};";
             $Result_CheckGalaxy2 = doquery($Query_CheckGalaxy2, 'galaxy');
-            if(mysql_num_rows($Result_CheckGalaxy2) > 0)
+            if($Result_CheckGalaxy2->num_rows > 0)
             {
-                while($FetchData = mysql_fetch_assoc($Result_CheckGalaxy2))
+                while($FetchData = $Result_CheckGalaxy2->fetch_assoc())
                 {
                     $Position_NonFree["{$FetchData['system']}:{$FetchData['planet']}"] = true;
                 }
@@ -264,9 +266,9 @@ if(isset($_GET['register']))
                 $Query_CheckGalaxy3 .= "WHERE `galaxy` = {$GalaxyNo} AND ";
                 $Query_CheckGalaxy3 .= "`planet` NOT BETWEEN {$Planet_Lower} AND {$Planet_Higher};";
                 $Result_CheckGalaxy3 = doquery($Query_CheckGalaxy3, 'galaxy');
-                if(mysql_num_rows($Result_CheckGalaxy3) > 0)
+                if($Result_CheckGalaxy3->num_rows > 0)
                 {
-                    while($FetchData = mysql_fetch_assoc($Result_CheckGalaxy3))
+                    while($FetchData = $Result_CheckGalaxy3->fetch_assoc())
                     {
                         $Position_NonFree["{$FetchData['system']}:{$FetchData['planet']}"] = true;
                     }
@@ -350,19 +352,23 @@ if(isset($_GET['register']))
                         $Query_InsertRefData_Matches = 'null';
 
                         $Query_SelectIPMatches = "SELECT `ID` FROM {{table}} WHERE `Type` = 'ip' AND `Value` IN (".implode(',', $UserIPs).");";
+
                         $Result_SelectIPMatches = doquery($Query_SelectIPMatches, 'used_ip_and_ua');
-                        if(mysql_num_rows($Result_SelectIPMatches) > 0)
+
+                        if($Result_SelectIPMatches->num_rows > 0)
                         {
-                            while($FetchData = mysql_fetch_assoc($Result_SelectIPMatches))
+                            while($FetchData = $Result_SelectIPMatches->fetch_assoc())
                             {
                                 $MatchedIPIDs[] = $FetchData['ID'];
                             }
 
                             $Query_SelectEnterLogMatches = "SELECT `ID` FROM {{table}} WHERE `IP_ID` IN (".implode(',', $MatchedIPIDs).");";
+
                             $Result_SelectEnterLogMatches = doquery($Query_SelectEnterLogMatches, 'user_enterlog');
-                            if(mysql_num_rows($Result_SelectEnterLogMatches) > 0)
+
+                            if($Result_SelectEnterLogMatches->num_rows > 0)
                             {
-                                while($FetchData = mysql_fetch_assoc($Result_SelectEnterLogMatches))
+                                while($FetchData = $Result_SelectEnterLogMatches->fetch_assoc())
                                 {
                                     $MatchedEnterLogIDs[] = $FetchData['ID'];
                                 }

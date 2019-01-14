@@ -155,7 +155,7 @@ if(isset($_POST['sent']) && $_POST['sent'] == 1)
                                 $Query_Update .= implode(',', $Query_Update_Set);
                             }
                             doquery($Query_Update, 'planets');
-                            if(mysql_affected_rows() > 0)
+                            if(getDBLink()->affected_rows > 0)
                             {
                                 $_MsgBox = array
                                 (

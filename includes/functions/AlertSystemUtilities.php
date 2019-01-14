@@ -9,14 +9,14 @@ function AlertUtils_IPIntersect($FirstUserID, $SecondUserID, $ExcludeRules = arr
     $Query_SelectIPs .= "`Count` > `FailCount`;";
     $Result_SelectIPs = doquery($Query_SelectIPs, 'user_enterlog');
 
-    if(mysql_num_rows($Result_SelectIPs) == 0)
+    if($Result_SelectIPs->num_rows == 0)
     {
         return false;
     }
 
     $ForIntersection = array();
     $IPLogData = array();
-    while($FetchData = mysql_fetch_assoc($Result_SelectIPs))
+    while($FetchData = $Result_SelectIPs->fetch_assoc())
     {
         if(!isset($IPLogData[$FetchData['User_ID']][$FetchData['IP_ID']]['Count']))
         {
@@ -139,9 +139,9 @@ function AlertUtils_CheckFilters($FiltersData, $CacheSettings = array())
         $Query_GetFilters .= ");";
         $Result_GetFilters = doquery($Query_GetFilters, 'system_alerts_filters');
 
-        if(mysql_num_rows($Result_GetFilters) > 0)
+        if($Result_GetFilters->num_rows > 0)
         {
-            while($Filter = mysql_fetch_assoc($Result_GetFilters))
+            while($Filter = $Result_GetFilters->fetch_assoc())
             {
                 $Filters[] = $Filter;
                 if($CacheSettings['Save'] === true)

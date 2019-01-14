@@ -12,12 +12,15 @@ function FleetControl_Retreat($FleetSelector, $InstandRetreat = false)
 
     $Fields_SelectFleets = '`f`.`fleet_id`, `f`.`fleet_owner`, `f`.`fleet_mission`, `f`.`fleet_mess`, `f`.`fleet_end_stay`, `f`.`fleet_send_time`, `f`.`fleet_start_time`, `a`.`fleets_id`';
     $Query_SelectFleets = "SELECT {$Fields_SelectFleets} FROM {{table}} AS `f` LEFT JOIN {{prefix}}acs AS `a` ON `a`.`main_fleet_id` = `f`.`fleet_id` WHERE {$FleetSelector};";
-    $SelectFleets = doquery($Query_SelectFleets, 'fleets');
-    $RowsCount = mysql_num_rows($SelectFleets);
+
+    $SQLResult_GetFleets = doquery($Query_SelectFleets, 'fleets');
+
+    $RowsCount = $SQLResult_GetFleets->num_rows;
+
     if($RowsCount > 0)
     {
         // Parse Fleets
-        while($Fleet = mysql_fetch_assoc($SelectFleets))
+        while($Fleet = $SQLResult_GetFleets->fetch_assoc())
         {
             if($Fleet['fleet_mission'] == 10)
             {
@@ -174,10 +177,12 @@ function FleetControl_Retreat($FleetSelector, $InstandRetreat = false)
                 $GetACSWhere[] = "`fleets_id` LIKE '%|{$FleetID}|%'";
             }
             $Query_SelectACS = "SELECT `id`, `fleets_id`, `user_joined`, `main_fleet_id` FROM {{table}} WHERE ".implode(' OR ', $GetACSWhere).";";
-            $SelectACS = doquery($Query_SelectACS, 'acs');
-            if(mysql_num_rows($SelectACS) > 0)
+
+            $SQLResult_GetACS = doquery($Query_SelectACS, 'acs');
+
+            if($SQLResult_GetACS->num_rows > 0)
             {
-                while($ACS = mysql_fetch_assoc($SelectACS))
+                while($ACS = $SQLResult_GetACS->fetch_assoc())
                 {
                     if(in_array($ACS['main_fleet_id'], $DeleteACS))
                     {
@@ -217,8 +222,10 @@ function FleetControl_Retreat($FleetSelector, $InstandRetreat = false)
                 if(!empty($GetFleetOwners))
                 {
                     $Query_SelectFleetOwners = "SELECT `fleet_id`, `fleet_owner` FROM {{table}} WHERE `fleet_id` IN (".implode(', ', $GetFleetOwners).");";
-                    $SelectFleetOwners = doquery($Query_SelectFleetOwners, 'fleets');
-                    while($Owners = mysql_fetch_assoc($SelectFleetOwners))
+
+                    $SQLResult_GetFleetOwners = doquery($Query_SelectFleetOwners, 'fleets');
+
+                    while($Owners = $SQLResult_GetFleetOwners->fetch_assoc())
                     {
                         $FleetsOwners[$Owners['fleet_id']] = $Owners['fleet_owner'];
                     }

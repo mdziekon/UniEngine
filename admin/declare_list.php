@@ -98,7 +98,11 @@ if(CheckAuth('supportadmin'))
     {
         $_Lang['Declarations_Header_ShowAll'] = $_Lang['Declarations_Header_HideDel'];
     }
-    $query = doquery("SELECT * FROM {{table}} {$AddWhere} ORDER BY `time` DESC", 'declarations');
+
+    $SQLResult_GetDeclarations = doquery(
+        "SELECT * FROM {{table}} {$AddWhere} ORDER BY `time` DESC",
+        'declarations'
+    );
 
     $parse = $_Lang;
     $parse['adm_ul_table'] = '';
@@ -108,9 +112,9 @@ if(CheckAuth('supportadmin'))
     }
     $i = 0;
 
-    if(mysql_num_rows($query) > 0)
+    if($SQLResult_GetDeclarations->num_rows > 0)
     {
-        while($u = mysql_fetch_assoc($query))
+        while($u = $SQLResult_GetDeclarations->fetch_assoc())
         {
             $UserTemp = explode(',', $u['users']);
             foreach($UserTemp as $Key)
@@ -148,9 +152,12 @@ if(CheckAuth('supportadmin'))
             $Data[] = $u;
         }
 
-        $SelectUsers = doquery("SELECT `id`, `username` FROM {{table}} WHERE `id` IN (".implode(',', $UsersID).")", 'users');
+        $SQLResult_GetUsers = doquery(
+            "SELECT `id`, `username` FROM {{table}} WHERE `id` IN (".implode(',', $UsersID).")",
+            'users'
+        );
 
-        while($Users = mysql_fetch_assoc($SelectUsers))
+        while($Users = $SQLResult_GetUsers->fetch_assoc())
         {
             $UserNames[$Users['id']] = $Users['username'];
         }

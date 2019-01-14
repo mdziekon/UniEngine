@@ -17,8 +17,8 @@ function SendSimpleMultipleMessages($MessagesArray)
         {
             $Message['Thread_IsLast'] = '0';
         }
-        $Message['subject'] = mysql_real_escape_string($Message['subject']);
-        $Message['text']    = mysql_real_escape_string($Message['text']);
+        $Message['subject'] = getDBLink()->escape_string($Message['subject']);
+        $Message['text']    = getDBLink()->escape_string($Message['text']);
         $Array_Insert[] = "(NULL, '{$Message['id_owner']}', '{$Message['id_sender']}', '{$Message['time']}', '{$Message['type']}', '{$Message['from']}', '{$Message['subject']}', '{$Message['text']}', {$Message['Thread_ID']}, {$Message['Thread_IsLast']}) ";
     }
     $Query_Insert .= implode(', ', $Array_Insert).';';

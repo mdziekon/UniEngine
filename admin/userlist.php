@@ -420,7 +420,7 @@ if($FilterResult !== true)
             $CurrentPage = ceil($SelectCount / $PerPage);
             $GetStart = (string) ((($CurrentPage - 1) * $PerPage) + 0);
         }
-        $query = doquery("SELECT {$UserFields} FROM {{table}} WHERE `id` IN ({$WhereClausure}) ORDER BY `{$TypeSort}` {$SortMode} LIMIT {$GetStart}, {$PerPage};", 'users');
+        $SQLResult_GetUsers = doquery("SELECT {$UserFields} FROM {{table}} WHERE `id` IN ({$WhereClausure}) ORDER BY `{$TypeSort}` {$SortMode} LIMIT {$GetStart}, {$PerPage};", 'users');
     }
     else
     {
@@ -441,7 +441,7 @@ else
         $CurrentPage = ceil($SelectCount / $PerPage);
         $GetStart = (string) ((($CurrentPage - 1) * $PerPage) + 0);
     }
-    $query = doquery("SELECT {$UserFields} FROM {{table}} ORDER BY `{$TypeSort}` {$SortMode} LIMIT {$GetStart}, {$PerPage};", 'users');
+    $SQLResult_GetUsers = doquery("SELECT {$UserFields} FROM {{table}} ORDER BY `{$TypeSort}` {$SortMode} LIMIT {$GetStart}, {$PerPage};", 'users');
 }
 $Loading['EndTime'] = microtime(true);
 
@@ -457,7 +457,7 @@ if($SelectCount > $PerPage)
 
 if($SelectCount > 0)
 {
-    while($UserData = mysql_fetch_assoc($query))
+    while($UserData = $SQLResult_GetUsers->fetch_assoc())
     {
         $Users[$UserData['id']] =
         array
@@ -545,10 +545,10 @@ if($SelectCount > 0)
 
     if(!empty($GetIPsQuery))
     {
-        $GetIPsResult = doquery(implode(' UNION ', $GetIPsQuery), 'users');
-        if(mysql_num_rows($GetIPsResult) > 0)
+        $SQLResult_GetIPs = doquery(implode(' UNION ', $GetIPsQuery), 'users');
+        if($SQLResult_GetIPs->num_rows > 0)
         {
-            while($IPsData = mysql_fetch_assoc($GetIPsResult))
+            while($IPsData = $SQLResult_GetIPs->fetch_assoc())
             {
                 if($IPsData['type'] == 1)
                 {
@@ -567,10 +567,10 @@ if($SelectCount > 0)
     if(!empty($GetAllys))
     {
         $Query = "SELECT `id`, `ally_name`, `ally_owner` FROM {{table}} WHERE `id` IN (".implode(', ', $GetAllys).");";
-        $Result = doquery($Query, 'alliance');
-        if(mysql_num_rows($Result) > 0)
+        $SQLResult_GetAlliances = doquery($Query, 'alliance');
+        if($SQLResult_GetAlliances->num_rows > 0)
         {
-            while($Data = mysql_fetch_assoc($Result))
+            while($Data = $SQLResult_GetAlliances->fetch_assoc())
             {
                 $Allys[$Data['id']] =
                 array

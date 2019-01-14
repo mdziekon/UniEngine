@@ -108,10 +108,15 @@ if($DelSelSoft === true || $DelSel === true || $SetRead === true || $SetNotRead 
                 {
                     $CheckCopyTexts[] = "'{COPY_MSG_#{$CheckID}}'";
                 }
-                $CheckCopy = doquery("SELECT `id` FROM {{table}} WHERE `text` IN (".implode(', ', $CheckCopyTexts).");", 'messages');
-                if(mysql_num_rows($CheckCopy) > 0)
+
+                $SQLResult_FindAllMessageCopies = doquery(
+                    "SELECT `id` FROM {{table}} WHERE `text` IN (".implode(', ', $CheckCopyTexts).");",
+                    'messages'
+                );
+
+                if($SQLResult_FindAllMessageCopies->num_rows > 0)
                 {
-                    while($AdditionalIDs = mysql_fetch_assoc($CheckCopy))
+                    while($AdditionalIDs = $SQLResult_FindAllMessageCopies->fetch_assoc())
                     {
                         if(!in_array($AdditionalIDs['id'], $DeleteIDs))
                         {
@@ -122,10 +127,17 @@ if($DelSelSoft === true || $DelSel === true || $SetRead === true || $SetNotRead 
                 if(!empty($DeleteIDs))
                 {
                     $DeleteIDs = implode(',', $DeleteIDs);
-                    $SelectThreads = false;
+
+                    $IsThreadsUpdateNeeded = false;
+
                     if($DelSelSoft === true || $DelSel === true)
                     {
-                        $SelectThreads = doquery("SELECT `Thread_ID` FROM {{table}} WHERE `Thread_ID` > 0 AND `id` IN ({$DeleteIDs});", 'messages');
+                        $IsThreadsUpdateNeeded = true;
+
+                        $SQLResult_GetThreadedMessages = doquery(
+                            "SELECT `Thread_ID` FROM {{table}} WHERE `Thread_ID` > 0 AND `id` IN ({$DeleteIDs});",
+                            'messages'
+                        );
                     }
 
                     if($DelSelSoft === true)
@@ -145,12 +157,12 @@ if($DelSelSoft === true || $DelSel === true || $SetRead === true || $SetNotRead 
                         doquery("UPDATE {{table}} SET `read` = 0 WHERE `id` IN ({$DeleteIDs});", 'messages');
                     }
 
-                    if($SelectThreads != false)
+                    if($IsThreadsUpdateNeeded != false)
                     {
-                        if(mysql_num_rows($SelectThreads) > 0)
+                        if($SQLResult_GetThreadedMessages->num_rows > 0)
                         {
                             $UpdateThreads = array();
-                            while($FetchData = mysql_fetch_assoc($SelectThreads))
+                            while($FetchData = $SQLResult_GetThreadedMessages->fetch_assoc())
                             {
                                 if(!in_array($FetchData['Thread_ID'], $UpdateThreads))
                                 {
@@ -158,11 +170,16 @@ if($DelSelSoft === true || $DelSel === true || $SetRead === true || $SetNotRead 
                                 }
                             }
                             $IDs = implode(',', $UpdateThreads);
-                            $SelectIDs = doquery("SELECT MAX(`id`) AS `id` FROM {{table}} WHERE `Thread_ID` IN ({$IDs}) AND `deleted` = false GROUP BY `Thread_ID`, `id_owner`;", 'messages');
-                            if(mysql_num_rows($SelectIDs) > 0)
+
+                            $SQLResult_GetThreadsToUpdate = doquery(
+                                "SELECT MAX(`id`) AS `id` FROM {{table}} WHERE `Thread_ID` IN ({$IDs}) AND `deleted` = false GROUP BY `Thread_ID`, `id_owner`;",
+                                'messages'
+                            );
+
+                            if($SQLResult_GetThreadsToUpdate->num_rows > 0)
                             {
                                 $UpdateThreads = array();
-                                while($SelectData = mysql_fetch_assoc($SelectIDs))
+                                while($SelectData = $SQLResult_GetThreadsToUpdate->fetch_assoc())
                                 {
                                     $UpdateThreads[] = $SelectData['id'];
                                 }
@@ -192,11 +209,15 @@ else if($CurrPage != $SelPage)
 $ExcludedUsers = false;
 if(CheckAuth('supportadmin'))
 {
-    $Query = "SELECT `id` FROM {{table}} WHERE `authlevel` >= {$_User['authlevel']} AND `id` != {$_User['id']};";
-    $Result = doquery($Query, 'users');
-    if(mysql_num_rows($Result) > 0)
+    $SQLQuery_GetUsersWithHigherAuth = "SELECT `id` FROM {{table}} WHERE `authlevel` >= {$_User['authlevel']} AND `id` != {$_User['id']};";
+    $SQLResult_GetUsersWithHigherAuth = doquery(
+        $SQLQuery_GetUsersWithHigherAuth,
+        'users'
+    );
+
+    if($SQLResult_GetUsersWithHigherAuth->num_rows > 0)
     {
-        while($Data = mysql_fetch_assoc($Result))
+        while($Data = $SQLResult_GetUsersWithHigherAuth->fetch_assoc())
         {
             $ExcludedUsers[] = $Data['id'];
         }
@@ -218,10 +239,14 @@ if($_POST['user_id'] > 0)
     }
     else
     {
-        $AdditionalSelect = doquery("SELECT `id` FROM {{table}} WHERE `ally_id` = {$_POST['user_id']};", 'users');
-        if(mysql_num_rows($AdditionalSelect) > 0)
+        $SQLResult_GetAllianceUsers = doquery(
+            "SELECT `id` FROM {{table}} WHERE `ally_id` = {$_POST['user_id']};",
+            'users'
+        );
+
+        if($SQLResult_GetAllianceUsers->num_rows > 0)
         {
-            while($AdditionalData = mysql_fetch_assoc($AdditionalSelect))
+            while($AdditionalData = $SQLResult_GetAllianceUsers->fetch_assoc())
             {
                 $AdditionalUsers[] = $AdditionalData['id'];
             }
@@ -330,14 +355,15 @@ $GetMessages .= "LEFT JOIN {{prefix}}users as `users` ON `id_sender` = `users`.`
 $GetMessages .= $WhereClausures;
 $GetMessages .= " ORDER BY {{table}}.`time` DESC, {{table}}.`id` DESC ";
 $GetMessages .= "LIMIT {$StartRec}, {$_PerPage};";
-$Messages = doquery($GetMessages, 'messages');
+
+$SQLResult_GetMessages = doquery($GetMessages, 'messages');
 
 if($_GameConfig['enable_bbcode'] == 1)
 {
     include($_EnginePath.'includes/functions/BBcodeFunction.php');
 }
 
-while($row = mysql_fetch_assoc($Messages))
+while($row = $SQLResult_GetMessages->fetch_assoc())
 {
     $bloc = array();
 
@@ -450,10 +476,12 @@ else
     {
         $GetMsgCopiesIDs = implode(', ', array_keys($GetMsgCopies));
         $GetMsgCopiesQuery  = "SELECT `id`, `subject`, `text` FROM {{table}} WHERE `id` IN ({$GetMsgCopiesIDs});";
-        $GetMsgCopiesResult = doquery($GetMsgCopiesQuery, 'messages');
-        if(mysql_num_rows($GetMsgCopiesResult) > 0)
+
+        $SQLResult_GetCopiedMessageSources = doquery($GetMsgCopiesQuery, 'messages');
+
+        if($SQLResult_GetCopiedMessageSources->num_rows > 0)
         {
-            while($GetMsgCopiesRow = mysql_fetch_assoc($GetMsgCopiesResult))
+            while($GetMsgCopiesRow = $SQLResult_GetCopiedMessageSources->fetch_assoc())
             {
                 $GetMsgCopiesData[$GetMsgCopiesRow['id']] = $GetMsgCopiesRow;
             }

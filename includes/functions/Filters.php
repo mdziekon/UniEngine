@@ -512,11 +512,12 @@ function Filter_Users($String = '', $Type = '', $Flags = array())
     $Query['queryString'] = "SELECT {$Query['querySelect']} {$Query['queryString']}; -- FilterQuery";
 
     $Result = doquery($Query['queryString'], $Query['queryTable']);
-    if(mysql_num_rows($Result) > 0)
+
+    if($Result->num_rows > 0)
     {
         $SelectArrayCount = count($Query['querySelectArray']);
         $NeedValueCheck = ($SelectArrayCount > 1 ? true : false);
-        while($Data = mysql_fetch_assoc($Result))
+        while($Data = $Result->fetch_assoc())
         {
             foreach($Query['querySelectArray'] AS $FieldName)
             {

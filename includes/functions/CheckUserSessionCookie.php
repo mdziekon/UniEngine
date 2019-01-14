@@ -34,15 +34,15 @@ function CheckUserSessionCookie()
         $Query_GetUser .= "LEFT JOIN `{{prefix}}statpoints` AS `stats` ON `user`.`id` = `stats`.`id_owner` AND `stats`.`stat_type` = '1' ";
         $Query_GetUser .= "LEFT JOIN `{{prefix}}alliance` AS `ally` ON `ally`.`id` = `user`.`ally_id` ";
         $Query_GetUser .= "WHERE `user`.`id` = {$TheCookie[0]} LIMIT 1;";
-        $UserResult = doquery($Query_GetUser, 'users');
+        $SQLResult_GetUser = doquery($Query_GetUser, 'users');
 
         // Check if User exists
-        if(mysql_num_rows($UserResult) != 1)
+        if($SQLResult_GetUser->num_rows != 1)
         {
             includeLang('cookies');
             message($_Lang['cookies']['Error2'], $_Lang['cookies']['Title']);
         }
-        $UserRow = mysql_fetch_assoc($UserResult);
+        $UserRow = $SQLResult_GetUser->fetch_assoc();
 
         // Check if Password is correct
         if(!isset($__ServerConnectionSettings['secretword']))
@@ -77,9 +77,9 @@ function CheckUserSessionCookie()
         $Query_UpdateUser = '';
         $Query_UpdateUser .= "UPDATE {{table}} SET ";
         $Query_UpdateUser .= "`onlinetime` = UNIX_TIMESTAMP(), ";
-        $Query_UpdateUser .= "`current_page` = '".mysql_real_escape_string($_SERVER['REQUEST_URI'])."', ";
+        $Query_UpdateUser .= "`current_page` = '" . (getDBLink()->escape_string($_SERVER['REQUEST_URI'])) . "', ";
         $Query_UpdateUser .= "`user_lastip` = '{$_SERVER['REMOTE_ADDR']}', ";
-        $Query_UpdateUser .= "`user_agent` = '".mysql_real_escape_string($_SERVER['HTTP_USER_AGENT'])."', ";
+        $Query_UpdateUser .= "`user_agent` = '" . (getDBLink()->escape_string($_SERVER['HTTP_USER_AGENT'])) . "', ";
         $Query_UpdateUser .= "`screen_settings` = '".preg_replace('#[^0-9\_]{1,}#si', '', $_COOKIE['var_1124'])."' ";
         $Query_UpdateUser .= "WHERE `id` = {$TheCookie[0]} LIMIT 1;";
         doquery($Query_UpdateUser, 'users');

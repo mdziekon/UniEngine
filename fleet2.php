@@ -187,9 +187,9 @@ $CheckPlanetOwnerQuery .= "WHERE `planets`.`galaxy` = {$Target['galaxy']} AND `p
 $CheckPlanetOwnerQuery .= "LIMIT 1;";
 $CheckPlanetOwner = doquery($CheckPlanetOwnerQuery, 'planets');
 
-if(mysql_num_rows($CheckPlanetOwner) == 1)
+if($CheckPlanetOwner->num_rows == 1)
 {
-    $CheckPlanetOwner = mysql_fetch_assoc($CheckPlanetOwner);
+    $CheckPlanetOwner = $CheckPlanetOwner->fetch_assoc();
     $UsedPlanet = true;
     if($CheckPlanetOwner['owner'] == $_User['id'])
     {
@@ -218,6 +218,8 @@ if(mysql_num_rows($CheckPlanetOwner) == 1)
             $OwnerFriend = true;
         }
     }
+} else {
+    $CheckPlanetOwner = [];
 }
 
 // Parse Fleet Array
@@ -340,12 +342,16 @@ else
     }
 }
 
-if(in_array(1, $AvailableMissions))
+if(in_array(1, $AvailableMissions) && $CheckPlanetOwner['id'] > 0)
 {
-    $CheckACS = doquery("SELECT * FROM {{table}} WHERE (`users` LIKE '%|{$_User['id']}|%' OR `owner_id` = {$_User['id']}) AND `end_target_id` = {$CheckPlanetOwner['id']} AND `start_time` > UNIX_TIMESTAMP();", 'acs');
-    if(mysql_num_rows($CheckACS) > 0)
+    $SQLResult_CheckACS = doquery(
+        "SELECT * FROM {{table}} WHERE (`users` LIKE '%|{$_User['id']}|%' OR `owner_id` = {$_User['id']}) AND `end_target_id` = {$CheckPlanetOwner['id']} AND `start_time` > UNIX_TIMESTAMP();",
+        'acs'
+    );
+
+    if($SQLResult_CheckACS->num_rows > 0)
     {
-        while($ACSData = mysql_fetch_assoc($CheckACS))
+        while($ACSData = $SQLResult_CheckACS->fetch_assoc())
         {
             $ACSData['fleets_count'] += 1;
             $ACSList[$ACSData['id']] = "{$ACSData['name']} ({$_Lang['fl_acs_fleets']}: {$ACSData['fleets_count']})";

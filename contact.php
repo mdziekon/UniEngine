@@ -25,9 +25,10 @@ $QrySelectUser = '';
 $QrySelectUser .= "SELECT `username`, `email`, `authlevel` ";
 $QrySelectUser .= "FROM {{table}} ";
 $QrySelectUser .= "WHERE `authlevel` > 0 ORDER BY `authlevel` DESC;";
-$GetData = doquery($QrySelectUser, 'users');
 
-while($DataRow = mysql_fetch_assoc($GetData))
+$SQLResult_GetData = doquery($QrySelectUser, 'users');
+
+while($DataRow = $SQLResult_GetData->fetch_assoc())
 {
     $Row['Username']    = $DataRow['username'];
     $Row['Authlabel']    = $_Lang['user_level'][GetAuthLabel($DataRow)];

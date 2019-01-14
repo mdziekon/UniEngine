@@ -120,9 +120,9 @@ if(isset($_POST['send']) && $_POST['send'] == 1)
             $GetUsernames = implode(',', $GetUsernames);
             $Query_GetUsernames = "SELECT `id`, `username` FROM {{table}} WHERE `id` IN ({$GetUsernames}) LIMIT {$GetUsernamesCount};";
             $Result_GetUsernames = doquery($Query_GetUsernames, 'users');
-            if(mysql_num_rows($Result_GetUsernames) > 0)
+            if($Result_GetUsernames->num_rows > 0)
             {
-                while($FetchData = mysql_fetch_assoc($Result_GetUsernames))
+                while($FetchData = $Result_GetUsernames->fetch_assoc())
                 {
                     $Usernames[$FetchData['id']] = $FetchData['username'];
                 }
@@ -151,7 +151,7 @@ if(isset($_POST['send']) && $_POST['send'] == 1)
         $Query_GetFleets .= implode(' AND ', $Query_Where);
 
         $Result_GetFleets = doquery($Query_GetFleets, 'fleet_archive');
-        if(mysql_num_rows($Result_GetFleets) > 0)
+        if($Result_GetFleets->num_rows > 0)
         {
             $TPL_FleetRow = gettemplate('admin/bashDetector_fleetrow');
             $GetTargets = array();
@@ -159,7 +159,7 @@ if(isset($_POST['send']) && $_POST['send'] == 1)
             $BashCountersPlanet = array();
             $FoundBash = false;
 
-            while($FetchRow = mysql_fetch_assoc($Result_GetFleets))
+            while($FetchRow = $Result_GetFleets->fetch_assoc())
             {
                 $BashCountersUser += 1;
                 if(!isset($BashCountersPlanet[$FetchRow['Fleet_End_ID']]))
@@ -196,9 +196,9 @@ if(isset($_POST['send']) && $_POST['send'] == 1)
                 $Query_GetTargets .= "WHERE `id` IN ({$GetTargets}) LIMIT {$GetTargetsCount};";
 
                 $Result_GetTargets = doquery($Query_GetTargets, 'planets');
-                if(mysql_num_rows($Result_GetTargets) > 0)
+                if($Result_GetTargets->num_rows > 0)
                 {
-                    while($FetchData = mysql_fetch_assoc($Result_GetTargets))
+                    while($FetchData = $Result_GetTargets->fetch_assoc())
                     {
                         $Targets[$FetchData['id']] = $FetchData;
                     }

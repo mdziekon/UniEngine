@@ -185,9 +185,9 @@ if($_User['ally_id'] == 0)
 
                 $Result_ACreate_Check = doquery($Query_ACreate_Check, 'alliance');
                 $WarningBox = array();
-                if(mysql_num_rows($Result_ACreate_Check))
+                if($Result_ACreate_Check->num_rows)
                 {
-                    while($checkData = mysql_fetch_assoc($Result_ACreate_Check))
+                    while($checkData = $Result_ACreate_Check->fetch_assoc())
                     {
                         if(strtolower($checkData['ally_tag']) == strtolower($CreateTag))
                         {
@@ -212,7 +212,7 @@ if($_User['ally_id'] == 0)
                     $ThisArray = array_merge(array($ThisRowData['name']), $ThisArray);
                     $AllyCreate_RanksArray[] = $ThisArray;
                 }
-                $AllyCreate_RanksArray = mysql_real_escape_string(json_encode($AllyCreate_RanksArray));
+                $AllyCreate_RanksArray = getDBLink()->escape_string(json_encode($AllyCreate_RanksArray));
 
                 $Query_ACreate_Create = '';
                 $Query_ACreate_Create .= "INSERT INTO {{table}} SET ";
@@ -312,7 +312,7 @@ if($_User['ally_id'] == 0)
 
                     $SearchRowTPL = gettemplate('alliance_searchresult_row');
                     $_Lang['result'] = '';
-                    while($Result = mysql_fetch_assoc($Result_ASearch_Search))
+                    while($Result = $Result_ASearch_Search->fetch_assoc())
                     {
                         $SanitizeSearch = preg_replace($TagOrNameSanitize, '\\\$1', $searchText);
                         $Result['ally_tag'] = preg_replace('#('.$SanitizeSearch.'){1,}#si', '<b class="lime">$1</b>', $Result['ally_tag']);
@@ -370,7 +370,7 @@ if($_User['ally_id'] == 0)
                 $RequestText = strip_tags(stripslashes(trim($_POST['text'])));
                 if(!empty($RequestText))
                 {
-                    $RequestText = mysql_real_escape_string(substr($RequestText, 0, $_MaxLength_Request));
+                    $RequestText = getDBLink()->escape_string(substr($RequestText, 0, $_MaxLength_Request));
                     doquery("UPDATE {{table}} SET `ally_request` = {$AllyID}, `ally_request_text` = '{$RequestText}', `ally_register_time` = UNIX_TIMESTAMP() WHERE `id` = {$_User['id']};", 'users');
                     message($_Lang['AApp_Done'], $MsgTitle, 'alliance.php', 3);
                 }
@@ -448,10 +448,10 @@ if($_User['ally_id'] == 0)
             $Query_InvList_Get .= "WHERE `ai`.`OwnerID` = {$_User['id']} AND `State` != 0 ";
             $Query_InvList_Get .= " ORDER BY `ai`.`State` DESC, `ai`.`Date` DESC;";
             $Result_InvList_Get = doquery($Query_InvList_Get, 'ally_invites');
-            if(mysql_num_rows($Result_InvList_Get) > 0)
+            if($Result_InvList_Get->num_rows > 0)
             {
                 $TPL_Row = gettemplate('alliance_defaultmenu_invites_row');
-                while($FetchData = mysql_fetch_assoc($Result_InvList_Get))
+                while($FetchData = $Result_InvList_Get->fetch_assoc())
                 {
                     $FetchData['Date'] = prettyDate('d m Y, H:i:s', $FetchData['Date'], 1);
                     if($FetchData['State'] == 1)
@@ -633,9 +633,9 @@ elseif($_User['ally_id'] > 0 AND $_User['ally_request'] == 0)
                     }
                     $Result_AMassMsg_Members = doquery($Query_AMassMsg_Members, 'users');
 
-                    if(mysql_num_rows($Result_AMassMsg_Members) > 0)
+                    if($Result_AMassMsg_Members->num_rows > 0)
                     {
-                        while($FetchData = mysql_fetch_assoc($Result_AMassMsg_Members))
+                        while($FetchData = $Result_AMassMsg_Members->fetch_assoc())
                         {
                             $UsersID[] = $FetchData['id'];
                             $UsersNicks[] = $FetchData['username'];
@@ -861,10 +861,10 @@ elseif($_User['ally_id'] > 0 AND $_User['ally_request'] == 0)
         }
         $Query_InvList_Get .= " ORDER BY `ai`.`State` DESC, `ai`.`Date` DESC;";
         $Result_InvList_Get = doquery($Query_InvList_Get, 'ally_invites');
-        if(mysql_num_rows($Result_InvList_Get) > 0)
+        if($Result_InvList_Get->num_rows > 0)
         {
             $TPL_Row = gettemplate('alliance_invlist_row');
-            while($FetchData = mysql_fetch_assoc($Result_InvList_Get))
+            while($FetchData = $Result_InvList_Get->fetch_assoc())
             {
                 $FetchData['Date'] = prettyDate('d m Y, H:i:s', $FetchData['Date'], 1);
                 if($FetchData['State'] == 1 AND ($_ThisUserRank['managereq'] === true OR $_User['id'] == $FetchData['SenderID']))
@@ -966,7 +966,7 @@ elseif($_User['ally_id'] > 0 AND $_User['ally_request'] == 0)
                         }
                         if($TempText != $Ally['ally_description'])
                         {
-                            $InsertText = mysql_real_escape_string($TempText);
+                            $InsertText = getDBLink()->escape_string($TempText);
                             $ChangeQuery[] = "`ally_description` = '{$InsertText}'";
                             $Ally['ally_description'] = $TempText;
                             $Info[] = $_Lang['ADM_ExtTextChanged'];
@@ -986,7 +986,7 @@ elseif($_User['ally_id'] > 0 AND $_User['ally_request'] == 0)
                         }
                         if($TempText != $Ally['ally_text'])
                         {
-                            $InsertText = mysql_real_escape_string($TempText);
+                            $InsertText = getDBLink()->escape_string($TempText);
                             $ChangeQuery[] = "`ally_text` = '{$InsertText}'";
                             $Ally['ally_text'] = $TempText;
                             $Info[] = $_Lang['ADM_IntTextChanged'];
@@ -1006,7 +1006,7 @@ elseif($_User['ally_id'] > 0 AND $_User['ally_request'] == 0)
                         }
                         if($TempText != $Ally['ally_request'])
                         {
-                            $InsertText = mysql_real_escape_string($TempText);
+                            $InsertText = getDBLink()->escape_string($TempText);
                             $ChangeQuery[] = "`ally_request` = '{$InsertText}'";
                             $Ally['ally_request'] = $TempText;
                             $Info[] = $_Lang['ADM_ReqTextChanged'];
@@ -1325,7 +1325,7 @@ elseif($_User['ally_id'] > 0 AND $_User['ally_request'] == 0)
                         $_POST['website'] = trim($_POST['website']);
                         if(preg_match('/^(http\:\/\/|www\.|https\:\/\/){1}.*?$/D', $_POST['website'], $Matches))
                         {
-                            $NewWebsite = mysql_real_escape_string(strip_tags($_POST['website']));
+                            $NewWebsite = getDBLink()->escape_string(strip_tags($_POST['website']));
                             if($Matches[1] == 'www.')
                             {
                                 $NewWebsite = substr($NewWebsite, 4);
@@ -1359,7 +1359,7 @@ elseif($_User['ally_id'] > 0 AND $_User['ally_request'] == 0)
                         $_POST['logourl'] = trim($_POST['logourl']);
                         if(preg_match('/^(http\:\/\/|www\.|https\:\/\/){1}.*?$/D', $_POST['logourl'], $Matches))
                         {
-                            $NewLogo = mysql_real_escape_string(strip_tags($_POST['logourl']));
+                            $NewLogo = getDBLink()->escape_string(strip_tags($_POST['logourl']));
                             if($Matches[1] == 'www.')
                             {
                                 $NewLogo = substr($NewLogo, 4);
@@ -1470,7 +1470,7 @@ elseif($_User['ally_id'] > 0 AND $_User['ally_request'] == 0)
 
                 $Result_AHandOver_Members = doquery($Query_AHandOver_Members, 'users');
                 $_Lang['UserList'] = '';
-                while($FetchData = mysql_fetch_assoc($Result_AHandOver_Members))
+                while($FetchData = $Result_AHandOver_Members->fetch_assoc())
                 {
                     $_Lang['UserList'] .= "<option value=\"{$FetchData['id']}\">{$FetchData['username']} ({$Ally['ally_ranks'][$FetchData['ally_rank_id']]['name']})</option>";
                     $Members[$FetchData['id']] = $FetchData['ally_rank_id'];
@@ -1666,9 +1666,9 @@ elseif($_User['ally_id'] > 0 AND $_User['ally_request'] == 0)
                         if(!empty($RankChanges))
                         {
                             $MembersList = doquery("SELECT `id`, `ally_id`, `ally_rank_id` FROM {{table}} WHERE `id` IN (".implode(', ', array_keys($RankChanges)).");", 'users');
-                            if(mysql_num_rows($MembersList) > 0)
+                            if($MembersList->num_rows > 0)
                             {
-                                while($FetchData = mysql_fetch_assoc($MembersList))
+                                while($FetchData = $MembersList->fetch_assoc())
                                 {
                                     if($FetchData['ally_id'] == $Ally['id'] AND $RankChanges[$FetchData['id']] != $FetchData['ally_rank_id'] AND in_array($FetchData['ally_rank_id'], $AllowedRanksChange))
                                     {
@@ -1901,7 +1901,7 @@ elseif($_User['ally_id'] > 0 AND $_User['ally_request'] == 0)
                 $Query_ARequests_Get .= "WHERE `ally_request` = {$Ally['id']} ORDER BY {$SortBy} {$SortHow};";
 
                 $GetRequests = doquery($Query_ARequests_Get, 'users');
-                $ReqCount = mysql_num_rows($GetRequests);
+                $ReqCount = $GetRequests->num_rows;
                 $_Lang['RequestCount'] = $ReqCount;
 
                 if($_ThisUserRank['managereq'] === true)
@@ -1919,7 +1919,7 @@ elseif($_User['ally_id'] > 0 AND $_User['ally_request'] == 0)
                 {
                     $_Lang['HideNoRequests'] = 'hide';
                     $_Lang['RequestRows'] = '';
-                    while($Request = mysql_fetch_assoc($GetRequests))
+                    while($Request = $GetRequests->fetch_assoc())
                     {
                         $Request['ally_request_text'] = stripslashes($Request['ally_request_text']);
                         if($Request['total_rank'] > 0)
@@ -2001,7 +2001,7 @@ elseif($_User['ally_id'] > 0 AND $_User['ally_request'] == 0)
                 $_Lang['HideInfoBox'] = 'hide';
 
                 $Result_ARanks_Counter = doquery("SELECT COUNT(*) AS `Count`, `ally_rank_id` FROM {{table}} WHERE `ally_id` = {$Ally['id']} GROUP BY `ally_rank_id`;", 'users');
-                while($FetchData = mysql_fetch_assoc($Result_ARanks_Counter))
+                while($FetchData = $Result_ARanks_Counter->fetch_assoc())
                 {
                     $RanksCountArray[$FetchData['ally_rank_id']] = $FetchData['Count'];
                 }
@@ -2086,7 +2086,13 @@ elseif($_User['ally_id'] > 0 AND $_User['ally_request'] == 0)
                                             }
                                             $Ally['ally_ranks'][] = $NewRankData;
 
-                                            doquery("UPDATE {{table}} SET `ally_ranks` = '".mysql_real_escape_string(json_encode($Ally['ally_ranks_org']))."' WHERE `id` = {$Ally['id']};", 'alliance');
+                                            $NewRanksObj = getDBLink()->escape_string(json_encode($Ally['ally_ranks_org']));
+
+                                            doquery(
+                                                "UPDATE {{table}} SET `ally_ranks` = '{$NewRanksObj}' WHERE `id` = {$Ally['id']};",
+                                                'alliance'
+                                            );
+
                                             $InfoBoxCol = 'lime';
                                             $InfoBoxTxt = $_Lang['ADM_RkL_AddedRank'];
                                         }
@@ -2296,7 +2302,10 @@ elseif($_User['ally_id'] > 0 AND $_User['ally_request'] == 0)
                                         }
                                     }
                                 }
-                                doquery("UPDATE {{table}} SET `ally_ranks` = '".mysql_real_escape_string(json_encode($Ally['ally_ranks_org']))."' WHERE `id` = {$Ally['id']};", 'alliance');
+
+                                $NewRanksObj = getDBLink()->escape_string(json_encode($Ally['ally_ranks_org']));
+
+                                doquery("UPDATE {{table}} SET `ally_ranks` = '{$NewRanksObj}' WHERE `id` = {$Ally['id']};", 'alliance');
                                 $InfoBoxCol = 'lime';
                                 if($RankNoExists > 0 OR $ChangingErrors > 0)
                                 {
@@ -2365,7 +2374,10 @@ elseif($_User['ally_id'] > 0 AND $_User['ally_request'] == 0)
                                     }
                                     unset($Ally['ally_ranks'][$RankID]);
                                     unset($Ally['ally_ranks_org'][$RankID]);
-                                    doquery("UPDATE {{table}} SET `ally_ranks` = '".mysql_real_escape_string(json_encode($Ally['ally_ranks_org']))."' WHERE `id` = {$Ally['id']};", 'alliance');
+
+                                    $NewRanksObj = getDBLink()->escape_string(json_encode($Ally['ally_ranks_org']));
+
+                                    doquery("UPDATE {{table}} SET `ally_ranks` = '{$NewRanksObj}' WHERE `id` = {$Ally['id']};", 'alliance');
 
                                     $InfoBoxCol = 'lime';
                                     $InfoBoxTxt = $_Lang['ADM_RkL_RankDeleted'];

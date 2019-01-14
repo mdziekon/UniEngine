@@ -40,10 +40,15 @@ function GetBuildingTime($TheUser, $ThePlanet, $ElementID)
         else if($intergal_lab >= 1)
         {
             $lablevel = 0;
-            $empire = doquery("SELECT `{$_Vars_GameElements[31]}` FROM {{table}} WHERE `id_owner` = {$TheUser['id']} AND `{$_Vars_GameElements[31]}` > 0 ORDER BY `{$_Vars_GameElements[31]}` DESC LIMIT ".($intergal_lab + 1).";", 'planets');
-            if(mysql_num_rows($empire) > 1)
+
+            $SQLResult_GetPlanetsWithLab = doquery(
+                "SELECT `{$_Vars_GameElements[31]}` FROM {{table}} WHERE `id_owner` = {$TheUser['id']} AND `{$_Vars_GameElements[31]}` > 0 ORDER BY `{$_Vars_GameElements[31]}` DESC LIMIT ".($intergal_lab + 1).";",
+                'planets'
+            );
+
+            if($SQLResult_GetPlanetsWithLab->num_rows > 1)
             {
-                while($colony = mysql_fetch_assoc($empire))
+                while($colony = $SQLResult_GetPlanetsWithLab->fetch_assoc())
                 {
                     $lablevel += $colony[$_Vars_GameElements[31]];
                 }

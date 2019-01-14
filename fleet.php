@@ -140,8 +140,8 @@ else
 }
 
 // Get FlyingFleets Count
-$Fleets = doquery("SELECT `fleet_mission` FROM {{table}} WHERE `fleet_owner` = {$_User['id']};", 'fleets');
-while($FleetData = mysql_fetch_assoc($Fleets))
+$SQLResult_GetFlyingFleets = doquery("SELECT `fleet_mission` FROM {{table}} WHERE `fleet_owner` = {$_User['id']};", 'fleets');
+while($FleetData = $SQLResult_GetFlyingFleets->fetch_assoc())
 {
     $FlyingFleetsCount += 1;
     if($FleetData['fleet_mission'] == 15)
@@ -174,15 +174,24 @@ $i = 0;
 $ACSCounter = 1;
 
 $CheckACSFields = '`t`.`id`, `t`.`main_fleet_id`, `t`.`owner_id`, `t`.`fleets_id`, `t`.`start_time`, `t`.`end_galaxy`, `t`.`end_system`, `t`.`end_planet`, `t`.`end_type`, `userst`.`username`, `fleets`.`fleet_amount`, `fleets`.`fleet_array`, `fleet_start_galaxy`, `fleet_start_system`, `fleet_start_planet`, `fleet_start_type`, `fleet_start_time`';
-$CheckACS = doquery("SELECT {$CheckACSFields} FROM {{table}} AS `t` LEFT JOIN {{prefix}}users as `userst` ON `owner_id` = `userst`.`id` LEFT JOIN {{prefix}}fleets as `fleets` ON `main_fleet_id` = `fleets`.`fleet_id` WHERE (`users` LIKE '%|{$_User['id']}|%' OR `owner_id` = {$_User['id']}) AND `t`.`start_time` > UNIX_TIMESTAMP();", 'acs');
+
+$SQLResult_GetAvailableAlliedFlights = doquery(
+    "SELECT {$CheckACSFields} FROM {{table}} AS `t` LEFT JOIN {{prefix}}users as `userst` ON `owner_id` = `userst`.`id` LEFT JOIN {{prefix}}fleets as `fleets` ON `main_fleet_id` = `fleets`.`fleet_id` WHERE (`users` LIKE '%|{$_User['id']}|%' OR `owner_id` = {$_User['id']}) AND `t`.`start_time` > UNIX_TIMESTAMP();",
+    'acs'
+);
+
 $AddJoinButton = array();
 
-if(mysql_num_rows($CheckACS) > 0)
+if($SQLResult_GetAvailableAlliedFlights->num_rows > 0)
 {
-    $CheckACSForFleets = doquery("SELECT `main_fleet_id`, `fleets_id` FROM {{table}} WHERE (`users` LIKE '%|{$_User['id']}|%' OR `owner_id` = {$_User['id']}) AND `start_time` > UNIX_TIMESTAMP();", 'acs');
-    if(mysql_num_rows($CheckACSForFleets) > 0)
+    $CheckACSForFleets = doquery(
+        "SELECT `main_fleet_id`, `fleets_id` FROM {{table}} WHERE (`users` LIKE '%|{$_User['id']}|%' OR `owner_id` = {$_User['id']}) AND `start_time` > UNIX_TIMESTAMP();",
+        'acs'
+    );
+
+    if($CheckACSForFleets->num_rows > 0)
     {
-        while($ACSFleetsData = mysql_fetch_assoc($CheckACSForFleets))
+        while($ACSFleetsData = $CheckACSForFleets->fetch_assoc())
         {
             if(!empty($ACSFleetsData['fleets_id']))
             {
@@ -198,17 +207,21 @@ if(mysql_num_rows($CheckACS) > 0)
 
     if(!empty($ACSFleetsIDIn))
     {
-        $CheckACSFleets = doquery("SELECT `fleet_id`, `fleet_array`, `fleet_amount` FROM {{table}} WHERE `fleet_id` IN (".implode(', ', $ACSFleetsIDIn).");", 'fleets');
-        if(mysql_num_rows($CheckACSFleets) > 0)
+        $SQLResult_GetACSFlyingFleetsData = doquery(
+            "SELECT `fleet_id`, `fleet_array`, `fleet_amount` FROM {{table}} WHERE `fleet_id` IN (".implode(', ', $ACSFleetsIDIn).");",
+            'fleets'
+        );
+
+        if($SQLResult_GetACSFlyingFleetsData->num_rows > 0)
         {
-            while($ACSFleetsData = mysql_fetch_assoc($CheckACSFleets))
+            while($ACSFleetsData = $SQLResult_GetACSFlyingFleetsData->fetch_assoc())
             {
                 $ACSFleetsFillData[$ACSFleetsIDs[$ACSFleetsData['fleet_id']]][] = array('array' => $ACSFleetsData['fleet_array'], 'count' => $ACSFleetsData['fleet_amount']);
             }
         }
     }
 
-    while($ACSData = mysql_fetch_assoc($CheckACS))
+    while($ACSData = $SQLResult_GetAvailableAlliedFlights->fetch_assoc())
     {
         if($ACSData['owner_id'] == $_User['id'])
         {
@@ -345,7 +358,7 @@ if(mysql_num_rows($CheckACS) > 0)
     }
 }
 
-while($f = mysql_fetch_assoc($Result_GetFleets))
+while($f = $Result_GetFleets->fetch_assoc())
 {
     $FleetRow = array();
     $FleetRow['FleetDetails'] = '';
@@ -653,10 +666,12 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
                         $Query_GetAllyPacts .= "FROM {{table}} WHERE ";
                         $Query_GetAllyPacts .= "(`AllyID_Sender` = {$_User['ally_id']} OR `AllyID_Owner` = {$_User['ally_id']}) AND `Active` = 1 AND `Type` >= ".ALLYPACT_MILITARY;
                         $Query_GetAllyPacts .= "; -- fleet.php|GetAllyPacts";
+
                         $Result_GetAllyPacts = doquery($Query_GetAllyPacts, 'ally_pacts');
-                        if(mysql_num_rows($Result_GetAllyPacts) > 0)
+
+                        if($Result_GetAllyPacts->num_rows > 0)
                         {
-                            while($FetchData = mysql_fetch_assoc($Result_GetAllyPacts))
+                            while($FetchData = $Result_GetAllyPacts->fetch_assoc())
                             {
                                 $Data_GetInvitableUsers['AllyID'][] = $FetchData['AllyID'];
                             }
@@ -683,10 +698,12 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
 
                     $Query_GetInvitableUsers = implode(' UNION ', $Query_GetInvitableUsers);
                     $Query_GetInvitableUsers .= "; -- fleet.php|GetInvitableUsers";
-                    $GetInvitableUsers = doquery($Query_GetInvitableUsers, 'users');
-                    if(mysql_num_rows($GetInvitableUsers) > 0)
+
+                    $SQLResult_GetInvitableUsers = doquery($Query_GetInvitableUsers, 'users');
+
+                    if($SQLResult_GetInvitableUsers->num_rows > 0)
                     {
-                        while($InvitableUser = mysql_fetch_assoc($GetInvitableUsers))
+                        while($InvitableUser = $SQLResult_GetInvitableUsers->fetch_assoc())
                         {
                             $InvitableUsers[$InvitableUser['id']] = $InvitableUser;
                             $JSACSUsers[$InvitableUser['id']] = array('name' => $InvitableUser['username'], 'status' => '', 'canmove' => true, 'place' => 2);
@@ -726,10 +743,12 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
                             $Query_GetEmptyUsernames .= "SELECT `id`, `username` FROM {{table}} ";
                             $Query_GetEmptyUsernames .= "WHERE `id` IN ({$Data_GetEmptyUsernames['ids']}) ";
                             $Query_GetEmptyUsernames .= "LIMIT {$Data_GetEmptyUsernames['count']}; -- fleet.php|GetEmptyUsernames";
+
                             $Result_GetEmptyUsernames = doquery($Query_GetEmptyUsernames, 'users');
-                            if(mysql_num_rows($Result_GetEmptyUsernames) > 0)
+
+                            if($Result_GetEmptyUsernames->num_rows > 0)
                             {
-                                while($FetchData = mysql_fetch_assoc($Result_GetEmptyUsernames))
+                                while($FetchData = $Result_GetEmptyUsernames->fetch_assoc())
                                 {
                                     $JSACSUsers[$FetchData['id']]['name'] = $FetchData['username'];
                                 }

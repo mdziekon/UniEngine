@@ -84,9 +84,9 @@ function FlyingFleetHandler(&$planet, $IncludeFleetsFromEndIDs = array())
     $Query_GetACS .= "SELECT `main_fleet_id`, `end_target_id` FROM {{table}} ";
     $Query_GetACS .= "WHERE `owner_id` != {$planet['id_owner']} AND `user_joined` LIKE '%|{$planet['id_owner']}|%'; -- FlyingFleetHandler.php [#01]";
     $Result_GetACS = doquery($Query_GetACS, 'acs');
-    if(mysql_num_rows($Result_GetACS) > 0)
+    if($Result_GetACS->num_rows > 0)
     {
-        while($FetchData = mysql_fetch_assoc($Result_GetACS))
+        while($FetchData = $Result_GetACS->fetch_assoc())
         {
             if($FetchData['end_target_id'] == $planet['id'])
             {
@@ -104,9 +104,9 @@ function FlyingFleetHandler(&$planet, $IncludeFleetsFromEndIDs = array())
     $Query_MyGalaxyFleets .= "SELECT `fleet_mission`, `fleet_end_id_galaxy`, `fleet_end_galaxy`, `fleet_end_system`, `fleet_end_planet` FROM {{table}} ";
     $Query_MyGalaxyFleets .= "WHERE `fleet_mission` IN (7, 8) AND `fleet_owner` = {$planet['id_owner']}; -- FlyingFleetHandler.php [#02]";
     $Result_MyGalaxyFleets = doquery($Query_MyGalaxyFleets, 'fleets');
-    if(mysql_num_rows($Result_MyGalaxyFleets) > 0)
+    if($Result_MyGalaxyFleets->num_rows > 0)
     {
-        while($FetchData = mysql_fetch_assoc($Result_MyGalaxyFleets))
+        while($FetchData = $Result_MyGalaxyFleets->fetch_assoc())
         {
             if($FetchData['fleet_mission'] == 7)
             {
@@ -146,9 +146,9 @@ function FlyingFleetHandler(&$planet, $IncludeFleetsFromEndIDs = array())
     $Query_GetMyFleets .= ") AND `fleet_end_id` > 0 AND `fleet_mission` IN (1, 6, 7, 9, 10) ";
     $Query_GetMyFleets .= "AND (`fleet_start_time` <= UNIX_TIMESTAMP() OR `fleet_end_time` <= UNIX_TIMESTAMP()); -- FlyingFleetHandler.php [#03]";
     $Result_GetMyFleets = doquery($Query_GetMyFleets, 'fleets');
-    if(mysql_num_rows($Result_GetMyFleets) > 0)
+    if($Result_GetMyFleets->num_rows > 0)
     {
-        while($FetchData = mysql_fetch_assoc($Result_GetMyFleets))
+        while($FetchData = $Result_GetMyFleets->fetch_assoc())
         {
             if(!in_array($FetchData['fleet_end_id'], $NotOwnFleetsGetter_FleetEndIDs))
             {
@@ -185,9 +185,9 @@ function FlyingFleetHandler(&$planet, $IncludeFleetsFromEndIDs = array())
         $Query_GetNotOwnFleets .= "AND `fleet_owner` != {$planet['id_owner']} ";
         $Query_GetNotOwnFleets .= ";  -- FlyingFleetHandler.php [#04]";
         $Result_GetNotOwnFleets = doquery($Query_GetNotOwnFleets, 'fleets');
-        if(mysql_num_rows($Result_GetNotOwnFleets) > 0)
+        if($Result_GetNotOwnFleets->num_rows > 0)
         {
-            while($FetchData = mysql_fetch_assoc($Result_GetNotOwnFleets))
+            while($FetchData = $Result_GetNotOwnFleets->fetch_assoc())
             {
                 if(!in_array($FetchData['fleet_id'], $AdditionalIDs))
                 {
@@ -231,7 +231,7 @@ function FlyingFleetHandler(&$planet, $IncludeFleetsFromEndIDs = array())
 
     if(!empty($_BenchTool)){ $_BenchTool->simpleCountStop(); }
 
-    if(mysql_num_rows($Result_GetAllFleets) > 0)
+    if($Result_GetAllFleets->num_rows > 0)
     {
         if(!empty($_BenchTool)){ $_BenchTool->simpleCountStart(false, 'telemetry__f1'); }
 
@@ -240,7 +240,7 @@ function FlyingFleetHandler(&$planet, $IncludeFleetsFromEndIDs = array())
         $RowNo = 0;
         $PrepareData = array();
 
-        while($ThisFleet = mysql_fetch_assoc($Result_GetAllFleets))
+        while($ThisFleet = $Result_GetAllFleets->fetch_assoc())
         {
             $PrepareReturn = MissionCheckCalculation($ThisFleet, $FleetCalcTimestamp);
             foreach($PrepareReturn as $Key => $Value)
@@ -347,7 +347,7 @@ function FlyingFleetHandler(&$planet, $IncludeFleetsFromEndIDs = array())
                     $Query_PrepUsers .= "LEFT JOIN `{{prefix}}alliance` AS `ally` ON `users`.`ally_id` = `ally`.`id` ";
                     $Query_PrepUsers .= "WHERE `users`.`id` IN ({$Temp1}) LIMIT {$Temp2}; -- FlyingFleetHandler.php [#08]";
                     $Result_PrepUsers = doquery($Query_PrepUsers, 'users');
-                    while($FetchData = mysql_fetch_assoc($Result_PrepUsers))
+                    while($FetchData = $Result_PrepUsers->fetch_assoc())
                     {
                         $_FleetCache['users'][$FetchData['id']] = $FetchData;
                         if($FetchData['techQueue_EndTime'] > 0)
@@ -363,7 +363,7 @@ function FlyingFleetHandler(&$planet, $IncludeFleetsFromEndIDs = array())
                 $Temp2 = count($PrepareData['addPlanets']);
                 $Query_PrepAddPlanets = "SELECT `id_planet`, `id_moon` FROM {{table}} WHERE `id_moon` IN ({$Temp1}) LIMIT {$Temp2}; -- FlyingFleetHandler.php [#09]";
                 $Result_PrepAddPlanets = doquery($Query_PrepAddPlanets, 'galaxy');
-                while($FetchData = mysql_fetch_assoc($Result_PrepAddPlanets))
+                while($FetchData = $Result_PrepAddPlanets->fetch_assoc())
                 {
                     $_FleetCache['moonPlanets'][$FetchData['id_moon']] = $FetchData['id_planet'];
                     $PrepareData['planets'][] = $FetchData['id_planet'];
@@ -384,7 +384,7 @@ function FlyingFleetHandler(&$planet, $IncludeFleetsFromEndIDs = array())
                     $Temp2 = count($PrepareData['planets']);
                     $Query_PrepPlanets = "SELECT * FROM {{table}} WHERE `id` IN ({$Temp1}) LIMIT {$Temp2}; -- FlyingFleetHandler.php [#10]";
                     $Result_PrepPlanets = doquery($Query_PrepPlanets, 'planets');
-                    while($FetchData = mysql_fetch_assoc($Result_PrepPlanets))
+                    while($FetchData = $Result_PrepPlanets->fetch_assoc())
                     {
                         $_FleetCache['planets'][$FetchData['id']] = $FetchData;
                     }
@@ -407,7 +407,7 @@ function FlyingFleetHandler(&$planet, $IncludeFleetsFromEndIDs = array())
                 $Query_PrepDefFleets .= "`fleet_start_time` <= UNIX_TIMESTAMP() AND ";
                 $Query_PrepDefFleets .= "`fleet_end_stay` > UNIX_TIMESTAMP(); -- FlyingFleetHandler.php [#11]";
                 $Result_PrepDefFleets = doquery($Query_PrepDefFleets, 'fleets');
-                while($FetchData = mysql_fetch_assoc($Result_PrepDefFleets))
+                while($FetchData = $Result_PrepDefFleets->fetch_assoc())
                 {
                     $_FleetCache['defFleets'][$FetchData['fleet_end_id']][$FetchData['fleet_id']] = $FetchData;
                 }
@@ -436,7 +436,7 @@ function FlyingFleetHandler(&$planet, $IncludeFleetsFromEndIDs = array())
                 $Query_PrepACSFleets .= "LEFT JOIN {{prefix}}alliance AS `ally` ON `users`.`ally_id` = `ally`.`id` ";
                 $Query_PrepACSFleets .= "WHERE `fleet_id` IN ({$Temp1}) LIMIT {$Temp2}; -- FlyingFleetHandler.php [#12]";
                 $Result_PrepACSFleets = doquery($Query_PrepACSFleets, 'fleets');
-                while($FetchData = mysql_fetch_assoc($Result_PrepACSFleets))
+                while($FetchData = $Result_PrepACSFleets->fetch_assoc())
                 {
                     $_FleetCache['acsFleets'][$Temp3[$FetchData['fleet_id']]][] = $FetchData;
                     $PrepareData['taskData'][] = $FetchData['fleet_owner'];
@@ -469,7 +469,7 @@ function FlyingFleetHandler(&$planet, $IncludeFleetsFromEndIDs = array())
                     $Query_PrepUserTasks .= "SELECT `id`, `tasks_done` FROM {{table}} ";
                     $Query_PrepUserTasks .= "WHERE `id` IN ({$Temp1}) LIMIT {$Temp2}; -- FlyingFleetHandler.php [#13]";
                     $Result_PrepUserTasks = doquery($Query_PrepUserTasks, 'users');
-                    while($FetchData = mysql_fetch_assoc($Result_PrepUserTasks))
+                    while($FetchData = $Result_PrepUserTasks->fetch_assoc())
                     {
                         $_FleetCache['userTasks'][$FetchData['id']] = $FetchData['tasks_done'];
                     }
@@ -496,7 +496,7 @@ function FlyingFleetHandler(&$planet, $IncludeFleetsFromEndIDs = array())
                     $Query_PrepGalaxy .= "SELECT `galaxy_id`, `id_planet`, `id_moon`, `metal`, `crystal` FROM {{table}} ";
                     $Query_PrepGalaxy .= "WHERE `galaxy_id` IN ({$Temp1}) LIMIT {$Temp2}; -- FlyingFleetHandler.php [#14]";
                     $Result_PrepGalaxy = doquery($Query_PrepGalaxy, 'galaxy');
-                    while($FetchData = mysql_fetch_assoc($Result_PrepGalaxy))
+                    while($FetchData = $Result_PrepGalaxy->fetch_assoc())
                     {
                         $_FleetCache['galaxy'][$FetchData['galaxy_id']] = $FetchData;
                         $_FleetCache['galaxyMap']['byPlanet'][$FetchData['id_planet']] = $FetchData['galaxy_id'];
@@ -514,8 +514,9 @@ function FlyingFleetHandler(&$planet, $IncludeFleetsFromEndIDs = array())
             {
                 // Investigate if mysql_data_seek should be replaced by HashMap of Fleets (for O(1) access to FleetRow instead of O(n))
                 // May cause bad impact on memory usage
-                mysql_data_seek($Result_GetAllFleets, $CalculationData['rowNo']);
-                $CurrentFleet = mysql_fetch_assoc($Result_GetAllFleets);
+                $Result_GetAllFleets->data_seek($CalculationData['rowNo']);
+
+                $CurrentFleet = $Result_GetAllFleets->fetch_assoc();
                 $CurrentFleet['calcType'] = $CalculationData['type'];
 
                 if(!empty($ChangeCoordinatesForFleets))

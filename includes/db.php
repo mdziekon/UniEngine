@@ -111,4 +111,14 @@ function getDBLink()
     return $_DBLink;
 }
 
+function closeDBLink() {
+    global $_DBLink;
+
+    if (!$_DBLink) {
+        return;
+    }
+
+    $_DBLink->close();
+}
+
 ?>

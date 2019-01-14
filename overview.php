@@ -136,9 +136,9 @@ if($_User['first_login'] == 0)
                 $Query_AlertOtherUsers .= "`IP_ID` IN (".implode(', ', $CheckIntersection['Intersect']).") AND ";
                 $Query_AlertOtherUsers .= "`Count` > `FailCount`;";
                 $Result_AlertOtherUsers = doquery($Query_AlertOtherUsers, 'user_enterlog');
-                if(mysql_num_rows($Result_AlertOtherUsers) > 0)
+                if($Result_AlertOtherUsers->num_rows > 0)
                 {
-                    while($FetchData = mysql_fetch_assoc($Result_AlertOtherUsers))
+                    while($FetchData = $Result_AlertOtherUsers->fetch_assoc())
                     {
                         $_Alert['Data']['OtherUsers'][] = $FetchData['User_ID'];
                     }
@@ -427,7 +427,7 @@ switch($mode)
             $Result_AdminBoxCheck = doquery($Query_AdminBoxCheck, '');
 
             $AdminBoxTotalCount = 0;
-            while($AdminBoxData = mysql_fetch_assoc($Result_AdminBoxCheck))
+            while($AdminBoxData = $Result_AdminBoxCheck->fetch_assoc())
             {
                 $AdminBox[$AdminBoxData['Type']] = $AdminBoxData['Count'];
                 $AdminBoxTotalCount += $AdminBoxData['Count'];
@@ -534,11 +534,11 @@ switch($mode)
         }
 
         // --- New Polls Information Box -------------------------------------------------------------------------
-        $Polls = doquery("SELECT {{table}}.`id`, `votes`.`id` AS `vote_id` FROM {{table}} LEFT JOIN {{prefix}}poll_votes AS `votes` ON `votes`.`poll_id` = {{table}}.id AND `votes`.`user_id` = {$_User['id']} WHERE {{table}}.`open` = 1 ORDER BY {{table}}.`time` DESC;", 'polls');
-        if(mysql_num_rows($Polls) > 0)
+        $SQLResult_GetPolls = doquery("SELECT {{table}}.`id`, `votes`.`id` AS `vote_id` FROM {{table}} LEFT JOIN {{prefix}}poll_votes AS `votes` ON `votes`.`poll_id` = {{table}}.id AND `votes`.`user_id` = {$_User['id']} WHERE {{table}}.`open` = 1 ORDER BY {{table}}.`time` DESC;", 'polls');
+        if($SQLResult_GetPolls->num_rows > 0)
         {
             $AvailablePolls = 0;
-            while($PollData = mysql_fetch_assoc($Polls))
+            while($PollData = $SQLResult_GetPolls->fetch_assoc())
             {
                 if($PollData['vote_id'] <= 0)
                 {
@@ -553,12 +553,18 @@ switch($mode)
 
         // --- Get users activity informations -----------------------------------------------------------
         $TodaysStartTimeStamp = mktime(0, 0, 0);
-        $OnlineUsers = doquery("SELECT IF(`onlinetime` >= (UNIX_TIMESTAMP() - (".TIME_ONLINE.")), 1, 0) AS `current_online` FROM {{table}} WHERE `onlinetime` >= {$TodaysStartTimeStamp};", 'users');
-        $TodayActive = mysql_num_rows($OnlineUsers);
+
+        $SQLResult_GetOnlineUsers = doquery(
+            "SELECT IF(`onlinetime` >= (UNIX_TIMESTAMP() - (".TIME_ONLINE.")), 1, 0) AS `current_online` FROM {{table}} WHERE `onlinetime` >= {$TodaysStartTimeStamp};",
+            'users'
+        );
+
+        $TodayActive = $SQLResult_GetOnlineUsers->num_rows;
         $CurrentOnline = 0;
+
         if($TodayActive > 0)
         {
-            while($ActiveData = mysql_fetch_assoc($OnlineUsers))
+            while($ActiveData = $SQLResult_GetOnlineUsers->fetch_assoc())
             {
                 if($ActiveData['current_online'] == 1)
                 {
@@ -566,6 +572,7 @@ switch($mode)
                 }
             }
         }
+
         $parse['CurrentOnline'] = prettyNumber($CurrentOnline);
         $parse['TodayOnline'] = prettyNumber($TodayActive);
         $parse['TotalPlayerCount'] = prettyNumber($_GameConfig['users_amount']);
@@ -906,10 +913,10 @@ switch($mode)
 
         $FleetIndex1 = 0;
         $FleetIndex2 = 2000;
-        if(mysql_num_rows($Result_GetFleets) > 0)
+        if($Result_GetFleets->num_rows > 0)
         {
             include($_EnginePath.'includes/functions/BuildFleetEventTable.php');
-            while($FleetRow = mysql_fetch_assoc($Result_GetFleets))
+            while($FleetRow = $Result_GetFleets->fetch_assoc())
             {
                 if($FleetRow['fleet_owner'] == $_User['id'])
                 {
@@ -1004,13 +1011,15 @@ switch($mode)
             $QryPlanets .= "`name` {$Order}";
         }
         $parse['OtherPlanets'] = '';
-        $AllOtherPlanets = doquery($QryPlanets, 'planets');
-        if(mysql_num_rows($AllOtherPlanets) > 0)
+
+        $SQLResult_GetAllOtherPlanets = doquery($QryPlanets, 'planets');
+
+        if($SQLResult_GetAllOtherPlanets->num_rows > 0)
         {
             $InCurrentRow = 0;
             $InNextRow = false;
 
-            while($PlanetsData = mysql_fetch_assoc($AllOtherPlanets))
+            while($PlanetsData = $SQLResult_GetAllOtherPlanets->fetch_assoc())
             {
                 // Show Planet on List
                 if(empty($DontShowPlanet) OR !in_array($PlanetsData['id'], $DontShowPlanet))

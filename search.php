@@ -98,9 +98,10 @@ if(!empty($Search_Value))
                 $ThisPage = 1;
             }
             $Query_Get = str_replace(array('{$SearchVar}', '{$QueryStart}'), array($Search_Value, $QueryStart), $Query_Get);
-            $Get_Rows = doquery($Query_Get, $Query_Table);
 
-            while($RowData = mysql_fetch_assoc($Get_Rows))
+            $SQLResult_GetRows = doquery($Query_Get, $Query_Table);
+
+            while($RowData = $SQLResult_GetRows->fetch_assoc())
             {
                 if($Type == 'playername')
                 {

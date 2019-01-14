@@ -227,10 +227,11 @@ $SFBSelect .= "SELECT `Type`, `BlockMissions`, `Reason`, `StartTime`, `EndTime`,
 $SFBSelect .= implode(' OR ', $SFBSelectWhere);
 $SFBSelect .= " ORDER BY `Type` ASC, `EndTime` DESC;";
 
-$LoadSFBData = doquery($SFBSelect, 'smart_fleet_blockade');
-if(mysql_num_rows($LoadSFBData) > 0)
+$SQLResult_GetSmartFleetBlockadeData = doquery($SFBSelect, 'smart_fleet_blockade');
+
+if($SQLResult_GetSmartFleetBlockadeData->num_rows > 0)
 {
-    while($GetSFBData = mysql_fetch_assoc($LoadSFBData))
+    while($GetSFBData = $SQLResult_GetSmartFleetBlockadeData->fetch_assoc())
     {
         $BlockedMissions = false;
         if($GetSFBData['BlockMissions'] == '0')

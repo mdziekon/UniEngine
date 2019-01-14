@@ -73,8 +73,10 @@ $Query_GetMessages .= "FROM {{table}} AS `chat` ";
 $Query_GetMessages .= "LEFT JOIN `{{prefix}}users` AS `user` ON `user`.`id` = `chat`.`UID` ";
 $Query_GetMessages .= "WHERE `RID` = {$RoomID} ";
 $Query_GetMessages .= "ORDER BY `ID` DESC LIMIT {$PerPage};";
-$Query = doquery($Query_GetMessages, 'chat_messages');
-$MessagesCount = mysql_num_rows($Query);
+
+$SQLResult_GetMessages = doquery($Query_GetMessages, 'chat_messages');
+$MessagesCount = $SQLResult_GetMessages->num_rows;
+
 if($MessagesCount > 0)
 {
     include($_EnginePath.'includes/functions/BBcodeFunction.php');
@@ -87,7 +89,7 @@ if($MessagesCount > 0)
     $msg_i = 0;
     $FirstGet = false;
 
-    while($Message = mysql_fetch_assoc($Query))
+    while($Message = $SQLResult_GetMessages->fetch_assoc())
     {
         $isNew = false;
         $msg_i += 1;
@@ -209,11 +211,13 @@ $Query_GetOnline .= "SELECT `chat`.`UID`, `user`.`username`, `user`.`authlevel`,
 $Query_GetOnline .= "FROM {{table}} AS `chat` ";
 $Query_GetOnline .= "LEFT JOIN `{{prefix}}users` AS `user` ON `user`.`id` = `chat`.`UID` ";
 $Query_GetOnline .= "WHERE `chat`.`UID` != {$_User['id']} AND `chat`.`RID` = {$RoomID} AND `lastOnline` >= {$OnlineCheck} ORDER BY `authlevel` DESC, `id` ASC;";
-$SelectOnline = doquery($Query_GetOnline, 'chat_online');
-$OnlineNo = mysql_num_rows($SelectOnline);
+
+$SQLResult_GetOnline = doquery($Query_GetOnline, 'chat_online');
+$OnlineNo = $SQLResult_GetOnline->num_rows;
+
 if($OnlineNo > 0)
 {
-    while($UserOn = mysql_fetch_assoc($SelectOnline))
+    while($UserOn = $SQLResult_GetOnline->fetch_assoc())
     {
         if(empty($UserOn['username']))
         {

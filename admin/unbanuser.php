@@ -69,11 +69,16 @@ if(isset($_POST['send']) && $_POST['send'] == 'yes')
                 $Where[] = "`username` IN (".implode(', ', $GetUsers['name']).")";
             }
 
-            $CheckUsers = doquery("SELECT `id`, `username`, `is_banned`, `ban_endtime`, `is_onvacation` FROM {{table}} WHERE ".implode(' OR ', $Where).";", 'users');
+            $SQLResult_CheckUsers = doquery(
+                "SELECT `id`, `username`, `is_banned`, `ban_endtime`, `is_onvacation` FROM {{table}} WHERE ".implode(' OR ', $Where).";",
+                'users'
+            );
+
             $UnbanUsers = array();
-            if(mysql_num_rows($CheckUsers) > 0)
+
+            if($SQLResult_CheckUsers->num_rows > 0)
             {
-                while($Data = mysql_fetch_assoc($CheckUsers))
+                while($Data = $SQLResult_CheckUsers->fetch_assoc())
                 {
                     if($Data['is_banned'] == 1 AND $Data['ban_endtime'] > $Now)
                     {

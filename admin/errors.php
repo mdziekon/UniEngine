@@ -32,11 +32,11 @@ else if($DoDeleteAll)
     doquery("TRUNCATE TABLE {{table}}", 'errors');
 }
 
-$Query_GetErrors = doquery("SELECT * FROM {{table}} LIMIT 100;", 'errors');
+$SQLResult_GetErrors = doquery("SELECT * FROM {{table}} LIMIT 100;", 'errors');
 $i = 0;
 
 $parse['errors_list'] = '';
-while($ErrorData = mysql_fetch_assoc($Query_GetErrors))
+while($ErrorData = $SQLResult_GetErrors->fetch_assoc())
 {
     ++$i;
     $parse['errors_list'] .= parsetemplate($TPL_Row, array

@@ -39,7 +39,7 @@ function SendNotification($AllyID, $AllyRanks, $Message)
         $Query_GetUsers .= "`ally_id` = {$AllyID} AND `ally_rank_id` IN ({$RanksID})";
         $Query_GetUsers .= "; -- ally.pactslist.php|SendNotification|GetUsers";
         $Result_GetUsers = doquery($Query_GetUsers, 'users');
-        while($FetchData = mysql_fetch_assoc($Result_GetUsers))
+        while($FetchData = $Result_GetUsers->fetch_assoc())
         {
             $UserIDs[] = $FetchData['id'];
         }
@@ -364,11 +364,11 @@ $Query_GetPacts .= "LEFT JOIN `{{prefix}}alliance` AS `ally` ";
 $Query_GetPacts .= "ON `ally`.`id` = IF(`pacts`.`AllyID_Sender` = {$Ally['id']}, `pacts`.`AllyID_Owner`, `pacts`.`AllyID_Sender`) ";
 $Query_GetPacts .= "WHERE (`AllyID_Sender` = {$Ally['id']} OR `AllyID_Owner` = {$Ally['id']}) ";
 $Query_GetPacts .= "; -- ally.pactslist.php|GetPacts";
-$GetPacts = doquery($Query_GetPacts, 'ally_pacts');
+$SQLResult_GetPacts = doquery($Query_GetPacts, 'ally_pacts');
 
-if(mysql_num_rows($GetPacts) > 0)
+if($SQLResult_GetPacts->num_rows > 0)
 {
-    while($FetchData = mysql_fetch_assoc($GetPacts))
+    while($FetchData = $SQLResult_GetPacts->fetch_assoc())
     {
         $FetchData['IsSender'] = ($FetchData['AllyID_Sender'] == $Ally['id'] ? true : false);
         $FetchData['SecondAllyID'] = ($FetchData['IsSender'] === true ? $FetchData['AllyID_Owner'] : $FetchData['AllyID_Sender']);

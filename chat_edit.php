@@ -20,8 +20,13 @@ if(!CheckAuth('supportadmin'))
 $EditID = (isset($_GET['mode']) ? round($_GET['mode']) : 0);
 if($EditID > 0 && isset($_GET['save']))
 {
-    $NewMessage = mysql_real_escape_string($_POST['message']);
-    doquery("UPDATE {{table}} SET `Text` = '{$NewMessage}', `TimeStamp_Edit` = UNIX_TIMESTAMP() WHERE `ID` = {$EditID} LIMIT 1;", 'chat_messages');
+    $NewMessage = getDBLink()->escape_string($_POST['message']);
+
+    doquery(
+        "UPDATE {{table}} SET `Text` = '{$NewMessage}', `TimeStamp_Edit` = UNIX_TIMESTAMP() WHERE `ID` = {$EditID} LIMIT 1;",
+        'chat_messages'
+    );
+
     header('Location: chat.php');
 }
 else if($EditID > 0)

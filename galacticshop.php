@@ -39,11 +39,15 @@ if(isset($_GET['show']))
     }
 }
 
-$GetFreeItems = doquery("SELECT * FROM {{table}} WHERE `UserID` = {$_User['id']} AND `Used` = false;", 'premium_free');
-if(mysql_num_rows($GetFreeItems) > 0)
+$SQLResult_GetFreeItems = doquery(
+    "SELECT * FROM {{table}} WHERE `UserID` = {$_User['id']} AND `Used` = false;",
+    'premium_free'
+);
+
+if($SQLResult_GetFreeItems->num_rows > 0)
 {
     $GetUsernames = array();
-    while($Free = mysql_fetch_assoc($GetFreeItems))
+    while($Free = $SQLResult_GetFreeItems->fetch_assoc())
     {
         if(!isset($_Lang['FreeItemsList'][$Free['ID']]))
         {
@@ -60,10 +64,14 @@ if(mysql_num_rows($GetFreeItems) > 0)
     }
     if(!empty($GetUsernames))
     {
-        $GetUsernamesQry = doquery("SELECT `id`, `username` FROM {{table}} WHERE `id` IN (".implode(', ', $GetUsernames).");", 'users');
-        if(mysql_num_rows($GetUsernamesQry) > 0)
+        $SQLResult_GetUsernames = doquery(
+            "SELECT `id`, `username` FROM {{table}} WHERE `id` IN (".implode(', ', $GetUsernames).");",
+            'users'
+        );
+
+        if($SQLResult_GetUsernames->num_rows > 0)
         {
-            while($Username = mysql_fetch_assoc($GetUsernamesQry))
+            while($Username = $SQLResult_GetUsernames->fetch_assoc())
             {
                 foreach($_Lang['FreeItemsList'] as $Key => $Value)
                 {

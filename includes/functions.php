@@ -362,7 +362,7 @@ function message($Message, $Title = 'Error', $RedirectLocation = '', $RedirectTi
 
 function display($PageCode, $PageTitle = '', $ShowTopResourceBar = true, $IsAdminPage = false)
 {
-    global    $_DBLink, $_GameConfig, $_User, $_SkinPath, $_Planet, $_DisplaySettings,
+    global  $_GameConfig, $_User, $_SkinPath, $_Planet, $_DisplaySettings,
             $_DontShowMenus, $NewMSGCount, $_BenchTool, $_Vars_AllyRankLabels;
 
     if(!empty($_BenchTool)){ $_BenchTool->simpleCountStart(false, 'telemetry__d'); }
@@ -489,8 +489,8 @@ function display($PageCode, $PageTitle = '', $ShowTopResourceBar = true, $IsAdmi
                 $Query_Counters[2] = "(SELECT '3' AS `Type`, COUNT(*) AS `Count` FROM `{{prefix}}buddy` WHERE `owner` = {$_User['id']} AND `active` = 0)";
 
                 $Query_Counters = implode(' UNION ', $Query_Counters);
-                $GetCounters = doquery($Query_Counters, '');
-                while($CountersData = mysql_fetch_assoc($GetCounters))
+                $SQLResult_GetCounters = doquery($Query_Counters, '');
+                while($CountersData = $SQLResult_GetCounters->fetch_assoc())
                 {
                     if($CountersData['Type'] == 1)
                     {
@@ -651,17 +651,16 @@ function display($PageCode, $PageTitle = '', $ShowTopResourceBar = true, $IsAdmi
     }
     Handler_Telemetry($pageurl);
 
-    if(is_resource($_DBLink))
-    {
-        mysqli_close($_DBLink);
-    }
+    closeDBLink();
+
     echo $Page;
+
     die();
 }
 
 function safeDie($DieMsg = '')
 {
-    global $_DBLink, $_BenchTool;
+    global $_BenchTool;
 
     preg_match('#(admin\/|ajax\/)?([^\/]{1,})\.php#si', $_SERVER['SCRIPT_NAME'], $match);
     $pageurl = $match[2];
@@ -694,10 +693,8 @@ function safeDie($DieMsg = '')
     }
     Handler_Telemetry($pageurl);
 
-    if(isset($_DBLink))
-    {
-        mysqli_close($_DBLink);
-    }
+    closeDBLink();
+
     die($DieMsg);
 }
 
@@ -883,6 +880,8 @@ function ServerStamp($TimeStamp = false)
 
 function CreateAccessLog($RootPath = '', $Prepend2Filename = '')
 {
+    return;
+
     global $_User, $_SERVER, $_POST;
 
     // --- Look for or Create LogDir ---
@@ -1097,6 +1096,7 @@ function Handler_Telemetry($pageurl)
         {
             $FromCache = false;
             $SelectPageID = doquery("SELECT `ID` FROM {{table}} WHERE `Hash` = '{$TelemetryPage['hash']}' LIMIT 1;", 'telemetry_pages', true);
+
             if(!($SelectPageID['ID'] > 0))
             {
                 if(!empty($TelemetryPage['get']))
@@ -1327,7 +1327,7 @@ function Handler_SystemAlerts()
         {
             if(!empty($Data['Other_Data']))
             {
-                $Data['Other_Data'] = mysql_real_escape_string(json_encode($Data['Other_Data']));
+                $Data['Other_Data'] = getDBLink()->escape_string(json_encode($Data['Other_Data']));
             }
             $Query_Insert_Values[] = "(NULL, {$Data['Sender']}, {$Data['Date']}, {$Data['Type']}, {$Data['Code']}, {$Data['Importance']}, 0, {$Data['User_ID']}, '{$Data['Other_Data']}')";
         }

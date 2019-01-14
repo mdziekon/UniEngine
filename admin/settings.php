@@ -34,8 +34,8 @@ $_DefFunctions = array
     'sanitize_plusint' => function($Value){ $Value = intval($Value); if($Value <= 0){ return false; } return $Value; },
     'sanitize_nonnegint' => function($Value){ $Value = intval($Value); if($Value < 0){ return false; } return $Value; },
     'sanitize_percent' => function($Value){ $Value = round($Value, 2); if($Value < 0 OR $Value > 100){ return false; } return $Value; },
-    'sanitize_text' => function($Value){ return mysql_real_escape_string(stripslashes($Value)); },
-    'sanitize_check' => function($Value){ return mysql_real_escape_string($Value); },
+    'sanitize_text' => function($Value){ return getDBLink()->escape_string(stripslashes($Value)); },
+    'sanitize_check' => function($Value){ return getDBLink()->escape_string($Value); },
     'desanitize_text' => function($Value){ return stripslashes($Value); },
     'dedesanitize_text' => function($Name, $Value){ return stripslashes($_POST[$Name]); },
 );
@@ -101,7 +101,7 @@ if(isset($_GET['configcachereload']) && $_GET['configcachereload'] == 1)
 {
     $Query_GetGameConfig = "SELECT * FROM {{table}};";
     $Result_GetGameConfig = doquery($Query_GetGameConfig, 'config');
-    while($FetchData = mysql_fetch_assoc($Result_GetGameConfig))
+    while($FetchData = $Result_GetGameConfig->fetch_assoc())
     {
         $_GameConfig[$FetchData['config_name']] = $FetchData['config_value'];
     }
@@ -164,7 +164,7 @@ else if(isset($_POST['opt_save']) && $_POST['opt_save'] == '1')
         doquery($UpdateQuery, 'config');
         $_MemCache->GameConfig = $_GameConfig;
 
-        $UpdatedRows = mysql_affected_rows();
+        $UpdatedRows = getDBLink()->affected_rows;
         if($UpdatedRows > 0)
         {
             $_Lang['Msg_Color'] = 'lime';

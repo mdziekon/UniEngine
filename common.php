@@ -67,7 +67,7 @@ else
 {
     $Query_GetGameConfig = "SELECT * FROM {{table}};";
     $Result_GetGameConfig = doquery($Query_GetGameConfig, 'config');
-    while($FetchData = mysql_fetch_assoc($Result_GetGameConfig))
+    while($FetchData = $Result_GetGameConfig->fetch_assoc())
     {
         $_GameConfig[$FetchData['config_name']] = $FetchData['config_value'];
     }
@@ -459,10 +459,10 @@ if(isLogged())
                 $Query_SelectPolls .= "LEFT JOIN `{{prefix}}poll_votes` AS `votes` ON `votes`.`poll_id` = `polls`.`id` AND `votes`.`user_id` = {$_User['id']} ";
                 $Query_SelectPolls .= "WHERE `polls`.`open` = 1 AND `polls`.`obligatory` = 1;";
                 $SelectObligatoryPolls = doquery($Query_SelectPolls, 'polls');
-                if(mysql_num_rows($SelectObligatoryPolls) > 0)
+                if($SelectObligatoryPolls->num_rows > 0)
                 {
                     $PollsCount = 0;
-                    while($SelectObligatoryPollsData = mysql_fetch_assoc($SelectObligatoryPolls))
+                    while($SelectObligatoryPollsData = $SelectObligatoryPolls->fetch_assoc())
                     {
                         if($SelectObligatoryPollsData['vote_id'] <= 0)
                         {

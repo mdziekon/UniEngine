@@ -79,14 +79,18 @@ function BuildRessourcePage($CurrentUser, &$CurrentPlanet)
             $UpdatePercentIDs[] = $CurrentPlanet['id'];
             if($Post_SetUsage2All)
             {
-                $SelectOtherPlanets = doquery("SELECT * FROM {{table}} WHERE `id_owner` = {$CurrentUser['id']} AND `planet_type` = 1 AND `id` != {$CurrentPlanet['id']};", 'planets');
-                if(mysql_num_rows($SelectOtherPlanets) > 0)
+                $SQLResult_SelectOtherPlanets = doquery(
+                    "SELECT * FROM {{table}} WHERE `id_owner` = {$CurrentUser['id']} AND `planet_type` = 1 AND `id` != {$CurrentPlanet['id']};",
+                    'planets'
+                );
+
+                if($SQLResult_SelectOtherPlanets->num_rows > 0)
                 {
                     $CopySetPercents = $SetPercents;
                     $SetPercents = null;
 
                     $Results['planets'] = array();
-                    while($PlanetData = mysql_fetch_assoc($SelectOtherPlanets))
+                    while($PlanetData = $SQLResult_SelectOtherPlanets->fetch_assoc())
                     {
                         if(HandlePlanetUpdate($PlanetData, $CurrentUser, $Now, true) === true)
                         {

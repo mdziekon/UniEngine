@@ -319,9 +319,9 @@ $_Lang['Insert_Speeds'] = implode('<span class="speedBreak">|</span>', $_Lang['I
 $OtherPlanets = SortUserPlanets($_User);
 $Shortcuts = doquery("SELECT {{table}}.*, IF(`planets`.`id` > 0, `planets`.`name`, '') AS `name`, IF(`planets`.`id` > 0, `planets`.`galaxy`, {{table}}.galaxy) AS `galaxy`, IF(`planets`.`id` > 0, `planets`.`system`, {{table}}.system) AS `system`, IF(`planets`.`id` > 0, `planets`.`planet`, {{table}}.planet) AS `planet`, IF(`planets`.`id` > 0, `planets`.`planet_type`, {{table}}.type) AS `planet_type` FROM {{table}} LEFT JOIN {{prefix}}planets as `planets` ON `planets`.`id` = {{table}}.`id_planet` WHERE {{table}}.`id_owner` = {$_User['id']} ORDER BY {{table}}.id ASC;", 'fleet_shortcuts');
 
-if(mysql_num_rows($OtherPlanets) > 1)
+if($OtherPlanets->num_rows > 1)
 {
-    while($PlanetData = mysql_fetch_assoc($OtherPlanets))
+    while($PlanetData = $OtherPlanets->fetch_assoc())
     {
         if($PlanetData['galaxy'] == $_Planet['galaxy'] AND $PlanetData['system'] == $_Planet['system'] AND $PlanetData['planet'] == $_Planet['planet'] AND $PlanetData['planet_type'] == $_Planet['planet_type'])
         {
@@ -338,9 +338,9 @@ if(mysql_num_rows($OtherPlanets) > 1)
     }
 }
 
-if(mysql_num_rows($Shortcuts) > 0)
+if($Shortcuts->num_rows > 0)
 {
-    while($Data = mysql_fetch_assoc($Shortcuts))
+    while($Data = $Shortcuts->fetch_assoc())
     {
         $ShortcutList[] = array
         (

@@ -117,7 +117,7 @@ if($PollID > 0)
                 $Query_GetVotes .= "LEFT JOIN `{{prefix}}users` AS `users` ON `votes`.`user_id` = `users`.`id` ";
                 $Query_GetVotes .= "WHERE `votes`.`poll_id` = {$PollID}; -- Polls|GetVotes|Admin";
                 $SelectVotes = doquery($Query_GetVotes, 'poll_votes');
-                while($Votes = mysql_fetch_assoc($SelectVotes))
+                while($Votes = $SelectVotes->fetch_assoc())
                 {
                     $Votes['answer'] = explode(',', $Votes['answer']);
                     foreach($Votes['answer'] as $ThisAnswer)
@@ -148,7 +148,7 @@ if($PollID > 0)
 
                 if($SelectPoll['Opt_Multivote'] == 0)
                 {
-                    while($Votes = mysql_fetch_assoc($SelectVotes))
+                    while($Votes = $SelectVotes->fetch_assoc())
                     {
                         if(!isset($Results[$Votes['answer']]))
                         {
@@ -160,7 +160,7 @@ if($PollID > 0)
                 }
                 else
                 {
-                    while($Votes = mysql_fetch_assoc($SelectVotes))
+                    while($Votes = $SelectVotes->fetch_assoc())
                     {
                         $Votes['answer'] = explode(',', $Votes['answer']);
                         foreach($Votes['answer'] as $ThisAnswer)
@@ -270,10 +270,10 @@ else
     $Query_GetPolls .= "; -- Polls|GetPolls";
     $Result_GetPolls = doquery($Query_GetPolls, 'polls');
 
-    if(mysql_num_rows($Result_GetPolls) > 0)
+    if($Result_GetPolls->num_rows > 0)
     {
         $TPL_List_Row = gettemplate('polls_list_row');
-        while($FetchData = mysql_fetch_assoc($Result_GetPolls))
+        while($FetchData = $Result_GetPolls->fetch_assoc())
         {
             $CreateKey = (($FetchData['vote_id'] > 0 OR $FetchData['open'] == 0) ? '1' : '2').($FetchData['obligatory'] == 0 ? '1' : '2').($FetchData['open'] == 0 ? '1' : '2').$FetchData['time'].str_pad($FetchData['id'], 10, '0', STR_PAD_LEFT);
             $FetchData['Insert_PollID'] = $FetchData['id'];

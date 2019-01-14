@@ -77,11 +77,13 @@ $Bench->simpleCountStart();
 
 $CounterNames[] = '> Messages';
 $Bench->simpleCountStart();
-$SelectMessages = doquery($Query_SelectMessages, 'messages');
+
+$SQLResult_GetMessages = doquery($Query_SelectMessages, 'messages');
+
 $Update_Threads = array();
-if(mysql_num_rows($SelectMessages) > 0)
+if($SQLResult_GetMessages->num_rows > 0)
 {
-    while($FetchData = mysql_fetch_assoc($SelectMessages))
+    while($FetchData = $SQLResult_GetMessages->fetch_assoc())
     {
         $Delete_Messages[] = $FetchData['id'];
         if($FetchData['Thread_ID'] > 0)
@@ -94,12 +96,15 @@ if(mysql_num_rows($SelectMessages) > 0)
     }
 }
 $Bench->simpleCountStop();
+
 $CounterNames[] = '> Planets';
 $Bench->simpleCountStart();
-$SelectPlanets = doquery($Query_SelectPlanets, 'planets');
-if(mysql_num_rows($SelectPlanets) > 0)
+
+$SQLResult_GetPlanets = doquery($Query_SelectPlanets, 'planets');
+
+if($SQLResult_GetPlanets->num_rows > 0)
 {
-    while($FetchData = mysql_fetch_assoc($SelectPlanets))
+    while($FetchData = $SQLResult_GetPlanets->fetch_assoc())
     {
         if($FetchData['id'] > 0)
         {
@@ -107,11 +112,17 @@ if(mysql_num_rows($SelectPlanets) > 0)
             $Delete_PlanetsFromGalaxy[] = $FetchData['id'];
         }
     }
-    $Query_SelectMoons = str_replace(array('{_InsertIDs_}', '{_InsertCount_}'), array(implode(', ', $Delete_Planets), count($Delete_Planets)), $Query_SelectMoons);
-    $SelectMoons = doquery($Query_SelectMoons, 'galaxy');
-    if(mysql_num_rows($SelectMoons) > 0)
+    $Query_SelectMoons = str_replace(
+        array('{_InsertIDs_}', '{_InsertCount_}'),
+        array(implode(', ', $Delete_Planets), count($Delete_Planets)),
+        $Query_SelectMoons
+    );
+
+    $SQLResult_GetDeletedMoons = doquery($Query_SelectMoons, 'galaxy');
+
+    if($SQLResult_GetDeletedMoons->num_rows > 0)
     {
-        while($FetchData = mysql_fetch_assoc($SelectMoons))
+        while($FetchData = $SQLResult_GetDeletedMoons->fetch_assoc())
         {
             if($FetchData['id_moon'] > 0)
             {
@@ -134,8 +145,10 @@ $Bench->simpleCountStart();
 if(!empty($Delete_Messages))
 {
     $Query_DeleteMessages = str_replace(array('{_InsertIDs_}', '{_InsertCount_}'), array(implode(', ', $Delete_Messages), count($Delete_Messages)), $Query_DeleteMessages);
+
     doquery($Query_DeleteMessages, 'messages');
-    $Stats['del']['msg'] = mysql_affected_rows();
+
+    $Stats['del']['msg'] = getDBLink()->affected_rows;
 }
 else
 {
@@ -145,36 +158,58 @@ $Bench->simpleCountStop();
 
 $CounterNames[] = '> SimReports';
 $Bench->simpleCountStart();
+
 doquery($Query_DeleteSimReports, 'sim_battle_reports');
-$Stats['del']['simrep'] = mysql_affected_rows();
+
+$Stats['del']['simrep'] = getDBLink()->affected_rows;
+
 $Bench->simpleCountStop();
 
 $CounterNames[] = '> Ally Invites';
 $Bench->simpleCountStart();
+
 doquery($Query_DeleteAllyInvites, 'ally_invites');
-$Stats['del']['allyinvite'] = mysql_affected_rows();
+
+$Stats['del']['allyinvite'] = getDBLink()->affected_rows;
+
 $Bench->simpleCountStop();
 
 $CounterNames[] = '> LoginProtection Rows';
 $Bench->simpleCountStart();
+
 doquery($Query_DeleteLoginProtectionRows, 'login_protection');
-$Stats['del']['loginprotection'] = mysql_affected_rows();
+
+$Stats['del']['loginprotection'] = getDBLink()->affected_rows;
+
 $Bench->simpleCountStop();
 
 $CounterNames[] = '> Planets';
 $Bench->simpleCountStart();
+
 if(!empty($Delete_Planets))
 {
-    $Query_DeletePlanets = str_replace(array('{_InsertIDs_}', '{_InsertCount_}'), array(implode(', ', $Delete_Planets), count($Delete_Planets)), $Query_DeletePlanets);
-    $Query_DeletePlanetsOnGalaxy = str_replace(array('{_InsertIDs_}', '{_InsertCount_}'), array(implode(', ', $Delete_PlanetsFromGalaxy), count($Delete_PlanetsFromGalaxy)), $Query_DeletePlanetsOnGalaxy);
+    $Query_DeletePlanets = str_replace(
+        array('{_InsertIDs_}', '{_InsertCount_}'),
+        array(implode(', ', $Delete_Planets), count($Delete_Planets)),
+        $Query_DeletePlanets
+    );
+    $Query_DeletePlanetsOnGalaxy = str_replace(
+        array('{_InsertIDs_}', '{_InsertCount_}'),
+        array(implode(', ', $Delete_PlanetsFromGalaxy), count($Delete_PlanetsFromGalaxy)),
+        $Query_DeletePlanetsOnGalaxy
+    );
+
     doquery($Query_DeletePlanets, 'planets');
-    $Stats['del']['planets'] = mysql_affected_rows();
+
+    $Stats['del']['planets'] = getDBLink()->affected_rows;
+
     doquery($Query_DeletePlanetsOnGalaxy, 'galaxy');
 }
 else
 {
     $Stats['del']['planets'] = 0;
 }
+
 $Bench->simpleCountStop();
 
 $Bench->simpleCountStop();
@@ -188,12 +223,15 @@ if(!empty($Update_Threads))
 {
     $CounterNames[] = '> Messages';
     $Bench->simpleCountStart();
+
     $Query_SelectThreaded = str_replace('{_InsertIDs_}', implode(',', $Update_Threads), $Query_SelectThreaded);
-    $SelectMessages = doquery($Query_SelectThreaded, 'messages');
-    if(mysql_num_rows($SelectMessages) > 0)
+
+    $SQLResult_GetThreadedMessages = doquery($Query_SelectThreaded, 'messages');
+
+    if($SQLResult_GetThreadedMessages->num_rows > 0)
     {
         $Update_Threads = array();
-        while($FetchData = mysql_fetch_assoc($SelectMessages))
+        while($FetchData = $SQLResult_GetThreadedMessages->fetch_assoc())
         {
             $Update_Threads[] = $FetchData['id'];
         }

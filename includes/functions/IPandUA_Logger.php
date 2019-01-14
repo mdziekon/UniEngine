@@ -13,7 +13,7 @@ function IPandUA_Logger($TheUser, $Failed = false)
 
     global $_SERVER;
     $IPHash = md5($_SERVER['REMOTE_ADDR']);
-    $UAVal = mysql_real_escape_string($_SERVER['HTTP_USER_AGENT']);
+    $UAVal = getDBLink()->escape_string($_SERVER['HTTP_USER_AGENT']);
     $UAHash = md5($UAVal);
     $InsertIPandUAQuery = '';
     $InsertIPandUAQuery .= "INSERT INTO {{table}} (`Type`, `Value`, `ValueHash`) VALUES ";
@@ -23,8 +23,12 @@ function IPandUA_Logger($TheUser, $Failed = false)
     $InsertIPandUAQuery .= "`SeenCount` = `SeenCount` + 1;";
     doquery($InsertIPandUAQuery, 'used_ip_and_ua');
 
-    $SelectBrowserAndIPLogs = doquery("SELECT `ID`, `Type` FROM {{table}} WHERE (`Type` = 'ua' AND `ValueHash` = '{$UAHash}') OR (`Type` = 'ip' AND `ValueHash` = '{$IPHash}');", 'used_ip_and_ua');
-    while($AccessData = mysql_fetch_assoc($SelectBrowserAndIPLogs))
+    $SelectBrowserAndIPLogs = doquery(
+        "SELECT `ID`, `Type` FROM {{table}} WHERE (`Type` = 'ua' AND `ValueHash` = '{$UAHash}') OR (`Type` = 'ip' AND `ValueHash` = '{$IPHash}');",
+        'used_ip_and_ua'
+    );
+
+    while($AccessData = $SelectBrowserAndIPLogs->fetch_assoc())
     {
         if($AccessData['Type'] == 'ip')
         {

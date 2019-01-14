@@ -122,7 +122,7 @@ function createMembersList($Admin = false)
 
     $CounterLoop = 1;
     $_Lang['Rows'] = '';
-    while($FetchData = mysql_fetch_assoc($Result_GetMembersList))
+    while($FetchData = $Result_GetMembersList->fetch_assoc())
     {
         $FetchData['i'] = $CounterLoop;
         $FetchData['skinpath'] = $_SkinPath;

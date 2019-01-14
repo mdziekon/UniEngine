@@ -58,8 +58,10 @@ $Query_GetMessages .= " AND (`m`.`Thread_IsLast` = 0 OR `m`.`id_owner` != {$_Use
 $Query_GetMessages .= (!empty($ExcludeIDs) ? " AND `m`.`id` NOT IN (".implode(', ', $ExcludeIDs).") " : '');
 $Query_GetMessages .= ($MaxMessageID > 0 ? " AND `m`.`id` < {$MaxMessageID} " : '');
 $Query_GetMessages .= "ORDER BY `m`.`time` DESC, `m`.`id` DESC;";
-$GetMessages = doquery($Query_GetMessages, 'messages');
-if(mysql_num_rows($GetMessages) <= 0)
+
+$SQLResult_GetMessages = doquery($Query_GetMessages, 'messages');
+
+if($SQLResult_GetMessages->num_rows <= 0)
 {
     ajaxReturn(array('Err' => '003'));
 }
@@ -78,7 +80,7 @@ else
     }
 
     $Messages = array();
-    while($CurMess = mysql_fetch_assoc($GetMessages))
+    while($CurMess = $SQLResult_GetMessages->fetch_assoc())
     {
         $MsgCache[] = $CurMess;
     }
@@ -169,7 +171,7 @@ else
         {
             $QryGetMassMsg = doquery("SELECT `id`, `type`, `subject`, `text`, `from` FROM {{table}} WHERE `id` IN (".implode(', ', $GetMassMsgs).");", 'messages');
         }
-        while($CopyData = mysql_fetch_assoc($QryGetMassMsg))
+        while($CopyData = $QryGetMassMsg->fetch_assoc())
         {
             if($CopyData['type'] == 80 OR $CopyData['type'] == 2)
             {

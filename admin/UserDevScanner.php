@@ -392,8 +392,13 @@ if($AllowScan)
     if(!$BreakScan)
     {
         $LastDumpTimestamp = $LoadLastDump['Date'] - SERVER_MAINOPEN_TSTAMP;
-        $GetLogs = doquery("SELECT * FROM {{table}} WHERE `UserID` = {$GetUser['id']} ORDER BY `ID` ASC;", 'user_developmentlog');
-        if(mysql_num_rows($GetLogs) == 0)
+
+        $SQLResult_GetLogs = doquery(
+            "SELECT * FROM {{table}} WHERE `UserID` = {$GetUser['id']} ORDER BY `ID` ASC;",
+            'user_developmentlog'
+        );
+
+        if($SQLResult_GetLogs->num_rows == 0)
         {
             $_Lang['Notice_Found'] = $_Lang['Notice_NoLogs'];
             $BreakScan = true;
@@ -402,13 +407,22 @@ if($AllowScan)
         {
             $ScanStartTime = microtime(true);
 
-            $PlanetsNewData = doquery("SELECT * FROM {{table}} WHERE `id_owner` = {$GetUser['id']};", 'planets');
-            $FleetsNewData = doquery("SELECT * FROM {{table}} WHERE `fleet_owner` = {$GetUser['id']};", 'fleets');
-            $UserPremiumItems = doquery("SELECT * FROM {{table}} WHERE `UserID` = {$GetUser['id']} AND `Item` IN (5,6);", 'premiumpayments');
+            $SQLResult_PlanetsNewData = doquery(
+                "SELECT * FROM {{table}} WHERE `id_owner` = {$GetUser['id']};",
+                'planets'
+            );
 
-            if(mysql_num_rows($UserPremiumItems) > 0)
+            // TODO: Implement fleets scanning
+            // $FleetsNewData = doquery(
+            //     "SELECT * FROM {{table}} WHERE `fleet_owner` = {$GetUser['id']};",
+            //     'fleets'
+            // );
+
+            $SQLResult_UserPremiumItems = doquery("SELECT * FROM {{table}} WHERE `UserID` = {$GetUser['id']} AND `Item` IN (5,6);", 'premiumpayments');
+
+            if($SQLResult_UserPremiumItems->num_rows > 0)
             {
-                while($PremiumItem = mysql_fetch_assoc($UserPremiumItems))
+                while($PremiumItem = $SQLResult_UserPremiumItems->fetch_assoc())
                 {
                     $Length = 14 * TIME_DAY;
                     $PremiumItemsArchive[$PremiumItem['Item']][] = array
@@ -518,7 +532,7 @@ if($AllowScan)
                 'deuterium' => 0,
             );
 
-            while($Log = mysql_fetch_assoc($GetLogs))
+            while($Log = $SQLResult_GetLogs->fetch_assoc())
             {
                 $Log['Date'] += SERVER_MAINOPEN_TSTAMP;
 
@@ -1344,7 +1358,7 @@ if($AllowScan)
             $SummaryLog['crystal'] = 0;
             $SummaryLog['deuterium'] = 0;
 
-            while($PlanetNew = mysql_fetch_assoc($PlanetsNewData))
+            while($PlanetNew = $SQLResult_PlanetsNewData->fetch_assoc())
             {
                 $PlanetNew['metal'] += 0;
                 $PlanetNew['crystal'] += 0;

@@ -57,8 +57,12 @@ if(!empty($SkinDir))
     }
 }
 
-$SelectAllPlanets = doquery("SELECT `id`, `name`, `galaxy`, `system`, `planet` FROM {{table}} WHERE `id_owner` = {$_User['id']} AND `planet_type` = 1;", 'planets');
-while($Planets = mysql_fetch_assoc($SelectAllPlanets))
+$SQLResult_SelectAllPlanets = doquery(
+    "SELECT `id`, `name`, `galaxy`, `system`, `planet` FROM {{table}} WHERE `id_owner` = {$_User['id']} AND `planet_type` = 1;",
+    'planets'
+);
+
+while($Planets = $SQLResult_SelectAllPlanets->fetch_assoc())
 {
     $_Lang['QuickRes_PlanetList'] .= "<option value=\"{$Planets['id']}\" {sel_planet_{$Planets['id']}}>{$Planets['name']} [{$Planets['galaxy']}:{$Planets['system']}:{$Planets['planet']}]</option>";
 }
@@ -76,10 +80,12 @@ if(!isOnVacation())
         $Query_IgnoreSystem .= "SELECT `ignore`.`IgnoredID`, `user`.`username` FROM {{table}} AS `ignore` ";
         $Query_IgnoreSystem .= "JOIN `{{prefix}}users` AS `user` ON `ignore`.`IgnoredID` = `user`.`id` ";
         $Query_IgnoreSystem .= "WHERE `ignore`.`OwnerID` = {$_User['id']};";
-        $Result_IgnoreSystem = doquery($Query_IgnoreSystem, 'ignoresystem');
-        if(mysql_num_rows($Result_IgnoreSystem) > 0)
+
+        $SQLResult_IgnoreSystem = doquery($Query_IgnoreSystem, 'ignoresystem');
+
+        if($SQLResult_IgnoreSystem->num_rows > 0)
         {
-            while($FetchData = mysql_fetch_assoc($Result_IgnoreSystem))
+            while($FetchData = $SQLResult_IgnoreSystem->fetch_assoc())
             {
                 $_User['IgnoredUsers'][$FetchData['IgnoredID']] = $FetchData['username'];
             }
@@ -133,7 +139,10 @@ if(!isOnVacation())
                 {
                     if($CheckMailChange['ID'] <= 0)
                     {
-                        $_POST['give_newemail'] = mysql_real_escape_string(strip_tags(trim($_POST['give_newemail'])));
+                        $_POST['give_newemail'] = getDBLink()->escape_string(
+                            strip_tags(trim($_POST['give_newemail']))
+                        );
+
                         $CheckMail = $_POST['give_newemail'];
                         $banned_domain_list = $_GameConfig['BannedMailDomains'];
                         $banned_domain_list = str_replace('.', '\.', $banned_domain_list);
@@ -310,7 +319,10 @@ if(!isOnVacation())
                     $ChangeNotDone += 1;
                 }
 
-                $SkinPath = mysql_real_escape_string(strip_tags(trim($_POST['skin_path'])));
+                $SkinPath = getDBLink()->escape_string(
+                    strip_tags(trim($_POST['skin_path']))
+                );
+
                 if(strstr($SkinPath, 'http://') === FALSE AND strstr($SkinPath, 'www.') === FALSE)
                 {
                     if($SkinPath != '')
@@ -367,7 +379,10 @@ if(!isOnVacation())
                     $ChangeNotDone += 1;
                 }
 
-                $AvatarPath = mysql_real_escape_string(strip_tags(trim($_POST['avatar_path'])));
+                $AvatarPath = getDBLink()->escape_string(
+                    strip_tags(trim($_POST['avatar_path']))
+                );
+
                 if(strstr($AvatarPath, 'http://') === FALSE AND strstr($AvatarPath, 'www.') !== FALSE)
                 {
                     $AvatarPath = str_replace('www.', 'http://', $AvatarPath);
@@ -671,10 +686,10 @@ if(!isOnVacation())
                         if($allowVacation === true)
                         {
                             // Update All Planets/Moons before VacationMode (don't do that if previous conditions are not fulfilled)
-                            $AllPlanets = doquery("SELECT * FROM {{table}} WHERE `id_owner` = {$_User['id']};", 'planets');
+                            $SQLResult_AllPlanets = doquery("SELECT * FROM {{table}} WHERE `id_owner` = {$_User['id']};", 'planets');
 
                             $Results['planets'] = array();
-                            while($PlanetsData = mysql_fetch_assoc($AllPlanets))
+                            while($PlanetsData = $SQLResult_AllPlanets->fetch_assoc())
                             {
                                 // Update Planet - Building Queue
                                 $GeneratePlanetName[$PlanetsData['id']] = "{$PlanetsData['name']} [{$PlanetsData['galaxy']}:{$PlanetsData['system']}:{$PlanetsData['planet']}]";
@@ -783,7 +798,9 @@ if(!isOnVacation())
                 }
                 if($FleetColors_NeedChange === true)
                 {
-                    $ChangeSet['settings_FleetColors'] = mysql_real_escape_string(json_encode($FleetColors_UserVar));
+                    $ChangeSet['settings_FleetColors'] = getDBLink()->escape_string(
+                        json_encode($FleetColors_UserVar)
+                    );
                     $ChangeSetTypes['settings_FleetColors'] = 's';
                 }
 
@@ -1167,10 +1184,12 @@ if(!isOnVacation())
         $Query_GetLogons .= "LEFT JOIN `{{prefix}}used_ip_and_ua` AS `IPTable` ON `Log`.`IP_ID` = `IPTable`.`ID` ";
         $Query_GetLogons .= "WHERE `Log`.`User_ID` = {$_User['id']} ";
         $Query_GetLogons .= "ORDER BY `Log`.`LastTime` DESC LIMIT {$LogonLIMIT};";
-        $GetLogons = doquery($Query_GetLogons, 'user_enterlog');
-        if(mysql_num_rows($GetLogons) > 0)
+
+        $SQLResult_GetLogons = doquery($Query_GetLogons, 'user_enterlog');
+
+        if($SQLResult_GetLogons->num_rows > 0)
         {
-            while($LogonData = mysql_fetch_assoc($GetLogons))
+            while($LogonData = $SQLResult_GetLogons->fetch_assoc())
             {
                 $LogonData['Times'] = array_reverse(explode(',', $LogonData['Times']));
                 $LimitCounter = $LogonLIMIT;

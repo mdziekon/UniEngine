@@ -12,15 +12,22 @@ includeLang('declaration');
 $PageTpl = gettemplate('declaration_body');
 $parse = $_Lang;
 
-$Validating = false;
+$HasExistingDeclarationEntry = false;
+$DeclarationDetails = [];
+
 if($_User['multiIP_DeclarationID'] > 0)
 {
-    $IsInValidationProcess = doquery("SELECT `users`, `status` FROM {{table}} WHERE `id` = '{$_User['multiIP_DeclarationID']}' AND `status` != -2 LIMIT 1;", 'declarations');
-    if(mysql_num_rows($IsInValidationProcess) != 0)
+    $SQLResult_GetCurrentDeclaration = doquery(
+        "SELECT `users`, `status` FROM {{table}} WHERE `id` = '{$_User['multiIP_DeclarationID']}' AND `status` != -2 LIMIT 1;",
+        'declarations'
+    );
+
+    if($SQLResult_GetCurrentDeclaration->num_rows != 0)
     {
-        $Validating = true;
-        $IsInValidationProcess = mysql_fetch_assoc($IsInValidationProcess);
-        $ExplodeUsers = explode(',', $IsInValidationProcess['users']);
+        $DeclarationDetails = $SQLResult_GetCurrentDeclaration->fetch_assoc();
+        $HasExistingDeclarationEntry = true;
+
+        $ExplodeUsers = explode(',', $DeclarationDetails['users']);
 
         $DeclarationOwner = false;
         foreach($ExplodeUsers as $UserID)
@@ -52,7 +59,13 @@ $parse['ShowError'] = 'display: none;';
 
 if(isset($_GET['cmd']) && $_GET['cmd'] == 'rmv')
 {
-    if($Validating === true AND ($IsInValidationProcess['status'] == 0 OR $IsInValidationProcess['status'] == 1))
+    if (
+        $HasExistingDeclarationEntry === true AND
+        (
+            $DeclarationDetails['status'] == 0 OR
+            $DeclarationDetails['status'] == 1
+        )
+    )
     {
         if($IsDeclarationOwner === true)
         {
@@ -103,8 +116,9 @@ if(isset($_GET['cmd']) && $_GET['cmd'] == 'rmv')
             $parse['ErrorText'] = $_Lang['Msg_DeclarationLeft'];
             $parse['ErrorColor'] = 'lime';
         }
-        $Validating = false;
-        $IsInValidationProcess = array();
+
+        $HasExistingDeclarationEntry = false;
+        $DeclarationDetails = [];
 
         if($SendDeleteMessage === true)
         {
@@ -121,7 +135,13 @@ if(isset($_POST['mode']) && $_POST['mode'] == 'addit')
 {
     if($_User['multi_validated'] !== 1)
     {
-        if($Validating === false || (isset($IsInValidationProcess['status']) && $IsInValidationProcess['status'] == -1))
+        if (
+            $HasExistingDeclarationEntry === false ||
+            (
+                isset($DeclarationDetails['status']) &&
+                $DeclarationDetails['status'] == -1
+            )
+        )
         {
             if(empty($_POST['userslist']))
             {
@@ -172,8 +192,12 @@ if(isset($_POST['mode']) && $_POST['mode'] == 'addit')
 
             if(!empty($SearchUsers))
             {
-                $DoSearch = doquery("SELECT `user`.`id`, `user`.`username` FROM {{table}} AS `user` LEFT JOIN {{prefix}}declarations AS `decl` ON `decl`.`id` = `user`.`multiIP_DeclarationID` WHERE `user`.`username` IN (".implode(', ', $SearchUsers).") AND (`user`.`multiIP_DeclarationID` = 0 OR `decl`.`status` = -2 OR `decl`.`status` = -1);", 'users');
-                while($Result = mysql_fetch_assoc($DoSearch))
+                $SQLResult_SearchUsers = doquery(
+                    "SELECT `user`.`id`, `user`.`username` FROM {{table}} AS `user` LEFT JOIN {{prefix}}declarations AS `decl` ON `decl`.`id` = `user`.`multiIP_DeclarationID` WHERE `user`.`username` IN (".implode(', ', $SearchUsers).") AND (`user`.`multiIP_DeclarationID` = 0 OR `decl`.`status` = -2 OR `decl`.`status` = -1);",
+                    'users'
+                );
+
+                while($Result = $SQLResult_SearchUsers->fetch_assoc())
                 {
                     $FoundUsers[] = "|{$Result['id']}|";
                     $SearchNDestroy = array_search(strtolower($Result['username']), $BadUsernames);
@@ -243,9 +267,16 @@ if(isset($_POST['mode']) && $_POST['mode'] == 'addit')
     }
 }
 
-if($Validating === false || $IsInValidationProcess['status'] == -1)
+if (
+    $HasExistingDeclarationEntry === false ||
+    $DeclarationDetails['status'] == -1
+)
 {
-    if(isset($IsInValidationProcess['status']) && $IsInValidationProcess['status'] == -1 && empty($BadUsernames))
+    if (
+        isset($DeclarationDetails['status']) &&
+        $DeclarationDetails['status'] == -1 &&
+        empty($BadUsernames)
+    )
     {
         $parse['ShowError'] = '';
         if($IsDeclarationOwner === false)
@@ -269,7 +300,7 @@ if($Validating === false || $IsInValidationProcess['status'] == -1)
 }
 else
 {
-    if($IsInValidationProcess['status'] == 1)
+    if ($DeclarationDetails['status'] == 1)
     {
         // Validation Done
         if($IsDeclarationOwner === true)
@@ -282,7 +313,7 @@ else
         }
         message($Message, $_Lang['Title']);
     }
-    else if($IsInValidationProcess['status'] == 0)
+    else if ($DeclarationDetails['status'] == 0)
     {
         // Validation Awaiting
         if($IsDeclarationOwner === true)

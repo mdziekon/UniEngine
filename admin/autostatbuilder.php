@@ -95,8 +95,13 @@ $Bench->simpleCountStart();
 
 $CounterNames[] = '> Getting UsersData';
 $Bench->simpleCountStart();
-$GameUsers = doquery("SELECT {$UserNeedenFields} FROM {{table}} as `user` WHERE `user`.`authlevel` = 0 ORDER BY `user`.`id` ASC;", 'users');
-if(mysql_num_rows($GameUsers) <= 0)
+
+$SQLResult_GameUsers = doquery(
+    "SELECT {$UserNeedenFields} FROM {{table}} as `user` WHERE `user`.`authlevel` = 0 ORDER BY `user`.`id` ASC;",
+    'users'
+);
+
+if($SQLResult_GameUsers->num_rows <= 0)
 {
     AdminMessage('No Users Found', 'StatBuilder');
 }
@@ -104,22 +109,35 @@ if(mysql_num_rows($GameUsers) <= 0)
 $Bench->simpleCountStop();
 $CounterNames[] = '> Getting StatPoints';
 $Bench->simpleCountStart();
-$UsersStats = doquery("SELECT {$CreateStatFieldsList} FROM {{table}} WHERE `stat_type` = 1;", 'statpoints');
+
+$SQLResult_UsersStats = doquery(
+    "SELECT {$CreateStatFieldsList} FROM {{table}} WHERE `stat_type` = 1;",
+    'statpoints'
+);
 
 $Bench->simpleCountStop();
 $CounterNames[] = '> Getting PlanetsData';
 $Bench->simpleCountStart();
-$AllPlanets = doquery("SELECT {$CreatePlanetFieldsList} FROM {{table}};", 'planets');
+
+$SQLResult_AllPlanets = doquery(
+    "SELECT {$CreatePlanetFieldsList} FROM {{table}};",
+    'planets'
+);
 
 $Bench->simpleCountStop();
 $CounterNames[] = '> Getting FleetsData';
 $Bench->simpleCountStart();
-$AllFleets= doquery("SELECT {$CreateFleetFieldsList} FROM {{table}};", 'fleets');
+
+$SQLResult_AllFleets= doquery(
+    "SELECT {$CreateFleetFieldsList} FROM {{table}};",
+    'fleets'
+);
 
 $Bench->simpleCountStop();
 $CounterNames[] = '> Parsing PlanetsData';
 $Bench->simpleCountStart();
-while($PlanetsData = mysql_fetch_array($AllPlanets, MYSQL_ASSOC))
+
+while($PlanetsData = $SQLResult_AllPlanets->fetch_assoc())
 {
     $Planets[$PlanetsData['id_owner']][] = $PlanetsData;
 }
@@ -127,7 +145,8 @@ while($PlanetsData = mysql_fetch_array($AllPlanets, MYSQL_ASSOC))
 $Bench->simpleCountStop();
 $CounterNames[] = '> Parsing FleetsData';
 $Bench->simpleCountStart();
-while($FleetsData = mysql_fetch_array($AllFleets, MYSQL_ASSOC))
+
+while($FleetsData = $SQLResult_AllFleets->fetch_assoc())
 {
     $Fleets[$FleetsData['fleet_owner']][] = $FleetsData;
 }
@@ -135,7 +154,8 @@ while($FleetsData = mysql_fetch_array($AllFleets, MYSQL_ASSOC))
 $Bench->simpleCountStop();
 $CounterNames[] = '> Parsing StatsData';
 $Bench->simpleCountStart();
-while($StatsData = mysql_fetch_array($UsersStats, MYSQL_ASSOC))
+
+while($StatsData = $SQLResult_UsersStats->fetch_assoc())
 {
     $Stats[$StatsData['id_owner']] = $StatsData;
 }
@@ -147,7 +167,7 @@ $Bench->simpleCountStart();
 
 $OnlyOnce = true;
 
-while($CurUser = mysql_fetch_array($GameUsers, MYSQL_ASSOC))
+while($CurUser = $SQLResult_GameUsers->fetch_assoc())
 {
     // Delete User with DeletionRequest
     if($CurUser['is_ondeletion'] == 1 AND $CurUser['deletion_endtime'] < $StatDate)
@@ -627,10 +647,14 @@ $Bench->simpleCountStart();
 
 ///////////////////// ALLIANCES ////////////////////
 $AllysNeedenFields = "{{prefix}}statpoints.total_rank, {{prefix}}statpoints.tech_rank, {{prefix}}statpoints.build_rank, {{prefix}}statpoints.defs_rank, {{prefix}}statpoints.fleet_rank, {{prefix}}statpoints.tech_yesterday_rank,{{prefix}}statpoints.build_yesterday_rank,{{prefix}}statpoints.defs_yesterday_rank,{{prefix}}statpoints.fleet_yesterday_rank,{{prefix}}statpoints.total_yesterday_rank";
-$GameAllys = doquery("SELECT {{table}}.*, {$AllysNeedenFields} FROM {{table}} LEFT JOIN {{prefix}}statpoints ON `stat_type` = 2 AND {{prefix}}statpoints.id_owner = {{table}}.id GROUP BY {{table}}.id", 'alliance');
+
+$SQLResult_GameAllys = doquery(
+    "SELECT {{table}}.*, {$AllysNeedenFields} FROM {{table}} LEFT JOIN {{prefix}}statpoints ON `stat_type` = 2 AND {{prefix}}statpoints.id_owner = {{table}}.id GROUP BY {{table}}.id",
+    'alliance'
+);
 
 $Loop = 0;
-while($CurAlly = mysql_fetch_array($GameAllys, MYSQL_ASSOC))
+while($CurAlly = $SQLResult_GameAllys->fetch_assoc())
 {
     $OldTotalRank    = $CurAlly['total_rank'];
     $OldTechRank    = $CurAlly['tech_rank'];
@@ -910,8 +934,12 @@ $CounterNames[] = 'Deleting Users';
 $Bench->simpleCountStart();
 
 // Delete all NonActivated Users which are in DataBase for at least 7 days
-$SelectNonActivatedUsers = doquery("SELECT `id` FROM {{table}} WHERE `activation_code` != '' AND `register_time` < ({$StatDate} - (".NONACTIVE_DELETETIME."));", 'users');
-while($NonActivated = mysql_fetch_array($SelectNonActivatedUsers, MYSQL_ASSOC))
+$SQLResult_SelectNonActivatedUsers = doquery(
+    "SELECT `id` FROM {{table}} WHERE `activation_code` != '' AND `register_time` < ({$StatDate} - (".NONACTIVE_DELETETIME."));",
+    'users'
+);
+
+while($NonActivated = $SQLResult_SelectNonActivatedUsers->fetch_assoc())
 {
     $UsersToDelete[] = $NonActivated['id'];
 }

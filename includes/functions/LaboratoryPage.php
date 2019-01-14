@@ -56,10 +56,12 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     $Query_GetOtherLabs = '';
     $Query_GetOtherLabs .= "SELECT `id`, `buildQueue`, `{$_Vars_GameElements[31]}` FROM {{table}} ";
     $Query_GetOtherLabs .= "WHERE `id_owner` = {$CurrentUser['id']} AND `planet_type` = 1;";
-    $Result_GetOtherLabs = doquery($Query_GetOtherLabs, 'planets');
-    if(mysql_num_rows($Result_GetOtherLabs) > 0)
+
+    $SQLResult_GetOtherLabs = doquery($Query_GetOtherLabs, 'planets');
+
+    if($SQLResult_GetOtherLabs->num_rows > 0)
     {
-        while($FetchData = mysql_fetch_assoc($Result_GetOtherLabs))
+        while($FetchData = $SQLResult_GetOtherLabs->fetch_assoc())
         {
             if(!empty($FetchData['buildQueue']))
             {

@@ -33,8 +33,14 @@ if(isset($_POST['email']))
     {
         if(is_email($email))
         {
-            $email = mysql_real_escape_string($email);
-            $Result = doquery("SELECT `id`,`activation_code`, `last_send_activationcode` FROM {{table}} WHERE `email` = '{$email}';", 'users', true);
+            $email = getDBLink()->escape_string($email);
+
+            $Result = doquery(
+                "SELECT `id`,`activation_code`, `last_send_activationcode` FROM {{table}} WHERE `email` = '{$email}';",
+                'users',
+                true
+            );
+
             if($Result)
             {
                 if(!empty($Result['activation_code']))

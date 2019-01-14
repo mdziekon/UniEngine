@@ -28,14 +28,19 @@ if($TodayTimestamp <= 0)
 }
 
 $SelectFields = '`Fleet_End_ID`, `Fleet_End_Owner`, `Fleet_End_ID_Changed`, `Fleet_End_Type_Changed`, `Fleet_End_Galaxy`, `Fleet_End_System`, `Fleet_End_Planet`, `Fleet_End_Type`, `Fleet_ACSID`';
-$SelectAttacks = doquery("SELECT {$SelectFields} FROM {{table}} WHERE (`Fleet_Time_Start` + `Fleet_Time_ACSAdd`) >= {$TodayTimestamp} AND `Fleet_Owner` = {$_User['id']} AND `Fleet_Mission` IN (1, 2, 9) AND `Fleet_End_Owner_IdleHours` < 168 AND `Fleet_ReportID` > 0 AND `Fleet_End_Owner` > 0 AND `Fleet_Destroyed_Reason` NOT IN (1, 4, 11);", 'fleet_archive');
-if(mysql_num_rows($SelectAttacks) > 0)
+
+$SQLResult_GetAttacks = doquery(
+    "SELECT {$SelectFields} FROM {{table}} WHERE (`Fleet_Time_Start` + `Fleet_Time_ACSAdd`) >= {$TodayTimestamp} AND `Fleet_Owner` = {$_User['id']} AND `Fleet_Mission` IN (1, 2, 9) AND `Fleet_End_Owner_IdleHours` < 168 AND `Fleet_ReportID` > 0 AND `Fleet_End_Owner` > 0 AND `Fleet_Destroyed_Reason` NOT IN (1, 4, 11);",
+    'fleet_archive'
+);
+
+if($SQLResult_GetAttacks->num_rows > 0)
 {
     $GetUsernames = array();
     $GetPlanetnames = array();
     $SkipACSID = array();
 
-    while($Fleet = mysql_fetch_assoc($SelectAttacks))
+    while($Fleet = $SQLResult_GetAttacks->fetch_assoc())
     {
         if($Fleet['Fleet_ACSID'] > 0)
         {
@@ -92,10 +97,14 @@ if(!empty($Records))
     $_Lang['PHP_HideNoAttacks'] = 'class="hide"';
     if(!empty($GetUsernames))
     {
-        $Usernames = doquery("SELECT `user`.`id`, `user`.`username`, `user`.`ally_id`, `ally`.`ally_tag` FROM {{table}} AS `user` LEFT JOIN {{prefix}}alliance AS `ally` ON `ally`.`id` = `user`.`ally_id` WHERE `user`.`id` IN (".implode(', ', $GetUsernames).");", 'users');
-        if(mysql_num_rows($Usernames) > 0)
+        $SQLResult_GetUsernames = doquery(
+            "SELECT `user`.`id`, `user`.`username`, `user`.`ally_id`, `ally`.`ally_tag` FROM {{table}} AS `user` LEFT JOIN {{prefix}}alliance AS `ally` ON `ally`.`id` = `user`.`ally_id` WHERE `user`.`id` IN (".implode(', ', $GetUsernames).");",
+            'users'
+        );
+
+        if($SQLResult_GetUsernames->num_rows > 0)
         {
-            while($Username = mysql_fetch_assoc($Usernames))
+            while($Username = $SQLResult_GetUsernames->fetch_assoc())
             {
                 if($Username['ally_id'] > 0 AND !empty($Username['ally_tag']))
                 {
@@ -126,10 +135,15 @@ if(!empty($Records))
         {
             $GetPlanetIDs[] = $Data['id'];
         }
-        $Planets = doquery("SELECT `id`, `name` FROM {{table}} WHERE `id` IN (".implode(', ', $GetPlanetIDs).");", 'planets');
-        if(mysql_num_rows($Planets) > 0)
+
+        $SQLResult_GetPlanetsNames = doquery(
+            "SELECT `id`, `name` FROM {{table}} WHERE `id` IN (".implode(', ', $GetPlanetIDs).");",
+            'planets'
+        );
+
+        if($SQLResult_GetPlanetsNames->num_rows > 0)
         {
-            while($Planet = mysql_fetch_assoc($Planets))
+            while($Planet = $SQLResult_GetPlanetsNames->fetch_assoc())
             {
                 $FoundPlanets[$Planet['id']] = $Planet['name'];
             }

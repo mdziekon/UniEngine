@@ -299,11 +299,12 @@ $SFBSelect = '';
 $SFBSelect .= "SELECT `Type`, `BlockMissions`, `Reason`, `StartTime`, `EndTime`, `PostEndTime`, `ElementID`, `DontBlockIfIdle` FROM {{table}} WHERE `StartTime` <= UNIX_TIMESTAMP() AND ";
 $SFBSelect .= implode(' OR ', $SFBSelectWhere);
 $SFBSelect .= " ORDER BY `Type` ASC, `EndTime` DESC;";
-$LoadSFBData = doquery($SFBSelect, 'smart_fleet_blockade');
 
-if(mysql_num_rows($LoadSFBData) > 0)
+$SQLResult_SmartFleetBlockadeData = doquery($SFBSelect, 'smart_fleet_blockade');
+
+if($SQLResult_SmartFleetBlockadeData->num_rows > 0)
 {
-    while($GetSFBData = mysql_fetch_assoc($LoadSFBData))
+    while($GetSFBData = $SQLResult_SmartFleetBlockadeData->fetch_assoc())
     {
         $BlockedMissions = false;
         if($GetSFBData['BlockMissions'] == '0')

@@ -41,7 +41,7 @@ function MissionCaseColonisation($FleetRow, &$_FleetCache)
             }
             $Query_GetUserData .= "; -- MISSION COLONIZATION [Q02]";
             $GetUserData = doquery($Query_GetUserData, '');
-            while($FetchData = mysql_fetch_assoc($GetUserData))
+            while($FetchData = $GetUserData->fetch_assoc())
             {
                 if($FetchData['Type'] == 1)
                 {

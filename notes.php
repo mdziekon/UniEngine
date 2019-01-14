@@ -24,9 +24,9 @@ if(isset($_POST['send']) && $_POST['send'] == 1)
     $InsertClean['priority'] = intval($_POST['priority']);
     $InsertClean['text'] = substr(trim(stripslashes($_POST['text'])), 0, $_MaxLengthNote);
 
-    $Insert['title'] = mysql_real_escape_string($InsertClean['title']);
+    $Insert['title'] = getDBLink()->escape_string($InsertClean['title']);
     $Insert['priority'] = $InsertClean['priority'];
-    $Insert['text'] = mysql_real_escape_string($InsertClean['text']);
+    $Insert['text'] = getDBLink()->escape_string($InsertClean['text']);
 }
 
 if($Command == 'show')
@@ -167,7 +167,7 @@ else if($Command == 'delete')
         // Delete all notes
 
         doquery("DELETE FROM {{table}} WHERE `owner` = {$_User['id']};", 'notes');
-        if(mysql_affected_rows() > 0)
+        if(getDBLink()->affected_rows > 0)
         {
             $Parse['Input_MsgText'] = $_Lang['Msg_DeleteAllSuccess'];
             $Parse['Input_MsgColor'] = 'lime';
@@ -200,7 +200,7 @@ else if($Command == 'delete')
         {
             doquery("DELETE FROM {{table}} WHERE `id` IN (".implode(', ', $DeleteIDs).") AND `owner` = {$_User['id']};", 'notes');
 
-            if(mysql_affected_rows() > 0)
+            if(getDBLink()->affected_rows > 0)
             {
                 $Parse['Input_MsgText'] = $_Lang['Msg_DeleteSelectedSuccess'];
                 $Parse['Input_MsgColor'] = 'lime';
@@ -250,8 +250,10 @@ if(empty($Command))
         $Query_GetNotes .= "SELECT * FROM {{table}} ";
         $Query_GetNotes .= "WHERE `owner` = {$_User['id']} ";
         $Query_GetNotes .= "ORDER BY `priority` DESC, `time` DESC LIMIT {$SkipCount}, {$_PerPage};";
-        $Result_GetNotes = doquery($Query_GetNotes, 'notes');
-        while($NoteData = mysql_fetch_assoc($Result_GetNotes))
+
+        $SQLResult_GetNotes = doquery($Query_GetNotes, 'notes');
+
+        while($NoteData = $SQLResult_GetNotes->fetch_assoc())
         {
             $NoteData = array
             (
