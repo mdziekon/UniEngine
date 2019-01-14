@@ -318,7 +318,7 @@ else if($Next == true)
 }
 
 $parse = $_Lang;
-$parse['mlst_data_rows'] = '';
+$parse['mlst_data_rows'] = [];
 $parse['mlst_data_page'] = $ViewPage;
 $parse['mlst_data_pagemax'] = $MaxPage;
 $parse['mlst_data_sele'] = $Selected;
@@ -371,7 +371,7 @@ while($row = $SQLResult_GetMessages->fetch_assoc())
     {
         if(in_array($row['id_sender'], $ExcludedUsers) OR in_array($row['id_owner'], $ExcludedUsers))
         {
-            $parse['mlst_data_rows'] .= parsetemplate($DisallowTpl , $_Lang);
+            $parse['mlst_data_rows'][] = parsetemplate($DisallowTpl , $_Lang);
             continue;
         }
     }
@@ -467,7 +467,7 @@ while($row = $SQLResult_GetMessages->fetch_assoc())
 }
 if(empty($parse['mlst_data_rows']))
 {
-    $parse['mlst_data_rows'] .= '<tr><th colspan="6" class="pad5 red">'.$_Lang['Error_NoMsgFound'].'<br/><a href="messagelist.php" class="orange">('.$_Lang['Form_ResetFilters'].')</a></th></tr>';
+    $parse['mlst_data_rows'][] = '<tr><th colspan="6" class="pad5 red">'.$_Lang['Error_NoMsgFound'].'<br/><a href="messagelist.php" class="orange">('.$_Lang['Form_ResetFilters'].')</a></th></tr>';
     $parse['HideSelectedActionRow'] = ' style="display: none;"';
 }
 else
@@ -516,7 +516,11 @@ else
     $JoinMsgs = '';
     foreach($parse['mlst_data_rows'] as $RowData)
     {
-        $JoinMsgs .= parsetemplate($RowsTpl, $RowData);
+        if (is_array($RowData)) {
+            $JoinMsgs .= parsetemplate($RowsTpl, $RowData);
+        } else {
+            $JoinMsgs .= $RowData;
+        }
     }
 
     $parse['mlst_data_rows'] = $JoinMsgs;
