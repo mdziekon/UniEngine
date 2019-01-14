@@ -24,11 +24,12 @@ $_JSChronoAppletIncluded = false;
 if(!empty($_GET['ids']))
 {
     $InsertIDs = explode(',', $_GET['ids']);
+    $MappedIDs = [];
     foreach($InsertIDs as $ThisID)
     {
-        $_Lang['Insert_Input_Users'][] = "[{$ThisID}]";
+        $MappedIDs[] = "[{$ThisID}]";
     }
-    $_Lang['Insert_Input_Users'] = $_POST['users'] = implode(',', $_Lang['Insert_Input_Users']);
+    $_POST['users'] = implode(',', $MappedIDs);
     $_POST['send'] = 'yes';
 }
 
