@@ -617,8 +617,12 @@ if(!empty($GetData))
                     $ThisData['EvenOrOdd'] = 'odd';
                 }
 
-                $ParsedRows[$TableKey] = parsetemplate($RowTPL, $ThisData);
+                $ParsedRows[$TableKey][] = parsetemplate($RowTPL, $ThisData);
             }
+        }
+
+        foreach($ParsedRows as $TableKey => $ParsedRow) {
+            $ParsedRows[$TableKey] = implode("", $ParsedRows[$TableKey]);
         }
 
         krsort($ParsedRows);
