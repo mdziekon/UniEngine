@@ -2,8 +2,7 @@
 
 if(!defined('INSIDE')){ die('Access Denied!');}
 
-class debug
-{
+class DBErrorHandler {
     var $NestingPrevention = 0;
     var $PreviousMessage = '';
 

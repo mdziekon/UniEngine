@@ -2,11 +2,11 @@
 
 function doquery($query, $table, $fetch = false) {
     global $_DBLink, $_EnginePath, $_User;
-    static $__ServerConnectionSettings, $debug = NULL;
+    static $__ServerConnectionSettings, $dbErrorHandler = NULL;
 
-    if ($debug === NULL) {
+    if ($dbErrorHandler === NULL) {
         include($_EnginePath . 'includes/debug.class.php');
-        $debug = new debug();
+        $dbErrorHandler = new DBErrorHandler();
     }
 
     if (empty($__ServerConnectionSettings)) {
@@ -27,13 +27,13 @@ function doquery($query, $table, $fetch = false) {
         );
 
         if ($_DBLink->connect_errno) {
-            $debug->error($_DBLink->error . '<br/>' . $query);
+            $dbErrorHandler->error($_DBLink->error . '<br/>' . $query);
         }
 
         $_DBLink->select_db($__ServerConnectionSettings['name']);
 
         if ($_DBLink->errno) {
-            $debug->error($_DBLink->error . '<br/>' . $query);
+            $dbErrorHandler->error($_DBLink->error . '<br/>' . $query);
         }
 
         $_DBLink->query("SET NAMES 'UTF8';");
@@ -63,7 +63,7 @@ function doquery($query, $table, $fetch = false) {
     $SQLResult = $_DBLink->query($SQLQuery_Final);
 
     if ($_DBLink->errno) {
-        $debug->error(
+        $dbErrorHandler->error(
             $_DBLink->error .
             '<br/>' . $SQLQuery_Final .
             '<br/>File: ' . $_SERVER['REQUEST_URI'] .
