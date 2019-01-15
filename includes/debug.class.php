@@ -3,20 +3,20 @@
 if(!defined('INSIDE')){ die('Access Denied!');}
 
 class DBErrorHandler {
-    var $NestingPrevention = 0;
-    var $PreviousMessage = '';
+    var $isHandlingError = false;
+    var $lastErrorMessage = "";
 
     function error($message) {
         global $_DBLink, $_User, $_EnginePath;
 
-        $this->NestingPrevention += 1;
-
-        if ($this->NestingPrevention > 1) {
+        if ($this->isHandlingError) {
             throw new RuntimeException(
                 "DBErrorHandler: Nesting Prevention!\n" .
-                $this->PreviousMessage
+                $this->lastErrorMessage
             );
         }
+
+        $this->isHandlingError = true;
 
         define('IN_ERROR', true);
 
@@ -48,7 +48,7 @@ class DBErrorHandler {
         $EscapedMessage = $_DBLink->escape_string($message);
 
         $SQLQuery_InsertError = (
-            "INSERTs INTO {{table}} SET " .
+            "INSERT INTO {{table}} SET " .
             "`error_sender` = {$_User['id']}, " .
             "`error_time` = UNIX_TIMESTAMP(), " .
             "`error_text` = '{$EscapedMessage}' " .
@@ -72,15 +72,13 @@ class DBErrorHandler {
         $ErrorID = $_DBLink->insert_id;
 
         $ErrorMsg = 'An Error occured!<br/>Error ID: <b>'. $ErrorID .'</b>';
-        $this->PreviousMessage = $ErrorMsg;
+        $this->lastErrorMessage = $ErrorMsg;
 
         if (!function_exists('message')) {
             echo $ErrorMsg;
         } else {
             message($ErrorMsg, 'System Error!');
         }
-
-        $this->NestingPrevention -= 1;
 
         $_DBLink->close();
 
