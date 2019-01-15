@@ -9,7 +9,9 @@
             "homepage": "https://github.com/mdziekon"
         }
     ],
-    "require": {},
+    "require": {
+        "smarty/smarty": "~3.1"
+    },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.3"
     },
