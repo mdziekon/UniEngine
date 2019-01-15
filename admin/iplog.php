@@ -577,6 +577,10 @@ if(!empty($GetData))
                     }
                     else
                     {
+                        if (empty($RowData['sub'][$ThisKey]['SubRows'])) {
+                            $RowData['sub'][$ThisKey]['SubRows'] = '';
+                        }
+
                         $RowData['sub'][$ThisKey]['SubRows'] .= '<tr>'.parsetemplate($SubRowTPL, $SubRowData).'</tr>';
                         $RowData['sub'][$ThisKey]['SubRowsCount'] += 1;
                     }

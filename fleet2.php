@@ -361,6 +361,7 @@ if(in_array(1, $AvailableMissions) && $CheckPlanetOwner['id'] > 0)
 }
 
 $allowUseQuantumGate = false;
+$allowGateJump = false;
 if(!empty($AvailableMissions))
 {
     if($_Planet['quantumgate'] == 1)

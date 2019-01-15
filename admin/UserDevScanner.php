@@ -137,11 +137,55 @@ function ResourceUpdate(&$CurrentPlanet, $CurrentUser, $StartTime, $EndTime)
         }
     }
     // Calculate Place in Storages
-    if(empty($CurrentPlanet['metal_max']))
-    {
-        $CurrentPlanet['metal_max'] = (floor (BASE_STORAGE_SIZE * pow (1.7, $CurrentPlanet[$_Vars_GameElements[22]]))) * MAX_OVERFLOW;
-        $CurrentPlanet['crystal_max'] = (floor (BASE_STORAGE_SIZE * pow (1.7, $CurrentPlanet[$_Vars_GameElements[23]]))) * MAX_OVERFLOW;
-        $CurrentPlanet['deuterium_max'] = (floor (BASE_STORAGE_SIZE * pow (1.7, $CurrentPlanet[$_Vars_GameElements[24]]))) * MAX_OVERFLOW;
+    if(empty($CurrentPlanet['metal_max'])) {
+        $CurrentPlanet['metal_max'] = (
+            (
+                floor(
+                    BASE_STORAGE_SIZE *
+                    pow(
+                        1.7,
+                        (
+                            isset($CurrentPlanet[$_Vars_GameElements[22]]) ?
+                            $CurrentPlanet[$_Vars_GameElements[22]] :
+                            0
+                        )
+                    )
+                )
+            ) *
+            MAX_OVERFLOW
+        );
+        $CurrentPlanet['crystal_max'] = (
+            (
+                floor(
+                    BASE_STORAGE_SIZE *
+                    pow(
+                        1.7,
+                        (
+                            isset($CurrentPlanet[$_Vars_GameElements[23]]) ?
+                            $CurrentPlanet[$_Vars_GameElements[23]] :
+                            0
+                        )
+                    )
+                )
+            ) *
+            MAX_OVERFLOW
+        );
+        $CurrentPlanet['deuterium_max'] = (
+            (
+                floor(
+                    BASE_STORAGE_SIZE *
+                    pow(
+                        1.7,
+                        (
+                            isset($CurrentPlanet[$_Vars_GameElements[24]]) ?
+                            $CurrentPlanet[$_Vars_GameElements[24]] :
+                            0
+                        )
+                    )
+                )
+            ) *
+            MAX_OVERFLOW
+        );
     }
 
     // Calculate additional income
@@ -158,7 +202,11 @@ function ResourceUpdate(&$CurrentPlanet, $CurrentUser, $StartTime, $EndTime)
     foreach($_Vars_ElementCategories['prod'] as $ElementID)
     {
         $BuildLevelFactor = $CurrentPlanet[$_Vars_GameElements[$ElementID].'_workpercent'];
-        $BuildLevel = $CurrentPlanet[$_Vars_GameElements[$ElementID]];
+        $BuildLevel = (
+            isset($CurrentPlanet[$_Vars_GameElements[$ElementID]]) ?
+            $CurrentPlanet[$_Vars_GameElements[$ElementID]] :
+            0
+        );
 
         if($BuildLevel <= 0)
         {
@@ -1026,6 +1074,10 @@ if($AllowScan)
                         }
                         else
                         {
+                            if (empty($PlanetsDumpData[$Log['PlanetID']][$_Vars_GameElements[$Restored[0]]])) {
+                                $PlanetsDumpData[$Log['PlanetID']][$_Vars_GameElements[$Restored[0]]] = 0;
+                            }
+
                             $PlanetsDumpData[$Log['PlanetID']][$_Vars_GameElements[$Restored[0]]] += $Restored[1];
                             $ChangedShipsTypes[] = $Restored[0];
 
@@ -1588,7 +1640,13 @@ if($AllowScan)
                             {
                                 $SummaryLog[$ItemID] = 0;
                             }
-                            $SummaryLog[$ItemID] += $PlanetData[$_Vars_GameElements[$ItemID]];
+
+                            $SummaryLog[$ItemID] += (
+                                isset($PlanetData[$_Vars_GameElements[$ItemID]]) ?
+                                $PlanetData[$_Vars_GameElements[$ItemID]] :
+                                0
+                            );
+
                             if(!in_array($ItemID, $SummaryElements))
                             {
                                 $SummaryElements[] = $ItemID;
@@ -1945,8 +2003,13 @@ if($AllowScan)
                     $Point = &$_Lang['Found'.$ScanKey.'s'][$Data['ID']];
                     $ParseRow['Index'] = str_pad($Index + 1, 4, '0', STR_PAD_LEFT);
                     $ParseRow['RowTitle'] = $Point['Txt'];
-                    if($ScanKey == 'Summary' OR $Data['LogID'] <= 0)
-                    {
+                    if (
+                        $ScanKey == 'Summary' ||
+                        (
+                            !isset($Data['LogID']) ||
+                            $Data['LogID'] <= 0
+                        )
+                    ) {
                         $ParseRow['HideLogID'] = $Hide;
                     }
                     else

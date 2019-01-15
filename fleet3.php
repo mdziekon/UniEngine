@@ -869,6 +869,7 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
     if($Protections['enable'])
     {
         $Throw = false;
+        $DoFarmCheck = false;
         if(in_array($Fleet['Mission'], $Protections['mtypes']))
         {
             if($_User['total_rank'] >= 1)
