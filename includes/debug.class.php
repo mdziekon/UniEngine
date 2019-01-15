@@ -12,14 +12,12 @@ class DBErrorHandler {
         $this->NestingPrevention += 1;
 
         if ($this->NestingPrevention > 1) {
-            trigger_error(
-                (
-                    '<b>ErrorNesting Prevention!</b><br/>' .
-                    $this->PreviousMessage
-                ),
-                E_USER_ERROR
+            throw new RuntimeException(
+                "DBErrorHandler: Nesting Prevention!\n" .
+                $this->PreviousMessage
             );
         }
+
         define('IN_ERROR', true);
 
         if (LOCALHOST) {
@@ -31,11 +29,13 @@ class DBErrorHandler {
         }
 
         if (!$_DBLink) {
-            trigger_error('DBDriver Connection Error #01<br/>', E_USER_ERROR);
+            throw new RuntimeException("DBErrorHandler: DBDriver Connection Error #01");
         }
+
         if (empty($_User['id'])) {
             $_User['id'] = '0';
         }
+
         $Replace_Search = [
             '{{table}}',
             '{{prefix}}'
@@ -48,7 +48,7 @@ class DBErrorHandler {
         $EscapedMessage = $_DBLink->escape_string($message);
 
         $SQLQuery_InsertError = (
-            "INSERT INTO {{table}} SET " .
+            "INSERTs INTO {{table}} SET " .
             "`error_sender` = {$_User['id']}, " .
             "`error_time` = UNIX_TIMESTAMP(), " .
             "`error_text` = '{$EscapedMessage}' " .
@@ -63,9 +63,9 @@ class DBErrorHandler {
         $_DBLink->query($SQLQuery_InsertError);
 
         if ($_DBLink->errno) {
-            trigger_error(
-                'DBDriver Fatal Error #01<br/>' . $_DBLink->error,
-                E_USER_ERROR
+            throw new RuntimeException(
+                "DBDriver Fatal Error #01\n" .
+                $_DBLink->error
             );
         }
 
