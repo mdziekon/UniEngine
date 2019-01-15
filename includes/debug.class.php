@@ -41,15 +41,33 @@ class debug
         $Replace_Search        = array('{{table}}', '{{prefix}}');
         $Replace_Replace    = array($__ServerConnectionSettings['prefix'].'errors', $__ServerConnectionSettings['prefix']);
 
-        $query = "INSERT INTO {{table}} SET `error_sender` = {$_User['id']}, `error_time` = UNIX_TIMESTAMP(), `error_text` = '".mysqli_real_escape_string($_DBLink, $message)."';";
-        $query = str_replace($Replace_Search, $Replace_Replace, $query);
-        mysqli_query($_DBLink, $query) or trigger_error('DBDriver Fatal Error #01<br/>'.mysqli_error($_DBLink), E_USER_ERROR);
+        $EscapedMessage = $_DBLink->escape_string($message);
 
-        $query = "SELECT LAST_INSERT_ID() as `id` FROM {{table}} LIMIT 1;";
-        $query = str_replace($Replace_Search, $Replace_Replace, $query);
-        $q = mysqli_fetch_assoc(mysqli_query($_DBLink, $query)) or trigger_error('DBDriver Fatal Error #02<br/>'.mysqli_error($_DBLink), E_USER_ERROR);
+        $SQLQuery_InsertError = (
+            "INSERT INTO {{table}} SET " .
+            "`error_sender` = {$_User['id']}, " .
+            "`error_time` = UNIX_TIMESTAMP(), " .
+            "`error_text` = '{$EscapedMessage}' " .
+            ";"
+        );
+        $SQLQuery_InsertError = str_replace(
+            $Replace_Search,
+            $Replace_Replace,
+            $SQLQuery_InsertError
+        );
 
-        $ErrorMsg = 'An Error occured!<br/>Error ID: <b>'.$q['id'].'</b>';
+        $_DBLink->query($SQLQuery_InsertError);
+
+        if ($_DBLink->errno) {
+            trigger_error(
+                'DBDriver Fatal Error #01<br/>' . $_DBLink->error,
+                E_USER_ERROR
+            );
+        }
+
+        $ErrorID = $_DBLink->insert_id;
+
+        $ErrorMsg = 'An Error occured!<br/>Error ID: <b>'. $ErrorID .'</b>';
         $this->PreviousMessage = $ErrorMsg;
 
         if(!function_exists('message'))
@@ -63,7 +81,8 @@ class debug
 
         $this->NestingPrevention -= 1;
 
-        mysqli_close($_DBLink);
+        $_DBLink->close();
+
         die();
     }
 }
