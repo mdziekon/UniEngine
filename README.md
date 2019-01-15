@@ -17,14 +17,14 @@ OGame-clone browser based game engine.
 - PHP
     - ``>= 5.4``
     - ``< 7.0``
+- Composer
+    - ``>= 1.6``
 - MySQL
     - ``>= 5``
 - A webserver (eg. nginx)
 
-### Development requirements
+### (Additional) Development requirements
 
-- Composer
-    - ``>= 1.6``
 - Node.js
     - ``>= 11``
 
@@ -43,15 +43,17 @@ OGame-clone browser based game engine.
 2. Setup a MySQL server.
 3. Create a DB user and DB database for your game server.
 4. Move source files of the project to your webserver's directory.
-5. Run installation wizard: http://your_server_address:port/install
-6. Remove ``install/`` directory
+5. Install PHP dependencies.
+    - ``composer install --no-dev``
+6. Run installation wizard: http://your_server_address:port/install
+7. Remove ``install/`` directory
 
 ## Development guides
 
 ### Preparations
 
-1. Install PHP dependencies:
-    - ``composer install``
+1. Install PHP dependencies (normal & dev):
+    - ``composer install --dev``
 2. Install Node.js dependencies:
     - ``npm ci``
 
