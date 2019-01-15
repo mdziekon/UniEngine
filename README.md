@@ -40,13 +40,13 @@ OGame-clone browser based game engine.
             - (one-off, installation purposes)
         - ``tmp/``
             - (permanent, eg. for Smarty cache)
-2. Setup a MySQL server.
-3. Create a DB user and DB database for your game server.
-4. Move source files of the project to your webserver's directory.
-5. Install PHP dependencies.
+1. Setup a MySQL server.
+1. Create a DB user and DB database for your game server.
+1. Move source files of the project to your webserver's directory.
+1. Install PHP dependencies.
     - ``composer install --no-dev``
-6. Run installation wizard: http://your_server_address:port/install
-7. Remove ``install/`` directory
+1. Run installation wizard: http://your_server_address:port/install
+1. Remove ``install/`` directory
 
 ## Development guides
 
@@ -54,7 +54,7 @@ OGame-clone browser based game engine.
 
 1. Install PHP dependencies (normal & dev):
     - ``composer install --dev``
-2. Install Node.js dependencies:
+1. Install Node.js dependencies:
     - ``npm ci``
 
 ### Available scripts
