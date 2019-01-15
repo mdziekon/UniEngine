@@ -20,7 +20,7 @@ function doquery($query, $table, $fetch = false) {
     }
 
     if (!$_DBLink) {
-        $_DBLink = mysqli_connect(
+        $_DBLink = new mysqli(
             $__ServerConnectionSettings['server'],
             $__ServerConnectionSettings['user'],
             $__ServerConnectionSettings['pass']

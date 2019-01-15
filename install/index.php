@@ -316,7 +316,12 @@ else
             if($_Install_CanProceed)
             {
                 // Try to establish a connection with DataBase Server
-                $_Install_DBLink = mysqli_connect($_POST['set_dbconfig_host'], $_POST['set_dbconfig_user'], $_POST['set_dbconfig_pass']);
+                $_Install_DBLink = new mysqli(
+                    $_POST['set_dbconfig_host'],
+                    $_POST['set_dbconfig_user'],
+                    $_POST['set_dbconfig_pass']
+                );
+
                 if($_Install_DBLink !== false)
                 {
                     // Try to select game DataBase
