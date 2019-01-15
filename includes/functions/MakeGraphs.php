@@ -100,7 +100,7 @@ class Context
     var $vendors;
     var $modes;
 
-    function Context($Modes)
+    function __construct($Modes)
     {
         $Vendors = array(array('id' => 1, 'name' => '', 'vendor' => '', 'browser' => ''));
         foreach($Vendors as $Index => $Data)
@@ -150,7 +150,7 @@ class RunFilter
     var $modemap;
     var $series;
 
-    function RunFilter($cx, $AllScores)
+    function __construct($cx, $AllScores)
     {
         $this->AllScores = $AllScores;
 
@@ -235,7 +235,7 @@ class GraphBuilder
     var $runs;
     var $run_points;
 
-    function GraphBuilder(&$cx, &$filter)
+    function __construct(&$cx, &$filter)
     {
         $this->AllScores = $filter->AllScores;
         $this->runs = $filter->runs;
