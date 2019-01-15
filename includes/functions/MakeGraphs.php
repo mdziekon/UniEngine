@@ -39,11 +39,14 @@ function MakeGraphs($Modes, $Scores, $Dimensions = array(), $OwnTooltipCode = fa
         return false;
     }
 
-    require($_EnginePath.'class/Smarty/Smarty.class.php');
-    $smarty = new Smarty;
-    $smarty->template_dir = $_EnginePath.TEMPLATE_DIR.TEMPLATE_NAME.'/';
-    $smarty->compile_dir = $_EnginePath.'/tmp/Smarty/Compile/';
-    $smarty->cache_dir = $_EnginePath.'/tmp/Smarty/Cache/';
+    require($_EnginePath.'vendor/smarty/smarty/libs/Smarty.class.php');
+
+    $smarty = new Smarty();
+
+    $smarty
+        ->addTemplateDir($_EnginePath . TEMPLATE_DIR . TEMPLATE_NAME . '/')
+        ->setCompileDir($_EnginePath . '/tmp/smarty/compiled/')
+        ->setCacheDir($_EnginePath . '/tmp/smarty/cached/');
 
     $graphs = array();
     $cx = new Context($Modes);
