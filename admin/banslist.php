@@ -287,8 +287,30 @@ if($SQLResult_GetBans !== false)
 
     foreach($InsertRows as $RowData)
     {
-        $RowData['UserParsed'] = "<a href=\"?ids={$RowData['UserID']}\">{$UsernamesArray[$RowData['UserID']]}</a> (<a href=\"user_info.php?uid={$RowData['UserID']}\" target=\"_blank\">#{$RowData['UserID']}</a>)";
-        $RowData['GiverParsed'] = "<a href=\"?ids={$RowData['GiverID']}\">{$UsernamesArray[$RowData['GiverID']]}</a> (<a href=\"user_info.php?uid={$RowData['GiverID']}\" target=\"_blank\">#{$RowData['GiverID']}</a>)";
+        $RowBannedUserID = $RowData['UserID'];
+        $RowBannedUsername = (
+            isset($UsernamesArray[$RowBannedUserID]) ?
+            $UsernamesArray[$RowBannedUserID] :
+            "<b class=\"red\">{$_Lang['Row_UserDeleted']}</b>"
+        );
+        $RowGiverUserID = $RowData['GiverID'];
+        $RowGiverUsername = (
+            isset($UsernamesArray[$RowGiverUserID]) ?
+            $UsernamesArray[$RowGiverUserID] :
+            "<b class=\"red\">{$_Lang['Row_UserDeleted']}</b>"
+        );
+
+        $RowData['UserParsed'] = (
+            "<a href=\"?ids={$RowBannedUserID}\">{$RowBannedUsername}</a>" .
+            " " .
+            "(<a href=\"user_info.php?uid={$RowBannedUserID}\" target=\"_blank\">#{$RowBannedUserID}</a>)"
+        );
+
+        $RowData['GiverParsed'] = (
+            "<a href=\"?ids={$RowGiverUserID}\">{$RowGiverUsername}</a>" .
+            " " .
+            "(<a href=\"user_info.php?uid={$RowGiverUserID}\" target=\"_blank\">#{$RowGiverUserID}</a>)"
+        );
 
         $_Lang['Insert_Rows'][] = parsetemplate($TPL_Row, $RowData);
     }

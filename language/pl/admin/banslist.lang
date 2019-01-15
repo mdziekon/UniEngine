@@ -23,6 +23,7 @@ $_Lang['Row_OwnFleetsRetreaded']		= '<b class="orange">Floty wycofane (#02)</b>'
 $_Lang['Row_OthersFleetsRetreaded']	= '<b class="orange">Floty wycofane (#03)</b>';
 $_Lang['Row_NoFleetsRetreaded']		= '<b class="red">Nie wycofano Flot</b>';
 $_Lang['Row_BlockadeOnCookieStyle']	= '<b class="red">Blokada Cookies</b>';
+$_Lang['Row_UserDeleted']               = 'Gracz usunięty';
 
 $_Lang['Error_NoRows']				= 'Brak wpisów';
 
