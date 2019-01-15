@@ -41,6 +41,7 @@ OGame-clone browser based game engine.
         - ``tmp/``
             - (permanent, eg. for Smarty cache)
 1. Setup a MySQL server.
+    - Disable ``STRICT_TRANS_TABLES`` mode.
 1. Create a DB user and DB database for your game server.
 1. Move source files of the project to your webserver's directory.
 1. Install PHP dependencies.
