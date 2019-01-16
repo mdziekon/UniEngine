@@ -10,7 +10,8 @@
         }
     ],
     "require": {
-        "smarty/smarty": "~3.1"
+        "smarty/smarty": "~3.1",
+        "phpmailer/phpmailer": "~6.0"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.3"
