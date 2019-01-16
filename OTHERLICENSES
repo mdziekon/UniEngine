@@ -60,37 +60,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 ---
-* PHPMailer
-includes/phpmailer/*
-
-(Copy from file includes/phpmailer/class.phpmailer.php)
-.---------------------------------------------------------------------------.
-|  Software: PHPMailer - PHP email class                                    |
-|   Version: 5.1                                                            |
-|   Contact: via sourceforge.net support pages (also www.worxware.com)      |
-|      Info: http://phpmailer.sourceforge.net                               |
-|   Support: http://sourceforge.net/projects/phpmailer/                     |
-| ------------------------------------------------------------------------- |
-|     Admin: Andy Prevost (project admininistrator)                         |
-|   Authors: Andy Prevost (codeworxtech) codeworxtech@users.sourceforge.net |
-|          : Marcus Bointon (coolbru) coolbru@users.sourceforge.net         |
-|   Founder: Brent R. Matzelle (original founder)                           |
-| Copyright (c) 2004-2009, Andy Prevost. All Rights Reserved.               |
-| Copyright (c) 2001-2003, Brent R. Matzelle                                |
-| ------------------------------------------------------------------------- |
-|   License: Distributed under the Lesser General Public License (LGPL)     |
-|            http://www.gnu.org/copyleft/lesser.html                        |
-| This program is distributed in the hope that it will be useful - WITHOUT  |
-| ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or     |
-| FITNESS FOR A PARTICULAR PURPOSE.                                         |
-| ------------------------------------------------------------------------- |
-| We offer a number of paid services (www.worxware.com):                    |
-| - Web Hosting on highly optimized fast and secure servers                 |
-| - Technology Consulting                                                   |
-| - Oursourcing (highly qualified programmers and graphic designers)        |
-'---------------------------------------------------------------------------'
-
----
 * AreWeFastYet
 includes/functions/MakeGraphs.php
 css/graphs.css
