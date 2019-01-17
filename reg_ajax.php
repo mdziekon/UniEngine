@@ -11,7 +11,7 @@ $Now = time();
 
 if(REGISTER_RECAPTCHA_ENABLE)
 {
-    require($_EnginePath.'includes/recaptchalib.php');
+    require($_EnginePath.'vendor/google/recaptcha/src/autoload.php');
 }
 
 header('access-control-allow-origin: *');
@@ -118,19 +118,25 @@ if(isset($_GET['register']))
 
     if(REGISTER_RECAPTCHA_ENABLE)
     {
-        // Check if reCaptcha is correct
-        if(!isset($_GET['recaptcha_challenge_field']))
-        {
-            $_GET['recaptcha_challenge_field'] = null;
+        $CaptchaResponse = null;
+        $RecaptchaServerIdentification = $_SERVER['SERVER_NAME'];
+
+        if (REGISTER_RECAPTCHA_SERVERIP_AS_HOSTNAME) {
+            $RecaptchaServerIdentification = $_SERVER['SERVER_ADDR'];
         }
-        if(!isset($_GET['recaptcha_response_field']))
-        {
-            $_GET['recaptcha_response_field'] = null;
+
+        if (isset($_GET['captcha_response'])) {
+            $CaptchaResponse = $_GET['captcha_response'];
         }
-        $resp = recaptcha_check_answer(REGISTER_RECAPTCHA_PRIVATEKEY, $_SERVER['REMOTE_ADDR'], $_GET['recaptcha_challenge_field'], $_GET['recaptcha_response_field']);
-        if(!$resp->is_valid)
-        {
-            // ReCaptcha Code is not valid
+
+        $recaptcha = new \ReCaptcha\ReCaptcha(REGISTER_RECAPTCHA_PRIVATEKEY);
+
+        $recaptchaResponse = $recaptcha
+            ->setExpectedHostname($RecaptchaServerIdentification)
+            ->verify($CaptchaResponse, $_SERVER['REMOTE_ADDR']);
+
+        if (!($recaptchaResponse->isSuccess())) {
+            // ReCaptcha validation failed
             $JSONResponse['Errors'][] = 10;
         }
     }
