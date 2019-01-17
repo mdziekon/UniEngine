@@ -24,6 +24,7 @@ $_Lang['Label_Const_UniID'] = 'Identyfikator Universum';
 $_Lang['Label_Const_Domain'] = 'Domena serwera gry';
 $_Lang['Label_Const_Subdomain'] = 'Subdomena universum gry';
 $_Lang['Label_Const_ReCaptcha_Enable'] = 'Włączyć system ReCaptcha podczas rejestracji?';
+$_Lang['Label_Const_ReCaptcha_ServerIP_as_Hostname'] = 'Identyfikuj serwer przez IP zamiast nazwy hosta?';
 $_Lang['Label_Const_ReCaptcha_Public'] = 'Klucz publiczny ReCaptcha';
 $_Lang['Label_Const_ReCaptcha_Private'] = 'Klucz prywatny ReCaptcha';
 $_Lang['Label_Admin_Username'] = 'Nazwa konta Administratora';
@@ -66,6 +67,7 @@ $_Lang['Tip_Const_UniID'] = 'Kod identyfikacyjny tego Universum.<br/>Ta wartoś�
 $_Lang['Tip_Const_Domain'] = 'Główna Domena serwera, na której będzie uruchamiana gra.<br/>(np. mojagra.pl)';
 $_Lang['Tip_Const_Subdomain'] = 'Subdomena, na której będzie uruchamiane instalowane Universum gry.<br/>Jeśli wszystkie universa będą uruchamiane na wspólnej domenie głównej, pozostaw tą wartośc pustą.<br/>(np. jeśli universum będzie uruchamiane na domenie "uni1.mojagra.pl", wpisz tylko "uni1")';
 $_Lang['Tip_Const_ReCaptcha_Enable'] = 'System <a href="http://www.google.com/recaptcha" target="_blank">ReCaptcha</a> ułatwia podstawową walkę ze SpamBotami, dodając prosty kod Captcha do formularza rejestracyjnego.<br/>Do jego poprawnego działania wymagane jest skofigurowane konto <a href="http://www.google.com/recaptcha" target="_blank">ReCaptcha</a> i podanie klucza publicznego i prywatnego otrzymanego przy konfiguracji konta.';
+$_Lang['Tip_Const_ReCaptcha_ServerIP_as_Hostname'] = 'Podczas konfiguracji serwera na maszynie lokalnej konieczna może być identyfikacja serwera poprzez jego adres IP. Na serwerze produkcyjnym ta opcja powinna być WYŁĄCZONA.';
 $_Lang['Tip_Const_ReCaptcha_Public'] = 'Klucz publiczny ReCaptcha otrzymany podczas konfiguracji konta. Jeśli nie używasz systemu ReCaptcha, pozostaw to pole puste.';
 $_Lang['Tip_Const_ReCaptcha_Public'] = 'Klucz prywatny ReCaptca otrzymany podczas konfiguracji konta. Jeśli nie używasz systemu ReCaptcha, pozostaw to pole puste.';
 $_Lang['Tip_Admin_Username'] = 'Nazwa użytkownika, przez którą będzie logować się Administrator (Właściciel) Gry.';

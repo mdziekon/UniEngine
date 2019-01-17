@@ -130,6 +130,10 @@ else
         {
             $_Lang['set_const_recaptcha_enable'] = 'checked';
         }
+        if(isset($_POST['set_const_recaptcha_serverip_as_hostname']) && $_POST['set_const_recaptcha_serverip_as_hostname'] == 'on')
+        {
+            $_Lang['set_const_recaptcha_serverip_as_hostname'] = 'checked';
+        }
         if(isset($_POST['set_uni_mailactivationneeded']) && $_POST['set_uni_mailactivationneeded'] == 'on')
         {
             $_Lang['set_uni_mailactivationneeded'] = 'checked';
@@ -350,6 +354,7 @@ else
                             'GameName' => $_POST['set_uni_gamename'],
                             'Reg_RequireEmailConfirm' => (isset($_POST['set_uni_mailactivationneeded']) && $_POST['set_uni_mailactivationneeded'] == 'on' ? 'true' : 'false'),
                             'Reg_RecaptchaEnabled' => (isset($_POST['set_const_recaptcha_enable']) && $_POST['set_const_recaptcha_enable'] == 'on' ? 'true' : 'false'),
+                            'Reg_Recaptcha_ServerIP_As_Hostname' => (isset($_POST['set_const_recaptcha_serverip_as_hostname']) && $_POST['set_const_recaptcha_serverip_as_hostname'] == 'on' ? 'true' : 'false'),
                             'Reg_Recaptcha_Private' => $_POST['set_const_recaptcha_private'],
                             'Reg_Recaptcha_Public' => $_POST['set_const_recaptcha_public'],
                             'InsertServerMainOpenTime' => time()

@@ -181,6 +181,7 @@ define('COOKIE_BLOCK_VAL'                           , '58847718139');
 // Registry check Cookie
 define('REGISTER_REQUIRE_EMAILCONFIRM'              , {Reg_RequireEmailConfirm});
 define('REGISTER_RECAPTCHA_ENABLE'                  , {Reg_RecaptchaEnabled});
+define('REGISTER_RECAPTCHA_SERVERIP_AS_HOSTNAME'    , {Reg_Recaptcha_ServerIP_As_Hostname});
 define('REGISTER_RECAPTCHA_PRIVATEKEY'              , '{Reg_Recaptcha_Private}');
 define('REGISTER_RECAPTCHA_PUBLICKEY'               , '{Reg_Recaptcha_Public}');
 define('REGISTER_CHECK'                             , 'VBF0BU794ETH1');
