@@ -158,8 +158,14 @@ function regCallback (ResponseObject) {
             ResponseObject.Errors[ErrorID] = JSLang["Alert_RequestCode_" + ResponseObject.Errors[ErrorID]];
         }
         showMsgBox(ResponseObject.Errors.join("<br/>"), "red");
-        if ($("#recaptcha_response_field").length > 0) {
-            Recaptcha.reload();
+
+        if (
+            isCaptchaEnabled &&
+            window.grecaptcha
+        ) {
+            $("#captcha_response").val("");
+
+            window.grecaptcha.reset();
         }
     }
     if (typeof ResponseObject.BadFields != "undefined") {
