@@ -44,6 +44,7 @@ else
 
 $parse = $_Lang;
 
+$planet = [];
 while($p = $SQLResult_SelectedRows->fetch_assoc())
 {
     $planet[] = $p;

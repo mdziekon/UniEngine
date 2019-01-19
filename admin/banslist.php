@@ -131,6 +131,7 @@ if(!empty($Filters))
 
     if($SQLResult_SelectedIDs->num_rows > 0)
     {
+        $FilterIDs = [];
         while($ThisRow = $SQLResult_SelectedIDs->fetch_assoc())
         {
             $FilterIDs[] = $ThisRow['ID'];

@@ -42,6 +42,7 @@ function DeleteSelectedPlanetorMoon()
     $Query_UpdateUser .= " WHERE `id` = {$_User['id']} LIMIT 1;";
     doquery($Query_UpdateUser, 'users');
 
+    $PlanetIDs = [];
     $PlanetIDs[] = $_Planet['id'];
     if($_Planet['planet_type'] == 1 AND $_GalaxyRow['id_moon'] > 0)
     {

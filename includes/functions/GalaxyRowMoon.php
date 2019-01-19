@@ -9,6 +9,8 @@ function GalaxyRowMoon($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Galaxy, $S
         $TPL = gettemplate('galaxy_row_moon');
     }
 
+    $Links = [];
+
     if($GalaxyRow['id_moon'] > 0)
     {
         $MoonCount += 1;

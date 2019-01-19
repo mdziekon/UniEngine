@@ -86,6 +86,7 @@ if(isset($_GET['cmd']) && $_GET['cmd'] == 'rmv')
         }
         else
         {
+            $NewArray = [];
             foreach($DeclarationUsers as $UserID)
             {
                 if($UserID != $_User['id'])

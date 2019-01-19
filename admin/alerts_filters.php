@@ -142,6 +142,7 @@ if(isset($_GET['cmd']) && $_GET['cmd'] == 'del')
 else if(isset($_GET['cmd']) && $_GET['cmd'] == 'delpost')
 {
     $_GET['cmd'] = '';
+    $Filters2Delete = [];
     if(!empty($_POST['f']))
     {
         foreach($_POST['f'] as $FilterID => $Status)

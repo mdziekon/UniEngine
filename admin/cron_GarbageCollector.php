@@ -46,6 +46,10 @@ $DelTime['planet_abandontime']    = PLANET_ABANDONTIME;
 $Opt_Interval                    = TIME_HOUR;
 // End of Settings
 
+$Delete_Planets = [];
+$Delete_Messages = [];
+$Delete_PlanetsFromGalaxy = [];
+
 foreach($DelTime as &$Value)
 {
     $Value = $Now - $Value;

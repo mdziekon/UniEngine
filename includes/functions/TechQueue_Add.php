@@ -16,12 +16,12 @@ function TechQueue_Add(&$ThePlanet, &$TheUser, $TechID)
     }
     else
     {
-        $Queue = array();
+        $Queue = [];
         $QueueLength = 0;
     }
 
     $MaxLength = (isPro($TheUser) ? MAX_TECH_QUEUE_LENGTH_PRO : MAX_TECH_QUEUE_LENGTH);
-    $Modifier = array();
+    $Modifier = [];
 
     if($QueueLength + 1 <= $MaxLength)
     {

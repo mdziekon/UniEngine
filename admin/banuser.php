@@ -183,6 +183,7 @@ if(isset($_POST['save']) && $_POST['save'] == 'yes')
                         $Reason = '';
                     }
 
+                    $UserLinks = [];
                     $UserLinkTPL = gettemplate('admin/banuser_userlink');
                     foreach($BanUsers as $UserID => $UserData)
                     {

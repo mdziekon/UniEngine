@@ -10,6 +10,7 @@ function RemoveBuildingFromQueue(&$CurrentPlanet, $CurrentUser, $QueueID)
         if($CurrentQueue != 0)
         {
             $Queue = explode(';', $CurrentQueue);
+            $QueueArray = [];
             foreach($Queue as $ID => $Data)
             {
                 if(!empty($Data))

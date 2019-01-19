@@ -61,6 +61,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 
     if($SQLResult_GetOtherLabs->num_rows > 0)
     {
+        $OtherLabs_Levels = [];
         while($FetchData = $SQLResult_GetOtherLabs->fetch_assoc())
         {
             if(!empty($FetchData['buildQueue']))

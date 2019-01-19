@@ -183,6 +183,7 @@ function DeleteSelectedUser($UserID)
                 while($Data = $Result_GetDeclarations->fetch_assoc())
                 {
                     $Data['users'] = explode(',', $Data['users']);
+                    $Data['thisUsers'] = [];
                     foreach($Data['users'] as $ThisUser)
                     {
                         $ThisUser = str_replace('|', '', $ThisUser);

@@ -190,7 +190,7 @@ if(isset($_GET['register']))
 
         // - Step 1: check random range of solar systems
         $PosFound = false;
-        $Position_NonFree = array();
+        $Position_NonFree = [];
         $Position_NonFreeCount = 0;
         $Position_TotalCount = (($System_Higher - $System_Lower) + 1) * (($Planet_Higher - $Planet_Lower) + 1);
 
@@ -223,7 +223,7 @@ if(isset($_GET['register']))
         else
         {
             // - Step 2: check whole galaxy, if space not found earlier
-            $Position_NonFree = array();
+            $Position_NonFree = [];
             $Position_NonFreeCount = 0;
             $Position_TotalCount = MAX_SYSTEM_IN_GALAXY * (($Planet_Higher - $Planet_Lower) + 1);
 
@@ -255,8 +255,9 @@ if(isset($_GET['register']))
             else
             {
                 // - Step 3: check whole galaxy and all slots which has not been checked
-                $Position_NonFree = array();
+                $Position_NonFree = [];
                 $Position_NonFreeCount = 0;
+                $Planet_PosArray = [];
                 for($i = 1; $i < $Planet_Lower; $i += 1)
                 {
                     $Planet_PosArray[] = $i;

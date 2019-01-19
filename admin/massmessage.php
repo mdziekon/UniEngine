@@ -36,6 +36,7 @@ if(CheckAuth('supportadmin'))
             $Subject = substr(strip_tags($_POST['temat']), 0, $_MaxLength_Subject);
             $Message = substr(strip_tags($_POST['tresc']), 0, $_MaxLength_Text);
 
+            $UserList = [];
             while($UsersData = $SQLResult_GetUsers->fetch_assoc())
             {
                 $UserList[] = $UsersData['id'];

@@ -452,6 +452,7 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
                     $ResourceSteal_Factor = (COMBAT_RESOURCESTEAL_PERCENT / 100);
                     if(MORALE_ENABLED)
                     {
+                        $ResourceSteal_NewFactor = [];
                         if(!$IsAbandoned AND $TargetUser['morale_level'] <= MORALE_PENALTY_RESOURCELOSE)
                         {
                             $ResourceSteal_NewFactor[] = MORALE_PENALTY_RESOURCELOSE_STEALPERCENT;
