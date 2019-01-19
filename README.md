@@ -59,6 +59,9 @@ OGame-clone browser based game engine.
 1. Close your game server (prevent players from accessing the game).
 1. Perform a full backup of your game server's state (database, configuration, files, etc...).
 1. Make sure that your PHP server has write access to game server's files (in case if one of the migration scripts might need this).
+1. Update files to the desired version.
+1. Update PHP dependencies.
+    - ``composer install --no-dev``
 1. Login as root admin (or any other account with ``programmer`` role).
 1. Run ``/admin/updater.php`` script.
 1. Restart PHP server.
