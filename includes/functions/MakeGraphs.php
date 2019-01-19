@@ -100,8 +100,8 @@ function MakeGraphs($Modes, $Scores, $Dimensions = array(), $OwnTooltipCode = fa
 
 class Context
 {
-    var $vendors;
-    var $modes;
+    var $vendors = [];
+    var $modes = [];
 
     function __construct($Modes)
     {
@@ -149,9 +149,9 @@ class RunFilter
     var $AllScores;
     var $run_points;
     var $runs;
-    var $runmap;
-    var $modemap;
-    var $series;
+    var $runmap = [];
+    var $modemap = [];
+    var $series = [];
 
     function __construct($cx, $AllScores)
     {
@@ -161,7 +161,6 @@ class RunFilter
 
         // Get the list of run IDs for this graph.
         $HasRuns = false;
-        $this->runmap = array();
         $RunMapID = 0;
         foreach($this->runs as $Index => $Data)
         {
