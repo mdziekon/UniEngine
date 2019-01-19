@@ -60,7 +60,7 @@ if(isset($_POST['sent']) && $_POST['sent'] == 1)
                 $Query_DeleteMsgs = "DELETE FROM {{table}} WHERE `ID` IN (".implode(',', $DeleteMsgs).") LIMIT ".count($DeleteMsgs).";";
                 doquery($Query_DeleteMsgs, 'chat_messages');
 
-                $DeletedCount = mysql_affected_rows();
+                $DeletedCount = getDBLink()->affected_rows;
                 if($DeletedCount > 0)
                 {
                     $_MsgBox = array('Color' => 'lime', 'Text' => sprintf($_Lang['CMDInfo_Delete_DeletedOK'], prettyNumber($DeletedCount)));
@@ -220,14 +220,14 @@ if($_Pagination_TotalCount > 0)
 $Result_GetMessages_Count = 0;
 if(isset($Result_GetMessages))
 {
-    $Result_GetMessages_Count = mysql_num_rows($Result_GetMessages);
+    $Result_GetMessages_Count = $Result_GetMessages->num_rows;
 }
 if(isset($Result_GetMessages) && $Result_GetMessages_Count > 0)
 {
     include($_EnginePath.'includes/functions/BBcodeFunction.php');
     include_once($_EnginePath.'includes/functions/Pagination.php');
 
-    while($FetchData = mysql_fetch_assoc($Result_GetMessages))
+    while($FetchData = $Result_GetMessages->fetch_assoc())
     {
         $MessageRows[$FetchData['ID']] = $FetchData;
     }

@@ -452,6 +452,7 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
                     $ResourceSteal_Factor = (COMBAT_RESOURCESTEAL_PERCENT / 100);
                     if(MORALE_ENABLED)
                     {
+                        $ResourceSteal_NewFactor = [];
                         if(!$IsAbandoned AND $TargetUser['morale_level'] <= MORALE_PENALTY_RESOURCELOSE)
                         {
                             $ResourceSteal_NewFactor[] = MORALE_PENALTY_RESOURCELOSE_STEALPERCENT;
@@ -626,10 +627,12 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
                         $GetIDsToChangeArchive .= "SELECT `fleet_id`, `fleet_mission`, `fleet_start_id`, `fleet_end_id` FROM {{table}} ";
                         $GetIDsToChangeArchive .= "WHERE (`fleet_start_id` = {$FleetRow['fleet_end_id']} OR `fleet_end_id` = {$FleetRow['fleet_end_id']}) ";
                         $GetIDsToChangeArchive .= "AND `fleet_id` != {$FleetRow['fleet_id']}; -- MISSION DESTRUCTION [Q01][FID: {$FleetRow['fleet_id']}]";
-                        $GetData = doquery($GetIDsToChangeArchive, 'fleets');
-                        if(mysql_num_rows($GetData) > 0)
+
+                        $SQLResult_GetArchiveRowsToChange = doquery($GetIDsToChangeArchive, 'fleets');
+
+                        if($SQLResult_GetArchiveRowsToChange->num_rows > 0)
                         {
-                            while($ParseFleet = mysql_fetch_assoc($GetData))
+                            while($ParseFleet = $SQLResult_GetArchiveRowsToChange->fetch_assoc())
                             {
                                 $Pointer = &$Return['FleetArchive'][$ParseFleet['fleet_id']];
                                 if($ParseFleet['fleet_start_id'] == $FleetRow['fleet_end_id'])

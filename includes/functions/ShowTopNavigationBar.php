@@ -25,9 +25,11 @@ function ShowTopNavigationBar($CurrentUser, $CurrentPlanet)
         // Create PlanetList (for Select)
         $parse['planetlist'] = '';
 
-        $ThisUsersPlanets = SortUserPlanets($CurrentUser);
+        $SQLResult_ThisUsersPlanets = SortUserPlanets($CurrentUser);
+
         $OtherType_ID = 0;
-        while($CurPlanet = mysql_fetch_assoc($ThisUsersPlanets))
+
+        while($CurPlanet = $SQLResult_ThisUsersPlanets->fetch_assoc())
         {
             if($CurPlanet['galaxy'] == $CurrentPlanet['galaxy'] AND $CurPlanet['system'] == $CurrentPlanet['system'] AND $CurPlanet['planet'] == $CurrentPlanet['planet'])
             {

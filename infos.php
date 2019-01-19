@@ -47,14 +47,15 @@ function Teleport_MoonsList($CurrentUser, $CurrentPlanet)
     $Query_GetMoons = '';
     $Query_GetMoons .= "SELECT `id`, `galaxy`, `system`, `planet`, `name`, `{$_Vars_GameElements[43]}`, `last_jump_time` FROM {{table}} WHERE ";
     $Query_GetMoons .= "`id_owner` = {$CurrentUser['id']} AND `id` != {$CurrentPlanet['id']} AND `planet_type` = 3;";
-    $MoonList = doquery($Query_GetMoons, 'planets');
 
-    if(mysql_num_rows($MoonList) > 0)
+    $SQLResult_MoonList = doquery($Query_GetMoons, 'planets');
+
+    if($SQLResult_MoonList->num_rows > 0)
     {
         $TPL_MoonsList = gettemplate('infos_teleport_moonslist');
         $Combo = '';
 
-        while($CurMoon = mysql_fetch_assoc($MoonList))
+        while($CurMoon = $SQLResult_MoonList->fetch_assoc())
         {
             if($CurMoon[$_Vars_GameElements[43]] > 0)
             {

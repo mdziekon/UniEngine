@@ -34,8 +34,14 @@ if(isset($_POST['email']))
     {
         if(is_email($email))
         {
-            $email = mysql_real_escape_string($email);
-            $Result = doquery("SELECT `id`, `username`, `last_send_newpass` FROM {{table}} WHERE `email` = '{$email}';", 'users', true);
+            $email = getDBLink()->escape_string($email);
+
+            $Result = doquery(
+                "SELECT `id`, `username`, `last_send_newpass` FROM {{table}} WHERE `email` = '{$email}';",
+                'users',
+                true
+            );
+
             if($Result['id'] > 0)
             {
                 if(($Result['last_send_newpass'] + TIME_HOUR) < time())
@@ -92,13 +98,23 @@ else if(isset($_GET['code']))
     {
         if(preg_match('/^[0-9a-zA-Z]{32}$/D', $_GET['code']))
         {
-            $Result = doquery("SELECT `username`, `new_pass` FROM {{table}} WHERE `new_pass_code` = '{$_GET['code']}';", 'users');
-            if(mysql_num_rows($Result) > 0)
+            $SQLResult_GetUserData = doquery(
+                "SELECT `username`, `new_pass` FROM {{table}} WHERE `new_pass_code` = '{$_GET['code']}';",
+                'users'
+            );
+
+            if($SQLResult_GetUserData->num_rows > 0)
             {
-                $Result = mysql_fetch_assoc($Result);
+                $Result = $SQLResult_GetUserData->fetch_assoc();
+
                 $Username = $Result['username'];
                 $NewPassword = $Result['new_pass'];
-                doquery("UPDATE {{table}} SET `new_pass_code` = '', `new_pass` = '', `password` = '{$NewPassword}' WHERE `username` = '{$Username}';", 'users');
+
+                doquery(
+                    "UPDATE {{table}} SET `new_pass_code` = '', `new_pass` = '', `password` = '{$NewPassword}' WHERE `username` = '{$Username}';",
+                    'users'
+                );
+
                 $Msg = sprintf($_Lang['resetpass_completed'], $Username);
             }
             else

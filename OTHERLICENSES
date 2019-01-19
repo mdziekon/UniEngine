@@ -9,41 +9,6 @@ Christian Robertson - https://plus.google.com/110879635926653430880/about
 Apache License, version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.html
 
 ---
-* Smarty
-class/Smarty/*
-
-(Copy from file class/Smarty/Smarty.class.php)
-
-Project:     Smarty: the PHP compiling template engine
-File:        Smarty.class.php
-SVN:         $Id: Smarty.class.php 3794 2010-11-15 22:54:59Z uwe.tews@googlemail.com $
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-For questions, help, comments, discussion, etc., please join the
-Smarty mailing list. Send a blank e-mail to
-smarty-discussion-subscribe@googlegroups.com
-
-@link http://www.smarty.net/
-@copyright 2008 New Digital Group, Inc.
-@author Monte Ohrt <monte at ohrt dot com>
-@author Uwe Tews
-@package Smarty
-@version 3.0.5
-
----
 * jQuery UI CSS
 libs/jquery-ui/*
 
@@ -56,74 +21,6 @@ Dual licensed under the MIT or GPL Version 2 licenses.
 http://jquery.org/license
 
 http://docs.jquery.com/UI/Theming/API
-
----
-* reCaptcha
-includes/recaptchalib.php
-
-(Copy from file includes/recaptchalib.php)
-
-This is a PHP library that handles calling reCAPTCHA.
-   - Documentation and latest version
-         http://recaptcha.net/plugins/php/
-   - Get a reCAPTCHA API Key
-         https://www.google.com/recaptcha/admin/create
-   - Discussion group
-         http://groups.google.com/group/recaptcha
-
-Copyright (c) 2007 reCAPTCHA -- http://recaptcha.net
-AUTHORS:
-  Mike Crawford
-  Ben Maurer
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
----
-* PHPMailer
-includes/phpmailer/*
-
-(Copy from file includes/phpmailer/class.phpmailer.php)
-.---------------------------------------------------------------------------.
-|  Software: PHPMailer - PHP email class                                    |
-|   Version: 5.1                                                            |
-|   Contact: via sourceforge.net support pages (also www.worxware.com)      |
-|      Info: http://phpmailer.sourceforge.net                               |
-|   Support: http://sourceforge.net/projects/phpmailer/                     |
-| ------------------------------------------------------------------------- |
-|     Admin: Andy Prevost (project admininistrator)                         |
-|   Authors: Andy Prevost (codeworxtech) codeworxtech@users.sourceforge.net |
-|          : Marcus Bointon (coolbru) coolbru@users.sourceforge.net         |
-|   Founder: Brent R. Matzelle (original founder)                           |
-| Copyright (c) 2004-2009, Andy Prevost. All Rights Reserved.               |
-| Copyright (c) 2001-2003, Brent R. Matzelle                                |
-| ------------------------------------------------------------------------- |
-|   License: Distributed under the Lesser General Public License (LGPL)     |
-|            http://www.gnu.org/copyleft/lesser.html                        |
-| This program is distributed in the hope that it will be useful - WITHOUT  |
-| ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or     |
-| FITNESS FOR A PARTICULAR PURPOSE.                                         |
-| ------------------------------------------------------------------------- |
-| We offer a number of paid services (www.worxware.com):                    |
-| - Web Hosting on highly optimized fast and secure servers                 |
-| - Technology Consulting                                                   |
-| - Oursourcing (highly qualified programmers and graphic designers)        |
-'---------------------------------------------------------------------------'
 
 ---
 * AreWeFastYet

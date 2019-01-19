@@ -14,12 +14,14 @@ if(!empty($_GET['code']))
 {
     if(preg_match('/^[0-9a-zA-Z]{32}$/D', $_GET['code']))
     {
-        $Result = doquery("SELECT `id`, `username` FROM {{table}} WHERE `activation_code` = '{$_GET['code']}' LIMIT 1;", 'users');
-        if(mysql_num_rows($Result) > 0)
+        $SQLResult = doquery("SELECT `id`, `username` FROM {{table}} WHERE `activation_code` = '{$_GET['code']}' LIMIT 1;", 'users');
+        if($SQLResult->num_rows > 0)
         {
-            $Result = mysql_fetch_assoc($Result);
-            $Username = $Result['username'];
-            doquery("UPDATE {{table}} SET `activation_code` = '' WHERE `id` = '{$Result['id']}';", 'users');
+            $SQLRowData = $SQLResult->fetch_assoc();
+
+            $Username = $SQLRowData['username'];
+
+            doquery("UPDATE {{table}} SET `activation_code` = '' WHERE `id` = '{$SQLRowData['id']}';", 'users');
 
             $Msg = sprintf($_Lang['activation_completed'], $Username, 'overview.php', 3);
             $Activated = true;

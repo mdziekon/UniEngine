@@ -19,10 +19,12 @@ if(CheckAuth('go'))
     $Error = $_Lang['PageTitle'];
 
     $Query = "SELECT `id` FROM {{table}} WHERE `authlevel` >= {$_User['authlevel']} AND `id` != {$_User['id']};";
-    $Result = doquery($Query, 'users');
-    if(mysql_num_rows($Result) > 0)
+
+    $SQLResult_GetUsersWithHigherAuth = doquery($Query, 'users');
+
+    if($SQLResult_GetUsersWithHigherAuth->num_rows > 0)
     {
-        while($Data = mysql_fetch_assoc($Result))
+        while($Data = $SQLResult_GetUsersWithHigherAuth->fetch_assoc())
         {
             $ExcludedUsers[] = $Data['id'];
         }
@@ -75,15 +77,16 @@ if(CheckAuth('go'))
     $Query_GetUser .= "LEFT JOIN `{{prefix}}users` AS `inviter` ON `user`.`referred` > 0 AND `user`.`referred` = `inviter`.`id` ";
     $Query_GetUser .= "WHERE {$WhereClausure} ";
     $Query_GetUser .= "LIMIT 1;";
-    $Result = doquery($Query_GetUser, 'users');
 
-    if(mysql_num_rows($Result) == 0)
+    $SQLResult_GetUserData = doquery($Query_GetUser, 'users');
+
+    if($SQLResult_GetUserData->num_rows == 0)
     {
         message($_Lang['Error_NotFound_'.$OnNotFoundError], $Error);
     }
 
     $Now = time();
-    $Data = mysql_fetch_assoc($Result);
+    $Data = $SQLResult_GetUserData->fetch_assoc();
     $UID = $Data['id'];
 
     if(!empty($ExcludedUsers))
@@ -94,26 +97,30 @@ if(CheckAuth('go'))
         }
     }
 
-    $Query = "SELECT * FROM {{table}} WHERE `id_owner` = {$UID} AND `stat_type` = 1 LIMIT 1;";
-    $Result = doquery($Query, 'statpoints');
-    if(mysql_num_rows($Result) == 0)
+    $SQLQuery_GetUserStats = "SELECT * FROM {{table}} WHERE `id_owner` = {$UID} AND `stat_type` = 1 LIMIT 1;";
+
+    $SQLResult_GetUserStats = doquery($SQLQuery_GetUserStats, 'statpoints');
+
+    if($SQLResult_GetUserStats->num_rows == 0)
     {
         $Data['stats'] = 'EMPTY';
     }
     else
     {
-        $Data['stats'] = mysql_fetch_assoc($Result);
+        $Data['stats'] = $SQLResult_GetUserStats->fetch_assoc();
     }
 
-    $Query = "SELECT * FROM {{table}} WHERE `fleet_owner` = {$UID} OR `fleet_target_owner` = {$UID};";
-    $Result = doquery($Query, 'fleets');
-    if(mysql_num_rows($Result) == 0)
+    $SQLQuery_GetUserFleets = "SELECT * FROM {{table}} WHERE `fleet_owner` = {$UID} OR `fleet_target_owner` = {$UID};";
+
+    $SQLResult_GetUserFleets = doquery($SQLQuery_GetUserFleets, 'fleets');
+
+    if($SQLResult_GetUserFleets->num_rows == 0)
     {
         $Data['fleets'] = 'EMPTY';
     }
     else
     {
-        while($Fleets = mysql_fetch_assoc($Result))
+        while($Fleets = $SQLResult_GetUserFleets->fetch_assoc())
         {
             $GetACSData[] = $Fleets['fleet_id'];
             $Data['fleets'][$Fleets['fleet_id']] = $Fleets;
@@ -126,18 +133,20 @@ if(CheckAuth('go'))
                 $GetUserNicks[] = $Fleets['fleet_target_owner'];
             }
         }
+
         if(!empty($GetUserNicks))
         {
-            $Query = "SELECT `id`, `username` FROM {{table}} WHERE `id` IN (".implode(', ', $GetUserNicks).");";
-            $Result = doquery($Query, 'users');
-            if(mysql_num_rows($Result) > 0)
+            $SQLQuery_GetOwnersUsernames = "SELECT `id`, `username` FROM {{table}} WHERE `id` IN (".implode(', ', $GetUserNicks).");";
+            $SQLResult_GetOwnersUsernames = doquery($SQLQuery_GetOwnersUsernames, 'users');
+            if($SQLResult_GetOwnersUsernames->num_rows > 0)
             {
-                while($UserData = mysql_fetch_assoc($Result))
+                while($UserData = $SQLResult_GetOwnersUsernames->fetch_assoc())
                 {
                     $UsersNicks[$UserData['id']] = $UserData['username'];
                 }
             }
         }
+
         if(!empty($GetACSData))
         {
             foreach($GetACSData as $ACSTempData)
@@ -145,11 +154,14 @@ if(CheckAuth('go'))
                 $CheckJoinedFleets[] = "`fleets_id` LIKE '%|{$ACSTempData}|%'";
             }
             $CheckJoinedFleets = implode(' OR ', $CheckJoinedFleets);
-            $Query = "SELECT `id`, `main_fleet_id`, `fleets_id` FROM {{table}} WHERE `main_fleet_id` IN (".implode(', ', $GetACSData).") OR {$CheckJoinedFleets};";
-            $Result = doquery($Query, 'acs');
-            if(mysql_num_rows($Result) > 0)
+
+            $SQLQuery_GetACSData = "SELECT `id`, `main_fleet_id`, `fleets_id` FROM {{table}} WHERE `main_fleet_id` IN (".implode(', ', $GetACSData).") OR {$CheckJoinedFleets};";
+
+            $SQLResult_GetACSData = doquery($SQLQuery_GetACSData, 'acs');
+
+            if($SQLResult_GetACSData->num_rows > 0)
             {
-                while($TempACSData = mysql_fetch_assoc($Result))
+                while($TempACSData = $SQLResult_GetACSData->fetch_assoc())
                 {
                     $TempFleetsFromACS = false;
                     $Temp1 = explode(',', str_replace('|', '', $TempACSData['fleets_id']));

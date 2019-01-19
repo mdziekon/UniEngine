@@ -104,6 +104,10 @@ if(isset($_POST['mode']) && $_POST['mode'] == 'send_report')
                         $ElementID = '0';
                     }
 
+                    $UserInput_userinfo = getDBLink()->escape_string(
+                        strip_tags(stripslashes(trim($_POST['user_info'])))
+                    );
+
                     $Query_SendReport = '';
                     $Query_SendReport .= "INSERT INTO {{table}} SET ";
                     $Query_SendReport .= "`date` = UNIX_TIMESTAMP(), ";
@@ -111,7 +115,8 @@ if(isset($_POST['mode']) && $_POST['mode'] == 'send_report')
                     $Query_SendReport .= "`report_type` = ".($TypesFlip[$ReportType] + 1).", ";
                     $Query_SendReport .= "`report_element` = {$ElementID}, ";
                     $Query_SendReport .= "`report_user` = {$UserID}, ";
-                    $Query_SendReport .= "`user_info` = '".trim(mysql_real_escape_string(strip_tags(stripslashes($_POST['user_info']))))."';";
+                    $Query_SendReport .= "`user_info` = '". $UserInput_userinfo ."';";
+
                     doquery($Query_SendReport, 'reports');
 
                     $Sent = true;

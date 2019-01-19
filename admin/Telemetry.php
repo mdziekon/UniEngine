@@ -44,8 +44,8 @@ if(!empty($_GET['pid']))
 if($PlaceID > 0)
 {
     $BodyTPL = gettemplate('admin/telemetry_graph_body');
-    $ModeColors = array('black', 'red', 'green', 'purple', 'blue');
-    $ModeNameTranslation = array('_t', '_c', '_d', '_f0', '_f1');
+    $ModeColors = array('black', 'red', 'orange', 'green', 'purple', 'blue');
+    $ModeNameTranslation = array('_t', '_c', '_c_maininc', '_d', '_f0', '_f1');
     foreach($ModeNameTranslation as $Value)
     {
         $ModeNameTranslation[$Value] = $_Lang['Tele_NameTranslation_'.$Value];
@@ -70,11 +70,11 @@ if($PlaceID > 0)
 
     if(!empty($_POST['filter_where']))
     {
-        $SelectDataWhere = mysql_real_escape_string($_POST['filter_where']);
+        $SelectDataWhere = getDBLink()->escape_string($_POST['filter_where']);
     }
     if(!empty($_POST['filter_order']))
     {
-        $SelectDataOrder = mysql_real_escape_string($_POST['filter_order']);
+        $SelectDataOrder = getDBLink()->escape_string($_POST['filter_order']);
     }
     if(!empty($_POST['filter_limit']))
     {
@@ -119,12 +119,17 @@ if($PlaceID > 0)
     {
         $InsertLimit = "LIMIT 100";
     }
-    $SelectData = doquery("SELECT `DataID`, `UserID`, `TimeStamp`, `Data` FROM {{table}} WHERE `PlaceID` = {$PlaceID} {$InsertWhere} {$InsertOrder} {$InsertLimit};", 'telemetry_data');
-    if(mysql_num_rows($SelectData) > 0)
+
+    $SQLResult_SelectData = doquery(
+        "SELECT `DataID`, `UserID`, `TimeStamp`, `Data` FROM {{table}} WHERE `PlaceID` = {$PlaceID} {$InsertWhere} {$InsertOrder} {$InsertLimit};",
+        'telemetry_data'
+    );
+
+    if($SQLResult_SelectData->num_rows > 0)
     {
         $ModesI = 0;
         $ModesAdded = array();
-        while($DataPoint = mysql_fetch_assoc($SelectData))
+        while($DataPoint = $SQLResult_SelectData->fetch_assoc())
         {
             $DataPoint['Data'] = json_decode($DataPoint['Data'], true);
             foreach($DataPoint['Data'] as $DataKey => $DataValue)
@@ -218,8 +223,12 @@ if($PlaceID > 0)
 
         if(!empty($GetUsernames))
         {
-            $GetUsernames = doquery("SELECT `id`, `username` FROM {{table}} WHERE `id` IN (".implode(', ', $GetUsernames).");", 'users');
-            while($Username = mysql_fetch_assoc($GetUsernames))
+            $SQLResult_GetUsernames = doquery(
+                "SELECT `id`, `username` FROM {{table}} WHERE `id` IN (".implode(', ', $GetUsernames).");",
+                'users'
+            );
+
+            while($Username = $SQLResult_GetUsernames->fetch_assoc())
             {
                 $Usernames[$Username['id']] = $Username['username'];
             }
@@ -270,12 +279,16 @@ else
 {
     $BodyTPL = gettemplate('admin/telemetry_select_body');
 
-    $SelectPlaces = doquery("SELECT `places`.*, COUNT(*) AS `PointsCount` FROM {{table}} AS `places` JOIN {{prefix}}telemetry_data AS `data` ON `data`.`PlaceID` = `places`.`ID` GROUP BY `PlaceID` ORDER BY `places`.`Page` ASC;", 'telemetry_pages');
-    if(mysql_num_rows($SelectPlaces) > 0)
+    $SQLResult_SelectPlaces = doquery(
+        "SELECT `places`.*, COUNT(*) AS `PointsCount` FROM {{table}} AS `places` JOIN {{prefix}}telemetry_data AS `data` ON `data`.`PlaceID` = `places`.`ID` GROUP BY `PlaceID` ORDER BY `places`.`Page` ASC;",
+        'telemetry_pages'
+    );
+
+    if($SQLResult_SelectPlaces->num_rows > 0)
     {
         $_Lang['Hide_Headers'] = '';
         $PlacesTPL = gettemplate('admin/telemetry_select_row');
-        while($Place = mysql_fetch_assoc($SelectPlaces))
+        while($Place = $SQLResult_SelectPlaces->fetch_assoc())
         {
             if(!empty($Place['Get']))
             {

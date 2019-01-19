@@ -52,9 +52,9 @@ function ShowGalaxyRows($Galaxy, $System, $HighlightPlanet = false)
     if($_User['ally_id'] > 0)
     {
         $Result_MyAllyPacts = doquery($Query_AllyPacts, 'ally_pacts');
-        if(mysql_num_rows($Result_MyAllyPacts) > 0)
+        if($Result_MyAllyPacts->num_rows > 0)
         {
-            while($FetchData = mysql_fetch_assoc($Result_MyAllyPacts))
+            while($FetchData = $Result_MyAllyPacts->fetch_assoc())
             {
                 $MyAllyPacts[$FetchData['AllyID']] = $FetchData['Type'];
             }
@@ -62,9 +62,9 @@ function ShowGalaxyRows($Galaxy, $System, $HighlightPlanet = false)
     }
 
     $MyBuddies = array();
-    if(mysql_num_rows($MyBuddyList) > 0)
+    if($MyBuddyList->num_rows > 0)
     {
-        while($MyBuddyData = mysql_fetch_assoc($MyBuddyList))
+        while($MyBuddyData = $MyBuddyList->fetch_assoc())
         {
             if($MyBuddyData['sender'] != $_User['id'])
             {
@@ -87,13 +87,13 @@ function ShowGalaxyRows($Galaxy, $System, $HighlightPlanet = false)
     $Planet = 1;
     $RowTPL = gettemplate('galaxy_row_body');
 
-    while($GalaxyRow = mysql_fetch_assoc($GalaxyResult) OR $Planet <= MAX_PLANET_IN_SYSTEM)
+    while(($GalaxyRow = $GalaxyResult->fetch_assoc()) OR $Planet <= MAX_PLANET_IN_SYSTEM)
     {
         if($Planet <= MAX_PLANET_IN_SYSTEM)
         {
             if($GalaxyRow['planet'] > 0 AND $GalaxyRow['planet'] < $Planet)
             {
-                $GalaxyRow = mysql_fetch_assoc($GalaxyResult);
+                $GalaxyRow = $GalaxyResult->fetch_assoc();
             }
 
             while($GalaxyRow['planet'] != $Planet)
@@ -127,7 +127,7 @@ function ShowGalaxyRows($Galaxy, $System, $HighlightPlanet = false)
                 $GalaxyRowMoon = array();
                 if($GalaxyRow['id_planet'] != 0)
                 {
-                    $GalaxyRowPlanet = mysql_fetch_assoc($PlanetsResult);
+                    $GalaxyRowPlanet = $PlanetsResult->fetch_assoc();
                     if($GalaxyRow['hide_planet'] == 0 OR CheckAuth('supportadmin') OR $_User['id'] == $GalaxyRowPlanet['id_owner'])
                     {
                         $planetcount += 1;
@@ -135,7 +135,7 @@ function ShowGalaxyRows($Galaxy, $System, $HighlightPlanet = false)
                         $GalaxyRowPlayer['id'] = $GalaxyRowPlayer['user_id'];
                         if($GalaxyRow['id_moon'] != 0)
                         {
-                            $GalaxyRowMoon = mysql_fetch_assoc($MoonsResult);
+                            $GalaxyRowMoon = $MoonsResult->fetch_assoc();
                         }
                     }
                     else

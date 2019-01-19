@@ -127,6 +127,11 @@
                             <th>{Tip_Const_ReCaptcha_Enable}</th>
                         </tr>
                         <tr>
+                            <th>{Label_Const_ReCaptcha_ServerIP_as_Hostname}</th>
+                            <th><input type="checkbox" name="set_const_recaptcha_serverip_as_hostname" {set_const_recaptcha_serverip_as_hostname} tabindex="9"/></th>
+                            <th>{Tip_Const_ReCaptcha_ServerIP_as_Hostname}</th>
+                        </tr>
+                        <tr>
                             <th>{Label_Const_ReCaptcha_Public}</th>
                             <th><input type="text" name="set_const_recaptcha_public" value="{set_const_recaptcha_public}" {PHP_BadVal_set_const_recaptcha_public} tabindex="10"/></th>
                             <th>{Tip_Const_ReCaptcha_Public}</th>

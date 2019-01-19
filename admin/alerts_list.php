@@ -82,7 +82,7 @@ if(!empty($_GET['action']))
         if($ThisAction == 'delete')
         {
             doquery("DELETE FROM {{table}} WHERE `ID` = {$ID};", 'system_alerts');
-            if(mysql_affected_rows() > 0)
+            if(getDBLink()->affected_rows > 0)
             {
                 $MSG = $_Lang['Alert_deleted'];
                 $MSGColor = 'lime';
@@ -182,10 +182,10 @@ else
     $Parse['HidePaginRow'] = ' class="hide"';
 }
 
-if(!empty($Result_GetAlerts) AND mysql_num_rows($Result_GetAlerts) > 0)
+if(!empty($Result_GetAlerts) AND $Result_GetAlerts->num_rows > 0)
 {
     $GetData = array('users' => array(), 'ips' => array());
-    while($FetchData = mysql_fetch_assoc($Result_GetAlerts))
+    while($FetchData = $Result_GetAlerts->fetch_assoc())
     {
         $FetchData['mainusers'][$FetchData['User_ID']] = $FetchData['User_ID'];
         $FetchData['alertusers'][$FetchData['User_ID']] = $FetchData['User_ID'];
@@ -284,9 +284,9 @@ if(!empty($Rows))
         $Query_GetUsers .= "`id` IN (".implode(', ', $GetData['users']).") ";
         $Query_GetUsers .= "LIMIT ".count($GetData['users']).";";
         $Result_GetUsers = doquery($Query_GetUsers, 'users');
-        if(mysql_num_rows($Result_GetUsers) > 0)
+        if($Result_GetUsers->num_rows > 0)
         {
-            while($FetchData = mysql_fetch_assoc($Result_GetUsers))
+            while($FetchData = $Result_GetUsers->fetch_assoc())
             {
                 $DataArray['users'][$FetchData['id']] = array('username' => $FetchData['username']);
             }
@@ -306,9 +306,9 @@ if(!empty($Rows))
         $Query_GetAllys .= "`id` IN (".implode(', ', $GetData['allys']).") ";
         $Query_GetAllys .= "LIMIT ".count($GetData['allys']).";";
         $Result_GetAllys = doquery($Query_GetAllys, 'alliance');
-        if(mysql_num_rows($Result_GetAllys) > 0)
+        if($Result_GetAllys->num_rows > 0)
         {
-            while($FetchData = mysql_fetch_assoc($Result_GetAllys))
+            while($FetchData = $Result_GetAllys->fetch_assoc())
             {
                 $DataArray['allys'][$FetchData['id']] = array('ally_name' => $FetchData['ally_name'], 'ally_tag' => $FetchData['ally_tag']);
             }
@@ -328,9 +328,9 @@ if(!empty($Rows))
         $Query_GetIPs .= "`ID` IN (".implode(', ', $GetData['ips']).") ";
         $Query_GetIPs .= "LIMIT ".count($GetData['ips']).";";
         $Result_GetIPs = doquery($Query_GetIPs, 'used_ip_and_ua');
-        if(mysql_num_rows($Result_GetIPs) > 0)
+        if($Result_GetIPs->num_rows > 0)
         {
-            while($FetchData = mysql_fetch_assoc($Result_GetIPs))
+            while($FetchData = $Result_GetIPs->fetch_assoc())
             {
                 $DataArray['ips'][$FetchData['ID']] = array('Value' => $FetchData['Value']);
             }
@@ -344,9 +344,9 @@ if(!empty($Rows))
         $Query_GetFleets .= "`Fleet_ID` IN (".implode(', ', $GetData['fleets']).") ";
         $Query_GetFleets .= "LIMIT ".count($GetData['fleets']).";";
         $Result_GetFleets = doquery($Query_GetFleets, 'fleet_archive');
-        if(mysql_num_rows($Result_GetFleets) > 0)
+        if($Result_GetFleets->num_rows > 0)
         {
-            while($FetchData = mysql_fetch_assoc($Result_GetFleets))
+            while($FetchData = $Result_GetFleets->fetch_assoc())
             {
                 $DataArray['fleets'][$FetchData['Fleet_ID']] = $FetchData;
             }

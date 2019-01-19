@@ -25,7 +25,7 @@ if(isLogged())
             $Result = doquery("DELETE FROM {{table}} WHERE `ID` = {$GivenID} LIMIT 1;", 'chat_messages');
             if($Result !== false)
             {
-                if(mysql_affected_rows() == 1)
+                if(getDBLink()->affected_rows == 1)
                 {
                     echo '1';
                 }

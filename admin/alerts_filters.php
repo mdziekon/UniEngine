@@ -117,8 +117,12 @@ if(isset($_GET['cmd']) && $_GET['cmd'] == 'del')
 
     if($DeleteID > 0)
     {
-        doquery("DELETE FROM {{table}} WHERE `ID` = {$DeleteID} LIMIT 1;", 'system_alerts_filters');
-        if(mysql_affected_rows() == 1)
+        doquery(
+            "DELETE FROM {{table}} WHERE `ID` = {$DeleteID} LIMIT 1;",
+            'system_alerts_filters'
+        );
+
+        if(getDBLink()->affected_rows == 1)
         {
             $MSG = $_Lang['Info_FilterDeleted'];
             $MSGColor = 'lime';
@@ -138,6 +142,7 @@ if(isset($_GET['cmd']) && $_GET['cmd'] == 'del')
 else if(isset($_GET['cmd']) && $_GET['cmd'] == 'delpost')
 {
     $_GET['cmd'] = '';
+    $Filters2Delete = [];
     if(!empty($_POST['f']))
     {
         foreach($_POST['f'] as $FilterID => $Status)
@@ -155,8 +160,12 @@ else if(isset($_GET['cmd']) && $_GET['cmd'] == 'delpost')
     $DeleteCount = count($Filters2Delete);
     if($DeleteCount > 0)
     {
-        doquery("DELETE FROM {{table}} WHERE `ID` IN (".implode(', ', $Filters2Delete).");", 'system_alerts_filters');
-        $AffectedRows = mysql_affected_rows();
+        doquery(
+            "DELETE FROM {{table}} WHERE `ID` IN (".implode(', ', $Filters2Delete).");",
+            'system_alerts_filters'
+        );
+
+        $AffectedRows = getDBLink()->affected_rows;
         if($AffectedRows > 0)
         {
             if($AffectedRows == $DeleteCount)
@@ -519,9 +528,13 @@ if($_GET['cmd'] == 'list')
 
     $GetStart = (string) ((($CurrentPage - 1) * $PerPage) + 0);
 
-    $Query = doquery("SELECT * FROM {{table}} ORDER BY `Date` DESC LIMIT {$GetStart}, {$PerPage};", 'system_alerts_filters');
-    $GetCount = doquery("SELECT COUNT(`ID`) AS `Count` FROM {{table}};", 'system_alerts_filters', true);
-    $GetCount = $GetCount['Count'];
+    $SQLResult_GetFilters = doquery(
+        "SELECT * FROM {{table}} ORDER BY `Date` DESC LIMIT {$GetStart}, {$PerPage};",
+        'system_alerts_filters'
+    );
+
+    $SQLResult_GetFiltersCount = doquery("SELECT COUNT(`ID`) AS `Count` FROM {{table}};", 'system_alerts_filters', true);
+    $FiltersCount = $SQLResult_GetFiltersCount['Count'];
 
     $Parse = $_Lang;
     $Parse['Rows'] = '';
@@ -530,10 +543,10 @@ if($_GET['cmd'] == 'list')
         $Parse['System_MSG'] = '<tr><td class="c pad5" colspan="8" style="color: '.$MSGColor.'">'.$MSG.'</td></tr><tr class="inv"><td></td></tr>';
     }
 
-    if($GetCount > 0)
+    if($FiltersCount > 0)
     {
         include_once($_EnginePath.'includes/functions/Pagination.php');
-        $Pagin = CreatePaginationArray($GetCount, $PerPage, $CurrentPage, 7);
+        $Pagin = CreatePaginationArray($FiltersCount, $PerPage, $CurrentPage, 7);
         $PaginationTPL = '<input type="button" class="pagin {$Classes}" name="goto_{$Value}" value="{$ShowValue}"/>';
         $PaginationViewOpt = array('CurrentPage_Classes' => 'fatB orange', 'Breaker_View' => '...');
         $CreatePagination = implode(' ', ParsePaginationArray($Pagin, $CurrentPage, $PaginationTPL, $PaginationViewOpt));
@@ -544,10 +557,10 @@ if($_GET['cmd'] == 'list')
         $Parse['HidePaginRow'] = ' class="hide"';
     }
 
-    if(mysql_num_rows($Query) > 0)
+    if($SQLResult_GetFilters->num_rows > 0)
     {
         $Parse['BlankCellFix'] = 'hide';
-        while($Filter = mysql_fetch_assoc($Query))
+        while($Filter = $SQLResult_GetFilters->fetch_assoc())
         {
             $Row = $_Lang;
 
@@ -564,7 +577,7 @@ if($_GET['cmd'] == 'list')
     }
     else
     {
-        if($CurrentPage > 1 AND $GetCount > 0)
+        if($CurrentPage > 1 AND $FiltersCount > 0)
         {
             $ThisWarning = $_Lang['No_Filters_ThisPage'];
         }

@@ -165,9 +165,9 @@ $_Lang['User_MissileAttacks'] = prettyNumber($SelectAchievements['ustat_raids_mi
 $_Lang['User_MoonsCreated'] = prettyNumber($SelectAchievements['ustat_moons_created']);
 $_Lang['User_MoonsDestroyed'] = prettyNumber($SelectAchievements['ustat_moons_destroyed']);
 
-$_Lang['User_ShotDownUnits'] = '';
-$_Lang['User_LostUnits'] = '';
-$_Lang['User_WarBalance'] = '';
+$_Lang['User_ShotDownUnits'] = 0;
+$_Lang['User_LostUnits'] = 0;
+$_Lang['User_WarBalance'] = 0;
 
 if(!empty($SelectAchievements))
 {

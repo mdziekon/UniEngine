@@ -9,6 +9,8 @@ function GalaxyRowPlanet($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Galaxy, 
         $TPL = gettemplate('galaxy_row_planetimg');
     }
 
+    $Links = [];
+
     if($GalaxyRow['id_planet'] > 0)
     {
         if($SensonPhalanxLevel > 0)

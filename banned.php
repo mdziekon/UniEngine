@@ -13,12 +13,15 @@ $parse['Rows'] = '';
 $RowTPL = gettemplate('bans_row');
 
 $SelectFields = '`bans`.`Reason`, `bans`.`StartTime`, `bans`.`EndTime`, `bans`.`GiverID`, `users`.`username`, `users2`.`username` AS `GiverUsername`';
-$SelectBans = doquery("SELECT {$SelectFields} FROM {{table}} AS `bans` LEFT JOIN `{{prefix}}users` AS `users` ON `users`.`id` = `bans`.`UserID` LEFT JOIN `{{prefix}}users` AS `users2` ON `users2`.`id` = `bans`.`GiverID` AND `bans`.`GiverID` > 0 WHERE `bans`.`EndTime` > UNIX_TIMESTAMP() AND `bans`.`Active` = 1 ORDER BY `bans`.`ID`;",'bans');
-$BansCount = mysql_num_rows($SelectBans);
+
+$SQLResult_SelectBans = doquery("SELECT {$SelectFields} FROM {{table}} AS `bans` LEFT JOIN `{{prefix}}users` AS `users` ON `users`.`id` = `bans`.`UserID` LEFT JOIN `{{prefix}}users` AS `users2` ON `users2`.`id` = `bans`.`GiverID` AND `bans`.`GiverID` > 0 WHERE `bans`.`EndTime` > UNIX_TIMESTAMP() AND `bans`.`Active` = 1 ORDER BY `bans`.`ID`;",'bans');
+
+$BansCount = $SQLResult_SelectBans->num_rows;
+
 if($BansCount > 0)
 {
     $i = 0;
-    while($Ban = mysql_fetch_assoc($SelectBans))
+    while($Ban = $SQLResult_SelectBans->fetch_assoc())
     {
         $Row = array();
         $Row['BanNo'] = ++$i;

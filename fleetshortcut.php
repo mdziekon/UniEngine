@@ -25,10 +25,12 @@ if(empty($Mode))
     $Query_GetShortcuts .= "FROM {{table}} ";
     $Query_GetShortcuts .= "LEFT JOIN {{prefix}}planets as `planets` ON `planets`.`id` = {{table}}.`id_planet` ";
     $Query_GetShortcuts .= "WHERE {{table}}.`id_owner` = {$_User['id']} ORDER BY {{table}}.id ASC;";
+
     $Result_GetShortcuts = doquery($Query_GetShortcuts, 'fleet_shortcuts');
-    if(mysql_num_rows($Result_GetShortcuts) > 0)
+
+    if($Result_GetShortcuts->num_rows > 0)
     {
-        while($Data = mysql_fetch_assoc($Result_GetShortcuts))
+        while($Data = $Result_GetShortcuts->fetch_assoc())
         {
             $_Lang['shortcuts_list'] .= '<option value="'.$Data['id'].'">'.((!empty($Data['own_name']) ? $Data['own_name'].' - ' : '')).$Data['name'].(($Data['planet_type'] == 3) ? ' ('.$_Lang['moon_sign'].')' : (($Data['planet_type'] == 2) ? ' ('.$_Lang['debris_sign'].')' : ' ('.$_Lang['planet_sign'].')')).' ['.$Data['galaxy'].':'.$Data['system'].':'.$Data['planet'].']</option>';
         }
@@ -62,11 +64,12 @@ else
                         $Query_GetTarget .= "SELECT `id` FROM {{table}} WHERE ";
                         $Query_GetTarget .= "`galaxy` = {$Galaxy} AND `system` = {$System} AND `planet` = {$Planet} AND `planet_type` = {$Type} ";
                         $Query_GetTarget .= "LIMIT 1;";
-                        $SelectTarget = doquery($Query_GetTarget, 'planets');
-                        if(mysql_num_rows($SelectTarget) == 1)
+
+                        $SQLResult_SelectTarget = doquery($Query_GetTarget, 'planets');
+
+                        if($SQLResult_SelectTarget->num_rows == 1)
                         {
-                            $SelectTarget = mysql_fetch_assoc($SelectTarget);
-                            $TargetID = $SelectTarget['id'];
+                            $TargetID = ($SQLResult_SelectTarget->fetch_assoc())['id'];
                         }
                     }
 
@@ -83,8 +86,10 @@ else
                     $Query_CheckShortcut .= "`galaxy` = {$Galaxy} AND `system` = {$System} AND `planet` = {$Planet} AND `type` = {$Type} ";
                     $Query_CheckShortcut .= "AND `id_owner` = {$_User['id']} ";
                     $Query_CheckShortcut .= "LIMIT 1;";
+
                     $Result_CheckShortcut = doquery($Query_CheckShortcut, 'fleet_shortcuts');
-                    if(mysql_num_rows($Result_CheckShortcut) == 1)
+
+                    if($Result_CheckShortcut->num_rows == 1)
                     {
                         message($_Lang['That_target_already_exists'], $_Lang['Adding_shortcut'], 'fleetshortcut.php?mode=add', 2);
                     }
@@ -176,10 +181,14 @@ else
                                 }
                             }
 
-                            $SelectTarget = doquery("SELECT `id` FROM {{table}} WHERE `galaxy` = {$Galaxy} AND `system` = {$System} AND `planet` = {$Planet} AND `type` = {$Type} AND `id_owner` = {$_User['id']} LIMIT 1;", 'fleet_shortcuts');
-                            if(mysql_num_rows($SelectTarget) == 1)
+                            $SQLResult_SelectTarget = doquery(
+                                "SELECT `id` FROM {{table}} WHERE `galaxy` = {$Galaxy} AND `system` = {$System} AND `planet` = {$Planet} AND `type` = {$Type} AND `id_owner` = {$_User['id']} LIMIT 1;",
+                                'fleet_shortcuts'
+                            );
+
+                            if($SQLResult_SelectTarget->num_rows == 1)
                             {
-                                $SelectTarget = mysql_fetch_assoc($SelectTarget);
+                                $SelectTarget = $SQLResult_SelectTarget->fetch_assoc();
                                 if($SelectTarget['id'] > 0 AND $SelectTarget['id'] != $ID)
                                 {
                                     message($_Lang['That_target_already_exists'], $_Lang['Editing_shortcut'], 'fleetshortcut.php?mode=edit&id='.$ID, 2);

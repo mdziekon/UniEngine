@@ -11,7 +11,7 @@ function SendSimpleMassMessage($Owners, $Sender, $Time, $Type, $From, $Subject, 
     $QueryArray = false;
     foreach($Owners as $ID)
     {
-        $QueryArray[] = "(NULL, {$ID}, {$Sender}, {$Time}, {$Type}, '{$From}', '".mysql_real_escape_string($Subject)."', '".mysql_real_escape_string($Message)."', false, false)";
+        $QueryArray[] = "(NULL, {$ID}, {$Sender}, {$Time}, {$Type}, '{$From}', '" . (getDBLink()->escape_string($Subject)) . "', '" . (getDBLink()->escape_string($Message)) . "', false, false)";
     }
     $QryInsertMessage .= implode(', ', $QueryArray).';';
 

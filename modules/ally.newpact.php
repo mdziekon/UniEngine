@@ -44,7 +44,7 @@ if(isset($_POST['sent']))
                         // Finish this, when AllyWars will be ready
                         $Query_NewPact_CheckPacts .= "; -- alliance.php|NewPact|CheckPacts";
                         $Result_NewPact_CheckPacts = doquery($Query_NewPact_CheckPacts, '');
-                        while($FetchData = mysql_fetch_assoc($Result_NewPact_CheckPacts))
+                        while($FetchData = $Result_NewPact_CheckPacts->fetch_assoc())
                         {
                             if($FetchData['Count'] > 0)
                             {
@@ -90,7 +90,7 @@ if(isset($_POST['sent']))
                                 $Query_NewPact_GetUsers .= "`ally_id` = {$NewPact_AllyID} AND `ally_rank_id` IN ({$NewPact_RankIDs})";
                                 $Query_NewPact_GetUsers .= "; -- alliance.php|NewPact|GetUsers";
                                 $Result_NewPact_GetUsers = doquery($Query_NewPact_GetUsers, 'users');
-                                while($FetchData = mysql_fetch_assoc($Result_NewPact_GetUsers))
+                                while($FetchData = $Result_NewPact_GetUsers->fetch_assoc())
                                 {
                                     $NewPact_UserIDs[] = $FetchData['id'];
                                 }

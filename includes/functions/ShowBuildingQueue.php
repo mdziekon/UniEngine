@@ -15,7 +15,7 @@ function ShowBuildingQueue($CurrentPlanet, $CurrentUser)
     else
     {
         // Building Queue is empty
-        $QueueArray = '0';
+        $QueueArray = [];
         $ActualCount = 0;
     }
 

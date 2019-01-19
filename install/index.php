@@ -130,6 +130,10 @@ else
         {
             $_Lang['set_const_recaptcha_enable'] = 'checked';
         }
+        if(isset($_POST['set_const_recaptcha_serverip_as_hostname']) && $_POST['set_const_recaptcha_serverip_as_hostname'] == 'on')
+        {
+            $_Lang['set_const_recaptcha_serverip_as_hostname'] = 'checked';
+        }
         if(isset($_POST['set_uni_mailactivationneeded']) && $_POST['set_uni_mailactivationneeded'] == 'on')
         {
             $_Lang['set_uni_mailactivationneeded'] = 'checked';
@@ -316,11 +320,16 @@ else
             if($_Install_CanProceed)
             {
                 // Try to establish a connection with DataBase Server
-                $_Install_DBLink = mysql_connect($_POST['set_dbconfig_host'], $_POST['set_dbconfig_user'], $_POST['set_dbconfig_pass']);
+                $_Install_DBLink = new mysqli(
+                    $_POST['set_dbconfig_host'],
+                    $_POST['set_dbconfig_user'],
+                    $_POST['set_dbconfig_pass']
+                );
+
                 if($_Install_DBLink !== false)
                 {
                     // Try to select game DataBase
-                    $_Install_DBSelect = mysql_select_db($_POST['set_dbconfig_name']);
+                    $_Install_DBSelect = $_Install_DBLink->select_db($_POST['set_dbconfig_name']);
                     if($_Install_DBSelect)
                     {
                         // Try to write all required data to files
@@ -345,6 +354,7 @@ else
                             'GameName' => $_POST['set_uni_gamename'],
                             'Reg_RequireEmailConfirm' => (isset($_POST['set_uni_mailactivationneeded']) && $_POST['set_uni_mailactivationneeded'] == 'on' ? 'true' : 'false'),
                             'Reg_RecaptchaEnabled' => (isset($_POST['set_const_recaptcha_enable']) && $_POST['set_const_recaptcha_enable'] == 'on' ? 'true' : 'false'),
+                            'Reg_Recaptcha_ServerIP_As_Hostname' => (isset($_POST['set_const_recaptcha_serverip_as_hostname']) && $_POST['set_const_recaptcha_serverip_as_hostname'] == 'on' ? 'true' : 'false'),
                             'Reg_Recaptcha_Private' => $_POST['set_const_recaptcha_private'],
                             'Reg_Recaptcha_Public' => $_POST['set_const_recaptcha_public'],
                             'InsertServerMainOpenTime' => time()
@@ -402,7 +412,7 @@ else
 
                                 foreach($_Install_DoQueries as $ThisQuery)
                                 {
-                                    $_Install_QueryResult = mysql_query($ThisQuery);
+                                    $_Install_QueryResult = $_Install_DBLink->query($ThisQuery);
                                     if($_Install_QueryResult === false)
                                     {
                                         break;

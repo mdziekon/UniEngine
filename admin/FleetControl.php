@@ -66,10 +66,11 @@ if(CheckAuth('sgo'))
                             $GetOwnersQuery .= "SELECT `fleet_owner`, COUNT(`fleet_id`) AS `Count`, '2' AS `Type` ";
                             $GetOwnersQuery .= "FROM {{table}} GROUP BY `fleet_owner`;";
 
-                            $GetOwners = doquery($GetOwnersQuery, 'fleets');
-                            if(mysql_num_rows($GetOwners) > 0)
+                            $SQLResult_GetOwners = doquery($GetOwnersQuery, 'fleets');
+
+                            if($SQLResult_GetOwners->num_rows > 0)
                             {
-                                while($FleetOwner = mysql_fetch_assoc($GetOwners))
+                                while($FleetOwner = $SQLResult_GetOwners->fetch_assoc())
                                 {
                                     $OwnersArray[$FleetOwner['fleet_owner']][$FleetOwner['Type']] = $FleetOwner['Count'];
                                 }
@@ -131,15 +132,16 @@ if(CheckAuth('sgo'))
     }
 
     $Query = "SELECT * FROM {{table}} ORDER BY `fleet_start_time` ASC, `fleet_id` ASC;";
-    $Result = doquery($Query, 'fleets');
-    if(mysql_num_rows($Result) == 0)
+    $SQLResult_GetFleets = doquery($Query, 'fleets');
+
+    if($SQLResult_GetFleets->num_rows == 0)
     {
         $Parse['Rows'] = "<tr><th colspan=\"10\" class=\"red pad\">{$_Lang['Error_NoFleetsFound']}</th></tr>";
         $Parse['Hide_AllOptions'] = 'hide';
     }
     else
     {
-        while($Fleets = mysql_fetch_assoc($Result))
+        while($Fleets = $SQLResult_GetFleets->fetch_assoc())
         {
             $GetACSData[] = $Fleets['fleet_id'];
             $Data[$Fleets['fleet_id']] = $Fleets;
@@ -155,10 +157,10 @@ if(CheckAuth('sgo'))
         if(!empty($GetUserNicks))
         {
             $Query = "SELECT `id`, `username` FROM {{table}} WHERE `id` IN (".implode(', ', $GetUserNicks).");";
-            $Result = doquery($Query, 'users');
-            if(mysql_num_rows($Result) > 0)
+            $SQLResult_GetUsers = doquery($Query, 'users');
+            if($SQLResult_GetUsers->num_rows > 0)
             {
-                while($UserData = mysql_fetch_assoc($Result))
+                while($UserData = $SQLResult_GetUsers->fetch_assoc())
                 {
                     $UsersNicks[$UserData['id']] = $UserData['username'];
                 }
@@ -171,11 +173,14 @@ if(CheckAuth('sgo'))
                 $CheckJoinedFleets[] = "`fleets_id` LIKE '%|{$ACSTempData}|%'";
             }
             $CheckJoinedFleets = implode(' OR ', $CheckJoinedFleets);
+
             $Query = "SELECT `id`, `main_fleet_id`, `fleets_id` FROM {{table}} WHERE `main_fleet_id` IN (".implode(', ', $GetACSData).") OR {$CheckJoinedFleets};";
-            $Result = doquery($Query, 'acs');
-            if(mysql_num_rows($Result) > 0)
+
+            $SQLResult_GetACSData = doquery($Query, 'acs');
+
+            if($SQLResult_GetACSData->num_rows > 0)
             {
-                while($TempACSData = mysql_fetch_assoc($Result))
+                while($TempACSData = $SQLResult_GetACSData->fetch_assoc())
                 {
                     $Temp1 = explode(',', str_replace('|', '', $TempACSData['fleets_id']));
                     foreach($Temp1 as $TempData)

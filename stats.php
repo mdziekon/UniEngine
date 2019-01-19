@@ -156,12 +156,12 @@ else
 $parse['stat_header'] = parsetemplate(gettemplate($StatHeader), $parse);
 $parse['stat_date'] = '<span class="lime">'.prettyDate('d m Y - H:i:s', $_GameConfig['last_update'], 1).'</span>';
 
-$SelectRows = doquery($GetQuery, 'statpoints');
+$SQLResult = doquery($GetQuery, 'statpoints');
 
 $start += 1;
-if(mysql_num_rows($SelectRows) > 0)
+if($SQLResult->num_rows > 0)
 {
-    while($StatRow = mysql_fetch_assoc($SelectRows))
+    while($StatRow = $SQLResult->fetch_assoc())
     {
         if($start % 2 == 1)
         {

@@ -22,6 +22,10 @@ function ReturnImage($ImagePath)
 $CachePath = './cache/img/signatures/';
 $_EnginePath = './';
 
+define('INSIDE', true);
+
+include($_EnginePath.'includes/constants.php');
+
 $UID = (isset($_GET['uid']) ? round($_GET['uid']) : 0);
 $SigLang = (isset($_GET['lang']) ? $_GET['lang'] : null);
 $DefaultLang = 'pl';
@@ -65,7 +69,6 @@ if($UID > 0)
             ReturnImage("{$CachePath}static/signature_{$SigLang}_error4.png");
         }
     }
-    define('INSIDE', true);
 
     if($_SERVER['SERVER_ADDR'] == '127.0.0.1' OR $_SERVER['SERVER_ADDR'] == '::1')
     {
@@ -100,13 +103,17 @@ if($UID > 0)
     );
 
     // Get Data
-    $UserData = doquery("SELECT `username`, `ally_id` FROM {{table}} WHERE `id` = {$UID} LIMIT 1;", 'users', true, true);
-    if(empty($UserData['username']))
+    $SQLResult_GetUserData = doquery("SELECT `username`, `ally_id` FROM {{table}} WHERE `id` = {$UID} LIMIT 1;", 'users');
+
+    if($SQLResult_GetUserData->num_rows != 1)
     {
         // Throw Error: User don't exist
         copy("{$CachePath}static/signature_{$SigLang}_error2.png", $UserFile);
         ReturnImage($UserFile);
     }
+
+    $UserData = $SQLResult_GetUserData->fetch_assoc();
+
     $UserStat = doquery("SELECT `total_rank`, `total_points` FROM {{table}} WHERE `id_owner` = {$UID} AND `stat_type` = 1 LIMIT 1;", 'statpoints', true);
     if($UserStat['total_rank'] <= 0)
     {

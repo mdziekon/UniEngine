@@ -1,7 +1,8 @@
-/* globals JSLang, Recaptcha */
+/* globals JSLang */
 /* exported hideMsgBox, regCallback */
 
 var $Elements = {MsgSpace: null, MsgBox: null};
+var isCaptchaEnabled = undefined;
 
 function showMsgBox (Text, Color) {
     if ($Elements.MsgSpace.css("opacity") == 0) {
@@ -27,6 +28,8 @@ $(document).ready(function () {
     $Elements.MsgBox = $("#MsgBox");
 
     var $UniInfo_Holder = $("#UniInfo_Holder");
+
+    isCaptchaEnabled = ($(".captcha-indicator-el").length > 0);
 
     $("#uniSel")
         .change(function () {
@@ -86,7 +89,10 @@ $(document).ready(function () {
         } else if ($("#rules").is(":checked") == false) {
             showMsgBox(JSLang["Alert_RulesNotAccepted"], "red");
             ErrorFound = true;
-        } else if ($("#recaptcha_response_field").length > 0 && $("#recaptcha_response_field").val().length <= 0) {
+        } else if (
+            isCaptchaEnabled &&
+            $("#captcha_response").val().length === 0
+        ) {
             showMsgBox(JSLang["Alert_CaptchaNotWriten"], "red");
             ErrorFound = true;
         }
@@ -152,8 +158,14 @@ function regCallback (ResponseObject) {
             ResponseObject.Errors[ErrorID] = JSLang["Alert_RequestCode_" + ResponseObject.Errors[ErrorID]];
         }
         showMsgBox(ResponseObject.Errors.join("<br/>"), "red");
-        if ($("#recaptcha_response_field").length > 0) {
-            Recaptcha.reload();
+
+        if (
+            isCaptchaEnabled &&
+            window.grecaptcha
+        ) {
+            $("#captcha_response").val("");
+
+            window.grecaptcha.reset();
         }
     }
     if (typeof ResponseObject.BadFields != "undefined") {

@@ -44,8 +44,10 @@ else
     }
 }
 
-$Message = mysql_real_escape_string(trim($_POST['msg']));
+$Message = getDBLink()->escape_string(trim($_POST['msg']));
+
 include($_EnginePath.'includes/functions/FilterMessages.php');
+
 $Message = FilterMessages($Message, 2, '***');
 
 if(empty($Message))
@@ -58,8 +60,12 @@ if(get_magic_quotes_gpc())
     $Message = stripslashes($Message);
 }
 
-$Result = doquery("INSERT INTO {{table}} SET `RID` = {$RoomID}, `UID` = {$_User['id']}, `TimeStamp_Add` = UNIX_TIMESTAMP(), `Text` = '{$Message}';", 'chat_messages');
-if(mysql_affected_rows() > 0)
+doquery(
+    "INSERT INTO {{table}} SET `RID` = {$RoomID}, `UID` = {$_User['id']}, `TimeStamp_Add` = UNIX_TIMESTAMP(), `Text` = '{$Message}';",
+    'chat_messages'
+);
+
+if(getDBLink()->affected_rows > 0)
 {
     safeDie('1'); // Inserted
 }

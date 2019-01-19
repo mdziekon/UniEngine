@@ -89,7 +89,7 @@ $Query_GetFleets = '';
 $Query_GetFleets .= "SELECT `fleet_mission`, `fleet_target_owner`, `fleet_end_id`, `fleet_mess` FROM {{table}} ";
 $Query_GetFleets .= "WHERE `fleet_owner` = {$_User['id']};";
 $Result_GetFleets = doquery($Query_GetFleets, 'fleets');
-while($FleetData = mysql_fetch_assoc($Result_GetFleets))
+while($FleetData = $Result_GetFleets->fetch_assoc())
 {
     $FlyingFleetsCount += 1;
     if($FleetData['fleet_mission'] == 15)
@@ -248,12 +248,18 @@ if($Fleet['Mission'] != 8)
     }
     $Query_CheckPlanetOwner .= "WHERE `pl`.`galaxy` = {$Target['galaxy']} AND `pl`.`system` = {$Target['system']} AND `pl`.`planet` = {$Target['planet']} AND `pl`.`planet_type` = {$Target['type']} ";
     $Query_CheckPlanetOwner .= "LIMIT 1;";
-    $CheckPlanetOwner = doquery($Query_CheckPlanetOwner, 'planets');
 
-    if(mysql_num_rows($CheckPlanetOwner) == 1)
+    $SQLResult_GetPlanetData = doquery($Query_CheckPlanetOwner, 'planets');
+
+    if($SQLResult_GetPlanetData->num_rows == 1)
     {
-        $CheckGalaxyRow = doquery("SELECT `galaxy_id` FROM {{table}} WHERE `galaxy` = {$Target['galaxy']} AND `system` = {$Target['system']} AND `planet` = {$Target['planet']} LIMIT 1;", 'galaxy', true);
-        $CheckPlanetOwner = mysql_fetch_assoc($CheckPlanetOwner);
+        $CheckGalaxyRow = doquery(
+            "SELECT `galaxy_id` FROM {{table}} WHERE `galaxy` = {$Target['galaxy']} AND `system` = {$Target['system']} AND `planet` = {$Target['planet']} LIMIT 1;", 'galaxy',
+            true
+        );
+
+        $CheckPlanetOwner = $SQLResult_GetPlanetData->fetch_assoc();
+
         $CheckPlanetOwner['galaxy_id'] = $CheckGalaxyRow['galaxy_id'];
         $UsedPlanet = true;
         if($CheckPlanetOwner['owner'] > 0)
@@ -312,10 +318,12 @@ $SFBSelect = '';
 $SFBSelect .= "SELECT `Type`, `BlockMissions`, `Reason`, `StartTime`, `EndTime`, `PostEndTime`, `ElementID`, `DontBlockIfIdle` FROM {{table}} WHERE `StartTime` <= UNIX_TIMESTAMP() AND ";
 $SFBSelect .= implode(' OR ', $SFBSelectWhere);
 $SFBSelect .= " ORDER BY `Type` ASC, `EndTime` DESC;";
-$LoadSFBData = doquery($SFBSelect, 'smart_fleet_blockade');
-if(mysql_num_rows($LoadSFBData) > 0)
+
+$SQLResult_GetSmartFleetBlockadeData = doquery($SFBSelect, 'smart_fleet_blockade');
+
+if($SQLResult_GetSmartFleetBlockadeData->num_rows > 0)
 {
-    while($GetSFBData = mysql_fetch_assoc($LoadSFBData))
+    while($GetSFBData = $SQLResult_GetSmartFleetBlockadeData->fetch_assoc())
     {
         $BlockedMissions = false;
         if($GetSFBData['BlockMissions'] == '0')
@@ -861,6 +869,7 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
     if($Protections['enable'])
     {
         $Throw = false;
+        $DoFarmCheck = false;
         if(in_array($Fleet['Mission'], $Protections['mtypes']))
         {
             if($_User['total_rank'] >= 1)
@@ -962,10 +971,14 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
                 sort($BashTimestamps, SORT_ASC);
                 $BashTimestampMinVal = $BashTimestamps[0]['stamp'];
 
-                $GetFleetArchiveRecords = doquery("SELECT * FROM {{table}} WHERE (`Fleet_Time_Start` + `Fleet_Time_ACSAdd`) >= {$BashTimestampMinVal} AND `Fleet_Owner` = {$_User['id']} AND `Fleet_End_Owner` = {$TargetData['owner']} AND `Fleet_Mission` IN (1, 2, 9) AND `Fleet_ReportID` > 0 AND `Fleet_Destroyed_Reason` NOT IN (1, 4, 11);", 'fleet_archive');
-                if(mysql_num_rows($GetFleetArchiveRecords) > 0)
+                $SQLResult_GetFleetArchiveRecords = doquery(
+                    "SELECT * FROM {{table}} WHERE (`Fleet_Time_Start` + `Fleet_Time_ACSAdd`) >= {$BashTimestampMinVal} AND `Fleet_Owner` = {$_User['id']} AND `Fleet_End_Owner` = {$TargetData['owner']} AND `Fleet_Mission` IN (1, 2, 9) AND `Fleet_ReportID` > 0 AND `Fleet_Destroyed_Reason` NOT IN (1, 4, 11);",
+                    'fleet_archive'
+                );
+
+                if($SQLResult_GetFleetArchiveRecords->num_rows > 0)
                 {
-                    while($ArchiveRecord = mysql_fetch_assoc($GetFleetArchiveRecords))
+                    while($ArchiveRecord = $SQLResult_GetFleetArchiveRecords->fetch_assoc())
                     {
                         foreach($BashTimestamps as $Values)
                         {
@@ -1438,9 +1451,9 @@ if($SendAlert)
     $Query_AlertOtherUsers .= "`IP_ID` IN (".implode(', ', $CheckIntersection['Intersect']).") AND ";
     $Query_AlertOtherUsers .= "`Count` > `FailCount`;";
     $Result_AlertOtherUsers = doquery($Query_AlertOtherUsers, 'user_enterlog');
-    if(mysql_num_rows($Result_AlertOtherUsers) > 0)
+    if($Result_AlertOtherUsers->num_rows > 0)
     {
-        while($FetchData = mysql_fetch_assoc($Result_AlertOtherUsers))
+        while($FetchData = $Result_AlertOtherUsers->fetch_assoc())
         {
             $_Alert['MultiAlert']['Data']['OtherUsers'][] = $FetchData['User_ID'];
         }

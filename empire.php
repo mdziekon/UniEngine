@@ -19,8 +19,12 @@ if(!isset($_GET['type']) || ($_GET['type'] != 1 && $_GET['type'] != 3))
     $_GET['type'] = 1;
 }
 
-$SelectedRows = doquery("SELECT * FROM {{table}} WHERE `id_owner` = {$_User['id']} AND `planet_type` = '{$_GET['type']}';", 'planets');
-if(mysql_num_rows($SelectedRows) == 0)
+$SQLResult_SelectedRows = doquery(
+    "SELECT * FROM {{table}} WHERE `id_owner` = {$_User['id']} AND `planet_type` = '{$_GET['type']}';",
+    'planets'
+);
+
+if($SQLResult_SelectedRows->num_rows == 0)
 {
     $_GET['type'] = 1;
     $_Lang['HideMoons'] = ' style="display: none;"';
@@ -40,7 +44,8 @@ else
 
 $parse = $_Lang;
 
-while($p = mysql_fetch_assoc($SelectedRows))
+$planet = [];
+while($p = $SQLResult_SelectedRows->fetch_assoc())
 {
     $planet[] = $p;
 }

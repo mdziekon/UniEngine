@@ -146,11 +146,11 @@ if($ThisMoon['planet_type'] == 3)
                         $Result_GetFleets = doquery($Query_GetFleets, 'fleets');
 
                         $parse['phl_fleets_table'] = $_Lang['PhalanxInfo_NoMovements'];
-                        if(mysql_num_rows($Result_GetFleets) > 0)
+                        if($Result_GetFleets->num_rows > 0)
                         {
                             include($_EnginePath.'includes/functions/BuildFleetEventTable.php');
                             $Record = 0;
-                            while($FleetRow = mysql_fetch_assoc($Result_GetFleets))
+                            while($FleetRow = $Result_GetFleets->fetch_assoc())
                             {
                                 $Record += 1;
 

@@ -1,25 +1,8 @@
 <script>
-var RecaptchaOptions =
-{
-    theme : 'clean',
-    tabindex: 7,
-    custom_translations:
-    {
-        instructions_visual : '{ReCaptcha_instructions_visual}',
-        instructions_audio : "{ReCaptcha_instructions_audio}",
-        play_again : "{ReCaptcha_play_again}",
-        cant_hear_this : "{ReCaptcha_cant_hear_this}",
-        visual_challenge : "{ReCaptcha_visual_challenge}",
-        audio_challenge : "{ReCaptcha_audio_challenge}",
-        refresh_btn : "{ReCaptcha_refresh_btn}",
-        help_btn : "{ReCaptcha_help_btn}",
-        incorrect_try_again : "{ReCaptcha_incorrect_try_again}"
-    }
-};
 var JSLang = {Insert_JSLang};
 </script>
 <script type="text/javascript" src="libs/jquery-cookie/jquery.cookie-1.0.0.1.min.js"></script>
-<script src="dist/js/register.cachebuster-1545956361123.min.js" type="text/javascript"></script>
+<script src="dist/js/register.cachebuster-1547684899198.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="dist/css/register.cachebuster-1546564327123.min.css" />
 <br/>
 <div>
@@ -98,8 +81,17 @@ var JSLang = {Insert_JSLang};
                     </th>
                 </tr>
                 <tr>
-                    <th class="pad2" colspan="2">
-                        <center style="min-height: 110px;">{ReCaptchaCode}</center>
+                    <th
+                        class="pad2"
+                        colspan="2"
+                    >
+                        <div style="width: 100%; text-align: center;">
+                            <div
+                                class="captcha-container"
+                                style="display: inline-block"
+                            ></div>
+                        </div>
+                        <input name="captcha_response" id="captcha_response" type="hidden"/>
                     </th>
                 </tr>
                 <tr>
@@ -111,3 +103,4 @@ var JSLang = {Insert_JSLang};
         </table>
     </form>
 </div>
+{PHPInject_RecaptchaJSSetup}

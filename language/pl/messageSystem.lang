@@ -73,9 +73,9 @@ $_Lang['msg_const']['msgs'] = array
 
 	'038' => '<b>Właśnie ktoś zarejestrował się do gry z twojego linku polecającego!</b><br/><br/>Jeśli chcesz sprawdzić kto zarejestował się z twojego linku, przejdź do sekcji <a href="ref_table.php" class="orange"><u>Poleceni gracze</u></a>.<br/>W tym miejscu możesz także sprawdzić, ile Ciemnej Energii otrzymałeś już dzięki tej osobie!',
 	'039' => 'Gratulacje!<br/>Polecony przez Ciebie użytkownik <b>%s</b> przekroczył jeden z progów punktowych (%s), dlatego dostajesz za to <b>%s jednostek Ciemnej Energii</b>!<br/><br/>Pamiętaj, że możesz zapraszać nieskończoną ilość użytkowników do gry!',
-	
+
 	// ACS Invitation
-	'041' => 'Gracz %s zaprosił Cię do wspólnego ataku na %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a><br/><br/>Jeśli chcesz sporzystać z jego propozycji, zaatakuj %s, jako misję wybierz <a class="orange" href="fleet.php?galaxy=%s&system=%s&planet=%s&planettype=%s&target_mission=2"><b>Atak związku</b></a> a następnie wybierz z listy związek o nazwie <b class="lime">"%s"</b>.',
+	'041' => 'Gracz %s zaprosił Cię do wspólnego ataku na %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a><br/><br/>Jeśli chcesz skorzystać z jego propozycji, zaatakuj %s, jako misję wybierz <a class="orange" href="fleet.php?galaxy=%s&system=%s&planet=%s&planettype=%s&target_mission=2"><b>Atak związku</b></a> a następnie wybierz z listy związek o nazwie <b class="lime">"%s"</b>.',
 
 	// Expeditions
 	'042' => 'Twoja ekspedycja napotkała wrogo nastawionych piratów i wdała się w bitwę!<br/><br/>Następujące statki zostały zniszczone w tej bitwie:<br/>%s',
@@ -99,7 +99,7 @@ $_Lang['msg_const']['msgs'] = array
 	'060' => 'Twoja ekspedycja przeszukała kryjówkę piratów. Zostawili oni w hangarach kilka statków.<br/>Niestety, ich stan pozostawiał wiele do życzenia - nie nadawały się one do dalszej eksploatacji...',
 	'061' => 'Twoja ekspedycja nie znalazła niczego godnego uwagi na krańcach tego układu planetarnego.<br/>Niestety, błąd w obliczeniach nawigatorów spowodował, że flota obrała nieodpowiednią drogę powrotną na ojczystą planetę, przez co czas powrotu wydłużył się o:<br/>%s',
 
-	'069' => 'Gracz %s zaprosił Cię do wspólnego ataku na %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a><br/><br/>Jeśli chcesz sporzystać z jego propozycji, zaatakuj %s, jako misję wybierz <a class="orange" href="fleet.php?galaxy=%s&system=%s&planet=%s&planettype=%s&target_mission=2"><b>Atak związku</b></a> a następnie wybierz z listy związek o nazwie <a href="fleet.php?joinacs=%s" class="lime">"%s"</a> (Kliknij w tą nazwę aby bezpośrednio dołączyć do związku)',
+	'069' => 'Gracz %s zaprosił Cię do wspólnego ataku na %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a><br/><br/>Jeśli chcesz skorzystać z jego propozycji, zaatakuj %s, jako misję wybierz <a class="orange" href="fleet.php?galaxy=%s&system=%s&planet=%s&planettype=%s&target_mission=2"><b>Atak związku</b></a> a następnie wybierz z listy związek o nazwie <a href="fleet.php?joinacs=%s" class="lime">"%s"</a> (Kliknij w tą nazwę aby bezpośrednio dołączyć do związku)',
 
 	'070' => 'Nie możesz rozbudowywać budynku <b>%s</b> na %s %s, ponieważ nie spełniłeś jego <a href="techtree.php#el%s">Wymagań Technologicznych</a>!',
 
@@ -110,13 +110,13 @@ $_Lang['msg_const']['msgs'] = array
 	'075' => $_Lang['BattleReport_Helper_NoRebuild'],
 
 	'076' => 'Wroga flota z %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a> (<a href="profile.php?uid=%s">%s</a>) została dostrzeżona w pobliżu %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a><br/><br/>Szansa na przechwycenie sond: %s',
-	
+
 	// MultiAccount Declarations
 	'077' => 'Deklaracja gry z jednego IP/Komputera w której znajduje się twoje konto została <b class="lime">zaakceptowana</b> przez Administrację!',
 	'078' => 'Deklaracja gry z jednego IP/Komputera w której znajduje się twoje konto została <b class="orange">odrzucona</b> przez Administrację - prosimy o kontakt w tej sprawie!',
 	'079' => 'Deklaracja gry z jednego IP/Komputera w której znajduje się twoje konto została <b class="red">usunięta</b> (ostatni gracz należący do tej deklaracji wycofał się, usunął konto lub osoba zgłaszająca deklarację ją wycofała)!',
 	'080' => 'Deklaracja gry z jednego IP/Komputera w której znajduje się twoje konto została <b class="red">usunięta</b> przez Administrację - prosimy o kontakt w tej sprawie!',
-	
+
 	// Buildings/Technology Queue Infos
 	'081' => 'Nie można dokonać akcji konstrukcyjnych na %s %s przy budynku <b>%s</b>!',
 	'082' => 'Brak odpowiedniej ilości surowców do konstrukcji budynku <b>%s</b> (Poziom %s) na %s %s.<br/>Posiadane surowce: <b>%s</b> j. <b>metalu</b>, <b>%s</b> j. <b>kryształu</b> i <b>%s</b> j. <b>deuteru</b>.<br/>Budowa wymaga: <b class="%s">%s</b> j. <b>metalu</b>, <b class="%s">%s</b> j. <b>kryształu</b> i <b class="%s">%s</b> j. <b>deuteru</b>.',
@@ -127,16 +127,16 @@ $_Lang['msg_const']['msgs'] = array
 	'087' => 'Nie masz wystarczającej ilości Ciemnej Energii do rozpoczecia badania <b>%s</b>.<br/>Potrzebujesz <b>%s</b> j., a na swoim koncie posiadasz <b>%s</b> j.',
 	'088' => 'Nie możesz rozpocząć badania <b>%s</b> na %s %s, ponieważ nie spełniłeś jego <a href="techtree.php#el%s">Wymagań Technologicznych</a>!',
 	'089' => 'Nie możesz rozpocząć badania <b>%s</b> na %s %s!',
-	
+
 	// Buddy Invites
 	'090' => 'Gracz <a href="profile.php?uid=%s">%s</a> <b>zaakceptował twoje Buddy-Zapytanie!</b>',
 	'091' => 'Gracz <a href="profile.php?uid=%s">%s</a> <b>odrzucił twoje Buddy-Zapytanie!</b>',
 	'092' => 'Gracz <a href="profile.php?uid=%s">%s</a> <b>usunął Cię ze swojej Listy Znajomych!</b>',
-	
+
 	// Retreat Info
 	'093' => 'Twoje lecące floty zostały zawrócone przez Administrację.<br/><b>Floty wracają na macierzyste współrzędne normalnym lotem.</b><br/><br/>Ilość zawróconych flot: %s / %s',
 	'094' => 'Twoje lecące floty zostały zawrócone przez Administrację.<br/><b>Floty zostały natychmiastowo przywrócone na macierzyste współrzędne.</b><br/><br/>Ilość zawróconych flot: %s / %s',
-	
+
 	// Ally Invites
 	'095' => 'Zostałeś zaproszony do sojuszu <a href="alliance.php?mode=ainfo&a=%s">%s [%s]</a> przez gracza <a href="profile.php?uid=%s">%s</a>.<br/>Aby <b class="lime">zaakceptować</b> lub <b class="orange">odrzucić</b> to zaproszenie, przejdź do zakładki <a href="alliance.php">Sojusz</a> (zaproszenie ma ważność 14 dni).<br/><u>Treść zaproszenia:</u><br/><br/>%s',
 	// Ally Pacts
@@ -166,9 +166,9 @@ $_Lang['msg_const']['senders']['system'] = array
 $_Lang['msg_const']['senders']['rangs'] = array
 (
 	0	=> '<span style="color: #BFBFBF;">Gracz</span>',
-	20	=> '<span class="lime">ForumTeam</span>', 
-	50	=> '<span class="lime">Operator (GO)</span>', 
-	70	=> '<span class="skyblue">Super Operator (SGO)</span>', 
+	20	=> '<span class="lime">ForumTeam</span>',
+	50	=> '<span class="lime">Operator (GO)</span>',
+	70	=> '<span class="skyblue">Super Operator (SGO)</span>',
 	90	=> '<span class="orange">Administrator</span>',
 	100 => '<span class="orange">Administrator</span>',
 	110 => '<span class="red">Programista</span>',

@@ -90,7 +90,7 @@ $_Lang['Error_NoIDGiven']                = 'Podano niepoprawne ID!';
 
 $_Lang['Info_FilterAdded']               = 'Filtr dodany pomyślnie!';
 $_Lang['Info_FilterDeleted']             = 'Filtr usunięty!';
-$_Lang['Info_AllSelectsDeleted']         = 'Zaznaczone wiadomości zostały usunięte!';
+$_Lang['Info_AllSelectsDeleted']         = 'Zaznaczone filtry zostały usunięte!';
 $_Lang['Info_CodeLooksFine']             = 'Kod wygląda na poprawny';
 $_Lang['Info_FilterEdited']              = 'Filtr został zmieniony!';
 
@@ -104,7 +104,7 @@ $_Lang['ActionTypes']                    = array
                                                 '1' => 'Ignoruj',
                                                 '2' => 'Ignoruj i nie blokuj floty',
                                             );
-                                    
+
 $_Lang['ActionType_2']                   = &$_Lang['ActionTypes'][2];
 $_Lang['ActionType_1']                   = &$_Lang['ActionTypes'][1];
 

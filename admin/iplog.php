@@ -223,10 +223,11 @@ if(!empty($_POST['search']))
                         }
                     }
                     $ComposeQuery = str_replace('{Fields}', implode('', $Fields), $ComposeQuery);
-                    $Result = doquery($ComposeQuery, $QueryData['table']);
-                    if(mysql_num_rows($Result) > 0)
+
+                    $SQLResult_ComposedQuery = doquery($ComposeQuery, $QueryData['table']);
+                    if($SQLResult_ComposedQuery->num_rows > 0)
                     {
-                        while($Data = mysql_fetch_assoc($Result))
+                        while($Data = $SQLResult_ComposedQuery->fetch_assoc())
                         {
                             $Query[$QueryID]['results'][] = $Data;
                         }
@@ -393,8 +394,9 @@ if(!empty($GetData))
         $_Lang['Insert_Search_OptSel_'.($GetData['type'] == 'user' ? 'uid' : 'ipid')] = 'selected';
     }
 
-    $LoadData = doquery($GetData['query'], $GetData['table']);
-    if(mysql_num_rows($LoadData) > 0)
+    $SQLResult_LoadData = doquery($GetData['query'], $GetData['table']);
+
+    if($SQLResult_LoadData->num_rows > 0)
     {
         // Parse main data and then grab secondary data
         $HeaderTPL = gettemplate('admin/iplog_result_header_'.$GetData['tpl']);
@@ -402,7 +404,7 @@ if(!empty($GetData))
         $RowTPL = gettemplate('admin/iplog_result_mainrow_'.$GetData['tpl']);
         $SubRowTPL = gettemplate('admin/iplog_result_subrow_'.$GetData['tpl']);
 
-        while($Data = mysql_fetch_assoc($LoadData))
+        while($Data = $SQLResult_LoadData->fetch_assoc())
         {
             if($GetData['type'] == 'user')
             {
@@ -445,11 +447,17 @@ if(!empty($GetData))
                 $LoadWhere[] = $RowData['id'];
             }
             $LoadWhere = implode(', ', $LoadWhere);
-            $LoadData = doquery("SELECT `logs`.`IP_ID`, `logs`.`User_ID`, `logs`.`Count`, `logs`.`LastTime`, `values`.`Value`, `values`.`isProxy` FROM {{table}} AS `logs` LEFT JOIN `{{prefix}}used_ip_and_ua` AS `values` ON `logs`.`IP_ID` = `values`.`ID` WHERE `User_ID` IN ({$LoadWhere});", 'user_enterlog');
+
+            $SQLResult_GetUserEnterlog = doquery(
+                "SELECT `logs`.`IP_ID`, `logs`.`User_ID`, `logs`.`Count`, `logs`.`LastTime`, `values`.`Value`, `values`.`isProxy` FROM {{table}} AS `logs` LEFT JOIN `{{prefix}}used_ip_and_ua` AS `values` ON `logs`.`IP_ID` = `values`.`ID` WHERE `User_ID` IN ({$LoadWhere});",
+                'user_enterlog'
+            );
+
             $MainKey = 'id';
-            if(mysql_num_rows($LoadData) > 0)
+
+            if($SQLResult_GetUserEnterlog->num_rows > 0)
             {
-                while($Data = mysql_fetch_assoc($LoadData))
+                while($Data = $SQLResult_GetUserEnterlog->fetch_assoc())
                 {
                     if(empty($SubRows[$Data['User_ID']][$Data['IP_ID']]))
                     {
@@ -569,6 +577,10 @@ if(!empty($GetData))
                     }
                     else
                     {
+                        if (empty($RowData['sub'][$ThisKey]['SubRows'])) {
+                            $RowData['sub'][$ThisKey]['SubRows'] = '';
+                        }
+
                         $RowData['sub'][$ThisKey]['SubRows'] .= '<tr>'.parsetemplate($SubRowTPL, $SubRowData).'</tr>';
                         $RowData['sub'][$ThisKey]['SubRowsCount'] += 1;
                     }
@@ -609,8 +621,12 @@ if(!empty($GetData))
                     $ThisData['EvenOrOdd'] = 'odd';
                 }
 
-                $ParsedRows[$TableKey] = parsetemplate($RowTPL, $ThisData);
+                $ParsedRows[$TableKey][] = parsetemplate($RowTPL, $ThisData);
             }
+        }
+
+        foreach($ParsedRows as $TableKey => $ParsedRow) {
+            $ParsedRows[$TableKey] = implode("", $ParsedRows[$TableKey]);
         }
 
         krsort($ParsedRows);

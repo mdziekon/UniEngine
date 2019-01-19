@@ -283,11 +283,13 @@ switch($_GET['mode'])
                 $Query_IgnoreSystem .= "(`OwnerID` = {$_User['id']} AND `IgnoredID` = {$FormData['uid']}) OR ";
                 $Query_IgnoreSystem .= "(`OwnerID` = {$FormData['uid']} AND `IgnoredID` = {$_User['id']}) ";
                 $Query_IgnoreSystem .= "LIMIT 2; -- messages.php|IgnoreSystem";
+
                 $Result_IgnoreSystem = doquery($Query_IgnoreSystem, 'ignoresystem');
-                if(mysql_num_rows($Result_IgnoreSystem) > 0)
+
+                if($Result_IgnoreSystem->num_rows > 0)
                 {
                     $AllowSend = false;
-                    while($IgnoreData = mysql_fetch_assoc($Result_IgnoreSystem))
+                    while($IgnoreData = $Result_IgnoreSystem->fetch_assoc())
                     {
                         if($IgnoreData['OwnerID'] == $_User['id'])
                         {
@@ -400,13 +402,22 @@ switch($_GET['mode'])
             {
                 // User is Deleting all messages at once (exclude AdminMessages)
 
-                $SelectMsgs = doquery("SELECT `Thread_ID` FROM {{table}} WHERE `time` <= {$TimeStamp} AND `id_owner` = {$_User['id']} AND `type` != 80 AND `Thread_ID` > 0;", 'messages');
-                doquery("UPDATE {{table}} SET `deleted` = true WHERE `id_owner` = {$_User['id']} AND `type` != 80 AND `time` <= {$TimeStamp};", 'messages');
-                $DeletedCount = mysql_affected_rows();
-                if(mysql_num_rows($SelectMsgs) > 0)
+                $SelectMsgs = doquery(
+                    "SELECT `Thread_ID` FROM {{table}} WHERE `time` <= {$TimeStamp} AND `id_owner` = {$_User['id']} AND `type` != 80 AND `Thread_ID` > 0;",
+                    'messages'
+                );
+
+                doquery(
+                    "UPDATE {{table}} SET `deleted` = true WHERE `id_owner` = {$_User['id']} AND `type` != 80 AND `time` <= {$TimeStamp};",
+                    'messages'
+                );
+
+                $DeletedCount = getDBLink()->affected_rows;
+
+                if($SelectMsgs->num_rows > 0)
                 {
                     $UpdateThreads = array();
-                    while($SelectData = mysql_fetch_assoc($SelectMsgs))
+                    while($SelectData = $SelectMsgs->fetch_assoc())
                     {
                         if(!in_array($SelectData['Thread_ID'], $UpdateThreads))
                         {
@@ -414,15 +425,24 @@ switch($_GET['mode'])
                         }
                     }
                     $IDs = implode(',', $UpdateThreads);
-                    $SelectIDs = doquery("SELECT MAX(`id`) AS `id` FROM {{table}} WHERE `Thread_ID` IN ({$IDs}) AND `id_owner` = {$_User['id']} AND `deleted` = false GROUP BY `Thread_ID`;", 'messages');
-                    if(mysql_num_rows($SelectIDs) > 0)
+
+                    $SelectIDs = doquery(
+                        "SELECT MAX(`id`) AS `id` FROM {{table}} WHERE `Thread_ID` IN ({$IDs}) AND `id_owner` = {$_User['id']} AND `deleted` = false GROUP BY `Thread_ID`;",
+                        'messages'
+                    );
+
+                    if($SelectIDs->num_rows > 0)
                     {
-                        while($SelectData = mysql_fetch_assoc($SelectIDs))
+                        while($SelectData = $SelectIDs->fetch_assoc())
                         {
                             $UpdateIDs[] = $SelectData['id'];
                         }
                         $IDs = implode(',', $UpdateIDs);
-                        doquery("UPDATE {{table}} SET `Thread_IsLast` = 1 WHERE `id` IN ({$IDs});", 'messages');
+
+                        doquery(
+                            "UPDATE {{table}} SET `Thread_IsLast` = 1 WHERE `id` IN ({$IDs});",
+                            'messages'
+                        );
                     }
                 }
 
@@ -440,13 +460,22 @@ switch($_GET['mode'])
                 // User is Deleting all messages in this category at once
                 if(in_array($_ThisCategory, $MessageType) AND $_ThisCategory != 100 AND $_ThisCategory != 80)
                 {
-                    $SelectMsgs = doquery("SELECT `Thread_ID` FROM {{table}} WHERE `type` = {$_ThisCategory} AND `time` <= {$TimeStamp} AND `id_owner` = {$_User['id']} AND `Thread_ID` > 0;", 'messages');
-                    doquery("UPDATE {{table}} SET `deleted` = true WHERE `id_owner` = {$_User['id']} AND `type` = {$_ThisCategory} AND `time` <= {$TimeStamp};", 'messages');
-                    $DeletedCount = mysql_affected_rows();
-                    if(mysql_num_rows($SelectMsgs) > 0)
+                    $SelectMsgs = doquery(
+                        "SELECT `Thread_ID` FROM {{table}} WHERE `type` = {$_ThisCategory} AND `time` <= {$TimeStamp} AND `id_owner` = {$_User['id']} AND `Thread_ID` > 0;",
+                        'messages'
+                    );
+
+                    doquery(
+                        "UPDATE {{table}} SET `deleted` = true WHERE `id_owner` = {$_User['id']} AND `type` = {$_ThisCategory} AND `time` <= {$TimeStamp};",
+                        'messages'
+                    );
+
+                    $DeletedCount = getDBLink()->affected_rows;
+
+                    if($SelectMsgs->num_rows > 0)
                     {
                         $UpdateThreads = array();
-                        while($SelectData = mysql_fetch_assoc($SelectMsgs))
+                        while($SelectData = $SelectMsgs->fetch_assoc())
                         {
                             if(!in_array($SelectData['Thread_ID'], $UpdateThreads))
                             {
@@ -454,15 +483,25 @@ switch($_GET['mode'])
                             }
                         }
                         $IDs = implode(',', $UpdateThreads);
-                        $SelectIDs = doquery("SELECT MAX(`id`) AS `id` FROM {{table}} WHERE `Thread_ID` IN ({$IDs}) AND `id_owner` = {$_User['id']} AND `deleted` = false GROUP BY `Thread_ID`;", 'messages');
-                        if(mysql_num_rows($SelectIDs) > 0)
+
+                        $SelectIDs = doquery(
+                            "SELECT MAX(`id`) AS `id` FROM {{table}} WHERE `Thread_ID` IN ({$IDs}) AND `id_owner` = {$_User['id']} AND `deleted` = false GROUP BY `Thread_ID`;",
+                            'messages'
+                        );
+
+                        if($SelectIDs->num_rows > 0)
                         {
-                            while($SelectData = mysql_fetch_assoc($SelectIDs))
+                            while($SelectData = $SelectIDs->fetch_assoc())
                             {
                                 $UpdateIDs[] = $SelectData['id'];
                             }
+
                             $IDs = implode(',', $UpdateIDs);
-                            doquery("UPDATE {{table}} SET `Thread_IsLast` = 1 WHERE `id` IN ({$IDs});", 'messages');
+
+                            doquery(
+                                "UPDATE {{table}} SET `Thread_IsLast` = 1 WHERE `id` IN ({$IDs});",
+                                'messages'
+                            );
                         }
                     }
                     if($DeletedCount > 0)
@@ -509,13 +548,18 @@ switch($_GET['mode'])
                 if($DeleteIDs !== FALSE)
                 {
                     $IDs = implode(',', $DeleteIDs);
-                    $SelectMsgs = doquery("SELECT `id`, `Thread_ID` FROM {{table}} WHERE `id` IN ({$IDs}) AND `id_owner` = {$_User['id']} AND `type` != 80;", 'messages');
-                    if(mysql_num_rows($SelectMsgs) > 0)
+
+                    $SelectMsgs = doquery(
+                        "SELECT `id`, `Thread_ID` FROM {{table}} WHERE `id` IN ({$IDs}) AND `id_owner` = {$_User['id']} AND `type` != 80;",
+                        'messages'
+                    );
+
+                    if($SelectMsgs->num_rows > 0)
                     {
                         $DelMsgs[] = $_Lang['Delete_SelectedDeleted'];
 
                         $UpdateThreads = array();
-                        while($SelectData = mysql_fetch_assoc($SelectMsgs))
+                        while($SelectData = $SelectMsgs->fetch_assoc())
                         {
                             $UpdateIDs[] = $SelectData['id'];
                             if($SelectData['Thread_ID'] > 0)
@@ -528,19 +572,34 @@ switch($_GET['mode'])
                         }
                         $IDs = implode(',', $UpdateIDs);
                         $UpdateIDs = array();
-                        doquery("UPDATE {{table}} SET `deleted` = true, `Thread_IsLast` = 0 WHERE `id` IN ({$IDs});", 'messages');
+
+                        doquery(
+                            "UPDATE {{table}} SET `deleted` = true, `Thread_IsLast` = 0 WHERE `id` IN ({$IDs});",
+                            'messages'
+                        );
+
                         if(!empty($UpdateThreads))
                         {
                             $IDs = implode(',', $UpdateThreads);
-                            $SelectIDs = doquery("SELECT MAX(`id`) AS `id` FROM {{table}} WHERE `Thread_ID` IN ({$IDs}) AND `id_owner` = {$_User['id']} AND `deleted` = false GROUP BY `Thread_ID`;", 'messages');
-                            if(mysql_num_rows($SelectIDs) > 0)
+
+                            $SelectIDs = doquery(
+                                "SELECT MAX(`id`) AS `id` FROM {{table}} WHERE `Thread_ID` IN ({$IDs}) AND `id_owner` = {$_User['id']} AND `deleted` = false GROUP BY `Thread_ID`;",
+                                'messages'
+                            );
+
+                            if($SelectIDs->num_rows > 0)
                             {
-                                while($SelectData = mysql_fetch_assoc($SelectIDs))
+                                while($SelectData = $SelectIDs->fetch_assoc())
                                 {
                                     $UpdateIDs[] = $SelectData['id'];
                                 }
+
                                 $IDs = implode(',', $UpdateIDs);
-                                doquery("UPDATE {{table}} SET `Thread_IsLast` = 1 WHERE `id` IN ({$IDs});", 'messages');
+
+                                doquery(
+                                    "UPDATE {{table}} SET `Thread_IsLast` = 1 WHERE `id` IN ({$IDs});",
+                                    'messages'
+                                );
                             }
                         }
                     }
@@ -579,13 +638,18 @@ switch($_GET['mode'])
                 if($DeleteIDs !== FALSE)
                 {
                     $IDs = implode(',', $DeleteIDs);
-                    $SelectMsgs = doquery("SELECT `id`, `Thread_ID` FROM {{table}} WHERE `id` IN ({$IDs}) AND `id_owner` = {$_User['id']} AND `type` != 80;", 'messages');
-                    if(mysql_num_rows($SelectMsgs) > 0)
+
+                    $SelectMsgs = doquery(
+                        "SELECT `id`, `Thread_ID` FROM {{table}} WHERE `id` IN ({$IDs}) AND `id_owner` = {$_User['id']} AND `type` != 80;",
+                        'messages'
+                    );
+
+                    if($SelectMsgs->num_rows > 0)
                     {
                         $DelMsgs[] = $_Lang['Delete_UnselectedDeleted'];
 
                         $UpdateThreads = array();
-                        while($SelectData = mysql_fetch_assoc($SelectMsgs))
+                        while($SelectData = $SelectMsgs->fetch_assoc())
                         {
                             $UpdateIDs[] = $SelectData['id'];
                             if($SelectData['Thread_ID'] > 0)
@@ -598,19 +662,34 @@ switch($_GET['mode'])
                         }
                         $IDs = implode(',', $UpdateIDs);
                         $UpdateIDs = array();
-                        doquery("UPDATE {{table}} SET `deleted` = true, `Thread_IsLast` = 0 WHERE `id` IN ({$IDs});", 'messages');
+
+                        doquery(
+                            "UPDATE {{table}} SET `deleted` = true, `Thread_IsLast` = 0 WHERE `id` IN ({$IDs});",
+                            'messages'
+                        );
+
                         if(!empty($UpdateThreads))
                         {
                             $IDs = implode(',', $UpdateThreads);
-                            $SelectIDs = doquery("SELECT MAX(`id`) AS `id` FROM {{table}} WHERE `Thread_ID` IN ({$IDs}) AND `id_owner` = {$_User['id']} AND `deleted` = false GROUP BY `Thread_ID`;", 'messages');
-                            if(mysql_num_rows($SelectIDs) > 0)
+
+                            $SelectIDs = doquery(
+                                "SELECT MAX(`id`) AS `id` FROM {{table}} WHERE `Thread_ID` IN ({$IDs}) AND `id_owner` = {$_User['id']} AND `deleted` = false GROUP BY `Thread_ID`;",
+                                'messages'
+                            );
+
+                            if($SelectIDs->num_rows > 0)
                             {
-                                while($SelectData = mysql_fetch_assoc($SelectIDs))
+                                while($SelectData = $SelectIDs->fetch_assoc())
                                 {
                                     $UpdateIDs[] = $SelectData['id'];
                                 }
+
                                 $IDs = implode(',', $UpdateIDs);
-                                doquery("UPDATE {{table}} SET `Thread_IsLast` = 1 WHERE `id` IN ({$IDs});", 'messages');
+
+                                doquery(
+                                    "UPDATE {{table}} SET `Thread_IsLast` = 1 WHERE `id` IN ({$IDs});",
+                                    'messages'
+                                );
                             }
                         }
                     }
@@ -627,8 +706,12 @@ switch($_GET['mode'])
             else if($DeleteWhat == 'setallread')
             {
                 // User wants to set All messages as "read"
-                doquery("UPDATE {{table}} SET `read` = true WHERE `id_owner` = {$_User['id']} AND `type` != 80 AND `time` <= {$TimeStamp};", 'messages');
-                if(mysql_affected_rows() > 0)
+                doquery(
+                    "UPDATE {{table}} SET `read` = true WHERE `id_owner` = {$_User['id']} AND `type` != 80 AND `time` <= {$TimeStamp};",
+                    'messages'
+                );
+
+                if(getDBLink()->affected_rows > 0)
                 {
                     $DelMsgs[] = $_Lang['Delete_AllMsgsRead'];
                 }
@@ -642,8 +725,12 @@ switch($_GET['mode'])
                 // User is setting All messages in this Cat as "read"
                 if(in_array($_ThisCategory, $MessageType) AND $_ThisCategory != 100 AND $_ThisCategory != 80)
                 {
-                    doquery("UPDATE {{table}} SET `read` = true WHERE `id_owner` = {$_User['id']} AND `type` = {$_ThisCategory} AND `time` <= {$TimeStamp};", 'messages');
-                    if(mysql_affected_rows() > 0)
+                    doquery(
+                        "UPDATE {{table}} SET `read` = true WHERE `id_owner` = {$_User['id']} AND `type` = {$_ThisCategory} AND `time` <= {$TimeStamp};",
+                        'messages'
+                    );
+
+                    if(getDBLink()->affected_rows > 0)
                     {
                         $DelMsgs[] = $_Lang['Delete_CatMsgsRead'];
                     }
@@ -832,9 +919,9 @@ switch($_GET['mode'])
             }
             $Query_GetMessages .= "ORDER BY `m`.`time` DESC, `m`.`id` DESC LIMIT {$Start}, {$_PerPage};";
 
-            $GetMessages = doquery($Query_GetMessages, 'messages');
+            $SQLResult_GetMessages = doquery($Query_GetMessages, 'messages');
 
-            if(mysql_num_rows($GetMessages) > 0)
+            if($SQLResult_GetMessages->num_rows > 0)
             {
                 if($_GameConfig['enable_bbcode'] == 1)
                 {
@@ -845,7 +932,7 @@ switch($_GET['mode'])
                 $Messages = array();
                 $CheckThreads = array();
 
-                while($CurMess = mysql_fetch_assoc($GetMessages))
+                while($CurMess = $SQLResult_GetMessages->fetch_assoc())
                 {
                     $MsgCache[] = $CurMess;
                     if($_UseThreads AND $CurMess['Thread_ID'] > 0 AND in_array($CurMess['type'], $_CanBeThreaded))
@@ -866,10 +953,11 @@ switch($_GET['mode'])
                     $Query_GetThreaded .= "WHERE `m`.`deleted` = false AND `m`.`id_owner` = {$_User['id']} AND `read` = false AND `m`.`Thread_ID` IN ({$ThreadsIDs}) AND `m`.`id` NOT IN ({$ExcludeIDs}) ";
                     $Query_GetThreaded .= "ORDER BY `m`.`id` DESC;";
 
-                    $GetMessages = doquery($Query_GetThreaded, 'messages');
-                    if(mysql_num_rows($GetMessages) > 0)
+                    $SQLResult_GetThreadedMessages = doquery($Query_GetThreaded, 'messages');
+
+                    if($SQLResult_GetThreadedMessages->num_rows > 0)
                     {
-                        while($CurMess = mysql_fetch_assoc($GetMessages))
+                        while($CurMess = $SQLResult_GetThreadedMessages->fetch_assoc())
                         {
                             $CurMess['isAdditional'] = true;
                             $MsgCache[] = $CurMess;
@@ -880,12 +968,15 @@ switch($_GET['mode'])
                     {
                         $Query_ThreadsLengthWhere[] = "(`Thread_ID` = {$ThreadID} AND `id` <= {$ThreadMap[$ThreadID]})";
                     }
+
                     $Query_ThreadsLengthWhere = implode(' OR ', $Query_ThreadsLengthWhere);
                     $Query_ThreadsLength = "SELECT `Thread_ID`, COUNT(*) AS `Count` FROM {{table}} WHERE {$Query_ThreadsLengthWhere} AND (`id_sender` = {$_User['id']} OR `deleted` = false) GROUP BY `Thread_ID`;";
+
                     $GetThreadsLength = doquery($Query_ThreadsLength, 'messages');
-                    if(mysql_num_rows($GetThreadsLength) > 0)
+
+                    if($GetThreadsLength->num_rows > 0)
                     {
-                        while($ThisThread = mysql_fetch_assoc($GetThreadsLength))
+                        while($ThisThread = $GetThreadsLength->fetch_assoc())
                         {
                             $ThreadsLength[$ThisThread['Thread_ID']] = $ThisThread['Count'];
                         }
@@ -1060,13 +1151,20 @@ switch($_GET['mode'])
                 {
                     if($_ThisCategory == 100)
                     {
-                        $QryGetMassMsg = doquery("SELECT `id`, `type`, `subject`, `text` FROM {{table}} WHERE `id` IN (".implode(', ', $GetMassMsgs).");", 'messages');
+                        $SQLResult_GetMassMessages = doquery(
+                            "SELECT `id`, `type`, `subject`, `text` FROM {{table}} WHERE `id` IN (".implode(', ', $GetMassMsgs).");",
+                            'messages'
+                        );
                     }
                     else
                     {
-                        $QryGetMassMsg = doquery("SELECT `id`, `type`, `subject`, `text`, `from` FROM {{table}} WHERE `id` IN (".implode(', ', $GetMassMsgs).");", 'messages');
+                        $SQLResult_GetMassMessages = doquery(
+                            "SELECT `id`, `type`, `subject`, `text`, `from` FROM {{table}} WHERE `id` IN (".implode(', ', $GetMassMsgs).");",
+                            'messages'
+                        );
                     }
-                    while($CopyData = mysql_fetch_assoc($QryGetMassMsg))
+
+                    while($CopyData = $SQLResult_GetMassMessages->fetch_assoc())
                     {
                         if($CopyData['type'] == 80 OR $CopyData['type'] == 2)
                         {
@@ -1193,12 +1291,16 @@ switch($_GET['mode'])
 
     default:
         // Show Message Categories
-        $GetCounters = doquery("SELECT `type`, `read`, `Thread_ID`, `Thread_IsLast`, COUNT(*) AS `Count` FROM {{table}} WHERE `id_owner` = {$_User['id']} AND `deleted` = false GROUP BY `type`, `read`, `Thread_ID`, `Thread_IsLast` ORDER BY `Thread_IsLast` DESC;", 'messages');
-        if(mysql_num_rows($GetCounters) > 0)
+        $SQLResult_GetMessageCategoriesCounters = doquery(
+            "SELECT `type`, `read`, `Thread_ID`, `Thread_IsLast`, COUNT(*) AS `Count` FROM {{table}} WHERE `id_owner` = {$_User['id']} AND `deleted` = false GROUP BY `type`, `read`, `Thread_ID`, `Thread_IsLast` ORDER BY `Thread_IsLast` DESC;",
+            'messages'
+        );
+
+        if($SQLResult_GetMessageCategoriesCounters->num_rows > 0)
         {
             $SeenThreads = array();
             $ThreadMainTypes = array();
-            while($Counter = mysql_fetch_assoc($GetCounters))
+            while($Counter = $SQLResult_GetMessageCategoriesCounters->fetch_assoc())
             {
                 // Handler TypeCount
                 if($_UseThreads AND $Counter['Thread_ID'] > 0)

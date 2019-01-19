@@ -4,6 +4,25 @@ include('includes/phpBench.php'); $_BenchTool = new phpBench();
 if(!empty($_BenchTool)){ $_BenchTool->simpleCountStart(false, 'telemetry__c'); }
 
 session_start();
+
+ini_set('default_charset', 'UTF-8');
+
+$_GameConfig = array();
+$_User = array();
+$_Lang = array();
+$_DBLink = '';
+$ForceIPnUALog = false;
+$Common_TimeNow = time();
+
+define('DEFAULT_SKINPATH', 'skins/epicblue/');
+define('TEMPLATE_DIR', 'templates/');
+define('TEMPLATE_NAME', 'default_template');
+define('DEFAULT_LANG', 'pl');
+
+if(!empty($_BenchTool)){ $_BenchTool->simpleCountStart(false, 'telemetry__c_maininc'); }
+
+include($_EnginePath.'includes/constants.php');
+
 if($_SERVER['SERVER_ADDR'] == '127.0.0.1' OR $_SERVER['SERVER_ADDR'] == '::1')
 {
     // We are on Localhost
@@ -24,21 +43,6 @@ else
     }
 }
 
-ini_set('default_charset', 'UTF-8');
-
-$_GameConfig = array();
-$_User = array();
-$_Lang = array();
-$_DBLink = '';
-$ForceIPnUALog = false;
-$Common_TimeNow = time();
-
-define('DEFAULT_SKINPATH', 'skins/epicblue/');
-define('TEMPLATE_DIR', 'templates/');
-define('TEMPLATE_NAME', 'default_template');
-define('DEFAULT_LANG', 'pl');
-
-include($_EnginePath.'includes/constants.php');
 if(defined('INSTALL_NOTDONE'))
 {
     header('Location: ./install/');
@@ -58,6 +62,8 @@ include($_EnginePath.'includes/vars.php');
 include($_EnginePath.'includes/db.php');
 include($_EnginePath.'includes/strings.php');
 
+if(!empty($_BenchTool)){ $_BenchTool->simpleCountStop(); }
+
 // Load game configuration
 if(isset($_MemCache->GameConfig))
 {
@@ -67,7 +73,7 @@ else
 {
     $Query_GetGameConfig = "SELECT * FROM {{table}};";
     $Result_GetGameConfig = doquery($Query_GetGameConfig, 'config');
-    while($FetchData = mysql_fetch_assoc($Result_GetGameConfig))
+    while($FetchData = $Result_GetGameConfig->fetch_assoc())
     {
         $_GameConfig[$FetchData['config_name']] = $FetchData['config_value'];
     }
@@ -437,7 +443,7 @@ if(isLogged())
                 }
                 else
                 {
-                    if(IN_RULES !== true)
+                    if(!defined("IN_RULES") || IN_RULES !== true)
                     {
                         header('Location: rules.php');
                         safeDie();
@@ -459,10 +465,10 @@ if(isLogged())
                 $Query_SelectPolls .= "LEFT JOIN `{{prefix}}poll_votes` AS `votes` ON `votes`.`poll_id` = `polls`.`id` AND `votes`.`user_id` = {$_User['id']} ";
                 $Query_SelectPolls .= "WHERE `polls`.`open` = 1 AND `polls`.`obligatory` = 1;";
                 $SelectObligatoryPolls = doquery($Query_SelectPolls, 'polls');
-                if(mysql_num_rows($SelectObligatoryPolls) > 0)
+                if($SelectObligatoryPolls->num_rows > 0)
                 {
                     $PollsCount = 0;
-                    while($SelectObligatoryPollsData = mysql_fetch_assoc($SelectObligatoryPolls))
+                    while($SelectObligatoryPollsData = $SelectObligatoryPolls->fetch_assoc())
                     {
                         if($SelectObligatoryPollsData['vote_id'] <= 0)
                         {

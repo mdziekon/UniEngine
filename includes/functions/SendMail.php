@@ -20,7 +20,9 @@ function SendMail($to, $title, $body, $From = '', $MoreThanOne = false, $CloseCo
 
     if($__MailerInc !== TRUE)
     {
-        require "{$_EnginePath}includes/phpmailer/class.phpmailer.php";
+        require "{$_EnginePath}vendor/phpmailer/phpmailer/src/PHPMailer.php";
+        require "{$_EnginePath}vendor/phpmailer/phpmailer/src/SMTP.php";
+        require "{$_EnginePath}vendor/phpmailer/phpmailer/src/Exception.php";
         $__MailerInc = TRUE;
     }
 
@@ -39,7 +41,7 @@ function SendMail($to, $title, $body, $From = '', $MoreThanOne = false, $CloseCo
 
         if(empty($Object))
         {
-            $Object = new PHPMailer(true);
+            $Object = new PHPMailer\PHPMailer\PHPMailer(true);
 
             if(MAILER_SMTP_USE)
             {
@@ -73,7 +75,7 @@ function SendMail($to, $title, $body, $From = '', $MoreThanOne = false, $CloseCo
 
         $Object->Send();
 
-        $Object->RemoveToAddress($to);
+        $Object->clearAllRecipients();
 
         return true;
     }
@@ -89,7 +91,9 @@ function SendMassMail($to, $title, $body, $From = '')
 
     if($__MailerInc !== TRUE)
     {
-        require "{$_EnginePath}includes/phpmailer/class.phpmailer.php";
+        require "{$_EnginePath}vendor/phpmailer/phpmailer/src/PHPMailer.php";
+        require "{$_EnginePath}vendor/phpmailer/phpmailer/src/SMTP.php";
+        require "{$_EnginePath}vendor/phpmailer/phpmailer/src/Exception.php";
         $__MailerInc = TRUE;
     }
 
@@ -106,7 +110,7 @@ function SendMassMail($to, $title, $body, $From = '')
             $FromName = $From;
         }
 
-        $Object = new PHPMailer(true);
+        $Object = new PHPMailer\PHPMailer\PHPMailer(true);
 
         if(MAILER_SMTP_USE)
         {

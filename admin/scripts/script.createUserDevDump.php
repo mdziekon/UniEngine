@@ -22,13 +22,13 @@ if($SelectedUID > 0)
     $WhereClausure3 = " WHERE `fleet_owner` = {$SelectedUID}";
 }
 
-$GetUsers = doquery("SELECT * FROM {{table}}{$WhereClausure1};", 'users');
-$GetPlanets = doquery("SELECT * FROM {{table}}{$WhereClausure2};", 'planets');
-$GetFleets = doquery("SELECT * FROM {{table}}{$WhereClausure3};", 'fleets');
+$SQLResult_GetUsers = doquery("SELECT * FROM {{table}}{$WhereClausure1};", 'users');
+$SQLResult_GetPlanets = doquery("SELECT * FROM {{table}}{$WhereClausure2};", 'planets');
+$SQLResult_GetFleets = doquery("SELECT * FROM {{table}}{$WhereClausure3};", 'fleets');
 
-if(mysql_num_rows($GetUsers) > 0)
+if($SQLResult_GetUsers->num_rows > 0)
 {
-    while($UserData = mysql_fetch_assoc($GetUsers))
+    while($UserData = $SQLResult_GetUsers->fetch_assoc())
     {
         $DevDump[$UserData['id']] = array('planets' => array(), 'techs' => array(), 'inflight' => array());
         $Point = &$DevDump[$UserData['id']]['techs'];
@@ -41,9 +41,9 @@ if(mysql_num_rows($GetUsers) > 0)
         }
     }
 
-    if(mysql_num_rows($GetPlanets) > 0)
+    if($SQLResult_GetPlanets->num_rows > 0)
     {
-        while($PlanetData = mysql_fetch_assoc($GetPlanets))
+        while($PlanetData = $SQLResult_GetPlanets->fetch_assoc())
         {
             if($PlanetData['id_owner'] <= 0)
             {
@@ -96,9 +96,9 @@ if(mysql_num_rows($GetUsers) > 0)
             }
         }
 
-        if(mysql_num_rows($GetFleets) > 0)
+        if($SQLResult_GetFleets->num_rows > 0)
         {
-            while($FleetData = mysql_fetch_assoc($GetFleets))
+            while($FleetData = $SQLResult_GetFleets->fetch_assoc())
             {
                 $Point = &$DevDump[$FleetData['fleet_owner']]['inflight'][$FleetData['fleet_id']];
                 $Point = rtrim($FleetData['fleet_array'], ';');

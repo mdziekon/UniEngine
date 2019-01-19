@@ -30,7 +30,7 @@ function SendNotification($AllyID, $AllyRanks, $Message)
         $Query_GetUsers .= "`ally_id` = {$AllyID} AND `ally_rank_id` IN ({$RanksID})";
         $Query_GetUsers .= "; -- ally.changepact.php|SendNotification|GetUsers";
         $Result_GetUsers = doquery($Query_GetUsers, 'users');
-        while($FetchData = mysql_fetch_assoc($Result_GetUsers))
+        while($FetchData = $Result_GetUsers->fetch_assoc())
         {
             $UserIDs[] = $FetchData['id'];
         }

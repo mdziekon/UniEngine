@@ -38,10 +38,14 @@ $parse['defenses'] = parsetemplate($HeaderTpl, $bloc);
 $parse['last_count_was'] = $_Lang['last_count_was'];
 $parse['last_count_time'] = prettyDate('d m Y, H:i:s', $_GameConfig['last_update'], 1);
 
-$Records = doquery("SELECT `r`.*, `u`.`username` FROM {{table}} AS `r` LEFT JOIN {{prefix}}users AS `u` ON `u`.`id` = `r`.`id_owner` ORDER BY `r`.`element` ASC", 'records');
-if(mysql_num_rows($Records) > 0)
+$SQLResult_Records = doquery(
+    "SELECT `r`.*, `u`.`username` FROM {{table}} AS `r` LEFT JOIN {{prefix}}users AS `u` ON `u`.`id` = `r`.`id_owner` ORDER BY `r`.`element` ASC",
+    'records'
+);
+
+if($SQLResult_Records->num_rows > 0)
 {
-    while($Rec = mysql_fetch_assoc($Records))
+    while($Rec = $SQLResult_Records->fetch_assoc())
     {
         $Row = array();
 

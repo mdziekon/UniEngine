@@ -115,7 +115,7 @@ else
 
                             if($AllowProceed === true)
                             {
-                                $_FormData_Reason = mysql_real_escape_string($_FormData_Reason);
+                                $_FormData_Reason = getDBLink()->escape_string($_FormData_Reason);
                                 if(count($_FormData_Missions) == count($_Vars_FleetMissions['all']))
                                 {
                                     $_FormData_Missions = array('0');
@@ -272,7 +272,7 @@ else
                             {
                                 if(!($_FormData_Type == 1 AND $GetEditRow['EndTime'] <= $Now AND $_FormData_PostEndTime < $GetEditRow['PostEndTime']))
                                 {
-                                    $_FormData_Reason = mysql_real_escape_string($_FormData_Reason);
+                                    $_FormData_Reason = getDBLink()->escape_string($_FormData_Reason);
                                     if(count($_FormData_Missions) == count($_Vars_FleetMissions['all']))
                                     {
                                         $_FormData_Missions = array('0');
@@ -513,22 +513,22 @@ if(!empty($CombineData))
 {
     foreach($CombineData as $Data)
     {
-        if(mysql_num_rows($Data['Result']) > 0)
+        if($Data['Result']->num_rows > 0)
         {
             $_Lang['Insert_'.$Data['Prefix']] = $Parsed_List_Headers;
-            while($SFBData = mysql_fetch_assoc($Data['Result']))
+            while($SFBData = $Data['Result']->fetch_assoc())
             {
                 $SFBData['RowType'] = $Data['RowType'];
                 $SFBData['RowPrefix'] = $Data['Prefix'];
                 $SFBRows[] = $SFBData;
-                $GetUsernames[] = $SFBData['AdminID'];
+                $SQLQueryData_GetUsernames[] = $SFBData['AdminID'];
                 if($SFBData['Type'] == 2)
                 {
-                    $GetUsernames[] = $SFBData['ElementID'];
+                    $SQLQueryData_GetUsernames[] = $SFBData['ElementID'];
                 }
                 if($SFBData['Type'] == 3)
                 {
-                    $GetPlanetsData[] = $SFBData['ElementID'];
+                    $SQLQueryData_GetPlanets[] = $SFBData['ElementID'];
                 }
             }
         }
@@ -542,23 +542,31 @@ if(!empty($CombineData))
     {
         include($_EnginePath.'includes/functions/InsertJavaScriptChronoApplet.php');
 
-        if(!empty($GetUsernames))
+        if(!empty($SQLQueryData_GetUsernames))
         {
-            $GetUsernames = doquery("SELECT `id`, `username` FROM {{table}} WHERE `id` IN (".implode(', ', $GetUsernames).");", 'users');
-            if(mysql_num_rows($GetUsernames) > 0)
+            $SQLResult_GetUsernames = doquery(
+                "SELECT `id`, `username` FROM {{table}} WHERE `id` IN (".implode(', ', $SQLQueryData_GetUsernames).");",
+                'users'
+            );
+
+            if($SQLResult_GetUsernames->num_rows > 0)
             {
-                while($LoadData = mysql_fetch_assoc($GetUsernames))
+                while($LoadData = $SQLResult_GetUsernames->fetch_assoc())
                 {
                     $Usernames[$LoadData['id']] = $LoadData['username'];
                 }
             }
         }
-        if(!empty($GetPlanetsData))
+        if(!empty($SQLQueryData_GetPlanets))
         {
-            $GetPlanetsData = doquery("SELECT `id`, `name`, `galaxy`, `system`, `planet`, `planet_type` FROM {{table}} WHERE `id` IN (".implode(', ', $GetPlanetsData).");", 'planets');
-            if(mysql_num_rows($GetPlanetsData) > 0)
+            $SQLResult_GetPlanets = doquery(
+                "SELECT `id`, `name`, `galaxy`, `system`, `planet`, `planet_type` FROM {{table}} WHERE `id` IN (".implode(', ', $SQLQueryData_GetPlanets).");",
+                'planets'
+            );
+
+            if($SQLResult_GetPlanets->num_rows > 0)
             {
-                while($LoadData = mysql_fetch_assoc($GetPlanetsData))
+                while($LoadData = $SQLResult_GetPlanets->fetch_assoc())
                 {
                     $Planets[$LoadData['id']] = $LoadData;
                 }

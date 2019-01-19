@@ -22,7 +22,7 @@ if(CheckAuth('supportadmin'))
         // If Everything is OK, so set variables and send mails!
         if(!empty($_POST['tresc']) AND !empty($_POST["temat"]))
         {
-            $GetUsers = doquery("SELECT `id` FROM {{table}}", "users");
+            $SQLResult_GetUsers = doquery("SELECT `id` FROM {{table}}", "users");
             $Time = time();
 
             $_POST['tresc'] = stripslashes(trim($_POST['tresc']));
@@ -36,7 +36,8 @@ if(CheckAuth('supportadmin'))
             $Subject = substr(strip_tags($_POST['temat']), 0, $_MaxLength_Subject);
             $Message = substr(strip_tags($_POST['tresc']), 0, $_MaxLength_Text);
 
-            while($UsersData = mysql_fetch_assoc($GetUsers))
+            $UserList = [];
+            while($UsersData = $SQLResult_GetUsers->fetch_assoc())
             {
                 $UserList[] = $UsersData['id'];
             }

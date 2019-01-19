@@ -31,11 +31,6 @@ $UniData = array
     ),
 );
 
-if(REGISTER_RECAPTCHA_ENABLE)
-{
-    require($_EnginePath.'includes/recaptchalib.php');
-}
-
 // Create registry form
 $parse = $_Lang;
 
@@ -81,9 +76,18 @@ foreach($UniData as $UniNo => $This)
 $parse['GameURL'] = GAMEURL_STRICT;
 $parse['GameName'] = $_GameConfig['game_name'];
 $parse['Insert_JSLang'] = json_encode($_Lang['JSLang']);
+
 if(REGISTER_RECAPTCHA_ENABLE)
 {
-    $parse['ReCaptchaCode'] = recaptcha_get_html(REGISTER_RECAPTCHA_PUBLICKEY);
+    $RecaptchaJSSetupTpl = gettemplate('registry_form_recaptcha_jssetup');
+
+    $parse['PHPInject_RecaptchaJSSetup'] = parsetemplate(
+        $RecaptchaJSSetupTpl,
+        [
+            'Recaptcha_Sitekey' => REGISTER_RECAPTCHA_PUBLICKEY,
+            'Recaptcha_Lang' => 'pl'
+        ]
+    );
 }
 $page = parsetemplate(gettemplate('registry_form'), $parse);
 

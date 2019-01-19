@@ -74,7 +74,7 @@ function DeleteSelectedUser($UserID)
 
     // Delete all data
     $Result_GetUsers = doquery($Query_GetUsers, 'users');
-    if(mysql_num_rows($Result_GetUsers) > 0)
+    if($Result_GetUsers->num_rows > 0)
     {
         // --- Save necessary UserData
         $SaveData = array();
@@ -82,7 +82,7 @@ function DeleteSelectedUser($UserID)
         $AllysToDelete = array();
         $GetDeclataions = array();
         $UsersInDeclarations = array();
-        while($Data = mysql_fetch_assoc($Result_GetUsers))
+        while($Data = $Result_GetUsers->fetch_assoc())
         {
             $SaveData[] = $Data;
             if($Data['ally_id'] > 0)
@@ -114,7 +114,7 @@ function DeleteSelectedUser($UserID)
         // --- Delete Planets
         $GalaxyImplode = array();
         $Result_GetPlanets = doquery($Query_GetPlanets, 'planets');
-        while($Data = mysql_fetch_assoc($Result_GetPlanets))
+        while($Data = $Result_GetPlanets->fetch_assoc())
         {
             $GalaxyImplode[] = $Data['id'];
         }
@@ -178,11 +178,12 @@ function DeleteSelectedUser($UserID)
             $GetDeclataions_Count = count($GetDeclataions);
             $GetDeclataions = implode(',', $GetDeclataions);
             $Result_GetDeclarations = doquery(sprintf($Query_GetDeclarations, $GetDeclataions, $GetDeclataions_Count), 'declarations');
-            if(mysql_num_rows($Result_GetDeclarations) > 0)
+            if($Result_GetDeclarations->num_rows > 0)
             {
-                while($Data = mysql_fetch_assoc($Result_GetDeclarations))
+                while($Data = $Result_GetDeclarations->fetch_assoc())
                 {
                     $Data['users'] = explode(',', $Data['users']);
+                    $Data['thisUsers'] = [];
                     foreach($Data['users'] as $ThisUser)
                     {
                         $ThisUser = str_replace('|', '', $ThisUser);

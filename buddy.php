@@ -47,7 +47,7 @@ if($Command == 'accept')
     if($UID > 0)
     {
         doquery("UPDATE {{table}} SET `active` = 1 WHERE `sender` = {$UID} AND `owner` = {$_User['id']} AND `active` = 0;", 'buddy');
-        if(mysql_affected_rows() == 1)
+        if(getDBLink()->affected_rows == 1)
         {
             $Message['msg_id'] = '090';
             $Message['args'] = array($_User['id'], $_User['username']);
@@ -78,7 +78,7 @@ else if($Command == 'refuse')
     if($UID > 0)
     {
         doquery("DELETE FROM {{table}} WHERE `sender` = {$UID} AND `owner` = {$_User['id']} AND `active` = 0;", 'buddy');
-        if(mysql_affected_rows() == 1)
+        if(getDBLink()->affected_rows == 1)
         {
             $Message['msg_id'] = '091';
             $Message['args'] = array($_User['id'], $_User['username']);
@@ -105,8 +105,12 @@ else if($Command == 'rmv')
     $Command = '';
     if($UID > 0)
     {
-        doquery("DELETE FROM {{table}} WHERE ((`sender` = {$UID} AND `owner` = {$_User['id']}) OR (`owner` = {$UID} AND `sender` = {$_User['id']})) AND `active` = 1;", 'buddy');
-        if(mysql_affected_rows() == 1)
+        doquery(
+            "DELETE FROM {{table}} WHERE ((`sender` = {$UID} AND `owner` = {$_User['id']}) OR (`owner` = {$UID} AND `sender` = {$_User['id']})) AND `active` = 1;",
+            'buddy'
+        );
+
+        if(getDBLink()->affected_rows == 1)
         {
             $Message['msg_id'] = '092';
             $Message['args'] = array($_User['id'], $_User['username']);
@@ -133,8 +137,12 @@ else if($Command == 'del')
     $Command = '';
     if($UID > 0)
     {
-        doquery("DELETE FROM {{table}} WHERE `owner` = {$UID} AND `sender` = {$_User['id']} AND `active` = 0;", 'buddy');
-        if(mysql_affected_rows() == 1)
+        doquery(
+            "DELETE FROM {{table}} WHERE `owner` = {$UID} AND `sender` = {$_User['id']} AND `active` = 0;",
+            'buddy'
+        );
+
+        if(getDBLink()->affected_rows == 1)
         {
             $Parse['Insert_MsgBoxText'] = $_Lang['Success_Deleted'];
             $Parse['Insert_MsgBoxColor'] = 'lime';
@@ -198,7 +206,7 @@ if(empty($Command))
         $Query .= "ORDER BY `buddy`.`active` ASC, `buddy`.`date` DESC LIMIT {$LimitStart}, {$_PerPage};";
         $Get_Buddy = doquery($Query, 'buddy');
 
-        while($BuddyData = mysql_fetch_assoc($Get_Buddy))
+        while($BuddyData = $Get_Buddy->fetch_assoc())
         {
             $BuddyData['UID'] = ($BuddyData['owner'] == $_User['id'] ? $BuddyData['sender'] : $BuddyData['owner']);
             $BuddyParse = array
@@ -360,7 +368,7 @@ else if($Command == 'edit' OR $Command == 'add')
     if(isset($_POST['send']) && $_POST['send'] == '1')
     {
         $InsertClean['Text'] = substr(trim(stripslashes($_POST['text'])), 0, $_MaxLength);
-        $Insert['Text'] = mysql_real_escape_string($InsertClean['Text']);
+        $Insert['Text'] = getDBLink()->escape_string($InsertClean['Text']);
 
         if(!empty($Insert['Text']))
         {

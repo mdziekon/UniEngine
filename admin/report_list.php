@@ -43,8 +43,12 @@ if(!empty($_GET['action']))
     $ID = isset($_GET['id']) ? floor(floatval($_GET['id'])) : 0;
     if($ID > 0)
     {
-        $GetDeclaration = doquery("SELECT `id`, `status` FROM {{table}} WHERE `id` = {$ID} LIMIT 1;", 'reports');
-        if(mysql_num_rows($GetDeclaration) == 1)
+        $SQLResult_GetDeclaration = doquery(
+            "SELECT `id`, `status` FROM {{table}} WHERE `id` = {$ID} LIMIT 1;",
+            'reports'
+        );
+
+        if($SQLResult_GetDeclaration->num_rows == 1)
         {
             switch($_GET['action'])
             {
@@ -84,7 +88,10 @@ if($ShowAll == '0')
 {
     $ShowAllWhere = "WHERE `status` NOT IN (9,10)";
 }
-$query = doquery("SELECT {{table}}.*, `users`.`username`, `users1`.`username` AS `reported_user` FROM {{table}} LEFT JOIN {{prefix}}users AS `users` ON `sender_id` = `users`.`id` LEFT JOIN {{prefix}}users AS `users1` ON `report_user` = `users1`.`id` {$ShowAllWhere} ORDER BY {{table}}.`date` DESC;", 'reports');
+$SQLResult_GetReports = doquery(
+    "SELECT {{table}}.*, `users`.`username`, `users1`.`username` AS `reported_user` FROM {{table}} LEFT JOIN {{prefix}}users AS `users` ON `sender_id` = `users`.`id` LEFT JOIN {{prefix}}users AS `users1` ON `report_user` = `users1`.`id` {$ShowAllWhere} ORDER BY {{table}}.`date` DESC;",
+    'reports'
+);
 
 $parse = $_Lang;
 $parse['adm_ul_table'] = '';
@@ -93,9 +100,9 @@ if(!empty($MSG))
     $parse['system_msg'] = '<tr><td class="c" colspan="9" style="padding: 5px; color: '.$MSGColor.'">'.$MSG.'</td></tr><tr style="visibility: hidden;"><td><br/></td></tr>';
 }
 
-if(mysql_num_rows($query) > 0)
+if($SQLResult_GetReports->num_rows > 0)
 {
-    while($u = mysql_fetch_assoc($query))
+    while($u = $SQLResult_GetReports->fetch_assoc())
     {
         $Bloc['data_id'] = $u['id'];
         $Bloc['data_date'] = date('d.m.Y', $u['date']).' <br/><span class="lime">'.date('H:i:s', $u['date']).'</span>';

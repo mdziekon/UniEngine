@@ -1,6 +1,7 @@
 # UniEngine
 
 [![Build Status](https://travis-ci.org/mdziekon/UniEngine.svg?branch=master)](https://travis-ci.org/mdziekon/UniEngine)
+[![Release: Stable (latest)](https://img.shields.io/github/release/mdziekon/UniEngine.svg?label=release%3Astable&logo=github&logoColor=FFFFFF)](https://github.com/mdziekon/UniEngine/releases)
 
 OGame-clone browser based game engine.
 
@@ -8,6 +9,7 @@ OGame-clone browser based game engine.
 
 - [Requirements](#requirements)
 - [Installation](#installation)
+- [Updating from older versions](#updating-from-older-versions)
 - [Development guides](#development-guides)
 - [Credits](#credits)
 - [License](#license)
@@ -15,16 +17,16 @@ OGame-clone browser based game engine.
 ## Requirements
 
 - PHP
-    - ``>= 5.4``
-    - ``< 7.0``
+    - ``>= 7.0 && < 7.3``
+    - ``>= 5.4`` (deprecated)
+- Composer
+    - ``>= 1.6``
 - MySQL
     - ``>= 5``
 - A webserver (eg. nginx)
 
-### Development requirements
+### (Additional) Development requirements
 
-- Composer
-    - ``>= 1.6``
 - Node.js
     - ``>= 11``
 
@@ -40,19 +42,37 @@ OGame-clone browser based game engine.
             - (one-off, installation purposes)
         - ``tmp/``
             - (permanent, eg. for Smarty cache)
-2. Setup a MySQL server.
-3. Create a DB user and DB database for your game server.
-4. Move source files of the project to your webserver's directory.
-5. Run installation wizard: http://your_server_address:port/install
-6. Remove ``install/`` directory
+1. Setup a MySQL server.
+    - Disable ``STRICT_TRANS_TABLES`` mode.
+1. Create a DB user and DB database for your game server.
+1. Move source files of the project to your webserver's directory.
+1. Install PHP dependencies.
+    - ``composer install --no-dev``
+1. Run installation wizard: http://your_server_address:port/install
+1. Remove ``install/`` directory
+
+## Updating from older versions
+
+1. Check [__Releases__ section](https://github.com/mdziekon/UniEngine/releases) to see if migration scripts have been provided between your current version and the latest version you want to upgrade to.
+    - In case of missing migration scripts, **do not try to use the auto-migrate functionality!** It may completely break your game server.
+    - In case of major breaking changes (which for some reason were not possible to auto-migrate), there should be a release note explaining why and what manual actions have to be performed to proceed with migration.
+1. Close your game server (prevent players from accessing the game).
+1. Perform a full backup of your game server's state (database, configuration, files, etc...).
+1. Make sure that your PHP server has write access to game server's files (in case if one of the migration scripts might need this).
+1. Update files to the desired version.
+1. Update PHP dependencies.
+    - ``composer install --no-dev``
+1. Login as root admin (or any other account with ``programmer`` role).
+1. Run ``/admin/updater.php`` script.
+1. Restart PHP server.
 
 ## Development guides
 
 ### Preparations
 
-1. Install PHP dependencies:
-    - ``composer install``
-2. Install Node.js dependencies:
+1. Install PHP dependencies (normal & dev):
+    - ``composer install --dev``
+1. Install Node.js dependencies:
     - ``npm ci``
 
 ### Available scripts

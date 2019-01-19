@@ -39,11 +39,14 @@ function MakeGraphs($Modes, $Scores, $Dimensions = array(), $OwnTooltipCode = fa
         return false;
     }
 
-    require($_EnginePath.'class/Smarty/Smarty.class.php');
-    $smarty = new Smarty;
-    $smarty->template_dir = $_EnginePath.TEMPLATE_DIR.TEMPLATE_NAME.'/';
-    $smarty->compile_dir = $_EnginePath.'/tmp/Smarty/Compile/';
-    $smarty->cache_dir = $_EnginePath.'/tmp/Smarty/Cache/';
+    require($_EnginePath.'vendor/smarty/smarty/libs/Smarty.class.php');
+
+    $smarty = new Smarty();
+
+    $smarty
+        ->addTemplateDir($_EnginePath . TEMPLATE_DIR . TEMPLATE_NAME . '/')
+        ->setCompileDir($_EnginePath . '/tmp/smarty/compiled/')
+        ->setCacheDir($_EnginePath . '/tmp/smarty/cached/');
 
     $graphs = array();
     $cx = new Context($Modes);
@@ -97,10 +100,10 @@ function MakeGraphs($Modes, $Scores, $Dimensions = array(), $OwnTooltipCode = fa
 
 class Context
 {
-    var $vendors;
-    var $modes;
+    var $vendors = [];
+    var $modes = [];
 
-    function Context($Modes)
+    function __construct($Modes)
     {
         $Vendors = array(array('id' => 1, 'name' => '', 'vendor' => '', 'browser' => ''));
         foreach($Vendors as $Index => $Data)
@@ -146,11 +149,11 @@ class RunFilter
     var $AllScores;
     var $run_points;
     var $runs;
-    var $runmap;
-    var $modemap;
-    var $series;
+    var $runmap = [];
+    var $modemap = [];
+    var $series = [];
 
-    function RunFilter($cx, $AllScores)
+    function __construct($cx, $AllScores)
     {
         $this->AllScores = $AllScores;
 
@@ -158,7 +161,6 @@ class RunFilter
 
         // Get the list of run IDs for this graph.
         $HasRuns = false;
-        $this->runmap = array();
         $RunMapID = 0;
         foreach($this->runs as $Index => $Data)
         {
@@ -235,7 +237,7 @@ class GraphBuilder
     var $runs;
     var $run_points;
 
-    function GraphBuilder(&$cx, &$filter)
+    function __construct(&$cx, &$filter)
     {
         $this->AllScores = $filter->AllScores;
         $this->runs = $filter->runs;

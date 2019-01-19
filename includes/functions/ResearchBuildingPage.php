@@ -20,13 +20,17 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePl
     $LabInQueue = false;
     if($_GameConfig['BuildLabWhileRun'] != 1)
     {
-        $CheckOtherPlanets = doquery("SELECT * FROM {{table}} WHERE `id_owner` = {$CurrentUser['id']} AND (`buildQueue` LIKE '31,%' OR `buildQueue` LIKE '%;31,%');", 'planets');
-        if(mysql_num_rows($CheckOtherPlanets) > 0)
+        $SQLResult_CheckOtherPlanets = doquery(
+            "SELECT * FROM {{table}} WHERE `id_owner` = {$CurrentUser['id']} AND (`buildQueue` LIKE '31,%' OR `buildQueue` LIKE '%;31,%');",
+            'planets'
+        );
+
+        if($SQLResult_CheckOtherPlanets->num_rows > 0)
         {
             include($_EnginePath.'/includes/functions/CheckLabInQueue.php');
 
             $Results['planets'] = array();
-            while($PlanetsData = mysql_fetch_assoc($CheckOtherPlanets))
+            while($PlanetsData = $SQLResult_CheckOtherPlanets->fetch_assoc())
             {
                 // Update Planet - Building Queue
                 $CheckLab = CheckLabInQueue($PlanetsData);

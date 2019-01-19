@@ -2,68 +2,86 @@
 
 if(!defined('INSIDE')){ die('Access Denied!');}
 
-class debug
-{
-    var $NestingPrevention = 0;
-    var $PreviousMessage = '';
-    function error($message)
-    {
+class DBErrorHandler {
+    var $isHandlingError = false;
+    var $lastErrorMessage = "";
+
+    function error($message) {
         global $_DBLink, $_User, $_EnginePath;
 
-        $this->NestingPrevention += 1;
-        if($this->NestingPrevention > 1)
-        {
-            trigger_error('<b>ErrorNesting Prevention!</b><br/>'.$this->PreviousMessage, E_USER_ERROR);
+        if ($this->isHandlingError) {
+            throw new RuntimeException(
+                "DBErrorHandler: Nesting Prevention!\n" .
+                $this->lastErrorMessage
+            );
         }
+
+        $this->isHandlingError = true;
+
         define('IN_ERROR', true);
 
-        if(LOCALHOST)
-        {
-            require($_EnginePath.'config.localhost.php');
-        }
-        else if(TESTSERVER)
-        {
-            require($_EnginePath.'config.testserver.php');
-        }
-        else
-        {
-            require($_EnginePath.'config.php');
+        if (LOCALHOST) {
+            require($_EnginePath . 'config.localhost.php');
+        } else if (TESTSERVER) {
+            require($_EnginePath . 'config.testserver.php');
+        } else {
+            require($_EnginePath . 'config.php');
         }
 
-        if(!$_DBLink)
-        {
-            trigger_error('DBDriver Connection Error #01<br/>', E_USER_ERROR);
+        if (!$_DBLink) {
+            throw new RuntimeException("DBErrorHandler: DBDriver Connection Error #01");
         }
-        if(empty($_User['id']))
-        {
+
+        if (empty($_User['id'])) {
             $_User['id'] = '0';
         }
-        $Replace_Search        = array('{{table}}', '{{prefix}}');
-        $Replace_Replace    = array($__ServerConnectionSettings['prefix'].'errors', $__ServerConnectionSettings['prefix']);
 
-        $query = "INSERT INTO {{table}} SET `error_sender` = {$_User['id']}, `error_time` = UNIX_TIMESTAMP(), `error_text` = '".mysql_real_escape_string($message)."';";
-        $query = str_replace($Replace_Search, $Replace_Replace, $query);
-        mysql_query($query) or trigger_error('DBDriver Fatal Error #01<br/>'.mysql_error(), E_USER_ERROR);
+        $Replace_Search = [
+            '{{table}}',
+            '{{prefix}}'
+        ];
+        $Replace_Replace = [
+            $__ServerConnectionSettings['prefix'] . 'errors',
+            $__ServerConnectionSettings['prefix']
+        ];
 
-        $query = "SELECT LAST_INSERT_ID() as `id` FROM {{table}} LIMIT 1;";
-        $query = str_replace($Replace_Search, $Replace_Replace, $query);
-        $q = mysql_fetch_assoc(mysql_query($query)) or trigger_error('DBDriver Fatal Error #02<br/>'.mysql_error(), E_USER_ERROR);
+        $EscapedMessage = $_DBLink->escape_string($message);
 
-        $ErrorMsg = 'An Error occured!<br/>Error ID: <b>'.$q['id'].'</b>';
-        $this->PreviousMessage = $ErrorMsg;
+        $SQLQuery_InsertError = (
+            "INSERT INTO {{table}} SET " .
+            "`error_sender` = {$_User['id']}, " .
+            "`error_time` = UNIX_TIMESTAMP(), " .
+            "`error_text` = '{$EscapedMessage}' " .
+            ";"
+        );
+        $SQLQuery_InsertError = str_replace(
+            $Replace_Search,
+            $Replace_Replace,
+            $SQLQuery_InsertError
+        );
 
-        if(!function_exists('message'))
-        {
-            echo $ErrorMsg;
+        $_DBLink->query($SQLQuery_InsertError);
+
+        if ($_DBLink->errno) {
+            throw new RuntimeException(
+                "DBDriver Fatal Error #01\n" .
+                $_DBLink->error
+            );
         }
-        else
-        {
+
+        $ErrorID = $_DBLink->insert_id;
+
+        $ErrorMsg = 'An Error occured!<br/>Error ID: <b>'. $ErrorID .'</b>';
+        $this->lastErrorMessage = $ErrorMsg;
+
+        if (!function_exists('message')) {
+            echo $ErrorMsg;
+        } else {
             message($ErrorMsg, 'System Error!');
         }
 
-        $this->NestingPrevention -= 1;
+        $_DBLink->close();
 
-        mysql_close($_DBLink);
         die();
     }
 }

@@ -78,12 +78,17 @@ if(isset($_POST['save']) && $_POST['save'] == 'yes')
                 $Where[] = "`username` IN (".implode(', ', $BanUsers['name']).")";
             }
 
-            $CheckUsers = doquery("SELECT `id`, `username`, `ban_endtime` FROM {{table}} WHERE ".implode(' OR ', $Where).";", 'users');
+            $SQLResult_CheckUsers = doquery(
+                "SELECT `id`, `username`, `ban_endtime` FROM {{table}} WHERE ".implode(' OR ', $Where).";",
+                'users'
+            );
+
             $BanUsers = array();
             $GetBanRows = array();
-            if(mysql_num_rows($CheckUsers) > 0)
+
+            if($SQLResult_CheckUsers->num_rows > 0)
             {
-                while($Data = mysql_fetch_assoc($CheckUsers))
+                while($Data = $SQLResult_CheckUsers->fetch_assoc())
                 {
                     $BanUsers[$Data['id']] = $Data;
                     if($Data['ban_endtime'] > $Now)
@@ -171,13 +176,14 @@ if(isset($_POST['save']) && $_POST['save'] == 'yes')
                     $_POST['reason'] = trim(strip_tags(stripslashes($_POST['reason'])), '<br><br/>');
                     if(!empty($_POST['reason']))
                     {
-                        $Reason = mysql_real_escape_string($_POST['reason']);
+                        $Reason = getDBLink()->escape_string($_POST['reason']);
                     }
                     else
                     {
                         $Reason = '';
                     }
 
+                    $UserLinks = [];
                     $UserLinkTPL = gettemplate('admin/banuser_userlink');
                     foreach($BanUsers as $UserID => $UserData)
                     {
@@ -201,10 +207,11 @@ if(isset($_POST['save']) && $_POST['save'] == 'yes')
                             $SelectBanRows .= "`Active` = 1 AND `EndTime` > {$Now} AND `UserID` IN ({$GetBanRows}) ";
                             $SelectBanRows .= "ORDER BY `EndTime` DESC;";
 
-                            $SelectBanRows = doquery($SelectBanRows, 'bans');
-                            if(mysql_num_rows($SelectBanRows) > 0)
+                            $SQLResult_GetBans = doquery($SelectBanRows, 'bans');
+
+                            if($SQLResult_GetBans->num_rows > 0)
                             {
-                                while($BanRow = mysql_fetch_assoc($SelectBanRows))
+                                while($BanRow = $SQLResult_GetBans->fetch_assoc())
                                 {
                                     $InsertBans[] = "({$BanRow['ID']}, 0, 0, 0, '', 0, 0, 0, 0, 0, 0, 0, 0, 0)";
                                 }

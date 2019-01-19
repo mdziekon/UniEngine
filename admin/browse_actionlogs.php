@@ -1117,6 +1117,7 @@ if(CheckAuth('supportadmin'))
 
         $DirPath= './../action_logs/'.$UIDMarker;
         $ScanDir= scandir($DirPath);
+        $Logs = [];
         foreach($ScanDir as $Filename)
         {
             if(preg_match("/^Log\_U\_{$UIDMarker}\_D\_([0-9]{4}\_[0-9]{2}\_[0-9]{2})\.php$/D", $Filename, $Matches))
