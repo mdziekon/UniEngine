@@ -443,7 +443,7 @@ if(isLogged())
                 }
                 else
                 {
-                    if(IN_RULES !== true)
+                    if(!defined("IN_RULES") || IN_RULES !== true)
                     {
                         header('Location: rules.php');
                         safeDie();
