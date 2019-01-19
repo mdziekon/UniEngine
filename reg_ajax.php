@@ -121,7 +121,10 @@ if(isset($_GET['register']))
         $CaptchaResponse = null;
         $RecaptchaServerIdentification = $_SERVER['SERVER_NAME'];
 
-        if (REGISTER_RECAPTCHA_SERVERIP_AS_HOSTNAME) {
+        if (
+            defined("REGISTER_RECAPTCHA_SERVERIP_AS_HOSTNAME") &&
+            REGISTER_RECAPTCHA_SERVERIP_AS_HOSTNAME
+        ) {
             $RecaptchaServerIdentification = $_SERVER['SERVER_ADDR'];
         }
 
