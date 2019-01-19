@@ -12,7 +12,7 @@ function AddBuildingToQueue(&$CurrentPlanet, $CurrentUser, $Element, $AddMode = 
     }
     else
     {
-        $QueueArray = '';
+        $QueueArray = [];
         $ActualCount = 0;
     }
 
