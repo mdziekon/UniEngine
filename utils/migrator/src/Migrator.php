@@ -64,6 +64,18 @@ class Migrator {
         return $content;
     }
 
+    private function loadLastMigrationID() {
+        $lastMigrationID = $this->loadFile("./config/latest-migration");
+
+        $isValid = preg_match("/^\d{8}_\d{6}$/", $lastMigrationID);
+
+        if (!($isValid === 1)) {
+            throw new \Exception("Invalid migration ID in \"config/latest-migration\"");
+        }
+
+        return $lastMigrationID;
+    }
+
     private function loadMigrationEntries() {
         $migrationsPath = $this->getRealPath("./migrations");
 
