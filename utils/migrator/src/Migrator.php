@@ -44,10 +44,14 @@ class Migrator {
 
         $migrations = $this->getMigrationsNewerThan($migrations, $latestAppliedID);
 
-        $lastAppliedID = $this->applyMigrations($migrations, $options);
+        $migrationResult = $this->applyMigrations($migrations, $options);
 
-        if ($lastAppliedID !== null) {
-            $this->saveMigrationID($lastAppliedID);
+        if ($migrationResult["migrationsApplied"] > 0) {
+            $lastMigrationID = $migrationResult["lastAppliedMigrationID"];
+
+            $this->printLog("> Saving \"{$lastMigrationID}\" as the last applied migration ID");
+
+            $this->saveMigrationID($lastMigrationID);
         } else {
             $this->printLog("> No migrations applied");
         }
