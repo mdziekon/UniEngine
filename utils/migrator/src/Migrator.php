@@ -5,16 +5,26 @@ namespace UniEngine\Utils\Migrations;
 class Migrator {
     private $rootPath;
 
-    //  $options:
-    //      - rootPath (string)
-    //
+    /**
+     * @param array $options Array containing general options.
+     *      $options = [
+     *          'rootPath' => (string)
+     *              The base location of the project. Necessary to locate
+     *              "/migrations" directory.
+     *      ]
+     */
     function __construct($options) {
         $this->rootPath = $options["rootPath"];
     }
 
-    //  $options:
-    //      - wasManualActionConfirmed (boolean)
-    //
+    /**
+     * @param array $options Array containing migration options.
+     *      $options = [
+     *          'wasManualActionConfirmed' => (bool)
+     *              Whether we should allow the first migration on the unapplied
+     *              list to be run regardless of its manual action requirement.
+     *      ]
+     */
     public function runMigration($options) {
         $migrations = $this->loadMigrationEntries();
 
@@ -172,9 +182,15 @@ class Migrator {
         return $migrations;
     }
 
-    //  $options:
-    //      - wasManualActionConfirmed (boolean)
-    //
+    /**
+     * @param array $migrationEntries
+     * @param array $options Array containing application options.
+     *      $options = [
+     *          'wasManualActionConfirmed' => (bool)
+     *              Whether we should allow the first migration on the unapplied
+     *              list to be run regardless of its manual action requirement.
+     *      ]
+     */
     private function applyMigrations($migrationEntries, $options) {
         if (empty($migrationEntries)) {
             return null;
