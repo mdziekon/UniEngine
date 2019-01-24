@@ -44,6 +44,26 @@ class Migrator {
         return ($this->rootPath . $path);
     }
 
+    private function loadFile($filePath) {
+        $path = $this->getRealPath($filePath);
+
+        if (!file_exists($path)) {
+            throw new FileMissingException("File does not exist");
+        }
+
+        if (!is_readable($path)) {
+            throw new FileIOException("File is not readable");
+        }
+
+        $content = file_get_contents($path);
+
+        if ($content === false) {
+            throw new FileIOException("File could not be loaded");
+        }
+
+        return $content;
+    }
+
     private function loadMigrationEntries() {
         $migrationsPath = $this->getRealPath("./migrations");
 
