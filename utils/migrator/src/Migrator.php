@@ -190,16 +190,36 @@ class Migrator {
      *              Whether we should allow the first migration on the unapplied
      *              list to be run regardless of its manual action requirement.
      *      ]
+     *
+     * @return array {
+     *      @var int $migrationsApplied
+     *          How many migrations were applied.
+     *      @var bool $migrationRolledback
+     *          Was there a problem with one of the migrations which caused
+     *          a rollback?
+     *      @var string | null $lastAppliedMigrationID
+     *          Last migration's ID. Either the actually applied migration,
+     *          or the one that caused a rollback.
+     *      @var bool $isManualActionRequired
+     *          Whether the migration process was stopped because of a manual
+     *          action requirement.
+     * }
      */
     private function applyMigrations($migrationEntries, $options) {
         if (empty($migrationEntries)) {
-            return null;
+            return [
+                "migrationsApplied" => 0,
+                "migrationRolledback" => false,
+                "lastAppliedMigrationID" => null,
+                "isManualActionRequired" => false
+            ];
         }
 
         $this->sortMigrations($migrationEntries);
 
         $migrations = [];
         $lastAppliedMigrationIdx = -1;
+        $isManualActionRequired = false;
 
         foreach ($migrationEntries as $migrationEntry) {
             $migrations[] = $this->instantiateMigration($migrationEntry);
@@ -208,9 +228,9 @@ class Migrator {
         try {
             // Try to apply all migrations
             foreach ($migrations as $idx => $migration) {
-                $isPriorManualActionRequired = $migration["instance"]->isPriorManualActionRequired();
+                $isManualActionRequired = $migration["instance"]->isPriorManualActionRequired();
 
-                if ($isPriorManualActionRequired) {
+                if ($isManualActionRequired) {
                     if ($idx !== 0) {
                         // Manual action confirmation applies only to the first action
                         // to prevent unexpected constrained migrations down the line
@@ -228,6 +248,8 @@ class Migrator {
                         break;
                     }
 
+                    $isManualActionRequired = false;
+
                     $this->printLog("> Migration's \"{$migration["className"]}\" manual action confirmed, proceeding...");
                 }
 
@@ -240,18 +262,30 @@ class Migrator {
         } catch (\Exception $exception) {
             // Try to revert all already applied migrations
 
+            $lastMigrationID = $migrations[$lastAppliedMigrationIdx]["id"];
+
             for ($idx = $lastAppliedMigrationIdx; $idx >= 0; $idx--) {
                 $migration = $migrations[$idx];
 
                 $migration["instance"]->down();
             }
 
-            return null;
+            return [
+                "migrationsApplied" => 0,
+                "migrationRolledback" => true,
+                "lastAppliedMigrationID" => $lastMigrationID,
+                "isManualActionRequired" => false
+            ];
         }
 
         $lastMigration = $migrations[$lastAppliedMigrationIdx];
 
-        return $lastMigration["id"];
+        return [
+            "migrationsApplied" => ($lastAppliedMigrationIdx + 1),
+            "migrationRolledback" => false,
+            "lastAppliedMigrationID" => $lastMigration["id"],
+            "isManualActionRequired" => $isManualActionRequired
+        ];
     }
 
     private function instantiateMigration($migrationEntry) {
