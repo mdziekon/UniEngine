@@ -131,6 +131,105 @@ class Migrator {
             );
         });
     }
+
+    private function sortMigrations($migrations) {
+        usort($migrations, function ($left, $right) {
+            return (
+                $left["datetime"]->getTimestamp() -
+                $right["datetime"]->getTimestamp()
+            );
+        });
+
+        return $migrations;
+    }
+
+    //  $options:
+    //      - wasManualActionConfirmed (boolean)
+    //
+    private function applyMigrations($migrationEntries, $options) {
+        if (empty($migrationEntries)) {
+            return null;
+        }
+
+        $this->sortMigrations($migrationEntries);
+
+        $migrations = [];
+        $lastAppliedMigrationIdx = -1;
+
+        foreach ($migrationEntries as $migrationEntry) {
+            $migrations[] = $this->instantiateMigration($migrationEntry);
+        }
+
+        try {
+            // Try to apply all migrations
+            foreach ($migrations as $idx => $migration) {
+                $isPriorManualActionRequired = $migration["instance"]->isPriorManualActionRequired();
+
+                if ($isPriorManualActionRequired) {
+                    if ($idx !== 0) {
+                        // Manual action confirmation applies only to the first action
+                        // to prevent unexpected constrained migrations down the line
+                        // from running.
+
+                        $this->printLog("> Migration \"{$migration["className"]}\" requires manual action. Read release notes, apply any required manual actions and then run migrations again with \"--confirmManualAction\" flag.");
+
+                        break;
+                    }
+                    if (!($options["wasManualActionConfirmed"])) {
+                        // This is the first migration, but manual action was not confirmed.
+
+                        $this->printLog("> Migration \"{$migration["className"]}\" requires manual action. Read release notes, apply any required manual actions and then run migrations again with \"--confirmManualAction\" flag.");
+
+                        break;
+                    }
+
+                    $this->printLog("> Migration's \"{$migration["className"]}\" manual action confirmed, proceeding...");
+                }
+
+                $this->printLog("> Running migration \"{$migration["className"]}\"");
+
+                $migration["instance"]->up();
+
+                $lastAppliedMigrationIdx = $idx;
+            }
+        } catch (\Exception $exception) {
+            // Try to revert all already applied migrations
+
+            for ($idx = $lastAppliedMigrationIdx; $idx >= 0; $idx--) {
+                $migration = $migrations[$idx];
+
+                $migration["instance"]->down();
+            }
+
+            return null;
+        }
+
+        $lastMigration = $migrations[$lastAppliedMigrationIdx];
+
+        return $lastMigration["id"];
+    }
+
+    private function instantiateMigration($migrationEntry) {
+        $migrationID = $migrationEntry["id"];
+        $filename = $migrationEntry["filename"];
+        $migrationPath = $this->getRealPath("./migrations/" . $filename);
+
+        require_once($migrationPath);
+
+        $migrationClass = "Migration_" . $migrationID;
+
+        $reflectionClass = new \ReflectionClass($migrationClass);
+
+        if (!($reflectionClass->implementsInterface("\UniEngine\Utils\Migrations\Interfaces\Migration"))) {
+            throw new \Exception("Migration \"{$migrationClass}\" (\"{$filename}\") does not implement Migration interface");
+        }
+
+        return [
+            "id" => $migrationID,
+            "className" => $reflectionClass->getName(),
+            "instance" => $reflectionClass->newInstance()
+        ];
+    }
 }
 
 ?>
