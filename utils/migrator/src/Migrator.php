@@ -64,6 +64,28 @@ class Migrator {
         return $content;
     }
 
+    private function saveFile($filePath, $data) {
+        $path = $this->getRealPath($filePath);
+
+        $accessCheckPath = $path;
+
+        if (!file_exists($path)) {
+            $accessCheckPath = dirname($path);
+        } else {
+            $accessCheckPath = $path;
+        }
+
+        if (!is_writeable($accessCheckPath)) {
+            throw new FileIOException("File / file's directory is not writeable");
+        }
+
+        $result = file_put_contents($path, $data,  LOCK_EX);
+
+        if ($result === false) {
+            throw new FileIOException("File could not be saved");
+        }
+    }
+
     private function loadLastMigrationID() {
         $lastMigrationID = $this->loadFile("./config/latest-migration");
 
@@ -74,6 +96,10 @@ class Migrator {
         }
 
         return $lastMigrationID;
+    }
+
+    private function saveMigrationID($migrationID) {
+        $this->saveFile("./config/latest-migration", $migrationID);
     }
 
     private function loadMigrationEntries() {
