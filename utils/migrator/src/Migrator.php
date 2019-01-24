@@ -3,6 +3,15 @@
 namespace UniEngine\Utils\Migrations;
 
 class Migrator {
+    private $rootPath;
+
+    //  $options:
+    //      - rootPath (string)
+    //
+    function __construct($options) {
+        $this->rootPath = $options["rootPath"];
+    }
+
     public function runMigration($options) {
         $migrations = $this->loadMigrationEntries();
 
@@ -29,6 +38,10 @@ class Migrator {
         } else {
             $this->printLog("> No migrations applied");
         }
+    }
+
+    private function getRealPath($path) {
+        return ($this->rootPath . $path);
     }
 }
 
