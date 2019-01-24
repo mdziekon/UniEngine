@@ -266,10 +266,16 @@ class Migrator {
         } catch (\Exception $exception) {
             // Try to revert all already applied migrations
 
-            $lastMigrationID = $migrations[$lastRunMigrationIdx]["id"];
+            $lastMigration = $migrations[$lastRunMigrationIdx];
+
+            $this->printLog("> An error occured while running migration \"{$lastMigration["className"]}\"");
+            $this->printLog($exception->getMessage());
+            $this->printLog($exception->getTraceAsString());
 
             for ($idx = $lastRunMigrationIdx; $idx >= 0; $idx--) {
                 $migration = $migrations[$idx];
+
+                $this->printLog("> Reverting migration \"{$migration["className"]}\"");
 
                 $migration["instance"]->down();
             }
@@ -277,7 +283,7 @@ class Migrator {
             return [
                 "migrationsApplied" => 0,
                 "migrationRolledback" => true,
-                "lastAppliedMigrationID" => $lastMigrationID,
+                "lastAppliedMigrationID" => $lastMigration["id"],
                 "isManualActionRequired" => false
             ];
         }
