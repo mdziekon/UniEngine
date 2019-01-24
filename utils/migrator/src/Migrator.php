@@ -12,6 +12,9 @@ class Migrator {
         $this->rootPath = $options["rootPath"];
     }
 
+    //  $options:
+    //      - wasManualActionConfirmed (boolean)
+    //
     public function runMigration($options) {
         $migrations = $this->loadMigrationEntries();
 
