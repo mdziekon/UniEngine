@@ -101,6 +101,24 @@ class Migrator {
             ];
         }, $migrationFiles);
     }
+
+    private function getMigrationsNewerThan($migrations, $latestAppliedID) {
+        if ($latestAppliedID === null) {
+            return $migrations;
+        }
+
+        $latestDatetime = \DateTime::createFromFormat(
+            "Ymd_His",
+            $latestAppliedID
+        );
+
+        return array_filter($migrations, function ($migrationEntry) use ($latestDatetime) {
+            return (
+                $migrationEntry["datetime"]->getTimestamp() >
+                $latestDatetime->getTimestamp()
+            );
+        });
+    }
 }
 
 ?>
