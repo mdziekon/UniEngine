@@ -218,7 +218,7 @@ class Migrator {
         $this->sortMigrations($migrationEntries);
 
         $migrations = [];
-        $lastAppliedMigrationIdx = -1;
+        $lastRunMigrationIdx = -1;
         $isManualActionRequired = false;
 
         foreach ($migrationEntries as $migrationEntry) {
@@ -255,16 +255,16 @@ class Migrator {
 
                 $this->printLog("> Running migration \"{$migration["className"]}\"");
 
-                $migration["instance"]->up();
+                $lastRunMigrationIdx = $idx;
 
-                $lastAppliedMigrationIdx = $idx;
+                $migration["instance"]->up();
             }
         } catch (\Exception $exception) {
             // Try to revert all already applied migrations
 
-            $lastMigrationID = $migrations[$lastAppliedMigrationIdx]["id"];
+            $lastMigrationID = $migrations[$lastRunMigrationIdx]["id"];
 
-            for ($idx = $lastAppliedMigrationIdx; $idx >= 0; $idx--) {
+            for ($idx = $lastRunMigrationIdx; $idx >= 0; $idx--) {
                 $migration = $migrations[$idx];
 
                 $migration["instance"]->down();
@@ -278,10 +278,10 @@ class Migrator {
             ];
         }
 
-        $lastMigration = $migrations[$lastAppliedMigrationIdx];
+        $lastMigration = $migrations[$lastRunMigrationIdx];
 
         return [
-            "migrationsApplied" => ($lastAppliedMigrationIdx + 1),
+            "migrationsApplied" => ($lastRunMigrationIdx + 1),
             "migrationRolledback" => false,
             "lastAppliedMigrationID" => $lastMigration["id"],
             "isManualActionRequired" => $isManualActionRequired
