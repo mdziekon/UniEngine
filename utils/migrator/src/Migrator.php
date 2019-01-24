@@ -256,6 +256,10 @@ class Migrator {
             "instance" => $reflectionClass->newInstance()
         ];
     }
+
+    private function printLog($line) {
+        echo "{$line}\n";
+    }
 }
 
 ?>
