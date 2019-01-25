@@ -272,7 +272,7 @@ class Migrator {
             $this->printLog($exception->getMessage());
             $this->printLog($exception->getTraceAsString());
 
-            for ($idx = $lastRunMigrationIdx; $idx >= 0; $idx--) {
+            for ($idx = ($lastRunMigrationIdx - 1); $idx >= 0; $idx--) {
                 $migration = $migrations[$idx];
 
                 $this->printLog("> Reverting migration \"{$migration["className"]}\"");
