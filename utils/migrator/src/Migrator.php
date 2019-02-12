@@ -2,6 +2,9 @@
 
 namespace UniEngine\Utils\Migrations;
 
+use UniEngine\Utils\Migrations\Exceptions\FileIOException;
+use UniEngine\Utils\Migrations\Exceptions\FileMissingException;
+
 class Migrator {
     private $rootPath;
 
