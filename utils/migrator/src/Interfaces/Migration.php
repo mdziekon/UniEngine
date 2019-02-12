@@ -2,6 +2,19 @@
 
 namespace UniEngine\Utils\Migrations\Interfaces;
 
+/**
+ * Provides a basic interface for all migration scripts.
+ *
+ * Migrations are uniquely identified by their "date of creation" and nothing else
+ * (eg. "20000101_120030", which would correspond to ISO 8601 date "2000-01-01T12:00:30).
+ * The migration UID should be the first part of migration's filename, followed by
+ * a short description (only for users' convenience).
+ * Once committed and merged, migration's UID should stay immutable, as it will
+ * be stored in users' databases when applied with migrations runner.
+ *
+ * All migrations class names should start with "Migration_" prefix,
+ * eg. "Migration_20000101_120030".
+ */
 interface Migration {
     /**
      * A function applying all necessary work to make an instance of this project
