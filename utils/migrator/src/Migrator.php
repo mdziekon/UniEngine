@@ -294,7 +294,13 @@ class Migrator {
             ];
         }
 
-        $lastMigration = $migrations[$lastRunMigrationIdx];
+        if ($lastRunMigrationIdx !== -1) {
+            $lastMigration = $migrations[$lastRunMigrationIdx];
+        } else {
+            $lastMigration = [
+                "id" => null
+            ];
+        }
 
         return [
             "migrationsApplied" => ($lastRunMigrationIdx + 1),
