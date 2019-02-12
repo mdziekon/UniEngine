@@ -7,6 +7,8 @@ interface Migration {
     public function down();
 
     public function isPriorManualActionRequired();
+
+    public function getPreviousProjectVersion();
 }
 
 ?>
