@@ -238,24 +238,14 @@ class Migrator {
                 $isManualActionRequired = $migration["instance"]->isPriorManualActionRequired();
 
                 if ($isManualActionRequired) {
-                    if ($idx !== 0) {
+                    if (
+                        $idx !== 0 ||
+                        !($options["wasManualActionConfirmed"])
+                    ) {
                         // Manual action confirmation applies only to the first action
                         // to prevent unexpected constrained migrations down the line
                         // from running.
-                        $previousVersion = $migration["instance"]->getPreviousProjectVersion();
-
-                        $this->printLog(
-                            "> Migration \"{$migration["className"]}\" requires manual action. " .
-                            "Read release notes (post release \"{$previousVersion}\"), " .
-                            "apply any required manual actions " .
-                            "and then run migrations again with \"--confirmManualAction\" flag."
-                        );
-
-                        break;
-                    }
-                    if (!($options["wasManualActionConfirmed"])) {
-                        // This is the first migration, but manual action was not confirmed.
-
+                        // It also has to be confirmed by the user.
                         $previousVersion = $migration["instance"]->getPreviousProjectVersion();
 
                         $this->printLog(
