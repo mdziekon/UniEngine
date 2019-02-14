@@ -252,7 +252,7 @@ class Migrator {
                             "> Migration \"{$migration["className"]}\" requires manual action. " .
                             "Read release notes (post release \"{$previousVersion}\"), " .
                             "apply any required manual actions " .
-                            "and then run migrations again with \"--confirmManualAction\" flag."
+                            "and then run migrations again with \"--confirm-manual-action\" flag."
                         );
 
                         break;
