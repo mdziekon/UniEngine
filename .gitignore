@@ -9,6 +9,10 @@ install/lock
 # Ignore PHP-related files & directories
 vendor/
 
+# Ignore app's instance configuration
+config/**
+!config/.gitkeep
+
 # Files temporarily removed from further tracking
 # (based on https://stackoverflow.com/a/11366713/951007)
 config.php
