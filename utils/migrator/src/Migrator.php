@@ -34,7 +34,7 @@ class Migrator {
         $latestAppliedID;
 
         try {
-            $latestAppliedID = $this->loadLastMigrationID();
+            $latestAppliedID = $this->loadLastAppliedMigrationID();
         } catch (FileMissingException $exception) {
             $latestAppliedID = null;
         }
@@ -54,7 +54,7 @@ class Migrator {
 
             $this->printLog("> Saving \"{$lastMigrationID}\" as the last applied migration ID");
 
-            $this->saveMigrationID($lastMigrationID);
+            $this->saveLastAppliedMigrationID($lastMigrationID);
         } else {
             $this->printLog("> No migrations applied");
         }
@@ -106,7 +106,7 @@ class Migrator {
         }
     }
 
-    private function loadLastMigrationID() {
+    private function loadLastAppliedMigrationID() {
         $lastMigrationID = $this->loadFile("./config/latest-migration");
 
         $isValid = preg_match("/^\d{8}_\d{6}$/", $lastMigrationID);
@@ -118,7 +118,7 @@ class Migrator {
         return $lastMigrationID;
     }
 
-    private function saveMigrationID($migrationID) {
+    private function saveLastAppliedMigrationID($migrationID) {
         $this->saveFile("./config/latest-migration", $migrationID);
     }
 
