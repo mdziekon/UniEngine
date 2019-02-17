@@ -36,6 +36,10 @@ spl_autoload_register(function ($class) {
 
 use \UniEngine\Utils\Migrations as Migrations;
 
+if (PHP_SAPI !== "cli") {
+    throw new Exception("Migrator utility can only be run from 'cli' environment");
+}
+
 $migrator = new Migrations\Migrator([
     "rootPath" => "./"
 ]);
