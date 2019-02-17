@@ -44,7 +44,7 @@ class Migrator {
         if ($latestAppliedID !== null) {
             $this->printLog("> Last applied migration ID: \"{$latestAppliedID}\"");
         } else {
-            $this->printLog("> No \"config/latest-migration\" file found, assuming no migrations have been applied yet");
+            $this->printLog("> No \"config/latest-applied-migration\" file found, assuming no migrations have been applied yet");
         }
 
         $migrations = $this->getMigrationsNewerThan($migrations, $latestAppliedID);
@@ -63,19 +63,19 @@ class Migrator {
     }
 
     private function loadLastAppliedMigrationID() {
-        $lastMigrationID = $this->fsHandler->loadFile("./config/latest-migration");
+        $lastMigrationID = $this->fsHandler->loadFile("./config/latest-applied-migration");
 
         $isValid = preg_match("/^\d{8}_\d{6}$/", $lastMigrationID);
 
         if (!($isValid === 1)) {
-            throw new \Exception("Invalid migration ID in \"config/latest-migration\"");
+            throw new \Exception("Invalid migration ID in \"config/latest-applied-migration\"");
         }
 
         return $lastMigrationID;
     }
 
     private function saveLastAppliedMigrationID($migrationID) {
-        $this->fsHandler->saveFile("./config/latest-migration", $migrationID);
+        $this->fsHandler->saveFile("./config/latest-applied-migration", $migrationID);
     }
 
     private function loadMigrationEntries() {
