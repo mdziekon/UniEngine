@@ -62,6 +62,20 @@ class Migrator {
         }
     }
 
+    public function getMostRecentMigrationID() {
+        $migrationEntries = $this->loadMigrationEntries();
+
+        if (empty($migrationEntries)) {
+            return null;
+        }
+
+        $this->sortMigrations($migrationEntries);
+
+        $lastMigrationEntry = end($migrationEntries);
+
+        return $lastMigrationEntry["id"];
+    }
+
     private function loadLastAppliedMigrationID() {
         $lastMigrationID = $this->fsHandler->loadFile("./config/latest-applied-migration");
 
