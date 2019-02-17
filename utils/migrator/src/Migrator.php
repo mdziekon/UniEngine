@@ -6,7 +6,7 @@ use UniEngine\Utils\Migrations\Exceptions\FileIOException;
 use UniEngine\Utils\Migrations\Exceptions\FileMissingException;
 
 class Migrator {
-    private $rootPath;
+    private $fsHandler;
 
     /**
      * @param array $options Array containing general options.
@@ -17,7 +17,9 @@ class Migrator {
      *      ]
      */
     function __construct($options) {
-        $this->rootPath = $options["rootPath"];
+        $this->fsHandler = new FSHandler([
+            "rootPath" => $options["rootPath"]
+        ]);
     }
 
     /**
@@ -60,54 +62,8 @@ class Migrator {
         }
     }
 
-    private function getRealPath($path) {
-        return ($this->rootPath . $path);
-    }
-
-    private function loadFile($filePath) {
-        $path = $this->getRealPath($filePath);
-
-        if (!file_exists($path)) {
-            throw new FileMissingException("File does not exist");
-        }
-
-        if (!is_readable($path)) {
-            throw new FileIOException("File is not readable");
-        }
-
-        $content = file_get_contents($path);
-
-        if ($content === false) {
-            throw new FileIOException("File could not be loaded");
-        }
-
-        return $content;
-    }
-
-    private function saveFile($filePath, $data) {
-        $path = $this->getRealPath($filePath);
-
-        $accessCheckPath = $path;
-
-        if (!file_exists($path)) {
-            $accessCheckPath = dirname($path);
-        } else {
-            $accessCheckPath = $path;
-        }
-
-        if (!is_writeable($accessCheckPath)) {
-            throw new FileIOException("File / file's directory is not writeable");
-        }
-
-        $result = file_put_contents($path, $data,  LOCK_EX);
-
-        if ($result === false) {
-            throw new FileIOException("File could not be saved");
-        }
-    }
-
     private function loadLastAppliedMigrationID() {
-        $lastMigrationID = $this->loadFile("./config/latest-migration");
+        $lastMigrationID = $this->fsHandler->loadFile("./config/latest-migration");
 
         $isValid = preg_match("/^\d{8}_\d{6}$/", $lastMigrationID);
 
@@ -119,17 +75,11 @@ class Migrator {
     }
 
     private function saveLastAppliedMigrationID($migrationID) {
-        $this->saveFile("./config/latest-migration", $migrationID);
+        $this->fsHandler->saveFile("./config/latest-migration", $migrationID);
     }
 
     private function loadMigrationEntries() {
-        $migrationsPath = $this->getRealPath("./migrations");
-
-        $list = scandir($migrationsPath);
-
-        if ($list === false) {
-            throw new FileIOException("Could not load migrations directory");
-        }
+        $list = $this->fsHandler->loadDirectoryFilenames("./migrations");
 
         $migrationFiles = array_filter($list, function ($file) {
             // Migration scripts' filenames follow this pattern:
@@ -313,9 +263,10 @@ class Migrator {
     private function instantiateMigration($migrationEntry) {
         $migrationID = $migrationEntry["id"];
         $filename = $migrationEntry["filename"];
-        $migrationPath = $this->getRealPath("./migrations/" . $filename);
 
-        require_once($migrationPath);
+        $migrationClassFilePath = $this->fsHandler->getRealPath("./migrations/" . $filename);
+
+        require_once($migrationClassFilePath);
 
         $migrationClass = "Migration_" . $migrationID;
 
