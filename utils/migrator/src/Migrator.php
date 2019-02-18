@@ -76,7 +76,7 @@ class Migrator {
         return $lastMigrationEntry["id"];
     }
 
-    private function loadLastAppliedMigrationID() {
+    public function loadLastAppliedMigrationID() {
         $lastMigrationID = $this->fsHandler->loadFile("./config/latest-applied-migration");
 
         $isValid = preg_match("/^\d{8}_\d{6}$/", $lastMigrationID);
@@ -88,7 +88,7 @@ class Migrator {
         return $lastMigrationID;
     }
 
-    private function saveLastAppliedMigrationID($migrationID) {
+    public function saveLastAppliedMigrationID($migrationID) {
         $this->fsHandler->saveFile("./config/latest-applied-migration", $migrationID);
     }
 
