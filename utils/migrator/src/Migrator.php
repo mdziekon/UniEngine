@@ -6,6 +6,10 @@ use UniEngine\Utils\Migrations\Exceptions\FileIOException;
 use UniEngine\Utils\Migrations\Exceptions\FileMissingException;
 
 class Migrator {
+    const CONFIG_DIRECTORY = "./config";
+    const CONFIG_LATESTMIGRATION_FILENAME = "latest-applied-migration";
+    const MIGRATIONS_DIRECTORY = "./migrations";
+
     private $fsHandler;
 
     /**
@@ -44,7 +48,7 @@ class Migrator {
         if ($latestAppliedID !== null) {
             $this->printLog("> Last applied migration ID: \"{$latestAppliedID}\"");
         } else {
-            $this->printLog("> No \"config/latest-applied-migration\" file found, assuming no migrations have been applied yet");
+            $this->printLog("> No \"{$this->getConfigLatestMigrationFilepath()}\" file found, assuming no migrations have been applied yet");
         }
 
         $migrations = $this->getMigrationsNewerThan($migrations, $latestAppliedID);
@@ -77,23 +81,46 @@ class Migrator {
     }
 
     public function loadLastAppliedMigrationID() {
-        $lastMigrationID = $this->fsHandler->loadFile("./config/latest-applied-migration");
+        $lastMigrationID = $this->fsHandler->loadFile(
+            $this->getConfigLatestMigrationFilepath()
+        );
 
         $isValid = preg_match("/^\d{8}_\d{6}$/", $lastMigrationID);
 
         if (!($isValid === 1)) {
-            throw new \Exception("Invalid migration ID in \"config/latest-applied-migration\"");
+            throw new \Exception("Invalid migration ID in \"{$this->getConfigLatestMigrationFilepath()}\"");
         }
 
         return $lastMigrationID;
     }
 
     public function saveLastAppliedMigrationID($migrationID) {
-        $this->fsHandler->saveFile("./config/latest-applied-migration", $migrationID);
+        $this->fsHandler->saveFile(
+            $this->getConfigLatestMigrationFilepath(),
+            $migrationID
+        );
+    }
+
+    public function getConfigLatestMigrationFilepath() {
+        return (
+            self::CONFIG_DIRECTORY .
+            "/" .
+            self::CONFIG_LATESTMIGRATION_FILENAME
+        );
+    }
+
+    private function getMigrationFilepath($filename) {
+        return (
+            self::MIGRATIONS_DIRECTORY .
+            "/" .
+            $filename
+        );
     }
 
     private function loadMigrationEntries() {
-        $list = $this->fsHandler->loadDirectoryFilenames("./migrations");
+        $list = $this->fsHandler->loadDirectoryFilenames(
+            self::MIGRATIONS_DIRECTORY
+        );
 
         $migrationFiles = array_filter($list, function ($file) {
             // Migration scripts' filenames follow this pattern:
@@ -278,7 +305,9 @@ class Migrator {
         $migrationID = $migrationEntry["id"];
         $filename = $migrationEntry["filename"];
 
-        $migrationClassFilePath = $this->fsHandler->getRealPath("./migrations/" . $filename);
+        $migrationClassFilePath = $this->fsHandler->getRealPath(
+            $this->getMigrationFilepath($filename)
+        );
 
         require_once($migrationClassFilePath);
 
