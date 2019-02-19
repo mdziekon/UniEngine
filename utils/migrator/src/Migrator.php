@@ -56,6 +56,13 @@ class Migrator {
 
         $migrations = $this->getMigrationsNewerThan($migrations, $latestAppliedID);
 
+        if (count($migrations) === 0) {
+            $this->printLog("> The latest migration script is already applied");
+            $this->printLog("> No migrations applied");
+
+            return;
+        }
+
         $migrationResult = $this->applyMigrations($migrations, $options);
 
         if ($migrationResult["migrationsApplied"] > 0) {
