@@ -96,7 +96,7 @@ class Migrator {
             );
         }
 
-        return $lastMigrationID;
+        return trim($lastMigrationID);
     }
 
     public function saveLastAppliedMigrationID($migrationID) {
