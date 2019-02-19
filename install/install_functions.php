@@ -5,6 +5,8 @@ if(!defined('IN_INSTALL'))
     die();
 }
 
+require_once('../utils/migrator/autoload.php');
+
 function generateRandomHash($Length)
 {
     $Signs = '0123456789abcdefghijklmnoprstuwxyzABCDEFGHIJKLMNOPRSTUWXYZ_';
@@ -45,6 +47,17 @@ function includeLang()
     global $_Lang, $_UseLang;
 
     include("install_lang_".$_UseLang.".lang");
+}
+
+function generateMigrationEntryFile()
+{
+    $migrator = new UniEngine\Utils\Migrations\Migrator([
+        "rootPath" => "../"
+    ]);
+
+    $migrator->saveLastAppliedMigrationID(
+        $migrator->getMostRecentMigrationID()
+    );
 }
 
 ?>

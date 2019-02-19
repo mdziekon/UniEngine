@@ -17,6 +17,8 @@ else
     define('ONLOCALHOST', false);
 }
 
+$_Install_ConfigDirectory = './config';
+
 include('install_functions.php');
 
 $_UseLang = 'pl';
@@ -44,6 +46,24 @@ if(error_reporting() & E_NOTICE)
 else
 {
     $_RequirementsCheckFails['PHPNoticesOff'] = false;
+}
+if(is_writable('../'.$_Install_ConfigDirectory.'/'))
+{
+    $_RequirementsCheckFails['ConfigDirectoryWritable'] = false;
+}
+else
+{
+    $_RequirementsCheckPassed = false;
+    $_RequirementsCheckFails['ConfigDirectoryWritable'] = true;
+}
+if(!file_exists('../'.$_Install_ConfigDirectory.'/latest-applied-migration'))
+{
+    $_RequirementsCheckFails['ConfigDirectoryMigrationEntryDoesNotExist'] = false;
+}
+else
+{
+    $_RequirementsCheckPassed = false;
+    $_RequirementsCheckFails['ConfigDirectoryMigrationEntryDoesNotExist'] = true;
 }
 if(is_writable('../'.$_Install_ConfigFile.'.php'))
 {
@@ -421,13 +441,33 @@ else
 
                                 if($_Install_QueryResult)
                                 {
-                                    $_Lang['PHP_HideInfoBox'] = '';
-                                    $_Lang['PHP_HideFormBox'] = 'display: none;';
-                                    $_Lang['PHP_InfoBox_Color'] = 'lime';
-                                    $_Lang['PHP_InfoBox_Center'] = 'center';
-                                    $_Lang['PHP_InfoBox_Text'] = $_Lang['InstallSuccess'];
+                                    $_Install_MigrationEntryFileCreationSuccess = false;
 
-                                    file_put_contents('lock', '');
+                                    try {
+                                        generateMigrationEntryFile();
+
+                                        $_Install_MigrationEntryFileCreationSuccess = true;
+                                    } catch (\Exception $exception) {
+                                        $_Install_MigrationEntryFileCreationSuccess = false;
+                                    }
+
+                                    if ($_Install_MigrationEntryFileCreationSuccess)
+                                    {
+                                        $_Lang['PHP_HideInfoBox'] = '';
+                                        $_Lang['PHP_HideFormBox'] = 'display: none;';
+                                        $_Lang['PHP_InfoBox_Color'] = 'lime';
+                                        $_Lang['PHP_InfoBox_Center'] = 'center';
+                                        $_Lang['PHP_InfoBox_Text'] = $_Lang['InstallSuccess'];
+
+                                        file_put_contents('lock', '');
+                                    }
+                                    else
+                                    {
+                                        $_Lang['PHP_HideInfoBox'] = '';
+                                        $_Lang['PHP_InfoBox_Color'] = 'red';
+                                        $_Lang['PHP_InfoBox_Center'] = 'center';
+                                        $_Lang['PHP_InfoBox_Text'] = $_Lang['InstallError_MigrationEntryFileCreationFail'];
+                                    }
                                 }
                                 else
                                 {
