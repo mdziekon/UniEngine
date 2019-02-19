@@ -9,6 +9,7 @@ class Migrator {
     const CONFIG_DIRECTORY = "./config";
     const CONFIG_LATESTMIGRATION_FILENAME = "latest-applied-migration";
     const MIGRATIONS_DIRECTORY = "./utils/migrator/migrations";
+    const MIGRATIONS_TEMPLATE_FILEPATH = "./utils/migrator/src/migration.tpl";
 
     private $fsHandler;
 
@@ -110,6 +111,41 @@ class Migrator {
         $this->fsHandler->saveFile(
             $this->getConfigLatestMigrationFilepath(),
             $migrationID
+        );
+    }
+
+    /**
+     * @param array $options Array containing generator options.
+     *      $options = [
+     *          'name' => (string) [required]
+     *              Migration's name to be used in the file name.
+     *      ]
+     */
+    public function generateNewMigration($options) {
+        if (empty($options["name"])) {
+            throw new \InvalidArgumentException("\$options[\"name\"] was not defined");
+        }
+
+        $content = $this->fsHandler->loadfile(
+            self::MIGRATIONS_TEMPLATE_FILEPATH
+        );
+
+        $newMigrationID = date(
+            "Ymd_His",
+            time()
+        );
+
+        $content = str_replace(
+            "{{MIGRATION_ID}}",
+            $newMigrationID,
+            $content
+        );
+
+        $this->fsHandler->saveFile(
+            $this->getMigrationFilepath(
+                $newMigrationID . "_" . $options["name"] . ".php"
+            ),
+            $content
         );
     }
 
