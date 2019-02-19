@@ -49,6 +49,26 @@ class FSHandler {
         return $content;
     }
 
+    public function loadFileLines($filePath) {
+        $path = $this->getRealPath($filePath);
+
+        if (!file_exists($path)) {
+            throw new FileMissingException("File does not exist");
+        }
+
+        if (!is_readable($path)) {
+            throw new FileIOException("File is not readable");
+        }
+
+        $fileLines = file($path, FILE_IGNORE_NEW_LINES);
+
+        if ($fileLines === false) {
+            throw new FileIOException("File could not be loaded");
+        }
+
+        return $fileLines;
+    }
+
     public function saveFile($filePath, $data) {
         $path = $this->getRealPath($filePath);
 
@@ -64,11 +84,18 @@ class FSHandler {
             throw new FileIOException("File / file's directory is not writeable");
         }
 
-        $result = file_put_contents($path, $data,  LOCK_EX);
+        $result = file_put_contents($path, $data, LOCK_EX);
 
         if ($result === false) {
             throw new FileIOException("File could not be saved");
         }
+    }
+
+    public function saveFileLines($filePath, $fileLines) {
+        return $this->saveFile(
+            $filePath,
+            implode("\n", $fileLines)
+        );
     }
 
     public function loadDirectoryFilenames($dirPath) {
