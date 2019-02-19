@@ -8,7 +8,7 @@ use UniEngine\Utils\Migrations\Exceptions\FileMissingException;
 class Migrator {
     const CONFIG_DIRECTORY = "./config";
     const CONFIG_LATESTMIGRATION_FILENAME = "latest-applied-migration";
-    const MIGRATIONS_DIRECTORY = "./migrations";
+    const MIGRATIONS_DIRECTORY = "./utils/migrator/migrations";
 
     private $fsHandler;
 
