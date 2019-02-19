@@ -48,7 +48,10 @@ class Migrator {
         if ($latestAppliedID !== null) {
             $this->printLog("> Last applied migration ID: \"{$latestAppliedID}\"");
         } else {
-            $this->printLog("> No \"{$this->getConfigLatestMigrationFilepath()}\" file found, assuming no migrations have been applied yet");
+            $this->printLog(
+                "> No \"{$this->getConfigLatestMigrationFilepath()}\" file found, " .
+                "assuming no migrations have been applied yet"
+            );
         }
 
         $migrations = $this->getMigrationsNewerThan($migrations, $latestAppliedID);
@@ -88,7 +91,9 @@ class Migrator {
         $isValid = preg_match("/^\d{8}_\d{6}$/", $lastMigrationID);
 
         if (!($isValid === 1)) {
-            throw new \Exception("Invalid migration ID in \"{$this->getConfigLatestMigrationFilepath()}\"");
+            throw new \Exception(
+                "Invalid migration ID in \"{$this->getConfigLatestMigrationFilepath()}\""
+            );
         }
 
         return $lastMigrationID;
@@ -251,7 +256,10 @@ class Migrator {
 
                     $isManualActionRequired = false;
 
-                    $this->printLog("> Migration's \"{$migration["className"]}\" manual action confirmed, proceeding...");
+                    $this->printLog(
+                        "> Migration's \"{$migration["className"]}\" manual action confirmed, " .
+                        "proceeding..."
+                    );
                 }
 
                 $this->printLog("> Running migration \"{$migration["className"]}\"");
@@ -266,8 +274,9 @@ class Migrator {
             $lastMigration = $migrations[$lastRunMigrationIdx];
 
             $this->printLog("> An error occured while running migration \"{$lastMigration["className"]}\"");
-            $this->printLog($exception->getMessage());
-            $this->printLog($exception->getTraceAsString());
+            $this->printLog("");
+            $this->printLog($exception->__toString());
+            $this->printLog("");
 
             for ($idx = ($lastRunMigrationIdx - 1); $idx >= 0; $idx--) {
                 $migration = $migrations[$idx];
@@ -314,9 +323,14 @@ class Migrator {
         $migrationClass = "Migration_" . $migrationID;
 
         $reflectionClass = new \ReflectionClass($migrationClass);
+        $migrationInterfaceName = "\UniEngine\Utils\Migrations\Interfaces\Migration";
 
-        if (!($reflectionClass->implementsInterface("\UniEngine\Utils\Migrations\Interfaces\Migration"))) {
-            throw new \Exception("Migration \"{$migrationClass}\" (\"{$filename}\") does not implement Migration interface");
+        if (!($reflectionClass->implementsInterface($migrationInterfaceName))) {
+            throw new \Exception(
+                "Migration \"{$migrationClass}\" (\"{$filename}\") " .
+                "does not implement Migration interface " .
+                "({$migrationInterfaceName})"
+            );
         }
 
         return [
