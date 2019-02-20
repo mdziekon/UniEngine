@@ -1,5 +1,8 @@
 <script>
 var JSLang = {Insert_JSLang};
+var phpVars = {
+    domain: "{phpVars_domain}"
+};
 </script>
 <script type="text/javascript" src="libs/jquery-cookie/jquery.cookie-1.0.0.1.min.js"></script>
 <script src="dist/js/register.cachebuster-1547684899198.min.js" type="text/javascript"></script>
