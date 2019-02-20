@@ -86,8 +86,8 @@ $_Lang['Watch_lastchanges_onBlip']   = 'Obserwuj nasz serwer na Blipie';
 $_Lang['DelFirstQueue']                          = 'Przerwij';
 $_Lang['CannotDeletePremiumBuilding_Warning']    = 'Nie można przerwać budowy, która wymagała Ciemnej Energii!';
 $_Lang['completed']                              = 'Zakończono';
-$_Lang['BuildJS_Complete']                       = 'Zakończono'; 
-$_Lang['BuildJS_Continue']                       = 'Kontynuuj';  
+$_Lang['BuildJS_Complete']                       = 'Zakończono';
+$_Lang['BuildJS_Continue']                       = 'Kontynuuj';
 
 // Free PremiumItems Box
 $_Lang['FreePremItem_Text']          = 'Otrzymałeś Darmowe Towary Premium [%s] (Konto Pro, Oficerowie itp.) od Systemu lub Administracji!<br/>Przejdź do Sklepu aby przejrzeć listę!';

@@ -76,7 +76,7 @@ $_Lang['tech'] = array
 	122 => 'Technologia plazmowa',
 	123 => 'Międzygalaktyczna Sieć Badań Naukowych',
 	124 => 'Technologia Ekspedycji',
-	125 => 'Technologia Antymaterii', 
+	125 => 'Technologia Antymaterii',
 	126 => 'Strumień Dezintegracyjny',
 	199 => 'Rozwój grawitonów',
 
@@ -114,7 +114,7 @@ $_Lang['tech'] = array
 	406 => 'Wyrzutnia plazmy',
 	407 => 'Mała powłoka ochronna',
 	408 => 'Duża powłoka ochronna',
-	
+
 	502 => 'Przeciwrakieta',
 	503 => 'Rakieta międzyplanetarna',
 );

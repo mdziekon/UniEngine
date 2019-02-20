@@ -58,7 +58,7 @@ $_Lang['Rule_SubTitles_4_1']     = 'Treści w grze';
 $_Lang['Rule_SubTitles_4_2']     = 'Kontakt z graczami i Zarządem gry';
 $_Lang['Rule_SubTitles_4_3']     = 'SPAM oraz wiadomości reklamowe';
 
-$_Lang['Rules_1']                = 
+$_Lang['Rules_1']                =
 '<b class="float">1.1.</b><span class="float">Każdy gracz przed ukończeniem rejestracji <b>musi</b> dokonać akceptacji Regulaminu gry. Założenie konta w grze (na dowolnym Universum) jest równoznaczne z tym, że Użytkownik zgadza się i akceptuje wszystkie postanowienia tego Regulaminu.</span><br/>
 <b class="float">1.2.</b><span class="float">Rozszerzeniem tego Regulaminu jest <a href="redirect.php?id=4"><b>Tabela Kar</b></a>, która zawiera spis przyznawanych kar za konkretne wykroczenia w grze.</span><br/>
 <b class="float">1.3.</b><span class="float">Każdy gracz musi znać Regulamin oraz wszystkie jego punkty i podpunkty. Nieznajomość <b>Regulaminu</b> oraz <a href="redirect.php?id=4"><b>Tabeli Kar</b></a> nie zwalnia z odpowiedzialności za swoje czyny w grze, zaś wszelkie odwołania od kar, w których gracz wykazuje ewidentny brak znajomości Regulaminu, będą od razu odrzucane.</span><br/>
@@ -78,7 +78,7 @@ $_Lang['Rules_1']                =
 <b class="float">1.12.</b><span class="float">Właściciele jak i Administracja nie biorą odpowiedzialności za wszelkie awarie lub niedostępność gry wynikłe zarówno z przyczyn losowych jak i z błędów w oprogramowaniu lub działania serwerów.</span><br/>
 <b class="float">1.13.</b><span class="float">Właściciele gry zastrzegają sobie prawo do składowania adresów IP oraz adresów Email w celach Reklamowych gry i pochodnych produktów. Po usunięciu konta gracz ma prawo zarządać usunięcia swojego adresu IP oraz Email z Bazy Danych - w tym celu należy wysłać wiadomość Email do jednego z Właścicieli lub Administracji gry z prośbą o usunięcie danych z Bazy (wiadomość, w celu weryfikacji, należy wysłać z tego samego adresu, który znajduje się w Bazie).</span>';
 
-$_Lang['Rules_2_1']              = 
+$_Lang['Rules_2_1']              =
 '<b class="float">2.1.1.</b><span class="float">Każdy gracz może posiadać tylko jedno konto na każdym Universum.</span><br/>
 <b class="float">2.1.2.</b><span class="float">Gracz, który otrzymał Bana (blokadę konta), nie może zakładać następnego konta w celu dalszej gry.</span><br/>
 <b class="float">2.1.3.</b><span class="float">Na każdym koncie może grać tylko jedna osoba, chyba że dana sytuacja jest opisana w poniższych punktach lub Administracja wyraziła zgodę na grę przez kilka osób.</span><br/>
@@ -98,11 +98,11 @@ $_Lang['Rules_2_1']              =
 <li>Wyjątkiem od powyższych dwóch podpunktów są sporadyczne logowania w tym samym miejscu (np. kawiarenki internetowe, sporadyczne logowanie na komputerze drugiego gracza w weekendy). Wtedy kontakt flot jest zabroniony tylko wtedy, gdy gracze logują się w tym samym miejscu.</li>
 </ul></span>';
 
-$_Lang['Rules_2_2']              = 
+$_Lang['Rules_2_2']              =
 '<b class="float">2.2.1.</b><span class="float">Wymiana kont jest dozwolona, jednakże fakt ten należy zgłosić Administracji. W takim wypadku Administracja może zamienić oba konta bez potrzeby wymieniania się hasłami. W przypadku wymiany bez powiadomienia Administracja nie jest zobowiązana do zwrotu jakichkolwiek strat w przypadku oszustwa czy kradzieży, nie musi również wszczynać żadnego postępowania, mającego na celu wyjaśnienie danej sytuacji.</span><br/>
 <b class="float">2.2.2.</b><span class="float">Sprzedaż kont (lub dowolnej jego cześci, np. surowców) w celach zarobkowych jest zabroniona. Właściciele gry uznają jednak możliwość sprzedaży kont w celach charytatywnych.</span>';
 
-$_Lang['Rules_3_1']              = 
+$_Lang['Rules_3_1']              =
 '<b class="float">3.1.1.</b><span class="float">Handel nie musi być zgłaszany na Forum gry ani nikomu z Administracji i Supportu gry.</span><br/>
 <b class="float">3.1.2.</b><span class="float">Minimalnym przelicznikiem w Handlu jest stosunek 1:1 dla każdego surowca. Sprzedaż lub kupno surowców po nierozsądnych cenach (wielokrotnie zaniżone lub zawyżone ceny) może zostać uznana za przejaw Pushu, o którym mowa w punkcie <b>3.2.</b></span><br/>
 <b class="float">3.1.3.</b><span class="float">Handel musi zostać zakończony po 24 godzinach od momentu wysłania floty przez pierwszego gracza. Brak odesłania surowców zostanie uznany jako Push lub Kradzież (w zależności od zaistniałej sytuacji).</span><br/>
@@ -110,7 +110,7 @@ $_Lang['Rules_3_1']              =
 <b class="float">3.1.5.</b><span class="float">Wszelkie pożyczki surowców powinny zostać zgłoszone na Forum gry lub bezpośrednio do Administracji. W przeciwnym wypadku mogą zostać uznane za Push, o którym mowa w punkcie <b>3.2.</b></span><br/>
 <b class="float">3.1.6.</b><span class="float">Maksymalny czas trwania pożyczki to 14 dni.</span>';
 
-$_Lang['Rules_3_2']              = 
+$_Lang['Rules_3_2']              =
 '<b class="float">3.2.1.</b><span class="float">Za Push uznaje się wspomaganie gracza silniejszego przez gracza słabszego.</span><br/>
 <b class="float">3.2.2.</b><span class="float">Przejawami Pushu są:<br/>
 <ul class="ruleul">
@@ -120,7 +120,7 @@ $_Lang['Rules_3_2']              =
 <li>Brak zgłoszenia Najemnictwa [Moonmaking, Pożyczki Recyklerów lub Celowe złomowanie flot] (o ile wymagane jest zgłoszenie)</li>
 <li>Złamanie jednej z zasad z <b>pkt. 3.1</b> tego Regulaminu</li>
 <li>Wszelkie inne sposoby, które mają na celu przynieść korzyść silniejszemu kontu.</li>
-</ul></span><br/>   
+</ul></span><br/>
 <b class="float">3.2.3.</b><span class="float">Należy pamiętać, że:<br/>
 <ul class="ruleul">
 <li>Niechcianych surowców od gracza słabszego nie można zatrzymać, należy je niezwłocznie odesłać oraz fakt ten zgłosić na Forum gry lub bezpośrednio do Administracji.</li>
@@ -129,7 +129,7 @@ $_Lang['Rules_3_2']              =
 </ul></span><br/>
 <b class="float">3.2.4.</b><span class="float">Pomoc silniejszym graczom w sojuszu jest możliwa w formie pożyczki, lecz powinna być zgłoszona na Forum Gry lub bezpośrednio do Administracji.</span>';
 
-$_Lang['Rules_3_3']              = 
+$_Lang['Rules_3_3']              =
 '<b class="float">3.3.1.</b><span class="float">Tworzenie Księżyców (tzw. Moonmaking - celowe wysyłanie flot w celu ich zniszczenia w taki sposób, by na orbicie planety powstał Księżyc) jest dozwolone pod pewnymi warunkami:<br/>
 <ul class="ruleul">
 <li>Wszelkie straty poniesione przez gracza, który został poproszony o pomoc w Moonmakingu powinny zostać pokryte przez gracza, który o pomoc poprosił.</li>
@@ -138,7 +138,7 @@ $_Lang['Rules_3_3']              =
 <b class="float">3.3.2.</b><span class="float">Zgłaszanie Moonmakingu nie jest konieczne.</span><br/>
 <b class="float">3.3.3.</b><span class="float">Moonmaking jest uznawany za Najemnictwo.</span>';
 
-$_Lang['Rules_3_4']              = 
+$_Lang['Rules_3_4']              =
 '<b class="float">3.4.1.</b><span class="float">Celowe złomowanie floty jest dozwolone na pewnych warunkach:<br/>
 <ul class="ruleul">
 <li>Złomowanie <b>musi</b> zostać zgłoszone na Forum gry lub bezpośrednio do Administracji lub Supportu i może odbyć się dopiero po uzyskaniu zgody.</li>
@@ -147,13 +147,13 @@ $_Lang['Rules_3_4']              =
 </ul></span><br/>
 <b class="float">3.4.2.</b><span class="float">Celowe złomowanie flot jest uznawane za Najemnictwo.</span>';
 
-$_Lang['Rules_3_5']              = 
+$_Lang['Rules_3_5']              =
 '<b class="float">3.5.1.</b><span class="float">Pożyczki Recyklerów (w celu zebrania nadmiarowych szczątków po bitwie) są dozwolone i powinny zostać zgłoszone na Forum gry lub bezpośrednio do Administracji lub Supportu.</span><br/>
 <b class="float">3.5.2.</b><span class="float">Podział surowców z Pola Zniszczeń jest dowolny.</span><br/>
 <b class="float">3.5.3.</b><span class="float">Odesłanie surowców musi odbyć się w przeciągu 24 godzin od zebrania surowców z Pola Zniszczeń.</span><br/>
 <b class="float">3.5.4.</b><span class="float">Pożyczki Recyklerów są uznawane za Najemnictwo.</span>';
 
-$_Lang['Rules_3_6']              = 
+$_Lang['Rules_3_6']              =
 '<b class="float">3.6.1.</b><span class="float">Za Bash uznaje się więcej niż 5 ataków na jedną <b>planetę lub księżyc</b> w ciągu 24 godzin (liczonych od godziny 00:00 do 23:59) lub więcej niż 15 ataków na jednego <b>gracza</b> w ciągu 24 godzin (liczonych od godziny 00:00 do 23:59)</span><br/>
 <b class="float">3.6.2.</b><span class="float">Flota lecąca z misją Niszcz jest liczona tak jak normalny atak.</span><br/>
 <b class="float">3.6.3.</b><span class="float">Każdy gracz, który bierze udział w Ataku Związku, jest osobno liczony do reguły Bash (nie istnieje w tym przypadku odpowiedzialność zbiorowa).</span><br/>
@@ -171,25 +171,25 @@ $_Lang['Rules_3_6']              =
 <li>Jeśli podczas niezgłoszonego Najemnictwa dojdzie do nadużyć (np. nadmierna ilość ataków w stosunku do zawartej umowy między graczami), gracz poszkodowany (Obrońca) ma prawo do zgłoszenia tych nadużyć na zasadach Bashu.</li>
 </ul></span>';
 
-$_Lang['Rules_3_7']              = 
+$_Lang['Rules_3_7']              =
 '<b class="float">3.7.1.</b><span class="float">Za Bugusing uznaje się używanie lub świadome ukrywanie błędów w oprogramowaniu gry dla własnej lub cudzej korzyści a także by spowolnić, zdestabilizować działanie gry lub w utrudnić dostęp do gry innym osobom.</span><br/>
 <b class="float">3.7.2.</b><span class="float">Każdy gracz, który został ukarany za BugUsing lub skorzystał nieświadomie z błędu, jest zobowiązany do pomocy Administracji w celu zlokalizowania i usunięcia błędu, o ile Administracja go o to prosi. Jeśli odmówi współpracy, jego konto może zostać ukarane, całkowicie zablokowane lub usunięte.</span><br/>
 <b class="float">3.7.3.</b><span class="float">Każdy gracz ma obowiązek zgłosić odkrytego Buga, niezależnie od jego szkodliwości.</span><br/>
 <b class="float">3.7.4.</b><span class="float">Jeśli gracz odznaczył się wyjątkową pomocą w rozwiązaniu problemu z błędami (lub zgłosił ich dostatecznie dużo), Administracja może nagrodzić go odpowiednimi płatnymi dodatkami w grze. Jednakże każda próba wyłudzenia nagrody może zostać ukarana.</span>';
 
-$_Lang['Rules_3_8']              = 
+$_Lang['Rules_3_8']              =
 '<b class="float">3.8.1</b><span class="float">Tryb Urlopu ma za zadanie zabezpieczyć konto gracza w czasie jego nieobecności przed atakami innych graczy. Dlatego też zabronione jest blokowanie możliwości przejścia na Urlop, niezależnie od sposobu blokowania (przykładem blokowania jest wysyłanie powolnych flot na planetę gracza).</span><br/>
 <b class="float">3.8.2</b><span class="float">Tryb Urlopu musi trwać minimalnie 3 dni i może trwać maksymalnie 30 dni (o ile gracz nie napisze do Administracji z prośbą o przedłużenie Urlopu ze względu na niecodzienną sytuację). Maksymalny czas urlopu ma zapobiec utrzymywaniu nieaktywnych i nietykalnych kont w grze.<br/>
 Po upłynięciu 30 dni od założenia Urlopu, przy najbliższym przeliczaniu Statystyk Serwera system automatycznie zdejmie Urlop z konta gracza.</span><br/>
 <b class="float">3.8.3</b><span class="float">Po zdjęciu każdego Urlopu system zablokuje wszelkie próby ponownego przejścia na ponowny urlop przez następne 24 godziny.</span>';
 
-$_Lang['Rules_3_9']              = 
+$_Lang['Rules_3_9']              =
 '<b class="float">3.9.1</b><span class="float">Stosowanie wszelkich botów, autoclickerów, autoodświeżaczy i innych programów lub skryptów, które nie został zaakceptowane przez Właścicieli i Administrację Gry, a mających na celu ułatwienie lub automatyzację gry, są surowo zabronione.</span><br/>
 <b class="float">3.9.2</b><span class="float">Korzystanie z gry przez oprogramowanie inne niż przeglądarka internetowa jest surowo zabronione.</span><br/>
 <b class="float">3.9.3</b><span class="float">Oficjalnie wspieraną przeglądarką jest Mozilla Firefox w najnowszej dostępnej stabilnej wersji. Jednakże gra jest również sprawdzana na najnowszych stabilnych wersjach innych przeglądarek, a także na niektórych wersjach rozwojowych. Właściciele Gry nie gwarantują prawidłowego działania gry na starych przeglądarkach (jak Internet Explorer 6) oraz na telefonach komórkowych czy tabletach.</span><br/>
 <b class="float">3.9.4</b><span class="float">W szczególnych przypadkach Właściciele Gry lub Administracja może (ale nie musi) przyznać zwrot straconych surowców lub floty, co zostało wywołane przez awarię serwera. Jednocześnie należy pamiętać, że w takim przypadku należy dostarczyć jak największej ilości informacji, by pomóc w procesie zwrotu.</span>';
 
-$_Lang['Rules_4_1']              = 
+$_Lang['Rules_4_1']              =
 '<b class="float">4.1.1.</b><span class="float">Oficjalnymi językami kontaktu z Właścicielami, Administracją i Supportem w grze są język Polski i Angielski.</span><br/>
 <b class="float">4.1.2.</b><span class="float">W Wiadomościach (zarówno prywatnych jak i na czacie) zabronione jest:<br/>
 <ul class="ruleul">
@@ -198,7 +198,7 @@ $_Lang['Rules_4_1']              =
 <li>Wysyłanie SPAMu, niechcianych Reklam.</li>
 <li>Wysyłanie wszelkich szkodliwych linków lub szkodliwego kodu, mającego na celu wyłudzić prywatne dane gracza.</li>
 <li>W szczególnych przypadkach będą karane również: publiczna obraza oraz pomówienia, a także mocne wulgaryzmy wymierzone w inne osoby (pseudocenzura, czyli ukrywanie części wulgaryzmu, również będzie karana).</li>
-</ul></span><br/>    
+</ul></span><br/>
 <b class="float">4.1.3.</b><span class="float">W Nazwach (gracza, planet, księżyców, sojuszy itp.) zabronione jest:<br/>
 <ul class="ruleul">
 <li>Używanie nazw zarezerwowanych dla Właścicieli Gry, Administracji czy Supportu (np. Admin, GameMaster, Game Operator).</li>
@@ -207,7 +207,7 @@ $_Lang['Rules_4_1']              =
 </ul></span><br/>
 <b class="float">4.1.4.</b><span class="float">Właściciele Gry i Administracja zastrzega sobie prawo do przeglądania Wiadomości wysłanych przez graczy w przypadku, gdy jest to wymagane do przeprowadzenia śledztwa w sprawie złamania Regulaminu.</span><br/>';
 
-$_Lang['Rules_4_2']              = 
+$_Lang['Rules_4_2']              =
 '<b class="float">4.2.1.</b><span class="float">Zabrania się jakichkolwiek prób Wymuszeń na innych graczach lub Właścicielach, Administracji lub Supporcie gry.</span><br/>
 <b class="float">4.2.2.</b><span class="float">Groźby odnoszące się do gry (np. groźba zezłomowania floty) nie będą karane, o ile nie przekraczają granic zdrowego rozsądku.</span><br/>
 <b class="float">4.2.3.</b><span class="float">Wymuszenia lub groźby odnoszące się do realnego życia są surowo zabronione.</span><br/>
@@ -216,21 +216,21 @@ $_Lang['Rules_4_2']              =
 <b class="float">4.2.6.</b><span class="float">Każda wiadomość masowa (Wiadomości Administracyjne) w grze jest obowiązkową lekturą dla gracza. Podobnie jak nieznajomość Regulaminu, nieznajomość treści Wiadomości nie zwalnia od odpowiedzialności w stosunku do zawartych w niech informacji lub wytycznych dla graczy.</span><br/>
 <b class="float">4.2.7.</b><span class="float">Wszelkie zgłoszenia, opinie, sugestie na temat gry powinny być zgłaszane na Forum gry, przez System Raportowania lub Bezpośrednio do Administracji lub Supportu. Luźne rozmowy na Czacie lub inną drogą komunikacji nie będą brane pod uwagę.</span>';
 
-$_Lang['Rules_4_3']              = 
+$_Lang['Rules_4_3']              =
 '<b class="float">4.3.1.</b><span class="float">Wszelki SPAM i Wiadomości Reklamowe bez zgody Właścicieli lub Administracji są surowo zabronione.</span><br/>
 <b class="float">4.3.2.</b><span class="float">Jeśli w akcji wysyłania SPAMu lub Reklam bierze udział kilka osób, wszystkie zostaną ukarane</span><br/>
 <b class="float">4.3.3.</b><span class="float">Wszelkie wiadomości mające na celu reklamowanie własnych gier, stron internetowych, blogów, for a także zawierające linki polecające także są uznawane za SPAM.</span><br/>
 <b class="float">4.3.4.</b><span class="float">Wielokrotne wysyłanie pustych (np. zawierających tylko jeden znak) lub nieistotnych wiadomości (zawierających przypadkowe ciągu znaków) uznawane jest za SPAM.</span><br/>
 <b class="float">4.3.5.</b><span class="float">Za przejaw SPAMu będą uznawane również masowe wysyłki Sond Szpiegowskich lub innych Flot (by zapełnić listę lecących flot lub skrzynkę wiadomości gracza).</span>';
 
-$_Lang['Rules_5']                = 
+$_Lang['Rules_5']                =
 '<b class="float">5.1.</b><span class="float">Wszelkie płatne dodatki, które gracz może zakupić na przyznane mu konto nie podlegają zwrotowi w przypadku naruszeń zasad Regulaminu.</span><br/>
 <b class="float">5.2.</b><span class="float">W przypadku Awarii lub blokady dostępu do gry, Właściciele lub Administracja gry <b>może</b>, ale nie musi, zarządzić darmowe przyznanie rekompensaty części lub całości straconych dodatków.</span><br/>
 <b class="float">5.3.</b><span class="float">Wszelkie dokonane płatności nie będą zwracane, nawet w przypadku usunięcia konta.</span><br/>
 <b class="float">5.4.</b><span class="float">Wszelkie reklamacje lub problemy z płatnościami lub płatnymi dodatkami należy zgłosić do Składu Zarządzającego Grą.</span>';
 
 
-$_Lang['Rules_6']                = 
+$_Lang['Rules_6']                =
 '<b class="float">6.1.</b><span class="float">Wszelkie treści zamieszczane w grze nie mogą łamać Polskiego Prawa, nie mogą także łamać zasad etyki oraz nie powinny łamać zasad kultury osobistej.</span><br/>
 <b class="float">6.2.</b><span class="float">Wszelkie Kary nakładane na konto gracza mogą zostać podane bez podania wyjaśnienia ze strony Właścicieli i Administracji gry.</span><br/>
 <b class="float">6.3.</b><span class="float">To Właściciele, Administracja i Support gry ustala, czy dany gracz złamał dany punkt Regulaminu.</span><br/>

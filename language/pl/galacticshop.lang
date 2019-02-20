@@ -40,10 +40,10 @@ $_Lang['DarkEnergyTitle']        = 'Handlarz Ciemnej Energii';
 $_Lang['ErrorBadOption']         = 'Niepoprawnie wybrana opcja!';
 $_Lang['ErrorWrongCode']         = 'Wprowadzony kod jest niepoprawny lub skończyła się jego ważność.';
 $_Lang['ErrorCodeShouldBe8CharsLong']    = 'Zwróć uwagę, że kod powinien składać się z 8 znaków!';
-$_Lang['ErrorUnknown']           = 'Wystąpił błąd: ';    
+$_Lang['ErrorUnknown']           = 'Wystąpił błąd: ';
 $_Lang['ErrorSQL']               = 'Wystąpił błąd zapytania!';
 $_Lang['ErrorNoCode']            = 'Nie podano kodu!';
-$_Lang['AddSuccess']             = 'Do twojego konta dodano <i>%s</i> Ciemnej Energii!'; 
+$_Lang['AddSuccess']             = 'Do twojego konta dodano <i>%s</i> Ciemnej Energii!';
 $_Lang['_Added5DEUnits']         = '5 jednostek';
 $_Lang['_Added15DEUnits']        = '15 jednostek';
 $_Lang['_Added25DEUnits']        = '25 jednostek';
@@ -53,8 +53,8 @@ $_Lang['_Added30DEUnits']        = '30 jednostek';
 $_Lang['_Added50DEUnits']        = '50 jednostek';
 $_Lang['_Added90DEUnits']        = '90 jednostek';
 
-$_Lang['ErrorNoItemIDGiven']         = "Nie podałeś przedmiotu, który chcesz zakupić!";  
-$_Lang['ErrorTooMuchItemIDGiven']    = "Możesz kupić tylko jeden przedmiot za jednym razem!"; 
+$_Lang['ErrorNoItemIDGiven']         = "Nie podałeś przedmiotu, który chcesz zakupić!";
+$_Lang['ErrorTooMuchItemIDGiven']    = "Możesz kupić tylko jeden przedmiot za jednym razem!";
 $_Lang['ErrorCurrentlyNothinkToSell']= "Przepraszamy, ale w tym momencie nie można nic kupić u Przemytników!";
 $_Lang['ErrorBadIDGiven']            = "Nie mamy takiego przedmiotu na składzie!";
 $_Lang['ErrorNotBuyable']            = 'Ten przedmiot nie jest na sprzedaż!';
@@ -86,7 +86,7 @@ $_Lang['TraderUsesBought']			= 'Zatrudniłeś Handlowca do wykonania %s transakc
 $_Lang['PlanetSlots_left'][0]        = '2 sloty';
 $_Lang['PlanetSlots_left'][1]        = '1 slot';
 
-$_Lang['ShopTitle']            = "Magazyny przemytników"; 
+$_Lang['ShopTitle']            = "Magazyny przemytników";
 $_Lang['ShopText']             = "Przemytnicy to niezbyt przyjaźni ludzie. Prowadząc życie poza prawem i z kilkoma listami gończymi na karku też pewnie byłbyś taki jak oni.<br/>Jeśli już potrzebujesz skorzystać z ich oferty, lepiej zrób to szybko i bez żadnych przekrętów.";
 $_Lang['ShopArticlesTitle']    = "Oferta przemytników";
 $_Lang['ArticleName']          = "Nazwa";
@@ -111,7 +111,7 @@ $_Lang['Free_NoFreeItems']           = 'Brak Darmowych Towarów dla twojego kont
 $_Lang['Free_BadIDGiven']            = 'Podano nieprawidłowe dane!';
 $_Lang['Free_BadItemGiven']          = 'Podano nieprawidłowy Identyfikator Towaru!';
 
-$_Lang['shop_items'] = 
+$_Lang['shop_items'] =
     array(
         1 => array(
                 'name' => 'Konto Pro (7 dni)',
@@ -140,7 +140,7 @@ $_Lang['shop_items'] =
                 'price' => 15,
                 'duration' => '14 dni',
 				'duration_days' => 14
-                
+
             ),
         5 => array(
                 'name' => 'Zatrudnij Geologa',
@@ -175,7 +175,7 @@ $_Lang['shop_items'] =
                 'desc' => 'Zarządzanie kilkoma planetami na raz to duże wyzwanie nawet dla największych Imperatorów. W takich sytuacjach z pomocą przychodzą wybitni koloniści z sektora Xen, których doświadczenie pozwoli Ci na skolonizowanie kilku dodatkowych planet.<br/><br/><b>- Możliwość skolonizowania dodatkowej planety (max. 3)',
                 'price' => 0,
                 'price_array' => array(20,35,50, -1),
-                'duration' => false                        
+                'duration' => false
             ),
         10 => array(
                 'name' => 'Brama Kwantowa',

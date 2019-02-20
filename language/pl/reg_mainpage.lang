@@ -52,7 +52,7 @@ $_Lang['ReCaptcha_incorrect_try_again']	= 'Źle przepisano kod, spróbuj ponowni
 $_Lang['JSLang'] = array
 (
 	'Info_RequestSent'			=> '<img src="./images/ajaxload.gif" style="margin-right: 10px;" /> Trwa tworzenie konta...',
-	
+
 	'Alert_UsernameShort'		=> 'Nazwa gracza musi być dłuższa niż 3 znaki!',
 	'Alert_UsernameLong'		=> 'Nazwa gracza nie może być dłuższa niż 64 znaków!',
 	'Alert_PasswordShort'		=> 'Hasło musi być dłuższe niż 3 znaki!',
@@ -63,7 +63,7 @@ $_Lang['JSLang'] = array
 	'Alert_RequestTimeout'		=> 'Przekroczono czas żądania. Prosimy spróbować ponownie za kilka chwil...',
 	'Alert_RequestError'		=> 'Wystąpił błąd podczas przetwarzania żądania. Prosimy o kontakt z Administracją...',
 	'Alert_JSONError'			=> 'Wystąpił błąd podczas przetwarzania odpowiedzi serwera. Prosimy o kontakt z Administracją...',
-	
+
 	'Alert_RequestCode_1'		=> 'Nazwa gracza musi być dłuższa niż 3 znaki!',
 	'Alert_RequestCode_2'		=> 'Nazwa gracza nie może być dłuższa niż 64 znaków!',
 	'Alert_RequestCode_3'		=> 'Nazwa gracza zawiera niedozwolone znaki!',
@@ -79,7 +79,7 @@ $_Lang['JSLang'] = array
 	'Alert_RequestCode_13'		=> 'Musisz podać, w której Galaktyce chcesz rozpocząć rozgrywkę!',
 	'Alert_RequestCode_14'		=> 'Przekroczyłeś wielkość Universum podając numer Galaktyki!',
 	'Alert_RequestCode_15'		=> 'Przepraszamy, ale w tej Galaktyce nie ma już wolnych miejsc!',
-	
+
 	'Info_RequestCode_1'		=> 'Twoje konto zostało założone poprawnie, za chwilę nastapi przejście do gry...',
 	'Info_RequestCode_2'		=> 'Twoje konto zostało założone poprawnie. Teraz oczekuj na otwarcie tego Universum...',
 );

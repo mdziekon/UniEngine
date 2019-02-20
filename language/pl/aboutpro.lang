@@ -10,13 +10,13 @@ $_Lang['BenefitsTitle'] = 'Co zyskujesz z Kontem Pro';
 
 $_Lang['Benefits'] = array
 (
-	'Kolejka budowania - rozszerzenie do <b class="lime">10 pozycji</b>', 
-	'Kolejka badań - <b class="lime">5 pozycji</b>', 
-	'<b class="lime">Nieograniczony</b> dostęp do <b class="lime">Handlarza</b> (możliwość wymiany surowców)', 
-	'Dostęp do <b class="lime">Podglądu Imperium</b> (podgląd wszystkich planet i księżyców w jednym miejscu)', 
-	'Dostęp do <b class="lime">Demontowni</b> (możliwość demontowania statków i obrony na surowce)', 
+	'Kolejka budowania - rozszerzenie do <b class="lime">10 pozycji</b>',
+	'Kolejka badań - <b class="lime">5 pozycji</b>',
+	'<b class="lime">Nieograniczony</b> dostęp do <b class="lime">Handlarza</b> (możliwość wymiany surowców)',
+	'Dostęp do <b class="lime">Podglądu Imperium</b> (podgląd wszystkich planet i księżyców w jednym miejscu)',
+	'Dostęp do <b class="lime">Demontowni</b> (możliwość demontowania statków i obrony na surowce)',
 	'Maksymalna ilość Statków i Obronnych w Kolejce Stoczni podniesiona do <b class="lime">10 mln</b>',
-	'Dostęp do <b class="lime">Listy Ataków</b> podlegających Regule Bash', 
+	'Dostęp do <b class="lime">Listy Ataków</b> podlegających Regule Bash',
 	'Funkcję usprawniającą Transport Surowców (<b class="lime">Autouzupełnianie</b>)',
 );
 

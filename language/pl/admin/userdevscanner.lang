@@ -58,7 +58,7 @@ $_Lang['Scripts'] = array
         23 => 'merchant',
         24 => 'disassembler',
     );
-    
+
 $_Lang['FoundSummarys'] = array
     (
         '000' => array('Txt1' => 'Wszystko jest w porządku...', 'Txt2' => 'Wykryto następujące Konflikty:'),

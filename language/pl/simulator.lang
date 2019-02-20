@@ -10,8 +10,8 @@ $_Lang['Slot']                   = 'Slot';
 $_Lang['Submit']                 = 'Przeprowadź symulację!';
 
 $_Lang['Attacker']               = 'Agresor nr. <span id="attacker_slot">1</span>';
-$_Lang['Defender']               = 'Obrońca nr. <span id="defender_slot">1</span> <span id="is_planet_owner">(Właściciel Planety/Księżyca)</span>';  
-$_Lang['PlanetOwner']            = '(Właściciel Planety/Księżyca)';           
+$_Lang['Defender']               = 'Obrońca nr. <span id="defender_slot">1</span> <span id="is_planet_owner">(Właściciel Planety/Księżyca)</span>';
+$_Lang['PlanetOwner']            = '(Właściciel Planety/Księżyca)';
 
 $_Lang['Attacker_Txt']           = 'Agresor ';
 $_Lang['Defender_Txt']           = 'Obrońca ';
