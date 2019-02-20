@@ -76,6 +76,7 @@ foreach($UniData as $UniNo => $This)
 $parse['GameURL'] = GAMEURL_STRICT;
 $parse['GameName'] = $_GameConfig['game_name'];
 $parse['Insert_JSLang'] = json_encode($_Lang['JSLang']);
+$parse['phpVars_domain'] = GAMEURL_DOMAIN;
 
 if(REGISTER_RECAPTCHA_ENABLE)
 {

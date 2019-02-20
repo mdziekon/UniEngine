@@ -1,4 +1,4 @@
-/* globals JSLang */
+/* globals JSLang, phpVars */
 /* exported hideMsgBox, regCallback */
 
 var $Elements = {MsgSpace: null, MsgBox: null};
@@ -176,7 +176,13 @@ function regCallback (ResponseObject) {
 
     if (typeof ResponseObject.Cookie != "undefined") {
         for (var CookieID in ResponseObject.Cookie) {
-            $.cookie(ResponseObject.Cookie[CookieID].Name, ResponseObject.Cookie[CookieID].Value, { domain: ".172.19.0.3"});
+            $.cookie(
+                ResponseObject.Cookie[CookieID].Name,
+                ResponseObject.Cookie[CookieID].Value,
+                {
+                    domain: ("." + phpVars.domain)
+                }
+            );
         }
     }
 
