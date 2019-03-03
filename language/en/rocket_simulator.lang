@@ -1,0 +1,36 @@
+<?php
+
+$_Lang['Title']              = 'Interplanetary Strikes Simulator';
+
+$_Lang['Sim_Result']         = 'Simulation result';
+
+$_Lang['Defender']           = 'Defender';
+$_Lang['Attacker']           = 'Aggressor';
+
+$_Lang['InterceptMiss']      = 'Anti-ballistic Missiles';
+$_Lang['InterplanetMiss']    = 'Interplanetary Missiles';
+
+$_Lang['MainTarget']         = 'Primary target';
+$_Lang['Everythink']         = 'Everything';
+
+$_Lang['Submit']             = 'Simulate';
+
+$_Lang['No_IPM_Given']       = 'No Interplanetary Missiles selected!';
+$_Lang['No_Defs_Given']      = 'No defenses selected!';
+
+$_Lang['IPMissiles_Destroyed']   = 'All Interplanetary Missiles have been intercepted!';
+$_Lang['IPMissiles_CapturedX']   = 'Intercepted Interplanetary Missiles: %s';
+
+$_Lang['Destroyed_Sys']          = '<u>Destroyed defenses</u>';
+$_Lang['Nothing_destroyed']      = '<u style="color: orange;">Nothing has been destroyed!</u>';
+$_Lang['Destroyed_Sys_Count']    = '<u>Lost defenses</u>:';
+$_Lang['Lost_units_ICM']         = '<u>Resources lost (Anti-ballistic Missiles)</u>';
+$_Lang['Lost_units_Sys']         = '<u>Resources lost (Defense systems)</u>';
+$_Lang['Range']                  = '<u>Missile striking area</u>';
+$_Lang['DefDebris']              = '<u>Created debris field</u>';
+$_Lang['SquareMeters']           = 'square meters';
+$_Lang['Lost_units_IPM']         = '<u>Resources used (Interplanetary Missiles)</u>';
+
+$_Lang['units']                  = 'units of';
+
+?>
