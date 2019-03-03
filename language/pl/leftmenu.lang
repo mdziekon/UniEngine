@@ -16,7 +16,6 @@ $_Lang['AttacksList']		= 'Lista Ataków';
 $_Lang['Resources']			= 'Surowce';
 $_Lang['Empire']			= 'Imperium';
 $_Lang['Merchant']			= 'Handlarz';
-$_Lang['Annonces']			= 'Ogłoszenia';
 $_Lang['Technology']		= 'Technologia';
 $_Lang['Galaxy']			= 'Galaktyka';
 $_Lang['Fleet']				= 'Flota';
@@ -73,7 +72,6 @@ $_Lang['BoardTitle']			= 'Forum gry';
 $_Lang['AddDeclareTitle']		= 'Zgłaszanie gry z jednego IP przez wielu graczy';
 $_Lang['ChangeLogTitle']		= 'Dziennik zmian i informacje o serwerze';
 $_Lang['MerchantTitle']			= 'Handluj swoimi surowcami';
-$_Lang['AnounceTitle']			= 'Wystaw na wymianę swoje surowce';
 $_Lang['GalacticShopTitle']		= 'Potrzebujesz dodatkowych usprawnień dla konta! Zajrzyj tu!';
 $_Lang['RefTableTitle']			= 'Sprawdź status polecenia swoich znajomych';
 $_Lang['AboutProTitle']			= 'Dowiedz się, co oferuje Ci konto Pro';
@@ -84,7 +82,6 @@ $_Lang['DisassemblerTitle']		= 'Nie potrzebujesz już danej jednostki? Rozbierz 
 $_Lang['AttacksListTitle']		= 'Sprawdź ile razy atakowałeś dziś graczy';
 $_Lang['TeleportTitle']			= 'Użyj Teleportera';
 $_Lang['TasksTitle']			= 'Sprawdź aktywne i wykonane zadania';
-$_Lang['changelogandinfo']		= 'Dziennik zmian i informacje o serwerze';
 
 // AdminPanel Menu
 
