@@ -10,13 +10,10 @@ $_Lang['ChatTitle_GameTeam'] = 'obsługi gry';
 $_Lang['chat_loading']  = "Ładowanie ...";
 $_Lang['chat_disc']     = "Bezpośredni czat";
 $_Lang['chat_message']  = "Wiadomość<br/>(Shift + Enter &#187; Nowa Linia)";
-$_Lang['chat_short']    = "Emotikony";
-$_Lang['chat_text']     = "Tekst";
 $_Lang['chat_send']     = "Wyślij";
 $_Lang['chat_save']     = "Zapisz zmiany";
 $_Lang['on_chat']       = "Obecni na czacie:";
 
-$_Lang['Legend_Smiles']      = 'Emotikony';
 $_Lang['Legend_BBCode']      = 'BBCode';
 $_Lang['Legend_BBCode_B'] = 'Pogrubienie';
 $_Lang['Legend_BBCode_S'] = 'Przekreślenie';
