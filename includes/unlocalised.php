@@ -415,10 +415,14 @@ function pretty_time_hour($seconds, $NoSpace = false)
 function prettyMonth($month, $variant = '0')
 {
     global $_Lang;
-    if(!isset($_Lang['pretty_months_loaded']))
-    {
+    static $_PrettyMonthsLocaleLoaded = false;
+
+    if (!$_PrettyMonthsLocaleLoaded) {
         includeLang('months');
+
+        $_PrettyMonthsLocaleLoaded = true;
     }
+
     return $_Lang['months_variant'.$variant][($month-1)];
 }
 
