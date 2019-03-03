@@ -50,12 +50,4 @@ $_Lang['PhalanxError_ScanOnlyFromMoon']	= 'Skanowanie za pomocą Falangi można 
 $_Lang['PhalanxInfo_NoMovements_Text']	= 'Nie wykryto żadnych ruchów flot...';
 $_Lang['PhalanxInfo_NoMovements']		= "<tr><th class=\"orange pad8\">{$_Lang['PhalanxInfo_NoMovements_Text']}</th></tr>";
 
-$_Lang['Phalanx_only_from_moon']			= 'Skanowanie za pomocą Falangi czujników można przeprowadzać tylko z księżyca!';
-$_Lang['Phalanx_CurrentMoonDestroyed']	= 'Księżyc na którym się znajdujesz został zniszczony!';
-$_Lang['No_phalanx_on_moon']				= 'Na tym księżycu nie ma Falangi czujników!';
-$_Lang['Can_scan_only_in_my_galaxy']		= 'Falanga czyjników działa tylko w obrębie jednej galaktyki!';
-$_Lang['Target_out_of_range']			= 'Cel poza zasięgiem Falangi!';
-$_Lang['No_planet']						= 'Na podanych koordynatach nie ma żadnej planety!';
-$_Lang['No_movements']					= 'Nie wykryto żadnych ruchów flot...';
-
 ?>
