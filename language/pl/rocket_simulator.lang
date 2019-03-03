@@ -2,7 +2,6 @@
 
 $_Lang['Title']              = 'Symulator Ataków Rakietowych';
 
-$_Lang['DataInput']          = 'Wprowadź dane';
 $_Lang['Sim_Result']         = 'Wynik Symulacji';
 
 $_Lang['Defender']           = 'Obrońca';
