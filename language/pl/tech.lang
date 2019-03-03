@@ -11,8 +11,6 @@ $_Lang['Message']		= "Wiadomości";
 $_Lang['GoToShop']		= 'Sklep';
 $_Lang['level']			= "Poziom";
 $_Lang['treeinfo']		= "[i]";
-$_Lang['comingsoon']		= "Wkrótce";
-$_Lang['te_dt_tx_pre']	= "Wymagania wstępne dla";
 
 $_Lang['Metal_rec']		= 'metalu';
 $_Lang['Crystal_rec']	= 'kryształu';
