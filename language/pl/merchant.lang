@@ -42,16 +42,7 @@ $_Lang['Trader_Zero']                = 'Zero';
 
 $_Lang['Trader_CantUseTrader']		= '<b class="red">Aby korzystać z Handlarza, musisz mieć wykupione pakiety transakcji od Handlowca lub Konto Pro!</b>';
 
-$_Lang['mod_ma_title'] = "Handlarz";
-$_Lang['mod_ma_typer'] = "Sprzedaj";
-$_Lang['mod_ma_rates'] = "Preferowany przelicznik 4:2:1";
-$_Lang['mod_ma_buton'] = "Handluj";
-$_Lang['mod_ma_noten'] = "Brak surowca";
-$_Lang['mod_ma_done']  = "Dziękujemy za zaufanie i polecamy się na przyszłość.";
-$_Lang['mod_ma_error'] = "Błąd";
-$_Lang['mod_ma_donet'] = "Tranzakcja wykonana pomyślnie!";
 $_Lang['mod_ma_excha'] = "Dokonaj tranzakcji";
 $_Lang['mod_ma_cours'] = "Przelicznik";
-$_Lang['mod_ma_nbre']  = "Szereg !!!";
 
 ?>
