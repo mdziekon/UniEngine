@@ -9,7 +9,6 @@ $_Lang['Ban_TimeLeft']               = 'Pozostało';
 $_Lang['Ban_expired']                = 'Ban wygasł!';
 
 $_Lang['_ago']                       = 'temu';
-$_Lang['_in']                        = 'za';
 $_Lang['_day']                       = 'dzień';
 $_Lang['_days']                      = 'dni';
 $_Lang['_today']                     = 'Dziś';
