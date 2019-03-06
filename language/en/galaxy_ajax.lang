@@ -1,0 +1,90 @@
+<?php
+
+// Ajax Success
+$_Lang['ajax_send_600_1']   = 'Spy probes (xyz) sent to replace_target!';
+$_Lang['ajax_send_600_2']   = 'Recyclers (xyz) sent to replace_target!';
+$_Lang['ajax_send_600_3']   = 'Colony ship sent to planet replace_target!';
+$_Lang['ajax_send_600_4']	= 'Interplanetary strike sent to planet replace_target!';
+
+// Ajax Error
+$_Lang['ajax_send_601']     = 'You are not logged in!';
+$_Lang['ajax_send_602']     = 'Invalid mission given!';
+$_Lang['ajax_send_603']     = 'Invalid coordinates given!';
+$_Lang['ajax_send_604']     = 'Invalid target type given!';
+$_Lang['ajax_send_605']     = 'Invalid ships count given!';
+$_Lang['ajax_send_606_1']   = "You don\'t have any Spy probes!";
+$_Lang['ajax_send_606_2']   = "You don\'t have any Recyclers!";
+$_Lang['ajax_send_606_3']   = "You don\'t have any Colony ships!";
+$_Lang['ajax_send_607']     = "You don\'t have enough deuterium!";
+$_Lang['ajax_send_608']     = "You don\'t have enough fuel storage!";
+$_Lang['ajax_send_609']     = 'You cannot send this fleet - no free flight slots available!';
+$_Lang['ajax_send_610']     = "You didn\'t select any ships to send!";
+$_Lang['ajax_send_611']     = 'There is no debris field on coordinates replace_target!';
+$_Lang['ajax_send_612']     = 'Debris can be recycled only from a debris field!';
+$_Lang['ajax_send_613']     = 'You can send Spy probes only to planets and moons!';
+$_Lang['ajax_send_614']     = 'Selected planet (or moon) is uninhabited!';
+$_Lang['ajax_send_615']     = 'You cannot spy on yourself!';
+$_Lang['ajax_send_616']     = 'You cannot spy on your ally!';
+$_Lang['ajax_send_617']     = 'You cannot spy on a banned player (with vacation mode on)!';
+$_Lang['ajax_send_618']     = 'You cannot spy on a player on vacation!';
+$_Lang['ajax_send_619']     = "This player is still under system\'s protection!";
+$_Lang['ajax_send_620']     = "You cannot spy on anyone since you\'re still under system\'s protection!";
+$_Lang['ajax_send_621']     = 'Player is too weak for you!';
+$_Lang['ajax_send_622']     = 'Player is too strong for you!';
+$_Lang['ajax_send_623']     = 'Administration cannot spy on other players!';
+$_Lang['ajax_send_624']     = 'This planet is already colonised!';
+$_Lang['ajax_send_625']     = 'You cannot spy on Administration!';
+$_Lang['ajax_send_626']     = 'Fleet Blockade is active!';
+$_Lang['ajax_send_627']     = "This player is under Fleet Blockade\'s protection!";
+$_Lang['ajax_send_628']     = 'Global Fleet Blockade is active!';
+$_Lang['ajax_send_629']     = "Spying on Admin\'s Test Account is forbidden from the Galaxy view!";
+$_Lang['ajax_send_630']     = "You cannot spy on a player who does not have their Statistics calculated, or they didn\'t activate their account yet!";
+$_Lang['ajax_send_631']     = "You cannot spy on other players until your account\'s Statistics are not calculated, or you didn\'t activate your account yet!";
+$_Lang['ajax_send_632']     = 'You cannot spy on other players until your account is under Newcomer protection!';
+$_Lang['ajax_send_633']     = 'This player is under Newcomer protection!';
+$_Lang['ajax_send_634']     = "This player is under Newcomer protection - they didn\'t login to the game yet!";
+$_Lang['ajax_send_635']     = "This player is under post Fleet Blockade system\'s protection!";
+$_Lang['ajax_send_636']     = "Your account is under Fleet\'s Blockade!";
+$_Lang['ajax_send_637']     = "This player is under Fleet\'s Blockade!";
+$_Lang['ajax_send_638']     = "Your planet is under Fleet\'s Blockade!";
+$_Lang['ajax_send_639']     = "Your moon is under Fleet\'s Blockade!";
+$_Lang['ajax_send_640']     = "This planet is under Fleet\'s Blockade!";
+$_Lang['ajax_send_641']     = "This moon is under Fleet\'s Blockade!";
+$_Lang['ajax_send_642']		= 'This player is banned (with vacation mode on)!';
+$_Lang['ajax_send_643']		= 'This player is on vacation!';
+$_Lang['ajax_send_644']		= 'You cannot attack an allied player!';
+$_Lang['ajax_send_645']		= 'You cannot attack yourself!';
+$_Lang['ajax_send_646']		= 'You do not have enough Interplanetary Missiles!';
+$_Lang['ajax_send_647']		= 'Target is out of range!';
+$_Lang['ajax_send_648']		= 'You do not have Impulse drive discovered yet!';
+$_Lang['ajax_send_649']		= 'You do not have Missile silo!';
+$_Lang['ajax_send_650']		= 'This planet does not exist!';
+$_Lang['ajax_send_651']		= 'No missiles count given!';
+$_Lang['ajax_send_652']		= 'Invalid data given!';
+$_Lang['ajax_send_653']		= 'You cannot attack other players until your account is under Newcomer protection!';
+$_Lang['ajax_send_654']		= 'This player is under Newcomer protection!';
+$_Lang['ajax_send_655']		= "This player is under Newcomer protection - they didn\'t login to the game yet!";
+$_Lang['ajax_send_656']		= 'You cannot attack a weaker player!';
+$_Lang['ajax_send_657']		= "You cannot attack other players until your account is under system\'s protection!";
+$_Lang['ajax_send_658']		= 'You cannot attack a stronger player!';
+$_Lang['ajax_send_659']		= 'Administration cannot send Interplanetary strikes!';
+$_Lang['ajax_send_660']		= "You cannot send Interplanetary strikes on Administration\'s planets!";
+$_Lang['ajax_send_661']		= 'You cannot send any fleets until your account remains inactive!';
+$_Lang['ajax_send_662']     = "You cannot attack a player who does not have their Statistics calculated, or they didn\'t activate their account yet!";
+$_Lang['ajax_send_663']     = "You cannot attack other players until your account\'s Statistics are not calculated, or you didn\'t activate your account yet!";
+
+$_Lang['ajax_send_694']		= 'Unexpected error occured!';
+$_Lang['ajax_send_695']		= 'Galaxy data retrieval error!';
+$_Lang['ajax_send_696']		= 'Request timeout, please try again in a moment...';
+$_Lang['ajax_send_697']		= 'Player data retrieval error!';
+$_Lang['ajax_send_698']     = 'We could not process your request!';
+$_Lang['ajax_send_699']     = 'Function not implemented yet!';
+
+$_Lang['ajax_moon_sign']    = 'Moon';
+
+$_Lang['icoTip_missile']    = 'Interplanetary Strike';
+$_Lang['icoTip_spy']        = 'Spy on this planet';
+$_Lang['icoTip_msg']        = 'Write a message';
+$_Lang['icoTip_buddy']      = 'Add to friends';
+
+?>
