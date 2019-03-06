@@ -26,7 +26,7 @@ $_Lang['Way_vacation']               = 'Vacation';
 $_Lang['Pendent_user']               = 'Banned';
 $_Lang['Inactive_7_days']            = 'Inactive +7';
 $_Lang['Inactive_28_days']           = 'Inactive +28';
-$_Lang['FleetBlockadeUser']          = "Protected by Fleet's Blockade";
+$_Lang['FleetBlockadeUser']          = "Protected by Fleet\'s Blockade";
 $_Lang['User_NonActivatedText']      = 'Account not activated';
 $_Lang['New_player']                 = '<b>Newcomer protection</b> (%sh)';
 
