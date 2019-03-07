@@ -81,8 +81,6 @@ $_Lang['ships']                  = 'statków';
 $_Lang['simulate_moon_build']    = 'Symuluj powstanie księżyca';
 $_Lang['moon_diameter']          = 'Średnica księżyca';
 $_Lang['moon_diameter_info']     = 'Podaj tylko w przypadku symulacji niszczenia księżyca!';
-$_Lang['Moon_created_x_times']   = 'Ilość stworzonych księżyców';
-$_Lang['Moon_destroyed_x_times'] = 'Ilość zniszczonych księżyców';
 
 $_Lang['BreakLineLight']         = '<tr style="visibility: hidden;"><td></td></tr>';
 $_Lang['BreakLine']              = '<tr style="visibility: hidden;"><td><br/></td></tr>';
