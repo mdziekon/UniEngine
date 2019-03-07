@@ -1,0 +1,30 @@
+<?php
+
+$_Lang['Resources']                                  = 'Resources';
+$_Lang['Production_of_resources_in_the_planet']      = 'Resources production on %s';
+$_Lang['Production_level_t']                         = 'Efficiency factor';
+$_Lang['Basic_income']                               = 'Basic income';
+$_Lang['quantity']                                   = 'Count';
+$_Lang['level']                                      = 'Level';
+$_Lang['Stores_capacity']                            = 'Storages capacity';
+$_Lang['Widespread_production']                      = 'Long term production';
+$_Lang['Daily']                                      = 'Daily';
+$_Lang['Weekly']                                     = 'Weekly';
+$_Lang['Monthly']                                    = 'Monthly';
+$_Lang['Storage_state']                              = 'Storages load';
+$_Lang['Calcule']                                    = 'Recalculate';
+$_Lang['o/o']                                        = '%';
+$_Lang['k']                                          = 'k';
+$_Lang['Total']                                      = 'Total';
+$_Lang['MineUsage']                                  = 'Production';
+
+$_Lang['NeedenTransporters']                         = 'Cargo ships needed to transport all resources from';
+$_Lang['Needen']                                     = 'Needed';
+$_Lang['YouHave']                                    = 'Available';
+$_Lang['Missing']                                    = 'Missing';
+$_Lang['no_need_more_transporters']                  = '0';
+
+$_Lang['Res_SetThisUsage2All']                       = 'Set the same production factors on all planets';
+$_Lang['Res_GeologistBonus']                         = 'Production bonus of <a href="officers.php" class="skyblue">Geologist</a>';
+
+?>
