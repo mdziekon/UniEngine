@@ -86,7 +86,7 @@ if(REGISTER_RECAPTCHA_ENABLE)
         $RecaptchaJSSetupTpl,
         [
             'Recaptcha_Sitekey' => REGISTER_RECAPTCHA_PUBLICKEY,
-            'Recaptcha_Lang' => 'pl'
+            'Recaptcha_Lang' => DEFAULT_LANG
         ]
     );
 }
