@@ -1,7 +1,5 @@
 <?php
 
-	$_Lang['Ally_FunctionNotReady']	= 'Ta funkcja nie jest jeszcze gotowa!';
-
 // Ally Information
 
     $_Lang['AInfo_Title']            = 'Informacje o Sojuszu';
@@ -12,7 +10,7 @@
     $_Lang['AInfo_BadTag']           = 'Podany Tag jest niepoprawny!';
     $_Lang['AInfo_NoExist']          = 'Taki Sojusz nie istnieje!';
 
-    $_Lang['AInfo_MembersCount']     = 'Ilość członków';
+    $_Lang['AInfo_MembersCount']     = 'Liczba członków';
 
     $_Lang['AInfo_NoAllyDesc']       = 'Brak opisu sojuszu';
 
@@ -566,7 +564,7 @@
     $_Lang['ADM_RkL_PosChgSaved']    = 'Zmiany zostały zapisane!';
     $_Lang['ADM_RkL_AllChgSaved']    = 'Wszystkie zmiany zostały zapisane!';
     $_Lang['ADM_RkL_NothingChanged'] = 'Brak zmian do zapisania.';
-    $_Lang['ADM_RkL_ChgErrors']      = 'W czasie sprawdzania danych wystąpiło kilka błędów. Możliwe, próbowałeś zmienić dane do których nie masz uprawnień...';
+    $_Lang['ADM_RkL_ChgErrors']      = 'W czasie sprawdzania danych wystąpiło kilka błędów. Możliwe, że próbowałeś zmienić dane do których nie masz uprawnień...';
     $_Lang['ADM_RkL_EmptyData']      = 'Nie podano danych do zapisu!';
 
     $_Lang['ADM_RkL_BadPostAction']  = 'Niepoprawna Akcja!';
