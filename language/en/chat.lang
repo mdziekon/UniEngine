@@ -57,7 +57,7 @@ $_Lang['jQueryAjax_notLogged'] = 'An error occured - not logged in!';
 
 $_Lang['jsLang_usrRef'] = 'Mention this player';
 $_Lang['jsLang_profile'] = 'Player profile';
-$_Lang['jsLang_mentioned'] = 'You\'ve been mentioned!';
+$_Lang['jsLang_mentioned'] = 'You\\\'ve been mentioned!';
 $_Lang['jsLang_ToolTip_ReportMsg'] = 'Report message';
 
 $_Lang['UsersOnline'] = 'Online';
