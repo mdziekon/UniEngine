@@ -1,6 +1,6 @@
 <?php
 
-$_Lang['infolabel_resourcesspeed'] = 'Resources extraction multiplier';
+$_Lang['infolabel_resourcesspeed'] = 'Resources production multiplier';
 $_Lang['infolabel_gamespeed'] = 'Game speed multiplier';
 $_Lang['infolabel_fleetspeed'] = 'Fleet speed multiplier';
 $_Lang['infolabel_shipyardqueue'] = 'Shipyard Queue size';
