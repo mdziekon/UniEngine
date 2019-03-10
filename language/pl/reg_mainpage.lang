@@ -35,17 +35,6 @@ $_Lang['UniOpt_Active']					= 'Aktywne';
 $_Lang['UniOpt_InActive']				= 'Nieaktywne';
 $_Lang['UniInfo_MotherFields']			= 'pól';
 
-$_Lang['ReCaptcha_instructions_visual']	= 'Przepisz kod z obrazka:';
-$_Lang['ReCaptcha_instructions_visual']	= 'Przepisz kod z obrazka:';
-$_Lang['ReCaptcha_instructions_audio']	= 'Przepisz to, co słyszysz:';
-$_Lang['ReCaptcha_play_again']			= 'Jeszcze raz';
-$_Lang['ReCaptcha_cant_hear_this']		= 'Pobierz jako MP3';
-$_Lang['ReCaptcha_visual_challenge']		= 'Chcę przepisać kod z obrazka';
-$_Lang['ReCaptcha_audio_challenge']		= 'Chcę przepisać kod ze słuchu';
-$_Lang['ReCaptcha_refresh_btn']			= 'Nowy kod';
-$_Lang['ReCaptcha_help_btn']				= 'Pomoc';
-$_Lang['ReCaptcha_incorrect_try_again']	= 'Źle przepisano kod, spróbuj ponownie';
-
 $_Lang['JSLang'] = array
 (
 	'Info_RequestSent'			=> '<img src="./images/ajaxload.gif" style="margin-right: 10px;" /> Trwa tworzenie konta...',
@@ -56,7 +45,7 @@ $_Lang['JSLang'] = array
 	'Alert_NoEmail'				=> 'Musisz podać aktywny adres Email!',
 	'Alert_NoGalaxy'			=> 'Musisz podać, w której Galaktyce chcesz rozpocząć rozgrywkę!',
 	'Alert_RulesNotAccepted'	=> 'Musisz zaakceptować Regulamin!',
-	'Alert_CaptchaNotWriten'	=> 'Nie przepisano kodu ReCaptcha!',
+	'Alert_CaptchaNotWriten'	=> 'Musisz ukończyć zadanie ReCaptcha!',
 	'Alert_RequestTimeout'		=> 'Przekroczono czas żądania. Prosimy spróbować ponownie za kilka chwil...',
 	'Alert_RequestError'		=> 'Wystąpił błąd podczas przetwarzania żądania. Prosimy o kontakt z Administracją...',
 	'Alert_JSONError'			=> 'Wystąpił błąd podczas przetwarzania odpowiedzi serwera. Prosimy o kontakt z Administracją...',
