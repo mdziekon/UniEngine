@@ -10,7 +10,7 @@ var phpVars = {
 <br/>
 <div>
     <h2 class="TextShadow">
-        <font size="+3">{registry}</font>
+        <font size="+3">{Title}</font>
         <br/>
         <a href="{GameURL}">{GameName}</a>
     </h2>

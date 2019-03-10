@@ -11,11 +11,8 @@ $_Lang['Description']					= 'Darmowa Rejestracja w grze '.$_GameConfig['game_nam
 
 $_Lang['Universe']						= 'Świat Gry';
 $_Lang['UniSelector']					= 'Universum';
-$_Lang['SelectUni_2']					= 'Universum 2';
-$_Lang['SelectUni_3']					= 'Universum 3';
 
 // Registration form
-$_Lang['registry']						= 'Rejestracja';
 $_Lang['Input_Username']					= 'Nazwa gracza';
 $_Lang['Input_Passoword']				= 'Hasło';
 $_Lang['Input_Email']					= 'Email';
