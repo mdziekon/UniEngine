@@ -34,7 +34,7 @@ $_Lang['AMake_NameExists']      = 'Name %s is already taken';
 
 $_Lang['AMake_Done']            = 'Alliance %s [%s] has been created!';
 
-$_Lang['AMake_AllyLeader']      = 'Founder';
+$_Lang['AMake_AllyLeader']      = 'Leader';
 $_Lang['AMake_AllyNewComer']    = 'New member';
 
 // Ally Search Form
@@ -109,7 +109,7 @@ $_Lang['Ally_Title']             = 'Alliance';
 $_Lang['Ally_GetAllyError']      = 'An unexpected error occured!<br/>Please contact support!';
 
 // Leaving the Ally
-$_Lang['Ally_Leave_MAdminInfo']  = 'Founder of the alliance cannot leave!';
+$_Lang['Ally_Leave_MAdminInfo']  = 'Leader of the alliance cannot leave!';
 $_Lang['Ally_Leave_Done']        = 'You\'ve left the alliance %s!';
 
 // Showing Ally Members List (for User)
@@ -363,12 +363,12 @@ $_Lang['ADM_ReqSetNoAccess']     = 'You are not allowed to change these settings
 $_Lang['ADM_ReqSetOpenBadOption']= 'Invalid applications\' option selected!';
 $_Lang['ADM_ReqSetBadRank']      = 'Invalid rank selected!';
 $_Lang['ADM_RankNoExist']        = 'This rank does not exist!';
-$_Lang['ADM_OnlyAdminCanSetThis']= 'Only the alliance\\\'s founder can set this rank!';
+$_Lang['ADM_OnlyAdminCanSetThis']= 'Only the alliance\\\'s leader can set this rank!';
 $_Lang['ADM_ReqSetRankChanged']  = 'The default new member\'s rank has been changed!';
 $_Lang['ADM_ReqSetOpenChanged']  = 'Applications\' acceptance option has been changed!';
 
 $_Lang['ADM_HandOver']           = 'Hand over the alliance';
-$_Lang['ADM_SelectNewLeader']    = 'Select the new founder';
+$_Lang['ADM_SelectNewLeader']    = 'Select the new leader';
 
 $_Lang['ADM_DeleteAlly']         = 'Disband the alliance';
 $_Lang['ADM_Click2Delete']       = 'Click here to disband the alliance';
@@ -403,7 +403,7 @@ $_Lang['ADM_WebSiteReveal']      = 'Reveal the website only to members';
 $_Lang['ADM_LogoURL']            = 'Alliance\'s logo (URL)';
 $_Lang['ADM_ChangeGeneralButton']= 'Save changes';
 
-$_Lang['ADM_OnlyLeaderChangeName']  = 'Only the founder of the alliance can change its name!';
+$_Lang['ADM_OnlyLeaderChangeName']  = 'Only the leader of the alliance can change its name!';
 $_Lang['ADM_NewNameEmpty']       = 'New alliance name cannot be empty!';
 $_Lang['ADM_NewNameLong']        = 'New alliance name cannot be longer than 35 characters!';
 $_Lang['ADM_BadNewName']         = 'New alliance name is invalid!';
@@ -411,7 +411,7 @@ $_Lang['ADM_NewNameNotFree']     = 'This name is already taken!';
 $_Lang['ADM_SameName']           = 'You cannot use the same alliance name!';
 $_Lang['ADM_AllyNameChanged']    = 'Alliance\'s name has been changed!';
 
-$_Lang['ADM_OnlyLeaderChangeTag']= 'Only the founder of the alliance can change its tag!';
+$_Lang['ADM_OnlyLeaderChangeTag']= 'Only the leader of the alliance can change its tag!';
 $_Lang['ADM_NewTagEmpty']        = 'New alliance tag cannot be empty!';
 $_Lang['ADM_NewTagLong']         = 'New alliance tag cannot be longer than 8 characters!';
 $_Lang['ADM_NewTagShort']        = 'New alliance tag cannot be shorter than 3 characters!';
@@ -523,8 +523,8 @@ $_Lang['ADM_RkL_RUSure']         = 'Are you sure you want to remove this rank?';
 $_Lang['ADM_RkL_RUSure2']        = 'Are you sure you want to save all rank changes?';
 $_Lang['ADM_RkL_AddRank']        = 'Add';
 
-$_Lang['ADM_RkL_ChangeAdminRk']  = 'You cannot modify permissions of Alliance\\\'s founder rank!';
-$_Lang['ADM_RkL_DeleteAdminRk']  = 'You cannot delete Alliance\\\'s founder rank!';
+$_Lang['ADM_RkL_ChangeAdminRk']  = 'You cannot modify permissions of Alliance\\\'s leader rank!';
+$_Lang['ADM_RkL_DeleteAdminRk']  = 'You cannot delete Alliance\\\'s leader rank!';
 $_Lang['ADM_RkL_DeleteDefNewRk'] = 'You cannot delete Alliance\\\'s default rank - change it to a different rank first!';
 $_Lang['ADM_RkL_NoAccess2Chg']   = 'You do not have enough permissions to change this!';
 $_Lang['ADM_RkL_NoAccess2ACh']   = 'You do not have enough permissions to assign this permission!';
@@ -541,7 +541,7 @@ $_Lang['ADM_RkL_NameShort']      = 'Rank name cannot be shorter than 3 character
 
 $_Lang['ADM_RkL_RankDeleted']    = 'Rank has been deleted!';
 $_Lang['ADM_RkL_RankDelete_na_nodel']    = 'You do not have enough permissions to delete this rank!';
-$_Lang['ADM_RkL_RankDelete_adm_nodel']   = 'You cannot delete Alliance\'s founder rank!';
+$_Lang['ADM_RkL_RankDelete_adm_nodel']   = 'You cannot delete Alliance\'s leader rank!';
 $_Lang['ADM_RkL_RankDelete_nc_nodel']    = 'You cannot delete Alliance\'s default rank - change it to a different rank first!';
 $_Lang['ADM_RkL_RankNoExists']   = 'This rank does not exist!';
 $_Lang['ADM_RkL_BadRankIDGiven'] = 'Invalid data provided!';
