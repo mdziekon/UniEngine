@@ -116,8 +116,8 @@ var TemplateData = {'SaveOnlyThis': '{SaveOnlyThis}', 'SaveAll': '{SaveAll}', 'u
             <tr>
                 <th>{ConfirmPassword}</th>
                 <th><input tabindex="3" type="password" name="give_confirmpass" autocomplete="off" class="pad2 w90p"/></th>
-                <th>{ConfirmEmail}</th>
-                <th><input tabindex="5" type="text" name="give_confirmemail" autocomplete="off" class="pad2 w90p"/></th>
+                <th {EMChange1}>{ConfirmEmail}</th>
+                <th {EMChange1}><input tabindex="5" type="text" name="give_confirmemail" autocomplete="off" class="pad2 w90p"/></th>
                 <th {EMChange2}>{StopEmailPrc}</th>
                 <th {EMChange2}><input type="checkbox" name="stop_email_change"/></th>
             </tr>
