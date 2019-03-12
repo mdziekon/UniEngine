@@ -56,7 +56,6 @@ $_Lang['SkinSelect']                 = '(wybierz skórkę z serwera)';
 $_Lang['UseSkin']                    = 'Użyj wybranej skórki';
 $_Lang['Avatar']                     = 'Avatar';
 $_Lang['AvatarMore']                 = '(Adres URL, najlepszy rozmiar 200&#215;200)';
-$_Lang['OwnSkin']                    = 'Skórka z innego Serwera (podaj URL)';
 $_Lang['DevelopmentOld']             = 'Przywróć Stary wygląd Rozwoju';
 $_Lang['BuildExpandedViewUse']       = 'Pokazuj niedostępne Elementy';
 $_Lang['PrettyFleetUse']             = 'Rozdzielaj duże liczby';
@@ -150,7 +149,6 @@ $_Lang['Logons_ListEmpty']			= '<b class="orange">Brak logowań!</b>';
 
 $_Lang['SaveAll']                    = 'Zapisz zmiany';
 $_Lang['SaveOnlyThis']               = 'Zapisz zmiany tylko z tej zakładki';
-$_Lang['SaveFromThis']               = 'Zatwierdź zmiany z tej zakładki';
 $_Lang['IgnoreUserNow']              = 'Dodaj do listy';
 
 // Warning MSGs
@@ -176,12 +174,10 @@ $_Lang['Vacation_FlyingFleets']      = 'Nie możesz przejść na Urlop, poniewa�
 $_Lang['Vacation_GoingOnVacations']  = 'Twoje konto zostało wprowadzone w Tryb Urlopu!';
 $_Lang['Vacation_GoingOnVacationsWithDeletion'] = 'Twoje konto zostało wprowadzone w Tryb Urlopu<br/><span class="red">oraz zostanie usunięte za 7 dni!</span>';
 $_Lang['Delete_Confirm_isbad']       = 'Podano niepoprawne hasło do weryfikacji!';
-$_Lang['VacAndDel_NoAction']         = 'Brak akcji w tej zakładce...';
 $_Lang['Info_NoChanges']				= 'Brak zmian...';
 $_Lang['Info_SaveWellDone']          = 'Zmiany zostały zapisane (Ilość zmienionych ustawień: %s)';
 $_Lang['Info_SaveWellDone2']         = 'Zmiany zostały zapisane!';
 $_Lang['Notice_ChangesNotSaved']     = 'Ilość ustawień pozostawionych bez zmian: %s';
-$_Lang['ClickToClose']               = 'Kliknij aby zamknąć...';
 $_Lang['Msgs_PlanetNotYour']         = 'Nie możesz ustawić wybranej Planety jako Planety Głównej!';
 $_Lang['Msgs_BadPerPageInt']         = 'Podano niepoprawną liczbę wiadomości na stronę!';
 $_Lang['DeleteMsg']                  = 'Twoje konto jest w Trybie Usuwania! Zostanie ono skasowane %s<br/><br/>Jeśli chciałbyś zmienić swoja decyzję, przejdź do zakładki "Urlop i Kasacja" i odznacz opcję "Włącz Tryb Usuwania".';
