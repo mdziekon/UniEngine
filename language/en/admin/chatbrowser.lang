@@ -1,0 +1,20 @@
+<?php
+
+$_Lang['Page_Title']                        = 'Chat archive';
+
+$_Lang['Pagination_Reload']                 = 'Reload';
+
+$_Lang['CMD_DeleteSelected']                = 'Delete selected';
+
+$_Lang['CMDInfo_BadCMD']                    = 'Invalid action!';
+$_Lang['CMDInfo_Delete_NothingToDelete']    = 'Nothing has been selected...';
+$_Lang['CMDInfo_Delete_NothingDeleted']     = 'No messages have been deleted!';
+$_Lang['CMDInfo_Delete_DeletedOK']          = 'Selected messages have been deleted (%s)!';
+
+$_Lang['JSAlert_NothingSelected']           = 'Nothing has been selected...';
+$_Lang['JSTip_SelectAll']                   = 'Select / deselect all';
+$_Lang['JSTip_DeleteID']                    = 'Delete message';
+
+$_Lang['Notice_NoMessages']                 = 'No messages in this Chat room...';
+
+?>
