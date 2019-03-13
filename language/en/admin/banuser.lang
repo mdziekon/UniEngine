@@ -1,0 +1,31 @@
+<?php
+
+$_Lang['PageTitle']                     = 'Ban players';
+
+$_Lang['Form_General']                  = 'General';
+$_Lang['Form_UserInput']                = 'Players to ban<br/>(Separate with commas)<br/>(ID should be wrapped in square parenthesis [])';
+$_Lang['Form_Reason']                   = 'Ban reason';
+$_Lang['Form_Period']                   = 'Ban duration';
+$_Lang['Form_Days']                     = 'Days';
+$_Lang['Form_Hours']                    = 'Hours';
+$_Lang['Form_Minutes']                  = 'Minutes';
+$_Lang['Form_Seconds']                  = 'Seconds';
+$_Lang['Form_ExtendPrevious']           = 'Extend current ban<br/>(If already banned)';
+$_Lang['Form_Other']                    = 'Other options';
+$_Lang['Form_SetVacationOn']            = 'Enable vacation mode';
+$_Lang['Form_SetRetreatOwnOn']          = 'Retreat all fleets of banned players';
+$_Lang['Form_SetRetreatOthersOn']       = 'Retreat all other fleets';
+$_Lang['Form_SetBlockade_CookieStyle']  = 'Activate Cookies lock';
+$_Lang['Form_GiveBan']                  = 'Ban';
+
+$_Lang['Msg_Ban1OK']                    = 'Player %s has been banned!';
+$_Lang['Msg_Ban1OK_wFleets']            = 'Player %s has been banned (Retreated fleets: %s)!';
+$_Lang['Msg_BanMOK']                    = 'Players %s have been banned!';
+$_Lang['Msg_BanMOK_wFleets']            = 'Players %s have been banned (Retreated fleets: %s)!';
+
+$_Lang['Msg_PeriodBad']                 = 'Invalid ban duration!';
+$_Lang['Msg_UsersNotFound']             = 'Players not found!';
+$_Lang['Msg_BadUserDataGiven']          = 'Invalid player usernames or IDs given!';
+$_Lang['Msg_EmptyUserInput']            = 'Player usernames and/or IDs input cannot be empty!';
+
+?>
