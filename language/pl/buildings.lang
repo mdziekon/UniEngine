@@ -87,7 +87,6 @@ $_Lang['InfoBox_SelectTech'] = 'Wybierz technologię';
 $_Lang['InfoBox_DoResearch'] = 'Badaj<br/>na Poziom';
 $_Lang['InfoBox_ResearchTime'] = 'Czas badania';
 
-$_Lang['Queue_Mode_Research'] = 'Badanie';
 $_Lang['Queue_Cancel_Research'] = 'Przerwij badanie';
 $_Lang['Queue_ResearchOn'] = 'Badanie przeprowadzane na';
 $_Lang['Queue_CantCancel_Premium_Lab'] = 'Nie można przerwać badania, które wymagało Ciemnej Energii!';
