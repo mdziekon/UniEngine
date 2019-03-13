@@ -23,10 +23,7 @@ $_Lang['Msg_Ban1OK_wFleets']				= 'Gracz %s został zbanowany (Zawrócone floty:
 $_Lang['Msg_BanMOK']						= 'Gracze %s zostali zbanowani!';
 $_Lang['Msg_BanMOK_wFleets']				= 'Gracze %s zostali zbanowani (Zawrócone floty: %s)!';
 
-$_Lang['Msg_BansGiven']                  = 'Ban został wlepiony!';
-$_Lang['Msg_BansGiven_Fleets']           = 'Ban został wlepiony (Zarócone floty: %s)!';
 $_Lang['Msg_PeriodBad']                  = 'Niepoprawny czas bana!';
-$_Lang['Msg_ReasonEmpty']                = 'Nie możesz wlepić bana bez podania przyczyny!';
 $_Lang['Msg_UsersNotFound']              = 'Gracze nie zostali znalezieni!';
 $_Lang['Msg_BadUserDataGiven']           = 'Podano niepoprawne nazwy graczy lub ich ID!';
 $_Lang['Msg_EmptyUserInput']             = 'Musisz podać nazwy graczy lub ID do zbanowania!';
