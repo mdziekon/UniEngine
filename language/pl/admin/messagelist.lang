@@ -1,12 +1,10 @@
 <?php
 
 $_Lang['mlst_title']       = "Lista wiadomości";
-$_Lang['mlst_mess_del']    = "Wiadomości skasowane";
 $_Lang['mlst_hdr_page']    = "Strona";
 $_Lang['mlst_hdr_userID']  = 'ID Gracza/Sojuszu';
 $_Lang['mlst_hdr_msgID']   = 'ID Wiadomości';
 $_Lang['mlst_hdr_filter']  = 'Filtruj';
-$_Lang['mlst_hdr_title']   = " ) wiadomość z :";
 $_Lang['mlst_hdr_id']      = "ID";
 $_Lang['mlst_hdr_type']    = "Typ";
 $_Lang['mlst_hdr_time']    = "Data";
@@ -20,8 +18,6 @@ $_Lang['mlst_bt_setread']  = 'Ustaw jako przeczytane';
 $_Lang['mlst_bt_setnotread'] = 'Ustaw jako nieprzeczytane';
 $_Lang['mlst_bt_delselsoft'] = 'Usuń Zaznaczone (Miękkie)';
 $_Lang['mlst_bt_delsel']   = "Usuń Zaznaczone (Twarde)";
-$_Lang['mlst_bt_deldate']  = "Usuń od podanego czasu";
-$_Lang['mlst_hdr_delfrom'] = "Usuń począwszy od";
 $_Lang['mlst_mess_typ__0'] = "Raporty szpiegowskie";
 $_Lang['mlst_mess_typ__1'] = "Wiadomości od graczy";
 $_Lang['mlst_mess_typ__2'] = "Wiadomości z sojuszu";
