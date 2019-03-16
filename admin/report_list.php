@@ -134,6 +134,19 @@ if($SQLResult_GetReports->num_rows > 0)
             $Bloc['Hide_NoBash'] = 'hide';
         }
 
+        $Bloc['btn_send_message__tooltip']          = $_Lang['ReportRow_Actions_BtnSendMessage_tooltip'];
+        $Bloc['btn_send_message__alt']              = $_Lang['ReportRow_Actions_BtnSendMessage_alt'];
+        $Bloc['btn_delete_report__alt']             = $_Lang['ReportRow_Actions_BtnDeleteReport_tooltip'];
+        $Bloc['btn_delete_report__alt']             = $_Lang['ReportRow_Actions_BtnDeleteReport_alt'];
+        $Bloc['btn_review_and_reject__tooltip']     = $_Lang['ReportRow_Actions_BtnReviewAndReject_tooltip'];
+        $Bloc['btn_review_and_reject__alt']         = $_Lang['ReportRow_Actions_BtnReviewAndReject_alt'];
+        $Bloc['btn_review_and_accept__tooltip']     = $_Lang['ReportRow_Actions_BtnReviewAndAccept_tooltip'];
+        $Bloc['btn_review_and_accept__alt']         = $_Lang['ReportRow_Actions_BtnReviewAndAccept_alt'];
+        $Bloc['btn_check_attacks__tooltip']         = $_Lang['ReportRow_Actions_BtnCheckAttacks_tooltip'];
+        $Bloc['btn_check_attacks__alt']             = $_Lang['ReportRow_Actions_BtnCheckAttacks_alt'];
+        $Bloc['btn_ban_reported_player__tooltip']   = $_Lang['ReportRow_Actions_BtnBanReportedPlayer_tooltip'];
+        $Bloc['btn_ban_reported_player__alt']       = $_Lang['ReportRow_Actions_BtnBanReportedPlayer_alt'];
+
         $parse['adm_ul_table'] .= parsetemplate($RowsTPL, $Bloc );
     }
 }

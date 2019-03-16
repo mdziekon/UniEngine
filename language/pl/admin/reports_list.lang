@@ -51,4 +51,17 @@ $_Lang['Report_statuslist']= array
 	'Wykonane'
 );
 
+$_Lang['ReportRow_Actions_BtnSendMessage_tooltip']          = 'Wyślij wiadomość';
+$_Lang['ReportRow_Actions_BtnSendMessage_alt']              = '[PW]';
+$_Lang['ReportRow_Actions_BtnDeleteReport_tooltip']         = 'Usuń raport';
+$_Lang['ReportRow_Actions_BtnDeleteReport_alt']             = 'Usuń raport';
+$_Lang['ReportRow_Actions_BtnReviewAndReject_tooltip']      = 'Ustaw jako sprawdzone - odrzucone';
+$_Lang['ReportRow_Actions_BtnReviewAndReject_alt']          = 'Odrzuć';
+$_Lang['ReportRow_Actions_BtnReviewAndAccept_tooltip']      = 'Ustaw jako sprawdzone - zaakceptowane';
+$_Lang['ReportRow_Actions_BtnReviewAndAccept_alt']          = 'Zaakceptuj';
+$_Lang['ReportRow_Actions_BtnCheckAttacks_tooltip']         = 'Analiza Ataków';
+$_Lang['ReportRow_Actions_BtnCheckAttacks_alt']             = 'Analiza Ataków';
+$_Lang['ReportRow_Actions_BtnBanReportedPlayer_tooltip']    = 'Zbanuj Gracza';
+$_Lang['ReportRow_Actions_BtnBanReportedPlayer_alt']        = 'Zbanuj Gracza';
+
 ?>
