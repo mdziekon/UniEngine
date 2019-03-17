@@ -14,7 +14,7 @@ $_Lang['Table_Submit']              = 'Submit';
 
 $_Lang['MsgBox_UpdateOK_Planet']    = 'The Planet';
 $_Lang['MsgBox_UpdateOK_Moon']      = 'The Moon';
-$_Lang['MsgBox_UpdateOK']           = '%s "%s" [%s:%s:%s] [#%s] (Player: <a href="user_info.php?uid=%s" target="_blank">%s [#%s]</a>) has been updated  (updated properties: %s)!';
+$_Lang['MsgBox_UpdateOK']           = '%s "%s" [%s:%s:%s] [#%s] (Player: <a href="user_info.php?uid=%s" target="_blank">%s [#%s]</a>) has been updated (updated properties: %s)!';
 $_Lang['MsgBox_UpdateNotAffected']  = '%s "%s" [%s:%s:%s] [#%s] (Player: <a href="user_info.php?uid=%s" target="_blank">%s [#%s]</a>) did not require an update...';
 $_Lang['MsgBox_BadInput']           = 'Invalid data provided!';
 $_Lang['MsgBox_PlanetDoesntExist']  = 'This planet / moon does not exist!';
