@@ -6,8 +6,6 @@ $_Lang['PageTitle']			= 'Alerty Systemowe';
 $_Lang['Alerts_List']		= 'Lista Alertów Systemowych';
 $_Lang['Alert_ID']			= 'ID';
 $_Lang['Alert_Origin']		= 'Wysłano';
-$_Lang['Alert_Date']			= 'Data';
-$_Lang['Alert_Sender']		= 'Pochodzenie';
 $_Lang['Alert_Type']			= 'Typ';
 $_Lang['Alert_Importance']	= 'Waga';
 $_Lang['Alert_User']			= 'Gracz';
@@ -19,9 +17,6 @@ $_Lang['PerPage']			= 'Na stronę';
 $_Lang['Pages']				= 'Strony';
 $_Lang['Prev']				= '&#171;';
 $_Lang['Next']				= '&#187;';
-
-$_Lang['DeletedUser']		= 'Gracz usunięty';
-$_Lang['DeletedUser2']		= 'Usunięty Gracz';
 
 // Senders
 $_Lang['Senders'] = array
@@ -129,6 +124,5 @@ $_Lang['No_id_given']				= 'Nie podano poprawnego ID!';
 $_Lang['No_Alerts']					= 'Brak Alertów!';
 $_Lang['No_Alerts_ThisPage']			= 'Brak Alertów na tej stronie!';
 $_Lang['Alert_Truncated']			= 'Wyczyszczono tabelę Alertów!';
-$_Lang['NotFound']					= 'Brak';
 
 ?>
