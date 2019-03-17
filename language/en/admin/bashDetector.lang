@@ -1,0 +1,34 @@
+<?php
+
+$_Lang['Page_Title']                = 'Bash Detector';
+
+$_Lang['Table_Sender']              = 'Aggressor';
+$_Lang['Table_Owner']               = 'Defender';
+$_Lang['Table_Date']                = 'Date';
+$_Lang['Table_Submit']              = 'Analyse';
+$_Lang['Table_Result']              = 'Result';
+
+$_Lang['Table_Head_ID']             = 'Fleet ID';
+$_Lang['Table_Head_Date']           = 'Invasion\'s date';
+$_Lang['Table_Head_Mission']        = 'Mission';
+$_Lang['Table_Head_Target']         = 'Target';
+$_Lang['Table_Head_ReportID']       = 'Battle Report ID';
+
+$_Lang['FleetRow_PlanetTypes'][1]   = 'P';
+$_Lang['FleetRow_PlanetTypes'][3]   = 'M';
+$_Lang['FleetRow_PlanetDeleted']    = '<b class="red">Deleted</b>';
+$_Lang['UserRow_Deleted']           = '<b class="red">Deleted</b>';
+
+$_Lang['Info_NoFleetRows']          = 'No matching invasions found...';
+
+$_Lang['Analysis_Info']             = 'Invasion analysis between players: <b class="skyblue">%s</b> (<a href="user_info.php?uid=%s" target="_blank">#%s</a>) [as Aggressor] and <b class="skyblue">%s</b> (<a href="user_info.php?uid=%s" target="_blank">#%s</a>) [as Defender], on <b class="skyblue">%s</b>';
+$_Lang['Analysis_BashNotFound']     = '<b class="lime">No Bash violation detected...</b>';
+$_Lang['Analysis_BashFound']        = '<b class="red">Bash violation detected!</b><br/>[<a class="red" href="banuser.php?ids=%s"><img src="../images/lock.png" style="vertical-align: middle"/> Ban the Aggressor</a>]';
+$_Lang['Analysis_BadInput']         = '<b class="orange">Invalid data provided...</b>';
+$_Lang['Analysis_BadSenderName']    = '<b class="red">Aggressor does not exist!</b>';
+$_Lang['Analysis_BadOwnerName']     = '<b class="red">Defender does not exist!</b>';
+
+$_Lang['Analysis_List_UserBash']    = 'Per player invasions limit exceeded (Invasions: %s / Limit: %s)';
+$_Lang['Analysis_List_PlanetBash']  = 'Per planet / moon invasions limit exceeded on "%s" [%s:%s:%s][%s] (#%s) (Invasions: %s / Limit: %s)';
+
+?>
