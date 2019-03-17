@@ -27,8 +27,6 @@ $_Lang['Filter_Conditions']              = 'Warunki Akcji';
 $_Lang['Filter_UseCount']                = 'Ilość użyć';
 $_Lang['Filter_Actions']                 = 'Opcje';
 
-$_Lang['WhatWithSelected']               = 'Zaznaczone';
-
 $_Lang['Disabled']                       = 'Wyłączony';
 $_Lang['Enabled']                        = 'Włączony';
 
