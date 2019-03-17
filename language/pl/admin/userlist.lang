@@ -45,6 +45,7 @@ $_Lang['UserDelete'] = 'Usuń gracza';
 $_Lang['UserUnban'] = 'Odbanuj';
 $_Lang['UserBan'] = 'Zbanuj';
 $_Lang['ShowActionLogs'] = 'Pokaż Logi';
+$_Lang['ShowUserMessages'] = 'Wiadomości gracza';
 
 $_Lang['ResetFilters'] = 'Resetuj Filtry';
 $_Lang['ToggleFilters']	= 'Pokaż/Ukryj opcje filtrów';
@@ -84,9 +85,6 @@ $_Lang['_Yes'] = 'Tak';
 $_Lang['_No'] = 'Nie';
 $_Lang['_Names'] = 'Nazwach';
 $_Lang['_Tags']	= 'Tagach';
-
-$_Lang['UserStats'] = 'Statystyki';
-$_Lang['ShowUserMessages'] = 'Wiadomości gracza';
 
 $_Lang['FoundUsers_Count'] = 'Ilość znalezionych graczy: %s';
 $_Lang['Filtering_Time'] = 'Filtrowanie: %s s.';
