@@ -170,8 +170,8 @@ $_Lang['fl2_targetowner']                        = 'Target owner';
 
 $_Lang['fl2_SendButton']                         = 'Send fleet';
 
-$_Lang['fl2_confirm_allypact_attack']            = 'Are you sure you want to attack a player who\'s in an alliance which has a pact with the alliance you are currently in?';
-$_Lang['fl2_testacctarget']                      = 'Warning!\nThe target coordinates belong to one of the Testing Account of the Game Administration!\nAny actions involving this target without admins\' permission might result in a ban!';
+$_Lang['fl2_confirm_allypact_attack']            = 'Are you sure you want to attack a player who\\\'s in an alliance which has a pact with the alliance you are currently in?';
+$_Lang['fl2_testacctarget']                      = 'Warning!\nThe target coordinates belong to one of the Testing Account of the Game Administration!\nAny actions involving this target without admins\\\' permission might result in a ban!';
 
 // fleet3.php
 $_Lang['fl3_TargetReach']                        = 'Destination reach date (one way)';
