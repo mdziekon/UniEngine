@@ -36,7 +36,6 @@ $_Lang['Next']               = '&#187;';
 $_Lang['Prev']               = '&#171;';
 
 // Log Parser
-$_Lang['Log_IPSetToX']       = '<b class="orange">Używane IP: %s</b>';
 $_Lang['Log_IPChangedToX']   = '<b class="orange">Zmiana IP: %s</b>';
 $_Lang['Log_IPisCurentlyX']	= '<b class="orange">Aktualne IP: %s</b>';
 $_Lang['Log_BrowserStart']	= '<b class="orange">Używana przeglądarka: %s</b>';
