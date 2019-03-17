@@ -1,0 +1,16 @@
+<?php
+
+$_Lang['Page_Title']            = 'Unban player';
+
+$_Lang['Form_UserInput']        = 'Players to unban<br/>(Separate with commas)<br/>(ID should be wrapped in square parenthesis [])';
+$_Lang['Form_Other']            = 'Other options';
+$_Lang['Form_RemoveVacation']   = 'Disable vacation mode';
+$_Lang['Form_Unban']            = 'Unban';
+
+$_Lang['Msg_Unban1OK']          = 'Player %s has been unbanned!';
+$_Lang['Msg_UnbanMOK']          = 'Players %s have been unbanned!';
+$_Lang['Error_NoOne2Unban']     = 'No players to unban!';
+$_Lang['Error_BadSearch']       = 'Invalid data provided!';
+$_Lang['Error_EmptySearch']     = 'No player names or IDs provided!';
+
+?>
