@@ -11,32 +11,32 @@ $_Lang['Table_DeuteriumState']			= 'Pozostała ilość Deuteru';
 
 $_Lang['Abandoned_planet']				= 'porzuconą planetę';
 
-$_Lang['ov_fleet']						= 'flot';
-$_Lang['ov_une']							= 'Jedna z Twoich ';
-$_Lang['ov_vennant']						= ' lecąca ';
-$_Lang['ov_planet_to']					= 'z planety ';
-$_Lang['ov_moon_to']						= 'z księżyca ';
-$_Lang['ov_atteint']						= ' osiągnie ';
-$_Lang['ov_planet_to_target']			= 'planetę ';
-$_Lang['ov_moon_to_target']				= 'księżyc ';
-$_Lang['ov_debris_to_target']			= 'pole zniszczeń ';
-$_Lang['ov_explo_to_target']				= 'ekspedycje ';
-$_Lang['ov_mission']						= '<br/>Misja: ';
-
-$_Lang['ov_explo_stay']					= ' bada ';
-$_Lang['ov_explo_mission']				= '<br/>Misja: ';
-
-$_Lang['ov_rentrant']					= ' powraca ';
-$_Lang['ov_planet_from']					= 'z planety ';
-$_Lang['ov_moon_from']					= 'z księżyca ';
-$_Lang['ov_debris_from']					= 'z pola zniszczeń ';
-$_Lang['ov_explo_from']					= 'z ekspedycji ';
-$_Lang['ov_back_planet']					= ' na planetę ';
-$_Lang['ov_back_moon']					= ' na księżyc ';
-
-$_Lang['ov_une_hostile']					= 'Obca ';
-$_Lang['ov_hostile']						= ' od gracza ';
-$_Lang['ov_message']						= 'Napisz wiadomość';
+$_Lang['ov_fleet']              = 'flot';
+$_Lang['ov_fleet2']             = 'flot';
+$_Lang['ov_une']                = 'Jedna z Twoich ';
+$_Lang['ov_une_phalanx']        = 'Jedna z ';
+$_Lang['ov_une_hostile']        = 'Obca ';
+$_Lang['ov_vennant']            = ' lecąca ';
+$_Lang['ov_planet_to']          = 'z planety ';
+$_Lang['ov_moon_to']            = 'z księżyca ';
+$_Lang['ov_atteint']            = ' osiągnie ';
+$_Lang['ov_planet_to_target']   = 'planetę ';
+$_Lang['ov_moon_to_target']     = 'księżyc ';
+$_Lang['ov_debris_to_target']   = 'pole zniszczeń ';
+$_Lang['ov_explo_to_target']    = 'niezbadaną przestrzeń ';
+$_Lang['ov_mission']            = '<br/>Misja: ';
+$_Lang['ov_explo_stay']         = ' bada ';
+$_Lang['ov_onorbit_stay']       = ' protects ';
+$_Lang['ov_explo_mission']      = '<br/>Misja: ';
+$_Lang['ov_rentrant']           = ' powraca ';
+$_Lang['ov_planet_from']        = 'z planety ';
+$_Lang['ov_moon_from']          = 'z księżyca ';
+$_Lang['ov_debris_from']        = 'z pola zniszczeń ';
+$_Lang['ov_explo_from']         = 'z ekspedycji ';
+$_Lang['ov_back_planet']        = ' na planetę ';
+$_Lang['ov_back_moon']          = ' na księżyc ';
+$_Lang['ov_hostile']            = ' od gracza ';
+$_Lang['ov_message']            = 'Napisz wiadomość';
 
 $_Lang['PhalanxError_BadCoordinates']	= 'Podano niepoprawne koordynaty!';
 $_Lang['PhalanxError_GalaxyOutOfRange']	= 'Falanga czyjników działa tylko w obrębie jednej Galaktyki!';
