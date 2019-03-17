@@ -1,6 +1,6 @@
 <?php
 
-$_Lang['PageTitle']                      = 'Alerts > Filters Management';
+$_Lang['PageTitle']                      = 'System Alerts > Filters Management';
 
 $_Lang['Filters_List']                   = 'Filters list';
 $_Lang['Filters_Add']                    = 'Add new Filter';
