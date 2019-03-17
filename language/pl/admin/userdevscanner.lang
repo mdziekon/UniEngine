@@ -2,7 +2,7 @@
 
 $_Lang['UserDevScanner_Title']               = 'Skanowanie rozwoju Gracza';
 
-$_Lang['Table_Header']                       = 'Skanowanie Gracza';
+$_Lang['Table_Header']                       = 'Skanowanie Gracza (EKSPERYMENTALNE)';
 $_Lang['Table_Form_UID']                     = 'Podaj ID Gracza';
 $_Lang['Table_Form_Username']                = 'lub Nazwę Gracza';
 $_Lang['Table_Form_Submit']                  = 'Skanuj!';

@@ -2,7 +2,7 @@
 
 $_Lang['UserDevScanner_Title']               = 'Player\'s development scanner';
 
-$_Lang['Table_Header']                       = 'Scan player';
+$_Lang['Table_Header']                       = 'Scan player (EXPERIMENTAL)';
 $_Lang['Table_Form_UID']                     = 'Player\'s ID';
 $_Lang['Table_Form_Username']                = '(or) Player\'s Name';
 $_Lang['Table_Form_Submit']                  = 'Scan!';
