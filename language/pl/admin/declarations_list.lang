@@ -31,6 +31,15 @@ $_Lang['Declarations_Header_Reason'] = 'Powód';
 $_Lang['Declarations_Header_Status'] = 'Status';
 $_Lang['Declarations_Header_Actions'] = 'Akcje';
 
+$_Lang['DeclarationRow_Actions_BtnSearch_tooltip']                  = 'Podgląd graczy';
+$_Lang['DeclarationRow_Actions_BtnSearch_alt']                      = 'Podgląd graczy';
+$_Lang['DeclarationRow_Actions_BtnSoftDeleteDeclaration_tooltip']   = 'Miekkie usunięcie deklaracji';
+$_Lang['DeclarationRow_Actions_BtnSoftDeleteDeclaration_alt']       = 'Usuń (soft-delete)';
+$_Lang['DeclarationRow_Actions_BtnRejectDeclaration_tooltip']       = 'Odrzuć deklarację';
+$_Lang['DeclarationRow_Actions_BtnRejectDeclaration_alt']           = 'Odrzuć';
+$_Lang['DeclarationRow_Actions_BtnAcceptDeclaration_tooltip']       = 'Zaakceptuj deklarację';
+$_Lang['DeclarationRow_Actions_BtnAcceptDeclaration_alt']           = 'Zaakceptuj';
+
 $_Lang['Declarations_NoUser'] = '<b class="red">Brak</b>';
 $_Lang['Declarations_EmptyUser'] = '<b class="red">Usunięte Konto</b>';
 $_Lang['Declarations_NothingFound'] = 'Brak deklaracji';

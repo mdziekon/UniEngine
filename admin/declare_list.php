@@ -212,6 +212,15 @@ if(CheckAuth('supportadmin'))
             $Bloc['DeclarationStatus'] = $_Lang['DeclarationStatuses_'][(string)($Vars['status'] + 0)];
             $Bloc['declaration_id'] = $Vars['id'];
 
+            $Bloc['btn_search__tooltip']                    = $_Lang['DeclarationRow_Actions_BtnSearch_tooltip'];
+            $Bloc['btn_search__alt']                        = $_Lang['DeclarationRow_Actions_BtnSearch_alt'];
+            $Bloc['btn_soft_delete_declaration__tooltip']   = $_Lang['DeclarationRow_Actions_BtnSoftDeleteDeclaration_tooltip'];
+            $Bloc['btn_soft_delete_declaration__alt']       = $_Lang['DeclarationRow_Actions_BtnSoftDeleteDeclaration_alt'];
+            $Bloc['btn_reject_declaration__tooltip']        = $_Lang['DeclarationRow_Actions_BtnRejectDeclaration_tooltip'];
+            $Bloc['btn_reject_declaration__alt']            = $_Lang['DeclarationRow_Actions_BtnRejectDeclaration_alt'];
+            $Bloc['btn_accept_declaration__tooltip']        = $_Lang['DeclarationRow_Actions_BtnAcceptDeclaration_tooltip'];
+            $Bloc['btn_accept_declaration__alt']            = $_Lang['DeclarationRow_Actions_BtnAcceptDeclaration_alt'];
+
             $parse['adm_ul_table'] .= parsetemplate($RowsTPL, $Bloc);
             $i += 1;
         }
