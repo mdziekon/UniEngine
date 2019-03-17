@@ -1,9 +1,6 @@
 <?php
 
-$_Lang['Header_FleetBlock'] = 'Blokada Flot';
-
 $_Lang['Body_Title'] = 'Konfiguracja serwera';
-$_Lang['Body_GameSettings'] = 'Ustawienia gry';
 
 $_Lang['Body_Save'] = 'Zapisz';
 
