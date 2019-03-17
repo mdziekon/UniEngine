@@ -12,8 +12,6 @@ $_Lang['Fleet_Cargo']                = 'Ładunek';
 $_Lang['Fleet_Start']                = 'Start floty';
 $_Lang['Fleet_End']                  = 'Cel i czas dotarcia';
 $_Lang['Fleet_End_owner']            = 'Właściciel celu';
-$_Lang['Fleet_Start_time']           = 'Wylot';
-$_Lang['Fleet_Calc_time']            = 'Dotarcie do celu';
 $_Lang['Fleet_Back_time']            = 'Powrót';
 
 $_Lang['No_cargo']                   = 'Brak';
