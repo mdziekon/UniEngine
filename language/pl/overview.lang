@@ -15,8 +15,6 @@ $_Lang['ResourcesTransport']         = 'Transport wszystkich surowców z tej pla
 $_Lang['OtherPlanets_header']        = 'Pozostałe planety';
 $_Lang['MoreInfo']                   = 'Pozostałe informacje';
 
-$_Lang['RefferingInfo']              = 'Polecając grę swoim znajomym zdobywasz Ciemną Energię, którą możesz przeznaczyć na różne dodatki!';
-
 // InBox Titles & Data
 $_Lang['Box_online']                 = 'Online';
 $_Lang['Box_todayActive']            = 'Aktywni dziś';
@@ -49,6 +47,7 @@ $_Lang['Box_planetCoords']           = 'Koordynaty';
 $_Lang['Box_planetDiameter']         = 'Średnica';
 $_Lang['diameter_unit']              = 'km.';
 $_Lang['Box_planetBuildFields']      = 'Zabudowa';
+$_Lang['fields']                     = "pól";
 $_Lang['Box_planetTemps']            = 'Temperatura';
 $_Lang['Box_planetOrbit']            = 'Orbita';
 $_Lang['_emptyOrbit']                = '-';
@@ -80,8 +79,6 @@ $_Lang['QuickResSend_Button']        = 'Wyślij Wszystkie Surowce na Planetę %s
 $_Lang['Box_fromAdmins']             = 'Od Zarządu';
 $_Lang['Box_lastChanges']            = 'Ostatnie zmiany';
 $_Lang['Box_buttons']                = 'TopListy';
-
-$_Lang['Watch_lastchanges_onBlip']   = 'Obserwuj nasz serwer na Blipie';
 
 $_Lang['DelFirstQueue']                          = 'Przerwij';
 $_Lang['CannotDeletePremiumBuilding_Warning']    = 'Nie można przerwać budowy, która wymagała Ciemnej Energii!';
@@ -126,22 +123,7 @@ $_Lang['Info_CountedEvery']          = 'Obliczane co 15 minut';
 $_Lang['RefferedList']               = 'Lista graczy';
 
 // Ogólne
-$_Lang['cancel']                  = "Anuluj";
-$_Lang['Planet']                  = "Planeta";
-$_Lang['Moon']                    = "Księżyc";
 $_Lang['Free']                    = "Oczekuje";
-$_Lang['Diameter']                = "Średnica";
-$_Lang['fields']                  = "pól";
-$_Lang['Temperature']             = "Temperatura";
-$_Lang['approx']                  = "env.";
-$_Lang['to']                      = "by";
-$_Lang['Centigrade']              = "C";
-$_Lang['Position']                = "Pozycja";
-$_Lang['Points']                  = "Punkty";
-$_Lang['Rank']                    = "Miejsce";
-$_Lang['of']                      = "z";
-
-
 $_Lang['Error']                   = "Błąd";
 
 // --- Rename Planet ---
@@ -189,35 +171,18 @@ $_Lang['Abandon_ColonyAbandoned']    = 'Kolonia została porzucona! Powracam na 
 
 // ---
 
-$_Lang['Disallowed_signs']        = "Podano niedozwolone znaki! Dozwolone są jedynie litery (+ polskie znaki), cyfry, spacja, podkreślenie i myślnik!";
-$_Lang['No_planettype']           = "Brak oznaczenia planety!";
-
 $_Lang['ov_temp_from']            = "od";
 $_Lang['ov_temp_unit']            = "&deg;C";
 $_Lang['ov_temp_to']              = "do";
 
 //Planeta
 $_Lang['colony_abandon']          = "Porzucenie kolonii";
-$_Lang['ov_rena_dele']            = "Porzucenie kolonii - potwierdzenie";
 $_Lang['functions']               = "Funkcja";
 $_Lang['coords']                  = "Współrzędne";
 $_Lang['your_planet']             = "Ta planeta";
-$_Lang['colony_abandon']          = "Porzucenie kolonii";
-$_Lang['deleteplanet']            = "Porzuć!";
-$_Lang['security_query']          = "Zastosowanie zabezpieczeń";
 $_Lang['name']                    = "Nazwa";
 $_Lang['namer']                   = "Zmień nazwę";
 $_Lang['password']                = "Potwierdź hasło";
-$_Lang['confirm_planet_delete']   = "Potwierdź porzucenie planety";
-$_Lang['confirmed_with_password'] = "Potwierdź twoje hasło";
-
-
-// Rename planet
-$_Lang['deletemessage_ok']    = "Twoja kolonia została porzucona!";
-$_Lang['deletemessage_wrong'] = "Nie można porzucić planety matki!";
-$_Lang['deletemessage_fail']  = "Podano nieprawidłowe hasło!";
-$_Lang['cannot_delete_when_fleets_flying']   = 'Nie możesz porzucić kolonii jeśli chociaż jedna flota leci na nią lub została z niej wysłana!';
-$_Lang['cannot_delete_mysql_problems']       = 'Nie można porzucić kolonii - wystąpił problem z bazą danych!';
 
 //Zarządzanie flot
 $_Lang['ov_fleet']            = "flot";
@@ -250,20 +215,12 @@ $_Lang['ov_une_hostile']      = "Obca ";
 $_Lang['ov_hostile']          = " od gracza ";
 $_Lang['ov_message']          = "Napisz wiadomość";
 
-$_Lang['this_planet']         = "Ta planeta";
-$_Lang['this_moon']           = "Ten księżyc";
-
-$_Lang['stats_are_empty']     = ' <acronym style="cursor: pointer;" title="Statystyki nie zostały jeszcze przeliczone dla twojego konta!">[?]</acronym>';
-$_Lang['multiacc_with']       = 'MultiKonto z';
-
 $_Lang['ProAccTill']          = 'Aktywne do<br/>';
 $_Lang['NoProAccSince']       = 'Wygasło<br/>';
 $_Lang['NoProAccEver']        = '<span style="color: red;">Brak<br/>Konta Pro</span>';
 $_Lang['ProAccBuyMore']       = 'Przedłuż';
 $_Lang['ProAccBuyFirst']      = 'Wykup';
 $_Lang['ProAccBuyNext']       = 'Wznów';
-
-$_Lang['StatImg_user_noexists'] = 'Gracz nie istnieje!';
 
 $_Lang['AdminAlertsBox']      = 'Masz <a style="color: black;" href="admin/report_list.php">%s nowych Raportów</a>, <a style="color: black;" href="admin/declare_list.php">%s nowych Deklaracji</a> i <a style="color: black;" href="admin/alerts_list.php">%s nowych Alertów Systemowych</a> do przejrzenia!';
 
