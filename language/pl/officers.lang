@@ -11,7 +11,7 @@ $_Lang['OfficersArr']           = [
         'name'      => 'Geolog',
         'img'       => '601',
         'desc'      => 'Geolog to znany w całej galaktyce ekspert w dziedzinie górnictwa. Dzięki swej ogromnej wiedzy na temat skał i minerałów jest w stanie odpowiednio pokierować pracami wydobywczymi, by trafiały na jak najbogatsze złoża surowców.',
-        'bene'      => [
+        'benefits'  => [
             'Zwiększone wydobycie o 15%',
         ],
         'type'      => 1,
@@ -29,7 +29,7 @@ $_Lang['OfficersArr']           = [
         'name'      => 'Mechanik',
         'img'       => '603',
         'desc'      => 'Ten powszechnie znany eskpert jest rozchwytywany przez niemal wszystkich Imperatorów we Wszechświecie. Dzięki jego błyskotliwym pomysłom, twoje elektrownie zwiększają swą produktywność, zaś systemy obronne mają większą szansę na odbudowę.',
-        'bene'      => [
+        'benefits'  => [
             'Zwiększona produkcja energii o 10%',
             'Szansa na odbudowę obrony zwiększona o 20% (Możliwa odbudowa całości obrony)'
         ],
@@ -48,7 +48,7 @@ $_Lang['OfficersArr']           = [
         'name'      => 'Admirał',
         'img'       => '602',
         'desc'      => 'As wśród najlepszych dowódców wojennych we Wszechświecie. Jego taktyka, prędkość i sposób działania nie mają sobie równych. Każdy Imperator chce mieć go u swego boku.',
-        'bene'      => [
+        'benefits'  => [
             'Maksymalna ilość flot: +2',
             'Dodatkowe opcje prędkości floty (120%, 110%, 5%, 2.5%)'
         ],
@@ -67,7 +67,7 @@ $_Lang['OfficersArr']           = [
         'name'      => 'Technokrata',
         'img'       => '604',
         'desc'      => 'Technokrata to najwybitniejszy umysł naszych czasów. Jego wynalazki odmieniły bieg wielu wojen. Jego obecność w labolatorium zwiększa produktywność innych naukowców, którzy chcą jak najwięcej nauczyć się od tego wielkiego myśliciela.',
-        'bene'      => [
+        'benefits'  => [
             'Czas trwania badań: -20%'
         ],
         'type'      => 1,
@@ -85,7 +85,7 @@ $_Lang['OfficersArr']           = [
         'name'      => 'Handlowiec',
         'img'       => '605',
         'desc'      => 'Handlowiec Imperialny to pośrednik między tobą a Handlarzem. W zamian za skromne wynagrodzenie gotów jest reprezentować twoje interesy u Handlarza.',
-        'bene'      => [
+        'benefits'  => [
             'Możliwość korzystania z Handlarza bez Konta Pro i bez ograniczeń czasowych'
         ],
         'type'      => 2,
