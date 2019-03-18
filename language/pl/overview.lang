@@ -179,7 +179,6 @@ $_Lang['ov_temp_to']              = "do";
 $_Lang['colony_abandon']          = "Porzucenie kolonii";
 $_Lang['functions']               = "Funkcja";
 $_Lang['coords']                  = "Współrzędne";
-$_Lang['your_planet']             = "Ta planeta";
 $_Lang['name']                    = "Nazwa";
 $_Lang['namer']                   = "Zmień nazwę";
 $_Lang['password']                = "Potwierdź hasło";

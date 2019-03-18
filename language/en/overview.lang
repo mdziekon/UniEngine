@@ -180,7 +180,6 @@ $_Lang['ov_temp_unit']            = "&deg;C";
 $_Lang['colony_abandon']          = "Abandon colony";
 $_Lang['functions']               = "Function";
 $_Lang['coords']                  = "Coordinates";
-$_Lang['your_planet']             = "This planet";
 $_Lang['name']                    = "Name";
 $_Lang['namer']                   = "Change name";
 $_Lang['password']                = "Your password";
