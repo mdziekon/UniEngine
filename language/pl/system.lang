@@ -139,21 +139,19 @@ $_Lang['Store_status_NearFull'] = '<span class="orange">Bliski zapełnieniu</spa
 $_Lang['Store_status_OK'] = '<span class="lime">OK</span>';
 $_Lang['Store_status_Empty'] = '<span class="orange">Pusty</span>';
 
-$_Lang['your_planet'] = 'twojej planety';
-$_Lang['your_moon']	= 'twojego księżyca';
-$_Lang['to_your_planet'] = 'twoją planetę';
-$_Lang['to_your_moon'] = 'twój księżyc';
-$_Lang['to_planet']	= 'planetę';
-$_Lang['to_moon'] = 'księżyc';
-$_Lang['from_planet'] = 'planety';
-$_Lang['from_moon']	= 'księżyca';
-$_Lang['on_planet']	= 'planecie';
-$_Lang['on_moon'] = 'księżycu';
-$_Lang['to_this_planet'] = 'tą planetę';
-$_Lang['to_this_moon'] = 'ten księżyc';
-$_Lang['on_this_planet'] = 'tej planecie';
-$_Lang['on_this_moon'] = 'tym księżycu';
-$_Lang['your_planet'] = 'twoja planeta';
-$_Lang['your_moon']	= 'twój księżyc';
+$_Lang['near_your_planet']  = 'twojej planety';
+$_Lang['near_your_moon']    = 'twojego księżyca';
+$_Lang['to_your_planet']    = 'twoją planetę';
+$_Lang['to_your_moon']      = 'twój księżyc';
+$_Lang['to_planet']         = 'planetę';
+$_Lang['to_moon']           = 'księżyc';
+$_Lang['from_planet']       = 'planety';
+$_Lang['from_moon']         = 'księżyca';
+$_Lang['on_planet']         = 'planecie';
+$_Lang['on_moon']           = 'księżycu';
+$_Lang['to_this_planet']    = 'tą planetę';
+$_Lang['to_this_moon']      = 'ten księżyc';
+$_Lang['on_this_planet']    = 'tej planecie';
+$_Lang['on_this_moon']      = 'tym księżycu';
 
 ?>

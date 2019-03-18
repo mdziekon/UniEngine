@@ -310,7 +310,7 @@ function MissionCaseSpy($FleetRow, &$_FleetCache)
                 $Message = false;
                 $Message['msg_id'] = '076';
                 $PlanetOrMoon = ($FleetRow['fleet_start_type'] == 1) ? $_Lang['sys_MIP_sending_planet'] : $_Lang['sys_MIP_sending_moon'];
-                $PlanetOrMoonYour = ($TargetPlanet['planet_type'] == 1) ? $_Lang['your_planet'] : $_Lang['your_moon'];
+                $PlanetOrMoonYour = ($TargetPlanet['planet_type'] == 1) ? $_Lang['near_your_planet'] : $_Lang['near_your_moon'];
                 $Message['args'] = array
                 (
                     $PlanetOrMoon, $FleetRow['attacking_planet_name'], $FleetRow['fleet_start_galaxy'],
