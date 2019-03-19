@@ -1,5 +1,5 @@
 <link rel="stylesheet" type="text/css" href="dist/css/chat.cachebuster-1546565145290.min.css" />
-<script type="text/javascript" src="dist/js/chat.cachebuster-1546740422470.min.js"></script>
+<script type="text/javascript" src="dist/js/chat.cachebuster-1552960387022.min.js"></script>
 <script>
 var YourNickname = '{Online_You_Name}';
 var JSLang =
@@ -22,7 +22,6 @@ var ErrorMsg =
     'jQueryAjax_notLogged': '{jQueryAjax_notLogged}'
 };
 var JSLang_Errors = {Insert_JSLang_Errors};
-var MonthsLang = {MonthLangString};
 
 var LastSeenID = {LastSeenID};
 var ServerStamp = {ServerStamp};

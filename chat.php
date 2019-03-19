@@ -45,15 +45,10 @@ $Query_GetFirstID .= "WHERE `msg`.`TimeStamp_Add` <= `visit`.`LastOnline` AND `m
 $Query_GetFirstID .= "ORDER BY `msg`.`ID` DESC LIMIT 1;";
 $GetFirstID = doquery($Query_GetFirstID, 'chat_messages', true);
 
-foreach($_Lang['months_variant1'] as $monthID => $monthText)
-{
-    $MonthLangString[($monthID+1)] = $monthText;
-}
 $_Lang['Online_You_ID'] = $_User['id'];
 $_Lang['Online_You_Color'] = (string)GetAuthLabel($_User);
 $_Lang['Online_You_Name'] = $_User['username'];
 
-$_Lang['MonthLangString'] = json_encode($MonthLangString);
 $_Lang['LastSeenID'] = (string)($GetFirstID['ID'] + 0);
 $_Lang['ServerStamp'] = SERVER_MAINOPEN_TSTAMP;
 $_Lang['UserAuth'] = (string)($_User['authlevel'] + 0);
