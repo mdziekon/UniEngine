@@ -428,17 +428,32 @@ function prettyMonth($month, $variant = '0')
 
 function prettyDate($format, $timestamp = false, $variant = '0')
 {
-    if(strstr($format, 'm') !== false)
-    {
+    global $_Lang;
+    static $_PrettyMonthsLocaleLoaded = false;
+
+    if (!$_PrettyMonthsLocaleLoaded) {
+        includeLang('months');
+
+        $_PrettyMonthsLocaleLoaded = true;
+    }
+
+    if (isset($_Lang['__helpers'])) {
+        $formatter = $_Lang['__helpers']['date_formatters'][$variant];
+
+        return $formatter($format, $timestamp);
+    }
+
+    // DEPRECATED: should be replaced with lang specific formatters
+    if (strstr($format, 'm') !== false) {
         $HasMonth = true;
         $format = str_replace('m', '{|_|}', $format);
     }
     $Date = date($format, $timestamp);
-    if($HasMonth === true)
-    {
+    if ($HasMonth === true) {
         $Month = prettyMonth(date('m', $timestamp), $variant);
         $Date = str_replace('{|_|}', $Month, $Date);
     }
+
     return $Date;
 }
 
