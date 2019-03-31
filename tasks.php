@@ -251,7 +251,9 @@ else
             {
                 $ThisTask['HideRewards'] = 'hide';
             }
-            $ThisTask['Image'] = $_SkinPath.$_Lang['Tasks'][$TaskID]['img'];
+
+            $ThisTask['Image'] = Tasks_GetTaskImagePath($SelectCat, $TaskID);
+
             if(!empty($_Lang['TasksJobs'][$TaskID]))
             {
                 foreach($_Lang['TasksJobs'][$TaskID] as $JobID => $Job)
