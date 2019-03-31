@@ -21,6 +21,10 @@ if(defined('INSIDE'))
             (
                 1    => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/1.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'CONSTRUCTION_END',
                     'jobs' => array
@@ -36,6 +40,10 @@ if(defined('INSIDE'))
                 ),
                 2    => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/3.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'CONSTRUCTION_END',
                     'jobs' => array
@@ -49,6 +57,10 @@ if(defined('INSIDE'))
                 ),
                 3    => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/401.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'CONSTRUCTION_END|CONSTRUCT_SHIPS_OR_DEFENSE',
                     'jobs' => array
@@ -64,6 +76,10 @@ if(defined('INSIDE'))
                 ),
                 4    => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/22.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'CONSTRUCTION_END',
                     'jobs' => array
@@ -79,6 +95,10 @@ if(defined('INSIDE'))
                 ),
                 5    => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/31.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'CONSTRUCTION_END|RESEARCH_END',
                     'jobs' => array
@@ -94,6 +114,10 @@ if(defined('INSIDE'))
                 ),
                 6    => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/202.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'CONSTRUCTION_END|CONSTRUCT_SHIPS_OR_DEFENSE|RESEARCH_END',
                     'jobs' => array
@@ -110,6 +134,10 @@ if(defined('INSIDE'))
                 ),
                 7    => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/208.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'CONSTRUCT_SHIPS_OR_DEFENSE|COLONIZE_PLANET',
                     'jobs' => array
@@ -124,6 +152,10 @@ if(defined('INSIDE'))
                 ),
                 8    => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/212.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'CONSTRUCT_SHIPS_OR_DEFENSE',
                     'jobs' => array
@@ -137,6 +169,10 @@ if(defined('INSIDE'))
                 ),
                 9    => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/210.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'CONSTRUCT_SHIPS_OR_DEFENSE|SPY_OTHER_USER|USE_SIMULATOR',
                     'jobs' => array
@@ -153,6 +189,10 @@ if(defined('INSIDE'))
                 ),
                 10    => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/209.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'CONSTRUCT_SHIPS_OR_DEFENSE|RECYCLE_DEBRIS',
                     'jobs' => array
@@ -167,6 +207,10 @@ if(defined('INSIDE'))
                 ),
                 11    => array
                 (
+                    'details' => array(
+                        'img' => 'officiers/602.jpg',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BUDDY_OR_ALLY_TASK',
                     'jobs' => array
@@ -180,6 +224,10 @@ if(defined('INSIDE'))
                 ),
                 12    => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/219.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'CONSTRUCT_SHIPS_OR_DEFENSE',
                     'jobs' => array
@@ -193,6 +241,10 @@ if(defined('INSIDE'))
                 ),
                 13 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/15.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'RESEARCH_END|MULTIPLE_CONSTRUCTION_END',
                     'jobs' => array
@@ -207,6 +259,10 @@ if(defined('INSIDE'))
                 ),
                 14 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/214.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'CONSTRUCT_SHIPS_OR_DEFENSE|DESTROY_MOON',
                     'jobs' => array
@@ -221,6 +277,10 @@ if(defined('INSIDE'))
                 ),
                 15 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/217.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'CONSTRUCT_SHIPS_OR_DEFENSE',
                     'jobs' => array
@@ -234,6 +294,10 @@ if(defined('INSIDE'))
                 ),
                 16 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/208.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'COLONIZE_PLANET',
                     'jobs' => array
@@ -247,6 +311,10 @@ if(defined('INSIDE'))
                 ),
                 17 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/2.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'MULTIPLE_CONSTRUCTION_END',
                     'jobs' => array
@@ -262,6 +330,10 @@ if(defined('INSIDE'))
                 ),
                 18 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/41.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'CONSTRUCTION_END',
                     'jobs' => array
@@ -275,6 +347,10 @@ if(defined('INSIDE'))
                 ),
                 19 => array
                 (
+                    'details' => array(
+                        'img' => 'planeten/mond.jpg',
+                    ),
+
                     'requirements' => array
                     (
                         array('type' => 'TASK', 'elementID' => 12),
@@ -304,6 +380,10 @@ if(defined('INSIDE'))
             (
                 20 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/214.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'DESTROY_MOON',
                     'jobs' => array
@@ -317,6 +397,10 @@ if(defined('INSIDE'))
                 ),
                 21 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/214.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'DESTROY_MOON',
                     'jobs' => array
@@ -330,6 +414,10 @@ if(defined('INSIDE'))
                 ),
                 22 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/214.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'DESTROY_MOON',
                     'jobs' => array
@@ -343,6 +431,10 @@ if(defined('INSIDE'))
                 ),
                 23 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/199.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'DESTROY_MOON_NOFLEETLOSS',
                     'jobs' => array
@@ -356,6 +448,10 @@ if(defined('INSIDE'))
                 ),
                 24 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/199.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'DESTROY_MOON_NOFLEETLOSS',
                     'jobs' => array
@@ -369,6 +465,10 @@ if(defined('INSIDE'))
                 ),
                 25 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/199.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'DESTROY_MOON_NOFLEETLOSS',
                     'jobs' => array
@@ -382,6 +482,10 @@ if(defined('INSIDE'))
                 ),
                 26 => array
                 (
+                    'details' => array(
+                        'img' => 'planeten/mond.jpg',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'DESTROY_MOON_NOFLEETLOSS',
                     'jobs' => array
@@ -395,6 +499,10 @@ if(defined('INSIDE'))
                 ),
                 27 => array
                 (
+                    'details' => array(
+                        'img' => 'planeten/mond.jpg',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'DESTROY_MOON',
                     'jobs' => array
@@ -408,6 +516,10 @@ if(defined('INSIDE'))
                 ),
                 28 => array
                 (
+                    'details' => array(
+                        'img' => 'planeten/mond.jpg',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'DESTROY_MOON',
                     'jobs' => array
@@ -421,6 +533,10 @@ if(defined('INSIDE'))
                 ),
                 29 => array
                 (
+                    'details' => array(
+                        'img' => 'planeten/mond.jpg',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'CREATE_MOON',
                     'jobs' => array
@@ -434,6 +550,10 @@ if(defined('INSIDE'))
                 ),
                 30 => array
                 (
+                    'details' => array(
+                        'img' => 'planeten/mond.jpg',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'CREATE_MOON',
                     'jobs' => array
@@ -447,6 +567,10 @@ if(defined('INSIDE'))
                 ),
                 31 => array
                 (
+                    'details' => array(
+                        'img' => 'planeten/mond.jpg',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'CREATE_MOON',
                     'jobs' => array
@@ -460,6 +584,10 @@ if(defined('INSIDE'))
                 ),
                 32 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/204.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_DESTROY_MILITARYUNITS',
                     'jobs' => array
@@ -473,6 +601,10 @@ if(defined('INSIDE'))
                 ),
                 33 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/204.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_DESTROY_MILITARYUNITS',
                     'jobs' => array
@@ -486,6 +618,10 @@ if(defined('INSIDE'))
                 ),
                 34 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/204.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_DESTROY_MILITARYUNITS',
                     'jobs' => array
@@ -499,6 +635,10 @@ if(defined('INSIDE'))
                 ),
                 35 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/215.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_DESTROY_MOREEXPENSIVEFLEET_SOLO',
                     'jobs' => array
@@ -512,6 +652,10 @@ if(defined('INSIDE'))
                 ),
                 36 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/215.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_DESTROY_MOREEXPENSIVEFLEET_SOLO',
                     'jobs' => array
@@ -525,6 +669,10 @@ if(defined('INSIDE'))
                 ),
                 37 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/215.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_DESTROY_MOREEXPENSIVEFLEET_SOLO',
                     'jobs' => array
@@ -538,6 +686,10 @@ if(defined('INSIDE'))
                 ),
                 38 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/213.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_DESTROY_MOREEXPENSIVEFLEET_ACS',
                     'jobs' => array
@@ -551,6 +703,10 @@ if(defined('INSIDE'))
                 ),
                 39 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/213.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_DESTROY_MOREEXPENSIVEFLEET_ACS',
                     'jobs' => array
@@ -564,6 +720,10 @@ if(defined('INSIDE'))
                 ),
                 40 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/213.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_DESTROY_MOREEXPENSIVEFLEET_ACS',
                     'jobs' => array
@@ -577,6 +737,10 @@ if(defined('INSIDE'))
                 ),
                 41 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/205.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_WIN',
                     'jobs' => array
@@ -590,6 +754,10 @@ if(defined('INSIDE'))
                 ),
                 42 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/205.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_WIN',
                     'jobs' => array
@@ -603,6 +771,10 @@ if(defined('INSIDE'))
                 ),
                 43 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/205.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_WIN',
                     'jobs' => array
@@ -616,6 +788,10 @@ if(defined('INSIDE'))
                 ),
                 44 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/205.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_WIN',
                     'jobs' => array
@@ -629,6 +805,10 @@ if(defined('INSIDE'))
                 ),
                 45 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/205.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_WIN',
                     'jobs' => array
@@ -642,6 +822,10 @@ if(defined('INSIDE'))
                 ),
                 46 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/206.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_WINORDRAW_SOLO_LIMIT',
                     'jobs' => array
@@ -655,6 +839,10 @@ if(defined('INSIDE'))
                 ),
                 47 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/206.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_WINORDRAW_SOLO_LIMIT',
                     'jobs' => array
@@ -668,6 +856,10 @@ if(defined('INSIDE'))
                 ),
                 48 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/206.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_WINORDRAW_SOLO_LIMIT',
                     'jobs' => array
@@ -681,6 +873,10 @@ if(defined('INSIDE'))
                 ),
                 49 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/218.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_WINORDRAW_SOLO_LIMIT',
                     'jobs' => array
@@ -694,6 +890,10 @@ if(defined('INSIDE'))
                 ),
                 50 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/218.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_WINORDRAW_SOLO_LIMIT',
                     'jobs' => array
@@ -707,6 +907,10 @@ if(defined('INSIDE'))
                 ),
                 51 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/218.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_WINORDRAW_SOLO_LIMIT',
                     'jobs' => array
@@ -720,6 +924,10 @@ if(defined('INSIDE'))
                 ),
                 52 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/218.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_WINORDRAW_LIMIT',
                     'jobs' => array
@@ -733,6 +941,10 @@ if(defined('INSIDE'))
                 ),
                 53 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/218.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_WINORDRAW_LIMIT',
                     'jobs' => array
@@ -746,6 +958,10 @@ if(defined('INSIDE'))
                 ),
                 54 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/218.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_WINORDRAW_LIMIT',
                     'jobs' => array
@@ -759,6 +975,10 @@ if(defined('INSIDE'))
                 ),
                 55 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/218.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_WINORDRAW_ACS_LIMIT',
                     'jobs' => array
@@ -772,6 +992,10 @@ if(defined('INSIDE'))
                 ),
                 56 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/223.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_BLOCK_MOONDESTROY',
                     'jobs' => array
@@ -785,6 +1009,10 @@ if(defined('INSIDE'))
                 ),
                 57 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/224.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_WINORDRAW_SOLO_TOTALLIMIT',
                     'jobs' => array
@@ -798,6 +1026,10 @@ if(defined('INSIDE'))
                 ),
                 58 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/209.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'DEBRIS_COLLECT_METAL|DEBRIS_COLLECT_CRYSTAL',
                     'jobs' => array
@@ -812,6 +1044,10 @@ if(defined('INSIDE'))
                 ),
                 59 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/217.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_COLLECT_METAL|BATTLE_COLLECT_CRYSTAL|BATTLE_COLLECT_DEUTERIUM',
                     'jobs' => array
@@ -827,6 +1063,10 @@ if(defined('INSIDE'))
                 ),
                 60 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/217.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_COLLECT_METAL|BATTLE_COLLECT_CRYSTAL|BATTLE_COLLECT_DEUTERIUM',
                     'jobs' => array
@@ -842,6 +1082,10 @@ if(defined('INSIDE'))
                 ),
                 61 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/217.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_COLLECT_METAL|BATTLE_COLLECT_CRYSTAL|BATTLE_COLLECT_DEUTERIUM',
                     'jobs' => array
@@ -857,6 +1101,10 @@ if(defined('INSIDE'))
                 ),
                 62 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/204.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'CONSTRUCT_SHIPS_OR_DEFENSE_MULTIID',
                     'jobs' => array
@@ -870,6 +1118,10 @@ if(defined('INSIDE'))
                 ),
                 63 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/205.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'CONSTRUCT_SHIPS_OR_DEFENSE_MULTIID',
                     'jobs' => array
@@ -895,6 +1147,10 @@ if(defined('INSIDE'))
             (
                 64 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/1.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'MULTIPLE_CONSTRUCTION_END',
                     'jobs' => array
@@ -910,6 +1166,10 @@ if(defined('INSIDE'))
                 ),
                 65 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/2.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'MULTIPLE_CONSTRUCTION_END',
                     'jobs' => array
@@ -925,6 +1185,10 @@ if(defined('INSIDE'))
                 ),
                 66 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/3.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'MULTIPLE_CONSTRUCTION_END',
                     'jobs' => array
@@ -940,6 +1204,10 @@ if(defined('INSIDE'))
                 ),
                 67 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/3.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'MULTIPLE_CONSTRUCTION_END',
                     'jobs' => array
@@ -955,6 +1223,10 @@ if(defined('INSIDE'))
                 ),
                 68 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/2.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'REACH_EXTRACTION_LEVEL',
                     'jobs' => array
@@ -970,6 +1242,10 @@ if(defined('INSIDE'))
                 ),
                 69 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/23.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'MULTIPLE_CONSTRUCTION_END',
                     'jobs' => array
@@ -985,6 +1261,10 @@ if(defined('INSIDE'))
                 ),
                 70 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/33.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'REACH_TERRAFORMING_LEVEL',
                     'jobs' => array
@@ -998,6 +1278,10 @@ if(defined('INSIDE'))
                 ),
                 71 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/3.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'REACH_TOTAL_EXTRACTION_LEVEL',
                     'jobs' => array
@@ -1023,6 +1307,10 @@ if(defined('INSIDE'))
             (
                 72 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/109.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'RESEARCH_END',
                     'jobs' => array
@@ -1036,6 +1324,10 @@ if(defined('INSIDE'))
                 ),
                 73 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/109.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'RESEARCH_END',
                     'jobs' => array
@@ -1049,6 +1341,10 @@ if(defined('INSIDE'))
                 ),
                 74 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/110.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'RESEARCH_END',
                     'jobs' => array
@@ -1062,6 +1358,10 @@ if(defined('INSIDE'))
                 ),
                 75 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/110.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'RESEARCH_END',
                     'jobs' => array
@@ -1075,6 +1375,10 @@ if(defined('INSIDE'))
                 ),
                 76 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/111.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'RESEARCH_END',
                     'jobs' => array
@@ -1088,6 +1392,10 @@ if(defined('INSIDE'))
                 ),
                 77 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/111.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'RESEARCH_END',
                     'jobs' => array
@@ -1101,6 +1409,10 @@ if(defined('INSIDE'))
                 ),
                 78 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/120.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'RESEARCH_END',
                     'jobs' => array
@@ -1114,6 +1426,10 @@ if(defined('INSIDE'))
                 ),
                 79 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/120.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'RESEARCH_END',
                     'jobs' => array
@@ -1127,6 +1443,10 @@ if(defined('INSIDE'))
                 ),
                 80 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/120.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'RESEARCH_END',
                     'jobs' => array
@@ -1140,6 +1460,10 @@ if(defined('INSIDE'))
                 ),
                 81 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/121.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'RESEARCH_END',
                     'jobs' => array
@@ -1153,6 +1477,10 @@ if(defined('INSIDE'))
                 ),
                 82 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/121.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'RESEARCH_END',
                     'jobs' => array
@@ -1166,6 +1494,10 @@ if(defined('INSIDE'))
                 ),
                 83 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/121.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'RESEARCH_END',
                     'jobs' => array
@@ -1179,6 +1511,10 @@ if(defined('INSIDE'))
                 ),
                 84 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/122.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'RESEARCH_END',
                     'jobs' => array
@@ -1192,6 +1528,10 @@ if(defined('INSIDE'))
                 ),
                 85 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/122.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'RESEARCH_END',
                     'jobs' => array
@@ -1205,6 +1545,10 @@ if(defined('INSIDE'))
                 ),
                 86 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/122.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'RESEARCH_END',
                     'jobs' => array
@@ -1218,6 +1562,10 @@ if(defined('INSIDE'))
                 ),
                 87 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/123.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'RESEARCH_END',
                     'jobs' => array
@@ -1231,6 +1579,10 @@ if(defined('INSIDE'))
                 ),
                 88 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/31.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'MULTIPLE_CONSTRUCTION_END',
                     'jobs' => array
@@ -1244,6 +1596,10 @@ if(defined('INSIDE'))
                 ),
                 89 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/108.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'REACH_TECHPOINTS_LEVEL',
                     'jobs' => array
@@ -1257,6 +1613,10 @@ if(defined('INSIDE'))
                 ),
                 90 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/108.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'REACH_TECHPOINTS_LEVEL',
                     'jobs' => array
@@ -1270,6 +1630,10 @@ if(defined('INSIDE'))
                 ),
                 91 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/108.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'REACH_TECHPOINTS_LEVEL',
                     'jobs' => array
@@ -1283,6 +1647,10 @@ if(defined('INSIDE'))
                 ),
                 92 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/108.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'REACH_TECHPOINTS_LEVEL',
                     'jobs' => array
@@ -1296,6 +1664,10 @@ if(defined('INSIDE'))
                 ),
                 93 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/108.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'REACH_TECHPOINTS_LEVEL',
                     'jobs' => array
@@ -1321,6 +1693,10 @@ if(defined('INSIDE'))
             (
                 94 => array
                 (
+                    'details' => array(
+                        'img' => 'planeten/mond.jpg',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'CREATE_MOON_FRIENDLY',
                     'jobs' => array
@@ -1334,6 +1710,10 @@ if(defined('INSIDE'))
                 ),
                 95 => array
                 (
+                    'details' => array(
+                        'img' => 'planeten/mond.jpg',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'CREATE_MOON_FRIENDLY',
                     'jobs' => array
@@ -1347,6 +1727,10 @@ if(defined('INSIDE'))
                 ),
                 96 => array
                 (
+                    'details' => array(
+                        'img' => 'planeten/mond.jpg',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'CREATE_MOON_FRIENDLY',
                     'jobs' => array
@@ -1360,6 +1744,10 @@ if(defined('INSIDE'))
                 ),
                 97 => array
                 (
+                    'details' => array(
+                        'img' => 'planeten/mond.jpg',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'CREATE_MOON_FRIENDLY',
                     'jobs' => array
@@ -1373,6 +1761,10 @@ if(defined('INSIDE'))
                 ),
                 98 => array
                 (
+                    'details' => array(
+                        'img' => 'planeten/mond.jpg',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'CREATE_MOON_FRIENDLY',
                     'jobs' => array
@@ -1386,6 +1778,10 @@ if(defined('INSIDE'))
                 ),
                 99 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/218.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_WINORDRAW_ACS_LIMIT',
                     'jobs' => array
@@ -1399,6 +1795,10 @@ if(defined('INSIDE'))
                 ),
                 100 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/218.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_WINORDRAW_ACS_LIMIT',
                     'jobs' => array
@@ -1412,6 +1812,10 @@ if(defined('INSIDE'))
                 ),
                 101 => array
                 (
+                    'details' => array(
+                        'img' => 'gebaeude/218.gif',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'BATTLE_WINORDRAW_ACS_LIMIT',
                     'jobs' => array
@@ -1437,6 +1841,10 @@ if(defined('INSIDE'))
             (
                 102 => array
                 (
+                    'details' => array(
+                        'img' => 'img/proacc.jpg',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'NEWUSER_REGISTER',
                     'jobs' => array
@@ -1450,6 +1858,10 @@ if(defined('INSIDE'))
                 ),
                 103 => array
                 (
+                    'details' => array(
+                        'img' => 'img/proacc.jpg',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'NEWUSER_REGISTER',
                     'jobs' => array
@@ -1463,6 +1875,10 @@ if(defined('INSIDE'))
                 ),
                 104 => array
                 (
+                    'details' => array(
+                        'img' => 'img/proacc.jpg',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'NEWUSER_REGISTER',
                     'jobs' => array
@@ -1476,6 +1892,10 @@ if(defined('INSIDE'))
                 ),
                 105 => array
                 (
+                    'details' => array(
+                        'img' => 'img/proacc.jpg',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'INVITEDUSER_BOUGHT_DE',
                     'jobs' => array
@@ -1489,6 +1909,10 @@ if(defined('INSIDE'))
                 ),
                 106 => array
                 (
+                    'details' => array(
+                        'img' => 'img/proacc.jpg',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'INVITEDUSERS_BOUGHT_DE_USERCOUNT',
                     'jobs' => array
@@ -1502,6 +1926,10 @@ if(defined('INSIDE'))
                 ),
                 107 => array
                 (
+                    'details' => array(
+                        'img' => 'img/proacc.jpg',
+                    ),
+
                     'requirements' => array(),
                     'jobtypes' => 'INVITEDUSERS_BOUGHT_DE_LIMIT',
                     'jobs' => array
