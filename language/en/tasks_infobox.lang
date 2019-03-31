@@ -9,6 +9,7 @@ $_Lang['CatLink']		= '"<i><a href="tasks.php?%s" style="color: black;">%s</a></i
 
 $_Lang['Hide']			= 'Hide notification';
 
+// FIXME: this should be shared with "tasks.lang"
 $_Lang['Names']			= [
 	1 => 'Introduction',
 	2 => 'Military',
