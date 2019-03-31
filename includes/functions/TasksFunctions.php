@@ -313,4 +313,18 @@ function Tasks_TriggerTask_MainCheck_Progressive($JobArray, $ThisCat, $TaskID, $
     }
 }
 
+function Tasks_GetTaskData($TaskCatID, $TaskID) {
+    global $_Vars_TasksData;
+
+    return $_Vars_TasksData[$TaskCatID]['tasks'][$TaskID];
+}
+
+function Tasks_GetTaskImagePath($TaskCatID, $TaskID) {
+    global $_SkinPath;
+
+    $TaskData = Tasks_GetTaskData($TaskCatID, $TaskID);
+
+    return ($_SkinPath . $TaskData['details']['img']);
+}
+
 ?>
