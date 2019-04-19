@@ -176,16 +176,20 @@ else
             $_Lang['Input_HideCatSkip'] = ' class="hide"';
         }
 
-        if(!empty($_Lang['TasksCatRewards'][$SelectCat]))
-        {
+        $CategoryData = Tasks_GetTaskCategoryData($SelectCat);
+
+        if (
+            !empty($CategoryData['reward']) &&
+            count($CategoryData['reward']) > 0
+        ) {
+            $rewards = Tasks_GenerateRewardsStrings($CategoryData['reward'], $_Lang);
+
             $_Lang['Input_CatRewards'] = '';
-            foreach($_Lang['TasksCatRewards'][$SelectCat] as $CatReward)
-            {
-                $_Lang['Input_CatRewards'] .= "&#149; {$CatReward}<br/>";
+
+            foreach ($rewards as $rewardString) {
+                $_Lang['Input_CatRewards'] .= "&#149; {$rewardString}<br/>";
             }
-        }
-        else
-        {
+        } else {
             $_Lang['Input_HideCatRewards'] = ' class="hide"';
         }
 
@@ -242,13 +246,23 @@ else
             $ThisTask['No'] = $TaskLoop;
             $ThisTask['Lang_Task'] = $_Lang['Tab01_CatSel_Task'];
             $ThisTask['Lang_JobsToDo'] = $_Lang['Tab01_CatSel_JobsToDo'];
-            if(!empty($_Lang['Tasks'][$TaskID]['rewards']))
-            {
+
+            $TaskData = Tasks_GetTaskData($SelectCat, $TaskID);
+
+            if (
+                !empty($TaskData['reward']) &&
+                count($TaskData['reward']) > 0
+            ) {
                 $ThisTask['Lang_Reward'] = $_Lang['Tab01_CatSel_Reward'];
-                $ThisTask['Input_Rewards'] = $_Lang['Tasks'][$TaskID]['rewards'];
-            }
-            else
-            {
+
+                $rewards = Tasks_GenerateRewardsStrings($TaskData['reward'], $_Lang);
+
+                foreach ($rewards as &$rewardString) {
+                    $rewardString = ucfirst($rewardString);
+                }
+
+                $ThisTask['Input_Rewards'] = implode(', ', $rewards);
+            } else {
                 $ThisTask['HideRewards'] = 'hide';
             }
 
