@@ -313,10 +313,16 @@ function Tasks_TriggerTask_MainCheck_Progressive($JobArray, $ThisCat, $TaskID, $
     }
 }
 
-function Tasks_GetTaskData($TaskCatID, $TaskID) {
+function Tasks_GetTaskCategoryData($TaskCatID) {
     global $_Vars_TasksData;
 
-    return $_Vars_TasksData[$TaskCatID]['tasks'][$TaskID];
+    return $_Vars_TasksData[$TaskCatID];
+}
+
+function Tasks_GetTaskData($TaskCatID, $TaskID) {
+    $CategoryData = Tasks_GetTaskCategoryData($TaskCatID);
+
+    return $CategoryData['tasks'][$TaskID];
 }
 
 function Tasks_GetTaskImagePath($TaskCatID, $TaskID) {
