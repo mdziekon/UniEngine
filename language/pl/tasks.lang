@@ -54,10 +54,72 @@ $_Lang['TasksCats'] = [
     5 => 'Wsparcie sojusznicze',
     6 => 'Wsparcie Universum',
 ];
-$_Lang['TasksCatRewards'] = [
-    1 => [
-        'Darmowy Geolog na 3 dni',
-    ],
+
+$_Lang['TaskRewardsTranslations'] = [
+    'PREMIUM_ITEM' => [
+        12 => 'Darmowy Geolog na 3 dni'
+    ]
+];
+
+$_Lang['TaskRewards'] = [
+    //  $details
+    //      - type: 'RESOURCES'
+    //      - met: Number | undefined
+    //      - cry: Number | undefined
+    //      - deu: Number | undefined
+    'RESOURCES' => function ($details, $_Lang) {
+        $parts = [];
+
+        $resourceNames = [
+            'met' => $_Lang['Metal'],
+            'cry' => $_Lang['Crystal'],
+            'deu' => $_Lang['Deuterium'],
+        ];
+
+        foreach ([ 'met', 'cry', 'deu' ] as $resourceKey) {
+            if (!isset($details[$resourceKey])) {
+                continue;
+            }
+
+            $value = prettyNumber($details[$resourceKey]);
+            $resourceName = $resourceNames[$resourceKey];
+
+            $parts[] = "{$resourceName}: {$value} jednostek";
+        }
+
+        return implode(", ", $parts);
+    },
+
+    //  $details
+    //      - type: 'PREMIUM_ITEM'
+    //      - elementID: Number
+    'PREMIUM_ITEM' => function ($details, $_Lang) {
+        $elementID = $details['elementID'];
+
+        return $_Lang['TaskRewardsTranslations']['PREMIUM_ITEM'][$elementID];
+    },
+
+    //  $details
+    //      - type: 'XXXX'
+    //      - elementID: Number
+    //      - count: Number
+    'PLANET_ELEMENT' => function ($details, $_Lang) {
+        $elementID = $details['elementID'];
+        $value = prettyNumber($details['count']);
+        $resourceName = $_Lang['tech'][$elementID];
+
+        return "{$resourceName}: {$value}";
+    },
+
+    //  $details
+    //      - type: 'PREMIUM_RESOURCE'
+    //      - value: Number
+    'PREMIUM_RESOURCE' => function ($details, $_Lang) {
+        $value = prettyNumber($details['value']);
+        $resourceName = $_Lang['DarkEnergy'];
+
+        return "{$resourceName}: {$value} jednostek";
+    },
 ];
 
 $_Lang['Tasks'] = [

@@ -333,4 +333,16 @@ function Tasks_GetTaskImagePath($TaskCatID, $TaskID) {
     return ($_SkinPath . $TaskData['details']['img']);
 }
 
+function Tasks_GenerateRewardsStrings($rewardsData, $_Lang) {
+    $parts = [];
+
+    foreach ($rewardsData as $rewardDetails) {
+        $rewardType = $rewardDetails['type'];
+
+        $parts[] = $_Lang['TaskRewards'][$rewardType]($rewardDetails, $_Lang);
+    }
+
+    return $parts;
+}
+
 ?>
