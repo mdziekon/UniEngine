@@ -151,55 +151,55 @@ $_Lang['Tasks'] = [
     ],
     7 => [
         'name' => 'Planetary colonies',
-        'desc' => '//TODO'
+        'desc' => 'The development of your planetary <b>Colonies</b> is crucial to the expansion of your empire. The more planets you own, the more resources income you can get with less investment spent on improvements of the mines. Since the cost of improvements grows faster than the improved extraction, it\'s far easier and efficient to improve two low-level mines than improve a high-level one. You should also remember, that Deuterium is easier to extract on colder planets placed further away from their system stars, and the biggest (field-wise) planets can be found on the 14-th position in the solar system.'
     ],
     8 => [
         'name' => 'Alternative energy sources',
-        'desc' => '//TODO'
+        'desc' => 'Due to the growing cost of Solar plants improvements, <b>Solar Sattelites</b> are a highly recommended energy source in the later phases of the game. They are extremelly cheap and easy to construct, giving you a substantial energy income boost. However, they have a significant downside compared to the ground Plants - they can be destroyed during battles and their debris pillaged by your enemies. Therefore, it\'s important to provide at least a minimal energy income from the Plants, to prevent your mines from halting their work completely.'
     ],
     9 => [
         'name' => 'Millitary actions',
-        'desc' => '//TODO'
+        'desc' => 'The very first step to resources pillaging is sending <b>Espionage</b> missions using <b>Spy probes</b>, to find enemy stockpiles. With highly developed Espionage technology, or high enough count of the Probes, you should be able to get enough informations about your enemies\' planets and moons, their defenses and storage states (although, keep in mind that your probes can be destroyed when detected!). Before the actual attack mission, it\'s worth to use the <b>Battle simulator</b>, to check if the mission is cost-effective. If a planet does not have any defenses and guarding ships, you can <b>pillage</b> resources with <b>Cargoships</b> alone!'
     ],
     10 => [
         'name' => 'Debris field cleanup',
-        'desc' => '//TODO'
+        'desc' => 'Almost every battle produces some garbage on the orbit, creating a <b>Debris field</b>, containing the remains of destroyed ships and defenses. This provides an additional source of <b>income</b>, that\'s why sometimes it might be worth attacking a planet without any stored resources, to simply destroy and then recover resources from a destroyed enemy fleet. You can use <b>Recyclers</b> to collect that debris, but remember - first come, first served!'
     ],
     11 => [
         'name' => 'Players\' unions',
-        'desc' => '//TODO'
+        'desc' => '<b>Alliances</b> are unions of several players how declare to help each other both in term of Millitary actions and Trading. Joining or creating an Alliance usually helps your empire to grow faster and further expands your millitary dominion. Another way to "socialise" in the game is by using <b>Friends list</b> - a list of befriended players, which just like Alliance membership, allows you to send <b>United Attacks</b>.'
     ],
     12 => [
         'name' => 'Fleet saving',
-        'desc' => '//TODO'
+        'desc' => 'Due to the nature of the game, your planets and fleets are vulnerable to enemy attacks 24/7, even when you\'re not logged in. Therefore it\'s important that every fleet owner sends their ships on a so called <b>FleetSave (FS)</b> before logging out - it is a form of long and slow mission, which makes it impossible to destroy your ships in-flight. To heavily slow down your ships you can use a special spacecraft - the <b>Space shuttle</b>. The best way to perform a Fleet Save is to send your ships from one of <b>your Moons</b> to another with <b>Stay mission</b>. This prevents enemies from tracking down your in-flight fleets with <b>Sensor phalanx</b>, which cannot scan fleet movements on moons.'
     ],
     13 => [
         'name' => 'Computations',
-        'desc' => '//TODO'
+        'desc' => 'As your empire grows, improving buildings and constructing new types of spaceships takes more time due to the growing complexity of the developed structures. One remedy to that problem is to build and improve the Nanite factory, which greatly reduces buildings construction time and helps with Shipyard\'s work as well. Every next level of the Nanite factory cuts construction times by half.'
     ],
     14 => [
         'name' => 'The hunt for enemy\'s fleet',
-        'desc' => '//TODO'
+        'desc' => 'Sensor phalanx is an extremely helpful tool when scanning the galaxy for enemy fleets, but it becomes useless when ships are flying between moons. In that case, the only solution is to destroy the enemy\'s moon with Deathstars - large and costly units equipped with Graviton cannons, powerful enough to destroy moons. After moon\'s destruction, all in-flight ships are visible again to the phalanx when scanning the moon\'s corresponding planet'
     ],
     15 => [
         'name' => 'Interplanetar transportation',
-        'desc' => '//TODO'
+        'desc' => 'Mega cargoships are the result of engineering mastery brought to the world of interplanetar transportation system. All the developed empires use them as the main resources transportation unit'
     ],
     16 => [
         'name' => 'Colonial expansion',
-        'desc' => '//TODO'
+        'desc' => 'Empire\'s expansion further into space is extremely important from the economical standpoint. Every additional is an additional income source. The faster you colonise as many planets as you can, the faster you\'ll surpass your rivals or catch up with the server\'s elite.'
     ],
     17 => [
         'name' => 'Colonial empires',
-        'desc' => '//TODO'
+        'desc' => 'While colonising new planets one should not forget about improving the colonial infrastructure. It\'s worth investing in next levels of mines and extractors to increase the overall empire\'s resources income. Evenly spread investments should yield the most efficient income growth.'
     ],
     18 => [
         'name' => 'Moons',
-        'desc' => '//TODO'
+        'desc' => 'Planet\'s moon is the only place where structures like a Jump gate or Sensor phalanx can be built. In addition to that, it creates the perfect environment for Fleet saves, giving you the ability to prevent from losing your fleets and stockpiled resources. Moons are created as a result of orbital battles, and since their presence is invaluable, sometimes it\'s worth asking for help from friends or alliance members to destroy some of your ships in a controlled demolishion, usually referred to as Moonmaking (where sacrificing a small, calculated number of ships gives you a chance to have a moon on your own terms).'
     ],
     19 => [
         'name' => 'God save the fleet!',
-        'desc' => '//TODO'
+        'desc' => 'One of the best methods of performing a Fleet save maneuver is to send your ships from one of your own moons to another with Stay mission. Thanks to the nature of the moons, your fleet is hidden from your enemies\' Sensor phalanxes, but even in the case of moon destruction, there\'s still a chance to save your fleet from its doom.'
     ],
     // Military
     20 => [
