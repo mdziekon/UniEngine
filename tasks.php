@@ -214,6 +214,14 @@ else
             }
         }
 
+        if (!empty($_Lang['Input_HideCatSkip'])) {
+            if (empty($_Lang['Input_CatSkipTDClass'])) {
+                $_Lang['Input_CatSkipTDClass'] = 'hide';
+            } else {
+                $_Lang['Input_CatSkipTDClass'] .= ' hide';
+            }
+        }
+
         $_Lang['SetActiveTask'] = '1';
 
         $_Lang['Input_CreateTaskRows'] = '';
