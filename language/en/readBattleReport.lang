@@ -1,0 +1,50 @@
+<?php
+
+$_Lang['sys_attacker_lostunits']                = "The attacker has lost %s units of resources.";
+$_Lang['sys_defender_lostunits']                = "The defender has lost %s units of resources.";
+$_Lang['sys_moonproba']                         = "Chance of moon creation: %d %%";
+$_Lang['sys_moonproba_total']                   = "Chance of moon creation: %d %% (%s %%)";
+$_Lang['sys_moonbuilt']                         = "A moon has been created on the orbit of the planet %s [<a class=\"gxLink\" onclick=\"opener.location = 'galaxy.php?mode=3&galaxy=%s&system=%s&planet=%s'; opener.focus();\">%d:%d:%d</a>]!";
+$_Lang['sys_attack_title']                      = "<b>The following fleets have participated in the battle %s</b>";
+$_Lang['sys_attack_attacker_pos']               = "Attacker %s %s [<a class=\"gxLink\" onclick=\"opener.location = 'galaxy.php?mode=3&galaxy=%s&system=%s&planet=%s'; opener.focus();\">%s:%s:%s</a>]";
+$_Lang['sys_attack_techologies']                = "Weapons: %d %% | Shields: %d %% | Armour: %d %% ";
+$_Lang['sys_attack_morale']                     = ' | Morale level: %s%%';
+$_Lang['sys_attack_defender_pos']               = "Defender %s %s [<a class=\"gxLink\" onclick=\"opener.location = 'galaxy.php?mode=3&galaxy=%s&system=%s&planet=%s'; opener.focus();\">%s:%s:%s</a>]";
+$_Lang['sys_battle_versus']                     = 'vs';
+$_Lang['sys_ship_type']                         = 'Type';
+$_Lang['sys_ship_count']                        = 'Count';
+$_Lang['sys_ship_weapon']                       = 'Weapons';
+$_Lang['sys_ship_shield']                       = 'Shield';
+$_Lang['sys_ship_armour']                       = 'Armour';
+
+$_Lang['sys_attack_wave']                       = "%s %s time%s with total force of %s points towards %s. The shields of %s have absorbed %s  force points.";
+$_Lang['sys_msg_atk_fleet']                     = 'The fleet of the attacker shoots';
+$_Lang['sys_msg_atk_fleets']                    = 'The fleets of the attackers shoot';
+$_Lang['sys_msg_def_fleet']                     = 'The fleet of the defender shoots';
+$_Lang['sys_msg_def_fleets']                    = 'The fleets of the defenders shoot';
+$_Lang['sys_msg_into_atk']                      = 'the attacker';
+$_Lang['sys_msg_into_atks']                     = 'the attackers';
+$_Lang['sys_msg_into_def']                      = 'the defender';
+$_Lang['sys_msg_into_def_shield']               = 'the defender';
+$_Lang['sys_msg_into_defs']                     = 'the defenders';
+$_Lang['sys_x_times']                           = 's';
+$_Lang['sys_battle_onMoon']                     = 'The battle took place on the orbit of a Moon';
+$_Lang['sys_raport_build_engine']               = 'The battle was calculated by <a href="https://github.com/mdziekon/UniEngine" target="_blank" class="orange">ARES BattleEngine</a>';
+$_Lang['sys_mess_attacker_lost_in_1_round']     = 'Contact with the attacking fleet has been lost!<br />(Your fleet has been destroyed in the first round of the battle)';
+
+$_Lang['BattleReport_Morale_Attacker_Negative'] = 'Due to the disproportion in the Empires\' development level between the Attacker <b class="skyblue">%s</b> and the Defender (ratio: <b class="skyblue">%s</b>), this battle was dishonorable for the Attacker.<br/>The morale of the Attacker\'s crew have droped to the level of <b class="red">%s%%</b>.';
+$_Lang['BattleReport_Morale_Attacker_Positive'] = 'Due to the disproportion in the Empires\' development level between the Defender and the Attacker <b class="skyblue">%s</b> (ratio: <b class="skyblue">%s</b>), this battle was honorable for the Attacker.<br/>The morale of the Attacker\'s crew have risen to the level of <b class="lime">%s%%</b>.';
+$_Lang['BattleReport_Morale_Defender_Positive'] = 'Due to the holded position by the Defended <b class="skyblue">%s</b> and the disproportion in the Empires\' development level between the fighting sides (ratio: <b class="skyblue">%s</b>), this battle was honorable for the Defender.<br/>The morale of the Defender\'s crew have risen to the level of <b class="lime">%s%%</b>.';
+
+$_Lang['sys_gcdrunits']                         = "A debris field containing %s units %s and %s units %s has been created on the orbit of the planet.";
+$_Lang['sys_destroyed']                         = 'Destroyed!';
+$_Lang['sys_destruction_onlymoon']              = 'The Deathstar fires the Graviton cannon towards the Moon, which causes seismic activity and finally rips apart the Moon. All structures on the Moon\'s ground have been destroyed.';
+$_Lang['sys_destruction_both']                  = 'The Deathstar fires the Graviton cannon towards the Moon. Light seismic activity grows stronger every second. The moon starts to deform and explodes into million fragments. Huge chunks of rock flying towards your ships cause massive damage. Your fleet has been destroyed in the hailstorm of the moon\'s remains.';
+$_Lang['sys_destruction_onlyfleet']             = 'The Deathstar begins to accumulate energy in its Graviton cannon. Shorting in one of the super capacitors causes the destruction of the ship\'s core. A huge shockwave destroys your entire fleet, leaving the moon intact.';
+$_Lang['sys_destruction_nothing']               = 'The Deathstar fires the Graviton beam towards the Moon. A miscalculation of the centre of the moon\'s mass leads to a small tremors on the surface of the moon, leaving it intact.';
+$_Lang['sys_destruction_nothappened']           = 'All of the Deathstars have been destroyed during the battle!';
+
+$_Lang['sys_destruc_lune']                      = "Chance to destroy the moon: %s %%";
+$_Lang['sys_destruc_rip']                       = "Chance to destroy attacker's fleet: %s %%";
+
+?>
