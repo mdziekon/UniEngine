@@ -85,7 +85,7 @@ $_Lang['sys_mess_attack_report']                = "Battle Report";
 $_Lang['sys_attacker_won']                      = "Aggressor has won the battle!";
 $_Lang['sys_defender_won']                      = "Defender has won the battle!";
 $_Lang['sys_both_won']                          = "Battle drawn. All fleets are returning to their origin bases!";
-$_Lang['sys_stealed_ressources']                = "They steal %s units of %s, %s units of %s and %s units of %s.";
+$_Lang['sys_stealed_ressources']                = "They steal %s units %s, %s units %s and %s units %s.";
 $_Lang['sys_rapport_build_time']                = "Report generation time: %s sec.";
 
 $_Lang['sys_mess_destruc_report']               = "Destruction Report";
