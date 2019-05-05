@@ -56,7 +56,10 @@ else
     {showError}{showMsg}
     <tbody class="Cont01">
         <tr>
-            <th class="pad" colspan="6">THIS OPTION IS NOT IMPLEMENTED YET<br/>(Look for implementation notes in galacticshop.php file)</th>
+            <th class="pad" colspan="6">
+                LEFT FOR INDIVIDUAL IMPLEMENTATION OF THE SERVER OWNERS<br/>
+                (Implementation notes in galacticshop.php file)
+            </th>
         </tr>
     </tbody>
     <tbody class="Cont02">
