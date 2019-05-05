@@ -519,7 +519,7 @@ if(!empty($_POST['mode']))
             }
             else
             {
-                $_Lang['showError'] = $_Lang['ErrorCurrentlyNothinkToSell'];
+                $_Lang['showError'] = $_Lang['ErrorCurrentlyNothingToSell'];
             }
             break;
         }
