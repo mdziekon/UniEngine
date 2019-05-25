@@ -6,6 +6,7 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
 
     include($_EnginePath.'includes/functions/GetMaxConstructibleElements.php');
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
+    includeLang('worldElements.detailed');
 
     $Now = time();
     $IsInFleet = false;
@@ -383,7 +384,7 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
         $ElementParser['MaxConstructible'] = prettyNumber($ElementParser['MaxConstructible']);
         $ElementParser['ElementName'] = $_Lang['tech'][$ElementID];
         $ElementParser['ElementID'] = $ElementID;
-        $ElementParser['Desc'] = $_Lang['res']['descriptions'][$ElementID];
+        $ElementParser['Desc'] = $_Lang['WorldElements_Detailed'][$ElementID]['description_short'];
 
         $ElementParser['ElementPrice'] = GetBuildingPrice($CurrentUser, $CurrentPlanet, $ElementID, true, false, true);
         foreach($ElementParser['ElementPrice'] as $Key => $Value)

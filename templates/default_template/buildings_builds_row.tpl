@@ -6,7 +6,7 @@
     </td>
     <td class="l">
         <a href="infos.php?gid={i}">{n}</a>{nivel} {build_need_diff}<br/>
-        {descriptions}<br/><br/>
+        {Description}<br/><br/>
         {AddLevelPrice}
         {price}
         {time}

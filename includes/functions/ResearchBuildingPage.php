@@ -7,6 +7,7 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePl
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
     include($_EnginePath.'includes/functions/GetElementPrice.php');
     include($_EnginePath.'includes/functions/GetRestPrice.php');
+    includeLang('worldElements.detailed');
 
     $Now = time();
 
@@ -149,7 +150,7 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePl
         $building_level = $CurrentUser[$_Vars_GameElements[$Tech]];
         $RowParse['tech_level'] = ($building_level == 0) ? '' : "({$_Lang['level']} {$building_level})";
         $RowParse['tech_name'] = $_Lang['tech'][$Tech];
-        $RowParse['tech_descr'] = $_Lang['res']['descriptions'][$Tech];
+        $RowParse['tech_descr'] = $_Lang['WorldElements_Detailed'][$Tech]['description_short'];
 
         if(IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $Tech))
         {

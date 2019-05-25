@@ -7,6 +7,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             $_SkinPath, $_GameConfig, $_GET;
 
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
+    includeLang('worldElements.detailed');
 
     $Now = time();
     $Parse = &$_Lang;
@@ -383,7 +384,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         $ElementParser['ElementLevel'] = prettyNumber($CurrentUser[$_Vars_GameElements[$ElementID]]);
         $ElementParser['ElementRealLevel'] = prettyNumber($CurrentUser[$_Vars_GameElements[$ElementID]] + (isset($LevelModifiers[$ElementID]) ? $LevelModifiers[$ElementID] : 0));
         $ElementParser['BuildLevel'] = prettyNumber($CurrentUser[$_Vars_GameElements[$ElementID]] + 1);
-        $ElementParser['Desc'] = $_Lang['res']['descriptions'][$ElementID];
+        $ElementParser['Desc'] = $_Lang['WorldElements_Detailed'][$ElementID]['description_short'];
         $ElementParser['BuildButtonColor'] = 'buildDo_Green';
 
         if(isset($LevelModifiers[$ElementID]))

@@ -1,0 +1,301 @@
+<?php
+
+$_Lang['WorldElements_Detailed'] = [
+    // Buildings
+    1 => [
+        'description_short' => 'Dostawca głównego surowca do budowy konstrukcji nośnych budynków i statków kosmicznych.',
+        'description_extra' => '',
+    ],
+    2 => [
+        'description_short' => 'Dostawca głównego surowca do budowy elementów elektronicznych i stopów metali.',
+        'description_extra' => '',
+    ],
+    3 => [
+        'description_short' => 'Oddziela atomy deuteru (ciężkiego izotopu wodoru) od atomów lekkiego wodoru z wody znajdującej się na planecie.',
+        'description_extra' => '',
+    ],
+    4 => [
+        'description_short' => 'Elektrownia słoneczna pozyskuje energię z promieniowania słonecznego. Prawie wszystkie budynki potrzebują energii do ich eksploatacji.',
+        'description_extra' => '',
+    ],
+    12 => [
+        'description_short' => 'Elektrownia fuzyjna otrzymuje energię z połączenia dwóch atomów deuteru w jeden atom helu.',
+        'description_extra' => '',
+    ],
+    14 => [
+        'description_short' => 'Fabryka robotów dostarcza tanią siłę roboczą dzięki której możliwa jest rozbudowa infrastruktury na planecie. Każdy kolejny poziom fabryki robotów zwiększa szybkość powstawania budowli.',
+        'description_extra' => '',
+    ],
+    15 => [
+        'description_short' => 'Przedstawia ukoronowanie prac w dziedzinie robotyki. Każdy kolejny poziom skraca o połowę czas budowy budynków, statków i zabezpieczeń obronnych.',
+        'description_extra' => '',
+    ],
+    21 => [
+        'description_short' => 'W stoczni budowane są wszelkiego rodzaju statki i systemy obronne.',
+        'description_extra' => '',
+    ],
+    22 => [
+        'description_short' => 'Jest to miejsce składowania świeżo wydobytej rudy metalu, przed jej dalszą obróbką.',
+        'description_extra' => '',
+    ],
+    23 => [
+        'description_short' => 'Miejsce składowania świeżo wydobytych kryształów przed ich dalszą obróbką.',
+        'description_extra' => '',
+    ],
+    24 => [
+        'description_short' => 'Są to ogromne zbiorniki służące do przechowywania świeżo wytworzonego deuteru.',
+        'description_extra' => '',
+    ],
+    31 => [
+        'description_short' => 'Aby odkrywać nowe technologie, konieczne jest laboratorium badawcze.',
+        'description_extra' => '',
+    ],
+    33 => [
+        'description_short' => 'Terraformer jest niezbędny aby przygotować niedostępne tereny pod zabudowę.',
+        'description_extra' => '',
+    ],
+    34 => [
+        'description_short' => 'Depozyt sojuszniczy oferuje możliwość zaopatrywania w paliwo napędowe zaprzyjaźnionych flot, które podczas działań obronnych pomagają lub stacjonują na orbicie.',
+        'description_extra' => '',
+    ],
+
+    // Special buildings
+    41 => [
+        'description_short' => 'Na księżycu nie ma atmosfery, dlatego przed jego zasiedleniem musi zostać zbudowana stacja księżycowa.',
+        'description_extra' => '',
+    ],
+    42 => [
+        'description_short' => 'Falanga czujników pozwala obserwować poruszanie się flot. Im bardziej jest rozbudowana, tym większy jest jej zasięg.',
+        'description_extra' => '',
+    ],
+    43 => [
+        'description_short' => 'Teleporter to ogromny przekaźnik, który jest w stanie przesyłać floty między galaktykami bez strat czasowych.',
+        'description_extra' => '',
+    ],
+    44 => [
+        'description_short' => 'Silos rakietowy pełni rolę magazynu i wyrzutni dla rakiet międzyplanetarnych oraz przeciwrakiet.',
+        'description_extra' => '',
+    ],
+    50 => [
+        'description_short' => 'Brama kwantowa to ogromne urządzenie zdolne do natychmiastowego transportu materii poprzez stabilny tunel czaroprzestrzenny.',
+        'description_extra' => '',
+    ],
+
+    // Research
+    106 => [
+        'description_short' => 'Przy pomocy tej technologii można zdobywać informacje o innych planetach.',
+        'description_extra' => '',
+    ],
+    108 => [
+        'description_short' => 'Wraz ze zwiększaniem wydajności komputerów można sterować większą ilością flot. Każdy poziom technologii komputerowej zwiększa maksymalną ilość flot o 1.',
+        'description_extra' => '',
+    ],
+    109 => [
+        'description_short' => 'Technologia bojowa usprawnia systemy bojowe. Każdy poziom technologii bojowej podwyższa moc bojową jednostek o 10% wartości początkowej.',
+        'description_extra' => '',
+    ],
+    110 => [
+        'description_short' => 'Technologia ochronna usprawnia powłoki ochronne wokół statków i systemów obronnych. Każdy poziom technologii ochronnej podwyższa efektywność powłok o 10% wartości podstawowej.',
+        'description_extra' => '',
+    ],
+    111 => [
+        'description_short' => 'Specjalny stop metali polepsza właściwości opancerzenia. Skuteczność opancerzenia wzrasta o 10% wartości początkowej.',
+        'description_extra' => '',
+    ],
+    113 => [
+        'description_short' => 'Opanowanie różnych rodzajów energii jest konieczne dla wielu nowych technologii.',
+        'description_extra' => '',
+    ],
+    114 => [
+        'description_short' => 'Przez połączenie 4-tego i 5-tego wymiaru jest teraz możliwe zbudowanie nowatorskiego napędu, który jest oszczędniejszy i wydajniejszy.',
+        'description_extra' => '',
+    ],
+    115 => [
+        'description_short' => 'Dalszy rozwój tego napędu sprawia, że niektóre statki poruszają się szybciej, przede wszystkim każdy poziom podwyższa prędkość o 10% wartości podstawowej.',
+        'description_extra' => '',
+    ],
+    117 => [
+        'description_short' => 'Napęd impulsowy bazuje na zasadzie odrzutu. Dalszy rozwój tego napędu sprawia, że niektóre statki poruszają się szybciej, przede wszystkim każdy poziom podwyższa ich prędkość o 20% wartości podstawowej.',
+        'description_extra' => '',
+    ],
+    118 => [
+        'description_short' => 'Zakrzywia przestrzeń wokół statku. Dalszy rozwój tego napędu sprawnie podwyższa prędkość niektórych statków o 30% wartości podstawowej.',
+        'description_extra' => '',
+    ],
+    120 => [
+        'description_short' => 'Uzyskana wiązka światła powoduje znaczące zniszczenia wybranego dla niej celu.',
+        'description_extra' => '',
+    ],
+    121 => [
+        'description_short' => 'Rozwija skuteczność śmiertelnego promieniowania przyspieszonych jonów. Rozpędzone jony wyrządzają ogromne szkody obiektom, na które trafiają.',
+        'description_extra' => '',
+    ],
+    122 => [
+        'description_short' => 'Dalszy etap rozwoju technologii jonowej, która nie przyspiesza już jonów, lecz wysoko energetyczną plazmę. Taka plazma posiada niszczycielską moc podczas atakowania wyznaczonych obiektów.',
+        'description_extra' => '',
+    ],
+    123 => [
+        'description_short' => 'Naukowcy z różnych planet komunikują się ze sobą przez tę sieć.',
+        'description_extra' => '',
+    ],
+    124 => [
+        'description_short' => 'Statki mogą być wyposażone w moduł badawczy, który podczas długich wypraw badawczych umożliwia naukowe opracowanie zebranych danych.',
+        'description_extra' => '',
+    ],
+    125 => [
+        'description_short' => 'Antymateria to niezwykle niestabilny rodzaj cząstek, które przy kontakcie ze zwykłą materią (np. para wodór - antywodór) ulegają Anihilacji wydzielając przy tym ogromne ilości promieniowania Gamma.',
+        'description_extra' => '',
+    ],
+    126 => [
+        'description_short' => 'Ostateczna forma bojowa możliwa do osiągnięcia. Śmiercionośny strumień niszczy każdą napotkaną materię.',
+        'description_extra' => '',
+    ],
+    199 => [
+        'description_short' => 'Przez wystrzał skoncentrowanego ładunku cząstek grawitonów może zostaćwytworzone sztuczne pole grawitacyjne, które może niszczyć statki i księżyce.',
+        'description_extra' => '',
+    ],
+
+    // Ships
+    202 => [
+        'description_short' => 'Mały transporter to zwrotny statek, który może szybko transportować surowce na inne planety.',
+        'description_extra' => '',
+    ],
+    203 => [
+        'description_short' => 'Dalszy rozwój małego transportera zwiększył ładowność i dzięki nowym napędom umożliwił jeszcze szybsze poruszanie się.',
+        'description_extra' => '',
+    ],
+    204 => [
+        'description_short' => 'Lekki myśliwiec to zwrotny statek, który można zastać na prawie każdej planecie. Jego koszty nie są zbyt wysokie, jednakże jego pole ochronne i ładowność są bardzo małe.',
+        'description_extra' => '',
+    ],
+    205 => [
+        'description_short' => 'Ten typ myśliwca, to udoskonalona wersja lekkiego myśliwca, która jest wyposażona w lepsze opancerzenie i broń.',
+        'description_extra' => '',
+    ],
+    206 => [
+        'description_short' => 'Krążownik jest prawie trzy razy lepiej opancerzony niż ciężki myśliwiec i dysponuje ponad dwa razy większą siłą ognia. W dodatku jest bardzo szybki.',
+        'description_extra' => '',
+    ],
+    207 => [
+        'description_short' => 'Okręty wojenne tworzą trzon floty. Ich ciężkie działa, duża prędkość i pojemność ładunkowa robią z nich naprawdę groźnych przeciwników.',
+        'description_extra' => '',
+    ],
+    208 => [
+        'description_short' => 'Niezamieszkałe planety mogą być kolonizowane przy pomocy tych statków.',
+        'description_extra' => '',
+    ],
+    209 => [
+        'description_short' => 'Za pomocą recyklerów można odzyskać surowce z pól zniszczeń.',
+        'description_extra' => '',
+    ],
+    210 => [
+        'description_short' => 'Sondy szpiegowskie to małe, zwrotne statki bezzałogowe, które przez oddalenie się na duże odległości dostarczają informacji o obcych flotach i planetach.',
+        'description_extra' => '',
+    ],
+    211 => [
+        'description_short' => 'Bombowiec został stworzony, aby niszczyć systemy obronne innych planet.',
+        'description_extra' => '',
+    ],
+    212 => [
+        'description_short' => 'Satelity słoneczne to proste platformy pokryte ogniwami słonecznymi, które znajdują się wysoko na stałej orbicie. Gromadzą światło słoneczne i przekazują je dalej przez laser do stacji naziemnej.',
+        'description_extra' => '',
+    ],
+    213 => [
+        'description_short' => 'Niszczyciel to król wśród statków wojennych.',
+        'description_extra' => '',
+    ],
+    214 => [
+        'description_short' => 'Niszczycielska siła Gwiazdy Śmierci jest niezrównana.',
+        'description_extra' => '',
+    ],
+    215 => [
+        'description_short' => 'Pancernik jest wyspecjalizowaną jednostką do przechwytywania (niszczenia) wrogich flot.',
+        'description_extra' => '',
+    ],
+    216 => [
+        'description_short' => 'Stacja orbitalna to kolejny krok w stronę obrony twojej planety.',
+        'description_extra' => '',
+    ],
+    217 => [
+        'description_short' => 'Postęp w miniaturyzacji i nanotechnologii pozwolił na stworzenie tego pojemnego statu transportowego.',
+        'description_extra' => '',
+    ],
+    218 => [
+        'description_short' => 'Odkrycie wytwarzania antymaterii pozwoliło na skonstruowanie specjalnych rakiet krótkiego zasięgu zdolnych do niszczenia ogromnych ilości statków za jednym zamachem.',
+        'description_extra' => '',
+    ],
+    219 => [
+        'description_short' => 'Zarzucony projekt do wynoszenia ludzi i ładunku na orbitę Ziemii, teraz przeżywa swoją drugą młodość.<br/><b style="color: orange;">Ze względu na bardzo stary typ silników spalinowych, ten pojazd nie przyspiesza wraz z rozwojem Napędu Spalinowego</b>',
+        'description_extra' => '',
+    ],
+    220 => [
+        'description_short' => 'Zadaniem Lotniskowca jest transport mniejszych, lecz bardzo zwrotnych i skutecznych myśliwców.',
+        'description_extra' => '',
+    ],
+    221 => [
+        'description_short' => 'Rozpad Hadronów to śmiercionośna broń przeciwko instalacjom obronnym planet.',
+        'description_extra' => '',
+    ],
+    222 => [
+        'description_short' => 'Dzięki wykorzystaniu wysokoenergetycznych działek plazmowych, ten pojazd skutecznie rozprawia się z dobrze opancerzonymi jednostkami.',
+        'description_extra' => '',
+    ],
+    223 => [
+        'description_short' => 'Skuteczne wykorzystanie zjawiska anihilacji doprowadziło do stworzenia tego niezwykłego okrętu.',
+        'description_extra' => '',
+    ],
+    224 => [
+        'description_short' => 'Ostateczna broń przeciwko silnie opancerzonym statkom, zdolna do rozrywania wiązań międzyatomowych w ułamkach sekund.',
+        'description_extra' => '',
+    ],
+
+    // Defense systems
+    401 => [
+        'description_short' => 'Wyrzutnia rakiet to prosta i korzystna cenowo możliwość obrony.',
+        'description_extra' => '',
+    ],
+    402 => [
+        'description_short' => 'Przez skoncentrowany ostrzał wybranego celu fotonami można wyrządzić znacznie większe szkody niż przy pomocy zwykłej broni balistycznej.',
+        'description_extra' => '',
+    ],
+    403 => [
+        'description_short' => 'Ciężkie działo laserowe to następca lekkiego lasera.',
+        'description_extra' => '',
+    ],
+    404 => [
+        'description_short' => 'Działo Gaussa przyspiesza kilkutonowe pociski, wykorzystując przy tym gigantyczną ilość energii.',
+        'description_extra' => '',
+    ],
+    405 => [
+        'description_short' => 'Działo jonowe przyśpiesza jony skierowane na cel ataku. Destabilizują one powłokę ochronną i w skutek zmian elektromagnetycznych uszkadzają elektronikę.',
+        'description_extra' => '',
+    ],
+    406 => [
+        'description_short' => 'Wyrzutnia plazmy uwalnia energię odpowiadającą erupcji słońca i przerasta w działaniu nawet niszczyciela.',
+        'description_extra' => '',
+    ],
+    407 => [
+        'description_short' => 'Mała powłoka ochronna osłania całą planetę polem, które może absorbować znaczne ilości energii.',
+        'description_extra' => '',
+    ],
+    408 => [
+        'description_short' => 'Stanowi dalszy rozwój małej powłoki ochronnej i może pochłonąć znacznie większe ilości energii.',
+        'description_extra' => '',
+    ],
+    409 => [
+        'description_short' => 'Stanowi najwyższy poziom obrony dla planety.',
+        'description_extra' => '',
+    ],
+
+    // Missiles
+    502 => [
+        'description_short' => 'Przeciwrakiety niszczą atakujące międzyplanetarne rakiety przeciwnika.',
+        'description_extra' => '',
+    ],
+    503 => [
+        'description_short' => 'Rakiety międzyplanetarne niszczą systemy obronne przeciwnika.',
+        'description_extra' => '',
+    ],
+];
+
+?>

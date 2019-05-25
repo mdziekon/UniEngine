@@ -6,6 +6,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             $_Vars_GameElements, $_Vars_ElementCategories, $_Vars_ResProduction, $_Vars_MaxElementLevel, $_Vars_PremiumBuildings, $_Vars_IndestructibleBuildings;
 
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
+    includeLang('worldElements.detailed');
 
     $Now = time();
     $Parse = &$_Lang;
@@ -337,7 +338,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             $ElementParser['ElementRealLevel'] = prettyNumber($CurrentPlanet[$_Vars_GameElements[$ElementID]] + (isset($LevelModifiers[$ElementID]) ? $LevelModifiers[$ElementID] : 0));
             $ElementParser['BuildLevel'] = prettyNumber($CurrentPlanet[$_Vars_GameElements[$ElementID]] + 1);
             $ElementParser['DestroyLevel'] = prettyNumber($CurrentPlanet[$_Vars_GameElements[$ElementID]] - 1);
-            $ElementParser['Desc'] = $_Lang['res']['descriptions'][$ElementID];
+            $ElementParser['Desc'] = $_Lang['WorldElements_Detailed'][$ElementID]['description_short'];
             $ElementParser['BuildButtonColor'] = 'buildDo_Green';
             $ElementParser['DestroyButtonColor'] = 'buildDo_Red';
 
