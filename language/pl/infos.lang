@@ -74,17 +74,6 @@ $_Lang['gate_setmax']                = 'Max';
 $_Lang['fleet_setmax']				= 'Max';
 $_Lang['fleet_setmin']				= 'Min';
 
-$_Lang['GateJump_Done']              = 'Teleportacja Floty zakończona!<br/>Następny skok możliwy za:';
-$_Lang['GateJump_BadPOSTFound']      = 'Podano niepoprawne dane Floty!';
-$_Lang['GateJump_Moon2NotReach']     = 'Skok na Księżyc Docelowy możliwy dopiero za:';
-$_Lang['GateJump_NoTeleportOnMoon2'] = 'Brak Teleportera na Księżycu Docelowym!';
-$_Lang['GateJump_Moon2NotYours']     = 'Taki Księżyc nie istnieje!';
-$_Lang['GateJump_BadIDGiven']        = 'Wybrano niepoprawny Księżyc!';
-$_Lang['GateJump_Moon1NotReach']     = 'Skok z tego Księżyca możliwy dopiero za:';
-$_Lang['GateJump_NoTeleportOnMoon1'] = 'Brak Teleportera na tym Księżycu!';
-$_Lang['GateJump_NotOnMoon']         = 'Nie jesteś na Księżycu!';
-$_Lang['GateJump_NotDoing']          = 'Skok nie jest wykonywany!';
-
 // Destroy Rockets Page
 $_Lang['rocket_title']				= 'Niszczenie rakiet';
 $_Lang['rocket_info']				= 'W tym miejscu możesz wydać rozkaz zniszczenia dowolnych Rakiet znajdujących się na tej Planecie. Jeśli posiadasz <a href="aboutpro.php" class="orange">Konto Pro</a>, możesz skorzystać z <a href="disassembler.php" class="orange">Demontowni</a>, która zwraca część surowców podczas demontażu.';

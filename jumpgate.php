@@ -7,7 +7,7 @@ include($_EnginePath.'common.php');
 
 loggedCheck();
 
-includeLang('infos');
+includeLang('jumpgate');
 
 function ShowMessage($Text)
 {
