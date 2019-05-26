@@ -1,91 +1,84 @@
 <?php
 
 // Interface
-$_Lang['nfo_page_title']             = "Informacje";
-$_Lang['nfo_title_head']             = "Informacje";
-$_Lang['nfo_name']                   = "Nazwa";
-$_Lang['nfo_techinfoabout']			= 'Informacje Techniczne';
-$_Lang['nfo_destroy']                = "Wyburzyć";
-$_Lang['nfo_level']                  = "Poziom";
-$_Lang['nfo_range']                  = "Zasięg Czujników (Układy)";
-$_Lang['nfo_missilerange']			= 'Zasięg Rakiet (Układy)';
-$_Lang['nfo_used_energy']            = "Zużycie Energii";
-$_Lang['nfo_used_deuter']            = "Zużycie Deuteru/h";
-$_Lang['nfo_prod_energy']            = "Produkcja energii";
-$_Lang['nfo_difference']             = "Różnica";
-$_Lang['nfo_prod_p_hour']            = "Wydobycie/h";
-$_Lang['nfo_needed']                 = "Wymagane surowce";
-$_Lang['nfo_dest_durati']            = "Czas niszczenia (o jeden poziom)";
+$_Lang['nfo_page_title']            = "Informacje";
+$_Lang['nfo_title_head']            = "Informacje";
+$_Lang['nfo_name']                  = "Nazwa";
+$_Lang['nfo_techinfoabout']         = 'Informacje Techniczne';
+$_Lang['nfo_destroy']               = "Wyburzyć";
+$_Lang['nfo_level']                 = "Poziom";
+$_Lang['nfo_range']                 = "Zasięg Czujników (Układy)";
+$_Lang['nfo_missilerange']          = 'Zasięg Rakiet (Układy)';
+$_Lang['nfo_used_energy']           = "Zużycie Energii";
+$_Lang['nfo_used_deuter']           = "Zużycie Deuteru/h";
+$_Lang['nfo_prod_energy']           = "Produkcja energii";
+$_Lang['nfo_difference']            = "Różnica";
+$_Lang['nfo_prod_p_hour']           = "Wydobycie/h";
+$_Lang['nfo_needed']                = "Wymagane surowce";
+$_Lang['nfo_dest_durati']           = "Czas niszczenia (o jeden poziom)";
 
-$_Lang['nfo_techdetails_title']		= 'Dane techniczne';
-$_Lang['nfo_techdetails_base']		= 'Wartość podstawowa';
-$_Lang['nfo_techdetails_modifier']	= 'Modyfikator';
-$_Lang['nfo_techdetails_modified']	= 'Wartość obecna';
+$_Lang['nfo_techdetails_title']     = 'Dane techniczne';
+$_Lang['nfo_techdetails_base']      = 'Wartość podstawowa';
+$_Lang['nfo_techdetails_modifier']  = 'Modyfikator';
+$_Lang['nfo_techdetails_modified']  = 'Wartość obecna';
 
-$_Lang['nfo_struct_pt']              = 'Punkty strukturalne';
-$_Lang['nfo_shielf_pt']              = 'Siła tarcz';
-$_Lang['nfo_attack_type']			= 'Rodzaj uzbrojenia';
-$_Lang['nfo_attack_pt']              = 'Moc broni';
-$_Lang['nfo_rf_again']               = 'Szybki ogień przeciw';
-$_Lang['nfo_rf_from']                = 'Szybki ogień od';
-$_Lang['nfo_capacity']               = 'Ładowność';
-$_Lang['nfo_units']                  = 'jednostek';
-$_Lang['nfo_base_speed']             = 'Prędkość';
-$_Lang['nfo_consumption']            = 'Zużycie Deuteru';
+$_Lang['nfo_struct_pt']             = 'Punkty strukturalne';
+$_Lang['nfo_shielf_pt']             = 'Siła tarcz';
+$_Lang['nfo_attack_type']           = 'Rodzaj uzbrojenia';
+$_Lang['nfo_attack_pt']             = 'Moc broni';
+$_Lang['nfo_rf_again']              = 'Szybki ogień przeciw';
+$_Lang['nfo_rf_from']               = 'Szybki ogień od';
+$_Lang['nfo_capacity']              = 'Ładowność';
+$_Lang['nfo_units']                 = 'jednostek';
+$_Lang['nfo_base_speed']            = 'Prędkość';
+$_Lang['nfo_consumption']           = 'Zużycie Deuteru';
 
-$_Lang['Infos_BadElementID']         = 'Niepoprawny Identyfikator Elementu!';
+$_Lang['Infos_BadElementID']        = 'Niepoprawny Identyfikator Elementu!';
 
-$_Lang['weaponTypes'] = array
-(
-	0 => 'Brak',
-	1 => 'Broń konwencjonalna',
-	120 => 'Miotacze laserowe',
-	121 => 'Działa jonowe',
-	122 => 'Miotacze plazmy',
-	199 => 'Działa grawitronowe',
-	125 => 'Miotacze antymaterii',
-	126 => 'Działa dezintegrujące',
-);
+$_Lang['weaponTypes'] = [
+    0 => 'Brak',
+    1 => 'Broń konwencjonalna',
+    120 => 'Miotacze laserowe',
+    121 => 'Działa jonowe',
+    122 => 'Miotacze plazmy',
+    199 => 'Działa grawitronowe',
+    125 => 'Miotacze antymaterii',
+    126 => 'Działa dezintegrujące',
+];
 
-$_Lang['gate_selecttarget']          = 'Wybierz Cel Teleportacji';
-$_Lang['gate_start_moon']            = 'Księżyc Startowy';
-$_Lang['gate_dest_moon']             = "Księżyc Docelowy";
-$_Lang['gate_changemoon']			= 'Po skoku przejdź na Księżyc Docelowy';
-$_Lang['gate_ship_sel']              = "Wybierz Statki do Teleportacji";
-$_Lang['gate_nextjump_timer']        = 'Następny skok dostępny za';
+$_Lang['gate_selecttarget']         = 'Wybierz Cel Teleportacji';
+$_Lang['gate_start_moon']           = 'Księżyc Startowy';
+$_Lang['gate_dest_moon']            = "Księżyc Docelowy";
+$_Lang['gate_changemoon']           = 'Po skoku przejdź na Księżyc Docelowy';
+$_Lang['gate_ship_sel']             = "Wybierz Statki do Teleportacji";
+$_Lang['gate_nextjump_timer']       = 'Następny skok dostępny za';
 
-$_Lang['gate_title_ship']            = 'Nazwa statku';
-$_Lang['gate_title_count']           = 'Ilość';
-$_Lang['gate_title_input']           = 'Do wysłania';
-$_Lang['gate_title_max']             = '-';
+$_Lang['gate_title_ship']           = 'Nazwa statku';
+$_Lang['gate_title_count']          = 'Ilość';
+$_Lang['gate_title_input']          = 'Do wysłania';
+$_Lang['gate_title_max']            = '-';
 
-$_Lang['gate_ship_dispo']            = "Posiadasz";
-$_Lang['gate_jump_btn']              = "Wykonaj Skok";
-$_Lang['gate_jump_done']             = "Skok udany: ";
-$_Lang['gate_wait_dest']             = "Energia potrzebna do skoku jeszcze się nie naładowała. Zaczekaj: ";
-$_Lang['gate_no_dest_g']             = "Na wskazanym księżycu nie ma teleportera!";
-$_Lang['gate_wait_star']             = "Energia potrzebna do skoku jeszcze się nie naładowała. Zaczekaj: ";
-$_Lang['gate_wait_data']             = "Błąd, brak teleportera!";
-$_Lang['gate_nomoonswithtp']         = 'Brak innych Księżyców z Teleporterem!';
-$_Lang['gate_noshipstotp']           = 'Brak Statków do Teleportacji!';
-$_Lang['gate_everything']            = '&nbsp;';
-$_Lang['gate_setmax']                = 'Max';
+$_Lang['gate_ship_dispo']           = "Posiadasz";
+$_Lang['gate_jump_btn']             = "Wykonaj Skok";
+$_Lang['gate_nomoonswithtp']        = 'Brak innych Księżyców z Teleporterem!';
+$_Lang['gate_noshipstotp']          = 'Brak Statków do Teleportacji!';
+$_Lang['gate_everything']           = '&nbsp;';
 
-$_Lang['fleet_setmax']				= 'Max';
-$_Lang['fleet_setmin']				= 'Min';
+$_Lang['fleet_setmax']              = 'Max';
+$_Lang['fleet_setmin']              = 'Min';
 
 // Destroy Rockets Page
-$_Lang['rocket_title']				= 'Niszczenie rakiet';
-$_Lang['rocket_info']				= 'W tym miejscu możesz wydać rozkaz zniszczenia dowolnych Rakiet znajdujących się na tej Planecie. Jeśli posiadasz <a href="aboutpro.php" class="orange">Konto Pro</a>, możesz skorzystać z <a href="disassembler.php" class="orange">Demontowni</a>, która zwraca część surowców podczas demontażu.';
-$_Lang['rocket_type']				= 'Typ rakiety';
-$_Lang['rocket_count']				= 'Ilość';
-$_Lang['rocket_dest_count']			= 'Do zniszczenia';
-$_Lang['rocket_everything']			= 'Wszystko';
-$_Lang['rocket_nothing']				= 'Nic';
-$_Lang['rocket_destroy']				= 'Niszcz Rakiety';
+$_Lang['rocket_title']              = 'Niszczenie rakiet';
+$_Lang['rocket_info']               = 'W tym miejscu możesz wydać rozkaz zniszczenia dowolnych Rakiet znajdujących się na tej Planecie. Jeśli posiadasz <a href="aboutpro.php" class="orange">Konto Pro</a>, możesz skorzystać z <a href="disassembler.php" class="orange">Demontowni</a>, która zwraca część surowców podczas demontażu.';
+$_Lang['rocket_type']               = 'Typ rakiety';
+$_Lang['rocket_count']              = 'Ilość';
+$_Lang['rocket_dest_count']         = 'Do zniszczenia';
+$_Lang['rocket_everything']         = 'Wszystko';
+$_Lang['rocket_nothing']            = 'Nic';
+$_Lang['rocket_destroy']            = 'Niszcz Rakiety';
 
 // Quantum Gate Page
-$_Lang['GateReadyToUse']             = 'Na tej planecie Brama Kwantowa jest gotowa do Skoku Czasoprzestrzennego!';
-$_Lang['GateReadyToUseIn']           = 'Na tej planecie Brama Kwantowa będzie gotowa do Skoku Czasoprzestrzennego za';
+$_Lang['GateReadyToUse']            = 'Na tej planecie Brama Kwantowa jest gotowa do Skoku Czasoprzestrzennego!';
+$_Lang['GateReadyToUseIn']          = 'Na tej planecie Brama Kwantowa będzie gotowa do Skoku Czasoprzestrzennego za';
 
 ?>
