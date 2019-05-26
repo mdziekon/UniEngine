@@ -1,6 +1,13 @@
 <?php
 
 $_Lang['WorldElements_Detailed'] = [
+    // Template
+    // 0 => [
+    //     'description_short' => '',
+    //     'description_extra' => '',
+    //     'description_alt' => '',
+    // ],
+
     // Buildings
     1 => [
         'description_short' => 'Dostawca głównego surowca do budowy konstrukcji nośnych budynków i statków kosmicznych.',
