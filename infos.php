@@ -270,6 +270,7 @@ function RapidFire_From($BuildID)
 $BuildID = $_GET['gid'];
 
 includeLang('infos');
+includeLang('worldElements.detailed');
 
 $GateTPL = '';
 $DestroyTPL = '';
@@ -278,9 +279,20 @@ $TPL_Production_Header = '';
 $parse = $_Lang;
 $parse['Insert_AllowPrettyInputBox'] = ($_User['settings_useprettyinputbox'] == 1 ? 'true' : 'false');
 $parse['skinpath'] = $_SkinPath;
-$parse['name'] = $_Lang['info'][$BuildID]['name'];
+$parse['name'] = $_Lang['tech'][$BuildID];
 $parse['image'] = $BuildID;
-$parse['description'] = $_Lang['info'][$BuildID]['description'];
+$parse['description'] = (
+    !empty($_Lang['WorldElements_Detailed'][$BuildID]['description_alt']) ?
+    $_Lang['WorldElements_Detailed'][$BuildID]['description_alt'] :
+    (
+        $_Lang['WorldElements_Detailed'][$BuildID]['description_short'] .
+        (
+            !empty($_Lang['WorldElements_Detailed'][$BuildID]['description_extra']) ?
+            ('<br/><br/>' . $_Lang['WorldElements_Detailed'][$BuildID]['description_extra']) :
+            ''
+        )
+    )
+);
 $parse['element_typ'] = $_Lang['tech'][0];
 
 if($BuildID >= 1 AND $BuildID <= 3)
@@ -571,7 +583,7 @@ if(!isOnVacation($_User))
             foreach($_Vars_ElementCategories['rockets'] as $ThisID)
             {
                 $parse['DestroyRockets_ID'] = $ThisID;
-                $parse['DestroyRockets_Name'] = $_Lang['info'][$ThisID]['name'];
+                $parse['DestroyRockets_Name'] = $_Lang['tech'][$ThisID];
                 $parse['DestroyRockets_Count'] = $_Planet[$_Vars_GameElements[$ThisID]];
                 $parse['DestroyRockets_PrettyCount'] = prettyNumber($_Planet[$_Vars_GameElements[$ThisID]]);
 
