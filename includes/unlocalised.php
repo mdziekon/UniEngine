@@ -292,9 +292,31 @@ function CreateFleetPopupedFleetLink($FleetRow, $Texte)
 }
 
 // String-related functions
-function pretty_time($Seconds, $ChronoType = false, $Format = false)
-{
-    $Time = '';
+
+// $Seconds (Number)
+//      Time's seconds
+// $ChronoType (Boolean)
+//      Should the timer display time in a format supported by JS Chrono timers
+// $Format (String)
+//      Determines how to display the time. Should be a concatenated string of possible flags.
+//      Possible flags:
+//      - (Chrono format enabled)
+//          - D
+//              Display days, in full lang format
+//          - d
+//              Display days, in short lang format
+//      - (Chrono format disabled)
+//          - d
+//              Display days, in short lang format
+//          - h
+//              Display hours, in short lang format
+//          - m
+//              Display minutes, in short lang format
+//          - s
+//              Display seconds, in short lang format
+//
+function pretty_time($Seconds, $ChronoType = false, $Format = false) {
+    $timePieces = [];
 
     $Seconds = floor($Seconds);
     $Days = floor($Seconds / TIME_DAY);
@@ -304,89 +326,58 @@ function pretty_time($Seconds, $ChronoType = false, $Format = false)
     $Minutes = floor($Seconds / 60);
     $Seconds -= $Minutes * 60;
 
-    if($Hours < 10)
-    {
-        $Hours = '0'.(string)$Hours;
-    }
-    if($Minutes < 10)
-    {
-        $Minutes = '0'.(string)$Minutes;
-    }
-    if($Seconds < 10)
-    {
-        $Seconds = '0'.(string)$Seconds;
-    }
+    $hoursString = str_pad((string) $Hours, 2, '0', STR_PAD_LEFT);
+    $minutesString = str_pad((string) $Minutes, 2, '0', STR_PAD_LEFT);
+    $secondsString = str_pad((string) $Seconds, 2, '0', STR_PAD_LEFT);
 
-    if($ChronoType === false)
-    {
-        $DAllowed = array
-        (
-            'd' => false,
-            'h' => false,
-            'm' => false,
-            's' => false
-        );
+    if ($ChronoType === false) {
+        $Format = $Format || '';
+        $isPieceAllowed = [
+            'days' => (strstr($Format, 'd') !== false),
+            'hours' => (strstr($Format, 'h') !== false),
+            'minutes' => (strstr($Format, 'm') !== false),
+            'seconds' => (strstr($Format, 's') !== false)
+        ];
 
-        if($Format)
-        {
-            if(strstr($Format, 'd') === false)
-            {
-                $DAllowed['d'] = true;
-            }
-            if(strstr($Format, 'h') === false)
-            {
-                $DAllowed['h'] = true;
-            }
-            if(strstr($Format, 'm') === false)
-            {
-                $DAllowed['m'] = true;
-            }
-            if(strstr($Format, 's') === false)
-            {
-                $DAllowed['s'] = true;
-            }
+        if ($Days > 0 && $isPieceAllowed['days']) {
+            $timePieces[] = "{$Days}d";
+        }
+        if ($isPieceAllowed['hours']) {
+            $timePieces[] = "{$hoursString}g";
+        }
+        if ($isPieceAllowed['minutes']) {
+            $timePieces[] = "{$minutesString}m";
+        }
+        if ($isPieceAllowed['seconds']) {
+            $timePieces[] = "{$secondsString}s";
         }
 
-        if($Days > 0 AND ($DAllowed['d'] !== true))
-        {
-            $Time .= "{$Days}d ";
-        }
-        if($DAllowed['h'] !== true)
-        {
-            $Time .= "{$Hours}g ";
-        }
-        if($DAllowed['m'] !== true)
-        {
-            $Time .= "{$Minutes}m ";
-        }
-        if($DAllowed['s'] !== true)
-        {
-            $Time .= "{$Seconds}s";
-        }
-    }
-    else
-    {
-        if($Days > 0)
-        {
-            if(strstr($Format, 'D') !== FALSE)
-            {
-                global $_Lang;
-                $UseLang = ($Days > 1 ? $_Lang['Chrono_DayM'] : $_Lang['Chrono_Day1']);
-                $Time = "{$Days} {$UseLang} ";
-            }
-            else if(strstr($Format, 'd') !== FALSE)
-            {
-                $Time = "{$Days}d ";
-            }
-            else
-            {
-                $Hours += $Days * 24;
-            }
-        }
-        $Time .= "{$Hours}:{$Minutes}:{$Seconds}";
+        return implode(' ', $timePieces);
     }
 
-    return $Time;
+    if ($Days > 0) {
+        $isPieceAllowed = [
+            'daysFull' => (strstr($Format, 'D') !== false),
+            'daysShort' => (strstr($Format, 'd') !== false)
+        ];
+
+        if ($isPieceAllowed['daysFull']) {
+            global $_Lang;
+            $UseLang = ($Days > 1 ? $_Lang['Chrono_DayM'] : $_Lang['Chrono_Day1']);
+
+            $timePieces[] = "{$Days} {$UseLang}";
+        } else if ($isPieceAllowed['daysShort']) {
+            $timePieces[] = "{$Days}d";
+        } else {
+            $Hours += $Days * 24;
+
+            $hoursString = str_pad((string) $Hours, 2, '0', STR_PAD_LEFT);
+        }
+    }
+
+    $timePieces[] = "{$hoursString}:{$minutesString}:{$secondsString}";
+
+    return implode(' ', $timePieces);
 }
 
 function pretty_time_hour($seconds, $NoSpace = false)
