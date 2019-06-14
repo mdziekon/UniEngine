@@ -275,7 +275,14 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
             $QueueJSArray[1]['Count'] -= ($QueueJSArray[1]['Remove'] * (10 + ($CurrentPlanet['shipyardQueue_additionalWorkTime'] * 10)));
 
             include($_EnginePath.'/includes/functions/InsertJavaScriptChronoApplet.php');
-            $QueueParser[0]['ChronoAppletScript'] = InsertJavaScriptChronoApplet('QueueFirstTimer', '', $TotalTime, false, false, 'function() { SetTimer = \"<b class=lime>'.$_Lang['completed'].'</b>\"; window.setTimeout(\'document.location.href=\"buildings.php?mode='.$PageType.'\";\', 1000); }');
+            $QueueParser[0]['ChronoAppletScript'] = InsertJavaScriptChronoApplet(
+                'QueueFirstTimer',
+                '',
+                $TotalTime,
+                false,
+                false,
+                'function() { onQueuesFirstElementFinished("' . $PageType . '"); }'
+            );
             $QueueParser[0]['EndTimer'] = pretty_time($TotalTime, true);
             $Parse['Create_RunQueueJSHandler'] = 'true';
 

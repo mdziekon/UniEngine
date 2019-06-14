@@ -17,6 +17,12 @@
 }
 </style>
 <script>
+function onQueuesFirstElementFinished () {
+    window.setTimeout(function () {
+        document.location.href = "buildings.php?mode=research";
+    }, 500);
+}
+
 $(document).ready(function()
 {
     $('.tReqDiv').tipTip({attribute: 'title', delay: 50});

@@ -201,7 +201,14 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePl
                         // Include ChronoApplet
                         include($_EnginePath.'includes/functions/InsertJavaScriptChronoApplet.php');
                         $bloc = $_Lang;
-                        $bloc['Script'] = InsertJavaScriptChronoApplet('res', '', $ResearchPlanet['techQueue_firstEndTime'], true, false, 'function() { SetTimer = \"<b class=lime>'.$_Lang['completed'].'</b>\"; window.setTimeout(\'document.location.href=\"buildings.php?mode=research\";\', 500); }');
+                        $bloc['Script'] = InsertJavaScriptChronoApplet(
+                            'res',
+                            '',
+                            $ResearchPlanet['techQueue_firstEndTime'],
+                            true,
+                            false,
+                            'function() { onQueuesFirstElementFinished(); }'
+                        );
                         $bloc['SetStartTime'] = pretty_time($ResearchPlanet['techQueue_firstEndTime'] - $Now, true);
                         $bloc['tech_home'] = $ResearchPlanet['id'];
                         $bloc['tech_id']= $FirstElementID;

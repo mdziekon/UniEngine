@@ -149,7 +149,14 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 
                     $QueueParser[] = array
                     (
-                        'ChronoAppletScript'    => InsertJavaScriptChronoApplet('QueueFirstTimer', '', $BuildEndTime, true, false, 'function() { $(\"#QueueCancel\").html(\"'.$_Lang['Queue_Cancel_Go'].'\").attr(\"href\", \"buildings.php\").removeClass(\"cancelQueue\").addClass(\"lime\"); SetTimer = \"<b class=lime>'.$_Lang['completed'].'</b>\"; window.setTimeout(\'document.location.href=\"buildings.php\";\', 1000); }'),
+                        'ChronoAppletScript'    => InsertJavaScriptChronoApplet(
+                            'QueueFirstTimer',
+                            '',
+                            $BuildEndTime,
+                            true,
+                            false,
+                            'function() { onQueuesFirstElementFinished(); }'
+                        ),
                         'EndTimer'                => pretty_time($ElementBuildtime, true),
                         'SkinPath'                => $_SkinPath,
                         'ElementID'                => $ElementID,
