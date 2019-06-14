@@ -316,6 +316,8 @@ function CreateFleetPopupedFleetLink($FleetRow, $Texte)
 //              Display seconds, in short lang format
 //
 function pretty_time($Seconds, $ChronoType = false, $Format = false) {
+    global $_Lang;
+
     $timePieces = [];
 
     $Seconds = floor($Seconds);
@@ -340,16 +342,16 @@ function pretty_time($Seconds, $ChronoType = false, $Format = false) {
         ];
 
         if ($Days > 0 && $isPieceAllowed['days']) {
-            $timePieces[] = "{$Days}d";
+            $timePieces[] = $_Lang['Chrono_PrettyTime']['longFormat']['days']($Days);
         }
         if ($isPieceAllowed['hours']) {
-            $timePieces[] = "{$hoursString}g";
+            $timePieces[] = $_Lang['Chrono_PrettyTime']['longFormat']['hours']($hoursString);
         }
         if ($isPieceAllowed['minutes']) {
-            $timePieces[] = "{$minutesString}m";
+            $timePieces[] = $_Lang['Chrono_PrettyTime']['longFormat']['minutes']($minutesString);
         }
         if ($isPieceAllowed['seconds']) {
-            $timePieces[] = "{$secondsString}s";
+            $timePieces[] = $_Lang['Chrono_PrettyTime']['longFormat']['seconds']($secondsString);
         }
 
         return implode(' ', $timePieces);
@@ -362,12 +364,9 @@ function pretty_time($Seconds, $ChronoType = false, $Format = false) {
         ];
 
         if ($isPieceAllowed['daysFull']) {
-            global $_Lang;
-            $UseLang = ($Days > 1 ? $_Lang['Chrono_DayM'] : $_Lang['Chrono_Day1']);
-
-            $timePieces[] = "{$Days} {$UseLang}";
+            $timePieces[] = $_Lang['Chrono_PrettyTime']['chronoFormat']['daysFull']($Days);
         } else if ($isPieceAllowed['daysShort']) {
-            $timePieces[] = "{$Days}d";
+            $timePieces[] = $_Lang['Chrono_PrettyTime']['chronoFormat']['daysShort']($Days);
         } else {
             $Hours += $Days * 24;
 

@@ -17,6 +17,47 @@ $_Lang['Pagination_Next'] = 'Następna &#187;';
 
 $_Lang['Chrono_Day1'] = 'dzień';
 $_Lang['Chrono_DayM'] = 'dni';
+$_Lang['Chrono_PrettyTime'] = [
+    'longFormat' => [
+        'days' => function ($days) {
+            return "{$days}d";
+        },
+        'hours' => function ($hours) {
+            return "{$hours}g";
+        },
+        'minutes' => function ($minutes) {
+            return "{$minutes}m";
+        },
+        'seconds' => function ($seconds) {
+            return "{$seconds}s";
+        }
+    ],
+    'chronoFormat' => [
+        'daysFull' => function ($days) {
+            $daysSuffixString = (
+                $days > 1 ?
+                "dni" :
+                "dzień"
+            );
+
+            return "{$days} {$daysSuffixString}";
+        },
+        'daysFullJSFunction' => (
+            'function (days) {' .
+            '    const daysSuffixString = (' .
+            '        days > 1 ?' .
+            '        "dni" :' .
+            '        "dzień"' .
+            '    );' .
+            '' .
+            '    return `${days} ${daysSuffixString}`;' .
+            '}'
+        ),
+        'daysShort' => function ($days) {
+            return "{$days}d";
+        }
+    ]
+];
 
 $_Lang['FatalError_PlanetRowEmpty'] = 'Błąd krytyczny! Brak danych o Planecie Matce!<br/>Prosimy zgłosić to do Administracji!';
 $_Lang['ServerStart_NotReached'] = 'Ten Serwer Gry zostanie uruchomiony <b class="lime">%s</b> o godzinie <b class="lime">%s</b>!<br/>Do czasu rozpoczęcia gry, możesz zapraszać swoich znajomych przez otrzymany Link Polecający...';
