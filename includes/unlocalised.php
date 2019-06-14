@@ -333,7 +333,10 @@ function pretty_time($Seconds, $ChronoType = false, $Format = false) {
     $secondsString = str_pad((string) $Seconds, 2, '0', STR_PAD_LEFT);
 
     if ($ChronoType === false) {
-        $Format = $Format || '';
+        if (!$Format) {
+            $Format = 'dhms';
+        }
+
         $isPieceAllowed = [
             'days' => (strstr($Format, 'd') !== false),
             'hours' => (strstr($Format, 'h') !== false),
@@ -358,6 +361,10 @@ function pretty_time($Seconds, $ChronoType = false, $Format = false) {
     }
 
     if ($Days > 0) {
+        if (!$Format) {
+            $Format = '';
+        }
+
         $isPieceAllowed = [
             'daysFull' => (strstr($Format, 'D') !== false),
             'daysShort' => (strstr($Format, 'd') !== false)
