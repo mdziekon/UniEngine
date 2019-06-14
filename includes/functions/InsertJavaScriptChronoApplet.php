@@ -1,51 +1,59 @@
 <?php
 
-function InsertJavaScriptChronoApplet($Type, $Ref, $Value, $FixedTime = false, $Reverse = false, $CallbackFunction = false)
+function InsertJavaScriptChronoApplet($Type, $Ref, $Value, $FixedTime = false, $Reverse = false, $CallbackFunction = false, $params = [])
 {
     static $Created, $TPL_Instance;
-    global $_EnginePath;
+    global $_EnginePath, $_Lang;
 
-    if($Created !== true)
-    {
-        global $_Lang;
-        GlobalTemplate_AppendToAfterBody(parsetemplate(gettemplate('_JSTimer_script'), array('FilePath' => $_EnginePath, 'ServerTimestamp' => time(), 'Lang_day1' => $_Lang['Chrono_Day1'], 'Lang_dayM' => $_Lang['Chrono_DayM'])));
+    if ($Created !== true) {
+        $TPL_Script = gettemplate('_JSTimer_script');
         $TPL_Instance = gettemplate('_JSTimer_instance');
+
+        $scriptHTML = parsetemplate(
+            $TPL_Script,
+            [
+                'FilePath' => $_EnginePath,
+                'ServerTimestamp' => time(),
+                'LANG_daysFullJSFunction' => $_Lang['Chrono_PrettyTime']['chronoFormat']['daysFullJSFunction']
+            ]
+        );
+
+        GlobalTemplate_AppendToAfterBody($scriptHTML);
+
         $Created = true;
-        if($Type === false)
-        {
+
+        if ($Type === false) {
             return true;
         }
     }
 
-    $ReverseChrono = '';
-    $InsertCallback = '';
+    $isReverse = 'false';
+    $reverseEndTimestamp = 'Infinity';
 
-    if($FixedTime)
-    {
-        $InsertTime = $Value;
+    if ($FixedTime) {
+        $endTimestamp = $Value;
+    } else {
+        $endTimestamp = time() + $Value;
     }
-    else
-    {
-        $InsertTime = time() + $Value;
-    }
-    if($Reverse !== false)
-    {
-        $ReverseChrono = ', true';
-    }
+    if ($Reverse !== false) {
+        $isReverse = 'true';
 
-    if($CallbackFunction !== false)
-    {
-        if($Reverse === false)
-        {
-            $ReverseChrono = ', false';
+        if (isset($params['reverseEndTimestamp'])) {
+            $reverseEndTimestamp = $params['reverseEndTimestamp'];
         }
-        $InsertCallback = ', '.$CallbackFunction;
     }
 
-    return parsetemplate($TPL_Instance, array
-    (
-        'Type' => $Type, 'Ref' => $Ref, 'InsertTime' => $InsertTime, 'ReverseChrono' => $ReverseChrono, 'InsertCallback' => $InsertCallback,
-    ));
+    return parsetemplate(
+        $TPL_Instance,
+        [
+            'Type' => $Type,
+            'Ref' => $Ref,
+            'endTimestamp' => $endTimestamp,
+            'isReverse' => $isReverse,
+            'reverseEndTimestamp' => $reverseEndTimestamp,
+            'onEndCallback' => !empty($CallbackFunction) ? $CallbackFunction : "undefined"
+        ]
+    );
 }
 
 ?>
