@@ -10,7 +10,7 @@ function FleetControl_Retreat($FleetSelector, $InstandRetreat = false)
         $InstandRetreat = false;
     }
 
-    $Fields_SelectFleets = '`f`.`fleet_id`, `f`.`fleet_owner`, `f`.`fleet_mission`, `f`.`fleet_mess`, `f`.`fleet_end_stay`, `f`.`fleet_send_time`, `f`.`fleet_start_time`, `a`.`fleets_id`';
+    $Fields_SelectFleets = '`f`.`fleet_id`, `f`.`fleet_owner`, `f`.`fleet_mission`, `f`.`fleet_mess`, `f`.`fleet_end_stay`, `f`.`fleet_send_time`, `f`.`fleet_start_time`, `a`.`id` as `fleet_acs_id`, `a`.`fleets_id`';
     $Query_SelectFleets = "SELECT {$Fields_SelectFleets} FROM {{table}} AS `f` LEFT JOIN {{prefix}}acs AS `a` ON `a`.`main_fleet_id` = `f`.`fleet_id` WHERE {$FleetSelector};";
 
     $SQLResult_GetFleets = doquery($Query_SelectFleets, 'fleets');
@@ -61,6 +61,11 @@ function FleetControl_Retreat($FleetSelector, $InstandRetreat = false)
                 }
                 else
                 {
+                    if(!empty($Fleet['fleet_acs_id']))
+                    {
+                        $DeleteACS[] = $Fleet['fleet_id'];
+                    }
+
                     if(!empty($Fleet['fleets_id']))
                     {
                         $ExplodeFleets = explode(',', str_replace('|', '', $Fleet['fleets_id']));
@@ -89,7 +94,6 @@ function FleetControl_Retreat($FleetSelector, $InstandRetreat = false)
                                 );
                             }
                         }
-                        $DeleteACS[] = $Fleet['fleet_id'];
                     }
                 }
             }
