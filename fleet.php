@@ -1148,7 +1148,7 @@ else
     $_Lang['P_Mission'] = (isset($_GET['target_mission']) ? intval($_GET['target_mission']) : null);
     if(isset($_GET['quickres']) && $_GET['quickres'] == 1)
     {
-        if(isset($_GET['target_mission']) && $_GET['target_mission'] != 3)
+        if(!isset($_GET['target_mission']) || $_GET['target_mission'] != 3)
         {
             if($_User['settings_mainPlanetID'] != $_Planet['id'])
             {
