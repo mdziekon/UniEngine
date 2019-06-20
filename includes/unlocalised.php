@@ -54,6 +54,23 @@ function includeLang($filename, $Return = false)
     }
 }
 
+function langFileExists($filename) {
+    global $_EnginePath, $_User;
+
+    $SelLanguage = DEFAULT_LANG;
+
+    if (
+        isset($_User['lang']) &&
+        $_User['lang'] != ''
+    ) {
+        $SelLanguage = $_User['lang'];
+    }
+
+    $filepath = "{$_EnginePath}language/{$SelLanguage}/{$filename}.lang";
+
+    return file_exists($filepath);
+}
+
 // Fleet-related functions
 function GetTargetDistance($OrigGalaxy, $DestGalaxy, $OrigSystem, $DestSystem, $OrigPlanet, $DestPlanet)
 {
