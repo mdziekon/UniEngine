@@ -199,8 +199,14 @@ function createRulesList (&$rulesElements, $prefix = [], $hasNoHeader = false) {
     return implode('', $result);
 }
 
-$_Lang['ParsedRules_IndexList'] = createRulesIndex($_Lang['RulesArray'], []);
-$_Lang['ParsedRules_ContentList'] = createRulesList($_Lang['RulesArray'], []);
+if (langFileExists("rules.definitions.custom")) {
+    includeLang("rules.definitions.custom");
+} else {
+    includeLang("rules.definitions.default");
+}
+
+$_Lang['ParsedRules_IndexList'] = createRulesIndex($_Lang['RulesDefinitions'], []);
+$_Lang['ParsedRules_ContentList'] = createRulesList($_Lang['RulesDefinitions'], []);
 
 display(parsetemplate($TPL, $_Lang), $_Lang['Page_Title'], false);
 
