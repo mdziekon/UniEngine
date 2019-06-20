@@ -14,8 +14,8 @@ if(!empty($_GET['r']))
         {
             setcookie(REFERING_COOKIENAME, $ID, time() + (14*24*60*60), '', GAMEURL_DOMAIN);
         }
-        //header('Location: reg.php'); 	//reg.php not exists - commented
-		header('Location: reg_mainpage.php');  //reg.php to reg_mainpage.php for fix RefLink Issue#30
+        //header('Location: reg.php');         //reg.php not exists - commented
+        header('Location: reg_mainpage.php');  //reg.php to reg_mainpage.php for fix RefLink Issue#30
         die();
     }
 }
