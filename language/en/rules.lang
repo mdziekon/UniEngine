@@ -1,0 +1,18 @@
+<?php
+
+$_Lang['Page_Title']             = 'Terms of Service';
+
+$_Lang['Table_Header']           = 'Terms of Service of  '.$_GameConfig['game_name'];
+$_Lang['Table_GeneralInfo']      = 'These terms are effective since <b class="red">22nd of January 2012</b>.<br/>';
+$_Lang['Table_GeneralInfo']     .= 'All changes introduced to these terms will be announced via in-game <b class="red">Broadcast message</b>, or, in rare occasions (eg. substantial rewrites), via <b class="red">email</b>.';
+$_Lang['Table_Index']            = 'Table of content';
+
+$_Lang['AcceptBox_Info']             = 'Before continuing your gameplay, <b>you have to confirm your agreement to the Terms changes</b> (last modification: %s).<br/>If you do not agree with the new or modified rules, you can decline the changes, which means your account will be automatically <b class="red">removed after a period of 7 days</b> (during that period your are free to change your mind), or you can <b class="orange">leave your account unsupervised</b> (as long as you won\'t pick either of options).';
+$_Lang['AcceptBox_Option_Accept0']   = 'I accept the changed Terms of Service';
+$_Lang['AcceptBox_Option_Accept1']   = 'I accept the changed Terms of Service and cancel my account\'s deletion';
+$_Lang['AcceptBox_Option_Decline0']  = 'I decline the changed Terms of Service and set my account into deletion mode';
+$_Lang['AcceptBox_Option_Decline1']  = 'I decline the changed Terms of Service and maintain my decision about deletion';
+$_Lang['AcceptBox_DeleteTime']       = '<br/><br/>Your account will be deleted on %s';
+$_Lang['AcceptBox_Sure']             = 'Are you sure?';
+
+?>
