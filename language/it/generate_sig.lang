@@ -1,8 +1,0 @@
-<?php
-
-$_Lang['Universum']	= 'Uni Dev';
-$_Lang['Ally']       = 'Alleanza';
-$_Lang['Points']     = 'punti';
-$_Lang['Position']   = 'classifica';
-
-?>

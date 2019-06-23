@@ -1,6 +1,0 @@
-<?php
-
-$_Lang['MassMessage_Success']           = 'Mass Admin message has been sent to %s players!';
-$_Lang['MassMessage_NoSufficientData']  = 'You did not provide all necessary details!';
-
-?>

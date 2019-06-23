@@ -1,9 +1,0 @@
-<?php
-
-$_Lang['Title']				= 'Contatti';
-$_Lang['Info']				= 'Qui troverai gli indirizzi di contatto per l intero Team Game.';
-$_Lang['Label_username']	= 'Nickname';
-$_Lang['Label_authlabel']	= 'Titolo';
-$_Lang['Label_email']		= 'Email';
-
-?>
