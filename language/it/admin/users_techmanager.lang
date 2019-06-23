@@ -1,0 +1,21 @@
+<?php
+
+$_Lang['PageTitle']                 = 'Player Management';
+
+$_Lang['Table_UserID']              = 'Player ID';
+$_Lang['Table_Tabs_1']              = 'Technologies';
+$_Lang['Table_CMD_Add']             = 'Add';
+$_Lang['Table_CMD_Set']             = 'Set';
+$_Lang['Table_CMD_Substract']       = 'Subtract';
+$_Lang['Table_Submit']              = 'Submit';
+
+$_Lang['MsgBox_UpdateOK']           = 'Player <a href="user_info.php?uid=%s" target="_blank">%s [#%s]</a> has been updated (updated properties: %s)!';
+$_Lang['MsgBox_UpdateNotAffected']  = 'Player <a href="user_info.php?uid=%s" target="_blank">%s [#%s]</a> did not require an update...';
+$_Lang['MsgBox_BadInput']           = 'Invalid data provided!';
+$_Lang['MsgBox_PlanetDoesntExist']  = 'This player does not exist';
+$_Lang['MsgBox_EmptyInput']         = 'No properties to update provided!';
+$_Lang['MsgBox_BadTabID']           = 'Invalid element ID!';
+$_Lang['MsgBox_BadCMD']             = 'Invalid action type!';
+$_Lang['MsgBox_BadUserID']          = 'Invalid identifier!';
+
+?>
