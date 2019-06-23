@@ -1,0 +1,165 @@
+<?php
+
+$_Lang ['alliance'] = 'Alliance';
+$_Lang ['title'] = "Notizie";
+$_Lang ['head_type'] = 'Categoria';
+$_Lang ['head_count'] = 'Nuovo';
+$_Lang ['head_total'] = 'Tutto';
+$_Lang ['type'] [0] = "Rapporti di spionaggio";
+$_Lang ['type'] [1] = "Messaggi dai giocatori";
+$_Lang ['type'] [2] = "Notizie dall'alleanza";
+$_Lang ['type'] [3] = "Rapporti di guerra";
+$_Lang ['type'] [4] = "Rapporti operativi";
+$_Lang ['type'] [5] = "Rapporti sulla flotta";
+$_Lang ['type'] [15] = "Rapporti di spedizione";
+$_Lang ['type'] [50] = "Rapporti di azioni accodate";
+$_Lang ['type'] [70] = 'Messaggi di sistema';
+$_Lang ['type'] [80] = 'Notizie dall amministrazione';
+$_Lang ['type'] [100] = "Tutti i messaggi";
+
+$_Lang ['CatList_Title'] = 'Notizie';
+$_Lang ['CatList_Head_CatName'] = 'Categoria';
+$_Lang ['CatList_Head_Unread'] = 'Non letto';
+$_Lang ['CatList_Head_Total'] = 'Tutti';
+$_Lang ['CatList_Head_Total_Tip'] = 'Messaggi in discussioni / Tutti i messaggi';
+
+$_Lang ['GoBackToCatList'] = 'Torna alla lista delle categorie';
+$_Lang ['Pages'] = 'Pagine';
+$_Lang ['NoMsg'] = "Nessun messaggio!";
+
+$_Lang['Next']       = "Prossimo &#187;";
+$_Lang['Prev']       = "&#171; Precedente";
+
+
+$_Lang ['NoMessages'] = 'Nessun messaggio!';
+$_Lang ['NoMessages_page'] = 'Non ci sono messaggi in questa pagina!';
+
+$_Lang ['mess_pagetitle_read'] = 'Messaggi';
+$_Lang ['mess_pagetitle_send'] = 'Invia messaggio';
+$_Lang ['mess_error'] = "Errore";
+$_Lang ['mess_no_ownerid'] = "Inserisci il nome o l'ID del giocatore!";
+$_Lang ['mess_bad_usernick'] = 'Il nome del giocatore non è corretto!';
+$_Lang ['mess_no_ownerpl'] = "Si è verificato un errore! Impossibile ottenere dati sul pianeta dalla madre dell'utente!";
+$_Lang ['mess_no_owner'] = "Un giocatore del genere non esiste!";
+$_Lang ['mess_recipient'] = 'Destinatario';
+$_Lang ['mess_message'] = 'Messaggio';
+$_Lang ['mess_characters'] = 'Caratteri';
+$_Lang ['mess_subject'] = 'Oggetto';
+$_Lang ['mess_envoyer'] = 'Invia';
+$_Lang ['mess_no_subject'] = "Nessun tema";
+$_Lang ['mess_no_subject_err'] = 'Devi inserire l oggetto del messaggio!';
+$_Lang ['mess_no_text'] = "Non puoi inviare un messaggio vuoto!";
+$_Lang ['mess_sended'] = "Il messaggio è stato inviato";
+$_Lang ['mess_partialreport'] = "Report di spionaggio mostrato solo parzialmente";
+$_Lang ['mess_deleteunmarked'] = "Elimina messaggi non selezionati";
+$_Lang ['mess_deletemarked'] = "Elimina i messaggi selezionati";
+$_Lang ['mess_deleteall'] = "Elimina tutti i messaggi";
+$_Lang ['Sure_WantDeleteAll'] = 'Sei sicuro di voler eliminare tutti i messaggi dalla mailbox?';
+$_Lang ['mess_deleteallcat'] = "Elimina tutti i messaggi da questa categoria";
+$_Lang ['Sure_WantDeleteCat'] = 'Sei sicuro di voler eliminare tutti i messaggi da questa categoria?';
+$_Lang ['mess_setallasread'] = 'Imposta tutto come letti';
+$_Lang ['mess_setcatasread'] = 'Imposta tutto in questa categoria come letti';
+$_Lang ['NoActionsHere'] = 'Le azioni collettive in questa categoria non sono disponibili!';
+$_Lang ['mess_its_ok'] = "Ok";
+$_Lang ['mess_perform_action'] = 'Esegui';
+$_Lang ['mess_actions'] = 'Azioni';
+$_Lang ['mess_from'] = "Da";
+$_Lang ['mess_action'] = 'Azione';
+$_Lang ['mess_date'] = "Dati";
+$_Lang ['mess_answer'] = "Rispondi";
+$_Lang ['mess_answer_prefix'] = 'Re';
+$_Lang ['mess_bad_signs'] = 'I caratteri vietati sono stati inseriti!';
+$_Lang ['mess_bad_word'] = 'È stata inserita una frase proibita!';
+$_Lang ['mess_bad_category'] = 'Categoria non valida specificata!';
+$_Lang ['mess_no_to_yourself'] = 'Non puoi scrivere a te stesso!';
+$_Lang['mess_send_date']      = '<b class="date">Ricevuto</b>: <b>%s</b> o <b>%s</b>';
+$_Lang['mess_sendbyyou_date'] = '<b class="date">Inviato</b>: <b>%s</b> o <b>%s</b>';
+$_Lang ['mess_report'] = 'Segnala';
+$_Lang ['mess_ignore'] = 'Ignora';
+$_Lang ['mess_delete_single'] = 'Elimina';
+$_Lang ['mess_reply'] = 'Rispondi';
+$_Lang ['mess_reply_toplayer'] = 'Scrivi al giocatore';
+$_Lang ['mess_reply_toally'] = 'Scrivi all alleanza ';
+$_Lang ['mess_convert'] = 'Converti';
+$_Lang ['Action_Expand'] = 'Espandi l intera conversazione';
+$_Lang ['Action_Collapse'] = 'Espandi fino all ultimo messaggio';
+$_Lang ['Action_ThreadLoading'] = 'Caricamento conversazione ...';
+$_Lang ['Action_ThreadError'] = 'Si è verificato un errore durante il download!';
+
+
+$_Lang ['mess_delete_single_title'] = 'Elimina questo messaggio';
+$_Lang ['mess_reply_title'] = 'Rispondi a questo messaggio';
+$_Lang ['mess_replyally_title'] = 'Scrivi una risposta all alleanza';
+$_Lang ['mess_report_title'] = 'Segnala questo messaggio come violazione delle regole o errato';
+$_Lang ['mess_report_e_title'] = 'Segnala questo messaggio come sbagliato';
+$_Lang ['mess_ignore_title'] = 'Ignora i messaggi da questo giocatore';
+$_Lang ['mess_convert_title'] = 'Converti questo rapporto in BBCode';
+$_Lang ['mess_selectall_title'] = 'Seleziona tutti i messaggi';
+$_Lang ['mess_cannot_delete_all_admin_msgs'] = 'I messaggi dall Amministrazione possono essere cancellati solo individualmente!';
+$_Lang ['mess_no_access_to_adminmsg'] = 'Non hai il permesso di inviare messaggi di questo tipo!';
+$_Lang ['MsgWrite_YouIgnoreThatUser'] = 'Non puoi inviare messaggi ai giocatori che ignori!';
+$_Lang ['MsgWrite_UserIgnoresYou'] = 'Non puoi inviare un messaggio a questo Player perché sei nella sua Lista di Ignore!';
+
+$_Lang ['Box_send_as_adminmsg'] = 'Invia come messaggio all amministratore';
+
+$_Lang ['mess_clear'] = 'Cancella';
+$_Lang ['mess_send'] = 'Invia';
+$_Lang ['mess_wait'] = 'Aspetta';
+$_Lang ['bbcode_b'] = 'Testo in grassetto';
+$_Lang ['bbcode_i'] = 'Testo in corsivo';
+$_Lang ['bbcode_u'] = 'Testo sottolineato';
+$_Lang ['bbcode_img'] = 'Immagine';
+$_Lang ['bbcode_url'] = 'Link';
+$_Lang ['bbcode_coords'] = 'Coordinate galassia';
+
+$_Lang['Player_say'] = '<font color="#7f7f7f">Gracz</font> %s <font color="#7f7f7f">manda un messaggio:</font><br>';
+
+
+$_Lang ['Delete_AllMsgsDeleted'] = 'Tutti i messaggi sono stati cancellati!';
+$_Lang ['Delete_AllCatMsgsDeleted'] = 'Tutti i messaggi in questa categoria sono stati cancellati!';
+$_Lang ['Delete_SelectedDeleted'] = 'I messaggi selezionati sono stati cancellati!';
+$_Lang ['Delete_UnselectedDeleted'] = 'I messaggi non controllati sono stati cancellati!';
+$_Lang ['Delete_AllMsgsRead'] = 'Tutti i messaggi sono stati letti!';
+$_Lang ['Delete_CatMsgsRead'] = 'I messaggi in questa categoria sono stati letti!';
+$_Lang ['Delete_MsgDeleted'] = 'Il messaggio è stato cancellato!';
+
+$_Lang ['Delete_CannotDeleteAdminMsgsAtOnce'] = 'I messaggi amministrativi possono essere cancellati solo individualmente!';
+$_Lang ['Delete_CannotReadAdminMsgsAtOnce'] = 'Questa opzione non è disponibile per Notizie amministrative!';
+$_Lang ['Delete_BadCatSelected'] = 'Categoria errata!';
+$_Lang ['Delete_NoMsgsSelected'] = 'Niente è stato selezionato!';
+$_Lang ['Delete_BadSelections'] = 'La lista dei messaggi da cancellare è stata trasferita in modo errato!';
+$_Lang ['Delete_NoMsgsUnselected'] = 'Nulla è stato deselezionato!';
+$_Lang ['Delete_MsgNoExist'] = 'Il messaggio non esiste!';
+$_Lang ['Delete_NoMsgsToRead'] = 'Nessun messaggio da leggere!';
+$_Lang ['Delete_NoMsgsToDelete'] = 'Nessun messaggio da eliminare!';
+$_Lang ['Delete_BadTimestamp'] = 'Dati modulo errati! Per favore, fai di nuovo l azione ... ';
+
+$_Lang ['MsgList_NoMsgsOnThatPage'] = 'Non ci sono messaggi nella pagina %s';
+
+
+$_Lang ['Form_SendMsg'] = 'Invio di messaggi';
+$_Lang ['Form_User'] = 'Giocatore';
+$_Lang ['Form_Subject'] = 'Oggetto';
+$_Lang ['Form_SendAsAdmin'] = 'Invia come messaggio amministrativo';
+$_Lang ['Form_Text'] = 'Contenuto';
+$_Lang ['Form_MaxSigns'] = 'Limite';
+$_Lang ['Form_Reset'] = 'Cancella';
+$_Lang ['Form_Send'] = 'Invia';
+$_Lang ['Form_BBCode'] = 'Legend BBCode';
+
+
+$_Lang ['Info_MsgSend'] = 'Il messaggio è stato inviato!';
+$_Lang ['Errors_IgnoreHis'] = 'Questo giocatore ignora i tuoi messaggi!';
+$_Lang ['Errors_IgnoreYour'] = 'Non puoi scrivere sul giocatore che ignori!';
+$_Lang ['Errors_TextSPAM'] = 'Non puoi inviare questo messaggio!';
+$_Lang ['Errors_TextEmpty'] = 'Non puoi inviare un messaggio vuoto!';
+$_Lang ['Errors_SubjectEmpty'] = 'Devi inserire l oggetto del messaggio!';
+$_Lang ['Errors_NoUserID'] = 'Il giocatore a cui vuoi inviare il messaggio non è selezionato!';
+$_Lang ['Errors_CantUseAdminMsg'] = 'Questa opzione non è disponibile!';
+$_Lang ['Errors_CantWriteToYourself'] = 'Non puoi scrivere a te stesso!';
+$_Lang ['Errors_BadUserName'] = 'Nome giocatore errato!';
+$_Lang ['Errors_UserNoExist'] = 'Tale giocatore non esiste!';
+$_Lang ['Errors_BadUserID'] = 'ID giocatore errato!';
+$_Lang ['Errors_CantReply'] = 'Non puoi rispondere a questo messaggio!';
+
+?>

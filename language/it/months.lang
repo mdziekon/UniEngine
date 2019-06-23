@@ -1,0 +1,7 @@
+<?php
+
+$_Lang['pretty_months_loaded'] = true;
+$_Lang['months_variant0'] = array('gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre');
+$_Lang['months_variant1'] = array('gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre');
+
+?>

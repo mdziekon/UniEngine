@@ -1,0 +1,244 @@
+<?php
+
+$_Lang['Page_Title']             = 'Regolamento';
+
+$_Lang['Table_Header']           = 'Regolamento '.$_GameConfig['game_name'];
+$_Lang ['Table_GeneralInfo'] = 'Queste regole entrano in vigore il <b class="red"> 22 giugno 2019</b>. <br/>';
+$_Lang ['Table_GeneralInfo'] .= 'Eventuali modifiche a queste regole saranno annunciate nel gioco tramite <b class="red"> Messaggi Globali</b>, o nel caso di modifiche importanti verrà anche inviata un <b class="red">email</ b>. ';
+$_Lang ['Table_Index'] = 'Indice';
+
+$_Lang ['AcceptBox_Info'] = 'Prima di continuare a giocare <b> devi accettare le Regole modificate </b> (ultima modifica: %s). <br/> Se non accetti i termini modificati, il tuo account sarà <b class="red"> rimosso dopo 7 giorni </b> (con l opzione di cambiare la decisione) o <b class="orange"> lasciato inattivo </b> (a meno che tu non scelga una delle opzioni seguenti). ';
+$_Lang ['AcceptBox_Option_Accept0'] = 'Accetto i regolamenti e continuerò a giocare';
+$_Lang ['AcceptBox_Option_Accept1'] = 'Accetto i regolamenti e cancello la cancellazione dell account';
+$_Lang ['AcceptBox_Option_Decline0'] = 'Non accetto il regolamento e sto cancellando il mio account';
+$_Lang ['AcceptBox_Option_Decline1'] = 'Non accetto il regolamento e sto mantenendo la cancellazione dell account';
+$_Lang ['AcceptBox_DeleteTime'] = '<br/> <br/> Il tuo account sarà cancellato il %s';
+$_Lang ['AcceptBox_Sure'] = 'Sei sicuro?';
+
+
+$_Lang ['Rules_Index_1'] = 'Introduzione';
+$_Lang ['Rules_Index_2'] = 'Account';
+$_Lang ['Rules_Index_2_1'] = 'Utilizzo account e multi-account';
+$_Lang ['Rules_Index_2_2'] = 'Scambio di account';
+$_Lang ['Rules_Index_3']   = 'Gameplay';
+$_Lang ['Rules_Index_3_1'] = 'Commercio';
+$_Lang ['Rules_Index_3_2'] = 'Push';
+$_Lang ['Rules_Index_3_3'] = 'Creazione Luna';
+$_Lang ['Rules_Index_3_4'] = 'Demolizione della flotta intenzionale';
+$_Lang ['Rules_Index_3_5'] = 'Noleggio di riciclatori';
+$_Lang ['Rules_Index_3_6'] = 'Bash';
+$_Lang ['Rules_Index_3_7'] = 'Sfruttamento Bugs';
+$_Lang ['Rules_Index_3_8'] = 'Lascia la vacanza';
+$_Lang ['Rules_Index_3_9'] = 'Altro';
+$_Lang ['Rules_Index_4']   = 'Comunicazione';
+$_Lang ['Rules_Index_4_1'] = 'Contenuto in gioco';
+$_Lang ['Rules_Index_4_2'] = 'Contatto con giocatori e comportamento di gioco';
+$_Lang ['Rules_Index_4_3'] = 'SPAM e messaggi pubblicitari';
+$_Lang ['Rules_Index_5'] = 'Funzioni a pagamento e aggiunte agli account';
+$_Lang ['Rules_Index_6'] = 'Note finali';
+
+$_Lang ['Rule_Titles_1'] = 'Introduzione';
+$_Lang ['Rule_Titles_2'] = 'Account';
+$_Lang ['Rule_Titles_3'] = 'Gameplay';
+$_Lang ['Rule_Titles_4'] = 'Comunicazione';
+$_Lang ['Rule_Titles_5'] = 'Funzioni e aggiunte del Account a pagamento';
+$_Lang ['Rule_Titles_6'] = 'Note finali';
+
+$_Lang ['Rule_SubTitles_2_1'] = 'Utilizzo account e multi-account';
+$_Lang ['Rule_SubTitles_2_2'] = 'Scambio di account';
+$_Lang ['Rule_SubTitles_3_1'] = 'Commercio';
+$_Lang ['Rule_SubTitles_3_2'] = 'Pushing';
+$_Lang ['Rule_SubTitles_3_3'] = 'Creazione Luna';
+$_Lang ['Rule_SubTitles_3_4'] = 'Demolizione della flotta intenzionale';
+$_Lang ['Rule_SubTitles_3_5'] = 'Noleggio di riciclatrici';
+$_Lang ['Rule_SubTitles_3_6'] = 'Bash';
+$_Lang ['Rule_SubTitles_3_7'] = 'Sfruttamento Bugs';
+$_Lang ['Rule_SubTitles_3_8'] = 'Lascia la vacanza';
+$_Lang ['Rule_SubTitles_3_9'] = 'Altro';
+$_Lang ['Rule_SubTitles_4_1'] = 'Contenuto in gioco';
+$_Lang ['Rule_SubTitles_4_2'] = 'Contatto con giocatori e comportamento di gioco';
+$_Lang ['Rule_SubTitles_4_3'] = 'SPAM e messaggi pubblicitari';
+
+
+
+$_Lang['Rules_1']                = 
+'<b class="float">1.1.</b><span class="float">Ogni giocatore deve completare <b> </b> l accettazione delle regole di gioco prima di completare la registrazione. La creazione di un account nel gioco (in qualsiasi Universo) equivale al fatto che l Utente accetta e accetta tutte le disposizioni del presente Regolamento.</span><br/>
+<b class="float">1.2.</b><span class="float">Il non rispetto di questi regolamenti comporta finire nella <a href="redirect.php?id=4"><b>lista BAN</b></a>, che contiene un elenco di penalità assegnate per reati specifici nel gioco.</span><br/>
+<b class="float">1.3.</b><span class="float">Ogni giocatore deve avere familiarità con le Regole e tutti i suoi punti e sotto-punti. L ignoranza <b>Regolamento</b> e <a href="redirect.php?id=4"><b>Lista ban</b></a> non esonera dalla responsabilità per le sue azioni nel gioco, e tutti gli appelli da penalità in cui il giocatore mostra una chiara mancanza di conoscenza del Regolamento, saranno immediatamente respinti.</span><br/>
+<b class="float">1.4.1</b><span class="float">I proprietari dei giochi sono persone che hanno tutti i diritti su server, domini e file e contenuti contenuti nel gioco e sulle relative sottopagine e sottoservizi (come Forum o account nel portale della community). Il Titolare del Gioco può agire contemporaneamente come Amministratore e Operatore del gioco.</span><br/>
+<b class="float">1.4.2</b><span class="float">Gli amministratori di gioco sono persone che hanno ricevuto pieno accesso alla gestione del gioco al fine di preservare l ordine e risolvere questioni discutibili mediante funzioni di gioco fornite a loro o ad altre soluzioni tecniche. Rappresentano i proprietari al Forum dei giochi e in contatto con i giocatori.</span><br/>
+<b class="float">1.4.3</b><span class="float">Supporto del gioco sono le persone che occupano le posizioni del super operatore o dell operatore di giochi. Si tratta di persone che hanno avuto un accesso limitato alla gestione del gioco al fine di preservare l ordine e risolvere questioni discutibili mediante funzioni di gioco fornite a loro o altre soluzioni tecniche. Sono intermediari in contatto tra il giocatore e l amministrazione.</span><br/>
+<b class="float">1.4.4</b><span class="float">La gerarchia decisionale nella gestione dei giochi (proprietari, amministrazione e supporto dei giochi) appare come segue (il livello più basso di autorizzazioni inizia da sinistra): <br/> Operatore di gioco &#187; Super Operator &#187; Amministratore  &#187; Proprietario del gioco</span><br/>
+<b class="float">1.4.5</b><span class="float">I manager del Forum (come Moderatore o Amministratore del Forum) non entrano nel Consiglio di Gestione del Gioco, a meno che la persona al tempo stesso mantenga la suddetta posizione nel gioco.</span><br/>
+<b class="float">1.4.6</b><span class="float">I giocatori programmatori sono anche i suoi amministratori. Non eseguono le funzioni degli ordini - si occupano del corretto funzionamento del gioco, aggiungendo nuove funzioni e riparando eventuali errori. Il loro compito è anche possibile l interazione con la comunità dei giocatori, al fine di creare patch e aggiunte migliori e più amichevoli.</span>
+<b class="float">1.5.</b><span class="float">L amministrazione si riserva il diritto di modificare sia il regolamento che la tabella delle penalità in qualsiasi momento. Il Regolamento / Tabella delle sanzioni modificato entrerà in vigore alla data di pubblicazione.</span><br/>
+<b class="float">1.6.</b><span class="float">Un utente che non è d accordo con il Regolamento modificato o non vuole accettarlo, è obbligato ad assegnare il suo account alla cancellazione il più presto possibile. L uso continuato del gioco senza lo status di cancellazione dell account equivale all accettazione delle modifiche. In casi speciali, i proprietari e l amministrazione del gioco possono attivare un sistema speciale che impedirà ulteriori giochi senza accettare modifiche ai Regolamenti o attivare la condizione di cancellazione.</span><br/>
+<b class="float">1.7.</b><span class="float">Se il giocatore ha notato difetti o ambiguità nei Regolamenti, deve segnalarlo al Team di gestione del gioco e attendere una risposta in merito. Se l Amministrazione ritiene che un dato punto o situazione sia importante da notare, il punto pertinente può essere aggiunto ai Regolamenti.</span><br/>
+<b class="float">1.8.</b><span class="float">I regolamenti non sono la forma definitiva di legge su questo server. In casi speciali, i proprietari e l amministrazione decidono sulla soluzione del caso.</span><br/>
+<b class="float">1.9.</b><span class="float">Se l incidente va oltre il gioco stesso e si riferisce alla vita reale, la principale forma che costituisce la legge è la legge ove risede il server.</span><br/>
+<b class="float">1.10.</b><span class="float">Tutti gli account nel gioco appartengono al creatore del gioco. L utente non ha diritti di proprietà o di proprietà sugli account. Il fatto di avere un aggiunta pagata al gioco non significa che il giocatore diventi il proprietario dell account.</span><br/>
+<b class="float">1.11.</b><span class="float">I proprietari e l amministrazione si riservano il diritto di limitare parzialmente o completamente l accesso al gioco a persone selezionate.</span><br/>
+<b class="float">1.12.</b><span class="float">I proprietari e l amministrazione non si assumono alcuna responsabilità per eventuali guasti o indisponibilità del gioco a causa sia di motivi casuali che di errori nel software o nel funzionamento dei server.</span><br/>
+<b class="float">1.13.</b><span class="float">I proprietari di giochi si riservano il diritto di archiviare indirizzi IP e indirizzi e-mail per scopi pubblicitari e prodotti derivati. Dopo aver rimosso l account, il giocatore ha il diritto di rimuovere il suo indirizzo IP e l e-mail dal database - a tale scopo, inviare una e-mail a uno dei proprietari o all amministrazione del gioco chiedendo la cancellazione dei dati dal database (messaggio, per verifica, inviare dallo stesso indirizzo, che è nel database).</span>';
+
+$_Lang['Rules_2_1']              = 
+'<b class="float">2.1.1.</b><span class="float">Ogni giocatore può avere un solo account per ogni Universo.</span><br/>
+<b class="float">2.1.2.</b><span class="float">Il giocatore che ha ricevuto il Ban (blocco dell account) non può impostare il prossimo account per ulteriori giocate.</span><br/>
+<b class="float">2.1.3.</b><span class="float">Solo una persona può giocare su ciascun account, a meno che la situazione non sia descritta nei seguenti punti o l Amministrazione abbia accettato di giocare con più persone.</span><br/>
+<b class="float">2.1.4.</b><span class="float">La condivisione di un account tra due (o più) persone è severamente vietata.</span><br/>
+<b class="float">2.1.5.</b><span class="float">Un giocatore può autorizzare un altra persona ad accedere a quell account per attivare la vacanza, se il fondatore dell account non può farlo da solo:<br/>
+<ul class="ruleul">
+<li> In questo caso, questo fatto dovrebbe essere segnalato entro 24 direttamente all amministrazione. </ li>
+<li> La persona autorizzata ad accedere può solo ed esclusivamente: abilitare le vacanze e (solo se necessario includere le festività) interrompere tutte le azioni che si svolgono sul conto (ad es. costruzione di edifici, studio della tecnologia) e respingere flotte volanti. </ li>
+<li> È vietato svolgere altre attività sull account, ad esempio, l utilizzo di materie prime, l ulteriore espansione, l invio di flotte. </ li>
+<li> Se la vacanza non può essere attivata (ad esempio la coda nel cantiere è piena, un altro giocatore attacca il pianeta che appartiene a questo account), la persona autorizzata dovrebbe disconnettersi e (eventualmente) riprovare più tardi. </ li>
+</ul></span><br/>
+<b class="float">2.1.6.</b><span class="float">Solo una persona può essere registrata su un computer. Se più giocatori usano un determinato computer, ogni giocatore deve attendere il proprio turno (no accessi simultanei).</span><br/>
+<b class="float">2.1.7.</b><span class="float">Il fatto di giocare su un computer o in una rete (ad esempio una rete domestica, ma anche reti di abitazioni o sale computer in una scuola) da diversi giocatori dovrebbe essere segnalato all Amministrazione tramite la funzione "Gioco da un IP" disponibile nel gioco, entro 24 ore dalla registrazione prossimo giocatore. Si prega di notare che:<br/>
+<ul class="ruleul">
+<li> Gli account non possono combinare caratteristiche comuni tranne che appartenere a un alleanza </ li>
+<li> È vietato il contatto di qualsiasi flotta tra accounts (i voli comuni dell Unione ACS sono ammessi in casi speciali dall amministrazione) </ li>
+<li> Un eccezione alle due voci secondarie di cui sopra sono accessi sporadici nello stesso posto (es. internet cafè, accesso occasionale sul computer del secondo giocatore nei fine settimana). Quindi il contatto delle flotte è vietato solo quando i giocatori si collegano allo stesso posto. </li>
+</ul></span>';
+
+$_Lang['Rules_2_2']              = 
+'<b class="float">2.2.1.</b><span class="float">Lo scambio di account è consentito, tuttavia, questo fatto dovrebbe essere segnalato all Amministrazione. In questo caso, l amministrazione può sostituire entrambi gli account senza la necessità di scambiare password. In caso di scambio senza preavviso, l Amministrazione non è obbligata a rimborsare eventuali perdite in caso di frode o furto, né deve avviare alcuna procedura per chiarire la situazione.</span><br/>
+<b class="float">2.2.2.</b><span class="float">La vendita di account (o di qualsiasi sua parte, ad esempio materie prime) per scopi commerciali è proibita. I proprietari di giochi, tuttavia, riconoscono la possibilità di vendere account a fini caritatevoli.</span>';
+
+$_Lang['Rules_3_1']              = 
+'<b class="float">3.1.1.</b><span class="float">Il commercio non deve essere segnalato sul forum di gioco o su chiunque dall amministrazione e supporto del gioco.</span><br/>
+<b class="float">3.1.2.</b><span class="float">Il rapporto minimo in Scambio è il rapporto di 1: 1 per ogni materia prima. La vendita o l acquisto di materie prime a prezzi irragionevoli (prezzi ripetutamente sottovalutati o gonfiati) possono essere considerati come una manifestazione di Push, di cui al punto <b>3.2.</b></span><br/>
+<b class="float">3.1.3.</b><span class="float">Il commercio deve essere completato 24 ore dopo che il primo giocatore ha inviato la flotta. Nessun ritorno di materie prime sarà considerato come Push o Theft (a seconda della situazione).</span><br/>
+<b class="float">3.1.4.</b><span class="float">Non vi è alcun limite giornaliero al commercio di materie prime.</span><br/>
+<b class="float">3.1.5.</b><span class="float">Eventuali prestiti di materie prime dovrebbero essere segnalati sul forum di gioco o direttamente all amministrazione. Altrimenti, possono essere considerati un Push come spiegato al punto <b>3.2.</b></span><br/>
+<b class="float">3.1.6.</b><span class="float">La durata massima del prestito è di 14 giorni.</span>';
+
+$_Lang['Rules_3_2']              = 
+'<b class="float">3.2.1.</b><span class="float">E considerato Push il supportare un giocatore più forte da un giocatore più debole.</span><br/>
+<b class="float">3.2.2.</b><span class="float">I reati push sono:<br/>
+<ul class="ruleul">
+<li> Trasporto di risorse su pianeti o lune di un giocatore più forte. </ li>
+<li> Distruggere deliberatamente la flotta in un pianeta di un giocatore più forte in modo tale da poter raccogliere gli Scrap (Scrap) dopo il combattimento. </ li>
+<li> Archiviazione intenzionale di grandi quantità di materie prime in modo che un giocatore più forte possa prenderle. </ li>
+<li> Nessuna entrata mercenaria [Moonmaking, Prestito riciclatrici o Distruzione flotta volontaria] (se è richiesta una notifica) </ li>
+<li> Rompere una delle regole dal punto <b> 3.1 </b> di questi regolamenti </ li>
+<li> Qualsiasi altro modo inteso a vantaggio di un account più forte. </ li>
+</ul></span><br/>   
+<b class="float">3.2.3.</b><span class="float">Si prega di notare che:<br/>
+<ul class="ruleul">
+<li> Le materie prime indesiderate di un giocatore più debole non possono essere fermate, devono essere rimandate immediatamente e questo fatto dovrebbe essere segnalato nel forum di gioco o direttamente all amministrazione. </ li>
+<li> Se l amministrazione rileva un Push, entrambi i giocatori più deboli e più forti possono essere puniti (se entrambe le parti sono coinvolte nellincidente). </ li>
+<li> Il ricatto degli altri giocatori è vietato e punito. </ li>
+</ul></span><br/>
+<b class="float">3.2.4.</b><span class="float">L assistenza a giocatori più forti nell alleanza è possibile sotto forma di prestito, ma dovrebbe essere segnalata sul Forum dei Giochi o direttamente all Amministrazione.</span>';
+
+$_Lang['Rules_3_3']              = 
+'<b class="float">3.3.1.</b><span class="float">La formazione della luna (il cosiddetto Moonmaking - l invio intenzionale di flotte per distruggerli in modo tale che la luna si formi nell orbita) è permesso in determinate condizioni:<br/>
+<ul class="ruleul">
+<li>Qualsiasi perdita subita da un giocatore a cui è stato chiesto di aiutare a creare la luna dovrebbe essere coperta dal giocatore che ha chiesto aiuto.</li>
+<li>Le perdite su entrambi i lati della battaglia dovrebbero essere il più piccole possibile. In casi speciali, l uso di flotte troppo grandi (comprese le perdite che superano significativamente i requisiti per la formazione della Luna) può essere considerato come un tentativo di Push.</li>
+</ul></span><br/>
+<b class="float">3.3.2.</b><span class="float">Segnalare la creazione della luna non è necessario.</span><br/>
+<b class="float">3.3.3.</b><span class="float">La creazione della luna è considerato un atto Mercenario.</span>';
+
+$_Lang['Rules_3_4']              = 
+'<b class="float">3.4.1.</b><span class="float">La demolizione deliberata della flotta è consentita a determinate condizioni:<br/>
+<ul class="ruleul">
+<li> La demolizione <b> deve </ b> essere segnalata sul forum di gioco o direttamente all amministrazione o all assistenza e può aver luogo solo dopo aver ottenuto il consenso. </ li>
+<li> I giocatori che devono partecipare alla demolizione devono fornire un motivo valido e ragionevole per questa azione e confermare chiaramente la loro partecipazione. </ li>
+<li> I detriti risultanti dalla demolizione dovrebbe essere diviso in parti uguali da perdite su ciascun lato della battaglia (è consentito convertire tutte le perdite in una materia prima secondo un ragionevole tasso di conversione) </ li>
+</ul></span><br/>
+<b class="float">3.4.2.</b><span class="float">La deliberata demolizione delle flotte è considerata mercenaria.</span>';
+
+$_Lang['Rules_3_5']              = 
+'<b class="float">3.5.1.</b><span class="float">I prestiti di riciclatrici (al fine di raccogliere detriti in eccesso dopo la battaglia) sono consentiti e dovrebbero essere segnalati direttamente all amministrazione o al supporto.</span><br/>
+<b class="float">3.5.2.</b><span class="float">La distribuzione delle materie prime dal campo detriti è facoltativa.</span><br/>
+<b class="float">3.5.3.</b><span class="float">L invio di materie prime deve avvenire entro 24 ore dalla raccolta delle materie prime dal campo danni.</span><br/>
+<b class="float">3.5.4.</b><span class="float">I prestiti riciclabili sono considerati mercenari.</span>';
+
+$_Lang['Rules_3_6']              = 
+'<b class="float">3.6.1.</b><span class="float">Bash è considerato più di 5 attacchi per un <b> pianeta o luna </ b> entro 24 ore (contati dalle 00:00 alle 23:59) o più di 15 attacchi per uno <b> giocatore </ b > entro 24 ore (contate dalle 00:00 alle 23:59)</span><br/>
+<b class="float">3.6.2.</b><span class="float">La flotta che vola con la missione Distruzione viene contata come un normale attacco.</span><br/>
+<b class="float">3.6.3.</b><span class="float">Ogni giocatore che partecipa all Unione Attacco (ACS) viene conteggiato separatamente per la regola di Bash (in questo caso non vi è alcuna responsabilità collettiva).</span><br/>
+<b class="float">3.6.4.</b><span class="float">Le regole Bash non sono soggette a:<br/>
+<ul class="ruleul">
+<li> Attacchi missilistici </ li>
+<li> Invio di sonde spia </ li>
+<LI> Gli attacchi, che termina in un pareggio o vincita dei difensori (s) <b> e </ b> flotta e attività dei difensori erano intatto - nessuna perdita di flotta, della Difesa e delle materie prime sul lato dei difensori (s) </ li >
+<li> Battaglie tra membri dell alleanza che sono attualmente in guerra. Affinché la regola di Bash venga abolita durante la guerra, devono essere presenti almeno 12 ore dal momento della dichiarazione di guerra (non vengono prese in considerazione altre segnalazioni). Amministrazione e supporto gioco può respingere la dichiarazione di guerra (attraverso un messaggio sul forum, e i messaggi nel gioco), e in questo caso la regola di bash non è tollerata. </ Li>
+<LI> Inoltre, se l alleanza più forte alleanza dichiara guerra molto più deboli (scelta questa dell amministrazione o del supporto), la guerra deve essere confermata da un alleanza più debole. </ Li>
+<li> Attacchi su giocatori inattivi per almeno 7 giorni (stato contrassegnato con una lettera corrispondente in Anteprima galattica) </ li>
+</ul></span><br/>
+<b class="float">3.6.5.</b><span class="float">Disposizioni aggiuntive per questa regola:<br/>
+<ul class="ruleul">
+<li>In caso di abuso (ad es. Numero eccessivo di attacchi in relazione all accordo concluso tra giocatori), il giocatore infortunato (Difensore) ha il diritto di segnalare questi abusi come violazione della regola di Bash.</li>
+</ul></span>';
+
+$_Lang['Rules_3_7']              = 
+'<b class="float">3.7.1.</b><span class="float">L utilizzo di un bug è l uso o l occultamento intenzionale di errori nel software di gioco per il proprio o di qualcun altro, oltre a rallentare, destabilizzare il gioco o rendere difficile ad altri l accesso al gioco.</span><br/>
+<b class="float">3.7.2.</b><span class="float">Ogni giocatore che è stato punito per l utilizzo di un bug o che non è a conoscenza dell errore è obbligato ad aiutare l Amministrazione al fine di localizzare e correggere l errore, per quanto l Amministrazione lo richiede. Se rifiuta di collaborare, il suo account può essere punito, completamente bloccato o rimosso.</span><br/>
+<b class="float">3.7.3.</b><span class="float">Ogni giocatore è tenuto a segnalare un Bug scoperto, indipendentemente dalla sua nocività.</span><br/>
+<b class="float">3.7.4.</b><span class="float">Se il giocatore ha dato un aiuto eccezionale nel risolvere il problema con i bug (o ne ha segnalati molti), l Amministrazione può assegnargli dei bonus che solitamente sono a pagamento nel gioco. Tuttavia, qualsiasi tentativo di estorcere il premio può essere punito.</span>';
+
+$_Lang['Rules_3_8']              = 
+'<b class="float">3.8.1</b><span class="float">La modalità di vacanza è progettata per proteggere l account del giocatore durante la sua assenza dagli attacchi di altri giocatori. Pertanto, è vietato bloccare la possibilità di trasferirsi in una vacanza, indipendentemente dal modo di bloccare (un esempio di blocco è l invio di flotte lente al pianeta del giocatore).</span><br/>
+<b class="float">3.8.2</b><span class="float">La modalità di vacanza deve durare un minimo di 3 giorni e può durare un massimo di 30 giorni (a meno che il giocatore non scriva all Amministrazione con la richiesta di estendere il congedo a causa di una situazione insolita). Il tempo massimo di congedo è quello di evitare di mantenere account inattivi e intoccabili nel gioco.<br/>
+Dopo 30 giorni dalla data dei vacanza, il sistema rimuoverà automaticamente la vacanza dall account del giocatore al successiv calcolo delle statistiche del server.</span><br/>
+<b class="float">3.8.3</b><span class="float">Dopo aver rimosso la vacanza, il sistema bloccherà tutti i tentativi di reinserire la prossima vacanza per le successive 24 ore.</span>';
+
+$_Lang['Rules_3_9']              = 
+'<b class="float">3.9.1</b><span class="float">L uso di bot, autoclicker, autosilver e altri programmi o script che non sono stati accettati dai proprietari e dall amministrazione del gioco, e volti a facilitare o automatizzare il gioco, sono severamente proibiti.</span><br/>
+<b class="float">3.9.2</b><span class="float">L uso del gioco da parte di un software diverso da un browser Web è severamente proibito (es. plugins estensioni).</span><br/>
+<b class="float">3.9.3</b><span class="float">Mozilla Firefox è il browser ufficialmente supportato nell ultima versione stabile disponibile. Tuttavia, il gioco viene anche controllato sulle ultime versioni stabili di altri browser, nonché su alcune versioni di sviluppo. I proprietari del gioco non garantiscono il corretto funzionamento del gioco sui vecchi browser (come Internet Explorer 6) e sui telefoni cellulari o tablet.</span><br/>
+<b class="float">3.9.4</b><span class="float">In casi particolari, i proprietari dei giochi o l amministrazione possono (ma non devono) garantire un ritorno delle risorse o della flotta perse, che è stato attivato da un errore del server. Allo stesso tempo, va ricordato che in questo caso, è necessario fornire quante più informazioni possibili per aiutare nella procedura di restituzione.</span>';
+
+$_Lang['Rules_4_1']              = 
+'<b class="float">4.1.1.</b><span class="float">Le lingue ufficiali di contatto con i proprietari, l amministrazione e il supporto nel gioco sono secondo la lingua del gioco.</span><br/>
+<b class="float">4.1.2.</b><span class="float">Nei messaggi (sia privati che chat) è vietato:<br/>
+<ul class="ruleul">
+<li> Impersonare proprietari di giochi, amministrazione o supporto di giochi. </ li>
+<li> Tutte le forme di pubblicità per siti Web o giochi competitivi. </ li>
+<li> Invio di SPAM, annunci indesiderati. </ li>
+<li> Invia eventuali link dannosi o codice dannoso per estorcere i dati dei giocatori privati. </ li>
+<li> In casi particolari, saranno puniti anche: reati e calunnie pubbliche, nonché forte volgarità rivolta ad altre persone (pseudocensura, cioè che nasconde una parte di volgarità, sarà comunque punita). </ li>
+</ul></span><br/>    
+<b class="float">4.1.3.</b><span class="float">In Nomi (giocatore, pianeti, lune, alleanze, ecc.) È vietato:<br/>
+<ul class="ruleul">
+<li>Utilizzo dei nomi riservati ai proprietari dei giochi, all amministrazione o al supporto (ad esempio Admin, GameMaster, Game Operator).</li>
+<li>Impersonare proprietari di giochi, amministrazione o supporto.</li>
+<li>Usando frasi volgari, offensive o razziste.</li>
+</ul></span><br/>
+<b class="float">4.1.4.</b><span class="float">I proprietari del gioco e dell amministrazione si riservano il diritto di visualizzare i messaggi inviati dai giocatori nel caso in cui sia necessario condurre un indagine relativa alla violazione dei regolamenti.</span><br/>';
+
+$_Lang['Rules_4_2']              = 
+'<b class="float">4.2.1.</b><span class="float">È vietato tentare estorsioni su altri giocatori o proprietari, amministrazione o supporto di gioco.</span><br/>
+<b class="float">4.2.2.</b><span class="float">Le minacce legate al gioco (ad esempio la minaccia di una flotta che viene distrutta) non saranno punite se non superano i limiti del buon senso.</span><br/>
+<b class="float">4.2.3.</b><span class="float">L estorsione o le minacce relative alla vita reale sono severamente proibite.</span><br/>
+<b class="float">4.2.4.</b><span class="float">Le truffe nel gioco finalizzate all estorsione sono proibite.</span><br/>
+<b class="float">4.2.5.</b><span class="float">Se Tentati di ingannare i proprietari dei giochi, l amministrazione o il supporto sarai puniti.</span><br/>
+<b class="float">4.2.6.</b><span class="float">Ogni messaggio di massa (Notizie amministrative) nel gioco è una lettura obbligatoria per il giocatore. Analogamente all ignoranza dei Regolamenti, l ignoranza del contenuto del Messaggio non libera da responsabilità in relazione alle informazioni contenute nelle informazioni o linee guida per i giocatori.</span><br/>
+<b class="float">4.2.7.</b><span class="float">Tutte le voci, le opinioni, i suggerimenti sul gioco devono essere segnalati all amministratore del gioco, attraverso il sistema di segnalazione o direttamente all amministrazione o al supporto. Le conversazioni nella chat o altre comunicazioni non saranno prese in considerazione.</span>';
+
+$_Lang['Rules_4_3']              = 
+'<b class="float">4.3.1.</b><span class="float">Tutti i messaggi SPAM e pubblicitari senza il consenso dei proprietari o dell amministrazione sono severamente vietati.</span><br/>
+<b class="float">4.3.2.</b><span class="float">Se più persone partecipano ad una campagna di SPAM o pubblicità, saranno penalizzati</span><br/>
+<b class="float">4.3.3.</b><span class="float">Tutti i messaggi destinati a pubblicizzare i propri giochi, siti Web, blog, forum e contenenti anche link di riferimento sono considerati SPAM.</span><br/>
+<b class="float">4.3.4.</b><span class="float">L invio ripetuto di messaggi vuoti (ad esempio contenente solo un carattere) o non pertinenti (contenente una stringa accidentale di caratteri) è considerato SPAM.</span><br/>
+<b class="float">4.3.5.</b><span class="float">Si considera SPAM le comunicazioni di massa, sonde spia ed altre flotte (per compilare l elenco delle flotte volanti o la finestra dei messaggi del giocatore).</span>';
+
+$_Lang['Rules_5']                = 
+'<b class="float">5.1.</b><span class="float">Eventuali extra pagati che il giocatore può acquistare per l account a lui concesso non sono rimborsabili in caso di violazione delle regole del Regolamento.</span><br/>
+<b class="float">5.2.</b><span class="float">In caso di guasto o blocco dell accesso al gioco, i proprietari o l amministrazione del gioco <b> possono </ b>, ma non necessariamente, ordinare la concessione gratuita del risarcimento per alcune o tutte le quote perse.</span><br/>
+<b class="float">5.3.</b><span class="float">Tutti i pagamenti effettuati non saranno rimborsati, anche se elimini il tuo account.</span><br/>
+<b class="float">5.4.</b><span class="float">Tutti i reclami o problemi con pagamenti o aggiunte a pagamento devono essere segnalati alla Gestione del gioco.</span>';
+
+
+$_Lang['Rules_6']                = 
+'<b class="float">6.1.</b><span class="float">Tutti i contenuti pubblicati nel gioco non possono violare la legge, non possono violare le regole dell etica e non devono violare i principi della cultura personale.</span><br/>
+<b class="float">6.2.</b><span class="float">Qualsiasi penalità imposta sul Account del giocatore può essere data senza fornire una spiegazione dai proprietari e dall amministrazione del gioco.</span><br/>
+<b class="float">6.3.</b><span class="float">Solo i proprietari, l amministrazione e il supporto del gioco a determinare se un giocatore ha violato un determinato punto dei regolamenti.</span><br/>
+<b class="float">6.4.</b><span class="float">La decisione del Supporto può essere contestata dall Amministrazione e la decisione dell Amministrazione da parte dei Proprietari del Gioco. Solo la persona che ha imposto la punizione o la posizione più elevata può rimuovere o mitigare la sanzione concessa.</span><br/>
+<b class="float">6.5.</b><span class="float">Se il giocatore scopre che la penalità che gli è stata assegnata è ingiusta, può presentare ricorso contattando il proprietario del gioco.</span><br/>
+<b class="float">6.6.</b><span class="float">Se una regola non è inclusa in questi regolamenti, la questione viene risolta in ultima analisi dai proprietari o dall amministrazione del gioco.</span><br/>';
+
+?>

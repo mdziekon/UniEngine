@@ -1,0 +1,20 @@
+<?php
+
+$_Lang ['No_Data'] = 'Nessun dato';
+$_Lang ['No_id_given'] = 'La voce con l ID specificato non esiste!';
+
+$_Lang ['InfiniteVacation'] = 'Vacanza infinita';
+$_Lang ['Ban_Expired'] = 'Ban scaduto';
+$_Lang ['Ban_TimeLeft'] = 'Rimanente';
+$_Lang ['Ban_expired'] = 'Ban scaduto!';
+
+$_Lang ['_ago'] = 'fa';
+$_Lang ['_day'] = 'giorno';
+$_Lang ['_days'] = 'giorni';
+$_Lang ['_today'] = 'Oggi';
+$_Lang ['_yesterday'] = 'Ieri';
+$_Lang ['_Since'] = 'Da';
+$_Lang ['_Untill'] = 'Fino';
+$_Lang ['_Duration'] = 'Durata';
+
+?>

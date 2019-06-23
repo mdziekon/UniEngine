@@ -1,0 +1,44 @@
+<?php
+
+$_Lang ['Title'] = 'I tuoi appunti';
+$_Lang ['Title_EditRow'] = 'Modifica nota';
+$_Lang ['Title_AddRow'] = 'Aggiungi nota';
+
+$_Lang ['Link_AddNote'] = 'Aggiungi una nuova nota';
+
+$_Lang ['Headers_Title'] = 'Oggetto';
+$_Lang ['Headers_Date'] = 'Data aggiunta';
+$_Lang ['Headers_Priority'] = 'Priorità';
+$_Lang ['Headers_Text'] = 'Contenuto';
+$_Lang ['Headers_Limit'] = 'Limite';
+
+$_Lang ['Info_NoRows'] = 'Nessuna nota';
+$_Lang ['Info_SelectAll'] = 'Seleziona / deseleziona tutto';
+
+$_Lang ['Priority_1'] = 'Basso';
+$_Lang ['Priority_2'] = 'Media';
+$_Lang ['Priority_3'] = 'Alto';
+
+$_Lang ['Action_DeleteSelected'] = 'Elimina selezionato';
+$_Lang ['Action_DeleteAll'] = 'Elimina tutto';
+$_Lang ['Action_Cancel'] = 'Torna indietro';
+$_Lang ['Action_Save'] = 'Salva';
+$_Lang ['Action_Submit'] = 'Esegui';
+
+$_Lang ['JS_Confirm'] = 'Sei sicuro di voler eliminare tutte le note?';
+
+$_Lang ['Errors_BadIDGiven'] = 'ID non valido inserito!';
+$_Lang ['Errors_IDNoExist'] = 'Questa nota non esiste!';
+$_Lang ['Errors_NoteNotYour'] = 'Non puoi visualizzare questa nota!';
+$_Lang ['Errors_TitleEmpty'] = 'Il titolo non può essere vuoto!';
+$_Lang ['Errors_BadPriority'] = 'Priorità errata!';
+$_Lang ['Errors_TextEmpty'] = 'Il contenuto non può essere vuoto!';
+$_Lang ['Errors_NothingToDelete'] = 'Nessuna nota da eliminare!';
+$_Lang ['Errors_NothingDeleted'] = 'Nulla è stato cancellato!';
+
+$_Lang ['Msg_EditSuccess'] = 'Le modifiche sono state salvate correttamente!';
+$_Lang ['Msg_AddSuccess'] = 'Nota salvata correttamente!';
+$_Lang ['Msg_DeleteAllSuccess'] = 'Le note sono state cancellate!';
+$_Lang ['Msg_DeleteSelectedSuccess'] = 'Le note selezionate sono state cancellate!';
+
+?>

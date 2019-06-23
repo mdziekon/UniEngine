@@ -1,0 +1,44 @@
+<?php
+
+
+$_Lang ['Title'] = 'Report';
+$_Lang ['Table_title'] = 'Invia rapporto';
+
+$_Lang ['Report_type'] = 'Tipo di rapporto';
+$_Lang ['Type_user_badmsg'] = 'Messaggio dal giocatore che infrange le regole';
+$_Lang ['Type_user_bash'] = 'Infrazione della regola di Bash';
+$_Lang ['Type_user_push'] = 'Infrazione della regola push';
+$_Lang ['Type_user_other'] = 'Infrazione di un altro giocatore';
+$_Lang ['Type_sys_badmsg'] = 'Errore di sistema messaggio';
+$_Lang ['Type_sys_error'] = 'Errore del sistema di gioco';
+$_Lang ['Type_mail_smtp'] = 'Errore nella modifica dell indirizzo email';
+$_Lang ['Type_other'] = 'Altro';
+$_Lang ['Type_user_badmsg_chat'] = 'Un messaggio di chat infrangere le regole';
+
+
+$_Lang['Additional_info']        = 'Istruzioni aggiuntive<br/><span style="font-size: 70%">(Se vengono dati, per favore seguili)</span>';
+$_Lang['add_info_none']          = 'Nessuna istruzione aggiuntiva';
+$_Lang['add_info_bash']          = '1. Inserisci l ora degli attacchi <br/> 2. Inserisci le coordinate del pianeta attaccato';
+$_Lang['add_info_push']          = '1. Fornire l ora di ricevimento delle materie prime <br/> 2. Inserisci le coordinate del pianeta del giocatore <br/> 3. Inserisci la quantità di materie prime <br/> 4. Fornire l ora di restituzione delle materie prime';
+$_Lang['add_info_user_other']    = '1. Specificare il tipo di reato (preferibilmente un punto di infrazione del Regolamento) <br/> 2. Fornire informazioni accurate sull offesa del giocatore';
+$_Lang['add_info_sys_badmsg']    = '1. Immettere il tipo di messaggio <br/> 2. Inserisci le circostanze dell evento (dopo quale azione hai ricevuto il messaggio) <br/> 3. Si prega di indicare se ci sono state ulteriori complicazioni';
+$_Lang['add_info_sys_error']     = '1. Fornire una descrizione accurata e dettagliata dell errore';
+$_Lang['add_info_user_badmsg']   = '(Opzionale) <br/> 1. Per favore inserisci il primo di questi messaggi <br/> 2. In caso contrario, inserisci dove hai già ricevuto tali messaggi da questo lettore (Chat, PW)';
+
+$_Lang['Report_Username']    = 'Nickname del giocatore<br/><span style="font-size: 70%">(Se la voce riguarda un giocatore)</span>';
+
+$_Lang['User_info']          = 'Ulteriori informazioni<br/><span style="font-size: 70%">(Inserisci eventuali informazioni aggiuntive)</span>';
+
+$_Lang['Send_report']        = 'Invia il rapporto';
+
+
+$_Lang ['Error_badtype'] = 'Tipo di rapporto errato!';
+$_Lang ['Error_nousername'] = 'Devi inserire il nome del giocatore che stai segnalando!';
+$_Lang ['Error_username_signs'] = 'Il nome del giocatore dato contiene caratteri proibiti!';
+$_Lang ['Error_user_noexists'] = 'Il giocatore specificato non esiste!';
+$_Lang ['Error_no_info_given'] = 'Devi fornire ulteriori informazioni che sono elencate nelle Istruzioni!';
+$_Lang ['Error_no_element_given'] = 'L ID dell articolo che viene segnalato non è fornito! <br/> <span style = "font-size: 70%"> (Se non hai mixato nulla nel link, segnalalo come errore di sistema) </span> ';
+
+$_Lang ['Report_sent'] = 'Il rapporto è stato inviato!';
+
+?>

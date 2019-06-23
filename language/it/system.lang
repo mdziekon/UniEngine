@@ -1,0 +1,163 @@
+<?php
+
+$_Lang['user_level'] = array
+(
+	'0' => 'Giocatore',
+	'20' => 'ForumTeam',
+	'50' => 'Operatore di gioco (GO)',
+	'70' => 'Super Game Operator (SGO)',
+	'90' => 'Game Administrator',
+	'100' => 'Game Administrator',
+	'110' => 'Sviluppatore del gioco',
+	'120' => 'Proprietario del gioco',
+);
+
+$_Lang['Pagination_Prev'] = '&#171; Precedente';
+$_Lang['Pagination_Next'] = 'Successiva &#187;';
+
+$_Lang['Chrono_Day1'] = 'giorno';
+$_Lang['Chrono_DayM'] = 'giorni';
+
+$_Lang['FatalError_PlanetRowEmpty'] = 'Errore fatale! Nessun dato su pianeta madre! <br/> Si prega di segnalarlo all Amministrazione!';
+$_Lang['ServerStart_NotReached'] = 'Questo server di gioco verrà lanciato <b class="lime">% s </b> alla volta <b class="lime">% s </b>! <br/> Finché non inizi a giocare, puoi invitare i tuoi amici dal Referrer Link ... ';
+
+
+$_Lang['ServerIsClosed'] = 'Il server è stato disabilitato dall Amministrazione!';
+$_Lang['NonActiveBlock'] = '<b class="orange"> Per poter continuare il gioco, devi attivare il tuo account tramite il link di attivazione ricevuto in EMail News! </b> <br/> Se il tuo account rimane inattivo per 7 giorni dalla data di registrazione, verrà rimosso dal sistema !';
+
+$_Lang['PlanetList_MoonSign'] = 'Luna';
+$_Lang['PlanetList_MoonChar'] = 'M';
+$_Lang['PlanetList_TypeChange_Sign_M'] = 'M';
+$_Lang['PlanetList_TypeChange_Sign_P'] = 'P';
+$_Lang['PlanetList_TypeChange_Title_M'] = 'Vai sulla luna';
+$_Lang['PlanetList_TypeChange_Title_P'] = 'Vai al pianeta';
+
+$_Lang['YouHaveToVoteInSurveys'] = 'Il sistema ha rilevato che non hai ancora votato per uno (o più) sondaggi obbligatori attualmente attivi. <br/> Il sistema ti porterà automaticamente alla scheda "Sondaggi", dove ti verrà chiesto di votare. <br/> <br/> A per continuare il gioco, devi votare tutti i sondaggi obbligatori (numero di sondaggi in cui devi esprimere il tuo voto: <span style = "color: red;"> %s </span> ) in cui non hai ancora votato (sono segnati su rosso sulla lista)! <br/> <br/> <a href="polls.php"> In un attimo, il sistema ti condurrà ai Sondaggi (10 secondi), se non vuoi aspettare, fai clic su ... </a> ';
+$_Lang['SystemInfo'] = 'Messaggio di sistema';
+$_Lang['Cannot_usethis_till_logged'] = 'Non puoi usare questa funzione quando sei loggato!';
+$_Lang['User_Deleted'] = 'Giocatore rimosso';
+$_Lang['Planet_Deleted'] = 'Pianeta rimosso';
+$_Lang['Moon_Deleted'] = 'Luna rimossa';
+$_Lang['RulesAcceptBox_CantUseFunction'] = 'Non è possibile utilizzare questa funzione finché non si accettano i nuovi regolamenti!';
+
+$_Lang['Symbols_Planet'] = 'P';
+$_Lang['Symbols_Moon'] = 'M';
+
+$_Lang['BR_Target_1'] = 'Pianeta';
+$_Lang['BR_Target_3'] = 'Luna';
+$_Lang['no_loses_in_defence'] = 'Nessuna perdita in difesa';
+$_Lang['nothing_have_been_rebuilt'] = 'Niente è stato ricostruito';
+$_Lang['moon_has_been_destroyed'] = 'La luna è stata distrutta!';
+
+$_Lang['Old_username_is'] = 'Precedentemente conosciuto come';
+$_Lang['ThisPageOnlyForPro'] = 'Questa funzione è disponibile solo per i titolari di <a href="aboutpro.php"> account Pro </a>!';
+$_Lang['ProAccount'] = 'Account Pro';
+
+
+$_Lang['YouAreNotLogged'] = 'Non sei collegato <br/> <a href="login.php" target="_top"> login </a>!!';
+$_Lang['NotLoggedTitle'] = 'Sistema';
+$_Lang['Title_System'] = 'Sistema';
+$_Lang['BattleReport_title'] = 'Rapporto di guerra';
+$_Lang['BattleConverter_title'] = 'LiteConverter - Convertitore di report';
+$_Lang['Main_page'] = '<br/> <a href="login.php"> Home </a>';
+$_Lang['Kicked_by_badIP'] = 'Sei stato buttato fuori a causa dell IP modificato!'.$_Lang['Main_page'].'<br/><br/><span style="color: red;">Nota!</span><br/>Se entrate nel sistema senza interruzioni grazie al vostro IP dinamico, è possibile scrivere una richiesta sul Forum per disattivare questa opzione per il tuo account in questa discussione:<br/><a href="redirect.php?id=1" target="_blank"> clicca qui</a>';
+$_Lang['You_have_been_kicked'] = 'Sei stato cacciato da parte dell amministratore'.$_Lang['Main_page'];
+
+$_Lang['GameBlock_CookieStyle'] = 'Sei stato bloccato dal gioco <br/> Se non si conosce il motivo del blocco, contattare l amministratore del gioco!';
+$_Lang['Game_blocked_for_this_IP'] = 'Sei stato bloccato dal gioco <br/> Se non si conosce il motivo del blocco, contattare l amministratore del gioco!';
+$_Lang['Hacking_attempt'] = "È stato rilevato un tentativo di intrusione o di frode! L'amministratore è stato avvisato!";
+$_Lang['Warning'] = 'Warning';
+
+$_Lang['BattleReport_DoesntExist'] = 'Questo rapporto non esiste!';
+$_Lang['BattleReport_NoIDGiven'] = 'ID rapporto non fornito!';
+$_Lang['BattleReportReader_CannotRead'] = 'Non puoi leggere questo rapporto!';
+$_Lang['BattleReportReader_deleted'] = 'Questo rapporto è già stato cancellato';
+$_Lang['BattleReportReader_notyour'] = 'Questo rapporto può essere visualizzato solo dal link condiviso';
+$_Lang['BattleReportConverter_CannotConvert'] = 'Non puoi convertire questo rapporto!';
+$_Lang['BattleReportReader_FatalError'] = 'Si è verificato un errore durante la lettura del corso del combattimento! <br/> Contatta Amministrazione!';
+
+$_Lang['sys_moon'] = "Luna";
+$_Lang['sys_error'] = "Errore";
+$_Lang['sys_mess_attack_report'] = "Rapporto di guerra";
+
+$_Lang['sys_attacker_won'] = "L'aggressore ha vinto la battaglia!";
+$_Lang['sys_defender_won'] = "Il difensore ha vinto la battaglia!";
+$_Lang['sys_both_won'] = "La battaglia finì senza una risoluzione, le flotte tornarono ai loro pianeti nativi!";
+$_Lang['sys_stealed_ressources'] = "Toglie %s unita %s, %s unita %s i %s unita %s.";
+$_Lang['sys_rapport_build_time'] = "Tempo di generazione del rapporto: %s s.";
+
+$_Lang['sys_mess_destruc_report'] = "Rapporto sulla distruzione";
+$_Lang['sys_mess_defense_report'] = "Rapporto di difesa";
+$_Lang['sys_mess_rebuilt_def'] = 'Ricostruisci sistema difensivo';
+
+$_Lang['sys_colo_defaultname'] = "Colonia";
+$_Lang['sys_gain'] = "Profitti";
+$_Lang['sys_perte_attaquant'] = "Aggressore perso";
+$_Lang['sys_perte_defenseur'] = "Il difensore ha perso";
+$_Lang['sys_debris'] = "Detriti";
+$_Lang['sys_noaccess'] = "Accesso negato";
+$_Lang['sys_noalloaw'] = "Non hai il permesso di vedere questa pagina";
+
+$_Lang['sys_MIP_sending_planet'] = 'pianeti';
+$_Lang['sys_MIP_sending_moon'] = 'luna';
+$_Lang['sys_MIP_attacked_planet'] = 'pianeta';
+$_Lang['sys_MIP_attacked_moon'] = 'luna';
+
+
+// Fleet Blockade Box
+$_Lang['FleetBlockBox_Text'] = '<acronym style="cursor: pointer;" title="Questo sistema si attiva in caso di crash o manutenzione del server e lavori di manutenzione! Per ulteriori informazioni sul forum.">Il Sistema di blocco della flotta</acronym> è stato attivato, il blocco verrà rimosso su <i>%s</i>';
+$_Lang['FleetBlockBox_Title'] = 'Sistema di blocco della flotta';
+$_Lang['FleetBlockBox_UserUnderProtection'] = 'Questo giocatore è ancora sotto la protezione del Sistema di blocco della flotta! <br/> Per i giocatori inattivi il blocco verrà rimosso su <i>%s</i>';
+$_Lang['FleetBlockBox_Total'] = 'Tutti i movimenti della flotta sono bloccati!';
+$_Lang['FleetBlockBox_OnlyAgressive'] = 'Sono state bloccate solo flotte aggressive (attacchi e spionaggio).';
+
+
+// SmartFleetBlockade
+$_Lang['SFB_BoxTitle'] = 'Blocco flotta intelligente';
+$_Lang['SFB_Stop_GlobalBlockade'] = 'Non puoi inviare questa flotta perché il blocco flotta globale è attivo!';
+$_Lang['SFB_Stop_GlobalPostBlockade'] = 'Non è possibile inviare la flotta, perché il giocatore è protetto <br/> Questo blocco è stato rimosso quando un giocatore accede al gioco o quando sono scaduti i termini <br/>(%s)';
+$_Lang['SFB_Stop_UserBlockade'] = 'Non è possibile inviare la flotta, perché il giocatore è coperto da scambio flotte <br/> (da %s fino a %s) <br/> motivo del blocco: %s';
+$_Lang['SFB_Stop_UserBlockadeOwn'] = 'Non è possibile inviare la flotta, perché il giocatore è coperto da scambio flotte <br/> (da %s fino a %s) <br/> motivo del blocco: %s';
+$_Lang['SFB_Stop_PlanetBlockade_Planet'] = 'Non è possibile inviare la flotta, perché il giocatore è coperto da scambio flotte <br/> (da %s fino a %s) <br/> motivo del blocco: %s';
+$_Lang['SFB_Stop_PlanetBlockade_Moon'] = 'Non è possibile inviare la flotta, perché il giocatore è coperto da scambio flotte <br/> (da %s fino a %s) <br/> motivo del blocco: %s';
+$_Lang['SFB_Stop_PlanetBlockadeOwn_Planet'] = 'Non è possibile inviare la flotta, perché il giocatore è coperto da scambio flotte <br/> (da %s fino a %s) <br/> motivo del blocco: %s';
+$_Lang['SFB_Stop_PlanetBlockadeOwn_Moon'] = 'Non è possibile inviare la flotta, perché il giocatore è coperto da scambio flotte <br/> (da %s fino a %s) <br/> motivo del blocco: %s';
+$_Lang['SFB_Stop_LearnMore'] = '<hr>Per saperne di più sul sistema di blocco flotte intelligente, andare <a href="redirect.php?id=5" target="_blank"><u> qui </u> </a> ';
+$_Lang['SFB_Stop_ReasonNotGiven'] = '- nessun motivo fornito -';
+
+$_Lang['Vacation'] = 'Vacanza';
+$_Lang['VacationMode'] = 'Lascia la modalità vacanza';
+$_Lang['Vacation_WarnMsg'] = 'Non puoi usare questa funzione mentre sei in vacanza!';
+$_Lang['VacationTill'] = 'Hai una vacanza attiva <br> che deve durare almeno fino a quando almeno %s <br/> <a href = "logout.php"> Logout </a>!';
+$_Lang['VacationSetOff'] = '<br/><br/><span style="color: orange;">Se si desidera disattivare la modalita vacanza  </span> <a href="settings.php"> clicca QUI </a> ';
+$_Lang['When_full_store'] = 'Magazzino pieno:';
+$_Lang['Store_Status'] = 'Stato magazzino:';
+$_Lang['full_in'] = 'tra';
+$_Lang['full'] = 'Completo';
+$_Lang['income_no_mine'] = '<span class = "red"> Nessuna miniera </span>';
+$_Lang['income_vacation'] = '<span class = "orange"> Lascia la modalità vacanza</ span>';
+$_Lang['income_minus'] = '<span class = "red"> Estrazione negativa </ span>';
+$_Lang['Store_status_Full'] = '<span class = "red"> Pieno </ span>';
+$_Lang['Store_status_Overload'] = '<span class = "red"> Sovraccarico </ span>';
+$_Lang['Store_status_NearFull'] = '<span class = "orange"> Quasi pieno </ span>';
+$_Lang['Store_status_OK'] = '<span class = "lime"> OK </ span>';
+$_Lang['Store_status_Empty'] = '<span class = "orange"> Vuoto </ span>';
+
+$_Lang['your_planet'] = 'il tuo pianeta';
+$_Lang['your_moon'] = 'la tua luna';
+$_Lang['to_your_planet'] = 'il tuo pianeta';
+$_Lang['to_your_moon'] = 'la tua luna';
+$_Lang['to_planet'] = 'pianeta';
+$_Lang['to_moon'] = 'luna';
+$_Lang['from_planet'] = 'pianeti';
+$_Lang['from_moon'] = 'luna';
+$_Lang['on_planet'] = 'pianeta';
+$_Lang['on_moon'] = 'luna';
+$_Lang['to_this_planet'] = 'questo pianeta';
+$_Lang['to_this_moon'] = 'questa luna';
+$_Lang['on_this_planet'] = 'questo pianeta';
+$_Lang['on_this_moon'] = 'questa luna';
+$_Lang['your_planet'] = 'il tuo pianeta';
+$_Lang['your_moon'] = 'la tua luna';
+
+?>

@@ -1,0 +1,126 @@
+<?php
+
+// UserMenu Links
+$_Lang['Multiverse']			= '<b>'.(isset($_GameConfig) ? $_GameConfig['game_name'] : '').'</b> Uni';
+$_Lang['Overview']				= 'Riepilogo';
+$_Lang['Buildings']				= 'Edifici';
+$_Lang['Research']				= 'Ricerca';
+$_Lang['Shipyard']				= 'Cantiere Spaziale';
+$_Lang['Defense']				= 'Difese';
+$_Lang['GalacticShop']			= 'Store';
+$_Lang['RefTable']				= 'Giocatori Consigliati';
+$_Lang['AboutPro']				= 'Account Pro';
+$_Lang['Officers']				= 'Ufficiali';
+$_Lang['MerchantLink']			= 'Commerciante';
+$_Lang['AttacksList']			= 'Elenco di attacchi';
+$_Lang['Resources']				= 'Monitor Risorse';
+$_Lang['Empire']				= 'Il mio Impero';
+$_Lang['Merchant']				= 'Mercante';
+$_Lang['Annonces']				= 'Annunci';
+$_Lang['Technology']			= 'Albero Tecnologico';
+$_Lang['Galaxy']				= 'Galassia';
+$_Lang['Fleet']					= 'Gestione Flotta';
+$_Lang['Tasks']					= 'Obiettivi';
+$_Lang['Alliance']				= 'Alleanza';
+$_Lang['Chat']					= 'Chat';
+$_Lang['Statistics']			= 'Statistiche';
+$_Lang['Search']				= 'Cerca giocatore';
+$_Lang['blocked']				= 'Bannato';
+$_Lang['Records']				= 'Records nel server';
+$_Lang['Messages']				= 'Messaggi';
+$_Lang['Notes']					= 'Note';
+$_Lang['multi']					= 'Giocatore multi IP';
+$_Lang['Board']					= 'Forum';
+$_Lang['Contact']				= 'Contatti';
+$_Lang['Options']				= 'Impostazioni';
+$_Lang['Logout']				= 'Logout';
+$_Lang['Rules']					= 'Regolamento';
+$_Lang['Simulator']				= 'Simulatore battaglia';
+$_Lang['RocketSimulator']		= 'Simulatore missilistico';
+$_Lang['MoonSimulator']			= 'Simulatore Luna';
+$_Lang['Disassembler']			= 'Disassemblatore';
+$_Lang['devlp']					= 'Sviluppo';
+$_Lang['navig']					= 'Navigazione';
+$_Lang['observ']				= 'Osservatorio';
+$_Lang['PremiumZone']			= 'Zona Premium';
+$_Lang['Simulators']			= 'Simulatori';
+$_Lang['commun']				= 'Comunicazione';
+$_Lang['infog']					= 'Informazioni';
+$_Lang['Teleport']				= 'Teletrasporto';
+
+// Menu link titles
+
+$_Lang['OverviewTitle']			= 'Riepilogo Pianeta';
+$_Lang['BuildingsTitle']		= 'Espansione del Pianeta';
+$_Lang['LabTitle']				= 'Centro di ricerca';
+$_Lang['ShipyardTitle']			= 'Centro di costruzione navale';
+$_Lang['DefenseTitle']			= 'Centro difese del pianeta';
+$_Lang['OfficersTitle']			= 'Gestione degli ufficiali';
+$_Lang['AllyTitle']				= 'Centro Alleanze';
+$_Lang['AllyChat_Title']		= 'Chat alleanza';
+$_Lang['FleetTitle']			= 'Centro gestione flotta';
+$_Lang['MsgTitle']				= 'Centro messaggi';
+$_Lang['MsgWriteTitle']			= 'Scrivi un messaggio';
+$_Lang['GalaxyTitle']			= 'Vista della galassia';
+$_Lang['EmpireTitle']			= 'Anteprima Impero';
+$_Lang['ResourcesTitle']		= 'Gestione estrazione risorse';
+$_Lang['TechTitle']				= 'Base Technologica';
+$_Lang['RecordsTitle']			= 'Tabella dei record';
+$_Lang['StatsTitle']			= 'Tabella delle statistiche';
+$_Lang['SearchTitle']			= 'Ricerca universale';
+$_Lang['BannedTitle']			= 'Elenco giocatori bannati';
+$_Lang['BoardTitle']			= 'Forum di gioco';
+$_Lang['AddDeclareTitle']		= 'Segnalazione di un gioco da un IP da parte di multi-player';
+$_Lang['ChangeLogTitle']		= 'Cambia registro e informazioni sul server';
+$_Lang['MerchantTitle']			= 'Commercio con le tue materie prime';
+$_Lang['AnounceTitle']			= 'Scambia le tue materie prime per lo scambio';
+$_Lang['GalacticShopTitle']		= 'Hai bisogno di ulteriori miglioramenti per il tuo account! Guarda qui!';
+$_Lang['RefTableTitle']			= 'Controlla lo stato del comando dei tuoi amici';
+$_Lang['AboutProTitle']			= 'Scopri cosa ti offre l account Pro';
+$_Lang['SimulatorTitle']		= 'Ricalcola il risultato della lotta futura per ridurre il rischio di perdita della flotta!';
+$_Lang['RocketSimulatorTitle']	= 'Metti alla prova le tue opzioni nel distruggere lune ostili!';
+$_Lang['MoonSimulatorTitle']	= 'Metti alla prova le tue possibilità nel distruggere lune ostili!';
+$_Lang['DisassemblerTitle']		= 'Non hai più bisogno di un unità? Smontali!';
+$_Lang['AttacksListTitle']		= 'Controlla quante volte hai attaccato i giocatori oggi';
+$_Lang['TeleportTitle']			= 'Usa teletrasporto';
+$_Lang['TasksTitle']			= 'Controlla attività attive e completate';
+$_Lang['changelogandinfo']		= 'Cambia registro e informazioni sul server';
+
+// AdminPanel Menu
+
+$_Lang['Head_Overview']			= 'Panoramica server';
+$_Lang['Head_Settings']			= 'Impostazioni server';
+$_Lang['Head_Management']		= 'Gestione server';
+$_Lang['Head_Analysis']			= 'Sistemi analitici';
+$_Lang['Head_ScriptNAutomatics'] = 'Script e automazione';
+$_Lang['ACP_QuickOverview']		= 'Anteprima rapida';
+$_Lang['ACP_UserList']			= 'Elenco dei giocatori';
+$_Lang['ACP_IPLog']				= 'Browser IP';
+$_Lang['ACP_FleetControl']		= 'Controlla il traffico flotta';
+$_Lang['ACP_MessagesList']		= 'Elenco notizie';
+$_Lang['ACP_ChatBrowser']		= 'Archivi chat';
+$_Lang['ACP_Reports_MultiACC']	= 'Reports MultiAccount';
+$_Lang['ACP_Reports_User']		= 'Reports Users';
+$_Lang['ACP_AlertsList']		= 'Avvisi di sistema';
+$_Lang['ACP_SQLErrors']			= 'Elenco di errori SQL';
+$_Lang['ACP_GeneralSettings']	= 'Configurazione generale';
+$_Lang['ACP_SmartFleetBlockade'] = 'Sistema di blocco della flotta';
+$_Lang['ACP_UserManagement']	= 'Gestione giocatori';
+$_Lang['ACP_Planets_ResManager'] = 'Gestione del pianeta';
+$_Lang['ACP_MassMessage']		= 'Messaggio Broadcast';
+$_Lang['ACP_MoonAddition']		= 'Formazione Lunare';
+$_Lang['ACP_AddProxy']			= 'Aggiungi ProxyIP';
+$_Lang['ACP_BanUser']			= 'Banna utente';
+$_Lang['ACP_ReduceBan']			= 'Modifica Ban';
+$_Lang['ACP_UnbanUser']			= 'Rimuovi Ban';
+$_Lang['ACP_UserAnalysis']		= 'Analizza utente';
+$_Lang['ACP_BashDetector']		= 'Rilevazione Bash';
+$_Lang['ACP_Telemetry']			= 'Telemetria sistema';
+$_Lang['ACP_ScriptsList']		= 'Elenco di script';
+$_Lang['ACP_StatBuilder']		= 'Statistiche di conversione';
+$_Lang['ACP_AccessLogPacker']	= 'Log accessi';
+$_Lang['ACP_GarbageCollector']	= 'GarbageCollector';
+$_Lang['ACP_GoBack']			= 'Torna Indietro';
+$_Lang['ACP_BansList']			= 'Lista ban';
+
+?>

@@ -1,0 +1,19 @@
+<?php
+
+$_Lang['empire_vision']	= "Riepilogo Impero";
+$_Lang['name'] = "Nome";
+$_Lang['coordinates'] = "Coordinate";
+$_Lang['fields'] = "Campi";
+$_Lang['resources'] = "Risorse";
+$_Lang['metal'] = "Metallo";
+$_Lang['crystal'] = "Cristallo";
+$_Lang['deuterium'] = "Deuterio";
+$_Lang['energy'] = "Energia";
+$_Lang['buildings'] = "Edifici";
+$_Lang['ships'] = "Navi";
+$_Lang['defense'] = "Difese";
+
+$_Lang['ShowPlanets'] = 'Pianeti';
+$_Lang['ShowMoons'] = 'Lune';
+
+?>

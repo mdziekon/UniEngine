@@ -1,0 +1,225 @@
+<?php
+
+$_Lang['Title']                         = 'Shop';
+
+$_Lang['DarkEnergyStatusIs']            = 'Unità di Energia Oscura che possiedi';
+
+$_Lang['BuyDarkEnergy']                 = 'Compra Energia Oscura';
+$_Lang['BuyItems']                      = 'Spendi la tua Energia Oscura';
+$_Lang['FreePremiumItems']              = 'Regali Ricevuti';
+
+$_Lang['NoJavaScript_Warning']          = 'Avvertimento! Sembra che il tuo browser stia bloccando il caricamento dei file JavaScript! <br/> Per visualizzare correttamente questa pagina, assicurati di avere il supporto JavaScript abilitato e qualsiasi componente aggiuntivo per il blocco dei contenuti (ad esempio NoScript, blocco annunci) aggiunga eccezioni appropriate .';
+
+// DarkEnergy Form
+$_Lang['ErrorSQL']                      = 'Errore sconosciuto!';
+$_Lang['AddSuccess']                    = 'Abbiamo aggiunto <i>%s</i> di Energia Oscura al tuo account!';
+$_Lang['_Added5DEUnits']                = '5 unità';
+$_Lang['_Added15DEUnits']               = '15 unità';
+$_Lang['_Added25DEUnits']               = '25 unità';
+$_Lang['_Added45DEUnits']               = '45 unità';
+$_Lang['_Added10DEUnits']               = '10 unità';
+$_Lang['_Added30DEUnits']               = '30 unità';
+$_Lang['_Added50DEUnits']               = '50 unità';
+$_Lang['_Added90DEUnits']               = '90 unità';
+
+
+$_Lang ['ErrorNoItemIDGiven'] = "Non hai fornito un oggetto da acquistare!";
+$_Lang ['ErrorTooMuchItemIDGiven'] = "Puoi solo un articolo alla volta!";
+$_Lang ['ErrorCurrentlyNothingToSell'] = "Siamo spiacenti, ma attualmente non c'è nulla da acquistare!";
+$_Lang ['ErrorBadIDGiven'] = "Articolo non valido dato!";
+$_Lang ['ErrorNotBuyable'] = 'Non puoi acquistare questo oggetto!';
+$_Lang ['ErrorNoEnoughDE'] = "Non hai abbastanza energia oscura!";
+$_Lang ['ErrorConfigError'] = "Si è verificato un errore di sistema (#0001), segnalalo all'amministrazione!";
+$_Lang ['ErrorNoQuery'] = "Si è verificato un errore di sistema (#0002), segnalalo all'amministrazione!";
+$_Lang ['ErrorNoPlanetID'] = "Si è verificato un errore di sistema (#0003), segnalalo all'amministrazione!";
+$_Lang ['ErrorAddFieldsNoMoon'] = "I campi aggiuntivi possono essere acquistati solo per i pianeti!";
+$_Lang ['ErrorCanBuyOnly3Planets'] = "Non puoi acquistare altri spazi di colonizzazione!";
+$_Lang ['CannotBuyItAnymore'] = "Non puoi più acquistarlo!";
+
+$_Lang ['ProAccountExtended'] = "L'account Pro è stato esteso!";
+$_Lang ['ProAccountAdded'] = "L'account Pro è stato acquistato!";
+$_Lang ['PlanetFieldsAdded'] = "I campi aggiuntivi sono stati aggiunti al tuo pianeta!";
+$_Lang ['SpyJamAdd'] = "I sistemi di spionaggio Jamming sono stati affittati!";
+$_Lang ['SpyJamExt'] = "Il tempo di affitto dei sistemi di spionaggio Jamming è stato esteso!";
+$_Lang ['GeologistAdd'] = "Hai ingaggiato un Geologo!";
+$_Lang ['GeologistExt'] = "Hai esteso il tuo contratto con il tuo Geologo!";
+$_Lang ['EngineerAdd'] = "Hai assunto un Meccanico!";
+$_Lang ['EngineerExt'] = "Hai esteso il tuo contratto con il tuo Meccanico!";
+$_Lang ['AdmiralAdd'] = "Hai ingaggiato un Ammiraglio!";
+$_Lang ['AdmiralExt'] = "Hai esteso il tuo contratto con il tuo Ammiraglio!";
+$_Lang ['TechnocratAdd'] = "Hai ingaggiato uno Scienziato!";
+$_Lang ['TechnocratExt'] = "Hai esteso il tuo contratto con il tuo Scienziato!";
+$_Lang ['PlanetBought'] = "Hai acquistato uno slot di colonizzazione aggiuntivo! <br/> Puoi acquistarne altri %s !";
+$_Lang ['PlanetBoughtLast'] = "Hai acquistato uno slot di colonizzazione aggiuntivo! <br/><b style=\"color: red;\"> Hai acquistato tutti gli slot disponibili! </ B>";
+$_Lang ['TraderUsesBought'] = 'Hai acquistato %s transazioni con il Commerciante!';
+
+$_Lang ['PlanetSlots_left'][0] = '2';
+$_Lang ['PlanetSlots_left'][1] = '1';
+
+$_Lang ['ArticleName'] = "Nome";
+$_Lang ['ArticleDesc'] = "Descrizione";
+$_Lang ['ArticleButtom'] = "Costo";
+$_Lang ['DEprice'] = "unità di Energia Oscura";
+$_Lang ['BuyIT'] = "Acquista";
+$_Lang ['GoToBuyPlace'] = "Vai alla pagina di acquisto";
+$_Lang ['AreYouSure'] = "Sei sicuro?";
+$_Lang ['NoItemsOnStock'] = "Nessun articolo in magazzino!";
+
+//Free Stuff
+$_Lang ['FreeText'] = 'Questa pagina contiene un elenco di tutti gli oggetti premium che ti sono stati concessi come regalo (ad esempio completando una missione). Puoi attivarli in qualsiasi momento. <br/> Ricorda però - non puoi mettere in pausa nessuno dei benefici di questi articoli dopo l attivazione!';
+
+$_Lang ['FreeItemName'] = 'Nome';
+$_Lang ['FreeItemGivenBy'] = 'Ricevuto da';
+$_Lang ['FreeItemUse'] = 'Attiva';
+$_Lang ['FreeDuration'] = 'Durata';
+
+$_Lang ['Free_GivenBySys'] = 'Sistema';
+$_Lang ['Free_NoFreeItems'] = 'Nessun regalo assegnato al tuo account.';
+$_Lang ['Free_BadIDGiven'] = 'Dati dati non validi!';
+$_Lang ['Free_BadItemGiven'] = 'Identificatore non valido dato!';
+
+
+
+
+
+$_Lang['shop_items'] = [
+    1 => [
+        'name' => 'Pro Account (7 giorni)',
+        'desc' => '<b>Attiva o estendi il tuo account Pro di 7 giorni<br/>(<a href="aboutpro.php"><u>Leggi i vantaggi dell account Pro qui</u></a>)</b>',
+        'price' => 15,
+        'duration' => false,
+        'duration_days' => 7,
+    ],
+    2 => [
+        'name' => 'Pro Account (25 giorni)',
+        'desc' => '<b>Attiva o estendi il tuo account Pro di 25 giorni<br/>(<a href="aboutpro.php"><u>Leggi i vantaggi dell account Pro qui</u></a>)</b>',
+        'price' => 45,
+        'duration' => false,
+        'duration_days' => 25,
+    ],
+    3 => [
+        'name' => 'Avanzato Terraforming del pianeta',
+        'desc' => '<b>Concede ulteriori 10 campi sul pianeta in cui ti trovi attualmente (non può essere usato sulle lune)</b>',
+        'price' => 15,
+        'duration' => false,
+        'addFields' => 10
+    ],
+    4 => [
+        'name' => 'Sistemi di spionaggio Jamming',
+        'desc' => '<b>- Aumenta la tecnologia di spionaggio di 5 livelli quando qualcuno spia i tuoi pianeti e le tue lune<br/>- Durata: 14 giorni</b>',
+        'price' => 15,
+        'duration' => '14 giorni',
+        'duration_days' => 14
+
+    ],
+    5 => [
+        'name' => 'Assumi un Geologo',
+        'desc' => (
+            'Il geologo è un esperto minerario noto nell intera galassia. Grazie alla loro vasta conoscenza di rocce e minerali sono in grado di guidare lo scavo verso i depositi di risorse più ricche.' .
+            '<br/><br/>' .
+            '<b>- Produzione risorse: +15%<br/>- Durata: 14 giorni</b>'
+        ),
+        'price' => 20,
+        'duration' => '14 giorni',
+        'duration_days' => 14
+    ],
+    6 => [
+        'name' => 'Assumi un Meccanico',
+        'desc' => (
+            'Questo esperto comunemente noto è richiesto da quasi tutti gli imperatori nell universo. Grazie alle loro idee brillanti, i tuoi pianeti potenti sono più efficaci e i tuoi sistemi di difesa sono più suscettibili di essere ricostruiti dopo ogni invasione.' .
+            '<br/><br/>' .
+            '<b>- Produzione Energia +15%<br/>- Possibilità ricostruzione difese: +20%<br/>- Durata: 14 giorni</b>'
+        ),
+        'price' => 20,
+        'duration' => '14 giorni',
+        'duration_days' => 14
+    ],
+    7 => [
+        'name' => 'Assumi un Ammiraglio',
+        'desc' => (
+            'Uno dei migliori comandanti di guerra in tutto l universo. Il loro modo di pensare tattico, la velocità e i metodi operativi non sono secondi a nessuno. Ogni imperatore vuole averli al loro fianco.' .
+            '<br/><br/>' .
+            '<b>- Numero massimo flotte in volo: +2<br/>- Opzioni velocità flotta addizzionali: 120%, 110%, 5%, 2.5%<br/>- Durata: 14 giorni</b>'
+        ),
+        'price' => 20,
+        'duration' => '14 giorni',
+        'duration_days' => 14
+    ],
+    8 => [
+        'name' => 'Assumi uno Scienziato',
+        'desc' => (
+            'Lo Scienziato è la mente più brillante dei nostri tempi. Le loro invenzioni hanno cambiato il corso di molte guerre nel passato. La loro presenza nei vostri laboratori aumenta la produttività di altri scienziati, che vogliono imparare il più possibile da questa grande persona.' .
+            '<br/><br/>' .
+            '<b>- Tempo ricerche: -20%<br/>- Durata: 14 giorni</b>'
+        ),
+        'price' => 20,
+        'duration' => '14 giorni',
+        'duration_days' => 14
+    ],
+    9 => [
+        'name' => 'Slot colonizzazione addizionali',
+        'desc' => '<b>- Capacità di colonizzare un altro pianeta (max. 3)',
+        'price' => 0,
+        'price_array' => [
+            20,
+            35,
+            50,
+            -1
+        ],
+        'duration' => false
+    ],
+    10 => [
+        'name' => 'Quantum Gate',
+        'desc' => '',
+        'price' => 20,
+        'action' => 'redirect',
+        'data' => [
+            'url' => 'buildings.php#b_id_50'
+        ],
+        'duration' => false
+    ],
+    11 => [
+        'name' => 'Pro Account (10 giorni)',
+        'desc' => '',
+        'price' => 30,
+        'duration' => '10 giorni',
+        'duration_days' => 10,
+        'buyable' => false,
+    ],
+    12 => [
+        'name' => 'Assumi un Geologo',
+        'desc' => '',
+        'price' => 20,
+        'duration' => '3 giorni',
+        'duration_days' => 3,
+        'buyable' => false,
+    ],
+    13 => [
+        'name' => 'Pro Account (3 giorni)',
+        'desc' => '',
+        'price' => 30,
+        'duration' => '3 giorni',
+        'duration_days' => 3,
+        'buyable' => false,
+    ],
+    14 => [
+        'name' => 'Assumi un Mercante (5 transazioni)',
+        'desc' => '<b>- Ti consente di utilizzare lo scambio del commerciante 5 volte',
+        'price' => 10,
+        'amount' => 5,
+    ],
+    15 => [
+        'name' => 'Assumi un Mercante (15 transazioni)',
+        'desc' => '<b>- Ti consente di utilizzare lo scambio del commerciante 15 volte',
+        'price' => 30,
+        'amount' => 15,
+    ],
+    16 => [
+        'name' => 'Assumi un Mercante (30 transazioni)',
+        'desc' => '<b>- Ti consente di utilizzare lo scambio del commerciante 30 volte',
+        'price' => 50,
+        'amount' => 30,
+    ],
+];
+
+?>

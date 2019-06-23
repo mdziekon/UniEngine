@@ -1,0 +1,7 @@
+<?php
+
+
+$_Lang['see_you'] = 'Per favore visita di nuovo. <br /> <a href="login.php"> Home </a>';
+$_Lang['session_closed'] = "La sessione è terminata con successo.";
+
+?>

@@ -1,0 +1,69 @@
+<?php
+
+$_Lang['PageTitle']                                     = 'Morale - Informazioni';
+
+$_Lang ['Table_MoraleInfo'] = 'La morale del tuo equipaggio è un aspetto importante del gioco, che può influenzare pesantemente lo sviluppo del tuo Impero e cambiare il corso di qualsiasi Battaglia. <br/> La moralità del tuo cambio di equipaggio è causata da le battaglie a cui prendi parte, aumentano quando attacchi un nemico più forte di te, e cadono quando attacchi con imperi molto più deboli del tuo. <br/> Più alto è il livello del morale, migliori sono i bonus che ottieni. Più basso è il livello del morale, più il tuo equipaggio diventa disobbediente, causando effetti negativi su diversi aspetti del gioco. <br/> Ricorda che il livello del morale non è costante, aumenterà o diminuirà nel tempo, cercando di raggiungere la sua base , livello neutro. ';
+
+$_Lang['Table_MoraleStatus']                            = 'Il tuo livello di morale attuale:<br/><b class="%s">%s%%</b>';
+
+$_Lang['Table_Bonuses']                                 = 'Bonus';
+$_Lang['Table_Penalties']                               = 'Effetti negativi';
+
+$_Lang['Table_State_Active_Bonus']                      = '%s%%<br/><b class="lime">Attivo</b>';
+$_Lang['Table_State_Active_Penalty']                    = '%s%%<br/><b class="red">Attivo</b>';
+$_Lang['Table_State_InActive']                          = '%s%%<br/><b class="orange">Inattivo</b>';
+
+$_Lang ['Table_Bonus_IdleResStealRaise1_Name'] = 'Aumenta furto risorse negli attacchi';
+$_Lang ['Table_Bonus_FleetRFAddition1_Name'] = 'Miglioramento tecnologia fuoco rapido';
+
+$_Lang ['Table_Penalty_FleetSlowDown1_Name'] = 'Flotte rallentano';
+$_Lang ['Table_Penalty_FleetShieldAttenuation1_Name'] = 'Scudo destabilizzazione I';
+$_Lang ['Table_Penalty_FleetShieldAttenuation2_Name'] = 'Scudo destabilizzazione II';
+$_Lang ['Table_Penalty_FleetPowerAttenuation1_Name'] = 'Arma riduzione efficacia I';
+$_Lang ['Table_Penalty_FleetPowerAttenuation2_Name'] = 'Arma riduzione dell efficacia II';
+$_Lang ['Table_Penalty_FleetRFRemoval1_Name'] = 'Riduzione dell efficacia del fuoco rapido';
+$_Lang ['Table_Penalty_IdleResStealDrop1_Name'] = 'Riduzione del furto delle risorse scende';
+$_Lang ['Table_Penalty_AllResStealDrop1_Name'] = 'Riduzione del furto di risorse scende';
+$_Lang ['Table_Penalty_SpyReportRevolt_Name'] = 'Sabotaggio rapporti di Spionaggio';
+$_Lang ['Table_Penalty_OwnResLoseRaise1_Name'] = 'Aumenta la perdita di risorse durante l attacco del nemico';
+
+
+$_Lang ['Table_Bonus_FleetSpeedUp1_Desc'] = 'Grazie al morale aumentato, i tuoi meccanici hanno nuove soluzioni brillanti per aumentare l efficacia dei motori interstellari. <br/> <b>&bull; Opzione di velocità di flotte aggiuntive, potenziata del 10% </b>';
+$_Lang ['Table_Bonus_FleetSpeedUp2_Desc'] = 'A causa dell aumento di morale in tutto il tuo impero, i tuoi scienziati hanno scoperto nuove tecniche di computazione del deuterio. <br/> <b>&bull; Opzione di velocità di flotte aggiuntive, potenziata del 20% </b>';
+$_Lang ['Table_Bonus_FleetPowerUp1_Desc'] = 'Dopo le recenti vittorie sul fronte galattico, i tuoi operatori di armi sono diventati più mirati ed efficaci. <br/> <b>&bull; Efficacia delle armi Navi e Difese  potenziata del 20% </b> ';
+$_Lang ['Table_Bonus_FleetShieldPowerUp1_Desc'] = 'Motivati ​​dai recenti trionfi, i tuoi scienziati hanno aggiornato gli scudi su tutte le tue navi e sistemi di difesa. <br/> <b>&bull; Efficacia Scudi Difese potenziato del 20% </b> ';
+$_Lang ['Table_Bonus_IdleResStealRaise1_Desc'] = 'Le voci sulla forza del tuo impero si stanno diffondendo in tutto l universo. Alcuni degli imperi meno attivi sono facilmente spaventati dalle tue flotte, lasciando più risorse quando fuggono. <br/> <b>&bull; Il saccheggio delle risorse sui pianeti dei giocatori inattivi produce fino al 75% dei beni disponibili </b>';
+
+$_Lang ['Table_Bonus_FleetRFAddition1_Desc'] = 'Grazie al successo delle recenti battaglie, l equipaggio informatico ha aggiornato il software del fuoco rapido delle tue navi. <br/> <b> &bull; Il fuoco rapido di qualsiasi arma di tutte le navi ricevono un tiro addizionale contro unità nemiche. </b> ';
+
+$_Lang ['Table_Penalty_FleetSlowDown1_Desc'] = 'Il tuo equipaggio sta diventando confuso dalle recenti battaglie, il che porta al personale dei motori a diminuire l efficacia. <br/> <b>&bull; La velocità complessiva delle flotte è diminuita del 15% </b>';
+$_Lang ['Table_Penalty_FleetShieldAttenuation1_Desc'] = 'Le tue ultime azioni militari contro imperi più deboli hanno causato che il personale che gestisce i tuoi scudi lo facciano con meno motivazione durante il proprio lavoro. <br/> <b>&bull; L efficacia degli scudi è diminuita del 15% </b>';
+$_Lang ['Table_Penalty_FleetShieldAttenuation2_Desc'] = 'Le proteste tra i gruppi idealisti dei tuoi scienziati stanno diventando più forti. I recenti sabotaggi causano problemi con l efficacia dei sistemi di schermatura. <br/> <b> &bull; Riduzione dell efficacia degli scudi del 30% </b>';
+$_Lang ['Table_Penalty_FleetPowerAttenuation1_Desc'] = 'Il tuo personale operativo per le armi non è soddisfatto dell attuale strategia delle invasioni su pianeti disarmati e indifesi. <br/> <b> &bull; L efficacia delle armi è diminuita del 15% </b>';
+$_Lang ['Table_Penalty_FleetPowerAttenuation2_Desc'] = 'Le proteste negli impianti di produzione missilistica stanno diventando più intense. La mancanza di munizioni fa sì che le tue navi siano meno efficaci nelle battaglie. <br/> <b> &bull; L efficacia delle armi è diminuita del 25% </b>';
+$_Lang ['Table_Penalty_FleetRFRemoval1_Desc'] = 'Altre proteste nelle divisioni di automazione nei tuoi cantieri. Le armi rapide sono state intenzionalmente danneggiate dallo staff del malcontento. <br/> <b> &bull; Le tue unità possono utilizzare solo il 50% dei colpi di fuoco rapidi </b> ';
+$_Lang ['Table_Penalty_IdleResStealDrop1_Desc'] = 'Le truppe di sbarco sono sempre più scontenti durante le invasioni su pianeti disarmati. <br/> <b> &bull; Ogni invasione sui pianeti dei giocatori inattivi produce solo il 25% del possibile saccheggio delle risorse. </b> ';
+$_Lang ['Table_Penalty_AllResStealDrop1_Desc'] = 'Le truppe di sbarco stanno iniziando a rifiutare i loro ordini durante le invasioni su imperi più deboli. <br/> <b> &bull; Ogni invasione su tutti i pianeti di altri giocatori produce solo il 25% del possibile saccheggio delle risorse. </b> ';
+$_Lang ['Table_Penalty_SpyReportRevolt_Desc'] = 'A causa del crescente caos nel tuo impero, le spie nemiche sono state in grado di prendere il controllo di alcune delle tue divisioni di controllo spionistico, diffondendo disinformazione e rapporti falsi. <br/> <b>&bull; Lo spionaggio ha il 50% di probabilità che il rapporto sia inutile </b> ';
+$_Lang ['Table_Penalty_OwnResLoseRaise1_Desc'] = 'Grazie alle recenti frequenti dimostrazioni, le spie nemiche si infiltrano facilmente nella tua infrastruttura. Durante le invasioni sui tuoi pianeti, le truppe di sbarco nemiche sono ben informate su dove si trovano le tue risorse nascoste. <br/> <b> &bull; Perdita di risorse durante le invasioni aumentata al 75% </b>';
+
+
+$_Lang['Table_Bonus_FleetSpeedUp1_Level']               = MORALE_BONUS_FLEETSPEEDUP1;
+$_Lang['Table_Bonus_FleetSpeedUp2_Level']               = MORALE_BONUS_FLEETSPEEDUP2;
+$_Lang['Table_Bonus_FleetPowerUp1_Level']               = MORALE_BONUS_FLEETPOWERUP1;
+$_Lang['Table_Bonus_FleetShieldPowerUp1_Level']         = MORALE_BONUS_FLEETSHIELDUP1;
+$_Lang['Table_Bonus_IdleResStealRaise1_Level']          = MORALE_BONUS_SOLOIDLERSTEAL;
+$_Lang['Table_Bonus_FleetRFAddition1_Level']            = MORALE_BONUS_FLEETSDADDITION;
+
+$_Lang['Table_Penalty_FleetSlowDown1_Level']            = MORALE_PENALTY_FLEETSLOWDOWN;
+$_Lang['Table_Penalty_FleetShieldAttenuation1_Level']   = MORALE_PENALTY_FLEETSHIELDDOWN1;
+$_Lang['Table_Penalty_FleetShieldAttenuation2_Level']   = MORALE_PENALTY_FLEETSHIELDDOWN2;
+$_Lang['Table_Penalty_FleetPowerAttenuation1_Level']    = MORALE_PENALTY_FLEETPOWERDOWN1;
+$_Lang['Table_Penalty_FleetPowerAttenuation2_Level']    = MORALE_PENALTY_FLEETPOWERDOWN2;
+$_Lang['Table_Penalty_FleetRFRemoval1_Level']           = MORALE_PENALTY_FLEETSDDOWN;
+$_Lang['Table_Penalty_IdleResStealDrop1_Level']         = MORALE_PENALTY_IDLERSTEAL;
+$_Lang['Table_Penalty_AllResStealDrop1_Level']          = MORALE_PENALTY_STEAL;
+$_Lang['Table_Penalty_SpyReportRevolt_Level']           = MORALE_PENALTY_EMPTYSPYREPORT;
+$_Lang['Table_Penalty_OwnResLoseRaise1_Level']          = MORALE_PENALTY_RESOURCELOSE;
+
+?>

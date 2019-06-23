@@ -1,0 +1,202 @@
+<?php
+
+$_Lang['Tech']			= "Technologia";
+$_Lang['Requirements']	= "Requisiti";
+$_Lang['Metal']			= "Metallo";
+$_Lang['Crystal']		= "Cristallo";
+$_Lang['Deuterium']		= "Deuterio";
+$_Lang['Energy']			= "Energia";
+$_Lang['DarkEnergy']		= "Energia Oscura";
+$_Lang['Message']		= "Messaggi";
+$_Lang['GoToShop']		= 'Store';
+$_Lang['level']			= "Livello";
+$_Lang['treeinfo']		= "[i]";
+$_Lang['comingsoon']		= "In arrivo";
+$_Lang['te_dt_tx_pre']	= "Prerequisiti per";
+
+$_Lang['Metal_rec']		= 'metallo';
+$_Lang['Crystal_rec']	= 'cristallo';
+$_Lang['Deuterium_rec']	= 'deuterio';
+
+$_Lang['PrevPlanet']		= "Pianeta precedente";
+$_Lang['NextPlanet']		= "Pianeta successivo";
+
+$_Lang['type_mission'][1]	= "Attacco";
+$_Lang['type_mission'][2]	= "ACS";
+$_Lang['type_mission'][3]	= "Trasporto";
+$_Lang['type_mission'][4]	= "Stazionamento";
+$_Lang['type_mission'][5]	= "Stop";
+$_Lang['type_mission'][6]	= "Spiare";
+$_Lang['type_mission'][7]	= "Colonizzare";
+$_Lang['type_mission'][8]	= "Raccogli";
+$_Lang['type_mission'][9]	= "Distruggi";
+$_Lang['type_mission'][10]	= 'Attacco missilistico';
+$_Lang['type_mission'][11]	= 'Attacco combinato';
+$_Lang['type_mission'][15]	= "Spedizione";
+$_Lang['type_mission_quickres'] = 'Trasporto Risorse';
+
+$_Lang['tech'] = array
+(
+	0 => "Edifici",
+	1 => "Miniera di metallo",
+	2 => "Miniera di cristallo",
+	3 => "Estrattore deuterio",
+	4 => "Impianto solare",
+	12 => "Centrale a fusione",
+	14 => "Fabbrica di robot",
+	15 => "Fabbrica di naniti",
+	21 => "Cantiere spaziale",
+	22 => "Magazzino di metallo",
+	23 => "Magazzino di cristallo",
+	24 => "Serbatoio deuterio",
+	31 => "Laboratorio di ricerca",
+	33 => "Terraformer",
+	34 => "Deposito alleato",
+
+	40 => 'Edifici speciali',
+	41 => 'Stazione lunare',
+	42 => 'Sensori falangia',
+	43 => 'Teletrasporto',
+	44 => "Base missilistica",
+	50 => "Porta quantistica",
+
+	100 => 'Ricerca',
+	106 => 'Tecnologia di spionaggio',
+	108 => 'Tecnologia informatica',
+	109 => 'Tecnologia armi',
+	110 => 'Tecnologia scudi',
+	111 => 'Armatura',
+	113 => 'Tecnologia energetica',
+	114 => 'Tecnologia dell iperspazio',
+	115 => 'Motore a combustione',
+	117 => 'Motore ad impulso',
+	118 => 'Motore iperspaziale',
+	120 => 'Tecnologia laser',
+	121 => 'Tecnologia ionica',
+	122 => 'Tecnologia al plasma',
+	123 => 'Rete di ricerca intergalattica',
+	124 => 'Tecnologia di spedizione',
+	125 => 'Tecnologia antimateria', 
+	126 => 'Stream disgregatore',
+	199 => 'Gravitonica',
+
+	200 => 'Navi spaziali',
+	202 => 'Trasporto leggero',
+	203 => 'Trasporto pesante',
+	204 => 'Caccia leggero',
+	205 => 'Caccia pesante',
+	206 => 'Incrociatore',
+	207 => 'Nave da battaglia',
+	208 => 'Colonizzatrice',
+	209 => 'Riciclatrice',
+	210 => 'Sonda spia',
+	211 => 'Bombardiere',
+	212 => 'Satellite solare',
+	213 => 'Corazzata',
+	214 => 'Morte nera',
+	215 => 'Incrociatore da Battaglia',
+	216 => 'Stazione orbitante',
+	217 => 'Mega transporter',
+	218 => 'Annientatore',
+	219 => 'Space Shuttle',
+	220 => 'Incrociatore Imperiale',
+	221 => 'Bombardiere Hadron',
+	222 => 'Bombardiere al plasma',
+	223 => 'Distruttore protonico',
+	224 => 'Disgregatore',
+
+	400 => 'Sistemi di difesa',
+	401 => 'Lanciarazzi',
+	402 => 'Cannone laser leggero',
+	403 => 'Cannone laser pesante',
+	404 => 'Gauss Cannon',
+	405 => 'Cannone a ioni',
+	406 => 'Cannone al plasma',
+	407 => 'Scudo protettivo',
+	408 => 'Grande scudo protettivo',
+	
+	502 => 'Missile antibalistico',
+	503 => 'Missile interplanetario',
+);
+
+$_Lang['res']['descriptions'] = array
+(
+	
+	1 => "Fornitore della principale materia prima per la costruzione di strutture portanti di edifici e veicoli spaziali.",
+	2 => "Fornitore della principale materia prima per la costruzione di componenti elettronici e leghe metalliche",
+	3 => "Separa gli atomi di deuterio (isotopo dell'idrogeno pesante) dagli atomi di idrogeno leggero dall'acqua sul pianeta.",
+	4 => "Un impianto solare acquisisce energia dalla radiazione solare, quasi tutti gli edifici hanno bisogno di energia per il loro funzionamento.",
+	12 => "La centrale elettrica a fusione riceve energia combinando due atomi di deuterio in un atomo di elio.",
+	14 => "La fabbrica di robot fornisce una forza lavoro a basso costo che consente di espandere l infrastruttura sul pianeta. Ogni livello successivo della fabbrica di robot aumenta la velocità della costruzione. ",
+	15 => "Presenta il coronamento del lavoro nel campo della robotica: ogni livello successivo riduce della metà il tempo di costruzione di edifici, navi e difese.",
+	21 => "Tutti i tipi di navi e sistemi di difesa sono costruiti nel cantiere navale.",
+	22 => "Questo è il luogo in cui viene immagazzinato il minerale di metallo appena estratto prima che venga ulteriormente lavorato.",
+	23 => "Luogo di conservazione dei cristalli appena estratti prima di ulteriori elaborazioni.",
+	24 => "Questi sono enormi serbatoi per conservare il deuterio appena fatto.",
+	31 => "Per scoprire nuove tecnologie, è necessario un laboratorio di ricerca.",
+	33 => "Terraformer è necessario per preparare aree inaccessibili per lo sviluppo.",
+	34 => "Il deposito alleato offre la possibilità di fornire carburante alle flotte amichevoli, che durante le operazioni difensive aiutano o sono stazionate in orbita.",
+	41 => "Non c'è atmosfera sulla luna, quindi una stazione lunare deve essere costruita prima di essere sistemata.",
+	42 => "La falange dei sensori consente di osservare il movimento delle flotte: più è esteso, maggiore è il raggio d'azione.",
+	43 => "Il teletrasporto è un enorme relè che è in grado di inviare flotte tra galassie senza perdita di tempo.",
+	44 => "Il silo di razzi funge da rivista e lanciatore di missili e missili interplanetari.",
+	50 => "La porta quantica è un enorme dispositivo in grado di trasportare immediatamente la materia attraverso un tunnel spaziale stabile.",
+
+	106 => "A partire dal livello 2, oltre alla notifica di attacco viene mostrato anche il numero totale delle navi attaccanti. A partire dal livello 4 vengono mostrati il tipo di navi attaccanti ed il loro numero totale e dal livello 8 il numero preciso dei diversi tipi di nave.",
+	108 => "Con l'aumentare dell'efficienza dei computer, è possibile controllare più flotte: ogni livello di tecnologia informatica aumenta il numero massimo di flotte di 1.",
+	109 => "La tecnologia di combattimento migliora i sistemi di combattimento. Ogni livello di tecnologia di combattimento aumenta la potenza di combattimento delle unità del 10% rispetto al valore iniziale. ",
+	110 => "La tecnologia protettiva migliora i rivestimenti protettivi attorno alle navi e ai sistemi di difesa, e ogni livello di tecnologia protettiva aumenta l'efficacia dei rivestimenti del 10% del valore di base.",
+	111 => "La speciale lega metallica migliora le proprietà dell'armatura, l'efficacia dell'armatura aumenta del 10% rispetto al valore iniziale.",
+	113 => "La padronanza di diversi tipi di energia è necessaria per molte nuove tecnologie.",
+	114 => "Combinando la quarta e la quinta dimensione è ora possibile costruire un'unità innovativa più economica ed efficiente.",
+	115 => "L ulteriore sviluppo di questa unità significa che alcune navi si muovono più velocemente, soprattutto, ogni livello aumenta la velocità del 10% del valore di base.",
+	117 => "Il comando a impulsi si basa sul principio del rinculo. Un ulteriore sviluppo di questa propulsione fa sì che alcune navi si muovano più velocemente, prima di tutto ogni livello aumenta la loro velocità del 20% del valore di base. ",
+	118 => "Curve lo spazio attorno alla nave, l'ulteriore sviluppo di questa propulsione aumenta efficientemente la velocità di alcune navi del 30% del valore di base.",
+	120 => "Il fascio di luce risultante causa un danno significativo al bersaglio scelto per esso.",
+	121 => "Sviluppa l'efficacia delle radiazioni mortali degli ioni accelerati, gli ioni accelerati danneggiano enormemente gli oggetti che raggiungono.",
+	122 => "Un ulteriore stadio nello sviluppo della tecnologia ionica che non accelera più lo ione, ma il plasma ad alta energia. Questo plasma ha potere distruttivo quando attacca oggetti designati.",
+	123 => "Scienziati provenienti da diversi pianeti comunicano tra loro attraverso questa rete.",
+	124 => "Le navi possono essere equipaggiate con un modulo di ricerca, che durante lunghi viaggi di ricerca consente la preparazione scientifica dei dati raccolti.",
+	125 => "L'antimateria è un tipo insolitamente instabile di particelle che, quando sono in contatto con la materia ordinaria (es. Vapore di idrogeno - antidrogeno), subiscono l'annientamento, producendo così enormi quantità di radiazioni gamma.",
+	126 => 'La forma di battaglia finale raggiungibile. Lo stream disgregatore distrugge qualsiasi cosa incontra. ',
+	199 => "Sparando una carica concentrata di particelle di gravitoni, si può creare un campo gravitazionale artificiale in grado di distruggere navi e lune.",
+
+	202 => "Un piccolo trasportatore è una nave che può trasportare rapidamente le materie prime su altri pianeti.",
+	203 => "L'ulteriore sviluppo del piccolo trasportatore ha aumentato la capacità di carico e grazie ai nuovi azionamenti ha permesso un movimento ancora più rapido.",
+	204 => "Un caccia leggero è un vascello rotante che può essere trovato su quasi tutti i pianeti, i suoi costi non sono troppo alti, ma il suo campo protettivo e la capacità di carico sono molto piccoli.",
+	205 => "Questo tipo di combattente è una versione migliorata di un caccia leggero, che è equipaggiato con armature e armi migliori.",
+	206 => "L'incrociatore è quasi tre volte più corazzato di un caccia pesante e ha più del doppio della potenza di fuoco, oltre ad essere molto veloce.",
+	207 => "Le navi da guerra formano il nucleo della flotta, i loro cannoni pesanti, l'alta velocità e la capacità di carico li rendono nemici davvero pericolosi.",
+	208 => "I pianeti disabitati possono essere colonizzati con l'aiuto di queste navi.",
+	209 => "I riciclatori possono recuperare le materie prime dalle scatole danneggiate.",
+	210 => "Le sonde spia sono piccole navi manovrate senza equipaggio che, allontanandosi su lunghe distanze, forniscono informazioni su flotte e pianeti stranieri.",
+	211 => "Il bombardiere è stato creato per distruggere i sistemi di difesa di altri pianeti.",
+	212 => "I satelliti solari sono piattaforme semplici coperte da celle solari che si trovano in alto in un'orbita fissa, raccolgono la luce solare e le trasmettono attraverso un laser a una stazione di terra.",
+	213 => "Questa nave è il Re tra le navi da guerra.",
+	214 => "Il potere distruttivo della Morte Nera è insuperabile.",
+	215 => "Questa nave è un'unità specializzata per catturare (distruggere) flotte nemiche.",
+	216 => "Una stazione orbitale è un altro passo verso la difesa del tuo pianeta.",
+	217 => "I progressi nella miniaturizzazione e nella nanotecnologia hanno permesso di creare questa nave di trasporto molto capiente.",
+	218 => "La scoperta della produzione di antimateria ha permesso la costruzione di speciali missili a corto raggio in grado di distruggere enormi quantità di navi in ​​una volta sola.",
+	219 => "Un progetto abbandonato per trasportare persone e merci nell'orbita terrestre, ora vivendo la sua seconda giovinezza. <br/><b style = \" color: orange; \"> A causa del tipo molto vecchio di motori a combustione interna, questo veicolo non accelera con lo sviluppo del motore a benzina. </b> ",
+	220 => 'Il compito del Incrociatore Imperiale è quello di trasportare navi di caccia più piccoli ma molto manovrabili ed efficaci.',
+	221 => 'Il Bombardiere Hadron è un arma letale contro le installazioni di difesa del pianeta',
+	222 => 'Grazie all utilizzo di trame al plasma ad alta energia, questo veicolo si occupa efficacemente di unità ben armate.',
+	223 => 'L uso efficace dell annientamento ha portato alla creazione di questa nave straordinaria.',
+	224 => 'L arma definitiva contro navi pesantemente corazzate, in grado di strappare legami interatomici in frazioni di secondo.',
+
+	401 => "Il lanciarazzi è un dispositivo di difesa semplice ed economico.",
+	402 => "Con il fuoco concentrato su un bersaglio con il laser, puoi fare molto più danno che con le normali armi balistiche.",
+	403 => "Il cannone laser pesante è il successore di un laser leggero.",
+	404 => "Il cannone di Gauss accelera missili da diverse tonnellate, usando una quantità enorme di energia.",
+	405 => "Il canone ionico accelera gli ioni diretti verso il bersaglio, destabilizzano lo strato protettivo e danneggiano l'elettronica a causa di cambiamenti elettromagnetici.",
+	406 => "Il cannone al plasma rilascia l'energia corrispondente all'eruzione del sole.",
+	407 => "Un piccolo rivestimento protettivo copre l'intero pianeta con un campo in grado di assorbire quantità significative di energia.",
+	408 => "È un ulteriore sviluppo di un piccolo rivestimento protettivo e può assorbire molta più energia.",
+	409 => "È il più alto livello di difesa per il pianeta",
+
+	502 => "Gli anti-missili distruggono i razzi interplanetari del nemico invasore.",
+	503 => "I missili interplanetari distruggono le difese nemiche.",
+);
+
+?>

@@ -1,0 +1,34 @@
+<?php
+
+$_Lang['Page_Title']             = 'Buglist';
+
+$_Lang['Table_Header']           = 'Bugs list '.$_GameConfig['game_name'];
+$_Lang['Table_GeneralInfo']      = 'Bugs e descrizioni .<br/>';
+$_Lang['Table_Index']            = 'Indice';
+
+
+$_Lang['Rules_Index_1']          = 'Prio 1';
+$_Lang['Rules_Index_2']          = 'Prio 2';
+$_Lang['Rules_Index_3']          = 'Prio 3';
+
+
+$_Lang['Rule_Titles_1']          = 'Attacca in galassia';
+$_Lang['Rule_Titles_2']          = 'RefLink';
+$_Lang['Rule_Titles_3']          = 'Forum';
+
+
+
+$_Lang['Rules_1']  = 
+'<b class="float">1.1.</b><span class="float">Risolto.</span><br/>
+';
+
+$_Lang['Rules_2']  = 
+'<b class="float">2.1.</b><span class="float">Risolto.</span><br/>
+';
+
+
+$_Lang['Rules_3']  = 
+'<b class="float">3.1.</b><span class="float">Forum non esiste. Creare Pagina Facebook</span><br/>
+';
+
+?>

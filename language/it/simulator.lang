@@ -1,0 +1,66 @@
+<?php
+
+$_Lang['Title']                  = 'Simulatore battaglie';
+$_Lang['Settings']               = 'Impostazioni';
+$_Lang['SelectSlot']             = 'Cambia slot (ACS)';
+$_Lang['ResultTitle']            = 'Risultato simulazione';
+$_Lang['ShowHide']               = 'Nascondi / Mostra';
+
+$_Lang['Slot']                   = 'Slot';
+$_Lang['Submit']                 = 'Simula!';
+
+$_Lang['Attacker']               = 'Attaccante no. <span id="attacker_slot">1</span>';
+$_Lang['Defender']               = 'Difensore no. <span id="defender_slot">1</span> <span id="is_planet_owner">(Possessore del pianeta / luna)</span>';
+$_Lang['PlanetOwner']            = '(Possessore del pianeta / luna)';
+
+$_Lang['Attacker_Txt']           = 'Attaccante ';
+$_Lang['Defender_Txt']           = 'Difensore ';
+
+$_Lang['Morale']                 = 'Morale';
+$_Lang['Morale_Level']			 = 'Livello Morale';
+$_Lang['Technology']             = 'Tecnologie';
+$_Lang['Fleets']                 = 'Flotte';
+$_Lang['Defense']                = 'Difese';
+// FIXME: get this from a shared lang file
+$_Lang['Techs'][1]               = 'Tecnologia Armi';
+$_Lang['Techs'][2]               = 'Tecnologia Scudi';
+$_Lang['Techs'][3]               = 'Armatura';
+$_Lang['Techs'][4]               = 'Tecnologia Laser';
+$_Lang['Techs'][5]               = 'Tecnologia Ioni';
+$_Lang['Techs'][6]               = 'Tecnologia Plasma';
+$_Lang['Techs'][7]               = 'Tecnologia Anti-materia';
+$_Lang['Techs'][8]               = 'Tecnologia Disgregatore stream';
+$_Lang['Techs'][9]               = 'Tecnologia Gravitonica';
+
+$_Lang['FillMyTechs']            = 'Metti i miei livelli di tecnologia';
+$_Lang['FillMyFleets']           = 'Metti le mie flotte (e difese)';
+$_Lang['Fill_Clean']             = 'Pulisci';
+$_Lang['Button_Max']             = 'Max';
+$_Lang['Button_Min']             = 'Min';
+
+$_Lang['CalcTotalTime']          = 'Tempo simulazione';
+$_Lang['BattleWonBy']            = 'Battaglia vinta da ';
+$_Lang['WonBy_Attacker']         = 'Attaccante(i)';
+$_Lang['WonBy_Defender']         = 'Difensore(i)';
+$_Lang['WonBy_Draw']             = '- Pareggio -';
+
+$_Lang['See_last_BR']            = 'Guarda ';
+
+$_Lang['Break_noATKShips']       = 'Nessuna flotta attaccante(i) inserita!';
+$_Lang['Break_noDEFShips']       = 'Nessuna nave o difese inserite!';
+$_Lang['Break_noDEFTechs']       = 'Nessuna tecnologia del difensore inserita!';
+$_Lang['Break_noATKTechs']       = 'Nessuna tecnologia del attaccante inserita!';
+
+$_Lang['avg_atk_lost']           = 'Predite Attaccante(i)';
+$_Lang['avg_def_lost']           = 'Predite Difensore(i)';
+$_Lang['avg_atk_ship_lost']      = 'Predite navi Attaccante(i)';
+$_Lang['avg_def_ship_lost']      = 'Predite navi Difensore(i)';
+$_Lang['txt_rounds']             = 'Rounds';
+
+$_Lang['units']                  = 'unità';
+$_Lang['ships']                  = 'navi';
+
+$_Lang['BreakLineLight']         = '<tr style="visibility: hidden;"><td></td></tr>';
+$_Lang['BreakLine']              = '<tr style="visibility: hidden;"><td><br/></td></tr>';
+
+?>

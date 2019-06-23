@@ -1,0 +1,43 @@
+<?php
+
+$_Lang ['Title'] = 'Sondaggi';
+
+$_Lang ['vote_already'] = 'Voce votata';
+$_Lang ['poll_closed'] = 'Finito';
+$_Lang ['no_polls'] = 'No Sondaggi';
+$_Lang ['select']             = '---';
+       
+$_Lang ['State_IsObligatory'] = '<img src="./images/warning.png" />';
+$_Lang ['State_IsClosed']		= '<img src="./images/lock.png" />';
+$_Lang ['State_IsVoted']		= '<img src="./images/tick.green.png" />';
+
+$_Lang ['Tip_LockedVoted'] = 'Terminato, votato';
+$_Lang ['Tip_Locked'] = 'Finito';
+$_Lang ['Tip_Voted'] = 'Voce votata';
+$_Lang ['Tip_Obligators'] = 'Obbligatorio';
+
+$_Lang ['Poll_system_info'] = 'L amministrazione del server crea occasionalmente sondaggi per vedere come gli utenti reagiscono alle modifiche future. Grazie alle tue opinioni, siamo in grado di creare un gioco ancora più personalizzato per le tue esigenze e preferenze ... ';
+$_Lang ['Select_poll'] = 'Scegli un sondaggio';
+$_Lang ['Select'] = 'Scegli';
+$_Lang ['PollOption'] = 'Opzione';
+$_Lang ['PollVotes'] = 'Riepilogo voti';
+$_Lang ['Votes'] = 'Voti';
+$_Lang ['GoBack'] = 'Indietro';
+$_Lang ['ResultsAreHidden'] = 'I risultati del sondaggio sono nascosti.';
+$_Lang ['ShowUsers'] = 'Giocatori';
+
+$_Lang ['Poll_doesnt_exist'] = 'Questo sondaggio non esiste!';
+$_Lang ['Poll_is_closed_for_view'] = 'Il sondaggio è stato chiuso (disponibile anche per ispezione)!';
+$_Lang ['Poll_is_closed'] = 'Il sondaggio è già stato completato!';
+$_Lang ['No_selected_answer'] = 'È stata selezionata un opzione non valida!';
+$_Lang ['Error_BadSelection_Multi'] = 'Opzioni non valide selezionate!';
+$_Lang ['Error_NoOptionSelected'] = 'Nessuna opzione selezionata!';
+$_Lang ['Thx_for_voting'] = 'Grazie per aver votato!';
+$_Lang ['Thx_for_chaning_vote'] = 'La tua risposta è stata cambiata!';
+$_Lang ['Error_NoAnswers'] = 'Spiacente, ma non puoi visualizzare questo sondaggio!';
+
+$_Lang ['Vote_now'] = 'Vota adesso';
+$_Lang ['Change_vote'] = 'Cambia il tuo voto';
+$_Lang ['Submit_PollLocked'] = 'Non posso più votare ...';
+
+?>

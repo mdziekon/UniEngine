@@ -1,0 +1,72 @@
+<?php
+
+$_Lang ['Chat'] = 'Chat';
+
+$_Lang ['ChatTitle_String'] = 'Chat %s';
+$_Lang ['ChatTitle_Main'] = 'principale';
+$_Lang ['ChatTitle_Ally'] = 'alleanza %s';
+$_Lang ['ChatTitle_GameTeam'] = 'gestione del gioco';
+
+$_Lang ['chat_loading'] = "Caricamento in corso ...";
+$_Lang ['chat_disc'] = 'Chat diretta';
+$_Lang ['chat_message'] = "Messaggio <br/> (Shift + Invio» Nuova riga) ";
+$_Lang ['chat_short'] = 'Emoticon';
+$_Lang ['chat_text'] = 'Testo';
+$_Lang ['chat_send'] = 'Invia';
+$_Lang ['chat_save'] = 'Salva modifiche';
+$_Lang ['on_chat'] = "Presente nella chat:";
+
+$_Lang ['Legend_Smiles'] = 'Emoticons';
+$_Lang ['Legend_BBCode'] = 'BBCode';
+$_Lang ['Legend_BBCode_B'] = 'Grassetto';
+$_Lang ['Legend_BBCode_S'] = 'Barrato';
+$_Lang ['Legend_BBCode_I'] = 'Corsivo';
+$_Lang ['Legend_BBCode_URL'] = 'Link';
+$_Lang ['Legend_BBCode_U'] = 'Sottolineato';
+$_Lang ['Legend_BBCode_C'] = 'Colore';
+$_Lang ['Legend_BBCode_Text'] = 'Testo';
+$_Lang ['Legend_BBCode_Adress'] = 'INDIRIZZO';
+$_Lang ['Legend_BBCode_OR'] = 'oppure';
+$_Lang ['Legend_BBCode_Color'] = 'COLOR';
+$_Lang ['Legend_BBCode_ColorInfo'] = 'Inglese o Hex';
+
+$_Lang ['Settings_Header'] = 'Impostazioni';
+$_Lang ['Settings_GhostMode'] = 'Nascondi la mia presenza';
+$_Lang ['Settings_GhostMode_DontCount'] = 'Non includere nel contatore online';
+
+$_Lang ['Today'] = 'Oggi';
+$_Lang ['Yesterday'] = 'Ieri';
+
+
+$_Lang ['jQueryAjax_getError'] = 'Errore nel recupero dei dati - Riconnessione in 5 secondi (prove a sinistra: {x}) ...';
+$_Lang ['jQueryAjax_getErrorFatal'] = 'Errore nel recupero dei dati - Connessione al server persa ... (<a class="orange" id="chatReload" href="#"> Riprova </a>)';
+$_Lang ['jQueryAjax_postError'] = "Errore nell'invio del messaggio ...";
+
+
+$_Lang['jsLang_Errors'] = array
+(
+
+	'getErr_001' => 'Questa stanza non esiste!',
+	'getErr_002' => 'Non hai accesso a questa stanza!',
+	'getErr_003' => 'Il gioco è stato disattivato!',
+);
+
+
+$_Lang ['jQueryAjax_postErr_2'] = 'Errore nell invio del messaggio - Errore nel database ...';
+$_Lang ['jQueryAjax_postErr_3'] = 'Errore nell invio del messaggio - messaggio vuoto ...';
+$_Lang ['jQueryAjax_postErr_5'] = 'Errore nell invio messaggio - nessun accesso a questa Stanza ...';
+$_Lang ['jQueryAjax_postErr_6'] = 'Errore nell invio messaggio - La stanza non esiste ...';
+$_Lang ['jQueryAjax_delErr_2'] = 'Errore nell eliminazione dei messaggi (#{$id}) - il messaggio non esiste!';
+$_Lang ['jQueryAjax_delErr_3'] = 'Errore nell eliminazione dei messaggi (#{$id}) - Errore nel database!';
+$_Lang ['jQueryAjax_delErr_4'] = 'Errore di azione - nessuna autorizzazione!';
+
+$_Lang ['jQueryAjax_notLogged'] = 'Errore - non sei loggato!';
+
+$_Lang ['jsLang_usrRef'] = 'Si prega di fare riferimento a questo giocatore';
+$_Lang ['jsLang_profile'] = 'Profilo giocatore';
+$_Lang ['jsLang_mentioned'] = 'Qualcuno ti ha scritto!';
+$_Lang ['jsLang_ToolTip_ReportMsg'] = 'Segnala il messaggio';
+
+$_Lang['UsersOnline'] = 'Online';
+
+?>

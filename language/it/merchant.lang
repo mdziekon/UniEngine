@@ -1,0 +1,48 @@
+<?php
+
+$_Lang['Trader_Title']               = 'Mercante';
+
+$_Lang ['Trader_DoSell'] = 'Vendi';
+$_Lang ['Trader_DoBuy'] = 'Acquista';
+$_Lang ['Trader_UsesLeft'] = 'Transazioni commerciali rimanenti';
+
+$_Lang ['Trader_Uses_Infinite'] = 'Infinito';
+$_Lang ['Trader_Uses_InStandBy'] = 'Salvato per dopo';
+$_Lang ['Trader_Uses_BuyMore'] = 'Acquista più transazioni commerciali';
+$_Lang ['Trader_Uses_BlockedBuy'] = 'Per sbloccare il Commerciante, acquistare Account Pro o Transazioni Mercante!';
+
+$_Lang ['Trader_BadResType'] = 'Tipo di risorsa non valido!';
+$_Lang ['Trader_BadResMode'] = 'Tipo di transazione non valido!';
+$_Lang ['Trader_ResMinus'] = 'Risorse negative fornite!';
+$_Lang ['Trader_ResZero'] = 'Nessuna risorsa da scambiare!';
+$_Lang ['Trader_ResZero2'] = 'Risorse insufficienti fornite per lo scambio!';
+$_Lang ['Trader_NoEnoughMetal'] = 'Non abbastanza metallo!';
+$_Lang ['Trader_NoEnoughCrystal'] = 'Non abbastanza cristallo!';
+$_Lang ['Trader_NoEnoughDeuterium'] = 'Non abbastanza deuterio!';
+$_Lang ['Trader_Done'] = 'Scambio completato!';
+
+$_Lang ['Trader_SellMet'] = 'Vendi: metallo';
+$_Lang ['Trader_SellCry'] = 'Vendi: Cristallo';
+$_Lang ['Trader_SellDeu'] = 'Vendi: Deuterio';
+$_Lang ['Trader_BuyMet'] = 'Acquista: Metallo';
+$_Lang ['Trader_BuyCry'] = 'Acquista: Cristallo';
+$_Lang ['Trader_BuyDeu'] = 'Acquista: Deuterio';
+
+$_Lang ['Trader_PercentMode'] = 'Scambia proporzione';
+$_Lang ['MainResource_Mode1'] = 'Risorse per <b class = "orange">vendere</b>';
+$_Lang ['MainResource_Mode2'] = 'Risorse per <b class = "orange">comprare</b>';
+$_Lang ['OtherResources_Mode1'] = 'Cambia in';
+$_Lang ['OtherResources_Mode2'] = 'Cambia da';
+
+$_Lang ['Trader_Needen'] = 'Richiesto';
+$_Lang ['Trader_Receiving'] = 'Ricevi';
+$_Lang ['Trader_GoBack'] = 'Torna indietro';
+$_Lang ['Trader_Max'] = 'Max';
+$_Lang ['Trader_Zero'] = 'Zero';
+
+$_Lang ['Trader_CantUseTrader'] = '<b class="red">Per sbloccare Merchant Exchange, devi avere le transazioni commerciante o un account Pro acquistato! </b>';
+
+$_Lang ['mod_ma_excha'] = "Scambio";
+$_Lang ['mod_ma_cours'] = "Tasso di scambio";
+
+?>

@@ -1,0 +1,35 @@
+<?php
+
+$_Lang['mail_text'] = 'Quest email è stata generata dal link di attivazione del sistema di recupero di <a href="'.GAMEURL_STRICT.'">'.$_GameConfig['game_name'].'</a><br /><br /><b>Il tuo nuovo link d attivazione:</b> {activationlink}<br/><br/>Ignora questo messaggio se non richiesto da te<br/>Buona fortuna e divertiti!';
+
+$_Lang['mail_template']  = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
+$_Lang['mail_template'] .= '<html>';
+$_Lang['mail_template'] .= '<head>';
+$_Lang['mail_template'] .= '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">';
+$_Lang['mail_template'] .= '</head>';
+$_Lang['mail_template'] .= '<body>';
+$_Lang['mail_template'] .= $_Lang['mail_text'];
+$_Lang['mail_template'] .= '</body>';
+$_Lang['mail_template'] .= '</html>';
+
+$_Lang['mail_title'] = 'Riattivazione Account';
+
+$_Lang['ResetCode'] = "Rimanda link d'attivazione";
+$_Lang['TextCode1'] = "Inserisci indirizzo email.";
+$_Lang['TextCode2'] = "Inserisci indirizzo email e poi premi il bottone \"Reinvia\" .Il tuo nuovo link di attivazione è stato spedito al tuo indirizzo email.";
+$_Lang['email'] = "Email";
+$_Lang['ButtonSendPass'] = "Reinvia";
+$_Lang['CodeForm'] = "Modulo";
+$_Lang['Title'] = 'Reinvia Link attivazione';
+
+$_Lang['go_back'] = '<br/><br/><a href="lostcode.php">Indietro</a>';
+
+$_Lang['new_code_sent'] = 'Nuovo link di attivazione è stato spedito all indirizzo email! '.$_Lang['go_back'];
+$_Lang['smtp_error'] = 'Un errore inaspettato è avvenuto durante l invio dell email:<br/>%s<br/>Gentilmente <a href="contact.php">contatta l Amministratore</a>!'.$_Lang['go_back'];
+$_Lang['acc_already_activated'] = 'Questo account è stato già attivato!'.$_Lang['go_back'];
+$_Lang['no_email_in_db'] = 'Quest indirizzo email non corrisponde a nessun account nel nostro sistema!'.$_Lang['go_back'];
+$_Lang['bad_email_given'] = 'Inserito indirizzo email invalido!'.$_Lang['go_back'];
+$_Lang['no_mail_given'] = 'Campo email non può essere vuoto!'.$_Lang['go_back'];
+$_Lang['prevent_spaming'] = 'Per piacere aspetta un altra ora prima di reinviare il link d attivazione.';
+
+?>

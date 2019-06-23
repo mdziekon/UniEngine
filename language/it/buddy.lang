@@ -1,0 +1,50 @@
+<?php
+
+$_Lang ['Title'] = 'Amici';
+
+$_Lang ['Headers_Nick'] = 'Giocatore';
+$_Lang ['Headers_StatPoints'] = 'Punti';
+$_Lang ['Headers_StatPosition'] = 'Posizione';
+$_Lang ['Headers_Ally'] = 'Alleanza';
+$_Lang ['Headers_GalaxyPosition'] = 'Coordinate';
+$_Lang ['Headers_Date'] = 'Data';
+$_Lang ['Headers_State'] = 'Stato';
+$_Lang ['Headers_Actions'] = 'Azioni';
+$_Lang ['Headers_BuddyForm'] = 'Richiesta amicizia';
+$_Lang ['Headers_Text'] = 'Contenuto';
+$_Lang ['Headers_Cancel'] = 'Annulla';
+$_Lang ['Headers_Send'] = 'Invia';
+$_Lang ['Headers_Limit'] = 'Limite';
+
+$_Lang ['qTip_Edit'] = 'Modifica la richiesta';
+$_Lang ['qTip_Delete'] = 'Elimina la richiesta';
+$_Lang ['qTip_Remove'] = 'Rimuovi dall elenco degli amici';
+$_Lang ['qTip_Accept'] = 'Accetta la richiesta';
+$_Lang ['qTip_Refuse'] = 'Rifiuta la richiesta';
+
+$_Lang ['Info_NoBuddy'] = 'Nessun amico ...';
+
+$_Lang ['Row_State_Online'] = 'Online';
+$_Lang ['Row_State_Offline'] = 'Offline';
+$_Lang ['Row_State_Minutes'] = 'min';
+$_Lang ['Row_State_Days'] = 'd';
+$_Lang ['Row_State_Awaiting'] = 'In sospeso';
+
+$_Lang ['Success_Accepted'] = 'La richiesta del giocatore è stata accettata';
+$_Lang ['Success_Refused'] = 'La richiesta del giocatore è stata respinta';
+$_Lang ['Success_Removed'] = 'Il giocatore è stato rimosso dalla Lista amici';
+$_Lang ['Success_Deleted'] = 'La la richiesta è stata cancellata';
+$_Lang ['Success_Edited'] = 'La la richiesta è stata cambiata';
+$_Lang ['Success_Sent'] = 'La la richiesta è stata inviata';
+
+$_Lang ['Error_BadElement'] = 'Azione illegale!';
+$_Lang ['Error_ElementIDBad'] = 'ID non valido inserito!';
+$_Lang ['Error_EmptyText'] = 'Il contenuto della la richiesta non può essere vuoto!';
+$_Lang ['Error_BadUID'] = 'ID giocatore errato!';
+$_Lang ['Error_BadUser'] = 'Questo giocatore non esiste!';
+$_Lang [ 'Error_LinkExists'] = 'Questo giocatore è già nella tua lista amici o richiesta è in attesa di approvazione';
+$_Lang ['Error_RowNoExists'] = 'Tale la richiesta non esiste!';
+$_Lang ['Error_CantEdit'] = 'Azione illegale!';
+$_Lang ['Error_AlreadyActive'] = 'Questa la richiesta è già attiva!';
+
+?>
