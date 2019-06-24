@@ -4,43 +4,64 @@ $_Lang['RulesDefinitions'] = [
     1 => [
         'title' => 'Wstęp',
         'elements' => [
-            1 => 'Każdy gracz przed ukończeniem rejestracji <b>musi</b> dokonać akceptacji Regulaminu gry. Założenie konta w grze (na dowolnym Universum) jest równoznaczne z tym, że Użytkownik zgadza się i akceptuje wszystkie postanowienia tego Regulaminu.',
+            // [MODIFIABLE]
+            0 => 'Poniższy Regulamin jest przykładem dostarczonym przez deweloperów silnika UniEngine i powinien być przejrzany przez Właścicielów gry lub Administrację przed upublicznieniem instancji gry na serwerach produkcyjnych. Deweloperzy UniEngine nie gwarantują, że poniższa lista punktów jest zgodna z jakimkolwiek systemem prawnym.',
 
-            2 => 'Rozszerzeniem tego Regulaminu jest <a href="redirect.php?id=4"><b>Tabela Kar</b></a>, która zawiera spis przyznawanych kar za konkretne wykroczenia w grze.',
+            1 => 'Każdy gracz przed ukończeniem rejestracji <b>musi</b> dokonać akceptacji Regulaminu gry. Jakiekolwiek akcje w grze są zabronione przed zaakceptowaniem regulaminu. Założenie konta w grze (na dowolnym Universum) jest równoznaczne z tym, że Użytkownik zgadza się i akceptuje wszystkie postanowienia tego Regulaminu.',
 
-            3 => 'Każdy gracz musi znać Regulamin oraz wszystkie jego punkty i podpunkty. Nieznajomość <b>Regulaminu</b> oraz <a href="redirect.php?id=4"><b>Tabeli Kar</b></a> nie zwalnia z odpowiedzialności za swoje czyny w grze, zaś wszelkie odwołania od kar, w których gracz wykazuje ewidentny brak znajomości Regulaminu, będą od razu odrzucane.',
+            2 => 'Rozszerzeniem tego Regulaminu jest <a href="redirect.php?id=4"><b>Tabela Kar</b></a>, która zawiera spis przyznawanych kar za konkretne wykroczenia w grze. Tabela jest jednak tylko i wyłącznie zbiorem wskazówek i nie musi idealnie reprezentować przyznawanych wymiarów kar na konto gracza.',
+
+            3 => 'Każdy gracz musi znać Regulamin oraz wszystkie jego punkty i podpunkty. Nieznajomość <b>Regulaminu</b> nie zwalnia z odpowiedzialności za swoje czyny w grze, zaś wszelkie odwołania od kar, w których gracz wykazuje ewidentny brak znajomości Regulaminu, będą od razu odrzucane.',
 
             4 => [
-                1 => 'Właścicielami Gry są osoby, które posiadają wszelkie prawa co do serwerów, domen oraz plików i treści zawartych w grze oraz na jej podstronach i podserwisach (jak Forum czy konta w Portalach Społecznościowych). Właściciel Gry może jednocześnie pełnić funkcje Administratora i Operatora gry.',
+                1 => 'Właścicielami Gry są osoby, które posiadają wszelkie prawa co do serwerów, domen oraz plików i treści zawartych w grze (za wyjątkiem tych dostarczanych przez graczy) oraz na jej podstronach i podserwisach (jak Forum czy konta w Portalach Społecznościowych). Właściciel Gry może jednocześnie pełnić funkcje Administratora i Operatora gry.',
 
                 2 => 'Administratorami Gry są osoby, które otrzymały pełen dostęp do zarządzania grą w celu zachowania porządku oraz rozstrzygania spornych spraw przez dostarczone im funkcje w grze bądź inne rozwiązania techniczne. Reprezentują oni Właścicieli na Forum Gry oraz w kontakcie z graczami.',
 
                 3 => 'Supportem Gry są osoby zajmujące stanowiska Super Operatora lub Operatora Gry. Są to osoby, które otrzymały ograniczony dostęp do zarządzania grą w celu zachowania porządku oraz rozstrzygania spornych spraw przez dostarczone im funkcje w grze bądź inne rozwiązania techniczne. Są oni pośrednikami w kontakcie między graczem a Administracją.',
 
-                4 => 'Hierarchia decyzyjna w Składzie Zarządzającym Grą (Właściciele, Administracja i Support Gry) wygląda następująco (najniższy poziom uprawnień zaczynają od lewej):<br/>Operator Gry &#187; Super Operator Gry &#187; Administrator Gry &#187; Właściciel Gry',
+                4 => [
+                    'maintext' => 'Hierarchia decyzyjna wygląda następująco (pierwsza pozycja - najwyższa ranga decyzyjna; ostatnia pozycja - najniższa ranga decyzyjna):',
+                    'ul' => [
+                        'Właściciele gry',
 
-                5 => 'Osoby zarządzające Forum (jak Moderator czy Administrator Forum) nie wchodzą w Skład Zarządzający Grą, chyba że dana osoba piastuje jednocześnie wyżej wymienione stanowisko w grze.',
+                        'Administracja',
 
-                6 => 'Programiści Gry są jednocześnie jej Administratorami. Nie pełnią oni funkcji porządkowych - zajmują się poprawnym działaniem gry, dodawaniem nowych funkcji oraz naprawą ewentualnych błędów. Ich zadaniem jest również ewentualna interakcja ze społecznością graczy, w celu dokonywania lepszych i bardziej przyjaznych graczom poprawek i dodatków.',
+                        'Super Operatorzy gry (Zespół wsparcia)',
+
+                        'Operatorzy gry (Zespół wsparcia)'
+                    ]
+                ],
+
+                5 => 'Osoby zarządzające Forum (o ile Forum zostało uruchomione) nie wchodzą w Skład Zarządzający Grą, chyba że dana osoba piastuje jednocześnie wyżej wymienione stanowisko w grze.',
+
+                6 => 'Zespół deweloperów gry nie działa na zasadach decyzyjnych takich jak role wymieone wyżej, mimo że posiadają oni podobny zakres dostępu jak Administracja czy nawet Właściciele gry. Ich rolą jest zarządzanie rozwojem silnika gry, poprzez dodawanie nowych funkcjonalności, naprawianie błędów i ogólne usprawnianie funkcjonalności gry. Nie wchodzą w interakcje z graczami (mowa tu o rozstrzyganiu zgłoszeń, odwołań i innych akcji decyzyjnych w wypadku łamiania Regulaminu), jednakże mogą kontaktować się z graczami w niektórych przypadkach (np. gdy błąd został zgłoszony przez gracza).'
             ],
 
-            5 => 'Administracja zastrzega sobie prawo do zmiany zarówno Regulamin jak i Tabela Kar w dowolnym czasie. Zmieniony Regulamin/Tabela Kar wchodzi w życie wraz z momentem publikacji.',
+            5 => 'Właściciele gry zastrzegają sobie prawo do zmiany zarówno Regulamin jak i Tabela Kar w dowolnym czasie. Zmieniony Regulamin/Tabela Kar wchodzi w życie wraz z momentem publikacji, jednakże każdy gracz musi zaakceptować zmiany.',
 
-            6 => 'Użytkownik który nie zgadza się ze zmienionym Regulaminem lub nie chce go zaakceptować, jest zobligowany do przeznaczenia swojego konta do kasacji w najbliższym możliwym terminie. Dalsze użytkowanie gry bez statusu kasacji konta jest jednoznaczne z akceptacją wprowadzonych zmian. W szczególnych przypadkach, Właściciele i Administracja gry mogą uaktywnić specjalny system, który uniemożliwi dalszą grę bez akceptacji zmian Regulaminu lub aktywacji statustu kasacji.',
+            6 => 'Użytkownik który nie zgadza się ze zmienionym Regulaminem lub nie chce go zaakceptować, jest zobligowany do przeznaczenia swojego konta do kasacji w najbliższym możliwym terminie. Dalsze użytkowanie gry bez statusu kasacji konta jest jednoznaczne z akceptacją wprowadzonych zmian. W szczególnych przypadkach, Właściciele i Administracja gry mogą uaktywnić specjalny system, który uniemożliwi dalszą grę bez akceptacji zmian Regulaminu lub aktywacji statusu kasacji.',
 
-            7 => 'Jeśli gracz zauważył braki lub niejasności w Regulaminie, powinien zgłosić to do Składu Zarządzającego Grą i czekać na odpowiedź w tej sprawie. Jeśli Administracja uzna dany punkt lub sytuację za ważną odnotowania, odpowiedni punkt może zostać dodany do Regulaminu.',
+            7 => 'Jeśli gracz zauważył braki lub niejasności w Regulaminie, powinien zgłosić to do Składu Zarządzającego Grą i czekać na odpowiedź w tej sprawie. Jeśli Administracja uzna dany punkt lub sytuację za wartą odnotowania, odpowiedni punkt może zostać dodany do Regulaminu.',
 
-            8 => 'Regulamin nie jest ostateczną formą stanowiącą prawa na tym serwerze. W szczególnych przypadkach to Właściciele i Administracja rozstrzygają o rozwiązaniu danej sprawy.',
+            // [MODIFIABLE]
+            8 => 'Jeśli dany incydent wykracza poza samą grę i odnosi się do życia realnego, główną formą stanowiącą prawo jest system prawny obowiązujący w kraju, którego obywatelami są Właściciele gry - [GAME OWNERS\' COUNTRY OR JURISTICTION HERE].',
 
-            9 => 'Jeśli dany incydent wykracza poza samą grę i odnosi się do życia realnego, główną formą stanowiącą prawo jest Prawo Polskie.',
+            9 => 'Właściciele jak i Administracja zastrzegają sobie prawo do częściowego lub całkowitego ograniczenia dostępu do gry wybranym osobom, grupom osób lub organizacjom.',
 
-            10 => 'Wszystkie konta w grze należą do Właścicieli. Użytkownik nie ma żadnych praw majątkowych lub własnościowych co do kont. Fakt posiadania płatnego dodatku do gry nie oznacza, że właścicielem konta staje się gracz.',
+            10 => 'Właściciele jak i Administracja nie biorą odpowiedzialności za wszelkie awarie lub niedostępność gry wynikłe zarówno z przyczyn losowych jak i z błędów w oprogramowaniu lub działania serwerów.',
 
-            11 => 'Właściciele jak i Administracja zastrzegają sobie prawo do częściowego lub całkowitego ograniczenia dostępu do gry wybranym osobom.',
+            11 => [
+                'title' => 'Dane osobowe',
+                'elements' => [
+                    1 => 'Właściciele gry zastrzegają sobie prawo do składowania danych osobowych (takich jak adres IP czy adres Email), również po skasowaniu konta gracza.',
 
-            12 => 'Właściciele jak i Administracja nie biorą odpowiedzialności za wszelkie awarie lub niedostępność gry wynikłe zarówno z przyczyn losowych jak i z błędów w oprogramowaniu lub działania serwerów.',
+                    2 => 'Gracz ma jednocześnie prawo do wglądu do zebranych danych, zażądania ich modyfikacji lub żądania kasacji w dowolnym momencie (co może się jednak wiązać z uniemożliwieniem dalszej gry jeśli nie doszło do kasacji konta).',
 
-            13 => 'Właściciele gry zastrzegają sobie prawo do składowania adresów IP oraz adresów Email w celach Reklamowych gry i pochodnych produktów. Po usunięciu konta gracz ma prawo zarządać usunięcia swojego adresu IP oraz Email z Bazy Danych - w tym celu należy wysłać wiadomość Email do jednego z Właścicieli lub Administracji gry z prośbą o usunięcie danych z Bazy (wiadomość, w celu weryfikacji, należy wysłać z tego samego adresu, który znajduje się w Bazie).'
+                    // [MODIFIABLE]
+                    3 => 'Więcej informacji nt. przetwarzania danych osobowych zostanie przedstawionych w osobnej sekcji regulaminu, zgodnie z prawem obowiązującym w kraju którego obywatelami są Właściwiele gry.'
+                ]
+            ],
         ]
     ],
     2 => [
@@ -49,7 +70,7 @@ $_Lang['RulesDefinitions'] = [
             1 => [
                 'title' => 'Dzielenie konta oraz wielokontowość',
                 'elements' => [
-                    1 => 'Każdy gracz może posiadać tylko jedno konto na każdym Universum.',
+                    1 => 'Każdy gracz może posiadać tylko jedno konto na każdym z Universów gry.',
 
                     2 => 'Gracz, który otrzymał Bana (blokadę konta), nie może zakładać następnego konta w celu dalszej gry.',
 
@@ -71,17 +92,17 @@ $_Lang['RulesDefinitions'] = [
                         ]
                     ],
 
-                    6 => 'Na jednym komputerze może być zalogowana tylko jedna osoba. Jeśli z danego komputera korzysta kilku graczy, każdy gracz musi poczekać na swoją kolej.',
+                    6 => 'Na jednym komputerze lub innym urządzeniu obsługującym przeglądanie Internetu może być zalogowana tylko jedna osoba. Jeśli z danego komputera korzysta kilku graczy, każdy gracz musi poczekać na swoją kolej.',
 
                     7 => [
-                        'maintext' => 'Fakt grania na jednym komputerze lub w jednej sieci (np. sieć domowa, ale także sieci osiedlowe czy pracownie komputerowe w szkole) przez kilku graczy należy zgłosić Administracji poprzez funkcję "Gra z jednego IP" dostępną w grze, nie później niż 24 godzin od rejestracji kolejnego gracza. Należy pamiętać, że:',
+                        'maintext' => 'Fakt grania na jednym komputerze lub w jednej sieci przez kilku graczy należy zgłosić Administracji poprzez funkcję "Gra z jednego IP" dostępną w grze, nie później niż 24 godzin od rejestracji kolejnego gracza. Należy pamiętać, że:',
 
                         'ul' => [
                             'Kont nie mogą łączyć żadne wspólne cechy prócz przynależności do jednego sojuszu',
 
                             'Kontakt jakiejkolwiek floty między kontami jest zabroniony (wspólne loty z Związku są dopuszczane w szczególnych przypadkach przez Administrację)',
 
-                            'Wyjątkiem od powyższych dwóch podpunktów są sporadyczne logowania w tym samym miejscu (np. kawiarenki internetowe, sporadyczne logowanie na komputerze drugiego gracza w weekendy). Wtedy kontakt flot jest zabroniony tylko wtedy, gdy gracze logują się w tym samym miejscu.'
+                            'Wyjątkiem od powyższych dwóch podpunktów są sporadyczne logowania w tym samym miejscu (np. podczas odwiedzin u znajomych, używając ich sieci domowej). Wtedy kontakt flot jest zabroniony tylko wtedy, gdy gracze logują się w tym samym miejscu i nie musi być zgłaszany. Gracze powinni mieć jednak na uwadze że tego typu sytuacja dalej może być zakwalifikowana przez Administrację jako nadużycie, dlatego też gracze są zobowiązani do odpowiedzi na wszelkie pytania Administracji podczas przeprowadzania analizy tego typu sytuacji.'
                         ]
                     ]
                 ]
@@ -90,9 +111,7 @@ $_Lang['RulesDefinitions'] = [
             2 => [
                 'title' => 'Wymiana kont',
                 'elements' => [
-                    1 => 'Wymiana kont jest dozwolona, jednakże fakt ten należy zgłosić Administracji. W takim wypadku Administracja może zamienić oba konta bez potrzeby wymieniania się hasłami. W przypadku wymiany bez powiadomienia Administracja nie jest zobowiązana do zwrotu jakichkolwiek strat w przypadku oszustwa czy kradzieży, nie musi również wszczynać żadnego postępowania, mającego na celu wyjaśnienie danej sytuacji.',
-
-                    2 => 'Sprzedaż kont (lub dowolnej jego cześci, np. surowców) w celach zarobkowych jest zabroniona. Właściciele gry uznają jednak możliwość sprzedaży kont w celach charytatywnych.'
+                    1 => 'Wymiana kont jest dozwolona, jednakże fakt ten należy zgłosić Administracji. W takim wypadku Administracja może zamienić oba konta bez potrzeby wymieniania się hasłami. W przypadku wymiany bez powiadomienia Administracja nie jest zobowiązana do zwrotu jakichkolwiek strat w przypadku oszustwa czy kradzieży, nie musi również wszczynać żadnego postępowania, mającego na celu wyjaśnienie danej sytuacji.'
                 ]
             ]
         ]
@@ -102,7 +121,7 @@ $_Lang['RulesDefinitions'] = [
         'title' => 'Rozgrywka',
         'elements' => [
             1 => [
-                'title' => 'Handel',
+                'title' => 'Handel w grze',
                 'elements' => [
                     1 => 'Handel nie musi być zgłaszany na Forum gry ani nikomu z Administracji i Supportu gry.',
 
@@ -145,9 +164,9 @@ $_Lang['RulesDefinitions'] = [
                         'ul' => [
                             'Niechcianych surowców od gracza słabszego nie można zatrzymać, należy je niezwłocznie odesłać oraz fakt ten zgłosić na Forum gry lub bezpośrednio do Administracji.',
 
-                            'Jeśli Administracja wykryje Push, zarówno gracz słabszy jak i silniejszy mogą zostać ukarani (w przypadku, gdy obie strony brały udział w incydencie).',
+                            'Szantażowanie innych graczy jest zabronione i karane.',
 
-                            'Szantażowanie innych graczy jest zabronione i karane.'
+                            'Jeśli Administracja wykryje Push, zarówno gracz słabszy jak i silniejszy mogą zostać ukarani (w przypadku, gdy obie strony brały udział w incydencie).',
                         ]
                     ],
 
@@ -183,7 +202,7 @@ $_Lang['RulesDefinitions'] = [
 
                             'Gracze, który mają wziąć udział w złomowaniu powinni podać dobry i rozsądny powód dla tej akcji i jednoznacznie potwierdzić swoje uczestnictwo.',
 
-                            'Powstałe szczątki ze złomowania należy rozdzielić równo wg. strat każdej ze stron bitwy (dopuszcza się zamianę wszystkich strat na jeden surowiec wg. rozsądnego przelicznika)'
+                            'Powstałe szczątki ze złomowania należy rozdzielić równo wg. strat każdej ze stron bitwy (dopuszcza się zamianę wszystkich strat na jeden surowiec, np. metal na kryształ, wg. rozsądnego przelicznika)'
                         ]
                     ],
 
@@ -196,7 +215,7 @@ $_Lang['RulesDefinitions'] = [
                 'elements' => [
                     1 => 'Pożyczki Recyklerów (w celu zebrania nadmiarowych szczątków po bitwie) są dozwolone i powinny zostać zgłoszone na Forum gry lub bezpośrednio do Administracji lub Supportu.',
 
-                    2 => 'Podział surowców z Pola Zniszczeń jest dowolny.',
+                    2 => 'Podział surowców z Pola Zniszczeń jest dowolny, lecz nie powinien łamać zasad Pushu.',
 
                     3 => 'Odesłanie surowców musi odbyć się w przeciągu 24 godzin od zebrania surowców z Pola Zniszczeń.',
 
@@ -207,9 +226,10 @@ $_Lang['RulesDefinitions'] = [
             6 => [
                 'title' => 'Bash',
                 'elements' => [
-                    1 => 'Za Bash uznaje się więcej niż 5 ataków na jedną <b>planetę lub księżyc</b> w ciągu 24 godzin (liczonych od godziny 00:00 do 23:59) lub więcej niż 15 ataków na jednego <b>gracza</b> w ciągu 24 godzin (liczonych od godziny 00:00 do 23:59)',
+                    // [MODIFIABLE]
+                    1 => 'Za Bash uznaje się więcej niż 5 ataków na jedną <b>planetę lub księżyc</b> w ciągu 24 godzin (liczonych od godziny 00:00 do 23:59 czasu serwera) lub więcej niż 15 ataków na jednego <b>gracza</b> w ciągu 24 godzin (liczonych od godziny 00:00 do 23:59 czasu serwera)',
 
-                    2 => 'Flota lecąca z misją Niszcz jest liczona tak jak normalny atak.',
+                    2 => 'Flota lecąca z misją "Niszcz" jest liczona tak jak normalny atak.',
 
                     3 => 'Każdy gracz, który bierze udział w Ataku Związku, jest osobno liczony do reguły Bash (nie istnieje w tym przypadku odpowiedzialność zbiorowa).',
 
@@ -244,20 +264,20 @@ $_Lang['RulesDefinitions'] = [
                 'elements' => [
                     1 => 'Za Bugusing uznaje się używanie lub świadome ukrywanie błędów w oprogramowaniu gry dla własnej lub cudzej korzyści a także by spowolnić, zdestabilizować działanie gry lub w utrudnić dostęp do gry innym osobom.',
 
-                    2 => 'Każdy gracz, który został ukarany za BugUsing lub skorzystał nieświadomie z błędu, jest zobowiązany do pomocy Administracji w celu zlokalizowania i usunięcia błędu, o ile Administracja go o to prosi. Jeśli odmówi współpracy, jego konto może zostać ukarane, całkowicie zablokowane lub usunięte.',
+                    2 => 'Nieświadome wykorzystywanie błędów w grze nie jest domyślnie karalne, jednakże znalezienie błędu powinno zostać natychmiastowo zgłoszone do Administracji (bez rozgłaszania informacji o znalezionym błędzie innym osobom).',
 
-                    3 => 'Każdy gracz ma obowiązek zgłosić odkrytego Buga, niezależnie od jego szkodliwości.',
+                    3 => 'Każdy gracz, który został ukarany za BugUsing lub skorzystał nieświadomie z błędu, jest zobowiązany do pomocy Administracji w celu zlokalizowania i usunięcia błędu, o ile Administracja go o to prosi. Jeśli odmówi współpracy, jego konto może zostać ukarane, całkowicie zablokowane lub usunięte.',
 
-                    4 => 'Jeśli gracz odznaczył się wyjątkową pomocą w rozwiązaniu problemu z błędami (lub zgłosił ich dostatecznie dużo), Administracja może nagrodzić go odpowiednimi płatnymi dodatkami w grze. Jednakże każda próba wyłudzenia nagrody może zostać ukarana.'
+                    4 => 'Każdy gracz ma obowiązek zgłosić odkrytego Buga, niezależnie od jego szkodliwości.'
                 ]
             ],
 
             8 => [
                 'title' => 'Tryb Urlopu',
                 'elements' => [
-                    1 => 'Tryb Urlopu ma za zadanie zabezpieczyć konto gracza w czasie jego nieobecności przed atakami innych graczy. Dlatego też zabronione jest blokowanie możliwości przejścia na Urlop, niezależnie od sposobu blokowania (przykładem blokowania jest wysyłanie powolnych flot na planetę gracza).',
+                    1 => 'Tryb Urlopu ma za zadanie zabezpieczyć konto gracza w czasie jego nieobecności przed przyszłymi atakami innych graczy. Dlatego też zabronione jest blokowanie możliwości przejścia na Urlop, niezależnie od sposobu blokowania (przykładem blokowania jest wysyłanie powolnych flot na planetę gracza).',
 
-                    2 => 'Tryb Urlopu musi trwać minimalnie 3 dni i może trwać maksymalnie 30 dni (o ile gracz nie napisze do Administracji z prośbą o przedłużenie Urlopu ze względu na niecodzienną sytuację). Maksymalny czas urlopu ma zapobiec utrzymywaniu nieaktywnych i nietykalnych kont w grze. Po upłynięciu 30 dni od założenia Urlopu, przy najbliższym przeliczaniu Statystyk Serwera system automatycznie zdejmie Urlop z konta gracza.',
+                    2 => 'Tryb Urlopu musi trwać minimalnie 3 dni i może trwać maksymalnie 30 dni (o ile gracz nie napisze do Administracji z prośbą o przedłużenie Urlopu ze względu na niecodzienną sytuację). Po upłynięciu 30 dni od założenia Urlopu, przy najbliższym przeliczaniu Statystyk Serwera system automatycznie zdejmie Urlop z konta gracza.',
 
                     3 => 'Po zdjęciu każdego Urlopu system zablokuje wszelkie próby ponownego przejścia na ponowny urlop przez następne 24 godziny.'
                 ]
@@ -270,7 +290,7 @@ $_Lang['RulesDefinitions'] = [
 
                     2 => 'Korzystanie z gry przez oprogramowanie inne niż przeglądarka internetowa jest surowo zabronione.',
 
-                    3 => 'Oficjalnie wspieraną przeglądarką jest Mozilla Firefox w najnowszej dostępnej stabilnej wersji. Jednakże gra jest również sprawdzana na najnowszych stabilnych wersjach innych przeglądarek, a także na niektórych wersjach rozwojowych. Właściciele Gry nie gwarantują prawidłowego działania gry na starych przeglądarkach (jak Internet Explorer 6) oraz na telefonach komórkowych czy tabletach.',
+                    3 => 'Zespół deweloperski silnika gry oficjalnie wspiera nowoczesne przeglądarki internetowe takie jak Mozilla Firefox czy Google Chrome, które są dostępne na wszystkich wiodących platformach (Windows, Linux, MacOS i Android). We wszystkich przypadkach, zespół deweloperski dołoży wszelkich starań by wspierać zarówno najnowszą wersję stabilną oraz wersję o wydłużonym okresie wsparcia wymienionych przeglądarek.',
 
                     4 => 'W szczególnych przypadkach Właściciele Gry lub Administracja może (ale nie musi) przyznać zwrot straconych surowców lub floty, co zostało wywołane przez awarię serwera. Jednocześnie należy pamiętać, że w takim przypadku należy dostarczyć jak największej ilości informacji, by pomóc w procesie zwrotu.'
                 ]
@@ -284,15 +304,20 @@ $_Lang['RulesDefinitions'] = [
             1 => [
                 'title' => 'Treści w grze',
                 'elements' => [
-                    1 => 'Oficjalnymi językami kontaktu z Właścicielami, Administracją i Supportem w grze są język Polski i Angielski.',
+                    // [MODIFIABLE]
+                    1 => 'Jeśli nie zostało to inaczej sprecyzowane, oficjalnym językiem kontaktu z Właścicielami, Administracją, Zespołem deweloperskim i Supportem jest język Angielski.',
 
                     2 => [
                         'maintext' => 'W Wiadomościach (zarówno prywatnych jak i na czacie) zabronione jest:',
                         'ul' => [
                             'Podszywanie się pod Właścicieli Gry, Administrację lub Support gry.',
+
                             'Wszelkie formy Reklamy konkurencyjnych serwisów lub gier.',
+
                             'Wysyłanie SPAMu, niechcianych Reklam.',
+
                             'Wysyłanie wszelkich szkodliwych linków lub szkodliwego kodu, mającego na celu wyłudzić prywatne dane gracza.',
+
                             'W szczególnych przypadkach będą karane również: publiczna obraza oraz pomówienia, a także mocne wulgaryzmy wymierzone w inne osoby (pseudocenzura, czyli ukrywanie części wulgaryzmu, również będzie karana).'
                         ]
                     ],
@@ -301,7 +326,9 @@ $_Lang['RulesDefinitions'] = [
                         'maintext' => 'W Nazwach (gracza, planet, księżyców, sojuszy itp.) zabronione jest:',
                         'ul' => [
                             'Używanie nazw zarezerwowanych dla Właścicieli Gry, Administracji czy Supportu (np. Admin, GameMaster, Game Operator).',
+
                             'Podszywanie się pod Właścicieli Gry, Administrację lub Support.',
+
                             'Używanie zwrotów wulgarnych, obraźliwych lub rasistowskich.'
                         ]
                     ],
@@ -313,11 +340,11 @@ $_Lang['RulesDefinitions'] = [
             2 => [
                 'title' => 'Kontakt z graczami i Zarządem gry',
                 'elements' => [
-                    1 => 'Zabrania się jakichkolwiek prób Wymuszeń na innych graczach lub Właścicielach, Administracji lub Supporcie gry.',
+                    1 => 'Zabrania się jakichkolwiek prób Wymuszeń na innych graczach lub Właścicielach, Administracji lub Supporcie gry (np. w celu wymuszenia surowców lub przysług).',
 
                     2 => 'Groźby odnoszące się do gry (np. groźba zezłomowania floty) nie będą karane, o ile nie przekraczają granic zdrowego rozsądku.',
 
-                    3 => 'Wymuszenia lub groźby odnoszące się do realnego życia są surowo zabronione.',
+                    3 => 'Wymuszenia lub groźby odnoszące się do realnego życia są surowo zabronione i mogą zostać zgłoszone do organsów ścigania odpowiadających dla kraju pochodzenia Właścicieli gry',
 
                     4 => 'Oszustwa w grze mające na celu wyłudzenie są zabronione.',
 
@@ -349,20 +376,25 @@ $_Lang['RulesDefinitions'] = [
     5 => [
         'title' => 'Płatne funkcje i dodatki do kont',
         'elements' => [
-            1 => 'Wszelkie płatne dodatki, które gracz może zakupić na przyznane mu konto nie podlegają zwrotowi w przypadku naruszeń zasad Regulaminu.',
+            // [MODIFIABLE]
+            1 => 'Zasady zapisane w tym punkcie obowiązują tylko i wyłącznie w przypadku gdy jakiekolwiek płatne funkcjonalności faktycznie występują w grze. Właściciele gry mają obowiązek dopilnować, gdy poniżej przedstawione podpunkty były zgodne z prawem obowiązującym w kraju ich pochodzenia.',
 
-            2 => 'W przypadku Awarii lub blokady dostępu do gry, Właściciele lub Administracja gry <b>może</b>, ale nie musi, zarządzić darmowe przyznanie rekompensaty części lub całości straconych dodatków.',
+            2 => 'Wszystkie płatne funkcjonalności zakupione przez gracza są przyznawane na jego konto i nie są transferowalne między innymi kontami (za wyjątkiem sytuacji, gdy Administracja zgodzi się na ręczne przeniesienie).',
 
-            3 => 'Wszelkie dokonane płatności nie będą zwracane, nawet w przypadku usunięcia konta.',
+            3 => 'Wszystkie płatne funkcjonalności nie są refundowalne w przypadkach, gdy przez złamanie zasad Regulaminu użytkownik stracił wspomiane funkcjonalności przez zablokowanie konta, usunięcie konta lub kompletne ograniczenie dostępu do gry.',
 
-            4 => 'Wszelkie reklamacje lub problemy z płatnościami lub płatnymi dodatkami należy zgłosić do Składu Zarządzającego Grą.'
+            4 => 'Manualne usunięcie konta (rozpoczęte przez gracza na jego życzenie) przyznaje prawa do żądania zwrotów. Usuwając konto, gracz jest świadomy faktu zrzeknięcia się praw do dostępu do zakupionych funkcjonalności i ich użytkowania.',
+
+            5 => 'Wszelkie reklamacje związane z płatnymi funkcjonalnościami powinny być zgłaszane bezpośrednio do Administracji, chyba że ustalono dedykowany kanał kontaktu w tych sprawach.',
+
+            6 => 'We wszystkich innych sprawach nie wyszególnionych w tym Regulaminie, stosowane powinno być prawo odpowiednie dla kraju pochodzenia Właścicieli gry.',
         ]
     ],
 
     6 => [
         'title' => 'Postanowienia końcowe',
         'elements' => [
-            1 => 'Wszelkie treści zamieszczane w grze nie mogą łamać Polskiego Prawa, nie mogą także łamać zasad etyki oraz nie powinny łamać zasad kultury osobistej.',
+            1 => 'Wszelkie treści zamieszczane w grze nie mogą łamać prawa właściwego dla kraju pochodzenia Właścicieli gry, nie mogą także łamać zasad etyki oraz nie powinny łamać zasad kultury osobistej.',
 
             2 => 'Wszelkie Kary nakładane na konto gracza mogą zostać podane bez podania wyjaśnienia ze strony Właścicieli i Administracji gry.',
 
