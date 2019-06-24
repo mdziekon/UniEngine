@@ -10,7 +10,7 @@ $_Lang['BattleReport_AttackerDestroy'] = str_replace($_Lang['sys_mess_attack_rep
 // Defender Report (Owner)- Without Defence rebuild stats
 $_Lang['BattleReport_Defender_NoRebuild'] = "<center><a href=\"#\" onclick=\"f('battlereport.php?id=%s', ''); return false;\"><span style=\"color: %s\">{$_Lang['sys_mess_attack_report']} [%s:%s:%s] [%s]</span></a><br/><br/><b class=\"skyblue\">Link Udostępniający:</b> <a href=\"%s\" onclick=\"f(this.href, ''); return false;\">%s</a></center>";
 // Defender Report (Owner)- With Defence rebuild stats
-$_Lang['BattleReport_Defender_WithRebuild']	= "<center><a href=\"#\" onclick=\"f('battlereport.php?id=%s', ''); return false;\"><span style=\"color: %s\">{$_Lang['sys_mess_attack_report']} [%s:%s:%s] [%s]</span></a><br/><br/><b><u>{$_Lang['sys_mess_rebuilt_def']}</u></b><br/>%s<br/><br/><b class=\"skyblue\">Link Udostępniający:</b> <a href=\"%s\" onclick=\"f(this.href, ''); return false;\">%s</a></center>";
+$_Lang['BattleReport_Defender_WithRebuild']    = "<center><a href=\"#\" onclick=\"f('battlereport.php?id=%s', ''); return false;\"><span style=\"color: %s\">{$_Lang['sys_mess_attack_report']} [%s:%s:%s] [%s]</span></a><br/><br/><b><u>{$_Lang['sys_mess_rebuilt_def']}</u></b><br/>%s<br/><br/><b class=\"skyblue\">Link Udostępniający:</b> <a href=\"%s\" onclick=\"f(this.href, ''); return false;\">%s</a></center>";
 // Defender Report (Helper) - Report
 $_Lang['BattleReport_Helper_NoRebuild'] = "<center><a href=\"#\" onclick=\"f('battlereport.php?id=%s', ''); return false;\"><span style=\"color: %s\">{$_Lang['sys_mess_defense_report']} [%s:%s:%s] [%s]</span></a><br/><br/><b class=\"skyblue\">Link Udostępniający:</b> <a href=\"%s\" onclick=\"f(this.href, ''); return false;\">%s</a></center>";
 
@@ -18,195 +18,193 @@ $_Lang['BattleReport_Helper_NoRebuild'] = "<center><a href=\"#\" onclick=\"f('ba
 
 $_Lang['msg_const']['msgs'] = array
 (
-	// MessageSystem Errors
-	'err'	=> '<span class="red">Wystąpił błąd w Systemie Wiadomości! Proszę zgłosić tą wiadomość, klikając link "Raportuj", (a w polu "Dodatkowe informacje podać kod błędu - #ERR_MSGSYS_001) [Identyfikator wiadomości: %s]!</span>',
-	'err2'	=> '<span class="red">Wystąpił błąd w Systemie Wiadomości! Proszę zgłosić tą wiadomość, klikając link "Raportuj", (a w polu "Dodatkowe informacje podać kod błędu - #ERR_MSGSYS_002) [Identyfikator wiadomości: %s]!</span>',
-	'err3'	=> '<span class="red">Wystąpił błąd w Systemie Wiadomości Masowej! Proszę zgłosić tą wiadomość, klikając link "Raportuj", (a w polu "Dodatkowe informacje podać kod błędu - #ERR_MSGSYS_003) [Identyfikator wiadomości: %s]!</span>',
-	'err4'	=> '<span class="red">Wystąpił błąd w Systemie Wiadomości Masowej! Proszę zgłosić tą wiadomość, klikając link "Raportuj", (a w polu "Dodatkowe informacje podać kod błędu - #ERR_MSGSYS_004) [Identyfikator wiadomości: %s]!</span>',
+    // Legacy messages
+    '005' => 'Nie masz wystarczające ilości surowców do budowy %s (Poziom %s).<br/>Aktualnie dysponujesz <b>%s</b> jednostkami <b>metalu</b>, <b>%s</b> jednostkami <b>kryształu</b> i <b>%s</b> jednostkami <b>deuteru</b>,<br/>natomiast budowa wymaga <b class="red">%s</b> jednostek <b>metalu</b>, <b class="red">%s</b> jednostek <b>kryształu</b> i <b class="red">%s</b> jednostek <b>deuteru</b>.',
+    '006' => 'Jedna z Twoich flot osiągneła %s %s. Zdobyła %s jednostek %s, %s jednostek %s i %s jednostek %s.',
+    '007' => 'Sojusznicza flota z %s %s osiągneła %s %s zdobyła %s jednostek %s, %s jednostek %s i %s jednostek %s.',
+    '008' => 'Twoja flota wraca na %s %s %s. Nie dostarczyła żadnych surowców.',
+    '012' => 'Twoja flota wpadła w czarną dziurę i została %s zniszczona!',
+    '013' => 'Członkowie ekspedycji znaleźli projekt nowego statku międzygalaktycznego, zachwycili się pięknem schematów, lecz nie mieli odpowiedniej technologii, by zapisać je na dyskach...%s',
+    '014' => 'Twoja ekipa ekspedycji natrafiła na surowce!<br/>Uzyskane surowce to %s ; %s, %s ; %s i %s %s',
+    '015' => 'Członkowie ekspedycji spędzili długie godziny na przeszukiwaniu granic systemu planetarnego, lecz nie znaleźli niczego godnego uwagi...',
+    '016' => 'Twoja ekipa ekspedycji natrafiła na porzucone okręty!<br/>Statki jakie udało się uruchomić to:<br/> %s',
+    '017' => 'Twoja ekspedycja powróciła na ojczystą planetę.',
+    '029' => 'Wroga flota z %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a> została dostrzeżona w pobliżu %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a><br/><br/>Szansa na przechwycenie sond: %s',
+    '039' => 'Gratulacje!<br/>Polecony przez Ciebie użytkownik <b>%s</b> przekroczył jeden z progów punktowych (%s), dlatego dostajesz za to <b>%s jednostek Ciemnej Energii</b>!<br/><br/>Pamiętaj, że możesz zapraszać nieskończoną ilość użytkowników do gry!',
+    '041' => 'Gracz %s zaprosił Cię do wspólnego ataku na %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a><br/><br/>Jeśli chcesz skorzystać z jego propozycji, zaatakuj %s, jako misję wybierz <a class="orange" href="fleet.php?galaxy=%s&system=%s&planet=%s&planettype=%s&target_mission=2"><b>Atak związku</b></a> a następnie wybierz z listy związek o nazwie <b class="lime">"%s"</b>.',
+    '042' => 'Twoja ekspedycja napotkała wrogo nastawionych piratów i wdała się w bitwę!<br/><br/>Następujące statki zostały zniszczone w tej bitwie:<br/>%s',
+    '043' => 'Twoja ekspedycja podczas badania przestrzeni znalazła się w pobliżu Czarnej Dziury i pewna jej część została wciągnięta w jej ogromnie silne pole grawitacyjne!<br/><br/>Następujące statki zostały wciągnięte i zmiażdżone przez ogromne siły grawitacyjne:<br/>%s',
+    '044' => 'Twoja ekspedycja spotkała wrogo nastawioną flotę innego Imperium, która od razu zaatakowała twoją flotę!<br/><br/>Następujące statki zostały zniszczone przez agresora:<br/>%s',
+    '045' => 'Twoja ekspedycja napotkała wrogo nastawioną flotę innego Imperium i wdała się z nią w bitwę.<br/>Na szczęscie, obca flota nie była dostatecznie silna by przedrzeć się przez silne tarcze i opancerzenie twojej floty i wycofała się z pola bitwy...',
+    '046' => 'Twoja ekspedycja podczas badania przestrzeni znalazła się na polu asteroid.<br/>Dzięki świetnym manewrom twoich Admirałów i Nawigatorów flota wyleciała bez szwanku poza asteroidy...',
+    '047' => 'Twoja ekspedycja przez błąd nawigatorów znalazła się w pobliżu Czarnej Dziury.<br/>Dzięki szybkiej reakcji fizyków najdujących się w składzie grupy badawczej, udało im się na chwilę zwiększyć wydajność napędów, przez co wszystkie statki cało uciekły z pola grawitacyjnego...',
+    '048' => 'Twoja ekspedycja przez błąd nawigatorów znalazła się w horyzoncie zdarzeń Czarnej Dziury.<br/>Żadnemu ze statków nie udało się przeciwstawić ogromnej sile grawitacyjnej...',
+    '049' => 'Twoja ekspedycja podczas badania przestrzeni znalazła dziwną asteroidę, która emitowała słabe pole elektromagnetyczne.<br/>Zainteresowani naukowcy postanowili zbadać źródło tego pola, niestety, jak się okazało, była to zasadzka zastawiona przez piratów.<br/>Żaden ze statków nie wyszedł cało z tej bitwy...',
+    '050' => 'Twoja ekspedycja napotkała nieznaną dotąd rasę we Wszechświecie.<br/>Podczas próby nawiązania kontaktu z obcymi, system komunikacyjny wysłał niewłaściwą wiadomość, przez co obcy uznali próbę kontaktu za groźbę.<br/>Ich przewaga technologiczna nie dała żadnych szans twoim statkom. Kontakt z flotą został przerwany...',
+    '051' => 'Twoja ekspedycja znalazła niewielki pas asteroid, z którego można odzyskać nieco surowców.<br/>Twoja flota pozyskała następujące surowce:<br/>%s',
+    '052' => 'Twoja ekspedycja natrafiła na opuszczoną stację badawczą. W jej magazynach znaleziono zapasy surowców.<br/>Twoja flota zabrała ze sobą następujące surowce:<br/>%s',
+    '053' => 'Twoja ekspedycja odkryła opuszczoną kryjówkę piratów na jednej z ogromnych asteroid, w której piraci ukrywali swoje łupy.<br/>Twoja flota zabrała ze sobą następujące surowce:<br/>%s',
+    '054' => 'Twoja ekspedycja znalazła niewielki pas asteroid, z którego możnaby odzyskać nieco surowców.<br/>Niestety, ładowność statków nie pozwoliła na zabranie jakichkolwiek surowców...',
+    '055' => 'Twoja ekspedycja natrafiła na opuszczoną stację badawczą. W jej magazynach znaleziono zapasy surowców.<br/>Niestety, ładowność statków nie pozwoliła na zabranie pozostawionych surowców...',
+    '056' => 'Twoja ekspedycja odkryła opuszczoną kryjówkę piratów na jednej z ogromnych asteroid, w której piraci ukrywali swoje łupy.<br/>Niestety, ładowność statków nie pozwoliła na zabranie jakichkolwiek łupów...',
+    '057' => 'Twoja ekspedycja odnalazła opuszczone i nieco zniszczone statki. Inżynierowie pokładowi zdołali uruchomić i przywrócić do normalnego stanu część statków.<br/>Uruchomione statki:<br/>%s',
+    '058' => 'Twoja ekspedycja przeszukała kryjówkę piratów. Okazało się, że w hangarach zostawili całkiem sprawne statki.<br/>Pozyskane statki:<br/>%s',
+    '059' => 'Twoja ekspedycja trafiła na opuszczone i nieco zniszczone statki.<br/>Niestety, nie udało się uruchomić żadnego z nich - uszkodzenia były zbyt poważne, by nadawały się do naprawy...',
+    '060' => 'Twoja ekspedycja przeszukała kryjówkę piratów. Zostawili oni w hangarach kilka statków.<br/>Niestety, ich stan pozostawiał wiele do życzenia - nie nadawały się one do dalszej eksploatacji...',
+    '061' => 'Twoja ekspedycja nie znalazła niczego godnego uwagi na krańcach tego układu planetarnego.<br/>Niestety, błąd w obliczeniach nawigatorów spowodował, że flota obrała nieodpowiednią drogę powrotną na ojczystą planetę, przez co czas powrotu wydłużył się o:<br/>%s',
+    '073' => $_Lang['BattleReport_Defender_NoRebuild'],
 
-	// Normal Messages
-	'000' => '%s',
-	'001' => 'Budynek <b>%s</b> nie może zostać zbudorzy, ponieważ nie został jeszcze wybudowany!',
-	'002' => 'Osiągnięto maksymalny poziom budynku %s!',
-	'003' => 'Nie masz wystarczającej ilości Ciemnej Energii do budowy budynku <b>%s</b>.<br/>Potrzebujesz <b>%s</b> j., a na swoim koncie posiadasz <b>%s</b> j.',
-	'004' => 'Budynek <b>%s</b> nie może zostać zburzony!',
-	'005' => 'Nie masz wystarczające ilości surowców do budowy %s (Poziom %s).<br/>Aktualnie dysponujesz <b>%s</b> jednostkami <b>metalu</b>, <b>%s</b> jednostkami <b>kryształu</b> i <b>%s</b> jednostkami <b>deuteru</b>,<br/>natomiast budowa wymaga <b class="red">%s</b> jednostek <b>metalu</b>, <b class="red">%s</b> jednostek <b>kryształu</b> i <b class="red">%s</b> jednostek <b>deuteru</b>.',
+    // ---
 
-	'006' => 'Jedna z Twoich flot osiągneła %s %s. Zdobyła %s jednostek %s, %s jednostek %s i %s jednostek %s.',
-	'007' => 'Sojusznicza flota z %s %s osiągneła %s %s zdobyła %s jednostek %s, %s jednostek %s i %s jednostek %s.',
-	'008' => 'Twoja flota wraca na %s %s %s. Nie dostarczyła żadnych surowców.',
+    // MessageSystem Errors
+    'err'   => '<span class="red">Wystąpił błąd w Systemie Wiadomości! Proszę zgłosić tą wiadomość, klikając link "Raportuj", (a w polu "Dodatkowe informacje podać kod błędu - #ERR_MSGSYS_001) [Identyfikator wiadomości: %s]!</span>',
+    'err2'  => '<span class="red">Wystąpił błąd w Systemie Wiadomości! Proszę zgłosić tą wiadomość, klikając link "Raportuj", (a w polu "Dodatkowe informacje podać kod błędu - #ERR_MSGSYS_002) [Identyfikator wiadomości: %s]!</span>',
+    'err3'  => '<span class="red">Wystąpił błąd w Systemie Wiadomości Masowej! Proszę zgłosić tą wiadomość, klikając link "Raportuj", (a w polu "Dodatkowe informacje podać kod błędu - #ERR_MSGSYS_003) [Identyfikator wiadomości: %s]!</span>',
+    'err4'  => '<span class="red">Wystąpił błąd w Systemie Wiadomości Masowej! Proszę zgłosić tą wiadomość, klikając link "Raportuj", (a w polu "Dodatkowe informacje podać kod błędu - #ERR_MSGSYS_004) [Identyfikator wiadomości: %s]!</span>',
 
-	'009' => 'Twoja flota osiągnęła %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a>.<br/>Następujące statki będą teraz stacjonować na tych koordynatach:<br/>%s<br/>Następujące surowce zostały dostarczone:<br/>%s: <b>%s</b>, %s: <b>%s</b>, %s: <b>%s</b>',
-	'010' => 'Twoja flota wraca na %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a> i przywozi z powrotem następujące surowce:<br/>%s: <b>%s</b>, %s: <b>%s</b>, %s: <b>%s</b>',
+    // Normal Messages
+    '000' => '%s',
+    '001' => 'Budynek <b>%s</b> nie może zostać zbudorzy, ponieważ nie został jeszcze wybudowany!',
+    '002' => 'Osiągnięto maksymalny poziom budynku %s!',
+    '003' => 'Nie masz wystarczającej ilości Ciemnej Energii do budowy budynku <b>%s</b>.<br/>Potrzebujesz <b>%s</b> j., a na swoim koncie posiadasz <b>%s</b> j.',
+    '004' => 'Budynek <b>%s</b> nie może zostać zburzony!',
 
-	'011' => 'Twoje recyklery dotarły na Pole Zniszczeń <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a><br/>Zebrano <b>%s</b> jednostek metalu i <b>%s</b> jednostek kryształu.',
 
-	'012' => 'Twoja flota wpadła w czarną dziurę i została %s zniszczona!',
-	'013' => 'Członkowie ekspedycji znaleźli projekt nowego statku międzygalaktycznego, zachwycili się pięknem schematów, lecz nie mieli odpowiedniej technologii, by zapisać je na dyskach...%s',
-	'014' => 'Twoja ekipa ekspedycji natrafiła na surowce!<br/>Uzyskane surowce to %s ; %s, %s ; %s i %s %s',
-	'015' => 'Członkowie ekspedycji spędzili długie godziny na przeszukiwaniu granic systemu planetarnego, lecz nie znaleźli niczego godnego uwagi...',
-	'016' => 'Twoja ekipa ekspedycji natrafiła na porzucone okręty!<br/>Statki jakie udało się uruchomić to:<br/> %s',
-	'017' => 'Twoja ekspedycja powróciła na ojczystą planetę.',
+    '009' => 'Twoja flota osiągnęła %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a>.<br/>Następujące statki będą teraz stacjonować na tych koordynatach:<br/>%s<br/>Następujące surowce zostały dostarczone:<br/>%s: <b>%s</b>, %s: <b>%s</b>, %s: <b>%s</b>',
+    '010' => 'Twoja flota wraca na %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a> i przywozi z powrotem następujące surowce:<br/>%s: <b>%s</b>, %s: <b>%s</b>, %s: <b>%s</b>',
 
-	'018' => 'Twoja flota kolonizacyjna osiągnęła pozycję <b>[%s:%s:%s]</b>, lecz kolonizacja nie była możliwa - posiadasz już maksymalną liczbę kolonii (%s)!<br/><b>Pamiętaj, że możesz dokupić 3 dodatkowe Sloty dla nowych kolonii w <a href="galacticshop.php#shop" class="orange">Sklepie</a>!</b>',
-	'019' => 'Twoja flota kolonizacyjna osiągnęła pozycję <b>[%s:%s:%s]</b>, twoi wysłannicy rozpoczynają zasiedlanie planety.',
-	'020' => 'Twoja flota kolonizacyjna osiągnęła pozycję <b>[%s:%s:%s]</b>, lecz na tej pozycji nie ma żadnej poprawnej planety!<br/>Flota wraca na swoją planetę ojczystą.',
-	'021' => 'Twoja flota kolonizacyjna osiągnęła pozycję <b>[%s:%s:%s]</b>, lecz okazało się, że ta planeta jest już zamieszkała!<br/>Flota wraca na swoją planetę ojczystą.',
+    '011' => 'Twoje recyklery dotarły na Pole Zniszczeń <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a><br/>Zebrano <b>%s</b> jednostek metalu i <b>%s</b> jednostek kryształu.',
 
-	'022' => '%sWitamy na serwerze '.$_GameConfig['game_name'].'!<br/>Jeśli masz jakieś pytania co do gry, zapraszamy na nasze Forum lub Chat w grze.<br/>Numery i adresy kontaktowe z zarządem gry znajdują się w zakładce Kontakt.<br/><br/>',
+    '018' => 'Twoja flota kolonizacyjna osiągnęła pozycję <b>[%s:%s:%s]</b>, lecz kolonizacja nie była możliwa - posiadasz już maksymalną liczbę kolonii (%s)!<br/><b>Pamiętaj, że możesz dokupić 3 dodatkowe Sloty dla nowych kolonii w <a href="galacticshop.php#shop" class="orange">Sklepie</a>!</b>',
+    '019' => 'Twoja flota kolonizacyjna osiągnęła pozycję <b>[%s:%s:%s]</b>, twoi wysłannicy rozpoczynają zasiedlanie planety.',
+    '020' => 'Twoja flota kolonizacyjna osiągnęła pozycję <b>[%s:%s:%s]</b>, lecz na tej pozycji nie ma żadnej poprawnej planety!<br/>Flota wraca na swoją planetę ojczystą.',
+    '021' => 'Twoja flota kolonizacyjna osiągnęła pozycję <b>[%s:%s:%s]</b>, lecz okazało się, że ta planeta jest już zamieszkała!<br/>Flota wraca na swoją planetę ojczystą.',
 
-	'023' => 'Sojusz %s zaakceptował twoje podanie o członkostwo!',
-	'024' => 'Sojusz %s odrzucił twoje podanie o członkostwo!<br/>Powód: %s',
+    '022' => '%sWitamy na serwerze '.$_GameConfig['game_name'].'!<br/>Jeśli masz jakieś pytania co do gry, zapraszamy na nasze Forum lub Chat w grze.<br/>Numery i adresy kontaktowe z zarządem gry znajdują się w zakładce Kontakt.<br/><br/>',
 
-	'029' => 'Wroga flota z %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a> została dostrzeżona w pobliżu %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a><br/><br/>Szansa na przechwycenie sond: %s',
+    '023' => 'Sojusz %s zaakceptował twoje podanie o członkostwo!',
+    '024' => 'Sojusz %s odrzucił twoje podanie o członkostwo!<br/>Powód: %s',
 
-	'030' => 'Jedna z Twoich flot osiągnęła %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a>.<br/>Dostarczyła <b>%s</b> jednostek metalu, <b>%s</b> jednostek kryształu i <b>%s</b> jednostek deuteru.',
-	'031' => 'Sojusznicza flota z %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a> osiągnęła %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a>.<br/>Dostarczyła <b>%s</b> jednostek metalu, <b>%s</b> jednostek kryształu i <b>%s<b/> jednostek deuteru.',
+    '030' => 'Jedna z Twoich flot osiągnęła %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a>.<br/>Dostarczyła <b>%s</b> jednostek metalu, <b>%s</b> jednostek kryształu i <b>%s</b> jednostek deuteru.',
+    '031' => 'Sojusznicza flota z %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a> osiągnęła %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a>.<br/>Dostarczyła <b>%s</b> jednostek metalu, <b>%s</b> jednostek kryształu i <b>%s<b/> jednostek deuteru.',
 
-	'032' => 'Jedna z Twoich flot osiągnęła %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a>.<br/>Zostanie tam przez %s h.',
-	'033' => 'Sojusznicza flota z %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a> osiągnęła %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a>.<br/>Zostanie tu przez %s h.',
+    '032' => 'Jedna z Twoich flot osiągnęła %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a>.<br/>Zostanie tam przez %s h.',
+    '033' => 'Sojusznicza flota z %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a> osiągnęła %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a>.<br/>Zostanie tu przez %s h.',
 
-	'034' => 'Twoja flota wraca na %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a>.<br/>Przywozi następujące surowce: <b>%s</b> jednostek metal, <b>%s</b> jednostek kryształu i <b>%s</b> jednostek deuteru.',
-	'035' => 'Twoja flota wraca na %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a>.<br/>Nie przywiozła ze sobą żadnych surowców.',
+    '034' => 'Twoja flota wraca na %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a>.<br/>Przywozi następujące surowce: <b>%s</b> jednostek metal, <b>%s</b> jednostek kryształu i <b>%s</b> jednostek deuteru.',
+    '035' => 'Twoja flota wraca na %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a>.<br/>Nie przywiozła ze sobą żadnych surowców.',
 
-	'037' => 'Na %s %s nie ma już miejsca pod rozbudowę budynku %s.',
+    '037' => 'Na %s %s nie ma już miejsca pod rozbudowę budynku %s.',
 
-	'038' => '<b>Właśnie ktoś zarejestrował się do gry z twojego linku polecającego!</b><br/><br/>Jeśli chcesz sprawdzić kto zarejestował się z twojego linku, przejdź do sekcji <a href="ref_table.php" class="orange"><u>Poleceni gracze</u></a>.<br/>W tym miejscu możesz także sprawdzić, ile Ciemnej Energii otrzymałeś już dzięki tej osobie!',
-	'039' => 'Gratulacje!<br/>Polecony przez Ciebie użytkownik <b>%s</b> przekroczył jeden z progów punktowych (%s), dlatego dostajesz za to <b>%s jednostek Ciemnej Energii</b>!<br/><br/>Pamiętaj, że możesz zapraszać nieskończoną ilość użytkowników do gry!',
+    '038' => '<b>Właśnie ktoś zarejestrował się do gry z twojego linku polecającego!</b><br/><br/>Jeśli chcesz sprawdzić kto zarejestował się z twojego linku, przejdź do sekcji <a href="ref_table.php" class="orange"><u>Poleceni gracze</u></a>.<br/>W tym miejscu możesz także sprawdzić, ile Ciemnej Energii otrzymałeś już dzięki tej osobie!',
 
-	// ACS Invitation
-	'041' => 'Gracz %s zaprosił Cię do wspólnego ataku na %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a><br/><br/>Jeśli chcesz skorzystać z jego propozycji, zaatakuj %s, jako misję wybierz <a class="orange" href="fleet.php?galaxy=%s&system=%s&planet=%s&planettype=%s&target_mission=2"><b>Atak związku</b></a> a następnie wybierz z listy związek o nazwie <b class="lime">"%s"</b>.',
+    '069' => 'Gracz %s zaprosił Cię do wspólnego ataku na %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a><br/><br/>Jeśli chcesz skorzystać z jego propozycji, zaatakuj %s, jako misję wybierz <a class="orange" href="fleet.php?galaxy=%s&system=%s&planet=%s&planettype=%s&target_mission=2"><b>Atak związku</b></a> a następnie wybierz z listy związek o nazwie <a href="fleet.php?joinacs=%s" class="lime">"%s"</a> (Kliknij w tą nazwę aby bezpośrednio dołączyć do związku)',
 
-	// Expeditions
-	'042' => 'Twoja ekspedycja napotkała wrogo nastawionych piratów i wdała się w bitwę!<br/><br/>Następujące statki zostały zniszczone w tej bitwie:<br/>%s',
-	'043' => 'Twoja ekspedycja podczas badania przestrzeni znalazła się w pobliżu Czarnej Dziury i pewna jej część została wciągnięta w jej ogromnie silne pole grawitacyjne!<br/><br/>Następujące statki zostały wciągnięte i zmiażdżone przez ogromne siły grawitacyjne:<br/>%s',
-	'044' => 'Twoja ekspedycja spotkała wrogo nastawioną flotę innego Imperium, która od razu zaatakowała twoją flotę!<br/><br/>Następujące statki zostały zniszczone przez agresora:<br/>%s',
-	'045' => 'Twoja ekspedycja napotkała wrogo nastawioną flotę innego Imperium i wdała się z nią w bitwę.<br/>Na szczęscie, obca flota nie była dostatecznie silna by przedrzeć się przez silne tarcze i opancerzenie twojej floty i wycofała się z pola bitwy...',
-	'046' => 'Twoja ekspedycja podczas badania przestrzeni znalazła się na polu asteroid.<br/>Dzięki świetnym manewrom twoich Admirałów i Nawigatorów flota wyleciała bez szwanku poza asteroidy...',
-	'047' => 'Twoja ekspedycja przez błąd nawigatorów znalazła się w pobliżu Czarnej Dziury.<br/>Dzięki szybkiej reakcji fizyków najdujących się w składzie grupy badawczej, udało im się na chwilę zwiększyć wydajność napędów, przez co wszystkie statki cało uciekły z pola grawitacyjnego...',
-	'048' => 'Twoja ekspedycja przez błąd nawigatorów znalazła się w horyzoncie zdarzeń Czarnej Dziury.<br/>Żadnemu ze statków nie udało się przeciwstawić ogromnej sile grawitacyjnej...',
-	'049' => 'Twoja ekspedycja podczas badania przestrzeni znalazła dziwną asteroidę, która emitowała słabe pole elektromagnetyczne.<br/>Zainteresowani naukowcy postanowili zbadać źródło tego pola, niestety, jak się okazało, była to zasadzka zastawiona przez piratów.<br/>Żaden ze statków nie wyszedł cało z tej bitwy...',
-	'050' => 'Twoja ekspedycja napotkała nieznaną dotąd rasę we Wszechświecie.<br/>Podczas próby nawiązania kontaktu z obcymi, system komunikacyjny wysłał niewłaściwą wiadomość, przez co obcy uznali próbę kontaktu za groźbę.<br/>Ich przewaga technologiczna nie dała żadnych szans twoim statkom. Kontakt z flotą został przerwany...',
-	'051' => 'Twoja ekspedycja znalazła niewielki pas asteroid, z którego można odzyskać nieco surowców.<br/>Twoja flota pozyskała następujące surowce:<br/>%s',
-	'052' => 'Twoja ekspedycja natrafiła na opuszczoną stację badawczą. W jej magazynach znaleziono zapasy surowców.<br/>Twoja flota zabrała ze sobą następujące surowce:<br/>%s',
-	'053' => 'Twoja ekspedycja odkryła opuszczoną kryjówkę piratów na jednej z ogromnych asteroid, w której piraci ukrywali swoje łupy.<br/>Twoja flota zabrała ze sobą następujące surowce:<br/>%s',
-	'054' => 'Twoja ekspedycja znalazła niewielki pas asteroid, z którego możnaby odzyskać nieco surowców.<br/>Niestety, ładowność statków nie pozwoliła na zabranie jakichkolwiek surowców...',
-	'055' => 'Twoja ekspedycja natrafiła na opuszczoną stację badawczą. W jej magazynach znaleziono zapasy surowców.<br/>Niestety, ładowność statków nie pozwoliła na zabranie pozostawionych surowców...',
-	'056' => 'Twoja ekspedycja odkryła opuszczoną kryjówkę piratów na jednej z ogromnych asteroid, w której piraci ukrywali swoje łupy.<br/>Niestety, ładowność statków nie pozwoliła na zabranie jakichkolwiek łupów...',
-	'057' => 'Twoja ekspedycja odnalazła opuszczone i nieco zniszczone statki. Inżynierowie pokładowi zdołali uruchomić i przywrócić do normalnego stanu część statków.<br/>Uruchomione statki:<br/>%s',
-	'058' => 'Twoja ekspedycja przeszukała kryjówkę piratów. Okazało się, że w hangarach zostawili całkiem sprawne statki.<br/>Pozyskane statki:<br/>%s',
-	'059' => 'Twoja ekspedycja trafiła na opuszczone i nieco zniszczone statki.<br/>Niestety, nie udało się uruchomić żadnego z nich - uszkodzenia były zbyt poważne, by nadawały się do naprawy...',
-	'060' => 'Twoja ekspedycja przeszukała kryjówkę piratów. Zostawili oni w hangarach kilka statków.<br/>Niestety, ich stan pozostawiał wiele do życzenia - nie nadawały się one do dalszej eksploatacji...',
-	'061' => 'Twoja ekspedycja nie znalazła niczego godnego uwagi na krańcach tego układu planetarnego.<br/>Niestety, błąd w obliczeniach nawigatorów spowodował, że flota obrała nieodpowiednią drogę powrotną na ojczystą planetę, przez co czas powrotu wydłużył się o:<br/>%s',
+    '070' => 'Nie możesz rozbudowywać budynku <b>%s</b> na %s %s, ponieważ nie spełniłeś jego <a href="techtree.php#el%s">Wymagań Technologicznych</a>!',
 
-	'069' => 'Gracz %s zaprosił Cię do wspólnego ataku na %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a><br/><br/>Jeśli chcesz skorzystać z jego propozycji, zaatakuj %s, jako misję wybierz <a class="orange" href="fleet.php?galaxy=%s&system=%s&planet=%s&planettype=%s&target_mission=2"><b>Atak związku</b></a> a następnie wybierz z listy związek o nazwie <a href="fleet.php?joinacs=%s" class="lime">"%s"</a> (Kliknij w tą nazwę aby bezpośrednio dołączyć do związku)',
+    '071' => $_Lang['BattleReport_AttackerNormal'],
+    '072' => $_Lang['BattleReport_AttackerDestroy'],
+    '074' => $_Lang['BattleReport_Defender_WithRebuild'],
+    '075' => $_Lang['BattleReport_Helper_NoRebuild'],
 
-	'070' => 'Nie możesz rozbudowywać budynku <b>%s</b> na %s %s, ponieważ nie spełniłeś jego <a href="techtree.php#el%s">Wymagań Technologicznych</a>!',
+    '076' => 'Wroga flota z %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a> (<a href="profile.php?uid=%s">%s</a>) została dostrzeżona w pobliżu %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a><br/><br/>Szansa na przechwycenie sond: %s',
 
-	'071' => $_Lang['BattleReport_AttackerNormal'],
-	'072' => $_Lang['BattleReport_AttackerDestroy'],
-	'073' => $_Lang['BattleReport_Defender_NoRebuild'],
-	'074' => $_Lang['BattleReport_Defender_WithRebuild'],
-	'075' => $_Lang['BattleReport_Helper_NoRebuild'],
+    // MultiAccount Declarations
+    '077' => 'Deklaracja gry z jednego IP/Komputera w której znajduje się twoje konto została <b class="lime">zaakceptowana</b> przez Administrację!',
+    '078' => 'Deklaracja gry z jednego IP/Komputera w której znajduje się twoje konto została <b class="orange">odrzucona</b> przez Administrację - prosimy o kontakt w tej sprawie!',
+    '079' => 'Deklaracja gry z jednego IP/Komputera w której znajduje się twoje konto została <b class="red">usunięta</b> (ostatni gracz należący do tej deklaracji wycofał się, usunął konto lub osoba zgłaszająca deklarację ją wycofała)!',
+    '080' => 'Deklaracja gry z jednego IP/Komputera w której znajduje się twoje konto została <b class="red">usunięta</b> przez Administrację - prosimy o kontakt w tej sprawie!',
 
-	'076' => 'Wroga flota z %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a> (<a href="profile.php?uid=%s">%s</a>) została dostrzeżona w pobliżu %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a><br/><br/>Szansa na przechwycenie sond: %s',
+    // Buildings/Technology Queue Infos
+    '081' => 'Nie można dokonać akcji konstrukcyjnych na %s %s przy budynku <b>%s</b>!',
+    '082' => 'Brak odpowiedniej ilości surowców do konstrukcji budynku <b>%s</b> (Poziom %s) na %s %s.<br/>Posiadane surowce: <b>%s</b> j. <b>metalu</b>, <b>%s</b> j. <b>kryształu</b> i <b>%s</b> j. <b>deuteru</b>.<br/>Budowa wymaga: <b class="%s">%s</b> j. <b>metalu</b>, <b class="%s">%s</b> j. <b>kryształu</b> i <b class="%s">%s</b> j. <b>deuteru</b>.',
+    '083' => 'Na %s %s osiągnięto maksymalny poziom budynku <b>%s</b>.',
+    '084' => 'Nie można rozbudować budynku <b>%s</b> na %s %s, ponieważ aktualnie przeprowadzasz badania.',
+    '085' => 'Brak odpowiedniej ilości surowców do rozpoczęcia badania <b>%s</b> (Poziom %s) na %s %s.<br/>Posiadane surowce: <b>%s</b> j. <b>metalu</b>, <b>%s</b> j. <b>kryształu</b> i <b>%s</b> j. <b>deuteru</b>.<br/>Budowa wymaga: <b class="%s">%s</b> j. <b>metalu</b>, <b class="%s">%s</b> j. <b>kryształu</b> i <b class="%s">%s</b> j. <b>deuteru</b>.',
+    '086' => 'Osiągnięto maksymalny poziom badania <b>%s</b>.',
+    '087' => 'Nie masz wystarczającej ilości Ciemnej Energii do rozpoczecia badania <b>%s</b>.<br/>Potrzebujesz <b>%s</b> j., a na swoim koncie posiadasz <b>%s</b> j.',
+    '088' => 'Nie możesz rozpocząć badania <b>%s</b> na %s %s, ponieważ nie spełniłeś jego <a href="techtree.php#el%s">Wymagań Technologicznych</a>!',
+    '089' => 'Nie możesz rozpocząć badania <b>%s</b> na %s %s!',
 
-	// MultiAccount Declarations
-	'077' => 'Deklaracja gry z jednego IP/Komputera w której znajduje się twoje konto została <b class="lime">zaakceptowana</b> przez Administrację!',
-	'078' => 'Deklaracja gry z jednego IP/Komputera w której znajduje się twoje konto została <b class="orange">odrzucona</b> przez Administrację - prosimy o kontakt w tej sprawie!',
-	'079' => 'Deklaracja gry z jednego IP/Komputera w której znajduje się twoje konto została <b class="red">usunięta</b> (ostatni gracz należący do tej deklaracji wycofał się, usunął konto lub osoba zgłaszająca deklarację ją wycofała)!',
-	'080' => 'Deklaracja gry z jednego IP/Komputera w której znajduje się twoje konto została <b class="red">usunięta</b> przez Administrację - prosimy o kontakt w tej sprawie!',
+    // Buddy Invites
+    '090' => 'Gracz <a href="profile.php?uid=%s">%s</a> <b>zaakceptował twoje Buddy-Zapytanie!</b>',
+    '091' => 'Gracz <a href="profile.php?uid=%s">%s</a> <b>odrzucił twoje Buddy-Zapytanie!</b>',
+    '092' => 'Gracz <a href="profile.php?uid=%s">%s</a> <b>usunął Cię ze swojej Listy Znajomych!</b>',
 
-	// Buildings/Technology Queue Infos
-	'081' => 'Nie można dokonać akcji konstrukcyjnych na %s %s przy budynku <b>%s</b>!',
-	'082' => 'Brak odpowiedniej ilości surowców do konstrukcji budynku <b>%s</b> (Poziom %s) na %s %s.<br/>Posiadane surowce: <b>%s</b> j. <b>metalu</b>, <b>%s</b> j. <b>kryształu</b> i <b>%s</b> j. <b>deuteru</b>.<br/>Budowa wymaga: <b class="%s">%s</b> j. <b>metalu</b>, <b class="%s">%s</b> j. <b>kryształu</b> i <b class="%s">%s</b> j. <b>deuteru</b>.',
-	'083' => 'Na %s %s osiągnięto maksymalny poziom budynku <b>%s</b>.',
-	'084' => 'Nie można rozbudować budynku <b>%s</b> na %s %s, ponieważ aktualnie przeprowadzasz badania.',
-	'085' => 'Brak odpowiedniej ilości surowców do rozpoczęcia badania <b>%s</b> (Poziom %s) na %s %s.<br/>Posiadane surowce: <b>%s</b> j. <b>metalu</b>, <b>%s</b> j. <b>kryształu</b> i <b>%s</b> j. <b>deuteru</b>.<br/>Budowa wymaga: <b class="%s">%s</b> j. <b>metalu</b>, <b class="%s">%s</b> j. <b>kryształu</b> i <b class="%s">%s</b> j. <b>deuteru</b>.',
-	'086' => 'Osiągnięto maksymalny poziom badania <b>%s</b>.',
-	'087' => 'Nie masz wystarczającej ilości Ciemnej Energii do rozpoczecia badania <b>%s</b>.<br/>Potrzebujesz <b>%s</b> j., a na swoim koncie posiadasz <b>%s</b> j.',
-	'088' => 'Nie możesz rozpocząć badania <b>%s</b> na %s %s, ponieważ nie spełniłeś jego <a href="techtree.php#el%s">Wymagań Technologicznych</a>!',
-	'089' => 'Nie możesz rozpocząć badania <b>%s</b> na %s %s!',
+    // Retreat Info
+    '093' => 'Twoje lecące floty zostały zawrócone przez Administrację.<br/><b>Floty wracają na macierzyste współrzędne normalnym lotem.</b><br/><br/>Ilość zawróconych flot: %s / %s',
+    '094' => 'Twoje lecące floty zostały zawrócone przez Administrację.<br/><b>Floty zostały natychmiastowo przywrócone na macierzyste współrzędne.</b><br/><br/>Ilość zawróconych flot: %s / %s',
 
-	// Buddy Invites
-	'090' => 'Gracz <a href="profile.php?uid=%s">%s</a> <b>zaakceptował twoje Buddy-Zapytanie!</b>',
-	'091' => 'Gracz <a href="profile.php?uid=%s">%s</a> <b>odrzucił twoje Buddy-Zapytanie!</b>',
-	'092' => 'Gracz <a href="profile.php?uid=%s">%s</a> <b>usunął Cię ze swojej Listy Znajomych!</b>',
-
-	// Retreat Info
-	'093' => 'Twoje lecące floty zostały zawrócone przez Administrację.<br/><b>Floty wracają na macierzyste współrzędne normalnym lotem.</b><br/><br/>Ilość zawróconych flot: %s / %s',
-	'094' => 'Twoje lecące floty zostały zawrócone przez Administrację.<br/><b>Floty zostały natychmiastowo przywrócone na macierzyste współrzędne.</b><br/><br/>Ilość zawróconych flot: %s / %s',
-
-	// Ally Invites
-	'095' => 'Zostałeś zaproszony do sojuszu <a href="alliance.php?mode=ainfo&a=%s">%s [%s]</a> przez gracza <a href="profile.php?uid=%s">%s</a>.<br/>Aby <b class="lime">zaakceptować</b> lub <b class="orange">odrzucić</b> to zaproszenie, przejdź do zakładki <a href="alliance.php">Sojusz</a> (zaproszenie ma ważność 14 dni).<br/><u>Treść zaproszenia:</u><br/><br/>%s',
-	// Ally Pacts
-	'096' => 'Sojusz <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> wysłał propozycję Paktu dla twojego Sojuszu.<br/><br/><a href="alliance.php?mode=pactslist">Aby sprawdzić tą propozycję, przejdź do Listy Paktów w zakładce "Sojusz"</a>',
-	'097' => 'Sojusz <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> wycofał swoją propozycję Paktu dla twojego Sojuszu!',
-	'098' => 'Sojusz <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> zaakceptował propozycję Paktu wysłaną przez twój Sojusz!',
-	'099' => 'Sojusz <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> odrzucił propozycję Paktu wysłaną przez twój Sojusz!',
-	'100' => 'Sojusz <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> zaakceptował propozycję zmiany Typu Paktu wysłaną przez twój Sojusz!',
-	'101' => 'Sojusz <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> odrzucił propozycję zmiany Typu Paktu wysłaną przez twój Sojusz!',
-	'102' => 'Sojusz <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> wycofał się z Paktu z twoim Sojuszem!',
-	'103' => 'Sojusz <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> wycofał swoją propozycję zmiany Typu Paktu!',
-	'104' => 'Sojusz <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> wysłał propozycję zmiany Typu Paktu Sojuszowego.<br/><br/><a href="alliance.php?mode=pactslist">Aby sprawdzić tą propozycję, przejdź do Listy Paktów w zakładce "Sojusz"</a>',
-	'105' => 'Sojusz <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> zmienił Typ Paktu Sojuszowego na "<b>%s</b>"!',
+    // Ally Invites
+    '095' => 'Zostałeś zaproszony do sojuszu <a href="alliance.php?mode=ainfo&a=%s">%s [%s]</a> przez gracza <a href="profile.php?uid=%s">%s</a>.<br/>Aby <b class="lime">zaakceptować</b> lub <b class="orange">odrzucić</b> to zaproszenie, przejdź do zakładki <a href="alliance.php">Sojusz</a> (zaproszenie ma ważność 14 dni).<br/><u>Treść zaproszenia:</u><br/><br/>%s',
+    // Ally Pacts
+    '096' => 'Sojusz <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> wysłał propozycję Paktu dla twojego Sojuszu.<br/><br/><a href="alliance.php?mode=pactslist">Aby sprawdzić tą propozycję, przejdź do Listy Paktów w zakładce "Sojusz"</a>',
+    '097' => 'Sojusz <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> wycofał swoją propozycję Paktu dla twojego Sojuszu!',
+    '098' => 'Sojusz <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> zaakceptował propozycję Paktu wysłaną przez twój Sojusz!',
+    '099' => 'Sojusz <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> odrzucił propozycję Paktu wysłaną przez twój Sojusz!',
+    '100' => 'Sojusz <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> zaakceptował propozycję zmiany Typu Paktu wysłaną przez twój Sojusz!',
+    '101' => 'Sojusz <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> odrzucił propozycję zmiany Typu Paktu wysłaną przez twój Sojusz!',
+    '102' => 'Sojusz <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> wycofał się z Paktu z twoim Sojuszem!',
+    '103' => 'Sojusz <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> wycofał swoją propozycję zmiany Typu Paktu!',
+    '104' => 'Sojusz <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> wysłał propozycję zmiany Typu Paktu Sojuszowego.<br/><br/><a href="alliance.php?mode=pactslist">Aby sprawdzić tą propozycję, przejdź do Listy Paktów w zakładce "Sojusz"</a>',
+    '105' => 'Sojusz <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> zmienił Typ Paktu Sojuszowego na "<b>%s</b>"!',
 );
 
 $_Lang['msg_const']['senders']['system'] = array
 (
-	'001' => 'Kolejka budowy',
-	'002' => 'Kontrola lotu',
-	'003' => 'Dowództwo',
-	'004' => 'Administracja',
-	'005' => 'Sojusz',
-	'006' => 'Perymetr obronny',
-	'007' => 'System',
+    '001' => 'Kolejka budowy',
+    '002' => 'Kontrola lotu',
+    '003' => 'Dowództwo',
+    '004' => 'Administracja',
+    '005' => 'Sojusz',
+    '006' => 'Perymetr obronny',
+    '007' => 'System',
 );
 
 $_Lang['msg_const']['senders']['rangs'] = array
 (
-	0	=> '<span style="color: #BFBFBF;">Gracz</span>',
-	20	=> '<span class="lime">ForumTeam</span>',
-	50	=> '<span class="lime">Operator (GO)</span>',
-	70	=> '<span class="skyblue">Super Operator (SGO)</span>',
-	90	=> '<span class="orange">Administrator</span>',
-	100 => '<span class="orange">Administrator</span>',
-	110 => '<span class="red">Programista</span>',
-	120 => '<span class="red">Właściciel Gry</span>',
+    0   => '<span style="color: #BFBFBF;">Gracz</span>',
+    20  => '<span class="lime">ForumTeam</span>',
+    50  => '<span class="lime">Operator (GO)</span>',
+    70  => '<span class="skyblue">Super Operator (SGO)</span>',
+    90  => '<span class="orange">Administrator</span>',
+    100 => '<span class="orange">Administrator</span>',
+    110 => '<span class="red">Programista</span>',
+    120 => '<span class="red">Właściciel Gry</span>',
 );
 
 $_Lang['msg_const']['subjects'] = array
 (
-	'001' => 'Budowa zakończona niepowodzeniem',
-	'002' => 'Transport',
-	'003' => 'Powrót floty',
-	'004' => 'Stacjonowanie floty',
-	'005' => 'Raport z Pola Zniszczeń',
-	'006' => 'Atak międzyplanetarny',
-	'007' => 'Raport z Ekspedycji',
-	'008' => 'Raport z Kolonizacji',
-	'009' => 'Witamy w grze!',
-	'010' => 'Twoje podanie zostało zaakceptowane!',
-	'011' => 'Twoje podanie zostało odrzucone!',
-	'012' => 'Raport Wojenny',
-	'013' => 'Raport Niszczenia',
-	'014' => 'Raport Szpiegowski',
-	'015' => 'Akcja szpiegowska',
-	'016' => 'Polecenie gracza',
-	'017' => 'Raport Obrony',
-	'018' => 'Zaproszenie do wspólnego ataku',
-	'019' => 'Błąd Systemu Wiadomości',
-	'020' => 'Deklaracje Gry z jednego IP/Komputera',
-	'021' => 'Buddy-Zapytanie',
-	'022' => 'Zawrócenie Flot',
-	'023' => 'Zaproszenie do Sojuszu',
-	'024' => 'Propozycja Paktu Sojuszy',
+    '001' => 'Budowa zakończona niepowodzeniem',
+    '002' => 'Transport',
+    '003' => 'Powrót floty',
+    '004' => 'Stacjonowanie floty',
+    '005' => 'Raport z Pola Zniszczeń',
+    '006' => 'Atak międzyplanetarny',
+    '007' => 'Raport z Ekspedycji',
+    '008' => 'Raport z Kolonizacji',
+    '009' => 'Witamy w grze!',
+    '010' => 'Twoje podanie zostało zaakceptowane!',
+    '011' => 'Twoje podanie zostało odrzucone!',
+    '012' => 'Raport Wojenny',
+    '013' => 'Raport Niszczenia',
+    '014' => 'Raport Szpiegowski',
+    '015' => 'Akcja szpiegowska',
+    '016' => 'Polecenie gracza',
+    '017' => 'Raport Obrony',
+    '018' => 'Zaproszenie do wspólnego ataku',
+    '019' => 'Błąd Systemu Wiadomości',
+    '020' => 'Deklaracje Gry z jednego IP/Komputera',
+    '021' => 'Buddy-Zapytanie',
+    '022' => 'Zawrócenie Flot',
+    '023' => 'Zaproszenie do Sojuszu',
+    '024' => 'Propozycja Paktu Sojuszy',
 );
 
 $_Lang['msg_const']['sim'] = array
 (
-	'form'		=> '<form id="sim_%s" action="simulator.php" method="post" class="hide"><textarea class="hide" name="spyreport">%s</textarea></form>',
-	'button'	=> '<table class="sth" cellspacing="0"><tr><td class="c center"><a class="lime point spySim" id="spy_%s" href="#">Symuluj</a></td></tr></table>',
+    'form'      => '<form id="sim_%s" action="simulator.php" method="post" class="hide"><textarea class="hide" name="spyreport">%s</textarea></form>',
+    'button'    => '<table class="sth" cellspacing="0"><tr><td class="c center"><a class="lime point spySim" id="spy_%s" href="#">Symuluj</a></td></tr></table>',
 );
 
 ?>
