@@ -1,50 +1,50 @@
 <?php
 
-$_Lang['Title'] = 'Znajomi';
+$_Lang['Title']                     = 'Znajomi';
 
-$_Lang['Headers_Nick'] = 'Gracz';
-$_Lang['Headers_StatPoints'] = 'Punkty';
-$_Lang['Headers_StatPosition'] = 'Pozycja';
-$_Lang['Headers_Ally'] = 'Sojusz';
-$_Lang['Headers_GalaxyPosition'] = 'Współrzędne';
-$_Lang['Headers_Date'] = 'Data';
-$_Lang['Headers_State'] = 'Status';
-$_Lang['Headers_Actions'] = 'Akcje';
-$_Lang['Headers_BuddyForm'] = 'Buddy-Zapytanie';
-$_Lang['Headers_Text'] = 'Treść';
-$_Lang['Headers_Cancel'] = 'Anuluj';
-$_Lang['Headers_Send'] = 'Wyślij';
-$_Lang['Headers_Limit'] = 'Limit';
+$_Lang['Headers_Nick']              = 'Gracz';
+$_Lang['Headers_StatPoints']        = 'Punkty';
+$_Lang['Headers_StatPosition']      = 'Pozycja';
+$_Lang['Headers_Ally']              = 'Sojusz';
+$_Lang['Headers_GalaxyPosition']    = 'Współrzędne';
+$_Lang['Headers_Date']              = 'Data';
+$_Lang['Headers_State']             = 'Status';
+$_Lang['Headers_Actions']           = 'Akcje';
+$_Lang['Headers_BuddyForm']         = 'Buddy-Zapytanie';
+$_Lang['Headers_Text']              = 'Treść';
+$_Lang['Headers_Cancel']            = 'Anuluj';
+$_Lang['Headers_Send']              = 'Wyślij';
+$_Lang['Headers_Limit']             = 'Limit';
 
-$_Lang['qTip_Edit'] = 'Edycja zapytania';
-$_Lang['qTip_Delete'] = 'Usuń zapytanie';
-$_Lang['qTip_Remove'] = 'Usuń z Listy Znajomych';
-$_Lang['qTip_Accept'] = 'Zaakceptuj zapytanie';
-$_Lang['qTip_Refuse'] = 'Odrzuć zapytanie';
+$_Lang['qTip_Edit']                 = 'Edycja zapytania';
+$_Lang['qTip_Delete']               = 'Usuń zapytanie';
+$_Lang['qTip_Remove']               = 'Usuń z Listy Znajomych';
+$_Lang['qTip_Accept']               = 'Zaakceptuj zapytanie';
+$_Lang['qTip_Refuse']               = 'Odrzuć zapytanie';
 
-$_Lang['Info_NoBuddy'] = 'Brak znajomych...';
+$_Lang['Info_NoBuddy']              = 'Brak znajomych...';
 
-$_Lang['Row_State_Online'] = 'Online';
-$_Lang['Row_State_Offline'] = 'Offline';
-$_Lang['Row_State_Minutes'] = 'min';
-$_Lang['Row_State_Days'] = 'd';
-$_Lang['Row_State_Awaiting'] = 'Oczekuje';
+$_Lang['Row_State_Online']          = 'Online';
+$_Lang['Row_State_Offline']         = 'Offline';
+$_Lang['Row_State_Minutes']         = 'min';
+$_Lang['Row_State_Days']            = 'd';
+$_Lang['Row_State_Awaiting']        = 'Oczekuje';
 
-$_Lang['Success_Accepted'] = 'Zapytanie gracza zostało zaakceptowane';
-$_Lang['Success_Refused'] = 'Zapytanie gracza zostało odrzucone';
-$_Lang['Success_Removed'] = 'Gracz został usunięty z Listy Znajomych';
-$_Lang['Success_Deleted'] = 'Zapytanie zostało usunięte';
-$_Lang['Success_Edited'] = 'Zapytanie zostało zmienione';
-$_Lang['Success_Sent'] = 'Zapytanie zostało wysłane';
+$_Lang['Success_Accepted']          = 'Zapytanie gracza zostało zaakceptowane';
+$_Lang['Success_Refused']           = 'Zapytanie gracza zostało odrzucone';
+$_Lang['Success_Removed']           = 'Gracz został usunięty z Listy Znajomych';
+$_Lang['Success_Deleted']           = 'Zapytanie zostało usunięte';
+$_Lang['Success_Edited']            = 'Zapytanie zostało zmienione';
+$_Lang['Success_Sent']              = 'Zapytanie zostało wysłane';
 
-$_Lang['Error_BadElement'] = 'Niedozwolona akcja!';
-$_Lang['Error_ElementIDBad'] = 'Podano niepoprawny identyfikator!';
-$_Lang['Error_EmptyText'] = 'Treść zapytania nie może być pusta!';
-$_Lang['Error_BadUID'] = 'Niepoprawny identyfikator gracza!';
-$_Lang['Error_BadUser'] = 'Taki gracz nie istnieje!';
-$_Lang['Error_LinkExists'] = 'Ten gracz jest już na twojej Liście Znajomych lub zapytanie oczekuje na akceptację!';
-$_Lang['Error_RowNoExists'] = 'Takie zapytanie nie istnieje!';
-$_Lang['Error_CantEdit'] = 'Niedozwolona akcja!';
-$_Lang['Error_AlreadyActive'] = 'To zapytanie jest już aktywne!';
+$_Lang['Error_BadElement']          = 'Niedozwolona akcja!';
+$_Lang['Error_ElementIDBad']        = 'Podano niepoprawny identyfikator!';
+$_Lang['Error_EmptyText']           = 'Treść zapytania nie może być pusta!';
+$_Lang['Error_BadUID']              = 'Niepoprawny identyfikator gracza!';
+$_Lang['Error_BadUser']             = 'Taki gracz nie istnieje!';
+$_Lang['Error_LinkExists']          = 'Ten gracz jest już na twojej Liście Znajomych lub zapytanie oczekuje na akceptację!';
+$_Lang['Error_RowNoExists']         = 'Takie zapytanie nie istnieje!';
+$_Lang['Error_CantEdit']            = 'Niedozwolona akcja!';
+$_Lang['Error_AlreadyActive']       = 'To zapytanie jest już aktywne!';
 
 ?>

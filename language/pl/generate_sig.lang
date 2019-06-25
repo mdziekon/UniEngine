@@ -1,8 +1,8 @@
 <?php
 
-$_Lang['Universum']	= 'Uni 3';
-$_Lang['Ally']       = 'Sojusz';
-$_Lang['Points']     = 'pkt.';
-$_Lang['Position']   = 'Ranking';
+$_Lang['Universum'] = 'Uni 3';
+$_Lang['Ally']      = 'Sojusz';
+$_Lang['Points']    = 'pkt.';
+$_Lang['Position']  = 'Ranking';
 
 ?>

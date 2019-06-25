@@ -16,8 +16,8 @@ $_Lang['PlanetOwner']            = '(Właściciel Planety/Księżyca)';
 $_Lang['Attacker_Txt']           = 'Agresor ';
 $_Lang['Defender_Txt']           = 'Obrońca ';
 
-$_Lang['Morale']					= 'Morale';
-$_Lang['Morale_Level']			= 'Poziom morali';
+$_Lang['Morale']                 = 'Morale';
+$_Lang['Morale_Level']           = 'Poziom morali';
 $_Lang['Technology']             = 'Technologie';
 $_Lang['Fleets']                 = 'Flota';
 $_Lang['Defense']                = 'Obrona';

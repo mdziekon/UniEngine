@@ -1,18 +1,20 @@
 <?php
 
-$_Lang['Page_Title']             = 'Regulamin';
+$_Lang['Page_Title']                = 'Regulamin';
 
-$_Lang['Table_Header']           = 'Regulamin '.$_GameConfig['game_name'];
-$_Lang['Table_GeneralInfo']      = 'Regulamin ten wchodzi w życie dnia <b class="red">22 stycznia 2012 roku</b>.<br/>';
-$_Lang['Table_GeneralInfo']     .= 'Wszelkie zmiany w tym Regulaminie będą ogłaszane w grze poprzez <b class="red">Wiadomość Masową</b>, bądź w przypadku większych zmian również <b class="red">drogą Emailową</b>.';
-$_Lang['Table_Index']            = 'Spis treści';
+$_Lang['Table_Header']              = 'Regulamin '.$_GameConfig['game_name'];
+$_Lang['Table_GeneralInfo']         = (
+    'Regulamin ten wchodzi w życie dnia <b class="red">22 stycznia 2012 roku</b>.<br/>' .
+    'Wszelkie zmiany w tym Regulaminie będą ogłaszane w grze poprzez <b class="red">Wiadomość Masową</b>, bądź w przypadku większych zmian również <b class="red">drogą Emailową</b>.'
+);
+$_Lang['Table_Index']               = 'Spis treści';
 
-$_Lang['AcceptBox_Info']             = 'Przed kontynuacją dalszej gry <b>musisz zaakceptować zmieniony Regulamin</b> (ostatnia zmiana: %s).<br/>Jeśli nie zgadzasz się na zmienione postanowienia, twoje konto zostanie <b class="red">usunięte po 7 dniach</b> (z możliwością zmiany decyzji) lub <b class="orange">pozostawione bez opieki</b> (o ile nie wybierzesz żadnej z poniższych opcji).';
-$_Lang['AcceptBox_Option_Accept0']   = 'Akceptuję Regulamin i gram dalej';
-$_Lang['AcceptBox_Option_Accept1']   = 'Akceptuję Regulamin i anuluję Kasację Konta';
-$_Lang['AcceptBox_Option_Decline0']  = 'Nie akceptuję Regulaminu i przeznaczam Konto do Kasacji';
-$_Lang['AcceptBox_Option_Decline1']  = 'Nie akceptuję Regulaminu i podtrzymuję kasację Konta';
-$_Lang['AcceptBox_DeleteTime']       = '<br/><br/>Twoje Konto zostanie usunięte dnia %s';
-$_Lang['AcceptBox_Sure']             = 'Czy jesteś pewien?';
+$_Lang['AcceptBox_Info']            = 'Przed kontynuacją dalszej gry <b>musisz zaakceptować zmieniony Regulamin</b> (ostatnia zmiana: %s).<br/>Jeśli nie zgadzasz się na zmienione postanowienia, twoje konto zostanie <b class="red">usunięte po 7 dniach</b> (z możliwością zmiany decyzji) lub <b class="orange">pozostawione bez opieki</b> (o ile nie wybierzesz żadnej z poniższych opcji).';
+$_Lang['AcceptBox_Option_Accept0']  = 'Akceptuję Regulamin i gram dalej';
+$_Lang['AcceptBox_Option_Accept1']  = 'Akceptuję Regulamin i anuluję Kasację Konta';
+$_Lang['AcceptBox_Option_Decline0'] = 'Nie akceptuję Regulaminu i przeznaczam Konto do Kasacji';
+$_Lang['AcceptBox_Option_Decline1'] = 'Nie akceptuję Regulaminu i podtrzymuję kasację Konta';
+$_Lang['AcceptBox_DeleteTime']      = '<br/><br/>Twoje Konto zostanie usunięte dnia %s';
+$_Lang['AcceptBox_Sure']            = 'Czy jesteś pewien?';
 
 ?>

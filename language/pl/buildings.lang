@@ -1,191 +1,190 @@
 <?php
 
 // ViewSelector
-$_Lang['ViewSel_ViewText'] = 'Wygląd';
-$_Lang['ViewSel_Mode0'] = 'Kafelki';
-$_Lang['ViewSel_Mode1'] = 'Lista';
-$_Lang['ViewSel_ChangeView'] = 'Zmień Wygląd';
+$_Lang['ViewSel_ViewText']      = 'Wygląd';
+$_Lang['ViewSel_Mode0']         = 'Kafelki';
+$_Lang['ViewSel_Mode1']         = 'Lista';
+$_Lang['ViewSel_ChangeView']    = 'Zmień Wygląd';
 
 // General
-$_Lang['PlanetType_1'] = 'Planeta';
-$_Lang['PlanetType_3'] = 'Księżyc';
+$_Lang['PlanetType_1']          = 'Planeta';
+$_Lang['PlanetType_3']          = 'Księżyc';
 
 // PlanetOverview
-$_Lang['Overview_Diameter'] = 'Średnica';
-$_Lang['Overview_Units_Diameter'] = 'km.';
-$_Lang['Overview_Fields'] = 'Zabudowane Pola';
-$_Lang['Overview_FieldsPercent'] = 'Stopień zabudowy';
-$_Lang['Overview_Temperature'] = 'Temperatura';
+$_Lang['Overview_Diameter']         = 'Średnica';
+$_Lang['Overview_Units_Diameter']   = 'km.';
+$_Lang['Overview_Fields']           = 'Zabudowane Pola';
+$_Lang['Overview_FieldsPercent']    = 'Stopień zabudowy';
+$_Lang['Overview_Temperature']      = 'Temperatura';
 $_Lang['Overview_Form_Temperature'] = 'od %s&deg;C do %s&deg;C';
 
-$_Lang['Overview_LabLevel'] = 'Poziom Laboratorium';
-$_Lang['Overview_LabsConnected'] = 'Połączone Laboratoria';
-$_Lang['Overview_LabPower'] = 'Całkowity Poziom Badawczy';
+$_Lang['Overview_LabLevel']         = 'Poziom Laboratorium';
+$_Lang['Overview_LabsConnected']    = 'Połączone Laboratoria';
+$_Lang['Overview_LabPower']         = 'Całkowity Poziom Badawczy';
 
-$_Lang['Overview_ShipyardLevel'] = 'Poziom Stoczni';
-$_Lang['Overview_NanoFactoryLevel'] = 'Poziom Fabryki Nanitów';
-$_Lang['Overview_SolarSateliteEnergy'] = 'Energia Satelity Słonecznej';
+$_Lang['Overview_ShipyardLevel']        = 'Poziom Stoczni';
+$_Lang['Overview_NanoFactoryLevel']     = 'Poziom Fabryki Nanitów';
+$_Lang['Overview_SolarSateliteEnergy']  = 'Energia Satelity Słonecznej';
 
 // Structures
-$_Lang['Builds'] = 'Budynki';
+$_Lang['Builds']                        = 'Budynki';
 
-$_Lang['Builds_OldVievInfo'] = 'Nie podoba Ci się ten wygląd Listy? Możesz powrócić na stary, dobrze znany z starego OGame.<br/>Opcja zmiany dostępna w <a href="settings.php" class="red">Ustawieniach</a>, zakładce "Wygląd gry" - ustawienie <b class="orange">"Przywróć Stary wygląd Rozwoju"</span>!';
+$_Lang['Builds_OldVievInfo']            = 'Nie podoba Ci się ten wygląd Listy? Możesz powrócić na stary, dobrze znany z starego OGame.<br/>Opcja zmiany dostępna w <a href="settings.php" class="red">Ustawieniach</a>, zakładce "Wygląd gry" - ustawienie <b class="orange">"Przywróć Stary wygląd Rozwoju"</span>!';
 
-$_Lang['InfoBox_SelectStructure'] = 'Wybierz budynek';
-$_Lang['InfoBox_Level'] = 'Poziom';
-$_Lang['InfoBox_Build'] = 'Rozbuduj<br/>na Poziom';
-$_Lang['InfoBox_Destroy'] = 'Zburz<br/>do Poziomu';
-$_Lang['InfoBox_RequirementsFor'] = 'Wymagania na Poziom';
-$_Lang['InfoBox_ResRequirements'] = 'Wymagane Surowce na Poziom';
-$_Lang['InfoBox_TechRequirements'] = 'Wymagania Technologiczne';
-$_Lang['InfoBox_Requirements_Tech'] = 'Technologie';
-$_Lang['InfoBox_Requirements_Res'] = 'Surowce';
-$_Lang['InfoBox_BuildTime'] = 'Czas budowy';
-$_Lang['InfoBox_ShowTechReq'] = 'Pokaż Wymagania Technologiczne';
-$_Lang['InfoBox_ShowResReq'] = 'Pokaż Wymagane Surowce';
-$_Lang['InfoBox_DestroyCost'] = 'Koszt wyburzania';
-$_Lang['InfoBox_DestroyTime'] = 'Czas wyburzania';
+$_Lang['InfoBox_SelectStructure']       = 'Wybierz budynek';
+$_Lang['InfoBox_Level']                 = 'Poziom';
+$_Lang['InfoBox_Build']                 = 'Rozbuduj<br/>na Poziom';
+$_Lang['InfoBox_Destroy']               = 'Zburz<br/>do Poziomu';
+$_Lang['InfoBox_RequirementsFor']       = 'Wymagania na Poziom';
+$_Lang['InfoBox_ResRequirements']       = 'Wymagane Surowce na Poziom';
+$_Lang['InfoBox_TechRequirements']      = 'Wymagania Technologiczne';
+$_Lang['InfoBox_Requirements_Tech']     = 'Technologie';
+$_Lang['InfoBox_Requirements_Res']      = 'Surowce';
+$_Lang['InfoBox_BuildTime']             = 'Czas budowy';
+$_Lang['InfoBox_ShowTechReq']           = 'Pokaż Wymagania Technologiczne';
+$_Lang['InfoBox_ShowResReq']            = 'Pokaż Wymagane Surowce';
+$_Lang['InfoBox_DestroyCost']           = 'Koszt wyburzania';
+$_Lang['InfoBox_DestroyTime']           = 'Czas wyburzania';
 
-$_Lang['ListBox_StructuresList'] = 'Lista budynków';
-$_Lang['ListBox_Disallow_LabResearch'] = 'Przeprowadza badania';
-$_Lang['ListBox_Disallow_NoTech'] = 'Nie osiągnięto wymagań';
-$_Lang['ListBox_Disallow_MaxLevelReached'] = 'Osiągnięto maksymalny poziom!';
-$_Lang['ListBox_Disallow_NoFreeFields'] = 'Brak wolnego miejsca!';
-$_Lang['ListBox_Disallow_QueueIsFull'] = 'Kolejka jest pełna!';
-$_Lang['ListBox_Disallow_NoResources'] = 'Za mało surowców!';
-$_Lang['ListBox_Disallow_NoElements'] = 'Brak jednostek do demontażu!';
-$_Lang['ListBox_Disallow_VacationMode'] = 'Tryb Urlopu';
+$_Lang['ListBox_StructuresList']            = 'Lista budynków';
+$_Lang['ListBox_Disallow_LabResearch']      = 'Przeprowadza badania';
+$_Lang['ListBox_Disallow_NoTech']           = 'Nie osiągnięto wymagań';
+$_Lang['ListBox_Disallow_MaxLevelReached']  = 'Osiągnięto maksymalny poziom!';
+$_Lang['ListBox_Disallow_NoFreeFields']     = 'Brak wolnego miejsca!';
+$_Lang['ListBox_Disallow_QueueIsFull']      = 'Kolejka jest pełna!';
+$_Lang['ListBox_Disallow_NoResources']      = 'Za mało surowców!';
+$_Lang['ListBox_Disallow_NoElements']       = 'Brak jednostek do demontażu!';
+$_Lang['ListBox_Disallow_VacationMode']     = 'Tryb Urlopu';
 
-$_Lang['Queue_Header'] = 'Kolejka';
-$_Lang['Queue_Empty'] = 'Kolejka jest pusta';
-$_Lang['Queue_Full'] = 'Kolejka zapełniona!';
-$_Lang['Queue_EndTime'] = 'Koniec';
-$_Lang['Queue_Mode_Destroy_1+'] = 'Wyburz';
-$_Lang['Queue_Mode_Build_1+'] = 'Buduj';
-$_Lang['Queue_Mode_Destroy_1'] = 'Wyburzanie';
-$_Lang['Queue_Mode_Build_1'] = 'Budowa';
-$_Lang['Queue_CantCancel_Premium'] = 'Nie można przerwać budowy, która wymagała Ciemnej Energii!';
-$_Lang['Queue_ConfirmCancel'] = 'Czy jesteś pewien, że chcesz anulować zadanie?';
-$_Lang['Queue_Cancel_CantCancel'] = 'Nie można przerwać';
-$_Lang['Queue_Cancel_Destroy'] = 'Przerwij wyburzanie';
-$_Lang['Queue_Cancel_Build'] = 'Przerwij budowę';
-$_Lang['Queue_Cancel_Remove'] = 'Usuń z kolejki';
-$_Lang['Queue_Cancel_Go'] = 'Kontunuuj';
-$_Lang['Queue_EndTitleBeg'] = 'Zakończenie dnia';
-$_Lang['Queue_EndTitleHour'] = 'o godzinie';
+$_Lang['Queue_Header']              = 'Kolejka';
+$_Lang['Queue_Empty']               = 'Kolejka jest pusta';
+$_Lang['Queue_Full']                = 'Kolejka zapełniona!';
+$_Lang['Queue_EndTime']             = 'Koniec';
+$_Lang['Queue_Mode_Destroy_1+']     = 'Wyburz';
+$_Lang['Queue_Mode_Build_1+']       = 'Buduj';
+$_Lang['Queue_Mode_Destroy_1']      = 'Wyburzanie';
+$_Lang['Queue_Mode_Build_1']        = 'Budowa';
+$_Lang['Queue_CantCancel_Premium']  = 'Nie można przerwać budowy, która wymagała Ciemnej Energii!';
+$_Lang['Queue_ConfirmCancel']       = 'Czy jesteś pewien, że chcesz anulować zadanie?';
+$_Lang['Queue_Cancel_CantCancel']   = 'Nie można przerwać';
+$_Lang['Queue_Cancel_Destroy']      = 'Przerwij wyburzanie';
+$_Lang['Queue_Cancel_Build']        = 'Przerwij budowę';
+$_Lang['Queue_Cancel_Remove']       = 'Usuń z kolejki';
+$_Lang['Queue_Cancel_Go']           = 'Kontunuuj';
+$_Lang['Queue_EndTitleBeg']         = 'Zakończenie dnia';
+$_Lang['Queue_EndTitleHour']        = 'o godzinie';
 
 // Laboratory
 
-$_Lang['Research'] = 'Laboratorium badawcze';
+$_Lang['Research']                      = 'Laboratorium badawcze';
 
-$_Lang['ListBox_TechsList'] = 'Lista technologii';
-$_Lang['ListBox_Disallow_NotThisLab'] = 'Badania przeprowadzane na innej planecie!';
-$_Lang['ListBox_Disallow_LabInQueue'] = 'Laboratorium w rozbudowie!';
-$_Lang['ListBox_Disallow_NoLab'] = 'Brak laboratorium!';
+$_Lang['ListBox_TechsList']             = 'Lista technologii';
+$_Lang['ListBox_Disallow_NotThisLab']   = 'Badania przeprowadzane na innej planecie!';
+$_Lang['ListBox_Disallow_LabInQueue']   = 'Laboratorium w rozbudowie!';
+$_Lang['ListBox_Disallow_NoLab']        = 'Brak laboratorium!';
 
-$_Lang['InfoBox_SelectTech'] = 'Wybierz technologię';
-$_Lang['InfoBox_DoResearch'] = 'Badaj<br/>na Poziom';
-$_Lang['InfoBox_ResearchTime'] = 'Czas badania';
+$_Lang['InfoBox_SelectTech']            = 'Wybierz technologię';
+$_Lang['InfoBox_DoResearch']            = 'Badaj<br/>na Poziom';
+$_Lang['InfoBox_ResearchTime']          = 'Czas badania';
 
-$_Lang['Queue_Cancel_Research'] = 'Przerwij badanie';
-$_Lang['Queue_ResearchOn'] = 'Badanie przeprowadzane na';
-$_Lang['Queue_CantCancel_Premium_Lab'] = 'Nie można przerwać badania, które wymagało Ciemnej Energii!';
-$_Lang['Queue_LabInQueue'] = 'Kolejka zablokowana!<br/>Laboratorium w rozbudowie na Planetach:<br/>%s';
+$_Lang['Queue_Cancel_Research']         = 'Przerwij badanie';
+$_Lang['Queue_ResearchOn']              = 'Badanie przeprowadzane na';
+$_Lang['Queue_CantCancel_Premium_Lab']  = 'Nie można przerwać badania, które wymagało Ciemnej Energii!';
+$_Lang['Queue_LabInQueue']              = 'Kolejka zablokowana!<br/>Laboratorium w rozbudowie na Planetach:<br/>%s';
 
-$_Lang['Queue_ListView_Info'] = 'Kolejka Badań jest dostępna tylko w Wyglądzie Kafelkowym!';
+$_Lang['Queue_ListView_Info']           = 'Kolejka Badań jest dostępna tylko w Wyglądzie Kafelkowym!';
 
 // Shipyard
+$_Lang['Title_Shipyard']                = 'Stocznia';
+$_Lang['Title_Defense']                 = 'Obrona';
 
-$_Lang['Title_Shipyard'] = 'Stocznia';
-$_Lang['Title_Defense'] = 'Obrona';
-
-$_Lang['ListBox_ShipsList'] = 'Lista pojazdów';
-$_Lang['ListBox_DefensesList'] = 'Lista systemów obronnych';
-$_Lang['ListBox_Disallow_NoShipyard'] = 'Brak Stoczni!';
-$_Lang['ListBox_Disallow_ShieldBlock'] = 'Wybudowane';
+$_Lang['ListBox_ShipsList']             = 'Lista pojazdów';
+$_Lang['ListBox_DefensesList']          = 'Lista systemów obronnych';
+$_Lang['ListBox_Disallow_NoShipyard']   = 'Brak Stoczni!';
+$_Lang['ListBox_Disallow_ShieldBlock']  = 'Wybudowane';
 $_Lang['ListBox_Disallow_MissileBlock'] = 'Brak miejsca w Silosach!';
 
-$_Lang['InfoBox_SelectShip'] = 'Wybierz Pojazd';
-$_Lang['InfoBox_SelectDefense'] = 'Wybierz System Obronny';
-$_Lang['InfoBox_Count'] = 'Ilość';
-$_Lang['InfoBox_ResRequirementsShip'] = 'Wymagane Surowce';
-$_Lang['InfoBox_RequirementsForShip'] = 'Wymagania';
-$_Lang['InfoBox_ConstructionTime'] = 'Czas konstrukcji';
-$_Lang['InfoBox_MaxConstructible'] = 'Maksymalna ilość';
+$_Lang['InfoBox_SelectShip']            = 'Wybierz Pojazd';
+$_Lang['InfoBox_SelectDefense']         = 'Wybierz System Obronny';
+$_Lang['InfoBox_Count']                 = 'Ilość';
+$_Lang['InfoBox_ResRequirementsShip']   = 'Wymagane Surowce';
+$_Lang['InfoBox_RequirementsForShip']   = 'Wymagania';
+$_Lang['InfoBox_ConstructionTime']      = 'Czas konstrukcji';
+$_Lang['InfoBox_MaxConstructible']      = 'Maksymalna ilość';
 
-$_Lang['Cart_Header'] = 'Zamówienie Konstrukcji';
-$_Lang['Cart_Cost'] = 'Koszt';
-$_Lang['Cart_Time'] = 'Czas';
-$_Lang['Cart_Construct'] = 'Konstruuj';
-$_Lang['Cart_Ships'] = 'jednostki';
-$_Lang['Cart_Defense'] = 'obronę';
+$_Lang['Cart_Header']                   = 'Zamówienie Konstrukcji';
+$_Lang['Cart_Cost']                     = 'Koszt';
+$_Lang['Cart_Time']                     = 'Czas';
+$_Lang['Cart_Construct']                = 'Konstruuj';
+$_Lang['Cart_Ships']                    = 'jednostki';
+$_Lang['Cart_Defense']                  = 'obronę';
 
 // Disassembler
-$_Lang['Disassembler_Title'] = 'Demontownia';
-$_Lang['Disassembler_Header'] = 'Podsumowanie Demontażu';
-$_Lang['Disassembler_Result'] = 'Wynik Demontażu';
-$_Lang['Disassembler_Proceed'] = 'Demontuj';
-$_Lang['Disassembler_Gain'] = 'Zysk';
-$_Lang['Disassembler_Percent'] = 'Zwrot';
+$_Lang['Disassembler_Title']            = 'Demontownia';
+$_Lang['Disassembler_Header']           = 'Podsumowanie Demontażu';
+$_Lang['Disassembler_Result']           = 'Wynik Demontażu';
+$_Lang['Disassembler_Proceed']          = 'Demontuj';
+$_Lang['Disassembler_Gain']             = 'Zysk';
+$_Lang['Disassembler_Percent']          = 'Zwrot';
 
-$_Lang['Disassembler_Tab_Ships'] = 'Statki';
-$_Lang['Disassembler_Tab_Defense'] = 'Systemy Obronne';
+$_Lang['Disassembler_Tab_Ships']        = 'Statki';
+$_Lang['Disassembler_Tab_Defense']      = 'Systemy Obronne';
 
-$_Lang['Disassembler_ReturnTip'] = 'Demontownia zwraca <b class="lime">%s%%</b> kosztów produkcji';
-$_Lang['Disassembler_CancelRequest'] = 'Wyczyść listę';
-$_Lang['Disassembler_SelectAll'] = 'Zaznacz wszystko';
+$_Lang['Disassembler_ReturnTip']        = 'Demontownia zwraca <b class="lime">%s%%</b> kosztów produkcji';
+$_Lang['Disassembler_CancelRequest']    = 'Wyczyść listę';
+$_Lang['Disassembler_SelectAll']        = 'Zaznacz wszystko';
 
 $_Lang['Disassembler_Nothink_in_post']        = 'Nie wybrano jednostek do zdemontowania...';
 $_Lang['Disassembler_NoUnits_on_that_planet'] = 'Nie posiadasz wybranych jednostek na %s!';
 $_Lang['Disassembler_Sold_units']             = 'Odzyskane surowce:<br/>%s jednostek Metalu,<br/>%s jednostek Kryształu,<br/>%s jednostek Deuteru';
 
 // ...
-$_Lang['ResearchTitle']    = 'Badania';
-$_Lang['AreYouSure']       = 'Czy jesteś pewien, że chcesz anulować budowę?';
-$_Lang['Hangar']           = 'Stocznia';
-$_Lang['Fleet']            = "Flota";
-$_Lang['Defense']          = "Obrona";
-$_Lang['level']            = "Poziom";
-$_Lang['dispo']            = "Dostępne";
-$_Lang['Requirements']     = "Wymaga: ";
-$_Lang['Requires']         = "Wymagane surowce";
-$_Lang['Rest_ress']        = "Pozostanie surowców";
-$_Lang['TechRequirements'] = 'Wymagania';
-$_Lang['Rechercher']       = "Badanie";
-$_Lang['ConstructionTime'] = "Czas budowy";
-$_Lang['Construire']       = " Buduj ";
-$_Lang['BuildFirstLevel']  = "Buduj";
-$_Lang['BuildNextLevel']   = "Rozbudowa na poziom ";
-$_Lang['completed']        = "Zakończono";
-$_Lang['in_working']       = "Pracuje";
-$_Lang['work_todo']        = "Kolejka Stoczni";
-$_Lang['total_left_time']  = "Pozostało czasu";
-$_Lang['only_one']         = "Można wybudować tylko raz.";
-$_Lang['NoMoreSpace']      = "Planeta zabudowana";
-$_Lang['NoMoreSpace_Moon'] = "Księżyc zabudowany";
-$_Lang['InBuildQueue']     = "Dodaj do Kolejki";
-$_Lang['bld_usedcells']    = "Budynki";
-$_Lang['bld_theyare']      = "Pozostało";
-$_Lang['bld_cellfree']     = "pól do zabudowania";
-$_Lang['DelFromQueue']     = "Usuń z kolejki";
-$_Lang['DelFirstQueue']    = "Przerwij";
-$_Lang['cancel']           = "Anuluj";
-$_Lang['continue']         = "Kontynuj";
-$_Lang['ready']            = "Gotowe";
-$_Lang['destroy']          = "Niszcz";
-$_Lang['on']               = "na";
-$_Lang['no_laboratory']    = "Najpierw musisz wybudować labolatorium badawcze!";
-$_Lang['need_hangar']      = "Najpierw musisz wybudować stocznie!";
-$_Lang['labo_on_update']   = "Nie można przeprowadzać badań, gdy Laboratorium jest w Kolejce Budowy!<br/>Blokujące Planety: %s";
-$_Lang['onlyOneLevel']     = "Wybudowane";
-$_Lang['youCanBuild']      = "Można wybudować";
-$_Lang['max']              = "Max";
-$_Lang['noMoreSpaceInSilo']= 'Brak miejsca w silosie!';
-$_Lang['CanBuildXMissiles']= 'Ilość wolnego miejsca na te rakiety';
-$_Lang['NoMoreSpaceForThisMissiles'] = 'Brak wolnego miejsca dla tych rakiety!';
-$_Lang['QueueIsFull']      = 'Kolejka jest pełna';
-$_Lang['ActualProduction'] = 'Aktualna produkcja';
-$_Lang['CannotDeletePremiumBuilding_Warning']    = 'Nie można przerwać budowy, która wymagała Ciemnej Energii!';
-$_Lang['SatelitesEnergy']    = 'Na tej pozycji Satelita dostarcza <b>%s</b> Energii.';
+$_Lang['ResearchTitle']                         = 'Badania';
+$_Lang['AreYouSure']                            = 'Czy jesteś pewien, że chcesz anulować budowę?';
+$_Lang['Hangar']                                = 'Stocznia';
+$_Lang['Fleet']                                 = "Flota";
+$_Lang['Defense']                               = "Obrona";
+$_Lang['level']                                 = "Poziom";
+$_Lang['dispo']                                 = "Dostępne";
+$_Lang['Requirements']                          = "Wymaga: ";
+$_Lang['Requires']                              = "Wymagane surowce";
+$_Lang['Rest_ress']                             = "Pozostanie surowców";
+$_Lang['TechRequirements']                      = 'Wymagania';
+$_Lang['Rechercher']                            = "Badanie";
+$_Lang['ConstructionTime']                      = "Czas budowy";
+$_Lang['Construire']                            = " Buduj ";
+$_Lang['BuildFirstLevel']                       = "Buduj";
+$_Lang['BuildNextLevel']                        = "Rozbudowa na poziom ";
+$_Lang['completed']                             = "Zakończono";
+$_Lang['in_working']                            = "Pracuje";
+$_Lang['work_todo']                             = "Kolejka Stoczni";
+$_Lang['total_left_time']                       = "Pozostało czasu";
+$_Lang['only_one']                              = "Można wybudować tylko raz.";
+$_Lang['NoMoreSpace']                           = "Planeta zabudowana";
+$_Lang['NoMoreSpace_Moon']                      = "Księżyc zabudowany";
+$_Lang['InBuildQueue']                          = "Dodaj do Kolejki";
+$_Lang['bld_usedcells']                         = "Budynki";
+$_Lang['bld_theyare']                           = "Pozostało";
+$_Lang['bld_cellfree']                          = "pól do zabudowania";
+$_Lang['DelFromQueue']                          = "Usuń z kolejki";
+$_Lang['DelFirstQueue']                         = "Przerwij";
+$_Lang['cancel']                                = "Anuluj";
+$_Lang['continue']                              = "Kontynuj";
+$_Lang['ready']                                 = "Gotowe";
+$_Lang['destroy']                               = "Niszcz";
+$_Lang['on']                                    = "na";
+$_Lang['no_laboratory']                         = "Najpierw musisz wybudować labolatorium badawcze!";
+$_Lang['need_hangar']                           = "Najpierw musisz wybudować stocznie!";
+$_Lang['labo_on_update']                        = "Nie można przeprowadzać badań, gdy Laboratorium jest w Kolejce Budowy!<br/>Blokujące Planety: %s";
+$_Lang['onlyOneLevel']                          = "Wybudowane";
+$_Lang['youCanBuild']                           = "Można wybudować";
+$_Lang['max']                                   = "Max";
+$_Lang['noMoreSpaceInSilo']                     = 'Brak miejsca w silosie!';
+$_Lang['CanBuildXMissiles']                     = 'Ilość wolnego miejsca na te rakiety';
+$_Lang['NoMoreSpaceForThisMissiles']            = 'Brak wolnego miejsca dla tych rakiety!';
+$_Lang['QueueIsFull']                           = 'Kolejka jest pełna';
+$_Lang['ActualProduction']                      = 'Aktualna produkcja';
+$_Lang['CannotDeletePremiumBuilding_Warning']   = 'Nie można przerwać budowy, która wymagała Ciemnej Energii!';
+$_Lang['SatelitesEnergy']                       = 'Na tej pozycji Satelita dostarcza <b>%s</b> Energii.';
 
 ?>

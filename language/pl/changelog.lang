@@ -1,33 +1,32 @@
 <?php
 
-$_Lang['infolabel_resourcesspeed']	= 'Surowce';
-$_Lang['infolabel_gamespeed']		= 'Gra';
-$_Lang['infolabel_fleetspeed']		= 'Flota';
-$_Lang['infolabel_shipyardqueue']	= 'Kolejka flot';
-$_Lang['infolabel_buildingsqueue']	= 'Kolejka budowli';
-$_Lang['infolabel_noobprotection']	= 'Obrona słabych graczy';
-$_Lang['infolabel_to']				= 'Do';
-$_Lang['infolabel_points']			= 'punktów';
-$_Lang['infolabel_nonoobprotection'] = 'Całkowite zdjęcie obrony graczy';
-$_Lang['infolabel_from']				= 'Od';
-$_Lang['infotip_nonoobprotection']	= 'Od tego momentu nie ma żadnych ograniczeń dla ataku na innych graczy';
-$_Lang['infotip_noobprotection']		= 'Do tego momentu nikt nie może atakować gracza (on też nie może przeprowadzać akcji wojennych). Od tego momentu może atakować graczy silniejszych lub słabszych od siebie o %s-krotność swoich punktów';
+$_Lang['infolabel_resourcesspeed']      = 'Surowce';
+$_Lang['infolabel_gamespeed']           = 'Gra';
+$_Lang['infolabel_fleetspeed']          = 'Flota';
+$_Lang['infolabel_shipyardqueue']       = 'Kolejka flot';
+$_Lang['infolabel_buildingsqueue']      = 'Kolejka budowli';
+$_Lang['infolabel_noobprotection']      = 'Obrona słabych graczy';
+$_Lang['infolabel_to']                  = 'Do';
+$_Lang['infolabel_points']              = 'punktów';
+$_Lang['infolabel_nonoobprotection']    = 'Całkowite zdjęcie obrony graczy';
+$_Lang['infolabel_from']                = 'Od';
+$_Lang['infotip_nonoobprotection']      = 'Od tego momentu nie ma żadnych ograniczeń dla ataku na innych graczy';
+$_Lang['infotip_noobprotection']        = 'Do tego momentu nikt nie może atakować gracza (on też nie może przeprowadzać akcji wojennych). Od tego momentu może atakować graczy silniejszych lub słabszych od siebie o %s-krotność swoich punktów';
 
-$_Lang['TipTip_Add'] = 'Dodano';
-$_Lang['TipTip_Fix'] = 'Naprawiono';
-$_Lang['TipTip_Upd'] = 'Zaktualizowano';
-$_Lang['TipTip_Opt'] = 'Zoptymalizowano';
-$_Lang['TipTip_Chg'] = 'Zmieniono';
+$_Lang['TipTip_Add']    = 'Dodano';
+$_Lang['TipTip_Fix']    = 'Naprawiono';
+$_Lang['TipTip_Upd']    = 'Zaktualizowano';
+$_Lang['TipTip_Opt']    = 'Zoptymalizowano';
+$_Lang['TipTip_Chg']    = 'Zmieniono';
 
-$_Lang['ServerInfo']		= 'Informacje o serwerze';
-$_Lang['Title']			= 'ChangeLog i Informacje o serwerze';
-$_Lang['Version']		= 'Wersja';
-$_Lang['Description']	= 'Opis zmian';
-$_Lang['Changelog']		= 'Dziennik zmian';
-$_Lang['changelog']		= array
-(
-	'<b class="lime">1.0.0<br/>by mdziekon</b>' =>
-	'<img src="images/chglog_add.png" class="img"> <b>UniEngine</b> - First public release (19th of July 2013)',
-);
+$_Lang['ServerInfo']    = 'Informacje o serwerze';
+$_Lang['Title']         = 'ChangeLog i Informacje o serwerze';
+$_Lang['Version']       = 'Wersja';
+$_Lang['Description']   = 'Opis zmian';
+$_Lang['Changelog']     = 'Dziennik zmian';
+$_Lang['changelog']     = [
+    '<b class="lime">1.0.0<br/>by mdziekon</b>' =>
+    '<img src="images/chglog_add.png" class="img"> <b>UniEngine</b> - First public release (19th of July 2013)',
+];
 
 ?>

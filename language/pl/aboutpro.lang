@@ -1,39 +1,38 @@
 <?php
 
-$_Lang['DarkEnergyStatusIs'] = 'Ilość jednostek Ciemnej Energii na twoim koncie';
-$_Lang['BuyMoreDE'] = 'Dokup Ciemną Energię!';
+$_Lang['DarkEnergyStatusIs']    = 'Ilość jednostek Ciemnej Energii na twoim koncie';
+$_Lang['BuyMoreDE']             = 'Dokup Ciemną Energię!';
 
-$_Lang['aboutpro'] = 'Konto Pro';
+$_Lang['aboutpro']              = 'Konto Pro';
 
-$_Lang['Desc'] = 'Konto Pro działa na zasadzie rozszerzenia możliwości twojego obecnego konta. Dzięki niemu otrzymujesz dostęp do zablokowanych dla zwykłych graczy funkcji, które pozwalają Ci o wiele sprawniej zarządzać planetami i flotą. Z pewnością pomogą Ci one w szybszym rozwoju!';
-$_Lang['BenefitsTitle'] = 'Co zyskujesz z Kontem Pro';
+$_Lang['Desc']                  = 'Konto Pro działa na zasadzie rozszerzenia możliwości twojego obecnego konta. Dzięki niemu otrzymujesz dostęp do zablokowanych dla zwykłych graczy funkcji, które pozwalają Ci o wiele sprawniej zarządzać planetami i flotą. Z pewnością pomogą Ci one w szybszym rozwoju!';
+$_Lang['BenefitsTitle']         = 'Co zyskujesz z Kontem Pro';
 
-$_Lang['Benefits'] = array
-(
-	'Kolejka budowania - rozszerzenie do <b class="lime">10 pozycji</b>',
-	'Kolejka badań - <b class="lime">5 pozycji</b>',
-	'<b class="lime">Nieograniczony</b> dostęp do <b class="lime">Handlarza</b> (możliwość wymiany surowców)',
-	'Dostęp do <b class="lime">Podglądu Imperium</b> (podgląd wszystkich planet i księżyców w jednym miejscu)',
-	'Dostęp do <b class="lime">Demontowni</b> (możliwość demontowania statków i obrony na surowce)',
-	'Maksymalna ilość Statków i Obronnych w Kolejce Stoczni podniesiona do <b class="lime">10 mln</b>',
-	'Dostęp do <b class="lime">Listy Ataków</b> podlegających Regule Bash',
-	'Funkcję usprawniającą Transport Surowców (<b class="lime">Autouzupełnianie</b>)',
-);
+$_Lang['Benefits']              = [
+    'Kolejka budowania - rozszerzenie do <b class="lime">10 pozycji</b>',
+    'Kolejka badań - <b class="lime">5 pozycji</b>',
+    '<b class="lime">Nieograniczony</b> dostęp do <b class="lime">Handlarza</b> (możliwość wymiany surowców)',
+    'Dostęp do <b class="lime">Podglądu Imperium</b> (podgląd wszystkich planet i księżyców w jednym miejscu)',
+    'Dostęp do <b class="lime">Demontowni</b> (możliwość demontowania statków i obrony na surowce)',
+    'Maksymalna ilość Statków i Obronnych w Kolejce Stoczni podniesiona do <b class="lime">10 mln</b>',
+    'Dostęp do <b class="lime">Listy Ataków</b> podlegających Regule Bash',
+    'Funkcję usprawniającą Transport Surowców (<b class="lime">Autouzupełnianie</b>)',
+];
 
-$_Lang['ProAccStatus'] = 'Status Konta Pro';
-$_Lang['ProTill'] = 'Ważne do';
-$_Lang['ProEnded'] = 'Wygasło';
-$_Lang['NeverHadPro'] = 'Nigdy nie zakupiono';
+$_Lang['ProAccStatus']          = 'Status Konta Pro';
+$_Lang['ProTill']               = 'Ważne do';
+$_Lang['ProEnded']              = 'Wygasło';
+$_Lang['NeverHadPro']           = 'Nigdy nie zakupiono';
 
-$_Lang['RenewPro'] = 'Przedłuż o %s %s!';
-$_Lang['BuyAgain'] = 'Wykup ponownie na %s %s!';
-$_Lang['FirstBuy'] = 'Wykup na %s %s!';
+$_Lang['RenewPro']              = 'Przedłuż o %s %s!';
+$_Lang['BuyAgain']              = 'Wykup ponownie na %s %s!';
+$_Lang['FirstBuy']              = 'Wykup na %s %s!';
 
-$_Lang['_day'] = 'dzień';
-$_Lang['_days'] = 'dni';
+$_Lang['_day']                  = 'dzień';
+$_Lang['_days']                 = 'dni';
 
-$_Lang['Cost'] = 'Koszt';
-$_Lang['CostUnits'] = 'j. Ciemnej Energii';
-$_Lang['AreYouSure'] = 'Czy jesteś pewien?';
+$_Lang['Cost']                  = 'Koszt';
+$_Lang['CostUnits']             = 'j. Ciemnej Energii';
+$_Lang['AreYouSure']            = 'Czy jesteś pewien?';
 
 ?>

@@ -4,12 +4,12 @@ $_Lang['Trader_Title']               = 'Handlarz';
 
 $_Lang['Trader_DoSell']              = 'Sprzedaj';
 $_Lang['Trader_DoBuy']               = 'Kup';
-$_Lang['Trader_UsesLeft']			= 'Ilość transakcji Handlarza';
+$_Lang['Trader_UsesLeft']            = 'Ilość transakcji Handlarza';
 
-$_Lang['Trader_Uses_Infinite']		= 'Nieskończona';
-$_Lang['Trader_Uses_InStandBy']		= 'W zapasie';
-$_Lang['Trader_Uses_BuyMore']		= 'Kup więcej transakcji u Handlowca';
-$_Lang['Trader_Uses_BlockedBuy']		= 'Aby korzystać z Handlarza, wykup Konto Pro lub transakcje u Handlowca!';
+$_Lang['Trader_Uses_Infinite']       = 'Nieskończona';
+$_Lang['Trader_Uses_InStandBy']      = 'W zapasie';
+$_Lang['Trader_Uses_BuyMore']        = 'Kup więcej transakcji u Handlowca';
+$_Lang['Trader_Uses_BlockedBuy']     = 'Aby korzystać z Handlarza, wykup Konto Pro lub transakcje u Handlowca!';
 
 $_Lang['Trader_BadResType']          = 'Niepoprawny typ surowców!';
 $_Lang['Trader_BadResMode']          = 'Niepoprawny typ transakcji!';
@@ -40,9 +40,9 @@ $_Lang['Trader_GoBack']              = 'Powrót';
 $_Lang['Trader_Max']                 = 'Max';
 $_Lang['Trader_Zero']                = 'Zero';
 
-$_Lang['Trader_CantUseTrader']		= '<b class="red">Aby korzystać z Handlarza, musisz mieć wykupione pakiety transakcji od Handlowca lub Konto Pro!</b>';
+$_Lang['Trader_CantUseTrader']       = '<b class="red">Aby korzystać z Handlarza, musisz mieć wykupione pakiety transakcji od Handlowca lub Konto Pro!</b>';
 
-$_Lang['mod_ma_excha'] = "Dokonaj tranzakcji";
-$_Lang['mod_ma_cours'] = "Przelicznik";
+$_Lang['mod_ma_excha']               = "Dokonaj tranzakcji";
+$_Lang['mod_ma_cours']               = "Przelicznik";
 
 ?>

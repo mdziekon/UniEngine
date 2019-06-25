@@ -1,13 +1,13 @@
 <?php
 
-$_Lang['MassMessage_Form_Title'] = 'Wiadomość Masowa';
-$_Lang['MassMessage_Form_Subject'] = 'Temat';
-$_Lang['MassMessage_Form_Content'] = 'Treść';
+$_Lang['MassMessage_Form_Title']        = 'Wiadomość Masowa';
+$_Lang['MassMessage_Form_Subject']      = 'Temat';
+$_Lang['MassMessage_Form_Content']      = 'Treść';
 $_Lang['MassMessage_Form_ContentLimit'] = 'Limit';
-$_Lang['MassMessage_Form_Submit'] = 'Wyślij';
-$_Lang['MassMessage_Form_Reset'] = 'Wyczyść';
+$_Lang['MassMessage_Form_Submit']       = 'Wyślij';
+$_Lang['MassMessage_Form_Reset']        = 'Wyczyść';
 
-$_Lang['MassMessage_Success'] = 'Wiadomość masowa została wysłana do %s użytkowników!';
-$_Lang['MassMessage_NoSufficientData'] = 'Nie podano wszystkich danych!';
+$_Lang['MassMessage_Success']           = 'Wiadomość masowa została wysłana do %s użytkowników!';
+$_Lang['MassMessage_NoSufficientData']  = 'Nie podano wszystkich danych!';
 
 ?>

@@ -150,8 +150,7 @@ $_Lang['msg_const']['msgs'] = array
     '105' => 'Sojusz <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> zmienił Typ Paktu Sojuszowego na "<b>%s</b>"!',
 );
 
-$_Lang['msg_const']['senders']['system'] = array
-(
+$_Lang['msg_const']['senders']['system'] = [
     '001' => 'Kolejka budowy',
     '002' => 'Kontrola lotu',
     '003' => 'Dowództwo',
@@ -159,10 +158,9 @@ $_Lang['msg_const']['senders']['system'] = array
     '005' => 'Sojusz',
     '006' => 'Perymetr obronny',
     '007' => 'System',
-);
+];
 
-$_Lang['msg_const']['senders']['rangs'] = array
-(
+$_Lang['msg_const']['senders']['rangs'] = [
     0   => '<span style="color: #BFBFBF;">Gracz</span>',
     20  => '<span class="lime">ForumTeam</span>',
     50  => '<span class="lime">Operator (GO)</span>',
@@ -171,10 +169,9 @@ $_Lang['msg_const']['senders']['rangs'] = array
     100 => '<span class="orange">Administrator</span>',
     110 => '<span class="red">Programista</span>',
     120 => '<span class="red">Właściciel Gry</span>',
-);
+];
 
-$_Lang['msg_const']['subjects'] = array
-(
+$_Lang['msg_const']['subjects'] = [
     '001' => 'Budowa zakończona niepowodzeniem',
     '002' => 'Transport',
     '003' => 'Powrót floty',
@@ -199,12 +196,11 @@ $_Lang['msg_const']['subjects'] = array
     '022' => 'Zawrócenie Flot',
     '023' => 'Zaproszenie do Sojuszu',
     '024' => 'Propozycja Paktu Sojuszy',
-);
+];
 
-$_Lang['msg_const']['sim'] = array
-(
+$_Lang['msg_const']['sim'] = [
     'form'      => '<form id="sim_%s" action="simulator.php" method="post" class="hide"><textarea class="hide" name="spyreport">%s</textarea></form>',
     'button'    => '<table class="sth" cellspacing="0"><tr><td class="c center"><a class="lime point spySim" id="spy_%s" href="#">Symuluj</a></td></tr></table>',
-);
+];
 
 ?>

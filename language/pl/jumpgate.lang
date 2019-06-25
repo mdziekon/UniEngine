@@ -1,6 +1,6 @@
 <?php
 
-$_Lang['GateJump_NotDoing']		        = 'Skok nie jest wykonywany!';
+$_Lang['GateJump_NotDoing']             = 'Skok nie jest wykonywany!';
 $_Lang['GateJump_NotOnMoon']            = 'Nie jesteś na Księżycu!';
 $_Lang['GateJump_NoTeleportOnMoon1']    = 'Brak Teleportera na tym Księżycu!';
 $_Lang['GateJump_Moon1NotReach']        = 'Skok z tego Księżyca możliwy dopiero za:';

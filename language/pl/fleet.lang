@@ -46,7 +46,7 @@ $_Lang['fl_noplanetrow']                         = 'Brak Danych o Planecie! Pros
 $_Lang['fl_fleetspeed']                          = 'Prędkość';
 $_Lang['fl_selmax']                              = 'Max';
 $_Lang['fl_selnone']                             = 'Zero';
-$_Lang['fl_goback']								= 'Cofnij';
+$_Lang['fl_goback']                              = 'Cofnij';
 $_Lang['fl_continue']                            = 'Dalej';
 $_Lang['fl_noships']                             = 'Brak Statków';
 $_Lang['fl_nofreeslots']                         = 'Brak wolnych Slotów';
@@ -55,7 +55,7 @@ $_Lang['fl_selectall']                           = 'Wszystkie';
 $_Lang['fl_already_cameback']                    = 'Flota już wróciła';
 
 $_Lang['fl_flytargettime']                       = 'Cel za';
-$_Lang['fl_flystaytime']							= 'Wycofanie za';
+$_Lang['fl_flystaytime']                         = 'Wycofanie za';
 $_Lang['fl_flygobacktime']                       = 'Powrót za';
 $_Lang['fl_flyretreattime']                      = 'Zawróć';
 
@@ -119,7 +119,7 @@ $_Lang['fl1_targetPlanet']                       = 'Planeta';
 
 $_Lang['fl_reachtime']                           = 'Czas przylotu';
 $_Lang['fl_comebacktime']                        = 'Czas powrotu';
-$_Lang['fl_fleet1_ttl']                         = 'Wyślij Flotę';
+$_Lang['fl_fleet1_ttl']                          = 'Wyślij Flotę';
 $_Lang['fl_speed']                               = 'Prędkość (%)';
 $_Lang['fl_planet']                              = 'Planeta';
 $_Lang['fl_ruins']                               = 'Pole zniszczeń';
@@ -159,8 +159,8 @@ $_Lang['fl2_title']                              = 'Wyślij Flotę z ';
 $_Lang['fl2_sendfromplanet']                     = 'planety';
 $_Lang['fl2_sendfrommoon']                       = 'księżyca';
 $_Lang['fl2_emptyplanet']                        = 'Niezamieszkała';
-$_Lang['fl2_target_abandoned_1']					= 'Porzucona planeta';
-$_Lang['fl2_target_abandoned_3']					= 'Porzucony księżyc';
+$_Lang['fl2_target_abandoned_1']                 = 'Porzucona planeta';
+$_Lang['fl2_target_abandoned_3']                 = 'Porzucony księżyc';
 $_Lang['fl2_debrisfield']                        = 'Pole zniszczeń';
 
 $_Lang['fl2_flightTime']                         = 'Czas lotu<br />(w jedną stronę)';
@@ -169,7 +169,7 @@ $_Lang['fl2_targetowner']                        = 'Właściciel Celu';
 
 $_Lang['fl2_SendButton']                         = 'Wyślij Flotę';
 
-$_Lang['fl2_confirm_allypact_attack']			= 'Czy jesteś pewien, że chcesz zaatakować gracza, który należy do Sojuszu posiadającego Pakt z twoim Sojuszem?';
+$_Lang['fl2_confirm_allypact_attack']            = 'Czy jesteś pewien, że chcesz zaatakować gracza, który należy do Sojuszu posiadającego Pakt z twoim Sojuszem?';
 $_Lang['fl2_testacctarget']                      = 'Uwaga!\nPodane koordynaty należą do jednego z Kont Testowych Administracji Gry!\nJakiekolwiek Ruchy Flot na te obiekty bez pozwolenia Administracji będą surowo karane!';
 
 // fleet3.php
@@ -185,7 +185,7 @@ $_Lang['fl3_BadResourcesGiven']                  = 'Źle wprowadzono ilość sur
 $_Lang['fl3_PlanetNoEnoughmetal']                = 'Nie masz wystarczającej ilości Metalu!';
 $_Lang['fl3_PlanetNoEnoughcrystal']              = 'Nie masz wystarczającej ilości Kryształu!';
 $_Lang['fl3_PlanetNoEnoughdeuterium']            = 'Nie masz wystarczającej ilości Deuteru!';
-$_Lang['fl3_BlockAccNotActivated']				= 'Nie możesz wysyłać żadnych flot, dopóki nie aktywujesz swojego konta!';
+$_Lang['fl3_BlockAccNotActivated']               = 'Nie możesz wysyłać żadnych flot, dopóki nie aktywujesz swojego konta!';
 
 $_Lang['fl3_CantAttackDebris']                   = 'Nie możesz zaatakować Pola Zniszczeń!';
 $_Lang['fl3_CantAttackNonUsed']                  = 'Nie możesz zaatakować niezamieszkałej Planety/Księżyca!';

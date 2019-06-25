@@ -1,20 +1,20 @@
 <?php
 
-$_Lang['No_Data']                    = 'Brak danych';
-$_Lang['No_id_given'] = 'Wpis o podanym ID nie istnieje!';
+$_Lang['No_Data']           = 'Brak danych';
+$_Lang['No_id_given']       = 'Wpis o podanym ID nie istnieje!';
 
-$_Lang['InfiniteVacation']           = 'Wieczny Urlop';
-$_Lang['Ban_Expired']                = 'Ban wygasł';
-$_Lang['Ban_TimeLeft']               = 'Pozostało';
-$_Lang['Ban_expired']                = 'Ban wygasł!';
+$_Lang['InfiniteVacation']  = 'Wieczny Urlop';
+$_Lang['Ban_Expired']       = 'Ban wygasł';
+$_Lang['Ban_TimeLeft']      = 'Pozostało';
+$_Lang['Ban_expired']       = 'Ban wygasł!';
 
-$_Lang['_ago']                       = 'temu';
-$_Lang['_day']                       = 'dzień';
-$_Lang['_days']                      = 'dni';
-$_Lang['_today']                     = 'Dziś';
-$_Lang['_yesterday']                 = 'Wczoraj';
-$_Lang['_Since']                     = 'Od';
-$_Lang['_Untill']                    = 'Do';
-$_Lang['_Duration']                  = 'Czas trwania';
+$_Lang['_ago']              = 'temu';
+$_Lang['_day']              = 'dzień';
+$_Lang['_days']             = 'dni';
+$_Lang['_today']            = 'Dziś';
+$_Lang['_yesterday']        = 'Wczoraj';
+$_Lang['_Since']            = 'Od';
+$_Lang['_Untill']           = 'Do';
+$_Lang['_Duration']         = 'Czas trwania';
 
 ?>

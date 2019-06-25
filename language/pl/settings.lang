@@ -1,18 +1,18 @@
 <?php
 
-$_Lang['Page_Title']                 = 'Ustawienia konta';
-$_Lang['NickChange_Title']           = 'Zmiana Nazwy Użytkownika';
-$_Lang['Vacations_Title']            = 'Tryb Urlopu';
+$_Lang['Page_Title']                = 'Ustawienia konta';
+$_Lang['NickChange_Title']          = 'Zmiana Nazwy Użytkownika';
+$_Lang['Vacations_Title']           = 'Tryb Urlopu';
 
 // Menu
-$_Lang['Menu_Title']					= 'Ustawienia Konta';
-$_Lang['General']                    = 'Ogólne';
-$_Lang['View']                       = 'Wygląd Gry';
-$_Lang['Galaxy']                     = 'Widok Galaktyki';
-$_Lang['VacationNDelete']            = 'Urlop i Kasacja';
-$_Lang['IgnoreList']                 = 'Lista Ignorowanych';
-$_Lang['LogonsList']					= 'Lista Logowań';
-$_Lang['FleetColors']				= 'Kolory Flot';
+$_Lang['Menu_Title']                = 'Ustawienia Konta';
+$_Lang['General']                   = 'Ogólne';
+$_Lang['View']                      = 'Wygląd Gry';
+$_Lang['Galaxy']                    = 'Widok Galaktyki';
+$_Lang['VacationNDelete']           = 'Urlop i Kasacja';
+$_Lang['IgnoreList']                = 'Lista Ignorowanych';
+$_Lang['LogonsList']                = 'Lista Logowań';
+$_Lang['FleetColors']               = 'Kolory Flot';
 
 //General
 $_Lang['UserInfo']                   = 'Informacje i Dane gracza';
@@ -59,12 +59,12 @@ $_Lang['AvatarMore']                 = '(Adres URL, najlepszy rozmiar 200&#215;2
 $_Lang['DevelopmentOld']             = 'Przywróć Stary wygląd Rozwoju';
 $_Lang['BuildExpandedViewUse']       = 'Pokazuj niedostępne Elementy';
 $_Lang['PrettyFleetUse']             = 'Rozdzielaj duże liczby';
-$_Lang['FleetTransportation']		= 'Transport Surowców';
+$_Lang['FleetTransportation']        = 'Transport Surowców';
 $_Lang['ResourcesSorting']           = 'Kolejność dodawania surowców<br/>do ładowni pojazdów<br/>(<b class="dash">Zmień kolejność metodą <b class="orange">Przeciągnij i Upuść</b></b>)';
 $_Lang['QuickResTransport']          = 'Główna Planeta<br/>(Dla funkcji "Transportuj Surowce")';
 $_Lang['MsgsPerPage']                = 'Ilość wiadomości na stronę';
 $_Lang['MsgsExpandSpy']              = 'Zwijaj Raporty Szpiegowskie';
-$_Lang['MsgsUseThreads']				= 'Wiadomości od graczy scalaj do Wątków';
+$_Lang['MsgsUseThreads']             = 'Wiadomości od graczy scalaj do Wątków';
 $_Lang['SortMoonsInfo']              = 'Na liście twoich Planet, Księżyc odpowiadający danej Planecie będzie zaraz pod nią, bez względu na rodzaj sortowania';
 $_Lang['SkinPathInfo']               = 'Zalecamy używać skórek dostępnych w grze ze względu na sprawę kompatybilności - zewnętrzne skórki mogą nie posiadać wszystkich obrazków';
 $_Lang['AvatarInfo']                 = 'Avatar jest widoczny np. w Podglądzie Galaktyki<br/><br/>Jeśli nie chcesz używać Avatara, pozostaw to pole puste.';
@@ -74,14 +74,18 @@ $_Lang['PrettyFleetInfo']            = 'Po zaznaczeniu tej opcji, wartości pól
 $_Lang['ResourcesSortingInfo']       = 'Ta opcja pozwala zmienić priorytet przydzielania Surowców do ładowni pojazdów.<br/>Jeśli masz za mało miejsca dla wszystkich surowców, surowce wyżej na tej liście będą przyznawane jako pierwsze do ładowni.';
 $_Lang['QuickResTransInfo']          = 'Ta lista pozwala wybrać Główną Planetę, na którą będą wysyłane Surowce za pomocą funkcji <b class=orange>Transportuj Surowce</b> użytej z Podglądu.<br/><b class=red>Ta opcja jest dostępna tylko dla posiadaczy Konta Pro!</b>';
 $_Lang['SkinSelectInfo']             = 'Możesz wybrać jedną ze skórek dostępnych na naszym serwerze. Skórka jest wtedy szybciej wczytywana';
-$_Lang['MsgsUseThreadsInfo']			= 'Jeśli ta opcja jest zaznaczona, Wiadomości od graczy będą odpowiednio scalane w Wątki, o ile gracze używali opcji <b>Odpowiedz</b>. Wyświetlane będą tylko nieprzeczytane lub ostatnie wiadomości, a reszta będzie dostępna po <b>Rozwinięciu Wątku</b>.';
+$_Lang['MsgsUseThreadsInfo']         = 'Jeśli ta opcja jest zaznaczona, Wiadomości od graczy będą odpowiednio scalane w Wątki, o ile gracze używali opcji <b>Odpowiedz</b>. Wyświetlane będą tylko nieprzeczytane lub ostatnie wiadomości, a reszta będzie dostępna po <b>Rozwinięciu Wątku</b>.';
 
 $_Lang['AYS_WantNoSkin']             = 'Czy jesteś pewien, że chcesz wyłączyć używanie Skórki Gry?';
 $_Lang['SetSkin_BadNetSkin']         = 'Link do wybranej przez Ciebie zewnętrznej skórki wydaje się być niepoprawny (brak pliku formate.css odpowiedzialnego za Wygląd Gry).\nJeśli jesteś pewien, że jest to poprawny Link, zgłoś to Administracji!';
 $_Lang['SetSkin_BadLocSkin']         = 'Na naszym serwerze nie ma takiej skórki!\nProsimy wybrać jedną z dostępnych skórek z Listy.';
 $_Lang['SetSkin_AjaxError']          = 'System nie mógł sprawdzić, czy wybrana przez Ciebie skórka gry jest poprawna.\nCzy jesteś pewien, że chcesz ustawić tą skórkę?\nW przypadku niepoprawnego linku, gra może wyglądać niepoprawnie!';
 
-$_Lang['ResSort_Resources']          = array('met' => &$_Lang['Metal'], 'cry' => &$_Lang['Crystal'], 'deu' => &$_Lang['Deuterium']);
+$_Lang['ResSort_Resources']          = [
+    'met' => &$_Lang['Metal'],
+    'cry' => &$_Lang['Crystal'],
+    'deu' => &$_Lang['Deuterium']
+];
 
 // Galaxy
 
@@ -89,8 +93,8 @@ $_Lang['GalaxyFleet']                = 'Wysyłanie Floty';
 $_Lang['GalaxyGenView']              = 'Ogólne';
 $_Lang['GalaxyShortcuts']            = 'Skróty akcji';
 $_Lang['SpyProbes']                  = 'Ilość Sond Szpiegowskich';
-$_Lang['UseAJAXGalaxy']				= 'Używaj AJAXa w Widoku Galaktyki';
-$_Lang['ShowUserAvatars']			= 'Pokazuj Avatary Graczy';
+$_Lang['UseAJAXGalaxy']              = 'Używaj AJAXa w Widoku Galaktyki';
+$_Lang['ShowUserAvatars']            = 'Pokazuj Avatary Graczy';
 $_Lang['SpyAction']                  = 'Szpieguj';
 $_Lang['WriteAction']                = 'Napisz do gracza';
 $_Lang['BuddyAction']                = 'Dodaj gracza do BuddyList';
@@ -133,17 +137,17 @@ $_Lang['Ignore_ListEmpty']           = 'Lista Ignorowanych jest pusta!';
 $_Lang['Ignore_NothingSelected']     = 'Nic nie zaznaczono!';
 
 // Logons List
-$_Lang['WhatIsLogonsList']			= 'Czym jest Lista Logowań?';
-$_Lang['LogonsList_FullInfo']		= 'Na tej liście znajdziesz ostatnie 20 prób logowań na twoje konto. Dzięki niej możesz sprawdzić, czy ostatnio nikt niepowołany nie logował się na twoje konto.';
+$_Lang['WhatIsLogonsList']          = 'Czym jest Lista Logowań?';
+$_Lang['LogonsList_FullInfo']       = 'Na tej liście znajdziesz ostatnie 20 prób logowań na twoje konto. Dzięki niej możesz sprawdzić, czy ostatnio nikt niepowołany nie logował się na twoje konto.';
 
-$_Lang['Logons_Date']				= 'Data Logowania';
-$_Lang['Logons_IP']					= 'Adres IP';
-$_Lang['Logons_Status']				= 'Status Logowania';
+$_Lang['Logons_Date']               = 'Data Logowania';
+$_Lang['Logons_IP']                 = 'Adres IP';
+$_Lang['Logons_Status']             = 'Status Logowania';
 
-$_Lang['Logons_ago']					= 'temu';
-$_Lang['Logons_Success']				= 'Udane';
-$_Lang['Logons_Failed']				= 'Nieudane';
-$_Lang['Logons_ListEmpty']			= '<b class="orange">Brak logowań!</b>';
+$_Lang['Logons_ago']                = 'temu';
+$_Lang['Logons_Success']            = 'Udane';
+$_Lang['Logons_Failed']             = 'Nieudane';
+$_Lang['Logons_ListEmpty']          = '<b class="orange">Brak logowań!</b>';
 
 // Others
 
@@ -174,7 +178,7 @@ $_Lang['Vacation_FlyingFleets']      = 'Nie możesz przejść na Urlop, poniewa�
 $_Lang['Vacation_GoingOnVacations']  = 'Twoje konto zostało wprowadzone w Tryb Urlopu!';
 $_Lang['Vacation_GoingOnVacationsWithDeletion'] = 'Twoje konto zostało wprowadzone w Tryb Urlopu<br/><span class="red">oraz zostanie usunięte za 7 dni!</span>';
 $_Lang['Delete_Confirm_isbad']       = 'Podano niepoprawne hasło do weryfikacji!';
-$_Lang['Info_NoChanges']				= 'Brak zmian...';
+$_Lang['Info_NoChanges']             = 'Brak zmian...';
 $_Lang['Info_SaveWellDone']          = 'Zmiany zostały zapisane (Ilość zmienionych ustawień: %s)';
 $_Lang['Info_SaveWellDone2']         = 'Zmiany zostały zapisane!';
 $_Lang['Notice_ChangesNotSaved']     = 'Ilość ustawień pozostawionych bez zmian: %s';
@@ -191,11 +195,11 @@ $_Lang['BuyMoreDE']              = 'Dokup Ciemną Energię!';
 
 $_Lang['ChangeYourNick']         = 'Zmiana Nicka';
 $_Lang['GoBack']                 = 'Powrót do Ustawień Konta';
-$_Lang['NickChange_Info']		 = '';
-$_Lang['NickChange_Info']		.= '&bull; Koszt zmiany Nicka: <b class="orange">10</b> jednostek Ciemnej Energii<br/>';
-$_Lang['NickChange_Info']		.= '&bull; Informacja o twoim Starym Nicku będzie widoczna przez następne 7 dni<br/>';
-$_Lang['NickChange_Info']		.= '&bull; Nowy Nick musi być zgodny z <a class="red" href="rules.php" target="_blank">Regulaminem</a><br/>';
-$_Lang['NickChange_Info']		.= '&bull; Nowy Nick musi mieć przynajmniej 4 znaki i może składać się ze znaków alfanumerycznych, podkreśleń, spacji i myślników.<br/>';
+$_Lang['NickChange_Info']        = '';
+$_Lang['NickChange_Info']       .= '&bull; Koszt zmiany Nicka: <b class="orange">10</b> jednostek Ciemnej Energii<br/>';
+$_Lang['NickChange_Info']       .= '&bull; Informacja o twoim Starym Nicku będzie widoczna przez następne 7 dni<br/>';
+$_Lang['NickChange_Info']       .= '&bull; Nowy Nick musi być zgodny z <a class="red" href="rules.php" target="_blank">Regulaminem</a><br/>';
+$_Lang['NickChange_Info']       .= '&bull; Nowy Nick musi mieć przynajmniej 4 znaki i może składać się ze znaków alfanumerycznych, podkreśleń, spacji i myślników.<br/>';
 
 $_Lang['NewNick']                = 'Nowy nick';
 $_Lang['ChangeIt']               = 'Zmień nick';
@@ -215,7 +219,7 @@ $_Lang['Vacation_CantGoOut']     = 'Nie możesz jeszcze ściągnąć Trybu Urlop
 $_Lang['exit_vacations']         = 'Ściągnij Urlop';
 $_Lang['Exec']                   = 'Wykonaj';
 $_Lang['Vacation_mode']          = 'Konto w Trybie Urlopu przynajmniej do';
-$_Lang['Vacation_EndTime']		= 'Urlop można ściągnąć nie wcześniej niż: <b class="%s">%s</b>';
+$_Lang['Vacation_EndTime']       = 'Urlop można ściągnąć nie wcześniej niż: <b class="%s">%s</b>';
 $_Lang['Vacation_EndTimeNoBlock']= '<b class="lime">Urlop można ściągnąć w każdej chwili</b>';
 
 // Email Change
@@ -238,10 +242,10 @@ $_Lang['Email_Body']             .= $_Lang['Email_Text'];
 $_Lang['Email_Body']             .= '</body>';
 $_Lang['Email_Body']             .= '</html>';
 
-$_Lang['WhatIsFleetColors'] = 'Informacje';
-$_Lang['FleetColors_Info'] = 'Ta zakładka umożliwia zmianę kolorów dla poszczególnych misji flot widocznych w Podglądzie.<br/>Klikając na dowolne pole otwiera się okienko wyboru koloru. Puste pole oznacza kolor domyślny.';
-$_Lang['FleetColors_Pickers_OwnFlying'] = 'Własne Floty - lecące do celu';
+$_Lang['WhatIsFleetColors']                 = 'Informacje';
+$_Lang['FleetColors_Info']                  = 'Ta zakładka umożliwia zmianę kolorów dla poszczególnych misji flot widocznych w Podglądzie.<br/>Klikając na dowolne pole otwiera się okienko wyboru koloru. Puste pole oznacza kolor domyślny.';
+$_Lang['FleetColors_Pickers_OwnFlying']     = 'Własne Floty - lecące do celu';
 $_Lang['FleetColors_Pickers_OwnComingBack'] = 'Własne Floty - powracające';
-$_Lang['FleetColors_Pickers_NotOwn'] = 'Cudze Floty';
+$_Lang['FleetColors_Pickers_NotOwn']        = 'Cudze Floty';
 
 ?>

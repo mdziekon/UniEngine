@@ -1,8 +1,8 @@
 <?php
 
-$_Lang['Title'] = 'Garbage Collector';
+$_Lang['Title']         = 'Garbage Collector';
 
-$_Lang['Result_Parse'] = '';
+$_Lang['Result_Parse']  = '';
 $_Lang['Result_Parse'] .= 'Czas wykonywania: %s s.<br/>';
 $_Lang['Result_Parse'] .= 'Usunięte wiadomości: %s<br/>';
 $_Lang['Result_Parse'] .= 'Usunięte symulacje: %s<br/>';

@@ -1,20 +1,20 @@
 <?php
 
-$_Lang['Page_Title'] = 'Archiwum Chatu';
+$_Lang['Page_Title']                        = 'Archiwum Chatu';
 
-$_Lang['Pagination_Reload'] = 'Odśwież';
+$_Lang['Pagination_Reload']                 = 'Odśwież';
 
-$_Lang['CMD_DeleteSelected'] = 'Usuń zaznaczone';
+$_Lang['CMD_DeleteSelected']                = 'Usuń zaznaczone';
 
-$_Lang['CMDInfo_BadCMD'] = 'Niepoprawna akcja!';
-$_Lang['CMDInfo_Delete_NothingToDelete'] = 'Nic nie zaznaczono...';
-$_Lang['CMDInfo_Delete_NothingDeleted'] = 'Nie usunięto żadnej wiadomości!';
-$_Lang['CMDInfo_Delete_DeletedOK'] = 'Zaznaczone wiadomości zostały usunięte (%s)!';
+$_Lang['CMDInfo_BadCMD']                    = 'Niepoprawna akcja!';
+$_Lang['CMDInfo_Delete_NothingToDelete']    = 'Nic nie zaznaczono...';
+$_Lang['CMDInfo_Delete_NothingDeleted']     = 'Nie usunięto żadnej wiadomości!';
+$_Lang['CMDInfo_Delete_DeletedOK']          = 'Zaznaczone wiadomości zostały usunięte (%s)!';
 
-$_Lang['JSAlert_NothingSelected'] = 'Nic nie zaznaczono...';
-$_Lang['JSTip_SelectAll'] = 'Zaznacz/odznacz wszystko';
-$_Lang['JSTip_DeleteID'] = 'Usuń wiadomość';
+$_Lang['JSAlert_NothingSelected']           = 'Nic nie zaznaczono...';
+$_Lang['JSTip_SelectAll']                   = 'Zaznacz/odznacz wszystko';
+$_Lang['JSTip_DeleteID']                    = 'Usuń wiadomość';
 
-$_Lang['Notice_NoMessages'] = 'Brak wiadomości w tym pokoju...';
+$_Lang['Notice_NoMessages']                 = 'Brak wiadomości w tym pokoju...';
 
 ?>
