@@ -79,16 +79,20 @@ $_Lang['WorldElements_Detailed'] = [
         'description_short' => 'Przy pomocy tej technologii można zdobywać informacje o innych planetach.',
     ],
     108 => [
-        'description_short' => 'Wraz ze zwiększaniem wydajności komputerów można sterować większą ilością flot. Każdy poziom technologii komputerowej zwiększa maksymalną ilość flot o 1.',
+        'description_short' => 'Wraz ze zwiększaniem wydajności komputerów można sterować większą ilością flot.',
+        'description_extra' => 'Każdy poziom technologii komputerowej zwiększa maksymalną ilość flot o 1.',
     ],
     109 => [
-        'description_short' => 'Technologia bojowa usprawnia systemy bojowe. Każdy poziom technologii bojowej podwyższa moc bojową jednostek o 10% wartości początkowej.',
+        'description_short' => 'Technologia bojowa usprawnia systemy bojowe.',
+        'description_extra' => 'Każdy poziom technologii bojowej podwyższa moc bojową jednostek o 10% wartości początkowej.'
     ],
     110 => [
-        'description_short' => 'Technologia ochronna usprawnia powłoki ochronne wokół statków i systemów obronnych. Każdy poziom technologii ochronnej podwyższa efektywność powłok o 10% wartości podstawowej.',
+        'description_short' => 'Technologia ochronna usprawnia powłoki ochronne wokół statków i systemów obronnych.',
+        'description_extra' => 'Każdy poziom technologii ochronnej podwyższa efektywność powłok o 10% wartości podstawowej.'
     ],
     111 => [
-        'description_short' => 'Specjalny stop metali polepsza właściwości opancerzenia. Skuteczność opancerzenia wzrasta o 10% wartości początkowej.',
+        'description_short' => 'Specjalny stop metali polepsza właściwości opancerzenia.',
+        'description_extra' => 'Skuteczność opancerzenia wzrasta o 10% wartości początkowej.'
     ],
     113 => [
         'description_short' => 'Opanowanie różnych rodzajów energii jest konieczne dla wielu nowych technologii.',
@@ -97,13 +101,16 @@ $_Lang['WorldElements_Detailed'] = [
         'description_short' => 'Przez połączenie 4-tego i 5-tego wymiaru jest teraz możliwe zbudowanie nowatorskiego napędu, który jest oszczędniejszy i wydajniejszy.',
     ],
     115 => [
-        'description_short' => 'Dalszy rozwój tego napędu sprawia, że niektóre statki poruszają się szybciej, przede wszystkim każdy poziom podwyższa prędkość o 10% wartości podstawowej.',
+        'description_short' => 'Dalszy rozwój tego napędu sprawia, że niektóre statki poruszają się szybciej.',
+        'description_extra' => 'Każdy poziom podwyższa prędkość o 10% wartości podstawowej.'
     ],
     117 => [
-        'description_short' => 'Napęd impulsowy bazuje na zasadzie odrzutu. Dalszy rozwój tego napędu sprawia, że niektóre statki poruszają się szybciej, przede wszystkim każdy poziom podwyższa ich prędkość o 20% wartości podstawowej.',
+        'description_short' => 'Napęd impulsowy bazuje na zasadzie odrzutu.',
+        'description_extra' => 'Dalszy rozwój tego napędu sprawia, że niektóre statki poruszają się szybciej, przede wszystkim każdy poziom podwyższa ich prędkość o 20% wartości podstawowej.'
     ],
     118 => [
-        'description_short' => 'Zakrzywia przestrzeń wokół statku. Dalszy rozwój tego napędu sprawnie podwyższa prędkość niektórych statków o 30% wartości podstawowej.',
+        'description_short' => 'Zakrzywia przestrzeń wokół statku.',
+        'description_extra' => 'Dalszy rozwój tego napędu sprawnie podwyższa prędkość niektórych statków o 30% wartości podstawowej.'
     ],
     120 => [
         'description_short' => 'Uzyskana wiązka światła powoduje znaczące zniszczenia wybranego dla niej celu.',
@@ -126,15 +133,15 @@ $_Lang['WorldElements_Detailed'] = [
     ],
     125 => [
         'description_short' => 'Antymateria to niezwykle niestabilny rodzaj cząstek, które przy kontakcie ze zwykłą materią (np. para wodór - antywodór) ulegają Anihilacji wydzielając przy tym ogromne ilości promieniowania Gamma.',
-        'description_alt' => 'Antymaterię i zwykłą materię jaką znamy z codziennego życia różni jedynie znak ładunku elektrycznego. Ta specyficzna właściwość powoduje, że podczas kontaktu obu rodzajów cząstek ulegają one procesowi Anihilacji, która doprowadza do zamiany ich na promieniowanie o sumarycznej energii równoważnej ich masom.<br/>Anihilacja 1 kg materii i 1 kg antymaterii (np. pary wodór - antywodór) wytwarza energię w przybliżeniu równą 1% energii wytwarzanej na powierzchni Słońca.<br/><br/>Wraz z rozwojem tej technologii, wszystkie pojazdy i systemy obronne uzbrojone w Miotacze antymaterii, będą zwiększały swą moc o 5% na każdy poziom.',
+        'description_extra' => 'Wraz z rozwojem tej technologii, wszystkie pojazdy i systemy obronne uzbrojone w Miotacze antymaterii, będą zwiększały swą moc o 5% na każdy poziom.',
     ],
     126 => [
         'description_short' => 'Ostateczna forma bojowa możliwa do osiągnięcia. Śmiercionośny strumień niszczy każdą napotkaną materię.',
-        'description_alt' => 'Przy wykorzystaniu zaawansowanych Technologii możliwe jest wygenerowanie niebezpiecznego strumienia, który po napotkaniu jakiejkolwiek materii rozrywa wiązania między wszystkimi atomami. Powoduje to natychmiastową zapaść cząsteczek i rozbicie ich na wolne atomy pierwiastków.<br/><br/>Wraz z rozwojem tej technologii, wszystkie pojazdy i systemy obronne uzbrojone w Działa dezintegrujące, będą zwiększały swą moc o 5% na każdy poziom.',
+        'description_extra' => 'Wraz z rozwojem tej technologii, wszystkie pojazdy i systemy obronne uzbrojone w Działa dezintegrujące, będą zwiększały swą moc o 5% na każdy poziom.',
     ],
     199 => [
         'description_short' => 'Przez wystrzał skoncentrowanego ładunku cząstek grawitonów może zostaćwytworzone sztuczne pole grawitacyjne, które może niszczyć statki i księżyce.',
-        'description_alt' => 'Grawiton to cząstka, która nie posiada żadnej masy, ani żadnego ładunku, a która określa siłę grawitacji. Przez wystrzał skoncentrowanego ładunku grawitonów można wytworzyć sztuczne pole grawitacyjne, które podobnie jak czarna dziura, wciąga do siebie wszystkie masy i obiekty.<br/><br/>Wraz z rozwojem tej technologii, wszystkie pojazdy i systemy obronne uzbrojone w Działa grawitronowe, będą zwiększały swą moc o 5% na każdy poziom.',
+        'description_extra' => 'Wraz z rozwojem tej technologii, wszystkie pojazdy i systemy obronne uzbrojone w Działa grawitronowe, będą zwiększały swą moc o 5% na każdy poziom.',
     ],
 
     // Ships
