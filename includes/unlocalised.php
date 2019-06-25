@@ -71,6 +71,26 @@ function langFileExists($filename) {
     return file_exists($filepath);
 }
 
+function getJSDatePickerTranslationLang() {
+    global $_User;
+
+    $lang = DEFAULT_LANG;
+
+    if (
+        isset($_User['lang']) &&
+        $_User['lang'] != ''
+    ) {
+        $lang = $_User['lang'];
+    }
+
+    $langMapping = [
+        'en' => 'en-GB',
+        'pl' => 'pl'
+    ];
+
+    return $langMapping[$lang];
+}
+
 // Fleet-related functions
 function GetTargetDistance($OrigGalaxy, $DestGalaxy, $OrigSystem, $DestSystem, $OrigPlanet, $DestPlanet)
 {
