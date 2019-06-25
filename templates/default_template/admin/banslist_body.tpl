@@ -1,7 +1,7 @@
 <script src="../libs/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
 <script src="../libs/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.min.js" type="text/javascript"></script>
 <script src="../libs/jquery-ui-datepicker-{JS_DatePicker_TranslationLang}/jquery-ui-datepicker-{JS_DatePicker_TranslationLang}.min.js" type="text/javascript"></script>
-<script src="../dist/js/admin/banslist_body.cachebuster-1546739003831.min.js" type="text/javascript"></script>
+<script src="../dist/js/admin/banslist_body.cachebuster-1561455380555.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="../dist/css/admin/banslist_body.cachebuster-1546564327123.min.css" />
 <link rel="stylesheet" type="text/css" href="../libs/jquery-ui/jquery-ui.min.css" />
 {Insert_Scripts}

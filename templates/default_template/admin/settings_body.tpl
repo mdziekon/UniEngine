@@ -4,7 +4,7 @@
 <script>
 var JSLang = {'JS_ConfirmNeeded': '{JS_ConfirmNeeded}'};
 </script>
-<script src="../dist/js/admin/settings_body.cachebuster-1545956361123.min.js" type="text/javascript"></script>
+<script src="../dist/js/admin/settings_body.cachebuster-1561455380555.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="../dist/css/admin/settings_body.cachebuster-1546564327123.min.css" />
 <link rel="stylesheet" type="text/css" href="../libs/jquery-ui/jquery-ui.min.css" />
 <br />
