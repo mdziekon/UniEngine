@@ -1,6 +1,6 @@
 <?php
 
-$_Lang['Page_Title'] = 'Sensor Phalanx';
+$_Lang['Page_Title']            = 'Sensor Phalanx';
 
 $_Lang['Table_Title1']          = 'Scanning';
 $_Lang['Table_Title2']          = 'planet';

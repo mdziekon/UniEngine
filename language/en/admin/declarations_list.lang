@@ -1,6 +1,6 @@
 <?php
 
-$_Lang['declaration_title']	            = 'Shared IP declarations';
+$_Lang['declaration_title']             = 'Shared IP declarations';
 $_Lang['declaration_noexist']           = 'This declaration does not exist!';
 $_Lang['declaration_refused']           = '<b class="orange">Declaration rejected!</b>';
 $_Lang['declaration_accepted']          = '<b class="lime">Declaration accepted!</b>';

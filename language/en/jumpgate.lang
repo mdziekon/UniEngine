@@ -1,6 +1,6 @@
 <?php
 
-$_Lang['GateJump_NotDoing']		        = 'The jump is not being performed!';
+$_Lang['GateJump_NotDoing']             = 'The jump is not being performed!';
 $_Lang['GateJump_NotOnMoon']            = 'You are not on a moon!';
 $_Lang['GateJump_NoTeleportOnMoon1']    = 'There is no Jump gate on this moon!';
 $_Lang['GateJump_Moon1NotReach']        = 'Jump from this moon available in:';

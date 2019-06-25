@@ -14,7 +14,7 @@ $_Lang['Userlist_ConfirmDelete']    = 'Are you sure you want to delete this play
 
 $_Lang['SearchUserTip']             = 'To use <b>multisearch</b> option, separate every search phrase with <b>"|"</b> sign (pipe)';
 $_Lang['SelectAllVisible']          = '<b>Select all</b>';
-$_Lang['SelectAllFiltered']	        = '<b>Select all matched</b>';
+$_Lang['SelectAllFiltered']         = '<b>Select all matched</b>';
 $_Lang['EMails']                    = 'Email addresses';
 $_Lang['IPs']                       = 'IP addresses';
 
@@ -48,7 +48,7 @@ $_Lang['ShowActionLogs']            = 'Show action logs';
 $_Lang['ShowUserMessages']          = 'Show player\'s messages';
 
 $_Lang['ResetFilters']              = 'Reset';
-$_Lang['ToggleFilters']	            = 'Show / Hide advanced filter options';
+$_Lang['ToggleFilters']             = 'Show / Hide advanced filter options';
 $_Lang['ShowPerPage']               = 'Players per page';
 $_Lang['StrictSearch']              = 'Strict matching';
 $_Lang['AnyIP']                     = 'Match all IP records';
@@ -76,7 +76,7 @@ $_Lang['IsDeletingSearch']          = 'Acc. Termination';
 $_Lang['IsActiveSearch']            = 'Active account';
 $_Lang['IsInAllySearch']            = 'In any alliance';
 $_Lang['AllySearchType']            = 'Match:';
-$_Lang['AllyInRequest']	            = 'Inc. applications';
+$_Lang['AllyInRequest']             = 'Inc. applications';
 
 $_Lang['PlayerIsBanned']            = 'Player is banned!';
 $_Lang['PlayerIsOnVacations']       = 'Player is on Vacation';
@@ -84,14 +84,14 @@ $_Lang['PlayerIsOnVacations']       = 'Player is on Vacation';
 $_Lang['_Yes']                      = 'Yes';
 $_Lang['_No']                       = 'No';
 $_Lang['_Names']                    = 'Names';
-$_Lang['_Tags']	                    = 'Tags';
+$_Lang['_Tags']                     = 'Tags';
 
 $_Lang['FoundUsers_Count']          = 'Matching players found: %s';
 $_Lang['Filtering_Time']            = 'Filtering: %s s.';
 $_Lang['Loading_Time']              = 'Data fetching: %s s.';
 
 $_Lang['MassAction']['Selections']  = 'Selection options';
-$_Lang['MassAction']['Ban']	        = 'Ban';
+$_Lang['MassAction']['Ban']         = 'Ban';
 $_Lang['MassAction']['Unban']       = 'Unban';
 
 $_Lang['UserFilter_NoGoodStrings']  = 'Input validation rejected all search phrases!';

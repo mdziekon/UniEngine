@@ -42,7 +42,7 @@ $_Lang['tip_Deleted']           = 'Deleted';
 $_Lang['tip_Read']              = 'Read';
 $_Lang['tip_Copy']              = 'Copy';
 
-$_Lang['Err_CopyNotFound']	    = '<b class="red">Base-source of this message does not exist!</b>';
+$_Lang['Err_CopyNotFound']      = '<b class="red">Base-source of this message does not exist!</b>';
 
 $_Lang['YouCannotSeeThisMsg']   = '<b class="red">Not enough permissions to see this message!</b>';
 $_Lang['Error_NoMsgFound']      = 'No messages found!';

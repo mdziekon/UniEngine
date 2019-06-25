@@ -64,7 +64,7 @@ $_Lang['AMenu_Inv_Actions']     = 'Actions';
 $_Lang['AMenu_Inv_Accept']      = 'Accept invitation';
 $_Lang['AMenu_Inv_Reject']      = 'Reject invitation';
 
-$_Lang['AMenu_Inv_NoRows']      = 'No invitations...';
+$_Lang['AMenu_Inv_NoRows']          = 'No invitations...';
 $_Lang['AMenu_Inv_States']['1']     = '<b class="lime">Awaiting decision</b>';
 $_Lang['AMenu_Inv_States']['-1']    = '<b class="orange">Rejected</b>';
 $_Lang['AMenu_Inv_States']['-2']    = '<b class="red">Withdrawn</b>';
@@ -132,10 +132,10 @@ $_Lang['Ally_ML_isOffline']      = 'Offline';
 $_Lang['Ally_ML_Days']           = 'd.';
 
 // Showing Ally Wars & Pacts List
-$_Lang['Ally_Pacts_WinTitle']    = 'Alliance - List of Pacts';
+$_Lang['Ally_Pacts_WinTitle']       = 'Alliance - List of Pacts';
 
-$_Lang['AWNP_Wars']              = 'Wars';
-$_Lang['AWNP_Pacts']             = 'Pacts';
+$_Lang['AWNP_Wars']                 = 'Wars';
+$_Lang['AWNP_Pacts']                = 'Pacts';
 
 $_Lang['AWNP_DeclareWar']           = 'Declare war';
 $_Lang['AWNP_NewPact']              = 'Send a pact proposal';
@@ -217,12 +217,12 @@ $_Lang['Ally_PactNew_Error_BadName']            = 'Invalid alliance name given!'
 $_Lang['Ally_PactNew_Success']  = 'Pact proposal has been sent to alliance <a href="?mode=ainfo&amp;a=%s" target="_blank">%s</a>!';
 
 // Changing existing Pact
-$_Lang['Ally_PactChange_Title'] = 'Alliance - Change pact type';
+$_Lang['Ally_PactChange_Title']             = 'Alliance - Change pact type';
 
-$_Lang['Ally_PactChange_Body_Head'] = 'Send Pact type change proposal to another Alliance';
-$_Lang['Ally_PactChange_Body_Ally'] = 'Alliance';
-$_Lang['Ally_PactChange_Body_CurrentType'] = 'Current Pact type';
-$_Lang['Ally_PactChange_Body_Submit'] = 'Send proposal';
+$_Lang['Ally_PactChange_Body_Head']         = 'Send Pact type change proposal to another Alliance';
+$_Lang['Ally_PactChange_Body_Ally']         = 'Alliance';
+$_Lang['Ally_PactChange_Body_CurrentType']  = 'Current Pact type';
+$_Lang['Ally_PactChange_Body_Submit']       = 'Send proposal';
 
 $_Lang['Ally_PactChange_BadAID']                = 'Invalid alliance identifier given';
 $_Lang['Ally_PactChange_PactDoesntExist']       = 'This pact does not exist!';
@@ -516,7 +516,7 @@ $_Lang['ADM_RkL_Info9']          = '<b class="dash">Ranks\\\' management</b><br/
 $_Lang['ADM_RkL_Info10']         = '<b class="dash">Kick out members</b><br/><br/><u>Activates</u>:<br/>&#187; Allows to kick out other members from the Alliance (except for other members with this permission)';
 $_Lang['ADM_RkL_Info11']         = '<b class="dash">Wars\\\' and Pacts\\\' management</b><br/><br/><u>Activates</u>:<br/>&#187; Allows to declare or cease wars with other alliances<br/>&#187; Allows to make or terminate pacts with other alliances';
 $_Lang['ADM_RkL_Info12']         = '<b class="dash">Send invitations</b><br/><br/><u>Activates</u>:<br/>&#187; Allows to send membership invitations to other players<br/>&#187; Allows to see and withdraw own invitations';
-$_Lang['ADM_RkL_Info13']            = '<b class="dash">Access to the Chat</b><br/><br/><u>Activates</u>:<br/>&#187; Allows to use Alliance\\\'s chat <br/>(as long as it is active)';
+$_Lang['ADM_RkL_Info13']         = '<b class="dash">Access to the Chat</b><br/><br/><u>Activates</u>:<br/>&#187; Allows to use Alliance\\\'s chat <br/>(as long as it is active)';
 
 $_Lang['ADM_RkL_Delete']         = 'Delete';
 $_Lang['ADM_RkL_RUSure']         = 'Are you sure you want to remove this rank?';
@@ -531,20 +531,20 @@ $_Lang['ADM_RkL_NoAccess2ACh']   = 'You do not have enough permissions to assign
 $_Lang['ADM_RkL_NoAccess2Del']   = 'You do not have enough permissions to delete this rank!';
 $_Lang['ADM_RkL_NoAccess2Nam']   = 'You do not have enough permissions to rename this rank!';
 
-$_Lang['ADM_RkL_AddedRank']      = 'New rank has been added!';
-$_Lang['ADM_RkL_BadOptGiven']    = 'Invalid rank permissions set given!';
+$_Lang['ADM_RkL_AddedRank']         = 'New rank has been added!';
+$_Lang['ADM_RkL_BadOptGiven']       = 'Invalid rank permissions set given!';
 $_Lang['ADM_RkL_ForbiddenOptGiven'] = 'One of the permissions you\'ve tried to assign is not available for you!';
-$_Lang['ADM_RkL_RankExists']     = 'This rank name is already taken!';
-$_Lang['ADM_RkL_ForbiddenSigns'] = 'Invalid rank name given!';
-$_Lang['ADM_RkL_NameLong']       = 'Rank name cannot be longer than 50 characters!';
-$_Lang['ADM_RkL_NameShort']      = 'Rank name cannot be shorter than 3 characters!';
+$_Lang['ADM_RkL_RankExists']        = 'This rank name is already taken!';
+$_Lang['ADM_RkL_ForbiddenSigns']    = 'Invalid rank name given!';
+$_Lang['ADM_RkL_NameLong']          = 'Rank name cannot be longer than 50 characters!';
+$_Lang['ADM_RkL_NameShort']         = 'Rank name cannot be shorter than 3 characters!';
 
-$_Lang['ADM_RkL_RankDeleted']    = 'Rank has been deleted!';
-$_Lang['ADM_RkL_RankDelete_na_nodel']    = 'You do not have enough permissions to delete this rank!';
-$_Lang['ADM_RkL_RankDelete_adm_nodel']   = 'You cannot delete Alliance\'s leader rank!';
-$_Lang['ADM_RkL_RankDelete_nc_nodel']    = 'You cannot delete Alliance\'s default rank - change it to a different rank first!';
-$_Lang['ADM_RkL_RankNoExists']   = 'This rank does not exist!';
-$_Lang['ADM_RkL_BadRankIDGiven'] = 'Invalid data provided!';
+$_Lang['ADM_RkL_RankDeleted']           = 'Rank has been deleted!';
+$_Lang['ADM_RkL_RankDelete_na_nodel']   = 'You do not have enough permissions to delete this rank!';
+$_Lang['ADM_RkL_RankDelete_adm_nodel']  = 'You cannot delete Alliance\'s leader rank!';
+$_Lang['ADM_RkL_RankDelete_nc_nodel']   = 'You cannot delete Alliance\'s default rank - change it to a different rank first!';
+$_Lang['ADM_RkL_RankNoExists']          = 'This rank does not exist!';
+$_Lang['ADM_RkL_BadRankIDGiven']        = 'Invalid data provided!';
 
 $_Lang['ADM_RkL_PosChgSaved']    = 'Changes have been saved!';
 $_Lang['ADM_RkL_AllChgSaved']    = 'All changes have been saved!';
@@ -560,16 +560,16 @@ $_Lang['ADM_BadEditSelected']    = 'Invalid data!';
 
 // Global
 
-$_Lang['GoBack']                     = 'Go back';
-$_Lang['Ally_AccessDenied']          = 'You do not have enough permissions to access this function!';
-$_Lang['Ally_Desc']                  = 'Alliance description';
-$_Lang['Ally']                       = 'Alliance';
+$_Lang['GoBack']                = 'Go back';
+$_Lang['Ally_AccessDenied']     = 'You do not have enough permissions to access this function!';
+$_Lang['Ally_Desc']             = 'Alliance description';
+$_Lang['Ally']                  = 'Alliance';
 
-$_Lang['Pages']                      = 'Pages';
-$_Lang['next']                       = 'Next';
-$_Lang['prev']                       = 'Previous';
+$_Lang['Pages']                 = 'Pages';
+$_Lang['next']                  = 'Next';
+$_Lang['prev']                  = 'Previous';
 
-$_Lang['Tag']                        = 'Tag';
-$_Lang['Name']                       = 'Name';
+$_Lang['Tag']                   = 'Tag';
+$_Lang['Name']                  = 'Name';
 
 ?>

@@ -1,8 +1,8 @@
 <?php
 
-$_Lang['Body_Title'] = 'General configuration';
+$_Lang['Body_Title']                            = 'General configuration';
 
-$_Lang['Body_Save'] = 'Save';
+$_Lang['Body_Save']                             = 'Save';
 
 $_Lang['Headers_EnforceConfigReload']           = 'Cache management';
 $_Lang['Headers_EnforceConfigReload_Button']    = 'Force Cache reload';

@@ -25,30 +25,30 @@ $_Lang['Report_status_changed']     = 'Status changed';
 $_Lang['Report_noexist']            = 'This report does not exist';
 
 $_Lang['Report_types']              = [
-	'Player - Message',
-	'Player - Bash',
-	'Player - Push',
-	'Player - Other violation',
-	'System - message bug',
-	'System - game bug',
-	'System - SMTP bug',
-	'Other',
-	'Player - Chat message'
+    'Player - Message',
+    'Player - Bash',
+    'Player - Push',
+    'Player - Other violation',
+    'System - message bug',
+    'System - game bug',
+    'System - SMTP bug',
+    'Other',
+    'Player - Chat message'
 ];
 $_Lang['Report_statuslist']         = [
-	'Awaiting',
+    'Awaiting',
     // FIXME: reserved statuses, should be predefined by ID rather than
     // leave it to PHP's array indices
-	'',
-	'',
-	'',
-	'',
-	'',
-	'',
-	'',
-	'',
-	'Reviewed<br/><b>Rejected</b>',
-	'Reviewed<br/><b>Accepted</b>'
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    'Reviewed<br/><b>Rejected</b>',
+    'Reviewed<br/><b>Accepted</b>'
 ];
 
 $_Lang['ReportRow_Actions_BtnSendMessage_tooltip']          = 'Send a reply';

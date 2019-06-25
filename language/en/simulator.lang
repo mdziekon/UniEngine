@@ -17,7 +17,7 @@ $_Lang['Attacker_Txt']           = 'Aggressor ';
 $_Lang['Defender_Txt']           = 'Defender ';
 
 $_Lang['Morale']                 = 'Morale';
-$_Lang['Morale_Level']			 = 'Morale level';
+$_Lang['Morale_Level']           = 'Morale level';
 $_Lang['Technology']             = 'Technologies';
 $_Lang['Fleets']                 = 'Fleet';
 $_Lang['Defense']                = 'Defenses';

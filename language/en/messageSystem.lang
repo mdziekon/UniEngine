@@ -16,8 +16,7 @@ $_Lang['BattleReport_Helper_NoRebuild'] = "<center><a href=\"#\" onclick=\"f('ba
 
 //
 
-$_Lang['msg_const']['msgs'] = array
-(
+$_Lang['msg_const']['msgs'] = [
     // Legacy messages
     '005' => (
         'You do not have enough resources to start the construction of <b>%s</b> (level %s)<br/>' .
@@ -282,10 +281,9 @@ $_Lang['msg_const']['msgs'] = array
         '<a href="alliance.php?mode=pactslist">To read the proposal, go to the Pacts list in the "Alliance" page</a>'
     ),
     '105' => 'The <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> alliance has changed the pact type to "<b>%s</b>"!',
-);
+];
 
-$_Lang['msg_const']['senders']['system'] = array
-(
+$_Lang['msg_const']['senders']['system'] = [
     '001' => 'Queues',
     '002' => 'Flight control',
     '003' => 'Headquarters',
@@ -293,10 +291,9 @@ $_Lang['msg_const']['senders']['system'] = array
     '005' => 'Alliance',
     '006' => 'Defensive perimeter',
     '007' => 'System',
-);
+];
 
-$_Lang['msg_const']['senders']['rangs'] = array
-(
+$_Lang['msg_const']['senders']['rangs'] = [
     0   => '<span style="color: #BFBFBF;">Player</span>',
     20  => '<span class="lime">ForumTeam</span>',
     50  => '<span class="lime">Operator (GO)</span>',
@@ -305,10 +302,9 @@ $_Lang['msg_const']['senders']['rangs'] = array
     100 => '<span class="orange">Administrator</span>',
     110 => '<span class="red">Developer</span>',
     120 => '<span class="red">Server owner</span>',
-);
+];
 
-$_Lang['msg_const']['subjects'] = array
-(
+$_Lang['msg_const']['subjects'] = [
     '001' => 'Enqueued job has failed',
     '002' => 'Transport',
     '003' => 'Fleet\'s return',
@@ -333,12 +329,11 @@ $_Lang['msg_const']['subjects'] = array
     '022' => 'Fleet\'s call back',
     '023' => 'Alliance invitation',
     '024' => 'Alliances\' pact proposal',
-);
+];
 
-$_Lang['msg_const']['sim'] = array
-(
+$_Lang['msg_const']['sim'] = [
     'form'      => '<form id="sim_%s" action="simulator.php" method="post" class="hide"><textarea class="hide" name="spyreport">%s</textarea></form>',
     'button'    => '<table class="sth" cellspacing="0"><tr><td class="c center"><a class="lime point spySim" id="spy_%s" href="#">Simulate</a></td></tr></table>',
-);
+];
 
 ?>

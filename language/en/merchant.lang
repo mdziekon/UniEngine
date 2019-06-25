@@ -4,11 +4,11 @@ $_Lang['Trader_Title']               = 'Merchant';
 
 $_Lang['Trader_DoSell']              = 'Sell';
 $_Lang['Trader_DoBuy']               = 'Buy';
-$_Lang['Trader_UsesLeft']			 = 'Merchant transactions left';
+$_Lang['Trader_UsesLeft']            = 'Merchant transactions left';
 
-$_Lang['Trader_Uses_Infinite']		 = 'Infinite';
-$_Lang['Trader_Uses_InStandBy']		 = 'Saved for later';
-$_Lang['Trader_Uses_BuyMore']		 = 'Purchase more merchant transactions';
+$_Lang['Trader_Uses_Infinite']       = 'Infinite';
+$_Lang['Trader_Uses_InStandBy']      = 'Saved for later';
+$_Lang['Trader_Uses_BuyMore']        = 'Purchase more merchant transactions';
 $_Lang['Trader_Uses_BlockedBuy']     = 'To unlock Merchant, purchase Pro Account or Merchant transactions!';
 
 $_Lang['Trader_BadResType']          = 'Invalid resource type!';
@@ -40,7 +40,7 @@ $_Lang['Trader_GoBack']              = 'Go back';
 $_Lang['Trader_Max']                 = 'Max';
 $_Lang['Trader_Zero']                = 'Zero';
 
-$_Lang['Trader_CantUseTrader']		= '<b class="red">To unlock Merchant Exchange, you either need to have Merchant transactions or Pro Account bought!</b>';
+$_Lang['Trader_CantUseTrader']       = '<b class="red">To unlock Merchant Exchange, you either need to have Merchant transactions or Pro Account bought!</b>';
 
 $_Lang['mod_ma_excha'] = "Exchange";
 $_Lang['mod_ma_cours'] = "Exchange rate";

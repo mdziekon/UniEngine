@@ -9,8 +9,8 @@ $_Lang['State_IsObligatory']    = '<img src="./images/warning.png" />';
 $_Lang['State_IsClosed']        = '<img src="./images/lock.png" />';
 $_Lang['State_IsVoted']         = '<img src="./images/tick.green.png" />';
 
-$_Lang['Tip_LockedVoted']	= 'Closed, voted';
-$_Lang['Tip_Locked']    	= 'Closed';
+$_Lang['Tip_LockedVoted']   = 'Closed, voted';
+$_Lang['Tip_Locked']        = 'Closed';
 $_Lang['Tip_Voted']         = 'Voted';
 $_Lang['Tip_Obligatory']    = 'Mandatory';
 
@@ -36,6 +36,6 @@ $_Lang['Error_NoAnswers']           = 'We are sorry, but this poll cannot be dis
 
 $_Lang['Vote_now']              = 'Vote now';
 $_Lang['Change_vote']           = 'Change your vote';
-$_Lang['Submit_PollLocked']	    = 'This poll is already closed...';
+$_Lang['Submit_PollLocked']     = 'This poll is already closed...';
 
 ?>

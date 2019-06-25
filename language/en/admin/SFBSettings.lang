@@ -76,7 +76,7 @@ $_Lang['SFB_Response_CancelInactive']       = 'This blockade has already ended!'
 $_Lang['SFB_Response_CancelNoExist']        = 'This blockade does not exist!';
 $_Lang['SFB_Response_CancelBadID']          = 'Invalid blockade ID given!';
 
-$_Lang['SFB_Response_AddOK']	            = 'New Blockade has been added!';
+$_Lang['SFB_Response_AddOK']                = 'New Blockade has been added!';
 $_Lang['SFB_Response_AddEndTimeBad']        = 'Blockade\'s end date must be in the future!';
 $_Lang['SFB_Response_AddNoMissions']        = 'You have to provide valid mission types to block!';
 $_Lang['SFB_Response_AddBadStart']          = 'Blockade\'s start date has to be set before the end date!';
