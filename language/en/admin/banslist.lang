@@ -2,6 +2,11 @@
 
 $_Lang['Page_Title']                = 'Bans log';
 
+$_Lang['Form_Players']              = 'Players';
+$_Lang['Form_DateRange']            = 'Date range';
+$_Lang['Form_SearchBtn']            = 'Search';
+$_Lang['Form_ResetBtn']             = 'Reset';
+
 $_Lang['Header_ID']                 = 'ID';
 $_Lang['Header_User']               = 'Player';
 $_Lang['Header_StartTime']          = 'Banned on';

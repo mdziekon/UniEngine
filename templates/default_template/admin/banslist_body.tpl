@@ -16,12 +16,12 @@
         <tr>
             <th class="pad5" colspan="{Colspan}">
                 <span class="fl">
-                    <span class="marg10">Gracze: <input type="text" name="users" class="pad3" value="{Insert_Input_Users}" style="width: 250px;"/></span>
-                    <span class="marg10">Przedział Czasu: <input type="text" name="date_from" class="pad3" value="{Insert_Input_DateFrom}"/> - <input type="text" name="date_to" class="pad3" value="{Insert_Input_DateTo}"/></span>
+                    <span class="marg10">{Form_Players}: <input type="text" name="users" class="pad3" value="{Insert_Input_Users}" style="width: 250px;"/></span>
+                    <span class="marg10">{Form_DateRange}: <input type="text" name="date_from" class="pad3" value="{Insert_Input_DateFrom}"/> - <input type="text" name="date_to" class="pad3" value="{Insert_Input_DateTo}"/></span>
                 </span>
                 <span class="fr marg10">
-                    <input type="submit" value="Szukaj" class="pad3" style="font-weight: 700; width: 100px;"/>
-                    <input type="button" id="reset" value="Resetuj" class="pad3" style="font-weight: 700; width: 100px;"/>
+                    <input type="submit" value="{Form_SearchBtn}" class="pad3" style="font-weight: 700; width: 100px;"/>
+                    <input type="button" id="reset" value="{Form_ResetBtn}" class="pad3" style="font-weight: 700; width: 100px;"/>
                 </span>
             </th>
         </tr>

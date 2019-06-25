@@ -2,6 +2,11 @@
 
 $_Lang['Page_Title']					= 'Dziennik Banów';
 
+$_Lang['Form_Players']              = 'Gracze';
+$_Lang['Form_DateRange']            = 'Przedział czasu';
+$_Lang['Form_SearchBtn']            = 'Szukaj';
+$_Lang['Form_ResetBtn']             = 'Resetuj';
+
 $_Lang['Header_ID']					= 'ID';
 $_Lang['Header_User']				= 'Gracz';
 $_Lang['Header_StartTime']			= 'Data nałożenia';
