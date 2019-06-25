@@ -295,6 +295,8 @@ if(empty($_Lang['Insert_srch_date']))
     $_Lang['Insert_srch_date'] = date('Y-m-d');
 }
 
+$_Lang['JS_DatePicker_TranslationLang'] = getJSDatePickerTranslationLang();
+
 display(parsetemplate($TPL_Body, $_Lang), $_Lang['Page_Title'], false, true);
 
 ?>

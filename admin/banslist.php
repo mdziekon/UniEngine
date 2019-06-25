@@ -332,6 +332,8 @@ else
     $_Lang['Insert_Rows'] = parsetemplate(gettemplate('_singleRow'), array('Colspan' => $_Colspan, 'Classes' => 'pad5 orange', 'Text' => $_Lang['Error_NoRows']));
 }
 
+$_Lang['JS_DatePicker_TranslationLang'] = getJSDatePickerTranslationLang();
+
 $_Lang['Colspan'] = $_Colspan;
 display(parsetemplate(gettemplate('admin/banslist_body'), $_Lang), $_Lang['Page_Title'], false, true);
 

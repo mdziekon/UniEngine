@@ -10,31 +10,22 @@
 .TabSelect{background-color:#5773A8 !important;border-color:#7189B7 !important;}
 .ui-datepicker-calendar > thead > tr > th{background: none; color: black;}
 </style>
+<script src="../libs/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
+<script src="../libs/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.min.js" type="text/javascript"></script>
+<script src="../libs/jquery-ui-datepicker-{JS_DatePicker_TranslationLang}/jquery-ui-datepicker-{JS_DatePicker_TranslationLang}.min.js" type="text/javascript"></script>
 <script>
 var SelectedTab = '{Insert_SelectedTab}';
-var JSLang = {'TP_timeOnlyTitle': 'Wybierz Czas', 'timeText': 'Czas', 'hourText': 'Godzina','minuteText': 'Minuta','secondText': 'Sekunda','millisecText': 'Milisekunda','currentText': 'Teraz','closeText': 'Gotowe'};
 </script>
 <script>
 $(document).ready(function()
 {
-    var DateTimePickerSettings =
-    {
-        timeFormat: 'hh:mm:ss',
+    var DateTimePickerSettings = {
         showButtonPanel: false,
-        timeOnlyTitle: JSLang['TP_timeOnlyTitle'],
-        timeText: JSLang['timeText'],
-        hourText: JSLang['hourText'],
-        minuteText: JSLang['minuteText'],
-        secondText: JSLang['secondText'],
-        millisecText: JSLang['millisecText'],
-        currentText: JSLang['currentText'],
-        closeText: JSLang['closeText'],
-        ampm: false,
         showSecond: true,
         beforeShow: function() {
-            setTimeout(function(){
-            $('#ui-datepicker-div').css({'z-index': 1000});
-            },1);
+            setTimeout(function() {
+                $('#ui-datepicker-div').css({'z-index': 1000});
+            }, 1);
         }
     };
 
@@ -59,9 +50,6 @@ $(document).ready(function()
     }
 });
 </script>
-<script src="../libs/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
-<script src="../libs/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.min.js" type="text/javascript"></script>
-<script src="../libs/jquery-ui-datepicker-pl/jquery-ui-datepicker-pl.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="../libs/jquery-ui/jquery-ui.min.css" />
 <br />
 <form action="reduceban.php" method="post">

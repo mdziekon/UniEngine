@@ -1,5 +1,3 @@
-/* globals JSLang */
-
 $(document).ready(function () {
     function checkAllStates () {
         var UncheckedCount = 0;
@@ -37,17 +35,7 @@ $(document).ready(function () {
     }
 
     var DateTimePickerSettings = {
-        timeFormat: "hh:mm:ss",
         showButtonPanel: false,
-        timeOnlyTitle: JSLang["TP_timeOnlyTitle"],
-        timeText: JSLang["timeText"],
-        hourText: JSLang["hourText"],
-        minuteText: JSLang["minuteText"],
-        secondText: JSLang["secondText"],
-        millisecText: JSLang["millisecText"],
-        currentText: JSLang["currentText"],
-        closeText: JSLang["closeText"],
-        ampm: false,
         beforeShow: function () {
             setTimeout(function () {
                 $("#ui-datepicker-div").css({"z-index": 1000});

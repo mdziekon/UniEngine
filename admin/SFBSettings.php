@@ -700,6 +700,8 @@ if(!empty($CombineData))
     }
 }
 
+$_Lang['JS_DatePicker_TranslationLang'] = getJSDatePickerTranslationLang();
+
 $Title = $_Lang['SFB_Title'];
 $Page = parsetemplate($TPL, $_Lang);
 
