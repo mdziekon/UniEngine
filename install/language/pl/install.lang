@@ -1,134 +1,244 @@
 <?php
 
-$_Lang['PageTitle'] = 'Instalator silnika UniEngine';
+$_Lang['PageTitle']                                                 = 'Instalator silnika UniEngine';
 
-$_Lang['Install_Info'] = 'Witamy w formularzu instalacyjnym silnika UniEngine!<br/><br/>Skoro widzisz ten komunikat, oznacza to, że ustawienia twojego serwera PHP są zgodne z wymaganiami.<br/><br/>Poniżej znajduje się kilkanaście pól tekstowych i opcji wyboru, za pomocą których skonfigurujesz swój serwer i utworzysz konto administratora w grze.<br/><br/>Prosimy uważnie przeczytać wszystkie informacje nt. każdego z pól, aby bezproblemowo przebrnąć przez proces instalacji.<br/><b style="color: orange;">(*) - pole wymagane</b>';
+$_Lang['Install_Info']                                              = (
+    'Witamy w formularzu instalacyjnym silnika UniEngine!<br/><br/>' .
+    'Skoro widzisz ten komunikat, oznacza to, że ustawienia twojego serwera PHP są zgodne z wymaganiami.<br/><br/>' .
+    'Poniżej znajduje się kilkanaście pól tekstowych i opcji wyboru, za pomocą których skonfigurujesz swój serwer i utworzysz konto administratora w grze.<br/><br/>' .
+    'Prosimy uważnie przeczytać wszystkie informacje nt. każdego z pól, aby bezproblemowo przebrnąć przez proces instalacji.<br/>' .
+    '<b style="color: orange;">(*) - pole wymagane</b>'
+);
 
-$_Lang['Header_DBConfig'] = 'Ustawienia Bazy Danych (zapis do pliku "config.php" / "config.localhost.php")';
-$_Lang['Header_Constants'] = 'Ustawienia Stałych Serwera (zapis do pliku "includes/constants.php")';
-$_Lang['Header_AdminUser'] = 'Ustawienia konta Administratora (zapis do tabel "users", "planets", "galaxy" w Bazie Danych)';
-$_Lang['Header_UniMain'] = 'Ustawienia Universum (zapis do tabeli "game_config" w Bazie Danych oraz do pliku "includes/constants.php")';
-$_Lang['Header_UniProtections'] = 'Ustawienia ochrony graczy (zapis do tabel "users", "planets", "galaxy" w Bazie Danych)';
-$_Lang['Header_UniAntiAbuse'] = 'Ustawienia blokad ochronnych (zapis do tabel "users", "planets", "galaxy" w Bazie Danych)';
+$_Lang['Header_DBConfig']                                           = 'Ustawienia Bazy Danych (zapis do pliku "config.php" / "config.localhost.php")';
+$_Lang['Header_Constants']                                          = 'Ustawienia Stałych Serwera (zapis do pliku "includes/constants.php")';
+$_Lang['Header_AdminUser']                                          = 'Ustawienia konta Administratora (zapis do tabel "users", "planets", "galaxy" w Bazie Danych)';
+$_Lang['Header_UniMain']                                            = 'Ustawienia Universum (zapis do tabeli "game_config" w Bazie Danych oraz do pliku "includes/constants.php")';
+$_Lang['Header_UniProtections']                                     = 'Ustawienia ochrony graczy (zapis do tabel "users", "planets", "galaxy" w Bazie Danych)';
+$_Lang['Header_UniAntiAbuse']                                       = 'Ustawienia blokad ochronnych (zapis do tabel "users", "planets", "galaxy" w Bazie Danych)';
 
-$_Lang['Button_Install'] = 'Rozpocznij instalację!';
+$_Lang['Button_Install']                                            = 'Rozpocznij instalację!';
 
-$_Lang['Form_Confirm'] = 'Czy jesteś pewien, że wypełniłeś wszystkie pola tak jak chciałeś?';
+$_Lang['Form_Confirm']                                              = 'Czy jesteś pewien, że wypełniłeś wszystkie pola tak jak chciałeś?';
 
-$_Lang['Label_DBHost'] = 'Adres serwera MySQL';
-$_Lang['Label_DBUser'] = 'Nazwa użytkownika MySQL';
-$_Lang['Label_DBPass'] = 'Hasło użytkownika MySQL';
-$_Lang['Label_DBName'] = 'Nazwa bazy danych';
-$_Lang['Label_DBPrefix'] = 'Prefix tabel silnika';
-$_Lang['Label_Const_UniID'] = 'Identyfikator Universum';
-$_Lang['Label_Const_Domain'] = 'Domena serwera gry';
-$_Lang['Label_Const_Subdomain'] = 'Subdomena universum gry';
-$_Lang['Label_Const_ReCaptcha_Enable'] = 'Włączyć system ReCaptcha podczas rejestracji?';
-$_Lang['Label_Const_ReCaptcha_ServerIP_as_Hostname'] = 'Identyfikuj serwer przez IP zamiast nazwy hosta?';
-$_Lang['Label_Const_ReCaptcha_Public'] = 'Klucz publiczny ReCaptcha';
-$_Lang['Label_Const_ReCaptcha_Private'] = 'Klucz prywatny ReCaptcha';
-$_Lang['Label_Admin_Username'] = 'Nazwa konta Administratora';
-$_Lang['Label_Admin_Password'] = 'Hasło konta Administratora';
-$_Lang['Label_Admin_Email'] = 'EMail Administratora';
-$_Lang['Label_Uni_GameName'] = 'Nazwa gry/universum';
-$_Lang['Label_Uni_GameSpeed'] = 'Prędkość gry';
-$_Lang['Label_Uni_FleetSpeed'] = 'Prędkość flot';
-$_Lang['Label_Uni_ResourceSpeed'] = 'Prędkość wydobycia';
-$_Lang['Label_Uni_MotherFields'] = 'Ilość pól na Planecie Matce';
-$_Lang['Label_Uni_FleetDebris'] = 'Złom ze statków';
-$_Lang['Label_Uni_DefenseDebris'] = 'Złom z obrony';
-$_Lang['Label_Uni_MissileDebris'] = 'Złom z obrony przy atakach rakietowych';
-$_Lang['Label_Uni_MailActivationNeeded'] = 'Wymagaj aktywacji konta przez Email?';
-$_Lang['Label_Uni_TelemetryEnable'] = 'Uruchom telemetrię';
-$_Lang['Label_Uni_AutoToolPass_StatBuilder'] = 'Hasło dla Auto Obliczania Statystyk';
-$_Lang['Label_Uni_AutoToolPass_GarbageCollector'] = 'Hasło dla Auto Odświecania';
-$_Lang['Label_Uni_AutoToolPass_GZipLog'] = 'Hasło dla Auto Pakowania Logów';
-$_Lang['Label_Uni_NoobProtectionEnable'] = 'Uruchom ochronę słabych graczy';
-$_Lang['Label_Uni_NoobProtectionBasicTimeLimit'] = 'Kompletna ochrona gracza (punkty)';
-$_Lang['Label_Uni_NoobProtectionBasicLimitMultiplier'] = 'Współczynnik ochrony gracza';
-$_Lang['Label_Uni_NoobProtectionRemove'] = 'Usunięcie ochrony gracza (punkty)';
-$_Lang['Label_Uni_NoobProtectionIdleDays'] = 'Zdjęcie ochrony u graczy nieaktywnych (ilość dni)';
-$_Lang['Label_Uni_NoobProtectionFirstLogin'] = 'Czas ochrony konta po pierwszym zalogowaniu (sekundy)';
-$_Lang['Label_Uni_AntiFarm_Enabled'] = 'Uruchom ochronę przed nadmiernym "farmieniem"';
-$_Lang['Label_Uni_AntiFarm_Ratio'] = 'Współczynnik ochrony przed farmieniem';
-$_Lang['Label_Uni_AntiFarm_TotalCount'] = 'Maksymalna ilość ataków na gracza';
-$_Lang['Label_Uni_AntiFarm_PlanetCount'] = 'Maksymalna ilość ataków na każdą z planet gracza';
-$_Lang['Label_Uni_AntiBash_Enabled'] = 'Uruchom blokadę AntyBashową';
-$_Lang['Label_Uni_AntiBash_Interval'] = 'Interwał między atakami (sekundy)';
-$_Lang['Label_Uni_AntiBash_TotalCount'] = 'Maksymalna ilość ataków na gracza';
-$_Lang['Label_Uni_AntiBash_PlanetCount'] = 'Makmsymalna ilość ataków na każdą z planet gracza';
+$_Lang['Label_DBHost']                                              = 'Adres serwera MySQL';
+$_Lang['Label_DBUser']                                              = 'Nazwa użytkownika MySQL';
+$_Lang['Label_DBPass']                                              = 'Hasło użytkownika MySQL';
+$_Lang['Label_DBName']                                              = 'Nazwa bazy danych';
+$_Lang['Label_DBPrefix']                                            = 'Prefix tabel silnika';
+$_Lang['Label_Const_UniID']                                         = 'Identyfikator Universum';
+$_Lang['Label_Const_Domain']                                        = 'Domena serwera gry';
+$_Lang['Label_Const_Subdomain']                                     = 'Subdomena universum gry';
+$_Lang['Label_Const_ReCaptcha_Enable']                              = 'Włączyć system ReCaptcha podczas rejestracji?';
+$_Lang['Label_Const_ReCaptcha_ServerIP_as_Hostname']                = 'Identyfikuj serwer przez IP zamiast nazwy hosta?';
+$_Lang['Label_Const_ReCaptcha_Public']                              = 'Klucz publiczny ReCaptcha';
+$_Lang['Label_Const_ReCaptcha_Private']                             = 'Klucz prywatny ReCaptcha';
+$_Lang['Label_Admin_Username']                                      = 'Nazwa konta Administratora';
+$_Lang['Label_Admin_Password']                                      = 'Hasło konta Administratora';
+$_Lang['Label_Admin_Email']                                         = 'EMail Administratora';
+$_Lang['Label_Uni_GameName']                                        = 'Nazwa gry/universum';
+$_Lang['Label_Uni_GameSpeed']                                       = 'Prędkość gry';
+$_Lang['Label_Uni_FleetSpeed']                                      = 'Prędkość flot';
+$_Lang['Label_Uni_ResourceSpeed']                                   = 'Prędkość wydobycia';
+$_Lang['Label_Uni_MotherFields']                                    = 'Ilość pól na Planecie Matce';
+$_Lang['Label_Uni_FleetDebris']                                     = 'Złom ze statków';
+$_Lang['Label_Uni_DefenseDebris']                                   = 'Złom z obrony';
+$_Lang['Label_Uni_MissileDebris']                                   = 'Złom z obrony przy atakach rakietowych';
+$_Lang['Label_Uni_MailActivationNeeded']                            = 'Wymagaj aktywacji konta przez Email?';
+$_Lang['Label_Uni_TelemetryEnable']                                 = 'Uruchom telemetrię';
+$_Lang['Label_Uni_AutoToolPass_StatBuilder']                        = 'Hasło dla Auto Obliczania Statystyk';
+$_Lang['Label_Uni_AutoToolPass_GarbageCollector']                   = 'Hasło dla Auto Odświecania';
+$_Lang['Label_Uni_AutoToolPass_GZipLog']                            = 'Hasło dla Auto Pakowania Logów';
+$_Lang['Label_Uni_NoobProtectionEnable']                            = 'Uruchom ochronę słabych graczy';
+$_Lang['Label_Uni_NoobProtectionBasicTimeLimit']                    = 'Kompletna ochrona gracza (punkty)';
+$_Lang['Label_Uni_NoobProtectionBasicLimitMultiplier']              = 'Współczynnik ochrony gracza';
+$_Lang['Label_Uni_NoobProtectionRemove']                            = 'Usunięcie ochrony gracza (punkty)';
+$_Lang['Label_Uni_NoobProtectionIdleDays']                          = 'Zdjęcie ochrony u graczy nieaktywnych (ilość dni)';
+$_Lang['Label_Uni_NoobProtectionFirstLogin']                        = 'Czas ochrony konta po pierwszym zalogowaniu (sekundy)';
+$_Lang['Label_Uni_AntiFarm_Enabled']                                = 'Uruchom ochronę przed nadmiernym "farmieniem"';
+$_Lang['Label_Uni_AntiFarm_Ratio']                                  = 'Współczynnik ochrony przed farmieniem';
+$_Lang['Label_Uni_AntiFarm_TotalCount']                             = 'Maksymalna ilość ataków na gracza';
+$_Lang['Label_Uni_AntiFarm_PlanetCount']                            = 'Maksymalna ilość ataków na każdą z planet gracza';
+$_Lang['Label_Uni_AntiBash_Enabled']                                = 'Uruchom blokadę AntyBashową';
+$_Lang['Label_Uni_AntiBash_Interval']                               = 'Interwał między atakami (sekundy)';
+$_Lang['Label_Uni_AntiBash_TotalCount']                             = 'Maksymalna ilość ataków na gracza';
+$_Lang['Label_Uni_AntiBash_PlanetCount']                            = 'Makmsymalna ilość ataków na każdą z planet gracza';
 
-$_Lang['Tip_DBHost'] = 'Adres (IP lub host) serwera MySQL, na którym będą przechowywane dane gry';
-$_Lang['Tip_DBUser'] = 'Nazwa użytkownika istniejącego na serwerze MySQL. Użytkownik musi mieć odpowiednie uprawnienia do wykonywania operacji na bazie podanej niżej (wymagane uprawnienia: CREATE TABLE, SELECT, UPDATE, INSERT, DELETE, OPTIMIZE TABLE)';
-$_Lang['Tip_DBPass'] = 'Hasło logowania do podanej nazwy użytkownika serwera MySQL';
-$_Lang['Tip_DBName'] = 'Nazwa istniejącej Bazy Danych na serwerze MySQL. Wcześniej podany użytkownik musi mieć odpowiednie uprawnienia do wykonywania operacji na tej bazie danych.';
-$_Lang['Tip_DBPrefix'] = 'Prefix dla tabel silnika gry, które zostaną utworzone w podanej bazie danych.<br/>Pole może pozostać puste, jednakże nie jest to zalecane. Jeśli nic nie przychodzi Ci do głowy, proponujemy wpisać przynajmniej "uni1".';
-$_Lang['Tip_Const_UniID'] = 'Kod identyfikacyjny tego Universum.<br/>Ta wartość jest wymagana do poprawnego działania systemu Cache opartego o moduł <a href="http://php.net/manual/en/book.apc.php" target="_blank">APC</a> na serwerze PHP. Każde Universum <b style="color: red;">MUSI</b> miec osobny identyfikator.<br/>Ta wartość może pozostać pusta tylko wtedy, gdy twój serwer nie ma modułu <a href="http://php.net/manual/en/book.apc.php" target="_blank">APC</a>.';
-$_Lang['Tip_Const_Domain'] = 'Główna Domena serwera, na której będzie uruchamiana gra.<br/>(np. example.com)';
-$_Lang['Tip_Const_Subdomain'] = 'Subdomena, na której będzie uruchamiane instalowane Universum gry.<br/>Jeśli wszystkie universa będą uruchamiane na wspólnej domenie głównej, pozostaw tą wartośc pustą.<br/>(np. jeśli universum będzie uruchamiane na domenie "uni1.example.com", wpisz tylko "uni1")';
-$_Lang['Tip_Const_ReCaptcha_Enable'] = 'System <a href="http://www.google.com/recaptcha" target="_blank">ReCaptcha</a> ułatwia podstawową walkę ze SpamBotami, dodając prosty kod Captcha do formularza rejestracyjnego.<br/>Do jego poprawnego działania wymagane jest skofigurowane konto <a href="http://www.google.com/recaptcha" target="_blank">ReCaptcha</a> i podanie klucza publicznego i prywatnego otrzymanego przy konfiguracji konta.';
-$_Lang['Tip_Const_ReCaptcha_ServerIP_as_Hostname'] = 'Podczas konfiguracji serwera na maszynie lokalnej konieczna może być identyfikacja serwera poprzez jego adres IP. Na serwerze produkcyjnym ta opcja powinna być WYŁĄCZONA.';
-$_Lang['Tip_Const_ReCaptcha_Public'] = 'Klucz publiczny ReCaptcha otrzymany podczas konfiguracji konta. Jeśli nie używasz systemu ReCaptcha, pozostaw to pole puste.';
-$_Lang['Tip_Const_ReCaptcha_Public'] = 'Klucz prywatny ReCaptca otrzymany podczas konfiguracji konta. Jeśli nie używasz systemu ReCaptcha, pozostaw to pole puste.';
-$_Lang['Tip_Admin_Username'] = 'Nazwa użytkownika, przez którą będzie logować się Administrator (Właściciel) Gry.';
-$_Lang['Tip_Admin_Password'] = 'Hasło, które zostanie przypisane do konta Administratora.';
-$_Lang['Tip_Admin_Email'] = 'Adres Email konta Administratora';
-$_Lang['Tip_Uni_GameName'] = 'Nazwa gry lub instalowanego universum';
-$_Lang['Tip_Uni_GameSpeed'] = 'Współczynnik prędkości gry odpowiadający między innymi za prędkość budowy budynków, statków i przeprowadzanych badań.<br/>Wartość "1" oznacza bazową wartość jak na standardowych universach OGame.<br/>(Można wpisywać liczby dziesiętne)';
-$_Lang['Tip_Uni_FleetSpeed'] = 'Współczynnik prędkości flot odpowiadający za przyspieszenie ich lotów.<br/>Wartość "1" oznacza bazową wartość jak na standardowych universach OGame.<br/>(Można wpisywać liczby dziesiętne)';
-$_Lang['Tip_Uni_ResourceSpeed'] = 'Współczynnik produkcji surowców na planetach.<br/>Wartość "1" oznacza bazową wartość jak na standardowych universach OGame.<br/>(Nie można wpisywać liczb dziesiętnych)';
-$_Lang['Tip_Uni_MotherFields'] = 'Ilość pól, jakie będzie miała każda nowa Planeta Matka nowozarejestrowanego gracza';
-$_Lang['Tip_Uni_FleetDebris'] = 'Procentowa ilość surowców kosztu statków, z jakich będzie tworzone pole zniszczeń po walce.<br/>Wartości podawać od 0 do 100';
-$_Lang['Tip_Uni_DefenseDebris'] = 'Procentowa ilość surowców kosztu systemów obronnych, z jakich będzie tworzone pole zniszczeń po walce.<br/>Wartości podawać od 0 do 100';
-$_Lang['Tip_Uni_MissileDebris'] = 'Procentowa ilość surowców kosztu systemów obronnych, z jakich będzie tworzone pole zniszczeń po ataku rakietami międzyplanetarnymi.<br/>Wartości podawać od 0 do 100';
-$_Lang['Tip_Uni_MailActivationNeeded'] = 'Ta opcja umożliwia zablokowanie konta gracza do czasu, aż nie aktywuje go poprzez link aktywacyjny wysłany przez Email.<br/>Umożliwia to weryfikację prawdziwości podanej skrzynki pocztowej i utrudnia nieco prace SpamBotów.<br/>Do działania tej funkcji wymagana jest sprawna funkcja mail() lub poprawne ustawienie połączenia z serwerem SMTP (można to zrobić w pliku "includes/constants.php" po instalacji).';
-$_Lang['Tip_Uni_TelemetryEnable'] = 'Telemetria to system silnika gry odpowiadający za zbieranie danych o czasach generowania stron gry. Dane są zbierane podczas każdego uruchomienia jakiejkolwiek strony gry przez gracza.<br/>Uwaga! Jeśli dalej nie wiesz do czego służy ten system, lub wiesz, że nie będziesz korzystać z zebranych danych, zalecamy wyłączenie tego modułu (aby nie zaśmiecał bazy danych).';
-$_Lang['Tip_Uni_AutoToolPass_StatBuilder'] = 'Podane tutaj hasło będzie wymagane do uruchomienia Automatycznego Generatora Statystyk (plik "admin/autostatbuilter.php") bez logowania do konta użytkownika (np. poprzez demona Cron).';
-$_Lang['Tip_Uni_AutoToolPass_GarbageCollector'] = 'Podane tutaj hasło będzie wymagane do uruchomienia Automatycznego Odśmiecania Systemu (plik "admin/cron_GarbageCollector.php") bez logowania do konta użytkownika (np. poprzez demona Cron).';
-$_Lang['Tip_Uni_AutoToolPass_GZipLog'] = 'Podane tutaj hasło będzie wymagane do uruchomienia Automatycznego Pakowania AccessLogów (plik "admin/autogziplogs.php") bez logowania do konta użytkownika (np. poprzez demona Cron).';
-$_Lang['Tip_Uni_NoobProtectionEnable'] = 'System odpowiadający za ochronę słabszych graczy przed atakami starszych, bardziej rozwiniętych graczy.<br/>(wpis "noobprotection" w tabeli "game_config")';
-$_Lang['Tip_Uni_NoobProtectionBasicTimeLimit'] = 'Podstawowy próg ochrony graczy. Póki gracz nie przekroczy tego progu, nikt nie może go atakować (ale działa to też w drugą stronę).<br/>(wpis "noobprotectiontime" w tabeli "game_config")';
-$_Lang['Tip_Uni_NoobProtectionBasicLimitMultiplier'] = 'Współczynnik punktów między graczami, który określa, czy walka może się odbyć. Jeśli atakowany gracz ma X razy mniej punktów lub X razy więcej punktów niż podana wartość, atak nie może się odbyć.<br/>(wpis "noobprotectionmulti" w tabeli "game_config")';
-$_Lang['Tip_Uni_NoobProtectionRemove'] = 'Próg, powyżej którego ochrona jest całkowicie zdejmowana. Oznacza to, że nie obowiązują już zasady związane ze współczynnikiem punktów, więc każdy gracz może atakować innych graczy, o ile oczywiście obydwoje przekraczają ten próg.<br/>(wpis "no_noob_protect" w tabeli "game_config")';
-$_Lang['Tip_Uni_NoobProtectionIdleDays'] = 'Po ilu dniach nieaktywności konta system ma ignorowac ochronę gracza?<br/>Jeśli gracz wróci do gry, licznik ten jest resetowany dla tego konta.<br/>(wpis "no_idle_protect" w tabeli "game_config")';
-$_Lang['Tip_Uni_NoobProtectionFirstLogin'] = 'Czas, przez który konto gracza ma być całkowicie chronione od czasu pierwszego zalogowania na konto.<br/>Ta wartość jest niezależna od poprzednich wartości (i jest ona nadrzędna).<br/>(wpis "Protection_NewPlayerTime" w tabeli "game_config")';
-$_Lang['Tip_Uni_AntiFarm_Enabled'] = 'Czy włączyć system ochrony przed nadmienym "farmingiem"? System ten blokuje możliwość ataków na danego gracza po przekroczeniu pewnych progów.<br/>System zlicza ataki od godziny 00:00 do 23:59:59.<br/>(wpis "Protection_AntiFarmEnabled" w tabeli "game_config")';
-$_Lang['Tip_Uni_AntiFarm_Ratio'] = 'Przy jakim współczynniku punktowym (agresor X razy słabszy/silniejszy) system ma się uaktywniać?<br/>(wpis "Protection_AntiFarmRate" w tabeli "game_config")';
-$_Lang['Tip_Uni_AntiFarm_TotalCount'] = 'Po ilu atakach na gracza system ma całkowicie blokować możliwość dalszego ataku?<br/>(wpis "Protection_AntiFarmCountTotal" w tabeli "game_config")';
-$_Lang['Tip_Uni_AntiFarm_PlanetCount'] = 'Po ilu atakach na daną planetę/księżyc system ma blokować możliwość dalszego ataku na tą planetę/księżyc (dla każdej planety/księżyca istnieje osobny licznik).<br/>(wpis "Protection_AntiFarmCountPlanet" w tabeli "game_config")';
-$_Lang['Tip_Uni_AntiBash_Enabled'] = 'Czy włączyć system ochrony przed bashowaniem? System działa podobnie do systemu AntyFarmingu, jednak ten nieco inaczej liczy, które ataki są brane pod uwagę.<br/>(wpis "Protection_BashLimitEnabled" w tabeli "game_config")';
-$_Lang['Tip_Uni_AntiBash_Interval'] = 'Z przed ilu sekund system ma brać pod uwage ataki na gracza (np. z przed godziny oznacza, że tylko ataki wykonane w ciągu ostatniej godziny mogą zablokować możliwość ataku).<br/>(wpis "Protection_BashLimitInterval" w tabeli "game_config")';
-$_Lang['Tip_Uni_AntiBash_TotalCount'] = 'Po ilu atakach na gracza system ma całkowicie blokować możliwość dalszego ataku?<br/>(wpis "Protection_BashLimitCountTotal" w tabeli "game_config")';
-$_Lang['Tip_Uni_AntiBash_PlanetCount'] = 'Po ilu atakach na daną planetę/księżyc system ma blokować możliwość dalszego ataku na tą planetę/księżyc (dla każdej planety/księżyca istnieje osobny licznik).<br/>(wpis "Protection_BashLimitCountPlanet" w tabeli "game_config")';
+$_Lang['Tip_DBHost']                                                = 'Adres (IP lub host) serwera MySQL, na którym będą przechowywane dane gry';
+$_Lang['Tip_DBUser']                                                = 'Nazwa użytkownika istniejącego na serwerze MySQL. Użytkownik musi mieć odpowiednie uprawnienia do wykonywania operacji na bazie podanej niżej (wymagane uprawnienia: CREATE TABLE, SELECT, UPDATE, INSERT, DELETE, OPTIMIZE TABLE)';
+$_Lang['Tip_DBPass']                                                = 'Hasło logowania do podanej nazwy użytkownika serwera MySQL';
+$_Lang['Tip_DBName']                                                = 'Nazwa istniejącej Bazy Danych na serwerze MySQL. Wcześniej podany użytkownik musi mieć odpowiednie uprawnienia do wykonywania operacji na tej bazie danych.';
+$_Lang['Tip_DBPrefix']                                              = (
+    'Prefix dla tabel silnika gry, które zostaną utworzone w podanej bazie danych.<br/>' .
+    'Pole może pozostać puste, jednakże nie jest to zalecane. Jeśli nic nie przychodzi Ci do głowy, proponujemy wpisać przynajmniej "uni1".'
+);
+$_Lang['Tip_Const_UniID']                                           = (
+    'Kod identyfikacyjny tego Universum.<br/>Ta wartość jest wymagana do poprawnego działania systemu Cache opartego o moduł <a href="http://php.net/manual/en/book.apc.php" target="_blank">APC</a> na serwerze PHP. Każde Universum <b style="color: red;">MUSI</b> miec osobny identyfikator.<br/>' .
+    'Ta wartość może pozostać pusta tylko wtedy, gdy twój serwer nie ma modułu <a href="http://php.net/manual/en/book.apc.php" target="_blank">APC</a>.'
+);
+$_Lang['Tip_Const_Domain']                                          = (
+    'Główna Domena serwera, na której będzie uruchamiana gra.<br/>' .
+    '(np. example.com)'
+);
+$_Lang['Tip_Const_Subdomain']                                       = (
+    'Subdomena, na której będzie uruchamiane instalowane Universum gry.<br/>' .
+    'Jeśli wszystkie universa będą uruchamiane na wspólnej domenie głównej, pozostaw tą wartośc pustą.<br/>' .
+    '(np. jeśli universum będzie uruchamiane na domenie "uni1.example.com", wpisz tylko "uni1")'
+);
+$_Lang['Tip_Const_ReCaptcha_Enable']                                = (
+    'System <a href="http://www.google.com/recaptcha" target="_blank">ReCaptcha</a> ułatwia podstawową walkę ze SpamBotami, dodając prosty kod Captcha do formularza rejestracyjnego.<br/>' .
+    'Do jego poprawnego działania wymagane jest skofigurowane konto <a href="http://www.google.com/recaptcha" target="_blank">ReCaptcha</a> i podanie klucza publicznego i prywatnego otrzymanego przy konfiguracji konta.'
+);
+$_Lang['Tip_Const_ReCaptcha_ServerIP_as_Hostname']                  = 'Podczas konfiguracji serwera na maszynie lokalnej konieczna może być identyfikacja serwera poprzez jego adres IP. Na serwerze produkcyjnym ta opcja powinna być WYŁĄCZONA.';
+$_Lang['Tip_Const_ReCaptcha_Public']                                = 'Klucz publiczny ReCaptcha otrzymany podczas konfiguracji konta. Jeśli nie używasz systemu ReCaptcha, pozostaw to pole puste.';
+$_Lang['Tip_Const_ReCaptcha_Public']                                = 'Klucz prywatny ReCaptca otrzymany podczas konfiguracji konta. Jeśli nie używasz systemu ReCaptcha, pozostaw to pole puste.';
+$_Lang['Tip_Admin_Username']                                        = 'Nazwa użytkownika, przez którą będzie logować się Administrator (Właściciel) Gry.';
+$_Lang['Tip_Admin_Password']                                        = 'Hasło, które zostanie przypisane do konta Administratora.';
+$_Lang['Tip_Admin_Email']                                           = 'Adres Email konta Administratora';
+$_Lang['Tip_Uni_GameName']                                          = 'Nazwa gry lub instalowanego universum';
+$_Lang['Tip_Uni_GameSpeed']                                         = (
+    'Współczynnik prędkości gry odpowiadający między innymi za prędkość budowy budynków, statków i przeprowadzanych badań.<br/>' .
+    'Wartość "1" oznacza bazową wartość jak na standardowych universach OGame.<br/>(Można wpisywać liczby dziesiętne)'
+);
+$_Lang['Tip_Uni_FleetSpeed']                                        = (
+    'Współczynnik prędkości flot odpowiadający za przyspieszenie ich lotów.<br/>' .
+    'Wartość "1" oznacza bazową wartość jak na standardowych universach OGame.<br/>' .
+    '(Można wpisywać liczby dziesiętne)'
+);
+$_Lang['Tip_Uni_ResourceSpeed']                                     = (
+    'Współczynnik produkcji surowców na planetach.<br/>' .
+    'Wartość "1" oznacza bazową wartość jak na standardowych universach OGame.<br/>' .
+    '(Nie można wpisywać liczb dziesiętnych)'
+);
+$_Lang['Tip_Uni_MotherFields']                                      = 'Ilość pól, jakie będzie miała każda nowa Planeta Matka nowozarejestrowanego gracza';
+$_Lang['Tip_Uni_FleetDebris']                                       = (
+    'Procentowa ilość surowców kosztu statków, z jakich będzie tworzone pole zniszczeń po walce.<br/>' .
+    'Wartości podawać od 0 do 100'
+);
+$_Lang['Tip_Uni_DefenseDebris']                                     = (
+    'Procentowa ilość surowców kosztu systemów obronnych, z jakich będzie tworzone pole zniszczeń po walce.<br/>' .
+    'Wartości podawać od 0 do 100'
+);
+$_Lang['Tip_Uni_MissileDebris']                                     = (
+    'Procentowa ilość surowców kosztu systemów obronnych, z jakich będzie tworzone pole zniszczeń po ataku rakietami międzyplanetarnymi.<br/>' .
+    'Wartości podawać od 0 do 100'
+);
+$_Lang['Tip_Uni_MailActivationNeeded']                              = (
+    'Ta opcja umożliwia zablokowanie konta gracza do czasu, aż nie aktywuje go poprzez link aktywacyjny wysłany przez Email.<br/>' .
+    'Umożliwia to weryfikację prawdziwości podanej skrzynki pocztowej i utrudnia nieco prace SpamBotów.<br/>' .
+    'Do działania tej funkcji wymagana jest sprawna funkcja mail() lub poprawne ustawienie połączenia z serwerem SMTP (można to zrobić w pliku "includes/constants.php" po instalacji).'
+);
+$_Lang['Tip_Uni_TelemetryEnable']                                   = (
+    'Telemetria to system silnika gry odpowiadający za zbieranie danych o czasach generowania stron gry. Dane są zbierane podczas każdego uruchomienia jakiejkolwiek strony gry przez gracza.<br/>' .
+    'Uwaga! Jeśli dalej nie wiesz do czego służy ten system, lub wiesz, że nie będziesz korzystać z zebranych danych, zalecamy wyłączenie tego modułu (aby nie zaśmiecał bazy danych).'
+);
+$_Lang['Tip_Uni_AutoToolPass_StatBuilder']                          = 'Podane tutaj hasło będzie wymagane do uruchomienia Automatycznego Generatora Statystyk (plik "admin/autostatbuilter.php") bez logowania do konta użytkownika (np. poprzez demona Cron).';
+$_Lang['Tip_Uni_AutoToolPass_GarbageCollector']                     = 'Podane tutaj hasło będzie wymagane do uruchomienia Automatycznego Odśmiecania Systemu (plik "admin/cron_GarbageCollector.php") bez logowania do konta użytkownika (np. poprzez demona Cron).';
+$_Lang['Tip_Uni_AutoToolPass_GZipLog']                              = 'Podane tutaj hasło będzie wymagane do uruchomienia Automatycznego Pakowania AccessLogów (plik "admin/autogziplogs.php") bez logowania do konta użytkownika (np. poprzez demona Cron).';
+$_Lang['Tip_Uni_NoobProtectionEnable']                              = (
+    'System odpowiadający za ochronę słabszych graczy przed atakami starszych, bardziej rozwiniętych graczy.<br/>' .
+    '(wpis "noobprotection" w tabeli "game_config")'
+);
+$_Lang['Tip_Uni_NoobProtectionBasicTimeLimit']                      = (
+    'Podstawowy próg ochrony graczy. Póki gracz nie przekroczy tego progu, nikt nie może go atakować (ale działa to też w drugą stronę).<br/>' .
+    '(wpis "noobprotectiontime" w tabeli "game_config")'
+);
+$_Lang['Tip_Uni_NoobProtectionBasicLimitMultiplier']                = (
+    'Współczynnik punktów między graczami, który określa, czy walka może się odbyć. Jeśli atakowany gracz ma X razy mniej punktów lub X razy więcej punktów niż podana wartość, atak nie może się odbyć.<br/>' .
+    '(wpis "noobprotectionmulti" w tabeli "game_config")'
+);
+$_Lang['Tip_Uni_NoobProtectionRemove']                              = (
+    'Próg, powyżej którego ochrona jest całkowicie zdejmowana. Oznacza to, że nie obowiązują już zasady związane ze współczynnikiem punktów, więc każdy gracz może atakować innych graczy, o ile oczywiście obydwoje przekraczają ten próg.<br/>' .
+    '(wpis "no_noob_protect" w tabeli "game_config")'
+);
+$_Lang['Tip_Uni_NoobProtectionIdleDays']                            = (
+    'Po ilu dniach nieaktywności konta system ma ignorowac ochronę gracza?<br/>' .
+    'Jeśli gracz wróci do gry, licznik ten jest resetowany dla tego konta.<br/>' .
+    '(wpis "no_idle_protect" w tabeli "game_config")'
+);
+$_Lang['Tip_Uni_NoobProtectionFirstLogin']                          = (
+    'Czas, przez który konto gracza ma być całkowicie chronione od czasu pierwszego zalogowania na konto.<br/>' .
+    'Ta wartość jest niezależna od poprzednich wartości (i jest ona nadrzędna).<br/>' .
+    '(wpis "Protection_NewPlayerTime" w tabeli "game_config")'
+);
+$_Lang['Tip_Uni_AntiFarm_Enabled']                                  = (
+    'Czy włączyć system ochrony przed nadmienym "farmingiem"? System ten blokuje możliwość ataków na danego gracza po przekroczeniu pewnych progów.<br/>' .
+    'System zlicza ataki od godziny 00:00 do 23:59:59.<br/>' .
+    '(wpis "Protection_AntiFarmEnabled" w tabeli "game_config")'
+);
+$_Lang['Tip_Uni_AntiFarm_Ratio']                                    = (
+    'Przy jakim współczynniku punktowym (agresor X razy słabszy/silniejszy) system ma się uaktywniać?<br/>' .
+    '(wpis "Protection_AntiFarmRate" w tabeli "game_config")'
+);
+$_Lang['Tip_Uni_AntiFarm_TotalCount']                               = (
+    'Po ilu atakach na gracza system ma całkowicie blokować możliwość dalszego ataku?<br/>' .
+    '(wpis "Protection_AntiFarmCountTotal" w tabeli "game_config")'
+);
+$_Lang['Tip_Uni_AntiFarm_PlanetCount']                              = (
+    'Po ilu atakach na daną planetę/księżyc system ma blokować możliwość dalszego ataku na tą planetę/księżyc (dla każdej planety/księżyca istnieje osobny licznik).<br/>' .
+    '(wpis "Protection_AntiFarmCountPlanet" w tabeli "game_config")'
+);
+$_Lang['Tip_Uni_AntiBash_Enabled']                                  = (
+    'Czy włączyć system ochrony przed bashowaniem? System działa podobnie do systemu AntyFarmingu, jednak ten nieco inaczej liczy, które ataki są brane pod uwagę.<br/>' .
+    '(wpis "Protection_BashLimitEnabled" w tabeli "game_config")'
+);
+$_Lang['Tip_Uni_AntiBash_Interval']                                 = (
+    'Z przed ilu sekund system ma brać pod uwage ataki na gracza (np. z przed godziny oznacza, że tylko ataki wykonane w ciągu ostatniej godziny mogą zablokować możliwość ataku).<br/>' .
+    '(wpis "Protection_BashLimitInterval" w tabeli "game_config")'
+);
+$_Lang['Tip_Uni_AntiBash_TotalCount']                               = (
+    'Po ilu atakach na gracza system ma całkowicie blokować możliwość dalszego ataku?<br/>' .
+    '(wpis "Protection_BashLimitCountTotal" w tabeli "game_config")'
+);
+$_Lang['Tip_Uni_AntiBash_PlanetCount']                              = (
+    'Po ilu atakach na daną planetę/księżyc system ma blokować możliwość dalszego ataku na tą planetę/księżyc (dla każdej planety/księżyca istnieje osobny licznik).<br/>' .
+    '(wpis "Protection_BashLimitCountPlanet" w tabeli "game_config")'
+);
 
 
-$_Lang['CheckError_Template'] = '<b style="color: red">Podczas sprawdzania wymagań serwera wystąpił błąd uniemożliwiający dalsza instalację!</b><br/>Przed ponowną próbą instalacji prosze sprawdzić wymagania i poprawić ewentualne błędy.<br/><br/>Lista testów:<br/>%s';
-$_Lang['CheckError_TestRow'] = '&bull; (<b style="color: %s">%s</b>) %s';
-$_Lang['CheckError_Success'] = 'Zaliczony';
-$_Lang['CheckError_Fail'] = 'Niezaliczony';
+$_Lang['CheckError_Template']                                       = (
+    '<b style="color: red">Podczas sprawdzania wymagań serwera wystąpił błąd uniemożliwiający dalsza instalację!</b><br/>' .
+    'Przed ponowną próbą instalacji prosze sprawdzić wymagania i poprawić ewentualne błędy.<br/><br/>' .
+    'Lista testów:<br/>%s'
+);
+$_Lang['CheckError_TestRow']                                        = '&bull; (<b style="color: %s">%s</b>) %s';
+$_Lang['CheckError_Success']                                        = 'Zaliczony';
+$_Lang['CheckError_Fail']                                           = 'Niezaliczony';
 
-$_Lang['Requirements_PHPVersion'] = 'Wersja PHP przynajmniej 5.4';
-$_Lang['Requirements_PHPNoticesOff'] = 'Powiadomienia PHP (PHP Notice) wyłączone';
-$_Lang['Requirements_ConfigDirectoryWritable'] = 'Folder "config/" umożliwia zapis (CHMOD 777)';
-$_Lang['Requirements_ConfigDirectoryMigrationEntryDoesNotExist'] = 'Plik "config/latest-applied-migration" nie powinien istnieć';
-$_Lang['Requirements_ConfigWritable'] = 'Plik "config.php" / "config.localhost.php" umożliwia zapis do niego (CHMOD 777)';
-$_Lang['Requirements_ConstantsWritable'] = 'Plik "includes/constants.php" umożliwia zapis do niego (CHMOD 777)';
-$_Lang['Requirements_RegisterWritable'] = 'Plik "js/register.js" umożliwia zapis do niego (CHMOD 777)';
-$_Lang['Requirements_ActionLogsWritable'] = 'Katalog "action_logs" umożliwia zapis do niego (CHMOD 777)';
-$_Lang['Requirements_AdminActionLogsWritable'] = 'Katalog "admin/action_logs" umożliwia zapis do niego (CHMOD 777)';
+$_Lang['Requirements_PHPVersion']                                   = 'Wersja PHP przynajmniej 5.4';
+$_Lang['Requirements_PHPNoticesOff']                                = 'Powiadomienia PHP (PHP Notice) wyłączone';
+$_Lang['Requirements_ConfigDirectoryWritable']                      = 'Folder "config/" umożliwia zapis (CHMOD 777)';
+$_Lang['Requirements_ConfigDirectoryMigrationEntryDoesNotExist']    = 'Plik "config/latest-applied-migration" nie powinien istnieć';
+$_Lang['Requirements_ConfigWritable']                               = 'Plik "config.php" / "config.localhost.php" umożliwia zapis do niego (CHMOD 777)';
+$_Lang['Requirements_ConstantsWritable']                            = 'Plik "includes/constants.php" umożliwia zapis do niego (CHMOD 777)';
+$_Lang['Requirements_RegisterWritable']                             = 'Plik "js/register.js" umożliwia zapis do niego (CHMOD 777)';
+$_Lang['Requirements_ActionLogsWritable']                           = 'Katalog "action_logs" umożliwia zapis do niego (CHMOD 777)';
+$_Lang['Requirements_AdminActionLogsWritable']                      = 'Katalog "admin/action_logs" umożliwia zapis do niego (CHMOD 777)';
 
-$_Lang['InstallError_EmptyFields'] = 'System wykrył puste wymagane pola! Wpisz wartości tam, gdzie pola są zaznaczone na czerwono!';
-$_Lang['InstallError_BadVars'] = 'System wykrył nieprawiłowe wartości! Popraw wartości tam, gdzie pola są zaznaczone na czerwono!';
-$_Lang['InstallError_CannotConnectToMySQL'] = 'System nie może nawiązać połączenia z serwerem MySQL!';
-$_Lang['InstallError_CannotSelectDatabase'] = 'System nie może wybrać bazy danych na serwerze MySQL!';
-$_Lang['InstallError_FailToSaveBothFiles'] = 'System nie może zapisać plików "config.php" / "config.localhost.php" i "includes/constants.php"!';
-$_Lang['InstallError_FailToSaveConfig'] = 'System nie może zapisać pliku "config.php" / "config.localhost.php"!';
-$_Lang['InstallError_FailToSaveConstants'] = 'System nie może zapisać pliku "includes/constants.php"!';
-$_Lang['InstallError_FailToSaveRegister'] = 'System nie może zapisać pliku "js/register.js"!';
-$_Lang['InstallError_QueryFail'] = 'Jedno z zapytań nie zostało wykonane poprawnie!<br/>Przed ponowną próbą wyczyść bazę danych!';
-$_Lang['InstallError_MigrationEntryFileCreationFail'] = 'Nie udało się zapisać pliku "config/latest-applied-migration"!<br/>Przed ponowną próbą wyczyść bazę danych!';
-$_Lang['InstallSuccess'] = 'Instalacja przebiegła pomyślnie!<br/><br/>Pamiętaj, by usunąć folder "install" z katalogu głównego silnika!';
+$_Lang['InstallError_EmptyFields']                                  = 'System wykrył puste wymagane pola! Wpisz wartości tam, gdzie pola są zaznaczone na czerwono!';
+$_Lang['InstallError_BadVars']                                      = 'System wykrył nieprawiłowe wartości! Popraw wartości tam, gdzie pola są zaznaczone na czerwono!';
+$_Lang['InstallError_CannotConnectToMySQL']                         = 'System nie może nawiązać połączenia z serwerem MySQL!';
+$_Lang['InstallError_CannotSelectDatabase']                         = 'System nie może wybrać bazy danych na serwerze MySQL!';
+$_Lang['InstallError_FailToSaveBothFiles']                          = 'System nie może zapisać plików "config.php" / "config.localhost.php" i "includes/constants.php"!';
+$_Lang['InstallError_FailToSaveConfig']                             = 'System nie może zapisać pliku "config.php" / "config.localhost.php"!';
+$_Lang['InstallError_FailToSaveConstants']                          = 'System nie może zapisać pliku "includes/constants.php"!';
+$_Lang['InstallError_FailToSaveRegister']                           = 'System nie może zapisać pliku "js/register.js"!';
+$_Lang['InstallError_QueryFail']                                    = (
+    'Jedno z zapytań nie zostało wykonane poprawnie!<br/>' .
+    'Przed ponowną próbą wyczyść bazę danych!'
+);
+$_Lang['InstallError_MigrationEntryFileCreationFail']               = (
+    'Nie udało się zapisać pliku "config/latest-applied-migration"!<br/>' .
+    'Przed ponowną próbą wyczyść bazę danych!'
+);
+$_Lang['InstallSuccess']                                            = (
+    'Instalacja przebiegła pomyślnie!<br/><br/>' .
+    'Pamiętaj, by usunąć folder "install" z katalogu głównego silnika!'
+);
 
-$_Lang['LocalhostInfo'] = 'System wykrył, że prawdopodobnie instalujesz silnik na swoim serwerze domowym (localhost).<br/>Plik konfiguracji zostanie więc zapisany do "config.localhost.php".';
+$_Lang['LocalhostInfo']                                             = (
+    'System wykrył, że prawdopodobnie instalujesz silnik na swoim serwerze domowym (localhost).<br/>' .
+    'Plik konfiguracji zostanie więc zapisany do "config.localhost.php".'
+);
 
 ?>
