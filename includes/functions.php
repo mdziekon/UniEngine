@@ -423,6 +423,7 @@ function display($PageCode, $PageTitle = '', $ShowTopResourceBar = true, $IsAdmi
 
     $Parse['TaskInfoBar'] = GlobalTemplate_GetTaskBox();
     $Parse['SkinPath'] = $_SkinPath;
+    $Parse['PHP_CurrentLangISOCode'] = getCurrentLangISOCode();
     $Parse['PHP_InjectAfterBody'] = GlobalTemplate_GetAfterBody()."\n";
     $Parse['PHP_InjectIntoBottomMenu'] = GlobalTemplate_GetBottomMenuInjection();
     $Parse['PHP_Meta'] = DisplayHelper_GetRedirect();
