@@ -28,34 +28,8 @@ function gettemplate($templatename)
     return ReadFromFile($_EnginePath.TEMPLATE_DIR.TEMPLATE_NAME.'/'.$templatename.'.tpl');
 }
 
-function includeLang($filename, $Return = false)
-{
-    global $_EnginePath, $_User, $_GameConfig;
-
-    if(!$Return)
-    {
-        global $_Lang;
-    }
-
-    $SelLanguage = DEFAULT_LANG;
-    if(isset($_User['lang']) && $_User['lang'] != '')
-    {
-        $SelLanguage = $_User['lang'];
-    }
-    else
-    {
-        $SelLanguage = DEFAULT_LANG;
-    }
-    include("{$_EnginePath}language/{$SelLanguage}/{$filename}.lang");
-
-    if($Return)
-    {
-        return $_Lang;
-    }
-}
-
-function langFileExists($filename) {
-    global $_EnginePath, $_User;
+function getCurrentLang() {
+    global $_User;
 
     $SelLanguage = DEFAULT_LANG;
 
@@ -65,6 +39,35 @@ function langFileExists($filename) {
     ) {
         $SelLanguage = $_User['lang'];
     }
+
+    return $SelLanguage;
+}
+
+function getCurrentLangISOCode() {
+    return getCurrentLang();
+}
+
+function includeLang($filename, $Return = false)
+{
+    global $_EnginePath;
+
+    if (!$Return) {
+        global $_Lang;
+    }
+
+    $SelLanguage = getCurrentLang();
+
+    include("{$_EnginePath}language/{$SelLanguage}/{$filename}.lang");
+
+    if ($Return) {
+        return $_Lang;
+    }
+}
+
+function langFileExists($filename) {
+    global $_EnginePath;
+
+    $SelLanguage = getCurrentLang();
 
     $filepath = "{$_EnginePath}language/{$SelLanguage}/{$filename}.lang";
 
@@ -72,16 +75,7 @@ function langFileExists($filename) {
 }
 
 function getJSDatePickerTranslationLang() {
-    global $_User;
-
-    $lang = DEFAULT_LANG;
-
-    if (
-        isset($_User['lang']) &&
-        $_User['lang'] != ''
-    ) {
-        $lang = $_User['lang'];
-    }
+    $lang = getCurrentLang();
 
     $langMapping = [
         'en' => 'en-GB',
