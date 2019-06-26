@@ -19,7 +19,6 @@ function ReturnImage($ImagePath)
     die();
 }
 
-$CachePath = './cache/img/signatures/';
 $_EnginePath = './';
 
 define('INSIDE', true);
@@ -34,9 +33,13 @@ if (!in_array($SigLang, LANG_AVAILABLE)) {
     $SigLang = DEFAULT_LANG;
 }
 
+$CachePath = './cache/img/signatures';
+$CacheStaticsPath = "{$CachePath}/static";
+$CacheLangPath = "{$CachePath}/{$SigLang}";
+
 if($UID > 0)
 {
-    $UserFile = "{$CachePath}{$SigLang}/user_".str_pad($UID, 6, 0, STR_PAD_LEFT).'.png';
+    $UserFile = "{$CacheLangPath}/user_".str_pad($UID, 6, 0, STR_PAD_LEFT).'.png';
 
     if(file_exists($UserFile))
     {
@@ -61,11 +64,11 @@ if($UID > 0)
 
     // --- Generate new image ---
     // Load DB Driver & Lang
-    if(substr(sprintf('%o', fileperms($CachePath.'pl')), -4) != '0777')
+    if(substr(sprintf('%o', fileperms($CacheLangPath)), -4) != '0777')
     {
-        if(!chmod($CachePath.'pl', 0777))
+        if(!chmod($CacheLangPath, 0777))
         {
-            ReturnImage("{$CachePath}static/signature_{$SigLang}_error4.png");
+            ReturnImage("{$CacheStaticsPath}/signature_{$SigLang}_error4.png");
         }
     }
 
@@ -107,7 +110,7 @@ if($UID > 0)
     if($SQLResult_GetUserData->num_rows != 1)
     {
         // Throw Error: User don't exist
-        copy("{$CachePath}static/signature_{$SigLang}_error2.png", $UserFile);
+        copy("{$CacheStaticsPath}/signature_{$SigLang}_error2.png", $UserFile);
         ReturnImage($UserFile);
     }
 
@@ -117,7 +120,7 @@ if($UID > 0)
     if($UserStat['total_rank'] <= 0)
     {
         // Throw Error: Stats not calculated
-        copy("{$CachePath}static/signature_{$SigLang}_error3.png", $UserFile);
+        copy("{$CacheStaticsPath}/signature_{$SigLang}_error3.png", $UserFile);
         ReturnImage($UserFile);
     }
 
@@ -150,8 +153,8 @@ if($UID > 0)
     }
 
     // Load image and create White Color
-    $ImageCopy = imagecreatefrompng("{$CachePath}static/signature_userbg.png");
-    $FontLink = "{$CachePath}static/font_roboto_bold.ttf";
+    $ImageCopy = imagecreatefrompng("{$CacheStaticsPath}/signature_userbg.png");
+    $FontLink = "{$CacheStaticsPath}/font_roboto_bold.ttf";
     $Colors['white'] = imagecolorallocate($ImageCopy, 255, 255, 255);
 
     // Calculate UserString Size
@@ -198,7 +201,7 @@ if($UID > 0)
 else
 {
     // Throw Error: BadData Given
-    $FilePath = "{$CachePath}static/signature_{$SigLang}_error1.png";
+    $FilePath = "{$CacheStaticsPath}/signature_{$SigLang}_error1.png";
     ReturnImage($FilePath);
 }
 
