@@ -109,7 +109,7 @@ $_Lang['WorldElements_Detailed'] = [
         'description_extra' => 'Dalszy rozwój tego napędu sprawia, że niektóre statki poruszają się szybciej, przede wszystkim każdy poziom podwyższa ich prędkość o 20% wartości podstawowej.'
     ],
     118 => [
-        'description_short' => 'Zakrzywia przestrzeń wokół statku.',
+        'description_short' => 'Zakrzywia przestrzeń wokół statku, pozwalając mu przebywać ogromne dystanse w sekundy.',
         'description_extra' => 'Dalszy rozwój tego napędu sprawnie podwyższa prędkość niektórych statków o 30% wartości podstawowej.'
     ],
     120 => [
@@ -184,47 +184,42 @@ $_Lang['WorldElements_Detailed'] = [
         'description_short' => 'Niszczyciel to król wśród statków wojennych. Posiada wielorzędowe falangi dział jonowych, plazmowych i Gaussa.',
     ],
     214 => [
-        'description_short' => 'Niszczycielska siła Gwiazdy Śmierci jest niezrównana.',
-        'description_extra' => 'Gwiazda śmierci jest uzbrojona w ogromne działo grawitonowe, które może niszczyć statki tak duże jak niszczyciele a nawet księżyce.',
+        'description_short' => 'Gwiazda śmierci to statek wielkości księżyca znany ze swojej niszczycielskiej mocy. Jest uzbrojona w ogromne działo grawitonowe, które może niszczyć statki tak duże jak niszczyciele a nawet księżyce.',
     ],
     215 => [
-        'description_short' => 'Pancernik jest wyspecjalizowaną jednostką do przechwytywania (niszczenia) wrogich flot.',
+        'description_short' => 'Pancernik jest wyspecjalizowaną jednostką do przechwytywania wrogich flot dzięki jego zaawansowanym działom laserowym.',
     ],
     216 => [
         'description_short' => 'Stacja orbitalna to kolejny krok w stronę obrony twojej planety.',
-        'description_alt' => 'Stacja orbitalna to wyspecjalizowany system zautomatyzowanych miotaczy plazmowych oraz działek laserowych , który nie traci energii strzału tak jak inne systemy obronne, ze względu na to, że znajduje się na orbicie planety. Dzięki temu osiąga ogromną moc, która może zmieść statki wroga z orbity w kilka sekund.',
+        'description_extra' => 'Stacja ta to wyspecjalizowany system zautomatyzowanych miotaczy plazmowych oraz działek laserowych , który nie traci energii strzału tak jak inne systemy obronne, ze względu na to, że znajduje się na orbicie planety. Dzięki temu osiąga ogromną moc, która może zmieść statki wroga z orbity w kilka sekund.',
     ],
     217 => [
         'description_short' => 'Postęp w miniaturyzacji i nanotechnologii pozwolił na stworzenie tego pojemnego statu transportowego.',
-        'description_alt' => 'Coraz większe zapotrzebowanie na ładowność statków wykorzystywanych przez kolonie górnicze do transportu wydobytych surowców zmusiło naukowców do opracowania zupełnie nowego typu transportera. Dzięki zastosowaniu miniaturyzacji oraz nanotechnologii możliwe było stworzenie tego ogromnego pojazdu. Zastosowano w nim także najnowsze silniki nadprzestrzenne by skrócić czas podróży.',
     ],
     218 => [
         'description_short' => 'Odkrycie wytwarzania antymaterii pozwoliło na skonstruowanie specjalnych rakiet krótkiego zasięgu zdolnych do niszczenia ogromnych ilości statków za jednym zamachem.',
-        'description_alt' => 'Odkrycie sposobu wytwarzania Antymaterii poprzez specjalne reakcje termojądrowe z wykorzystaniem wysokoenergerycznych laserów pozwoliło na opracowanie specjalnego rodzaju rakiety krótkiego zasięgu, która bezpośrednio przed zderzeniem z obiektem doprowadza do Anihilacji kilku ton cząstek skompresowanego wodoru i antywodoru, wytwarzając przy tym ogromne ilości Energii.',
     ],
     219 => [
-        'description_short' => 'Zarzucony projekt do wynoszenia ludzi i ładunku na orbitę Ziemii, teraz przeżywa swoją drugą młodość.<br/><b style="color: orange;">Ze względu na bardzo stary typ silników spalinowych, ten pojazd nie przyspiesza wraz z rozwojem Napędu Spalinowego</b>',
-        'description_alt' => 'W XX i XXI wieku ludzie zaczęli podbój kosmosu. Dzięki stworzeniu tego typu statku, mogli wielokrotnie wysyłać ludzi i ładunek na orbitę okołoziemską, ale zużywali na to ogromne ilości paliwa rakietowego, zaś sam statek był bardzo wolny.<br/>Po odkryciu nowych technik wykorzystywania ciągu w Silnikach spalinowych, projekt został zarzucony ze względu na swoją niską opłacalność.<br/><br/>Ze względu na bardzo stary typ silników spalinowych, ten pojazd nie przyspiesza wraz z rozwojem Napędu Spalinowego.',
+        'description_short' => 'Zarzucony projekt do wynoszenia ludzi i ładunku na orbitę Ziemii, teraz przeżywa swoją drugą młodość.',
+        'description_extra' => '<b style="color: orange;">Ze względu na bardzo stary typ silników spalinowych, ten pojazd nie przyspiesza wraz z rozwojem Napędu Spalinowego.</b>',
     ],
     220 => [
         'description_short' => 'Zadaniem Lotniskowca jest transport mniejszych, lecz bardzo zwrotnych i skutecznych myśliwców.',
-        'description_alt' => 'Lotniskowiec to ogromny okręt, którego zadaniem jest transport mniejszych, szybszych i skuteczniejszych jednostek. W swoim hangarze potrafi zmieścić i przygotować do walki setki myśliwców, które z łatwością radzą sobie z dużymi ilościami mniejszych jednostek.',
+        'description_extra' => 'Jego ogromne wewnętrzne hangary mieszczą setki myśliwców. Dzięki swoim zaawansowanym silnikom, może transportować te myśliwe na pole bitwy w mgnieniu oka.',
     ],
     221 => [
         'description_short' => 'Rozpad Hadronów to śmiercionośna broń przeciwko instalacjom obronnym planet.',
-        'description_alt' => 'Dzięki wykorzystaniu zjawiska rozpadu hadronowego możliwe było skonstruowanie idealnej broni przeciwko instalacjom powierzchniowym. Odpowiednio skonstruowane drony, dzięki zastosowaniu sztucznej inteligencji, osiągają skuteczność trafień na poziomie 99%.',
     ],
     222 => [
         'description_short' => 'Dzięki wykorzystaniu wysokoenergetycznych działek plazmowych, ten pojazd skutecznie rozprawia się z dobrze opancerzonymi jednostkami.',
-        'description_alt' => 'Pojazd ten jest wyposażony w wiele wysokoenergetycznych dział pulsacyjno-plazmowych. Każdy dobry dowódca doceni ich wysoką skuteczność przeciwko dobrze opancerzonym jednostkom wrogich flot bojowych. Niestety, salwy plazmowe nie są dostatecznie szybkie, by mniejsze, lecz bardziej zwrotne statki nie mogły im umknąć.',
     ],
     223 => [
         'description_short' => 'Skuteczne wykorzystanie zjawiska anihilacji doprowadziło do stworzenia tego niezwykłego okrętu.',
-        'description_alt' => 'Kolejny przykład znakomitego wykorzystania technologii anihilacyjnej. Wystrzelenie skoncentrowanego strumienia antyprotonów we wrogą jednostkę doprowadza do rozpoczęcia reakcji kaskadowych w opancerzeniu statku, przez co traci on swoją stabilność i rozpada się pod wpływem dekompresji.',
+        'description_extra' => 'Wystrzelenie skoncentrowanego strumienia antyprotonów we wrogą jednostkę doprowadza do rozpoczęcia reakcji kaskadowych w opancerzeniu statku, przez co traci on swoją stabilność i rozpada się pod wpływem dekompresji.',
     ],
     224 => [
         'description_short' => 'Ostateczna broń przeciwko silnie opancerzonym statkom, zdolna do rozrywania wiązań międzyatomowych w ułamkach sekund.',
-        'description_alt' => 'Jedna z najpotężniejszych jednostek dostępnych w historii Wszechświata. Wykorzystanie śmiercionośnych strumieni dezintegrujących rozrywa wrogie statki w ułamkach sekund na drobne kawałeczki. Jedynym ratunkiem przed tą ogromną mocą jest ucieczka w najdalsze zakamarki kosmosu.',
+        'description_extra' => 'Jedna z najpotężniejszych jednostek dostępnych w historii Wszechświata. Wykorzystanie śmiercionośnych strumieni dezintegrujących rozrywa wrogie statki w ułamkach sekund na drobne kawałeczki. Jedynym ratunkiem przed tą ogromną mocą jest ucieczka w najdalsze zakamarki kosmosu.',
     ],
 
     // Defense systems
