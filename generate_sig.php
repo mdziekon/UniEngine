@@ -24,15 +24,14 @@ $_EnginePath = './';
 
 define('INSIDE', true);
 
-include($_EnginePath.'includes/constants.php');
+include($_EnginePath . 'common.minimal.php');
+include($_EnginePath . 'includes/constants.php');
 
 $UID = (isset($_GET['uid']) ? round($_GET['uid']) : 0);
 $SigLang = (isset($_GET['lang']) ? $_GET['lang'] : null);
-$DefaultLang = 'pl';
 
-if(!in_array($SigLang, array('pl')))
-{
-    $SigLang = $DefaultLang;
+if (!in_array($SigLang, LANG_AVAILABLE)) {
+    $SigLang = DEFAULT_LANG;
 }
 
 if($UID > 0)
