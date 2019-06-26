@@ -46,7 +46,7 @@ function includeLang()
 {
     global $_Lang, $_UseLang;
 
-    include("install_lang_".$_UseLang.".lang");
+    include("./language/{$_UseLang}/install.lang");
 }
 
 function generateMigrationEntryFile()
