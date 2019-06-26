@@ -64,12 +64,8 @@ if($UID > 0)
 
     // --- Generate new image ---
     // Load DB Driver & Lang
-    if(substr(sprintf('%o', fileperms($CacheLangPath)), -4) != '0777')
-    {
-        if(!chmod($CacheLangPath, 0777))
-        {
-            ReturnImage("{$CacheStaticsPath}/signature_{$SigLang}_error4.png");
-        }
+    if (substr(sprintf('%o', fileperms($CacheLangPath)), -4) != '0777') {
+        ReturnImage("{$CacheStaticsPath}/signature_{$SigLang}_error4.png");
     }
 
     if($_SERVER['SERVER_ADDR'] == '127.0.0.1' OR $_SERVER['SERVER_ADDR'] == '::1')
