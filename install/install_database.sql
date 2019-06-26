@@ -1264,7 +1264,7 @@ INSERT INTO `{prefix}_config` (`config_name`, `config_value`) VALUES
 -- Query - create Admin User
 --
 
-INSERT INTO `{prefix}_users` SET 
+INSERT INTO `{prefix}_users` SET
 `id` = 1,
 `username` = '{AdminUser_name}',
 `password` = '{AdminUser_passhash}',
@@ -1291,7 +1291,7 @@ INSERT INTO `{prefix}_users` SET
 -- Query - create Admin Planet
 --
 
-INSERT INTO `{prefix}_planets` SET 
+INSERT INTO `{prefix}_planets` SET
 `id` = 1,
 `name` = 'Admin Planet',
 `id_owner` = 1,
