@@ -66,15 +66,15 @@ var $MaxLength_Text = {FormInsert_MaxSigns};
         </tr>
         <tr>
             <th class="t_r p_r">{bbcode_img}</th>
-            <th class="t_l p_l">[img]http://imageurl.pl[/img]</th>
+            <th class="t_l p_l">[img]http://example.com/image.png[/img]</th>
         </tr>
         <tr>
             <th class="t_r p_r">{bbcode_url}</th>
-            <th class="t_l p_l">[url=http://google.pl]Google[/url]</th>
+            <th class="t_l p_l">[url=http://example.com]Example page[/url]</th>
         </tr>
         <tr>
             <th class="t_r p_r">{bbcode_url}</th>
-            <th class="t_l p_l">[url]http://google.pl[/url]</th>
+            <th class="t_l p_l">[url]http://example.com[/url]</th>
         </tr>
         <tr>
             <th class="t_r p_r">{bbcode_coords}</th>
