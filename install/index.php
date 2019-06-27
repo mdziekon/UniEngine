@@ -20,107 +20,27 @@ else
 $_Install_ConfigDirectory = './config';
 
 include('install_functions.php');
+include('./utils/verify_requirements.php');
 
 $_UseLang = 'pl';
 
 includeLang();
 
-// Check Requirements
-$_RequirementsCheckPassed = true;
-$_RequirementsCheckFails = array();
-
-if(version_compare(PHP_VERSION, '5.4.0') < 0)
-{
-    $_RequirementsCheckPassed = false;
-    $_RequirementsCheckFails['PHPVersion'] = true;
-}
-else
-{
-    $_RequirementsCheckFails['PHPVersion'] = false;
-}
-if(error_reporting() & E_NOTICE)
-{
-    $_RequirementsCheckPassed = false;
-    $_RequirementsCheckFails['PHPNoticesOff'] = true;
-}
-else
-{
-    $_RequirementsCheckFails['PHPNoticesOff'] = false;
-}
-if(is_writable('../'.$_Install_ConfigDirectory.'/'))
-{
-    $_RequirementsCheckFails['ConfigDirectoryWritable'] = false;
-}
-else
-{
-    $_RequirementsCheckPassed = false;
-    $_RequirementsCheckFails['ConfigDirectoryWritable'] = true;
-}
-if(!file_exists('../'.$_Install_ConfigDirectory.'/latest-applied-migration'))
-{
-    $_RequirementsCheckFails['ConfigDirectoryMigrationEntryDoesNotExist'] = false;
-}
-else
-{
-    $_RequirementsCheckPassed = false;
-    $_RequirementsCheckFails['ConfigDirectoryMigrationEntryDoesNotExist'] = true;
-}
-if(is_writable('../'.$_Install_ConfigFile.'.php'))
-{
-    $_RequirementsCheckFails['ConfigWritable'] = false;
-}
-else
-{
-    $_RequirementsCheckPassed = false;
-    $_RequirementsCheckFails['ConfigWritable'] = true;
-}
-if(is_writable('../includes/constants.php'))
-{
-    $_RequirementsCheckFails['ConstantsWritable'] = false;
-}
-else
-{
-    $_RequirementsCheckPassed = false;
-    $_RequirementsCheckFails['ConstantsWritable'] = true;
-}
-if(is_writable('../js/register.js'))
-{
-    $_RequirementsCheckFails['RegisterWritable'] = false;
-}
-else
-{
-    $_RequirementsCheckPassed = false;
-    $_RequirementsCheckFails['RegisterWritable'] = true;
-}
-if(is_writable('../action_logs'))
-{
-    $_RequirementsCheckFails['ActionLogsWritable'] = false;
-}
-else
-{
-    $_RequirementsCheckPassed = false;
-    $_RequirementsCheckFails['ActionLogsWritable'] = true;
-}
-if(is_writable('../admin/action_logs'))
-{
-    $_RequirementsCheckFails['AdminActionLogsWritable'] = false;
-}
-else
-{
-    $_RequirementsCheckPassed = false;
-    $_RequirementsCheckFails['AdminActionLogsWritable'] = true;
-}
-
-if(!ONLOCALHOST)
-{
+if (!ONLOCALHOST) {
     $_Lang['PHP_HideLocalhostInfo'] = 'display: none;';
 }
 
-if(!$_RequirementsCheckPassed)
+// Check Requirements
+$requirementsVerificationResult = verify_requirements([
+    'configDirectory' => $_Install_ConfigDirectory,
+    'configFile' => $_Install_ConfigFile
+]);
+
+if(!$requirementsVerificationResult['hasPassed'])
 {
     $_Lang['PHP_HideFormBox'] = 'display: none;';
 
-    foreach($_RequirementsCheckFails as $Key => $Value)
+    foreach($requirementsVerificationResult['tests'] as $Key => $Value)
     {
         $_Lang['PHP_RequirementsList'][] = sprintf($_Lang['CheckError_TestRow'], ($Value === true ? 'red' : 'lime'), ($Value === true ? $_Lang['CheckError_Fail'] : $_Lang['CheckError_Success']), $_Lang['Requirements_'.$Key]);
     }
