@@ -12,9 +12,32 @@ include($_EnginePath.'common.php');
 includeLang('admin');
 includeLang('admin/autogziplogs');
 
-if(!((isset($_User['id']) && $_User['id'] > 0 AND CheckAuth('programmer')) || ((!isset($_User['id']) || $_User['id'] <= 0) && md5($_GET['pass']) == AUTOTOOL_ZIPLOGS_PASSWORDHASH)))
-{
+$isAuthorised = false;
+
+if (
+    isset($_User['id']) &&
+    $_User['id'] > 0 &&
+    CheckAuth('programmer')
+) {
+    $isAuthorised = true;
+}
+
+if (
+    (
+        !isset($_User['id']) ||
+        $_User['id'] <= 0
+    ) &&
+    !empty(AUTOTOOL_ZIPLOGS_PASSWORDHASH) &&
+    !empty($_GET['pass']) &&
+    md5($_GET['pass']) == AUTOTOOL_ZIPLOGS_PASSWORDHASH
+) {
+    $isAuthorised = true;
+}
+
+if (!$isAuthorised) {
     AdminMessage($_Lang['sys_noalloaw'], $_Lang['sys_noaccess']);
+
+    die();
 }
 
 $FilesZipped = 0;

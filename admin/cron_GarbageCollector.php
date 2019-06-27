@@ -21,9 +21,32 @@ $Bench->echoTableSwitch();
 $StartTime = microtime(true);
 includeLang('admin/cron_GarbageCollector');
 
-if(!((isset($_User['id']) && $_User['id'] > 0 AND CheckAuth('programmer')) || ((!isset($_User['id']) || $_User['id'] <= 0) && md5($_GET['pass']) == AUTOTOOL_GARBAGECOLLECTOR_PASSWORDHASH)))
-{
+$isAuthorised = false;
+
+if (
+    isset($_User['id']) &&
+    $_User['id'] > 0 &&
+    CheckAuth('programmer')
+) {
+    $isAuthorised = true;
+}
+
+if (
+    (
+        !isset($_User['id']) ||
+        $_User['id'] <= 0
+    ) &&
+    !empty(AUTOTOOL_GARBAGECOLLECTOR_PASSWORDHASH) &&
+    !empty($_GET['pass']) &&
+    md5($_GET['pass']) == AUTOTOOL_GARBAGECOLLECTOR_PASSWORDHASH
+) {
+    $isAuthorised = true;
+}
+
+if (!$isAuthorised) {
     AdminMessage($_Lang['sys_noalloaw'], $_Lang['sys_noaccess']);
+
+    die();
 }
 
 $ShowOutput = (isset($_User['id']) && $_User['id'] > 0 ? true : false);
