@@ -139,7 +139,7 @@
                         <tr>
                             <th>{Label_Const_ReCaptcha_Private}</th>
                             <th><input type="text" name="set_const_recaptcha_private" value="{set_const_recaptcha_private}" {PHP_BadVal_set_const_recaptcha_private} tabindex="11"/></th>
-                            <th>{Tip_Const_ReCaptcha_Public}</th>
+                            <th>{Tip_Const_ReCaptcha_Private}</th>
                         </tr>
 
 

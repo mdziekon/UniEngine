@@ -91,7 +91,7 @@ $_Lang['Tip_Const_ReCaptcha_Enable']                                = (
 );
 $_Lang['Tip_Const_ReCaptcha_ServerIP_as_Hostname']                  = 'Podczas konfiguracji serwera na maszynie lokalnej konieczna może być identyfikacja serwera poprzez jego adres IP. Na serwerze produkcyjnym ta opcja powinna być WYŁĄCZONA.';
 $_Lang['Tip_Const_ReCaptcha_Public']                                = 'Klucz publiczny ReCaptcha otrzymany podczas konfiguracji konta. Jeśli nie używasz systemu ReCaptcha, pozostaw to pole puste.';
-$_Lang['Tip_Const_ReCaptcha_Public']                                = 'Klucz prywatny ReCaptca otrzymany podczas konfiguracji konta. Jeśli nie używasz systemu ReCaptcha, pozostaw to pole puste.';
+$_Lang['Tip_Const_ReCaptcha_Private']                               = 'Klucz prywatny ReCaptca otrzymany podczas konfiguracji konta. Jeśli nie używasz systemu ReCaptcha, pozostaw to pole puste.';
 $_Lang['Tip_Admin_Username']                                        = 'Nazwa użytkownika, przez którą będzie logować się Administrator (Właściciel) Gry.';
 $_Lang['Tip_Admin_Password']                                        = 'Hasło, które zostanie przypisane do konta Administratora.';
 $_Lang['Tip_Admin_Email']                                           = 'Adres Email konta Administratora';
