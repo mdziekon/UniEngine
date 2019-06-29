@@ -11,6 +11,7 @@ OGame-clone browser based game engine.
 - [Installation](#installation)
 - [Updating from older versions](#updating-from-older-versions)
 - [Development guides](#development-guides)
+- [Languages](#languages)
 - [Credits](#credits)
 - [License](#license)
 
@@ -100,6 +101,11 @@ OGame-clone browser based game engine.
     - _Note:_ due to legacy reasons, all files in ``dist/`` are stored in the repo.
 
 ---
+
+## Languages
+
+- English 🇬🇧
+- Polish / Polski 🇵🇱
 
 ## Credits
 
