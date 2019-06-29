@@ -38,6 +38,9 @@ $TPL_UniInfoBox             = gettemplate('reg_uniinfo_box');
 $TPL_UniSelector            = gettemplate('reg_uniselector');
 $TPLInfo_UniInfoBoxWidth    = 700;
 
+$parse['Insert_UniInfo_Boxes'] = [];
+$parse['Insert_UniSelectors'] = [];
+
 $UniIterator = 0;
 foreach($UniData as $UniNo => $This)
 {
@@ -67,8 +70,8 @@ foreach($UniData as $UniNo => $This)
         $ThisInfobox['Insert_UniName']           = $UniNo;
     }
 
-    $parse['Insert_UniInfo_Boxes'] = parsetemplate($TPL_UniInfoBox, $ThisInfobox);
-    $parse['Insert_UniSelectors'] = parsetemplate($TPL_UniSelector, $ThisInfobox);
+    $parse['Insert_UniInfo_Boxes'][] = parsetemplate($TPL_UniInfoBox, $ThisInfobox);
+    $parse['Insert_UniSelectors'][] = parsetemplate($TPL_UniSelector, $ThisInfobox);
 
     $UniIterator += 1;
 }
@@ -77,6 +80,8 @@ $parse['GameURL'] = GAMEURL_STRICT;
 $parse['GameName'] = $_GameConfig['game_name'];
 $parse['Insert_JSLang'] = json_encode($_Lang['JSLang']);
 $parse['phpVars_domain'] = GAMEURL_DOMAIN;
+$parse['Insert_UniInfo_Boxes'] = implode('', $parse['Insert_UniInfo_Boxes']);
+$parse['Insert_UniSelectors'] = implode('', $parse['Insert_UniSelectors']);
 
 if(REGISTER_RECAPTCHA_ENABLE)
 {
