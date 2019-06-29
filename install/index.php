@@ -94,10 +94,28 @@ if (false && !$requirementsVerificationResult['hasPassed']) {
 $_Lang['PHP_HideInfoBox'] = 'display: none;';
 
 // --- Start installation process ---
-$_Install_Vars = normalize_config_inputs($_POST);
+$_Install_Vars = normalize_config_inputs(
+    $_POST,
+    [
+        'installerLang' => $_UseLang
+    ]
+);
 $_Install_RequiredFields = determine_required_fields($_Install_Vars);
 
 $htmlValues = translate_php_input_values_to_html($_Install_Vars, $_POST);
+
+$_Lang['PHP_Dynamic_GameDefaultLang_options'] = [];
+foreach (LANG_AVAILABLE as $langKey) {
+    $langData = $_Lang['VarValue_GameDefaultLang_Languages'][$langKey];
+    $isSelectedHTMLAttr = $htmlValues['uni_gamedefaultlang_' . $langKey];
+
+    $_Lang['PHP_Dynamic_GameDefaultLang_options'][] = (
+        "<option value='{$langKey}' {$isSelectedHTMLAttr}>" .
+        "{$langData['flag_emoji']} {$langData['name']}" .
+        "</option>"
+    );
+}
+$_Lang['PHP_Dynamic_GameDefaultLang_options'] = implode('', $_Lang['PHP_Dynamic_GameDefaultLang_options']);
 
 foreach ($htmlValues as $key => $value) {
     $_Lang['set_' . $key] = $value;
@@ -194,6 +212,7 @@ $_Install_TPL_Config = [
 ];
 $_Install_TPL_Constants = [
     'UNIID'                                 => $_Install_Vars['const_uniid'],
+    'UniDefaultLang'                        => $_Install_Vars['uni_gamedefaultlang'],
     'AdminEmail'                            => $_Install_Vars['admin_email'],
     'Domain'                                => $_Install_Vars['const_domain'],
     'GenerateSubdomainLink'                 => (

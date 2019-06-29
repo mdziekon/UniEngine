@@ -40,7 +40,7 @@
             text-align: center !important;
         }
 
-        input[type="text"] {
+        input[type="text"], select {
             width: 90%;
             padding: 3px !important;
         }
@@ -184,6 +184,19 @@
                                 <th>{Label_Uni_GameName} <b style="color: orange">(*)</b></th>
                                 <th><input type="text" name="set_uni_gamename" value="{set_uni_gamename}" {PHP_BadVal_set_uni_gamename} tabindex="15"/></th>
                                 <th>{Tip_Uni_GameName}</th>
+                            </tr>
+                            <tr>
+                                <th>{Label_Uni_GameDefaultLang} <b style="color: orange">(*)</b></th>
+                                <th>
+                                    <select
+                                        name="set_uni_gamedefaultlang"
+                                        tabindex="15"
+                                        {PHP_BadVal_set_uni_gamedefaultlang}
+                                    >
+                                        {PHP_Dynamic_GameDefaultLang_options}
+                                    </select>
+                                </th>
+                                <th>{Tip_Uni_GameDefaultLang}</th>
                             </tr>
                             <tr>
                                 <th>{Label_Uni_GameSpeed} <b style="color: orange">(*)</b></th>

@@ -1,6 +1,6 @@
 <?php
 
-function normalize_config_inputs($inputs) {
+function normalize_config_inputs($inputs, $options) {
     $normalized = [
         // Text values
         'dbconfig_host' => $inputs['set_dbconfig_host'],
@@ -10,6 +10,11 @@ function normalize_config_inputs($inputs) {
         'dbconfig_prefix' => $inputs['set_dbconfig_prefix'],
         'const_uniid' => $inputs['set_const_uniid'],
         'uni_gamename' => $inputs['set_uni_gamename'],
+        'uni_gamedefaultlang' => (
+            !empty($inputs['set_uni_gamedefaultlang']) ?
+            $inputs['set_uni_gamedefaultlang'] :
+            $options['installerLang']
+        ),
         'const_domain' => $inputs['set_const_domain'],
         'const_subdomain' => $inputs['set_const_subdomain'],
         'admin_username' => $inputs['set_admin_username'],

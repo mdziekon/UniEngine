@@ -41,6 +41,7 @@ $_Lang['Label_Admin_Password']                                      = 'Admin acc
 $_Lang['Label_Admin_Email']                                         = 'Admin account\'s email';
 
 $_Lang['Label_Uni_GameName']                                        = 'Universe name';
+$_Lang['Label_Uni_GameDefaultLang']                                 = 'Game\'s default language';
 $_Lang['Label_Uni_GameSpeed']                                       = 'Game speed';
 $_Lang['Label_Uni_FleetSpeed']                                      = 'Fleets speed';
 $_Lang['Label_Uni_ResourceSpeed']                                   = 'Resources extraction speed';
@@ -69,6 +70,17 @@ $_Lang['Label_Uni_AntiBash_Enabled']                                = 'Activate 
 $_Lang['Label_Uni_AntiBash_Interval']                               = 'Anti bash protection - interval between the attacks (seconds)';
 $_Lang['Label_Uni_AntiBash_TotalCount']                             = 'Anti bash protection - max attacks per player';
 $_Lang['Label_Uni_AntiBash_PlanetCount']                            = 'Anti bash protection - max attacks per player\'s planet';
+
+$_Lang['VarValue_GameDefaultLang_Languages']                        = [
+    'en' => [
+        'flag_emoji' => '🇬🇧',
+        'name' => 'English'
+    ],
+    'pl' => [
+        'flag_emoji' => '🇵🇱',
+        'name' => 'Polish'
+    ]
+];
 
 $_Lang['Tip_DBHost']                                                = 'The address (IP or hostname) of the MySQL server used to hold the game data.';
 $_Lang['Tip_DBUser']                                                = 'An existing MySQL Database user\'s username, used to connect to the server. The user has to have sufficient priviledges (required priviledges: CREATE TABLE, SELECT, UPDATE, INSERT, DELETE, OPTIMIZE TABLE)';
@@ -113,6 +125,10 @@ $_Lang['Tip_Admin_Password']                                        = 'First Adm
 $_Lang['Tip_Admin_Email']                                           = 'First Administrator\'s email address, presented to the players on the Contacts list';
 
 $_Lang['Tip_Uni_GameName']                                          = 'The presented name of the Game instance';
+$_Lang['Tip_Uni_GameDefaultLang']                                   = (
+    'The default language of the game, pre-selected for all new registrations.<br/>' .
+    'Players can still choose a different language, or change it game\'s settings panel.'
+);
 $_Lang['Tip_Uni_GameSpeed']                                         = (
     'The game speed ratio, which determines things like buildings construction speed, ships and defences construction speed and research speed.<br/>' .
     'The base, standard OGame-like speed equals to "1".<br/>' .

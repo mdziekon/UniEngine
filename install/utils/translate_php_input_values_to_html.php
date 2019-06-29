@@ -13,12 +13,19 @@ function translate_php_input_values_to_html($normalizedInputs, $originalInput) {
         'uni_antibashenable',
     ];
 
+    $selectInputs = [
+        'uni_gamedefaultlang'
+    ];
+
     foreach ($normalizedInputs as $key => $value) {
         $htmlValue = $value;
 
         if (
-            !isset($originalInput['set_' . $key]) ||
-            $originalInput['set_' . $key] == ''
+            !in_array($key, $selectInputs) &&
+            (
+                !isset($originalInput['set_' . $key]) ||
+                $originalInput['set_' . $key] == ''
+            )
         ) {
             $htmlValue = '';
 
@@ -28,6 +35,11 @@ function translate_php_input_values_to_html($normalizedInputs, $originalInput) {
 
         if (in_array($key, $checkboxes)) {
             $htmlValue = ($value ? "checked" : "");
+        }
+
+        if (in_array($key, $selectInputs)) {
+            $htmlValue = 'selected';
+            $key = $key . '_' . $value;
         }
 
         $htmlValues[$key] = $htmlValue;

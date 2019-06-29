@@ -37,6 +37,7 @@ $_Lang['Label_Admin_Username']                                      = 'Nazwa kon
 $_Lang['Label_Admin_Password']                                      = 'Hasło konta Administratora';
 $_Lang['Label_Admin_Email']                                         = 'EMail Administratora';
 $_Lang['Label_Uni_GameName']                                        = 'Nazwa gry/universum';
+$_Lang['Label_Uni_GameDefaultLang']                                 = 'Domyślny język gry';
 $_Lang['Label_Uni_GameSpeed']                                       = 'Prędkość gry';
 $_Lang['Label_Uni_FleetSpeed']                                      = 'Prędkość flot';
 $_Lang['Label_Uni_ResourceSpeed']                                   = 'Prędkość wydobycia';
@@ -63,6 +64,17 @@ $_Lang['Label_Uni_AntiBash_Enabled']                                = 'Uruchom b
 $_Lang['Label_Uni_AntiBash_Interval']                               = 'Interwał między atakami (sekundy)';
 $_Lang['Label_Uni_AntiBash_TotalCount']                             = 'Maksymalna ilość ataków na gracza';
 $_Lang['Label_Uni_AntiBash_PlanetCount']                            = 'Makmsymalna ilość ataków na każdą z planet gracza';
+
+$_Lang['VarValue_GameDefaultLang_Languages']                        = [
+    'en' => [
+        'flag_emoji' => '🇬🇧',
+        'name' => 'Angielski'
+    ],
+    'pl' => [
+        'flag_emoji' => '🇵🇱',
+        'name' => 'Polski'
+    ]
+];
 
 $_Lang['Tip_DBHost']                                                = 'Adres (IP lub host) serwera MySQL, na którym będą przechowywane dane gry';
 $_Lang['Tip_DBUser']                                                = 'Nazwa użytkownika istniejącego na serwerze MySQL. Użytkownik musi mieć odpowiednie uprawnienia do wykonywania operacji na bazie podanej niżej (wymagane uprawnienia: CREATE TABLE, SELECT, UPDATE, INSERT, DELETE, OPTIMIZE TABLE)';
@@ -96,6 +108,10 @@ $_Lang['Tip_Admin_Username']                                        = 'Nazwa uż
 $_Lang['Tip_Admin_Password']                                        = 'Hasło, które zostanie przypisane do konta Administratora.';
 $_Lang['Tip_Admin_Email']                                           = 'Adres Email konta Administratora';
 $_Lang['Tip_Uni_GameName']                                          = 'Nazwa gry lub instalowanego universum';
+$_Lang['Tip_Uni_GameDefaultLang']                                   = (
+    'Domyślny język gry, wstępnie wybierany dla każdej nowej rejestracji gracza.<br/>' .
+    'Gracze będą mieli możliwość wyboru innego języka przy rejestracji oraz później w ustawieniach gry.'
+);
 $_Lang['Tip_Uni_GameSpeed']                                         = (
     'Współczynnik prędkości gry odpowiadający między innymi za prędkość budowy budynków, statków i przeprowadzanych badań.<br/>' .
     'Wartość "1" oznacza bazową wartość jak na standardowych universach OGame.<br/>(Można wpisywać liczby dziesiętne)'
