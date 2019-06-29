@@ -27,6 +27,12 @@
         <tr style="visibility: hidden;"><td style="font-size: 5px;">&nbsp;</td></tr>
         <tr>
             <th colspan="2" class="pad5">
+                {PHP_Insert_LangSelectors}
+            </th>
+        </tr>
+        <tr style="visibility: hidden;"><td style="font-size: 5px;">&nbsp;</td></tr>
+        <tr>
+            <th colspan="2" class="pad5">
                 <a href="https://github.com/mdziekon/UniEngine" target="_blank" class="skyblue">Powered by UniEngine</a>
             </th>
         </tr>

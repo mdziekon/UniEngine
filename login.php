@@ -210,7 +210,34 @@ if(!LOGINPAGE_ALLOW_LOGINPHP)
     }
 }
 
+$input_changelang = $_GET['lang'];
+if (isset($input_changelang) && in_array($input_changelang, LANG_AVAILABLE)) {
+    setcookie(
+        UNIENGINE_VARNAMES_COOKIE_LANG,
+        $input_changelang,
+        time() + (30 * TIME_DAY),
+        '',
+        GAMEURL_DOMAIN
+    );
+
+    $_COOKIE[UNIENGINE_VARNAMES_COOKIE_LANG] = $input_changelang;
+    includeLang('login');
+}
+
 $_Lang['PHP_InsertUniCode'] = LOGINPAGE_UNIVERSUMCODE;
+$_Lang['PHP_Insert_LangSelectors'] = [];
+
+foreach (LANG_AVAILABLE as $langKey) {
+    $langData = $_Lang['LanguagesAvailable'][$langKey];
+
+    $_Lang['PHP_Insert_LangSelectors'][] = (
+        "<a href='?lang={$langKey}' title='{$langData['name']}'>" .
+        "{$langData['flag_emoji']}" .
+        "</a>"
+    );
+}
+$_Lang['PHP_Insert_LangSelectors'] = implode('&nbsp;&nbsp;', $_Lang['PHP_Insert_LangSelectors']);
+
 if($_GameConfig['game_disable'])
 {
     $_Lang['type'] = 'button" onclick="alert(\''.str_replace('<br/>', "\n", $_GameConfig['close_reason']).'\')';
