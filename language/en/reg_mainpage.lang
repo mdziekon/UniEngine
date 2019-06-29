@@ -17,6 +17,7 @@ $_Lang['Input_Passoword']           = 'Password';
 $_Lang['Input_Email']               = 'Email';
 $_Lang['Input_Galaxy']              = 'Starting Galaxy';
 $_Lang['Input_Rules']               = 'Accept';
+$_Lang['Input_RulesLinkLabel']      = 'Terms of Service';
 $_Lang['signup']                    = ' Complete registration ';
 
 $_Lang['UniInfo_GameSpeed']         = 'Game speed';

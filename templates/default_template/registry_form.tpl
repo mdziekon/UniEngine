@@ -77,7 +77,7 @@ var phpVars = {
                 </tr>
                 <tr>
                     <th class="pad2">
-                        <label for="rules">{Input_Rules}</label> <a class="TextShadow" href="rules.php" target="_blank"><u>Regulamin</u></a>
+                        <label for="rules">{Input_Rules}</label> <a class="TextShadow" href="rules.php" target="_blank"><u>{Input_RulesLinkLabel}</u></a>
                     </th>
                     <th class="pad2">
                         <input name="rules" id="rules" type="checkbox" tabindex="6"/>

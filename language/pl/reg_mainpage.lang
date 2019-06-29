@@ -17,6 +17,7 @@ $_Lang['Input_Passoword']       = 'Hasło';
 $_Lang['Input_Email']           = 'Email';
 $_Lang['Input_Galaxy']          = 'Galaktyka';
 $_Lang['Input_Rules']           = 'Akceptuję';
+$_Lang['Input_RulesLinkLabel']  = 'Regulamin';
 $_Lang['signup']                = ' Rejestruj ';
 
 $_Lang['UniInfo_GameSpeed']     = 'Prędkość Gry';
