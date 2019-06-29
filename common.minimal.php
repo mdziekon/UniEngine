@@ -2,7 +2,7 @@
 
 define('UNIENGINE_DEFAULT_LANG', 'en');
 define(
-    'LANG_AVAILABLE',
+    'UNIENGINE_LANGS_AVAILABLE',
     [ 'en', 'pl' ]
 );
 

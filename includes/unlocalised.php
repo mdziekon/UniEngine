@@ -44,7 +44,7 @@ function getCurrentLang() {
     if (
         isset($_User['lang']) &&
         $_User['lang'] != '' &&
-        in_array($_User['lang'], LANG_AVAILABLE)
+        in_array($_User['lang'], UNIENGINE_LANGS_AVAILABLE)
     ) {
         $lang = $_User['lang'];
     }
@@ -52,7 +52,7 @@ function getCurrentLang() {
     if (
         !isset($_User['lang']) &&
         isset($_COOKIE[UNIENGINE_VARNAMES_COOKIE_LANG]) &&
-        in_array($_COOKIE[UNIENGINE_VARNAMES_COOKIE_LANG], LANG_AVAILABLE)
+        in_array($_COOKIE[UNIENGINE_VARNAMES_COOKIE_LANG], UNIENGINE_LANGS_AVAILABLE)
     ) {
         $lang = $_COOKIE[UNIENGINE_VARNAMES_COOKIE_LANG];
     }

@@ -335,7 +335,7 @@ if(!isOnVacation())
 
                 $uservals_gamelanguage = $_User['lang'];
                 if (isset($_POST['lang'])) {
-                    if (in_array($_POST['lang'], LANG_AVAILABLE)) {
+                    if (in_array($_POST['lang'], UNIENGINE_LANGS_AVAILABLE)) {
                         $uservals_gamelanguage = $_POST['lang'];
                     } else {
                         $WarningMsgs[] = $_Lang['Lang_UnavailableLang'];

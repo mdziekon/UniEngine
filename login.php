@@ -211,7 +211,7 @@ if(!LOGINPAGE_ALLOW_LOGINPHP)
 }
 
 $input_changelang = $_GET['lang'];
-if (isset($input_changelang) && in_array($input_changelang, LANG_AVAILABLE)) {
+if (isset($input_changelang) && in_array($input_changelang, UNIENGINE_LANGS_AVAILABLE)) {
     setcookie(
         UNIENGINE_VARNAMES_COOKIE_LANG,
         $input_changelang,
@@ -227,7 +227,7 @@ if (isset($input_changelang) && in_array($input_changelang, LANG_AVAILABLE)) {
 $_Lang['PHP_InsertUniCode'] = LOGINPAGE_UNIVERSUMCODE;
 $_Lang['PHP_Insert_LangSelectors'] = [];
 
-foreach (LANG_AVAILABLE as $langKey) {
+foreach (UNIENGINE_LANGS_AVAILABLE as $langKey) {
     $langData = $_Lang['LanguagesAvailable'][$langKey];
 
     $_Lang['PHP_Insert_LangSelectors'][] = (

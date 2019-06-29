@@ -32,7 +32,7 @@ if(isset($_GET['register']))
     $LangCode = (
         (
             isset($_GET['lang']) &&
-            in_array($_GET['lang'], LANG_AVAILABLE)
+            in_array($_GET['lang'], UNIENGINE_LANGS_AVAILABLE)
         ) ?
         $_GET['lang'] :
         null

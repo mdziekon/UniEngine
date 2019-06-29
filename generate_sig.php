@@ -30,7 +30,7 @@ include($_EnginePath . 'includes/unlocalised.php');
 $UID = (isset($_GET['uid']) ? round($_GET['uid']) : 0);
 $SigLang = (isset($_GET['lang']) ? $_GET['lang'] : null);
 
-if (!in_array($SigLang, LANG_AVAILABLE)) {
+if (!in_array($SigLang, UNIENGINE_LANGS_AVAILABLE)) {
     $SigLang = getDefaultUniLang();
 }
 

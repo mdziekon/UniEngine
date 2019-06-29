@@ -12,7 +12,7 @@ $_UseLang = null;
 
 include('install_functions.php');
 
-if (isset($_GET['lang']) && in_array($_GET['lang'], LANG_AVAILABLE)) {
+if (isset($_GET['lang']) && in_array($_GET['lang'], UNIENGINE_LANGS_AVAILABLE)) {
     $_UseLang = $_GET['lang'];
 }
 
@@ -105,7 +105,7 @@ $_Install_RequiredFields = determine_required_fields($_Install_Vars);
 $htmlValues = translate_php_input_values_to_html($_Install_Vars, $_POST);
 
 $_Lang['PHP_Dynamic_GameDefaultLang_options'] = [];
-foreach (LANG_AVAILABLE as $langKey) {
+foreach (UNIENGINE_LANGS_AVAILABLE as $langKey) {
     $langData = $_Lang['VarValue_GameDefaultLang_Languages'][$langKey];
     $isSelectedHTMLAttr = $htmlValues['uni_gamedefaultlang_' . $langKey];
 
