@@ -40,7 +40,7 @@ function generateSelectLangOptions (params) {
         `;
 
         return el;
-    }).join('');
+    }).join("");
 }
 
 $.support.cors = true;
@@ -65,7 +65,7 @@ $(document).ready(function () {
 
             $("select[name='lang']").html(generateSelectLangOptions({
                 selectedLang: $("select[name='lang']").val(),
-                availableLangs: phpVars.unidata[selectedUniID]['availableLangs']
+                availableLangs: phpVars.unidata[selectedUniID]["availableLangs"]
             }));
         })
         .keyup(function () {
