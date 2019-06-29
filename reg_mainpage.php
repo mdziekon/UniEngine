@@ -68,8 +68,14 @@ foreach($UniData as $UniNo => $This)
         $parse['Insert_UniInfo_Holder_LeftPos']  = -($UniIterator * $TPLInfo_UniInfoBoxWidth);
         $parse['Insert_PreselectedUniLanguages'] = [];
 
+        $preselectedLang = (
+            in_array(getCurrentLang(), $This['availableLangs']) ?
+            getCurrentLang() :
+            getDefaultUniLang()
+        );
+
         foreach ($This['availableLangs'] as $langKey) {
-            $isSelectedHTMLAttr = ($langKey == getDefaultUniLang() ? "selected" : "");
+            $isSelectedHTMLAttr = ($langKey == $preselectedLang ? "selected" : "");
             $langData = $_Lang['JSLang']['LanguagesData'][$langKey];
 
             $parse['Insert_PreselectedUniLanguages'][] = (
