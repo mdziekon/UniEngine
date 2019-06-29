@@ -86,7 +86,7 @@ if(REGISTER_RECAPTCHA_ENABLE)
         $RecaptchaJSSetupTpl,
         [
             'Recaptcha_Sitekey' => REGISTER_RECAPTCHA_PUBLICKEY,
-            'Recaptcha_Lang' => DEFAULT_LANG
+            'Recaptcha_Lang' => getDefaultUniLang()
         ]
     );
 }

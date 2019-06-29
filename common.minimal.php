@@ -1,6 +1,6 @@
 <?php
 
-define('DEFAULT_LANG', 'en');
+define('UNIENGINE_DEFAULT_LANG', 'en');
 define(
     'LANG_AVAILABLE',
     [ 'en', 'pl' ]

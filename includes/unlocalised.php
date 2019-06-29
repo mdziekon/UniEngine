@@ -28,19 +28,28 @@ function gettemplate($templatename)
     return ReadFromFile($_EnginePath.TEMPLATE_DIR.TEMPLATE_NAME.'/'.$templatename.'.tpl');
 }
 
+function getDefaultUniLang() {
+    if (defined('UNI_DEFAULT_LANG')) {
+        return UNI_DEFAULT_LANG;
+    }
+
+    return UNIENGINE_DEFAULT_LANG;
+}
+
 function getCurrentLang() {
     global $_User;
 
-    $SelLanguage = DEFAULT_LANG;
+    $lang = getDefaultUniLang();
 
     if (
         isset($_User['lang']) &&
-        $_User['lang'] != ''
+        $_User['lang'] != '' &&
+        in_array($_User['lang'], LANG_AVAILABLE)
     ) {
-        $SelLanguage = $_User['lang'];
+        $lang = $_User['lang'];
     }
 
-    return $SelLanguage;
+    return $lang;
 }
 
 function getCurrentLangISOCode() {
