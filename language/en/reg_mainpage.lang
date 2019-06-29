@@ -16,6 +16,7 @@ $_Lang['Input_Username']            = 'Username';
 $_Lang['Input_Passoword']           = 'Password';
 $_Lang['Input_Email']               = 'Email';
 $_Lang['Input_Galaxy']              = 'Starting Galaxy';
+$_Lang['Input_Language']            = 'Language';
 $_Lang['Input_Rules']               = 'Accept';
 $_Lang['Input_RulesLinkLabel']      = 'Terms of Service';
 $_Lang['signup']                    = ' Complete registration ';
@@ -64,9 +65,21 @@ $_Lang['JSLang'] = [
     'Alert_RequestCode_13'      => 'Starting Galaxy cannot by empty!',
     'Alert_RequestCode_14'      => 'Please select a valid Galaxy number!',
     'Alert_RequestCode_15'      => 'We are sorry, but this Galaxy is already too crowded, please select another one!',
+    'Alert_RequestCode_16'      => 'Unavailable language selected!',
 
     'Info_RequestCode_1'        => 'Your account has been created, we will redirect you to the game in a moment...',
     'Info_RequestCode_2'        => 'Your account has been created. Now you have to wait until the game server opens up for all players...',
+
+    'LanguagesData'             => [
+        'en'                    => [
+            'flag_emoji'        => '🇬🇧',
+            'name'              => 'English'
+        ],
+        'pl'                    => [
+            'flag_emoji'        => '🇵🇱',
+            'name'              => 'Polish'
+        ]
+    ],
 ];
 
 ?>

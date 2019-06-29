@@ -16,6 +16,7 @@ $_Lang['Input_Username']        = 'Nazwa gracza';
 $_Lang['Input_Passoword']       = 'Hasło';
 $_Lang['Input_Email']           = 'Email';
 $_Lang['Input_Galaxy']          = 'Galaktyka';
+$_Lang['Input_Language']        = 'Język';
 $_Lang['Input_Rules']           = 'Akceptuję';
 $_Lang['Input_RulesLinkLabel']  = 'Regulamin';
 $_Lang['signup']                = ' Rejestruj ';
@@ -64,9 +65,21 @@ $_Lang['JSLang'] = [
     'Alert_RequestCode_13'      => 'Musisz podać, w której Galaktyce chcesz rozpocząć rozgrywkę!',
     'Alert_RequestCode_14'      => 'Przekroczyłeś wielkość Universum podając numer Galaktyki!',
     'Alert_RequestCode_15'      => 'Przepraszamy, ale w tej Galaktyce nie ma już wolnych miejsc!',
+    'Alert_RequestCode_16'      => 'Wybrano niedostępny język!',
 
     'Info_RequestCode_1'        => 'Twoje konto zostało założone poprawnie, za chwilę nastapi przejście do gry...',
     'Info_RequestCode_2'        => 'Twoje konto zostało założone poprawnie. Teraz oczekuj na otwarcie tego Universum...',
+
+    'LanguagesData'             => [
+        'en'                    => [
+            'flag_emoji'        => '🇬🇧',
+            'name'              => 'Angielski'
+        ],
+        'pl'                    => [
+            'flag_emoji'        => '🇵🇱',
+            'name'              => 'Polski'
+        ]
+    ],
 ];
 
 ?>

@@ -1,11 +1,12 @@
 <script>
 var JSLang = {Insert_JSLang};
 var phpVars = {
-    domain: "{phpVars_domain}"
+    domain: "{phpVars_domain}",
+    unidata: {phpVars_unidata}
 };
 </script>
 <script type="text/javascript" src="libs/jquery-cookie/jquery.cookie-1.0.0.1.min.js"></script>
-<script src="dist/js/register.cachebuster-1550622861913.min.js" type="text/javascript"></script>
+<script src="dist/js/register.cachebuster-1561837149089.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="dist/css/register.cachebuster-1546564327123.min.css" />
 <br/>
 <div>
@@ -48,7 +49,7 @@ var phpVars = {
                         <label for="username">{Input_Username}</label>
                     </th>
                     <th class="pad2">
-                        <input class="pad2 wid" id="username" name="username" size="20" maxlength="64" type="text" tabindex="2" value=""/>
+                        <input class="pad2 wid" id="username" name="username" style="width: 200px;" maxlength="64" type="text" tabindex="2" value=""/>
                     </th>
                 </tr>
                 <tr>
@@ -56,7 +57,7 @@ var phpVars = {
                         <label for="password">{Input_Passoword}</label>
                     </th>
                     <th class="pad2">
-                        <input class="pad2 wid" id="password" name="password" size="20" type="password" tabindex="3" value=""/>
+                        <input class="pad2 wid" id="password" name="password" style="width: 200px;" type="password" tabindex="3" value=""/>
                     </th>
                 </tr>
                 <tr>
@@ -64,7 +65,7 @@ var phpVars = {
                         <label for="email">{Input_Email}</label>
                     </th>
                     <th class="pad2">
-                        <input name="email" id="email" class="pad2 wid" size="20" type="text" tabindex="4" value=""/>
+                        <input name="email" id="email" class="pad2 wid" style="width: 200px;" type="text" tabindex="4" value=""/>
                     </th>
                 </tr>
                 <tr>
@@ -77,10 +78,20 @@ var phpVars = {
                 </tr>
                 <tr>
                     <th class="pad2">
+                        <label for="lang">{Input_Language}</label>
+                    </th>
+                    <th class="pad2">
+                        <select name="lang" id="lang" class="pad2 wid" style="width: 200px;" type="text" tabindex="6">
+                            {Insert_PreselectedUniLanguages}
+                        </select>
+                    </th>
+                </tr>
+                <tr>
+                    <th class="pad2">
                         <label for="rules">{Input_Rules}</label> <a class="TextShadow" href="rules.php" target="_blank"><u>{Input_RulesLinkLabel}</u></a>
                     </th>
                     <th class="pad2">
-                        <input name="rules" id="rules" type="checkbox" tabindex="6"/>
+                        <input name="rules" id="rules" type="checkbox" tabindex="7"/>
                     </th>
                 </tr>
                 <tr>

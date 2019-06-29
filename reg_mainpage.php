@@ -11,10 +11,8 @@ $_DontShowMenus = true;
 
 $RecommendedUni = '1';
 
-$UniData = array
-(
-    '1' => array
-    (
+$UniData = [
+    '1' => [
         // If you want to place your Universum on another domain (or subdomain),
         // regscripturl is absolute path (with http://) to your Universum reg_ajax.php file
         'regscripturl' => './reg_ajax.php',
@@ -26,10 +24,14 @@ $UniData = array
         'acs'          => true,
         'rapid'        => true,
         'fleetdeb'     => 0,
-        'defdeb'       => '0',
+        'defdeb'       => 0,
         'mother'       => 1,
-    ),
-);
+        'availableLangs' => [
+            'en',
+            'pl'
+        ]
+    ],
+];
 
 // Create registry form
 $parse = $_Lang;
@@ -64,6 +66,20 @@ foreach($UniData as $UniNo => $This)
     {
         $ThisInfobox['Insert_Selected']          = 'selected';
         $parse['Insert_UniInfo_Holder_LeftPos']  = -($UniIterator * $TPLInfo_UniInfoBoxWidth);
+        $parse['Insert_PreselectedUniLanguages'] = [];
+
+        foreach ($This['availableLangs'] as $langKey) {
+            $isSelectedHTMLAttr = ($langKey == getDefaultUniLang() ? "selected" : "");
+            $langData = $_Lang['JSLang']['LanguagesData'][$langKey];
+
+            $parse['Insert_PreselectedUniLanguages'][] = (
+                "<option value='{$langKey}' {$isSelectedHTMLAttr}>" .
+                    "{$langData["flag_emoji"]} {$langData["name"]}" .
+                "</option>"
+            );
+        }
+
+        $parse['Insert_PreselectedUniLanguages'] = implode('', $parse['Insert_PreselectedUniLanguages']);
     }
     if(empty($This['name']))
     {
@@ -80,6 +96,7 @@ $parse['GameURL'] = GAMEURL_STRICT;
 $parse['GameName'] = $_GameConfig['game_name'];
 $parse['Insert_JSLang'] = json_encode($_Lang['JSLang']);
 $parse['phpVars_domain'] = GAMEURL_DOMAIN;
+$parse['phpVars_unidata'] = json_encode($UniData);
 $parse['Insert_UniInfo_Boxes'] = implode('', $parse['Insert_UniInfo_Boxes']);
 $parse['Insert_UniSelectors'] = implode('', $parse['Insert_UniSelectors']);
 

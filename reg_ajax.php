@@ -29,6 +29,14 @@ if(isset($_GET['register']))
     $Email = getDBLink()->escape_string($Email);
     $Rules = (isset($_GET['rules']) ? $_GET['rules'] : null);
     $GalaxyNo = (isset($_GET['galaxy']) ? intval($_GET['galaxy']) : null);
+    $LangCode = (
+        (
+            isset($_GET['lang']) &&
+            in_array($_GET['lang'], LANG_AVAILABLE)
+        ) ?
+        $_GET['lang'] :
+        null
+    );
 
     // Check if Username is correct
     $UsernameGood = false;
@@ -107,6 +115,13 @@ if(isset($_GET['register']))
         // GalaxyNo is too high
         $JSONResponse['Errors'][] = 14;
         $JSONResponse['BadFields'][] = 'galaxy';
+    }
+
+    // Check if valid language has been selected
+    if(empty($LangCode))
+    {
+        // Invalid language selected
+        $JSONResponse['Errors'][] = 16;
     }
 
     // Check if Rules has been accepted
@@ -304,6 +319,7 @@ if(isset($_GET['register']))
             $Query_InsertUser = '';
             $Query_InsertUser .= "INSERT INTO {{table}} SET ";
             $Query_InsertUser .= "`username` = '{$Username}', ";
+            $Query_InsertUser .= "`lang` = '{$LangCode}', ";
             $Query_InsertUser .= "`email` = '{$Email}', ";
             $Query_InsertUser .= "`email_2` = '{$Email}', ";
             $Query_InsertUser .= "`ip_at_reg` = '{$_SERVER['REMOTE_ADDR']}', ";

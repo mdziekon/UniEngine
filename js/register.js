@@ -20,6 +20,28 @@ function hideMsgBox () {
     }
     $Elements.MsgBox.html("&nbsp;");
 }
+//  Arguments:
+//  - params (Object)
+//      - selectedLang (String)
+//      - availableLangs (Array<String>)
+//
+function generateSelectLangOptions (params) {
+    return params.availableLangs.map(function (langKey) {
+        const isSelected = langKey === params.selectedLang;
+        const langData = JSLang["LanguagesData"][langKey];
+
+        const el = `
+            <option
+                value="${langKey}"
+                ${isSelected ? "selected" : ""}
+            >
+                ${langData["flag_emoji"]} ${langData["name"]}
+            </option>
+        `;
+
+        return el;
+    }).join('');
+}
 
 $.support.cors = true;
 
@@ -33,11 +55,18 @@ $(document).ready(function () {
 
     $("#uniSel")
         .change(function () {
-            var NewPos = -$("#" + $(this).children("option:selected").attr("id").replace("UniSelector_", "UniInfo_")).position().left;
+            const selectedUniID = $(this).find("option:selected").data("uniid");
+
+            var NewPos = -$("#UniInfo_" + selectedUniID).position().left;
             var OldPos = parseInt($UniInfo_Holder.css("left"), 10);
             if (NewPos != OldPos) {
                 $UniInfo_Holder.animate({left: NewPos}, 500);
             }
+
+            $("select[name='lang']").html(generateSelectLangOptions({
+                selectedLang: $("select[name='lang']").val(),
+                availableLangs: phpVars.unidata[selectedUniID]['availableLangs']
+            }));
         })
         .keyup(function () {
             $(this).change();
