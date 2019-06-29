@@ -6,4 +6,6 @@ define(
     [ 'en', 'pl' ]
 );
 
+define('UNIENGINE_VARNAMES_COOKIE_LANG', 'lang');
+
 ?>
