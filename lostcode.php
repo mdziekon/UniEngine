@@ -90,7 +90,7 @@ if(isset($_POST['email']))
 else
 {
     $parse = $_Lang;
-    $parse['GameURL'] = $_GameConfig['game_name'];
+    $parse['GameURL'] = GAMEURL_STRICT;
     $parse['servername'] = $_GameConfig['game_name'];
     display(parsetemplate(gettemplate('lostcode'), $parse), $_Lang['Title'], false);
 }
