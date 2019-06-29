@@ -1,4 +1,4 @@
-/* globals YourNickname, JSLang, ErrorMsg, JSLang_Errors, MonthsLang, LastSeenID, ServerStamp, UserAuth, RoomID */
+/* globals YourNickname, JSLang, ErrorMsg, JSLang_Errors, LastSeenID, ServerStamp, UserAuth, RoomID */
 
 // Initialize
 var AjaxGet = false;
@@ -116,8 +116,8 @@ function createMessage (MessageData, curLastSeenID) {
     MsgDate = (
         padTime(MsgDate.getHours()) + ":" +
         padTime(MsgDate.getMinutes()) + ", " +
-        padTime(MsgDate.getDate()) + " " +
-        MonthsLang[(MsgDate.getMonth() + 1)] + " " + MsgDate.getFullYear()
+        padTime(MsgDate.getDate()) + "." +
+        padTime((MsgDate.getMonth() + 1)) + "." + MsgDate.getFullYear()
     );
 
     return (

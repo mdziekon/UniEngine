@@ -2,14 +2,14 @@
 
 $_Lang['user_level'] = array
 (
-	'0'		=> 'Gracz',
-	'20'	=> 'ForumTeam',
-	'50'	=> 'Operator Gry (GO)',
-	'70'	=> 'Super Operator Gry (SGO)',
-	'90'	=> 'Administrator Gry',
-	'100'	=> 'Administrator Gry',
-	'110'	=> 'Programista Gry',
-	'120'	=> 'Właściciel Gry',
+    '0'     => 'Gracz',
+    '20'    => 'ForumTeam',
+    '50'    => 'Operator Gry (GO)',
+    '70'    => 'Super Operator Gry (SGO)',
+    '90'    => 'Administrator Gry',
+    '100'   => 'Administrator Gry',
+    '110'   => 'Programista Gry',
+    '120'   => 'Właściciel Gry',
 );
 
 $_Lang['Pagination_Prev'] = '&#171; Poprzednia';
@@ -17,82 +17,123 @@ $_Lang['Pagination_Next'] = 'Następna &#187;';
 
 $_Lang['Chrono_Day1'] = 'dzień';
 $_Lang['Chrono_DayM'] = 'dni';
+$_Lang['Chrono_PrettyTime'] = [
+    'longFormat' => [
+        'days' => function ($days) {
+            return "{$days}d";
+        },
+        'hours' => function ($hours) {
+            return "{$hours}g";
+        },
+        'minutes' => function ($minutes) {
+            return "{$minutes}m";
+        },
+        'seconds' => function ($seconds) {
+            return "{$seconds}s";
+        }
+    ],
+    'chronoFormat' => [
+        'daysFull' => function ($days) {
+            $daysSuffixString = (
+                $days > 1 ?
+                "dni" :
+                "dzień"
+            );
+
+            return "{$days} {$daysSuffixString}";
+        },
+        'daysFullJSFunction' => (
+            'function (days) {' .
+            '    const daysSuffixString = (' .
+            '        days > 1 ?' .
+            '        "dni" :' .
+            '        "dzień"' .
+            '    );' .
+            '' .
+            '    return `${days} ${daysSuffixString}`;' .
+            '}'
+        ),
+        'daysShort' => function ($days) {
+            return "{$days}d";
+        }
+    ]
+];
 
 $_Lang['FatalError_PlanetRowEmpty'] = 'Błąd krytyczny! Brak danych o Planecie Matce!<br/>Prosimy zgłosić to do Administracji!';
-$_Lang['ServerStart_NotReached'] = 'Ten Serwer Gry zostanie uruchomiony <b class="lime">%s</b> o godzinie <b class="lime">%s</b>!<br/>Do czasu rozpoczęcia gry, możesz zapraszać swoich znajomych przez otrzymany Link Polecający...';
-$_Lang['ServerIsClosed'] = 'Serwer został wyłączony przez Administrację!';
-$_Lang['NonActiveBlock'] = '<b class="orange">Aby móc kontynuować rozgrywkę, musisz aktywować swoje konto poprzez Link Aktywacyjny otrzymany w Wiadomości EMail!</b><br/>Jeśli twoje konto pozostanie nieaktywne przez 7 dni od daty rejestracji, zostanie ono usunięte z Systemu!';
+$_Lang['ServerStart_NotReached']    = 'Ten Serwer Gry zostanie uruchomiony <b class="lime">%s</b> o godzinie <b class="lime">%s</b>!<br/>Do czasu rozpoczęcia gry, możesz zapraszać swoich znajomych przez otrzymany Link Polecający...';
+$_Lang['ServerIsClosed']            = 'Serwer został wyłączony przez Administrację!';
+$_Lang['NonActiveBlock']            = '<b class="orange">Aby móc kontynuować rozgrywkę, musisz aktywować swoje konto poprzez Link Aktywacyjny otrzymany w Wiadomości EMail!</b><br/>Jeśli twoje konto pozostanie nieaktywne przez 7 dni od daty rejestracji, zostanie ono usunięte z Systemu!';
 
-$_Lang['PlanetList_MoonSign'] = 'Księżyc';
-$_Lang['PlanetList_MoonChar'] = 'K';
-$_Lang['PlanetList_TypeChange_Sign_M'] = 'K';
-$_Lang['PlanetList_TypeChange_Sign_P'] = 'P';
+$_Lang['PlanetList_MoonSign']           = 'Księżyc';
+$_Lang['PlanetList_MoonChar']           = 'K';
+$_Lang['PlanetList_TypeChange_Sign_M']  = 'K';
+$_Lang['PlanetList_TypeChange_Sign_P']  = 'P';
 $_Lang['PlanetList_TypeChange_Title_M'] = 'Przejdź na Księżyc';
 $_Lang['PlanetList_TypeChange_Title_P'] = 'Przejdź na Planetę';
 
-$_Lang['YouHaveToVoteInSurveys'] = 'System wykrył, że nie głosowałeś jeszcze w jednej (lub więcej) z obecnie aktywnych obowiązkowych ankiet.<br/>System automatycznie przeniesie Cię do zakładki "Ankiety", gdzie zostaniesz poproszony o oddanie głosu.<br/><br/>Aby móc kontynuować grę, musisz zagłosować we wszystkich obowiązkowych ankietach (ilość ankiet, w których musisz oddać głos: <span style="color: red;">%s</span>), w których nie oddawałeś jeszcze głosu (są one zaznaczone na czerwono na liście)!<br/><br/><a href="polls.php">Za chwilę system przeniesie Cię do Ankiet (10 sekund), jeśli nie chcesz czekać, kliknij...</a>';
-$_Lang['SystemInfo'] = 'Wiadomość Systemowa';
-$_Lang['Cannot_usethis_till_logged'] = 'Nie możesz używaj ten funkcji kiedy jesteś zalogowany!';
-$_Lang['User_Deleted'] = 'Gracz usunięty';
-$_Lang['Planet_Deleted'] = 'Planeta usunięta';
-$_Lang['Moon_Deleted'] = 'Księżyc usunięty';
-$_Lang['RulesAcceptBox_CantUseFunction'] = 'Nie możesz korzystać z tej funkcji, dopóki nie zaakceptujesz nowego Regulaminu!';
+$_Lang['YouHaveToVoteInSurveys']            = 'System wykrył, że nie głosowałeś jeszcze w jednej (lub więcej) z obecnie aktywnych obowiązkowych ankiet.<br/>System automatycznie przeniesie Cię do zakładki "Ankiety", gdzie zostaniesz poproszony o oddanie głosu.<br/><br/>Aby móc kontynuować grę, musisz zagłosować we wszystkich obowiązkowych ankietach (ilość ankiet, w których musisz oddać głos: <span style="color: red;">%s</span>), w których nie oddawałeś jeszcze głosu (są one zaznaczone na czerwono na liście)!<br/><br/><a href="polls.php">Za chwilę system przeniesie Cię do Ankiet (10 sekund), jeśli nie chcesz czekać, kliknij...</a>';
+$_Lang['SystemInfo']                        = 'Wiadomość Systemowa';
+$_Lang['Cannot_usethis_till_logged']        = 'Nie możesz używaj ten funkcji kiedy jesteś zalogowany!';
+$_Lang['User_Deleted']                      = 'Gracz usunięty';
+$_Lang['Planet_Deleted']                    = 'Planeta usunięta';
+$_Lang['Moon_Deleted']                      = 'Księżyc usunięty';
+$_Lang['RulesAcceptBox_CantUseFunction']    = 'Nie możesz korzystać z tej funkcji, dopóki nie zaakceptujesz nowego Regulaminu!';
 
-$_Lang['Symbols_Planet'] = 'P';
-$_Lang['Symbols_Moon'] = 'K';
+$_Lang['Symbols_Planet']            = 'P';
+$_Lang['Symbols_Moon']              = 'K';
 
-$_Lang['BR_Target_1'] = 'Planeta';
-$_Lang['BR_Target_3'] = 'Księżyc';
-$_Lang['no_loses_in_defence'] = 'Brak strat w obronie';
+$_Lang['BR_Target_1']               = 'Planeta';
+$_Lang['BR_Target_3']               = 'Księżyc';
+$_Lang['no_loses_in_defence']       = 'Brak strat w obronie';
 $_Lang['nothing_have_been_rebuilt'] = 'Nic nie zostało odbudowane';
-$_Lang['moon_has_been_destroyed'] = 'Księżyc został zniszczony!';
+$_Lang['moon_has_been_destroyed']   = 'Księżyc został zniszczony!';
 
-$_Lang['Old_username_is'] = 'Dawniej znany jako';
-$_Lang['ThisPageOnlyForPro'] = 'Ta funkcja jest dostępna tylko dla posiadaczy <a href="aboutpro.php">Konta Pro</a>!';
-$_Lang['ProAccount'] = 'Konto Pro';
+$_Lang['Old_username_is']           = 'Dawniej znany jako';
+$_Lang['ThisPageOnlyForPro']        = 'Ta funkcja jest dostępna tylko dla posiadaczy <a href="aboutpro.php">Konta Pro</a>!';
+$_Lang['ProAccount']                = 'Konto Pro';
 
-$_Lang['YouAreNotLogged'] = 'Nie jesteś zalogowany!<br/><br/><a href="login.php" target="_top">Zaloguj się!</a>';
-$_Lang['NotLoggedTitle'] = 'System';
-$_Lang['Title_System'] = 'System';
-$_Lang['BattleReport_title'] = 'Raport Wojenny';
-$_Lang['BattleConverter_title'] = 'LiteConverter - Konwerter Raportów silnika UniEngine';
+$_Lang['YouAreNotLogged']           = 'Nie jesteś zalogowany!<br/><br/><a href="login.php" target="_top">Zaloguj się!</a>';
+$_Lang['NotLoggedTitle']            = 'System';
+$_Lang['Title_System']              = 'System';
+$_Lang['BattleReport_title']        = 'Raport Wojenny';
+$_Lang['BattleConverter_title']     = 'LiteConverter - Konwerter Raportów silnika UniEngine';
 
-$_Lang['Main_page'] = '<br /><a href="login.php">Strona główna</a>';
-$_Lang['Kicked_by_badIP'] = 'Zostałeś wyrzucony ze względu na zmienione IP!'.$_Lang['Main_page'].'<br/><br/><span style="color: red;">Uwaga!</span><br/>Jeśli System wyrzuca Cię bez przerwy ze względu na twoje zmienne IP, możesz napisać prośbę na Forum o dezaktywację tej opcji dla twojego konta w tym temacie:<br/><a href="redirect.php?id=1" target="_blank">Kliknij tu</a>';
-$_Lang['You_have_been_kicked'] = 'Zostałeś wyrzucony z gry przez Administratora!'.$_Lang['Main_page'];
-$_Lang['GameBlock_CookieStyle'] = 'Gra została dla Ciebie zablokowana!<br />Jeśli nie znasz powodu blokady gry, skontaktuj się z Administratorem gry!';
-$_Lang['Game_blocked_for_this_IP'] = 'Gra została dla Ciebie zablokowana!<br />Jeśli nie znasz powodu blokady gry, skontaktuj się z Administratorem gry!';
-$_Lang['Hacking_attempt'] = "Wykryto próbę włamania lub oszustwa! Administrator został o tym powiadomiony!";
-$_Lang['Warning'] = "Ostrzeżenie";
+$_Lang['Main_page']                 = '<br /><a href="login.php">Strona główna</a>';
+$_Lang['Kicked_by_badIP']           = 'Zostałeś wyrzucony ze względu na zmienione IP!'.$_Lang['Main_page'].'<br/><br/><span style="color: red;">Uwaga!</span><br/>Jeśli System wyrzuca Cię bez przerwy ze względu na twoje zmienne IP, możesz napisać prośbę na Forum o dezaktywację tej opcji dla twojego konta w tym temacie:<br/><a href="redirect.php?id=1" target="_blank">Kliknij tu</a>';
+$_Lang['You_have_been_kicked']      = 'Zostałeś wyrzucony z gry przez Administratora!'.$_Lang['Main_page'];
+$_Lang['GameBlock_CookieStyle']     = 'Gra została dla Ciebie zablokowana!<br />Jeśli nie znasz powodu blokady gry, skontaktuj się z Administratorem gry!';
+$_Lang['Game_blocked_for_this_IP']  = 'Gra została dla Ciebie zablokowana!<br />Jeśli nie znasz powodu blokady gry, skontaktuj się z Administratorem gry!';
+$_Lang['Hacking_attempt']           = "Wykryto próbę włamania lub oszustwa! Administrator został o tym powiadomiony!";
+$_Lang['Warning']                   = "Ostrzeżenie";
 
-$_Lang['BattleReport_DoesntExist'] = 'Taki raport nie istnieje!';
-$_Lang['BattleReport_NoIDGiven'] = 'Nie podano ID raportu!';
-$_Lang['BattleReportReader_CannotRead'] = 'Nie możesz czytać tego raportu!';
-$_Lang['BattleReportReader_deleted'] = 'Ten Raport został już usunięty';
-$_Lang['BattleReportReader_notyour'] = 'Ten Raport możesz obejrzeć tylko z udostępnionego linku';
-$_Lang['BattleReportConverter_CannotConvert'] = 'Nie możesz konwertować tego raportu!';
-$_Lang['BattleReportReader_FatalError'] = 'Wystąpił błąd podczas odczytu przebiegu walki!<br/>Skontaktuj się z Administracją!';
+$_Lang['BattleReport_DoesntExist']              = 'Taki raport nie istnieje!';
+$_Lang['BattleReport_NoIDGiven']                = 'Nie podano ID raportu!';
+$_Lang['BattleReportReader_CannotRead']         = 'Nie możesz czytać tego raportu!';
+$_Lang['BattleReportReader_deleted']            = 'Ten Raport został już usunięty';
+$_Lang['BattleReportReader_notyour']            = 'Ten Raport możesz obejrzeć tylko z udostępnionego linku';
+$_Lang['BattleReportConverter_CannotConvert']   = 'Nie możesz konwertować tego raportu!';
+$_Lang['BattleReportReader_FatalError']         = 'Wystąpił błąd podczas odczytu przebiegu walki!<br/>Skontaktuj się z Administracją!';
 
-$_Lang['sys_moon'] = "Księżyc";
-$_Lang['sys_error'] = "Błąd";
-$_Lang['sys_mess_attack_report'] = "Raport Wojenny";
+$_Lang['sys_moon']                  = "Księżyc";
+$_Lang['sys_error']                 = "Błąd";
+$_Lang['sys_mess_attack_report']    = "Raport Wojenny";
 
-$_Lang['sys_attacker_won'] = "Agresor wygrał bitwę!";
-$_Lang['sys_defender_won'] = "Obrońca wygrał bitwę!";
-$_Lang['sys_both_won'] = "Bitwa zakończyła się bez roztrzygnięcia. Floty wracają na swoje ojczyste planety!";
-$_Lang['sys_stealed_ressources'] = "Zabiera %s jednostek %s, %s jednostek %s i %s jednostek %s.";
-$_Lang['sys_rapport_build_time'] = "Czas generowania Raportu: %s sek.";
+$_Lang['sys_attacker_won']          = "Agresor wygrał bitwę!";
+$_Lang['sys_defender_won']          = "Obrońca wygrał bitwę!";
+$_Lang['sys_both_won']              = "Bitwa zakończyła się bez roztrzygnięcia. Floty wracają na swoje ojczyste planety!";
+$_Lang['sys_stealed_ressources']    = "Zabiera %s jednostek %s, %s jednostek %s i %s jednostek %s.";
+$_Lang['sys_rapport_build_time']    = "Czas generowania Raportu: %s sek.";
 
-$_Lang['sys_mess_destruc_report'] = "Raport Niszczenia";
-$_Lang['sys_mess_defense_report'] = "Raport Obrony";
-$_Lang['sys_mess_rebuilt_def'] = 'Odbudowane Systemy Obronne';
+$_Lang['sys_mess_destruc_report']   = "Raport Niszczenia";
+$_Lang['sys_mess_defense_report']   = "Raport Obrony";
+$_Lang['sys_mess_rebuilt_def']      = 'Odbudowane Systemy Obronne';
 
-$_Lang['sys_colo_defaultname'] = "Kolonia";
-$_Lang['sys_gain'] = "Zyski";
-$_Lang['sys_perte_attaquant'] = "Agresor stracił";
-$_Lang['sys_perte_defenseur'] = "Obrońca stracił";
-$_Lang['sys_debris'] = "Złom";
-$_Lang['sys_noaccess'] = "Odmowa dostępu";
+$_Lang['sys_colo_defaultname']      = "Kolonia";
+$_Lang['sys_gain']                  = "Zyski";
+$_Lang['sys_perte_attaquant']       = "Agresor stracił";
+$_Lang['sys_perte_defenseur']       = "Obrońca stracił";
+$_Lang['sys_debris']                = "Złom";
+$_Lang['sys_noaccess']              = "Odmowa dostępu";
 $_Lang['sys_noalloaw'] = "Nie masz uprawnień do oglądania tej strony";
 
 $_Lang['sys_MIP_sending_planet'] = 'planety';
@@ -139,21 +180,30 @@ $_Lang['Store_status_NearFull'] = '<span class="orange">Bliski zapełnieniu</spa
 $_Lang['Store_status_OK'] = '<span class="lime">OK</span>';
 $_Lang['Store_status_Empty'] = '<span class="orange">Pusty</span>';
 
-$_Lang['your_planet'] = 'twojej planety';
-$_Lang['your_moon']	= 'twojego księżyca';
-$_Lang['to_your_planet'] = 'twoją planetę';
-$_Lang['to_your_moon'] = 'twój księżyc';
-$_Lang['to_planet']	= 'planetę';
-$_Lang['to_moon'] = 'księżyc';
-$_Lang['from_planet'] = 'planety';
-$_Lang['from_moon']	= 'księżyca';
-$_Lang['on_planet']	= 'planecie';
-$_Lang['on_moon'] = 'księżycu';
-$_Lang['to_this_planet'] = 'tą planetę';
-$_Lang['to_this_moon'] = 'ten księżyc';
-$_Lang['on_this_planet'] = 'tej planecie';
-$_Lang['on_this_moon'] = 'tym księżycu';
-$_Lang['your_planet'] = 'twoja planeta';
-$_Lang['your_moon']	= 'twój księżyc';
+$_Lang['near_your_planet']  = 'twojej planety';
+$_Lang['near_your_moon']    = 'twojego księżyca';
+$_Lang['to_your_planet']    = 'twoją planetę';
+$_Lang['to_your_moon']      = 'twój księżyc';
+$_Lang['to_planet']         = 'planetę';
+$_Lang['to_moon']           = 'księżyc';
+$_Lang['from_planet']       = 'planety';
+$_Lang['from_moon']         = 'księżyca';
+$_Lang['on_planet']         = 'planecie';
+$_Lang['on_moon']           = 'księżycu';
+$_Lang['to_this_planet']    = 'tą planetę';
+$_Lang['to_this_moon']      = 'ten księżyc';
+$_Lang['on_this_planet']    = 'tej planecie';
+$_Lang['on_this_moon']      = 'tym księżycu';
+
+$_Lang['LanguagesAvailable']    = [
+    'en'                        => [
+        'flag_emoji'            => '🇬🇧',
+        'name'                  => 'Angielski'
+    ],
+    'pl'                        => [
+        'flag_emoji'            => '🇵🇱',
+        'name'                  => 'Polski'
+    ],
+];
 
 ?>

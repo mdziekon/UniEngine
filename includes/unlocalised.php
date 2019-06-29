@@ -28,30 +28,78 @@ function gettemplate($templatename)
     return ReadFromFile($_EnginePath.TEMPLATE_DIR.TEMPLATE_NAME.'/'.$templatename.'.tpl');
 }
 
+function getDefaultUniLang() {
+    if (defined('UNI_DEFAULT_LANG')) {
+        return UNI_DEFAULT_LANG;
+    }
+
+    return UNIENGINE_DEFAULT_LANG;
+}
+
+function getCurrentLang() {
+    global $_User;
+
+    $lang = getDefaultUniLang();
+
+    if (
+        isset($_User['lang']) &&
+        $_User['lang'] != '' &&
+        in_array($_User['lang'], LANG_AVAILABLE)
+    ) {
+        $lang = $_User['lang'];
+    }
+
+    if (
+        !isset($_User['lang']) &&
+        isset($_COOKIE[UNIENGINE_VARNAMES_COOKIE_LANG]) &&
+        in_array($_COOKIE[UNIENGINE_VARNAMES_COOKIE_LANG], LANG_AVAILABLE)
+    ) {
+        $lang = $_COOKIE[UNIENGINE_VARNAMES_COOKIE_LANG];
+    }
+
+    return $lang;
+}
+
+function getCurrentLangISOCode() {
+    return getCurrentLang();
+}
+
 function includeLang($filename, $Return = false)
 {
-    global $_EnginePath, $_User, $_GameConfig;
+    global $_EnginePath;
 
-    if(!$Return)
-    {
+    if (!$Return) {
         global $_Lang;
     }
 
-    $SelLanguage = DEFAULT_LANG;
-    if(isset($_User['lang']) && $_User['lang'] != '')
-    {
-        $SelLanguage = $_User['lang'];
-    }
-    else
-    {
-        $SelLanguage = DEFAULT_LANG;
-    }
+    $SelLanguage = getCurrentLang();
+
     include("{$_EnginePath}language/{$SelLanguage}/{$filename}.lang");
 
-    if($Return)
-    {
+    if ($Return) {
         return $_Lang;
     }
+}
+
+function langFileExists($filename) {
+    global $_EnginePath;
+
+    $SelLanguage = getCurrentLang();
+
+    $filepath = "{$_EnginePath}language/{$SelLanguage}/{$filename}.lang";
+
+    return file_exists($filepath);
+}
+
+function getJSDatePickerTranslationLang() {
+    $lang = getCurrentLang();
+
+    $langMapping = [
+        'en' => 'en-GB',
+        'pl' => 'pl'
+    ];
+
+    return $langMapping[$lang];
 }
 
 // Fleet-related functions
@@ -292,9 +340,33 @@ function CreateFleetPopupedFleetLink($FleetRow, $Texte)
 }
 
 // String-related functions
-function pretty_time($Seconds, $ChronoType = false, $Format = false)
-{
-    $Time = '';
+
+// $Seconds (Number)
+//      Time's seconds
+// $ChronoType (Boolean)
+//      Should the timer display time in a format supported by JS Chrono timers
+// $Format (String)
+//      Determines how to display the time. Should be a concatenated string of possible flags.
+//      Possible flags:
+//      - (Chrono format enabled)
+//          - D
+//              Display days, in full lang format
+//          - d
+//              Display days, in short lang format
+//      - (Chrono format disabled)
+//          - d
+//              Display days, in short lang format
+//          - h
+//              Display hours, in short lang format
+//          - m
+//              Display minutes, in short lang format
+//          - s
+//              Display seconds, in short lang format
+//
+function pretty_time($Seconds, $ChronoType = false, $Format = false) {
+    global $_Lang;
+
+    $timePieces = [];
 
     $Seconds = floor($Seconds);
     $Days = floor($Seconds / TIME_DAY);
@@ -304,89 +376,62 @@ function pretty_time($Seconds, $ChronoType = false, $Format = false)
     $Minutes = floor($Seconds / 60);
     $Seconds -= $Minutes * 60;
 
-    if($Hours < 10)
-    {
-        $Hours = '0'.(string)$Hours;
-    }
-    if($Minutes < 10)
-    {
-        $Minutes = '0'.(string)$Minutes;
-    }
-    if($Seconds < 10)
-    {
-        $Seconds = '0'.(string)$Seconds;
-    }
+    $hoursString = str_pad((string) $Hours, 2, '0', STR_PAD_LEFT);
+    $minutesString = str_pad((string) $Minutes, 2, '0', STR_PAD_LEFT);
+    $secondsString = str_pad((string) $Seconds, 2, '0', STR_PAD_LEFT);
 
-    if($ChronoType === false)
-    {
-        $DAllowed = array
-        (
-            'd' => false,
-            'h' => false,
-            'm' => false,
-            's' => false
-        );
-
-        if($Format)
-        {
-            if(strstr($Format, 'd') === false)
-            {
-                $DAllowed['d'] = true;
-            }
-            if(strstr($Format, 'h') === false)
-            {
-                $DAllowed['h'] = true;
-            }
-            if(strstr($Format, 'm') === false)
-            {
-                $DAllowed['m'] = true;
-            }
-            if(strstr($Format, 's') === false)
-            {
-                $DAllowed['s'] = true;
-            }
+    if ($ChronoType === false) {
+        if (!$Format) {
+            $Format = 'dhms';
         }
 
-        if($Days > 0 AND ($DAllowed['d'] !== true))
-        {
-            $Time .= "{$Days}d ";
+        $isPieceAllowed = [
+            'days' => (strstr($Format, 'd') !== false),
+            'hours' => (strstr($Format, 'h') !== false),
+            'minutes' => (strstr($Format, 'm') !== false),
+            'seconds' => (strstr($Format, 's') !== false)
+        ];
+
+        if ($Days > 0 && $isPieceAllowed['days']) {
+            $timePieces[] = $_Lang['Chrono_PrettyTime']['longFormat']['days']($Days);
         }
-        if($DAllowed['h'] !== true)
-        {
-            $Time .= "{$Hours}g ";
+        if ($isPieceAllowed['hours']) {
+            $timePieces[] = $_Lang['Chrono_PrettyTime']['longFormat']['hours']($hoursString);
         }
-        if($DAllowed['m'] !== true)
-        {
-            $Time .= "{$Minutes}m ";
+        if ($isPieceAllowed['minutes']) {
+            $timePieces[] = $_Lang['Chrono_PrettyTime']['longFormat']['minutes']($minutesString);
         }
-        if($DAllowed['s'] !== true)
-        {
-            $Time .= "{$Seconds}s";
+        if ($isPieceAllowed['seconds']) {
+            $timePieces[] = $_Lang['Chrono_PrettyTime']['longFormat']['seconds']($secondsString);
         }
-    }
-    else
-    {
-        if($Days > 0)
-        {
-            if(strstr($Format, 'D') !== FALSE)
-            {
-                global $_Lang;
-                $UseLang = ($Days > 1 ? $_Lang['Chrono_DayM'] : $_Lang['Chrono_Day1']);
-                $Time = "{$Days} {$UseLang} ";
-            }
-            else if(strstr($Format, 'd') !== FALSE)
-            {
-                $Time = "{$Days}d ";
-            }
-            else
-            {
-                $Hours += $Days * 24;
-            }
-        }
-        $Time .= "{$Hours}:{$Minutes}:{$Seconds}";
+
+        return implode(' ', $timePieces);
     }
 
-    return $Time;
+    if ($Days > 0) {
+        if (!$Format) {
+            $Format = '';
+        }
+
+        $isPieceAllowed = [
+            'daysFull' => (strstr($Format, 'D') !== false),
+            'daysShort' => (strstr($Format, 'd') !== false)
+        ];
+
+        if ($isPieceAllowed['daysFull']) {
+            $timePieces[] = $_Lang['Chrono_PrettyTime']['chronoFormat']['daysFull']($Days);
+        } else if ($isPieceAllowed['daysShort']) {
+            $timePieces[] = $_Lang['Chrono_PrettyTime']['chronoFormat']['daysShort']($Days);
+        } else {
+            $Hours += $Days * 24;
+
+            $hoursString = str_pad((string) $Hours, 2, '0', STR_PAD_LEFT);
+        }
+    }
+
+    $timePieces[] = "{$hoursString}:{$minutesString}:{$secondsString}";
+
+    return implode(' ', $timePieces);
 }
 
 function pretty_time_hour($seconds, $NoSpace = false)
@@ -415,26 +460,45 @@ function pretty_time_hour($seconds, $NoSpace = false)
 function prettyMonth($month, $variant = '0')
 {
     global $_Lang;
-    if(!isset($_Lang['pretty_months_loaded']))
-    {
+    static $_PrettyMonthsLocaleLoaded = false;
+
+    if (!$_PrettyMonthsLocaleLoaded) {
         includeLang('months');
+
+        $_PrettyMonthsLocaleLoaded = true;
     }
+
     return $_Lang['months_variant'.$variant][($month-1)];
 }
 
 function prettyDate($format, $timestamp = false, $variant = '0')
 {
-    if(strstr($format, 'm') !== false)
-    {
+    global $_Lang;
+    static $_PrettyMonthsLocaleLoaded = false;
+
+    if (!$_PrettyMonthsLocaleLoaded) {
+        includeLang('months');
+
+        $_PrettyMonthsLocaleLoaded = true;
+    }
+
+    if (isset($_Lang['__helpers'])) {
+        $formatter = $_Lang['__helpers']['date_formatters'][$variant];
+
+        return $formatter($format, $timestamp);
+    }
+
+    // DEPRECATED: should be replaced with lang specific formatters
+    if (strstr($format, 'm') !== false) {
         $HasMonth = true;
         $format = str_replace('m', '{|_|}', $format);
     }
     $Date = date($format, $timestamp);
-    if($HasMonth === true)
-    {
+    if ($HasMonth === true) {
         $Month = prettyMonth(date('m', $timestamp), $variant);
         $Date = str_replace('{|_|}', $Month, $Date);
     }
+
     return $Date;
 }
 

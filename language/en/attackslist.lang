@@ -1,0 +1,24 @@
+<?php
+
+$_Lang['Bash_Title']                = 'List of today\'s aggressive flights';
+
+$_Lang['Bash_Desc']                 = 'The table below represents a list of all today\'s aggressive flights sent by you towards other players, which are covered by the Bash Rule (Game rules: <a href="rules.php#rule_3_6" target="_blank" class="orange">3.6. Bash</a>). All of the flights are counted from midnight (00:00 server\'s time).<br/>Please note that after exceeding the Bash Limit, the victim might file a report...';
+
+$_Lang['Bash_Header']               = 'List of aggressive flights';
+
+$_Lang['Bash_NoAttacksToday']       = 'No aggressive flights covered by Bash Rule';
+
+$_Lang['Bash_Username']             = 'Player / Planet';
+$_Lang['Bash_BashCount']            = 'Flights count';
+$_Lang['Bash_Status']               = 'Status';
+$_Lang['Bash_CordPlanet']           = 'Planet';
+$_Lang['Bash_CordMoon']             = 'Moon';
+
+$_Lang['Bash_StatusOKLeft']         = 'Aggressive flights left: %s';
+$_Lang['Bash_Status0Left']          = 'Limit reached';
+$_Lang['Bash_StatusExceededUser']   = 'Flights per player limit exceeded!';
+$_Lang['Bash_StatusExceededPlanet'] = 'Flights per %s limit exceeded!';
+$_Lang['Bash_Exceeded_Planet']      = 'planet';
+$_Lang['Bash_Exceeded_Moon']        = 'moon';
+
+?>

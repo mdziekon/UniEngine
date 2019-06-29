@@ -1,15 +1,15 @@
 <?php
 
-$_Lang['ban_title']          = 'Zbanowani Gracze';
-$_Lang['ban_name']           = 'Gracz';
-$_Lang['ban_reason']         = 'Powód';
-$_Lang['ban_from']           = 'Przyznano';
-$_Lang['ban_to']             = 'Wygaśnie';
-$_Lang['ban_by']             = 'Przyznany przez';
-$_Lang['NoBannedPPL']        = 'Brak zbanowanych graczy!';
-$_Lang['CountOfBannedPPL']   = 'Ilość zbanowanych graczy';
-$_Lang['Reason_NotSpecified']	= '<b class="red">Nie podano do wiadomości publicznej</b>';
+$_Lang['ban_title']             = 'Zbanowani Gracze';
+$_Lang['ban_name']              = 'Gracz';
+$_Lang['ban_reason']            = 'Powód';
+$_Lang['ban_from']              = 'Przyznano';
+$_Lang['ban_to']                = 'Wygaśnie';
+$_Lang['ban_by']                = 'Przyznany przez';
+$_Lang['NoBannedPPL']           = 'Brak zbanowanych graczy!';
+$_Lang['CountOfBannedPPL']      = 'Ilość zbanowanych graczy';
+$_Lang['Reason_NotSpecified']   = '<b class="red">Nie podano do wiadomości publicznej</b>';
 
-$_Lang['ban_bysys']          = 'System';
+$_Lang['ban_bysys']             = 'System';
 
 ?>

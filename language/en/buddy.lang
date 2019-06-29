@@ -1,0 +1,50 @@
+<?php
+
+$_Lang['Title']                     = 'Friends';
+
+$_Lang['Headers_Nick']              = 'Player';
+$_Lang['Headers_StatPoints']        = 'Points';
+$_Lang['Headers_StatPosition']      = 'Rank';
+$_Lang['Headers_Ally']              = 'Alliance';
+$_Lang['Headers_GalaxyPosition']    = 'Coordinates';
+$_Lang['Headers_Date']              = 'Date';
+$_Lang['Headers_State']             = 'Status';
+$_Lang['Headers_Actions']           = 'Actions';
+$_Lang['Headers_BuddyForm']         = 'Friend request';
+$_Lang['Headers_Text']              = 'Text';
+$_Lang['Headers_Cancel']            = 'Cancel';
+$_Lang['Headers_Send']              = 'Send';
+$_Lang['Headers_Limit']             = 'Limit';
+
+$_Lang['qTip_Edit']                 = 'Edit request';
+$_Lang['qTip_Delete']               = 'Delete request';
+$_Lang['qTip_Remove']               = 'Remove from Friends list';
+$_Lang['qTip_Accept']               = 'Accept request';
+$_Lang['qTip_Refuse']               = 'Decline request';
+
+$_Lang['Info_NoBuddy']              = 'No friends...';
+
+$_Lang['Row_State_Online']          = 'Online';
+$_Lang['Row_State_Offline']         = 'Offline';
+$_Lang['Row_State_Minutes']         = 'min';
+$_Lang['Row_State_Days']            = 'd';
+$_Lang['Row_State_Awaiting']        = 'Awaiting';
+
+$_Lang['Success_Accepted']          = 'Friend request has been accepted';
+$_Lang['Success_Refused']           = 'Friend request has been declined';
+$_Lang['Success_Removed']           = 'Player has been removed from your Friends list';
+$_Lang['Success_Deleted']           = 'Request has been deleted';
+$_Lang['Success_Edited']            = 'Request has been edited';
+$_Lang['Success_Sent']              = 'Request has been sent';
+
+$_Lang['Error_BadElement']          = 'Invalid action!';
+$_Lang['Error_ElementIDBad']        = 'Invalid identifier given!';
+$_Lang['Error_EmptyText']           = 'Request cannot be empty!';
+$_Lang['Error_BadUID']              = 'Invalid player identifier given!';
+$_Lang['Error_BadUser']             = 'This player does not exist!';
+$_Lang['Error_LinkExists']          = 'This player already is on your Friends list, or your request is awaiting acceptance!';
+$_Lang['Error_RowNoExists']         = 'This request does not exist!';
+$_Lang['Error_CantEdit']            = 'Invalid action!';
+$_Lang['Error_AlreadyActive']       = 'This request is already active!';
+
+?>

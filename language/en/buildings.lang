@@ -1,0 +1,192 @@
+<?php
+
+// ViewSelector
+$_Lang['ViewSel_ViewText']                      = 'Layout';
+$_Lang['ViewSel_Mode0']                         = 'Grid';
+$_Lang['ViewSel_Mode1']                         = 'List';
+$_Lang['ViewSel_ChangeView']                    = 'Change layout';
+
+// General
+$_Lang['PlanetType_1']                          = 'Planet';
+$_Lang['PlanetType_3']                          = 'Moon';
+
+// PlanetOverview
+$_Lang['Overview_Diameter']                     = 'Diameter';
+$_Lang['Overview_Units_Diameter']               = 'km.';
+$_Lang['Overview_Fields']                       = 'Occupied fields';
+$_Lang['Overview_FieldsPercent']                = 'Occupied space (percent)';
+$_Lang['Overview_Temperature']                  = 'Temperature';
+$_Lang['Overview_Form_Temperature']             = 'from %s&deg;C to %s&deg;C';
+
+$_Lang['Overview_LabLevel']                     = 'Research Lab level';
+$_Lang['Overview_LabsConnected']                = 'Connected Research Labs';
+$_Lang['Overview_LabPower']                     = 'Combined Research Labs level';
+
+$_Lang['Overview_ShipyardLevel']                = 'Shipyard level';
+$_Lang['Overview_NanoFactoryLevel']             = 'Nanite Factory level';
+$_Lang['Overview_SolarSateliteEnergy']          = 'Total Energy from Solar Satellites';
+
+// Structures
+$_Lang['Builds']                                = 'Buildings';
+
+$_Lang['Builds_OldVievInfo'] = (
+    'If you don\'t like the new layout of this view, you can still go back to the old Ogame\'s layout.<br/>' .
+    'You can change the layout in <a href="settings.php" class="red">Settings section</a> - in "Game layout" tab change the <b class="orange">"Switch to the old Structures, Research &amp; Shipyard layout"</span> option!'
+);
+
+$_Lang['InfoBox_SelectStructure']               = 'Select building';
+$_Lang['InfoBox_Level']                         = 'Level';
+$_Lang['InfoBox_Build']                         = 'Upgrade<br/>to Level';
+$_Lang['InfoBox_Destroy']                       = 'Tear down<br/>to Level';
+$_Lang['InfoBox_RequirementsFor']               = 'Requirements for Level';
+$_Lang['InfoBox_ResRequirements']               = 'Resource requirements for Level';
+$_Lang['InfoBox_TechRequirements']              = 'Technological requirements for Level';
+$_Lang['InfoBox_Requirements_Tech']             = 'Technologies';
+$_Lang['InfoBox_Requirements_Res']              = 'Resources';
+$_Lang['InfoBox_BuildTime']                     = 'Construction time';
+$_Lang['InfoBox_ShowTechReq']                   = 'Show Technological requirements';
+$_Lang['InfoBox_ShowResReq']                    = 'Show Resource requirements';
+$_Lang['InfoBox_DestroyCost']                   = 'Tear down cost';
+$_Lang['InfoBox_DestroyTime']                   = 'Tear down time';
+
+$_Lang['ListBox_StructuresList']                = 'Buildings list';
+$_Lang['ListBox_Disallow_LabResearch']          = 'Conducts research';
+$_Lang['ListBox_Disallow_NoTech']               = 'Requirements not met';
+$_Lang['ListBox_Disallow_MaxLevelReached']      = 'Maximum Level reached!';
+$_Lang['ListBox_Disallow_NoFreeFields']         = 'No fields left!';
+$_Lang['ListBox_Disallow_QueueIsFull']          = 'Queue is full!';
+$_Lang['ListBox_Disallow_NoResources']          = 'Not enough resources!';
+$_Lang['ListBox_Disallow_NoElements']           = 'No units to deconstruct!';
+$_Lang['ListBox_Disallow_VacationMode']         = 'Vacation Mode';
+
+$_Lang['Queue_Header']                          = 'Queue';
+$_Lang['Queue_Empty']                           = 'Queue is empty';
+$_Lang['Queue_Full']                            = 'Queue is full!';
+$_Lang['Queue_EndTime']                         = 'Completes';
+$_Lang['Queue_Mode_Destroy_1+']                 = 'Tear down';
+$_Lang['Queue_Mode_Build_1+']                   = 'Upgrade';
+$_Lang['Queue_Mode_Destroy_1']                  = 'Tearing down';
+$_Lang['Queue_Mode_Build_1']                    = 'Upgrading';
+$_Lang['Queue_CantCancel_Premium']              = 'You cannot cancel construction which required Dark Energy!';
+$_Lang['Queue_ConfirmCancel']                   = 'Are you sure you want to cancel this task?';
+$_Lang['Queue_Cancel_CantCancel']               = 'Cannot be cancelled';
+$_Lang['Queue_Cancel_Destroy']                  = 'Cancel tear down';
+$_Lang['Queue_Cancel_Build']                    = 'Cancel upgrade';
+$_Lang['Queue_Cancel_Remove']                   = 'Remove from the queue';
+$_Lang['Queue_Cancel_Go']                       = 'Continue';
+$_Lang['Queue_EndTitleBeg']                     = 'Completes on ';
+$_Lang['Queue_EndTitleHour']                    = 'at';
+
+// Laboratory
+$_Lang['Research']                              = 'Research Lab';
+
+$_Lang['ListBox_TechsList']                     = 'Technologies list';
+$_Lang['ListBox_Disallow_NotThisLab']           = 'Research conducted on another planet!';
+$_Lang['ListBox_Disallow_LabInQueue']           = 'Research Lab is being upgraded!';
+$_Lang['ListBox_Disallow_NoLab']                = 'No Research Lab!';
+
+$_Lang['InfoBox_SelectTech']                    = 'Select Technology';
+$_Lang['InfoBox_DoResearch']                    = 'Upgrade<br/>to Level';
+$_Lang['InfoBox_ResearchTime']                  = 'Research time';
+
+$_Lang['Queue_Cancel_Research']                 = 'Cancel research';
+$_Lang['Queue_ResearchOn']                      = 'Research conducted on ';
+$_Lang['Queue_CantCancel_Premium_Lab']          = 'You cannot cancel research which required Dark Energy!';
+$_Lang['Queue_LabInQueue']                      = 'Queue is locked!<br/>Research lab is being upgraded on planets:<br/>%s';
+
+$_Lang['Queue_ListView_Info']                   = 'Research queue is available only when using the Grid Layout!';
+
+// Shipyard
+$_Lang['Title_Shipyard']                        = 'Shipyard / Ships';
+$_Lang['Title_Defense']                         = 'Shipyard / Defenses';
+
+$_Lang['ListBox_ShipsList']                     = 'Ships list';
+$_Lang['ListBox_DefensesList']                  = 'Defenses list';
+$_Lang['ListBox_Disallow_NoShipyard']           = 'No Shipyard!';
+$_Lang['ListBox_Disallow_ShieldBlock']          = 'Already constructed';
+$_Lang['ListBox_Disallow_MissileBlock']         = 'No space left in the Silo!';
+
+$_Lang['InfoBox_SelectShip']                    = 'Select Ship';
+$_Lang['InfoBox_SelectDefense']                 = 'Select Defense system';
+$_Lang['InfoBox_Count']                         = 'Count';
+$_Lang['InfoBox_ResRequirementsShip']           = 'Resources required';
+$_Lang['InfoBox_RequirementsForShip']           = 'Requirements';
+$_Lang['InfoBox_ConstructionTime']              = 'Construction time';
+$_Lang['InfoBox_MaxConstructible']              = 'Max. available';
+
+$_Lang['Cart_Header']                           = 'Construction summary';
+$_Lang['Cart_Cost']                             = 'Cost';
+$_Lang['Cart_Time']                             = 'Time';
+$_Lang['Cart_Construct']                        = 'Construct';
+$_Lang['Cart_Ships']                            = 'ships';
+$_Lang['Cart_Defense']                          = 'defense systems';
+
+// Disassembler
+$_Lang['Disassembler_Title']                    = 'Disassembler';
+$_Lang['Disassembler_Header']                   = 'Disassembly summary';
+$_Lang['Disassembler_Result']                   = 'Outcome';
+$_Lang['Disassembler_Proceed']                  = 'Disassemble';
+$_Lang['Disassembler_Gain']                     = 'Resources recovered';
+$_Lang['Disassembler_Percent']                  = 'Recovery percent';
+
+$_Lang['Disassembler_Tab_Ships']                = 'Ships';
+$_Lang['Disassembler_Tab_Defense']              = 'Defense systems';
+
+$_Lang['Disassembler_ReturnTip']                = 'Disassembler recovers <b class="lime">%s%%</b> of the production costs';
+$_Lang['Disassembler_CancelRequest']            = 'Clear';
+$_Lang['Disassembler_SelectAll']                = 'Select all';
+
+$_Lang['Disassembler_Nothink_in_post']          = 'Nothing selected...';
+$_Lang['Disassembler_NoUnits_on_that_planet']   = 'You do not have the selected units on %s!';
+$_Lang['Disassembler_Sold_units']               = 'Recovered resources:<br/>%s Metal units,<br/>%s Crystal units,<br/>%s Deuterium units';
+
+// ...
+$_Lang['ResearchTitle']                         = 'Research';
+$_Lang['AreYouSure']                            = 'Are you sure you want to cancel construction?';
+$_Lang['Hangar']                                = 'Shipyard';
+$_Lang['Fleet']                                 = "Fleet";
+$_Lang['Defense']                               = "Defenses";
+$_Lang['level']                                 = "Level";
+$_Lang['dispo']                                 = "Available";
+$_Lang['Requirements']                          = "Requirements: ";
+$_Lang['Requires']                              = "Resource requirements";
+$_Lang['Rest_ress']                             = "Resources left";
+$_Lang['TechRequirements']                      = 'Technological requirements';
+$_Lang['Rechercher']                            = "Research";
+$_Lang['ConstructionTime']                      = "Construction time";
+$_Lang['Construire']                            = " Construct ";
+$_Lang['BuildFirstLevel']                       = "Construct";
+$_Lang['BuildNextLevel']                        = "Upgrade to Level ";
+$_Lang['completed']                             = "Completed";
+$_Lang['in_working']                            = "Working";
+$_Lang['work_todo']                             = "Shipyard queue";
+$_Lang['total_left_time']                       = "Time left";
+$_Lang['only_one']                              = "Can be constructed only once.";
+$_Lang['NoMoreSpace']                           = "No fields left on the planet";
+$_Lang['NoMoreSpace_Moon']                      = "No fields left on the moon";
+$_Lang['InBuildQueue']                          = "Add to the Queue";
+$_Lang['bld_usedcells']                         = "Buildings";
+$_Lang['bld_theyare']                           = "";
+$_Lang['bld_cellfree']                          = "fields left";
+$_Lang['DelFromQueue']                          = "Remove from the Queue";
+$_Lang['DelFirstQueue']                         = "Cancel";
+$_Lang['cancel']                                = "Cancel";
+$_Lang['continue']                              = "Continue";
+$_Lang['ready']                                 = "Completed";
+$_Lang['destroy']                               = "Tear down";
+$_Lang['on']                                    = "on";
+$_Lang['no_laboratory']                         = "Construct Research lab first!";
+$_Lang['need_hangar']                           = "Construct Shipyard first!";
+$_Lang['labo_on_update']                        = "You cannot conduct research when Research Lab is being upgraded!<br/>Upgrading on planets: %s";
+$_Lang['onlyOneLevel']                          = "Already constructed";
+$_Lang['youCanBuild']                           = "Constructible";
+$_Lang['max']                                   = "Max";
+$_Lang['noMoreSpaceInSilo']                     = 'No more space left in the Silo!';
+$_Lang['CanBuildXMissiles']                     = 'Space left for these missiles';
+$_Lang['NoMoreSpaceForThisMissiles']            = 'No more space left for these missiles!';
+$_Lang['QueueIsFull']                           = 'Queue is full';
+$_Lang['ActualProduction']                      = 'Currently constructing';
+$_Lang['CannotDeletePremiumBuilding_Warning']   = 'You cannot cancel construction which required Dark Energy!';
+$_Lang['SatelitesEnergy']                       = 'On this position, Solar Sattelite provides <b>%s</b> energy units.';
+
+?>

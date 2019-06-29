@@ -1,0 +1,14 @@
+<?php
+
+$_Lang['GateJump_NotDoing']             = 'The jump is not being performed!';
+$_Lang['GateJump_NotOnMoon']            = 'You are not on a moon!';
+$_Lang['GateJump_NoTeleportOnMoon1']    = 'There is no Jump gate on this moon!';
+$_Lang['GateJump_Moon1NotReach']        = 'Jump from this moon available in:';
+$_Lang['GateJump_BadIDGiven']           = 'Invalid moon selected!';
+$_Lang['GateJump_Moon2NotYours']        = 'This moon doesn\'t exist!';
+$_Lang['GateJump_NoTeleportOnMoon2']    = 'There is no Jump gate on the destination moon!';
+$_Lang['GateJump_Moon2NotReach']        = 'Jump to the selected moon available in:';
+$_Lang['GateJump_BadPOSTFound']         = 'Invalid fleet data given!';
+$_Lang['GateJump_Done']                 = 'Jump has been completed!<br/>Next jump available in:';
+
+?>

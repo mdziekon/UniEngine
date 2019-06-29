@@ -1,0 +1,20 @@
+<?php
+
+$_Lang['No_Data']           = 'No data';
+$_Lang['No_id_given']       = 'Entry with the given ID does not exist!';
+
+$_Lang['InfiniteVacation']  = 'Infinite Vacation';
+$_Lang['Ban_Expired']       = 'Ban expired';
+$_Lang['Ban_TimeLeft']      = 'Remaining';
+$_Lang['Ban_expired']       = 'Ban expired!';
+
+$_Lang['_ago']              = 'ago';
+$_Lang['_day']              = 'day';
+$_Lang['_days']             = 'days';
+$_Lang['_today']            = 'Today';
+$_Lang['_yesterday']        = 'Yesterday';
+$_Lang['_Since']            = 'Since';
+$_Lang['_Untill']           = 'Util';
+$_Lang['_Duration']         = 'Duration';
+
+?>

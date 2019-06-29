@@ -1,0 +1,14 @@
+<?php
+
+$_Lang['Title']         = 'Garbage Collector';
+
+$_Lang['Result_Parse']  = '';
+$_Lang['Result_Parse'] .= 'Execution time: %s s.<br/>';
+$_Lang['Result_Parse'] .= 'Deleted messages: %s<br/>';
+$_Lang['Result_Parse'] .= 'Deleted simulations: %s<br/>';
+$_Lang['Result_Parse'] .= 'Deleted alliance invitations: %s<br/>';
+$_Lang['Result_Parse'] .= 'Deleted Login protection entries: %s<br/>';
+$_Lang['Result_Parse'] .= 'Deleted abandoned planets: %s<br/>';
+$_Lang['Result_Parse'] .= '<br/>Time profiling table:<br/>%s';
+
+?>

@@ -3,7 +3,8 @@
 define('INSIDE', true);
 
 $_EnginePath = './';
-include($_EnginePath.'common.php');
+include($_EnginePath  .'common.php');
+include($_EnginePath . 'includes/vars_officers.php');
 
 loggedCheck();
 
@@ -14,84 +15,71 @@ $RowTPL = gettemplate('officers_row');
 $BuyTPL = gettemplate('officers_buy');
 $Now = time();
 
-foreach($_Lang['OfficersArr'] as $Officer => $Data)
-{
-    foreach($Data['bene'] as &$Value)
-    {
+foreach ($_Lang['OfficersArr'] as $OfficerID => $Data) {
+    $OfficerVars = &$_Vars_Officers[$OfficerID];
+
+    foreach ($Data['benefits'] as &$Value) {
         $Value = '&#149; '.$Value;
     }
 
-    $ParseRow = array();
+    $ParseRow = [];
     $ParseRow['Name'] = $Data['name'];
     $ParseRow['skinpath'] = $_SkinPath;
     $ParseRow['img'] = $Data['img'];
     $ParseRow['Info'] = $Data['desc'];
     $ParseRow['Benefits'] = $_Lang['Benefits'];
-    $ParseRow['ParseBenefits'] = implode('<br/>', $Data['bene']);
-    if($Data['type'] == 1)
-    {
-        $ThisTimeKey = $Officer.'_time';
+    $ParseRow['ParseBenefits'] = implode('<br/>', $Data['benefits']);
+    $ParseRow['BuyButtons'] = [];
 
-        $ParseRow['OfficerState']        = $_Lang['RentState'];
-        if($_User[$ThisTimeKey] > $Now)
-        {
-            $ParseRow['ThisState']        = $_Lang['RentTill'];
-            $ParseRow['OfficerVal']        = prettyDate('d m Y H:i:s', $_User[$ThisTimeKey], 1);
+    if ($OfficerVars['type'] == 1) {
+        $ThisTimeKey = $OfficerID.'_time';
+
+        $ParseRow['OfficerState'] = $_Lang['RentState'];
+        if ($_User[$ThisTimeKey] > $Now) {
+            $ParseRow['ThisState'] = $_Lang['RentTill'];
+            $ParseRow['OfficerVal'] = prettyDate('d m Y H:i:s', $_User[$ThisTimeKey], 1);
             $ParseRow['OfficerValColor'] = 'lime';
-            $ParseRow['ButtonText']        = $_Lang['RenewRent'];
-        }
-        else if($_User[$ThisTimeKey] > 0)
-        {
-            $ParseRow['ThisState']        = $_Lang['RentEnded'];
-            $ParseRow['OfficerVal']        = prettyDate('d m Y H:i:s', $_User[$ThisTimeKey], 1);
+            $ParseRow['ButtonText'] = $_Lang['RenewRent'];
+        } else if ($_User[$ThisTimeKey] > 0) {
+            $ParseRow['ThisState'] = $_Lang['RentEnded'];
+            $ParseRow['OfficerVal'] = prettyDate('d m Y H:i:s', $_User[$ThisTimeKey], 1);
             $ParseRow['OfficerValColor'] = 'orange';
-            $ParseRow['ButtonText']        = $_Lang['RentAgain'];
-        }
-        else
-        {
-            $ParseRow['ThisState']        = $_Lang['NeverRented'];
+            $ParseRow['ButtonText'] = $_Lang['RentAgain'];
+        } else {
+            $ParseRow['ThisState'] = $_Lang['NeverRented'];
             $ParseRow['OfficerStateColor'] = 'red';
-            $ParseRow['ButtonText']        = $_Lang['FirstRent'];
+            $ParseRow['ButtonText'] = $_Lang['FirstRent'];
         }
 
-        foreach($Data['price'] as $KeyID => $PriceVal)
-        {
+        foreach ($OfficerVars['price'] as $KeyID => $PriceVal) {
             $ThisTimeVar = '_days';
-            if($Data['time'][$KeyID] == 1)
-            {
+            if ($OfficerVars['time'][$KeyID] == 1) {
                 $ThisTimeVar = '_day';
             }
-            $ParseRow['ButtonVars'][$KeyID] = array($Data['time'][$KeyID], $_Lang[$ThisTimeVar]);
-            $ParseRow['ButtonItems'][$KeyID] = $Data['itemid'][$KeyID];
+            $ParseRow['ButtonVars'][$KeyID] = array($OfficerVars['time'][$KeyID], $_Lang[$ThisTimeVar]);
+            $ParseRow['ButtonItems'][$KeyID] = $OfficerVars['itemid'][$KeyID];
         }
-    }
-    else if($Data['type'] == 2)
-    {
+    } else if ($OfficerVars['type'] == 2) {
         $ParseRow['OfficerState'] = $_Lang['RentState'];
-        $ParseRow['ThisState']        = $_Lang[$Data['thisState']];
+        $ParseRow['ThisState'] = $_Lang[$OfficerVars['thisState']];
 
-        if($_User[$Data['field']] == 0)
-        {
+        if ($_User[$OfficerVars['field']] == 0) {
             $ParseRow['ButtonText'] = $_Lang['FirstRent'];
             $ParseRow['OfficerValColor'] = 'red';
-        }
-        else
-        {
+        } else {
             $ParseRow['ButtonText'] = $_Lang['RentPlus'];
             $ParseRow['OfficerValColor'] = 'lime';
         }
-        $ParseRow['OfficerVal'] = ($_User[$Data['field']] + 0);
+        $ParseRow['OfficerVal'] = ($_User[$OfficerVars['field']] + 0);
 
-        foreach($Data['price'] as $KeyID => $PriceVal)
-        {
-            $ParseRow['ButtonVars'][$KeyID] = array($Data['count'][$KeyID], $_Lang['RentForTransactions']);
-            $ParseRow['ButtonItems'][$KeyID] = $Data['itemid'][$KeyID];
+        foreach ($OfficerVars['price'] as $KeyID => $PriceVal) {
+            $ParseRow['ButtonVars'][$KeyID] = array($OfficerVars['count'][$KeyID], $_Lang['RentForTransactions']);
+            $ParseRow['ButtonItems'][$KeyID] = $OfficerVars['itemid'][$KeyID];
         }
     }
 
-    foreach($Data['price'] as $KeyID => $PriceVal)
-    {
-        $BuyParse = array();
+    foreach ($OfficerVars['price'] as $KeyID => $PriceVal) {
+        $BuyParse = [];
         $BuyParse['ButtonText'] = vsprintf($ParseRow['ButtonText'], $ParseRow['ButtonVars'][$KeyID]);
         $BuyParse['Cost'] = $_Lang['Cost'];
         $BuyParse['CostVal'] = prettyNumber($PriceVal);
@@ -105,16 +93,11 @@ foreach($_Lang['OfficersArr'] as $Officer => $Data)
 }
 
 $_Lang['DarkEnergy_Counter'] = $_User['darkEnergy'];
-if($_User['darkEnergy'] >= 15)
-{
+if ($_User['darkEnergy'] >= 15) {
     $_Lang['DarkEnergy_Color'] = 'lime';
-}
-else if($_User['darkEnergy'] > 0)
-{
+} else if ($_User['darkEnergy'] > 0) {
     $_Lang['DarkEnergy_Color'] = 'orange';
-}
-else
-{
+} else {
     $_Lang['DarkEnergy_Color'] = 'red';
 }
 

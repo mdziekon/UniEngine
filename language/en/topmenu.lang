@@ -1,0 +1,45 @@
+<?php
+
+$_Lang['logout']         = 'Logout';
+$_Lang['player']         = 'Player';
+$_Lang['friends']        = 'Friends';
+$_Lang['options']        = 'Settings';
+$_Lang['stats']          = 'Statistics';
+$_Lang['search']         = 'Search';
+$_Lang['notes']          = 'Notes';
+$_Lang['rules']          = 'Rules';
+$_Lang['contact']        = 'Contact';
+$_Lang['chat']           = 'Chat';
+$_Lang['admin_cp']       = '<b style="color: lime;">Admin Panel</b>';
+$_Lang['go_cp']          = '<b style="color: lime;">Operator Panel</b>';
+$_Lang['sgo_cp']         = '<b style="color: lime;">Super Operator Panel</b>';
+$_Lang['forum']          = 'Forums';
+$_Lang['banned']         = 'Banned';
+$_Lang['ReportLink']     = 'Reporting System';
+$_Lang['Polls']          = 'Polls';
+
+$_Lang['ServerTimeTxt']  = 'Current Server Time';
+
+$_Lang['ChatTitle']      = 'Global players\' chat';
+$_Lang['FriendsTitle']   = 'List of your friends';
+$_Lang['NotesTitle']     = 'Your notes';
+$_Lang['StatsTitle']     = 'Table of players\' Statistics';
+$_Lang['SearchTitle']    = 'Search engine';
+$_Lang['RulesTitle']     = 'Server and Game rules';
+$_Lang['ContactTitle']   = 'Contact server\' Administration';
+$_Lang['OptionsTitle']   = 'Your account\' settings';
+$_Lang['LogoutTitle']    = 'Logout from the game';
+$_Lang['AdminLinkTitle'] = 'Server administration\'s panel';
+$_Lang['GOLinkTitle']    = 'Game operator\'s panel';
+$_Lang['SGOLinkTitle']   = 'Super game operator\'s panel';
+$_Lang['ForumTitle']     = 'The official game Forums';
+$_Lang['BannedTitle']    = 'List of all banned players';
+$_Lang['PollsTitle']     = 'Help us to improve in-game experience by expressing your opinions!';
+$_Lang['ReportTitle']    = 'Report other player\'s transgression or a bug found in the game!';
+
+$_Lang['Pro']            = 'Pro Account';
+$_Lang['ProTitle']       = 'Check your Pro Account status and find out more about its benefits';
+$_Lang['Free']           = 'Free Account';
+$_Lang['FreeTitle']      = 'Check out the benefits of Pro Account!';
+
+?>

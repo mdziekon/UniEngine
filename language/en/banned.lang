@@ -1,0 +1,15 @@
+<?php
+
+$_Lang['ban_title']             = 'Banned players';
+$_Lang['ban_name']              = 'Player';
+$_Lang['ban_reason']            = 'Reason';
+$_Lang['ban_from']              = 'Banned since';
+$_Lang['ban_to']                = 'Ban expires';
+$_Lang['ban_by']                = 'Banned by';
+$_Lang['NoBannedPPL']           = 'No banned players!';
+$_Lang['CountOfBannedPPL']      = 'Players banned in total';
+$_Lang['Reason_NotSpecified']   = '<b class="red">Not publicly available</b>';
+
+$_Lang['ban_bysys']             = 'System';
+
+?>

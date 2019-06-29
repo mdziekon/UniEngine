@@ -1,0 +1,123 @@
+<?php
+
+$_Lang['alliance']                              = 'Alliance';
+$_Lang['title']                                 = "Messages";
+
+$_Lang['type'][0]                               = "Espionage reports";
+$_Lang['type'][1]                               = "Messages from players";
+$_Lang['type'][2]                               = "Messages from alliance";
+$_Lang['type'][3]                               = "Battle reports";
+$_Lang['type'][4]                               = "Exploitation reports";
+$_Lang['type'][5]                               = "Flight reports";
+$_Lang['type'][15]                              = "Expedition reports";
+$_Lang['type'][50]                              = "Queued actions reports";
+$_Lang['type'][70]                              = 'System messages';
+$_Lang['type'][80]                              = 'Messages from Administration';
+$_Lang['type'][100]                             = "All messages";
+
+$_Lang['CatList_Title']                         = 'Messages';
+$_Lang['CatList_Head_CatName']                  = 'Category';
+$_Lang['CatList_Head_Unread']                   = 'Unread';
+$_Lang['CatList_Head_Total']                    = 'All';
+$_Lang['CatList_Head_Total_Tip']                = 'Messages in Threads / All Messages';
+
+$_Lang['GoBackToCatList']                       = 'Go back to Categories list';
+$_Lang['Pages']                                 = "Pages";
+$_Lang['NoMsg']                                 = "No messages!";
+$_Lang['Next']                                  = "Next &#187;";
+$_Lang['Prev']                                  = "&#171; Previous";
+
+$_Lang['NoMessages']                            = 'No messages!';
+$_Lang['NoMessages_page']                       = 'No messages on this page!';
+
+$_Lang['mess_pagetitle_read']                   = "Messages";
+$_Lang['mess_pagetitle_send']                   = 'Send a message';
+$_Lang['mess_subject']                          = "Subject";
+$_Lang['mess_deleteunmarked']                   = "Delete non-selected messages";
+$_Lang['mess_deletemarked']                     = "Delete selected messages";
+$_Lang['mess_deleteall']                        = "Delete all messages";
+$_Lang['Sure_WantDeleteAll']                    = 'Are you sure you want to delete all messages from the mailbox?';
+$_Lang['mess_deleteallcat']                     = "Delete all messages in this category";
+$_Lang['Sure_WantDeleteCat']                    = 'Are you sure you want to delete all messages in this category?';
+$_Lang['mess_setallasread']                     = 'Mark all as "seen"';
+$_Lang['mess_setcatasread']                     = 'Mark all in this category as "seen"';
+$_Lang['NoActionsHere']                         = 'You cannot perform bulk actions in this category!';
+$_Lang['mess_perform_action']                   = 'Perform';
+$_Lang['mess_actions']                          = 'Actions';
+$_Lang['mess_from']                             = "Sender";
+$_Lang['mess_action']                           = "Action";
+$_Lang['mess_answer']                           = "Reply";
+$_Lang['mess_answer_prefix']                    = "Re";
+$_Lang['mess_send_date']                        = '<b class="date">Received</b>: <b>%s</b> o <b>%s</b>';
+$_Lang['mess_sendbyyou_date']                   = '<b class="date">Sent</b>: <b>%s</b> o <b>%s</b>';
+$_Lang['mess_report']                           = 'Report';
+$_Lang['mess_ignore']                           = 'Ignore';
+$_Lang['mess_delete_single']                    = 'Delete';
+$_Lang['mess_reply']                            = 'Reply';
+$_Lang['mess_reply_toally']                     = 'Reply to alliance';
+$_Lang['mess_convert']                          = 'Convert';
+$_Lang['Action_Expand']                         = 'Expand the conversation';
+$_Lang['Action_Collapse']                       = 'Collapse to the last message';
+$_Lang['Action_ThreadLoading']                  = 'Loading conversation...';
+$_Lang['Action_ThreadError']                    = 'Conversation loading error!';
+
+$_Lang['mess_delete_single_title']              = 'Delete this message';
+$_Lang['mess_reply_title']                      = 'Reply to this message';
+$_Lang['mess_replyally_title']                  = 'Reply to all alliance members';
+$_Lang['mess_report_title']                     = 'Report this message as a violation or a bug';
+$_Lang['mess_report_e_title']                   = 'Report a bug in this message';
+$_Lang['mess_ignore_title']                     = 'Ignore all messages sent by this player';
+$_Lang['mess_convert_title']                    = 'Convert this report to BBCode';
+$_Lang['mess_selectall_title']                  = 'Select all messages';
+
+$_Lang['bbcode_b']                              = 'Bold';
+$_Lang['bbcode_i']                              = 'Italic';
+$_Lang['bbcode_u']                              = 'Underline';
+$_Lang['bbcode_img']                            = 'Image';
+$_Lang['bbcode_url']                            = 'Link';
+$_Lang['bbcode_coords']                         = 'Galaxy coordinates';
+
+$_Lang['Delete_AllMsgsDeleted']                 = 'All messages have been deleted!';
+$_Lang['Delete_AllCatMsgsDeleted']              = 'All messages in this category have been deleted!';
+$_Lang['Delete_SelectedDeleted']                = 'Selected messages have been deleted!';
+$_Lang['Delete_UnselectedDeleted']              = 'Non-selected messages have been deleted!';
+$_Lang['Delete_AllMsgsRead']                    = 'All messages have been marked as "seen"!';
+$_Lang['Delete_CatMsgsRead']                    = 'All messages in this category have been marked as "seen"!';
+$_Lang['Delete_MsgDeleted']                     = 'Message has been deleted!';
+
+$_Lang['Delete_CannotDeleteAdminMsgsAtOnce']    = 'Messages from Administration can be deleted only one at a time!';
+$_Lang['Delete_CannotReadAdminMsgsAtOnce']      = 'This function is not available for Messages from Administration category!';
+$_Lang['Delete_BadCatSelected']                 = 'Invalid category!';
+$_Lang['Delete_NoMsgsSelected']                 = 'Nothing has been selected!';
+$_Lang['Delete_BadSelections']                  = 'Invalid selections provided!';
+$_Lang['Delete_NoMsgsUnselected']               = 'There was no non-selected message!';
+$_Lang['Delete_MsgNoExist']                     = 'This message does not exist!';
+$_Lang['Delete_NoMsgsToRead']                   = 'No messages to mark as "seen"!';
+$_Lang['Delete_NoMsgsToDelete']                 = 'No messages to delete!';
+$_Lang['Delete_BadTimestamp']                   = 'Invalid data';
+
+$_Lang['Form_SendMsg']                          = 'Send a message';
+$_Lang['Form_User']                             = 'Player';
+$_Lang['Form_Subject']                          = 'Subject';
+$_Lang['Form_SendAsAdmin']                      = 'Send as Administration Message';
+$_Lang['Form_Text']                             = 'Message';
+$_Lang['Form_MaxSigns']                         = 'Limit';
+$_Lang['Form_Reset']                            = 'Clear';
+$_Lang['Form_Send']                             = 'Send';
+$_Lang['Form_BBCode']                           = 'BBCode legend';
+
+$_Lang['Info_MsgSend']                          = 'Message has been sent!';
+$_Lang['Errors_IgnoreHis']                      = 'This player is ignoring you!';
+$_Lang['Errors_IgnoreYour']                     = 'You cannot write a message to a player on your ignore list!';
+$_Lang['Errors_TextSPAM']                       = 'You cannot send this message!';
+$_Lang['Errors_TextEmpty']                      = 'You cannot send an empty message!';
+$_Lang['Errors_SubjectEmpty']                   = 'You cannot send a message with an empty subject!';
+$_Lang['Errors_NoUserID']                       = 'No recipient provided!';
+$_Lang['Errors_CantUseAdminMsg']                = 'This function is not available!';
+$_Lang['Errors_CantWriteToYourself']            = 'You cannot write to yourself!';
+$_Lang['Errors_BadUserName']                    = 'Invalid player\'s username!';
+$_Lang['Errors_UserNoExist']                    = 'This player does not exist!';
+$_Lang['Errors_BadUserID']                      = 'Invalid player\'s identifier!';
+$_Lang['Errors_CantReply']                      = 'You cannot reply to this message!';
+
+?>

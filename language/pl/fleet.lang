@@ -10,7 +10,6 @@ $_Lang['fl_count']                               = 'Flota';
 $_Lang['fl_from']                                = 'Start';
 $_Lang['fl_dest']                                = 'Cel';
 $_Lang['fl_dest_t']                              = 'Powrót';
-$_Lang['fl_back_t']                              = 'Czas powrotu';
 $_Lang['fl_back_in']                             = 'Czas lotu';
 $_Lang['fl_order']                               = 'Rozkazy';
 
@@ -27,8 +26,6 @@ $_Lang['fl_stay_to']                             = '(Stacjonuje)';
 $_Lang['fl_stay_to_ttl']                         = 'Stacjonuje na orbicie';
 $_Lang['fl_explore_to']                          = '(Bada)';
 $_Lang['fl_explore_to_ttl']                      = 'Bada przestrzeń';
-$_Lang['fl_doing_job']                           = '(Wykonuje)';
-$_Lang['fl_doing_job_ttl']                       = 'Wykonuje swoje zadanie';
 $_Lang['fl_cameback']                            = '(Powróciła)';
 $_Lang['fl_cameback_ttl']                        = 'Flota powróciła do bazy startowej';
 
@@ -41,7 +38,6 @@ $_Lang['fl_missiles_cannot_go_back']             = 'Rakiety nie mogą zostać za
 $_Lang['fl_isback']                              = 'Flota zawrócona!';
 $_Lang['fl_isback2']                             = 'Flota wycofana!';
 $_Lang['fl_sback']                               = 'Zawróć';
-$_Lang['fl_sback2']                              = 'Wycofaj';
 $_Lang['fl_error']                               = 'Błąd';
 $_Lang['fl_new_miss']                            = 'Wybierz flotę do misji';
 $_Lang['fl_fleet_typ']                           = 'Nazwa statku';
@@ -50,7 +46,7 @@ $_Lang['fl_noplanetrow']                         = 'Brak Danych o Planecie! Pros
 $_Lang['fl_fleetspeed']                          = 'Prędkość';
 $_Lang['fl_selmax']                              = 'Max';
 $_Lang['fl_selnone']                             = 'Zero';
-$_Lang['fl_goback']								= 'Cofnij';
+$_Lang['fl_goback']                              = 'Cofnij';
 $_Lang['fl_continue']                            = 'Dalej';
 $_Lang['fl_noships']                             = 'Brak Statków';
 $_Lang['fl_nofreeslots']                         = 'Brak wolnych Slotów';
@@ -59,7 +55,7 @@ $_Lang['fl_selectall']                           = 'Wszystkie';
 $_Lang['fl_already_cameback']                    = 'Flota już wróciła';
 
 $_Lang['fl_flytargettime']                       = 'Cel za';
-$_Lang['fl_flystaytime']							= 'Wycofanie za';
+$_Lang['fl_flystaytime']                         = 'Wycofanie za';
 $_Lang['fl_flygobacktime']                       = 'Powrót za';
 $_Lang['fl_flyretreattime']                      = 'Zawróć';
 
@@ -83,29 +79,13 @@ $_Lang['fl_acs_removeplayer']                    = 'Usuń gracza ze Związku';
 $_Lang['fl_acs_users_management']                = 'Zarządzanie uczestnikami';
 $_Lang['fl_acs_invited_title']                   = 'Zaproszeni gracze';
 $_Lang['fl_acs_users_2invite']                   = 'Gracze, których możesz zaprosić';
-$_Lang['fl_acs_invite_title']                    = 'Zaproś gracza';
 $_Lang['fl_acs_warning_users']                   = '(Maksymalnie 4 innych graczy w Związku)';
-$_Lang['fl_acs_username']                        = 'Nick gracza';
-$_Lang['fl_acs_user_save']                       = 'Zaproś';
-$_Lang['fl_acs_maxusers']                        = 'Zaproszono maksymalną ilość graczy!';
-$_Lang['fl_acs_not_created']                     = 'Związek nie został jeszcze nazwany!';
 $_Lang['fl_acs_now_name']                        = 'Nazwa związku';
 $_Lang['fl_acs_noname']                          = '- brak nazwy -';
 $_Lang['fl_acs_joinnow']                         = 'Dołącz flotę';
 
-$_Lang['fl_acs_error_badsigns_name']             = 'W nazwie związku dozwolone są tylko litery, cyfry, podkreślenia oraz myślniki!';
-$_Lang['fl_acs_error_empty_name']                = 'Nazwa związku jest pusta!';
 $_Lang['fl_acs_error_shortname']                 = 'Nazwa związku jest za krótka!';
-$_Lang['fl_acs_error_badsigns_user']             = 'Podano zakazane znaki w nazwie nicku gracza!';
-$_Lang['fl_acs_error_cannotinviteuser']          = 'Nie możesz zaprosić tego gracza do wspólnego ataku!<br/>Możesz zapraszać tylko sojuszników i znajomych z BuddyListy...';
-$_Lang['fl_acs_error_useronlist']                = 'Ten gracz jest już na liście tego związku!';
-$_Lang['fl_acs_error_usernoexists']              = 'Taki gracz nie istnieje!';
-$_Lang['fl_acs_error_nomoreusers']               = 'Nie możesz zaprosić więcej niż 4 graczy do jednego związku!';
-$_Lang['fl_acs_error_not_creater']               = 'Najpierw nazwij ten związek!';
-$_Lang['fl_acs_error_inviting_yourself']         = 'Nie możesz zapraszać samego siebie!';
 
-$_Lang['fl_acs_created_or_updated_row']          = 'Związek został utworzony lub zaktualizowany!';
-$_Lang['fl_acs_user_hasbeen_invited']            = 'Gracz został zaproszony!';
 $_Lang['fl_acs_changesSaved']                    = 'Zmiany zostały zapisane!';
 $_Lang['fl_acs_cantkick_joined']                 = 'Nie możesz wyrzucać ze związku graczy, którzy wysłali już swoje floty!';
 
@@ -117,7 +97,6 @@ $_Lang['fl_acs_fleetcount_extended']             = 'W jednym związku może ucze
 $_Lang['fl_acs_badcoordinates']                  = 'Podano nieprawidłowe koordynaty ataku!';
 $_Lang['fl_acs_cannot_join_this_group']          = 'Nie zostałeś zaproszony do tego związku!';
 $_Lang['fl_acs_bad_group_id']                    = 'Nieprawidłowy związek flot!';
-$_Lang['fl_acs_fleet_is_tooslow']                = 'Twoja flota jest zbyt wolna lub przekroczono maksymalny czas dołączania do związku!';
 
 $_Lang['fl_SendAllResources']                    = 'Transportuj Surowce';
 
@@ -140,7 +119,7 @@ $_Lang['fl1_targetPlanet']                       = 'Planeta';
 
 $_Lang['fl_reachtime']                           = 'Czas przylotu';
 $_Lang['fl_comebacktime']                        = 'Czas powrotu';
-$_Lang['fl_fleet1_ttl']                         = 'Wyślij Flotę';
+$_Lang['fl_fleet1_ttl']                          = 'Wyślij Flotę';
 $_Lang['fl_speed']                               = 'Prędkość (%)';
 $_Lang['fl_planet']                              = 'Planeta';
 $_Lang['fl_ruins']                               = 'Pole zniszczeń';
@@ -180,8 +159,8 @@ $_Lang['fl2_title']                              = 'Wyślij Flotę z ';
 $_Lang['fl2_sendfromplanet']                     = 'planety';
 $_Lang['fl2_sendfrommoon']                       = 'księżyca';
 $_Lang['fl2_emptyplanet']                        = 'Niezamieszkała';
-$_Lang['fl2_target_abandoned_1']					= 'Porzucona planeta';
-$_Lang['fl2_target_abandoned_3']					= 'Porzucony księżyc';
+$_Lang['fl2_target_abandoned_1']                 = 'Porzucona planeta';
+$_Lang['fl2_target_abandoned_3']                 = 'Porzucony księżyc';
 $_Lang['fl2_debrisfield']                        = 'Pole zniszczeń';
 
 $_Lang['fl2_flightTime']                         = 'Czas lotu<br />(w jedną stronę)';
@@ -190,7 +169,7 @@ $_Lang['fl2_targetowner']                        = 'Właściciel Celu';
 
 $_Lang['fl2_SendButton']                         = 'Wyślij Flotę';
 
-$_Lang['fl2_confirm_allypact_attack']			= 'Czy jesteś pewien, że chcesz zaatakować gracza, który należy do Sojuszu posiadającego Pakt z twoim Sojuszem?';
+$_Lang['fl2_confirm_allypact_attack']            = 'Czy jesteś pewien, że chcesz zaatakować gracza, który należy do Sojuszu posiadającego Pakt z twoim Sojuszem?';
 $_Lang['fl2_testacctarget']                      = 'Uwaga!\nPodane koordynaty należą do jednego z Kont Testowych Administracji Gry!\nJakiekolwiek Ruchy Flot na te obiekty bez pozwolenia Administracji będą surowo karane!';
 
 // fleet3.php
@@ -206,8 +185,7 @@ $_Lang['fl3_BadResourcesGiven']                  = 'Źle wprowadzono ilość sur
 $_Lang['fl3_PlanetNoEnoughmetal']                = 'Nie masz wystarczającej ilości Metalu!';
 $_Lang['fl3_PlanetNoEnoughcrystal']              = 'Nie masz wystarczającej ilości Kryształu!';
 $_Lang['fl3_PlanetNoEnoughdeuterium']            = 'Nie masz wystarczającej ilości Deuteru!';
-$_Lang['fl3_NoUsernameBug']                      = 'Przepraszamy, ale wystąpił błąd w Bazie Danych!<br/>Prosimy o natychmiastowy kontakt z Administracją!';
-$_Lang['fl3_BlockAccNotActivated']				= 'Nie możesz wysyłać żadnych flot, dopóki nie aktywujesz swojego konta!';
+$_Lang['fl3_BlockAccNotActivated']               = 'Nie możesz wysyłać żadnych flot, dopóki nie aktywujesz swojego konta!';
 
 $_Lang['fl3_CantAttackDebris']                   = 'Nie możesz zaatakować Pola Zniszczeń!';
 $_Lang['fl3_CantAttackNonUsed']                  = 'Nie możesz zaatakować niezamieszkałej Planety/Księżyca!';
@@ -273,8 +251,6 @@ $_Lang['fl3_Protect_AttackLimitTotal']           = 'Nie możesz już dziś atako
 $_Lang['fl3_Protect_AttackLimitSingle']          = 'Nie możesz już dziś atakować tej planety/księżyca tego gracza!<br/>(%s)';
 $_Lang['fl3_Protect_AttackLimitTotalFly']        = 'Nie możesz wysłać większej ilości flot na tego gracza!<br/>(%s)';
 $_Lang['fl3_Protect_AttackLimitSingleFly']       = 'Nie możesz wysłać większej ilości flot tą planetę/księżyc tego gracza!<br/>(%s)';
-$_Lang['fl3_Protect_AttackLimit_bashLimit']      = 'Blokada Bashu';
-$_Lang['fl3_Protect_AttackLimit_antifarm']       = 'Ochrona słabszych graczy';
 
 $_Lang['fl_bad_mission']                         = 'Błędna misja !';
 $_Lang['fl_fleet_send']                          = 'Flota została wysłana';
@@ -286,10 +262,7 @@ $_Lang['QuantumInfo']                            = 'Redukcja zużycia deuteru do
 $_Lang['QuantumGateUse']                         = 'Użyj';
 $_Lang['CannotUseQuantumGate']                   = 'Nie możesz użyć Bramy Kwantowej!';
 $_Lang['CannotUseQuantumGateTill']               = 'Nie możesz teraz wykonać Skoku Czasoprzestrzennego przez Bramę Kwantową!<br/><br/>Następny Skok przez Bramę Kwantową będzie dostępny:<br/>%s';
-$_Lang['QGOnlyInOwnGalaxy']                      = 'Brama Kwantowa może być użyta tylko do przeskoku w tej Galaktyce!';
 $_Lang['GateReadyToUse']                         = 'Brama Kwantowa gotowa do skoku';
 $_Lang['GateReadyToUseIn']                       = 'Brama Kwantowa gotowa do skoku za';
-
-$_Lang['JavaGoback']                             = '<br/><br/><a href="javascript:history.go(-1)">Powrót</a>';
 
 ?>

@@ -116,8 +116,8 @@ var TemplateData = {'SaveOnlyThis': '{SaveOnlyThis}', 'SaveAll': '{SaveAll}', 'u
             <tr>
                 <th>{ConfirmPassword}</th>
                 <th><input tabindex="3" type="password" name="give_confirmpass" autocomplete="off" class="pad2 w90p"/></th>
-                <th>{ConfirmEmail}</th>
-                <th><input tabindex="5" type="text" name="give_confirmemail" autocomplete="off" class="pad2 w90p"/></th>
+                <th {EMChange1}>{ConfirmEmail}</th>
+                <th {EMChange1}><input tabindex="5" type="text" name="give_confirmemail" autocomplete="off" class="pad2 w90p"/></th>
                 <th {EMChange2}>{StopEmailPrc}</th>
                 <th {EMChange2}><input type="checkbox" name="stop_email_change"/></th>
             </tr>
@@ -186,6 +186,12 @@ var TemplateData = {'SaveOnlyThis': '{SaveOnlyThis}', 'SaveAll': '{SaveAll}', 'u
             </tr>
             <tr>
                 <td class="c center" colspan="4">{GameView}</td>
+            </tr>
+            <tr>
+                <th colspan="2">{GameLanguage}</th>
+                <th colspan="2">
+                    <select name="lang" class="center pad2 w90p">{PHP_Insert_LanguageOptions}</select>
+                </th>
             </tr>
             <tr>
                 <th colspan="2"><b class="help highlight_skin_url highlight_box" title="{SkinPathInfo}"><b class="dash">{SkinPath}</b></b><br />{SkinPathMore}</th>

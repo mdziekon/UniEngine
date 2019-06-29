@@ -10,6 +10,7 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
     include($_EnginePath.'includes/functions/GetElementPrice.php');
     include($_EnginePath.'includes/functions/GetRestPrice.php');
+    includeLang('worldElements.detailed');
 
     CheckPlanetUsedFields ($CurrentPlanet);
 
@@ -256,7 +257,7 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
             }
 
             $parse['n'] = $ElementName;
-            $parse['descriptions'] = $_Lang['res']['descriptions'][$Element];
+            $parse['Description'] = $_Lang['WorldElements_Detailed'][$Element]['description_short'];
             $parse['click'] = '';
             $NextBuildLevel = $CurrentPlanet[$_Vars_GameElements[$Element]] + 1;
             $skip = false;

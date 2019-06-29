@@ -1,0 +1,9 @@
+<?php
+
+$_Lang['Title']             = 'Support contact';
+$_Lang['Info']              = 'You can find all contact details of the Game team.';
+$_Lang['Label_username']    = 'Nickname';
+$_Lang['Label_authlabel']   = 'Position';
+$_Lang['Label_email']       = 'Email';
+
+?>

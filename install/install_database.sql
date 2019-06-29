@@ -1035,7 +1035,7 @@ CREATE TABLE IF NOT EXISTS `{prefix}_users` (
   `password` char(32) NOT NULL DEFAULT '',
   `email` varchar(64) NOT NULL DEFAULT '',
   `email_2` varchar(64) NOT NULL DEFAULT '',
-  `lang` varchar(8) NOT NULL DEFAULT 'pl',
+  `lang` varchar(8) NOT NULL DEFAULT 'en',
   `authlevel` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `isAI` tinyint(1) NOT NULL DEFAULT '0',
   `avatar` varchar(255) NOT NULL DEFAULT '',
@@ -1264,13 +1264,13 @@ INSERT INTO `{prefix}_config` (`config_name`, `config_value`) VALUES
 -- Query - create Admin User
 --
 
-INSERT INTO `{prefix}_users` SET 
+INSERT INTO `{prefix}_users` SET
 `id` = 1,
 `username` = '{AdminUser_name}',
 `password` = '{AdminUser_passhash}',
 `email` = '{AdminUser_email}',
 `email_2` = '{AdminUser_email}',
-`lang` = 'pl',
+`lang` = 'en',
 `authlevel` = 120,
 `id_planet` = 1,
 `galaxy` = 1,
@@ -1291,7 +1291,7 @@ INSERT INTO `{prefix}_users` SET
 -- Query - create Admin Planet
 --
 
-INSERT INTO `{prefix}_planets` SET 
+INSERT INTO `{prefix}_planets` SET
 `id` = 1,
 `name` = 'Admin Planet',
 `id_owner` = 1,

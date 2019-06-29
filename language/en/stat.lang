@@ -1,0 +1,38 @@
+<?php
+
+$_Lang['stat_title']             = "Server Statistics";
+$_Lang['stat_header_txt']        = 'Statistics calculated on';
+$_Lang['stat_show']              = "Show";
+$_Lang['stat_by']                = "which have";
+$_Lang['stat_range']             = "at rank position";
+
+$_Lang['stat_player']            = "players";
+$_Lang['stat_allys']             = "alliances";
+$_Lang['stat_main']              = "points";
+$_Lang['stat_fleet']             = "fleets points";
+$_Lang['stat_research']          = "research points";
+$_Lang['stat_building']          = "buildings points";
+$_Lang['stat_defenses']          = "defenses points";
+
+$_Lang['Position']               = "No.";
+$_Lang['Difference']             = "+/-";
+$_Lang['Player']                 = "Player";
+$_Lang['Alliance']               = "Alliance";
+$_Lang['Points']                 = "Points";
+$_Lang['Members']                = "Members";
+$_Lang['PerMember']              = "Per member";
+$_Lang['Ecrire']                 = "Write a message";
+
+$_Lang['Fight_Won']              = 'Won';
+$_Lang['Fight_Lost']             = 'Lost';
+$_Lang['Fight_Draw']             = 'Drawn';
+
+$_Lang['User_is_banned']         = 'Player is banned!';
+$_Lang['User_is_on_vacations']   = 'Player is on vacation';
+
+$_Lang['QuickChangeInfo']        = 'Position change since <b>the last stats recalculation</b>';
+$_Lang['DailyChangeInfo']        = 'Position change since <b>yesterday</b>';
+
+$_Lang['No_Rows_Found']          = 'Server\'s statistics not calculated yet!';
+
+?>

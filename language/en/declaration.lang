@@ -1,0 +1,38 @@
+<?php
+
+$_Lang['Title']                             = 'Shared IP declaration';
+
+$_Lang['DeclarationInfo']                   = 'Enter nicknames of all players who share a computer, an IP address, or occasionally log in to the game in the same places as you (eg. your home\'s network, same school, same work place).<br/>Separate all nicknames using commas. You don\'t have to add your own nickname.';
+
+$_Lang['DeclarationType']                   = 'Reason';
+$_Lang['OnePC']                             = 'Shared computer';
+$_Lang['OneIP']                             = 'Shared network connection';
+$_Lang['SamePlaces']                        = 'Same log in places (school, work place etc.)';
+$_Lang['Others']                            = 'Other (an explanation is required, sent directly to the Administration)';
+$_Lang['OccasionalLogons']                  = 'Occasional log ins in same places (eg. neighbour\'s visits)';
+
+$_Lang['SubmitDeclaration']                 = 'Submit declaration';
+
+$_Lang['Error_Empty_Userlist']              = 'The list of nicknames is empty!';
+$_Lang['Error_Type_NotSelected']            = 'Reason has not been selected!';
+$_Lang['Error_Bad_DeclarationType']         = 'Invalid reason!';
+$_Lang['Error_BadUserlist_Sent']            = 'Invalid list of nicknames!';
+$_Lang['Error_BadUsernames']                = 'Provided nicknames are either invalid, or these players already are listed in other declarations:<br/>%s';
+$_Lang['Error_UsersNotFound']               = 'Provided nicknames do not exist in the Database!<br/>Please check your list!';
+$_Lang['Error_OnlyUFound']                  = 'You have to provide other players\' nicknames!';
+$_Lang['Error_DeclarationRejected']         = 'Your last declaration has been rejected by the Administration!';
+$_Lang['Error_DeclarationRejected_other']   = 'The last declaration you were part of has been rejected by the Administration!';
+
+$_Lang['Msg_DeclarationRemoved']            = 'Declaration revoked!';
+$_Lang['Msg_DeclarationLeft']               = 'You\'ve left the declaration!';
+
+$_Lang['Declaration_added']                 = 'Declaration has been submitted! Please wait until someone reviews it!';
+$_Lang['Users_dont_exists']                 = 'None of the provided nicknames exist!';
+$_Lang['Cannot_add_second_declare']         = 'You cannot add a second declaration!<br/>You have to resubmit your previous declaration in order to add or remove someone from it.<br/><br/><a href="?cmd=rmv">Revoke previous declaration</a>';
+$_Lang['Cannot_add_second_declare_other']   = 'You cannot add a second declaration!<br/>You have to leave the current declaration to submit your own one.<br/><br/><a href="?cmd=rmv">Leave declaration</a>';
+$_Lang['Multi_validated']                   = '<b class="lime">Your declaration has been accepted!</b><br/>If you want to change anything in your declaration (add or remove a player), you have to revoke your current declaration and submit a new one.<br/><br/><a href="?cmd=rmv">Revoke declaration</a>';
+$_Lang['Multi_validated_other']             = '<b class="lime">Declaration submitted by player %s has been accepted!</b><br/>If you want to submit your own declaration, you can leave the current one by clicking the link below.<br/><br/><a href="?cmd=rmv">Leave declaration</a>';
+$_Lang['Declaration_awaiting']              = '<b class="orange">Your declaration is still waiting for a review!</b><br/>If you want to make a correction, revoke your declaration and submit another one.<br/><br/><a href="?cmd=rmv">Revoke declaration</a>';
+$_Lang['Declaration_awaiting_other']        = '<b class="orange">Declaration submitted by player %s is still waiting for a review!</b><br/>If you want to submit your own declaration, you can leave the current one by clicking the link below.<br/><br/><a href="?cmd=rmv">Leave declaration</a>';
+
+?>

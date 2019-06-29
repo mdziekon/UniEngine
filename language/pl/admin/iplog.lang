@@ -13,25 +13,25 @@ $_Lang['Header_No']                      = '#';
 $_Lang['Header_User']                    = 'Gracz';
 $_Lang['Header_IPs']                     = 'Adresy IP';
 $_Lang['Header_Count']                   = 'Logowania';
-$_Lang['Header_LastLog']					= 'Ostatnia data';
+$_Lang['Header_LastLog']                 = 'Ostatnia data';
 $_Lang['Header_Actions']                 = 'Akcje';
 $_Lang['Header_IP']                      = 'Adres IP';
 $_Lang['Header_Users']                   = 'Gracze';
 $_Lang['SubRow_User_NoData']             = 'Brak danych';
 $_Lang['SubRow_IP_NoData']               = 'Gracz usunięty';
-$_Lang['BreakLine_Intersection']			= 'Intersekcja IP: <a class="orange" href="?ipid=%s">%s</a> <a class="orange" href="?ipid=%s">[#%s]</a>';
-$_Lang['BreakLine_NormalLogs']			= '<b class="lime">Pozostałe wpisy</b>';
+$_Lang['BreakLine_Intersection']         = 'Intersekcja IP: <a class="orange" href="?ipid=%s">%s</a> <a class="orange" href="?ipid=%s">[#%s]</a>';
+$_Lang['BreakLine_NormalLogs']           = '<b class="lime">Pozostałe wpisy</b>';
 
 $_Lang['Error_Search_NoRowsFound']       = 'Nie znaleziono żadnych pasujących wyników!';
 $_Lang['Error_Search_BadType']           = 'Niepoprawny typ wyszukiwania!';
 $_Lang['Error_Where_NoData']             = 'Nie znaleziono żadnych pasujących danych!';
 $_Lang['Info_InsertData']                = 'Wprowadź dane do wyszukiwarki...';
-$_Lang['Info_ProxySet_OK_Set']			= 'IP zostało oznaczone jako "Proxy"';
-$_Lang['Info_ProxySet_OK_Unset']			= 'Usunięto status "Proxy" dla tego IP';
-$_Lang['Info_ProxySet_NoIP']				= 'Takie IP nie istnieje!';
-$_Lang['Info_ProxySet_BadID']			= 'Niepoprawny Identyfikator IP!';
+$_Lang['Info_ProxySet_OK_Set']           = 'IP zostało oznaczone jako "Proxy"';
+$_Lang['Info_ProxySet_OK_Unset']         = 'Usunięto status "Proxy" dla tego IP';
+$_Lang['Info_ProxySet_NoIP']             = 'Takie IP nie istnieje!';
+$_Lang['Info_ProxySet_BadID']            = 'Niepoprawny Identyfikator IP!';
 
-$_Lang['info_SetAsProxy']				= 'Oznacz jako Proxy';
-$_Lang['info_SetAsNonProxy']				= 'Usuń status Proxy';
+$_Lang['info_SetAsProxy']                = 'Oznacz jako Proxy';
+$_Lang['info_SetAsNonProxy']             = 'Usuń status Proxy';
 
 ?>

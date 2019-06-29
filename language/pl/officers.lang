@@ -1,97 +1,77 @@
 <?php
 
-$_Lang['DarkEnergyStatusIs']     = 'Ilość jednostek Ciemnej Energii na twoim koncie';
-$_Lang['BuyMoreDE']              = 'Dokup Ciemną Energię!';
+$_Lang['DarkEnergyStatusIs']    = 'Ilość jednostek Ciemnej Energii na twoim koncie';
+$_Lang['BuyMoreDE']             = 'Dokup Ciemną Energię!';
 
-$_Lang['officers']       = 'Oficerowie';
-$_Lang['description']    = 'Oficerowie to Elita wśród doradców galaktycznych. Dzięki ich umiejętnościom i doświadczeniu, twoje Imperium rozrasta się o wiele szybciej.<br/>Możesz zatrudnić każdego z nich, pod warunkiem, że sowicie ich wynagrodzisz.';
+$_Lang['officers']              = 'Oficerowie';
+$_Lang['description']           = 'Oficerowie to Elita wśród doradców galaktycznych. Dzięki ich umiejętnościom i doświadczeniu, twoje Imperium rozrasta się o wiele szybciej.<br/>Możesz zatrudnić każdego z nich, pod warunkiem, że sowicie ich wynagrodzisz.';
 
-$_Lang['OfficersArr'] = array
-    (
-        'geologist'     => array
-            (
-                'name'  => 'Geolog',
-                'vari'  => '+a',
-                'img'   => '601',
-                'desc'  => 'Geolog to znany w całej galaktyce ekspert w dziedzinie górnictwa. Dzięki swej ogromnej wiedzy na temat skał i minerałów jest w stanie odpowiednio pokierować pracami wydobywczymi, by trafiały na jak najbogatsze złoża surowców.',
-                'bene'  => array('Zwiększone wydobycie o 15%'),
-				'type'	=> 1,    
-				'price' => array(20),
-                'time'  => array(14),
-                'itemid'=> array(5),
-            ),
-        'engineer'      => array
-            (
-                'name'  => 'Mechanik',
-                'vari'  => '+a',
-                'img'   => '603',
-                'desc'  => 'Ten powszechnie znany eskpert jest rozchwytywany przez niemal wszystkich Imperatorów we Wszechświecie. Dzięki jego błyskotliwym pomysłom, twoje elektrownie zwiększają swą produktywność, zaś systemy obronne mają większą szansę na odbudowę.',
-                'bene'  => array('Zwiększona produkcja energii o 10%', 'Szansa na odbudowę obrony zwiększona o 20% (Możliwa odbudowa całości obrony)'),
-				'type'	=> 1,    
-				'price' => array(20),
-                'time'  => array(14),
-                'itemid'=> array(6),
-            ),
-        'admiral'       => array
-            (
-                'name'  => 'Admirał',
-                'vari'  => '+a',
-                'img'   => '602',
-                'desc'  => 'As wśród najlepszych dowódców wojennych we Wszechświecie. Jego taktyka, prędkość i sposób działania nie mają sobie równych. Każdy Imperator chce mieć go u swego boku.',
-                'bene'  => array('Maksymalna ilość flot: +2', 'Dodatkowe opcje prędkości floty (120%, 110%, 5%, 2.5%)'),
-				'type'	=> 1,
-                'price' => array(20),
-                'time'  => array(14),
-                'itemid'=> array(7),
-            ),
-        'technocrat'    => array
-            (
-                'name'  => 'Technokrata',
-                'vari'  => '-a+y',
-                'img'   => '604',
-                'desc'  => 'Technokrata to najwybitniejszy umysł naszych czasów. Jego wynalazki odmieniły bieg wielu wojen. Jego obecność w labolatorium zwiększa produktywność innych naukowców, którzy chcą jak najwięcej nauczyć się od tego wielkiego myśliciela.',
-                'bene'  => array('Czas trwania badań: -20%'),
-				'type'	=> 1,
-                'price' => array(20),
-                'time'  => array(14),
-                'itemid'=> array(8),
-            ),
-		'salesman'		=> array
-			(
-				'name'	=> 'Handlowiec',
-				'img'	=> '605',
-				'desc'	=> 'Handlowiec Imperialny to pośrednik między tobą a Handlarzem. W zamian za skromne wynagrodzenie gotów jest reprezentować twoje interesy u Handlarza.',
-				'bene'	=> array('Możliwość korzystania z Handlarza bez Konta Pro i bez ograniczeń czasowych'),
-				'type'	=> 2,
-				'field' => 'trader_usesCount',
-				'thisState' => 'TransactionsLeft',
-				'price'	=> array(10, 30, 50),
-				'count'	=> array(5, 15, 30),
-				'itemid'=> array(14, 15, 16),
-			),
-    );
+$_Lang['OfficersArr']           = [
+    'geologist'     => [
+        'name'      => 'Geolog',
+        'img'       => '601',
+        'desc'      => 'Geolog to znany w całej galaktyce ekspert w dziedzinie górnictwa. Dzięki swej ogromnej wiedzy na temat skał i minerałów jest w stanie odpowiednio pokierować pracami wydobywczymi, by trafiały na jak najbogatsze złoża surowców.',
+        'benefits'  => [
+            'Zwiększone wydobycie o 15%',
+        ]
+    ],
+    'engineer'      => [
+        'name'      => 'Mechanik',
+        'img'       => '603',
+        'desc'      => 'Ten powszechnie znany ekspert jest rozchwytywany przez niemal wszystkich Imperatorów we Wszechświecie. Dzięki jego błyskotliwym pomysłom, twoje elektrownie zwiększają swą produktywność, zaś systemy obronne mają większą szansę na odbudowę.',
+        'benefits'  => [
+            'Zwiększona produkcja energii o 10%',
+            'Szansa na odbudowę obrony zwiększona o 20% (Możliwa odbudowa całości obrony)'
+        ]
+    ],
+    'admiral'       => [
+        'name'      => 'Admirał',
+        'img'       => '602',
+        'desc'      => 'As wśród najlepszych dowódców wojennych we Wszechświecie. Jego taktyka, prędkość i sposób działania nie mają sobie równych. Każdy Imperator chce mieć go u swego boku.',
+        'benefits'  => [
+            'Maksymalna ilość flot: +2',
+            'Dodatkowe opcje prędkości floty (120%, 110%, 5%, 2.5%)'
+        ]
+    ],
+    'technocrat'    => [
+        'name'      => 'Technokrata',
+        'img'       => '604',
+        'desc'      => 'Technokrata to najwybitniejszy umysł naszych czasów. Jego wynalazki odmieniły bieg wielu wojen. Jego obecność w labolatorium zwiększa produktywność innych naukowców, którzy chcą jak najwięcej nauczyć się od tego wielkiego myśliciela.',
+        'benefits'  => [
+            'Czas trwania badań: -20%'
+        ]
+    ],
+    'salesman'      => [
+        'name'      => 'Handlowiec',
+        'img'       => '605',
+        'desc'      => 'Handlowiec Imperialny to pośrednik między tobą a Handlarzem. W zamian za skromne wynagrodzenie gotów jest reprezentować twoje interesy u Handlarza.',
+        'benefits'  => [
+            'Możliwość korzystania z Handlarza bez Konta Pro i bez ograniczeń czasowych'
+        ]
+    ],
+];
 
-$_Lang['Buy']        = 'Jeśli potrzebujesz zatrudnić lub przedłużyć zatrudnienie oficera, udaj się do';
-$_Lang['BuyTitle']   = 'Sklepu';
+$_Lang['Buy']                   = 'Jeśli potrzebujesz zatrudnić lub przedłużyć zatrudnienie oficera, udaj się do';
+$_Lang['BuyTitle']              = 'Sklepu';
 
-$_Lang['RentState']  = 'Status zatrudnienia';
-$_Lang['RentEnded']  = 'Zatrudnienie zakończyło się';
-$_Lang['RentTill']   = 'Zatrudniony do';
-$_Lang['NeverRented']= 'Nigdy nie zatrudniono';
-$_Lang['TransactionsLeft'] = 'Pozostała ilość transakcji:';
+$_Lang['RentState']             = 'Status zatrudnienia';
+$_Lang['RentEnded']             = 'Zatrudnienie zakończyło się';
+$_Lang['RentTill']              = 'Zatrudniony do';
+$_Lang['NeverRented']           = 'Nigdy nie zatrudniono';
+$_Lang['TransactionsLeft']      = 'Pozostała ilość transakcji:';
 
-$_Lang['Benefits']   = 'Korzyści';
+$_Lang['Benefits']              = 'Korzyści';
 
-$_Lang['FirstRent']  = 'Zatrudnij na %s %s!';
-$_Lang['RentPlus']	= 'Zatrudnij na dodatkowe %s %s!';
-$_Lang['RentAgain']  = 'Zatrudnij ponownie na %s %s!';
-$_Lang['RenewRent']  = 'Przedłuż czas zatrudnienia o %s %s!';
-$_Lang['RentForTransactions'] = 'transakcji';
-$_Lang['Cost']       = 'Koszt';
-$_Lang['DEUnits']    = 'j. Ciemnej Energii';
-$_Lang['AreYouSure'] = 'Czy jesteś pewien?';
+$_Lang['FirstRent']             = 'Zatrudnij na %s %s!';
+$_Lang['RentPlus']              = 'Zatrudnij na dodatkowe %s %s!';
+$_Lang['RentAgain']             = 'Zatrudnij ponownie na %s %s!';
+$_Lang['RenewRent']             = 'Przedłuż czas zatrudnienia o %s %s!';
+$_Lang['RentForTransactions']   = 'transakcji';
+$_Lang['Cost']                  = 'Koszt';
+$_Lang['DEUnits']               = 'j. Ciemnej Energii';
+$_Lang['AreYouSure']            = 'Czy jesteś pewien?';
 
-$_Lang['_day']       = 'dzień';
-$_Lang['_days']      = 'dni';
+$_Lang['_day']                  = 'dzień';
+$_Lang['_days']                 = 'dni';
 
 ?>

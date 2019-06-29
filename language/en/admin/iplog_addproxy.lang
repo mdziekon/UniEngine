@@ -1,0 +1,12 @@
+<?php
+
+$_Lang['PageTitle']         = 'Add Proxy IP';
+
+$_Lang['Table_List']        = 'IP addresses<br/>(separate with commas)';
+$_Lang['Table_Submit']      = 'Add';
+
+$_Lang['MsgBox_Success']    = 'IP addresses have been saved and marked as Proxies (%s)!';
+$_Lang['MsgBox_AllBad']     = 'All provided addresses are invalid!';
+$_Lang['MsgBox_ListEmpty']  = 'IP addresses list was empty!';
+
+?>

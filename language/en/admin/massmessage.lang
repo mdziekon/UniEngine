@@ -1,0 +1,13 @@
+<?php
+
+$_Lang['MassMessage_Form_Title']        = 'Message Broadcast';
+$_Lang['MassMessage_Form_Subject']      = 'Subject';
+$_Lang['MassMessage_Form_Content']      = 'Content';
+$_Lang['MassMessage_Form_ContentLimit'] = 'Limit';
+$_Lang['MassMessage_Form_Submit']       = 'Send';
+$_Lang['MassMessage_Form_Reset']        = 'Clear';
+
+$_Lang['MassMessage_Success']           = 'Mass Admin message has been sent to %s players!';
+$_Lang['MassMessage_NoSufficientData']  = 'You did not provide all necessary details!';
+
+?>

@@ -1,95 +1,95 @@
 <?php
 
-$_Lang['SFB_Title'] = 'Zarządzanie Blokadą Flot';
+$_Lang['SFB_Title']                         = 'Zarządzanie Blokadą Flot';
 
-$_Lang['SFB_Header_Active'] = 'Aktywne Blokady Flot';
-$_Lang['SFB_Header_Log'] = 'Dziennik Blokad';
-$_Lang['SFB_Header_Adding'] = 'Dodawanie nowej Blokady';
+$_Lang['SFB_Header_Active']                 = 'Aktywne Blokady Flot';
+$_Lang['SFB_Header_Log']                    = 'Dziennik Blokad';
+$_Lang['SFB_Header_Adding']                 = 'Dodawanie nowej Blokady';
 
-$_Lang['SFB_Action_AddBlockade'] = 'Dodaj nową Blokadę';
-$_Lang['SFB_Action_Edit'] = 'Edytuj';
-$_Lang['SFB_Action_Cancel'] = 'Przerwij';
+$_Lang['SFB_Action_AddBlockade']            = 'Dodaj nową Blokadę';
+$_Lang['SFB_Action_Edit']                   = 'Edytuj';
+$_Lang['SFB_Action_Cancel']                 = 'Przerwij';
 
-$_Lang['SFB_ActiveList_NoElements'] = 'Brak aktywnych Blokad';
-$_Lang['SFB_InActiveList_NoElements'] = 'Brak wpisów w Dzienniku';
+$_Lang['SFB_ActiveList_NoElements']         = 'Brak aktywnych Blokad';
+$_Lang['SFB_InActiveList_NoElements']       = 'Brak wpisów w Dzienniku';
 
-$_Lang['SFB_Headers_ID'] = 'ID';
-$_Lang['SFB_Headers_Admin'] = 'Założyciel';
-$_Lang['SFB_Headers_Type'] = 'Typ';
-$_Lang['SFB_Headers_Missions'] = 'Misje';
-$_Lang['SFB_Headers_StartTime'] = 'Początek';
-$_Lang['SFB_Headers_EndTime'] = 'Zakończenie';
-$_Lang['SFB_Headers_AdditionalData'] = 'Dodatkowe';
-$_Lang['SFB_Headers_Reason'] = 'Powód';
-$_Lang['SFB_Headers_Actions'] = 'Akcje';
+$_Lang['SFB_Headers_ID']                    = 'ID';
+$_Lang['SFB_Headers_Admin']                 = 'Założyciel';
+$_Lang['SFB_Headers_Type']                  = 'Typ';
+$_Lang['SFB_Headers_Missions']              = 'Misje';
+$_Lang['SFB_Headers_StartTime']             = 'Początek';
+$_Lang['SFB_Headers_EndTime']               = 'Zakończenie';
+$_Lang['SFB_Headers_AdditionalData']        = 'Dodatkowe';
+$_Lang['SFB_Headers_Reason']                = 'Powód';
+$_Lang['SFB_Headers_Actions']               = 'Akcje';
 
-$_Lang['SFB_Labels_Type'] = 'Typ Blokady';
-$_Lang['SFB_Labels_Missions'] = 'Blokowane Misje';
-$_Lang['SFB_Labels_StartTime'] = 'Data Rozpoczęcia';
-$_Lang['SFB_Labels_EndTime'] = 'Data Zakończenia';
-$_Lang['SFB_Labels_PostEndTime'] = 'Zakończenie Ochrony Poblokadowej';
-$_Lang['SFB_Labels_ElementID'] = 'ID do Blokady';
-$_Lang['SFB_Labels_DontBlockIfIdle'] = 'Nie blokuj Nieaktywnych';
-$_Lang['SFB_Labels_Reason'] = 'Powód';
-$_Lang['SFB_Labels_SubmitAdd'] = 'Dodaj Blokadę';
-$_Lang['SFB_Labels_SubmitEdit'] = 'Zapisz zmiany';
-$_Lang['SFB_Labels_CancelChanges'] = 'Anuluj';
+$_Lang['SFB_Labels_Type']                   = 'Typ Blokady';
+$_Lang['SFB_Labels_Missions']               = 'Blokowane Misje';
+$_Lang['SFB_Labels_StartTime']              = 'Data Rozpoczęcia';
+$_Lang['SFB_Labels_EndTime']                = 'Data Zakończenia';
+$_Lang['SFB_Labels_PostEndTime']            = 'Zakończenie Ochrony Poblokadowej';
+$_Lang['SFB_Labels_ElementID']              = 'ID do Blokady';
+$_Lang['SFB_Labels_DontBlockIfIdle']        = 'Nie blokuj Nieaktywnych';
+$_Lang['SFB_Labels_Reason']                 = 'Powód';
+$_Lang['SFB_Labels_SubmitAdd']              = 'Dodaj Blokadę';
+$_Lang['SFB_Labels_SubmitEdit']             = 'Zapisz zmiany';
+$_Lang['SFB_Labels_CancelChanges']          = 'Anuluj';
 
-$_Lang['SFB_LabelsData_Type_1'] = 'Globalna';
-$_Lang['SFB_LabelsData_Type_2'] = 'Na Gracza';
-$_Lang['SFB_LabelsData_Type_3'] = 'Na Planetę';
-$_Lang['SFB_LabelsData_Mission_All'] = 'Wszystkie';
-$_Lang['SFB_LabelsData_Mission_Military'] = 'Agresywne';
-$_Lang['SFB_LabelsData_Mission_Civil'] = 'Cywilne';
-$_Lang['SFB_LabelsData_PostEndTime_Zero'] = 'Brak';
-$_Lang['SFB_LabelsData_PostEndTime_1Day'] = '24 Godziny';
+$_Lang['SFB_LabelsData_Type_1']             = 'Globalna';
+$_Lang['SFB_LabelsData_Type_2']             = 'Na Gracza';
+$_Lang['SFB_LabelsData_Type_3']             = 'Na Planetę';
+$_Lang['SFB_LabelsData_Mission_All']        = 'Wszystkie';
+$_Lang['SFB_LabelsData_Mission_Military']   = 'Agresywne';
+$_Lang['SFB_LabelsData_Mission_Civil']      = 'Cywilne';
+$_Lang['SFB_LabelsData_PostEndTime_Zero']   = 'Brak';
+$_Lang['SFB_LabelsData_PostEndTime_1Day']   = '24 Godziny';
 
-$_Lang['SFB_Types_1'] = '<b class="red">Globalna</b>';
-$_Lang['SFB_Types_2'] = '<b class="orange">Na Gracza</b>';
-$_Lang['SFB_Types_3'] = '<b class="orange">Na Planetę</b>';
+$_Lang['SFB_Types_1']                       = '<b class="red">Globalna</b>';
+$_Lang['SFB_Types_2']                       = '<b class="orange">Na Gracza</b>';
+$_Lang['SFB_Types_3']                       = '<b class="orange">Na Planetę</b>';
 
-$_Lang['SFB_Mission__1']         = 'Napad';
-$_Lang['SFB_Mission__2']         = 'Związek';
-$_Lang['SFB_Mission__3']         = 'Transport';
-$_Lang['SFB_Mission__4']         = 'Stacjonowanie';
-$_Lang['SFB_Mission__5']         = 'Zatrzymanie';
-$_Lang['SFB_Mission__6']         = 'Szpiegowanie';
-$_Lang['SFB_Mission__7']         = 'Kolonizacja';
-$_Lang['SFB_Mission__8']         = 'Zbierz szczątki';
-$_Lang['SFB_Mission__9']         = 'Niszczenie';
-$_Lang['SFB_Mission__10']        = 'Atak Rakietowy';
-$_Lang['SFB_Mission__15']        = 'Ekspedycja';
-$_Lang['SFB_Mission_Aggresive']  = '<b class="orange">Agresywne</b>';
-$_Lang['SFB_Mission_Civil']      = '<b class="lightblue">Cywilne</b>';
-$_Lang['SFB_Mission_All']        = '<b class="red">Wszystkie</b>';
+$_Lang['SFB_Mission__1']                    = 'Napad';
+$_Lang['SFB_Mission__2']                    = 'Związek';
+$_Lang['SFB_Mission__3']                    = 'Transport';
+$_Lang['SFB_Mission__4']                    = 'Stacjonowanie';
+$_Lang['SFB_Mission__5']                    = 'Zatrzymanie';
+$_Lang['SFB_Mission__6']                    = 'Szpiegowanie';
+$_Lang['SFB_Mission__7']                    = 'Kolonizacja';
+$_Lang['SFB_Mission__8']                    = 'Zbierz szczątki';
+$_Lang['SFB_Mission__9']                    = 'Niszczenie';
+$_Lang['SFB_Mission__10']                   = 'Atak Rakietowy';
+$_Lang['SFB_Mission__15']                   = 'Ekspedycja';
+$_Lang['SFB_Mission_Aggresive']             = '<b class="orange">Agresywne</b>';
+$_Lang['SFB_Mission_Civil']                 = '<b class="lightblue">Cywilne</b>';
+$_Lang['SFB_Mission_All']                   = '<b class="red">Wszystkie</b>';
 
-$_Lang['SFB_Additional_DontBlockIfIdle'] = 'Nie blokuj Idlerów';
+$_Lang['SFB_Additional_DontBlockIfIdle']    = 'Nie blokuj Idlerów';
 
-$_Lang['SFB_EndIn'] = 'Za';
+$_Lang['SFB_EndIn']                         = 'Za';
 
-$_Lang['SFB_Help_PostEndTime']   = 'Zakończenie ochrony Poblokadowej';
-$_Lang['SFB_Help_EndTime']       = 'Zakończenie Blokady';
-$_Lang['SFB_Confirm_Cancel']     = 'Czy na pewno chcesz przerwać tą Blokadę?';
+$_Lang['SFB_Help_PostEndTime']              = 'Zakończenie ochrony Poblokadowej';
+$_Lang['SFB_Help_EndTime']                  = 'Zakończenie Blokady';
+$_Lang['SFB_Confirm_Cancel']                = 'Czy na pewno chcesz przerwać tą Blokadę?';
 
-$_Lang['SFB_Response_CancelOK'] = 'Blokada została przerwana!';
-$_Lang['SFB_Response_CancelInactive'] = 'Ta Blokada jest już nieaktywna!';
-$_Lang['SFB_Response_CancelNoExist'] = 'Taka Blokada nie istnieje!';
-$_Lang['SFB_Response_CancelBadID'] = 'Podano niepoprawny identyfikator Blokady!';
+$_Lang['SFB_Response_CancelOK']             = 'Blokada została przerwana!';
+$_Lang['SFB_Response_CancelInactive']       = 'Ta Blokada jest już nieaktywna!';
+$_Lang['SFB_Response_CancelNoExist']        = 'Taka Blokada nie istnieje!';
+$_Lang['SFB_Response_CancelBadID']          = 'Podano niepoprawny identyfikator Blokady!';
 
-$_Lang['SFB_Response_AddOK']	= 'Nowa Blokada została dodana!';
-$_Lang['SFB_Response_AddEndTimeBad'] = 'Podany czas końca Blokady musi być przyszłą datą!';
-$_Lang['SFB_Response_AddNoMissions'] = 'Nie podano żadnej poprawnej Misji do zablokowania!';
-$_Lang['SFB_Response_AddBadStart'] = 'Data Rozpoczęcia nie może być późniejsza, niż Data Zakończenia!';
-$_Lang['SFB_Response_AddBadType'] = 'Podano niepoprawny typ Blokady!';
+$_Lang['SFB_Response_AddOK']                = 'Nowa Blokada została dodana!';
+$_Lang['SFB_Response_AddEndTimeBad']        = 'Podany czas końca Blokady musi być przyszłą datą!';
+$_Lang['SFB_Response_AddNoMissions']        = 'Nie podano żadnej poprawnej Misji do zablokowania!';
+$_Lang['SFB_Response_AddBadStart']          = 'Data Rozpoczęcia nie może być późniejsza, niż Data Zakończenia!';
+$_Lang['SFB_Response_AddBadType']           = 'Podano niepoprawny typ Blokady!';
 $_Lang['SFB_Response_AddElementIDNoExists'] = 'Podane ID do Blokady nie istnieje!';
-$_Lang['SFB_Response_AddBadElementID'] = 'Podano niepoprawne ID do Blokady!';
+$_Lang['SFB_Response_AddBadElementID']      = 'Podano niepoprawne ID do Blokady!';
 
-$_Lang['SFB_Response_EditOK'] = 'Zmiany zostały zapisane!';
-$_Lang['SFB_Response_EditPostEndTimeBad'] = 'Data zakończenia Ochrony Poblokadowej nie może być wcześniejsza niż poprzednia wartość!';
-$_Lang['SFB_Response_EditEndTimeBad'] = 'Data zakończenia Blokady nie może być wcześniejsza niż poprzednia wartość!';
-$_Lang['SFB_Response_EditNoMissions'] = 'Nie podano żadnej poprawnej Misji do zablokowania!';
-$_Lang['SFB_Response_EditOldRow'] = 'Ta Blokada nie może już być edytowana!';
-$_Lang['SFB_Response_EditRowNoExists'] = 'Taka Blokada nie istnieje!';
-$_Lang['SFB_Response_EditBadID'] = 'Podano niepoprawny Identyfikator!';
+$_Lang['SFB_Response_EditOK']               = 'Zmiany zostały zapisane!';
+$_Lang['SFB_Response_EditPostEndTimeBad']   = 'Data zakończenia Ochrony Poblokadowej nie może być wcześniejsza niż poprzednia wartość!';
+$_Lang['SFB_Response_EditEndTimeBad']       = 'Data zakończenia Blokady nie może być wcześniejsza niż poprzednia wartość!';
+$_Lang['SFB_Response_EditNoMissions']       = 'Nie podano żadnej poprawnej Misji do zablokowania!';
+$_Lang['SFB_Response_EditOldRow']           = 'Ta Blokada nie może już być edytowana!';
+$_Lang['SFB_Response_EditRowNoExists']      = 'Taka Blokada nie istnieje!';
+$_Lang['SFB_Response_EditBadID']            = 'Podano niepoprawny Identyfikator!';
 
 ?>

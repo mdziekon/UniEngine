@@ -1,0 +1,183 @@
+<?php
+
+$_Lang['UserDevScanner_Title']               = 'Player\'s development scanner';
+
+$_Lang['Table_Header']                       = 'Scan player (EXPERIMENTAL)';
+$_Lang['Table_Form_UID']                     = 'Player\'s ID';
+$_Lang['Table_Form_Username']                = '(or) Player\'s Name';
+$_Lang['Table_Form_Submit']                  = 'Scan!';
+
+$_Lang['Error_UserNoExist']                  = 'This player does not exist!';
+$_Lang['Error_BadPost']                      = 'No player\'s ID nor Username provided!';
+
+$_Lang['Table2_Header']                      = 'Scan\'s result';
+$_Lang['Table2_GoBack']                      = 'Go back';
+$_Lang['Table2_CollExp']                     = 'Expand / Collapse';
+$_Lang['Table2_Username']                    = 'Username';
+$_Lang['Table2_UID']                         = 'Player ID';
+
+$_Lang['Table2_ScanedLogs']                  = 'Scanned logs';
+$_Lang['Table2_ScanTime']                    = 'Scanning time';
+$_Lang['Table2_DumpDate']                    = 'Full snapshot date';
+$_Lang['Table2_DateDifference']              = 'Time difference';
+
+$_Lang['Table2_SummaryResult']               = 'Summary';
+$_Lang['Table2_FoundFatals']                 = 'Fatal problems';
+$_Lang['Table2_FoundWarnings']               = 'Warnings';
+$_Lang['Table2_FoundNotices']                = 'Notices';
+
+$_Lang['Table2_OccurrenceIndex']             = 'Index';
+$_Lang['Table2_OccurrenceText']              = 'Type';
+$_Lang['Table2_LogID']                       = 'LogID';
+$_Lang['Table2_OccurrenceData']              = 'Data';
+
+$_Lang['Scripts'] = [
+    1 => 'SetNextQueueElementOnTop',
+    2 => 'CancelBuildingFromQueue',
+    3 => 'CheckPlanetBuildingQueue',
+    4 => 'ResearchBuildingPage',
+    5 => 'HandleTechnologieBuild',
+    6 => 'FleetBuildingPage',
+    7 => 'DefensesBuildingPage',
+    8 => 'PlanetResourceUpdate',
+    9 => 'galaxyfleet',
+    10 => 'fleet3',
+    11 => 'sendmissiles',
+    12 => 'MissionCaseAttack',
+    13 => 'MissionCaseGroupAttack',
+    14 => 'MissionCaseColonisation',
+    15 => 'MissionCaseDestruction',
+    16 => 'MissionCaseMIP',
+    17 => 'MissionCaseRecycling',
+    18 => 'MissionCaseSpy',
+    19 => 'MissionCaseTransport',
+    20 => '-',
+    21 => 'RestoreFleetToPlanet',
+    22 => 'resources',
+    23 => 'merchant',
+    24 => 'disassembler',
+];
+
+$_Lang['FoundSummarys'] = [
+    '000' => [
+        'Txt1' => 'No inconsistencies detected...',
+        'Txt2' => 'Following inconsistencies detected:'
+    ],
+    '001' => [
+        'Txt' => 'Element deficit',
+        'GenerateDataList' => false,
+        'Eval' => 'Planet: {$Data[\'PlanetID\']}<br/>Element name: {$_Lang[\'tech\'][$Data[\'ElementID\']]}<br/>Expected result: ".prettyNumber($Data[\'Data\'][0])."<br/>Actual result: ".prettyNumber($Data[\'Data\'][1])."<br/>Difference: ".sprintf(\'%0.2f\', $Data[\'Data\'][2] * 100)."%'
+    ],
+    '002' => [
+        'Txt' => 'Element excess',
+        'GenerateDataList' => false,
+        'Eval' => 'Planet: {$Data[\'PlanetID\']}<br/>Element name: {$_Lang[\'tech\'][$Data[\'ElementID\']]}<br/>Expected result: ".prettyNumber($Data[\'Data\'][0])."<br/>Actual result: ".prettyNumber($Data[\'Data\'][1])."<br/>Difference: ".sprintf(\'%0.2f\', $Data[\'Data\'][2] * 100)."%'
+    ],
+    '003' => [
+        'Txt' => 'Resource deficit',
+        'GenerateDataList' => false,
+        'Eval' => 'Planet: {$Data[\'PlanetID\']}<br/>Resource: {$Data[\'ElementID\']}<br/>Expected result: ".prettyNumber($Data[\'Data\'][0])."<br/>Actual result: ".prettyNumber($Data[\'Data\'][1])."<br/>Difference: ".sprintf(\'%0.2f\', $Data[\'Data\'][2] * 100)."%'
+    ],
+    '004' => [
+        'Txt' => 'Resource excess',
+        'GenerateDataList' => false,
+        'Eval' => 'Planet: {$Data[\'PlanetID\']}<br/>Resource: {$Data[\'ElementID\']}<br/>Expected result: ".prettyNumber($Data[\'Data\'][0])."<br/>Actual result: ".prettyNumber($Data[\'Data\'][1])."<br/>Difference: ".sprintf(\'%0.2f\', $Data[\'Data\'][2] * 100)."%'
+    ],
+    '005' => [
+        'Txt' => 'Total resource deficit',
+        'GenerateDataList' => false,
+        'Eval' => 'Resource: {$Data[\'ElementID\']}<br/>Expected result: ".prettyNumber($Data[\'Data\'][0])."<br/>Actual result: ".prettyNumber($Data[\'Data\'][1])."<br/>Difference: ".sprintf(\'%0.2f\', $Data[\'Data\'][2] * 100)."%'
+    ],
+    '006' => [
+        'Txt' => 'Total resource excess',
+        'GenerateDataList' => false,
+        'Eval' => 'Resource: {$Data[\'ElementID\']}<br/>Expected result: ".prettyNumber($Data[\'Data\'][0])."<br/>Actual result: ".prettyNumber($Data[\'Data\'][1])."<br/>Difference: ".sprintf(\'%0.2f\', $Data[\'Data\'][2] * 100)."%'
+    ],
+    '007' => [
+        'Txt' => 'Total element deficit',
+        'GenerateDataList' => false,
+        'Eval' => 'Element name: {$_Lang[\'tech\'][$Data[\'ElementID\']]}<br/>Expected result: ".prettyNumber($Data[\'Data\'][0])."<br/>Actual result: ".prettyNumber($Data[\'Data\'][1])."<br/>Difference: ".sprintf(\'%0.2f\', $Data[\'Data\'][2] * 100)."%'
+    ],
+    '008' => [
+        'Txt' => 'Total element excess',
+        'GenerateDataList' => false,
+        'Eval' => 'Element name: {$_Lang[\'tech\'][$Data[\'ElementID\']]}<br/>Expected result: ".prettyNumber($Data[\'Data\'][0])."<br/>Actual result: ".prettyNumber($Data[\'Data\'][1])."<br/>Difference: ".sprintf(\'%0.2f\', $Data[\'Data\'][2] * 100)."%'
+    ],
+    '009' => [
+        'Txt' => 'Technology level too low',
+        'GenerateDataList' => false,
+        'Eval' => 'Technology name: {$_Lang[\'tech\'][$Data[\'ElementID\']]}<br/>Expected result: ".prettyNumber($Data[\'Data\'][0])."<br/>Actual result: ".prettyNumber($Data[\'Data\'][1])."'
+    ],
+    '010' => [
+        'Txt' => 'Technology level too high',
+        'GenerateDataList' => false,
+        'Eval' => 'Technology name: {$_Lang[\'tech\'][$Data[\'ElementID\']]}<br/>Expected result: ".prettyNumber($Data[\'Data\'][0])."<br/>Actual result: ".prettyNumber($Data[\'Data\'][1])."'
+    ],
+];
+
+$_Lang['FoundFatals'] = [
+    '001' => [
+        'Txt' => 'Unrecognised section',
+        'GenerateDataList' => false,
+        'Eval' => 'Stored section ID: <u>{$Data[\'Data\'][0]}</u>'
+    ],
+];
+$_Lang['FoundWarnings'] = [
+    '001' => [
+        'Txt' => 'Negative resource amount',
+        'GenerateDataList' => false,
+        'Eval' => 'Log date: ".prettyDate(\'d m Y - H:i:s\', $Data[\'Date\'], 1)."<br/>Planet (Script): {$Data[\'PlanetID\']} ({$_Lang[\'Scripts\'][$Data[\'Place\']]})<br/>Element and code: {$Data[\'ElementID\']} / {$Data[\'Code\']}<br/>Metal: ".prettyNumber($Data[\'Data\'][0])."<br/>Crystal: ".prettyNumber($Data[\'Data\'][1])."<br/>Deuterium: ".prettyNumber($Data[\'Data\'][2])."'
+    ],
+    '002' => [
+        'Txt' => 'No planet ID',
+        'GenerateDataList' => false,
+        'Eval' => 'Script: {$_Lang[\'Scripts\'][$Data[\'Place\']]}'
+    ],
+    '003' => [
+        'Txt' => 'Negative ships or defenses amount',
+        'GenerateDataList' => true,
+        'DataListEvalCode' => '{$_Lang[\'tech\'][$DataID]}: ".prettyNumber($DataVal)."',
+        'DataListGlue' => '<br/>',
+        'Eval' => 'Log date: ".prettyDate(\'d m Y - H:i:s\', $Data[\'Date\'], 1)."<br/>Planet (Script): {$Data[\'PlanetID\']} ({$_Lang[\'Scripts\'][$Data[\'Place\']]})<br/>Element and code: {$Data[\'ElementID\']} / {$Data[\'Code\']}<br/><u>Ships and defenses with negative amount:</u><br/>{$Data[\'GeneratedDataList\']}'
+    ],
+];
+$_Lang['FoundNotices'] = [
+    '001' => [
+        'Txt' => 'Minor metal deviation',
+        'GenerateDataList' => false,
+        'Eval' => 'Planet: {$Data[\'PlanetID\']}<br/>Difference (percent): ".sprintf(\'%0.2f\', $Data[\'Data\'][0] * 100)."%<br/>Difference (value): ".prettyNumber($Data[\'Data\'][1])."'
+    ],
+    '002' => [
+        'Txt' => 'Minor crystal deviation',
+        'GenerateDataList' => false,
+        'Eval' => 'Planet: {$Data[\'PlanetID\']}<br/>Difference (percent): ".sprintf(\'%0.2f\', $Data[\'Data\'][0] * 100)."%<br/>Difference (value): ".prettyNumber($Data[\'Data\'][1])."'
+    ],
+    '003' => [
+        'Txt' => 'Minor deuterium deviation',
+        'GenerateDataList' => false,
+        'Eval' => 'Planet: {$Data[\'PlanetID\']}<br/>Difference (percent): ".sprintf(\'%0.2f\', $Data[\'Data\'][0] * 100)."%<br/>Difference (value): ".prettyNumber($Data[\'Data\'][1])."'
+    ],
+    '004' => [
+        'Txt' => 'Total minor metal deviation',
+        'GenerateDataList' => false,
+        'Eval' => ''
+    ],
+    '005' => [
+        'Txt' => 'Total minor crystal deviation',
+        'GenerateDataList' => false,
+        'Eval' => ''
+    ],
+    '006' => [
+        'Txt' => 'Total minor deuterium deviation',
+        'GenerateDataList' => false,
+        'Eval' => ''
+    ],
+];
+
+$_Lang['Critical_NoDump']                    = 'No snapshot available for this player!';
+$_Lang['Critical_EmptyScanLog']              = 'Scan log is empty!';
+$_Lang['Critical_EmptyBreakErrorVar']        = 'No scan break error provided!';
+
+$_Lang['Notice_NoLogs']                      = 'This player has no logs recorded (no activity)';
+
+?>

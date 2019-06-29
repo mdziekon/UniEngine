@@ -1,0 +1,6 @@
+<?php
+
+$_Lang['see_you']           = 'Logged out.<br /><a href="login.php">Log in again</a>';
+$_Lang['session_closed']    = "Session ended successfully.";
+
+?>

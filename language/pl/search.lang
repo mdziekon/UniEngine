@@ -1,34 +1,32 @@
 <?php
 
-$_Lang['Position'] = 'Pozycja';
-$_Lang['Player'] = 'Gracz';
-$_Lang['Name'] = 'Gracz';
-$_Lang['Player_name'] = 'Nazwa gracza';
-$_Lang['Planet'] = 'Planeta Matka';
-$_Lang['Planet_name'] = 'Nazwa planety';
-$_Lang['Alliance'] = 'Sojusz';
-$_Lang['Alliance_name'] = 'Nazwa sojuszu';
-$_Lang['Tag'] = 'Tag';
-$_Lang['Alliance_tag'] = 'Tag sojuszu';
-$_Lang['Members'] = 'Członkowie';
-$_Lang['Points'] = 'Punkty';
-$_Lang['PerMember'] = 'Na gracza';
-$_Lang['Coordinated'] = 'Współrzędne';
-$_Lang['Position'] = 'Pozycja';
-$_Lang['Search'] = 'Szukaj';
-$_Lang['Search_in_all_game'] = "Wyszukiwanie na serwerze";
-$_Lang['Back'] = 'Powrót';
-$_Lang['Search'] = 'Szukaj';
-$_Lang['write_a_messege'] = 'Napisz wiadomość';
-$_Lang['buddy_request'] = 'Zaproszenie buddylist';
-$_Lang['Ally_Invite_Title'] = 'Zaproś do Sojuszu';
-$_Lang['found_results'] = "Znaleziono: ";
-$_Lang['nothing_found'] = "Nic nie znaleziono!";
-$_Lang['badsigns_given'] = '<b class="red">Podano niedozwolone znaki!</b>';
-$_Lang['pagination_title'] = "Strony";
-$_Lang['prev_page'] = "Poprzednia";
-$_Lang['next_page'] = "Następna";
+$_Lang['Position']              = 'Pozycja';
+$_Lang['Player']                = 'Gracz';
+$_Lang['Name']                  = 'Gracz';
+$_Lang['Player_name']           = 'Nazwa gracza';
+$_Lang['Planet']                = 'Planeta Matka';
+$_Lang['Planet_name']           = 'Nazwa planety';
+$_Lang['Alliance']              = 'Sojusz';
+$_Lang['Alliance_name']         = 'Nazwa sojuszu';
+$_Lang['Tag']                   = 'Tag';
+$_Lang['Alliance_tag']          = 'Tag sojuszu';
+$_Lang['Members']               = 'Członkowie';
+$_Lang['Points']                = 'Punkty';
+$_Lang['PerMember']             = 'Na gracza';
+$_Lang['Coordinated']           = 'Współrzędne';
+$_Lang['Search']                = 'Szukaj';
+$_Lang['Search_in_all_game']    = "Wyszukiwanie na serwerze";
+$_Lang['Back']                  = 'Powrót';
+$_Lang['write_a_messege']       = 'Napisz wiadomość';
+$_Lang['buddy_request']         = 'Zaproszenie buddylist';
+$_Lang['Ally_Invite_Title']     = 'Zaproś do Sojuszu';
+$_Lang['found_results']         = "Znaleziono: ";
+$_Lang['nothing_found']         = "Nic nie znaleziono!";
+$_Lang['badsigns_given']        = '<b class="red">Podano niedozwolone znaki!</b>';
+$_Lang['pagination_title']      = "Strony";
+$_Lang['prev_page']             = "Poprzednia";
+$_Lang['next_page']             = "Następna";
 
-$_Lang['not_counted_yet'] = 'Statystyki dla tego użytkownika nie zostały jeszcze obliczone!';
+$_Lang['not_counted_yet']       = 'Statystyki dla tego użytkownika nie zostały jeszcze obliczone!';
 
 ?>

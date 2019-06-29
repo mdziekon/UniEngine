@@ -344,8 +344,6 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
 
     if($Calculate === true)
     {
-        $MoonCreationCount = false;
-        $MoonDestructionCount = false;
         $Loop = 1;
 
         if(!isset($IncludeCombatEngine))
@@ -604,14 +602,6 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
         $SimData['ship_lost_atk'] = prettyNumber(round($SimData['ship_lost_atk'] / $Loop));
         $SimData['ship_lost_def'] = prettyNumber(round($SimData['ship_lost_def'] / $Loop));
         $SimData['rounds'] = round($SimData['rounds']/$Loop);
-        if($MoonCreationCount !== FALSE)
-        {
-            $SimData['ShowMoonCreationCount'] = '<br/>'.$_Lang['Moon_created_x_times'].': '.prettyNumber($MoonCreationCount);
-        }
-        if($MoonDestructionCount !== FALSE)
-        {
-            $SimData['ShowMoonDestructionCount'] = '<br/>'.$_Lang['Moon_destroyed_x_times'].': '.prettyNumber($MoonDestructionCount);
-        }
 
         $SimData['sim_loop'] = $Loop;
         $SimData['AddInfo'] = ((!empty($SimData['AddInfo'])) ? implode('<br/>', $SimData['AddInfo']).'<br/><br/>' : '');

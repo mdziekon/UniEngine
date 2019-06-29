@@ -1,128 +1,126 @@
 <?php
 
-$_Lang['PageTitle']          = 'Podgląd gracza';
+$_Lang['PageTitle']             = 'Podgląd gracza';
 
 // Menu
-$_Lang['GeneralOverview']    = 'Podgląd ogólny';
-$_Lang['Statistics']         = 'Statystyki';
-$_Lang['PlanetsInfo']        = 'Dane Planet';
-$_Lang['FleetControl']       = 'Ruchy Flot';
+$_Lang['GeneralOverview']       = 'Podgląd ogólny';
+$_Lang['Statistics']            = 'Statystyki';
+$_Lang['PlanetsInfo']           = 'Dane Planet';
+$_Lang['FleetControl']          = 'Ruchy Flot';
 
 // General Overview
-$_Lang['Nickname']           = 'Login';
-$_Lang['EMail']              = 'Aktywny EMail';
-$_Lang['EMail2']             = 'Drugi EMail (?)';
-$_Lang['LastIP']             = 'Ostatni Adres IP';
-$_Lang['RegisterIP']         = 'Adres IP z Rejestracji';
-$_Lang['LastActivity']       = 'Ostatnia aktywność';
-$_Lang['Browser']            = 'Przeglądarka';
-$_Lang['Screen']             = 'Ekran';
-$_Lang['RegisterInfo']       = 'Rejestracja';
-$_Lang['Vacations']          = 'Tryb Urlopu';
-$_Lang['Ban']                = 'Status Bana';
-$_Lang['Delete']             = 'Status Kasacji Konta';
-$_Lang['OldNick']            = 'Stary Nick';
-$_Lang['InvitedBy']			= 'Polecony przez';
-$_Lang['DarkEnergy']         = 'Ciemna Energia';
-$_Lang['ProTime']            = 'Konto Pro';
-$_Lang['GeoTime']            = 'Geolog';
-$_Lang['EngTime']            = 'Mechanik';
-$_Lang['AdmTime']            = 'Admirał';
-$_Lang['TecTime']            = 'Technokrata';
-$_Lang['JamTime']            = 'Systemy zagłuszające';
-$_Lang['AdditionalPlanets']  = 'Dodatkowe planety';
-$_Lang['Ally']               = 'Sojusz';
-$_Lang['AccountActive']      = 'Konto aktywne?';
-$_Lang['DisableIPCheck']     = 'Anty-IPChange aktywne?';
-$_Lang['MotherPlanet']       = 'Planeta Matka';
-$_Lang['MotherPlanet_ID']    = 'ID';
+$_Lang['Nickname']              = 'Login';
+$_Lang['EMail']                 = 'Aktywny EMail';
+$_Lang['EMail2']                = 'Drugi EMail (?)';
+$_Lang['LastIP']                = 'Ostatni Adres IP';
+$_Lang['RegisterIP']            = 'Adres IP z Rejestracji';
+$_Lang['LastActivity']          = 'Ostatnia aktywność';
+$_Lang['Browser']               = 'Przeglądarka';
+$_Lang['Screen']                = 'Ekran';
+$_Lang['RegisterInfo']          = 'Rejestracja';
+$_Lang['Vacations']             = 'Tryb Urlopu';
+$_Lang['Ban']                   = 'Status Bana';
+$_Lang['Delete']                = 'Status Kasacji Konta';
+$_Lang['OldNick']               = 'Stary Nick';
+$_Lang['InvitedBy']             = 'Polecony przez';
+$_Lang['DarkEnergy']            = 'Ciemna Energia';
+$_Lang['ProTime']               = 'Konto Pro';
+$_Lang['GeoTime']               = 'Geolog';
+$_Lang['EngTime']               = 'Mechanik';
+$_Lang['AdmTime']               = 'Admirał';
+$_Lang['TecTime']               = 'Technokrata';
+$_Lang['JamTime']               = 'Systemy zagłuszające';
+$_Lang['AdditionalPlanets']     = 'Dodatkowe planety';
+$_Lang['Ally']                  = 'Sojusz';
+$_Lang['AccountActive']         = 'Konto aktywne?';
+$_Lang['DisableIPCheck']        = 'Anty-IPChange aktywne?';
+$_Lang['MotherPlanet']          = 'Planeta Matka';
+$_Lang['MotherPlanet_ID']       = 'ID';
 
 
-$_Lang['Active']             = 'Aktywny';
-$_Lang['Inactive']           = 'Nieaktywny';
-$_Lang['Delete_Time']        = 'Usunięcie za';
-$_Lang['WillExpire']         = 'Wygaśnie za ';
-$_Lang['Expired']            = 'Wygasł';
-$_Lang['Expired2']           = 'Wygasło';
-$_Lang['NeverBought']        = 'Nigdy nie zakupiono';
-$_Lang['Request']            = 'Podanie';
-$_Lang['Ally_owner']         = 'Właściciel';
-$_Lang['_yes']               = 'Tak';
-$_Lang['_no']                = 'Nie';
-$_Lang['Male']               = 'Mężczyzna';
-$_Lang['Famale']             = 'Kobieta';
-$_Lang['Undefined']          = 'Niezdefiniowano';
-$_Lang['NoLogin']            = 'Brak logowania!'; 
-$_Lang['ActivationCode']     = 'Kod';
-$_Lang['CookieBanActive']    = 'Aktywny Ban na Ciasteczka!';
-$_Lang['NotInvited']			= '-';
-$_Lang['InviterDeleted']		= '<b class="red">Konto Usunięte</b>';
+$_Lang['Active']                = 'Aktywny';
+$_Lang['Inactive']              = 'Nieaktywny';
+$_Lang['Delete_Time']           = 'Usunięcie za';
+$_Lang['WillExpire']            = 'Wygaśnie za ';
+$_Lang['Expired']               = 'Wygasł';
+$_Lang['Expired2']              = 'Wygasło';
+$_Lang['NeverBought']           = 'Nigdy nie zakupiono';
+$_Lang['Request']               = 'Podanie';
+$_Lang['Ally_owner']            = 'Właściciel';
+$_Lang['_yes']                  = 'Tak';
+$_Lang['_no']                   = 'Nie';
+$_Lang['Male']                  = 'Mężczyzna';
+$_Lang['Famale']                = 'Kobieta';
+$_Lang['Undefined']             = 'Niezdefiniowano';
+$_Lang['NoLogin']               = 'Brak logowania!';
+$_Lang['ActivationCode']        = 'Kod';
+$_Lang['CookieBanActive']       = 'Aktywny Ban na Ciasteczka!';
+$_Lang['NotInvited']            = '-';
+$_Lang['InviterDeleted']        = '<b class="red">Konto Usunięte</b>';
 
-$_Lang['ShowOnline']         = 'Pokaż graczy Online';
-$_Lang['SearchByIP']         = 'Szukaj graczy o takim IP';
-$_Lang['SearchByAlly']       = 'Pokaż graczy z tego Sojuszu';
-$_Lang['InActivationProc']   = 'W procesie aktywacji';
-$_Lang['GoToGalaxy']         = 'Idź do Podglądu Galaktyki';
-$_Lang['ShowLogs']           = 'Pokaż wszystkie Logi';
+$_Lang['ShowOnline']            = 'Pokaż graczy Online';
+$_Lang['SearchByIP']            = 'Szukaj graczy o takim IP';
+$_Lang['SearchByAlly']          = 'Pokaż graczy z tego Sojuszu';
+$_Lang['InActivationProc']      = 'W procesie aktywacji';
+$_Lang['GoToGalaxy']            = 'Idź do Podglądu Galaktyki';
+$_Lang['ShowLogs']              = 'Pokaż wszystkie Logi';
 
 $_Lang['Delete_Time_onNextRecalc'] = 'Usunięcie przy następnym przeliczeniu...';
 
 // Statistics
 
-$_Lang['NoStatsAvailable']   = 'Przepraszamy, ale Statystyki tego gracza są obecnie niedostępne!';
+$_Lang['NoStatsAvailable']      = 'Przepraszamy, ale Statystyki tego gracza są obecnie niedostępne!';
 
-$_Lang['General']            = 'Punkty';
-$_Lang['Fleet']              = 'Flota';
-$_Lang['Buildings']          = 'Budynki';
-$_Lang['Defence']            = 'Obrona';
-$_Lang['Research']           = 'Badania';
+$_Lang['General']               = 'Punkty';
+$_Lang['Fleet']                 = 'Flota';
+$_Lang['Buildings']             = 'Budynki';
+$_Lang['Defence']               = 'Obrona';
+$_Lang['Research']              = 'Badania';
 
-$_Lang['Pos']                = 'Pozycja';
-$_Lang['Change']             = 'Zmiana pozycji';
-$_Lang['DayChange']          = 'Dzienna zmiana pozycji';
-$_Lang['Points']             = 'Punkty';
-$_Lang['GeneralPointsPercent']= 'Procent z całości punktów';
+$_Lang['Pos']                   = 'Pozycja';
+$_Lang['Change']                = 'Zmiana pozycji';
+$_Lang['DayChange']             = 'Dzienna zmiana pozycji';
+$_Lang['Points']                = 'Punkty';
+$_Lang['GeneralPointsPercent']  = 'Procent z całości punktów';
 
 // Fleet Control
 
-$_Lang['NoFleetsInFlight']   = 'Brak ruchów flot <u>od</u> lub <u>do</u> tego gracza!';
+$_Lang['NoFleetsInFlight']      = 'Brak ruchów flot <u>od</u> lub <u>do</u> tego gracza!';
 
-$_Lang['Fleet_ID']           = 'ID';
-$_Lang['Fleet_Owner']        = 'Właściciel';
-$_Lang['Fleet_Mission']      = 'Misja';
-$_Lang['Fleet_Array']        = 'Statki';
-$_Lang['Fleet_Cargo']        = 'Ładunek';
-$_Lang['Fleet_Start']        = 'Start floty';
-$_Lang['Fleet_End']          = 'Cel i czas dotarcia';
-$_Lang['Fleet_End_owner']    = 'Właściciel celu';
-$_Lang['Fleet_Start_time']   = 'Wylot';
-$_Lang['Fleet_Calc_time']    = 'Dotarcie do celu';
-$_Lang['Fleet_Back_time']    = 'Powrót';
+$_Lang['Fleet_ID']              = 'ID';
+$_Lang['Fleet_Owner']           = 'Właściciel';
+$_Lang['Fleet_Mission']         = 'Misja';
+$_Lang['Fleet_Array']           = 'Statki';
+$_Lang['Fleet_Cargo']           = 'Ładunek';
+$_Lang['Fleet_Start']           = 'Start floty';
+$_Lang['Fleet_End']             = 'Cel i czas dotarcia';
+$_Lang['Fleet_End_owner']       = 'Właściciel celu';
+$_Lang['Fleet_Back_time']       = 'Powrót';
 
-$_Lang['No_cargo']           = 'Brak';
-$_Lang['See_cargo']          = 'Zobacz';
+$_Lang['No_cargo']              = 'Brak';
+$_Lang['See_cargo']             = 'Zobacz';
 
-$_Lang['Planet_sign']        = 'P';
-$_Lang['Debris_sign']        = 'D';
-$_Lang['Moon_sign']          = 'K';
-$_Lang['Main_ACS_Fleet']     = 'Główna flota związku';
-$_Lang['Coming_back']        = 'Powrót';
-$_Lang['TargetAchieved']     = 'Cel osiągnięty';
-$_Lang['FleetCameBack']      = 'Misja zakończona';
-$_Lang['Not_calculated']     = 'Nie obliczona!';
+$_Lang['Planet_sign']           = 'P';
+$_Lang['Debris_sign']           = 'D';
+$_Lang['Moon_sign']             = 'K';
+$_Lang['Main_ACS_Fleet']        = 'Główna flota związku';
+$_Lang['Coming_back']           = 'Powrót';
+$_Lang['TargetAchieved']        = 'Cel osiągnięty';
+$_Lang['FleetCameBack']         = 'Misja zakończona';
+$_Lang['Not_calculated']        = 'Nie obliczona!';
 
-$_Lang['Start_from_planet']  = 'Start z Planety';
-$_Lang['Start_from_moon']    = 'Start z Księżyca';
-$_Lang['Target_is_planet']   = 'Cel to Planeta';
-$_Lang['Target_is_moon']     = 'Cel to Księżyc';
-$_Lang['Target_is_debris']   = 'Cel to Pole Zniszczeń';
+$_Lang['Start_from_planet']     = 'Start z Planety';
+$_Lang['Start_from_moon']       = 'Start z Księżyca';
+$_Lang['Target_is_planet']      = 'Cel to Planeta';
+$_Lang['Target_is_moon']        = 'Cel to Księżyc';
+$_Lang['Target_is_debris']      = 'Cel to Pole Zniszczeń';
 
 // Errors
-$_Lang['Error_NoUID_NoName'] = 'Musisz podać Identyfikator lub nick Gracza!';
-$_Lang['Error_BadUID']       = 'Podaj prawidłowy Identyfikator Gracza!';
-$_Lang['Error_BadName']      = 'Podaj prawidłowy Nick Gracza!';
-$_Lang['Error_NotFound_UID'] = 'Gracz o podanym ID nie istnieje!';
-$_Lang['Error_NotFound_Name']= 'Gracz o podanym nicku nie istnieje!';
-$_Lang['Error_NoEnoughAccess']= 'Przepraszamy, ale nie masz odpowiedniego poziomu dostępu, by przeglądać dane o tym użytkowniku!';
+$_Lang['Error_NoUID_NoName']    = 'Musisz podać Identyfikator lub nick Gracza!';
+$_Lang['Error_BadUID']          = 'Podaj prawidłowy Identyfikator Gracza!';
+$_Lang['Error_BadName']         = 'Podaj prawidłowy Nick Gracza!';
+$_Lang['Error_NotFound_UID']    = 'Gracz o podanym ID nie istnieje!';
+$_Lang['Error_NotFound_Name']   = 'Gracz o podanym nicku nie istnieje!';
+$_Lang['Error_NoEnoughAccess']  = 'Przepraszamy, ale nie masz odpowiedniego poziomu dostępu, by przeglądać dane o tym użytkowniku!';
 
 ?>

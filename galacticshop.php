@@ -137,30 +137,23 @@ if(!empty($_POST['mode']))
             // Currently it breaks here just to ensure, that this section won't be executed without proper code
             break;
 
-            // -------------------------------------------------------------------------
-            // HERE PLACE YOUR SMS SHOP CODE OR WHATEVER YOU WILL USE TO HANDLE PAYMENTS
-            // -------------------------------------------------------------------------
-            //
-            // Language variables
-            // $_Lang['ErrorNoCode'] - No code given
-            // $_Lang['ErrorBadOption'] - Bad option selected
-            // $_Lang['ErrorUnknown'] - Unknown error when connecting to remote server
-            // $_Lang['ErrorWrongCode'] - User gave wrong code
-            // $_Lang['ErrorCodeShouldBe8CharsLong'] - Code should be at least 8 characters long
+            // -------------------------------------
+            // PLACE YOUR PAYMENT SYSTEM'S CODE HERE
+            // -------------------------------------
             //
             // Variables to set
-            // $addDarkEnergy - How much Dark Energy use should get
-            // $check    - Given by user Code received by SMS (just to save it to the DataBase)
-            //            - If you don't want to save this code, delete code marked with "SAVECODETODB" comment
+            // $addDarkEnergy   - How much Dark Energy user should get
+            // $userInputCode   - User's input, most likely the SMS code they have received
+            //                  - Required to save it to the DB. If you don't need that functionality,
+            //                    delete code marked with "SAVECODETODB" comment
             //
-            //
-            // Also please remember, that you have to implement how this section is presented to the user
+            // Remember that you also have to implement how this section is presented to the user.
             // Place your implementation in galacticshop.tpl (template file) in place of this text:
             // "THIS OPTION IS NOT IMPLEMENTED YET"
             //
-            // If you want, you can use my implementation for DotPay.pl payment system
-            // (it's saved under galacticshop_dotpay.tpl template file)
-            //
+
+            $addDarkEnergy = 0;
+            $userInputCode = "";
 
             if($_User['referred'] > 0)
             {
@@ -238,7 +231,7 @@ if(!empty($_POST['mode']))
 
             // SAVECODETODB
             // Send this Action to PremiumCodes Log
-            $SecurePassedCode = preg_replace('#[^0-9a-zA-Z]{1,}#si', '', $check);
+            $SecurePassedCode = preg_replace('#[^0-9a-zA-Z]{1,}#si', '', $userInputCode);
             doquery("INSERT INTO {{table}} VALUES (NULL, {$_User['id']}, UNIX_TIMESTAMP(), ".intval($_POST['option']).", '{$SecurePassedCode}');", 'premiumcodes');
             // END OF SAVECODETODB
 
@@ -526,7 +519,7 @@ if(!empty($_POST['mode']))
             }
             else
             {
-                $_Lang['showError'] = $_Lang['ErrorCurrentlyNothinkToSell'];
+                $_Lang['showError'] = $_Lang['ErrorCurrentlyNothingToSell'];
             }
             break;
         }

@@ -58,6 +58,156 @@ if(isLogged() && isset($_ForceRulesAcceptBox) && $_ForceRulesAcceptBox === true)
     $TPL = str_replace('{InsertRulesAcceptanceBox}', gettemplate('rules_acceptbox'), $TPL);
 }
 
+function createRulesIndex (&$rulesElements, $prefix = []) {
+    $templates = [
+        'list_indexlist_set' => gettemplate('rules_list_indexlist_set'),
+        'list_indexlist_element' => gettemplate('rules_list_indexlist_element'),
+        'list_indexlist_subrules' => gettemplate('rules_list_indexlist_subrules')
+    ];
+
+    $result = [];
+
+    foreach ($rulesElements as $idx => &$element) {
+        if (!is_array($element)) {
+            continue;
+        }
+        if (!isset($element['title'])) {
+            continue;
+        }
+
+        $currentIdx = array_merge($prefix, [ $idx ]);
+
+        $subrules = (
+            isset($element['elements']) ?
+            createRulesIndex($element['elements'], $currentIdx) :
+            null
+        );
+
+        $tplVariables = [
+            'RuleLink_Idx' => implode('_', $currentIdx),
+            'RuleLabel_Idx' => implode('.', $currentIdx) . '.',
+            'RuleLabel_Title' => $element['title'],
+            'Subrules' => (
+                $subrules !== null ?
+                parsetemplate($templates['list_indexlist_subrules'], [ 'Subrules' => $subrules ]) :
+                ''
+            )
+        ];
+
+        $result[] = parsetemplate($templates['list_indexlist_element'], $tplVariables);
+    }
+
+    return implode('', $result);
+}
+
+function createRulesList (&$rulesElements, $prefix = [], $hasNoHeader = false) {
+    $templates = [
+        'list_content_header_group' => gettemplate('rules_list_content_header_group'),
+        'list_content_header_subgroup' => gettemplate('rules_list_content_header_subgroup'),
+        'list_content_rules_ruleitem' => gettemplate('rules_list_content_rules_ruleitem'),
+        'list_content_rules_rulesubitem' => gettemplate('rules_list_content_rules_rulesubitem'),
+    ];
+
+    $result = [];
+
+    foreach ($rulesElements as $idx => &$element) {
+        $currentIdx = array_merge($prefix, [ $idx ]);
+
+        if (!is_array($element)) {
+            // Is plain old string, simple rule
+            $tplVariables = [
+                'RuleLabel_Idx' => implode('.', $currentIdx) . '.',
+                'RuleContent' => $element,
+                'RuleSubcontent_IsHiddenStyle' => 'display: none;',
+                'RuleSubcontent' => ''
+            ];
+
+            $result[] = parsetemplate(
+                $templates['list_content_rules_ruleitem'],
+                $tplVariables
+            );
+
+            continue;
+        }
+        if (isset($element['maintext'])) {
+            // Is complex rule
+            $subcontent = [];
+
+            foreach($element['ul'] as &$subelement) {
+                $subelementTplVariables = [
+                    'RuleSubitem' => $subelement
+                ];
+
+                $subcontent[] = parsetemplate(
+                    $templates['list_content_rules_rulesubitem'],
+                    $subelementTplVariables
+                );
+            }
+
+            $tplVariables = [
+                'RuleLabel_Idx' => implode('.', $currentIdx) . '.',
+                'RuleContent' => $element['maintext'],
+                'RuleSubcontent_IsHiddenClass' => 'hidden',
+                'RuleSubcontent' => implode('', $subcontent)
+            ];
+
+            $result[] = parsetemplate(
+                $templates['list_content_rules_ruleitem'],
+                $tplVariables
+            );
+
+            continue;
+        }
+
+        if (!isset($element['title'])) {
+            // Is simple grouping (no header)
+            $result[] = createRulesList($element, $currentIdx, true);
+
+            continue;
+        }
+
+        // Is rules group
+        $rulesContent = createRulesList($element['elements'], $currentIdx);
+        $isTopLevel = (count($currentIdx) === 1);
+        $hasOwnRules = (
+            isset($element['elements']) &&
+            isset($element['elements'][1]) &&
+            !isset($element['elements'][1]['elements'])
+        );
+
+        $tplBody = (
+            $isTopLevel ?
+            $templates['list_content_header_group'] :
+            $templates['list_content_header_subgroup']
+        );
+
+        $tplVariables = [
+            'RuleLink_Idx' => implode('_', $currentIdx),
+            'RuleLabel_Idx' => implode('.', $currentIdx) . '.',
+            'RuleLabel_Title' => $element['title'],
+            'RulesContent' => $rulesContent,
+            'RulesContent_IsHiddenStyle' => (
+                !$hasOwnRules ?
+                "display: none;" :
+                ""
+            )
+        ];
+
+        $result[] = parsetemplate($tplBody, $tplVariables);
+    }
+
+    return implode('', $result);
+}
+
+if (langFileExists("rules.definitions.custom")) {
+    includeLang("rules.definitions.custom");
+} else {
+    includeLang("rules.definitions.default");
+}
+
+$_Lang['ParsedRules_IndexList'] = createRulesIndex($_Lang['RulesDefinitions'], []);
+$_Lang['ParsedRules_ContentList'] = createRulesList($_Lang['RulesDefinitions'], []);
+
 display(parsetemplate($TPL, $_Lang), $_Lang['Page_Title'], false);
 
 ?>

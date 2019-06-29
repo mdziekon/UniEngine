@@ -1,0 +1,26 @@
+<?php
+
+$_Lang['sfb_Title']                          = 'Smart Fleets\' Blockade';
+$_Lang['sfb_GlobalText']                     = 'Currently, this Universe has an enabled <b class="red">Fleet\'s Blockade</b>, which will remain active until <b class="orange">%s</b>, <b class="orange">%s</b>.<br/>This blockade covers %s. More informations can be found here <a href="redirect.php?id=5" target="_blank"><u>Link</u></a><br/>Reason of the Blockade: %s';
+$_Lang['sfb_Mission_All']                    = '<b class="skyblue">all fleet missions</b>';
+$_Lang['sfb_Mission_Aggresive']              = '<b class="skyblue">all aggressive fleet missions</b>';
+$_Lang['sfb_Mission_Civil']                  = '<b class="skyblue">all civil fleet missions</b>';
+$_Lang['sfb_Mission_Other']                  = 'the following fleet missions: <b class="skyblue">%s</b>';
+$_Lang['sfb_Mission_DontBlockIdle']          = ' (this blockade does not protect <b class="skyblue">inactive players</b>)';
+$_Lang['sfb_Mission_AggresiveDontBlockIdle'] = ' (aggressive flights towards <b class="skyblue">inactive players</b> are not blocked)';
+$_Lang['sfb_NoReason']                       = '- no reason provided -';
+
+// FIXME: get this from a shared lang file
+$_Lang['sfb_Mission__1']     = 'Attack';
+$_Lang['sfb_Mission__2']     = 'United Attack';
+$_Lang['sfb_Mission__3']     = 'Transport';
+$_Lang['sfb_Mission__4']     = 'Stay';
+$_Lang['sfb_Mission__5']     = 'Hold';
+$_Lang['sfb_Mission__6']     = 'SzpieSpygowanie';
+$_Lang['sfb_Mission__7']     = 'Colonise';
+$_Lang['sfb_Mission__8']     = 'Harvest';
+$_Lang['sfb_Mission__9']     = 'Destroy';
+$_Lang['sfb_Mission__10']    = 'Interplanetary Strike';
+$_Lang['sfb_Mission__15']    = 'Expedition';
+
+?>

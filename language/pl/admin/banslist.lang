@@ -1,30 +1,35 @@
 <?php
 
-$_Lang['Page_Title']					= 'Dziennik Banów';
+$_Lang['Page_Title']                = 'Dziennik Banów';
 
-$_Lang['Header_ID']					= 'ID';
-$_Lang['Header_User']				= 'Gracz';
-$_Lang['Header_StartTime']			= 'Data nałożenia';
-$_Lang['Header_Duration']			= 'Okres';
-$_Lang['Header_EndTime']				= 'Data zakończenia';
-$_Lang['Header_Status']				= 'Status';
-$_Lang['Header_Reason']				= 'Powód';
-$_Lang['Header_Giver']				= 'Nadawca';
-$_Lang['Header_Indicators']			= 'Informacje';
+$_Lang['Form_Players']              = 'Gracze';
+$_Lang['Form_DateRange']            = 'Przedział czasu';
+$_Lang['Form_SearchBtn']            = 'Szukaj';
+$_Lang['Form_ResetBtn']             = 'Resetuj';
 
-$_Lang['Row_Active']					= '<b class="lime">Aktywny</b>';
-$_Lang['Row_Expired']				= '<b class="orange">Wygasł</b>';
-$_Lang['Row_Removed']				= '<b class="red">Zdjęty</b>';
-$_Lang['Row_ReasonEmpty']			= '<b class="orange">Nie podany</b>';
-$_Lang['Row_WithVacation']			= '<b class="skyblue">Nałożono Urlop</b>';
-$_Lang['Row_WithoutVacation']		= 'Nie nałożono Urlopu';
-$_Lang['Row_AllFleetsRetreaded']		= '<b class="lime">Floty wycofane (#01)</b>';
-$_Lang['Row_OwnFleetsRetreaded']		= '<b class="orange">Floty wycofane (#02)</b>';
-$_Lang['Row_OthersFleetsRetreaded']	= '<b class="orange">Floty wycofane (#03)</b>';
-$_Lang['Row_NoFleetsRetreaded']		= '<b class="red">Nie wycofano Flot</b>';
-$_Lang['Row_BlockadeOnCookieStyle']	= '<b class="red">Blokada Cookies</b>';
-$_Lang['Row_UserDeleted']               = 'Gracz usunięty';
+$_Lang['Header_ID']                 = 'ID';
+$_Lang['Header_User']               = 'Gracz';
+$_Lang['Header_StartTime']          = 'Data nałożenia';
+$_Lang['Header_Duration']           = 'Okres';
+$_Lang['Header_EndTime']            = 'Data zakończenia';
+$_Lang['Header_Status']             = 'Status';
+$_Lang['Header_Reason']             = 'Powód';
+$_Lang['Header_Giver']              = 'Nadawca';
+$_Lang['Header_Indicators']         = 'Informacje';
 
-$_Lang['Error_NoRows']				= 'Brak wpisów';
+$_Lang['Row_Active']                = '<b class="lime">Aktywny</b>';
+$_Lang['Row_Expired']               = '<b class="orange">Wygasł</b>';
+$_Lang['Row_Removed']               = '<b class="red">Zdjęty</b>';
+$_Lang['Row_ReasonEmpty']           = '<b class="orange">Nie podany</b>';
+$_Lang['Row_WithVacation']          = '<b class="skyblue">Nałożono Urlop</b>';
+$_Lang['Row_WithoutVacation']       = 'Nie nałożono Urlopu';
+$_Lang['Row_AllFleetsRetreaded']    = '<b class="lime">Floty wycofane (#01)</b>';
+$_Lang['Row_OwnFleetsRetreaded']    = '<b class="orange">Floty wycofane (#02)</b>';
+$_Lang['Row_OthersFleetsRetreaded'] = '<b class="orange">Floty wycofane (#03)</b>';
+$_Lang['Row_NoFleetsRetreaded']     = '<b class="red">Nie wycofano Flot</b>';
+$_Lang['Row_BlockadeOnCookieStyle'] = '<b class="red">Blokada Cookies</b>';
+$_Lang['Row_UserDeleted']           = 'Gracz usunięty';
+
+$_Lang['Error_NoRows']              = 'Brak wpisów';
 
 ?>

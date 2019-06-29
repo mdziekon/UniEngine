@@ -1,0 +1,83 @@
+<?php
+
+// Interface
+$_Lang['nfo_page_title']            = "Informations";
+$_Lang['nfo_title_head']            = "Informations";
+$_Lang['nfo_name']                  = "Name";
+$_Lang['nfo_techinfoabout']         = 'Technical informations';
+$_Lang['nfo_destroy']               = "Tear down";
+$_Lang['nfo_level']                 = "Level";
+$_Lang['nfo_range']                 = "Sensors range (systems)";
+$_Lang['nfo_missilerange']          = 'Missiles range (systems)';
+$_Lang['nfo_used_energy']           = "Energy consumption";
+$_Lang['nfo_used_deuter']           = "Deuterium consumption (per hour)";
+$_Lang['nfo_prod_energy']           = "Energy production";
+$_Lang['nfo_difference']            = "Difference";
+$_Lang['nfo_prod_p_hour']           = "Extraction (per hour)";
+$_Lang['nfo_needed']                = "Required resources";
+$_Lang['nfo_dest_durati']           = "Tear down time (one level down)";
+
+$_Lang['nfo_techdetails_title']     = 'Technical details';
+$_Lang['nfo_techdetails_base']      = 'Base value';
+$_Lang['nfo_techdetails_modifier']  = 'Modifier';
+$_Lang['nfo_techdetails_modified']  = 'Current value';
+
+$_Lang['nfo_struct_pt']             = 'Hull points';
+$_Lang['nfo_shielf_pt']             = 'Shields power';
+$_Lang['nfo_attack_type']           = 'Weaponry';
+$_Lang['nfo_attack_pt']             = 'Weapons power';
+$_Lang['nfo_rf_again']              = 'Rapid fire against';
+$_Lang['nfo_rf_from']               = 'Rapid fire from';
+$_Lang['nfo_capacity']              = 'Capacity';
+$_Lang['nfo_units']                 = 'units';
+$_Lang['nfo_base_speed']            = 'Speed';
+$_Lang['nfo_consumption']           = 'Fuel consumption';
+
+$_Lang['Infos_BadElementID']        = 'Invalid element identifier!';
+
+$_Lang['weaponTypes'] = [
+    0 => 'None',
+    1 => 'Conventional',
+    120 => 'Laser cannons',
+    121 => 'Ion cannons',
+    122 => 'Plasma throwers',
+    199 => 'Graviton cannons',
+    125 => 'Antimatter throwers',
+    126 => 'Disintegrating cannons',
+];
+
+$_Lang['gate_selecttarget']         = 'Select teleportation target';
+$_Lang['gate_start_moon']           = 'Origin (moon)';
+$_Lang['gate_dest_moon']            = "Destination (moon)";
+$_Lang['gate_changemoon']           = 'Switch to the destination after jump';
+$_Lang['gate_ship_sel']             = "Select ships to teleport";
+$_Lang['gate_nextjump_timer']       = 'Next jump available in';
+
+$_Lang['gate_title_ship']           = 'Name';
+$_Lang['gate_title_count']          = 'Count';
+$_Lang['gate_title_input']          = 'To teleport';
+$_Lang['gate_title_max']            = '-';
+
+$_Lang['gate_jump_btn']             = "Perform the jump";
+$_Lang['gate_nomoonswithtp']        = 'No other moons with Jump gates!';
+$_Lang['gate_noshipstotp']          = 'No ships to teleport!';
+$_Lang['gate_everything']           = '&nbsp;';
+
+$_Lang['fleet_setmax']              = 'Max';
+$_Lang['fleet_setmin']              = 'Min';
+
+// Destroy Rockets Page
+$_Lang['rocket_title']              = 'Missiles destruction';
+$_Lang['rocket_info']               = 'In this place you can order to destroy any missiles you currently own on this planet. If you have an active <a href="aboutpro.php" class="orange">Pro Account</a>, you can use the <a href="disassembler.php" class="orange">Disassembler</a>, which will recycle some of the resources.';
+$_Lang['rocket_type']               = 'Missile type';
+$_Lang['rocket_count']              = 'Count';
+$_Lang['rocket_dest_count']         = 'To destroy';
+$_Lang['rocket_everything']         = 'All';
+$_Lang['rocket_nothing']            = 'Nothing';
+$_Lang['rocket_destroy']            = 'Destroy missiles';
+
+// Quantum Gate Page
+$_Lang['GateReadyToUse']            = 'The Quantum Gate is ready to perform a Spatio-temporal jump!';
+$_Lang['GateReadyToUseIn']          = 'The Quantum Gate will be ready to perform a jump in';
+
+?>

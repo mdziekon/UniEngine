@@ -1,0 +1,220 @@
+<?php
+
+$_Lang['Title']                         = 'Shop';
+
+$_Lang['DarkEnergyStatusIs']            = 'Dark Energy units you own';
+
+$_Lang['BuyDarkEnergy']                 = 'Purchase Dark Energy';
+$_Lang['BuyItems']                      = 'Spend your Dark Energy';
+$_Lang['FreePremiumItems']              = 'Received Gifts';
+
+$_Lang['NoJavaScript_Warning']          = 'Warning! It looks like your browser is blocking JavaScript files from being properly loaded!<br/>To properly view this page, make sure that you have JavaScript support enabled, and any content blocking addons (eg. NoScript, Ad blockers) have appropriate exceptions added.';
+
+// DarkEnergy Form
+$_Lang['ErrorSQL']                      = 'Unknown error occured!';
+$_Lang['AddSuccess']                    = 'We\'ve added <i>%s</i> of Dark Energy to your account!';
+$_Lang['_Added5DEUnits']                = '5 units';
+$_Lang['_Added15DEUnits']               = '15 units';
+$_Lang['_Added25DEUnits']               = '25 units';
+$_Lang['_Added45DEUnits']               = '45 units';
+$_Lang['_Added10DEUnits']               = '10 units';
+$_Lang['_Added30DEUnits']               = '30 units';
+$_Lang['_Added50DEUnits']               = '50 units';
+$_Lang['_Added90DEUnits']               = '90 units';
+
+$_Lang['ErrorNoItemIDGiven']            = "You didn't provide an item to purchase!";
+$_Lang['ErrorTooMuchItemIDGiven']       = "You can but only one item at a time!";
+$_Lang['ErrorCurrentlyNothingToSell']   = "We're sorry, but currently there is nothing to purchase!";
+$_Lang['ErrorBadIDGiven']               = "Invalid item given!";
+$_Lang['ErrorNotBuyable']               = 'You cannot purchase this item!';
+$_Lang['ErrorNoEnoughDE']               = "You do not have enough Dark Energy!";
+$_Lang['ErrorConfigError']              = "A system error has occurred (#0001), please report this to the Administration!";
+$_Lang['ErrorNoQuery']                  = "A system error has occurred (#0002), please report this to the Administration!";
+$_Lang['ErrorNoPlanetID']               = "A system error has occurred (#0003), please report this to the Administration!";
+$_Lang['ErrorAddFieldsNoMoon']          = "Additional fields can be purchased only for Planets!";
+$_Lang['ErrorCanBuyOnly3Planets']       = "You cannot purchase more colonisation slots!";
+$_Lang['CannotBuyItAnymore']            = "You cannot purchase this anymore!";
+
+$_Lang['ProAccountExtended']            = "Pro Account has been extended!";
+$_Lang['ProAccountAdded']               = "Pro Account has been purchased!";
+$_Lang['PlanetFieldsAdded']             = "Addtional Fields have been added to your planet!";
+$_Lang['SpyJamAdd']                     = "Espionage Jamming systems have been rented out!";
+$_Lang['SpyJamExt']                     = "Espionage Jamming systems rent time has been extended!";
+$_Lang['GeologistAdd']                  = "You've hired a Geologist!";
+$_Lang['GeologistExt']                  = "You've extended your contract with your Geologist!";
+$_Lang['EngineerAdd']                   = "You've hired a Mechanicial!";
+$_Lang['EngineerExt']                   = "You've extended your contract with your Mechanic!";
+$_Lang['AdmiralAdd']                    = "You've hired an Admiral!";
+$_Lang['AdmiralExt']                    = "You've extended your contract with your Admiral!";
+$_Lang['TechnocratAdd']                 = "You've hired a Technocrat!";
+$_Lang['TechnocratExt']                 = "You've extended your contract with your Technocrat!";
+$_Lang['PlanetBought']                  = "You've purchased an additional colonisation slot!<br/>You can purchase %s more!";
+$_Lang['PlanetBoughtLast']              = "You've purchased an additional colonisation slot!<br/><b style=\"color: red;\">You've bought all available slots!</b>";
+$_Lang['TraderUsesBought']              = 'You\'ve purchased %s transactions with the Merchant!';
+
+$_Lang['PlanetSlots_left'][0]           = '2';
+$_Lang['PlanetSlots_left'][1]           = '1';
+
+$_Lang['ArticleName']                   = "Name";
+$_Lang['ArticleDesc']                   = "Description";
+$_Lang['ArticleButtom']                 = "Cost";
+$_Lang['DEprice']                       = "units of Dark Energy";
+$_Lang['BuyIT']                         = "Purchase";
+$_Lang['GoToBuyPlace']                  = "Go to purchase page";
+$_Lang['AreYouSure']                    = "Are you sure?";
+$_Lang['NoItemsOnStock']                = "No items in stock!";
+
+// Free Stuff
+$_Lang['FreeText']                      = 'This page contains a list of all premium items which were granted to you as a gift (eg. by completeing a mission). You can activate them at any point.<br/>Remember though - you cannot pause any of these items\' benefits after activation!';
+
+$_Lang['FreeItemName']                  = 'Name';
+$_Lang['FreeItemGivenBy']               = 'Received from';
+$_Lang['FreeItemUse']                   = 'Activate';
+$_Lang['FreeDuration']                  = 'Duration';
+
+$_Lang['Free_GivenBySys']               = 'System';
+$_Lang['Free_NoFreeItems']              = 'No gifts assigned to your account.';
+$_Lang['Free_BadIDGiven']               = 'Invalid data given!';
+$_Lang['Free_BadItemGiven']             = 'Invalid identifier given!';
+
+$_Lang['shop_items'] = [
+    1 => [
+        'name' => 'Pro Account (7 days)',
+        'desc' => '<b>Activates or extends your Pro Account by 7 days<br/>(<a href="aboutpro.php"><u>Read about Pro Account benefits here</u></a>)</b>',
+        'price' => 15,
+        'duration' => false,
+        'duration_days' => 7,
+    ],
+    2 => [
+        'name' => 'Pro Account (25 days)',
+        'desc' => '<b>Activates or extends your Pro Account by 25 days<br/>(<a href="aboutpro.php"><u>Read about Pro Account benefits here</u></a>)</b>',
+        'price' => 45,
+        'duration' => false,
+        'duration_days' => 25,
+    ],
+    3 => [
+        'name' => 'Advanced Planet Terraforming',
+        'desc' => '<b>Grants additional 10 fields on the planet you are currently at (cannot be used on moons)</b>',
+        'price' => 15,
+        'duration' => false,
+        'addFields' => 10
+    ],
+    4 => [
+        'name' => 'Espionage Jamming systems',
+        'desc' => '<b>- Boosts Espionage Technology by 5 levels when someone is spying on your planets and moons<br/>- Duration: 14 days</b>',
+        'price' => 15,
+        'duration' => '14 days',
+        'duration_days' => 14
+
+    ],
+    5 => [
+        'name' => 'Hire a Geologist',
+        'desc' => (
+            'Geologist is an mining expert known in the entire galaxy. Thanks to their vast knowledge of rocks and mineral they are able to guide the excavation towards the most rich resources deposits.' .
+            '<br/><br/>' .
+            '<b>- Resources production: +15%<br/>- Duration: 14 days</b>'
+        ),
+        'price' => 20,
+        'duration' => '14 days',
+        'duration_days' => 14
+    ],
+    6 => [
+        'name' => 'Hire a Mechanic',
+        'desc' => (
+            'This commonly known expert is in demand by almost every emperor in the Universe. Thanks to their brilliant ideas, your power planets are more effective, and your defense systems are more likely to be rebuilt after each invasion.' .
+            '<br/><br/>' .
+            '<b>- Energy production: +15%<br/>- Defenses rebuild chance: +20%<br/>- Duration: 14 days</b>'
+        ),
+        'price' => 20,
+        'duration' => '14 days',
+        'duration_days' => 14
+    ],
+    7 => [
+        'name' => 'Hire an Admiral',
+        'desc' => (
+            'One of the best war commanders across the Universe. Their tactical thinking, speed and operation methods are second to none. Every emperor wants to have them by their side.' .
+            '<br/><br/>' .
+            '<b>- Max. flying fleets: +2<br/>- Additional flight speed options: 120%, 110%, 5%, 2.5%<br/>- Duration: 14 days</b>'
+        ),
+        'price' => 20,
+        'duration' => '14 days',
+        'duration_days' => 14
+    ],
+    8 => [
+        'name' => 'Hire a Technocrat',
+        'desc' => (
+            'The Technocrat is the brightest mind of our times. Their inventions changed courses of many wars in the past. Their presence in your laboratories enhances the productivity of other scientists, who want to learn as much as they possibly can from this great person.' .
+            '<br/><br/>' .
+            '<b>- Research time: -20%<br/>- Duration: 14 days</b>'
+        ),
+        'price' => 20,
+        'duration' => '14 days',
+        'duration_days' => 14
+    ],
+    9 => [
+        'name' => 'Additional colonisation slot',
+        'desc' => '<b>- Ability to colonise one additional planet (max. 3)',
+        'price' => 0,
+        'price_array' => [
+            20,
+            35,
+            50,
+            -1
+        ],
+        'duration' => false
+    ],
+    10 => [
+        'name' => 'Quantum Gate',
+        'desc' => '',
+        'price' => 20,
+        'action' => 'redirect',
+        'data' => [
+            'url' => 'buildings.php#b_id_50'
+        ],
+        'duration' => false
+    ],
+    11 => [
+        'name' => 'Pro Account (10 days)',
+        'desc' => '',
+        'price' => 30,
+        'duration' => '10 days',
+        'duration_days' => 10,
+        'buyable' => false,
+    ],
+    12 => [
+        'name' => 'Hire a Geologist',
+        'desc' => '',
+        'price' => 20,
+        'duration' => '3 days',
+        'duration_days' => 3,
+        'buyable' => false,
+    ],
+    13 => [
+        'name' => 'Pro Account (3 days)',
+        'desc' => '',
+        'price' => 30,
+        'duration' => '3 days',
+        'duration_days' => 3,
+        'buyable' => false,
+    ],
+    14 => [
+        'name' => 'Hire a Merchant (5 transactions)',
+        'desc' => '<b>- Allows you to use the Merchant\'s exchange 5 times',
+        'price' => 10,
+        'amount' => 5,
+    ],
+    15 => [
+        'name' => 'Hire a Merchant (15 transactions)',
+        'desc' => '<b>- Allows you to use the Merchant\'s exchange 15 times',
+        'price' => 30,
+        'amount' => 15,
+    ],
+    16 => [
+        'name' => 'Hire a Merchant (30 transactions)',
+        'desc' => '<b>- Allows you to use the Merchant\'s exchange 30 times',
+        'price' => 50,
+        'amount' => 30,
+    ],
+];
+
+?>

@@ -7,6 +7,7 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePl
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
     include($_EnginePath.'includes/functions/GetElementPrice.php');
     include($_EnginePath.'includes/functions/GetRestPrice.php');
+    includeLang('worldElements.detailed');
 
     $Now = time();
 
@@ -149,7 +150,7 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePl
         $building_level = $CurrentUser[$_Vars_GameElements[$Tech]];
         $RowParse['tech_level'] = ($building_level == 0) ? '' : "({$_Lang['level']} {$building_level})";
         $RowParse['tech_name'] = $_Lang['tech'][$Tech];
-        $RowParse['tech_descr'] = $_Lang['res']['descriptions'][$Tech];
+        $RowParse['tech_descr'] = $_Lang['WorldElements_Detailed'][$Tech]['description_short'];
 
         if(IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $Tech))
         {
@@ -200,7 +201,14 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePl
                         // Include ChronoApplet
                         include($_EnginePath.'includes/functions/InsertJavaScriptChronoApplet.php');
                         $bloc = $_Lang;
-                        $bloc['Script'] = InsertJavaScriptChronoApplet('res', '', $ResearchPlanet['techQueue_firstEndTime'], true, false, 'function() { SetTimer = \"<b class=lime>'.$_Lang['completed'].'</b>\"; window.setTimeout(\'document.location.href=\"buildings.php?mode=research\";\', 500); }');
+                        $bloc['Script'] = InsertJavaScriptChronoApplet(
+                            'res',
+                            '',
+                            $ResearchPlanet['techQueue_firstEndTime'],
+                            true,
+                            false,
+                            'function() { onQueuesFirstElementFinished(); }'
+                        );
                         $bloc['SetStartTime'] = pretty_time($ResearchPlanet['techQueue_firstEndTime'] - $Now, true);
                         $bloc['tech_home'] = $ResearchPlanet['id'];
                         $bloc['tech_id']= $FirstElementID;

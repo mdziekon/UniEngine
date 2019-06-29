@@ -1,0 +1,214 @@
+<?php
+
+$_Lang['user_level'] = [
+    '0'     => 'Player',
+    '20'    => 'Forum team member',
+    '50'    => 'Game operator',
+    '70'    => 'Super Game operator',
+    '90'    => 'Game admin',
+    '100'   => 'Game admin',
+    '110'   => 'Game developer',
+    '120'   => 'Game owner',
+];
+
+$_Lang['Pagination_Prev']                       = '&#171; Previous';
+$_Lang['Pagination_Next']                       = 'Next &#187;';
+
+$_Lang['Chrono_Day1']                           = 'day';
+$_Lang['Chrono_DayM']                           = 'days';
+$_Lang['Chrono_PrettyTime']                     = [
+    'longFormat' => [
+        'days' => function ($days) {
+            return "{$days}d";
+        },
+        'hours' => function ($hours) {
+            return "{$hours}h";
+        },
+        'minutes' => function ($minutes) {
+            return "{$minutes}m";
+        },
+        'seconds' => function ($seconds) {
+            return "{$seconds}s";
+        }
+    ],
+    'chronoFormat' => [
+        'daysFull' => function ($days) {
+            $daysSuffixString = (
+                $days > 1 ?
+                "days" :
+                "day"
+            );
+
+            return "{$days} {$daysSuffixString}";
+        },
+        'daysFullJSFunction' => (
+            'function (days) {' .
+            '    const daysSuffixString = (' .
+            '        days > 1 ?' .
+            '        "days" :' .
+            '        "day"' .
+            '    );' .
+            '' .
+            '    return `${days} ${daysSuffixString}`;' .
+            '}'
+        ),
+        'daysShort' => function ($days) {
+            return "{$days}d";
+        }
+    ]
+];
+
+$_Lang['FatalError_PlanetRowEmpty']             = 'Critical error! Mother planet data unavailable!<br/>Please report this problem!';
+$_Lang['ServerStart_NotReached']                = 'This game server is going to be opened on <b class="lime">%s</b> at <b class="lime">%s</b>!<br/>In the meantime, you can invite other players using your referral link...';
+$_Lang['ServerIsClosed']                        = 'Game server is currently offline (disabled by Administration)!';
+$_Lang['NonActiveBlock']                        = '<b class="orange">You have to activate your account to continue your game play. Checkout your email account to find your account\'s activation link in the mail we\'ve sent to you upon registration.</b><br/>If your account will remain inactive for 7 days past the registration date, it will be automatically removed!';
+
+$_Lang['PlanetList_MoonSign']                   = 'Moon';
+$_Lang['PlanetList_MoonChar']                   = 'M';
+$_Lang['PlanetList_TypeChange_Sign_M']          = 'M';
+$_Lang['PlanetList_TypeChange_Sign_P']          = 'P';
+$_Lang['PlanetList_TypeChange_Title_M']         = 'Go to the moon';
+$_Lang['PlanetList_TypeChange_Title_P']         = 'Go to the planet';
+
+$_Lang['YouHaveToVoteInSurveys']                = (
+    'We\'ve detected that you still didn\'t vote in at least one currently active obligatory polls...<br/>' .
+    'You will be automatically redirected to the "Polls" section, where you will be asked to leave your vote.<br/><br/>' .
+    'To continue playing the game, you have to vote in all obligatory polls (obligatory polls awaiting your vote: <span style="color: red;">%s</span>) in which you didn\'t leave your vote yet (they will be highlighted)!<br/><br/>' .
+    '<a href="polls.php">You\'ll be redirected in a moment (10 seconds), click here if you don\'t want to wait...</a>'
+);
+
+$_Lang['SystemInfo']                            = 'System message';
+$_Lang['Cannot_usethis_till_logged']            = 'This section is not available for logged in players!';
+$_Lang['User_Deleted']                          = 'Deleted player';
+$_Lang['Planet_Deleted']                        = 'Deleted planet';
+$_Lang['Moon_Deleted']                          = 'Deleted moon';
+$_Lang['RulesAcceptBox_CantUseFunction']        = 'You have to accept the new Rules list of the game to be able to access this section or functionality!';
+
+$_Lang['Symbols_Planet']                        = 'P';
+$_Lang['Symbols_Moon']                          = 'M';
+
+$_Lang['BR_Target_1']                           = 'Planet';
+$_Lang['BR_Target_3']                           = 'Moon';
+$_Lang['no_loses_in_defence']                   = 'No defense systems lost';
+$_Lang['nothing_have_been_rebuilt']             = 'Nothing has been rebuilt';
+$_Lang['moon_has_been_destroyed']               = 'Moon has been destroyed!';
+
+$_Lang['Old_username_is']                       = 'Previously known as';
+$_Lang['ThisPageOnlyForPro']                    = 'This function is only available for owners of <a href="aboutpro.php">Pro Account</a>!';
+$_Lang['ProAccount']                            = 'Pro Account';
+
+$_Lang['YouAreNotLogged']                       = 'You are not logged in!<br/><br/><a href="login.php" target="_top">Log in!</a>';
+$_Lang['NotLoggedTitle']                        = 'System';
+$_Lang['Title_System']                          = 'System';
+$_Lang['BattleReport_title']                    = 'Battle Report';
+$_Lang['BattleConverter_title']                 = 'LiteConverter - UniEngine\'s Battle Reports converter';
+
+$_Lang['Main_page']                             = '<br /><a href="login.php">Main page</a>';
+$_Lang['Kicked_by_badIP']                       = 'You have been kicked out due to an IP address change!'.$_Lang['Main_page'].'<br/><br/><span style="color: red;">Warning!</span><br/>If system keeps kicking you out because of the dynamic nature of your ISP\'s settings, you can write to Administration of the game to turn off the unexpected IP change protection.';
+$_Lang['You_have_been_kicked']                  = 'You have been kicked out by an Administrator!'.$_Lang['Main_page'];
+$_Lang['GameBlock_CookieStyle']                 = 'You have been blocked from accessing the game!';
+$_Lang['Game_blocked_for_this_IP']              = 'You have been blocked from accessing the game!';
+$_Lang['Hacking_attempt']                       = "Data tampering attempt detected, server's Administration has been notified!";
+$_Lang['Warning']                               = "Warning";
+
+$_Lang['BattleReport_DoesntExist']              = 'This Battle Report does not exist!';
+$_Lang['BattleReport_NoIDGiven']                = 'Invalid Battle Report identifier given!';
+$_Lang['BattleReportReader_CannotRead']         = 'You cannot read this Report!';
+$_Lang['BattleReportReader_deleted']            = 'This Report has already been deleted';
+$_Lang['BattleReportReader_notyour']            = 'You cannot read this Report without a sharing link';
+$_Lang['BattleReportConverter_CannotConvert']   = 'You cannot convert this Report!';
+$_Lang['BattleReportReader_FatalError']         = 'A fatal error occurred while reading this Battle Report!<br/>Please report this to Administration!';
+
+$_Lang['sys_moon']                              = "Moon";
+$_Lang['sys_error']                             = "Error";
+$_Lang['sys_mess_attack_report']                = "Battle Report";
+
+$_Lang['sys_attacker_won']                      = "Aggressor has won the battle!";
+$_Lang['sys_defender_won']                      = "Defender has won the battle!";
+$_Lang['sys_both_won']                          = "Battle drawn. All fleets are returning to their origin bases!";
+$_Lang['sys_stealed_ressources']                = "They steal %s units %s, %s units %s and %s units %s.";
+$_Lang['sys_rapport_build_time']                = "Report generation time: %s sec.";
+
+$_Lang['sys_mess_destruc_report']               = "Destruction Report";
+$_Lang['sys_mess_defense_report']               = "Defence Report";
+$_Lang['sys_mess_rebuilt_def']                  = 'Defense Systems rebuilt';
+
+$_Lang['sys_colo_defaultname']                  = "Colony";
+$_Lang['sys_gain']                              = "Gains";
+$_Lang['sys_perte_attaquant']                   = "Aggressor lost";
+$_Lang['sys_perte_defenseur']                   = "Defender lost";
+$_Lang['sys_debris']                            = "Debris";
+$_Lang['sys_noaccess']                          = "Access Denied";
+$_Lang['sys_noalloaw']                          = "You are not authorised to access this page";
+
+$_Lang['sys_MIP_sending_planet']                = 'the planet';
+$_Lang['sys_MIP_sending_moon']                  = 'the moon';
+$_Lang['sys_MIP_attacked_planet']               = 'the planet';
+$_Lang['sys_MIP_attacked_moon']                 = 'the moon';
+
+// Fleet Blockade Box
+$_Lang['FleetBlockBox_Text']                    = '<acronym style="cursor: pointer;" title="This system is activated in case of a serious server malfunction, server upgrade period or periodic maintenance.">Fleets Blockade System</acronym> has been activated, the blockade will be lifted on <i>%s</i>';
+$_Lang['FleetBlockBox_Title']                   = 'Fleets Blockade System';
+$_Lang['FleetBlockBox_UserUnderProtection']     = 'This player is under Fleets Blockade System\'s protection!<br/>The blockade will be lifted for all inactive players on <i>%s</i>';
+$_Lang['FleetBlockBox_Total']                   = 'All flights have been restricted!';
+$_Lang['FleetBlockBox_OnlyAgressive']           = 'All aggressive flights have been restricted (attacks and espionage)!';
+
+// SmartFleetBlockade
+$_Lang['SFB_BoxTitle']                          = 'Fleets Blockade System';
+$_Lang['SFB_Stop_GlobalBlockade']               = 'You cannot send this fleet, because the Global Fleets Blockade is active!';
+$_Lang['SFB_Stop_GlobalPostBlockade']           = 'You cannot send this fleet, because this player is protected by the post Fleet Blockade!<br/>This additional protection will be taken off when they log into the game, or the time limit runs out<br/>(%s)';
+$_Lang['SFB_Stop_UserBlockade']                 = 'You cannot send this fleet, because this player is protected by the Fleet Blockade System!<br/>(Until %s, %s)<br/>Blockade reason: %s';
+$_Lang['SFB_Stop_UserBlockadeOwn']              = 'You cannot send this fleet, because your account is protected by the Fleet Blockade System!<br/>(Until %s, %s)<br/>Blockade reason: %s';
+$_Lang['SFB_Stop_PlanetBlockade_Planet']        = 'You cannot send this fleet, because this planet is protected by the Fleet Blockade System!<br/>(Until %s, %s)<br/>Blockade reason: %s';
+$_Lang['SFB_Stop_PlanetBlockade_Moon']          = 'You cannot send this fleet, because this moon is protected by the Fleet Blockade System!<br/>(Until %s, %s)<br/>Blockade reason: %s';
+$_Lang['SFB_Stop_PlanetBlockadeOwn_Planet']     = 'You cannot send this fleet, because your planet is protected by the Fleet Blockade System!<br/>(Until %s, %s)<br/>Blockade reason: %s';
+$_Lang['SFB_Stop_PlanetBlockadeOwn_Moon']       = 'You cannot send this fleet, because your moon is protected by the Fleet Blockade System!<br/>(Until %s, %s)<br/>Blockade reason: %s';
+$_Lang['SFB_Stop_LearnMore']                    = '<hr>This find out more about the Fleets Blockade System, go to <a href="redirect.php?id=5" target="_blank"><u>this page</u></a>';
+$_Lang['SFB_Stop_ReasonNotGiven']               = '- no reason provided -';
+
+$_Lang['Vacation']                              = 'Vacation';
+$_Lang['VacationMode']                          = 'Vacation mode';
+$_Lang['Vacation_WarnMsg']                      = 'You cannot use this function while on vacation!';
+$_Lang['VacationTill']                          = 'You are on vacation!<br>Vacation mode can be switched off no sooner than %s<br/><a href="logout.php">Logout</a>';
+$_Lang['VacationSetOff']                        = '<br/><br/><span style="color: orange;">To switch off the vacation mode, go to </span> <a href="settings.php">Settings</a>';
+
+$_Lang['When_full_store']                       = 'Storage full in:';
+$_Lang['Store_Status']                          = 'Storage state:';
+$_Lang['full_in']                               = '';
+$_Lang['full']                                  = 'Full';
+$_Lang['income_no_mine']                        = '<span class="red">No mine</span>';
+$_Lang['income_vacation']                       = '<span class="orange">Vacation mode</span>';
+$_Lang['income_minus']                          = '<span class="red">Negative production</span>';
+$_Lang['Store_status_Full']                     = '<span class="red">Full</span>';
+$_Lang['Store_status_Overload']                 = '<span class="red">Overloaded</span>';
+$_Lang['Store_status_NearFull']                 = '<span class="orange">Almost full</span>';
+$_Lang['Store_status_OK']                       = '<span class="lime">OK</span>';
+$_Lang['Store_status_Empty']                    = '<span class="orange">Empty</span>';
+
+$_Lang['near_your_planet']                      = 'your planet';
+$_Lang['near_your_moon']                        = 'your moon';
+$_Lang['to_your_planet']                        = 'your planet';
+$_Lang['to_your_moon']                          = 'your moon';
+$_Lang['to_planet']                             = 'planet';
+$_Lang['to_moon']                               = 'moon';
+$_Lang['from_planet']                           = 'planet';
+$_Lang['from_moon']                             = 'moon';
+$_Lang['on_planet']                             = 'planet';
+$_Lang['on_moon']                               = 'moon';
+$_Lang['to_this_planet']                        = 'this planet';
+$_Lang['to_this_moon']                          = 'this moon';
+$_Lang['on_this_planet']                        = 'this planet';
+$_Lang['on_this_moon']                          = 'this moon';
+
+$_Lang['LanguagesAvailable']    = [
+    'en'                        => [
+        'flag_emoji'            => '🇬🇧',
+        'name'                  => 'English'
+    ],
+    'pl'                        => [
+        'flag_emoji'            => '🇵🇱',
+        'name'                  => 'Polish'
+    ],
+];
+
+?>

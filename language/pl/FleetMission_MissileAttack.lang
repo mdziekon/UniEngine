@@ -1,16 +1,16 @@
 <?php
 
-$_Lang['MIP_A_M_Cap']= 'Twoje rakiety międzyplanetarne <b>(%s)</b> zostały przechwycone przez przeciwrakiety obrońcy!';
-$_Lang['MIP_D_M_Cap']= 'Rakiety międzyplanetarne agresora <b>(%s)</b> zostały przechwycone przez twoje przeciwrakiety!';
-$_Lang['MIP_Cap_M']= 'Przechwycona ilość rakiet międzyplanetarnych: <b>%s</b>';
-$_Lang['MIP_destroy']= '<b>Zniszczenia dokonane przez rakiety</b>:';
-$_Lang['MIP_A_rp_h'] = 'Twoje rakiety międzyplanetarne <b>(%s)</b> wystrzelone z %s %s %s zaatakowały %s %s %s<br/>';
-$_Lang['MIP_D_rp_h'] = 'Atak rakietowy <b>(%s)</b> z %s %s %s osiągnął %s %s %s<br/>'; 
-$_Lang['MIP_nodef']= 'Brak obrony na planecie, nic nie zostało zniszczone!';
-$_Lang['MIP_Debris'] = '<br/><b>Powstałe Pole Zniszczeń</b>';
-$_Lang['MIP_Units']= 'jednostek';
-$_Lang['MIP_DebMet'] = 'metalu';
-$_Lang['MIP_DebCry'] = 'kryształu';
+$_Lang['MIP_A_M_Cap']   = 'Twoje rakiety międzyplanetarne <b>(%s)</b> zostały przechwycone przez przeciwrakiety obrońcy!';
+$_Lang['MIP_D_M_Cap']   = 'Rakiety międzyplanetarne agresora <b>(%s)</b> zostały przechwycone przez twoje przeciwrakiety!';
+$_Lang['MIP_Cap_M']     = 'Przechwycona ilość rakiet międzyplanetarnych: <b>%s</b>';
+$_Lang['MIP_destroy']   = '<b>Zniszczenia dokonane przez rakiety</b>:';
+$_Lang['MIP_A_rp_h']    = 'Twoje rakiety międzyplanetarne <b>(%s)</b> wystrzelone z %s %s %s zaatakowały %s %s %s<br/>';
+$_Lang['MIP_D_rp_h']    = 'Atak rakietowy <b>(%s)</b> z %s %s %s osiągnął %s %s %s<br/>';
+$_Lang['MIP_nodef']     = 'Brak obrony na planecie, nic nie zostało zniszczone!';
+$_Lang['MIP_Debris']    = '<br/><b>Powstałe Pole Zniszczeń</b>';
+$_Lang['MIP_Units']     = 'jednostek';
+$_Lang['MIP_DebMet']    = 'metalu';
+$_Lang['MIP_DebCry']    = 'kryształu';
 
 $_Lang['RocketReport_Morale_Attacker_Negative'] = 'Ze względu na dyspropocję w Poziomie rozwoju Imperium między Tobą a Obrońcą (współczynnik: <b class="skyblue">%s</b>), ten atak był niehonorowy.<br/>Morale twojej załogi spadają do poziomu <b class="red">%s%%</b>.';
 

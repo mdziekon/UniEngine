@@ -1,0 +1,25 @@
+<?php
+
+$_Lang['Page_Title']            = 'Ban Reduction';
+
+$_Lang['Form_UserInput']        = 'Players to shorten bans<br/>(Separate with commas)<br/>(ID should be wrapped in square parenthesis [])';
+$_Lang['Form_Option']           = 'Shortening mode';
+$_Lang['Form_OptDate']          = 'Reset to a specified date';
+$_Lang['Form_OptTimeSpan']      = 'Subtract time';
+$_Lang['Form_PickDate']         = 'Select date';
+$_Lang['Form_Days']             = 'Days';
+$_Lang['Form_Hours']            = 'Hours';
+$_Lang['Form_Minutes']          = 'Minutes';
+$_Lang['Form_Seconds']          = 'Seconds';
+$_Lang['Form_Unban']            = 'Confirm';
+
+$_Lang['Msg_Update1OK']         = 'Ban of the player %s has been shortened!';
+$_Lang['Msg_UpdateMOK']         = 'Bans of players %s have been shortened!';
+$_Lang['Error_NoOne2Update']    = 'Could not find any players to shorten their bans!';
+$_Lang['Error_BadSearch']       = 'Invalid search parameters!';
+$_Lang['Error_EmptySearch']     = 'No have to provide at least one player name or ID!';
+$_Lang['Error_BadType']         = 'Invalid shortening mode!';
+$_Lang['Error_BadNewEndTime']   = 'New ban end date cannot be older than the current date!';
+$_Lang['Error_BadPeriod']       = 'Invalid shortening period provided!';
+
+?>

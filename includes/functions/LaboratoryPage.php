@@ -7,6 +7,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             $_SkinPath, $_GameConfig, $_GET;
 
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
+    includeLang('worldElements.detailed');
 
     $Now = time();
     $Parse = &$_Lang;
@@ -226,7 +227,14 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 
                     $QueueParser[] = array
                     (
-                        'ChronoAppletScript'    => InsertJavaScriptChronoApplet('QueueFirstTimer', '', $BuildEndTime, true, false, 'function() { $(\"#QueueCancel\").html(\"'.$_Lang['Queue_Cancel_Go'].'\").attr(\"href\", \"buildings.php?mode=research\").removeClass(\"cancelQueue\").addClass(\"lime\"); SetTimer = \"<b class=lime>'.$_Lang['completed'].'</b>\"; window.setTimeout(\'document.location.href=\"buildings.php?mode=research\";\', 1000); }'),
+                        'ChronoAppletScript'    => InsertJavaScriptChronoApplet(
+                            'QueueFirstTimer',
+                            '',
+                            $BuildEndTime,
+                            true,
+                            false,
+                            'function() { onQueuesFirstElementFinished(); }'
+                        ),
                         'EndTimer'                => pretty_time($ElementBuildtime, true),
                         'SkinPath'                => $_SkinPath,
                         'ElementID'                => $ElementID,
@@ -383,7 +391,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         $ElementParser['ElementLevel'] = prettyNumber($CurrentUser[$_Vars_GameElements[$ElementID]]);
         $ElementParser['ElementRealLevel'] = prettyNumber($CurrentUser[$_Vars_GameElements[$ElementID]] + (isset($LevelModifiers[$ElementID]) ? $LevelModifiers[$ElementID] : 0));
         $ElementParser['BuildLevel'] = prettyNumber($CurrentUser[$_Vars_GameElements[$ElementID]] + 1);
-        $ElementParser['Desc'] = $_Lang['res']['descriptions'][$ElementID];
+        $ElementParser['Desc'] = $_Lang['WorldElements_Detailed'][$ElementID]['description_short'];
         $ElementParser['BuildButtonColor'] = 'buildDo_Green';
 
         if(isset($LevelModifiers[$ElementID]))

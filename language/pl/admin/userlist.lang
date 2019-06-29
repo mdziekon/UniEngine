@@ -1,104 +1,102 @@
 <?php
 
-$_Lang['Userlist_Title'] = "Lista graczy";
-$_Lang['Userlist_ID'] = "ID";
-$_Lang['Userlist_Username'] = "Gracz";
-$_Lang['Userlist_Email'] = "Adres e-mail";
-$_Lang['Userlist_IP'] = "Adres IP";
-$_Lang['Userlist_RegIP'] = "IP rejestracji";
-$_Lang['Userlist_Browser'] = 'Przeglądarka';
-$_Lang['Userlist_Screen'] = 'Ekran';
-$_Lang['Userlist_Submit'] = 'Szukaj graczy';
-$_Lang['Userlist_NoUsersFound'] = 'Nie znaleziono graczy!';
-$_Lang['Userlist_ConfirmDelete'] = 'Czy na pewno chcesz usunąć tego gracza?';
+$_Lang['Userlist_Title']            = "Lista graczy";
+$_Lang['Userlist_ID']               = "ID";
+$_Lang['Userlist_Username']         = "Gracz";
+$_Lang['Userlist_Email']            = "Adres e-mail";
+$_Lang['Userlist_IP']               = "Adres IP";
+$_Lang['Userlist_RegIP']            = "IP rejestracji";
+$_Lang['Userlist_Browser']          = 'Przeglądarka';
+$_Lang['Userlist_Screen']           = 'Ekran';
+$_Lang['Userlist_Submit']           = 'Szukaj graczy';
+$_Lang['Userlist_NoUsersFound']     = 'Nie znaleziono graczy!';
+$_Lang['Userlist_ConfirmDelete']    = 'Czy na pewno chcesz usunąć tego gracza?';
 
-$_Lang['SearchUserTip'] = 'W celu użycia <b>multiwyszukiwania</b> (wyszukiwanie kilku wartości naraz) oddziel każdą frazę znakiem <b>|</b> (pionowa kreska)';
-$_Lang['SelectAllVisible'] = '<b>Zaznacz wszystko</b>';
-$_Lang['SelectAllFiltered']	= '<b>Zaznacz wszystkich pasujących do Filtra</b>';
-$_Lang['EMails'] = 'Adresy Email';
-$_Lang['IPs'] = 'Adresy IP';
+$_Lang['SearchUserTip']             = 'W celu użycia <b>multiwyszukiwania</b> (wyszukiwanie kilku wartości naraz) oddziel każdą frazę znakiem <b>|</b> (pionowa kreska)';
+$_Lang['SelectAllVisible']          = '<b>Zaznacz wszystko</b>';
+$_Lang['SelectAllFiltered']         = '<b>Zaznacz wszystkich pasujących do Filtra</b>';
+$_Lang['EMails']                    = 'Adresy Email';
+$_Lang['IPs']                       = 'Adresy IP';
 
-$_Lang['mEmail'] = 'Aktywny EMail';
-$_Lang['xEmail'] = 'Zmieniony adres EMail (w procesie aktywacji)';
-$_Lang['_same'] = '<b class="lime">Bez zmian</b>';
-$_Lang['_notsame'] = '<b class="orange">W trakcie zmiany</b>';
+$_Lang['mEmail']                    = 'Aktywny EMail';
+$_Lang['xEmail']                    = 'Zmieniony adres EMail (w procesie aktywacji)';
+$_Lang['_same']                     = '<b class="lime">Bez zmian</b>';
+$_Lang['_notsame']                  = '<b class="orange">W trakcie zmiany</b>';
 
-$_Lang['Lookup'] = 'Lookup';
-$_Lang['LoopupInfo'] = 'Zobacz więcej informacji na temat wybranego IP';
-$_Lang['LastIPLook'] = 'Ostatnie IP';
-$_Lang['RegIPLook'] = 'IP Rejestracji';
-$_Lang['lastIP'] = 'Ostatni adres IP';
-$_Lang['regIP'] = 'Adres IP z rejestracji';
-$_Lang['_NoIP'] = 'Brak IP';
+$_Lang['Lookup']                    = 'Lookup';
+$_Lang['LoopupInfo']                = 'Zobacz więcej informacji na temat wybranego IP';
+$_Lang['LastIPLook']                = 'Ostatnie IP';
+$_Lang['RegIPLook']                 = 'IP Rejestracji';
+$_Lang['lastIP']                    = 'Ostatni adres IP';
+$_Lang['regIP']                     = 'Adres IP z rejestracji';
+$_Lang['_NoIP']                     = 'Brak IP';
 
-$_Lang['UserOnVacation'] = 'Gracz jest na urlopie';
-$_Lang['UserIsBanned'] = 'Gracz jest zbanowany do';
-$_Lang['UserNotActivated'] = 'Gracz nie aktywował konta';
-$_Lang['UserIsOnDeletion'] = 'Konto w trybie usuwania';
-$_Lang['UserDeleteIn'] = 'Usunięcie konta';
-$_Lang['DeleteInNextCalc'] = 'przy następnym przeliczeniu';
-$_Lang['UserActivationLink'] = 'Link aktywacyjny';
+$_Lang['UserOnVacation']            = 'Gracz jest na urlopie';
+$_Lang['UserIsBanned']              = 'Gracz jest zbanowany do';
+$_Lang['UserNotActivated']          = 'Gracz nie aktywował konta';
+$_Lang['UserIsOnDeletion']          = 'Konto w trybie usuwania';
+$_Lang['UserDeleteIn']              = 'Usunięcie konta';
+$_Lang['DeleteInNextCalc']          = 'przy następnym przeliczeniu';
+$_Lang['UserActivationLink']        = 'Link aktywacyjny';
 
-$_Lang['UserInfo'] = 'Pełen podgląd';
-$_Lang['UserPM'] = 'Napisz wiadomość';
-$_Lang['UserDelete'] = 'Usuń gracza';
-$_Lang['UserUnban'] = 'Odbanuj';
-$_Lang['UserBan'] = 'Zbanuj';
-$_Lang['ShowActionLogs'] = 'Pokaż Logi';
+$_Lang['UserInfo']                  = 'Pełen podgląd';
+$_Lang['UserPM']                    = 'Napisz wiadomość';
+$_Lang['UserDelete']                = 'Usuń gracza';
+$_Lang['UserUnban']                 = 'Odbanuj';
+$_Lang['UserBan']                   = 'Zbanuj';
+$_Lang['ShowActionLogs']            = 'Pokaż Logi';
+$_Lang['ShowUserMessages']          = 'Wiadomości gracza';
 
-$_Lang['ResetFilters'] = 'Resetuj Filtry';
-$_Lang['ToggleFilters']	= 'Pokaż/Ukryj opcje filtrów';
-$_Lang['ShowPerPage'] = 'Graczy na stronę';
-$_Lang['StrictSearch'] = 'Pełne dopasowanie';
-$_Lang['AnyIP'] = 'Szukaj w całej bazie IP';
-$_Lang['StrictSearchInfo'] = '<b>Pełne dopasowanie</b> oznacza, że wyszukane zostaną wyniki o <b>dokładnie</b> takich samych wartościach jak te wpisane.';
-$_Lang['AnyIPInfo'] = '<b>Przeszukiwanie całej bazy IP</b> wyszukuje jakiekolwiek logowania z podanego IP, nie tylko ostatnie logowanie.';
-$_Lang['SearchByName'] = 'Nazwa Gracza';
-$_Lang['SearchByUserID'] = 'ID Gracza';
-$_Lang['SearchByAlly'] = 'Gracze z Sojuszu';
-$_Lang['SearchByAllyID'] = 'Gracze z Sojuszu o ID';
-$_Lang['SearchByIP'] = 'Gracze o IP';
+$_Lang['ResetFilters']              = 'Resetuj Filtry';
+$_Lang['ToggleFilters']             = 'Pokaż/Ukryj opcje filtrów';
+$_Lang['ShowPerPage']               = 'Graczy na stronę';
+$_Lang['StrictSearch']              = 'Pełne dopasowanie';
+$_Lang['AnyIP']                     = 'Szukaj w całej bazie IP';
+$_Lang['StrictSearchInfo']          = '<b>Pełne dopasowanie</b> oznacza, że wyszukane zostaną wyniki o <b>dokładnie</b> takich samych wartościach jak te wpisane.';
+$_Lang['AnyIPInfo']                 = '<b>Przeszukiwanie całej bazy IP</b> wyszukuje jakiekolwiek logowania z podanego IP, nie tylko ostatnie logowanie.';
+$_Lang['SearchByName']              = 'Nazwa Gracza';
+$_Lang['SearchByUserID']            = 'ID Gracza';
+$_Lang['SearchByAlly']              = 'Gracze z Sojuszu';
+$_Lang['SearchByAllyID']            = 'Gracze z Sojuszu o ID';
+$_Lang['SearchByIP']                = 'Gracze o IP';
 
-$_Lang['Last_Activity'] = 'Ostatnia aktywność';
-$_Lang['Register_time'] = 'Rejestracja';
+$_Lang['Last_Activity']             = 'Ostatnia aktywność';
+$_Lang['Register_time']             = 'Rejestracja';
 
-$_Lang['Ally_name'] = 'Sojusz';
-$_Lang['ItsAllyOwner'] = 'Właściciel Sojuszu';
-$_Lang['AllyRequested'] = 'Złożone podanie do tego sojuszu';
+$_Lang['Ally_name']                 = 'Sojusz';
+$_Lang['ItsAllyOwner']              = 'Właściciel Sojuszu';
+$_Lang['AllyRequested']             = 'Złożone podanie do tego sojuszu';
 
-$_Lang['OnlineSearch'] = 'Gracze Online';
-$_Lang['OnVacationSearch'] = 'Gracze na Urlopie';
-$_Lang['NoSort'] = 'Wyłącz sortowanie';
-$_Lang['IsBannedSearch'] = 'Gracze Zbanowani';
-$_Lang['IsAISearch'] = 'Gracz to Bot';
-$_Lang['IsDeletingSearch'] = 'Kasacja konta';
-$_Lang['IsActiveSearch'] = 'Konto Aktywne';
-$_Lang['IsInAllySearch'] = 'W sojuszu';
-$_Lang['AllySearchType'] = 'Szukaj w';
-$_Lang['AllyInRequest']	= 'Uwzględnij podania';
+$_Lang['OnlineSearch']              = 'Gracze Online';
+$_Lang['OnVacationSearch']          = 'Gracze na Urlopie';
+$_Lang['NoSort']                    = 'Wyłącz sortowanie';
+$_Lang['IsBannedSearch']            = 'Gracze Zbanowani';
+$_Lang['IsAISearch']                = 'Gracz to Bot';
+$_Lang['IsDeletingSearch']          = 'Kasacja konta';
+$_Lang['IsActiveSearch']            = 'Konto Aktywne';
+$_Lang['IsInAllySearch']            = 'W sojuszu';
+$_Lang['AllySearchType']            = 'Szukaj w';
+$_Lang['AllyInRequest']             = 'Uwzględnij podania';
 
-$_Lang['PlayerIsBanned'] = 'Gracz jest zbanowany!';
-$_Lang['PlayerIsOnVacations'] = 'Gracz jest na urlopie';
+$_Lang['PlayerIsBanned']            = 'Gracz jest zbanowany!';
+$_Lang['PlayerIsOnVacations']       = 'Gracz jest na urlopie';
 
-$_Lang['_Yes'] = 'Tak';
-$_Lang['_No'] = 'Nie';
-$_Lang['_Names'] = 'Nazwach';
-$_Lang['_Tags']	= 'Tagach';
+$_Lang['_Yes']                      = 'Tak';
+$_Lang['_No']                       = 'Nie';
+$_Lang['_Names']                    = 'Nazwach';
+$_Lang['_Tags']                     = 'Tagach';
 
-$_Lang['UserStats'] = 'Statystyki';
-$_Lang['ShowUserMessages'] = 'Wiadomości gracza';
+$_Lang['FoundUsers_Count']          = 'Ilość znalezionych graczy: %s';
+$_Lang['Filtering_Time']            = 'Filtrowanie: %s s.';
+$_Lang['Loading_Time']              = 'Pobieranie: %s s.';
 
-$_Lang['FoundUsers_Count'] = 'Ilość znalezionych graczy: %s';
-$_Lang['Filtering_Time'] = 'Filtrowanie: %s s.';
-$_Lang['Loading_Time'] = 'Pobieranie: %s s.';
+$_Lang['MassAction']['Selections']  = 'Zaznaczenia';
+$_Lang['MassAction']['Ban']         = 'Zbanuj';
+$_Lang['MassAction']['Unban']       = 'Odbanuj';
 
-$_Lang['MassAction']['Selections'] = 'Zaznaczenia';
-$_Lang['MassAction']['Ban']	= 'Zbanuj';
-$_Lang['MassAction']['Unban'] = 'Odbanuj';
+$_Lang['UserFilter_NoGoodStrings']  = 'Funkcja filtrująca odrzuciła wszystkie podane wartości!';
 
-$_Lang['UserFilter_NoGoodStrings'] = 'Funkcja filtrująca odrzuciła wszystkie podane wartości!';
-
-$_Lang['ThisData_NoAccess'] = '<span style="color: red; border-bottom: 1px dashed white;" class="usrReg" title="Nie masz uprawnień do przeglądania tej zawartości!">NoAccess</span>';
+$_Lang['ThisData_NoAccess']         = '<span style="color: red; border-bottom: 1px dashed white;" class="usrReg" title="Nie masz uprawnień do przeglądania tej zawartości!">NoAccess</span>';
 
 
 ?>

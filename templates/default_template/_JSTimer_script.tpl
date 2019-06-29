@@ -1,5 +1,16 @@
+<script src="{FilePath}/dist/js/jsChronoApplet.cachebuster-1560520835921.min.js"></script>
 <script>
-var ServerClientDifference = ({ServerTimestamp} * 1000) - new Date().getTime();
-var JSChronoAppletLang = {Lang_day1: '{Lang_day1}', Lang_dayM: '{Lang_dayM}'};
+const serverTimestampOffset = ({ServerTimestamp} * 1000) - new Date().getTime();
+const LANG = {
+    Chrono_PrettyTime: {
+        chronoFormat: {
+            daysFullJSFunction: {LANG_daysFullJSFunction}
+        }
+    }
+};
+
+const countdownHandlerInstance = new CountdownHandler({
+    serverTimestampOffset,
+    LANG
+});
 </script>
-<script src="{FilePath}/dist/js/jsChronoApplet.cachebuster-1546216625636.min.js"></script>

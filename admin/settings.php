@@ -216,6 +216,8 @@ $_Lang['PHP_OverviewClickBanner'] = $_GameConfig['OverviewClickBanner'];
 $_Lang['PHP_banned_ip_list'] = str_replace('|', "\n", $_GameConfig['banned_ip_list']);
 $_Lang['PHP_BannedMailDomains'] = str_replace('|', "\n", $_GameConfig['BannedMailDomains']);
 
+$_Lang['JS_DatePicker_TranslationLang'] = getJSDatePickerTranslationLang();
+
 $Page = parsetemplate(gettemplate('admin/settings_body'), $_Lang);
 display($Page, $_Lang['Body_Title'], false, true);
 

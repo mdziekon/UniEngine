@@ -14,13 +14,13 @@ $_Lang['mail_template']    .= '</html>';
 
 $_Lang['mail_title']        = 'Ponowna aktywacja';
 
-$_Lang['ResetCode'] = "Ponowne wysłanie linku aktywacyjnego";
-$_Lang['TextCode1'] = "Proszę o wpisanie adresu e-mail.";
-$_Lang['TextCode2'] = "Po wpisaniu mail'a kliknij generuj, a na adres e-mail dostaniesz wygenerowany nowy kod aktywacyjny.";
-$_Lang['email']    = "EMail";
-$_Lang['ButtonSendPass'] = "Generuj";
-$_Lang['CodeForm'] = "Formularz";
-$_Lang['Title']      = 'Generowanie kodu aktywacyjnego';
+$_Lang['ResetCode']         = "Ponowne wysłanie linku aktywacyjnego";
+$_Lang['TextCode1']         = "Proszę o wpisanie adresu e-mail.";
+$_Lang['TextCode2']         = "Po wpisaniu mail'a kliknij generuj, a na adres e-mail dostaniesz wygenerowany nowy kod aktywacyjny.";
+$_Lang['email']             = "EMail";
+$_Lang['ButtonSendPass']    = "Generuj";
+$_Lang['CodeForm']          = "Formularz";
+$_Lang['Title']             = 'Generowanie kodu aktywacyjnego';
 
 $_Lang['go_back']                = '<br/><br/><a href="lostcode.php">Powrót</a>';
 

@@ -7,6 +7,7 @@ include($_EnginePath.'common.php');
 
 loggedCheck();
 
+include($_EnginePath.'includes/functions/InsertGalaxyScripts.php');
 include($_EnginePath.'includes/functions/ShowGalaxyRows.php');
 include($_EnginePath.'includes/functions/ShowGalaxySelector.php');
 include($_EnginePath.'includes/functions/ShowGalaxyMISelector.php');
@@ -173,47 +174,26 @@ $MoonCount = 0;
 $GalaxyTPL = gettemplate('galaxy_body');
 
 // Include Script
-$ScriptTPL = gettemplate('galaxy_scripts');
-$ScriptLang = includeLang('galaxy_ajax', true);
-$ScriptLang['SkinPath'] = $_SkinPath;
-$ScriptLang['Insert_ReponseCodes'] = '';
-foreach($ScriptLang as $Key => $Value)
-{
-    if(strstr($Key, 'ajax_send_') !== false)
-    {
-        $Code = str_replace('ajax_send_', '', $Key);
-        $ScriptLang['Insert_ReponseCodes'] .= "RespCodes['{$Code}'] = '{$Value}';\n";
-    }
-}
-$ScriptLang['maxGal'] = MAX_GALAXY_IN_WORLD;
-$ScriptLang['maxSys'] = MAX_SYSTEM_IN_GALAXY;
-if($_User['settings_UseAJAXGalaxy'] == 1)
-{
-    $ScriptLang['UseAjax'] = 'true';
-    $HideMissileForm = true;
-}
-else
-{
-    $ScriptLang['UseAjax'] = 'false';
-}
-if($_User['settings_useprettyinputbox'] == 1)
-{
-    $ScriptLang['P_AllowPrettyInputBox'] = 'true';
-}
-else
-{
-    $ScriptLang['P_AllowPrettyInputBox'] = 'false';
-}
-$Parse['Input_GalaxyScripts'] = parsetemplate($ScriptTPL, $ScriptLang);
+$galaxyScriptsData = [
+    'SkinPath' => $_SkinPath,
+    'maxGal' => MAX_GALAXY_IN_WORLD,
+    'maxSys' => MAX_SYSTEM_IN_GALAXY,
+    'UseAjax' => ($_User['settings_UseAJAXGalaxy'] == 1 ? 'true' : 'false'),
+    'P_AllowPrettyInputBox' => ($_User['settings_useprettyinputbox'] == 1 ? 'true' : 'false')
+];
+
+$Parse['Input_GalaxyScripts'] = InsertGalaxyScripts($galaxyScriptsData);
 
 $Parse['Input_GalaxySelector'] = ShowGalaxySelector($galaxy, $system);
-if($mode === 2 OR $_User['settings_UseAJAXGalaxy'] == 1)
-{
-    $Parse['Input_GalaxyMissileSelector'] = ShowGalaxyMISelector($galaxy, $system, $planet, $CurrentMIP, $HideMissileForm);
-}
 $Parse['Input_GalaxyHeaders'] = ShowGalaxyTitles();
 $Parse['Input_GalaxyRows'] = ShowGalaxyRows($galaxy, $system, $planet);
 $Parse['Input_GalaxyFooter'] = ShowGalaxyFooter($galaxy, $system, $CurrentMIP, $CurrentRC, $CurrentSP, $CurrentCS);
+
+if ($mode === 2 OR $_User['settings_UseAJAXGalaxy'] == 1) {
+    $HideMISelector = ($_User['settings_UseAJAXGalaxy'] == 1);
+
+    $Parse['Input_GalaxyMissileSelector'] = ShowGalaxyMISelector($galaxy, $system, $planet, $CurrentMIP, $HideMISelector);
+}
 
 $Page = parsetemplate($GalaxyTPL, $Parse);
 

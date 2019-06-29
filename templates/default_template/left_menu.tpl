@@ -4,7 +4,7 @@
     <tr>
         <td style="border-top: 1px #545454 solid" class="center">
             <b style="border-bottom: dotted 1px;">{servername}</b><br/>
-            <a onmouseover="this.style.background = 'none'" style="padding-left: 0;" class="red" title="{changelogandinfo}" href="changelog.php">{GameVersion} (Rev. {GameBuild})</a>
+            <a onmouseover="this.style.background = 'none'" style="padding-left: 0;" class="red" title="{ChangeLogTitle}" href="changelog.php">{GameVersion} (Rev. {GameBuild})</a>
         </td>
     </tr>
     <tr><td class="center bgimg">{devlp}</td></tr>

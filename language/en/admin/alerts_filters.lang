@@ -1,0 +1,108 @@
+<?php
+
+$_Lang['PageTitle']                     = 'System Alerts > Filters Management';
+
+$_Lang['Filters_List']                  = 'Filters list';
+$_Lang['Filters_Add']                   = 'Add new Filter';
+$_Lang['Filters_Edit']                  = 'Edit Filter';
+
+$_Lang['Filters_GoAdd']                 = 'Add new Filter';
+
+$_Lang['Cmd_GoToAlerts']                = 'Go back to Alerts List';
+$_Lang['CMD_Delete_Title']              = 'Delete this filter';
+$_Lang['CMD_Edit_Title']                = 'Edit this filter';
+$_Lang['CMD_Clear']                     = 'Clear code';
+$_Lang['CMD_GoBack']                    = 'Go back to Filters List';
+$_Lang['CMD_SelectAll']                 = 'Select all';
+$_Lang['CMD_DeleteAll']                 = 'Remove selected';
+
+$_Lang['No_Filters_ThisPage']           = 'There are no filters on this page!';
+$_Lang['No_Filters']                    = 'No filters!';
+
+$_Lang['Filter_ID']                     = 'ID';
+$_Lang['Filter_Date']                   = 'Added';
+$_Lang['Filter_Enabled']                = 'Is Active?';
+$_Lang['Filter_ActionType']             = 'Action';
+$_Lang['Filter_Conditions']             = 'Action conditions';
+$_Lang['Filter_UseCount']               = 'Usage count';
+$_Lang['Filter_Actions']                = 'Options';
+
+$_Lang['Disabled']                      = 'Disabled';
+$_Lang['Enabled']                       = 'Enabled';
+
+$_Lang['QuickConditions']               = 'Quick conditions';
+$_Lang['FilterCode']                    = 'Filter\'s code';
+$_Lang['ActionType']                    = 'Filter\'s action';
+$_Lang['TurnOff']                       = 'Disable filter';
+
+$_Lang['Condition_1']                   = 'Player "X" is on the list';
+$_Lang['Condition_2']                   = 'IP address "X" is on the list';
+$_Lang['Condition_3']                   = 'Player "X" tries to send a fleet';
+$_Lang['Condition_4']                   = 'Planet of the player "X" is fleet\\\'s destination';
+$_Lang['Condition_5']                   = 'Player "X" logged in using IP address "Y" less or equal "Z" times';
+$_Lang['Condition_6']                   = 'Section is "X"';
+$_Lang['Condition_7']                   = 'Alert detector is "X"';
+
+$_Lang['CondSelector_6_1']              = 'fleet3.php';
+$_Lang['CondSelector_6_2']              = 'galaxyfleet.php';
+$_Lang['CondSelector_6_3']              = 'sendmissile.php';
+$_Lang['CondSelector_6_4']              = 'overview.php';
+
+$_Lang['CondSelector_7_1']              = 'fleet3.php';
+$_Lang['CondSelector_7_2']              = 'galaxyfleet.php';
+$_Lang['CondSelector_7_3']              = 'sendmissile.php';
+$_Lang['CondSelector_7_4']              = 'MultiAccount (overview.php)';
+$_Lang['CondSelector_7_5']              = 'ProxyLogin (overview.php)';
+
+$_Lang['Give_UserID']                   = 'Player ID';
+$_Lang['Give_IPID']                     = 'IP Address ID';
+$_Lang['Give_LogIPCount']               = 'Provide (separate with commas): Player ID, IP Address ID, Logins count';
+
+$_Lang['AddFilter']                     = 'Add filter';
+$_Lang['EditFilter']                    = 'Save changes';
+$_Lang['CheckFilter']                   = 'Validate filter';
+$_Lang['AddCondition']                  = 'Add condition';
+
+$_Lang['Alert_GiveValFirst']            = 'This condition requires an argument!';
+$_Lang['AreYouSure_Clear']              = 'Are you sure you want to clear filter\\\'s code?';
+$_Lang['AreYouSure_Add']                = 'Are you sure you want to add this filter?';
+$_Lang['AreYouSure_Delete1']            = 'Are you sure you want to delete this filter?';
+$_Lang['AreYouSure_DeleteSelected']     = 'Are you sure you want to delete selected filters?';
+$_Lang['AreYouSure_Edit']               = 'Are you sure you want to save changes in this filter?';
+
+$_Lang['Warn_BadSyntax_BracketOpen']    = 'Invalid syntax detected - parenthesis not matched!';
+$_Lang['Warn_BadSyntax_BracketClose']   = 'Invalid syntax detected - too many closing parenthesis!';
+$_Lang['Warn_BadSyntax_1']              = 'Invalid syntax detected in function <u>%s</u>! [Errors: %s]';
+$_Lang['Warn_ArgBadSyntax_1']           = 'Function <u>%s</u> takes only Integers as arguments! [Errors: %s]';
+$_Lang['Warn_NotAllSelectsDeleted']     = 'Selected filters have been deleted! [Deleted %s out of %s]';
+
+$_Lang['Error_BadAction']               = 'Invalid filter action!';
+$_Lang['Error_CodeEmpty']               = 'Filter\'s code is empty!';
+$_Lang['Error_NoSuchFilter']            = 'There\'s no such filter!';
+$_Lang['Error_BadFilterID']             = 'Invalid filter ID!';
+$_Lang['Error_NothingDeleted']          = 'Nothing has been deleted!';
+$_Lang['Error_Nothing2Delete']          = 'Nothing has been selected for deletion!';
+$_Lang['Error_NothingSelected']         = 'Nothing has been selected!';
+$_Lang['Error_IDIsMalformed']           = 'Invalid data provided!';
+$_Lang['Error_NoIDGiven']               = 'Invalid ID provided!';
+
+$_Lang['Info_FilterAdded']              = 'Filter has been added!';
+$_Lang['Info_FilterDeleted']            = 'Filter has been removed!';
+$_Lang['Info_AllSelectsDeleted']        = 'All selected filters have been deleted!';
+$_Lang['Info_CodeLooksFine']            = 'Code looks to be valid';
+$_Lang['Info_FilterEdited']             = 'Filter has been modified!';
+
+$_Lang['PerPage']                       = 'Per page';
+$_Lang['Pages']                         = 'Pages';
+$_Lang['Prev']                          = '&#171;';
+$_Lang['Next']                          = '&#187;';
+
+$_Lang['ActionTypes']                   = [
+    '1' => 'Ignore',
+    '2' => 'Ignore and don\'t block fleet',
+];
+
+$_Lang['ActionType_2']                  = &$_Lang['ActionTypes'][2];
+$_Lang['ActionType_1']                  = &$_Lang['ActionTypes'][1];
+
+?>

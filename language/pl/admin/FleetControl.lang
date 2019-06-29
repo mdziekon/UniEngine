@@ -12,8 +12,6 @@ $_Lang['Fleet_Cargo']                = 'Ładunek';
 $_Lang['Fleet_Start']                = 'Start floty';
 $_Lang['Fleet_End']                  = 'Cel i czas dotarcia';
 $_Lang['Fleet_End_owner']            = 'Właściciel celu';
-$_Lang['Fleet_Start_time']           = 'Wylot';
-$_Lang['Fleet_Calc_time']            = 'Dotarcie do celu';
 $_Lang['Fleet_Back_time']            = 'Powrót';
 
 $_Lang['No_cargo']                   = 'Brak';
@@ -39,14 +37,14 @@ $_Lang['Target_is_debris']           = 'Cel to Pole Zniszczeń';
 
 $_Lang['FleetControl_Refresh']       = 'Odśwież';
 $_Lang['FleetControl_Retreat']       = 'Zawróć lecące floty';
-$_Lang['FleetControl_Fallback']		= 'Wycofaj natychmiast';
-$_Lang['FleetControl_SendMsg']		= 'Wyślij powiadomienie do graczy';
+$_Lang['FleetControl_Fallback']      = 'Wycofaj natychmiast';
+$_Lang['FleetControl_SendMsg']       = 'Wyślij powiadomienie do graczy';
 
 $_Lang['Ask_AreYouSure']             = 'Jesteś pewien?';
 
 $_Lang['SysMsg_AccessDenied']        = 'Nie masz odpowiednich uprawnień do wykonania tej akcji!';
 $_Lang['SysMsg_XFleetsRetreated']    = 'Floty zawrócone pomyślnie [Wycofano: %s / Znalezione: %s]';
-$_Lang['SysMsg_XFleetsFallenBack']	= 'Floty wycofane pomyślnie [Wycofano: %s / Znalezione: %s]';
+$_Lang['SysMsg_XFleetsFallenBack']   = 'Floty wycofane pomyślnie [Wycofano: %s / Znalezione: %s]';
 $_Lang['SysMsg_XACSChanged']         = '(W tym Floty Związku - Zaktualizowano: %s / Usunięto: %s)';
 $_Lang['SysMsg_0FleetsRetreated']    = 'Nie zawrócono żadnej Floty [Znalezione: %s]';
 $_Lang['SysMsg_0FleetsFallenBack']   = 'Nie wycofano żadnej Floty [Znalezione: %s]';

@@ -254,8 +254,58 @@ function ReadBattleReport($Report)
             }
             if($Every1FromTeamDestroyed === false AND $Number <= BATTLE_MAX_ROUNDS)
             {
-                $AttackWaveStat = sprintf($_Lang['sys_attack_wave'], ((count($Data['atk']['ships']) > 1) ? $_Lang['sys_msg_atk_fleets'] : $_Lang['sys_msg_atk_fleet']), prettyNumber($Data['atk']['count']), (($Data['atk']['count'] > 1) ? $_Lang['sys_x_times'] : ''),prettyNumber (floor($Data['atk']['force'])), ((count($Data['def']['ships']) > 1) ? $_Lang['sys_msg_into_defs'] : $_Lang['sys_msg_into_def']), ((count($Data['def']['ships']) > 1) ? $_Lang['sys_msg_into_defs'] : $_Lang['sys_msg_into_def_shield']), prettyNumber(floor($Data['def']['shield'])));
-                $DefendWavaStat = sprintf($_Lang['sys_attack_wave'], ((count($Data['def']['ships']) > 1) ? $_Lang['sys_msg_def_fleets'] : $_Lang['sys_msg_def_fleet']), prettyNumber($Data['def']['count']), (($Data['def']['count'] > 1) ? $_Lang['sys_x_times'] : ''),prettyNumber (floor($Data['def']['force'])), ((count($Data['atk']['ships']) > 1) ? $_Lang['sys_msg_into_atks'] : $_Lang['sys_msg_into_atk']), ((count($Data['atk']['ships']) > 1) ? $_Lang['sys_msg_into_atks'] : $_Lang['sys_msg_into_atk']), prettyNumber(floor($Data['atk']['shield'])));
+                $AttackWaveStat = sprintf(
+                    $_Lang['sys_attack_wave'],
+                    (
+                        (count($Data['atk']['ships']) > 1) ?
+                        $_Lang['sys_msg_atk_fleets'] :
+                        $_Lang['sys_msg_atk_fleet']
+                    ),
+                    prettyNumber($Data['atk']['count']),
+                    (
+                        ($Data['atk']['count'] > 1) ?
+                        $_Lang['sys_x_times'] :
+                        ''
+                    ),
+                    prettyNumber(floor($Data['atk']['force'])),
+                    (
+                        (count($Data['def']['ships']) > 1) ?
+                        $_Lang['sys_msg_into_defs'] :
+                        $_Lang['sys_msg_into_def']
+                    ),
+                    (
+                        (count($Data['def']['ships']) > 1) ?
+                        $_Lang['sys_msg_into_defs'] :
+                        $_Lang['sys_msg_into_def_shield']
+                    ),
+                    prettyNumber(floor($Data['def']['shield']))
+                );
+                $DefendWavaStat = sprintf(
+                    $_Lang['sys_attack_wave'],
+                    (
+                        (count($Data['def']['ships']) > 1) ?
+                        $_Lang['sys_msg_def_fleets'] :
+                        $_Lang['sys_msg_def_fleet']
+                    ),
+                    prettyNumber($Data['def']['count']),
+                    (
+                        ($Data['def']['count'] > 1) ?
+                        $_Lang['sys_x_times'] :
+                        ''
+                    ),
+                    prettyNumber(floor($Data['def']['force'])),
+                    (
+                        (count($Data['atk']['ships']) > 1) ?
+                        $_Lang['sys_msg_into_atks'] :
+                        $_Lang['sys_msg_into_atk']
+                    ),
+                    (
+                        (count($Data['atk']['ships']) > 1) ?
+                        $_Lang['sys_msg_into_atks'] :
+                        $_Lang['sys_msg_into_atk']
+                    ),
+                    prettyNumber(floor($Data['atk']['shield']))
+                );
 
                 $ThisRoundArray[] = "<tr><th class=\"pad5 wave\">{$AttackWaveStat}<br/>{$DefendWavaStat}</th></tr>";
                 $ThisRoundArray[] = '<tr><th class="br3"></th></tr>';

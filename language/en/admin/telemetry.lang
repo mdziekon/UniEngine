@@ -1,0 +1,45 @@
+<?php
+
+$_Lang['Page_Title']                    = 'Telemetry';
+
+$_Lang['Tele_Header_Overview']          = 'Sections list';
+
+$_Lang['Tele_Headers_ID']               = 'ID';
+$_Lang['Tele_Headers_Place']            = 'Section';
+$_Lang['Tele_Headers_HasPost']          = 'POST data';
+$_Lang['Tele_Headers_DataPoints']       = 'Data points';
+
+$_Lang['Tele_Filters_Where']            = 'WHERE';
+$_Lang['Tele_Filters_Order']            = 'ORDER';
+$_Lang['Tele_Filters_Limit']            = 'LIMIT';
+$_Lang['Tele_Filters_Submit']           = 'Filter';
+$_Lang['Tele_Filters_SkipJumps']        = 'Omit spikes';
+$_Lang['Tele_Filters_SkipJumps_Diff']   = 'Spike ratio';
+
+$_Lang['Tele_HasPost']['0'] = [
+    'color' => 'red',
+    'txt' => 'No'
+];
+$_Lang['Tele_HasPost']['1'] = [
+    'color' => 'lime',
+    'txt' => 'Yes'
+];
+
+$_Lang['Tele_Msg_NoPlaces']                 = 'No data collected!';
+$_Lang['Tele_Msg_NoDataPoints']             = 'No data points collected!';
+$_Lang['Tele_Msg_BadPID']                   = 'Invalid section ID given!';
+$_Lang['Tele_UsernameEmpty']                = 'Username empty';
+
+$_Lang['Tele_NameTranslation__t']           = 'Total';
+$_Lang['Tele_NameTranslation__c']           = 'common.php';
+$_Lang['Tele_NameTranslation__c_maininc']   = 'common.php - main includes';
+$_Lang['Tele_NameTranslation__f0']          = 'Fleets init';
+$_Lang['Tele_NameTranslation__f1']          = 'Fleets calculations';
+$_Lang['Tele_NameTranslation__d']           = 'Finalise';
+
+$_Lang['Tele_Legend_Avg']   = 'Avg. %s ms.';
+
+$_Lang['Tele_TimeUnits']    = 'ms';
+$_Lang['Tele_ToolTipText']  = "\'Time: \'+RunResult+\'ms<br/>Point type: \'+ModeName+\'<br/>Player: <a target=\\\"_blank\\\" href=\\\"browse_actionlogs.php?uid=\'+UserID+\'&amp;date=\'+OtherDate+\'\\\">\'+Username+\'</a><br/>Data point date: \'+FullDate+\'\'";
+
+?>

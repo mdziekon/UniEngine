@@ -1,0 +1,931 @@
+<?php
+
+$_Lang['PageTitle']                     = 'Tasks and Achievements';
+
+$_Lang['Tabs_ActiveTasks']              = 'Active tasks';
+$_Lang['Tabs_TasksLog']                 = 'Tasks log';
+$_Lang['Tabs_Achievements']             = 'Achievements';
+
+$_Lang['Tab01_CatSel_TabTitle']         = 'Tasks Overview';
+$_Lang['Tab01_CatSel_CatRewards']       = 'Rewards for tasks category completion';
+$_Lang['Tab01_CatSel_Task']             = 'Task';
+$_Lang['Tab01_CatSel_TaskDone']         = 'Completed';
+$_Lang['Tab01_CatSel_TaskNotDone']      = 'Incomplete';
+$_Lang['Tab01_CatSel_TaskLocked']       = 'Locked';
+$_Lang['Tab01_CatSel_JobsToDo']         = 'Requirements';
+$_Lang['Tab01_CatSel_FirstToDo']        = 'To unlock this task, complete';
+$_Lang['Tab01_CatSel_DoCategory']       = 'The whole category';
+$_Lang['Tab01_CatSel_DoTask']           = 'Task';
+$_Lang['Tab01_CatSel_Reward']           = 'Rewards';
+$_Lang['Tab01_CatSel_SkipInfo']         = '<b class=\'%s\'>%s</b>';
+$_Lang['Tab01_CatSel_SkipBoth']         = 'You\'ll receive rewards for completing tasks and the whole category';
+$_Lang['Tab01_CatSel_SkipTaskOnly']     = 'You\'ll receive rewards for completing tasks only<br/> - There are no rewards for category completion';
+$_Lang['Tab01_CatSel_SkipCatOnly']      = 'You\'ll receive rewards for completing the whole category<br/> - There are no rewards for individual tasks completion';
+$_Lang['Tab01_CatSel_SkipNone']         = 'This will unlock further tasks, but you won\'t be granted any rewards';
+$_Lang['Tab01_CatSel_DoSkip']           = 'Skip this category';
+$_Lang['Tab01_CatSel_SkipConfirm']      = 'Are you sure you want to skip this category of tasks?';
+
+$_Lang['Tab01_CatList_TabTitle']        = 'List of task categories to complete';
+$_Lang['Tab01_CatList_Info']            = 'The list below represents all the tasks (grouped into categories) which you can currently fulfil.<br/>Click on one of the categories to see its overview and check tasks\' statuses.<br/>If you want to see the list of already completed tasks, go to the "Tasks log" tab.<br/><b class="lime">Note: all tasks\' rewards are transfered to your Mother planet</b>';
+$_Lang['Tab01_CatList_Done']            = 'Completed';
+$_Lang['Tab01_CatList_NoCats']          = 'No active tasks!';
+$_Lang['Tab01_CatList_AllCatsMade']     = 'You\'ve completed all available tasks!';
+$_Lang['Tab01_CatList_NoCatsMade']      = 'You didn\'t complete any tasks\' categories yet!';
+
+$_Lang['Tab01_CatListDone_TabTitle']    = 'List of completed tasks\' categories';
+$_Lang['Tab01_CatListDone_Info']        = 'The list below represents all already completed tasks.<br/>Click on one of the categories to see its overview and check tasks\' descriptions and received rewards.';
+
+$_Lang['Msg_CatNoExist']                = 'This category does not exist!';
+$_Lang['Msg_CatDone']                   = 'Completed tasks are available in the Tasks log!';
+$_Lang['Msg_CatNotDone']                = 'You didn\'t complete this category yet!';
+$_Lang['Msg_CatNotAvailable']           = 'You didn\'t unlock this category yet!';
+$_Lang['Msg_CantSkipUnSkippable']       = 'You cannot skip this category!';
+$_Lang['Msg_CantSkipDone']              = 'This tasks\' category is already completed!';
+$_Lang['Msg_Skiped']                    = 'The category <i>"%s"</i> has been skipped!';
+
+$_Lang['Tab_Prev']                      = 'Previous task';
+$_Lang['Tab_Next']                      = 'Next task';
+
+
+$_Lang['TasksCats'] = [
+    1 => 'Introduction',
+    2 => 'Military',
+    3 => 'Economy',
+    4 => 'Research',
+    5 => 'Allied support',
+    6 => 'Universe support',
+];
+
+$_Lang['TaskRewardsTranslations'] = [
+    'PREMIUM_ITEM' => [
+        12 => 'Free Geologist for 3 days'
+    ]
+];
+
+$_Lang['TaskRewards'] = [
+    //  $details
+    //      - type: 'RESOURCES'
+    //      - met: Number | undefined
+    //      - cry: Number | undefined
+    //      - deu: Number | undefined
+    'RESOURCES' => function ($details, $_Lang) {
+        $parts = [];
+
+        $resourceNames = [
+            'met' => $_Lang['Metal'],
+            'cry' => $_Lang['Crystal'],
+            'deu' => $_Lang['Deuterium'],
+        ];
+
+        foreach ([ 'met', 'cry', 'deu' ] as $resourceKey) {
+            if (!isset($details[$resourceKey])) {
+                continue;
+            }
+
+            $value = prettyNumber($details[$resourceKey]);
+            $resourceName = $resourceNames[$resourceKey];
+
+            $parts[] = "{$resourceName}: {$value} units";
+        }
+
+        return implode(", ", $parts);
+    },
+
+    //  $details
+    //      - type: 'PREMIUM_ITEM'
+    //      - elementID: Number
+    'PREMIUM_ITEM' => function ($details, $_Lang) {
+        $elementID = $details['elementID'];
+
+        return $_Lang['TaskRewardsTranslations']['PREMIUM_ITEM'][$elementID];
+    },
+
+    //  $details
+    //      - type: 'XXXX'
+    //      - elementID: Number
+    //      - count: Number
+    'PLANET_ELEMENT' => function ($details, $_Lang) {
+        $elementID = $details['elementID'];
+        $value = prettyNumber($details['count']);
+        $resourceName = $_Lang['tech'][$elementID];
+
+        return "{$resourceName}: {$value}";
+    },
+
+    //  $details
+    //      - type: 'PREMIUM_RESOURCE'
+    //      - value: Number
+    'PREMIUM_RESOURCE' => function ($details, $_Lang) {
+        $value = prettyNumber($details['value']);
+        $resourceName = $_Lang['DarkEnergy'];
+
+        return "{$resourceName}: {$value} units";
+    },
+];
+
+$_Lang['Tasks'] = [
+    // Introduction
+    1 => [
+        'name' => 'Basic supplies',
+        'desc' => 'The basic planetary infrastructure provides resources necessary for further expansion.<b>Metal</b> and <b>Crystal</b> are the basic resources available in the game, which can be used to build up your Empire. To extract these resources you also need <b>Energy</b>, produced by Power planets and their smaller, more mobile counterparts.'
+    ],
+    2 => [
+        'name' => 'The third resource',
+        'desc' => '<b>Deuterium</b> is a very important resource available in the game. It allows you to further upgrade your planetary infrastructure, improve your technologies, build new ships and some defense systems. To allow for your Empire\'s stable growth, you have to take care of this resource\'s stable supply. <b>Deuterium</b>, thanks to its stored energy value, can also be used as a <b>Fuel</b> for space ships.'
+    ],
+    3 => [
+        'name' => 'Minimal viable defenses',
+        'desc' => 'One of the main aspects of the game are battles with other players. To prevent being an easy target for your enemies, you should invest some resources in a minimal planetary defenses. To construct both ships and defense systems, you\'ll need <b>Robotics factory</b> and <b>Shipyard</b>. In later stage of the game you\'ll also need to advance your technologies.'
+    ],
+    4 => [
+        'name' => 'Further planetary enhancements',
+        'desc' => 'Each planet has a limited resources storage. When that limit is reached, the <b>Resources extraction</b> is temporarily halted. Improving your <b>Storages</b> and <b>Tanks</b> prevents these situations. However, don\'t fear about resources carried by your ships - transported resources will be stored on your planets anyway, even though there is no storage space for the extraction itself!'
+    ],
+    5 => [
+        'name' => 'Technological advancements',
+        'desc' => '<b>Research lab</b> is a structure allowing you to develop and advance your technologies, which in turn allow you to construct new, better ships. One of the most important technologies are <b>Computer technology</b> (allowing you to manage simultaneous fleet flights) and <b>Drive technologies</b>. Information about <b>Technological requirements</b> can be found in the <b>"<a href="techtree.php" class="orange">Technology</a>"</b> section in the game menu.'
+    ],
+    6 => [
+        'name' => 'Your first ships',
+        'desc' => 'With your ships, you can transport resources between your planets and attack your enemies, pillaging their planets. Ships such like <b>Cargoships</b> are not suited for battles, so you better support them with other millitary units (eg. <b>Light fighters</b>, which will take care of the enemy fire, or <b>Battleships</b>, which can heavily damage enemy units)'
+    ],
+    7 => [
+        'name' => 'Planetary colonies',
+        'desc' => 'The development of your planetary <b>Colonies</b> is crucial to the expansion of your empire. The more planets you own, the more resources income you can get with less investment spent on improvements of the mines. Since the cost of improvements grows faster than the improved extraction, it\'s far easier and efficient to improve two low-level mines than improve a high-level one. You should also remember, that Deuterium is easier to extract on colder planets placed further away from their system stars, and the biggest (field-wise) planets can be found on the 14-th position in the solar system.'
+    ],
+    8 => [
+        'name' => 'Alternative energy sources',
+        'desc' => 'Due to the growing cost of Solar plants improvements, <b>Solar Sattelites</b> are a highly recommended energy source in the later phases of the game. They are extremelly cheap and easy to construct, giving you a substantial energy income boost. However, they have a significant downside compared to the ground Plants - they can be destroyed during battles and their debris pillaged by your enemies. Therefore, it\'s important to provide at least a minimal energy income from the Plants, to prevent your mines from halting their work completely.'
+    ],
+    9 => [
+        'name' => 'Millitary actions',
+        'desc' => 'The very first step to resources pillaging is sending <b>Espionage</b> missions using <b>Spy probes</b>, to find enemy stockpiles. With highly developed Espionage technology, or high enough count of the Probes, you should be able to get enough informations about your enemies\' planets and moons, their defenses and storage states (although, keep in mind that your probes can be destroyed when detected!). Before the actual attack mission, it\'s worth to use the <b>Battle simulator</b>, to check if the mission is cost-effective. If a planet does not have any defenses and guarding ships, you can <b>pillage</b> resources with <b>Cargoships</b> alone!'
+    ],
+    10 => [
+        'name' => 'Debris field cleanup',
+        'desc' => 'Almost every battle produces some garbage on the orbit, creating a <b>Debris field</b>, containing the remains of destroyed ships and defenses. This provides an additional source of <b>income</b>, that\'s why sometimes it might be worth attacking a planet without any stored resources, to simply destroy and then recover resources from a destroyed enemy fleet. You can use <b>Recyclers</b> to collect that debris, but remember - first come, first served!'
+    ],
+    11 => [
+        'name' => 'Players\' unions',
+        'desc' => '<b>Alliances</b> are unions of several players how declare to help each other both in term of Millitary actions and Trading. Joining or creating an Alliance usually helps your empire to grow faster and further expands your millitary dominion. Another way to "socialise" in the game is by using <b>Friends list</b> - a list of befriended players, which just like Alliance membership, allows you to send <b>United Attacks</b>.'
+    ],
+    12 => [
+        'name' => 'Fleet saving',
+        'desc' => 'Due to the nature of the game, your planets and fleets are vulnerable to enemy attacks 24/7, even when you\'re not logged in. Therefore it\'s important that every fleet owner sends their ships on a so called <b>FleetSave (FS)</b> before logging out - it is a form of long and slow mission, which makes it impossible to destroy your ships in-flight. To heavily slow down your ships you can use a special spacecraft - the <b>Space shuttle</b>. The best way to perform a Fleet Save is to send your ships from one of <b>your Moons</b> to another with <b>Stay mission</b>. This prevents enemies from tracking down your in-flight fleets with <b>Sensor phalanx</b>, which cannot scan fleet movements on moons.'
+    ],
+    13 => [
+        'name' => 'Computations',
+        'desc' => 'As your empire grows, improving buildings and constructing new types of spaceships takes more time due to the growing complexity of the developed structures. One remedy to that problem is to build and improve the Nanite factory, which greatly reduces buildings construction time and helps with Shipyard\'s work as well. Every next level of the Nanite factory cuts construction times by half.'
+    ],
+    14 => [
+        'name' => 'The hunt for enemy\'s fleet',
+        'desc' => 'Sensor phalanx is an extremely helpful tool when scanning the galaxy for enemy fleets, but it becomes useless when ships are flying between moons. In that case, the only solution is to destroy the enemy\'s moon with Deathstars - large and costly units equipped with Graviton cannons, powerful enough to destroy moons. After moon\'s destruction, all in-flight ships are visible again to the phalanx when scanning the moon\'s corresponding planet'
+    ],
+    15 => [
+        'name' => 'Interplanetar transportation',
+        'desc' => 'Mega cargoships are the result of engineering mastery brought to the world of interplanetar transportation system. All the developed empires use them as the main resources transportation unit'
+    ],
+    16 => [
+        'name' => 'Colonial expansion',
+        'desc' => 'Empire\'s expansion further into space is extremely important from the economical standpoint. Every additional is an additional income source. The faster you colonise as many planets as you can, the faster you\'ll surpass your rivals or catch up with the server\'s elite.'
+    ],
+    17 => [
+        'name' => 'Colonial empires',
+        'desc' => 'While colonising new planets one should not forget about improving the colonial infrastructure. It\'s worth investing in next levels of mines and extractors to increase the overall empire\'s resources income. Evenly spread investments should yield the most efficient income growth.'
+    ],
+    18 => [
+        'name' => 'Moons',
+        'desc' => 'Planet\'s moon is the only place where structures like a Jump gate or Sensor phalanx can be built. In addition to that, it creates the perfect environment for Fleet saves, giving you the ability to prevent from losing your fleets and stockpiled resources. Moons are created as a result of orbital battles, and since their presence is invaluable, sometimes it\'s worth asking for help from friends or alliance members to destroy some of your ships in a controlled demolishion, usually referred to as Moonmaking (where sacrificing a small, calculated number of ships gives you a chance to have a moon on your own terms).'
+    ],
+    19 => [
+        'name' => 'God save the fleet!',
+        'desc' => 'One of the best methods of performing a Fleet save maneuver is to send your ships from one of your own moons to another with Stay mission. Thanks to the nature of the moons, your fleet is hidden from your enemies\' Sensor phalanxes, but even in the case of moon destruction, there\'s still a chance to save your fleet from its doom.'
+    ],
+    // Military
+    20 => [
+        'name' => 'The power of gravitons I',
+        'desc' => ''
+    ],
+    21 => [
+        'name' => 'The power of gravitons II',
+        'desc' => ''
+    ],
+    22 => [
+        'name' => 'The power of gravitons III',
+        'desc' => ''
+    ],
+    23 => [
+        'name' => 'Treacherous gravity I',
+        'desc' => ''
+    ],
+    24 => [
+        'name' => 'Treacherous gravity II',
+        'desc' => ''
+    ],
+    25 => [
+        'name' => 'Treacherous gravity III',
+        'desc' => ''
+    ],
+    26 => [
+        'name' => 'Fun with gravity',
+        'desc' => ''
+    ],
+    27 => [
+        'name' => 'Ripping in half',
+        'desc' => ''
+    ],
+    28 => [
+        'name' => 'King of the gravitons',
+        'desc' => ''
+    ],
+    29 => [
+        'name' => 'Orbital creator I',
+        'desc' => ''
+    ],
+    30 => [
+        'name' => 'Orbital creator II',
+        'desc' => ''
+    ],
+    31 => [
+        'name' => 'Orbital creator III',
+        'desc' => ''
+    ],
+    32 => [
+        'name' => 'Flexing on your enemies I',
+        'desc' => ''
+    ],
+    33 => [
+        'name' => 'Flexing on your enemies II',
+        'desc' => ''
+    ],
+    34 => [
+        'name' => 'Flexing on your enemies III',
+        'desc' => ''
+    ],
+    35 => [
+        'name' => 'Tactical advantage I',
+        'desc' => ''
+    ],
+    36 => [
+        'name' => 'Tactical advantage II',
+        'desc' => ''
+    ],
+    37 => [
+        'name' => 'Tactical advantage III',
+        'desc' => ''
+    ],
+    38 => [
+        'name' => 'United power I',
+        'desc' => ''
+    ],
+    39 => [
+        'name' => 'United power II',
+        'desc' => ''
+    ],
+    40 => [
+        'name' => 'United power III',
+        'desc' => ''
+    ],
+    41 => [
+        'name' => 'Play hardball I',
+        'desc' => ''
+    ],
+    42 => [
+        'name' => 'Play hardball II',
+        'desc' => ''
+    ],
+    43 => [
+        'name' => 'Play hardball III',
+        'desc' => ''
+    ],
+    44 => [
+        'name' => 'Play hardball IV',
+        'desc' => ''
+    ],
+    45 => [
+        'name' => 'Play hardball V',
+        'desc' => ''
+    ],
+    46 => [
+        'name' => 'A though nut to crack I',
+        'desc' => ''
+    ],
+    47 => [
+        'name' => 'A though nut to crack II',
+        'desc' => ''
+    ],
+    48 => [
+        'name' => 'A though nut to crack III',
+        'desc' => ''
+    ],
+    49 => [
+        'name' => 'Crush your enemies I',
+        'desc' => ''
+    ],
+    50 => [
+        'name' => 'Crush your enemies II',
+        'desc' => ''
+    ],
+    51 => [
+        'name' => 'Crush your enemies III',
+        'desc' => ''
+    ],
+    52 => [
+        'name' => 'War encounters I',
+        'desc' => ''
+    ],
+    53 => [
+        'name' => 'War encounters II',
+        'desc' => ''
+    ],
+    54 => [
+        'name' => 'War encounters III',
+        'desc' => ''
+    ],
+    55 => [
+        'name' => 'Demolishing group',
+        'desc' => ''
+    ],
+    56 => [
+        'name' => 'Brave save',
+        'desc' => ''
+    ],
+    57 => [
+        'name' => 'Divide and conquer',
+        'desc' => ''
+    ],
+    58 => [
+        'name' => 'Save the environment',
+        'desc' => ''
+    ],
+    59 => [
+        'name' => 'Harvest I',
+        'desc' => ''
+    ],
+    60 => [
+        'name' => 'Harvest II',
+        'desc' => ''
+    ],
+    61 => [
+        'name' => 'Harvest III',
+        'desc' => ''
+    ],
+    62 => [
+        'name' => 'Sacrifices I',
+        'desc' => ''
+    ],
+    63 => [
+        'name' => 'Sacrifices II',
+        'desc' => ''
+    ],
+    // Economy
+    64 => [
+        'name' => 'Economy improvements I',
+        'desc' => ''
+    ],
+    65 => [
+        'name' => 'Economy improvements II',
+        'desc' => ''
+    ],
+    66 => [
+        'name' => 'Economy improvements III',
+        'desc' => ''
+    ],
+    67 => [
+        'name' => 'Economic power',
+        'desc' => ''
+    ],
+    68 => [
+        'name' => 'Economic growth',
+        'desc' => ''
+    ],
+    69 => [
+        'name' => 'Storage logistics',
+        'desc' => ''
+    ],
+    70 => [
+        'name' => 'Advanced terraforming',
+        'desc' => ''
+    ],
+    71 => [
+        'name' => 'Cold fuel',
+        'desc' => ''
+    ],
+    // Scientific Development
+    72 => [
+        'name' => 'Weaponry improvements I',
+        'desc' => ''
+    ],
+    73 => [
+        'name' => 'Weaponry improvements II',
+        'desc' => ''
+    ],
+    74 => [
+        'name' => 'Shielding improvements I',
+        'desc' => ''
+    ],
+    75 => [
+        'name' => 'Shielding improvements II',
+        'desc' => ''
+    ],
+    76 => [
+        'name' => 'Armour improvements I',
+        'desc' => ''
+    ],
+    77 => [
+        'name' => 'Armour improvements II',
+        'desc' => ''
+    ],
+    78 => [
+        'name' => 'Lasers improvements I',
+        'desc' => ''
+    ],
+    79 => [
+        'name' => 'Lasers improvements II',
+        'desc' => ''
+    ],
+    80 => [
+        'name' => 'Lasers improvements III',
+        'desc' => ''
+    ],
+    81 => [
+        'name' => 'Ion cannons improvements I',
+        'desc' => ''
+    ],
+    82 => [
+        'name' => 'Ion cannons improvements II',
+        'desc' => ''
+    ],
+    83 => [
+        'name' => 'Ion cannons improvements III',
+        'desc' => ''
+    ],
+    84 => [
+        'name' => 'Plasma throwers improvements I',
+        'desc' => ''
+    ],
+    85 => [
+        'name' => 'Plasma throwers improvements II',
+        'desc' => ''
+    ],
+    86 => [
+        'name' => 'Plasma throwers improvements III',
+        'desc' => ''
+    ],
+    87 => [
+        'name' => 'Imperial research grid',
+        'desc' => ''
+    ],
+    88 => [
+        'name' => 'Galactic centre of science',
+        'desc' => ''
+    ],
+    89 => [
+        'name' => 'Technocracy I',
+        'desc' => ''
+    ],
+    90 => [
+        'name' => 'Technocracy II',
+        'desc' => ''
+    ],
+    91 => [
+        'name' => 'Technocracy III',
+        'desc' => ''
+    ],
+    92 => [
+        'name' => 'Technocracy IV',
+        'desc' => ''
+    ],
+    93 => [
+        'name' => 'Technocracy V',
+        'desc' => ''
+    ],
+    // Allied support
+    94 => [
+        'name' => 'Demolition for a right cause I',
+        'desc' => ''
+    ],
+    95 => [
+        'name' => 'Demolition for a right cause II',
+        'desc' => ''
+    ],
+    96 => [
+        'name' => 'Demolition for a right cause III',
+        'desc' => ''
+    ],
+    97 => [
+        'name' => 'Demolition for a right cause IV',
+        'desc' => ''
+    ],
+    98 => [
+        'name' => 'Demolition for a right cause V',
+        'desc' => ''
+    ],
+    99 => [
+        'name' => 'Team leader I',
+        'desc' => ''
+    ],
+    100 => [
+        'name' => 'Team leader II',
+        'desc' => ''
+    ],
+    101 => [
+        'name' => 'Team leader III',
+        'desc' => ''
+    ],
+    // Universum support
+    102 => [
+        'name' => 'Friends network I',
+        'desc' => ''
+    ],
+    103 => [
+        'name' => 'Friends network II',
+        'desc' => ''
+    ],
+    104 => [
+        'name' => 'Friends network III',
+        'desc' => ''
+    ],
+    105 => [
+        'name' => 'Head hunter I',
+        'desc' => ''
+    ],
+    106 => [
+        'name' => 'Head hunter II',
+        'desc' => ''
+    ],
+    107 => [
+        'name' => 'Head hunter III',
+        'desc' => ''
+    ],
+];
+
+$_Lang['TasksJobs'] = [
+    // Introduction
+    1 => [
+        'Build and improve [tech=1]Metal mine[/tech] to level 8',
+        'Build and improve [tech=2]Crystal mine[/tech] to level 8',
+        'Build and improve [tech=4]Solar plant[/tech] to level 10'
+    ],
+    2 => [
+        'Build and improve [tech=3]Deuterium synthesiser[/tech] to level 8'
+    ],
+    3 => [
+        'Build and improve [tech=14]Robotics factory[/tech] to level 2',
+        'Build [tech=21]Shipyard[/tech] to level 1',
+        'Build 5.000 [tech=401]Rocket launchers[/tech]'
+    ],
+    4 => [
+        'Improve [tech=22]Metal mine[/tech] to level 5',
+        'Improve [tech=23]Crystal mine[/tech] to level 5',
+        'Improve [tech=24]Deuterium tank[/tech] to level 5'
+    ],
+    5 => [
+        'Build [tech=31]Research lab[/tech] to level 1',
+        'Develop [tech=108]Computer technology[/tech] to level 2',
+        'Develop [tech=113]Energy technology[/tech] to level 2'
+    ],
+    6 => [
+        'Improve [tech=21]Shipyard[/tech] to level 2',
+        'Develop [tech=115]Combustion drive[/tech] to level 2',
+        'Build 500 [tech=202]Small cargoships[/tech]'
+    ],
+    7 => [
+        'Unlock and build [tech=208]Colony ship[/tech]',
+        'Create a new colony on a different Planet'
+    ],
+    8 => [
+        'Build 200 [tech=212]Solar satellites[/tech]'
+    ],
+    9 => [
+        'Unlock and build 100 [tech=210]Spy probe[/tech]',
+        'Perform espionage mission on any enemy Planet',
+        'Perform a simulation in the Battle Simulator'
+    ],
+    10 => [
+        'Unlock and build 100 [tech=209]Recyclers[/tech]',
+        'Recycle any Debris field'
+    ],
+    11 => [
+        'Create a new alliance, join an existing one or invite someone to your Friends list'
+    ],
+    12 => [
+        'Unlock and build 1 [tech=219]Space shuttle[/tech]',
+        '<b>(Recommended)</b> Get familiar with <b>Fleet save maneuvers</b>'
+    ],
+    13 => [
+        'Improve [tech=108]Computer technology[/tech] to level 10',
+        'Build [tech=15]Nanite factory[/tech] on any 3 colonies'
+    ],
+    14 => [
+        'Build 1 [tech=214]Deathstar[/tech]',
+        'Destroy any moon'
+    ],
+    15 => [
+        'Build 50 [tech=217]Mega cargoships[/tech]'
+    ],
+    16 => [
+        'Colonise 10 planets (9 colonies + Mother planet)'
+    ],
+    17 => [
+        'Improve [tech=1]Metal mine[/tech] to level 20 on any 5 planets',
+        'Improve [tech=2]Crystal mine[/tech] to level 20 on any 5 planets',
+        'Improve [tech=3]Deuterium synthesiser[/tech] to level 20 on any 5 planets'
+    ],
+    18 => [
+        'Build [tech=41]Lunar base[/tech] to level 1'
+    ],
+    19 => [
+        'Perform Fleet save maneuver of any fleet. Send your fleet from one moon to another with Stay mission. The fleet\'s flight time has to last for at least 6 hours.'
+    ],
+    // Military
+    20 => [
+        'Destroy 50 Moons of any diameter'
+    ],
+    21 => [
+        'Destroy 150 Moons of any diameter'
+    ],
+    22 => [
+        'Destroy 500 Moons of any diameter'
+    ],
+    23 => [
+        'Destroy 50 Moons of any diameter, while not losing your fleet in that battle<br/>(Moon\'s destruction cannot destroy the fleet)'
+    ],
+    24 => [
+        'Destroy 100 Moons of any diameter, while not losing your fleet in that battle<br/>(Moon\'s destruction cannot destroy the fleet)'
+    ],
+    25 => [
+        'Destroy 200 Moons of any diameter, while not losing your fleet in that battle<br/>(Moon\'s destruction cannot destroy the fleet)'
+    ],
+    26 => [
+        'Destroy 50 Moons of at least 8.000 km. in diameter, while not losing your fleet in that battle <br/>(Moon\'s destruction cannot destroy the fleet)'
+    ],
+    27 => [
+        'Destroy 25 Moons at least 9.000 km. in diameter'
+    ],
+    28 => [
+        'Destroy 5 Moons at least 9.900 km. in diameter'
+    ],
+    29 => [
+        'Create 100 Moons of any diameter, in any battle type'
+    ],
+    30 => [
+        'Create 250 Moons of any diameter, in any battle type'
+    ],
+    31 => [
+        'Create 500 Moons of any diameter, in any battle type'
+    ],
+    32 => [
+        'Cumulatively destroy 100.000.000 enemy millitary units (ships or defense systems)'
+    ],
+    33 => [
+        'Cumulatively destroy 1.000.000.000 enemy millitary units (ships or defense systems)'
+    ],
+    34 => [
+        'Cumulatively destroy 5.000.000.000 enemy millitary units (ships or defense systems)'
+    ],
+    35 => [
+        'Destroy one enemy fleet (in solo battle) worth at least 10.000.000 stat points, where your fleet\'s cost is at max 60% of the enemy fleet\'s cost'
+    ],
+    36 => [
+        'Destroy one enemy fleet (in solo battle) worth at least 300.000.000 stat points, where your fleet\'s cost is at max 50% of the enemy fleet\'s cost'
+    ],
+    37 => [
+        'Destroy one enemy fleet (in solo battle) worth at least 1.000.000.000 stat points, where your fleet\'s cost is at max 40% of the enemy fleet\'s cost'
+    ],
+    38 => [
+        'Destroy 3 enemy fleets (in united battle) worth at least 10.000.000 stat points, where your fleets\' cost is at max 35% of the enemy fleets\' cost'
+    ],
+    39 => [
+        'Destroy 3 enemy fleets (in united battle) worth at least 500.000.000 stat points, where your fleets\' cost is at max 30% of the enemy fleets\' cost'
+    ],
+    40 => [
+        'Destroy 3 enemy fleets (in united battle) worth at least 1.500.000.000 stat points, where your fleets\' cost is at max 25% of the enemy fleets\' cost'
+    ],
+    41 => [
+        'Win 1.000 battles of any type'
+    ],
+    42 => [
+        'Win 5.000 battles of any type'
+    ],
+    43 => [
+        'Win 10.000 battles of any type'
+    ],
+    44 => [
+        'Win 25.000 battles of any type'
+    ],
+    45 => [
+        'Win 50.000 battles of any type'
+    ],
+    46 => [
+        'Win or draw 25 solo attacks, where debris of defenders\' units make up at least 100.000% chance of Moon creation'
+    ],
+    47 => [
+        'Win or draw 50 solo attacks, where debris of defenders\' units make up at least 100.000% chance of Moon creation'
+    ],
+    48 => [
+        'Win or draw 100 solo attacks, where debris of defenders\' units make up at least 100.000% chance of Moon creation'
+    ],
+    49 => [
+        'Win or draw 15 solo attacks, where debris of defenders\' units make up at least 500.000% chance of Moon creation'
+    ],
+    50 => [
+        'Win or draw 30 solo attacks, where debris of defenders\' units make up at least 500.000% chance of Moon creation'
+    ],
+    51 => [
+        'Win or draw 50 solo attacks, where debris of defenders\' units make up at least 500.000% chance of Moon creation'
+    ],
+    52 => [
+        'Win or draw 15 any attacks, where debris of defenders\' units make up at least 1.000.000% chance of Moon creation'
+    ],
+    53 => [
+        'Win or draw 30 any attacks, where debris of defenders\' units make up at least 1.000.000% chance of Moon creation'
+    ],
+    54 => [
+        'Win or draw 50 any attacks, where debris of defenders\' units make up at least 1.000.000% chance of Moon creation'
+    ],
+    55 => [
+        'Win or draw 5 Walk z Związku, where debris of defenders\' units make up at least 5.000.000% chance of Moon creation'
+    ],
+    56 => [
+        'Prevent destruction of one of your Moons by an enemy fleet which consists of at least 1.000 Deathstars<br/>(Enemy\'s Deathstars cannot fire gravitons towards your Moon)'
+    ],
+    57 => [
+        'Reach total sum of Moon creation chance from all won or drawn solo battles equal to 50.000.000%<br/>'
+    ],
+    58 => [
+        'Cumulatively recycle 30.000.000.000.000 units of Metal from Debris fields<br/>',
+        'Cumulatively recycle 15.000.000.000.000 units of Crystal from Debris fields<br/>',
+    ],
+    59 => [
+        'Cumulatively pillage 100.000.000.000 units of Metal from from attacked Planets and/or Moons<br/>',
+        'Cumulatively pillage 100.000.000.000 units of Crystal from from attacked Planets and/or Moons<br/>',
+        'Cumulatively pillage 100.000.000.000 units of Deuterium from from attacked Planets and/or Moons<br/>',
+    ],
+    60 => [
+        'Cumulatively pillage 500.000.000.000 units of Metal from from attacked Planets and/or Moons<br/>',
+        'Cumulatively pillage 500.000.000.000 units of Crystal from from attacked Planets and/or Moons<br/>',
+        'Cumulatively pillage 500.000.000.000 units of Deuterium from from attacked Planets and/or Moons<br/>',
+    ],
+    61 => [
+        'Cumulatively pillage 1.000.000.000.000 units of Metal from from attacked Planets and/or Moons<br/>',
+        'Cumulatively pillage 1.000.000.000.000 units of Crystal from from attacked Planets and/or Moons<br/>',
+        'Cumulatively pillage 1.000.000.000.000 units of Deuterium from from attacked Planets and/or Moons<br/>',
+    ],
+    62 => [
+        'Build cumulatively 1.000.000.000 [tech=204]Light[/tech] or [tech=205]Heavy fighters[/tech]'
+    ],
+    63 => [
+        'Build cumulatively 10.000.000.000 [tech=204]Light[/tech] or [tech=205]Heavy fighters[/tech]'
+    ],
+    // Economy
+    64 => [
+        'Improve [tech=1]Metal mine[/tech] to level 30 on 10 different planets',
+        'Improve [tech=2]Crystal mine[/tech] to level 30 on 10 different planets',
+        'Improve [tech=3]Deuterium synthesiser[/tech] to level 30 on 10 different planets',
+    ],
+    65 => [
+        'Improve [tech=1]Metal mine[/tech] to level 40 on 10 different planets',
+        'Improve [tech=2]Crystal mine[/tech] to level 40 on 10 different planets',
+        'Improve [tech=3]Deuterium synthesiser[/tech] to level 40 on 10 different planets',
+    ],
+    66 => [
+        'Improve [tech=1]Metal mine[/tech] to level 50 on 5 different planets',
+        'Improve [tech=2]Crystal mine[/tech] to level 50 on 5 different planets',
+        'Improve [tech=3]Deuterium synthesiser[/tech] to level 50 on 5 different planets',
+    ],
+    67 => [
+        'Improve [tech=1]Metal mine[/tech] to level 50 on 10 different planets',
+        'Improve [tech=2]Crystal mine[/tech] to level 50 on 10 different planets',
+        'Improve [tech=3]Deuterium synthesiser[/tech] to level 50 on 10 different planets',
+    ],
+    68 => [
+        'Reach Metal extraction rate of 45.000.000 units per hour on any planet (excluding Geologist bonus)',
+        'Reach Crystal extraction rate of 30.000.000 units per hour on any planet (excluding Geologist bonus)',
+        'Reach Deuterium extraction rate of 22.000.000 units per hour on any planet (excluding Geologist bonus)',
+    ],
+    69 => [
+        'Improve [tech=22]Metal storage[/tech] to level 25 on 5 different planets',
+        'Improve [tech=23]Crystal storage[/tech] to level 25 on 5 different planets',
+        'Improve [tech=24]Deuterium tank[/tech] to level 25 on 5 different planets',
+    ],
+    70 => [
+        'Using [tech=33]Terraformer[/tech], reach cumulatively 700 fields for building on any planet'
+    ],
+    71 => [
+        'Reach Deuterium extraction rate of 200.000.000 units per hour cumulatively on all planets (excluding Geologist bonus)'
+    ],
+    // Scientific Development
+    72 => [
+        'Improve [tech=109]Weapons technology[/tech] to level 25'
+    ],
+    73 => [
+        'Improve [tech=109]Weapons technology[/tech] to level 30'
+    ],
+    74 => [
+        'Improve [tech=110]Shielding technology[/tech] to level 25'
+    ],
+    75 => [
+        'Improve [tech=110]Shielding technology[/tech] to level 30'
+    ],
+    76 => [
+        'Improve [tech=111]Armour technology[/tech] to level 25'
+    ],
+    77 => [
+        'Improve [tech=111]Armour technology[/tech] to level 30'
+    ],
+    78 => [
+        'Improve [tech=120]Laser technology[/tech] to level 25'
+    ],
+    79 => [
+        'Improve [tech=120]Laser technology[/tech] to level 30'
+    ],
+    80 => [
+        'Improve [tech=120]Laser technology[/tech] to level 33'
+    ],
+    81 => [
+        'Improve [tech=121]Ion technology[/tech] to level 20'
+    ],
+    82 => [
+        'Improve [tech=121]Ion technology[/tech] to level 25'
+    ],
+    83 => [
+        'Improve [tech=121]Ion technology[/tech] to level 28'
+    ],
+    84 => [
+        'Improve [tech=122]Plasma technology[/tech] to level 20'
+    ],
+    85 => [
+        'Improve [tech=122]Plasma technology[/tech] to level 25'
+    ],
+    86 => [
+        'Improve [tech=122]Plasma technology[/tech] to level 28'
+    ],
+    87 => [
+        'Improve [tech=123]Intergalactic research network technology[/tech] to level 9'
+    ],
+    88 => [
+        'Improve [tech=31]Research Laboratory[/tech] to level 22 on 10 different planets'
+    ],
+    89 => [
+        'Reach 5.000.000 points in Research stats'
+    ],
+    90 => [
+        'Reach 10.000.000 points in Research stats'
+    ],
+    91 => [
+        'Reach 50.000.000 points in Research stats'
+    ],
+    92 => [
+        'Reach 200.000.000 points in Research stats'
+    ],
+    93 => [
+        'Reach 500.000.000 points in Research stats'
+    ],
+    // Allied support
+    94 => [
+        'Create 5 Moons of any kind for your allies'
+    ],
+    95 => [
+        'Create 20 Moons of any kind for your allies'
+    ],
+    96 => [
+        'Create 50 Moons of any kind for your allies'
+    ],
+    97 => [
+        'Create 125 Moons of any kind for your allies'
+    ],
+    98 => [
+        'Create 250 Moons of any kind for your allies'
+    ],
+    99 => [
+        'Win or draw 25 united battles (while being the leader of the battle), where debris of defenders\' units make up at least 10.000% chance of Moon creation'
+    ],
+    100 => [
+        'Win or draw 50 united battles (while being the leader of the battle), where debris of defenders\' units make up at least 10.000% chance of Moon creation'
+    ],
+    101 => [
+        'Win or draw 150 united battles (while being the leader of the battle), where debris of defenders\' units make up at least 10.000% chance of Moon creation'
+    ],
+    // Universe support
+    102 => [
+        'Bring 10 new players to the game'
+    ],
+    103 => [
+        'Bring 20 new players to the game'
+    ],
+    104 => [
+        'Bring 40 new players to the game'
+    ],
+    105 => [
+        'Bring a new player to the game who will buy at least 40 units of Dark Energy in one purchase<br/>(special offers not taken into account)'
+    ],
+    106 => [
+        'Bring 5 new players to the game who will buy any amount of Dark Energy'
+    ],
+    107 => [
+        'Bring new players to the game who will cumulatively purchase 400 units of Dark Energy<br/>(special offers not taken into account)'
+    ],
+];
+
+?>

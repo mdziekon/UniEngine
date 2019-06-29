@@ -1,0 +1,275 @@
+<?php
+
+// fleet.php
+$_Lang['fl_title']                               = 'Fleets';
+$_Lang['fl_expttl']                              = 'expeditions';
+$_Lang['fl_acs_title']                           = 'Allied flights (ACS)';
+$_Lang['fl_id']                                  = 'No.';
+$_Lang['fl_mission']                             = 'Mission';
+$_Lang['fl_count']                               = 'Fleet composition';
+$_Lang['fl_from']                                = 'Origin';
+$_Lang['fl_dest']                                = 'Destination';
+$_Lang['fl_dest_t']                              = 'Return';
+$_Lang['fl_back_in']                             = 'Flight timers';
+$_Lang['fl_order']                               = 'Orders';
+
+$_Lang['fl_fleetinfo_ships']                     = 'Ships';
+$_Lang['fl_fleetinfo_resources']                 = 'Resources';
+$_Lang['fl_fleetinfo_joinedships']               = 'Joined allied ships';
+
+$_Lang['fl_totalStorage']                        = 'Total load capacity';
+
+$_Lang['fl_get_to']                              = '(In flight)';
+$_Lang['fl_get_to_ttl']                          = 'In flight to the destination point';
+$_Lang['fl_back_to']                             = '(Returning)';
+$_Lang['fl_back_to_ttl']                         = 'In flight to the origin base';
+$_Lang['fl_stay_to']                             = '(Stationing)';
+$_Lang['fl_stay_to_ttl']                         = 'Stationing in orbit';
+$_Lang['fl_explore_to']                          = '(Explores)';
+$_Lang['fl_explore_to_ttl']                      = 'Explores uncharted space';
+$_Lang['fl_cameback']                            = '(Back)';
+$_Lang['fl_cameback_ttl']                        = 'Fleet came back to the origin base';
+
+$_Lang['fl_associate']                           = 'Join fleets';
+$_Lang['fl_back_from_stay']                      = 'Retreat';
+$_Lang['fl_noslotfree']                          = 'No free flight slots available!';
+$_Lang['fl_notback']                             = 'The fleet was not retreated!';
+$_Lang['fl_onlyyours']                           = 'You cannot retreat this fleet!';
+$_Lang['fl_missiles_cannot_go_back']             = 'You cannot retreat a Missile Strike!';
+$_Lang['fl_isback']                              = 'Fleet turned back!';
+$_Lang['fl_isback2']                             = 'Fleet retreated!';
+$_Lang['fl_sback']                               = 'Turn back';
+$_Lang['fl_error']                               = 'Error';
+$_Lang['fl_new_miss']                            = 'Select ships for the next mission';
+$_Lang['fl_fleet_typ']                           = 'Ship type';
+$_Lang['fl_fleet_count']                         = 'Ships available';
+$_Lang['fl_noplanetrow']                         = 'No planet data available! Please report this problem!';
+$_Lang['fl_fleetspeed']                          = 'Flight speed';
+$_Lang['fl_selmax']                              = 'Max';
+$_Lang['fl_selnone']                             = 'Zero';
+$_Lang['fl_goback']                              = 'Go back';
+$_Lang['fl_continue']                            = 'Continue';
+$_Lang['fl_noships']                             = 'No available ships';
+$_Lang['fl_nofreeslots']                         = 'No available flight slots';
+$_Lang['fl_unselectall']                         = 'Deselect all';
+$_Lang['fl_selectall']                           = 'Select all';
+$_Lang['fl_already_cameback']                    = 'Already came back';
+
+$_Lang['fl_flytargettime']                       = 'Destination in';
+$_Lang['fl_flystaytime']                         = 'Retreating in';
+$_Lang['fl_flygobacktime']                       = 'Coming back in';
+$_Lang['fl_flyretreattime']                      = 'Turn back';
+
+$_Lang['fl_coordplanet']                         = 'Planet';
+$_Lang['fl_coordmoon']                           = 'Moon';
+$_Lang['fl_coorddebris']                         = 'Debris field';
+
+// ACS Handling
+$_Lang['fl_acs_fleets']                          = 'Fleets';
+$_Lang['fl_select_acs']                          = 'Select allied fleet to join';
+
+$_Lang['fl_acs_cannot_join_time_extended']       = 'You cannot join this fleet - destination point has been already reached!';
+$_Lang['fl_acs_noid']                            = 'Invalid fleet ID!';
+$_Lang['fl_acs_noexist']                         = 'This fleet does not exist!';
+$_Lang['fl_acs_badmission']                      = 'You cannot join this fleet!';
+$_Lang['fl_acs_timeup']                          = 'This fleet has already reached its destination!';
+$_Lang['fl_acs_changename']                      = 'Change fleet union name';
+$_Lang['fl_acs_changename_save']                 = 'Save changes';
+$_Lang['fl_acs_addplayer']                       = 'Invite';
+$_Lang['fl_acs_removeplayer']                    = 'Remove';
+$_Lang['fl_acs_users_management']                = 'Joined players\' management';
+$_Lang['fl_acs_invited_title']                   = 'Invited players';
+$_Lang['fl_acs_users_2invite']                   = 'Other players to invite';
+$_Lang['fl_acs_warning_users']                   = '(Max. 4 other players in fleets\' union)';
+$_Lang['fl_acs_now_name']                        = 'Union name';
+$_Lang['fl_acs_noname']                          = '- N/A -';
+$_Lang['fl_acs_joinnow']                         = 'Join fleet';
+
+$_Lang['fl_acs_error_shortname']                 = 'Union\'s name is too short!';
+
+$_Lang['fl_acs_changesSaved']                    = 'Changes have been saved!';
+$_Lang['fl_acs_cantkick_joined']                 = 'You cannot kick out a player who already joined the union with their fleets!';
+
+$_Lang['fl_acs_leader']                          = 'Leader';
+$_Lang['fl_acs_joined']                          = 'Joined';
+$_Lang['fl_acs_invited']                         = 'Invited';
+
+$_Lang['fl_acs_fleetcount_extended']             = 'One fleets\' union can consist of up to 16 fleets at once!';
+$_Lang['fl_acs_badcoordinates']                  = 'Invalid attack coordinates!';
+$_Lang['fl_acs_cannot_join_this_group']          = 'You were not invited to this union!';
+$_Lang['fl_acs_bad_group_id']                    = 'Invalid fleets\' union!';
+
+$_Lang['fl_SendAllResources']                    = 'Transport all resources';
+
+// fleet1.php
+// -----------------------
+$_Lang['fl1_NoEnoughShips']                      = 'You don\'t have enough ships!';
+$_Lang['fl1_CantSendUnflyable']                  = 'You can\'t send units that don\'t have interstellar engines!';
+$_Lang['fl1_BadShipGiven']                       = 'You can\'t send that ship!';
+$_Lang['fl1_NoShipsGiven']                       = 'You didn\'t select ships to send!';
+
+$_Lang['fl1_ACSJoiningFleet']                    = 'This fleet will join union "%s", which attacks coordinates [%s:%s:%s]';
+$_Lang['fl1_ACSTimeUp']                          = 'This fleet\'s union has already reached its destination!';
+$_Lang['fl1_ACSNoExist']                         = 'This fleet\'s union does not exist!';
+
+$_Lang['fl1_currentTime']                        = 'Current time';
+
+$_Lang['fl1_targetGalaxy']                       = 'Galaxy';
+$_Lang['fl1_targetSystem']                       = 'System';
+$_Lang['fl1_targetPlanet']                       = 'Planet';
+
+$_Lang['fl_reachtime']                           = 'Destination reach time';
+$_Lang['fl_comebacktime']                        = 'Come back time';
+$_Lang['fl_fleet1_ttl']                          = 'Send fleet';
+$_Lang['fl_speed']                               = 'Flight speed (%)';
+$_Lang['fl_planet']                              = 'Planet';
+$_Lang['fl_ruins']                               = 'Debris field';
+$_Lang['fl_moon']                                = 'Moopn';
+$_Lang['fl_dist']                                = 'Distance';
+$_Lang['fl_fltime']                              = 'Flight duration (one way)';
+$_Lang['fl_deute_need']                          = 'Deuterium usage';
+$_Lang['fl_speed_max']                           = 'Max. speed';
+$_Lang['fl_max_load']                            = 'Load capacity';
+$_Lang['fl_fast_link']                           = 'Quick targets';
+$_Lang['fl_no_quick_links']                      = 'No quick targets';
+$_Lang['fl_no_shortcuts']                        = 'No custom targets';
+$_Lang['fl_no_planets']                          = 'No colonies';
+$_Lang['fl_your_planets']                        = 'Your colonies';
+$_Lang['fl_your_shortcuts']                      = 'Your custom targets';
+$_Lang['fl_add_shortcut']                        = 'Custom targets management';
+$_Lang['moon_sign']                              = 'M';
+$_Lang['debris_sign']                            = 'DF';
+$_Lang['planet_sign']                            = 'P';
+
+$_Lang['DropdownList_Moon_sign']                 = 'M';
+$_Lang['fl_dropdown_select']                     = 'Select';
+
+// fleet2.php
+$_Lang['fl_ressources']                          = 'Resources';
+$_Lang['fl_allressources']                       = 'All resources';
+$_Lang['fl2_allResZero']                         = 'Deselect resources';
+$_Lang['fl_bad_fleet_speed']                     = 'Invalid flight speed!';
+$_Lang['fl2_targeterror']                        = 'Invalid destination coordinates!';
+$_Lang['fl2_cantsendsamecoords']                 = 'Flight destination cannot be the same as the point of origin!';
+$_Lang['fl2_NoEnoughFuel']                       = 'You don\'t have enough deuterium to send this fleet!';
+$_Lang['fl2_Have2UseQuantumGate']                = 'To send this fleet you have to use Quantum Gate,<br/>because you don\'t have enough deuterium or enough load capacity on your ships!';
+$_Lang['fl2_NoEnoughStorage']                    = 'You don\'t have enough load capacity for the fuel required to send this fleet!';
+$_Lang['fl2_FlyTimeInfo']                        = 'In case of Quantum Gate usage, the second counter shows the time it will take this fleet to come back to the point of origin.';
+
+$_Lang['fl2_title']                              = 'Send fleet from  ';
+$_Lang['fl2_sendfromplanet']                     = 'a planet';
+$_Lang['fl2_sendfrommoon']                       = 'a moon';
+$_Lang['fl2_emptyplanet']                        = 'Uninhabited';
+$_Lang['fl2_target_abandoned_1']                 = 'Abandoned planet';
+$_Lang['fl2_target_abandoned_3']                 = 'Abandoned moon';
+$_Lang['fl2_debrisfield']                        = 'Debris field';
+
+$_Lang['fl2_flightTime']                         = 'Flight duration<br />(one way)';
+$_Lang['fl2_destination']                        = 'Destination';
+$_Lang['fl2_targetowner']                        = 'Target owner';
+
+$_Lang['fl2_SendButton']                         = 'Send fleet';
+
+$_Lang['fl2_confirm_allypact_attack']            = 'Are you sure you want to attack a player who\\\'s in an alliance which has a pact with the alliance you are currently in?';
+$_Lang['fl2_testacctarget']                      = 'Warning!\nThe target coordinates belong to one of the Testing Account of the Game Administration!\nAny actions involving this target without admins\\\' permission might result in a ban!';
+
+// fleet3.php
+$_Lang['fl3_TargetReach']                        = 'Destination reach date (one way)';
+$_Lang['fl3_BackTime']                           = 'Come back date';
+$_Lang['fl3_ShipsList']                          = 'Sent ships';
+
+$_Lang['fl3_NoMissionSelected']                  = 'You didn\'t pick a mission!';
+$_Lang['fl3_NoMoreFreeSlots']                    = 'No free flight slots available!';
+$_Lang['fl3_NoMoreFreeExpedSlots']               = 'No free expedition slots available!';
+$_Lang['fl3_ExpeditionsAreOff']                  = 'Expeditions are temporarily disabled!';
+$_Lang['fl3_BadResourcesGiven']                  = 'Invalid resources amount given!';
+$_Lang['fl3_PlanetNoEnoughmetal']                = 'Not enough metal to send!';
+$_Lang['fl3_PlanetNoEnoughcrystal']              = 'Not enough crystal to send!';
+$_Lang['fl3_PlanetNoEnoughdeuterium']            = 'Not enough deuterium to send!';
+$_Lang['fl3_BlockAccNotActivated']               = 'You have to activate your account to send fleets!';
+
+$_Lang['fl3_CantAttackDebris']                   = 'You cannot attack a debris field!';
+$_Lang['fl3_CantAttackNonUsed']                  = 'You cannot attack an uninhabitated planet or moon!';
+$_Lang['fl3_CantAttackYourself']                 = 'You cannot attack yourself!';
+$_Lang['fl3_CantACSDebris']                      = &$_Lang['fl3_CantAttackDebris'];
+$_Lang['fl3_CantACSNonUsed']                     = &$_Lang['fl3_CantAttackNonUsed'];
+$_Lang['fl3_CantACSYourself']                    = &$_Lang['fl3_CantAttackYourself'];
+$_Lang['fl3_CantTransportDebris']                = 'You cannot send resources to a debris field!';
+$_Lang['fl3_CantTransportNonUsed']               = 'You cannot send resources to an uninhabitated planet or moon!';
+$_Lang['fl3_CantTransportSpyProbes']             = 'You cannot use spying probes to transport resources!';
+$_Lang['fl3_CantStayDebris']                     = 'You cannot send your fleet to station on a debris field!';
+$_Lang['fl3_CantStayNonUsed']                    = 'You cannot send your fleet to station on an uninhabitated planet or moon!';
+$_Lang['fl3_CantStayNonYourself']                = 'You cannot send your fleet to station on a planet or a moon that you do not own!';
+$_Lang['fl3_CantProtectDebris']                  = 'You cannot send your fleet to protect a debris field!';
+$_Lang['fl3_CantProtectNonUsed']                 = 'You cannot send your fleet to protect an uninhabitated planet or moon!';
+$_Lang['fl3_CantProtectYourself']                = 'You cannot send your fleet to protect your own planet or moon!<br/>Select "Station" mission!';
+$_Lang['fl3_CantProtectNonFriend']               = 'To protect this player, you either have to be both members of the same alliance, or be friends in game!';
+$_Lang['fl3_CantSpyDebris']                      = 'You cannot send Spy probes to a debris field!';
+$_Lang['fl3_CantSpyNonUsed']                     = 'You cannot send Spy probes to an uninhabitated planet or moon!';
+$_Lang['fl3_CantSpyYourself']                    = 'You cannot spy on yourself!';
+$_Lang['fl3_CantSpyProbesCount']                 = 'You cannot spy using something else than Spy probes!';
+$_Lang['fl3_CantSettleOnUsed']                   = 'You cannot colonise an inhabitated planet!';
+$_Lang['fl3_CantSettleNonPlanet']                = 'You cannot colonise a moon nor a debris field!';
+$_Lang['fl3_CantSettleNoShips']                  = 'To colonise a planet your have to send at least one Colony ship!';
+$_Lang['fl3_CantRecycleNonDebris']               = 'You cannot recycle debris from a planet or a moon!';
+$_Lang['fl3_CantRecycleNoShip']                  = 'To recycle a debris field you have to send at least one Recycler!';
+$_Lang['fl3_CantDestroyDebris']                  = 'You cannot destroy a debris field!';
+$_Lang['fl3_CantDestroyNonUsed']                 = 'There is no moon to destroy on that coordinates!';
+$_Lang['fl3_CantDestroyYourself']                = 'You cannot destroy your own moon!';
+$_Lang['fl3_CantDestroyNonMoon']                 = 'You cannot destroy a planet!';
+$_Lang['fl3_CantDestroyNoShip']                  = 'To destroy a moon you have to send at least one Deathstar!';
+$_Lang['fl3_BadMissionSelected']                 = 'Invalid mission selected!';
+
+$_Lang['fl3_NoDebrisFieldHere']                  = 'There is no debris field on this position!';
+$_Lang['fl3_Expedition_Min1H']                   = 'An expedition must last for at least 1 hour!';
+$_Lang['fl3_Expedition_Max12H']                  = 'An expedition cannot last more than 12 hours!';
+$_Lang['fl3_Holding_BadTime']                    = 'Invalid stationing time!';
+$_Lang['fl3_CantSendVacation']                   = 'You cannot send a fleet to coordinates owned by a player on vacation!';
+$_Lang['fl3_CantSendBanned']                     = 'You cannot send a fleet to coordinates owned by a banned player (with vacation mode activated)!';
+$_Lang['fl3_CantSendAlly']                       = 'You cannot attack a player who is in the same alliance as you are!';
+$_Lang['fl3_ProtectHIStatNotCalc']               = 'You cannot attack a player who does not have their statistics calculated yet or their account is not active yet!';
+$_Lang['fl3_ProtectURStatNotCalc']               = 'You cannot attack anyone until your account\'s statistics are calculated!';
+$_Lang['fl3_ProtectHIWeak']                      = 'You cannot attack this player!<br/>They didn\'t surpass the newcomer protection points threshold yet (%s points)';
+$_Lang['fl3_ProtectUR2Strong']                   = 'You cannot attack this player!<br/>They are too weak for you (more than %s times weaker)!';
+$_Lang['fl3_ProtectHI2Strong']                   = 'You cannot attack this player!<br/>They are too powerful for you (more than %s times more powerful)!';
+$_Lang['fl3_ProtectURWeak']                      = 'You cannot attack anyone yet!<br/>You have to surpass the newcomer protection points threshold first (%s points)';
+$_Lang['fl3_ProtectAdminCant']                   = 'Admins cannot attack anyone!';
+$_Lang['fl3_ProtectCantAdmin']                   = 'You cannot attack admin\'s account!';
+$_Lang['fl3_ProtectPlanetProtect']               = 'This planet is under Game Support protection!';
+$_Lang['fl3_ProtectNewTimeYou']                  = 'You cannot attack anyone until you are under the newcomer protection!<br/>(You have to wait %s)';
+$_Lang['fl3_ProtectNewTimeHe']                   = 'This player is under newcomer protection!<br/>(You have to wait %s)';
+$_Lang['fl3_ProtectNewTimeHe2']                  = 'This player is under newcomer protection!<br/>(They didn\'t log in to the game yet!)';
+$_Lang['fl3_SpaceTimeJumpGalaxy']                = 'You cannot make a space jump to another galaxy!';
+$_Lang['fl3_QuantumDisallowAttack']              = 'You cannot make a space jump when performing an aggressive flight!';
+$_Lang['fl3_NoQuantumGate']                      = 'No Quantum gate!';
+$_Lang['fl3_NoEnoughFuel']                       = 'You do not have deuterium to use as fuel for this flight!';
+$_Lang['fl3_NoEnoughtStorage4Fuel']              = 'Your fleet doesn\'t have enough load capacity to store its fuel!';
+$_Lang['fl3_NoEnoughStorage4Res']                = 'Your fleet doesn\'t have enough load capacity to store selected resources!';
+$_Lang['fl3_ACSFleet2Slow']                      = 'Your fleet is too slow to join this fleets\' union!';
+$_Lang['MultiAlert']                             = '<b class="red">MultiAlarm!</b>';
+
+$_Lang['fl3_Protect_AttackLimitTotal']           = 'You cannot attack this player anymore today!<br/>(%s)';
+$_Lang['fl3_Protect_AttackLimitSingle']          = 'You cannot attack this planet / moon anymore today!<br/>(%s)';
+$_Lang['fl3_Protect_AttackLimitTotalFly']        = 'You cannot send more aggressive flights towards this player!<br/>(%s)';
+$_Lang['fl3_Protect_AttackLimitSingleFly']       = 'You cannot send more aggressive flights towards this player / moon!<br/>(%s)';
+
+$_Lang['fl_bad_mission']                         = 'Invalid mission!';
+$_Lang['fl_fleet_send']                          = 'Fleet has been sent';
+$_Lang['fl_expe_staytime']                       = 'Protection time';
+$_Lang['fl_expe_hours']                          = '&nbsp;hour(s)';
+
+$_Lang['QuantumGateHead']                        = 'Quantum Gate';
+$_Lang['QuantumInfo']                            = (
+    'Deuterium usage reduction to <b class="lime">zero units</b><br/>' .
+    'Flight duration reduction to <b class="lime">1 second</b><br/><br/>' .
+    '<b class="orange">Applications:</b><br/>' .
+    '- Time-unlimited transport, stationing and protection missions between planets both having Quantum Gates<br/>' .
+    '- Space jump for transport, stationing and protection reducing flight time and fuel usage in half when Quantum Gate is available only on the origin planet'
+);
+$_Lang['QuantumGateUse']                         = 'Use';
+$_Lang['CannotUseQuantumGate']                   = 'You cannot use Quantum Gate!';
+$_Lang['CannotUseQuantumGateTill']               = 'You cannot perform a space jump using Quantum Gate right now!<br/><br/>Next jump available in:<br/>%s';
+$_Lang['GateReadyToUse']                         = 'Quantum Gate is ready for space jump';
+$_Lang['GateReadyToUseIn']                       = 'Quantum Gate will be ready for space jump in';
+
+?>

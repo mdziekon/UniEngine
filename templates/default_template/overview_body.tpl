@@ -1,10 +1,23 @@
 <script>
+var JSLang = {
+    'BuildJS_Continue': '{BuildJS_Continue}'
+};
+
+function onQueuesFirstElementFinished (planetID) {
+    document.getElementById("dlink").innerHTML = (
+        '<a href="overview.php?planet=' + planetID + '">' + JSLang['BuildJS_Continue'] + '</a>'
+    );
+
+    window.setTimeout(function () {
+        document.location.href = "overview.php?planet=" + planetID;
+    }, 1000);
+}
+
 $(document).ready(function()
 {
     $('.tipRename').tipTip({maxWidth: 'auto', content: '{Rename_TipTip}', defaultPosition: 'bottom', delay: 200, edgeOffset: 5});
     $('.tipTipTitle').tipTip({maxWidth: 'auto', attribute: 'title', defaultPosition: 'bottom', delay: 200, edgeOffset: 5});
-    $('#quickres').click(function()
-    {
+    $('#quickres').click(function() {
         window.location = 'fleet.php?quickres=1';
     });
 });

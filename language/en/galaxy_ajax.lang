@@ -1,0 +1,92 @@
+<?php
+
+$_Lang['ajax_code_msgs'] = [];
+
+// Ajax Success
+$_Lang['ajax_code_msgs']['600_1']   = 'Spy probes (xyz) sent to replace_target!';
+$_Lang['ajax_code_msgs']['600_2']   = 'Recyclers (xyz) sent to replace_target!';
+$_Lang['ajax_code_msgs']['600_3']   = 'Colony ship sent to planet replace_target!';
+$_Lang['ajax_code_msgs']['600_4']   = 'Interplanetary strike sent to planet replace_target!';
+
+// Ajax Error
+$_Lang['ajax_code_msgs']['601']     = 'You are not logged in!';
+$_Lang['ajax_code_msgs']['602']     = 'Invalid mission given!';
+$_Lang['ajax_code_msgs']['603']     = 'Invalid coordinates given!';
+$_Lang['ajax_code_msgs']['604']     = 'Invalid target type given!';
+$_Lang['ajax_code_msgs']['605']     = 'Invalid ships count given!';
+$_Lang['ajax_code_msgs']['606_1']   = "You don\'t have any Spy probes!";
+$_Lang['ajax_code_msgs']['606_2']   = "You don\'t have any Recyclers!";
+$_Lang['ajax_code_msgs']['606_3']   = "You don\'t have any Colony ships!";
+$_Lang['ajax_code_msgs']['607']     = "You don\'t have enough deuterium!";
+$_Lang['ajax_code_msgs']['608']     = "You don\'t have enough fuel storage!";
+$_Lang['ajax_code_msgs']['609']     = 'You cannot send this fleet - no free flight slots available!';
+$_Lang['ajax_code_msgs']['610']     = "You didn\'t select any ships to send!";
+$_Lang['ajax_code_msgs']['611']     = 'There is no debris field on coordinates replace_target!';
+$_Lang['ajax_code_msgs']['612']     = 'Debris can be recycled only from a debris field!';
+$_Lang['ajax_code_msgs']['613']     = 'You can send Spy probes only to planets and moons!';
+$_Lang['ajax_code_msgs']['614']     = 'Selected planet (or moon) is uninhabited!';
+$_Lang['ajax_code_msgs']['615']     = 'You cannot spy on yourself!';
+$_Lang['ajax_code_msgs']['616']     = 'You cannot spy on your ally!';
+$_Lang['ajax_code_msgs']['617']     = 'You cannot spy on a banned player (with vacation mode on)!';
+$_Lang['ajax_code_msgs']['618']     = 'You cannot spy on a player on vacation!';
+$_Lang['ajax_code_msgs']['619']     = "This player is still under system\'s protection!";
+$_Lang['ajax_code_msgs']['620']     = "You cannot spy on anyone since you\'re still under system\'s protection!";
+$_Lang['ajax_code_msgs']['621']     = 'Player is too weak for you!';
+$_Lang['ajax_code_msgs']['622']     = 'Player is too strong for you!';
+$_Lang['ajax_code_msgs']['623']     = 'Administration cannot spy on other players!';
+$_Lang['ajax_code_msgs']['624']     = 'This planet is already colonised!';
+$_Lang['ajax_code_msgs']['625']     = 'You cannot spy on Administration!';
+$_Lang['ajax_code_msgs']['626']     = 'Fleet Blockade is active!';
+$_Lang['ajax_code_msgs']['627']     = "This player is under Fleet Blockade\'s protection!";
+$_Lang['ajax_code_msgs']['628']     = 'Global Fleet Blockade is active!';
+$_Lang['ajax_code_msgs']['629']     = "Spying on Admin\'s Test Account is forbidden from the Galaxy view!";
+$_Lang['ajax_code_msgs']['630']     = "You cannot spy on a player who does not have their Statistics calculated, or they didn\'t activate their account yet!";
+$_Lang['ajax_code_msgs']['631']     = "You cannot spy on other players until your account\'s Statistics are not calculated, or you didn\'t activate your account yet!";
+$_Lang['ajax_code_msgs']['632']     = 'You cannot spy on other players until your account is under Newcomer protection!';
+$_Lang['ajax_code_msgs']['633']     = 'This player is under Newcomer protection!';
+$_Lang['ajax_code_msgs']['634']     = "This player is under Newcomer protection - they didn\'t login to the game yet!";
+$_Lang['ajax_code_msgs']['635']     = "This player is under post Fleet Blockade system\'s protection!";
+$_Lang['ajax_code_msgs']['636']     = "Your account is under Fleet\'s Blockade!";
+$_Lang['ajax_code_msgs']['637']     = "This player is under Fleet\'s Blockade!";
+$_Lang['ajax_code_msgs']['638']     = "Your planet is under Fleet\'s Blockade!";
+$_Lang['ajax_code_msgs']['639']     = "Your moon is under Fleet\'s Blockade!";
+$_Lang['ajax_code_msgs']['640']     = "This planet is under Fleet\'s Blockade!";
+$_Lang['ajax_code_msgs']['641']     = "This moon is under Fleet\'s Blockade!";
+$_Lang['ajax_code_msgs']['642']     = 'This player is banned (with vacation mode on)!';
+$_Lang['ajax_code_msgs']['643']     = 'This player is on vacation!';
+$_Lang['ajax_code_msgs']['644']     = 'You cannot attack an allied player!';
+$_Lang['ajax_code_msgs']['645']     = 'You cannot attack yourself!';
+$_Lang['ajax_code_msgs']['646']     = 'You do not have enough Interplanetary Missiles!';
+$_Lang['ajax_code_msgs']['647']     = 'Target is out of range!';
+$_Lang['ajax_code_msgs']['648']     = 'You do not have Impulse drive discovered yet!';
+$_Lang['ajax_code_msgs']['649']     = 'You do not have Missile silo!';
+$_Lang['ajax_code_msgs']['650']     = 'This planet does not exist!';
+$_Lang['ajax_code_msgs']['651']     = 'No missiles count given!';
+$_Lang['ajax_code_msgs']['652']     = 'Invalid data given!';
+$_Lang['ajax_code_msgs']['653']     = 'You cannot attack other players until your account is under Newcomer protection!';
+$_Lang['ajax_code_msgs']['654']     = 'This player is under Newcomer protection!';
+$_Lang['ajax_code_msgs']['655']     = "This player is under Newcomer protection - they didn\'t login to the game yet!";
+$_Lang['ajax_code_msgs']['656']     = 'You cannot attack a weaker player!';
+$_Lang['ajax_code_msgs']['657']     = "You cannot attack other players until your account is under system\'s protection!";
+$_Lang['ajax_code_msgs']['658']     = 'You cannot attack a stronger player!';
+$_Lang['ajax_code_msgs']['659']     = 'Administration cannot send Interplanetary strikes!';
+$_Lang['ajax_code_msgs']['660']     = "You cannot send Interplanetary strikes on Administration\'s planets!";
+$_Lang['ajax_code_msgs']['661']     = 'You cannot send any fleets until your account remains inactive!';
+$_Lang['ajax_code_msgs']['662']     = "You cannot attack a player who does not have their Statistics calculated, or they didn\'t activate their account yet!";
+$_Lang['ajax_code_msgs']['663']     = "You cannot attack other players until your account\'s Statistics are not calculated, or you didn\'t activate your account yet!";
+
+$_Lang['ajax_code_msgs']['694']     = 'Unexpected error occured!';
+$_Lang['ajax_code_msgs']['695']     = 'Galaxy data retrieval error!';
+$_Lang['ajax_code_msgs']['696']     = 'Request timeout, please try again in a moment...';
+$_Lang['ajax_code_msgs']['697']     = 'Player data retrieval error!';
+$_Lang['ajax_code_msgs']['698']     = 'We could not process your request!';
+$_Lang['ajax_code_msgs']['699']     = 'Function not implemented yet!';
+
+$_Lang['ajax_moon_sign']    = 'Moon';
+
+$_Lang['icoTip_missile']    = 'Interplanetary Strike';
+$_Lang['icoTip_spy']        = 'Spy on this planet';
+$_Lang['icoTip_msg']        = 'Write a message';
+$_Lang['icoTip_buddy']      = 'Add to friends';
+
+?>

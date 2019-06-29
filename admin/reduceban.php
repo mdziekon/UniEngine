@@ -200,6 +200,8 @@ else if(!empty($_GET['user']))
     $_Lang['InsertUsernames'] = $_GET['user'];
 }
 
+$_Lang['JS_DatePicker_TranslationLang'] = getJSDatePickerTranslationLang();
+
 $Page = parsetemplate($TPL, $_Lang);
 display($Page, $_Lang['Page_Title'], false, true);
 

@@ -7,6 +7,7 @@ function FleetBuildingPage(&$CurrentPlanet, $CurrentUser)
     include($_EnginePath.'includes/functions/GetMaxConstructibleElements.php');
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
     include($_EnginePath.'includes/functions/GetElementPrice.php');
+    includeLang('worldElements.detailed');
 
     $Now = time();
 
@@ -118,7 +119,7 @@ function FleetBuildingPage(&$CurrentPlanet, $CurrentUser)
         $Row['ElementName'] = $_Lang['tech'][$Element];
         $ElementCount = $CurrentPlanet[$_Vars_GameElements[$Element]];
         $Row['ElementNbre'] = ($ElementCount == 0) ? '' : " ({$_Lang['dispo']}: " . prettyNumber($ElementCount) . ")";
-        $Row['Description'] = $_Lang['res']['descriptions'][$Element];
+        $Row['Description'] = $_Lang['WorldElements_Detailed'][$Element]['description_short'];
         if($Element == 212)
         {
             $BuildLevelFactor = 10;

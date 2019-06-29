@@ -1,18 +1,18 @@
 <?php
 
-$_Lang['Title']              = 'Raport';
-$_Lang['Table_title']        = 'Wyślij raport';
+$_Lang['Title']                  = 'Raport';
+$_Lang['Table_title']            = 'Wyślij raport';
 
-$_Lang['Report_type']        = 'Typ raportu';
-$_Lang['Type_user_badmsg']   = 'Wiadomość od gracza łamiąca Regulamin';
-$_Lang['Type_user_bash']     = 'Złamanie reguły Bashu';
-$_Lang['Type_user_push']     = 'Złamanie reguły Pushu';
-$_Lang['Type_user_other']    = 'Inne przewinienie gracza';
-$_Lang['Type_sys_badmsg']    = 'Błąd systemu wiadomości';
-$_Lang['Type_sys_error']     = 'Błąd systemu gry';
-$_Lang['Type_mail_smtp']     = 'Błąd zmiany adresu Email';
-$_Lang['Type_other']			= 'Inne';
-$_Lang['Type_user_badmsg_chat'] = 'Wiadomość na Chacie łamiąca Regulamin';
+$_Lang['Report_type']            = 'Typ raportu';
+$_Lang['Type_user_badmsg']       = 'Wiadomość od gracza łamiąca Regulamin';
+$_Lang['Type_user_bash']         = 'Złamanie reguły Bashu';
+$_Lang['Type_user_push']         = 'Złamanie reguły Pushu';
+$_Lang['Type_user_other']        = 'Inne przewinienie gracza';
+$_Lang['Type_sys_badmsg']        = 'Błąd systemu wiadomości';
+$_Lang['Type_sys_error']         = 'Błąd systemu gry';
+$_Lang['Type_mail_smtp']         = 'Błąd zmiany adresu Email';
+$_Lang['Type_other']             = 'Inne';
+$_Lang['Type_user_badmsg_chat']  = 'Wiadomość na Chacie łamiąca Regulamin';
 
 $_Lang['Additional_info']        = 'Dodatkowe instrukcje<br/><span style="font-size: 70%">(Jeśli są podane, proszę postępować zgodnie z nimi)</span>';
 $_Lang['add_info_none']          = 'Brak dodatkowych instrukcji';
@@ -23,11 +23,11 @@ $_Lang['add_info_sys_badmsg']    = '1. Podaj typ wiadomości<br/>2. Podaj okolic
 $_Lang['add_info_sys_error']     = '1. Podaj dokładny i szczegółowy opis błędu';
 $_Lang['add_info_user_badmsg']   = '(Opcjonalne)<br/>1. Podaj, czy to pierwsza taka wiadomość<br/>2. Jeśli nie, podaj, gdzie dostawałeś już takie wiadomości od tego gracza (Chat, PW)';
 
-$_Lang['Report_Username']    = 'Nick gracza<br/><span style="font-size: 70%">(Jeśli zgłoszenie dotyczy gracza)</span>';
+$_Lang['Report_Username']        = 'Nick gracza<br/><span style="font-size: 70%">(Jeśli zgłoszenie dotyczy gracza)</span>';
 
-$_Lang['User_info']          = 'Dodatkowe informacje<br/><span style="font-size: 70%">(Wpisz wszelkie dodatkowe informacje)</span>';
+$_Lang['User_info']              = 'Dodatkowe informacje<br/><span style="font-size: 70%">(Wpisz wszelkie dodatkowe informacje)</span>';
 
-$_Lang['Send_report']        = 'Wyślij raport';
+$_Lang['Send_report']            = 'Wyślij raport';
 
 $_Lang['Error_badtype']          = 'Niepoprawny typ raportu!';
 $_Lang['Error_nousername']       = 'Musisz podać nazwę gracza, którego dotyczy zgłoszenie!';

@@ -1,4 +1,4 @@
-<html>
+<html lang="{PHP_CurrentLangISOCode}">
     <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
         <title>{title}</title>
@@ -8,7 +8,6 @@
         <link rel="stylesheet" type="text/css" href="{SkinPath}formate.css" />
         <meta name="description" content="GAMEDESCRIPTION" />
         <meta name="keywords" content="KEYWORDS" />
-        <meta http-equiv="Content-Language" content="pl" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         {PHP_Meta}
         <script type="text/javascript" src="{AdminBack}libs/overlib/overlib.min.js"></script>

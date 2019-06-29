@@ -1,7 +1,31 @@
 <script>
 var ShowElementOnStartup = '{Create_ShowElementOnStartup}';
 var RunQueueHandler = 'false';
-var JSLang = {'InfoBox_ShowResReq': '{InfoBox_ShowResReq}', 'InfoBox_ShowTechReq': '{InfoBox_ShowTechReq}', 'Metal': '{Metal}', 'Crystal': '{Crystal}', 'Deuterium': '{Deuterium}', 'Energy': '{Energy}', 'DarkEnergy': '{DarkEnergy}', 'Queue_CantCancel_Premium': '{Queue_CantCancel_Premium}', 'Queue_ConfirmCancel': '{Queue_ConfirmCancel}'};
+var JSLang = {
+    'InfoBox_ShowResReq': '{InfoBox_ShowResReq}',
+    'InfoBox_ShowTechReq': '{InfoBox_ShowTechReq}',
+    'Metal': '{Metal}',
+    'Crystal': '{Crystal}',
+    'Deuterium': '{Deuterium}',
+    'Energy': '{Energy}',
+    'DarkEnergy': '{DarkEnergy}',
+    'Queue_CantCancel_Premium': '{Queue_CantCancel_Premium}',
+    'Queue_ConfirmCancel': '{Queue_ConfirmCancel}',
+    'Queue_Cancel_Go': '{Queue_Cancel_Go}'
+};
+
+function onQueuesFirstElementFinished () {
+    $("#QueueCancel")
+        .html(JSLang['Queue_Cancel_Go'])
+        .attr("href", "buildings.php?mode=research")
+        .removeClass("cancelQueue")
+        .addClass("lime");
+
+    window.setTimeout(function () {
+        document.location.href = "buildings.php?mode=research";
+    }, 1000);
+}
+
 $(document).ready(function()
 {
     {Create_DestroyTips}

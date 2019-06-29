@@ -1,0 +1,18 @@
+<?php
+
+$_Lang['rec_title']      = 'Server records';
+
+$_Lang['rec_build']      = 'Buildings';
+$_Lang['rec_specb']      = 'Special buildings';
+$_Lang['rec_techn']      = 'Technologies';
+$_Lang['rec_fleet']      = 'Fleets';
+$_Lang['rec_defes']      = 'Defenses';
+
+$_Lang['rec_playe']      = 'Player';
+$_Lang['rec_level']      = 'Level';
+$_Lang['rec_nbre']       = 'Amount';
+$_Lang['rec_rien']       = '-';
+
+$_Lang['last_count_was'] = 'Last calculation date';
+
+?>

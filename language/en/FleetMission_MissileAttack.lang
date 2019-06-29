@@ -1,0 +1,17 @@
+<?php
+
+$_Lang['MIP_A_M_Cap']   = 'Your Interplanetary Missiles <b>(%s)</b> have been intercepted by Anti-ballistic Missiles!';
+$_Lang['MIP_D_M_Cap']   = 'Attacker\'s Interplanetary Missiles <b>(%s)</b> have been intercepted by your Anti-ballistic Missiles!';
+$_Lang['MIP_Cap_M']     = 'Intercepted Interplanetary Missiles: <b>%s</b>';
+$_Lang['MIP_destroy']   = '<b>Damage done by the Missiles</b>:';
+$_Lang['MIP_A_rp_h']    = 'Your Interplanetary Missiles <b>(%s)</b> sent from %s %s %s striked %s %s %s<br/>';
+$_Lang['MIP_D_rp_h']    = 'Interplanetary attack <b>(%s)</b> from %s %s %s reached %s %s %s<br/>';
+$_Lang['MIP_nodef']     = 'No defenses on the planet, nothing has been destroyed!';
+$_Lang['MIP_Debris']    = '<br/><b>Created debris field</b>';
+$_Lang['MIP_Units']     = 'units';
+$_Lang['MIP_DebMet']    = 'of metal';
+$_Lang['MIP_DebCry']    = 'of crystal';
+
+$_Lang['RocketReport_Morale_Attacker_Negative'] = 'Disproportion between the Development level of your empire and the level of defender\'s empire (ratio: <b class="skyblue">%s</b>) caused this attack to be a dishonorable act.<br/>Morale of your crew drops to level <b class="red">%s%%</b>.';
+
+?>

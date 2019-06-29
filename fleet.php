@@ -493,11 +493,7 @@ while($f = $Result_GetFleets->fetch_assoc())
     }
     else
     {
-        if($f['fleet_mission'] != 5)
-        {
-            $FleetRow['AddToJSChronoAppletCallback'] = 'document.getElementById(\'bxxfr_'.$i.'\').innerHTML = \'-\';';
-        }
-        $InsertChronoApplets .= InsertJavaScriptChronoApplet('ft_', $i, $FleetTargetIn, false, false, 'function(){ clearInterval(ChronoIntervalfr_'.$i.'); '.$FleetRow['AddToJSChronoAppletCallback'].' }');
+        $InsertChronoApplets .= InsertJavaScriptChronoApplet('ft_', $i, $FleetTargetIn, false, false);
         $FleetTargetInT = '<b class="lime flRi" id="bxxft_'.$i.'">'.pretty_time($FleetTargetIn, true, 'D').'</b>';
         $FleetRow['FleetFlyTargetTime'] = $FleetTargetInT;
     }
@@ -577,7 +573,17 @@ while($f = $Result_GetFleets->fetch_assoc())
     {
         if($FleetRow['RetreatType'] == 1 AND $FleetTargetIn > 0)
         {
-            $InsertChronoApplets .= InsertJavaScriptChronoApplet('fr_', $i, $f['fleet_send_time'], true, true);
+            $InsertChronoApplets .= InsertJavaScriptChronoApplet(
+                'fr_',
+                $i,
+                $f['fleet_send_time'],
+                true,
+                true,
+                false,
+                [
+                    'reverseEndTimestamp' => $f['fleet_start_time']
+                ]
+            );
             $FleetRow['FleetRetreatTime'] = '<b class="flRi" id="bxxfr_'.$i.'">'.pretty_time($Now - $f['fleet_send_time'], true, 'D').'</b>';
         }
         else

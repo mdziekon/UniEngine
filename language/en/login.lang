@@ -1,0 +1,26 @@
+<?php
+
+$_Lang['Page_Title']                = 'Login';
+$_Lang['Body_Username']             = 'Username';
+$_Lang['Body_Password']             = 'Password';
+$_Lang['Body_Remember']             = 'Remember me';
+$_Lang['Body_Submit']               = 'Login';
+$_Lang['Body_LostPass']             = 'Lost your password?';
+$_Lang['Body_LostCode']             = 'Lost activation link?';
+$_Lang['Body_ServerOffline']        = 'Game server is Offline';
+
+$_Lang['Body_Contact']              = 'Contact';
+$_Lang['Body_Register']             = 'Registration';
+
+$_Lang['Err_Title']                 = 'Login error';
+$_Lang['Login_FailPassword']        = 'Invalid password!<br/><a href="login.php">Go back</a>';
+$_Lang['Login_FailUser']            = 'Username does not exist!<br/><a href=login.php>Go back</a>';
+$_Lang['Login_FailCookiePassword']  = 'Invalid session cookie (password), please log in again!<br /><a href="login.php">Go back</a>';
+$_Lang['Login_FailCookieUser']      = 'Invalid session cookie (username), please log in again!<br/><a href=login.php>Go back</a>';
+$_Lang['Login_BadSignsUser']        = 'Invalid username provided!<br/><a href=login.php>Go back</a>';
+$_Lang['Login_BadUniversum']        = 'Invalid Universe selected!';
+$_Lang['Login_UniversumNotStarted'] = 'This Universe starts on <br/>%s at %s.<br/>Spread the word by inviting other people to join on that day by using your personal <u>Referral Link</u> provided to you in the Activation Message.';
+$_Lang['Login_FailLoginProtection'] = 'Too many invalid attempts to login to this account!<br/>Please wait <b class="orange">5 minutes</b> and try again.';
+$_Lang['Login_UnknownError']        = 'An unknown error occured, please contact Administration!';
+
+?>

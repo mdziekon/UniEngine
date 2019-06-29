@@ -6,6 +6,7 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
 
     include($_EnginePath.'includes/functions/GetMaxConstructibleElements.php');
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
+    includeLang('worldElements.detailed');
 
     $Now = time();
     $IsInFleet = false;
@@ -274,7 +275,14 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
             $QueueJSArray[1]['Count'] -= ($QueueJSArray[1]['Remove'] * (10 + ($CurrentPlanet['shipyardQueue_additionalWorkTime'] * 10)));
 
             include($_EnginePath.'/includes/functions/InsertJavaScriptChronoApplet.php');
-            $QueueParser[0]['ChronoAppletScript'] = InsertJavaScriptChronoApplet('QueueFirstTimer', '', $TotalTime, false, false, 'function() { SetTimer = \"<b class=lime>'.$_Lang['completed'].'</b>\"; window.setTimeout(\'document.location.href=\"buildings.php?mode='.$PageType.'\";\', 1000); }');
+            $QueueParser[0]['ChronoAppletScript'] = InsertJavaScriptChronoApplet(
+                'QueueFirstTimer',
+                '',
+                $TotalTime,
+                false,
+                false,
+                'function() { onQueuesFirstElementFinished("' . $PageType . '"); }'
+            );
             $QueueParser[0]['EndTimer'] = pretty_time($TotalTime, true);
             $Parse['Create_RunQueueJSHandler'] = 'true';
 
@@ -383,7 +391,7 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
         $ElementParser['MaxConstructible'] = prettyNumber($ElementParser['MaxConstructible']);
         $ElementParser['ElementName'] = $_Lang['tech'][$ElementID];
         $ElementParser['ElementID'] = $ElementID;
-        $ElementParser['Desc'] = $_Lang['res']['descriptions'][$ElementID];
+        $ElementParser['Desc'] = $_Lang['WorldElements_Detailed'][$ElementID]['description_short'];
 
         $ElementParser['ElementPrice'] = GetBuildingPrice($CurrentUser, $CurrentPlanet, $ElementID, true, false, true);
         foreach($ElementParser['ElementPrice'] as $Key => $Value)

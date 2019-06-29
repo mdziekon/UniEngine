@@ -1,19 +1,26 @@
 <?php
 
-function InsertGalaxyScripts($CurrentPlanet)
-{
-    $TPL = gettemplate('galaxy_scripts');
-    $Lang = includeLang('galaxy_ajax', true);
-    foreach($Lang as $Key => $Value)
-    {
-        if(strstr($Key, 'ajax_send_') !== false)
-        {
-            $Code = str_replace('ajax_send_', '', $Key);
-            $Lang['Insert_ReponseCodes'] .= "RespCodes['{$Code}'] = '{$Value}';\n";
-        }
+function InsertGalaxyScripts($additionalTemplateData) {
+    $template = gettemplate('galaxy_scripts');
+    $templateData = [];
+    $jsAJAXCodeMsgs = [];
+
+    $galaxyAJAXLang = includeLang('galaxy_ajax', true);
+
+    foreach ($galaxyAJAXLang['ajax_code_msgs'] as $codeID => $codeMsg) {
+        $jsAJAXCodeMsgs[] = "RespCodes['{$codeID}'] = '{$codeMsg}';";
     }
 
-    return parsetemplate($TPL, $Lang);
+    $templateData = array_merge(
+        $templateData,
+        [
+            'Insert_ReponseCodes' => implode("\n", $jsAJAXCodeMsgs)
+        ],
+        $galaxyAJAXLang,
+        $additionalTemplateData
+    );
+
+    return parsetemplate($template, $templateData);
 }
 
 ?>

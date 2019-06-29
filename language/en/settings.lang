@@ -1,0 +1,270 @@
+<?php
+
+$_Lang['Page_Title']                = 'Account Settings';
+$_Lang['NickChange_Title']          = 'Account Settings - Username change';
+$_Lang['Vacations_Title']           = 'Vacation mode';
+
+// Menu
+$_Lang['Menu_Title']                = 'Account Settings';
+$_Lang['General']                   = 'General';
+$_Lang['View']                      = 'Display';
+$_Lang['Galaxy']                    = 'Galaxy View';
+$_Lang['VacationNDelete']           = 'Vacation and Account termination';
+$_Lang['IgnoreList']                = 'Ignore list';
+$_Lang['LogonsList']                = 'Logons History';
+$_Lang['FleetColors']               = 'Fleets Colours';
+
+// General
+$_Lang['UserInfo']                   = 'Account details';
+$_Lang['NickChange']                 = 'Change username';
+$_Lang['PasswordChange']             = 'Password change';
+$_Lang['EmailChange']                = 'Email address change';
+$_Lang['EmailPrc_Active_Since']      = 'Email address change process in progress since:<br/>%s';
+$_Lang['StopEmailPrc']               = 'Cancel process';
+$_Lang['Other']                      = 'Other';
+$_Lang['ChangePass']                 = 'I want to change my password';
+$_Lang['OldPassword']                = 'Old password';
+$_Lang['NewPassword']                = 'New password<br/>(min. 4 characters)';
+$_Lang['ConfirmPassword']            = 'Confirm new password';
+$_Lang['ChangeEmail']                = 'I want to change my email address';
+$_Lang['OldEmail']                   = 'Current address';
+$_Lang['RealOldEmail']               = 'Old address';
+$_Lang['NewEmail']                   = 'New address';
+$_Lang['ConfirmEmail']               = 'Confirm new address';
+$_Lang['IPCheckDeactivate']          = 'Deactivate IP address verification';
+$_Lang['NickChangeInfo']             = 'Click here to find out more about Username change process';
+$_Lang['IPCheckDeactiveInfo']        = 'This option causes a security logout on every IP address change during an active session. It increases your account\\\'s safety by preventing session key theft.<br/><br/>Please do not turn off this option unless absolutely necessary (eg. when you are constantly kicked out of the game because of frequent IP changes), and please contact Support team before doing so.';
+
+// View
+$_Lang['PlanetSort']                 = 'Planet\'s list order';
+$_Lang['GameView']                   = 'Game display options';
+$_Lang['GameDevelopmentView']        = 'Development (Buildings, Research, Shipyard, Defenses)';
+$_Lang['FleetView']                  = 'Navigation (Fleet)';
+$_Lang['MessagesView']               = 'Mailbox';
+$_Lang['SortMode']                   = 'Sort by';
+$_Lang['SortType']                   = 'Sort order';
+$_Lang['SortMoons']                  = 'Moons right below their Planets';
+$_Lang['PSort_CreationDate']         = 'Colonisation date';
+$_Lang['PSort_Coordinates']          = 'Coordinates';
+$_Lang['PSort_Name']                 = 'Name';
+$_Lang['PSort_Asc']                  = 'Ascending';
+$_Lang['PSort_Desc']                 = 'Descending';
+$_Lang['GameLanguage']               = 'Language';
+$_Lang['SkinPath']                   = 'Game skin';
+$_Lang['SkinPathMore']               = '(URL or path on the Game server)';
+$_Lang['SkinSelect']                 = '(select from the Game server)';
+$_Lang['UseSkin']                    = 'Use selected skin';
+$_Lang['Avatar']                     = 'Avatar';
+$_Lang['AvatarMore']                 = '(URL, best resolution: 200&#215;200)';
+$_Lang['DevelopmentOld']             = 'Use old Development Layout';
+$_Lang['BuildExpandedViewUse']       = 'Show inaccessible elements';
+$_Lang['PrettyFleetUse']             = 'Use big numbers separator';
+$_Lang['FleetTransportation']        = 'Resources transportation';
+$_Lang['ResourcesSorting']           = 'Resources filling order<br/>(<b class="dash">Use <b class="orange">Drag and Drop</b> to rearrange</b>)';
+$_Lang['QuickResTransport']         = 'Main planet<br/>("Transport resources" functionality)';
+$_Lang['MsgsPerPage']               = 'Messages per page';
+$_Lang['MsgsExpandSpy']             = 'Collapse Espionage reports by default';
+$_Lang['MsgsUseThreads']            = 'Use conversation threads';
+$_Lang['SortMoonsInfo']             = 'On the planets\' list, corresponding moons will be placed right below their planets, regardless of sorting methods.';
+$_Lang['SkinPathInfo']               = 'We recommend to use skins hosted on the Game servers, to prevent compatibility issues.';
+$_Lang['AvatarInfo']                 = 'The Avatar is displayed eg. in the Galaxy View<br/><br/>Leave this field empty if you don\\\'t want to use an Avatar.';
+$_Lang['DevelopmentOldInfo']         = 'Select this option if you want to use the old Development Layout.';
+$_Lang['BuildExpandedViewInfo']      = 'Deselecting this option causes inaccessible elements of the list (because of tech or buildings requirements not met) to be hidden.<br/><span class=orange>This option does not affect the modern Development Layout</span>.';
+$_Lang['PrettyFleetInfo']            = 'Selecting this option causes automatic thousands separation of numerical fields containing large numbers.<br/>';
+$_Lang['ResourcesSortingInfo']       = 'This setting allows to change the order of resources auto-fill option when sending resources.<br/>Resource types placed on the top of the list will be loaded on your ships in the first order.';
+$_Lang['QuickResTransInfo']          = 'This setting allows to pick which one of your planets should be considered the Main one. The <b class=orange>Transport resources</b> option will use it to auto-fill coordinates.<br/><b class=red>This feature is available only for Pro Account owners!</b>';
+$_Lang['SkinSelectInfo']             = 'Select one of the skins hosted on the Game Servers. It prevents compatibility issues and speeds up data loading.';
+$_Lang['MsgsUseThreadsInfo']            = 'Select this option to automatically compact all conversations with other players into threads (as long as you consistently use <b>Reply</b> function). We will shown you only the last message, or all unread messages by default, with all the other messages in the thread collapsed.';
+
+$_Lang['AYS_WantNoSkin']             = 'Are you sure you don\\\'t want to use a skin?';
+$_Lang['SetSkin_BadNetSkin']         = 'Invalid external skin URL (no "formate.css" file found).\nIf you are sure this is a correct skin, please contact Support!';
+$_Lang['SetSkin_BadLocSkin']         = 'There is no such skin on the Game server!';
+$_Lang['SetSkin_AjaxError']          = 'We could not validate the external skin.\nDo you want to use it anyway?';
+
+$_Lang['ResSort_Resources']          = [
+    'met' => &$_Lang['Metal'],
+    'cry' => &$_Lang['Crystal'],
+    'deu' => &$_Lang['Deuterium']
+];
+
+// Galaxy
+$_Lang['GalaxyFleet']               = 'Sending fleets';
+$_Lang['GalaxyGenView']             = 'General settings';
+$_Lang['GalaxyShortcuts']           = 'Action shorthands';
+$_Lang['SpyProbes']                 = 'Spy Probes count';
+$_Lang['UseAJAXGalaxy']             = 'Use dynamic data loading (AJAX)';
+$_Lang['ShowUserAvatars']           = 'Show Avatars';
+$_Lang['SpyAction']                 = 'Spy';
+$_Lang['WriteAction']               = 'Write a message';
+$_Lang['BuddyAction']               = 'Add to friends';
+$_Lang['RocketAction']              = 'Interplanetary Strike';
+$_Lang['SpyInfo']                   = 'How many Spy Probes should be sent at once?';
+
+// Vacation & Delete
+$_Lang['VacationMode']               = 'Vacation mode';
+$_Lang['AccountDelete']              = 'Account termination';
+$_Lang['ActivateVacationMode']       = 'Activate vacation mode';
+$_Lang['YouWillBeAbleToComeBack']    = 'Vacation mode will be active at least until';
+$_Lang['atHour']                     = '';
+$_Lang['DeleteAccount']              = 'Activate account termination';
+$_Lang['DeleteAccountOff']           = 'Account termination: Active';
+$_Lang['ClickToRemoveDeletion']      = 'Deselect to deactivate Account termination';
+$_Lang['PassConfirm']                = 'Confirm with your password';
+
+$_Lang['VacationInfo']               = 'Vacation mode protects your planets from being raided by other players during your absence, however it also stops all resources production.<br/>Before enabling vacation mode, you have to complete or cancel all constructions and research on all your planets and moons, and all your fleets have to be stationed on their respective planets\' orbits.<br/><br/><b class="orange">Remember - Vacation mode has to be enabled for at least 3 days and Pro Account and other purchased account enhancements will not be paused during the vacation.<br/>After disabling vacation mode, you cannot reenable it for the next 24 hours</b><br/><b class="red">In addition to that, vacation mode cannot last longer than 30 days - it will be automatically disabled after that period of time!</b>';
+$_Lang['DeleteInfo']                 = 'To terminate your account, you have to confirm your decision by typing in your account\'s password.<br/>After activating account termination process, you will still have 7 days to change your mind.<br/>During that time, other players can still attack your planets.';
+
+// Ignore List
+$_Lang['WhatIsIgnoreList']           = 'What\'s the purpose of Ignore list?';
+
+$_Lang['IgnoreList_FullInfo']        = 'By adding a player to the Ignore list, communication between you both will be blocked.<br/>When sending a message, you\'ll be notified that this action is now forbidden.<br/><br/>However, we won\'t block public (Chat) and mass (in Alliance) messages. You also cannot put any member of the Support and Administration teams on your list.';
+
+$_Lang['ManageIgnoreList']              = 'Manage Ignore list';
+$_Lang['AddUserToIgnoreList']           = 'Add a player to the list';
+$_Lang['DeleteFromIgnoreList']          = 'Remove selected players from the list';
+$_Lang['Ignore_Username']               = 'Username';
+$_Lang['IgnoreList_NoIgnored']          = 'No ignored players!';
+$_Lang['Ignore_ThisUserAlreadyIgnored'] = 'You are already ignoring this player!';
+$_Lang['Ignore_CannotIgnoreGameTeam']   = 'You cannot ignore Support members!';
+$_Lang['Ignore_UserNoExists']           = 'This player does not exist!';
+$_Lang['Ignore_BadSignsOrShort']        = 'Invalid username provided!';
+$_Lang['Ignore_CannotIgnoreYourself']   = 'You cannot ignore yourself!';
+$_Lang['Ignore_NoUsername']             = 'Username cannot be empty!';
+$_Lang['Ignore_UserAdded']              = 'Player added to the Ignore list!';
+$_Lang['Ignore_DeletedXUsers']          = 'Players removed from the list: %s';
+$_Lang['Ignore_NothingDeleted']         = 'No players removed from the list!';
+$_Lang['Ignore_ListEmpty']              = 'Ignore list is empty!';
+$_Lang['Ignore_NothingSelected']        = 'Nothing has been selected!';
+
+// Logons List
+$_Lang['WhatIsLogonsList']              = 'What\'s the purpose of Logons History?';
+$_Lang['LogonsList_FullInfo']           = 'Here, you can find the last 20 attempts to login to your account. You can find out if there were any unauthorised attempts to access your account.';
+
+$_Lang['Logons_Date']                   = 'Logon date';
+$_Lang['Logons_IP']                     = 'IP address';
+$_Lang['Logons_Status']                 = 'Status';
+
+$_Lang['Logons_ago']                    = 'ago';
+$_Lang['Logons_Success']                = 'Successful logon';
+$_Lang['Logons_Failed']                 = 'Logon failure';
+$_Lang['Logons_ListEmpty']              = '<b class="orange">No logons!</b>';
+
+// Others
+$_Lang['SaveAll']                       = 'Save all changes';
+$_Lang['SaveOnlyThis']                  = 'Save changes from this tab';
+$_Lang['IgnoreUserNow']                 = 'Add to the list';
+
+// Warning MSGs
+$_Lang['Pass_Confirm_isbad']                    = 'New password confirmation failed!';
+$_Lang['Pass_same_as_old']                      = 'You cannot use the same password as the old one!';
+$_Lang['Pass_is_tooshort']                      = 'New password is too short!';
+$_Lang['Pass_old_isbad']                        = 'Old password is invalid!';
+$_Lang['Pass_Changed_plzlogout']                = 'You\'ve changed your password - please log in again!<br/><a href="login.php">Go to the Login page</a>';
+$_Lang['Mail_some1_hasemail']                   = 'This email address is already taken!';
+$_Lang['Mail_banned_domain']                    = 'This email service has been banned!';
+$_Lang['Mail_Confirm_isbad']                    = 'New email address confirmation failed!';
+$_Lang['Mail_BadSigns']                         = 'New email address is invalid!';
+$_Lang['Mail_same_as_old']                      = 'You cannot use the same email address as the old one!';
+$_Lang['Mail_badEmail']                         = 'New email address looks to be invalid!';
+$_Lang['Mail_alreadyInChange']                  = 'This account already has an Email address change process in progress!<br/>To cancel this process or change the address, cancel the current process first!';
+$_Lang['Mail_PrcStopped']                       = 'Email address change process has been cancelled!';
+$_Lang['Mail_PrcNoExists']                      = 'There is no Email address change process in progress on this account!';
+$_Lang['Lang_UnavailableLang']                  = 'Unavailable language selected!';
+$_Lang['Skin_NoLocalSkin']                      = 'This skin does not exist on the Game server!';
+$_Lang['Vacation_24hNotPassed']                 = 'To reactivate Vacation mode, you have to wait at least 24 hours since you came back from the previous vacation!';
+$_Lang['Vacation_CannotBuildOrRes']             = 'You cannot activate the Vacation mode, because one of your planets is still busy!<br/>Blocking planets / moons: %s';
+$_Lang['Vacation_FlyingFleets']                 = 'You cannot activate the Vacation mode, because of the fleets movement related to your account!';
+$_Lang['Vacation_GoingOnVacations']             = 'You\'ve activated the Vacation mode!';
+$_Lang['Vacation_GoingOnVacationsWithDeletion'] = 'You\'ve activated Account termination process. Your account is now in Vacation mode and will be deleted<br/><span class="red">in 7 days!</span>';
+$_Lang['Delete_Confirm_isbad']                  = 'Password verification failed!';
+$_Lang['Info_NoChanges']                        = 'No changes...';
+$_Lang['Info_SaveWellDone']                     = 'Changes have been saved (Changed settings: %s)';
+$_Lang['Info_SaveWellDone2']                    = 'Changes have been saved!';
+$_Lang['Notice_ChangesNotSaved']                = 'Number of settings left unchanged: %s';
+$_Lang['Msgs_PlanetNotYour']                    = 'You cannot use this planet as your Main planet!';
+$_Lang['Msgs_BadPerPageInt']                    = 'Invalid messages per page number given!';
+
+$_Lang['DeleteMsg']                 = 'Your account has an active Termination process! It will be deleted on %s<br/><br/>If you wish to cancel it, go to the "Vacation mode and Account termination" tab and cancel it there.';
+
+$_Lang['Mail_MailChange']           = 'Email change process has been activated!<br/>In the next few minutes you should receive two activation messages in your mailboxes - one in your old mailbox and one in your new mailbox.<br/>You have to confirm your new address validity and confirm the process from your old address.<br/><br/>If you\'ve lost access to your old mailbox, you\'ll have to wait 7 days to confirm the process.';
+
+$_Lang['Mail_SendMailError']        = 'An unexpected error occured while sending Activation links!<br/>Please contact <br/><br/><a href="report.php?type=7&amp;info=%s" />Support</a>';
+
+// Nick Change
+$_Lang['DarkEnergyStatusIs']        = 'Dark Energy on your account';
+$_Lang['BuyMoreDE']                 = 'Purchase more Dark Energy!';
+
+$_Lang['ChangeYourNick']            = 'Username Change';
+$_Lang['GoBack']                    = 'Go back to Account settings';
+$_Lang['NickChange_Info']           = '';
+$_Lang['NickChange_Info']          .= '&bull; Username change cost: <b class="orange">10</b> Dark Energy units<br/>';
+$_Lang['NickChange_Info']          .= '&bull; Old username will still be visible for the next 7 days<br/>';
+$_Lang['NickChange_Info']          .= '&bull; New username cannot violate any <a class="red" href="rules.php" target="_blank">Rules</a><br/>';
+$_Lang['NickChange_Info']          .= '&bull; New username cannot be shorter than 4 characters and can contain only alphanumerical characters, underscores, spaces and dashes.<br/>';
+
+$_Lang['NewNick']                   = 'New username';
+$_Lang['ChangeIt']                  = 'Submit';
+$_Lang['AreYouSure']                = 'Are you sure you want to change your username for 10 Dark Energy units?';
+$_Lang['NewNick_is_like_old']       = 'New username cannot be same as the current one!';
+$_Lang['NewNick_is_tooshort']       = 'New username cannot be shorter than 4 characters!';
+$_Lang['NewNick_nolinks']           = 'New username is invalid!';
+$_Lang['NewNick_badSigns']          = 'New username is invalid!';
+$_Lang['NewNick_already_taken']     = 'This username is already taken!';
+$_Lang['NewNick_saved']             = 'Your username has been changed!<br/><a href="login.php">Please log in again!</a>';
+$_Lang['NewNick_donthave_DE']       = 'You do not have enough Dark Energy!';
+
+// Vacation Mode Box
+$_Lang['Vacation_GoOut']            = 'Vacation mode has been deactivated!';
+$_Lang['Vacation_CantGoOut']        = 'You cannot deactivate Vacation mode yet!';
+$_Lang['exit_vacations']            = 'Deactivate';
+$_Lang['Exec']                      = 'Confirm';
+$_Lang['Vacation_mode']             = 'Vacation mode at least until';
+$_Lang['Vacation_EndTime']          = 'Vacation mode cannot be deactivated until: <b class="%s">%s</b>';
+$_Lang['Vacation_EndTimeNoBlock']   = '<b class="lime">Vacation mode can be deactivated</b>';
+
+// Email Change
+
+$_Lang['Email_Text']              = (
+    'Hello <b>{EP_User}</b>!<br/><br/>' .
+    'This email has been sent to you because you\'ve activated the Email address change process on your account in <a href="{EP_GameLink}" target="_blank"><b>'.$_GameConfig['game_name'].'</b></a>!<br/><br/>' .
+    '<b>This process consists of two activation steps</b>, completed using the received Activation Links.<br/>' .
+    'The first step is a confirmation of your new Email address. The second step is a confirmation of your will to change from the Old address to the New one.<br/>' .
+    '<b>The first step</b> is mandatory (your have to confirm that the New address is a valid mailbox), however <b>the second step</b> can be skipped, but you\'ll have to wait <b>7 days</b> for the process to complete.<br/>' .
+    'If both steps will be manually completed, your New address will be activated instantly.<br/><br/>' .
+    '{EP_Text}:<br/><br/>' .
+    '<a href="{EP_Link}">{EP_Link}</a><br/>' .
+    '(If for some reason you won\'t be able to complete the activation using the link above, please manually copy it into your browser\'s address bar)<br/><br/>' .
+    '<b>Email change process details</b>:<br/>' .
+    'Old email address: <b>{EP_OldMail}</b><br/>' .
+    'New email address: <b>{EP_NewMail}</b><br/>' .
+    'Process started on: <b>{EP_Date}</b><br/>' .
+    'IP address used start the process: <b>{EP_IP}</b><br/><br/>' .
+    'If you did not start the process yourself, please immediatelly contact with <a href="{EP_ContactLink}" target="_blank">Support!</a><br/>' .
+    '{EP_Text2}<br/><br/>' .
+    'Regards, <a href="{EP_GameLink}" target="_blank"><b>the Team of '.$_GameConfig['game_name'].'</b></a>'
+);
+
+$_Lang['Email_WarnOld']           = 'If you won\'t click on this Activation link, your account\'s email address will be changed after 7 days since the process start date (as long as you confirm your new address)!';
+$_Lang['Email_WarnNew']           = 'If you won\'t click on this Activation link, your account\'s email address won\'t be changed at all!';
+
+$_Lang['Email_Title']             = $_GameConfig['game_name'].' - Email address change';
+$_Lang['Email_MailOld']           = 'To confirm that you wish to change your email address, click on the link below';
+$_Lang['Email_MailNew']           = 'To confirm that you own the new email address, click on the link below';
+
+$_Lang['Email_Body']              = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
+$_Lang['Email_Body']             .= '<html>';
+$_Lang['Email_Body']             .= '<head>';
+$_Lang['Email_Body']             .= '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">';
+$_Lang['Email_Body']             .= '</head>';
+$_Lang['Email_Body']             .= '<body>';
+$_Lang['Email_Body']             .= $_Lang['Email_Text'];
+$_Lang['Email_Body']             .= '</body>';
+$_Lang['Email_Body']             .= '</html>';
+
+$_Lang['WhatIsFleetColors']                 = 'What are Fleets Colours?';
+$_Lang['FleetColors_Info']                  = 'Here, you can set your own colours for each fleet type displayed in the Overview page.<br/>You can use a colour picker once you click on one of the fields. Empty value means the default colour for specific fleet type.';
+$_Lang['FleetColors_Pickers_OwnFlying']     = 'Own fleets - flying towards the destination';
+$_Lang['FleetColors_Pickers_OwnComingBack'] = 'Own fleets - flying back to the origin point';
+$_Lang['FleetColors_Pickers_NotOwn']        = 'Other people\'s fleets';
+
+?>

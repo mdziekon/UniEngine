@@ -1,0 +1,102 @@
+<?php
+
+$_Lang['Userlist_Title']            = "Players list";
+$_Lang['Userlist_ID']               = "ID";
+$_Lang['Userlist_Username']         = "Player";
+$_Lang['Userlist_Email']            = "Email address";
+$_Lang['Userlist_IP']               = "IP address";
+$_Lang['Userlist_RegIP']            = "Registration IP address";
+$_Lang['Userlist_Browser']          = 'Browser UA';
+$_Lang['Userlist_Screen']           = 'Screen';
+$_Lang['Userlist_Submit']           = 'Search';
+$_Lang['Userlist_NoUsersFound']     = 'No players found!';
+$_Lang['Userlist_ConfirmDelete']    = 'Are you sure you want to delete this player?';
+
+$_Lang['SearchUserTip']             = 'To use <b>multisearch</b> option, separate every search phrase with <b>"|"</b> sign (pipe)';
+$_Lang['SelectAllVisible']          = '<b>Select all</b>';
+$_Lang['SelectAllFiltered']         = '<b>Select all matched</b>';
+$_Lang['EMails']                    = 'Email addresses';
+$_Lang['IPs']                       = 'IP addresses';
+
+$_Lang['mEmail']                    = 'Active Email';
+$_Lang['xEmail']                    = 'New Email (change process in progress)';
+$_Lang['_same']                     = '<b class="lime">No changes</b>';
+$_Lang['_notsame']                  = '<b class="orange">Change process in progress</b>';
+
+$_Lang['Lookup']                    = 'Lookup';
+$_Lang['LoopupInfo']                = 'See more details about this IP address';
+$_Lang['LastIPLook']                = 'Last IP';
+$_Lang['RegIPLook']                 = 'Registration IP';
+$_Lang['lastIP']                    = 'Last IP address';
+$_Lang['regIP']                     = 'Registration IP address';
+$_Lang['_NoIP']                     = 'No IP';
+
+$_Lang['UserOnVacation']            = 'Player is on Vacation';
+$_Lang['UserIsBanned']              = 'Player is banned until';
+$_Lang['UserNotActivated']          = 'Account not activated';
+$_Lang['UserIsOnDeletion']          = 'Account is being terminated';
+$_Lang['UserDeleteIn']              = 'Account termination';
+$_Lang['DeleteInNextCalc']          = 'next Stats recalculation';
+$_Lang['UserActivationLink']        = 'Activation link';
+
+$_Lang['UserInfo']                  = 'Full overview';
+$_Lang['UserPM']                    = 'Write a message';
+$_Lang['UserDelete']                = 'Delete player';
+$_Lang['UserUnban']                 = 'Unban';
+$_Lang['UserBan']                   = 'Ban';
+$_Lang['ShowActionLogs']            = 'Show action logs';
+$_Lang['ShowUserMessages']          = 'Show player\'s messages';
+
+$_Lang['ResetFilters']              = 'Reset';
+$_Lang['ToggleFilters']             = 'Show / Hide advanced filter options';
+$_Lang['ShowPerPage']               = 'Players per page';
+$_Lang['StrictSearch']              = 'Strict matching';
+$_Lang['AnyIP']                     = 'Match all IP records';
+$_Lang['StrictSearchInfo']          = '<b>Strict matching</b> means that the search results will contain only entries that <b>exactly</b> match the search phrase.';
+$_Lang['AnyIPInfo']                 = '<b>Match all IP records</b> matches any logged IP records, not just the last ones.';
+$_Lang['SearchByName']              = 'Player name';
+$_Lang['SearchByUserID']            = 'Player ID';
+$_Lang['SearchByAlly']              = 'Players\' alliance name';
+$_Lang['SearchByAllyID']            = 'Player\'s alliance ID';
+$_Lang['SearchByIP']                = 'Player\'s IP address';
+
+$_Lang['Last_Activity']             = 'Last activity';
+$_Lang['Register_time']             = 'Registration date';
+
+$_Lang['Ally_name']                 = 'Alliance';
+$_Lang['ItsAllyOwner']              = 'Alliance leader';
+$_Lang['AllyRequested']             = 'Application awaiting';
+
+$_Lang['OnlineSearch']              = 'Online Players';
+$_Lang['OnVacationSearch']          = 'On Vacation';
+$_Lang['NoSort']                    = 'Disable sorting';
+$_Lang['IsBannedSearch']            = 'Banned players';
+$_Lang['IsAISearch']                = 'Bots (AI)';
+$_Lang['IsDeletingSearch']          = 'Acc. Termination';
+$_Lang['IsActiveSearch']            = 'Active account';
+$_Lang['IsInAllySearch']            = 'In any alliance';
+$_Lang['AllySearchType']            = 'Match:';
+$_Lang['AllyInRequest']             = 'Inc. applications';
+
+$_Lang['PlayerIsBanned']            = 'Player is banned!';
+$_Lang['PlayerIsOnVacations']       = 'Player is on Vacation';
+
+$_Lang['_Yes']                      = 'Yes';
+$_Lang['_No']                       = 'No';
+$_Lang['_Names']                    = 'Names';
+$_Lang['_Tags']                     = 'Tags';
+
+$_Lang['FoundUsers_Count']          = 'Matching players found: %s';
+$_Lang['Filtering_Time']            = 'Filtering: %s s.';
+$_Lang['Loading_Time']              = 'Data fetching: %s s.';
+
+$_Lang['MassAction']['Selections']  = 'Selection options';
+$_Lang['MassAction']['Ban']         = 'Ban';
+$_Lang['MassAction']['Unban']       = 'Unban';
+
+$_Lang['UserFilter_NoGoodStrings']  = 'Input validation rejected all search phrases!';
+
+$_Lang['ThisData_NoAccess']         = '<span style="color: red; border-bottom: 1px dashed white;" class="usrReg" title="You do not have enough permissions to see this value!">NoAccess</span>';
+
+
+?>

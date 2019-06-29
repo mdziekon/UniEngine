@@ -1,0 +1,66 @@
+<?php
+
+$_Lang['Title']                  = 'Battle Simulator';
+$_Lang['Settings']               = 'Settings';
+$_Lang['SelectSlot']             = 'Change slot (United Attack)';
+$_Lang['ResultTitle']            = 'Simulation result';
+$_Lang['ShowHide']               = 'Hide / Show';
+
+$_Lang['Slot']                   = 'Slot';
+$_Lang['Submit']                 = 'Simulate!';
+
+$_Lang['Attacker']               = 'Aggressor no. <span id="attacker_slot">1</span>';
+$_Lang['Defender']               = 'Defender no. <span id="defender_slot">1</span> <span id="is_planet_owner">(Owner of the planet / moon)</span>';
+$_Lang['PlanetOwner']            = '(Owner of the planet / moon)';
+
+$_Lang['Attacker_Txt']           = 'Aggressor ';
+$_Lang['Defender_Txt']           = 'Defender ';
+
+$_Lang['Morale']                 = 'Morale';
+$_Lang['Morale_Level']           = 'Morale level';
+$_Lang['Technology']             = 'Technologies';
+$_Lang['Fleets']                 = 'Fleet';
+$_Lang['Defense']                = 'Defenses';
+// FIXME: get this from a shared lang file
+$_Lang['Techs'][1]               = 'Weapons technology';
+$_Lang['Techs'][2]               = 'Shielding technology';
+$_Lang['Techs'][3]               = 'Armour technology';
+$_Lang['Techs'][4]               = 'Laser technology';
+$_Lang['Techs'][5]               = 'Ion technology';
+$_Lang['Techs'][6]               = 'Plasma technology';
+$_Lang['Techs'][7]               = 'Anti-matter technology';
+$_Lang['Techs'][8]               = 'Disintegration stream technology';
+$_Lang['Techs'][9]               = 'Graviton technology';
+
+$_Lang['FillMyTechs']            = 'Fill with my tech levels';
+$_Lang['FillMyFleets']           = 'Fill with my fleets (and defenses)';
+$_Lang['Fill_Clean']             = 'Clear';
+$_Lang['Button_Max']             = 'Max';
+$_Lang['Button_Min']             = 'Min';
+
+$_Lang['CalcTotalTime']          = 'Simulation time';
+$_Lang['BattleWonBy']            = 'Battle won by';
+$_Lang['WonBy_Attacker']         = 'Aggressor(s)';
+$_Lang['WonBy_Defender']         = 'Defender(s)';
+$_Lang['WonBy_Draw']             = '- Draw -';
+
+$_Lang['See_last_BR']            = 'See ';
+
+$_Lang['Break_noATKShips']       = 'No aggressor\'s ships provided!';
+$_Lang['Break_noDEFShips']       = 'No defender\'s ships nor defenses provided!';
+$_Lang['Break_noDEFTechs']       = 'No defender\'s technologies provided!';
+$_Lang['Break_noATKTechs']       = 'No aggressor\'s technologies provided!';
+
+$_Lang['avg_atk_lost']           = 'Aggressor(s) loses';
+$_Lang['avg_def_lost']           = 'Defender(s) loses';
+$_Lang['avg_atk_ship_lost']      = 'Aggressor(s) loses (ships)';
+$_Lang['avg_def_ship_lost']      = 'Defender(s) loses (ships)';
+$_Lang['txt_rounds']             = 'Rounds';
+
+$_Lang['units']                  = 'units';
+$_Lang['ships']                  = 'ships';
+
+$_Lang['BreakLineLight']         = '<tr style="visibility: hidden;"><td></td></tr>';
+$_Lang['BreakLine']              = '<tr style="visibility: hidden;"><td><br/></td></tr>';
+
+?>

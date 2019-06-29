@@ -1116,7 +1116,14 @@ switch($mode)
             $PlanetID = $_Planet['id'];
 
             $Build = '';
-            $Build .= InsertJavaScriptChronoApplet('pl', 'this', $RestTime, false, false, 'function() { SetTimer = \"<b class=lime>'.$_Lang['BuildJS_Complete'].'</b>\"; document.getElementById(\"dlink\").innerHTML = \'<a href=\"overview.php?planet='.$PlanetID.'\">'.$_Lang['BuildJS_Continue'].'</a>\'; window.setTimeout(\'document.location.href=\"overview.php?planet='.$PlanetID.'\";\', 1000); }');
+            $Build .= InsertJavaScriptChronoApplet(
+                'pl',
+                'this',
+                $RestTime,
+                false,
+                false,
+                'function () { onQueuesFirstElementFinished(' . $PlanetID . '); }'
+            );
             $Build .= $_Lang['tech'][$CurrBuild[0]].' ('.$CurrBuild[1].')';
             $Build .= '<br /><div id="bxxplthis" class="z">'.pretty_time($RestTime, true).'</div>';
             if(isset($_Vars_PremiumBuildings[$CurrBuild[0]]) && $_Vars_PremiumBuildings[$CurrBuild[0]] == 1)

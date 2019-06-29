@@ -1,0 +1,20 @@
+<?php
+
+$_Lang['FirstLogin_Title']   = 'Welcome';
+$_Lang['LoginPage_Header']   = 'Welcome to '.$_GameConfig['game_name'].'!';
+
+$_Lang['LoginPage_Text']     = '<center><b class="orange">Welcome to '.$_GameConfig['game_name'].'!</b><br/><br/>';
+$_Lang['LoginPage_Text']    .= '<b>This is your first log in, that\'s why we would like to introduce you to the gameplay settings of this Game Server:</b></center><br/>';
+$_Lang['LoginPage_Text']    .= '<span style="line-height: 18px;"><b class="minw">Universe:</b> <b class="lime">1</b><br/>';
+$_Lang['LoginPage_Text']    .= '<b class="minw">Game speed:</b> <b class="lime">{GameSpeed}x</b><br/><b class="minw">Resources speed:</b> <b class="lime">{ResSpeed}x</b><br/><b class="minw">Fleets speed:</b> <b class="lime">{FleetSpeed}x</b><br/>';
+$_Lang['LoginPage_Text']    .= '<b class="minw">Debris from ships:</b> <b class="lime">{FleetDebris}%</b><br/><b class="minw">Debris from defenses:</b> <b class="help lime" title="Battles between fleets">{DefFlDebris}%</b> / <b class="help lime" title="Interplanetary missile strikes">{DefMiDebris}%</b><br/><b class="minw">Mother planet\'s size:</b> <b class="lime">{MotherSize} fields</b><br/>';
+$_Lang['LoginPage_Text']    .= '<b class="minw">Server\'s official start date:</b> <b class="lime">{OpenTime}</b><br/>';
+$_Lang['LoginPage_Text']    .= '<b class="minw">Newcomer\'s time protection:</b> <b class="lime">{Protection_NewPlayerTime}h</b><br/>';
+$_Lang['LoginPage_Text']    .= '<b class="minw"><b class="help" title="Until this point nobody can attack a player (works the other way as well)">Newcomer\'s points protection threshold:</b></b> <b class="lime">{Protection_PointsLimit} points</b><br/>';
+$_Lang['LoginPage_Text']    .= '</span><br/><br/>';
+$_Lang['LoginPage_Text']    .= '<b>If you are a completely new player</b>, you should check out and try to complete <a class="orange" href="tasks.php?cat=1"><b>&#187; Introductory Tasks</b></a>, which should help you with the basic rules of the game.<br/>';
+$_Lang['LoginPage_Text']    .= '<center><b>Good luck and have fun!</b></center>';
+
+$_Lang['LoginPage_Input']    = 'Start the game!';
+
+?>

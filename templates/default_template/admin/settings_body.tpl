@@ -1,10 +1,10 @@
-<script>
-var JSLang = {'JS_ConfirmNeeded': '{JS_ConfirmNeeded}', 'TP_timeOnlyTitle': 'Wybierz Czas', 'timeText': 'Czas', 'hourText': 'Godzina','minuteText': 'Minuta','secondText': 'Sekunda','millisecText': 'Milisekunda','currentText': 'Teraz','closeText': 'Gotowe'};
-</script>
-<script src="../dist/js/admin/settings_body.cachebuster-1545956361123.min.js" type="text/javascript"></script>
 <script src="../libs/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
 <script src="../libs/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.min.js" type="text/javascript"></script>
-<script src="../libs/jquery-ui-datepicker-pl/jquery-ui-datepicker-pl.min.js" type="text/javascript"></script>
+<script src="../libs/jquery-ui-datepicker-{JS_DatePicker_TranslationLang}/jquery-ui-datepicker-{JS_DatePicker_TranslationLang}.min.js" type="text/javascript"></script>
+<script>
+var JSLang = {'JS_ConfirmNeeded': '{JS_ConfirmNeeded}'};
+</script>
+<script src="../dist/js/admin/settings_body.cachebuster-1561455380555.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="../dist/css/admin/settings_body.cachebuster-1546564327123.min.css" />
 <link rel="stylesheet" type="text/css" href="../libs/jquery-ui/jquery-ui.min.css" />
 <br />

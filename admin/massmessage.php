@@ -20,21 +20,21 @@ if(CheckAuth('supportadmin'))
     if($_POST && isset($_GET['mode']) && $_GET['mode'] == "change")
     {
         // If Everything is OK, so set variables and send mails!
-        if(!empty($_POST['tresc']) AND !empty($_POST["temat"]))
+        if(!empty($_POST['text']) AND !empty($_POST["subject"]))
         {
             $SQLResult_GetUsers = doquery("SELECT `id` FROM {{table}}", "users");
             $Time = time();
 
-            $_POST['tresc'] = stripslashes(trim($_POST['tresc']));
-            $_POST['temat'] = stripslashes(trim($_POST['temat']));
+            $_POST['text'] = stripslashes(trim($_POST['text']));
+            $_POST['subject'] = stripslashes(trim($_POST['subject']));
             if(get_magic_quotes_gpc())
             {
-                $_POST['tresc']= stripslashes($_POST['tresc']);
-                $_POST['temat'] = stripslashes($_POST['temat']);
+                $_POST['text']= stripslashes($_POST['text']);
+                $_POST['subject'] = stripslashes($_POST['subject']);
             }
 
-            $Subject = substr(strip_tags($_POST['temat']), 0, $_MaxLength_Subject);
-            $Message = substr(strip_tags($_POST['tresc']), 0, $_MaxLength_Text);
+            $Subject = substr(strip_tags($_POST['subject']), 0, $_MaxLength_Subject);
+            $Message = substr(strip_tags($_POST['text']), 0, $_MaxLength_Text);
 
             $UserList = [];
             while($UsersData = $SQLResult_GetUsers->fetch_assoc())
@@ -56,9 +56,9 @@ if(CheckAuth('supportadmin'))
     }
     else
     {
-        $parse = $_GameConfig;
-        $parse['skinpath'] = $_SkinPath;
-        $page = parsetemplate(gettemplate('admin/massmessage_body'), $parse);
+        $_Lang['FormInsert_MaxSigns'] = $_MaxLength_Text;
+
+        $page = parsetemplate(gettemplate('admin/massmessage_body'), $_Lang);
         display($page, 'MassMessage', false, true);
     }
 }

@@ -3,11 +3,30 @@ var AllowPrettyInputBox= {P_AllowPrettyInputBox};
 var ShowElementOnStartup = '{Create_ShowElementOnStartup}';
 var RunQueueHandler = '{Create_RunQueueJSHandler}';
 var LastQueueID = {Create_LastJSQueueID};
-var Resources = {'metal': '{Create_MetalMax}', 'crystal': '{Create_CrystalMax}', 'deuterium': '{Create_DeuteriumMax}'};
-var JSLang = {'InfoBox_ShowResReq': '{InfoBox_ShowResReq}', 'InfoBox_ShowTechReq': '{InfoBox_ShowTechReq}', 'Metal': '{Metal}', 'Crystal': '{Crystal}', 'Deuterium': '{Deuterium}', 'Energy': '{Energy}', 'DarkEnergy': '{DarkEnergy}'};
-eval('var ShipPrices = {Create_InsertPrices}');
-eval('var ShipTimes = {Create_InsertTimes}');
-eval('var QueueArray = {Create_QueueJSArray}');
+var Resources = {
+    'metal': '{Create_MetalMax}',
+    'crystal': '{Create_CrystalMax}',
+    'deuterium': '{Create_DeuteriumMax}'
+};
+var JSLang = {
+    'InfoBox_ShowResReq': '{InfoBox_ShowResReq}',
+    'InfoBox_ShowTechReq': '{InfoBox_ShowTechReq}',
+    'Metal': '{Metal}',
+    'Crystal': '{Crystal}',
+    'Deuterium': '{Deuterium}',
+    'Energy': '{Energy}',
+    'DarkEnergy': '{DarkEnergy}'
+};
+var ShipPrices = {Create_InsertPrices};
+var ShipTimes = {Create_InsertTimes};
+var QueueArray = {Create_QueueJSArray};
+
+function onQueuesFirstElementFinished (redirectPageType) {
+    window.setTimeout(function () {
+        document.location.href = "buildings.php?mode=" + redirectPageType;
+    }, 1000);
+}
+
 </script>
 <script src="dist/js/structures.cachebuster-1546739003831.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="dist/css/structures.cachebuster-1546565145290.min.css" />
