@@ -70,16 +70,7 @@ $_Lang['JSLang'] = [
     'Info_RequestCode_1'        => 'Twoje konto zostało założone poprawnie, za chwilę nastapi przejście do gry...',
     'Info_RequestCode_2'        => 'Twoje konto zostało założone poprawnie. Teraz oczekuj na otwarcie tego Universum...',
 
-    'LanguagesData'             => [
-        'en'                    => [
-            'flag_emoji'        => '🇬🇧',
-            'name'              => 'Angielski'
-        ],
-        'pl'                    => [
-            'flag_emoji'        => '🇵🇱',
-            'name'              => 'Polski'
-        ]
-    ],
+    'LanguagesData'             => &$_Lang['LanguagesAvailable'],
 ];
 
 ?>

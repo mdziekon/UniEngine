@@ -70,16 +70,7 @@ $_Lang['JSLang'] = [
     'Info_RequestCode_1'        => 'Your account has been created, we will redirect you to the game in a moment...',
     'Info_RequestCode_2'        => 'Your account has been created. Now you have to wait until the game server opens up for all players...',
 
-    'LanguagesData'             => [
-        'en'                    => [
-            'flag_emoji'        => '🇬🇧',
-            'name'              => 'English'
-        ],
-        'pl'                    => [
-            'flag_emoji'        => '🇵🇱',
-            'name'              => 'Polish'
-        ]
-    ],
+    'LanguagesData'             => &$_Lang['LanguagesAvailable'],
 ];
 
 ?>

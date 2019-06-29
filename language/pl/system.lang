@@ -195,4 +195,15 @@ $_Lang['to_this_moon']      = 'ten księżyc';
 $_Lang['on_this_planet']    = 'tej planecie';
 $_Lang['on_this_moon']      = 'tym księżycu';
 
+$_Lang['LanguagesAvailable']    = [
+    'en'                        => [
+        'flag_emoji'            => '🇬🇧',
+        'name'                  => 'Angielski'
+    ],
+    'pl'                        => [
+        'flag_emoji'            => '🇵🇱',
+        'name'                  => 'Polski'
+    ],
+];
+
 ?>
