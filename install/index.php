@@ -6,7 +6,43 @@ if (file_exists('lock')) {
     die('"lock" file found');
 }
 
-$_UseLang = 'pl';
+include('../common.minimal.php');
+
+$_UseLang = null;
+
+include('install_functions.php');
+
+if (isset($_GET['lang']) && in_array($_GET['lang'], LANG_AVAILABLE)) {
+    $_UseLang = $_GET['lang'];
+}
+
+if (!$_UseLang) {
+    include("./language/common.lang");
+
+    $_parse = [
+        'PageTitle' => $_Lang['PageTitle'],
+        'SelectLang_infobox_combined' => [],
+        'LangOptions_combined' => []
+    ];
+
+    foreach ($_Lang['SelectLang_infobox'] as $langKey => $value) {
+        $_parse['SelectLang_infobox_combined'][] = $value;
+    }
+    foreach ($_Lang['LangOptions'] as $langKey => $langData) {
+        $_parse['LangOptions_combined'][] = (
+            "<div class=\"lang_selector\">" .
+                "<a href=\"?lang={$langKey}\">{$langData['flag_emoji']} {$langData['name']}</a>" .
+            "</div>"
+        );
+    }
+
+    $_parse['SelectLang_infobox_combined'] = implode(' / ', $_parse['SelectLang_infobox_combined']);
+    $_parse['LangOptions_combined'] = implode('', $_parse['LangOptions_combined']);
+
+    echo parseFile("install_langselect.tpl", $_parse);
+
+    die();
+}
 
 $_Install_IsOnLocalhost = false;
 $_Install_ConfigFile = 'config';
@@ -17,7 +53,6 @@ if ($_SERVER['SERVER_ADDR'] == '127.0.0.1' OR $_SERVER['SERVER_ADDR'] == '::1') 
     $_Install_IsOnLocalhost = true;
 }
 
-include('install_functions.php');
 include('./utils/determine_required_fields.php');
 include('./utils/normalize_config_inputs.php');
 include('./utils/translate_php_input_values_to_html.php');
@@ -25,6 +60,8 @@ include('./utils/verify_config_inputs.php');
 include('./utils/verify_requirements.php');
 
 includeLang();
+
+$_Lang['PHP_CurrentLangISOCode'] = $_UseLang;
 
 if (!$_Install_IsOnLocalhost) {
     $_Lang['PHP_HideLocalhostInfo'] = 'display: none;';
@@ -36,7 +73,7 @@ $requirementsVerificationResult = verify_requirements([
     'configFile' => $_Install_ConfigFile
 ]);
 
-if (!$requirementsVerificationResult['hasPassed']) {
+if (false && !$requirementsVerificationResult['hasPassed']) {
     $_Lang['PHP_HideFormBox'] = 'display: none;';
 
     foreach ($requirementsVerificationResult['tests'] as $Key => $Value) {
@@ -56,11 +93,6 @@ if (!$requirementsVerificationResult['hasPassed']) {
 
 $_Lang['PHP_HideInfoBox'] = 'display: none;';
 
-if (!isset($_POST['install'])) {
-    display();
-    die();
-}
-
 // --- Start installation process ---
 $_Install_Vars = normalize_config_inputs($_POST);
 $_Install_RequiredFields = determine_required_fields($_Install_Vars);
@@ -69,6 +101,11 @@ $htmlValues = translate_php_input_values_to_html($_Install_Vars, $_POST);
 
 foreach ($htmlValues as $key => $value) {
     $_Lang['set_' . $key] = $value;
+}
+
+if (!isset($_POST['install'])) {
+    display();
+    die();
 }
 
 // Verify is all required fields are not empty

@@ -1,4 +1,4 @@
-<html>
+<html lang="{PHP_CurrentLangISOCode}">
     <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
         <title>{PageTitle}</title>
@@ -6,7 +6,6 @@
         <link rel="icon" href="../favicon.ico" type="image/x-icon" />
         <link rel="stylesheet" type="text/css" href="../skins/epicblue/default.css" />
         <link rel="stylesheet" type="text/css" href="../skins/epicblue/formate.css" />
-        <meta http-equiv="Content-Language" content="pl" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     </head>
     <body>

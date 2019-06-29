@@ -1,0 +1,21 @@
+<?php
+
+$_Lang['PageTitle'] = 'UniEngine Installer';
+
+$_Lang['SelectLang_infobox'] = [
+    'en' => 'Select language',
+    'pl' => 'Wybierz język'
+];
+
+$_Lang['LangOptions'] = [
+    'en' => [
+        'name' => 'English',
+        'flag_emoji' => '🇬🇧'
+    ],
+    'pl' => [
+        'name' => 'Polski',
+        'flag_emoji' => '🇵🇱'
+    ]
+];
+
+?>
