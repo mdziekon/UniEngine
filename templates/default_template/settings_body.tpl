@@ -188,6 +188,12 @@ var TemplateData = {'SaveOnlyThis': '{SaveOnlyThis}', 'SaveAll': '{SaveAll}', 'u
                 <td class="c center" colspan="4">{GameView}</td>
             </tr>
             <tr>
+                <th colspan="2">{GameLanguage}</th>
+                <th colspan="2">
+                    <select name="lang" class="center pad2 w90p">{PHP_Insert_LanguageOptions}</select>
+                </th>
+            </tr>
+            <tr>
                 <th colspan="2"><b class="help highlight_skin_url highlight_box" title="{SkinPathInfo}"><b class="dash">{SkinPath}</b></b><br />{SkinPathMore}</th>
                 <th colspan="2"><input type="text" name="skin_path" value="{skin_path}" class="pad2 w90p"/></th>
             </tr>

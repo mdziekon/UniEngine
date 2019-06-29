@@ -28,6 +28,20 @@ $_Lang['skinpath'] = $_User['skinpath'];
 $_Lang['VacationDays'] = 3;
 $_Lang['PHP_Insert_VacationComeback'] = $Now + ($_Lang['VacationDays'] * TIME_DAY);
 $_Lang['PHP_Insert_VacationComeback'] = date('d.m.Y', $_Lang['PHP_Insert_VacationComeback'])." {$_Lang['atHour']} ".date('h:i:s', $_Lang['PHP_Insert_VacationComeback']);
+$_Lang['PHP_Insert_LanguageOptions'] = [];
+
+foreach ($_Lang['LanguagesAvailable'] as $langKey => $langData) {
+    $isSelectedHTMLAttr = ($langKey == getCurrentLang() ? "selected" : "");
+
+    $_Lang['PHP_Insert_LanguageOptions'][] = (
+        "<option value='{$langKey}' {$isSelectedHTMLAttr}>" .
+            "{$langData["flag_emoji"]} {$langData["name"]}" .
+        "</option>"
+    );
+}
+
+$_Lang['PHP_Insert_LanguageOptions'] = implode('', $_Lang['PHP_Insert_LanguageOptions']);
+
 $ForceGoingOnVacationMsg = false;
 
 $ChangeNotDone = 0;
@@ -316,6 +330,21 @@ if(!isOnVacation())
                 }
                 else
                 {
+                    $ChangeNotDone += 1;
+                }
+
+                $uservals_gamelanguage = $_User['lang'];
+                if (isset($_POST['lang'])) {
+                    if (in_array($_POST['lang'], LANG_AVAILABLE)) {
+                        $uservals_gamelanguage = $_POST['lang'];
+                    } else {
+                        $WarningMsgs[] = $_Lang['Lang_UnavailableLang'];
+                    }
+                }
+                if ($uservals_gamelanguage != $_User['lang']) {
+                    $ChangeSet['lang'] = $uservals_gamelanguage;
+                    $ChangeSetTypes['lang'] = 's';
+                } else {
                     $ChangeNotDone += 1;
                 }
 
