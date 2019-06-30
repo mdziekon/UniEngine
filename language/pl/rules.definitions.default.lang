@@ -14,28 +14,30 @@ $_Lang['RulesDefinitions'] = [
             3 => 'Każdy gracz musi znać Regulamin oraz wszystkie jego punkty i podpunkty. Nieznajomość <b>Regulaminu</b> nie zwalnia z odpowiedzialności za swoje czyny w grze, zaś wszelkie odwołania od kar, w których gracz wykazuje ewidentny brak znajomości Regulaminu, będą od razu odrzucane.',
 
             4 => [
-                1 => 'Właścicielami Gry są osoby, które posiadają wszelkie prawa co do serwerów, domen oraz plików i treści zawartych w grze (za wyjątkiem tych dostarczanych przez graczy) oraz na jej podstronach i podserwisach (jak Forum czy konta w Portalach Społecznościowych). Właściciel Gry może jednocześnie pełnić funkcje Administratora i Operatora gry.',
+                'elements' => [
+                    1 => 'Właścicielami Gry są osoby, które posiadają wszelkie prawa co do serwerów, domen oraz plików i treści zawartych w grze (za wyjątkiem tych dostarczanych przez graczy) oraz na jej podstronach i podserwisach (jak Forum czy konta w Portalach Społecznościowych). Właściciel Gry może jednocześnie pełnić funkcje Administratora i Operatora gry.',
 
-                2 => 'Administratorami Gry są osoby, które otrzymały pełen dostęp do zarządzania grą w celu zachowania porządku oraz rozstrzygania spornych spraw przez dostarczone im funkcje w grze bądź inne rozwiązania techniczne. Reprezentują oni Właścicieli na Forum Gry oraz w kontakcie z graczami.',
+                    2 => 'Administratorami Gry są osoby, które otrzymały pełen dostęp do zarządzania grą w celu zachowania porządku oraz rozstrzygania spornych spraw przez dostarczone im funkcje w grze bądź inne rozwiązania techniczne. Reprezentują oni Właścicieli na Forum Gry oraz w kontakcie z graczami.',
 
-                3 => 'Supportem Gry są osoby zajmujące stanowiska Super Operatora lub Operatora Gry. Są to osoby, które otrzymały ograniczony dostęp do zarządzania grą w celu zachowania porządku oraz rozstrzygania spornych spraw przez dostarczone im funkcje w grze bądź inne rozwiązania techniczne. Są oni pośrednikami w kontakcie między graczem a Administracją.',
+                    3 => 'Supportem Gry są osoby zajmujące stanowiska Super Operatora lub Operatora Gry. Są to osoby, które otrzymały ograniczony dostęp do zarządzania grą w celu zachowania porządku oraz rozstrzygania spornych spraw przez dostarczone im funkcje w grze bądź inne rozwiązania techniczne. Są oni pośrednikami w kontakcie między graczem a Administracją.',
 
-                4 => [
-                    'maintext' => 'Hierarchia decyzyjna wygląda następująco (pierwsza pozycja - najwyższa ranga decyzyjna; ostatnia pozycja - najniższa ranga decyzyjna):',
-                    'ul' => [
-                        'Właściciele gry',
+                    4 => [
+                        'maintext' => 'Hierarchia decyzyjna wygląda następująco (pierwsza pozycja - najwyższa ranga decyzyjna; ostatnia pozycja - najniższa ranga decyzyjna):',
+                        'ul' => [
+                            'Właściciele gry',
 
-                        'Administracja',
+                            'Administracja',
 
-                        'Super Operatorzy gry (Zespół wsparcia)',
+                            'Super Operatorzy gry (Zespół wsparcia)',
 
-                        'Operatorzy gry (Zespół wsparcia)'
-                    ]
-                ],
+                            'Operatorzy gry (Zespół wsparcia)'
+                        ]
+                    ],
 
-                5 => 'Osoby zarządzające Forum (o ile Forum zostało uruchomione) nie wchodzą w Skład Zarządzający Grą, chyba że dana osoba piastuje jednocześnie wyżej wymienione stanowisko w grze.',
+                    5 => 'Osoby zarządzające Forum (o ile Forum zostało uruchomione) nie wchodzą w Skład Zarządzający Grą, chyba że dana osoba piastuje jednocześnie wyżej wymienione stanowisko w grze.',
 
-                6 => 'Zespół deweloperów gry nie działa na zasadach decyzyjnych takich jak role wymieone wyżej, mimo że posiadają oni podobny zakres dostępu jak Administracja czy nawet Właściciele gry. Ich rolą jest zarządzanie rozwojem silnika gry, poprzez dodawanie nowych funkcjonalności, naprawianie błędów i ogólne usprawnianie funkcjonalności gry. Nie wchodzą w interakcje z graczami (mowa tu o rozstrzyganiu zgłoszeń, odwołań i innych akcji decyzyjnych w wypadku łamiania Regulaminu), jednakże mogą kontaktować się z graczami w niektórych przypadkach (np. gdy błąd został zgłoszony przez gracza).'
+                    6 => 'Zespół deweloperów gry nie działa na zasadach decyzyjnych takich jak role wymieone wyżej, mimo że posiadają oni podobny zakres dostępu jak Administracja czy nawet Właściciele gry. Ich rolą jest zarządzanie rozwojem silnika gry, poprzez dodawanie nowych funkcjonalności, naprawianie błędów i ogólne usprawnianie funkcjonalności gry. Nie wchodzą w interakcje z graczami (mowa tu o rozstrzyganiu zgłoszeń, odwołań i innych akcji decyzyjnych w wypadku łamiania Regulaminu), jednakże mogą kontaktować się z graczami w niektórych przypadkach (np. gdy błąd został zgłoszony przez gracza).'
+                ]
             ],
 
             5 => 'Właściciele gry zastrzegają sobie prawo do zmiany zarówno Regulamin jak i Tabela Kar w dowolnym czasie. Zmieniony Regulamin/Tabela Kar wchodzi w życie wraz z momentem publikacji, jednakże każdy gracz musi zaakceptować zmiany.',

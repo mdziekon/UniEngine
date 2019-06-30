@@ -161,7 +161,7 @@ function createRulesList (&$rulesElements, $prefix = [], $hasNoHeader = false) {
 
         if (!isset($element['title'])) {
             // Is simple grouping (no header)
-            $result[] = createRulesList($element, $currentIdx, true);
+            $result[] = createRulesList($element['elements'], $currentIdx, true);
 
             continue;
         }
