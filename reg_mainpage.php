@@ -114,7 +114,7 @@ if(REGISTER_RECAPTCHA_ENABLE)
         $RecaptchaJSSetupTpl,
         [
             'Recaptcha_Sitekey' => REGISTER_RECAPTCHA_PUBLICKEY,
-            'Recaptcha_Lang' => getDefaultUniLang()
+            'Recaptcha_Lang' => getCurrentLang()
         ]
     );
 }
