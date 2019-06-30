@@ -30,10 +30,10 @@
     "gulp": "^4.0.2",
     "gulp-csso": "^3.0.1",
     "gulp-rename": "^1.4.0",
-    "gulp-terser": "^1.1.6",
+    "gulp-terser": "^1.2.0",
     "plugin-error": "^1.0.1",
     "stylelint": "^10.1.0",
-    "terser": "^3.13.1",
+    "terser": "^4.0.1",
     "through2-filter": "^3.0.0"
   }
 }
