@@ -14,28 +14,30 @@ $_Lang['RulesDefinitions'] = [
             3 => 'Each user accepts the fact that unfamiliarity with the <b>Terms of Service</b> does not release them from responsibilities for their in-game actions, and all appeals with evident ignorance of the Terms will be rejected.',
 
             4 => [
-                1 => 'The owners of the game are defined as all people who have the full ownership rights to the game servers, domains, files and content presented in the game (with the exception of user-provided content), including all subpages and subservices (such as a Forum or a social media account). A game owner can act as an Administrator or Game operator at any time.',
+                'elements' => [
+                    1 => 'The owners of the game are defined as all people who have the full ownership rights to the game servers, domains, files and content presented in the game (with the exception of user-provided content), including all subpages and subservices (such as a Forum or a social media account). A game owner can act as an Administrator or Game operator at any time.',
 
-                2 => 'The administrators of the game are defined as all people who have been granted the full access to the administrative tools and privileges for the purpose of preserving order and resolving all in-game disputes (such as players\' appeals). A game administrator acts as a representative of the game owners.',
+                    2 => 'The administrators of the game are defined as all people who have been granted the full access to the administrative tools and privileges for the purpose of preserving order and resolving all in-game disputes (such as players\' appeals). A game administrator acts as a representative of the game owners.',
 
-                3 => 'The support team members are defined as all people fulfilling the role of Game operators or Super Game operators, who have been granted limited access to the administrative tools and privileges for the purpose of preserving order and resolving some of the in-game disputes. A support team member acts as a mediator between game users and administrators.',
+                    3 => 'The support team members are defined as all people fulfilling the role of Game operators or Super Game operators, who have been granted limited access to the administrative tools and privileges for the purpose of preserving order and resolving some of the in-game disputes. A support team member acts as a mediator between game users and administrators.',
 
-                4 => [
-                    'maintext' => 'The decision hierarchy is as follows (first position - highest decision rank; last position - lowest decision rank):',
-                    'ul' => [
-                        'Game owners',
+                    4 => [
+                        'maintext' => 'The decision hierarchy is as follows (first position - highest decision rank; last position - lowest decision rank):',
+                        'ul' => [
+                            'Game owners',
 
-                        'Administrators',
+                            'Administrators',
 
-                        'Super Game operators (Support team)',
+                            'Super Game operators (Support team)',
 
-                        'Game operators (Support team)'
-                    ]
-                ],
+                            'Game operators (Support team)'
+                        ]
+                    ],
 
-                5 => 'The Forum\'s management team (if a game forum exists) do not participate in any in-game decision making, unless they act as one of the roles stated above.',
+                    5 => 'The Forum\'s management team (if a game forum exists) do not participate in any in-game decision making, unless they act as one of the roles stated above.',
 
-                6 => 'The Game Developers team do not act as any of the in-game decision making role stated above, even though they do have similar access rights to the Administrators or even Game owners. Their role is to manage the game\'s engine development, by adding new features, fixing bugs and improving the overall experience of the players. They do not interact with the players (as in, they do not handle complaints, appeals, decisions related to rules violations), however they may contact players in certain cases (eg. when a bug has been reported by a player).',
+                    6 => 'The Game Developers team do not act as any of the in-game decision making role stated above, even though they do have similar access rights to the Administrators or even Game owners. Their role is to manage the game\'s engine development, by adding new features, fixing bugs and improving the overall experience of the players. They do not interact with the players (as in, they do not handle complaints, appeals, decisions related to rules violations), however they may contact players in certain cases (eg. when a bug has been reported by a player).',
+                ]
             ],
 
             5 => 'The Game owners reserve the right to any modification of the Terms of Service and the List of violations at any moment. The modified regulations become effective in the moment of their publication, however the changes have to be accepted by each player.',
