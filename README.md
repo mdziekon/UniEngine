@@ -11,7 +11,7 @@ OGame-clone browser based game engine.
 - [Installation](#installation)
 - [Updating from older versions](#updating-from-older-versions)
 - [Development guides](#development-guides)
-- [Documentations](#documentation)
+- [Documentation](#documentation)
 - [Languages](#languages)
 - [Credits](#credits)
 - [License](#license)

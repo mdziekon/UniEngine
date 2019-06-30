@@ -1,4 +1,4 @@
-# Defining Terms of Service (Rules)
+# Defining custom Terms of Service (Rules)
 
 UniEngine's repo provides an example of Terms of Service document, as presented on the ``rules.php`` page. However, to prevent admins from modifying the ``rules.definitions.default.lang`` (holding these rules) which is tracked by the repo, the engine accepts an alternative definition file, ignored by the git repo.
 
