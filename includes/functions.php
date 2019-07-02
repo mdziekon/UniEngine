@@ -27,6 +27,19 @@ function SecureInput($Input)
     return $Input;
 }
 
+function getSessionCookieKey() {
+    global $_GameConfig;
+
+    $key = $_GameConfig['COOKIE_NAME'];
+
+    // PHP internally replaces spaces (" ") and dots (".") with underscores ("_")
+    // when setting cookie values in $_COOKIE. We have to map the stored key
+    // to read the correct value from the array.
+    $key = preg_replace('/(\s|\.)/', '_', $key);
+
+    return $key;
+}
+
 function isPro($_User = false)
 {
     if($_User === false)
