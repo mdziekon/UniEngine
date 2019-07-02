@@ -235,7 +235,7 @@ if(isLogged())
 
     if($_User['dokick'] == 1)
     {
-        setcookie($_GameConfig['COOKIE_NAME'], '', $Common_TimeNow - 100000, '/', '', 0);
+        setcookie(getSessionCookieKey(), '', $Common_TimeNow - 100000, '/', '', 0);
         doquery("UPDATE {{table}} SET `dokick` = 0 WHERE `id` = {$_User['id']};", 'users');
 
         header('Location: logout.php?kicked=1');

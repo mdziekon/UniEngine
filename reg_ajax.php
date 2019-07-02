@@ -483,7 +483,10 @@ if(isset($_GET['register']))
                 }
                 $cookie = $UserID.'/%/'.$Username.'/%/'.md5(md5($Password).'--'.$__ServerConnectionSettings['secretword']).'/%/0';
                 $JSONResponse['Code'] = 1;
-                $JSONResponse['Cookie'][] = array('Name' => $_GameConfig['COOKIE_NAME'], 'Value' => $cookie);
+                $JSONResponse['Cookie'][] = [
+                    'Name' => getSessionCookieKey(),
+                    'Value' => $cookie
+                ];
                 $JSONResponse['Redirect'] = GAMEURL_UNISTRICT.'/overview.php';
             }
             else

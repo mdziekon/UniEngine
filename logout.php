@@ -13,7 +13,7 @@ include($_EnginePath.'common.php');
 loggedCheck();
 includeLang('logout');
 
-setcookie($_GameConfig['COOKIE_NAME'], '', time() - 100000, '/', '', 0);
+setcookie(getSessionCookieKey(), '', time() - 100000, '/', '', 0);
 
 if(isset($_GET['kicked']))
 {

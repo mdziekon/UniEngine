@@ -10,6 +10,8 @@ include($_EnginePath.'common.php');
 
 includeLang('login');
 
+$sessionCookieKey = getSessionCookieKey();
+
 if(!empty($_GET['post']))
 {
     $_POST = unserialize(base64_decode($_GET['post']));
@@ -68,9 +70,9 @@ if($_POST)
         $Search['error'] = 1;
     }
 }
-elseif(!empty($_COOKIE[$_GameConfig['COOKIE_NAME']]))
+elseif(!empty($_COOKIE[$sessionCookieKey]))
 {
-    $explodeCookie = explode('/%/', $_COOKIE[$_GameConfig['COOKIE_NAME']]);
+    $explodeCookie = explode('/%/', $_COOKIE[$sessionCookieKey]);
     $UserID = intval($explodeCookie[0]);
     if($UserID > 0)
     {
@@ -129,7 +131,7 @@ if(!empty($Search['where']))
                     $Cookie_Remember = 0;
                 }
                 $Cookie_Set = $UserData['id'].'/%/'.$UserData['username'].'/%/'.md5($UserData['password'].'--'.$__ServerConnectionSettings['secretword']).'/%/'.$Cookie_Remember;
-                setcookie($_GameConfig['COOKIE_NAME'], $Cookie_Set, $Cookie_Expire, '/', '', false, true);
+                setcookie($sessionCookieKey, $Cookie_Set, $Cookie_Expire, '/', '', false, true);
             }
             IPandUA_Logger($UserData);
             unset($__ServerConnectionSettings);
@@ -164,7 +166,7 @@ if(!empty($Search['error']))
     }
     if($Search['mode'] == 2)
     {
-        setcookie($_GameConfig['COOKIE_NAME'], false, 0, '/', '');
+        setcookie($sessionCookieKey, false, 0, '/', '');
     }
     if($Search['error'] == 1)
     {
