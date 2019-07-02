@@ -60,6 +60,8 @@ class DBErrorHandler {
             $SQLQuery_InsertError
         );
 
+        $_DBLink->query('UNLOCK TABLES; -- debug.class.php');
+
         $_DBLink->query($SQLQuery_InsertError);
 
         if ($_DBLink->errno) {
