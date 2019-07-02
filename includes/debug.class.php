@@ -11,8 +11,11 @@ class DBErrorHandler {
 
         if ($this->isHandlingError) {
             throw new RuntimeException(
-                "DBErrorHandler: Nesting Prevention!\n" .
-                $this->lastErrorMessage
+                "DBErrorHandler: Nesting Prevention!\n\n" .
+                "Previous error message:\n" .
+                $this->lastErrorMessage . "\n\n" .
+                "Latest error message:\n" .
+                $message
             );
         }
 
