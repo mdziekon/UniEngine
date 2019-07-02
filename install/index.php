@@ -281,6 +281,12 @@ if (!$_Install_SaveRegisterJS) {
     die();
 }
 
+$sessionCookieName = $_Install_Vars['uni_gamename'];
+$sessionCookieName = strtoupper($sessionCookieName);
+$sessionCookieName = preg_replace('/\s+/', '_', $sessionCookieName);
+$sessionCookieName = preg_replace('/\.+/', '_', $sessionCookieName);
+$sessionCookieName = $sessionCookieName . '_CK';
+
 // Now, final try - call every query
 $_Install_QueriesData = [
     'prefix'                                        => $_Install_Vars['dbconfig_prefix'],
@@ -292,10 +298,7 @@ $_Install_QueriesData = [
     'Config_DefenseDebris'                          => $_Install_Vars['uni_defensedebris'],
     'Config_MissileDebris'                          => $_Install_Vars['uni_missiledebris'],
     'Config_InitialFields'                          => $_Install_Vars['uni_motherfields'],
-    'Config_CookieName'                             => (
-        preg_replace('/\s+/', '', strtoupper($_Install_Vars['uni_gamename'])) .
-        '_CK'
-    ),
+    'Config_CookieName'                             => $sessionCookieName,
     'Config_NoobProtection_Enable'                  => (
         $_Install_Vars['uni_noobprt_enable'] ?
         '1' :
