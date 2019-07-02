@@ -269,7 +269,9 @@ function Morale_ReCalculate(&$TheUser, $TheTime = false)
 
 function Morale_AddMorale(&$TheUser, $Type, $Factor, $LevelFactor = 1, $TimeFactor = 1, $TheTime = false)
 {
-    $AddLevel = floor((($Factor > MORALE_MAXIMALFACTOR ? MORALE_MAXIMALFACTOR : $Factor) / 2) * $LevelFactor) * $Type;
+    $effectiveFactor = ($Factor > MORALE_MAXIMALFACTOR ? MORALE_MAXIMALFACTOR : $Factor);
+
+    $AddLevel = floor(($effectiveFactor / 2) * $LevelFactor) * $Type;
     if($AddLevel == 0)
     {
         return false;
@@ -280,7 +282,7 @@ function Morale_AddMorale(&$TheUser, $Type, $Factor, $LevelFactor = 1, $TimeFact
         $TheTime = time();
     }
 
-    $AddTime = floor($Factor * 3600 * $TimeFactor);
+    $AddTime = floor($effectiveFactor * 3600 * $TimeFactor);
 
     $NewMoralePositive = ($AddLevel > 0 ? true : false);
     $OldMoralePositive = ($TheUser['morale_level'] > 0 ? true : false);
