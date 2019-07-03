@@ -28,7 +28,7 @@ function getSkinPath ($params) {
     $skinPath = (
         !empty($user['skinpath']) ?
         $user['skinpath'] :
-        DEFAULT_SKINPATH
+        UNIENGINE_DEFAULT_SKINPATH
     );
 
     $isLocalPath = !(preg_match('/(http:|https:)/', $skinPath) == 1);

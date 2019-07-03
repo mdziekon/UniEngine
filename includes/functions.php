@@ -385,7 +385,7 @@ function display($PageCode, $PageTitle = '', $ShowTopResourceBar = true, $IsAdmi
     $DisplayPage = '';
     if(empty($_SkinPath))
     {
-        $_SkinPath = DEFAULT_SKINPATH;
+        $_SkinPath = UNIENGINE_DEFAULT_SKINPATH;
     }
 
     $ProbablyOnAdminPage = false;

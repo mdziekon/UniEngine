@@ -27,7 +27,7 @@ function CheckUserSession()
                 {
                     includeLang('bannedUser');
                     include("{$_EnginePath}/includes/functions/InsertJavaScriptChronoApplet.php");
-                    $_SkinPath = DEFAULT_SKINPATH;
+                    $_SkinPath = UNIENGINE_DEFAULT_SKINPATH;
 
                     $Query_GetBanInfo = '';
                     $Query_GetBanInfo .= "SELECT `Ban`.*, `users`.`username` AS `GiverName` FROM {{table}} AS `Ban` ";

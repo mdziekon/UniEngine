@@ -25,7 +25,7 @@ function gettemplate($templatename)
 {
     global $_EnginePath;
 
-    return ReadFromFile($_EnginePath.TEMPLATE_DIR.TEMPLATE_NAME.'/'.$templatename.'.tpl');
+    return ReadFromFile($_EnginePath . UNIENGINE_TEMPLATE_DIR . UNIENGINE_TEMPLATE_NAME . '/' . $templatename . '.tpl');
 }
 
 function getDefaultUniLang() {
