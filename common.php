@@ -91,29 +91,10 @@ if(!defined('UEC_INLOGIN'))
     $_User = CheckUserSession();
 }
 
-if(defined('IN_ADMIN'))
-{
-    if(empty($_User['skinpath']))
-    {
-        $UsePath = DEFAULT_SKINPATH;
-    }
-    else
-    {
-        $UsePath = $_User['skinpath'];
-    }
-    if(strstr($UsePath, 'http:') === false)
-    {
-        $_SkinPath = $_EnginePath.$UsePath;
-    }
-    else
-    {
-        $_SkinPath = $UsePath;
-    }
-}
-else
-{
-    $_SkinPath = (empty($_User['skinpath'])) ? DEFAULT_SKINPATH : $_User['skinpath'];
-}
+$_SkinPath = getSkinPath([
+    'user' => &$_User,
+    'enginePath' => $_EnginePath
+]);
 
 includeLang('tech');
 includeLang('system');
