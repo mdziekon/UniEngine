@@ -138,16 +138,8 @@ if(!isset($_SetAccessLogPreFilename))
 }
 CreateAccessLog($_SetAccessLogPath, $_SetAccessLogPreFilename);
 
-if(!empty($_GameConfig['banned_ip_list']))
-{
-    $BannedIPs = explode('|',$_GameConfig['banned_ip_list']);
-    if(!empty($BannedIPs) AND (array)$BannedIPs === $BannedIPs)
-    {
-        if(!empty($_SERVER['REMOTE_ADDR']) AND in_array($_SERVER['REMOTE_ADDR'], $BannedIPs))
-        {
-            message($_Lang['Game_blocked_for_this_IP'], $_GameConfig['game_name']);
-        }
-    }
+if (isIPBanned($_SERVER['REMOTE_ADDR'], $_GameConfig)) {
+    message($_Lang['Game_blocked_for_this_IP'], $_GameConfig['game_name']);
 }
 
 if(isLogged())
