@@ -126,7 +126,7 @@ if(!isOnVacation())
                                     $ChangeSet['password'] = md5($_POST['give_newpass']);
                                     $ChangeSetTypes['password'] = 's';
                                     $InfoMsgs[] = $_Lang['Pass_Changed_plzlogout'];
-                                    setcookie($_GameConfig['COOKIE_NAME'], '', $Now - 3600, '/', '');
+                                    setcookie(getSessionCookieKey(), '', $Now - 3600, '/', '');
                                 }
                                 else
                                 {
@@ -1341,7 +1341,7 @@ if(!isOnVacation())
 
             doquery("UPDATE {{table}} SET `darkEnergy` = `darkEnergy` - 10, `username` = '{$NewNick}', `old_username` = '{$_User['username']}', `old_username_expire` = UNIX_TIMESTAMP() + (7*24*60*60) WHERE `id` = {$_User['id']} LIMIT 1;", 'users');
             doquery("INSERT INTO {{table}} VALUES(NULL, {$_User['id']}, UNIX_TIMESTAMP(), '{$NewNick}', '{$_User['username']}');", 'nick_changelog');
-            setcookie($_GameConfig['COOKIE_NAME'], '', $Now - 3600, '/', '');
+            setcookie(getSessionCookieKey(), '', $Now - 3600, '/', '');
             message($_Lang['NewNick_saved'], $_Lang['NickChange_Title'], 'login.php');
         }
         else

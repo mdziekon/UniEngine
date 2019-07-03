@@ -19,9 +19,12 @@ function CheckUserSessionCookie()
     {
         require($_EnginePath.'config.php');
     }
-    if(isset($_COOKIE[$_GameConfig['COOKIE_NAME']]))
+
+    $sessionCookieKey = getSessionCookieKey();
+
+    if(isset($_COOKIE[$sessionCookieKey]))
     {
-        $TheCookie = explode('/%/', $_COOKIE[$_GameConfig['COOKIE_NAME']]);
+        $TheCookie = explode('/%/', $_COOKIE[$sessionCookieKey]);
         $TheCookie[0] = intval($TheCookie[0]);
         if($TheCookie[0] <= 0)
         {
@@ -86,8 +89,8 @@ function CheckUserSessionCookie()
 
         Tasks_CheckUservar($UserRow);
 
-        setcookie($_GameConfig['COOKIE_NAME'], FALSE, 0, '/', '.'.GAMEURL_DOMAIN);
-        setcookie($_GameConfig['COOKIE_NAME'], $NextCookie, $ExpireTime, '/', '', false, true);
+        setcookie($sessionCookieKey, FALSE, 0, '/', '.'.GAMEURL_DOMAIN);
+        setcookie($sessionCookieKey, $NextCookie, $ExpireTime, '/', '', false, true);
     }
     unset($__ServerConnectionSettings);
     $_DontShowMenus = $Init['$_DontShowMenus'];
