@@ -714,38 +714,33 @@ function safeDie($DieMsg = '')
     die($DieMsg);
 }
 
-function ShowLeftMenu($Template = 'left_menu')
-{
+function ShowLeftMenu($templateFile = 'left_menu') {
     global $_Lang, $_SkinPath, $_GameConfig, $NewMSGCount, $_LeftMenuSettings;
 
     includeLang('leftmenu');
-    if(strstr($Template, 'admin/'))
-    {
+
+    if (strstr($templateFile, 'admin/')) {
         includeLang('admin');
     }
 
-    $Since = 2010;
-    $MenuTPL = gettemplate($Template);
     $parse = $_Lang;
+
     $parse['GameVersion'] = $_GameConfig['EngineInfo_Version'];
     $parse['GameBuild'] = $_GameConfig['EngineInfo_BuildNo'];
     $parse['skinpath'] = $_SkinPath;
+    $parse['servername'] = $_GameConfig['game_name'];
 
-    if($NewMSGCount > 0)
-    {
+    if ($NewMSGCount > 0) {
         $parse['Messages_Color'] = 'orange';
         $parse['Messages_AddCounter'] = '<b id="lm_msgc">('.$NewMSGCount.')</b>';
     }
-    if(!empty($_LeftMenuSettings['LM_Insert_AllyChatLink']))
-    {
+    if (!empty($_LeftMenuSettings['LM_Insert_AllyChatLink'])) {
         $parse['LM_Insert_AllyChatLink'] = "<a href=\"chat.php?rid={$_LeftMenuSettings['LM_Insert_AllyChatLink']['rid']}\" class=\"AllyChatLink\" title=\"{$_Lang['AllyChat_Title']}\">({$_LeftMenuSettings['LM_Insert_AllyChatLink']['count']})</a>";
     }
 
-    $parse['servername'] = $_GameConfig['game_name'];
-    $parse['CopyTime'] = ($Since == date('Y')) ? $Since : $Since.' - '.date('Y');
-    $Menu = parsetemplate( $MenuTPL, $parse);
+    $loadedTemplate = gettemplate($templateFile);
 
-    return $Menu;
+    return parsetemplate($loadedTemplate, $parse);
 }
 
 function DisplayHelper_DoRedirect($Location, $Delay)
