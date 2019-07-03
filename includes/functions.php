@@ -727,8 +727,8 @@ function ShowLeftMenu($Template = 'left_menu')
     $Since = 2010;
     $MenuTPL = gettemplate($Template);
     $parse = $_Lang;
-    $parse['GameVersion'] = VERSION;
-    $parse['GameBuild'] = REVISION;
+    $parse['GameVersion'] = $_GameConfig['EngineInfo_Version'];
+    $parse['GameBuild'] = $_GameConfig['EngineInfo_BuildNo'];
     $parse['skinpath'] = $_SkinPath;
 
     if($NewMSGCount > 0)

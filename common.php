@@ -68,9 +68,6 @@ $_GameConfig = loadGameConfig([
     'cache' => &$_MemCache
 ]);
 
-define('VERSION', $_GameConfig['EngineInfo_Version']);
-define('REVISION', $_GameConfig['EngineInfo_BuildNo']);
-
 if(!defined('UEC_INLOGIN'))
 {
     $_User = CheckUserSession();
