@@ -16,7 +16,7 @@ function isIPBanned ($ipAddress, $_GameConfig) {
 //          - enginePath (String)
 //
 function getSkinPath ($params) {
-    $user = $params['user'];
+    $user = &$params['user'];
     $enginePath = $params['enginePath'];
 
     $pathPrefix = (
