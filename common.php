@@ -65,6 +65,8 @@ include($_EnginePath.'includes/strings.php');
 
 if(!empty($_BenchTool)){ $_BenchTool->simpleCountStop(); }
 
+include($_EnginePath . 'includes/per_module/common/_includes.php');
+
 // Load game configuration
 if(isset($_MemCache->GameConfig))
 {
@@ -457,30 +459,18 @@ if(isLogged())
             }
         }
 
-        if(!isset($_DontCheckPolls) || $_DontCheckPolls !== true)
-        {
-            if($_User['isAI'] != 1 AND $_User['register_time'] < ($Common_TimeNow - TIME_DAY))
-            {
-                $Query_SelectPolls = '';
-                $Query_SelectPolls .= "SELECT `votes`.`id` AS `vote_id` FROM {{table}} AS `polls` ";
-                $Query_SelectPolls .= "LEFT JOIN `{{prefix}}poll_votes` AS `votes` ON `votes`.`poll_id` = `polls`.`id` AND `votes`.`user_id` = {$_User['id']} ";
-                $Query_SelectPolls .= "WHERE `polls`.`open` = 1 AND `polls`.`obligatory` = 1;";
-                $SelectObligatoryPolls = doquery($Query_SelectPolls, 'polls');
-                if($SelectObligatoryPolls->num_rows > 0)
-                {
-                    $PollsCount = 0;
-                    while($SelectObligatoryPollsData = $SelectObligatoryPolls->fetch_assoc())
-                    {
-                        if($SelectObligatoryPollsData['vote_id'] <= 0)
-                        {
-                            $PollsCount += 1;
-                        }
-                    }
-                    if($PollsCount > 0)
-                    {
-                        message(sprintf($_Lang['YouHaveToVoteInSurveys'], $PollsCount), $_Lang['SystemInfo'], 'polls.php', 10);
-                    }
-                }
+        if (
+            (
+                !isset($_DontCheckPolls) ||
+                $_DontCheckPolls !== true
+            ) &&
+            $_User['isAI'] != 1 &&
+            $_User['register_time'] < ($Common_TimeNow - TIME_DAY)
+        ) {
+            $pollsCount = fetchObligatoryPollsCount($_User['id']);
+
+            if ($pollsCount > 0) {
+                message(sprintf($_Lang['YouHaveToVoteInSurveys'], $pollsCount), $_Lang['SystemInfo'], 'polls.php', 10);
             }
         }
     }
