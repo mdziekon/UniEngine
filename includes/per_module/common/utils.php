@@ -31,7 +31,7 @@ function getSkinPath ($params) {
         DEFAULT_SKINPATH
     );
 
-    $isLocalPath = (strstr($skinPath, 'http:') === false);
+    $isLocalPath = !(preg_match('/(http:|https:)/', $skinPath) == 1);
 
     if (!$isLocalPath) {
         return $skinPath;
