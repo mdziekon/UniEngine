@@ -40,6 +40,31 @@ function getSkinPath ($params) {
     return "{$pathPrefix}{$skinPath}";
 }
 
+//  Arguments:
+//      - params (Object)
+//          - cache (&Object)
+//
+function loadGameConfig ($params) {
+    $cache = &$params['cache'];
+
+    if (isset($cache->GameConfig)) {
+        return $cache->GameConfig;
+    }
+
+    $config = [];
+
+    $query_GetConfig = "SELECT * FROM {{table}};";
+    $result_GetConfig = doquery($query_GetConfig, 'config');
+
+    while ($entry = $result_GetConfig->fetch_assoc()) {
+        $config[$entry['config_name']] = $entry['config_value'];
+    }
+
+    $cache->GameConfig = $config;
+
+    return $config;
+}
+
 function _getBannedIPsList ($_GameConfig) {
     $bannedIPsFromConfig = $_GameConfig['banned_ip_list'];
 

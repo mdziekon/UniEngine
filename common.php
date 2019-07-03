@@ -68,20 +68,9 @@ if(!empty($_BenchTool)){ $_BenchTool->simpleCountStop(); }
 include($_EnginePath . 'includes/per_module/common/_includes.php');
 
 // Load game configuration
-if(isset($_MemCache->GameConfig))
-{
-    $_GameConfig = $_MemCache->GameConfig;
-}
-else
-{
-    $Query_GetGameConfig = "SELECT * FROM {{table}};";
-    $Result_GetGameConfig = doquery($Query_GetGameConfig, 'config');
-    while($FetchData = $Result_GetGameConfig->fetch_assoc())
-    {
-        $_GameConfig[$FetchData['config_name']] = $FetchData['config_value'];
-    }
-    $_MemCache->GameConfig = $_GameConfig;
-}
+$_GameConfig = loadGameConfig([
+    'cache' => &$_MemCache
+]);
 
 define('VERSION', $_GameConfig['EngineInfo_Version']);
 define('REVISION', $_GameConfig['EngineInfo_BuildNo']);
