@@ -7,9 +7,9 @@ session_start();
 
 ini_set('default_charset', 'UTF-8');
 
-$_GameConfig = array();
-$_User = array();
-$_Lang = array();
+$_GameConfig = [];
+$_User = [];
+$_Lang = [];
 $_DBLink = '';
 $ForceIPnUALog = false;
 $Common_TimeNow = time();
