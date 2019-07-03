@@ -327,43 +327,21 @@ if(isLogged())
 
                 GlobalTemplate_AppendToTaskBox(parsetemplate(gettemplate('tasks_infobox'), $TaskBoxParseData));
 
-                if(!empty($_Vars_TasksDataUpdate['planet']))
-                {
-                    foreach($_Vars_TasksDataUpdate['planet'] as $Key => $Value2Add)
-                    {
-                        $_Vars_TasksDataUpdate['planet_array'][] = "`{$Key}` = `{$Key}` + {$Value2Add}";
-                    }
-                    doquery("UPDATE {{table}} SET ".implode(', ', $_Vars_TasksDataUpdate['planet_array'])." WHERE `id` = {$_User['id_planet']} LIMIT 1;", 'planets');
+                // Apply updates on the DB and global vars
+                $taskUpdatesApplicationResult = applyTaskUpdates(
+                    $_Vars_TasksDataUpdate,
+                    [
+                        'unixTimestamp' => $Common_TimeNow,
+                        'user' => $_User
+                    ]
+                );
 
-                    if(!empty($_Vars_TasksDataUpdate['devlog']))
-                    {
-                        foreach($_Vars_TasksDataUpdate['devlog'] as $DevLogKey => $DevLogRow)
-                        {
-                            $Insert2DevLog[] = "{$DevLogKey},{$DevLogRow}";
-                        }
-                        $UserDev_Log[] = array('PlanetID' => $_User['id_planet'], 'Date' => $Common_TimeNow, 'Place' => 30, 'Code' => '0', 'ElementID' => '0', 'AdditionalData' => implode(';', $Insert2DevLog));
-                        unset($Insert2DevLog);
-                    }
+                foreach ($taskUpdatesApplicationResult['devlogEntries'] as $entry) {
+                    $UserDev_Log[] = $entry;
                 }
-                if(!empty($_Vars_TasksDataUpdate['free_premium']))
-                {
-                    foreach($_Vars_TasksDataUpdate['free_premium'] as $ItemID)
-                    {
-                        $_Vars_TasksDataUpdate['free_premium_array'][] = "(NULL, {$_User['id']}, UNIX_TIMESTAMP(), 0, 0, {$ItemID}, 0)";
-                    }
-                    doquery("INSERT INTO {{table}} VALUES ".implode(', ', $_Vars_TasksDataUpdate['free_premium_array']).";", 'premium_free');
+                foreach ($taskUpdatesApplicationResult['userUpdatedEntries'] as $entry) {
+                    $_User[$entry['key']] += $entry['value'];
                 }
-                if(!empty($_Vars_TasksDataUpdate['user']))
-                {
-                    foreach($_Vars_TasksDataUpdate['user'] as $Key => $Value2Add)
-                    {
-                        $_Vars_TasksDataUpdate['user_var'][] = "`{$Key}` = `{$Key}` + {$Value2Add}";
-                        $_User[$Key] += $Value2Add;
-                    }
-                }
-
-                $_Vars_TasksDataUpdate['user_var'][] = "`tasks_done` = '{$_User['tasks_done']}'";
-                doquery("UPDATE {{table}} SET ".implode(',', $_Vars_TasksDataUpdate['user_var'])." WHERE `id` = {$_User['id']};", 'users');
             }
         }
     }
