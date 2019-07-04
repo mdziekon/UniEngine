@@ -40,6 +40,20 @@ function getSkinPath ($params) {
     return "{$pathPrefix}{$skinPath}";
 }
 
+function getPlanetChangeRequestedID(&$input) {
+    if (!isset($input['cp'])) {
+        return null;
+    }
+
+    $requestedID = intval($input['cp']);
+
+    if ($requestedID <= 0) {
+        return null;
+    }
+
+    return $requestedID;
+}
+
 //  Arguments:
 //      - params (Object)
 //          - cache (&Object)

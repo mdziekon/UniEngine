@@ -1,28 +1,35 @@
 <?php
 
-function SetSelectedPlanet(&$CurrentUser, $Security = false)
-{
-    global $_GET;
+function SetSelectedPlanet(&$user, $planetID) {
+    $userID = $user['id'];
 
-    $SelectPlanet = 0;
-    if($Security !== false)
-    {
-        $SelectPlanet = $Security;
-    }
-    else if(isset($_GET['cp']))
-    {
-        $SelectPlanet = round($_GET['cp']);
+    $query_IsPlanetOwner = (
+        "SELECT `id` " .
+        "FROM {{table}} " .
+        "WHERE " .
+        "  `id` = {$planetID} AND" .
+        "  `id_owner` = {$userID} " .
+        "LIMIT 1;"
+    );
+    $result_IsPlanetOwner = doquery($query_IsPlanetOwner, 'planets', true);
+
+    if (!$result_IsPlanetOwner) {
+        return false;
     }
 
-    if($SelectPlanet > 0)
-    {
-        $IsPlanetMine = doquery("SELECT `id` FROM {{table}} WHERE `id` = {$SelectPlanet} AND `id_owner` = {$CurrentUser['id']} LIMIT 1;", 'planets', true);
-        if($IsPlanetMine['id'] == $SelectPlanet)
-        {
-            $CurrentUser['current_planet'] = $SelectPlanet;
-            doquery("UPDATE {{table}} SET `current_planet` = {$SelectPlanet} WHERE `id` = {$CurrentUser['id']} LIMIT 1;", 'users');
-        }
-    }
+    $user['current_planet'] = $planetID;
+
+    $query_UpdateUser = (
+        "UPDATE {{table}} " .
+        "SET " .
+        "  `current_planet` = {$planetID} " .
+        "WHERE " .
+        "  `id` = {$userID} " .
+        "LIMIT 1;"
+    );
+    doquery($query_UpdateUser, 'users');
+
+    return true;
 }
 
 ?>

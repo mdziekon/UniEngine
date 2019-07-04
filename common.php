@@ -320,7 +320,11 @@ if(isLogged())
     if(!isset($_UseMinimalCommon) || $_UseMinimalCommon !== true)
     {
         // Change Planet (if user wants to do this)
-        SetSelectedPlanet($_User);
+        $planetChangeID = getPlanetChangeRequestedID($_GET);
+
+        if ($planetChangeID) {
+            SetSelectedPlanet($_User, $planetChangeID);
+        }
 
         // Get PlanetRow
         $_Planet = doquery("SELECT * FROM {{table}} WHERE `id` = {$_User['current_planet']};", 'planets', true);
