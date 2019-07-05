@@ -1,5 +1,9 @@
 <?php
 
+class UniEngineException extends \Exception {};
+class UniEngineDataFetchException extends UniEngineException {};
+class UniEnginePlanetDataFetchException extends UniEngineDataFetchException {};
+
 function _fetchPlanetData($planetID) {
     $query_GetPlanet = (
         "SELECT * " .
@@ -38,7 +42,7 @@ function fetchCurrentPlanetData (&$user) {
     }
 
     if (!$planet) {
-        throw new \Exception('Invalid planet');
+        throw new UniEnginePlanetDataFetchException('Could not select the current, nor mother, planets');
     }
 
     CheckPlanetUsedFields($planet);
