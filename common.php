@@ -330,24 +330,24 @@ if(isLogged())
             $_Planet = fetchCurrentPlanetData($_User);
             $_GalaxyRow = fetchGalaxyData($_Planet);
 
-            if(!isset($_BlockFleetHandler) || $_BlockFleetHandler !== true)
-            {
+            if (
+                !isset($_BlockFleetHandler) ||
+                $_BlockFleetHandler !== true
+            ) {
                 $FleetHandlerReturn = FlyingFleetHandler($_Planet);
-                if(isset($FleetHandlerReturn['ThisMoonDestroyed']) && $FleetHandlerReturn['ThisMoonDestroyed'])
-                {
+                if (
+                    isset($FleetHandlerReturn['ThisMoonDestroyed']) &&
+                    $FleetHandlerReturn['ThisMoonDestroyed']
+                ) {
                     // Redirect User to Planet (from Destroyed Moon)
-                    SetSelectedPlanet($_User, $_User['id_planet']);
-                    $_Planet = doquery("SELECT * FROM {{table}} WHERE `id` = {$_User['id_planet']};", 'planets', true);
-                    if($_Planet['id'] <= 0)
-                    {
-                        message($_Lang['FatalError_PlanetRowEmpty'], 'FatalError');
-                    }
-                    else
-                    {
-                        if($_GalaxyRow['id_planet'] != $_Planet['id'])
-                        {
-                            $_GalaxyRow = doquery("SELECT * FROM {{table}} WHERE `id_planet` = {$_Planet['id']};", 'galaxy', true);
-                        }
+                    $motherPlanetID = $_User['id_planet'];
+
+                    SetSelectedPlanet($_User, $motherPlanetID);
+
+                    $_Planet = fetchCurrentPlanetData($_User);
+
+                    if ($_GalaxyRow['id_planet'] != $_Planet['id']) {
+                        $_GalaxyRow = fetchGalaxyData($_Planet);
                     }
                 }
             }
