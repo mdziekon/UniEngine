@@ -319,43 +319,42 @@ if(isLogged())
 
     if(!isset($_UseMinimalCommon) || $_UseMinimalCommon !== true)
     {
-        // Change Planet (if user wants to do this)
-        $planetChangeID = getPlanetChangeRequestedID($_GET);
-
-        if ($planetChangeID) {
-            SetSelectedPlanet($_User, $planetChangeID);
-        }
-
         try {
+            // Change Planet (if user wants to do this)
+            $planetChangeID = getPlanetChangeRequestedID($_GET);
+
+            if ($planetChangeID) {
+                SetSelectedPlanet($_User, $planetChangeID);
+            }
+
             $_Planet = fetchCurrentPlanetData($_User);
-        } catch (\Exception $error) {
-            message($_Lang['FatalError_PlanetRowEmpty'], 'FatalError');
+            $_GalaxyRow = fetchGalaxyData($_Planet);
 
-            die();
-        }
-
-        $_GalaxyRow = fetchGalaxyData($_Planet);
-
-        if(!isset($_BlockFleetHandler) || $_BlockFleetHandler !== true)
-        {
-            $FleetHandlerReturn = FlyingFleetHandler($_Planet);
-            if(isset($FleetHandlerReturn['ThisMoonDestroyed']) && $FleetHandlerReturn['ThisMoonDestroyed'])
+            if(!isset($_BlockFleetHandler) || $_BlockFleetHandler !== true)
             {
-                // Redirect User to Planet (from Destroyed Moon)
-                SetSelectedPlanet($_User, $_User['id_planet']);
-                $_Planet = doquery("SELECT * FROM {{table}} WHERE `id` = {$_User['id_planet']};", 'planets', true);
-                if($_Planet['id'] <= 0)
+                $FleetHandlerReturn = FlyingFleetHandler($_Planet);
+                if(isset($FleetHandlerReturn['ThisMoonDestroyed']) && $FleetHandlerReturn['ThisMoonDestroyed'])
                 {
-                    message($_Lang['FatalError_PlanetRowEmpty'], 'FatalError');
-                }
-                else
-                {
-                    if($_GalaxyRow['id_planet'] != $_Planet['id'])
+                    // Redirect User to Planet (from Destroyed Moon)
+                    SetSelectedPlanet($_User, $_User['id_planet']);
+                    $_Planet = doquery("SELECT * FROM {{table}} WHERE `id` = {$_User['id_planet']};", 'planets', true);
+                    if($_Planet['id'] <= 0)
                     {
-                        $_GalaxyRow = doquery("SELECT * FROM {{table}} WHERE `id_planet` = {$_Planet['id']};", 'galaxy', true);
+                        message($_Lang['FatalError_PlanetRowEmpty'], 'FatalError');
+                    }
+                    else
+                    {
+                        if($_GalaxyRow['id_planet'] != $_Planet['id'])
+                        {
+                            $_GalaxyRow = doquery("SELECT * FROM {{table}} WHERE `id_planet` = {$_Planet['id']};", 'galaxy', true);
+                        }
                     }
                 }
             }
+        } catch (UniEnginePlanetDataFetchException $error) {
+            message($_Lang['FatalError_PlanetRowEmpty'], 'FatalError');
+
+            die();
         }
 
         if(!isset($_DontForceRulesAcceptance) || $_DontForceRulesAcceptance !== true)
