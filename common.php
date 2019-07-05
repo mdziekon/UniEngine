@@ -357,26 +357,27 @@ if(isLogged())
             die();
         }
 
-        if(!isset($_DontForceRulesAcceptance) || $_DontForceRulesAcceptance !== true)
-        {
-            if($_GameConfig['enforceRulesAcceptance'] == '1' AND $_GameConfig['last_rules_changes'] > 0 AND $_User['rules_accept_stamp'] < $_GameConfig['last_rules_changes'])
-            {
-                if(isset($_DontShowRulesBox) && $_DontShowRulesBox === true)
-                {
+        if (!isset($_DontForceRulesAcceptance) || $_DontForceRulesAcceptance !== true) {
+            if (isRulesAcceptanceRequired($_User, $_GameConfig)) {
+                if (
+                    isset($_DontShowRulesBox) &&
+                    $_DontShowRulesBox === true
+                ) {
                     message($_Lang['RulesAcceptBox_CantUseFunction'], $_Lang['SystemInfo']);
+
+                    die();
                 }
-                else
-                {
-                    if(!defined("IN_RULES") || IN_RULES !== true)
-                    {
-                        header('Location: rules.php');
-                        safeDie();
-                    }
-                    else
-                    {
-                        $_ForceRulesAcceptBox = true;
-                    }
+
+                if (
+                    !defined("IN_RULES") ||
+                    IN_RULES !== true
+                ) {
+                    header('Location: rules.php');
+                    safeDie();
                 }
+
+                // FIXME: do not determine it here, move to "rules.php"
+                $_ForceRulesAcceptBox = true;
             }
         }
 
