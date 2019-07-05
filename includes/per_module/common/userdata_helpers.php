@@ -20,23 +20,25 @@ function _isPlanetOwner($userID, &$planet) {
 function fetchCurrentPlanetData (&$user) {
     $userID = $user['id'];
     $currentPlanetID = $user['current_planet'];
+    $motherPlanetID = $user['id_planet'];
 
     $planet = _fetchPlanetData($currentPlanetID);
 
-    if (!$planet || !_isPlanetOwner($userID, $planet)) {
+    if (
+        (!$planet || !_isPlanetOwner($userID, $planet)) &&
+        $currentPlanetID != $motherPlanetID
+    ) {
         // TODO: determine is this is needed
         //       by checking how many places allow you to change 'current_planet'
         //
         // If this planet doesn't exist, try to go back to MotherPlanet
-        $motherPlanetID = $user['id_planet'];
-
         SetSelectedPlanet($user, $motherPlanetID);
 
         $planet = _fetchPlanetData($motherPlanetID);
+    }
 
-        if (!$planet) {
-            throw new \Exception('Invalid planet');
-        }
+    if (!$planet) {
+        throw new \Exception('Invalid planet');
     }
 
     CheckPlanetUsedFields($planet);
