@@ -326,30 +326,15 @@ if(isLogged())
             SetSelectedPlanet($_User, $planetChangeID);
         }
 
-        // Get PlanetRow
-        $_Planet = doquery("SELECT * FROM {{table}} WHERE `id` = {$_User['current_planet']};", 'planets', true);
-        if($_Planet['id'] <= 0 OR $_Planet['id_owner'] != $_User['id'])
-        {
-            // If this planet doesn't exist, try to go back to MotherPlanet
-            SetSelectedPlanet($_User, $_User['id_planet']);
-            $_Planet = doquery("SELECT * FROM {{table}} WHERE `id` = {$_User['id_planet']};", 'planets', true);
-            if($_Planet['id'] <= 0)
-            {
-                // If MotherPlanet doesn't exist, ThrowError and don't allow go further
-                message($_Lang['FatalError_PlanetRowEmpty'], 'FatalError');
-            }
-        }
-        CheckPlanetUsedFields($_Planet);
+        try {
+            $_Planet = fetchCurrentPlanetData($_User);
+        } catch (\Exception $error) {
+            message($_Lang['FatalError_PlanetRowEmpty'], 'FatalError');
 
-        if($_Planet['planet_type'] == 1)
-        {
-            $GalaxyRowWhere = "`id_planet` = {$_Planet['id']}";
+            die();
         }
-        else
-        {
-            $GalaxyRowWhere = "`id_moon` = {$_Planet['id']}";
-        }
-        $_GalaxyRow = doquery("SELECT * FROM {{table}} WHERE {$GalaxyRowWhere};", 'galaxy', true);
+
+        $_GalaxyRow = fetchGalaxyData($_Planet);
 
         if(!isset($_BlockFleetHandler) || $_BlockFleetHandler !== true)
         {
