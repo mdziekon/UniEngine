@@ -20,26 +20,6 @@ if(!empty($_BenchTool)){ $_BenchTool->simpleCountStart(false, 'telemetry__c_main
 
 include($_EnginePath.'includes/constants.php');
 
-if($_SERVER['SERVER_ADDR'] == '127.0.0.1' OR $_SERVER['SERVER_ADDR'] == '::1')
-{
-    // We are on Localhost
-    define('LOCALHOST', TRUE);
-    define('TESTSERVER', FALSE);
-}
-else
-{
-    // We are not on Localhost
-    define('LOCALHOST', FALSE);
-    if($_SERVER['HTTP_HOST'] === GAMEURL_REMOTE_TESTSERVERHOST)
-    {
-        define('TESTSERVER', TRUE);
-    }
-    else
-    {
-        define('TESTSERVER', FALSE);
-    }
-}
-
 if(defined('INSTALL_NOTDONE'))
 {
     header('Location: ./install/');
