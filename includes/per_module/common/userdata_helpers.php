@@ -22,6 +22,29 @@ function isIPandUALogRefreshRequired (&$user, $params) {
     );
 }
 
+function isUserAccountActivated (&$user) {
+    return (empty($user['activation_code']));
+}
+
+//  Arguments
+//      - $user (&Object)
+//      - $params (Object)
+//          - timestamp (Number)
+//
+//  Returns:
+//      Boolean (is user blocked)
+//
+function isUserBlockedByActivationRequirement (&$user, $params) {
+    $userFirstLoginTimestamp = $user['first_login'];
+    $timestamp = $params['timestamp'];
+
+    return (
+        !isUserAccountActivated($user) &&
+        $userFirstLoginTimestamp > 0 &&
+        ($timestamp - $userFirstLoginTimestamp) > NONACTIVE_PLAYTIME
+    );
+}
+
 //  Arguments
 //      - $user (&Object)
 //      - $params (Object)

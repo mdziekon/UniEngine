@@ -137,8 +137,12 @@ if(isLogged())
         message($serverStartMessage, $_Lang['Title_System']);
     }
 
-    if(!empty($_User['activation_code']) AND $_User['first_login'] > 0 AND ($Common_TimeNow - $_User['first_login']) > NONACTIVE_PLAYTIME)
-    {
+    $isUserBlockedByActivationRequirement = isUserBlockedByActivationRequirement(
+        $_User,
+        [ 'timestamp' => $Common_TimeNow ]
+    );
+
+    if ($isUserBlockedByActivationRequirement) {
         $_DontShowMenus = true;
         message($_Lang['NonActiveBlock'], $_GameConfig['game_name']);
     }
