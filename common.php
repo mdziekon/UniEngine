@@ -107,14 +107,6 @@ if (isIPBanned($_SERVER['REMOTE_ADDR'], $_GameConfig)) {
 
 if(isLogged())
 {
-    if(TESTSERVER === TRUE)
-    {
-        if($_User['allowTestServer'] != 1 AND $_User['id'] != 1)
-        {
-            message($_Lang['sys_noaccess'], $_Lang['Title_System'], GAMEURL_STRICT, 3);
-        }
-    }
-
     if($_User['onlinetime'] > 0 AND $_User['onlinetime'] < ($Common_TimeNow - TIME_ONLINE))
     {
         $ForceIPnUALog = true;
