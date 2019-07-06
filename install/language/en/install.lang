@@ -10,7 +10,7 @@ $_Lang['Install_Info']                                              = (
     '<b style="color: orange;">(*) - required field</b>'
 );
 
-$_Lang['Header_DBConfig']                                           = 'Database configuration (written to file: "config.php" / "config.localhost.php")';
+$_Lang['Header_DBConfig']                                           = 'Database configuration (written to file: "config.php")';
 $_Lang['Header_Constants']                                          = 'Constant values configuration (written to file: "includes/constants.php")';
 $_Lang['Header_AdminUser']                                          = 'Admin account configuration (written to the DB tables: "users", "planets", "galaxy")';
 $_Lang['Header_UniMain']                                            = 'Universe configuration (written to the DB table: "game_config" and to file: "includes/constants.php")';
@@ -257,7 +257,7 @@ $_Lang['Requirements_PHPVersion']                                   = 'PHP versi
 $_Lang['Requirements_PHPNoticesOff']                                = 'PHP\'s error reporting, E_NOTICE disabled';
 $_Lang['Requirements_ConfigDirectoryWritable']                      = 'Directory "config/" allows all writes (CHMOD 777)';
 $_Lang['Requirements_ConfigDirectoryMigrationEntryDoesNotExist']    = 'File "config/latest-applied-migration" should not exist';
-$_Lang['Requirements_ConfigWritable']                               = 'File "config.php" / "config.localhost.php" allows all writes (CHMOD 777)';
+$_Lang['Requirements_ConfigWritable']                               = 'File "config.php" allows all writes (CHMOD 777)';
 $_Lang['Requirements_ConstantsWritable']                            = 'File "includes/constants.php" allows all writes (CHMOD 777)';
 $_Lang['Requirements_RegisterWritable']                             = 'File "js/register.js" allows all writes (CHMOD 777)';
 $_Lang['Requirements_ActionLogsWritable']                           = 'Directory "action_logs" allows all writes (CHMOD 777)';
@@ -267,8 +267,8 @@ $_Lang['InstallError_EmptyFields']                                  = 'Some of t
 $_Lang['InstallError_BadVars']                                      = 'Some of the provided values were invalid!';
 $_Lang['InstallError_CannotConnectToMySQL']                         = 'Unable to establish a connection to the MySQL server!';
 $_Lang['InstallError_CannotSelectDatabase']                         = 'Unable to select the specified Database on the MySQL server!';
-$_Lang['InstallError_FailToSaveBothFiles']                          = 'Unable to write to files: "config.php" / "config.localhost.php" / "includes/constants.php"!';
-$_Lang['InstallError_FailToSaveConfig']                             = 'Unable to write to files: "config.php" / "config.localhost.php"!';
+$_Lang['InstallError_FailToSaveBothFiles']                          = 'Unable to write to files: "config.php" / "includes/constants.php"!';
+$_Lang['InstallError_FailToSaveConfig']                             = 'Unable to write to files: "config.php"!';
 $_Lang['InstallError_FailToSaveConstants']                          = 'Unable to write to file: "includes/constants.php"!';
 $_Lang['InstallError_FailToSaveRegister']                           = 'Unable to write to file: "js/register.js"!';
 $_Lang['InstallError_QueryFail']                                    = (
@@ -282,11 +282,6 @@ $_Lang['InstallError_MigrationEntryFileCreationFail']               = (
 $_Lang['InstallSuccess']                                            = (
     'The installation process has been finished successfully!<br/><br/>' .
     'Remember to remove the "install" directory from the engine\'s root directory!'
-);
-
-$_Lang['LocalhostInfo']                                             = (
-    'The installer has detected that you are most likely on a local environment (localhost).<br/>' .
-    'The configuration file will be saved to: "config.localhost.php".'
 );
 
 ?>

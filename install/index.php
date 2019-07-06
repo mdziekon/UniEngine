@@ -44,14 +44,8 @@ if (!$_UseLang) {
     die();
 }
 
-$_Install_IsOnLocalhost = false;
 $_Install_ConfigFile = 'config';
 $_Install_ConfigDirectory = './config';
-
-if ($_SERVER['SERVER_ADDR'] == '127.0.0.1' OR $_SERVER['SERVER_ADDR'] == '::1') {
-    $_Install_ConfigFile = 'config.localhost';
-    $_Install_IsOnLocalhost = true;
-}
 
 include('./utils/determine_required_fields.php');
 include('./utils/normalize_config_inputs.php');
@@ -62,10 +56,6 @@ include('./utils/verify_requirements.php');
 includeLang();
 
 $_Lang['PHP_CurrentLangISOCode'] = $_UseLang;
-
-if (!$_Install_IsOnLocalhost) {
-    $_Lang['PHP_HideLocalhostInfo'] = 'display: none;';
-}
 
 // Check Requirements
 $requirementsVerificationResult = verify_requirements([
