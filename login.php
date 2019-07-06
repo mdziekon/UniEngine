@@ -18,27 +18,24 @@ if(!empty($_GET['post']))
 }
 if($_POST)
 {
-    if(LOCALHOST === FALSE AND TESTSERVER === FALSE)
+    if($_POST['uniSelect'] != LOGINPAGE_UNIVERSUMCODE)
     {
-        if($_POST['uniSelect'] != LOGINPAGE_UNIVERSUMCODE)
+        if(preg_match('/^[a-zA-Z0-9]{3,}$/D', $_POST['uniSelect']))
         {
-            if(preg_match('/^[a-zA-Z0-9]{3,}$/D', $_POST['uniSelect']))
-            {
-                $PostRedirect = base64_encode(serialize(array
-                (
-                    'uniSelect' => $_POST['uniSelect'],
-                    'username' => $_POST['username'],
-                    'password' => $_POST['password'],
-                    'rememberme' => $_POST['rememberme']
-                )));
-                header("HTTP/1.1 301 Moved Permanently");
-                header('Location: http://'.$_POST['uniSelect'].'.'.GAMEURL_DOMAIN.'/login.php?post='.$PostRedirect);
-                die();
-            }
-            else
-            {
-                message($_Lang['Login_BadUniversum'], $_Lang['Err_Title']);
-            }
+            $PostRedirect = base64_encode(serialize(array
+            (
+                'uniSelect' => $_POST['uniSelect'],
+                'username' => $_POST['username'],
+                'password' => $_POST['password'],
+                'rememberme' => $_POST['rememberme']
+            )));
+            header("HTTP/1.1 301 Moved Permanently");
+            header('Location: http://'.$_POST['uniSelect'].'.'.GAMEURL_DOMAIN.'/login.php?post='.$PostRedirect);
+            die();
+        }
+        else
+        {
+            message($_Lang['Login_BadUniversum'], $_Lang['Err_Title']);
         }
     }
 
@@ -207,12 +204,9 @@ if(!empty($Search['error']))
 
 if(!LOGINPAGE_ALLOW_LOGINPHP)
 {
-    if(LOCALHOST === FALSE AND TESTSERVER === FALSE)
-    {
-        header("HTTP/1.1 301 Moved Permanently");
-        header('Location: '.GAMEURL_STRICT);
-        die();
-    }
+    header("HTTP/1.1 301 Moved Permanently");
+    header('Location: '.GAMEURL_STRICT);
+    die();
 }
 
 $input_changelang = $_GET['lang'];
