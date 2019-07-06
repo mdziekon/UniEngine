@@ -7,6 +7,10 @@ function isGameClosed ($_GameConfig) {
     );
 }
 
+function isGameStartTimeReached ($timestamp) {
+    return ($timestamp >= SERVER_MAINOPEN_TSTAMP);
+}
+
 function isIPBanned ($ipAddress, $_GameConfig) {
     if (empty($ipAddress)) {
         return false;

@@ -127,7 +127,7 @@ if(isLogged())
         IPandUA_Logger($_User);
     }
 
-    if ($Common_TimeNow < SERVER_MAINOPEN_TSTAMP) {
+    if (!isGameStartTimeReached($Common_TimeNow)) {
         $serverStartMessage = sprintf(
             $_Lang['ServerStart_NotReached'],
             prettyDate('d m Y', SERVER_MAINOPEN_TSTAMP, 1),
