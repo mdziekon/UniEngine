@@ -23,13 +23,7 @@ class DBErrorHandler {
 
         define('IN_ERROR', true);
 
-        if (LOCALHOST) {
-            require($_EnginePath . 'config.localhost.php');
-        } else if (TESTSERVER) {
-            require($_EnginePath . 'config.testserver.php');
-        } else {
-            require($_EnginePath . 'config.php');
-        }
+        require($_EnginePath . 'config.php');
 
         if (!$_DBLink) {
             throw new RuntimeException("DBErrorHandler: DBDriver Connection Error #01");

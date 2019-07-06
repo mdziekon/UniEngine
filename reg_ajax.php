@@ -469,18 +469,8 @@ if(isset($_GET['register']))
 
             if(SERVER_MAINOPEN_TSTAMP <= $Now)
             {
-                if(LOCALHOST)
-                {
-                    require($_EnginePath.'config.localhost.php');
-                }
-                else if(TESTSERVER)
-                {
-                    require($_EnginePath.'config.testserver.php');
-                }
-                else
-                {
-                    require($_EnginePath.'config.php');
-                }
+                require($_EnginePath.'config.php');
+
                 $cookie = $UserID.'/%/'.$Username.'/%/'.md5(md5($Password).'--'.$__ServerConnectionSettings['secretword']).'/%/0';
                 $JSONResponse['Code'] = 1;
                 $JSONResponse['Cookie'][] = [
