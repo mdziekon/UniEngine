@@ -45,6 +45,40 @@ function handleUserBlockadeByCookie(&$user, $params) {
     return true;
 }
 
+//  Arguments
+//      - $user (&Object)
+//      - $params (Object)
+//          - timestamp (Number)
+//
+//  Returns:
+//      Boolean (has user been kicked out)
+//
+function handleUserKick(&$user, $params) {
+    $userID = $user['id'];
+    $isKickedOut = ($user['dokick'] == 1);
+    $timestamp = $params['timestamp'];
+
+    if (!$isKickedOut) {
+        return false;
+    }
+
+    $sessionTimestamp = $timestamp - 100000;
+
+    $query_KickUser = (
+        "UPDATE {{table}} " .
+        "SET " .
+        "  `dokick` = 0 " .
+        "WHERE " .
+        "  `id` = {$userID} " .
+        "LIMIT 1;"
+    );
+
+    doquery($query_KickUser, 'users');
+    setcookie(getSessionCookieKey(), '', $sessionTimestamp, '/', '', 0);
+
+    return true;
+}
+
 function _unblockUserByCookies($timestamp) {
     $cookieKey = COOKIE_BLOCK;
     $pastTimestamp = ($timestamp - 100000);

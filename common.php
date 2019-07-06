@@ -172,11 +172,12 @@ if(isLogged())
         message($_Lang['GameBlock_CookieStyle'], $_GameConfig['game_name']);
     }
 
-    if($_User['dokick'] == 1)
-    {
-        setcookie(getSessionCookieKey(), '', $Common_TimeNow - 100000, '/', '', 0);
-        doquery("UPDATE {{table}} SET `dokick` = 0 WHERE `id` = {$_User['id']};", 'users');
+    $userKickCheckResult = handleUserKick(
+        $_User,
+        [ 'timestamp' => $Common_TimeNow ]
+    );
 
+    if ($userKickCheckResult) {
         header('Location: logout.php?kicked=1');
         safeDie();
     }
