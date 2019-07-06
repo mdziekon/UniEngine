@@ -1,5 +1,12 @@
 <?php
 
+function isGameClosed ($_GameConfig) {
+    return (
+        $_GameConfig['game_disable'] &&
+        !CheckAuth('supportadmin')
+    );
+}
+
 function isIPBanned ($ipAddress, $_GameConfig) {
     if (empty($ipAddress)) {
         return false;
@@ -16,6 +23,20 @@ function isRulesAcceptanceRequired (&$user, &$_GameConfig) {
         $_GameConfig['last_rules_changes'] > 0 &&
         $user['rules_accept_stamp'] < $_GameConfig['last_rules_changes']
     );
+}
+
+function getGameCloseReason ($_GameConfig) {
+    global $_Lang;
+
+    $message = '';
+    $message .= $_Lang['ServerIsClosed'];
+
+    if (isset($_GameConfig['close_reason']) && !empty($_GameConfig['close_reason'])) {
+        $message .= '<br/><br/>';
+        $message .= nl2br($_GameConfig['close_reason']);
+    }
+
+    return $message;
 }
 
 //  Arguments:

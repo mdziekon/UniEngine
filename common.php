@@ -61,14 +61,17 @@ $_SkinPath = getSkinPath([
 includeLang('tech');
 includeLang('system');
 
-if($_GameConfig['game_disable'] AND !CheckAuth('supportadmin'))
-{
+if (isGameClosed($_GameConfig)) {
     $_DontShowMenus = true;
-    if(!empty($_CommonSettings['gamedisable_callback']))
-    {
+
+    if (
+        isset($_CommonSettings['gamedisable_callback']) &&
+        is_callable($_CommonSettings['gamedisable_callback'])
+    ) {
         $_CommonSettings['gamedisable_callback']();
     }
-    message(($_GameConfig['close_reason'] ? nl2br($_Lang['ServerIsClosed'].'<br/>'.$_GameConfig['close_reason']) : $_Lang['ServerIsClosed']), $_GameConfig['game_name']);
+
+    message(getGameCloseReason($_GameConfig), $_GameConfig['game_name']);
 }
 
 if(!isset($_SetAccessLogPath))
