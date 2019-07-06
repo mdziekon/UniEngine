@@ -162,30 +162,12 @@ if(isLogged())
         message($_Lang['NonActiveBlock'], $_GameConfig['game_name']);
     }
 
-    // Cookie Blockade
-    $ShowBlockadeInfo_CookieStyle = false;
-    if(!empty($_COOKIE[COOKIE_BLOCK]))
-    {
-        if($_COOKIE[COOKIE_BLOCK] === (COOKIE_BLOCK_VAL.md5($_User['id'])) AND $_User['block_cookies'] == 0)
-        {
-            setcookie(COOKIE_BLOCK, '', $Common_TimeNow - 100000, '', '', false, true);
-            $_COOKIE[COOKIE_BLOCK] = '';
-        }
-        else
-        {
-            $ShowBlockadeInfo_CookieStyle = true;
-        }
-    }
-    else
-    {
-        if($_User['block_cookies'] == 1)
-        {
-            setcookie(COOKIE_BLOCK, (COOKIE_BLOCK_VAL.md5($_User['id'])), $Common_TimeNow + (3 * TIME_YEAR), "", "", false, true);
-            $ShowBlockadeInfo_CookieStyle = true;
-        }
-    }
-    if($ShowBlockadeInfo_CookieStyle === true)
-    {
+    $userCookieBlockadeResult = handleUserBlockadeByCookie(
+        $_User,
+        [ 'timestamp' => $Common_TimeNow ]
+    );
+
+    if ($userCookieBlockadeResult) {
         $_DontShowMenus = true;
         message($_Lang['GameBlock_CookieStyle'], $_GameConfig['game_name']);
     }

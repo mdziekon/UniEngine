@@ -4,6 +4,64 @@ class UniEngineException extends \Exception {};
 class UniEngineDataFetchException extends UniEngineException {};
 class UniEnginePlanetDataFetchException extends UniEngineDataFetchException {};
 
+//  Arguments
+//      - $user (&Object)
+//      - $params (Object)
+//          - timestamp (Number)
+//
+//  Returns:
+//      Boolean (is user currently blocked)
+//
+function handleUserBlockadeByCookie(&$user, $params) {
+    $cookieKey = COOKIE_BLOCK;
+    $cookieBlockSalt = COOKIE_BLOCK_VAL;
+
+    $userID = $user['id'];
+    $hasCookiesBlockade = ($user['block_cookies'] == 1);
+    $timestamp = $params['timestamp'];
+
+    if ($hasCookiesBlockade) {
+        _blockUserByCookies($userID, $timestamp);
+
+        return true;
+    }
+
+    if (empty($_COOKIE[$cookieKey])) {
+        return false;
+    }
+
+    $cookieBlockHash = ($cookieBlockSalt . md5($userID));
+
+    if (
+        $_COOKIE[$cookieKey] === $cookieBlockHash &&
+        $user['block_cookies'] == 0
+    ) {
+        // User was previously blocked, but not the blockade has been lifted
+        _unblockUserByCookies($timestamp);
+
+        return false;
+    }
+
+    return true;
+}
+
+function _unblockUserByCookies($timestamp) {
+    $cookieKey = COOKIE_BLOCK;
+    $pastTimestamp = ($timestamp - 100000);
+
+    setcookie($cookieKey, '', $pastTimestamp, '', '', false, true);
+    $_COOKIE[$cookieKey] = null;
+}
+
+function _blockUserByCookies($userID, $timestamp) {
+    $cookieKey = COOKIE_BLOCK;
+    $cookieBlockSalt = COOKIE_BLOCK_VAL;
+    $cookieBlockVal = ($cookieBlockSalt . md5($userID));
+    $cookieTimestamp = ($timestamp + (3 * TIME_YEAR));
+
+    setcookie($cookieKey, $cookieBlockVal, $cookieTimestamp, '', '', false, true);
+}
+
 function _fetchPlanetData($planetID) {
     $query_GetPlanet = (
         "SELECT * " .
