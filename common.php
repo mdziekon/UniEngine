@@ -148,12 +148,14 @@ if(isLogged())
         IPandUA_Logger($_User);
     }
 
-    if(LOCALHOST === FALSE AND TESTSERVER === FALSE)
-    {
-        if($Common_TimeNow < SERVER_MAINOPEN_TSTAMP)
-        {
-            message(sprintf($_Lang['ServerStart_NotReached'], prettyDate('d m Y', SERVER_MAINOPEN_TSTAMP, 1), date('H:i:s', SERVER_MAINOPEN_TSTAMP)), $_Lang['Title_System']);
-        }
+    if ($Common_TimeNow < SERVER_MAINOPEN_TSTAMP) {
+        $serverStartMessage = sprintf(
+            $_Lang['ServerStart_NotReached'],
+            prettyDate('d m Y', SERVER_MAINOPEN_TSTAMP, 1),
+            date('H:i:s', SERVER_MAINOPEN_TSTAMP)
+        );
+
+        message($serverStartMessage, $_Lang['Title_System']);
     }
 
     if(!empty($_User['activation_code']) AND $_User['first_login'] > 0 AND ($Common_TimeNow - $_User['first_login']) > NONACTIVE_PLAYTIME)

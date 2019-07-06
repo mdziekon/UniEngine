@@ -42,13 +42,16 @@ if($_POST)
         }
     }
 
-    if(LOCALHOST === FALSE AND TESTSERVER === FALSE)
-    {
-        if(time() < SERVER_MAINOPEN_TSTAMP)
-        {
-            message(sprintf($_Lang['Login_UniversumNotStarted'], prettyDate('d m Y', SERVER_MAINOPEN_TSTAMP, 1), date('H:i:s', SERVER_MAINOPEN_TSTAMP)), $_Lang['Page_Title']);
-        }
+    if (time() < SERVER_MAINOPEN_TSTAMP) {
+        $serverStartMessage = sprintf(
+            $_Lang['Login_UniversumNotStarted'],
+            prettyDate('d m Y', SERVER_MAINOPEN_TSTAMP, 1),
+            date('H:i:s', SERVER_MAINOPEN_TSTAMP)
+        );
+
+        message($serverStartMessage, $_Lang['Page_Title']);
     }
+
     $Username = trim($_POST['username']);
     if(preg_match(REGEXP_USERNAME_ABSOLUTE, $Username))
     {
