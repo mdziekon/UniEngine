@@ -10,6 +10,24 @@ class UniEnginePlanetDataFetchException extends UniEngineDataFetchException {};
 //          - timestamp (Number)
 //
 //  Returns:
+//      Boolean (is refresh request)
+//
+function isIPandUALogRefreshRequired (&$user, $params) {
+    $lastUserActionTimestamp = $user['onlinetime'];
+    $timestamp = $params['timestamp'];
+
+    return (
+        $lastUserActionTimestamp > 0 &&
+        $lastUserActionTimestamp < ($timestamp - TIME_ONLINE)
+    );
+}
+
+//  Arguments
+//      - $user (&Object)
+//      - $params (Object)
+//          - timestamp (Number)
+//
+//  Returns:
 //      Boolean (is user currently blocked)
 //
 function handleUserBlockadeByCookie(&$user, $params) {

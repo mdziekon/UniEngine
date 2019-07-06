@@ -90,8 +90,12 @@ if (isIPBanned($_SERVER['REMOTE_ADDR'], $_GameConfig)) {
 
 if(isLogged())
 {
-    if($_User['onlinetime'] > 0 AND $_User['onlinetime'] < ($Common_TimeNow - TIME_ONLINE))
-    {
+    $isIPandUALogRefreshRequired = isIPandUALogRefreshRequired(
+        $_User,
+        [ 'timestamp' => $Common_TimeNow ]
+    );
+
+    if ($isIPandUALogRefreshRequired) {
         $ForceIPnUALog = true;
     }
 
