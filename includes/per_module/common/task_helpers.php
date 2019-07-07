@@ -88,6 +88,30 @@ function parseCompletedTasks (&$user) {
     return $result;
 }
 
+function prepareTasksInfoboxHTML (&$handleTasksResult) {
+    $tplData = includeLang('tasks_infobox', true);
+    $tpl = gettemplate('tasks_infobox');
+
+    $tplData['Task'] = (
+        ($handleTasksResult['completedTasks'] > 1) ?
+        $tplData['MoreTasks'] :
+        $tplData['OneTask']
+    );
+    $tplData['CatLinks'] = [];
+
+    foreach ($handleTasksResult['completedTasksLinks'] as $CatID => $LinkData) {
+        $tplData['CatLinks'][] = sprintf(
+            $tplData['CatLink'],
+            $LinkData,
+            $tplData['Names'][$CatID]
+        );
+    }
+
+    $tplData['CatLinks'] = implode(', ', $tplData['CatLinks']);
+
+    return parsetemplate($tpl, $tplData);
+}
+
 //  $params (Object)
 //      - unixTimestamp (Number)
 //      - user (Object)

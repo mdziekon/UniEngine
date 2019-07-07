@@ -179,27 +179,7 @@ if(isLogged())
 
             // Dispay the infobox
             if ($handleTasksResult['completedTasks'] > 0) {
-                $TaskBoxParseData = includeLang('tasks_infobox', true);
-
-                $TaskBoxParseData['Task'] = (
-                    ($handleTasksResult['completedTasks'] > 1) ?
-                    $TaskBoxParseData['MoreTasks'] :
-                    $TaskBoxParseData['OneTask']
-                );
-                $TaskBoxParseData['CatLinks'] = [];
-
-                foreach ($handleTasksResult['completedTasksLinks'] as $CatID => $LinkData) {
-                    $TaskBoxParseData['CatLinks'][] = sprintf(
-                        $TaskBoxParseData['CatLink'],
-                        $LinkData,
-                        $TaskBoxParseData['Names'][$CatID]
-                    );
-                }
-
-                $TaskBoxParseData['CatLinks'] = implode(', ', $TaskBoxParseData['CatLinks']);
-
-                $tasksInfobox_template = gettemplate('tasks_infobox');
-                $tasksInfobox_html = parsetemplate($tasksInfobox_template, $TaskBoxParseData);
+                $tasksInfobox_html = prepareTasksInfoboxHTML($handleTasksResult);
 
                 GlobalTemplate_AppendToTaskBox($tasksInfobox_html);
             }
