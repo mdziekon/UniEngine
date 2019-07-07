@@ -1,5 +1,93 @@
 <?php
 
+//  Arguments:
+//      - $user (&Object)
+//
+//  Return: Object
+//      - completedTasks (Number)
+//      - completedTasksLinks (Number)
+//      - postTaskDataUpdates (Object)
+//
+function parseCompletedTasks (&$user) {
+    global $_Vars_TasksData;
+
+    $result = [
+        'completedTasks' => 0,
+        'completedTasksLinks' => [],
+        'postTaskDataUpdates' => []
+    ];
+
+    if (empty($user['tasks_done_parsed']['locked'])) {
+        return $result;
+    }
+
+    $completedTasks = 0;
+    $completedTasksLinks = [];
+    $postTaskDataUpdates = [];
+
+    foreach ($user['tasks_done_parsed']['locked'] as $taskCategoryID => $categoryTasks) {
+        $hasSkippedCategory = false;
+
+        if (strstr($taskCategoryID, 's')) {
+            $taskCategoryID = str_replace('s', '', $taskCategoryID);
+            $hasSkippedCategory = true;
+        }
+
+        foreach ($categoryTasks as $taskID) {
+            unset($user['tasks_done_parsed']['jobs'][$taskCategoryID][$taskID]);
+
+            if (
+                !$hasSkippedCategory ||
+                (
+                    $hasSkippedCategory &&
+                    $_Vars_TasksData[$taskCategoryID]['skip']['tasksrew'] === true
+                )
+            ) {
+                $completedTasksLinks[$taskCategoryID] = 'cat='.$taskCategoryID.'&amp;showtask='.$taskID;
+                foreach($_Vars_TasksData[$taskCategoryID]['tasks'][$taskID]['reward'] as $RewardData) {
+                    Tasks_ParseRewards($RewardData, $postTaskDataUpdates);
+                }
+            }
+            $completedTasks += 1;
+        }
+
+        if (Tasks_IsCatDone($taskCategoryID, $user)) {
+            unset($user['tasks_done_parsed']['jobs'][$taskCategoryID]);
+
+            if (
+                $hasSkippedCategory ||
+                (
+                    $hasSkippedCategory &&
+                    $_Vars_TasksData[$taskCategoryID]['skip']['catrew'] === true
+                )
+            ) {
+                $completedTasksLinks[$taskCategoryID] = 'mode=log&amp;cat='.$taskCategoryID;
+                foreach ($_Vars_TasksData[$taskCategoryID]['reward'] as $RewardData) {
+                    Tasks_ParseRewards($RewardData, $postTaskDataUpdates);
+                }
+            }
+        } else {
+            if (empty($user['tasks_done_parsed']['jobs'])) {
+                unset($user['tasks_done_parsed']['jobs']);
+            }
+        }
+    }
+
+    if (empty($user['tasks_done_parsed']['jobs'])) {
+        unset($user['tasks_done_parsed']['jobs']);
+    }
+
+    unset($user['tasks_done_parsed']['locked']);
+    // TODO: investigate if this should be moved to "postTaskDataUpdates"
+    $user['tasks_done'] = json_encode($user['tasks_done_parsed']);
+
+    $result['completedTasks'] = $completedTasks;
+    $result['completedTasksLinks'] = $completedTasksLinks;
+    $result['postTaskDataUpdates'] = $postTaskDataUpdates;
+
+    return $result;
+}
+
 //  $params (Object)
 //      - unixTimestamp (Number)
 //      - user (Object)

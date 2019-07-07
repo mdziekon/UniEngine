@@ -172,85 +172,42 @@ if(isLogged())
     {
         if(!isset($_DontShowMenus) || $_DontShowMenus !== true)
         {
-            if(!empty($_User['tasks_done_parsed']['locked']))
-            {
+            $handleTasksResult = parseCompletedTasks(
+                $_User,
+                [ 'timestamp' => $Common_TimeNow ]
+            );
+
+            // Dispay the infobox
+            if ($handleTasksResult['completedTasks'] > 0) {
                 $TaskBoxParseData = includeLang('tasks_infobox', true);
-                $DoneTasks = 0;
 
-                foreach($_User['tasks_done_parsed']['locked'] as $CatID => $CatTasks)
-                {
-                    if(strstr($CatID, 's'))
-                    {
-                        $CatID = str_replace('s', '', $CatID);
-                        $ThisCatSkiped = true;
-                    }
-                    else
-                    {
-                        $ThisCatSkiped = false;
-                    }
-                    foreach($CatTasks as $TaskID)
-                    {
-                        unset($_User['tasks_done_parsed']['jobs'][$CatID][$TaskID]);
-                        if($ThisCatSkiped === false OR ($ThisCatSkiped === true AND $_Vars_TasksData[$CatID]['skip']['tasksrew'] === true))
-                        {
-                            $TaskBoxLinks[$CatID] = 'cat='.$CatID.'&amp;showtask='.$TaskID;
-                            foreach($_Vars_TasksData[$CatID]['tasks'][$TaskID]['reward'] as $RewardData)
-                            {
-                                Tasks_ParseRewards($RewardData, $_Vars_TasksDataUpdate);
-                            }
-                        }
-                        $DoneTasks += 1;
-                    }
-                    if(Tasks_IsCatDone($CatID, $_User))
-                    {
-                        unset($_User['tasks_done_parsed']['jobs'][$CatID]);
-                        if($ThisCatSkiped === false OR ($ThisCatSkiped === true AND $_Vars_TasksData[$CatID]['skip']['catrew'] === true))
-                        {
-                            $TaskBoxLinks[$CatID] = 'mode=log&amp;cat='.$CatID;
-                            foreach($_Vars_TasksData[$CatID]['reward'] as $RewardData)
-                            {
-                                Tasks_ParseRewards($RewardData, $_Vars_TasksDataUpdate);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if(empty($_User['tasks_done_parsed']['jobs']))
-                        {
-                            unset($_User['tasks_done_parsed']['jobs']);
-                        }
-                    }
+                $TaskBoxParseData['Task'] = (
+                    ($handleTasksResult['completedTasks'] > 1) ?
+                    $TaskBoxParseData['MoreTasks'] :
+                    $TaskBoxParseData['OneTask']
+                );
+                $TaskBoxParseData['CatLinks'] = [];
+
+                foreach ($handleTasksResult['completedTasksLinks'] as $CatID => $LinkData) {
+                    $TaskBoxParseData['CatLinks'][] = sprintf(
+                        $TaskBoxParseData['CatLink'],
+                        $LinkData,
+                        $TaskBoxParseData['Names'][$CatID]
+                    );
                 }
 
-                if(empty($_User['tasks_done_parsed']['jobs']))
-                {
-                    unset($_User['tasks_done_parsed']['jobs']);
-                }
+                $TaskBoxParseData['CatLinks'] = implode(', ', $TaskBoxParseData['CatLinks']);
 
-                if(!empty($TaskBoxLinks))
-                {
-                    if($DoneTasks > 1)
-                    {
-                        $TaskBoxParseData['Task'] = $TaskBoxParseData['MoreTasks'];
-                    }
-                    else
-                    {
-                        $TaskBoxParseData['Task'] = $TaskBoxParseData['OneTask'];
-                    }
-                    foreach($TaskBoxLinks as $CatID => $LinkData)
-                    {
-                        $TaskBoxParseData['CatLinks'][] = sprintf($TaskBoxParseData['CatLink'], $LinkData, $TaskBoxParseData['Names'][$CatID]);
-                    }
-                    $TaskBoxParseData['CatLinks'] = implode(', ', $TaskBoxParseData['CatLinks']);
-                    GlobalTemplate_AppendToTaskBox(parsetemplate(gettemplate('tasks_infobox'), $TaskBoxParseData));
-                }
+                $tasksInfobox_template = gettemplate('tasks_infobox');
+                $tasksInfobox_html = parsetemplate($tasksInfobox_template, $TaskBoxParseData);
 
-                unset($_User['tasks_done_parsed']['locked']);
-                $_User['tasks_done'] = json_encode($_User['tasks_done_parsed']);
+                GlobalTemplate_AppendToTaskBox($tasksInfobox_html);
+            }
 
-                // Apply updates on the DB and global vars
+            // Apply updates on the DB and global vars
+            if ($handleTasksResult['completedTasks'] > 0) {
                 $taskUpdatesApplicationResult = applyTaskUpdates(
-                    $_Vars_TasksDataUpdate,
+                    $handleTasksResult['postTaskDataUpdates'],
                     [
                         'unixTimestamp' => $Common_TimeNow,
                         'user' => $_User
