@@ -54,7 +54,7 @@ $(document).ready(function(){
     );
 
     $('#doHide').click(function() {
-        $infoBar.animate({top: '-40px'}, 1000);
+        $infoBar.animate({top: '-50px'}, 1000);
 
         return false;
     });
