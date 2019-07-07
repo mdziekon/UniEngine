@@ -5,7 +5,7 @@ $_Lang['OneTask']       = 'zadanie';
 $_Lang['MoreTasks']     = 'zadania';
 $_Lang['TextSecond']    = 'z kategorii';
 
-$_Lang['CatLink']       = '"<i><a href="tasks.php?%s" style="color: black;">%s</a></i>"';
+$_Lang['CatLink']       = '"<i><a href="tasks.php?%s">%s</a></i>"';
 
 $_Lang['Hide']          = 'Ukryj powiadomienie';
 
