@@ -248,8 +248,6 @@ if(isLogged())
                 unset($_User['tasks_done_parsed']['locked']);
                 $_User['tasks_done'] = json_encode($_User['tasks_done_parsed']);
 
-                GlobalTemplate_AppendToTaskBox(parsetemplate(gettemplate('tasks_infobox'), $TaskBoxParseData));
-
                 // Apply updates on the DB and global vars
                 $taskUpdatesApplicationResult = applyTaskUpdates(
                     $_Vars_TasksDataUpdate,
