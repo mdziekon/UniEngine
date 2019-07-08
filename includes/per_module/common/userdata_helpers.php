@@ -47,6 +47,48 @@ function isUserBlockedByActivationRequirement (&$user, $params) {
 
 //  Arguments
 //      - $user (&Object)
+//
+//  Returns: Object
+//      - isStoredIPRefreshRequired (Boolean)
+//      - isKickRequired (Boolean)
+//      - isIPDifferent (Boolean)
+//
+function handleUserIPChangeCheck (&$user) {
+    $result = [
+        'isStoredIPRefreshRequired' => false,
+        'isKickRequired' => false,
+        'isIPDifferent' => false
+    ];
+
+    if (empty($_SESSION['IP_check'])) {
+        $result['isStoredIPRefreshRequired'] = true;
+
+        return $result;
+    }
+
+    if ($_SERVER['REMOTE_ADDR'] == $_SESSION['IP_check']) {
+        return $result;
+    }
+
+    $result['isIPDifferent'] = true;
+
+    if ($user['noipcheck'] == 1) {
+        $result['isStoredIPRefreshRequired'] = true;
+
+        return $result;
+    }
+
+    $result['isKickRequired'] = true;
+
+    return $result;
+}
+
+function refreshIPChangeCheckData () {
+    $_SESSION['IP_check'] = $_SERVER['REMOTE_ADDR'];
+}
+
+//  Arguments
+//      - $user (&Object)
 //      - $params (Object)
 //          - timestamp (Number)
 //

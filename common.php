@@ -11,7 +11,6 @@ $_GameConfig = [];
 $_User = [];
 $_Lang = [];
 $_DBLink = '';
-$ForceIPnUALog = false;
 $Common_TimeNow = time();
 
 include($_EnginePath . 'common.minimal.php');
@@ -90,39 +89,26 @@ if (isIPBanned($_SERVER['REMOTE_ADDR'], $_GameConfig)) {
 
 if(isLogged())
 {
+    $userIPChangeCheckResult = handleUserIPChangeCheck($_User);
+
+    if ($userIPChangeCheckResult['isKickRequired']) {
+        unset($_SESSION['IP_check']);
+        header('Location: logout.php?badip=1');
+        safeDie();
+    }
+
     $isIPandUALogRefreshRequired = isIPandUALogRefreshRequired(
         $_User,
         [ 'timestamp' => $Common_TimeNow ]
     );
 
-    if ($isIPandUALogRefreshRequired) {
-        $ForceIPnUALog = true;
+    if ($userIPChangeCheckResult['isStoredIPRefreshRequired']) {
+        refreshIPChangeCheckData();
     }
-
-    if(empty($_SESSION['IP_check']))
-    {
-        $_SESSION['IP_check'] = $_SERVER['REMOTE_ADDR'];
-    }
-    else
-    {
-        if($_SERVER['REMOTE_ADDR'] != $_SESSION['IP_check'])
-        {
-            if($_User['noipcheck'] != 1)
-            {
-                unset($_SESSION['IP_check']);
-                header('Location: logout.php?badip=1');
-                safeDie();
-            }
-            else
-            {
-                $_SESSION['IP_check'] = $_SERVER['REMOTE_ADDR'];
-                $ForceIPnUALog = true;
-            }
-        }
-    }
-
-    if($ForceIPnUALog)
-    {
+    if (
+        $isIPandUALogRefreshRequired ||
+        $userIPChangeCheckResult['isIPDifferent']
+    ) {
         include("{$_EnginePath}includes/functions/IPandUA_Logger.php");
         IPandUA_Logger($_User);
     }
