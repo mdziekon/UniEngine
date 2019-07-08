@@ -792,6 +792,8 @@ if(!isOnVacation())
 
                 if(empty($_User['settings_FleetColors']))
                 {
+                    $_User['settings_FleetColors'] = [];
+
                     foreach($_Vars_FleetMissions['all'] as $MissionID)
                     {
                         $_User['settings_FleetColors']['ownfly'][$MissionID] = '';
