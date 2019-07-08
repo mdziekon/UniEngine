@@ -101,6 +101,12 @@ function isOnVacation($_User = false)
     return false;
 }
 
+// Tells whether the enabled vacation mode is the "regular one" (set by the user)
+// or a "special one" (either enabled when banning, or special "admin" mode).
+function isOnRegularVacation(&$user) {
+    return ($user['vacation_type'] == 0);
+}
+
 function getUserMinimalVacationTime(&$user) {
     $hadProAccountWhenVacationStarted = ($user['pro_time'] > $user['vacation_starttime']);
 
@@ -116,7 +122,7 @@ function getUserMinimalVacationTime(&$user) {
 function canTakeVacationOff($time = false) {
     global $_User;
 
-    if ($_User['vacation_type'] != 0) {
+    if (!isOnRegularVacation($_User)) {
         return true;
     }
 
