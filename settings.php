@@ -1390,7 +1390,8 @@ else
         }
     }
 
-    $MinimalVacationTime = ($_User['pro_time'] > $_User['vacation_starttime'] ? MINURLOP_PRO : MINURLOP_FREE) + $_User['vacation_starttime'];
+    $MinimalVacationTime = getUserMinimalVacationTime($_User);
+
     if($_User['vacation_type'] != 0)
     {
         $_Lang['Parse_Vacation_EndTime'] = $_Lang['Vacation_EndTimeNoBlock'];
