@@ -1,0 +1,14 @@
+<?php
+
+$_Lang['VacationMode_Title']                = 'Tryb urlopu';
+
+$_Lang['VacationMode_Labels_Deactivate']    = 'Ściągnij Urlop';
+
+$_Lang['VacationMode_Btns_Confirm']         = 'Wykonaj';
+$_Lang['VacationMode_Btns_GotoSettings']    = 'Ściągnij Urlop w Ustawieniach';
+$_Lang['VacationMode_Btns_Logout']          = 'Wyloguj';
+
+$_Lang['VacationMode_EndTime_Anytime']      = '<b class="lime">Urlop można ściągnąć w każdej chwili</b>';
+$_Lang['VacationMode_EndTime_DefinedAs']    = 'Urlop można ściągnąć nie wcześniej niż: <b class="%s">%s</b>';
+
+?>

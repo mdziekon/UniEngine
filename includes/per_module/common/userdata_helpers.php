@@ -247,4 +247,44 @@ function fetchGalaxyData(&$planet) {
     return $result_GetGalaxyRow;
 }
 
+//  Arguments
+//      - $user (&Object)
+//      - $params (Object)
+//          - timestamp (Number)
+//
+//  Returns: String (HTML)
+//
+function prepareVacationModeMessageHTML (&$user, $params) {
+    $tplData = includeLang('common_vacationmode', true);
+    $tpl = gettemplate('common_vacationmode');
+
+    $timestamp = $params['timestamp'];
+
+    if (canTakeVacationOffAnytime()) {
+        $tplData['Parse_Vacation_EndTime'] = $tplData['VacationMode_EndTime_Anytime'];
+        $tplData['Parse_Block_GotoSettings_isHiddenStyle'] = '';
+    } else {
+        $canTakeVacationOff = canTakeVacationOff($timestamp);
+        $minimalVacationTime = getUserMinimalVacationTime($user);
+        $minimalVacationTimeColor = (
+            $canTakeVacationOff ?
+            'lime' :
+            'orange'
+        );
+
+        $tplData['Parse_Vacation_EndTime'] = sprintf(
+            $tplData['VacationMode_EndTime_DefinedAs'],
+            $minimalVacationTimeColor,
+            prettyDate('d m Y, H:i:s', $minimalVacationTime, 1)
+        );
+        $tplData['Parse_Block_GotoSettings_isHiddenStyle'] = (
+            $canTakeVacationOff ?
+            '' :
+            'display: none;'
+        );
+    }
+
+    return parsetemplate($tpl, $tplData);
+}
+
 ?>
