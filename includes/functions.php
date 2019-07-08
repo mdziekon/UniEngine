@@ -101,23 +101,32 @@ function isOnVacation($_User = false)
     return false;
 }
 
-function canTakeVacationOff($time = false)
-{
+function getUserMinimalVacationTime(&$user) {
+    $hadProAccountWhenVacationStarted = ($user['pro_time'] > $user['vacation_starttime']);
+
+    $vacationMinimalDuration = (
+        $hadProAccountWhenVacationStarted ?
+        MINURLOP_PRO :
+        MINURLOP_FREE
+    );
+
+    return ($vacationMinimalDuration + $user['vacation_starttime']);
+}
+
+function canTakeVacationOff($time = false) {
     global $_User;
-    if($_User['vacation_type'] != 0)
-    {
+
+    if ($_User['vacation_type'] != 0) {
         return true;
     }
-    if($time === false)
-    {
+
+    if ($time === false) {
         $time = time();
     }
-    $MinimalVacationTime = ($_User['pro_time'] > $_User['vacation_starttime'] ? MINURLOP_PRO : MINURLOP_FREE) + $_User['vacation_starttime'];
-    if($MinimalVacationTime <= $time)
-    {
-        return true;
-    }
-    return false;
+
+    $MinimalVacationTime = getUserMinimalVacationTime($_User);
+
+    return ($MinimalVacationTime <= $time);
 }
 
 // AuthLevel Checks
