@@ -1390,26 +1390,26 @@ else
         }
     }
 
-    $MinimalVacationTime = getUserMinimalVacationTime($_User);
+    includeLang('common_vacationmode');
 
-    if($_User['vacation_type'] != 0)
-    {
-        $_Lang['Parse_Vacation_EndTime'] = $_Lang['Vacation_EndTimeNoBlock'];
-    }
-    else
-    {
-        if($MinimalVacationTime <= $Now)
-        {
-            $MinimalVacationTimeColor = 'lime';
-        }
-        else
-        {
-            $MinimalVacationTimeColor = 'orange';
-        }
-        $_Lang['Parse_Vacation_EndTime'] = sprintf($_Lang['Vacation_EndTime'], $MinimalVacationTimeColor, prettyDate('d m Y, H:i:s', $MinimalVacationTime, 1));
+    if (canTakeVacationOffAnytime()) {
+        $_Lang['Parse_Vacation_EndTime'] = $_Lang['VacationMode_EndTime_Anytime'];
+    } else {
+        $MinimalVacationTime = getUserMinimalVacationTime($_User);
+        $MinimalVacationTimeColor = (
+            $MinimalVacationTime <= $Now ?
+            'lime' :
+            'orange'
+        );
+
+        $_Lang['Parse_Vacation_EndTime'] = sprintf(
+            $_Lang['VacationMode_EndTime_DefinedAs'],
+            $MinimalVacationTimeColor,
+            prettyDate('d m Y, H:i:s', $MinimalVacationTime, 1)
+        );
     }
 
-    display(parsetemplate(gettemplate('settings_vacations'), $_Lang), $_Lang['Vacations_Title'], false);
+    display(parsetemplate(gettemplate('settings_vacations'), $_Lang), $_Lang['VacationMode_Title'], false);
 }
 
 ?>

@@ -216,11 +216,7 @@ $_Lang['NewNick_donthave_DE']       = 'You do not have enough Dark Energy!';
 // Vacation Mode Box
 $_Lang['Vacation_GoOut']            = 'Vacation mode has been deactivated!';
 $_Lang['Vacation_CantGoOut']        = 'You cannot deactivate Vacation mode yet!';
-$_Lang['exit_vacations']            = 'Deactivate';
-$_Lang['Exec']                      = 'Confirm';
 $_Lang['Vacation_mode']             = 'Vacation mode at least until';
-$_Lang['Vacation_EndTime']          = 'Vacation mode cannot be deactivated until: <b class="%s">%s</b>';
-$_Lang['Vacation_EndTimeNoBlock']   = '<b class="lime">Vacation mode can be deactivated</b>';
 
 // Email Change
 
