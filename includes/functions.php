@@ -108,6 +108,14 @@ function isOnRegularVacation(&$user) {
 }
 
 function getUserMinimalVacationTime(&$user) {
+    if (!isOnRegularVacation($user)) {
+        return -1;
+    }
+
+    return getUserMinimalNormalVacationTime($user);
+}
+
+function getUserMinimalNormalVacationTime(&$user) {
     $hadProAccountWhenVacationStarted = ($user['pro_time'] > $user['vacation_starttime']);
 
     $vacationMinimalDuration = (
@@ -117,6 +125,12 @@ function getUserMinimalVacationTime(&$user) {
     );
 
     return ($vacationMinimalDuration + $user['vacation_starttime']);
+}
+
+function canTakeVacationOffAnytime() {
+    global $_User;
+
+    return (getUserMinimalVacationTime($_User) === -1);
 }
 
 function canTakeVacationOff($time = false) {
