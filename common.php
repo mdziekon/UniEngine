@@ -207,10 +207,10 @@ if(isLogged())
         // If this place do not allow User to be in VacationMode, show him a message if it's necessary
         if(isOnVacation())
         {
-            $MinimalVacationTime = ($_User['pro_time'] > $_User['vacation_starttime'] ? MINURLOP_PRO : MINURLOP_FREE) + $_User['vacation_starttime'];
+            $MinimalVacationTime = getUserMinimalVacationTime($_User);
             $VacationMessage = sprintf($_Lang['VacationTill'], date('d.m.Y H:i:s', $MinimalVacationTime));
-            if($MinimalVacationTime <= $Common_TimeNow)
-            {
+
+            if (canTakeVacationOff($Common_TimeNow)) {
                 $VacationMessage .= $_Lang['VacationSetOff'];
             }
             message($VacationMessage, $_Lang['Vacation']);
