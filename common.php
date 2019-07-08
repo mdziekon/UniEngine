@@ -172,10 +172,7 @@ if(isLogged())
     {
         if(!isset($_DontShowMenus) || $_DontShowMenus !== true)
         {
-            $handleTasksResult = parseCompletedTasks(
-                $_User,
-                [ 'timestamp' => $Common_TimeNow ]
-            );
+            $handleTasksResult = parseCompletedTasks($_User);
 
             // Dispay the infobox
             if ($handleTasksResult['completedTasks'] > 0) {
