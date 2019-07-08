@@ -25,6 +25,7 @@ function CheckUserSession()
 
                 if(!isset($DontBlockIfBanned))
                 {
+                    includeLang('system');
                     includeLang('bannedUser');
                     include("{$_EnginePath}/includes/functions/InsertJavaScriptChronoApplet.php");
                     $_SkinPath = UNIENGINE_DEFAULT_SKINPATH;
