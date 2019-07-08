@@ -49,42 +49,28 @@ function isUserBlockedByActivationRequirement (&$user, $params) {
 //      - $user (&Object)
 //
 //  Returns: Object
-//      - isStoredIPRefreshRequired (Boolean)
 //      - isKickRequired (Boolean)
 //      - isIPDifferent (Boolean)
 //
 function handleUserIPChangeCheck (&$user) {
-    $result = [
-        'isStoredIPRefreshRequired' => false,
-        'isKickRequired' => false,
-        'isIPDifferent' => false
+    $previousIP = getPreviousLastIPValue();
+    $currentIP = $_SERVER['REMOTE_ADDR'];
+
+    $hasEmptyPreviousIP = empty($previousIP);
+    $hasDifferentIP = (
+        $hasEmptyPreviousIP ||
+        ($currentIP != $previousIP)
+    );
+    $hasIPCheckDisabled = ($user['noipcheck'] == 1);
+
+    return [
+        'isIPDifferent' => $hasDifferentIP,
+        'isKickRequired' => (
+            $hasDifferentIP &&
+            !$hasEmptyPreviousIP &&
+            !$hasIPCheckDisabled
+        )
     ];
-
-    if (empty($_SESSION['IP_check'])) {
-        $result['isStoredIPRefreshRequired'] = true;
-
-        return $result;
-    }
-
-    if ($_SERVER['REMOTE_ADDR'] == $_SESSION['IP_check']) {
-        return $result;
-    }
-
-    $result['isIPDifferent'] = true;
-
-    if ($user['noipcheck'] == 1) {
-        $result['isStoredIPRefreshRequired'] = true;
-
-        return $result;
-    }
-
-    $result['isKickRequired'] = true;
-
-    return $result;
-}
-
-function refreshIPChangeCheckData () {
-    $_SESSION['IP_check'] = $_SERVER['REMOTE_ADDR'];
 }
 
 //  Arguments

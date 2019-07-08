@@ -1,5 +1,18 @@
 <?php
 
+// TODO: Do not store this like this, it's ugly...
+function setPreviousLastIPValue(&$user) {
+    global $_InMem_CheckUserSessionCookie_PreviousLastIP;
+
+    $_InMem_CheckUserSessionCookie_PreviousLastIP = $user['user_lastip'];
+}
+
+function getPreviousLastIPValue() {
+    global $_InMem_CheckUserSessionCookie_PreviousLastIP;
+
+    return $_InMem_CheckUserSessionCookie_PreviousLastIP;
+}
+
 function CheckUserSessionCookie()
 {
     global $_GameConfig, $_EnginePath, $_Lang, $_DontShowMenus;
@@ -47,6 +60,8 @@ function CheckUserSessionCookie()
             includeLang('cookies');
             message($_Lang['cookies']['Error3'], $_Lang['cookies']['Title']);
         }
+
+        setPreviousLastIPValue($UserRow);
 
         $NextCookie = implode('/%/', $TheCookie);
         if($TheCookie[3] == 1)

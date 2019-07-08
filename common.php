@@ -3,8 +3,6 @@
 include('includes/phpBench.php'); $_BenchTool = new phpBench();
 if(!empty($_BenchTool)){ $_BenchTool->simpleCountStart(false, 'telemetry__c'); }
 
-session_start();
-
 ini_set('default_charset', 'UTF-8');
 
 $_GameConfig = [];
@@ -90,27 +88,23 @@ if (isIPBanned($_SERVER['REMOTE_ADDR'], $_GameConfig)) {
 if(isLogged())
 {
     $userIPChangeCheckResult = handleUserIPChangeCheck($_User);
-
-    if ($userIPChangeCheckResult['isKickRequired']) {
-        unset($_SESSION['IP_check']);
-        header('Location: logout.php?badip=1');
-        safeDie();
-    }
-
     $isIPandUALogRefreshRequired = isIPandUALogRefreshRequired(
         $_User,
         [ 'timestamp' => $Common_TimeNow ]
     );
 
-    if ($userIPChangeCheckResult['isStoredIPRefreshRequired']) {
-        refreshIPChangeCheckData();
-    }
     if (
         $isIPandUALogRefreshRequired ||
         $userIPChangeCheckResult['isIPDifferent']
     ) {
         include("{$_EnginePath}includes/functions/IPandUA_Logger.php");
         IPandUA_Logger($_User);
+    }
+
+    // FIXME: try to prevent "on login, but IP changed" kicks
+    if ($userIPChangeCheckResult['isKickRequired']) {
+        header('Location: logout.php?badip=1');
+        safeDie();
     }
 
     if (!isGameStartTimeReached($Common_TimeNow)) {
