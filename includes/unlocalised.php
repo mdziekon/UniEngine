@@ -141,6 +141,90 @@ function GetGameSpeedFactor()
     return $_GameConfig['fleet_speed'] / 2500;
 }
 
+function getShipsEngines($shipID) {
+    global $_Vars_Prices;
+
+    if (empty($_Vars_Prices[$shipID]['engine'])) {
+        return [];
+    }
+
+    return $_Vars_Prices[$shipID]['engine'];
+}
+
+function getShipsStorageCapacity($shipID) {
+    global $_Vars_Prices;
+
+    return $_Vars_Prices[$shipID]['capacity'];
+}
+
+function getShipsUsedEngineData($shipID, $user) {
+    global $_Vars_GameElements;
+
+    $engines = getShipsEngines($shipID);
+
+    // The assumption here is that better engines come first.
+    // If the engine's tech is not set, we assume that it's the only engine available.
+    foreach ($engines as $engineIdx => $engineData) {
+        if (!isset($engineData['tech'])) {
+            return [
+                'engineIdx' => $engineIdx,
+                'data' => $engineData
+            ];
+        }
+
+        $engineTechID = $engineData['tech'];
+        $engineTechMinLevel = $engineData['minlevel'];
+        $userTechKey = $_Vars_GameElements[$engineTechID];
+        $userTechLevel = $user[$userTechKey];
+
+        if ($userTechLevel >= $engineTechMinLevel) {
+            return [
+                'engineIdx' => $engineIdx,
+                'data' => $engineData
+            ];
+        }
+    }
+
+    return [
+        'engineIdx' => -1,
+        'data' => null
+    ];
+}
+
+function getUsersEngineSpeedTechModifier($engineTechID, $user) {
+    global $_Vars_TechSpeedModifiers, $_Vars_GameElements;
+
+    $engineTechSpeedModifier = $_Vars_TechSpeedModifiers[$engineTechID];
+    $userTechKey = $_Vars_GameElements[$engineTechID];
+    $userTechLevel = $user[$userTechKey];
+
+    return (1 + ($engineTechSpeedModifier * $userTechLevel));
+}
+
+function getShipsCurrentSpeed($shipID, $user) {
+    $usedEngine = getShipsUsedEngineData($shipID, $user);
+
+    if (!$usedEngine['data']) {
+        return 0;
+    }
+
+    $engineData = $usedEngine['data'];
+
+    if (!isset($engineData['tech'])) {
+        return $engineData['speed'];
+    }
+
+    $engineTechID = $engineData['tech'];
+    $engineSpeedTechModifier = getUsersEngineSpeedTechModifier($engineTechID, $user);
+
+    // TODO: determine if the modifier should not be applied with a "base bias"
+    // meaning that it starts "improving" it starting from the minimal tech level.
+    return (
+        $engineData['speed'] *
+        $engineSpeedTechModifier
+    );
+}
+
 function GetFleetMaxSpeed($FleetArray, $Fleet, $Player, $ReturnInfo = false)
 {
     global $_Vars_Prices, $_Vars_GameElements, $_Vars_TechSpeedModifiers;
