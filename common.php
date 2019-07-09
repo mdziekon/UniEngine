@@ -17,11 +17,11 @@ if(!empty($_BenchTool)){ $_BenchTool->simpleCountStart(false, 'telemetry__c_main
 
 include($_EnginePath.'includes/constants.php');
 
-if(defined('INSTALL_NOTDONE'))
-{
+if (defined('INSTALL_NOTDONE')) {
     header('Location: ./install/');
     die();
 }
+
 include($_EnginePath.'includes/functions.php');
 include($_EnginePath.'includes/unlocalised.php');
 include($_EnginePath.'includes/ingamefunctions.php');
@@ -45,8 +45,7 @@ $_GameConfig = loadGameConfig([
     'cache' => &$_MemCache
 ]);
 
-if(!defined('UEC_INLOGIN'))
-{
+if (!defined('UEC_INLOGIN')) {
     $_User = CheckUserSession();
 }
 
@@ -71,12 +70,10 @@ if (isGameClosed($_GameConfig)) {
     message(getGameCloseReason($_GameConfig), $_GameConfig['game_name']);
 }
 
-if(!isset($_SetAccessLogPath))
-{
+if (!isset($_SetAccessLogPath)) {
     $_SetAccessLogPath = '';
 }
-if(!isset($_SetAccessLogPreFilename))
-{
+if (!isset($_SetAccessLogPreFilename)) {
     $_SetAccessLogPreFilename = '';
 }
 CreateAccessLog($_SetAccessLogPath, $_SetAccessLogPreFilename);
@@ -85,8 +82,7 @@ if (isIPBanned($_SERVER['REMOTE_ADDR'], $_GameConfig)) {
     message($_Lang['Game_blocked_for_this_IP'], $_GameConfig['game_name']);
 }
 
-if(isLogged())
-{
+if(isLogged()) {
     $userIPChangeCheckResult = handleUserIPChangeCheck($_User);
     $isIPandUALogRefreshRequired = isIPandUALogRefreshRequired(
         $_User,
@@ -148,10 +144,8 @@ if(isLogged())
     }
 
     // --- Handle Tasks ---
-    if(!isset($_UseMinimalCommon) || $_UseMinimalCommon !== true)
-    {
-        if(!isset($_DontShowMenus) || $_DontShowMenus !== true)
-        {
+    if (!isset($_UseMinimalCommon) || $_UseMinimalCommon !== true) {
+        if (!isset($_DontShowMenus) || $_DontShowMenus !== true) {
             $handleTasksResult = parseCompletedTasks($_User);
 
             // Dispay the infobox
@@ -182,8 +176,7 @@ if(isLogged())
     }
     // --- Handling Tasks ends here ---
 
-    if(!isset($_AllowInVacationMode) || $_AllowInVacationMode != true)
-    {
+    if (!isset($_AllowInVacationMode) || $_AllowInVacationMode != true) {
         // If this place do not allow User to be in VacationMode, show him a message if it's necessary
         if (isOnVacation()) {
             $vacationModeMessageHTML = prepareVacationModeMessageHTML(
@@ -201,8 +194,7 @@ if(isLogged())
         }
     }
 
-    if(!isset($_UseMinimalCommon) || $_UseMinimalCommon !== true)
-    {
+    if (!isset($_UseMinimalCommon) || $_UseMinimalCommon !== true) {
         try {
             // Change Planet (if user wants to do this)
             $planetChangeID = getPlanetChangeRequestedID($_GET);
@@ -280,9 +272,7 @@ if(isLogged())
             }
         }
     }
-}
-else
-{
+} else {
     $_DontShowMenus = true;
 }
 
