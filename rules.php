@@ -13,8 +13,10 @@ include($_EnginePath.'common.php');
 includeLang('rules');
 $TPL = gettemplate('rules_body');
 
-if(isLogged() && isset($_ForceRulesAcceptBox) && $_ForceRulesAcceptBox === true)
-{
+if (
+    isLogged() &&
+    isRulesAcceptanceRequired($_User, $_GameConfig)
+) {
     $IsInDelete = ($_User['is_ondeletion'] == 1 ? true : false);
 
     if(isset($_GET['cmd']))

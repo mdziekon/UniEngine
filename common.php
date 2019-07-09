@@ -251,9 +251,6 @@ if(isLogged()) {
                     header('Location: rules.php');
                     safeDie();
                 }
-
-                // FIXME: do not determine it here, move to "rules.php"
-                $_ForceRulesAcceptBox = true;
             }
         }
 

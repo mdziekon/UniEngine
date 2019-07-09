@@ -88,6 +88,14 @@ function loggedCheck($noAlert = false)
     }
 }
 
+function isRulesAcceptanceRequired (&$user, &$_GameConfig) {
+    return (
+        $_GameConfig['enforceRulesAcceptance'] == '1' &&
+        $_GameConfig['last_rules_changes'] > 0 &&
+        $user['rules_accept_stamp'] < $_GameConfig['last_rules_changes']
+    );
+}
+
 function isOnVacation($_User = false)
 {
     if($_User === false)
