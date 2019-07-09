@@ -197,27 +197,33 @@ function GetFleetMaxSpeed($FleetArray, $Fleet, $Player, $ReturnInfo = false)
     return $speedalls;
 }
 
-function GetShipConsumption($Ship, $Player)
-{
+function GetShipConsumption($shipID, $user) {
     global $_Vars_Prices, $_Vars_GameElements;
 
-    if(!empty($_Vars_Prices[$Ship]['engine']))
-    {
-        foreach($_Vars_Prices[$Ship]['engine'] as $EngineData)
-        {
-            if(!isset($EngineData['tech']) || $Player[$_Vars_GameElements[$EngineData['tech']]] >= $EngineData['minlevel'])
-            {
-                $Consumption = $EngineData['consumption'];
-                break;
-            }
-        }
-    }
-    else
-    {
-        $Consumption = 0;
+    if (empty($_Vars_Prices[$shipID]['engine'])) {
+        return 0;
     }
 
-    return $Consumption;
+    $engines = $_Vars_Prices[$shipID]['engine'];
+
+    // The assumption here is that better engines come first.
+    // If the engine's tech is not set, we assume that it's the only engine available.
+    foreach ($engines as $engineData) {
+        if (!isset($engineData['tech'])) {
+            return $engineData['consumption'];
+        }
+
+        $engineTechID = $engineData['tech'];
+        $engineTechMinLevel = $engineData['minlevel'];
+        $userTechKey = $_Vars_GameElements[$engineTechID];
+        $userTechLevel = $user[$userTechKey];
+
+        if ($userTechLevel >= $engineTechMinLevel) {
+            return $engineData['consumption'];
+        }
+    }
+
+    return 0;
 }
 
 function GetFleetConsumption($FleetArray, $SpeedFactor, $MissionDuration, $MissionDistance, $Player)
