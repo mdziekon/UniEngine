@@ -29,8 +29,8 @@ include($_EnginePath.'class/UniEngine_Cache.class.php');
 
 $_MemCache = new UniEngine_Cache();
 
-$_POST = SecureInput($_POST);
-$_GET = SecureInput($_GET);
+$_POST = secureUserInput($_POST);
+$_GET = secureUserInput($_GET);
 
 include($_EnginePath.'includes/vars.php');
 include($_EnginePath.'includes/db.php');

@@ -1,30 +1,19 @@
 <?php
 
-function SecureInput($Input)
-{
-    if(!empty($Input))
-    {
-        if((array)$Input === $Input)
-        {
-            foreach($Input as $Key => &$Val)
-            {
-                if((array)$Val === $Val)
-                {
-                    $Val = SecureInput($Val);
-                }
-                else
-                {
-                    $Val = addslashes($Val);
-                }
-            }
-        }
-        else
-        {
-            $Input = addslashes($Input);
-        }
+function secureUserInput($input) {
+    if (empty($input)) {
+        return $input;
     }
 
-    return $Input;
+    if (!is_array($input)) {
+        return addslashes($input);
+    }
+
+    foreach ($input as $key => &$value) {
+        $value = secureUserInput($value);
+    }
+
+    return $input;
 }
 
 function getSessionCookieKey() {
