@@ -85,17 +85,12 @@ function isRulesAcceptanceRequired (&$user, &$_GameConfig) {
     );
 }
 
-function isOnVacation($_User = false)
-{
-    if($_User === false)
-    {
+function isOnVacation($_User = false) {
+    if ($_User === false) {
         global $_User;
     }
-    if($_User['is_onvacation'] == 1)
-    {
-        return true;
-    }
-    return false;
+
+    return ($_User['is_onvacation'] == 1);
 }
 
 // Tells whether the enabled vacation mode is the "regular one" (set by the user)
