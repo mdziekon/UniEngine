@@ -1,5 +1,24 @@
 <?php
 
+//  Arguments
+//      - $user (&Object)
+//      - $params (Object)
+//          - timestamp (Number)
+//
+//  Returns:
+//      Boolean (is the polls check required for this user)
+//
+function isPollsCheckRequired (&$user, $params) {
+    $isUserAI = $user['isAI'];
+    $userRegistrationTime = $user['register_time'];
+    $timestamp = $params['timestamp'];
+
+    return (
+        $isUserAI != 1 &&
+        $userRegistrationTime < ($timestamp - TIME_DAY)
+    );
+}
+
 function fetchObligatoryPollsCount ($userID) {
     $Query_SelectPolls = '';
     $Query_SelectPolls .= "SELECT COUNT(`polls`.`id`) AS `polls_with_no_vote` FROM {{table}} AS `polls` ";

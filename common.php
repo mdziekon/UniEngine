@@ -258,12 +258,8 @@ if(isLogged()) {
         }
 
         if (
-            (
-                !isset($_DontCheckPolls) ||
-                $_DontCheckPolls !== true
-            ) &&
-            $_User['isAI'] != 1 &&
-            $_User['register_time'] < ($Common_TimeNow - TIME_DAY)
+            (!isset($_DontCheckPolls) || $_DontCheckPolls !== true) &&
+            isPollsCheckRequired($_User, [ 'timestamp' => $Common_TimeNow ])
         ) {
             $pollsCount = fetchObligatoryPollsCount($_User['id']);
 
