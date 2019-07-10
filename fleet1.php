@@ -116,7 +116,8 @@ if(!empty($_POST['ship']))
                         {
                             $Fleet['FuelStorage'] += $ThisStorage;
                         }
-                        $speedalls[$ShipID] = GetFleetMaxSpeed('', $ShipID, $_User);
+                        $speedalls[$ShipID] = getShipsCurrentSpeed($ShipID, $_User);
+
                         $FleetHiddenBlock .= "<input type=\"hidden\" id=\"consumption{$ShipID}\" value=\"".((string)((GetShipConsumption($ShipID, $_User) * $ShipCount) + 1))."\" />";
                         $FleetHiddenBlock .= "<input type=\"hidden\" id=\"speed{$ShipID}\" value=\"{$speedalls[$ShipID]}\" />";
                     }

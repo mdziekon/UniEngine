@@ -455,10 +455,10 @@ if(MORALE_ENABLED)
 arsort($SpeedsAvailable);
 reset($SpeedsAvailable);
 
-$AllFleetSpeed = GetFleetMaxSpeed('', $ShipID, $_User);
 $GenFleetSpeed = current($SpeedsAvailable);
 $SpeedFactor = GetGameSpeedFactor();
-$MaxFleetSpeed = $AllFleetSpeed;
+$MaxFleetSpeed = getShipsCurrentSpeed($ShipID, $_User);
+
 if(MORALE_ENABLED)
 {
     if($_User['morale_level'] <= MORALE_PENALTY_FLEETSLOWDOWN)

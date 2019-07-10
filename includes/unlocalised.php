@@ -298,7 +298,7 @@ function GetFleetConsumption($FleetArray, $SpeedFactor, $MissionDuration, $Missi
     {
         if($Ship > 0)
         {
-            $ShipSpeed = GetFleetMaxSpeed('', $Ship, $Player);
+            $ShipSpeed = getShipsCurrentSpeed($Ship, $Player);
             $ShipConsumption = GetShipConsumption($Ship, $Player);
             $spd = 35000 / ($MissionDuration * $SpeedFactor - 10) * sqrt($MissionDistance * 10 / $ShipSpeed);
             $basicConsumption = $ShipConsumption * $Count;
