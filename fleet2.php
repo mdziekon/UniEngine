@@ -398,9 +398,16 @@ if(MORALE_ENABLED)
 }
 
 $distance = getFlightDistanceBetween($_Planet, $Target);
-
 $duration = GetMissionDuration($GenFleetSpeed, $MaxFleetSpeed, $distance, $SpeedFactor);
-$consumption = GetFleetConsumption($Fleet['array'], $SpeedFactor, $duration, $distance, $_User);
+
+$consumption = getFlightTotalConsumption(
+    [
+        'ships' => $Fleet['array'],
+        'distance' => $distance,
+        'duration' => $duration,
+    ],
+    $_User
+);
 
 if($_Planet['deuterium'] < $consumption)
 {

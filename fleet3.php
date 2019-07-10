@@ -1139,13 +1139,30 @@ if($Allow_UseQuantumGate)
     {
         $DurationTarget = 1;
         $DurationBack = GetMissionDuration($GenFleetSpeed, $MaxFleetSpeed, $Distance, $SpeedFactor);
-        $Consumption = GetFleetConsumption($Fleet['array'], $SpeedFactor, $DurationBack, $Distance, $_User) / 2;
+
+        $Consumption = getFlightTotalConsumption(
+            [
+                'ships' => $Fleet['array'],
+                'distance' => $Distance,
+                'duration' => $DurationBack,
+            ],
+            $_User
+        );
+        $Consumption = $Consumption / 2;
     }
 }
 else
 {
     $DurationTarget = $DurationBack = GetMissionDuration($GenFleetSpeed, $MaxFleetSpeed, $Distance, $SpeedFactor);
-    $Consumption = GetFleetConsumption($Fleet['array'], $SpeedFactor, $DurationTarget, $Distance, $_User);
+
+    $Consumption = getFlightTotalConsumption(
+        [
+            'ships' => $Fleet['array'],
+            'distance' => $Distance,
+            'duration' => $DurationTarget,
+        ],
+        $_User
+    );
 }
 
 if($_Planet['deuterium'] < $Consumption)

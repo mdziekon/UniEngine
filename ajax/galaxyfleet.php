@@ -477,7 +477,18 @@ $distance = getFlightDistanceBetween(
 );
 
 $duration = GetMissionDuration($GenFleetSpeed, $MaxFleetSpeed, $distance, $SpeedFactor);
-$consumption = GetFleetConsumption(array($ShipID => $ShipCount), $SpeedFactor, $duration, $distance, $_User);
+
+$consumption = getFlightTotalConsumption(
+    [
+        'ships' => [
+            $ShipID => $ShipCount
+        ],
+        'distance' => $distance,
+        'duration' => $duration,
+    ],
+    $_User
+);
+
 $fleet['start_time'] = $duration + $Time;
 $fleet['end_time'] = (2 * $duration) + $Time;
 
@@ -493,7 +504,18 @@ if($CurrentPlanet['deuterium'] >= $consumption)
             if($GenFleetSpeed !== false)
             {
                 $duration = GetMissionDuration($GenFleetSpeed, $MaxFleetSpeed, $distance, $SpeedFactor);
-                $consumption = GetFleetConsumption(array($ShipID => $ShipCount), $SpeedFactor, $duration, $distance, $_User);
+
+                $consumption = getFlightTotalConsumption(
+                    [
+                        'ships' => [
+                            $ShipID => $ShipCount
+                        ],
+                        'distance' => $distance,
+                        'duration' => $duration,
+                    ],
+                    $_User
+                );
+
                 $fleet['start_time'] = $duration + $Time;
                 $fleet['end_time'] = (2 * $duration) + $Time;
             }

@@ -258,22 +258,40 @@ function getShipsCurrentConsumption($shipID, $user) {
     return $usedEngine['data']['consumption'];
 }
 
-function GetFleetConsumption($FleetArray, $SpeedFactor, $MissionDuration, $MissionDistance, $Player)
-{
-    $consumption = 0;
-    foreach($FleetArray as $Ship => $Count)
-    {
-        if($Ship > 0)
-        {
-            $ShipSpeed = getShipsCurrentSpeed($Ship, $Player);
-            $ShipConsumption = getShipsCurrentConsumption($Ship, $Player);
-            $spd = 35000 / ($MissionDuration * $SpeedFactor - 10) * sqrt($MissionDistance * 10 / $ShipSpeed);
-            $basicConsumption = $ShipConsumption * $Count;
-            $consumption += $basicConsumption * $MissionDistance / 35000 * (($spd / 10) + 1) * (($spd / 10) + 1);
+//  Arguments:
+//      - $flightParams (Object)
+//          - ships (Object<shipID, count>)
+//          - distance (Number)
+//          - duration (Number)
+//      - $user (Object)
+//
+function getFlightTotalConsumption($flightParams, $user) {
+    $serverFlightSpeedFactor = GetGameSpeedFactor();
+
+    $flightShips = $flightParams['ships'];
+    $flightDistance = $flightParams['distance'];
+    $flightDuration = $flightParams['duration'];
+
+    $totalConsumption = 0;
+
+    foreach ($flightShips as $shipID => $shipsCount) {
+        if ($shipsCount <= 0) {
+            continue;
         }
+
+        $shipSpeed = getShipsCurrentSpeed($shipID, $user);
+        $shipConsumption = getShipsCurrentConsumption($shipID, $user);
+
+        $finalSpeed = 35000 / ($flightDuration * $serverFlightSpeedFactor - 10) * sqrt($flightDistance * 10 / $shipSpeed);
+
+        $allShipsBaseConsumption = ($shipConsumption * $shipsCount);
+
+        $allShipsConsumption = $allShipsBaseConsumption * $flightDistance / 35000 * (($finalSpeed / 10) + 1) * (($finalSpeed / 10) + 1);
+
+        $totalConsumption += $allShipsConsumption;
     }
 
-    return (round($consumption) + 1);
+    return (round($totalConsumption) + 1);
 }
 
 function GetStartAdressLink($FleetRow, $FleetType, $FromWindow = false)
