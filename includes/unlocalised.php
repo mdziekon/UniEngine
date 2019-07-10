@@ -150,6 +150,14 @@ function GetGameSpeedFactor()
     return $_GameConfig['fleet_speed'] / 2500;
 }
 
+function getUsersTechLevel($techID, $user) {
+    global $_Vars_GameElements;
+
+    $userTechKey = $_Vars_GameElements[$techID];
+
+    return $user[$userTechKey];
+}
+
 function getShipsEngines($shipID) {
     global $_Vars_Prices;
 
@@ -167,8 +175,6 @@ function getShipsStorageCapacity($shipID) {
 }
 
 function getShipsUsedEngineData($shipID, $user) {
-    global $_Vars_GameElements;
-
     $engines = getShipsEngines($shipID);
 
     // The assumption here is that better engines come first.
@@ -183,8 +189,7 @@ function getShipsUsedEngineData($shipID, $user) {
 
         $engineTechID = $engineData['tech'];
         $engineTechMinLevel = $engineData['minlevel'];
-        $userTechKey = $_Vars_GameElements[$engineTechID];
-        $userTechLevel = $user[$userTechKey];
+        $userTechLevel = getUsersTechLevel($engineTechID, $user);
 
         if ($userTechLevel >= $engineTechMinLevel) {
             return [
@@ -201,11 +206,10 @@ function getShipsUsedEngineData($shipID, $user) {
 }
 
 function getUsersEngineSpeedTechModifier($engineTechID, $user) {
-    global $_Vars_TechSpeedModifiers, $_Vars_GameElements;
+    global $_Vars_TechSpeedModifiers;
 
     $engineTechSpeedModifier = $_Vars_TechSpeedModifiers[$engineTechID];
-    $userTechKey = $_Vars_GameElements[$engineTechID];
-    $userTechLevel = $user[$userTechKey];
+    $userTechLevel = getUsersTechLevel($engineTechID, $user);
 
     return (1 + ($engineTechSpeedModifier * $userTechLevel));
 }
