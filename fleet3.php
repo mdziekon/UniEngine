@@ -1042,7 +1042,7 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
 }
 
 // --- Calculate Speed and Distance
-$AllFleetSpeed = GetFleetMaxSpeed($Fleet['array'], 0, $_User);
+$AllFleetSpeed = GetFleetMaxSpeed($Fleet['array'], $_User);
 $GenFleetSpeed = $Fleet['Speed'];
 $SpeedFactor = GetGameSpeedFactor();
 $MaxFleetSpeed = min($AllFleetSpeed);

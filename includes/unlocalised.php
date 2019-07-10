@@ -225,16 +225,10 @@ function getShipsCurrentSpeed($shipID, $user) {
     );
 }
 
-function GetFleetMaxSpeed($FleetArray, $Fleet, $Player, $ReturnInfo = false)
+function GetFleetMaxSpeed($FleetArray, $Player)
 {
     global $_Vars_Prices, $_Vars_GameElements, $_Vars_TechSpeedModifiers;
 
-    if($Fleet != 0)
-    {
-        $FleetArray = array($Fleet => 1);
-    }
-
-    $Return = array();
     foreach($FleetArray as $Ship => $Count)
     {
         if(!empty($_Vars_Prices[$Ship]['engine']))
@@ -244,22 +238,14 @@ function GetFleetMaxSpeed($FleetArray, $Fleet, $Player, $ReturnInfo = false)
                 if(!isset($EngineData['tech']))
                 {
                     $speedalls[$Ship] = $EngineData['speed'];
-                    if($ReturnInfo === true)
-                    {
-                        $EngineData['engineID'] = $EngineID;
-                        $Return[$Ship]['engine'] = $EngineData;
-                    }
+
                     break;
                 }
 
                 if($Player[$_Vars_GameElements[$EngineData['tech']]] >= $EngineData['minlevel'])
                 {
                     $speedalls[$Ship] = $EngineData['speed'] * (1 + ($_Vars_TechSpeedModifiers[$EngineData['tech']] * $Player[$_Vars_GameElements[$EngineData['tech']]]));
-                    if($ReturnInfo === true)
-                    {
-                        $EngineData['engineID'] = $EngineID;
-                        $Return[$Ship]['engine'] = $EngineData;
-                    }
+
                     break;
                 }
             }
@@ -269,15 +255,7 @@ function GetFleetMaxSpeed($FleetArray, $Fleet, $Player, $ReturnInfo = false)
             $speedalls[$Ship] = 0;
         }
     }
-    if($Fleet != 0)
-    {
-        $speedalls = $speedalls[$Ship];
-    }
 
-    if($ReturnInfo === true)
-    {
-        return array('speed' => $speedalls, 'info' => $Return);
-    }
     return $speedalls;
 }
 
