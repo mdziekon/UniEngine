@@ -225,38 +225,14 @@ function getShipsCurrentSpeed($shipID, $user) {
     );
 }
 
-function GetFleetMaxSpeed($FleetArray, $Player)
-{
-    global $_Vars_Prices, $_Vars_GameElements, $_Vars_TechSpeedModifiers;
+function getFleetShipsSpeeds($fleetShips, $user) {
+    $speedsPerShip = [];
 
-    foreach($FleetArray as $Ship => $Count)
-    {
-        if(!empty($_Vars_Prices[$Ship]['engine']))
-        {
-            foreach($_Vars_Prices[$Ship]['engine'] as $EngineID => $EngineData)
-            {
-                if(!isset($EngineData['tech']))
-                {
-                    $speedalls[$Ship] = $EngineData['speed'];
-
-                    break;
-                }
-
-                if($Player[$_Vars_GameElements[$EngineData['tech']]] >= $EngineData['minlevel'])
-                {
-                    $speedalls[$Ship] = $EngineData['speed'] * (1 + ($_Vars_TechSpeedModifiers[$EngineData['tech']] * $Player[$_Vars_GameElements[$EngineData['tech']]]));
-
-                    break;
-                }
-            }
-        }
-        else
-        {
-            $speedalls[$Ship] = 0;
-        }
+    foreach ($fleetShips as $shipID => $_shipsCount) {
+        $speedsPerShip[$shipID] = getShipsCurrentSpeed($shipID, $user);
     }
 
-    return $speedalls;
+    return $speedsPerShip;
 }
 
 function GetShipConsumption($shipID, $user) {

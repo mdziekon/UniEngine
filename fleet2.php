@@ -386,7 +386,7 @@ if(!empty($AvailableMissions))
 
 $PreSelectedMission = intval($_POST['target_mission']);
 $SpeedFactor = GetGameSpeedFactor();
-$AllFleetSpeed = GetFleetMaxSpeed($Fleet['array'], $_User);
+$AllFleetSpeed = getFleetShipsSpeeds($Fleet['array'], $_User);
 $GenFleetSpeed = $_POST['speed'];
 $MaxFleetSpeed = min($AllFleetSpeed);
 if(MORALE_ENABLED)
