@@ -248,7 +248,7 @@ function getFleetShipsSpeeds($fleetShips, $user) {
     return $speedsPerShip;
 }
 
-function GetShipConsumption($shipID, $user) {
+function getShipsCurrentConsumption($shipID, $user) {
     $usedEngine = getShipsUsedEngineData($shipID, $user);
 
     if (!$usedEngine['data']) {
@@ -266,7 +266,7 @@ function GetFleetConsumption($FleetArray, $SpeedFactor, $MissionDuration, $Missi
         if($Ship > 0)
         {
             $ShipSpeed = getShipsCurrentSpeed($Ship, $Player);
-            $ShipConsumption = GetShipConsumption($Ship, $Player);
+            $ShipConsumption = getShipsCurrentConsumption($Ship, $Player);
             $spd = 35000 / ($MissionDuration * $SpeedFactor - 10) * sqrt($MissionDistance * 10 / $ShipSpeed);
             $basicConsumption = $ShipConsumption * $Count;
             $consumption += $basicConsumption * $MissionDistance / 35000 * (($spd / 10) + 1) * (($spd / 10) + 1);
