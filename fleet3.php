@@ -1053,7 +1053,8 @@ if(MORALE_ENABLED)
         $MaxFleetSpeed *= MORALE_PENALTY_FLEETSLOWDOWN_VALUE;
     }
 }
-$Distance = GetTargetDistance($_Planet['galaxy'], $Target['galaxy'], $_Planet['system'], $Target['system'], $_Planet['planet'], $Target['planet']);
+
+$Distance = getFlightDistanceBetween($_Planet, $Target);
 
 $Allow_UseQuantumGate = false;
 if($Fleet['UseQuantum'])

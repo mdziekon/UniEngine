@@ -466,7 +466,16 @@ if(MORALE_ENABLED)
         $MaxFleetSpeed *= MORALE_PENALTY_FLEETSLOWDOWN_VALUE;
     }
 }
-$distance = GetTargetDistance($CurrentPlanet['galaxy'], $Galaxy, $CurrentPlanet['system'], $System, $CurrentPlanet['planet'], $Planet);
+
+$distance = getFlightDistanceBetween(
+    $CurrentPlanet,
+    [
+        'galaxy' => $Galaxy,
+        'system' => $System,
+        'planet' => $Planet
+    ]
+);
+
 $duration = GetMissionDuration($GenFleetSpeed, $MaxFleetSpeed, $distance, $SpeedFactor);
 $consumption = GetFleetConsumption(array($ShipID => $ShipCount), $SpeedFactor, $duration, $distance, $_User);
 $fleet['start_time'] = $duration + $Time;

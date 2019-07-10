@@ -103,28 +103,37 @@ function getJSDatePickerTranslationLang() {
 }
 
 // Fleet-related functions
-function GetTargetDistance($OrigGalaxy, $DestGalaxy, $OrigSystem, $DestSystem, $OrigPlanet, $DestPlanet)
-{
-    $distance = 0;
 
-    if(($OrigGalaxy - $DestGalaxy) != 0)
-    {
-        $distance = abs($OrigGalaxy - $DestGalaxy) * 20000;
-    }
-    else if(($OrigSystem - $DestSystem) != 0)
-    {
-        $distance = abs($OrigSystem - $DestSystem) * 5 * 19 + 2700;
-    }
-    else if(($OrigPlanet - $DestPlanet) != 0)
-    {
-        $distance = abs($OrigPlanet - $DestPlanet) * 5 + 1000;
-    }
-    else
-    {
-        $distance = 5;
+//  Arguments:
+//      - $origin (Object)
+//          - galaxy (Number)
+//          - system (Number)
+//          - planet (Number)
+//      - $destination (Object)
+//          - galaxy (Number)
+//          - system (Number)
+//          - planet (Number)
+//
+function getFlightDistanceBetween($origin, $destination) {
+    $galaxiesDiff = ($origin['galaxy'] - $destination['galaxy']);
+
+    if ($galaxiesDiff != 0) {
+        return (abs($galaxiesDiff) * 20000);
     }
 
-    return $distance;
+    $systemsDiff = ($origin['system'] - $destination['system']);
+
+    if ($systemsDiff != 0) {
+        return ((abs($systemsDiff) * 5 * 19) + 2700);
+    }
+
+    $planetsDiff = ($origin['planet'] - $destination['planet']);
+
+    if ($planetsDiff != 0) {
+        return ((abs($planetsDiff) * 5) + 1000);
+    }
+
+    return 5;
 }
 
 function GetMissionDuration($GameSpeed, $MaxFleetSpeed, $Distance, $SpeedFactor)
