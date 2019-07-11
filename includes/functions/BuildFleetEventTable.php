@@ -282,20 +282,63 @@ function _getUserCustomFleetColorsStylesHTML(&$user) {
     return parsetemplate($tplColorsStyles, [ 'InsertStyles' => $missionStyles ]);
 }
 
-function _getStartAdressLinkHTML($FleetRow, $FleetType, $FromWindow = false) {
-    $Link = '';
-    $Link .= "<a ".(($FromWindow === true) ? "onclick=\"opener.location = this.href; opener.focus(); return false;\"" : '')." href=\"galaxy.php?mode=3&galaxy={$FleetRow['fleet_start_galaxy']}&system={$FleetRow['fleet_start_system']}&planet={$FleetRow['fleet_start_planet']}\" class=\"{$FleetType}\" >";
-    $Link .= "[{$FleetRow['fleet_start_galaxy']}:{$FleetRow['fleet_start_system']}:{$FleetRow['fleet_start_planet']}]</a>";
+//  Arguments:
+//      - $fleetRow (Object)
+//      - $isStartLink (Boolean)
+//      - $options (Object)
+//          - linkClass (String) [default: "white"]
+//          - isOpenedInPopup (Boolean) [default: false]
+//
+function _getFleetsGalaxyPositionHyperlinkHTML($fleetRow, $isStartLink, $options) {
+    $isOpenedInPopup = $options['isOpenedInPopup'];
+    $linkClass = $options['linkClass'];
 
-    return $Link;
+    if (!$linkClass) {
+        $linkClass = 'white';
+    }
+
+    $position = (
+        $isStartLink ?
+        [
+            'galaxy' => $fleetRow['fleet_start_galaxy'],
+            'system' => $fleetRow['fleet_start_system'],
+            'planet' => $fleetRow['fleet_start_planet'],
+        ] :
+        [
+            'galaxy' => $fleetRow['fleet_end_galaxy'],
+            'system' => $fleetRow['fleet_end_system'],
+            'planet' => $fleetRow['fleet_end_planet'],
+        ]
+    );
+
+    $linkParams = [
+        'text' => "[{$position['galaxy']}:{$position['system']}:{$position['planet']}]",
+        'href' => 'galaxy.php',
+        'query' => [
+            'mode' => '3',
+            'galaxy' => $position['galaxy'],
+            'system' => $position['system'],
+            'planet' => $position['planet'],
+        ],
+        'attrs' => [
+            'class' => $linkClass,
+            'onclick' => (
+                $isOpenedInPopup ?
+                'opener.location = this.href; opener.focus(); return false;' :
+                null
+            )
+        ]
+    ];
+
+    return buildLinkHTML($linkParams);
+}
+
+function _getStartAdressLinkHTML($FleetRow, $FleetType, $FromWindow = false) {
+    return _getFleetsGalaxyPositionHyperlinkHTML($FleetRow, true, [ 'isOpenedInPopup' => $FromWindow ]);
 }
 
 function _getTargetAdressLinkHTML($FleetRow, $FleetType, $FromWindow = false) {
-    $Link = '';
-    $Link .= "<a ".(($FromWindow === true) ? "onclick=\"opener.location = this.href; opener.focus(); return false;\"" : '')." href=\"galaxy.php?mode=3&galaxy={$FleetRow['fleet_end_galaxy']}&system={$FleetRow['fleet_end_system']}&planet={$FleetRow['fleet_end_planet']}\" class=\"{$FleetType}\" >";
-    $Link .= "[{$FleetRow['fleet_end_galaxy']}:{$FleetRow['fleet_end_system']}:{$FleetRow['fleet_end_planet']}]</a>";
-
-    return $Link;
+    return _getFleetsGalaxyPositionHyperlinkHTML($FleetRow, false, [ 'isOpenedInPopup' => $FromWindow ]);
 }
 
 function _getHostileFleetPlayerLinkHTML($FleetRow, $FromWindow = false) {
