@@ -24,6 +24,7 @@ if (defined('INSTALL_NOTDONE')) {
 
 include($_EnginePath.'includes/functions.php');
 include($_EnginePath.'includes/unlocalised.php');
+include($_EnginePath.'includes/helpers/_includes.php');
 include($_EnginePath.'includes/ingamefunctions.php');
 include($_EnginePath.'class/UniEngine_Cache.class.php');
 

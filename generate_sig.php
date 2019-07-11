@@ -26,6 +26,7 @@ define('INSIDE', true);
 include($_EnginePath . 'common.minimal.php');
 include($_EnginePath . 'includes/constants.php');
 include($_EnginePath . 'includes/unlocalised.php');
+include($_EnginePath . 'includes/helpers/_includes.php');
 
 $UID = (isset($_GET['uid']) ? round($_GET['uid']) : 0);
 $SigLang = (isset($_GET['lang']) ? $_GET['lang'] : null);
