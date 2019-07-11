@@ -136,7 +136,7 @@ function getFlightDistanceBetween($origin, $destination) {
     return 5;
 }
 
-function GetGameSpeedFactor()
+function getUniFleetsSpeedFactor()
 {
     global $_GameConfig;
 
@@ -258,7 +258,7 @@ function getShipsCurrentConsumption($shipID, $user) {
 //          - maxShipsSpeed (Number)
 //
 function getFlightDuration($flightParams) {
-    $serverFlightSpeedFactor = GetGameSpeedFactor();
+    $uniFleetsSpeedFactor = getUniFleetsSpeedFactor();
 
     $flightSpeedFactor = $flightParams['speedFactor'];
     $flightMaxShipsSpeed = $flightParams['maxShipsSpeed'];
@@ -266,7 +266,7 @@ function getFlightDuration($flightParams) {
 
     $duration = (
         (35000 / $flightSpeedFactor * sqrt($flightDistance * 10 / $flightMaxShipsSpeed) + 10) /
-        $serverFlightSpeedFactor
+        $uniFleetsSpeedFactor
     );
 
     return round($duration);
@@ -280,7 +280,7 @@ function getFlightDuration($flightParams) {
 //      - $user (Object)
 //
 function getFlightTotalConsumption($flightParams, $user) {
-    $serverFlightSpeedFactor = GetGameSpeedFactor();
+    $uniFleetsSpeedFactor = getUniFleetsSpeedFactor();
 
     $flightShips = $flightParams['ships'];
     $flightDistance = $flightParams['distance'];
@@ -296,7 +296,7 @@ function getFlightTotalConsumption($flightParams, $user) {
         $shipSpeed = getShipsCurrentSpeed($shipID, $user);
         $shipConsumption = getShipsCurrentConsumption($shipID, $user);
 
-        $finalSpeed = 35000 / ($flightDuration * $serverFlightSpeedFactor - 10) * sqrt($flightDistance * 10 / $shipSpeed);
+        $finalSpeed = 35000 / ($flightDuration * $uniFleetsSpeedFactor - 10) * sqrt($flightDistance * 10 / $shipSpeed);
 
         $allShipsBaseConsumption = ($shipConsumption * $shipsCount);
 

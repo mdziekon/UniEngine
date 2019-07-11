@@ -456,7 +456,7 @@ arsort($SpeedsAvailable);
 reset($SpeedsAvailable);
 
 $GenFleetSpeed = current($SpeedsAvailable);
-$SpeedFactor = GetGameSpeedFactor();
+$SpeedFactor = getUniFleetsSpeedFactor();
 $MaxFleetSpeed = getShipsCurrentSpeed($ShipID, $_User);
 
 if(MORALE_ENABLED)

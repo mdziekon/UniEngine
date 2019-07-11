@@ -385,7 +385,7 @@ if(!empty($AvailableMissions))
 }
 
 $PreSelectedMission = intval($_POST['target_mission']);
-$SpeedFactor = GetGameSpeedFactor();
+$SpeedFactor = getUniFleetsSpeedFactor();
 $AllFleetSpeed = getFleetShipsSpeeds($Fleet['array'], $_User);
 $GenFleetSpeed = $_POST['speed'];
 $MaxFleetSpeed = min($AllFleetSpeed);
