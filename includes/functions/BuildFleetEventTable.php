@@ -5,79 +5,17 @@ function BuildFleetEventTable($FleetRow, $Status, $Owner, $Label, $Record, $Phal
     global $_Lang, $InsertJSChronoApplet_GlobalIncluded;
     static $InsertJSChronoApplet_Included = false, $Template = false, $ThisDate = false;
 
-    $FleetStyle = array
-    (
-         1 => 'attack',
-         2 => 'federation',
-         3 => 'transport',
-         4 => 'deploy',
-         5 => 'hold',
-         6 => 'espionage',
-         7 => 'colony',
-         8 => 'harvest',
-         9 => 'destroy',
-        10 => 'missile',
-    );
-    $FleetStatus = array(0 => 'flight', 1 => 'holding', 2 => 'return');
-
     if($Template === false)
     {
         global $_User;
 
         GlobalTemplate_AppendToAfterBody(gettemplate('_FleetTable_files'));
         $Template = gettemplate('_FleetTable_row');
-        if(!empty($_User['settings_FleetColors']))
-        {
-            $TPL_FleetColors_Row = gettemplate('_FleetTable_fleetColors_row');
-            $FleetColors = json_decode($_User['settings_FleetColors'], true);
-            foreach($FleetColors as $TypeKey => $Missions)
-            {
-                if($TypeKey == 'ownfly')
-                {
-                    $ThisType = 'flight';
-                    $ThisOwn = 'own';
-                    $CheckHold = true;
-                }
-                else if($TypeKey == 'owncb')
-                {
-                    $ThisType = 'return';
-                    $ThisOwn = 'own';
-                    $CheckHold = false;
-                }
-                else if($TypeKey == 'nonown')
-                {
-                    $ThisType = 'flight';
-                    $ThisOwn = '';
-                    $CheckHold = true;
-                }
 
-                foreach($Missions as $MissionID => $MissionColor)
-                {
-                    if(!empty($MissionColor))
-                    {
-                        $MissionColors_Styles[] = parsetemplate($TPL_FleetColors_Row, array
-                        (
-                            'MissionType' => $ThisType,
-                            'MissionName' => $ThisOwn.$FleetStyle[$MissionID],
-                            'MissionColor' => $MissionColor,
-                        ));
-                        if($CheckHold === true AND $MissionID == 5)
-                        {
-                            $MissionColors_Styles[] = parsetemplate($TPL_FleetColors_Row, array
-                            (
-                                'MissionType' => 'holding',
-                                'MissionName' => $ThisOwn.$FleetStyle[$MissionID],
-                                'MissionColor' => $MissionColor,
-                            ));
-                        }
-                    }
-                }
-            }
+        $userCustomFleetColorsStylesHTML = _getUserCustomFleetColorsStylesHTML($_User);
 
-            if(!empty($MissionColors_Styles))
-            {
-                GlobalTemplate_AppendToAfterBody(parsetemplate(gettemplate('_FleetTable_fleetColors'), array('InsertStyles' => implode(' ', $MissionColors_Styles))));
-            }
+        if ($userCustomFleetColorsStylesHTML) {
+            GlobalTemplate_AppendToAfterBody($userCustomFleetColorsStylesHTML);
         }
     }
     if($ThisDate === false)
@@ -239,9 +177,9 @@ function BuildFleetEventTable($FleetRow, $Status, $Owner, $Label, $Record, $Phal
     }
     $EventString .= $FleetMission;
 
-    $bloc['fleet_status']        = $FleetStatus[$Status];
+    $bloc['fleet_status']        = _getFleetStatus($Status);
     $bloc['fleet_prefix']        = $FleetPrefix;
-    $bloc['fleet_style']        = $FleetStyle[$MissionType];
+    $bloc['fleet_style']        = _getMissionStyle($MissionType);
     $bloc['fleet_order']        = $Label.$Record;
     $bloc['fleet_countdown']    = pretty_time($Rest, true);
     $bloc['fleet_time']            = str_replace($ThisDate, '', date('d/m | H:i:s', $Time));
@@ -249,6 +187,99 @@ function BuildFleetEventTable($FleetRow, $Status, $Owner, $Label, $Record, $Phal
     GlobalTemplate_AppendToAfterBody(InsertJavaScriptChronoApplet($Label, $Record, $Rest));
 
     return parsetemplate($Template, $bloc);
+}
+
+function _getFleetStatus($statusID) {
+    $fleetStatuses = [
+        0 => 'flight',
+        1 => 'holding',
+        2 => 'return'
+    ];
+
+    return $fleetStatuses[$statusID];
+}
+
+function _getMissionStyle($missionID) {
+    $missionStyles = [
+        1 => 'attack',
+        2 => 'federation',
+        3 => 'transport',
+        4 => 'deploy',
+        5 => 'hold',
+        6 => 'espionage',
+        7 => 'colony',
+        8 => 'harvest',
+        9 => 'destroy',
+        10 => 'missile',
+    ];
+
+    return $missionStyles[$missionID];
+}
+
+function _getUserCustomFleetColorsStylesHTML(&$user) {
+    if (empty($user['settings_FleetColors'])) {
+        return null;
+    }
+
+    $fleetColorsSettings = json_decode($user['settings_FleetColors'], true);
+
+    $stylesData = [];
+
+    foreach ($fleetColorsSettings as $fleetType => $perMissionColors) {
+        $isOwnFleet = ($fleetType !== 'nonown');
+        $isOwnComeback = ($fleetType === 'owncb');
+        $missionType = (
+            $isOwnComeback ?
+            "flight" :
+            "return"
+        );
+
+        foreach ($perMissionColors as $missionID => $missionColor) {
+            if (empty($missionColor)) {
+                continue;
+            }
+
+            $stylesData[] = [
+                'MissionType' => $missionType,
+                'MissionName' => (
+                    ($isOwnFleet ? 'own' : '') .
+                    _getMissionStyle($missionID)
+                ),
+                'MissionColor' => $missionColor
+            ];
+
+            if (
+                $missionID == 5 &&
+                !$isOwnComeback
+            ) {
+                $stylesData[] = [
+                    'MissionType' => 'holding',
+                    'MissionName' => (
+                        ($isOwnFleet ? 'own' : '') .
+                        _getMissionStyle($missionID)
+                    ),
+                    'MissionColor' => $missionColor
+                ];
+            }
+        }
+    }
+
+    if (empty($stylesData)) {
+        return null;
+    }
+
+    $tplColorRow = gettemplate('_FleetTable_fleetColors_row');
+    $tplColorsStyles = gettemplate('_FleetTable_fleetColors');
+
+    $missionStyles = array_map(
+        function ($styleData) use ($tplColorRow) {
+            return parsetemplate($tplColorRow, $styleData);
+        },
+        $stylesData
+    );
+    $missionStyles = implode(' ', $missionStyles);
+
+    return parsetemplate($tplColorsStyles, [ 'InsertStyles' => $missionStyles ]);
 }
 
 ?>
