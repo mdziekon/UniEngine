@@ -102,33 +102,6 @@ function getJSDatePickerTranslationLang() {
     return $langMapping[$lang];
 }
 
-function GetStartAdressLink($FleetRow, $FleetType, $FromWindow = false)
-{
-    $Link = '';
-    $Link .= "<a ".(($FromWindow === true) ? "onclick=\"opener.location = this.href; opener.focus(); return false;\"" : '')." href=\"galaxy.php?mode=3&galaxy={$FleetRow['fleet_start_galaxy']}&system={$FleetRow['fleet_start_system']}&planet={$FleetRow['fleet_start_planet']}\" class=\"{$FleetType}\" >";
-    $Link .= "[{$FleetRow['fleet_start_galaxy']}:{$FleetRow['fleet_start_system']}:{$FleetRow['fleet_start_planet']}]</a>";
-    return $Link;
-}
-
-function GetTargetAdressLink($FleetRow, $FleetType, $FromWindow = false)
-{
-    $Link = '';
-    $Link .= "<a ".(($FromWindow === true) ? "onclick=\"opener.location = this.href; opener.focus(); return false;\"" : '')." href=\"galaxy.php?mode=3&galaxy={$FleetRow['fleet_end_galaxy']}&system={$FleetRow['fleet_end_system']}&planet={$FleetRow['fleet_end_planet']}\" class=\"{$FleetType}\" >";
-    $Link .= "[{$FleetRow['fleet_end_galaxy']}:{$FleetRow['fleet_end_system']}:{$FleetRow['fleet_end_planet']}]</a>";
-    return $Link;
-}
-
-function BuildHostileFleetPlayerLink($FleetRow, $FromWindow = false)
-{
-    global $_Lang, $_SkinPath;
-
-    $Link = '';
-    $Link .= $FleetRow['owner_name']." ";
-    $Link .= "<a ".(($FromWindow === true) ? "onclick=\"opener.location = this.href; opener.focus(); return false;\"" : '')." href=\"messages.php?mode=write&uid={$FleetRow['fleet_owner']}\">";
-    $Link .= "<img src=\"{$_SkinPath}/img/m.gif\" alt=\"{$_Lang['ov_message']}\" title=\"{$_Lang['ov_message']}\" border=\"0\"></a>";
-    return $Link;
-}
-
 function CreatePlanetLink($Galaxy, $System, $Planet)
 {
     $Link = '';
@@ -169,38 +142,6 @@ function GetNextJumpWaitTime($CurMoon)
     $RetValue['value'] = $RestWait;
 
     return $RetValue;
-}
-
-function CreateFleetPopupedFleetLink($FleetRow, $Texte)
-{
-    global $_Lang;
-
-    $FleetArray = String2Array($FleetRow['fleet_array']);
-    if(!empty($FleetArray))
-    {
-        foreach($FleetArray as $ShipID => $ShipCount)
-        {
-            $CreateTitle[] = "<tr><th class='flLabel sh'>{$_Lang['tech'][$ShipID]}:</th><th class='flVal'>".prettyNumber($ShipCount)."</th></tr>";
-        }
-    }
-    if($FleetRow['fleet_resource_metal'] > 0 OR $FleetRow['fleet_resource_crystal'] > 0 OR $FleetRow['fleet_resource_deuterium'] > 0)
-    {
-        $CreateTitle[] = '<tr><th class=\'flRes\' colspan=\'2\'>&nbsp;</th></tr>';
-        if($FleetRow['fleet_resource_metal'] > 0)
-        {
-            $CreateTitle[] = "<tr><th class='flLabel rs'>{$_Lang['Metal']}:</th><th class='flVal'>".prettyNumber($FleetRow['fleet_resource_metal'])."</th></tr>";
-        }
-        if($FleetRow['fleet_resource_crystal'] > 0)
-        {
-            $CreateTitle[] = "<tr><th class='flLabel rs'>{$_Lang['Crystal']}:</th><th class='flVal'>".prettyNumber($FleetRow['fleet_resource_crystal'])."</th></tr>";
-        }
-        if($FleetRow['fleet_resource_deuterium'] > 0)
-        {
-            $CreateTitle[] = "<tr><th class='flLabel rs'>{$_Lang['Deuterium']}:</th><th class='flVal'>".prettyNumber($FleetRow['fleet_resource_deuterium'])."</th></tr>";
-        }
-    }
-
-    return '<a class="white flShips" title="<table style=\'width: 100%;\'>'.implode('', $CreateTitle).'</table>">'.$Texte.'</a>';
 }
 
 // String-related functions

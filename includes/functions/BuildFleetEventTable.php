@@ -42,7 +42,7 @@ function BuildFleetEventTable($FleetRow, $Status, $Owner, $Label, $Record, $Phal
     }
 
     $MissionType    = $FleetRow['fleet_mission'];
-    $FleetContent    = CreateFleetPopupedFleetLink($FleetRow, (($Owner === true) ? $_Lang['ov_fleet'] : $_Lang['ov_fleet2']));
+    $FleetContent    = _getFleetPopupedFleetLinkHTML($FleetRow, (($Owner === true) ? $_Lang['ov_fleet'] : $_Lang['ov_fleet2']));
     $FleetMission    = $_Lang['type_mission'][$MissionType];
 
     $StartType        = $FleetRow['fleet_start_type'];
@@ -59,7 +59,7 @@ function BuildFleetEventTable($FleetRow, $Status, $Owner, $Label, $Record, $Phal
             $StartID = $_Lang['ov_moon_to'];
         }
         $StartID .= $FleetRow['start_name'].' ';
-        $StartID .= GetStartAdressLink($FleetRow, 'white', $Phalanx);
+        $StartID .= _getStartAdressLinkHTML($FleetRow, 'white', $Phalanx);
 
         if($MissionType != 15)
         {
@@ -81,7 +81,7 @@ function BuildFleetEventTable($FleetRow, $Status, $Owner, $Label, $Record, $Phal
             $TargetID = $_Lang['ov_explo_to_target'];
         }
         $TargetID .= $FleetRow['end_name'].' ';
-        $TargetID .= GetTargetAdressLink($FleetRow, 'white', $Phalanx);
+        $TargetID .= _getTargetAdressLinkHTML($FleetRow, 'white', $Phalanx);
     }
     else
     {
@@ -94,7 +94,7 @@ function BuildFleetEventTable($FleetRow, $Status, $Owner, $Label, $Record, $Phal
             $StartID = $_Lang['ov_back_moon'];
         }
         $StartID .= $FleetRow['start_name'].' ';
-        $StartID .= GetStartAdressLink($FleetRow, 'white', $Phalanx);
+        $StartID .= _getStartAdressLinkHTML($FleetRow, 'white', $Phalanx);
 
         if($MissionType != 15)
         {
@@ -116,7 +116,7 @@ function BuildFleetEventTable($FleetRow, $Status, $Owner, $Label, $Record, $Phal
             $TargetID = $_Lang['ov_explo_from'];
         }
         $TargetID .= $FleetRow['end_name'].' ';
-        $TargetID .= GetTargetAdressLink($FleetRow, 'white', $Phalanx);
+        $TargetID .= _getTargetAdressLinkHTML($FleetRow, 'white', $Phalanx);
     }
 
     if($Owner == true)
@@ -136,7 +136,7 @@ function BuildFleetEventTable($FleetRow, $Status, $Owner, $Label, $Record, $Phal
         $EventString = $_Lang['ov_une_hostile'];
         $EventString .= $FleetContent;
         $EventString .= $_Lang['ov_hostile'];
-        $EventString .= BuildHostileFleetPlayerLink($FleetRow , $Phalanx);
+        $EventString .= _getHostileFleetPlayerLinkHTML($FleetRow , $Phalanx);
     }
 
     if($Status == 0)
@@ -280,6 +280,65 @@ function _getUserCustomFleetColorsStylesHTML(&$user) {
     $missionStyles = implode(' ', $missionStyles);
 
     return parsetemplate($tplColorsStyles, [ 'InsertStyles' => $missionStyles ]);
+}
+
+function _getStartAdressLinkHTML($FleetRow, $FleetType, $FromWindow = false) {
+    $Link = '';
+    $Link .= "<a ".(($FromWindow === true) ? "onclick=\"opener.location = this.href; opener.focus(); return false;\"" : '')." href=\"galaxy.php?mode=3&galaxy={$FleetRow['fleet_start_galaxy']}&system={$FleetRow['fleet_start_system']}&planet={$FleetRow['fleet_start_planet']}\" class=\"{$FleetType}\" >";
+    $Link .= "[{$FleetRow['fleet_start_galaxy']}:{$FleetRow['fleet_start_system']}:{$FleetRow['fleet_start_planet']}]</a>";
+
+    return $Link;
+}
+
+function _getTargetAdressLinkHTML($FleetRow, $FleetType, $FromWindow = false) {
+    $Link = '';
+    $Link .= "<a ".(($FromWindow === true) ? "onclick=\"opener.location = this.href; opener.focus(); return false;\"" : '')." href=\"galaxy.php?mode=3&galaxy={$FleetRow['fleet_end_galaxy']}&system={$FleetRow['fleet_end_system']}&planet={$FleetRow['fleet_end_planet']}\" class=\"{$FleetType}\" >";
+    $Link .= "[{$FleetRow['fleet_end_galaxy']}:{$FleetRow['fleet_end_system']}:{$FleetRow['fleet_end_planet']}]</a>";
+
+    return $Link;
+}
+
+function _getHostileFleetPlayerLinkHTML($FleetRow, $FromWindow = false) {
+    global $_Lang, $_SkinPath;
+
+    $Link = '';
+    $Link .= $FleetRow['owner_name']." ";
+    $Link .= "<a ".(($FromWindow === true) ? "onclick=\"opener.location = this.href; opener.focus(); return false;\"" : '')." href=\"messages.php?mode=write&uid={$FleetRow['fleet_owner']}\">";
+    $Link .= "<img src=\"{$_SkinPath}/img/m.gif\" alt=\"{$_Lang['ov_message']}\" title=\"{$_Lang['ov_message']}\" border=\"0\"></a>";
+
+    return $Link;
+}
+
+function _getFleetPopupedFleetLinkHTML($FleetRow, $Texte)
+{
+    global $_Lang;
+
+    $FleetArray = String2Array($FleetRow['fleet_array']);
+    if(!empty($FleetArray))
+    {
+        foreach($FleetArray as $ShipID => $ShipCount)
+        {
+            $CreateTitle[] = "<tr><th class='flLabel sh'>{$_Lang['tech'][$ShipID]}:</th><th class='flVal'>".prettyNumber($ShipCount)."</th></tr>";
+        }
+    }
+    if($FleetRow['fleet_resource_metal'] > 0 OR $FleetRow['fleet_resource_crystal'] > 0 OR $FleetRow['fleet_resource_deuterium'] > 0)
+    {
+        $CreateTitle[] = '<tr><th class=\'flRes\' colspan=\'2\'>&nbsp;</th></tr>';
+        if($FleetRow['fleet_resource_metal'] > 0)
+        {
+            $CreateTitle[] = "<tr><th class='flLabel rs'>{$_Lang['Metal']}:</th><th class='flVal'>".prettyNumber($FleetRow['fleet_resource_metal'])."</th></tr>";
+        }
+        if($FleetRow['fleet_resource_crystal'] > 0)
+        {
+            $CreateTitle[] = "<tr><th class='flLabel rs'>{$_Lang['Crystal']}:</th><th class='flVal'>".prettyNumber($FleetRow['fleet_resource_crystal'])."</th></tr>";
+        }
+        if($FleetRow['fleet_resource_deuterium'] > 0)
+        {
+            $CreateTitle[] = "<tr><th class='flLabel rs'>{$_Lang['Deuterium']}:</th><th class='flVal'>".prettyNumber($FleetRow['fleet_resource_deuterium'])."</th></tr>";
+        }
+    }
+
+    return '<a class="white flShips" title="<table style=\'width: 100%;\'>'.implode('', $CreateTitle).'</table>">'.$Texte.'</a>';
 }
 
 ?>
