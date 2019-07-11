@@ -1138,7 +1138,11 @@ if($Allow_UseQuantumGate)
     elseif($QuantumGate_UseType == 2)
     {
         $DurationTarget = 1;
-        $DurationBack = GetMissionDuration($GenFleetSpeed, $MaxFleetSpeed, $Distance, $SpeedFactor);
+        $DurationBack = getFlightDuration([
+            'speedFactor' => $GenFleetSpeed,
+            'distance' => $Distance,
+            'maxShipsSpeed' => $MaxFleetSpeed
+        ]);
 
         $Consumption = getFlightTotalConsumption(
             [
@@ -1153,7 +1157,11 @@ if($Allow_UseQuantumGate)
 }
 else
 {
-    $DurationTarget = $DurationBack = GetMissionDuration($GenFleetSpeed, $MaxFleetSpeed, $Distance, $SpeedFactor);
+    $DurationTarget = $DurationBack = getFlightDuration([
+        'speedFactor' => $GenFleetSpeed,
+        'distance' => $Distance,
+        'maxShipsSpeed' => $MaxFleetSpeed
+    ]);
 
     $Consumption = getFlightTotalConsumption(
         [

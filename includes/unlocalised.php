@@ -136,13 +136,6 @@ function getFlightDistanceBetween($origin, $destination) {
     return 5;
 }
 
-function GetMissionDuration($GameSpeed, $MaxFleetSpeed, $Distance, $SpeedFactor)
-{
-    $Duration = round(((35000 / $GameSpeed * sqrt($Distance * 10 / $MaxFleetSpeed) + 10) / $SpeedFactor));
-
-    return $Duration;
-}
-
 function GetGameSpeedFactor()
 {
     global $_GameConfig;
@@ -256,6 +249,27 @@ function getShipsCurrentConsumption($shipID, $user) {
     }
 
     return $usedEngine['data']['consumption'];
+}
+
+//  Arguments:
+//      - $flightParams (Object)
+//          - speedFactor (Number)
+//          - distance (Number)
+//          - maxShipsSpeed (Number)
+//
+function getFlightDuration($flightParams) {
+    $serverFlightSpeedFactor = GetGameSpeedFactor();
+
+    $flightSpeedFactor = $flightParams['speedFactor'];
+    $flightMaxShipsSpeed = $flightParams['maxShipsSpeed'];
+    $flightDistance = $flightParams['distance'];
+
+    $duration = (
+        (35000 / $flightSpeedFactor * sqrt($flightDistance * 10 / $flightMaxShipsSpeed) + 10) /
+        $serverFlightSpeedFactor
+    );
+
+    return round($duration);
 }
 
 //  Arguments:
