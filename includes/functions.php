@@ -45,36 +45,31 @@ function isPro($_User = false)
     }
 }
 
-function isLogged()
-{
+function isLogged() {
     global $_User;
 
-    if(isset($_User['id']) && $_User['id'] > 0)
-    {
-        return TRUE;
-    }
-    else
-    {
-        return FALSE;
-    }
+    return (
+        isset($_User['id']) &&
+        $_User['id'] > 0
+    );
 }
 
-function loggedCheck($noAlert = false)
-{
+function loggedCheck($noAlert = false) {
+    if (isLogged()) {
+        return;
+    }
+
+    if ($noAlert === true) {
+        die();
+
+        return;
+    }
+
     global $_Lang, $_DontShowMenus;
 
-    if(!isLogged())
-    {
-        $_DontShowMenus = true;
-        if($noAlert === true)
-        {
-            die();
-        }
-        else
-        {
-            message($_Lang['YouAreNotLogged'], $_Lang['NotLoggedTitle'], 'login.php', 3);
-        }
-    }
+    $_DontShowMenus = true;
+
+    message($_Lang['YouAreNotLogged'], $_Lang['NotLoggedTitle'], 'login.php', 3);
 }
 
 function isRulesAcceptanceRequired (&$user, &$_GameConfig) {
