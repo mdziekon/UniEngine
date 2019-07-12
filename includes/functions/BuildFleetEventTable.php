@@ -59,7 +59,7 @@ function BuildFleetEventTable($FleetRow, $Status, $Owner, $Label, $Record, $Phal
             $StartID = $_Lang['ov_moon_to'];
         }
         $StartID .= $FleetRow['start_name'].' ';
-        $StartID .= _getStartAdressLinkHTML($FleetRow, 'white', $Phalanx);
+        $StartID .= _getStartAdressLinkHTML($FleetRow, $Phalanx);
 
         if($MissionType != 15)
         {
@@ -81,7 +81,7 @@ function BuildFleetEventTable($FleetRow, $Status, $Owner, $Label, $Record, $Phal
             $TargetID = $_Lang['ov_explo_to_target'];
         }
         $TargetID .= $FleetRow['end_name'].' ';
-        $TargetID .= _getTargetAdressLinkHTML($FleetRow, 'white', $Phalanx);
+        $TargetID .= _getTargetAdressLinkHTML($FleetRow, $Phalanx);
     }
     else
     {
@@ -94,7 +94,7 @@ function BuildFleetEventTable($FleetRow, $Status, $Owner, $Label, $Record, $Phal
             $StartID = $_Lang['ov_back_moon'];
         }
         $StartID .= $FleetRow['start_name'].' ';
-        $StartID .= _getStartAdressLinkHTML($FleetRow, 'white', $Phalanx);
+        $StartID .= _getStartAdressLinkHTML($FleetRow, $Phalanx);
 
         if($MissionType != 15)
         {
@@ -116,7 +116,7 @@ function BuildFleetEventTable($FleetRow, $Status, $Owner, $Label, $Record, $Phal
             $TargetID = $_Lang['ov_explo_from'];
         }
         $TargetID .= $FleetRow['end_name'].' ';
-        $TargetID .= _getTargetAdressLinkHTML($FleetRow, 'white', $Phalanx);
+        $TargetID .= _getTargetAdressLinkHTML($FleetRow, $Phalanx);
     }
 
     if($Owner == true)
@@ -136,7 +136,7 @@ function BuildFleetEventTable($FleetRow, $Status, $Owner, $Label, $Record, $Phal
         $EventString = $_Lang['ov_une_hostile'];
         $EventString .= $FleetContent;
         $EventString .= $_Lang['ov_hostile'];
-        $EventString .= _getHostileFleetPlayerLinkHTML($FleetRow , $Phalanx);
+        $EventString .= _getHostileFleetPlayerLinkHTML($FleetRow, $Phalanx);
     }
 
     if($Status == 0)
@@ -333,22 +333,22 @@ function _getFleetsGalaxyPositionHyperlinkHTML($fleetRow, $isStartLink, $options
     return buildLinkHTML($linkParams);
 }
 
-function _getStartAdressLinkHTML($FleetRow, $FleetType, $FromWindow = false) {
-    return _getFleetsGalaxyPositionHyperlinkHTML($FleetRow, true, [ 'isOpenedInPopup' => $FromWindow ]);
+function _getStartAdressLinkHTML($fleetRow, $FromWindow = false) {
+    return _getFleetsGalaxyPositionHyperlinkHTML($fleetRow, true, [ 'isOpenedInPopup' => $FromWindow ]);
 }
 
-function _getTargetAdressLinkHTML($FleetRow, $FleetType, $FromWindow = false) {
-    return _getFleetsGalaxyPositionHyperlinkHTML($FleetRow, false, [ 'isOpenedInPopup' => $FromWindow ]);
+function _getTargetAdressLinkHTML($fleetRow, $FromWindow = false) {
+    return _getFleetsGalaxyPositionHyperlinkHTML($fleetRow, false, [ 'isOpenedInPopup' => $FromWindow ]);
 }
 
-function _getHostileFleetPlayerLinkHTML($FleetRow, $FromWindow = false) {
+function _getHostileFleetPlayerLinkHTML($fleetRow, $FromWindow = false) {
     global $_Lang, $_SkinPath;
 
     $isOpenedInPopup = $FromWindow;
 
     $linkParams = [
         'text' => (
-            "{$FleetRow['owner_name']} " .
+            "{$fleetRow['owner_name']} " .
             buildDOMElementHTML([
                 'tagName' => 'img',
                 'attrs' => [
@@ -362,7 +362,7 @@ function _getHostileFleetPlayerLinkHTML($FleetRow, $FromWindow = false) {
         'href' => 'messages.php',
         'query' => [
             'mode' => 'write',
-            'uid' => $FleetRow['fleet_owner']
+            'uid' => $fleetRow['fleet_owner']
         ],
         'attrs' => [
             'onclick' => (
