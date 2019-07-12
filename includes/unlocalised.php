@@ -314,28 +314,39 @@ function ShowBuildTime($time)
     return "<br/>{$_Lang['ConstructionTime']}: ".pretty_time($time);
 }
 
-function Array2String($Array)
-{
-    foreach($Array as $Key => $Value)
-    {
-        $String[] = "{$Key},{$Value}";
+function Array2String($elements) {
+    $packedElements = [];
+
+    foreach ($elements as $elementKey => $elementValue) {
+        $packedElements[] = "{$elementKey},{$elementValue}";
     }
-    return implode(';', $String);
+
+    return implode(';', $packedElements);
 }
 
-function String2Array($String)
-{
-    $String = explode(';', $String);
-    foreach($String as $Data)
-    {
-        if(empty($Data))
-        {
+function String2Array($content) {
+    $result = [];
+
+    $contentElements = explode(';', $content);
+
+    foreach ($contentElements as $element) {
+        if (empty($element)) {
             break;
         }
-        $Data = explode(',', $Data);
-        $Array[$Data[0]] = $Data[1];
+
+        $element = explode(',', $element);
+
+        $elementKey = $element[0];
+        $elementValue = $element[1];
+
+        $result[$elementKey] = $elementValue;
     }
-    return (isset($Array) ? $Array : null);
+
+    return (
+        !empty($result) ?
+        $result :
+        null
+    );
 }
 
 ?>
