@@ -344,12 +344,36 @@ function _getTargetAdressLinkHTML($FleetRow, $FleetType, $FromWindow = false) {
 function _getHostileFleetPlayerLinkHTML($FleetRow, $FromWindow = false) {
     global $_Lang, $_SkinPath;
 
-    $Link = '';
-    $Link .= $FleetRow['owner_name']." ";
-    $Link .= "<a ".(($FromWindow === true) ? "onclick=\"opener.location = this.href; opener.focus(); return false;\"" : '')." href=\"messages.php?mode=write&uid={$FleetRow['fleet_owner']}\">";
-    $Link .= "<img src=\"{$_SkinPath}/img/m.gif\" alt=\"{$_Lang['ov_message']}\" title=\"{$_Lang['ov_message']}\" border=\"0\"></a>";
+    $isOpenedInPopup = $FromWindow;
 
-    return $Link;
+    $linkParams = [
+        'text' => (
+            "{$FleetRow['owner_name']} " .
+            buildDOMElementHTML([
+                'tagName' => 'img',
+                'attrs' => [
+                    'src' => "{$_SkinPath}/img/m.gif",
+                    'alt' => $_Lang['ov_message'],
+                    'title' => $_Lang['ov_message'],
+                    'border' => '0'
+                ]
+            ])
+        ),
+        'href' => 'messages.php',
+        'query' => [
+            'mode' => 'write',
+            'uid' => $FleetRow['fleet_owner']
+        ],
+        'attrs' => [
+            'onclick' => (
+                $isOpenedInPopup ?
+                'opener.location = this.href; opener.focus(); return false;' :
+                null
+            )
+        ]
+    ];
+
+    return buildLinkHTML($linkParams);
 }
 
 function _getFleetPopupedFleetLinkHTML($FleetRow, $Texte)
