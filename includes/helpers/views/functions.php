@@ -6,7 +6,7 @@
 //      - attrs (Object | undefined)
 //
 function buildDOMElementHTML($params) {
-    if (empty($params['contentHTML'])) {
+    if (!isset($params['contentHTML'])) {
         $params['contentHTML'] = '';
     }
     if (empty($params['attrs'])) {
