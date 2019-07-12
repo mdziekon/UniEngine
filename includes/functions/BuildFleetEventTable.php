@@ -376,36 +376,57 @@ function _getHostileFleetPlayerLinkHTML($FleetRow, $FromWindow = false) {
     return buildLinkHTML($linkParams);
 }
 
-function _getFleetPopupedFleetLinkHTML($FleetRow, $Texte)
-{
+function _getFleetPopupedFleetLinkHTML($fleetRow, $popupLabel) {
     global $_Lang;
 
-    $FleetArray = String2Array($FleetRow['fleet_array']);
-    if(!empty($FleetArray))
-    {
-        foreach($FleetArray as $ShipID => $ShipCount)
-        {
-            $CreateTitle[] = "<tr><th class='flLabel sh'>{$_Lang['tech'][$ShipID]}:</th><th class='flVal'>".prettyNumber($ShipCount)."</th></tr>";
-        }
-    }
-    if($FleetRow['fleet_resource_metal'] > 0 OR $FleetRow['fleet_resource_crystal'] > 0 OR $FleetRow['fleet_resource_deuterium'] > 0)
-    {
-        $CreateTitle[] = '<tr><th class=\'flRes\' colspan=\'2\'>&nbsp;</th></tr>';
-        if($FleetRow['fleet_resource_metal'] > 0)
-        {
-            $CreateTitle[] = "<tr><th class='flLabel rs'>{$_Lang['Metal']}:</th><th class='flVal'>".prettyNumber($FleetRow['fleet_resource_metal'])."</th></tr>";
-        }
-        if($FleetRow['fleet_resource_crystal'] > 0)
-        {
-            $CreateTitle[] = "<tr><th class='flLabel rs'>{$_Lang['Crystal']}:</th><th class='flVal'>".prettyNumber($FleetRow['fleet_resource_crystal'])."</th></tr>";
-        }
-        if($FleetRow['fleet_resource_deuterium'] > 0)
-        {
-            $CreateTitle[] = "<tr><th class='flLabel rs'>{$_Lang['Deuterium']}:</th><th class='flVal'>".prettyNumber($FleetRow['fleet_resource_deuterium'])."</th></tr>";
+    $popupElements = [];
+
+    $fleetShips = String2Array($fleetRow['fleet_array']);
+
+    if (!empty($fleetShips)) {
+        foreach($fleetShips as $shipID => $shipsCount) {
+            $shipLabel = $_Lang['tech'][$shipID];
+            $shipsCountDisplay = prettyNumber($shipsCount);
+
+            $popupElements[] = "<tr><th class='flLabel sh'>{$shipLabel}:</th><th class='flVal'>{$shipsCountDisplay}</th></tr>";
         }
     }
 
-    return '<a class="white flShips" title="<table style=\'width: 100%;\'>'.implode('', $CreateTitle).'</table>">'.$Texte.'</a>';
+    $resourcesDefs = [
+        'fleet_resource_metal' => [
+            'label' => $_Lang['Metal']
+        ],
+        'fleet_resource_crystal' => [
+            'label' => $_Lang['Crystal']
+        ],
+        'fleet_resource_deuterium' => [
+            'label' => $_Lang['Deuterium']
+        ],
+    ];
+
+    $resourceRows = [];
+
+    foreach ($resourcesDefs as $resourceKey => $resourceDetails) {
+        if (!($fleetRow[$resourceKey] > 0)) {
+            continue;
+        }
+
+        $resourceLabel = $resourceDetails['label'];
+        $resourceAmount = prettyNumber($fleetRow[$resourceKey]);
+
+        $resourceRows[] = "<tr><th class='flLabel rs'>{$resourceLabel}:</th><th class='flVal'>{$resourceAmount}</th></tr>";
+    }
+
+    if (!empty($resourceRows)) {
+        $popupElements[] = "<tr><th class='flRes' colspan='2'>&nbsp;</th></tr>";
+        foreach ($resourceRows as $resourceRow) {
+            $popupElements[] = $resourceRow;
+        }
+    }
+
+    $popupHTML = '<table style=\'width: 100%;\'>'.implode('', $popupElements).'</table>';
+
+    return '<a class="white flShips" title="' . $popupHTML . '">' . $popupLabel . '</a>';
 }
 
 ?>
