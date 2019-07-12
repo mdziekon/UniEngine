@@ -1,7 +1,7 @@
 <?php
 
 //  $params (Object)
-//      - elementName (String)
+//      - tagName (String)
 //      - contentHTML (String | undefined)
 //      - attrs (Object | undefined)
 //
@@ -13,7 +13,7 @@ function buildDOMElementHTML($params) {
         $params['attrs'] = [];
     }
 
-    $elementName = $params['elementName'];
+    $elementName = $params['tagName'];
     $contentHTML = $params['contentHTML'];
     $attrs = [];
 
@@ -64,7 +64,7 @@ function buildLinkHTML($params) {
     $params['attrs']['href'] = $href;
 
     return buildDOMElementHTML([
-        'elementName' => 'a',
+        'tagName' => 'a',
         'contentHTML' => $params['text'],
         'attrs' => $params['attrs']
     ]);
