@@ -1,13 +1,40 @@
 <?php
 
 //  $params (Object)
+//      - elementName (String)
+//      - contentHTML (String)
+//      - attrs (Object | undefined)
+//
+function buildDOMElementHTML($params) {
+    $elementName = $params['elementName'];
+    $contentHTML = $params['contentHTML'];
+
+    $attrs = [];
+
+    if (empty($params['attrs'])) {
+        $params['attrs'] = [];
+    }
+
+    foreach ($params['attrs'] as $attrKey => $attrValue) {
+        if ($attrValue === null) {
+            continue;
+        }
+
+        $attrs[] = "{$attrKey}=\"{$attrValue}\"";
+    }
+
+    $attrs = implode(' ', $attrs);
+
+    return ("<{$elementName} {$attrs}>{$contentHTML}</{$elementName}>");
+}
+
+//  $params (Object)
 //      - text (String)
 //      - href (String)
 //      - query (Object | undefined)
 //      - attrs (Object | undefined)
 //
 function buildLinkHTML($params) {
-    $attrs = [];
     $queryParams = [];
 
     if (empty($params['query'])) {
@@ -30,17 +57,11 @@ function buildLinkHTML($params) {
 
     $params['attrs']['href'] = $href;
 
-    foreach ($params['attrs'] as $attrKey => $attrValue) {
-        if ($attrValue === null) {
-            continue;
-        }
-
-        $attrs[] = "{$attrKey}=\"{$attrValue}\"";
-    }
-
-    $attrs = implode(' ', $attrs);
-
-    return ("<a {$attrs}>{$params['text']}</a>");
+    return buildDOMElementHTML([
+        'elementName' => 'a',
+        'contentHTML' => $params['text'],
+        'attrs' => $params['attrs']
+    ]);
 }
 
 ?>
