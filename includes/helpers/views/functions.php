@@ -2,18 +2,20 @@
 
 //  $params (Object)
 //      - elementName (String)
-//      - contentHTML (String)
+//      - contentHTML (String | undefined)
 //      - attrs (Object | undefined)
 //
 function buildDOMElementHTML($params) {
-    $elementName = $params['elementName'];
-    $contentHTML = $params['contentHTML'];
-
-    $attrs = [];
-
+    if (empty($params['contentHTML'])) {
+        $params['contentHTML'] = '';
+    }
     if (empty($params['attrs'])) {
         $params['attrs'] = [];
     }
+
+    $elementName = $params['elementName'];
+    $contentHTML = $params['contentHTML'];
+    $attrs = [];
 
     foreach ($params['attrs'] as $attrKey => $attrValue) {
         if ($attrValue === null) {
@@ -24,6 +26,10 @@ function buildDOMElementHTML($params) {
     }
 
     $attrs = implode(' ', $attrs);
+
+    if (empty($contentHTML)) {
+        return ("<{$elementName} {$attrs}/>");
+    }
 
     return ("<{$elementName} {$attrs}>{$contentHTML}</{$elementName}>");
 }
