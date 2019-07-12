@@ -29,26 +29,6 @@ function fetchObligatoryPollsCount ($userID) {
     $SelectObligatoryPolls = doquery($Query_SelectPolls, 'polls', true);
 
     return intval($SelectObligatoryPolls['polls_with_no_vote'], 10);
-
-    // if ($SelectObligatoryPolls->num_rows == 0) {
-    //     return 0;
-    // }
-
-    // if($SelectObligatoryPolls->num_rows > 0)
-    // {
-    //     $PollsCount = 0;
-    //     while($SelectObligatoryPollsData = $SelectObligatoryPolls->fetch_assoc())
-    //     {
-    //         if($SelectObligatoryPollsData['vote_id'] <= 0)
-    //         {
-    //             $PollsCount += 1;
-    //         }
-    //     }
-    //     if($PollsCount > 0)
-    //     {
-    //         message(sprintf($_Lang['YouHaveToVoteInSurveys'], $PollsCount), $_Lang['SystemInfo'], 'polls.php', 10);
-    //     }
-    // }
 }
 
 ?>
