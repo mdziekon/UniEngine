@@ -13,46 +13,48 @@ $_EnginePath = '../';
 
 include($_EnginePath.'common.php');
 
-loggedCheck(true);
+function requestHandler() {
+    if (!isLogged()) {
+        return '5';
+    }
 
-if(isLogged())
-{
-    if(CheckAuth('supportadmin'))
-    {
-        $GivenID = (isset($_GET['id']) ? round($_GET['id']) : 0);
-        if($GivenID > 0)
-        {
-            $Result = doquery("DELETE FROM {{table}} WHERE `ID` = {$GivenID} LIMIT 1;", 'chat_messages');
-            if($Result !== false)
-            {
-                if(getDBLink()->affected_rows == 1)
-                {
-                    echo '1';
-                }
-                else
-                {
-                    echo '2';
-                }
-            }
-            else
-            {
-                echo '3';
-            }
-        }
-        else
-        {
-            echo '2';
-        }
+    if (!CheckAuth('supportadmin')) {
+        return '4';
     }
-    else
-    {
-        echo '4';
+
+    if (!isset($_GET['id'])) {
+        return '2';
     }
+
+    $msgID = round($_GET['id']);
+
+    if (!($msgID > 0)) {
+        return '2';
+    }
+
+    $query_DeleteMessage = (
+        "DELETE FROM {{table}} " .
+        "WHERE " .
+        "  `ID` = {$msgID} " .
+        "LIMIT 1;"
+    );
+    $result_DeleteMessage = doquery($query_DeleteMessage, 'chat_messages');
+
+    if ($result_DeleteMessage === false) {
+        return '3';
+    }
+
+    if (getDBLink()->affected_rows != 1) {
+        return '2';
+    }
+
+    return '1';
 }
-else
-{
-    echo '5';
-}
+
+$response = requestHandler();
+
+echo $response;
+
 safeDie();
 
 ?>
