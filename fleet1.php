@@ -116,8 +116,12 @@ if(!empty($_POST['ship']))
                         {
                             $Fleet['FuelStorage'] += $ThisStorage;
                         }
-                        $speedalls[$ShipID] = GetFleetMaxSpeed('', $ShipID, $_User);
-                        $FleetHiddenBlock .= "<input type=\"hidden\" id=\"consumption{$ShipID}\" value=\"".((string)((GetShipConsumption($ShipID, $_User) * $ShipCount) + 1))."\" />";
+                        $speedalls[$ShipID] = getShipsCurrentSpeed($ShipID, $_User);
+                        $shipConsumption = getShipsCurrentConsumption($ShipID, $_User);
+                        $allShipsConsumption = ($shipConsumption * $ShipCount);
+
+                        // TODO: Check if that "+1" is correct
+                        $FleetHiddenBlock .= "<input type=\"hidden\" id=\"consumption{$ShipID}\" value=\"".((string)($allShipsConsumption + 1))."\" />";
                         $FleetHiddenBlock .= "<input type=\"hidden\" id=\"speed{$ShipID}\" value=\"{$speedalls[$ShipID]}\" />";
                     }
                     else
@@ -272,7 +276,7 @@ $_Lang['ThisPlanet'] = $_Planet['planet'];
 $_Lang['GalaxyEnd'] = intval($_POST['galaxy']);
 $_Lang['SystemEnd'] = intval($_POST['system']);
 $_Lang['PlanetEnd'] = intval($_POST['planet']);
-$_Lang['SpeedFactor'] = GetGameSpeedFactor();
+$_Lang['SpeedFactor'] = getUniFleetsSpeedFactor();
 $_Lang['ThisPlanetType'] = $_Planet['planet_type'];
 $_Lang['ThisResource3'] = (string)(floor($_Planet['deuterium']) + 0);
 foreach($Fleet['array'] as $ID => $Count)

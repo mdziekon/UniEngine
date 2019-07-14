@@ -26,6 +26,7 @@ define('INSIDE', true);
 include($_EnginePath . 'common.minimal.php');
 include($_EnginePath . 'includes/constants.php');
 include($_EnginePath . 'includes/unlocalised.php');
+include($_EnginePath . 'includes/helpers/_includes.php');
 
 $UID = (isset($_GET['uid']) ? round($_GET['uid']) : 0);
 $SigLang = (isset($_GET['lang']) ? $_GET['lang'] : null);
@@ -67,26 +68,6 @@ if($UID > 0)
     // Load DB Driver & Lang
     if (substr(sprintf('%o', fileperms($CacheLangPath)), -4) != '0777') {
         ReturnImage("{$CacheStaticsPath}/signature_{$SigLang}_error4.png");
-    }
-
-    if($_SERVER['SERVER_ADDR'] == '127.0.0.1' OR $_SERVER['SERVER_ADDR'] == '::1')
-    {
-        // We are on Localhost
-        define('LOCALHOST', TRUE);
-        define('TESTSERVER', FALSE);
-    }
-    else
-    {
-        // We are not on Localhost
-        define('LOCALHOST', FALSE);
-        if($_SERVER['HTTP_HOST'] === GAMEURL_REMOTE_TESTSERVERHOST)
-        {
-            define('TESTSERVER', TRUE);
-        }
-        else
-        {
-            define('TESTSERVER', FALSE);
-        }
     }
 
     include("{$_EnginePath}includes/db.php");

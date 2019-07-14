@@ -792,6 +792,8 @@ if(!isOnVacation())
 
                 if(empty($_User['settings_FleetColors']))
                 {
+                    $_User['settings_FleetColors'] = [];
+
                     foreach($_Vars_FleetMissions['all'] as $MissionID)
                     {
                         $_User['settings_FleetColors']['ownfly'][$MissionID] = '';
@@ -1388,25 +1390,26 @@ else
         }
     }
 
-    $MinimalVacationTime = ($_User['pro_time'] > $_User['vacation_starttime'] ? MINURLOP_PRO : MINURLOP_FREE) + $_User['vacation_starttime'];
-    if($_User['vacation_type'] != 0)
-    {
-        $_Lang['Parse_Vacation_EndTime'] = $_Lang['Vacation_EndTimeNoBlock'];
-    }
-    else
-    {
-        if($MinimalVacationTime <= $Now)
-        {
-            $MinimalVacationTimeColor = 'lime';
-        }
-        else
-        {
-            $MinimalVacationTimeColor = 'orange';
-        }
-        $_Lang['Parse_Vacation_EndTime'] = sprintf($_Lang['Vacation_EndTime'], $MinimalVacationTimeColor, prettyDate('d m Y, H:i:s', $MinimalVacationTime, 1));
+    includeLang('common_vacationmode');
+
+    if (canTakeVacationOffAnytime()) {
+        $_Lang['Parse_Vacation_EndTime'] = $_Lang['VacationMode_EndTime_Anytime'];
+    } else {
+        $MinimalVacationTime = getUserMinimalVacationTime($_User);
+        $MinimalVacationTimeColor = (
+            $MinimalVacationTime <= $Now ?
+            'lime' :
+            'orange'
+        );
+
+        $_Lang['Parse_Vacation_EndTime'] = sprintf(
+            $_Lang['VacationMode_EndTime_DefinedAs'],
+            $MinimalVacationTimeColor,
+            prettyDate('d m Y, H:i:s', $MinimalVacationTime, 1)
+        );
     }
 
-    display(parsetemplate(gettemplate('settings_vacations'), $_Lang), $_Lang['Vacations_Title'], false);
+    display(parsetemplate(gettemplate('settings_vacations'), $_Lang), $_Lang['VacationMode_Title'], false);
 }
 
 ?>

@@ -385,8 +385,8 @@ if(!empty($AvailableMissions))
 }
 
 $PreSelectedMission = intval($_POST['target_mission']);
-$SpeedFactor = GetGameSpeedFactor();
-$AllFleetSpeed = GetFleetMaxSpeed($Fleet['array'], 0, $_User);
+$SpeedFactor = getUniFleetsSpeedFactor();
+$AllFleetSpeed = getFleetShipsSpeeds($Fleet['array'], $_User);
 $GenFleetSpeed = $_POST['speed'];
 $MaxFleetSpeed = min($AllFleetSpeed);
 if(MORALE_ENABLED)
@@ -396,9 +396,22 @@ if(MORALE_ENABLED)
         $MaxFleetSpeed *= MORALE_PENALTY_FLEETSLOWDOWN_VALUE;
     }
 }
-$distance = GetTargetDistance($_Planet['galaxy'], $Target['galaxy'], $_Planet['system'], $Target['system'], $_Planet['planet'], $Target['planet']);
-$duration = GetMissionDuration($GenFleetSpeed, $MaxFleetSpeed, $distance, $SpeedFactor);
-$consumption = GetFleetConsumption($Fleet['array'], $SpeedFactor, $duration, $distance, $_User);
+
+$distance = getFlightDistanceBetween($_Planet, $Target);
+$duration = getFlightDuration([
+    'speedFactor' => $GenFleetSpeed,
+    'distance' => $distance,
+    'maxShipsSpeed' => $MaxFleetSpeed
+]);
+
+$consumption = getFlightTotalConsumption(
+    [
+        'ships' => $Fleet['array'],
+        'distance' => $distance,
+        'duration' => $duration,
+    ],
+    $_User
+);
 
 if($_Planet['deuterium'] < $consumption)
 {

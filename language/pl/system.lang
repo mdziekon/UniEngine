@@ -164,8 +164,6 @@ $_Lang['SFB_Stop_ReasonNotGiven'] = '- nie podano powodu -';
 $_Lang['Vacation'] = 'Urlop';
 $_Lang['VacationMode'] = 'Tryb Urlopu';
 $_Lang['Vacation_WarnMsg'] = 'Nie możesz używać tej funkcji będąc na Urlopie!';
-$_Lang['VacationTill'] = 'Masz aktywny tryb urlopu!<br>Urlop musi trwać przynajmniej do przynajmniej do %s<br/><a href="logout.php">Wyloguj</a>';
-$_Lang['VacationSetOff'] = '<br/><br/><span style="color: orange;">Jeśli chcesz dezaktywować urlop kliknij</span> <a href="settings.php">TUTAJ</a>';
 
 $_Lang['When_full_store'] = 'Zapełnienie magazynu:';
 $_Lang['Store_Status'] = 'Stan magazynu:';

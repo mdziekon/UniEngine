@@ -5,79 +5,17 @@ function BuildFleetEventTable($FleetRow, $Status, $Owner, $Label, $Record, $Phal
     global $_Lang, $InsertJSChronoApplet_GlobalIncluded;
     static $InsertJSChronoApplet_Included = false, $Template = false, $ThisDate = false;
 
-    $FleetStyle = array
-    (
-         1 => 'attack',
-         2 => 'federation',
-         3 => 'transport',
-         4 => 'deploy',
-         5 => 'hold',
-         6 => 'espionage',
-         7 => 'colony',
-         8 => 'harvest',
-         9 => 'destroy',
-        10 => 'missile',
-    );
-    $FleetStatus = array(0 => 'flight', 1 => 'holding', 2 => 'return');
-
     if($Template === false)
     {
         global $_User;
 
         GlobalTemplate_AppendToAfterBody(gettemplate('_FleetTable_files'));
         $Template = gettemplate('_FleetTable_row');
-        if(!empty($_User['settings_FleetColors']))
-        {
-            $TPL_FleetColors_Row = gettemplate('_FleetTable_fleetColors_row');
-            $FleetColors = json_decode($_User['settings_FleetColors'], true);
-            foreach($FleetColors as $TypeKey => $Missions)
-            {
-                if($TypeKey == 'ownfly')
-                {
-                    $ThisType = 'flight';
-                    $ThisOwn = 'own';
-                    $CheckHold = true;
-                }
-                else if($TypeKey == 'owncb')
-                {
-                    $ThisType = 'return';
-                    $ThisOwn = 'own';
-                    $CheckHold = false;
-                }
-                else if($TypeKey == 'nonown')
-                {
-                    $ThisType = 'flight';
-                    $ThisOwn = '';
-                    $CheckHold = true;
-                }
 
-                foreach($Missions as $MissionID => $MissionColor)
-                {
-                    if(!empty($MissionColor))
-                    {
-                        $MissionColors_Styles[] = parsetemplate($TPL_FleetColors_Row, array
-                        (
-                            'MissionType' => $ThisType,
-                            'MissionName' => $ThisOwn.$FleetStyle[$MissionID],
-                            'MissionColor' => $MissionColor,
-                        ));
-                        if($CheckHold === true AND $MissionID == 5)
-                        {
-                            $MissionColors_Styles[] = parsetemplate($TPL_FleetColors_Row, array
-                            (
-                                'MissionType' => 'holding',
-                                'MissionName' => $ThisOwn.$FleetStyle[$MissionID],
-                                'MissionColor' => $MissionColor,
-                            ));
-                        }
-                    }
-                }
-            }
+        $userCustomFleetColorsStylesHTML = _getUserCustomFleetColorsStylesHTML($_User);
 
-            if(!empty($MissionColors_Styles))
-            {
-                GlobalTemplate_AppendToAfterBody(parsetemplate(gettemplate('_FleetTable_fleetColors'), array('InsertStyles' => implode(' ', $MissionColors_Styles))));
-            }
+        if ($userCustomFleetColorsStylesHTML) {
+            GlobalTemplate_AppendToAfterBody($userCustomFleetColorsStylesHTML);
         }
     }
     if($ThisDate === false)
@@ -104,7 +42,7 @@ function BuildFleetEventTable($FleetRow, $Status, $Owner, $Label, $Record, $Phal
     }
 
     $MissionType    = $FleetRow['fleet_mission'];
-    $FleetContent    = CreateFleetPopupedFleetLink($FleetRow, (($Owner === true) ? $_Lang['ov_fleet'] : $_Lang['ov_fleet2']));
+    $FleetContent    = _getFleetPopupedFleetLinkHTML($FleetRow, (($Owner === true) ? $_Lang['ov_fleet'] : $_Lang['ov_fleet2']));
     $FleetMission    = $_Lang['type_mission'][$MissionType];
 
     $StartType        = $FleetRow['fleet_start_type'];
@@ -121,7 +59,7 @@ function BuildFleetEventTable($FleetRow, $Status, $Owner, $Label, $Record, $Phal
             $StartID = $_Lang['ov_moon_to'];
         }
         $StartID .= $FleetRow['start_name'].' ';
-        $StartID .= GetStartAdressLink($FleetRow, 'white', $Phalanx);
+        $StartID .= _getStartAdressLinkHTML($FleetRow, $Phalanx);
 
         if($MissionType != 15)
         {
@@ -143,7 +81,7 @@ function BuildFleetEventTable($FleetRow, $Status, $Owner, $Label, $Record, $Phal
             $TargetID = $_Lang['ov_explo_to_target'];
         }
         $TargetID .= $FleetRow['end_name'].' ';
-        $TargetID .= GetTargetAdressLink($FleetRow, 'white', $Phalanx);
+        $TargetID .= _getTargetAdressLinkHTML($FleetRow, $Phalanx);
     }
     else
     {
@@ -156,7 +94,7 @@ function BuildFleetEventTable($FleetRow, $Status, $Owner, $Label, $Record, $Phal
             $StartID = $_Lang['ov_back_moon'];
         }
         $StartID .= $FleetRow['start_name'].' ';
-        $StartID .= GetStartAdressLink($FleetRow, 'white', $Phalanx);
+        $StartID .= _getStartAdressLinkHTML($FleetRow, $Phalanx);
 
         if($MissionType != 15)
         {
@@ -178,7 +116,7 @@ function BuildFleetEventTable($FleetRow, $Status, $Owner, $Label, $Record, $Phal
             $TargetID = $_Lang['ov_explo_from'];
         }
         $TargetID .= $FleetRow['end_name'].' ';
-        $TargetID .= GetTargetAdressLink($FleetRow, 'white', $Phalanx);
+        $TargetID .= _getTargetAdressLinkHTML($FleetRow, $Phalanx);
     }
 
     if($Owner == true)
@@ -198,7 +136,7 @@ function BuildFleetEventTable($FleetRow, $Status, $Owner, $Label, $Record, $Phal
         $EventString = $_Lang['ov_une_hostile'];
         $EventString .= $FleetContent;
         $EventString .= $_Lang['ov_hostile'];
-        $EventString .= BuildHostileFleetPlayerLink($FleetRow , $Phalanx);
+        $EventString .= _getHostileFleetPlayerLinkHTML($FleetRow, $Phalanx);
     }
 
     if($Status == 0)
@@ -239,9 +177,9 @@ function BuildFleetEventTable($FleetRow, $Status, $Owner, $Label, $Record, $Phal
     }
     $EventString .= $FleetMission;
 
-    $bloc['fleet_status']        = $FleetStatus[$Status];
+    $bloc['fleet_status']        = _getFleetStatus($Status);
     $bloc['fleet_prefix']        = $FleetPrefix;
-    $bloc['fleet_style']        = $FleetStyle[$MissionType];
+    $bloc['fleet_style']        = _getMissionStyle($MissionType);
     $bloc['fleet_order']        = $Label.$Record;
     $bloc['fleet_countdown']    = pretty_time($Rest, true);
     $bloc['fleet_time']            = str_replace($ThisDate, '', date('d/m | H:i:s', $Time));
@@ -249,6 +187,246 @@ function BuildFleetEventTable($FleetRow, $Status, $Owner, $Label, $Record, $Phal
     GlobalTemplate_AppendToAfterBody(InsertJavaScriptChronoApplet($Label, $Record, $Rest));
 
     return parsetemplate($Template, $bloc);
+}
+
+function _getFleetStatus($statusID) {
+    $fleetStatuses = [
+        0 => 'flight',
+        1 => 'holding',
+        2 => 'return'
+    ];
+
+    return $fleetStatuses[$statusID];
+}
+
+function _getMissionStyle($missionID) {
+    $missionStyles = [
+        1 => 'attack',
+        2 => 'federation',
+        3 => 'transport',
+        4 => 'deploy',
+        5 => 'hold',
+        6 => 'espionage',
+        7 => 'colony',
+        8 => 'harvest',
+        9 => 'destroy',
+        10 => 'missile',
+    ];
+
+    return $missionStyles[$missionID];
+}
+
+function _getUserCustomFleetColorsStylesHTML(&$user) {
+    if (empty($user['settings_FleetColors'])) {
+        return null;
+    }
+
+    $fleetColorsSettings = json_decode($user['settings_FleetColors'], true);
+
+    $stylesData = [];
+
+    foreach ($fleetColorsSettings as $fleetType => $perMissionColors) {
+        $isOwnFleet = ($fleetType !== 'nonown');
+        $isOwnComeback = ($fleetType === 'owncb');
+        $missionType = (
+            $isOwnComeback ?
+            "flight" :
+            "return"
+        );
+
+        foreach ($perMissionColors as $missionID => $missionColor) {
+            if (empty($missionColor)) {
+                continue;
+            }
+
+            $stylesData[] = [
+                'MissionType' => $missionType,
+                'MissionName' => (
+                    ($isOwnFleet ? 'own' : '') .
+                    _getMissionStyle($missionID)
+                ),
+                'MissionColor' => $missionColor
+            ];
+
+            if (
+                $missionID == 5 &&
+                !$isOwnComeback
+            ) {
+                $stylesData[] = [
+                    'MissionType' => 'holding',
+                    'MissionName' => (
+                        ($isOwnFleet ? 'own' : '') .
+                        _getMissionStyle($missionID)
+                    ),
+                    'MissionColor' => $missionColor
+                ];
+            }
+        }
+    }
+
+    if (empty($stylesData)) {
+        return null;
+    }
+
+    $tplColorRow = gettemplate('_FleetTable_fleetColors_row');
+    $tplColorsStyles = gettemplate('_FleetTable_fleetColors');
+
+    $missionStyles = array_map(
+        function ($styleData) use ($tplColorRow) {
+            return parsetemplate($tplColorRow, $styleData);
+        },
+        $stylesData
+    );
+    $missionStyles = implode(' ', $missionStyles);
+
+    return parsetemplate($tplColorsStyles, [ 'InsertStyles' => $missionStyles ]);
+}
+
+//  Arguments:
+//      - $fleetRow (Object)
+//      - $isStartLink (Boolean)
+//      - $options (Object)
+//          - linkClass (String) [default: "white"]
+//          - isOpenedInPopup (Boolean) [default: false]
+//
+function _getFleetsGalaxyPositionHyperlinkHTML($fleetRow, $isStartLink, $options) {
+    $isOpenedInPopup = $options['isOpenedInPopup'];
+    $linkClass = $options['linkClass'];
+
+    if (!$linkClass) {
+        $linkClass = 'white';
+    }
+
+    $position = (
+        $isStartLink ?
+        [
+            'galaxy' => $fleetRow['fleet_start_galaxy'],
+            'system' => $fleetRow['fleet_start_system'],
+            'planet' => $fleetRow['fleet_start_planet'],
+        ] :
+        [
+            'galaxy' => $fleetRow['fleet_end_galaxy'],
+            'system' => $fleetRow['fleet_end_system'],
+            'planet' => $fleetRow['fleet_end_planet'],
+        ]
+    );
+
+    $linkParams = [
+        'text' => "[{$position['galaxy']}:{$position['system']}:{$position['planet']}]",
+        'href' => 'galaxy.php',
+        'query' => [
+            'mode' => '3',
+            'galaxy' => $position['galaxy'],
+            'system' => $position['system'],
+            'planet' => $position['planet'],
+        ],
+        'attrs' => [
+            'class' => $linkClass,
+            'onclick' => (
+                $isOpenedInPopup ?
+                'opener.location = this.href; opener.focus(); return false;' :
+                null
+            )
+        ]
+    ];
+
+    return buildLinkHTML($linkParams);
+}
+
+function _getStartAdressLinkHTML($fleetRow, $FromWindow = false) {
+    return _getFleetsGalaxyPositionHyperlinkHTML($fleetRow, true, [ 'isOpenedInPopup' => $FromWindow ]);
+}
+
+function _getTargetAdressLinkHTML($fleetRow, $FromWindow = false) {
+    return _getFleetsGalaxyPositionHyperlinkHTML($fleetRow, false, [ 'isOpenedInPopup' => $FromWindow ]);
+}
+
+function _getHostileFleetPlayerLinkHTML($fleetRow, $FromWindow = false) {
+    global $_Lang, $_SkinPath;
+
+    $isOpenedInPopup = $FromWindow;
+
+    $linkParams = [
+        'text' => (
+            "{$fleetRow['owner_name']} " .
+            buildDOMElementHTML([
+                'tagName' => 'img',
+                'attrs' => [
+                    'src' => "{$_SkinPath}/img/m.gif",
+                    'alt' => $_Lang['ov_message'],
+                    'title' => $_Lang['ov_message'],
+                    'border' => '0'
+                ]
+            ])
+        ),
+        'href' => 'messages.php',
+        'query' => [
+            'mode' => 'write',
+            'uid' => $fleetRow['fleet_owner']
+        ],
+        'attrs' => [
+            'onclick' => (
+                $isOpenedInPopup ?
+                'opener.location = this.href; opener.focus(); return false;' :
+                null
+            )
+        ]
+    ];
+
+    return buildLinkHTML($linkParams);
+}
+
+function _getFleetPopupedFleetLinkHTML($fleetRow, $popupLabel) {
+    global $_Lang;
+
+    $popupElements = [];
+
+    $fleetShips = String2Array($fleetRow['fleet_array']);
+
+    if (!empty($fleetShips)) {
+        foreach($fleetShips as $shipID => $shipsCount) {
+            $shipLabel = $_Lang['tech'][$shipID];
+            $shipsCountDisplay = prettyNumber($shipsCount);
+
+            $popupElements[] = "<tr><th class='flLabel sh'>{$shipLabel}:</th><th class='flVal'>{$shipsCountDisplay}</th></tr>";
+        }
+    }
+
+    $resourcesDefs = [
+        'fleet_resource_metal' => [
+            'label' => $_Lang['Metal']
+        ],
+        'fleet_resource_crystal' => [
+            'label' => $_Lang['Crystal']
+        ],
+        'fleet_resource_deuterium' => [
+            'label' => $_Lang['Deuterium']
+        ],
+    ];
+
+    $resourceRows = [];
+
+    foreach ($resourcesDefs as $resourceKey => $resourceDetails) {
+        if (!($fleetRow[$resourceKey] > 0)) {
+            continue;
+        }
+
+        $resourceLabel = $resourceDetails['label'];
+        $resourceAmount = prettyNumber($fleetRow[$resourceKey]);
+
+        $resourceRows[] = "<tr><th class='flLabel rs'>{$resourceLabel}:</th><th class='flVal'>{$resourceAmount}</th></tr>";
+    }
+
+    if (!empty($resourceRows)) {
+        $popupElements[] = "<tr><th class='flRes' colspan='2'>&nbsp;</th></tr>";
+        foreach ($resourceRows as $resourceRow) {
+            $popupElements[] = $resourceRow;
+        }
+    }
+
+    $popupHTML = '<table style=\'width: 100%;\'>'.implode('', $popupElements).'</table>';
+
+    return '<a class="white flShips" title="' . $popupHTML . '">' . $popupLabel . '</a>';
 }
 
 ?>

@@ -506,55 +506,51 @@ else if(in_array($BuildID, $_Vars_ElementCategories['fleet']) OR in_array($Build
         $parse['Insert_WeaponType'] = $_Lang['weaponTypes'][0];
     }
 
-    if($InShips)
-    {
-        $ThisElement_Storage = $_Vars_Prices[$BuildID]['capacity'];
+    if ($InShips) {
+        $thisShipsStorageCapacity = getShipsStorageCapacity($BuildID);
+        $thisShipsUsedEngine = getShipsUsedEngineData($BuildID, $_User);
+        $thisShipsCurrentSpeed = getShipsCurrentSpeed($BuildID, $_User);
+        $thisShipsCurrentSpeedModifier = (
+            $thisShipsUsedEngine['engineIdx'] === -1 ?
+            0 :
+            getUsersEngineSpeedTechModifier($thisShipsUsedEngine['tech'], $user)
+        );
+        $thisShipsEngines = getShipsEngines($BuildID);
 
-        $ThisElement_SpeedCalc = GetFleetMaxSpeed(array(), $BuildID, $_User, true);
-
-        $ThisElement_EngineTech = null;
-        if(isset($ThisElement_SpeedCalc['info'][$BuildID]['engine']['tech']))
-        {
-            $ThisElement_EngineTech = $ThisElement_SpeedCalc['info'][$BuildID]['engine']['tech'];
+        if (empty($thisShipsEngines)) {
+            $thisShipsEngines[] = [
+                'speed' => 0,
+                'consumption' => 0
+            ];
         }
-        $ThisElement_Modifiers_Speed = 0;
-        if(!empty($ThisElement_EngineTech))
-        {
-            $ThisElement_Modifiers_Speed = ($_Vars_TechSpeedModifiers[$ThisElement_EngineTech] * $_User[$_Vars_GameElements[$ThisElement_EngineTech]]);
-        }
 
-        $parse['Insert_Speed_Modifier'] = $ThisElement_Modifiers_Speed * 100;
-        $parse['Insert_Storage_Base'] = prettyNumber($ThisElement_Storage);
+        $hasUpgradableEngine = (count($thisShipsEngines) > 1);
 
-        if(!empty($_Vars_Prices[$BuildID]['engine']))
-        {
-            $EnginesCount = count($_Vars_Prices[$BuildID]['engine']);
-            $ThisEngineList = $_Vars_Prices[$BuildID]['engine'];
-            krsort($ThisEngineList);
-            foreach($ThisEngineList as $EngineID => $EngineData)
-            {
-                if($EnginesCount > 1 AND $EngineID == $ThisElement_SpeedCalc['info'][$BuildID]['engine']['engineID'])
-                {
-                    $ThisSpeed = '<b class="skyblue">'.prettyNumber($EngineData['speed']).'</b>';
-                    $ThisConsumption = '<b class="skyblue">'.prettyNumber($EngineData['consumption']).'</b>';
-                }
-                else
-                {
-                    $ThisSpeed = prettyNumber($EngineData['speed']);
-                    $ThisConsumption = prettyNumber($EngineData['consumption']);
-                }
-                $parse['Insert_Speed_Base'][] = $ThisSpeed;
-                $parse['Insert_Fuel_Base'][] = $ThisConsumption;
+        // Sort engines in reverse order, so the first one is the "slowest"
+        // according to the ordering assumption.
+        krsort($thisShipsEngines);
+
+        foreach ($thisShipsEngines as $engineIdx => $engineData) {
+            $engineData['speed'] = prettyNumber($engineData['speed']);
+            $engineData['consumption'] = prettyNumber($engineData['consumption']);
+
+            if (
+                $hasUpgradableEngine &&
+                $engineIdx === $thisShipsUsedEngine['engineIdx']
+            ) {
+                $engineData['speed'] = ('<b class="skyblue">' . $engineData['speed'] . '</b>');
+                $engineData['consumption'] = ('<b class="skyblue">' . $engineData['consumption'] . '</b>');
             }
-            $parse['Insert_Speed_Base'] = implode(' / ', $parse['Insert_Speed_Base']);
-            $parse['Insert_Fuel_Base'] = implode(' / ', $parse['Insert_Fuel_Base']);
+
+            $parse['Insert_Speed_Base'][] = $engineData['speed'];
+            $parse['Insert_Fuel_Base'][] = $engineData['consumption'];
         }
-        else
-        {
-            $parse['Insert_Speed_Base'] = 0;
-            $parse['Insert_Fuel_Base'] = 0;
-        }
-        $parse['Insert_Speed_Modified'] = prettyNumber($ThisElement_SpeedCalc['speed']);
+
+        $parse['Insert_Speed_Base'] = implode(' / ', $parse['Insert_Speed_Base']);
+        $parse['Insert_Fuel_Base'] = implode(' / ', $parse['Insert_Fuel_Base']);
+        $parse['Insert_Speed_Modified'] = prettyNumber($thisShipsCurrentSpeed);
+        $parse['Insert_Speed_Modifier'] = prettyNumber($thisShipsCurrentSpeedModifier * 100);
+        $parse['Insert_Storage_Base'] = prettyNumber($thisShipsStorageCapacity);
     }
 }
 else

@@ -455,10 +455,10 @@ if(MORALE_ENABLED)
 arsort($SpeedsAvailable);
 reset($SpeedsAvailable);
 
-$AllFleetSpeed = GetFleetMaxSpeed('', $ShipID, $_User);
 $GenFleetSpeed = current($SpeedsAvailable);
-$SpeedFactor = GetGameSpeedFactor();
-$MaxFleetSpeed = $AllFleetSpeed;
+$SpeedFactor = getUniFleetsSpeedFactor();
+$MaxFleetSpeed = getShipsCurrentSpeed($ShipID, $_User);
+
 if(MORALE_ENABLED)
 {
     if($_User['morale_level'] <= MORALE_PENALTY_FLEETSLOWDOWN)
@@ -466,9 +466,31 @@ if(MORALE_ENABLED)
         $MaxFleetSpeed *= MORALE_PENALTY_FLEETSLOWDOWN_VALUE;
     }
 }
-$distance = GetTargetDistance($CurrentPlanet['galaxy'], $Galaxy, $CurrentPlanet['system'], $System, $CurrentPlanet['planet'], $Planet);
-$duration = GetMissionDuration($GenFleetSpeed, $MaxFleetSpeed, $distance, $SpeedFactor);
-$consumption = GetFleetConsumption(array($ShipID => $ShipCount), $SpeedFactor, $duration, $distance, $_User);
+
+$distance = getFlightDistanceBetween(
+    $CurrentPlanet,
+    [
+        'galaxy' => $Galaxy,
+        'system' => $System,
+        'planet' => $Planet
+    ]
+);
+$duration = getFlightDuration([
+    'speedFactor' => $GenFleetSpeed,
+    'distance' => $distance,
+    'maxShipsSpeed' => $MaxFleetSpeed
+]);
+$consumption = getFlightTotalConsumption(
+    [
+        'ships' => [
+            $ShipID => $ShipCount
+        ],
+        'distance' => $distance,
+        'duration' => $duration,
+    ],
+    $_User
+);
+
 $fleet['start_time'] = $duration + $Time;
 $fleet['end_time'] = (2 * $duration) + $Time;
 
@@ -483,8 +505,22 @@ if($CurrentPlanet['deuterium'] >= $consumption)
             $GenFleetSpeed = next($SpeedsAvailable);
             if($GenFleetSpeed !== false)
             {
-                $duration = GetMissionDuration($GenFleetSpeed, $MaxFleetSpeed, $distance, $SpeedFactor);
-                $consumption = GetFleetConsumption(array($ShipID => $ShipCount), $SpeedFactor, $duration, $distance, $_User);
+                $duration = getFlightDuration([
+                    'speedFactor' => $GenFleetSpeed,
+                    'distance' => $distance,
+                    'maxShipsSpeed' => $MaxFleetSpeed
+                ]);
+                $consumption = getFlightTotalConsumption(
+                    [
+                        'ships' => [
+                            $ShipID => $ShipCount
+                        ],
+                        'distance' => $distance,
+                        'duration' => $duration,
+                    ],
+                    $_User
+                );
+
                 $fleet['start_time'] = $duration + $Time;
                 $fleet['end_time'] = (2 * $duration) + $Time;
             }

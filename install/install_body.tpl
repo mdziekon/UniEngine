@@ -65,14 +65,6 @@
 
                     <h1 style="font-size: 25pt;">{PageTitle}</h1>
                     <table style="width: 800px;">
-                        <tbody style="{PHP_HideLocalhostInfo}">
-                            <tr>
-                                <th colspan="3" class="info center">{LocalhostInfo}</th>
-                            </tr>
-                            <tr style="visibility: hidden;">
-                                <th>&nbsp;</th>
-                            </tr>
-                        </tbody>
                         <tbody style="{PHP_HideInfoBox}">
                             <tr>
                                 <th style="color: {PHP_InfoBox_Color};" colspan="3" class="info infobox {PHP_InfoBox_Center}">{PHP_InfoBox_Text}</th>

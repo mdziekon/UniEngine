@@ -1070,7 +1070,7 @@ foreach($_Vars_ElementCategories['fleet'] as $ID)
         $ThisShip = array();
 
         $ThisShip['ID'] = $ID;
-        $ThisShip['Speed'] = prettyNumber(GetFleetMaxSpeed(array(), $ID, $_User));
+        $ThisShip['Speed'] = prettyNumber(getShipsCurrentSpeed($ID, $_User));
         $ThisShip['Name'] = $_Lang['tech'][$ID];
         $ThisShip['Count'] = prettyNumber($_Planet[$_Vars_GameElements[$ID]]);
         if($ID == 210)

@@ -5,7 +5,7 @@ $_Lang['OneTask']       = 'a task';
 $_Lang['MoreTasks']     = 'tasks';
 $_Lang['TextSecond']    = 'from category';
 
-$_Lang['CatLink']       = '"<i><a href="tasks.php?%s" style="color: black;">%s</a></i>"';
+$_Lang['CatLink']       = '"<i><a href="tasks.php?%s">%s</a></i>"';
 
 $_Lang['Hide']          = 'Hide notification';
 

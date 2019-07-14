@@ -25,7 +25,7 @@ function gettemplate($templatename)
 {
     global $_EnginePath;
 
-    return ReadFromFile($_EnginePath.TEMPLATE_DIR.TEMPLATE_NAME.'/'.$templatename.'.tpl');
+    return ReadFromFile($_EnginePath . UNIENGINE_TEMPLATE_DIR . UNIENGINE_TEMPLATE_NAME . '/' . $templatename . '.tpl');
 }
 
 function getDefaultUniLang() {
@@ -102,169 +102,6 @@ function getJSDatePickerTranslationLang() {
     return $langMapping[$lang];
 }
 
-// Fleet-related functions
-function GetTargetDistance($OrigGalaxy, $DestGalaxy, $OrigSystem, $DestSystem, $OrigPlanet, $DestPlanet)
-{
-    $distance = 0;
-
-    if(($OrigGalaxy - $DestGalaxy) != 0)
-    {
-        $distance = abs($OrigGalaxy - $DestGalaxy) * 20000;
-    }
-    else if(($OrigSystem - $DestSystem) != 0)
-    {
-        $distance = abs($OrigSystem - $DestSystem) * 5 * 19 + 2700;
-    }
-    else if(($OrigPlanet - $DestPlanet) != 0)
-    {
-        $distance = abs($OrigPlanet - $DestPlanet) * 5 + 1000;
-    }
-    else
-    {
-        $distance = 5;
-    }
-
-    return $distance;
-}
-
-function GetMissionDuration($GameSpeed, $MaxFleetSpeed, $Distance, $SpeedFactor)
-{
-    $Duration = round(((35000 / $GameSpeed * sqrt($Distance * 10 / $MaxFleetSpeed) + 10) / $SpeedFactor));
-
-    return $Duration;
-}
-
-function GetGameSpeedFactor()
-{
-    global $_GameConfig;
-
-    return $_GameConfig['fleet_speed'] / 2500;
-}
-
-function GetFleetMaxSpeed($FleetArray, $Fleet, $Player, $ReturnInfo = false)
-{
-    global $_Vars_Prices, $_Vars_GameElements, $_Vars_TechSpeedModifiers;
-
-    if($Fleet != 0)
-    {
-        $FleetArray = array($Fleet => 1);
-    }
-
-    $Return = array();
-    foreach($FleetArray as $Ship => $Count)
-    {
-        if(!empty($_Vars_Prices[$Ship]['engine']))
-        {
-            foreach($_Vars_Prices[$Ship]['engine'] as $EngineID => $EngineData)
-            {
-                if(!isset($EngineData['tech']))
-                {
-                    $speedalls[$Ship] = $EngineData['speed'];
-                    if($ReturnInfo === true)
-                    {
-                        $EngineData['engineID'] = $EngineID;
-                        $Return[$Ship]['engine'] = $EngineData;
-                    }
-                    break;
-                }
-
-                if($Player[$_Vars_GameElements[$EngineData['tech']]] >= $EngineData['minlevel'])
-                {
-                    $speedalls[$Ship] = $EngineData['speed'] * (1 + ($_Vars_TechSpeedModifiers[$EngineData['tech']] * $Player[$_Vars_GameElements[$EngineData['tech']]]));
-                    if($ReturnInfo === true)
-                    {
-                        $EngineData['engineID'] = $EngineID;
-                        $Return[$Ship]['engine'] = $EngineData;
-                    }
-                    break;
-                }
-            }
-        }
-        else
-        {
-            $speedalls[$Ship] = 0;
-        }
-    }
-    if($Fleet != 0)
-    {
-        $speedalls = $speedalls[$Ship];
-    }
-
-    if($ReturnInfo === true)
-    {
-        return array('speed' => $speedalls, 'info' => $Return);
-    }
-    return $speedalls;
-}
-
-function GetShipConsumption($Ship, $Player)
-{
-    global $_Vars_Prices, $_Vars_GameElements;
-
-    if(!empty($_Vars_Prices[$Ship]['engine']))
-    {
-        foreach($_Vars_Prices[$Ship]['engine'] as $EngineData)
-        {
-            if(!isset($EngineData['tech']) || $Player[$_Vars_GameElements[$EngineData['tech']]] >= $EngineData['minlevel'])
-            {
-                $Consumption = $EngineData['consumption'];
-                break;
-            }
-        }
-    }
-    else
-    {
-        $Consumption = 0;
-    }
-
-    return $Consumption;
-}
-
-function GetFleetConsumption($FleetArray, $SpeedFactor, $MissionDuration, $MissionDistance, $Player)
-{
-    $consumption = 0;
-    foreach($FleetArray as $Ship => $Count)
-    {
-        if($Ship > 0)
-        {
-            $ShipSpeed = GetFleetMaxSpeed('', $Ship, $Player);
-            $ShipConsumption = GetShipConsumption($Ship, $Player);
-            $spd = 35000 / ($MissionDuration * $SpeedFactor - 10) * sqrt($MissionDistance * 10 / $ShipSpeed);
-            $basicConsumption = $ShipConsumption * $Count;
-            $consumption += $basicConsumption * $MissionDistance / 35000 * (($spd / 10) + 1) * (($spd / 10) + 1);
-        }
-    }
-
-    return (round($consumption) + 1);
-}
-
-function GetStartAdressLink($FleetRow, $FleetType, $FromWindow = false)
-{
-    $Link = '';
-    $Link .= "<a ".(($FromWindow === true) ? "onclick=\"opener.location = this.href; opener.focus(); return false;\"" : '')." href=\"galaxy.php?mode=3&galaxy={$FleetRow['fleet_start_galaxy']}&system={$FleetRow['fleet_start_system']}&planet={$FleetRow['fleet_start_planet']}\" class=\"{$FleetType}\" >";
-    $Link .= "[{$FleetRow['fleet_start_galaxy']}:{$FleetRow['fleet_start_system']}:{$FleetRow['fleet_start_planet']}]</a>";
-    return $Link;
-}
-
-function GetTargetAdressLink($FleetRow, $FleetType, $FromWindow = false)
-{
-    $Link = '';
-    $Link .= "<a ".(($FromWindow === true) ? "onclick=\"opener.location = this.href; opener.focus(); return false;\"" : '')." href=\"galaxy.php?mode=3&galaxy={$FleetRow['fleet_end_galaxy']}&system={$FleetRow['fleet_end_system']}&planet={$FleetRow['fleet_end_planet']}\" class=\"{$FleetType}\" >";
-    $Link .= "[{$FleetRow['fleet_end_galaxy']}:{$FleetRow['fleet_end_system']}:{$FleetRow['fleet_end_planet']}]</a>";
-    return $Link;
-}
-
-function BuildHostileFleetPlayerLink($FleetRow, $FromWindow = false)
-{
-    global $_Lang, $_SkinPath;
-
-    $Link = '';
-    $Link .= $FleetRow['owner_name']." ";
-    $Link .= "<a ".(($FromWindow === true) ? "onclick=\"opener.location = this.href; opener.focus(); return false;\"" : '')." href=\"messages.php?mode=write&uid={$FleetRow['fleet_owner']}\">";
-    $Link .= "<img src=\"{$_SkinPath}/img/m.gif\" alt=\"{$_Lang['ov_message']}\" title=\"{$_Lang['ov_message']}\" border=\"0\"></a>";
-    return $Link;
-}
-
 function CreatePlanetLink($Galaxy, $System, $Planet)
 {
     $Link = '';
@@ -305,38 +142,6 @@ function GetNextJumpWaitTime($CurMoon)
     $RetValue['value'] = $RestWait;
 
     return $RetValue;
-}
-
-function CreateFleetPopupedFleetLink($FleetRow, $Texte)
-{
-    global $_Lang;
-
-    $FleetArray = String2Array($FleetRow['fleet_array']);
-    if(!empty($FleetArray))
-    {
-        foreach($FleetArray as $ShipID => $ShipCount)
-        {
-            $CreateTitle[] = "<tr><th class='flLabel sh'>{$_Lang['tech'][$ShipID]}:</th><th class='flVal'>".prettyNumber($ShipCount)."</th></tr>";
-        }
-    }
-    if($FleetRow['fleet_resource_metal'] > 0 OR $FleetRow['fleet_resource_crystal'] > 0 OR $FleetRow['fleet_resource_deuterium'] > 0)
-    {
-        $CreateTitle[] = '<tr><th class=\'flRes\' colspan=\'2\'>&nbsp;</th></tr>';
-        if($FleetRow['fleet_resource_metal'] > 0)
-        {
-            $CreateTitle[] = "<tr><th class='flLabel rs'>{$_Lang['Metal']}:</th><th class='flVal'>".prettyNumber($FleetRow['fleet_resource_metal'])."</th></tr>";
-        }
-        if($FleetRow['fleet_resource_crystal'] > 0)
-        {
-            $CreateTitle[] = "<tr><th class='flLabel rs'>{$_Lang['Crystal']}:</th><th class='flVal'>".prettyNumber($FleetRow['fleet_resource_crystal'])."</th></tr>";
-        }
-        if($FleetRow['fleet_resource_deuterium'] > 0)
-        {
-            $CreateTitle[] = "<tr><th class='flLabel rs'>{$_Lang['Deuterium']}:</th><th class='flVal'>".prettyNumber($FleetRow['fleet_resource_deuterium'])."</th></tr>";
-        }
-    }
-
-    return '<a class="white flShips" title="<table style=\'width: 100%;\'>'.implode('', $CreateTitle).'</table>">'.$Texte.'</a>';
 }
 
 // String-related functions
@@ -509,28 +314,39 @@ function ShowBuildTime($time)
     return "<br/>{$_Lang['ConstructionTime']}: ".pretty_time($time);
 }
 
-function Array2String($Array)
-{
-    foreach($Array as $Key => $Value)
-    {
-        $String[] = "{$Key},{$Value}";
+function Array2String($elements) {
+    $packedElements = [];
+
+    foreach ($elements as $elementKey => $elementValue) {
+        $packedElements[] = "{$elementKey},{$elementValue}";
     }
-    return implode(';', $String);
+
+    return implode(';', $packedElements);
 }
 
-function String2Array($String)
-{
-    $String = explode(';', $String);
-    foreach($String as $Data)
-    {
-        if(empty($Data))
-        {
+function String2Array($content) {
+    $result = [];
+
+    $contentElements = explode(';', $content);
+
+    foreach ($contentElements as $element) {
+        if (empty($element)) {
             break;
         }
-        $Data = explode(',', $Data);
-        $Array[$Data[0]] = $Data[1];
+
+        $element = explode(',', $element);
+
+        $elementKey = $element[0];
+        $elementValue = $element[1];
+
+        $result[$elementKey] = $elementValue;
     }
-    return (isset($Array) ? $Array : null);
+
+    return (
+        !empty($result) ?
+        $result :
+        null
+    );
 }
 
 ?>

@@ -10,7 +10,7 @@ $_Lang['Install_Info']                                              = (
     '<b style="color: orange;">(*) - pole wymagane</b>'
 );
 
-$_Lang['Header_DBConfig']                                           = 'Ustawienia Bazy Danych (zapis do pliku "config.php" / "config.localhost.php")';
+$_Lang['Header_DBConfig']                                           = 'Ustawienia Bazy Danych (zapis do pliku "config.php")';
 $_Lang['Header_Constants']                                          = 'Ustawienia Stałych Serwera (zapis do pliku "includes/constants.php")';
 $_Lang['Header_AdminUser']                                          = 'Ustawienia konta Administratora (zapis do tabel "users", "planets", "galaxy" w Bazie Danych)';
 $_Lang['Header_UniMain']                                            = 'Ustawienia Universum (zapis do tabeli "game_config" w Bazie Danych oraz do pliku "includes/constants.php")';
@@ -225,7 +225,7 @@ $_Lang['Requirements_PHPVersion']                                   = 'Wersja PH
 $_Lang['Requirements_PHPNoticesOff']                                = 'Powiadomienia PHP (PHP Notice) wyłączone';
 $_Lang['Requirements_ConfigDirectoryWritable']                      = 'Folder "config/" umożliwia zapis (CHMOD 777)';
 $_Lang['Requirements_ConfigDirectoryMigrationEntryDoesNotExist']    = 'Plik "config/latest-applied-migration" nie powinien istnieć';
-$_Lang['Requirements_ConfigWritable']                               = 'Plik "config.php" / "config.localhost.php" umożliwia zapis do niego (CHMOD 777)';
+$_Lang['Requirements_ConfigWritable']                               = 'Plik "config.php" umożliwia zapis do niego (CHMOD 777)';
 $_Lang['Requirements_ConstantsWritable']                            = 'Plik "includes/constants.php" umożliwia zapis do niego (CHMOD 777)';
 $_Lang['Requirements_RegisterWritable']                             = 'Plik "js/register.js" umożliwia zapis do niego (CHMOD 777)';
 $_Lang['Requirements_ActionLogsWritable']                           = 'Katalog "action_logs" umożliwia zapis do niego (CHMOD 777)';
@@ -235,8 +235,8 @@ $_Lang['InstallError_EmptyFields']                                  = 'System wy
 $_Lang['InstallError_BadVars']                                      = 'System wykrył nieprawiłowe wartości! Popraw wartości tam, gdzie pola są zaznaczone na czerwono!';
 $_Lang['InstallError_CannotConnectToMySQL']                         = 'System nie może nawiązać połączenia z serwerem MySQL!';
 $_Lang['InstallError_CannotSelectDatabase']                         = 'System nie może wybrać bazy danych na serwerze MySQL!';
-$_Lang['InstallError_FailToSaveBothFiles']                          = 'System nie może zapisać plików "config.php" / "config.localhost.php" i "includes/constants.php"!';
-$_Lang['InstallError_FailToSaveConfig']                             = 'System nie może zapisać pliku "config.php" / "config.localhost.php"!';
+$_Lang['InstallError_FailToSaveBothFiles']                          = 'System nie może zapisać plików "config.php" i "includes/constants.php"!';
+$_Lang['InstallError_FailToSaveConfig']                             = 'System nie może zapisać pliku "config.php"!';
 $_Lang['InstallError_FailToSaveConstants']                          = 'System nie może zapisać pliku "includes/constants.php"!';
 $_Lang['InstallError_FailToSaveRegister']                           = 'System nie może zapisać pliku "js/register.js"!';
 $_Lang['InstallError_QueryFail']                                    = (
@@ -250,11 +250,6 @@ $_Lang['InstallError_MigrationEntryFileCreationFail']               = (
 $_Lang['InstallSuccess']                                            = (
     'Instalacja przebiegła pomyślnie!<br/><br/>' .
     'Pamiętaj, by usunąć folder "install" z katalogu głównego silnika!'
-);
-
-$_Lang['LocalhostInfo']                                             = (
-    'System wykrył, że prawdopodobnie instalujesz silnik na swoim serwerze domowym (localhost).<br/>' .
-    'Plik konfiguracji zostanie więc zapisany do "config.localhost.php".'
 );
 
 ?>

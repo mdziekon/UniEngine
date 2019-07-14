@@ -16,7 +16,6 @@ define('GAMEURL'                                    , 'http://'.$_SERVER['HTTP_H
 define('GAMEURL_DOMAIN'                             , '{Domain}');
 define('GAMEURL_STRICT'                             , 'http://{Domain}');
 define('GAMEURL_UNISTRICT'                          , 'http://{GenerateSubdomainLink}');
-define('GAMEURL_REMOTE_TESTSERVERHOST'              , 'unitest.{Domain}');
 define('UNI_DEFAULT_LANG'                           , '{UniDefaultLang}');
 
 // Am I playing or Beta? TRUE/FALSE (If TRUE - Everyone has ProAccount)

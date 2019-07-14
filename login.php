@@ -18,44 +18,44 @@ if(!empty($_GET['post']))
 }
 if($_POST)
 {
-    if(LOCALHOST === FALSE AND TESTSERVER === FALSE)
+    if($_POST['uniSelect'] != LOGINPAGE_UNIVERSUMCODE)
     {
-        if($_POST['uniSelect'] != LOGINPAGE_UNIVERSUMCODE)
+        if(preg_match('/^[a-zA-Z0-9]{3,}$/D', $_POST['uniSelect']))
         {
-            if(preg_match('/^[a-zA-Z0-9]{3,}$/D', $_POST['uniSelect']))
-            {
-                $PostRedirect = base64_encode(serialize(array
-                (
-                    'uniSelect' => $_POST['uniSelect'],
-                    'username' => $_POST['username'],
-                    'password' => $_POST['password'],
-                    'rememberme' => $_POST['rememberme']
-                )));
-                header("HTTP/1.1 301 Moved Permanently");
-                header('Location: http://'.$_POST['uniSelect'].'.'.GAMEURL_DOMAIN.'/login.php?post='.$PostRedirect);
-                die();
-            }
-            else
-            {
-                message($_Lang['Login_BadUniversum'], $_Lang['Err_Title']);
-            }
+            $PostRedirect = base64_encode(serialize(array
+            (
+                'uniSelect' => $_POST['uniSelect'],
+                'username' => $_POST['username'],
+                'password' => $_POST['password'],
+                'rememberme' => $_POST['rememberme']
+            )));
+            header("HTTP/1.1 301 Moved Permanently");
+            header('Location: http://'.$_POST['uniSelect'].'.'.GAMEURL_DOMAIN.'/login.php?post='.$PostRedirect);
+            die();
+        }
+        else
+        {
+            message($_Lang['Login_BadUniversum'], $_Lang['Err_Title']);
         }
     }
 
-    if(LOCALHOST === FALSE AND TESTSERVER === FALSE)
-    {
-        if(time() < SERVER_MAINOPEN_TSTAMP)
-        {
-            message(sprintf($_Lang['Login_UniversumNotStarted'], prettyDate('d m Y', SERVER_MAINOPEN_TSTAMP, 1), date('H:i:s', SERVER_MAINOPEN_TSTAMP)), $_Lang['Page_Title']);
-        }
+    if (time() < SERVER_MAINOPEN_TSTAMP) {
+        $serverStartMessage = sprintf(
+            $_Lang['Login_UniversumNotStarted'],
+            prettyDate('d m Y', SERVER_MAINOPEN_TSTAMP, 1),
+            date('H:i:s', SERVER_MAINOPEN_TSTAMP)
+        );
+
+        message($serverStartMessage, $_Lang['Page_Title']);
     }
+
     $Username = trim($_POST['username']);
     if(preg_match(REGEXP_USERNAME_ABSOLUTE, $Username))
     {
         $Search['mode'] = 1;
         $Search['where'] = "`username` = '{$Username}'";
         $Search['password'] = md5($_POST['password']);
-        $Search['IPHash'] = md5($_SERVER['REMOTE_ADDR']);
+        $Search['IPHash'] = md5(getUsersCurrentIP());
 
         $Query_LoginProtection = "SELECT `FailCount` FROM {{table}} WHERE `IP` = '{$Search['IPHash']}' AND `Date` >= (UNIX_TIMESTAMP() - ".LOGINPROTECTION_LOCKTIME.") LIMIT 1;";
         $Result_LoginProtection = doquery($Query_LoginProtection, 'login_protection', true);
@@ -94,18 +94,8 @@ if(!empty($Search['where']))
     if($UserData['id'] > 0)
     {
         include_once($_EnginePath.'/includes/functions/IPandUA_Logger.php');
-        if(LOCALHOST)
-        {
-            require($_EnginePath.'config.localhost.php');
-        }
-        else if(TESTSERVER)
-        {
-            require($_EnginePath.'config.testserver.php');
-        }
-        else
-        {
-            require($_EnginePath.'config.php');
-        }
+        require($_EnginePath.'config.php');
+
         $PasswordOK = false;
         if($Search['mode'] == 1 AND $UserData['password'] == $Search['password'])
         {
@@ -204,12 +194,9 @@ if(!empty($Search['error']))
 
 if(!LOGINPAGE_ALLOW_LOGINPHP)
 {
-    if(LOCALHOST === FALSE AND TESTSERVER === FALSE)
-    {
-        header("HTTP/1.1 301 Moved Permanently");
-        header('Location: '.GAMEURL_STRICT);
-        die();
-    }
+    header("HTTP/1.1 301 Moved Permanently");
+    header('Location: '.GAMEURL_STRICT);
+    die();
 }
 
 $input_changelang = $_GET['lang'];

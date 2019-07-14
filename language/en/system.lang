@@ -169,8 +169,6 @@ $_Lang['SFB_Stop_ReasonNotGiven']               = '- no reason provided -';
 $_Lang['Vacation']                              = 'Vacation';
 $_Lang['VacationMode']                          = 'Vacation mode';
 $_Lang['Vacation_WarnMsg']                      = 'You cannot use this function while on vacation!';
-$_Lang['VacationTill']                          = 'You are on vacation!<br>Vacation mode can be switched off no sooner than %s<br/><a href="logout.php">Logout</a>';
-$_Lang['VacationSetOff']                        = '<br/><br/><span style="color: orange;">To switch off the vacation mode, go to </span> <a href="settings.php">Settings</a>';
 
 $_Lang['When_full_store']                       = 'Storage full in:';
 $_Lang['Store_Status']                          = 'Storage state:';

@@ -218,11 +218,7 @@ $_Lang['NewNick_donthave_DE']    = 'Nie masz odpowiedniej ilości Ciemnej Energi
 
 $_Lang['Vacation_GoOut']         = 'Z twojego Konta ściągnięto Tryb Urlopu!';
 $_Lang['Vacation_CantGoOut']     = 'Nie możesz jeszcze ściągnąć Trybu Urlopu!';
-$_Lang['exit_vacations']         = 'Ściągnij Urlop';
-$_Lang['Exec']                   = 'Wykonaj';
 $_Lang['Vacation_mode']          = 'Konto w Trybie Urlopu przynajmniej do';
-$_Lang['Vacation_EndTime']       = 'Urlop można ściągnąć nie wcześniej niż: <b class="%s">%s</b>';
-$_Lang['Vacation_EndTimeNoBlock']= '<b class="lime">Urlop można ściągnąć w każdej chwili</b>';
 
 // Email Change
 

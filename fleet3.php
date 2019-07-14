@@ -1042,9 +1042,9 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
 }
 
 // --- Calculate Speed and Distance
-$AllFleetSpeed = GetFleetMaxSpeed($Fleet['array'], 0, $_User);
+$AllFleetSpeed = getFleetShipsSpeeds($Fleet['array'], $_User);
 $GenFleetSpeed = $Fleet['Speed'];
-$SpeedFactor = GetGameSpeedFactor();
+$SpeedFactor = getUniFleetsSpeedFactor();
 $MaxFleetSpeed = min($AllFleetSpeed);
 if(MORALE_ENABLED)
 {
@@ -1053,7 +1053,8 @@ if(MORALE_ENABLED)
         $MaxFleetSpeed *= MORALE_PENALTY_FLEETSLOWDOWN_VALUE;
     }
 }
-$Distance = GetTargetDistance($_Planet['galaxy'], $Target['galaxy'], $_Planet['system'], $Target['system'], $_Planet['planet'], $Target['planet']);
+
+$Distance = getFlightDistanceBetween($_Planet, $Target);
 
 $Allow_UseQuantumGate = false;
 if($Fleet['UseQuantum'])
@@ -1137,14 +1138,39 @@ if($Allow_UseQuantumGate)
     elseif($QuantumGate_UseType == 2)
     {
         $DurationTarget = 1;
-        $DurationBack = GetMissionDuration($GenFleetSpeed, $MaxFleetSpeed, $Distance, $SpeedFactor);
-        $Consumption = GetFleetConsumption($Fleet['array'], $SpeedFactor, $DurationBack, $Distance, $_User) / 2;
+        $DurationBack = getFlightDuration([
+            'speedFactor' => $GenFleetSpeed,
+            'distance' => $Distance,
+            'maxShipsSpeed' => $MaxFleetSpeed
+        ]);
+
+        $Consumption = getFlightTotalConsumption(
+            [
+                'ships' => $Fleet['array'],
+                'distance' => $Distance,
+                'duration' => $DurationBack,
+            ],
+            $_User
+        );
+        $Consumption = $Consumption / 2;
     }
 }
 else
 {
-    $DurationTarget = $DurationBack = GetMissionDuration($GenFleetSpeed, $MaxFleetSpeed, $Distance, $SpeedFactor);
-    $Consumption = GetFleetConsumption($Fleet['array'], $SpeedFactor, $DurationTarget, $Distance, $_User);
+    $DurationTarget = $DurationBack = getFlightDuration([
+        'speedFactor' => $GenFleetSpeed,
+        'distance' => $Distance,
+        'maxShipsSpeed' => $MaxFleetSpeed
+    ]);
+
+    $Consumption = getFlightTotalConsumption(
+        [
+            'ships' => $Fleet['array'],
+            'distance' => $Distance,
+            'duration' => $DurationTarget,
+        ],
+        $_User
+    );
 }
 
 if($_Planet['deuterium'] < $Consumption)

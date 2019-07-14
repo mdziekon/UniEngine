@@ -4,27 +4,58 @@
     position: fixed;
     top: -40px;
     left: 0px;
-    background-color: infobackground;
     border: 0px;
-    border-bottom: 2px ridge threedlightshadow;
-    color: infotext;
     height: 32px;
     z-index: 1000;
     font-weight: bold;
-}
-#infoBar:hover {
-    background-color: highlight;
-    color: highlighttext;
-    border-bottom-color: threedshadow;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    /* Computed styles based on current theme */
+    /* background-color: infobackground; */
+    /* border-bottom: 2px ridge threedlightshadow; */
+    /* color: infotext; */
 }
 </style>
 <script>
+function probeCSS() {
+    // FIXME: this is a workaround to capture appropriate theme colors,
+    // provide a better solution in the future
+    const $probeEl = $("<th>", { style: "display: none" });
+
+    $("body").append($probeEl);
+
+    const themeStyles = {
+        color: $probeEl.css("color"),
+        backgroundColor: $probeEl.css("background-color"),
+        borderBottomColor: $probeEl.css("border-bottom-color"),
+        borderBottomStyle: $probeEl.css("border-bottom-style"),
+        borderBottomWidth: $probeEl.css("border-bottom-width"),
+    };
+
+    $probeEl.remove();
+
+    return themeStyles;
+}
+
 $(document).ready(function(){
-    $('#infoBar').animate({top: '0px'}, 1000);
-    setTimeout(function(){$("#doHide").click();}, 10000);
-    $('#doHide').click(function()
-    {
-        $('#infoBar').animate({top: '-40px'}, 1000);
+    const styles = probeCSS();
+
+    const $infoBar = $('#infoBar');
+
+    $infoBar.css(styles);
+
+    $infoBar.animate({top: '0px'}, 1000);
+
+    setTimeout(
+        function() {
+            $("#doHide").click();
+        },
+        10000
+    );
+
+    $('#doHide').click(function() {
+        $infoBar.animate({top: '-50px'}, 1000);
+
         return false;
     });
 });

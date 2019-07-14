@@ -44,7 +44,7 @@ function MakeGraphs($Modes, $Scores, $Dimensions = array(), $OwnTooltipCode = fa
     $smarty = new Smarty();
 
     $smarty
-        ->addTemplateDir($_EnginePath . TEMPLATE_DIR . TEMPLATE_NAME . '/')
+        ->addTemplateDir($_EnginePath . UNIENGINE_TEMPLATE_DIR . UNIENGINE_TEMPLATE_NAME . '/')
         ->setCompileDir($_EnginePath . '/tmp/smarty/compiled/')
         ->setCacheDir($_EnginePath . '/tmp/smarty/cached/');
 

@@ -1,30 +1,19 @@
 <?php
 
-function SecureInput($Input)
-{
-    if(!empty($Input))
-    {
-        if((array)$Input === $Input)
-        {
-            foreach($Input as $Key => &$Val)
-            {
-                if((array)$Val === $Val)
-                {
-                    $Val = SecureInput($Val);
-                }
-                else
-                {
-                    $Val = addslashes($Val);
-                }
-            }
-        }
-        else
-        {
-            $Input = addslashes($Input);
-        }
+function secureUserInput($input) {
+    if (empty($input)) {
+        return $input;
     }
 
-    return $Input;
+    if (!is_array($input)) {
+        return addslashes($input);
+    }
+
+    foreach ($input as $key => &$value) {
+        $value = secureUserInput($value);
+    }
+
+    return $input;
 }
 
 function getSessionCookieKey() {
@@ -56,68 +45,95 @@ function isPro($_User = false)
     }
 }
 
-function isLogged()
-{
+function isLogged() {
     global $_User;
 
-    if(isset($_User['id']) && $_User['id'] > 0)
-    {
-        return TRUE;
-    }
-    else
-    {
-        return FALSE;
-    }
+    return (
+        isset($_User['id']) &&
+        $_User['id'] > 0
+    );
 }
 
-function loggedCheck($noAlert = false)
-{
+function loggedCheck($noAlert = false) {
+    if (isLogged()) {
+        return;
+    }
+
+    if ($noAlert === true) {
+        die();
+
+        return;
+    }
+
     global $_Lang, $_DontShowMenus;
 
-    if(!isLogged())
-    {
-        $_DontShowMenus = true;
-        if($noAlert === true)
-        {
-            die();
-        }
-        else
-        {
-            message($_Lang['YouAreNotLogged'], $_Lang['NotLoggedTitle'], 'login.php', 3);
-        }
-    }
+    $_DontShowMenus = true;
+
+    message($_Lang['YouAreNotLogged'], $_Lang['NotLoggedTitle'], 'login.php', 3);
 }
 
-function isOnVacation($_User = false)
-{
-    if($_User === false)
-    {
+function isRulesAcceptanceRequired (&$user, &$_GameConfig) {
+    return (
+        $_GameConfig['enforceRulesAcceptance'] == '1' &&
+        $_GameConfig['last_rules_changes'] > 0 &&
+        $user['rules_accept_stamp'] < $_GameConfig['last_rules_changes']
+    );
+}
+
+function isOnVacation($_User = false) {
+    if ($_User === false) {
         global $_User;
     }
-    if($_User['is_onvacation'] == 1)
-    {
-        return true;
-    }
-    return false;
+
+    return ($_User['is_onvacation'] == 1);
 }
 
-function canTakeVacationOff($time = false)
-{
+// Tells whether the enabled vacation mode is the "regular one" (set by the user)
+// or a "special one" (either enabled when banning, or special "admin" mode).
+function isOnRegularVacation(&$user) {
+    return ($user['vacation_type'] == 0);
+}
+
+function getUserMinimalVacationTime(&$user) {
+    if (!isOnRegularVacation($user)) {
+        return -1;
+    }
+
+    return getUserMinimalNormalVacationTime($user);
+}
+
+function getUserMinimalNormalVacationTime(&$user) {
+    $hadProAccountWhenVacationStarted = ($user['pro_time'] > $user['vacation_starttime']);
+
+    $vacationMinimalDuration = (
+        $hadProAccountWhenVacationStarted ?
+        MINURLOP_PRO :
+        MINURLOP_FREE
+    );
+
+    return ($vacationMinimalDuration + $user['vacation_starttime']);
+}
+
+function canTakeVacationOffAnytime() {
     global $_User;
-    if($_User['vacation_type'] != 0)
-    {
+
+    return (getUserMinimalVacationTime($_User) === -1);
+}
+
+function canTakeVacationOff($time = false) {
+    global $_User;
+
+    if (!isOnRegularVacation($_User)) {
         return true;
     }
-    if($time === false)
-    {
+
+    if ($time === false) {
         $time = time();
     }
-    $MinimalVacationTime = ($_User['pro_time'] > $_User['vacation_starttime'] ? MINURLOP_PRO : MINURLOP_FREE) + $_User['vacation_starttime'];
-    if($MinimalVacationTime <= $time)
-    {
-        return true;
-    }
-    return false;
+
+    $MinimalVacationTime = getUserMinimalVacationTime($_User);
+
+    return ($MinimalVacationTime <= $time);
 }
 
 // AuthLevel Checks
@@ -385,7 +401,7 @@ function display($PageCode, $PageTitle = '', $ShowTopResourceBar = true, $IsAdmi
     $DisplayPage = '';
     if(empty($_SkinPath))
     {
-        $_SkinPath = DEFAULT_SKINPATH;
+        $_SkinPath = UNIENGINE_DEFAULT_SKINPATH;
     }
 
     $ProbablyOnAdminPage = false;
@@ -714,38 +730,33 @@ function safeDie($DieMsg = '')
     die($DieMsg);
 }
 
-function ShowLeftMenu($Template = 'left_menu')
-{
+function ShowLeftMenu($templateFile = 'left_menu') {
     global $_Lang, $_SkinPath, $_GameConfig, $NewMSGCount, $_LeftMenuSettings;
 
     includeLang('leftmenu');
-    if(strstr($Template, 'admin/'))
-    {
+
+    if (strstr($templateFile, 'admin/')) {
         includeLang('admin');
     }
 
-    $Since = 2010;
-    $MenuTPL = gettemplate($Template);
     $parse = $_Lang;
-    $parse['GameVersion'] = VERSION;
-    $parse['GameBuild'] = REVISION;
-    $parse['skinpath'] = $_SkinPath;
 
-    if($NewMSGCount > 0)
-    {
+    $parse['GameVersion'] = $_GameConfig['EngineInfo_Version'];
+    $parse['GameBuild'] = $_GameConfig['EngineInfo_BuildNo'];
+    $parse['skinpath'] = $_SkinPath;
+    $parse['servername'] = $_GameConfig['game_name'];
+
+    if ($NewMSGCount > 0) {
         $parse['Messages_Color'] = 'orange';
         $parse['Messages_AddCounter'] = '<b id="lm_msgc">('.$NewMSGCount.')</b>';
     }
-    if(!empty($_LeftMenuSettings['LM_Insert_AllyChatLink']))
-    {
+    if (!empty($_LeftMenuSettings['LM_Insert_AllyChatLink'])) {
         $parse['LM_Insert_AllyChatLink'] = "<a href=\"chat.php?rid={$_LeftMenuSettings['LM_Insert_AllyChatLink']['rid']}\" class=\"AllyChatLink\" title=\"{$_Lang['AllyChat_Title']}\">({$_LeftMenuSettings['LM_Insert_AllyChatLink']['count']})</a>";
     }
 
-    $parse['servername'] = $_GameConfig['game_name'];
-    $parse['CopyTime'] = ($Since == date('Y')) ? $Since : $Since.' - '.date('Y');
-    $Menu = parsetemplate( $MenuTPL, $parse);
+    $loadedTemplate = gettemplate($templateFile);
 
-    return $Menu;
+    return parsetemplate($loadedTemplate, $parse);
 }
 
 function DisplayHelper_DoRedirect($Location, $Delay)
@@ -896,6 +907,7 @@ function ServerStamp($TimeStamp = false)
 
 function CreateAccessLog($RootPath = '', $Prepend2Filename = '')
 {
+    // FIXME: re-enable this
     return;
 
     global $_User, $_SERVER, $_POST;
@@ -934,6 +946,7 @@ function CreateAccessLog($RootPath = '', $Prepend2Filename = '')
         $PostHash = '8d9c307cb7f3c4a32822a51922d1ceaa';
     }
     // --- Create other data ---
+    $CurrentIP = getUsersCurrentIP();
     $CurrentBrowser = addslashes(trim($_SERVER['HTTP_USER_AGENT']));
     $CurrentScreen = (isset($_User['new_screen_settings']) ? $_User['new_screen_settings'] : '');
 
@@ -1001,11 +1014,11 @@ function CreateAccessLog($RootPath = '', $Prepend2Filename = '')
     {
         $LogDataNow = '<?php header("Location: ../index.php"); die(\'\');/*'."\n";
     }
-    if($LastLoggedIP != $_SERVER['REMOTE_ADDR'] OR $LastPageHash != $PageHash OR $LastPostHash != $PostHash OR $CurrentBrowser != $LastBrowser OR $CurrentScreen != $LastScreenSettings)
+    if($LastLoggedIP != $CurrentIP OR $LastPageHash != $PageHash OR $LastPostHash != $PostHash OR $CurrentBrowser != $LastBrowser OR $CurrentScreen != $LastScreenSettings)
     {
-        if($LastLoggedIP != $_SERVER['REMOTE_ADDR'])
+        if($LastLoggedIP != $CurrentIP)
         {
-            $ToBracket[] = 'A'.$_SERVER['REMOTE_ADDR'];
+            $ToBracket[] = 'A'.$CurrentIP;
         }
         if($CurrentBrowser != $LastBrowser)
         {
@@ -1023,7 +1036,7 @@ function CreateAccessLog($RootPath = '', $Prepend2Filename = '')
     }
     if($WriteLogDataFile === true)
     {
-        file_put_contents($LastDataFilepath, "<?php \$LastLoggedIP = '{$_SERVER['REMOTE_ADDR']}'; \$LastBrowser = '{$CurrentBrowser}'; \$LastScreenSettings = '{$CurrentScreen}'; \$LastPageHash = '{$PageHash}'; \$LastPostHash = '{$PostHash}'; ?>");
+        file_put_contents($LastDataFilepath, "<?php \$LastLoggedIP = '{$CurrentIP}'; \$LastBrowser = '{$CurrentBrowser}'; \$LastScreenSettings = '{$CurrentScreen}'; \$LastPageHash = '{$PageHash}'; \$LastPostHash = '{$PostHash}'; ?>");
     }
     if($LastPageHash === $PageHash)
     {
