@@ -79,7 +79,7 @@ if (!isset($_SetAccessLogPreFilename)) {
 }
 CreateAccessLog($_SetAccessLogPath, $_SetAccessLogPreFilename);
 
-if (isIPBanned($_SERVER['REMOTE_ADDR'], $_GameConfig)) {
+if (isIPBanned(getUsersCurrentIP(), $_GameConfig)) {
     message($_Lang['Game_blocked_for_this_IP'], $_GameConfig['game_name']);
 }
 

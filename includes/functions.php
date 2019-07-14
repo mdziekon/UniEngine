@@ -907,6 +907,7 @@ function ServerStamp($TimeStamp = false)
 
 function CreateAccessLog($RootPath = '', $Prepend2Filename = '')
 {
+    // FIXME: re-enable this
     return;
 
     global $_User, $_SERVER, $_POST;
@@ -945,6 +946,7 @@ function CreateAccessLog($RootPath = '', $Prepend2Filename = '')
         $PostHash = '8d9c307cb7f3c4a32822a51922d1ceaa';
     }
     // --- Create other data ---
+    $CurrentIP = getUsersCurrentIP();
     $CurrentBrowser = addslashes(trim($_SERVER['HTTP_USER_AGENT']));
     $CurrentScreen = (isset($_User['new_screen_settings']) ? $_User['new_screen_settings'] : '');
 
@@ -1012,11 +1014,11 @@ function CreateAccessLog($RootPath = '', $Prepend2Filename = '')
     {
         $LogDataNow = '<?php header("Location: ../index.php"); die(\'\');/*'."\n";
     }
-    if($LastLoggedIP != $_SERVER['REMOTE_ADDR'] OR $LastPageHash != $PageHash OR $LastPostHash != $PostHash OR $CurrentBrowser != $LastBrowser OR $CurrentScreen != $LastScreenSettings)
+    if($LastLoggedIP != $CurrentIP OR $LastPageHash != $PageHash OR $LastPostHash != $PostHash OR $CurrentBrowser != $LastBrowser OR $CurrentScreen != $LastScreenSettings)
     {
-        if($LastLoggedIP != $_SERVER['REMOTE_ADDR'])
+        if($LastLoggedIP != $CurrentIP)
         {
-            $ToBracket[] = 'A'.$_SERVER['REMOTE_ADDR'];
+            $ToBracket[] = 'A'.$CurrentIP;
         }
         if($CurrentBrowser != $LastBrowser)
         {
@@ -1034,7 +1036,7 @@ function CreateAccessLog($RootPath = '', $Prepend2Filename = '')
     }
     if($WriteLogDataFile === true)
     {
-        file_put_contents($LastDataFilepath, "<?php \$LastLoggedIP = '{$_SERVER['REMOTE_ADDR']}'; \$LastBrowser = '{$CurrentBrowser}'; \$LastScreenSettings = '{$CurrentScreen}'; \$LastPageHash = '{$PageHash}'; \$LastPostHash = '{$PostHash}'; ?>");
+        file_put_contents($LastDataFilepath, "<?php \$LastLoggedIP = '{$CurrentIP}'; \$LastBrowser = '{$CurrentBrowser}'; \$LastScreenSettings = '{$CurrentScreen}'; \$LastPageHash = '{$PageHash}'; \$LastPostHash = '{$PostHash}'; ?>");
     }
     if($LastPageHash === $PageHash)
     {

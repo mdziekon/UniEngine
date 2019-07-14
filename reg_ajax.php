@@ -151,7 +151,7 @@ if(isset($_GET['register']))
 
         $recaptchaResponse = $recaptcha
             ->setExpectedHostname($RecaptchaServerIdentification)
-            ->verify($CaptchaResponse, $_SERVER['REMOTE_ADDR']);
+            ->verify($CaptchaResponse, getUsersCurrentIP());
 
         if (!($recaptchaResponse->isSuccess())) {
             // ReCaptcha validation failed
@@ -322,7 +322,7 @@ if(isset($_GET['register']))
             $Query_InsertUser .= "`lang` = '{$LangCode}', ";
             $Query_InsertUser .= "`email` = '{$Email}', ";
             $Query_InsertUser .= "`email_2` = '{$Email}', ";
-            $Query_InsertUser .= "`ip_at_reg` = '{$_SERVER['REMOTE_ADDR']}', ";
+            $Query_InsertUser .= "`ip_at_reg` = '" . getUsersCurrentIP() . "', ";
             $Query_InsertUser .= "`id_planet` = 0, ";
             $Query_InsertUser .= "`register_time` = {$Now}, ";
             $Query_InsertUser .= "`onlinetime` = {$Now} - (24*60*60), ";
@@ -362,7 +362,7 @@ if(isset($_GET['register']))
                     $Result_SelectReferrer = doquery($Query_SelectReferrer, 'users', true);
                     if($Result_SelectReferrer['id'] > 0)
                     {
-                        $UserIPs['r'] = trim($_SERVER['REMOTE_ADDR']);
+                        $UserIPs['r'] = trim(getUsersCurrentIP());
                         $UserIPs['p'] = preg_replace('#[^a-zA-Z0-9\.\,\:\ ]{1,}#si', '', trim($_SERVER['HTTP_X_FORWARDED_FOR']));
                         if(empty($UserIPs['p']))
                         {

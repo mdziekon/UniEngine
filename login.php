@@ -55,7 +55,7 @@ if($_POST)
         $Search['mode'] = 1;
         $Search['where'] = "`username` = '{$Username}'";
         $Search['password'] = md5($_POST['password']);
-        $Search['IPHash'] = md5($_SERVER['REMOTE_ADDR']);
+        $Search['IPHash'] = md5(getUsersCurrentIP());
 
         $Query_LoginProtection = "SELECT `FailCount` FROM {{table}} WHERE `IP` = '{$Search['IPHash']}' AND `Date` >= (UNIX_TIMESTAMP() - ".LOGINPROTECTION_LOCKTIME.") LIMIT 1;";
         $Result_LoginProtection = doquery($Query_LoginProtection, 'login_protection', true);

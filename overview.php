@@ -150,7 +150,8 @@ if($_User['first_login'] == 0)
     }
 
     // Check, if this IP is Proxy
-    $IPHash = md5($_SERVER['REMOTE_ADDR']);
+    $usersIP = getUsersCurrentIP();
+    $IPHash = md5($usersIP);
     $Query_CheckProxy = "SELECT `ID`, `isProxy` FROM {{table}} WHERE `ValueHash` = '{$IPHash}' LIMIT 1;";
     $Result_CheckProxy = doquery($Query_CheckProxy, 'used_ip_and_ua', true);
     if($Result_CheckProxy['ID'] > 0 AND $Result_CheckProxy['isProxy'] == 1)
@@ -170,7 +171,7 @@ if($_User['first_login'] == 0)
         if($FilterResult['SendAlert'])
         {
             $_Alert['Data']['IPID'] = $Result_CheckProxy['ID'];
-            if($_SERVER['REMOTE_ADDR'] == $_User['ip_at_reg'])
+            if($usersIP == $_User['ip_at_reg'])
             {
                 $_Alert['Data']['RegIP'] = true;
             }

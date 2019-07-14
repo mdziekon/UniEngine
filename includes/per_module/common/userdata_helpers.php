@@ -54,7 +54,7 @@ function isUserBlockedByActivationRequirement (&$user, $params) {
 //
 function handleUserIPChangeCheck (&$user) {
     $previousIP = getPreviousLastIPValue();
-    $currentIP = $_SERVER['REMOTE_ADDR'];
+    $currentIP = getUsersCurrentIP();
 
     $hasEmptyPreviousIP = empty($previousIP);
     $hasDifferentIP = (
