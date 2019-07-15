@@ -748,8 +748,8 @@ if(!isOnVacation())
                         if($allowVacation === true)
                         {
                             $ChangeSet['is_onvacation'] = '1';
-                            $ChangeSet['vacation_starttime'] = 'UNIX_TIMESTAMP()';
-                            $ChangeSet['vacation_endtime'] = 'UNIX_TIMESTAMP() + '.(MAXVACATIONS_REG * TIME_DAY);
+                            $ChangeSet['vacation_starttime'] = $Now;
+                            $ChangeSet['vacation_endtime'] = $Now + (MAXVACATIONS_REG * TIME_DAY);
                             $ChangeSet['vacation_type']    = '0';
 
                             $ChangeSetCount += 1;
@@ -765,7 +765,7 @@ if(!isOnVacation())
                             if(md5($_POST['delete_confirm']) == $_User['password'])
                             {
                                 $ChangeSet['is_ondeletion'] = '1';
-                                $ChangeSet['deletion_endtime'] = 'UNIX_TIMESTAMP() + '.(ACCOUNT_DELETION_TIME * TIME_DAY);
+                                $ChangeSet['deletion_endtime'] = $Now + (ACCOUNT_DELETION_TIME * TIME_DAY);
                                 $ChangeSetCount += 1;
 
                                 if($ForceGoingOnVacationMsg === true)
@@ -978,14 +978,12 @@ if(!isOnVacation())
                 foreach($ChangeSet as $Key => $Value)
                 {
                     $_User[$Key] = $Value;
-                    if($Key == 'deletion_endtime' AND $Value != '0')
-                    {
-                        eval('$_User[$Key] = '.(str_replace('UNIX_TIMESTAMP()', $Now, $Value)).';');
-                    }
+
                     if(isset($ChangeSetTypes[$Key]) && $ChangeSetTypes[$Key] == 's')
                     {
                         $Value = "'{$Value}'";
                     }
+
                     $UpdateQuery[] = "`{$Key}` = {$Value}";
                 }
 
