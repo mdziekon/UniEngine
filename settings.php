@@ -975,6 +975,8 @@ if(!isOnVacation())
 
             if(!empty($ChangeSet))
             {
+                $UpdateQuery = [];
+
                 foreach($ChangeSet as $Key => $Value)
                 {
                     $_User[$Key] = $Value;
