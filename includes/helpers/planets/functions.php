@@ -113,6 +113,61 @@ function getElementProduction($elementID, &$planet, &$user, $params) {
     return $production;
 }
 
+function getElementProducedResourceKeys($elementID) {
+    $theoreticalProduction = _getTheoreticalElementProduction($elementID);
+
+    $producedResourceKeys = [];
+
+    foreach ($theoreticalProduction as $resourceKey => $resourceProduction) {
+        if ($resourceProduction <= 0) {
+            continue;
+        }
+
+        $producedResourceKeys[] = $resourceKey;
+    }
+
+    return $producedResourceKeys;
+}
+
+function getElementConsumedResourceKeys($elementID) {
+    $theoreticalProduction = _getTheoreticalElementProduction($elementID);
+
+    $consumedResourceKeys = [];
+
+    foreach ($theoreticalProduction as $resourceKey => $resourceProduction) {
+        if ($resourceProduction >= 0) {
+            continue;
+        }
+
+        $consumedResourceKeys[] = $resourceKey;
+    }
+
+    return $consumedResourceKeys;
+}
+
+function _getTheoreticalElementProduction($elementID) {
+    if (
+        !_isElementStructure($elementID) &&
+        !_isElementShip($elementID)
+    ) {
+        return [];
+    }
+
+    $productionFormula = _getElementProductionFormula($elementID);
+
+    if (!is_callable($productionFormula)) {
+        return [];
+    }
+
+    $elementParams = [
+        'level' => 1,
+        'productionFactor' => 10,
+        'planetTemp' => 100
+    ];
+
+    return $productionFormula($elementParams);
+}
+
 function _isResourceProductionSpeedMultiplicable($resourceKey) {
     $multiplicableResources = [
         'metal',
