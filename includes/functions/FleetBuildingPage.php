@@ -122,10 +122,25 @@ function FleetBuildingPage(&$CurrentPlanet, $CurrentUser)
         $Row['Description'] = $_Lang['WorldElements_Detailed'][$Element]['description_short'];
         if($Element == 212)
         {
-            $BuildLevelFactor = 10;
-            $BuildLevel = 1;
-            $BuildTemp = $CurrentPlanet['temp_max'];
-            $Row['SateliteInfo'] = '<br/>'.sprintf($_Lang['SatelitesEnergy'], prettyNumber(floor(eval($_Vars_ResProduction[$Element]['formule']['energy']))));
+            $solarSatelliteEnergyProduction = getElementProduction(
+                $Element,
+                $CurrentPlanet,
+                $CurrentUser,
+                [
+                    'isBoosted' => true,
+                    'timestamp' => $Now,
+                    'customLevel' => 1,
+                    'customProductionFactor' => 10
+                ]
+            );
+
+            $Row['SateliteInfo'] = (
+                '<br/>' .
+                sprintf(
+                    $_Lang['SatelitesEnergy'],
+                    prettyNumber($solarSatelliteEnergyProduction['energy'])
+                )
+            );
         }
 
         if(IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $Element))
