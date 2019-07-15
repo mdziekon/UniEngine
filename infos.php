@@ -84,11 +84,97 @@ function Teleport_MoonsList($CurrentUser, $CurrentPlanet)
     return false;
 }
 
+function buildResourcesProductionTableHTML($elementID, &$planet, &$user, $timestamp, $rowTPL) {
+    $elementPlanetKey = _getElementPlanetKey($elementID);
+
+    $currentLevel = $planet[$elementPlanetKey];
+
+    $currentLevelProduction = getElementProduction(
+        $elementID,
+        $planet,
+        $user,
+        [
+            'isBoosted' => true,
+            'timestamp' => $timestamp,
+            'customLevel' => $currentLevel,
+            'customProductionFactor' => 10
+        ]
+    );
+
+    $tableRangeStartLevel = $currentLevel - 3;
+    $tableRangeEndLevel = $currentLevel + 6;
+
+    if ($tableRangeStartLevel < 0) {
+        $offset = $tableRangeStartLevel * (-1);
+
+        $tableRangeStartLevel += $offset;
+        $tableRangeEndLevel += $offset;
+    }
+
+    // Supports only one resource type produced / consumed
+    $producedResourceKey = getElementProducedResourceKeys($elementID)[0];
+    $consumedResourceKey = getElementConsumedResourceKeys($elementID)[0];
+
+    $resultHTML = '';
+
+    for (
+        $iterLevel = $tableRangeStartLevel;
+        $iterLevel <= $tableRangeEndLevel;
+        $iterLevel++
+    ) {
+        $rowData = [];
+
+        if ($iterLevel == $currentLevel) {
+            $rowData['build_lvl'] = "<span class=\"red\">{$iterLevel}</span>";
+            $rowData['IsCurrent'] = ' class="thisLevel"';
+        } else {
+            $rowData['build_lvl'] = $iterLevel;
+        }
+
+        $iterLevelProduction = getElementProduction(
+            $elementID,
+            $planet,
+            $user,
+            [
+                'isBoosted' => true,
+                'timestamp' => $timestamp,
+                'customLevel' => $iterLevel,
+                'customProductionFactor' => 10
+            ]
+        );
+
+        $resourceProduction = $iterLevelProduction[$producedResourceKey];
+        $resourceConsumption = $iterLevelProduction[$consumedResourceKey];
+
+        $productionDifference = ($resourceProduction - $currentLevelProduction[$producedResourceKey]);
+        $consumptionDifference = ($resourceConsumption - $currentLevelProduction[$consumedResourceKey]);
+
+        $rowData['build_prod'] = prettyNumber($resourceProduction);
+        $rowData['build_prod_diff'] = prettyColorNumber(floor($productionDifference));
+        $rowData['build_need'] = prettyColorNumber($resourceConsumption);
+        $rowData['build_need_diff'] = prettyColorNumber(floor($consumptionDifference));
+
+        $resultHTML .= parsetemplate($rowTPL, $rowData);
+    }
+
+    return $resultHTML;
+}
+
 function ShowProductionTable($CurrentUser, $CurrentPlanet, $BuildID, $Template)
 {
     global $_Vars_ResProduction, $_Vars_GameElements, $_Vars_ElementCategories, $_GameConfig, $_EnginePath;
 
     include($_EnginePath.'includes/functions/GetMissileRange.php');
+
+    if (in_array($BuildID, $_Vars_ElementCategories['prod'])) {
+        return buildResourcesProductionTableHTML(
+            $BuildID,
+            $CurrentPlanet,
+            $CurrentUser,
+            time(),
+            $Template
+        );
+    }
 
     if(!in_array($BuildID, $_Vars_ElementCategories['tech']))
     {
@@ -97,50 +183,6 @@ function ShowProductionTable($CurrentUser, $CurrentPlanet, $BuildID, $Template)
     else
     {
         $CurrentLevel = $CurrentUser[$_Vars_GameElements[$BuildID]];
-    }
-
-    if($BuildID != 42 AND $BuildID != 117)
-    {
-        // Calculate Current Production (on CurrentBuildLevel)
-        $Now = time();
-
-        $BuildLevelFactor = 10;
-        $BuildTemp = $CurrentPlanet['temp_max'];
-
-        $GeoMulti = (($CurrentUser['geologist_time'] > $Now) ? 1.15 : 1);
-        $EngMulti = (($CurrentUser['engineer_time'] > $Now) ? 1.10 : 1);
-
-        $BuildLevel = ($CurrentLevel > 0) ? $CurrentLevel : 0;
-        $Prod[1] = floor(eval($_Vars_ResProduction[$BuildID]['formule']['metal']) * $_GameConfig['resource_multiplier'] * $GeoMulti);
-        $Prod[2] = floor(eval($_Vars_ResProduction[$BuildID]['formule']['crystal']) * $_GameConfig['resource_multiplier'] * $GeoMulti);
-        if($BuildID != 12)
-        {
-            $Prod[3] = floor(eval($_Vars_ResProduction[$BuildID]['formule']['deuterium']) * $_GameConfig['resource_multiplier'] * $GeoMulti);
-        }
-        else
-        {
-            $Prod[3] = floor(eval($_Vars_ResProduction[$BuildID]['formule']['deuterium']) * $_GameConfig['resource_multiplier']);
-        }
-
-        if($BuildID >= 4)
-        {
-            $Prod[4] = floor(eval($_Vars_ResProduction[$BuildID]['formule']['energy']) * $EngMulti);
-        }
-        else
-        {
-            $Prod[4] = floor(eval($_Vars_ResProduction[$BuildID]['formule']['energy']));
-        }
-
-        if($BuildID != 12)
-        {
-            $ActualNeed = floor($Prod[4]);
-            $ActualProd = floor($Prod[$BuildID]);
-        }
-        else
-        {
-            $ActualNeed = floor($Prod[3]);
-            $ActualProd = floor($Prod[4]);
-        }
     }
 
     $BuildStartLvl = $CurrentLevel - 3;
@@ -178,42 +220,7 @@ function ShowProductionTable($CurrentUser, $CurrentPlanet, $BuildID, $Template)
         {
             $bloc['build_range'] = GetMissileRange($_User, $BuildLevel);
         }
-        else
-        {
-            $Prod[1] = floor(eval($_Vars_ResProduction[$BuildID]['formule']['metal']) * $_GameConfig['resource_multiplier'] * $GeoMulti);
-            $Prod[2] = floor(eval($_Vars_ResProduction[$BuildID]['formule']['crystal']) * $_GameConfig['resource_multiplier'] * $GeoMulti);
-            if($BuildID != 12)
-            {
-                $Prod[3] = floor(eval($_Vars_ResProduction[$BuildID]['formule']['deuterium']) * $_GameConfig['resource_multiplier'] * $GeoMulti);
-            }
-            else
-            {
-                $Prod[3] = floor(eval($_Vars_ResProduction[$BuildID]['formule']['deuterium']) * $_GameConfig['resource_multiplier']);
-            }
-            if($BuildID >= 4)
-            {
-                $Prod[4] = floor(eval($_Vars_ResProduction[$BuildID]['formule']['energy']) * $EngMulti);
-            }
-            else
-            {
-                $Prod[4] = floor(eval($_Vars_ResProduction[$BuildID]['formule']['energy']));
-            }
 
-            if($BuildID != 12)
-            {
-                $bloc['build_prod'] = prettyNumber(floor($Prod[$BuildID]));
-                $bloc['build_prod_diff'] = prettyColorNumber(floor($Prod[$BuildID] - $ActualProd));
-                $bloc['build_need'] = prettyColorNumber(floor($Prod[4]));
-                $bloc['build_need_diff'] = prettyColorNumber(floor($Prod[4] - $ActualNeed));
-            }
-            else
-            {
-                $bloc['build_prod'] = prettyNumber(floor($Prod[4]));
-                $bloc['build_prod_diff'] = prettyColorNumber(floor($Prod[4] - $ActualProd));
-                $bloc['build_need'] = prettyColorNumber(floor($Prod[3]));
-                $bloc['build_need_diff'] = prettyColorNumber(floor($Prod[3] - $ActualNeed));
-            }
-        }
         $Table .= parsetemplate($Template, $bloc);
     }
 
