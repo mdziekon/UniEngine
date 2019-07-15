@@ -199,7 +199,7 @@ $(document).ready(function () {
         }
     });
     PlanetList.change(function () {
-        eval("location='" + $(this).val() + "'");
+        window.location = String($(this).val());
     });
     $("#plType").click(function () {
         PlanetList.val($("option[value*=\"cp=" + $(this).attr("data-id") + "\"]", PlanetList).val()).change();

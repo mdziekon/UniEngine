@@ -9,7 +9,7 @@ $(document).ready(function()
     setInterval("Update({JSPerHour_Metal}, {JSPerHour_Crystal}, {JSPerHour_Deuterium}, {JSStore_Metal}, {JSStore_Crystal}, {JSStore_Deuterium}, {JSStoreOverflow_Metal}, {JSStoreOverflow_Crystal}, {JSStoreOverflow_Deuterium}, {JSCount_Metal}, {JSCount_Crystal}, {JSCount_Deuterium})", 1000)
 });
 </script>
-<script src="dist/js/resourceUpdate.cachebuster-1546213884373.min.js"></script>
+<script src="dist/js/resourceUpdate.cachebuster-1563225437482.min.js"></script>
 <link rel="stylesheet" type="text/css" href="dist/css/topNav.cachebuster-1546564327123.min.css"/>
 <table>
     <tr>
