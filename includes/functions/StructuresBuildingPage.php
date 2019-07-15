@@ -599,102 +599,67 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 
             if(in_array($ElementID, $_Vars_ElementCategories['prod']))
             {
-                // Show energy on BuildingPage
-                $BuildLevelFactor = 10;
-                $BuildTemp = $CurrentPlanet['temp_max'];
-                $CurrentBuildtLvl = $CurrentLevel;
-                $BuildLevel = ($CurrentBuildtLvl > 0) ? $CurrentBuildtLvl : 0;
-                $Production = array();
-                $Needs = array();
-                $ThisResource = '';
+                // Calculate theoretical production increase
+                $thisLevelProduction = getElementProduction(
+                    $ElementID,
+                    $CurrentPlanet,
+                    $CurrentUser,
+                    [
+                        'isBoosted' => true,
+                        'timestamp' => $Now,
+                        'customLevel' => $CurrentLevel,
+                        'customProductionFactor' => 10
+                    ]
+                );
+                $nextLevelProduction = getElementProduction(
+                    $ElementID,
+                    $CurrentPlanet,
+                    $CurrentUser,
+                    [
+                        'isBoosted' => true,
+                        'timestamp' => $Now,
+                        'customLevel' => ($CurrentLevel + 1),
+                        'customProductionFactor' => 10
+                    ]
+                );
 
-                // Calculate ThisLevel Income
-                if($ElementID <= 3)
-                {
-                    if($ElementID == 1)
-                    {
-                        $ThisResource = $_Lang['Metal'];
-                        $Production[] = floor(eval($_Vars_ResProduction[$ElementID]['formule']['metal']) * $_GameConfig['resource_multiplier'] * $ResourceMulti);
-                    }
-                    else if($ElementID == 2)
-                    {
-                        $ThisResource = $_Lang['Crystal'];
-                        $Production[] = floor(eval($_Vars_ResProduction[$ElementID]['formule']['crystal']) * $_GameConfig['resource_multiplier'] * $ResourceMulti);
-                    }
-                    else if($ElementID == 3)
-                    {
-                        $ThisResource = $_Lang['Deuterium'];
-                        $Production[] = floor(eval($_Vars_ResProduction[$ElementID]['formule']['deuterium']) * $_GameConfig['resource_multiplier'] * $ResourceMulti);
-                    }
-                    $Needs[] = floor(eval($_Vars_ResProduction[$ElementID]['formule']['energy']));
-                }
-                else
-                {
-                    if($ElementID == 12)
-                    {
-                        $Needs[] = floor(eval($_Vars_ResProduction[$ElementID]['formule']['deuterium']) * $_GameConfig['resource_multiplier']);
-                    }
-                    $Production[] = floor(eval($_Vars_ResProduction[$ElementID]['formule']['energy']) * $EnergyMulti);
-                }
-                // Calculate NextLevel Income
-                $BuildLevel += 1;
-                if($ElementID <= 3)
-                {
-                    if($ElementID == 1)
-                    {
-                        $Production[] = floor(eval($_Vars_ResProduction[$ElementID]['formule']['metal']) * $_GameConfig['resource_multiplier'] * $ResourceMulti);
-                    }
-                    else if($ElementID == 2)
-                    {
-                        $Production[] = floor(eval($_Vars_ResProduction[$ElementID]['formule']['crystal']) * $_GameConfig['resource_multiplier'] * $ResourceMulti);
-                    }
-                    else if($ElementID == 3)
-                    {
-                        $Production[] = floor(eval($_Vars_ResProduction[$ElementID]['formule']['deuterium']) * $_GameConfig['resource_multiplier'] * $ResourceMulti);
-                    }
-                    $Needs[] = floor(eval($_Vars_ResProduction[$ElementID]['formule']['energy']));
-                }
-                else
-                {
-                    if($ElementID == 12)
-                    {
-                        $Needs[] = floor(eval($_Vars_ResProduction[$ElementID]['formule']['deuterium']) * $_GameConfig['resource_multiplier']);
-                    }
-                    $Production[] = floor(eval($_Vars_ResProduction[$ElementID]['formule']['energy']) * $EnergyMulti);
-                }
-                // Calculate Difference
-                $Production = prettyNumber($Production[1] - $Production[0]);
-                if(!isset($Needs[1]))
-                {
-                    $Needs[1] = 0;
-                }
-                if(!isset($Needs[0]))
-                {
-                    $Needs[0] = 0;
-                }
-                $Needs = prettyNumber($Needs[1] - $Needs[0]);
+                $resourceLabels = [
+                    'metal' => $_Lang['Metal'],
+                    'crystal' => $_Lang['Crystal'],
+                    'deuterium' => $_Lang['Deuterium'],
+                    'energy' => $_Lang['Energy'],
+                ];
 
-                if($ElementID >= 1 AND $ElementID <= 3)
-                {
-                    $ElementParser['AdditionalNfo'][] = parsetemplate($TPL['infobox_additionalnfo'], array('Label' => $_Lang['Energy'], 'ValueClasses' => 'red', 'Value' => $Needs));
-                    $ElementParser['AdditionalNfo'][] = parsetemplate($TPL['infobox_additionalnfo'], array('Label' => $ThisResource, 'ValueClasses' => 'lime', 'Value' => '+'.$Production));
-                }
-                else if($ElementID == 4 OR $ElementID == 12)
-                {
-                    if($ElementID != 12)
-                    {
-                        $ElementParser['AdditionalNfo'][] = parsetemplate($TPL['infobox_additionalnfo'], array('Label' => $_Lang['Energy'], 'ValueClasses' => 'lime', 'Value' => '+'.$Production));
+                foreach ($nextLevelProduction as $resourceKey => $nextLevelResourceProduction) {
+                    $difference = ($nextLevelResourceProduction - $thisLevelProduction[$resourceKey]);
+
+                    if ($difference == 0) {
+                        continue;
                     }
-                    else
-                    {
-                        $ElementParser['AdditionalNfo'][] = parsetemplate($TPL['infobox_additionalnfo'], array('Label' => $_Lang['Energy'], 'ValueClasses' => 'lime', 'Value' => '+'.$Production));
-                        $ElementParser['AdditionalNfo'][] = parsetemplate($TPL['infobox_additionalnfo'], array('Label' => $_Lang['Deuterium'], 'ValueClasses' => 'red', 'Value' => $Needs));
-                    }
+
+                    $differenceFormatted = prettyNumber($difference);
+                    $label = $resourceLabels[$resourceKey];
+
+                    $ElementParser['AdditionalNfo'][] = parsetemplate(
+                        $TPL['infobox_additionalnfo'],
+                        [
+                            'Label' => $label,
+                            'ValueClasses' => (
+                                $difference >= 0 ?
+                                'lime' :
+                                'red'
+                            ),
+                            'Value' => (
+                                $difference >= 0 ?
+                                ('+' . $differenceFormatted) :
+                                $differenceFormatted
+                            )
+                        ]
+                    );
                 }
             }
 
-            if(!empty($ElementParser['AdditionalNfo']))
-            {
+            if(!empty($ElementParser['AdditionalNfo'])) {
                 $ElementParser['AdditionalNfo'] = implode('', $ElementParser['AdditionalNfo']);
             }
             $ElementParser['ElementRequirementsHeadline'] = parsetemplate($ElementParser['ElementRequirementsHeadline'], $ElementParser);
