@@ -24,7 +24,7 @@ $_Lang['Overview_LabPower']                     = 'Combined Research Labs level'
 
 $_Lang['Overview_ShipyardLevel']                = 'Shipyard level';
 $_Lang['Overview_NanoFactoryLevel']             = 'Nanite Factory level';
-$_Lang['Overview_SolarSateliteEnergy']          = 'Total Energy from Solar Satellites';
+$_Lang['Overview_SolarSateliteEnergy']          = 'Solar Satellite energy output';
 
 // Structures
 $_Lang['Builds']                                = 'Buildings';
