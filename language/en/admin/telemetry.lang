@@ -37,9 +37,9 @@ $_Lang['Tele_NameTranslation__f0']          = 'Fleets init';
 $_Lang['Tele_NameTranslation__f1']          = 'Fleets calculations';
 $_Lang['Tele_NameTranslation__d']           = 'Finalise';
 
-$_Lang['Tele_Legend_Avg']   = 'Avg. %s ms.';
+$_Lang['Tele_Legend_Avg']                   = 'Avg. %s ms.';
 
-$_Lang['Tele_TimeUnits']    = 'ms';
-$_Lang['Tele_ToolTipText']  = "\'Time: \'+RunResult+\'ms<br/>Point type: \'+ModeName+\'<br/>Player: <a target=\\\"_blank\\\" href=\\\"browse_actionlogs.php?uid=\'+UserID+\'&amp;date=\'+OtherDate+\'\\\">\'+Username+\'</a><br/>Data point date: \'+FullDate+\'\'";
+$_Lang['Tele_TimeUnits']                    = 'ms';
+$_Lang['Tele_TooltipGenFunction']           = 'function (params) { return `Time: ${params.RunResult}ms<br/>Point type: ${params.ModeName}<br/>Player: <a target="_blank" href="browse_actionlogs.php?uid=${params.UserID}&amp;date=${params.OtherDate}">${params.Username}</a><br/>Data point date: ${params.FullDate}`; }';
 
 ?>

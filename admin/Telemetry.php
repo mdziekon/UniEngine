@@ -255,7 +255,7 @@ if($PlaceID > 0)
             'shortstamp' => '%d.%m<br>%H:%M:%S',
             'otherdate' => '%Y_%m_%d',
             'units' => $_Lang['Tele_TimeUnits'],
-            'tooltiptext' => $_Lang['Tele_ToolTipText']
+            'tooltipGenFunction' => $_Lang['Tele_TooltipGenFunction']
         );
         $Result = MakeGraphs
         (

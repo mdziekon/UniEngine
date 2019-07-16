@@ -34,6 +34,6 @@ $_Lang['Tele_NameTranslation__d']           = 'Finalizacja';
 $_Lang['Tele_Legend_Avg']                   = 'Śr. %s ms.';
 
 $_Lang['Tele_TimeUnits']                    = 'ms';
-$_Lang['Tele_ToolTipText']                  = "\'Wynik: \'+RunResult+\'ms<br/>Pomiar: \'+ModeName+\'<br/>Gracz: <a target=\\\"_blank\\\" href=\\\"browse_actionlogs.php?uid=\'+UserID+\'&amp;date=\'+OtherDate+\'\\\">\'+Username+\'</a><br/>Czas pomiaru: \'+FullDate+\'\'";
+$_Lang['Tele_TooltipGenFunction']           = 'function (params) { return `Wynik: ${params.RunResult}ms<br/>Pomiar: ${params.ModeName}<br/>Gracz: <a target="_blank" href="browse_actionlogs.php?uid=${params.UserID}&amp;date=${params.OtherDate}">${params.Username}</a><br/>Czas pomiaru: ${params.FullDate}`; }';
 
 ?>
