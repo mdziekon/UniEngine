@@ -87,7 +87,7 @@ $(document).ready(function()
         $("#"+$(this).attr('id').replace('Mark', 'Cont')).show(0).removeClass('hide');
         $(this).removeClass('markHover').addClass('markSelect');
         $('[name=saveonly]').val($(this).attr('id'));
-        $('.saveOne').val(eval('SaveOneText.'+$(this).attr('id')));
+        $('.saveOne').val(SaveOneText[$(this).attr('id')]);
         return false;
     });
     $('.markLink').click(function()
