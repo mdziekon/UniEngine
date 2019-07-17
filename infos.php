@@ -95,7 +95,9 @@ function buildResourcesProductionTableHTML($elementID, &$planet, &$user, $timest
         $user,
         [
             'isBoosted' => true,
-            'timestamp' => $timestamp,
+            'timerange' => [
+                'end' => $timestamp
+            ],
             'customLevel' => $currentLevel,
             'customProductionFactor' => 10
         ]
@@ -137,7 +139,9 @@ function buildResourcesProductionTableHTML($elementID, &$planet, &$user, $timest
             $user,
             [
                 'isBoosted' => true,
-                'timestamp' => $timestamp,
+                'timerange' => [
+                    'end' => $timestamp
+                ],
                 'customLevel' => $iterLevel,
                 'customProductionFactor' => 10
             ]

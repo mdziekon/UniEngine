@@ -128,7 +128,9 @@ function FleetBuildingPage(&$CurrentPlanet, $CurrentUser)
                 $CurrentUser,
                 [
                     'isBoosted' => true,
-                    'timestamp' => $Now,
+                    'timerange' => [
+                        'end' => $Now
+                    ],
                     'customLevel' => 1,
                     'customProductionFactor' => 10
                 ]

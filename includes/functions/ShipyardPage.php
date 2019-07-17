@@ -443,7 +443,9 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
                 $CurrentUser,
                 [
                     'isBoosted' => true,
-                    'timestamp' => $Now,
+                    'timerange' => [
+                        'end' => $Now
+                    ],
                     'customLevel' => 1,
                     'customProductionFactor' => 10
                 ]
@@ -615,7 +617,9 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
         $CurrentUser,
         [
             'isBoosted' => true,
-            'timestamp' => $Now,
+            'timerange' => [
+                'end' => $Now
+            ],
             'customLevel' => 1,
             'customProductionFactor' => 10
         ]

@@ -197,7 +197,9 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
                     $CurrentUser,
                     [
                         'isBoosted' => true,
-                        'timestamp' => $Now,
+                        'timerange' => [
+                            'end' => $Now
+                        ],
                         'customLevel' => $BuildingLevel,
                         'customProductionFactor' => 10
                     ]
@@ -208,7 +210,9 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
                     $CurrentUser,
                     [
                         'isBoosted' => true,
-                        'timestamp' => $Now,
+                        'timerange' => [
+                            'end' => $Now
+                        ],
                         'customLevel' => ($BuildingLevel + 1),
                         'customProductionFactor' => 10
                     ]

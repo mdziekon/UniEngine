@@ -7,9 +7,9 @@
 //      - $params (Object)
 //          - isBoosted (Boolean) [default: true]
 //              Should boosters be pre-applied
-//          - timestamp (Number) [default: 0]
-//              Timestamp needed to determine if boosters are applicable
-//              (eg. they did not expire yet)
+//          - timerange (Object) [default: []]
+//              - start (Number) [default: 0]
+//              - end (Number) [default: 0]
 //          - customLevel (Number) [default: null]
 //          - customProductionFactor (Number) [default: null]
 //
@@ -26,8 +26,14 @@ function getElementProduction($elementID, &$planet, &$user, $params) {
     if (!isset($params['isBoosted'])) {
         $params['isBoosted'] = true;
     }
-    if (!isset($params['timestamp'])) {
-        $params['timestamp'] = 0;
+    if (!isset($params['timerange'])) {
+        $params['timerange'] = [];
+    }
+    if (!isset($params['timerange']['start'])) {
+        $params['timerange']['start'] = 0;
+    }
+    if (!isset($params['timerange']['end'])) {
+        $params['timerange']['end'] = 0;
     }
     if (!isset($params['customLevel'])) {
         $params['customLevel'] = null;
@@ -37,7 +43,7 @@ function getElementProduction($elementID, &$planet, &$user, $params) {
     }
 
     $isBoosted = $params['isBoosted'];
-    $timestamp = $params['timestamp'];
+    $timerange = $params['timerange'];
     $hasCustomLevel = ($params['customLevel'] !== null);
     $customLevel = $params['customLevel'];
     $hasCustomProductionFactor = ($params['customProductionFactor'] !== null);
@@ -90,7 +96,7 @@ function getElementProduction($elementID, &$planet, &$user, $params) {
         if (
             $isBoosted &&
             _isResourceBoosterApplicable($resourceKey, 'geologist') &&
-            _isResourceBoosterActive('geologist', $user, $timestamp)
+            _isResourceBoosterActive('geologist', $user, $timerange['end'])
         ) {
             $resourceProduction *= (1.15);
         }
@@ -98,7 +104,7 @@ function getElementProduction($elementID, &$planet, &$user, $params) {
         if (
             $isBoosted &&
             _isResourceBoosterApplicable($resourceKey, 'engineer') &&
-            _isResourceBoosterActive('engineer', $user, $timestamp)
+            _isResourceBoosterActive('engineer', $user, $timerange['end'])
         ) {
             $resourceProduction *= (1.10);
         }

@@ -606,7 +606,9 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                     $CurrentUser,
                     [
                         'isBoosted' => true,
-                        'timestamp' => $Now,
+                        'timerange' => [
+                            'end' => $Now
+                        ],
                         'customLevel' => $CurrentLevel,
                         'customProductionFactor' => 10
                     ]
@@ -617,7 +619,9 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                     $CurrentUser,
                     [
                         'isBoosted' => true,
-                        'timestamp' => $Now,
+                        'timerange' => [
+                            'end' => $Now
+                        ],
                         'customLevel' => ($CurrentLevel + 1),
                         'customProductionFactor' => 10
                     ]
