@@ -79,6 +79,22 @@ function getElementProduction($elementID, &$planet, &$user, $params) {
 
     $elementProduction = $productionFormula($elementParams);
 
+    $boostersIncrease = [
+        'geologist' => 0,
+        'engineer' => 0
+    ];
+
+    if ($isBoosted) {
+        $boostersIncrease['geologist'] = (
+            0.15 *
+            _getBoosterApplicabilityRatio('geologist', $timerange, $user)
+        );
+        $boostersIncrease['engineer'] = (
+            0.10 *
+            _getBoosterApplicabilityRatio('engineer', $timerange, $user)
+        );
+    }
+
     foreach ($elementProduction as $resourceKey => $resourceProduction) {
         if (_isResourceProductionSpeedMultiplicable($resourceKey)) {
             $resourceProduction *= $_GameConfig['resource_multiplier'];
@@ -93,20 +109,12 @@ function getElementProduction($elementID, &$planet, &$user, $params) {
             continue;
         }
 
-        if (
-            $isBoosted &&
-            _isResourceBoosterApplicable($resourceKey, 'geologist') &&
-            _isResourceBoosterActive('geologist', $user, $timerange['end'])
-        ) {
-            $resourceProduction *= (1.15);
+        if (_isResourceBoosterApplicable($resourceKey, 'geologist')) {
+            $resourceProduction *= (1 + $boostersIncrease['geologist']);
         }
 
-        if (
-            $isBoosted &&
-            _isResourceBoosterApplicable($resourceKey, 'engineer') &&
-            _isResourceBoosterActive('engineer', $user, $timerange['end'])
-        ) {
-            $resourceProduction *= (1.10);
+        if (_isResourceBoosterApplicable($resourceKey, 'engineer')) {
+            $resourceProduction *= (1 + $boostersIncrease['engineer']);
         }
 
         $production[$resourceKey] = $resourceProduction;
@@ -182,12 +190,6 @@ function _isResourceProductionSpeedMultiplicable($resourceKey) {
     ];
 
     return in_array($resourceKey, $multiplicableResources);
-}
-
-function _isResourceBoosterActive($boosterKey, &$user, $timestamp) {
-    $boosterEndtime = _getBoosterEndtime($boosterKey, $user);
-
-    return $boosterEndtime > $timestamp;
 }
 
 function _isResourceBoosterApplicable($resourceKey, $boosterKey) {
