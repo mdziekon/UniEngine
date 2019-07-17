@@ -185,9 +185,9 @@ function _isResourceProductionSpeedMultiplicable($resourceKey) {
 }
 
 function _isResourceBoosterActive($boosterKey, &$user, $timestamp) {
-    $boosterUserKey = $boosterKey . '_time';
+    $boosterEndtime = _getBoosterEndtime($boosterKey, $user);
 
-    return $user[$boosterUserKey] > $timestamp;
+    return $boosterEndtime > $timestamp;
 }
 
 function _isResourceBoosterApplicable($resourceKey, $boosterKey) {
@@ -240,6 +240,36 @@ function _getElementProductionFormula($elementID) {
     }
 
     return $_Vars_ResProduction[$elementID]['production'];
+}
+
+function _getBoosterEndtime($boosterKey, &$user) {
+    $boosterEndtimeKey = $boosterKey . '_time';
+
+    return $user[$boosterEndtimeKey];
+}
+
+//  Arguments:
+//      - $boosterKey (String)
+//      - $timerange (Object)
+//          - start (Number)
+//          - end (Number)
+//      - $user (&Object)
+//
+function _getBoosterApplicabilityRatio($boosterKey, $timerange, &$user) {
+    $boosterEndtime = _getBoosterEndtime($boosterKey, $user);
+
+    if ($boosterEndtime <= $timerange['start']) {
+        return 0;
+    }
+
+    if ($boosterEndtime >= $timerange['end']) {
+        return 1;
+    }
+
+    $applicableInRange = ($boosterEndtime - $timerange['start']);
+    $rangeLength = ($timerange['end'] - $timerange['start']);
+
+    return ($applicableInRange / $rangeLength);
 }
 
 ?>
