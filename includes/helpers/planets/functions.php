@@ -8,8 +8,8 @@
 //          - isBoosted (Boolean) [default: true]
 //              Should boosters be pre-applied
 //          - timerange (Object) [default: []]
-//              - start (Number) [default: 0]
 //              - end (Number) [default: 0]
+//              - start (Number) [default: timerange.end]
 //          - customLevel (Number) [default: null]
 //          - customProductionFactor (Number) [default: null]
 //
@@ -29,11 +29,11 @@ function getElementProduction($elementID, &$planet, &$user, $params) {
     if (!isset($params['timerange'])) {
         $params['timerange'] = [];
     }
-    if (!isset($params['timerange']['start'])) {
-        $params['timerange']['start'] = 0;
-    }
     if (!isset($params['timerange']['end'])) {
         $params['timerange']['end'] = 0;
+    }
+    if (!isset($params['timerange']['start'])) {
+        $params['timerange']['start'] = $params['timerange']['end'];
     }
     if (!isset($params['customLevel'])) {
         $params['customLevel'] = null;
