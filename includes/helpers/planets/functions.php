@@ -85,6 +85,9 @@ function getElementProduction($elementID, &$planet, &$user, $params) {
     ];
 
     if ($isBoosted) {
+        // FIXME: remove applicability ratios feature - production updaters
+        // should take care of this on their own, since there are multiple
+        // periods that may split the ranges, not just "one for all"
         $boostersIncrease['geologist'] = (
             0.15 *
             _getBoosterApplicabilityRatio('geologist', $timerange, $user)
