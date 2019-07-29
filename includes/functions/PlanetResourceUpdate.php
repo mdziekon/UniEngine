@@ -1,24 +1,21 @@
 <?php
 
-function PlanetResourceUpdate($CurrentUser, &$CurrentPlanet, $UpdateTime, $Simul = false)
-{
-    global $_Vars_ResProduction, $_Vars_GameElements, $_Vars_ElementCategories, $_GameConfig, $_DontShowMenus, $UserDev_Log, $SetPercents;
+function PlanetResourceUpdate($CurrentUser, &$CurrentPlanet, $UpdateTime, $Simul = false) {
+    global $_Vars_GameElements, $_Vars_ElementCategories, $_DontShowMenus, $SetPercents;
 
     $NeedUpdate = false;
 
-    if(!empty($SetPercents[$CurrentPlanet['id']]))
-    {
-        foreach($SetPercents[$CurrentPlanet['id']] as $Key => $Value)
-        {
+    if (!empty($SetPercents[$CurrentPlanet['id']])) {
+        foreach ($SetPercents[$CurrentPlanet['id']] as $Key => $Value) {
             $CurrentPlanet[$Key] = $Value['old'];
         }
     }
 
     $ProductionTime = ($UpdateTime - $CurrentPlanet['last_update']);
 
-     // Update place for resources
-    $CurrentPlanet['metal_max']        = (floor(BASE_STORAGE_SIZE * pow(1.7, $CurrentPlanet[$_Vars_GameElements[22]])));
-    $CurrentPlanet['crystal_max']    = (floor(BASE_STORAGE_SIZE * pow(1.7, $CurrentPlanet[$_Vars_GameElements[23]])));
+    // Update place for resources
+    $CurrentPlanet['metal_max'] = (floor(BASE_STORAGE_SIZE * pow(1.7, $CurrentPlanet[$_Vars_GameElements[22]])));
+    $CurrentPlanet['crystal_max'] = (floor(BASE_STORAGE_SIZE * pow(1.7, $CurrentPlanet[$_Vars_GameElements[23]])));
     $CurrentPlanet['deuterium_max'] = (floor(BASE_STORAGE_SIZE * pow(1.7, $CurrentPlanet[$_Vars_GameElements[24]])));
 
     // Start ResourceUpdating
@@ -126,8 +123,7 @@ function PlanetResourceUpdate($CurrentUser, &$CurrentPlanet, $UpdateTime, $Simul
     // End of ResourceUpdate
     $CurrentPlanet['last_update'] = $UpdateTime;
 
-    if($Simul === false)
-    {
+    if ($Simul === false) {
         // Management of eventual shipyard Queue
         $Builded = HandleShipyardQueue($CurrentUser, $CurrentPlanet, $ProductionTime, $UpdateTime);
 
@@ -144,14 +140,12 @@ function PlanetResourceUpdate($CurrentUser, &$CurrentPlanet, $UpdateTime, $Simul
         $QryUpdatePlanet .= "`deuterium_perhour` = '{$CurrentPlanet['deuterium_perhour']}', ";
         $QryUpdatePlanet .= "`energy_used` = '{$CurrentPlanet['energy_used']}', ";
         $QryUpdatePlanet .= "`energy_max` = '{$CurrentPlanet['energy_max']}', ";
+
         // Check if something has been built in Shipyard
-        if(!empty($Builded))
-        {
+        if (!empty($Builded)) {
             $NeedUpdate = true;
-            foreach($Builded as $Element => $Count)
-            {
-                if(!empty($_Vars_GameElements[$Element]))
-                {
+            foreach ($Builded as $Element => $Count) {
+                if (!empty($_Vars_GameElements[$Element])) {
                     $QryUpdatePlanet .= "`{$_Vars_GameElements[$Element]}` = `{$_Vars_GameElements[$Element]}` + {$Count}, ";
                 }
             }
@@ -161,10 +155,13 @@ function PlanetResourceUpdate($CurrentUser, &$CurrentPlanet, $UpdateTime, $Simul
         $QryUpdatePlanet .= "`id` = {$CurrentPlanet['id']};";
 
         doquery('LOCK TABLE {{table}} WRITE, {{prefix}}errors WRITE', 'planets');
+
         $Last_DontShowMenus = $_DontShowMenus;
-        $_DontShowMenus= true;
+        $_DontShowMenus = true;
+
         doquery($QryUpdatePlanet, 'planets');
         doquery('UNLOCK TABLES', '');
+
         $_DontShowMenus = $Last_DontShowMenus;
     }
 
