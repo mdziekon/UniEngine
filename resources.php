@@ -142,7 +142,7 @@ function BuildRessourcePage($CurrentUser, &$CurrentPlanet)
     $CurrentPlanet['deuterium_perhour'] = 0;
     $CurrentPlanet['energy_max'] = 0;
     $CurrentPlanet['energy_used'] = 0;
-    $BuildTemp = $CurrentPlanet['temp_max'];
+
     $Loop = 0;
     foreach($_Vars_ElementCategories['prod'] as $ProdID)
     {
@@ -153,83 +153,27 @@ function BuildRessourcePage($CurrentUser, &$CurrentPlanet)
                 $CurrRow[$Loop]['zero_level'] = ' class="red"';
             }
 
-            $BuildLevelFactor = $CurrentPlanet[$_Vars_GameElements[$ProdID].'_workpercent'];
-            $BuildLevel = $CurrentPlanet[$_Vars_GameElements[$ProdID]];
+            $elementProduction = getElementProduction(
+                $ProdID,
+                $CurrentPlanet,
+                $CurrentUser,
+                [
+                    'isBoosted' => true,
+                    'timerange' => [
+                        'end' => $Now
+                    ]
+                ]
+            );
 
-            $metal = abs(floor( eval ( $_Vars_ResProduction[$ProdID]['formule']['metal'] ) * ( $_GameConfig['resource_multiplier'] ) * (($CurrentUser['geologist_time'] > $Now) ? 1.15 : 1) ) );
-            $crystal = abs(floor( eval ( $_Vars_ResProduction[$ProdID]['formule']['crystal'] ) * ( $_GameConfig['resource_multiplier'] ) * (($CurrentUser['geologist_time'] > $Now) ? 1.15 : 1) ) );
-            if($ProdID != 12)
-            {
-                $deuterium = floor( eval ( $_Vars_ResProduction[$ProdID]['formule']['deuterium'] ) * ( $_GameConfig['resource_multiplier'] ) * (($CurrentUser['geologist_time'] > $Now) ? 1.15 : 1) );
-            }
-            else
-            {
-                $deuterium = floor( eval ( $_Vars_ResProduction[$ProdID]['formule']['deuterium'] ) * ( $_GameConfig['resource_multiplier'] ) );
-            }
+            $CurrentPlanet['metal_perhour'] += $elementProduction['metal'];
+            $CurrentPlanet['crystal_perhour'] += $elementProduction['crystal'];
+            $CurrentPlanet['deuterium_perhour'] += $elementProduction['deuterium'];
 
-            // Calculate Energy
-            if($ProdID < 4)
-            {
-                $energy = floor(eval($_Vars_ResProduction[$ProdID]['formule']['energy']));
+            if ($elementProduction['energy'] > 0) {
+                $CurrentPlanet['energy_max'] += $elementProduction['energy'];
+            } else {
+                $CurrentPlanet['energy_used'] += $elementProduction['energy'];
             }
-            else
-            {
-                if($ProdID != 12)
-                {
-                    $energy = floor(eval($_Vars_ResProduction[$ProdID]['formule']['energy']) * (($CurrentUser['engineer_time'] > $Now) ? 1.10 : 1));
-                }
-                else
-                {
-                    $MineDeuteriumUse = floor(eval($_Vars_ResProduction[$ProdID]['formule']['deuterium']) * ($_GameConfig['resource_multiplier'])) * (-1);
-                    if($MineDeuteriumUse > 0)
-                    {
-                        if($CurrentPlanet['deuterium'] <= 0)
-                        {
-                            if(($CurrentPlanet['deuterium_perhour'] + $deuterium) == ($MineDeuteriumUse * (-1)))
-                            {
-                                // If no enough + production of deuterium
-                                $energy = 0;
-                            }
-                            else
-                            {
-                                // If there is still some deuterium in + production to use
-                                $FusionReactorMulti = $CurrentPlanet['deuterium_perhour'] / $MineDeuteriumUse;
-                                if($FusionReactorMulti > 1)
-                                {
-                                    $FusionReactorMulti = 1;
-                                }
-                                $energy = floor(eval($_Vars_ResProduction[$ProdID]['formule']['energy']) * $FusionReactorMulti * (($CurrentUser['engineer_time'] > $Now) ? 1.10 : 1));
-                            }
-                        }
-                        else
-                        {
-                            $FusionReactorMulti = $CurrentPlanet['deuterium'] / ($MineDeuteriumUse / 3600);
-                            if($FusionReactorMulti > 1)
-                            {
-                                $FusionReactorMulti = 1;
-                            }
-
-                            $energy = floor(eval($_Vars_ResProduction[$ProdID]['formule']['energy']) * $FusionReactorMulti * (($CurrentUser['engineer_time'] > $Now) ? 1.10 : 1));
-                        }
-                    }
-                    else
-                    {
-                        $energy = 0;
-                    }
-                }
-            }
-
-            if($energy > 0)
-            {
-                $CurrentPlanet['energy_max']+= $energy;
-            }
-            else
-            {
-                $CurrentPlanet['energy_used'] += $energy;
-            }
-            $CurrentPlanet['metal_perhour'] += $metal;
-            $CurrentPlanet['crystal_perhour'] += $crystal;
-            $CurrentPlanet['deuterium_perhour'] += $deuterium;
 
             $Field = $_Vars_GameElements[$ProdID]."_workpercent";
             $CurrRow[$Loop]['name'] = $_Vars_GameElements[$ProdID];
@@ -256,10 +200,10 @@ function BuildRessourcePage($CurrentUser, &$CurrentPlanet)
             {
                 $CurrRow[$Loop]['level_type'] = prettyNumber($CurrRow[$Loop]['level_type']);
             }
-            $CurrRow[$Loop]['metal_type'] = $metal;
-            $CurrRow[$Loop]['crystal_type'] = $crystal;
-            $CurrRow[$Loop]['deuterium_type'] = $deuterium;
-            $CurrRow[$Loop]['energy_type'] = $energy;
+            $CurrRow[$Loop]['metal_type'] = $elementProduction['metal'];
+            $CurrRow[$Loop]['crystal_type'] = $elementProduction['crystal'];
+            $CurrRow[$Loop]['deuterium_type'] = $elementProduction['deuterium'];
+            $CurrRow[$Loop]['energy_type'] = $elementProduction['energy'];
 
             $Loop += 1;
         }
