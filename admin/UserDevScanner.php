@@ -16,34 +16,31 @@ if(!CheckAuth('go'))
 }
 
 includeLang('admin/userdevscanner');
+
 $AllowScan = false;
 $Search = false;
 $Hide = ' class="hide"';
 $PermDiffSet = 5;
 $PermDiff = (100 + $PermDiffSet) / 100;
 
-function ResourceUpdate(&$CurrentPlanet, $CurrentUser, $StartTime, $EndTime)
-{
+function ResourceUpdate(&$CurrentPlanet, $CurrentUser, $StartTime, $EndTime) {
     global $_Vars_GameElements, $PremiumItemsArchive;
 
-    if($StartTime == 'LA')
-    {
+    if ($StartTime == 'LA') {
         $StartTime = $CurrentPlanet['last_update'];
     }
 
     $ProductionTime = $EndTime - $StartTime;
 
-    if($ProductionTime <= 0)
-    {
+    if ($ProductionTime <= 0) {
         return false;
     }
-    if($CurrentPlanet['planet_type'] == 3)
-    {
+    if ($CurrentPlanet['planet_type'] == 3) {
         return false;
     }
-    else if(empty($CurrentPlanet['planet_type']))
-    {
+    if (empty($CurrentPlanet['planet_type'])) {
         $CurrentPlanet['planet_type'] = 3;
+
         return false;
     }
 
