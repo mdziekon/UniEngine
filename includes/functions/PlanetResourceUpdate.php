@@ -86,7 +86,7 @@ function PlanetResourceUpdate($CurrentUser, &$CurrentPlanet, $UpdateTime, $Simul
             }
 
             $income = [
-                'metal' => _calculateFinalResourceAmount(
+                'metal' => calculateRealResourceIncome(
                     'metal',
                     $CurrentPlanet,
                     [
@@ -94,7 +94,7 @@ function PlanetResourceUpdate($CurrentUser, &$CurrentPlanet, $UpdateTime, $Simul
                         'productionLevel' => $production_level
                     ]
                 ),
-                'crystal' => _calculateFinalResourceAmount(
+                'crystal' => calculateRealResourceIncome(
                     'crystal',
                     $CurrentPlanet,
                     [
@@ -102,7 +102,7 @@ function PlanetResourceUpdate($CurrentUser, &$CurrentPlanet, $UpdateTime, $Simul
                         'productionLevel' => $production_level
                     ]
                 ),
-                'deuterium' => _calculateFinalResourceAmount(
+                'deuterium' => calculateRealResourceIncome(
                     'deuterium',
                     $CurrentPlanet,
                     [
@@ -181,71 +181,6 @@ function PlanetResourceUpdate($CurrentUser, &$CurrentPlanet, $UpdateTime, $Simul
     }
 
     return $NeedUpdate;
-}
-
-//  Arguments
-//      - $resourceKey (String)
-//      - $planet (&Object)
-//      - $params (Object)
-//          - productionTime (Number)
-//          - productionLevel (Number)
-//
-function _calculateFinalResourceAmount($resourceKey, &$planet, $params) {
-    global $_GameConfig;
-
-    $productionTime = $params['productionTime'];
-    $productionLevel = $params['productionLevel'];
-
-    $resourceCurrentAmount = $planet[$resourceKey];
-    $resourceMaxStorage = ($planet["{$resourceKey}_max"] * MAX_OVERFLOW);
-    $resourceIncomePerSecond = [
-        'production' => ($planet["{$resourceKey}_perhour"] / 3600),
-        'base' => (
-            (
-                $_GameConfig["{$resourceKey}_basic_income"] *
-                $_GameConfig['resource_multiplier']
-            ) /
-            3600
-        )
-    ];
-
-    if ($resourceCurrentAmount >= $resourceMaxStorage) {
-        return [
-            'isUpdated' => false,
-            'income' => 0
-        ];
-    }
-
-    $theoreticalIncome = [
-        'production' => (
-            $productionTime *
-            $resourceIncomePerSecond['production'] *
-            (0.01 * $productionLevel)
-        ),
-        'base' => (
-            $productionTime *
-            $resourceIncomePerSecond['base']
-        )
-    ];
-    $totalTheoreticalIncome = $theoreticalIncome['production'] + $theoreticalIncome['base'];
-
-    $theoreticalAmount = $resourceCurrentAmount + $totalTheoreticalIncome;
-
-    if ($theoreticalAmount < 0) {
-        $theoreticalAmount = 0;
-    }
-
-    $finalAmount = (
-        $theoreticalAmount < $resourceMaxStorage ?
-        $theoreticalAmount :
-        $resourceMaxStorage
-    );
-    $finalIncome = ($finalAmount - $resourceCurrentAmount);
-
-    return [
-        'isUpdated' => ($finalIncome != 0),
-        'income' => $finalIncome
-    ];
 }
 
 function _recalculateHourlyProductionLevels($changedProductionFactors, &$planet, &$user, $timerange) {

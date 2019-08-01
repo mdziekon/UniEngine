@@ -222,7 +222,7 @@ function _calculateTotalResourceIncome2(&$CurrentPlanet, $CurrentUser, $timerang
     }
 
     $income = [
-        'metal' => _calculateFinalResourceAmount2(
+        'metal' => calculateRealResourceIncome(
             'metal',
             $CurrentPlanet,
             [
@@ -230,7 +230,7 @@ function _calculateTotalResourceIncome2(&$CurrentPlanet, $CurrentUser, $timerang
                 'productionLevel' => $productionLevel
             ]
         ),
-        'crystal' => _calculateFinalResourceAmount2(
+        'crystal' => calculateRealResourceIncome(
             'crystal',
             $CurrentPlanet,
             [
@@ -238,7 +238,7 @@ function _calculateTotalResourceIncome2(&$CurrentPlanet, $CurrentUser, $timerang
                 'productionLevel' => $productionLevel
             ]
         ),
-        'deuterium' => _calculateFinalResourceAmount2(
+        'deuterium' => calculateRealResourceIncome(
             'deuterium',
             $CurrentPlanet,
             [
@@ -249,71 +249,6 @@ function _calculateTotalResourceIncome2(&$CurrentPlanet, $CurrentUser, $timerang
     ];
 
     return $income;
-}
-
-//  Arguments
-//      - $resourceKey (String)
-//      - $planet (&Object)
-//      - $params (Object)
-//          - productionTime (Number)
-//          - productionLevel (Number)
-//
-function _calculateFinalResourceAmount2($resourceKey, &$planet, $params) {
-    global $_GameConfig;
-
-    $productionTime = $params['productionTime'];
-    $productionLevel = $params['productionLevel'];
-
-    $resourceCurrentAmount = $planet[$resourceKey];
-    $resourceMaxStorage = ($planet["{$resourceKey}_max"] * MAX_OVERFLOW);
-    $resourceIncomePerSecond = [
-        'production' => ($planet["{$resourceKey}_perhour"] / 3600),
-        'base' => (
-            (
-                $_GameConfig["{$resourceKey}_basic_income"] *
-                $_GameConfig['resource_multiplier']
-            ) /
-            3600
-        )
-    ];
-
-    if ($resourceCurrentAmount >= $resourceMaxStorage) {
-        return [
-            'isUpdated' => false,
-            'income' => 0
-        ];
-    }
-
-    $theoreticalIncome = [
-        'production' => (
-            $productionTime *
-            $resourceIncomePerSecond['production'] *
-            (0.01 * $productionLevel)
-        ),
-        'base' => (
-            $productionTime *
-            $resourceIncomePerSecond['base']
-        )
-    ];
-    $totalTheoreticalIncome = $theoreticalIncome['production'] + $theoreticalIncome['base'];
-
-    $theoreticalAmount = $resourceCurrentAmount + $totalTheoreticalIncome;
-
-    if ($theoreticalAmount < 0) {
-        $theoreticalAmount = 0;
-    }
-
-    $finalAmount = (
-        $theoreticalAmount < $resourceMaxStorage ?
-        $theoreticalAmount :
-        $resourceMaxStorage
-    );
-    $finalIncome = ($finalAmount - $resourceCurrentAmount);
-
-    return [
-        'isUpdated' => ($finalIncome != 0),
-        'income' => $finalIncome
-    ];
 }
 
 $UID = isset($_POST['uid']) ? $_POST['uid'] : 0;

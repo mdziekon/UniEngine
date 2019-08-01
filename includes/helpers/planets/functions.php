@@ -277,4 +277,76 @@ function _getBoosterApplicabilityRatio($boosterKey, $timerange, &$user) {
     return ($applicableInRange / $rangeLength);
 }
 
+//  Assumptions:
+//      - Planet's hourly extraction of the resource is already calculated
+//        and available in $planet["{$resourceKey}_perhour"] property.
+//        This includes any boosters that affect the extraction (eg. Geologist).
+//      - Planet's storage capacity of the resource is already calculated
+//        and available in $planet["{$resourceKey}_max"] property.
+//
+//  Arguments
+//      - $resourceKey (String)
+//      - $planet (&Object)
+//      - $params (Object)
+//          - productionTime (Number)
+//          - productionLevel (Number)
+//
+function calculateRealResourceIncome($resourceKey, &$planet, $params) {
+    global $_GameConfig;
+
+    $productionTime = $params['productionTime'];
+    $productionLevel = $params['productionLevel'];
+
+    $resourceCurrentAmount = $planet[$resourceKey];
+    $resourceMaxStorage = ($planet["{$resourceKey}_max"] * MAX_OVERFLOW);
+    $resourceIncomePerSecond = [
+        'production' => ($planet["{$resourceKey}_perhour"] / 3600),
+        'base' => (
+            (
+                $_GameConfig["{$resourceKey}_basic_income"] *
+                $_GameConfig['resource_multiplier']
+            ) /
+            3600
+        )
+    ];
+
+    if ($resourceCurrentAmount >= $resourceMaxStorage) {
+        return [
+            'isUpdated' => false,
+            'income' => 0
+        ];
+    }
+
+    $theoreticalIncome = [
+        'production' => (
+            $productionTime *
+            $resourceIncomePerSecond['production'] *
+            (0.01 * $productionLevel)
+        ),
+        'base' => (
+            $productionTime *
+            $resourceIncomePerSecond['base']
+        )
+    ];
+    $totalTheoreticalIncome = $theoreticalIncome['production'] + $theoreticalIncome['base'];
+
+    $theoreticalAmount = $resourceCurrentAmount + $totalTheoreticalIncome;
+
+    if ($theoreticalAmount < 0) {
+        $theoreticalAmount = 0;
+    }
+
+    $finalAmount = (
+        $theoreticalAmount < $resourceMaxStorage ?
+        $theoreticalAmount :
+        $resourceMaxStorage
+    );
+    $finalIncome = ($finalAmount - $resourceCurrentAmount);
+
+    return [
+        'isUpdated' => ($finalIncome != 0),
+        'income' => $finalIncome
+    ];
+}
+
 ?>
