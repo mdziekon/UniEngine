@@ -1869,7 +1869,7 @@ if($AllowScan)
                     $ParseRow = $ParseRowPattern;
                     $Point = &$_Lang['Found'.$ScanKey.'s'][$Data['ID']];
                     $ParseRow['Index'] = str_pad($Index + 1, 4, '0', STR_PAD_LEFT);
-                    $ParseRow['RowTitle'] = $Point['Txt'];
+                    $ParseRow['RowTitle'] = $Point['label'];
                     if (
                         $ScanKey == 'Summary' ||
                         (
@@ -1887,23 +1887,10 @@ if($AllowScan)
                             $ParseRow['RowLogID'] .= '<br/>LogNo: '.$Data['LogNo'];
                         }
                     }
-                    if($Point['GenerateDataList'] === true)
-                    {
-                        if(!empty($Data['Data']))
-                        {
-                            foreach($Data['Data'] as $DataID => $DataVal)
-                            {
-                                $Data['GeneratedDataList'][] = eval('return "'.$Point['DataListEvalCode'].'";');
-                            }
-                            $Data['GeneratedDataList'] = implode($Point['DataListGlue'], $Data['GeneratedDataList']);
-                        }
-                    }
-                    if(!empty($Point['Eval']))
-                    {
-                        $ParseRow['RowData'] = eval('return "'.$Point['Eval'].'";');
-                    }
-                    else
-                    {
+
+                    if (isset($Point['msgGenerator']) && is_callable($Point['msgGenerator'])) {
+                        $ParseRow['RowData'] = $Point['msgGenerator']($Data, $_Lang);
+                    } else {
                         $ParseRow['RowData'] = '-';
                     }
 
@@ -1929,12 +1916,12 @@ if($AllowScan)
         if(empty($ScanLog['Summary']))
         {
             $_Lang['PHP_OverallResultColor'] = 'lime';
-            $_Lang['PHP_OverallResultText'] = $_Lang['FoundSummarys']['000']['Txt1'];
+            $_Lang['PHP_OverallResultText'] = $_Lang['FoundSummarys']['000']['ok'];
         }
         else
         {
             $_Lang['PHP_OverallResultColor'] = 'red';
-            $_Lang['PHP_OverallResultText'] = $_Lang['FoundSummarys']['000']['Txt2'];
+            $_Lang['PHP_OverallResultText'] = $_Lang['FoundSummarys']['000']['found_problems'];
         }
     }
 

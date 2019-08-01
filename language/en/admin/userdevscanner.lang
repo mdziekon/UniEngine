@@ -60,117 +60,246 @@ $_Lang['Scripts'] = [
 
 $_Lang['FoundSummarys'] = [
     '000' => [
-        'Txt1' => 'No inconsistencies detected...',
-        'Txt2' => 'Following inconsistencies detected:'
+        'ok' => 'No inconsistencies detected...',
+        'found_problems' => 'Following inconsistencies detected:'
     ],
     '001' => [
-        'Txt' => 'Element deficit',
-        'GenerateDataList' => false,
-        'Eval' => 'Planet: {$Data[\'PlanetID\']}<br/>Element name: {$_Lang[\'tech\'][$Data[\'ElementID\']]}<br/>Expected result: ".prettyNumber($Data[\'Data\'][0])."<br/>Actual result: ".prettyNumber($Data[\'Data\'][1])."<br/>Difference: ".sprintf(\'%0.2f\', $Data[\'Data\'][2] * 100)."%'
+        'label' => 'Element deficit',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Planet: {$params['PlanetID']}",
+                "Element name: {$_Lang['tech'][$params['ElementID']]}",
+                ("Expected result: " . prettyNumber($params['Data'][0])),
+                ("Actual result: " . prettyNumber($params['Data'][1])),
+                ("Difference: " . sprintf('%0.2f', $params['Data'][2] * 100) . "%")
+            ];
+
+            return implode('<br/>', $lines);
+        },
     ],
     '002' => [
-        'Txt' => 'Element excess',
-        'GenerateDataList' => false,
-        'Eval' => 'Planet: {$Data[\'PlanetID\']}<br/>Element name: {$_Lang[\'tech\'][$Data[\'ElementID\']]}<br/>Expected result: ".prettyNumber($Data[\'Data\'][0])."<br/>Actual result: ".prettyNumber($Data[\'Data\'][1])."<br/>Difference: ".sprintf(\'%0.2f\', $Data[\'Data\'][2] * 100)."%'
+        'label' => 'Element excess',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Planet: {$params['PlanetID']}",
+                "Element name: {$_Lang['tech'][$params['ElementID']]}",
+                ("Expected result: " . prettyNumber($params['Data'][0])),
+                ("Actual result: " . prettyNumber($params['Data'][1])),
+                ("Difference: " . sprintf('%0.2f', $params['Data'][2] * 100) . "%")
+            ];
+
+            return implode('<br/>', $lines);
+        },
     ],
     '003' => [
-        'Txt' => 'Resource deficit',
-        'GenerateDataList' => false,
-        'Eval' => 'Planet: {$Data[\'PlanetID\']}<br/>Resource: {$Data[\'ElementID\']}<br/>Expected result: ".prettyNumber($Data[\'Data\'][0])."<br/>Actual result: ".prettyNumber($Data[\'Data\'][1])."<br/>Difference: ".sprintf(\'%0.2f\', $Data[\'Data\'][2] * 100)."%'
+        'label' => 'Resource deficit',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Planet: {$params['PlanetID']}",
+                "Resource: {$params['ElementID']}",
+                ("Expected result: " . prettyNumber($params['Data'][0])),
+                ("Actual result: " . prettyNumber($params['Data'][1])),
+                ("Difference: " . sprintf('%0.2f', $params['Data'][2] * 100) . "%")
+            ];
+
+            return implode('<br/>', $lines);
+        },
     ],
     '004' => [
-        'Txt' => 'Resource excess',
-        'GenerateDataList' => false,
-        'Eval' => 'Planet: {$Data[\'PlanetID\']}<br/>Resource: {$Data[\'ElementID\']}<br/>Expected result: ".prettyNumber($Data[\'Data\'][0])."<br/>Actual result: ".prettyNumber($Data[\'Data\'][1])."<br/>Difference: ".sprintf(\'%0.2f\', $Data[\'Data\'][2] * 100)."%'
+        'label' => 'Resource excess',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Planet: {$params['PlanetID']}",
+                "Resource: {$params['ElementID']}",
+                ("Expected result: " . prettyNumber($params['Data'][0])),
+                ("Actual result: " . prettyNumber($params['Data'][1])),
+                ("Difference: " . sprintf('%0.2f', $params['Data'][2] * 100) . "%")
+            ];
+
+            return implode('<br/>', $lines);
+        },
     ],
     '005' => [
-        'Txt' => 'Total resource deficit',
-        'GenerateDataList' => false,
-        'Eval' => 'Resource: {$Data[\'ElementID\']}<br/>Expected result: ".prettyNumber($Data[\'Data\'][0])."<br/>Actual result: ".prettyNumber($Data[\'Data\'][1])."<br/>Difference: ".sprintf(\'%0.2f\', $Data[\'Data\'][2] * 100)."%'
+        'label' => 'Total resource deficit',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Resource: {$params['ElementID']}",
+                ("Expected result: " . prettyNumber($params['Data'][0])),
+                ("Actual result: " . prettyNumber($params['Data'][1])),
+                ("Difference: " . sprintf('%0.2f', $params['Data'][2] * 100) . "%")
+            ];
+
+            return implode('<br/>', $lines);
+        },
     ],
     '006' => [
-        'Txt' => 'Total resource excess',
-        'GenerateDataList' => false,
-        'Eval' => 'Resource: {$Data[\'ElementID\']}<br/>Expected result: ".prettyNumber($Data[\'Data\'][0])."<br/>Actual result: ".prettyNumber($Data[\'Data\'][1])."<br/>Difference: ".sprintf(\'%0.2f\', $Data[\'Data\'][2] * 100)."%'
+        'label' => 'Total resource excess',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Resource: {$params['ElementID']}",
+                ("Expected result: " . prettyNumber($params['Data'][0])),
+                ("Actual result: " . prettyNumber($params['Data'][1])),
+                ("Difference: " . sprintf('%0.2f', $params['Data'][2] * 100) . "%")
+            ];
+
+            return implode('<br/>', $lines);
+        },
     ],
     '007' => [
-        'Txt' => 'Total element deficit',
-        'GenerateDataList' => false,
-        'Eval' => 'Element name: {$_Lang[\'tech\'][$Data[\'ElementID\']]}<br/>Expected result: ".prettyNumber($Data[\'Data\'][0])."<br/>Actual result: ".prettyNumber($Data[\'Data\'][1])."<br/>Difference: ".sprintf(\'%0.2f\', $Data[\'Data\'][2] * 100)."%'
+        'label' => 'Total element deficit',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Element name: {$_Lang['tech'][$params['ElementID']]}",
+                ("Expected result: " . prettyNumber($params['Data'][0])),
+                ("Actual result: " . prettyNumber($params['Data'][1])),
+                ("Difference: " . sprintf('%0.2f', $params['Data'][2] * 100) . "%")
+            ];
+
+            return implode('<br/>', $lines);
+        },
     ],
     '008' => [
-        'Txt' => 'Total element excess',
-        'GenerateDataList' => false,
-        'Eval' => 'Element name: {$_Lang[\'tech\'][$Data[\'ElementID\']]}<br/>Expected result: ".prettyNumber($Data[\'Data\'][0])."<br/>Actual result: ".prettyNumber($Data[\'Data\'][1])."<br/>Difference: ".sprintf(\'%0.2f\', $Data[\'Data\'][2] * 100)."%'
+        'label' => 'Total element excess',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Element name: {$_Lang['tech'][$params['ElementID']]}",
+                ("Expected result: " . prettyNumber($params['Data'][0])),
+                ("Actual result: " . prettyNumber($params['Data'][1])),
+                ("Difference: " . sprintf('%0.2f', $params['Data'][2] * 100) . "%")
+            ];
+
+            return implode('<br/>', $lines);
+        },
     ],
     '009' => [
-        'Txt' => 'Technology level too low',
-        'GenerateDataList' => false,
-        'Eval' => 'Technology name: {$_Lang[\'tech\'][$Data[\'ElementID\']]}<br/>Expected result: ".prettyNumber($Data[\'Data\'][0])."<br/>Actual result: ".prettyNumber($Data[\'Data\'][1])."'
+        'label' => 'Technology level too low',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Technology name: {$_Lang['tech'][$params['ElementID']]}",
+                ("Expected result: " . prettyNumber($params['Data'][0])),
+                ("Actual result: " . prettyNumber($params['Data'][1])),
+            ];
+
+            return implode('<br/>', $lines);
+        },
     ],
     '010' => [
-        'Txt' => 'Technology level too high',
-        'GenerateDataList' => false,
-        'Eval' => 'Technology name: {$_Lang[\'tech\'][$Data[\'ElementID\']]}<br/>Expected result: ".prettyNumber($Data[\'Data\'][0])."<br/>Actual result: ".prettyNumber($Data[\'Data\'][1])."'
+        'label' => 'Technology level too high',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Technology name: {$_Lang['tech'][$params['ElementID']]}",
+                ("Expected result: " . prettyNumber($params['Data'][0])),
+                ("Actual result: " . prettyNumber($params['Data'][1])),
+            ];
+
+            return implode('<br/>', $lines);
+        },
     ],
 ];
 
 $_Lang['FoundFatals'] = [
     '001' => [
-        'Txt' => 'Unrecognised section',
-        'GenerateDataList' => false,
-        'Eval' => 'Stored section ID: <u>{$Data[\'Data\'][0]}</u>'
+        'label' => 'Unrecognised section',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Stored section ID: <u>{$params['Data'][0]}</u>",
+            ];
+
+            return implode('<br/>', $lines);
+        },
     ],
 ];
 $_Lang['FoundWarnings'] = [
     '001' => [
-        'Txt' => 'Negative resource amount',
-        'GenerateDataList' => false,
-        'Eval' => 'Log date: ".prettyDate(\'d m Y - H:i:s\', $Data[\'Date\'], 1)."<br/>Planet (Script): {$Data[\'PlanetID\']} ({$_Lang[\'Scripts\'][$Data[\'Place\']]})<br/>Element and code: {$Data[\'ElementID\']} / {$Data[\'Code\']}<br/>Metal: ".prettyNumber($Data[\'Data\'][0])."<br/>Crystal: ".prettyNumber($Data[\'Data\'][1])."<br/>Deuterium: ".prettyNumber($Data[\'Data\'][2])."'
+        'label' => 'Negative resource amount',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                ("Log date: " . prettyDate("d m Y - H:i:s", $params['Date'], 1)),
+                "Planet (Script): {$params['PlanetID']} ({$_Lang['Scripts'][$params['Place']]})",
+                "Element and code: {$params['ElementID']} / {$params['Code']}",
+                ("Metal: " . prettyNumber($params['Data'][0])),
+                ("Crystal: " . prettyNumber($params['Data'][1])),
+                ("Deuterium: " . prettyNumber($params['Data'][2]))
+            ];
+
+            return implode('<br/>', $lines);
+        },
     ],
     '002' => [
-        'Txt' => 'No planet ID',
-        'GenerateDataList' => false,
-        'Eval' => 'Script: {$_Lang[\'Scripts\'][$Data[\'Place\']]}'
+        'label' => 'No planet ID',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Script: {$_Lang['Scripts'][$params['Place']]}"
+            ];
+
+            return implode('<br/>', $lines);
+        },
     ],
     '003' => [
-        'Txt' => 'Negative ships or defenses amount',
-        'GenerateDataList' => true,
-        'DataListEvalCode' => '{$_Lang[\'tech\'][$DataID]}: ".prettyNumber($DataVal)."',
-        'DataListGlue' => '<br/>',
-        'Eval' => 'Log date: ".prettyDate(\'d m Y - H:i:s\', $Data[\'Date\'], 1)."<br/>Planet (Script): {$Data[\'PlanetID\']} ({$_Lang[\'Scripts\'][$Data[\'Place\']]})<br/>Element and code: {$Data[\'ElementID\']} / {$Data[\'Code\']}<br/><u>Ships and defenses with negative amount:</u><br/>{$Data[\'GeneratedDataList\']}'
+        'label' => 'Negative ships or defenses amount',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                ("Log date: " . prettyDate("d m Y - H:i:s", $params['Date'], 1)),
+                "Planet (Script): {$params['PlanetID']} ({$_Lang['Scripts'][$params['Place']]})",
+                "Element and code: {$params['ElementID']} / {$params['Code']}",
+                "<u>Ships and defenses with negative amount:</u>",
+            ];
+
+            if (!empty($params['Data'])) {
+                foreach ($params['Data'] as $elementID => $elementCount) {
+                    $lines[] = "{$_Lang['tech'][$elementID]}: " . prettyNumber($elementCount);
+                }
+            }
+
+            return implode('<br/>', $lines);
+        },
     ],
 ];
 $_Lang['FoundNotices'] = [
     '001' => [
-        'Txt' => 'Minor metal deviation',
-        'GenerateDataList' => false,
-        'Eval' => 'Planet: {$Data[\'PlanetID\']}<br/>Difference (percent): ".sprintf(\'%0.2f\', $Data[\'Data\'][0] * 100)."%<br/>Difference (value): ".prettyNumber($Data[\'Data\'][1])."'
+        'label' => 'Minor metal deviation',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Planet: {$params['PlanetID']}",
+                ("Difference (percent): " . sprintf('%0.2f', $params['Data'][0] * 100) . "%"),
+                ("Difference (value): " . sprintf('%0.2f', $params['Data'][1])),
+            ];
+
+            return implode('<br/>', $lines);
+        },
     ],
     '002' => [
-        'Txt' => 'Minor crystal deviation',
-        'GenerateDataList' => false,
-        'Eval' => 'Planet: {$Data[\'PlanetID\']}<br/>Difference (percent): ".sprintf(\'%0.2f\', $Data[\'Data\'][0] * 100)."%<br/>Difference (value): ".prettyNumber($Data[\'Data\'][1])."'
+        'label' => 'Minor crystal deviation',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Planet: {$params['PlanetID']}",
+                ("Difference (percent): " . sprintf('%0.2f', $params['Data'][0] * 100) . "%"),
+                ("Difference (value): " . sprintf('%0.2f', $params['Data'][1])),
+            ];
+
+            return implode('<br/>', $lines);
+        },
     ],
     '003' => [
-        'Txt' => 'Minor deuterium deviation',
-        'GenerateDataList' => false,
-        'Eval' => 'Planet: {$Data[\'PlanetID\']}<br/>Difference (percent): ".sprintf(\'%0.2f\', $Data[\'Data\'][0] * 100)."%<br/>Difference (value): ".prettyNumber($Data[\'Data\'][1])."'
+        'label' => 'Minor deuterium deviation',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Planet: {$params['PlanetID']}",
+                ("Difference (percent): " . sprintf('%0.2f', $params['Data'][0] * 100) . "%"),
+                ("Difference (value): " . sprintf('%0.2f', $params['Data'][1])),
+            ];
+
+            return implode('<br/>', $lines);
+        },
     ],
     '004' => [
-        'Txt' => 'Total minor metal deviation',
-        'GenerateDataList' => false,
-        'Eval' => ''
+        'label' => 'Total minor metal deviation',
     ],
     '005' => [
-        'Txt' => 'Total minor crystal deviation',
-        'GenerateDataList' => false,
-        'Eval' => ''
+        'label' => 'Total minor crystal deviation',
     ],
     '006' => [
-        'Txt' => 'Total minor deuterium deviation',
-        'GenerateDataList' => false,
-        'Eval' => ''
+        'label' => 'Total minor deuterium deviation',
     ],
 ];
 
