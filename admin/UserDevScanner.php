@@ -24,7 +24,7 @@ $PermDiff = (100 + $PermDiffSet) / 100;
 
 function ResourceUpdate(&$CurrentPlanet, $CurrentUser, $StartTime, $EndTime)
 {
-    global $_Vars_GameElements, $_Vars_ElementCategories, $_Vars_ResProduction, $_GameConfig, $PremiumItemsArchive;
+    global $_Vars_GameElements, $PremiumItemsArchive;
 
     if($StartTime == 'LA')
     {
@@ -47,341 +47,276 @@ function ResourceUpdate(&$CurrentPlanet, $CurrentUser, $StartTime, $EndTime)
         return false;
     }
 
-    $Multiplier_Resources = 1;
-    $Add_Multiplier_Resources = 0;
-    if(!empty($PremiumItemsArchive[5]))
-    {
-        foreach($PremiumItemsArchive[5] as $Index => $Data)
-        {
-            if($Data['start'] <= $StartTime)
-            {
-                if($Data['end'] >= $EndTime)
-                {
-                    $Add_Multiplier_Resources = $ProductionTime;
-                    break;
-                }
-                else
-                {
-                    $Add_Multiplier_Resources += ($Data['end'] - $StartTime);
-                }
-            }
-            else
-            {
-                if($Data['start'] >= $EndTime)
-                {
-                    break;
-                }
-                else
-                {
-                    if($Data['end'] >= $EndTime)
-                    {
-                        $Add_Multiplier_Resources += ($EndTime - $Data['start']);
-                        break;
-                    }
-                    else
-                    {
-                        $Add_Multiplier_Resources += ($Data['end'] - $Data['start']);
-                    }
-                }
-            }
-        }
-
-        if($Add_Multiplier_Resources > 0)
-        {
-            $Multiplier_Resources += (0.15 * ($Add_Multiplier_Resources / $ProductionTime));
-        }
-    }
-
-    $Multiplier_Energy = 1;
-    $Add_Multiplier_Energy = 0;
-    if(!empty($PremiumItemsArchive[6]))
-    {
-        foreach($PremiumItemsArchive[6] as $Index => $Data)
-        {
-            if($Data['start'] <= $StartTime)
-            {
-                if($Data['end'] >= $EndTime)
-                {
-                    $Add_Multiplier_Energy = $ProductionTime;
-                    break;
-                }
-                else
-                {
-                    $Add_Multiplier_Energy += ($Data['end'] - $StartTime);
-                }
-            }
-            else
-            {
-                if($Data['start'] >= $EndTime)
-                {
-                    break;
-                }
-                else
-                {
-                    if($Data['end'] >= $EndTime)
-                    {
-                        $Add_Multiplier_Energy += ($EndTime - $Data['start']);
-                        break;
-                    }
-                    else
-                    {
-                        $Add_Multiplier_Energy += ($Data['end'] - $Data['start']);
-                    }
-                }
-            }
-        }
-
-        if($Add_Multiplier_Energy > 0)
-        {
-            $Multiplier_Energy += (0.1 * ($Add_Multiplier_Energy / $ProductionTime));
-        }
-    }
-    // Calculate Place in Storages
-    if(empty($CurrentPlanet['metal_max'])) {
-        $CurrentPlanet['metal_max'] = (
-            (
-                floor(
-                    BASE_STORAGE_SIZE *
-                    pow(
-                        1.7,
-                        (
-                            isset($CurrentPlanet[$_Vars_GameElements[22]]) ?
-                            $CurrentPlanet[$_Vars_GameElements[22]] :
-                            0
-                        )
-                    )
-                )
-            ) *
-            MAX_OVERFLOW
-        );
-        $CurrentPlanet['crystal_max'] = (
-            (
-                floor(
-                    BASE_STORAGE_SIZE *
-                    pow(
-                        1.7,
-                        (
-                            isset($CurrentPlanet[$_Vars_GameElements[23]]) ?
-                            $CurrentPlanet[$_Vars_GameElements[23]] :
-                            0
-                        )
-                    )
-                )
-            ) *
-            MAX_OVERFLOW
-        );
-        $CurrentPlanet['deuterium_max'] = (
-            (
-                floor(
-                    BASE_STORAGE_SIZE *
-                    pow(
-                        1.7,
-                        (
-                            isset($CurrentPlanet[$_Vars_GameElements[24]]) ?
-                            $CurrentPlanet[$_Vars_GameElements[24]] :
-                            0
-                        )
-                    )
-                )
-            ) *
-            MAX_OVERFLOW
-        );
-    }
-
-    // Calculate additional income
-    $Caps = array
-    (
-        'metal_perhour' => 0,
-        'crystal_perhour' => 0,
-        'deuterium_perhour' => 0,
-        'energy_used' => 0,
-        'energy_max' => 0
+    $CurrentPlanet[$_Vars_GameElements[22]] = (
+        isset($CurrentPlanet[$_Vars_GameElements[22]]) ?
+        $CurrentPlanet[$_Vars_GameElements[22]] :
+        0
     );
-    $BuildTemp = $CurrentPlanet['temp_max'];
-    $TextIfEmpty = 'return "0";';
-    foreach($_Vars_ElementCategories['prod'] as $ElementID)
-    {
-        $BuildLevelFactor = $CurrentPlanet[$_Vars_GameElements[$ElementID].'_workpercent'];
-        $BuildLevel = (
-            isset($CurrentPlanet[$_Vars_GameElements[$ElementID]]) ?
-            $CurrentPlanet[$_Vars_GameElements[$ElementID]] :
-            0
-        );
+    $CurrentPlanet[$_Vars_GameElements[23]] = (
+        isset($CurrentPlanet[$_Vars_GameElements[23]]) ?
+        $CurrentPlanet[$_Vars_GameElements[23]] :
+        0
+    );
+    $CurrentPlanet[$_Vars_GameElements[24]] = (
+        isset($CurrentPlanet[$_Vars_GameElements[24]]) ?
+        $CurrentPlanet[$_Vars_GameElements[24]] :
+        0
+    );
 
-        if($BuildLevel <= 0)
-        {
-            continue;
-        }
+    // Calculate Place in Storages
+    $CurrentPlanet['metal_max'] = (floor(BASE_STORAGE_SIZE * pow(1.7, $CurrentPlanet[$_Vars_GameElements[22]]))) * MAX_OVERFLOW;
+    $CurrentPlanet['crystal_max'] = (floor(BASE_STORAGE_SIZE * pow(1.7, $CurrentPlanet[$_Vars_GameElements[23]]))) * MAX_OVERFLOW;
+    $CurrentPlanet['deuterium_max'] = (floor(BASE_STORAGE_SIZE * pow(1.7, $CurrentPlanet[$_Vars_GameElements[24]]))) * MAX_OVERFLOW;
 
-        if($_Vars_ResProduction[$ElementID]['formule']['metal'] != $TextIfEmpty)
-        {
-            $Caps['metal_perhour'] += floor(eval($_Vars_ResProduction[$ElementID]['formule']['metal']) * ($_GameConfig['resource_multiplier']) * $Multiplier_Resources);
-        }
-        if($_Vars_ResProduction[$ElementID]['formule']['crystal'] != $TextIfEmpty)
-        {
-            $Caps['crystal_perhour'] += floor(eval($_Vars_ResProduction[$ElementID]['formule']['crystal']) * ($_GameConfig['resource_multiplier']) * $Multiplier_Resources);
-        }
-        if($ElementID != 12)
-        {
-            if($_Vars_ResProduction[$ElementID]['formule']['deuterium'] != $TextIfEmpty)
-            {
-                $Caps['deuterium_perhour'] += floor(eval($_Vars_ResProduction[$ElementID]['formule']['deuterium']) * ($_GameConfig['resource_multiplier']) * $Multiplier_Resources);
+    $geologistTimelineSubperiods = [];
+    $engineerTimelineSubperiods = [];
+
+    if (!empty($PremiumItemsArchive[5])) {
+        foreach ($PremiumItemsArchive[5] as $premiumItemData) {
+            $subperiod = [
+                'start' => $premiumItemData['start'],
+                'end' => $premiumItemData['end'],
+                'data' => [
+                    'hasGeologist' => true
+                ]
+            ];
+
+            if ($subperiod['start'] < $StartTime) {
+                $subperiod['start'] = $StartTime;
             }
-        }
-        else
-        {
-            $Caps['deuterium_perhour'] += floor(eval($_Vars_ResProduction[$ElementID]['formule']['deuterium']) * ($_GameConfig['resource_multiplier']));
-        }
-
-        if($ElementID < 4)
-        {
-            $Caps['energy_used'] += floor(eval($_Vars_ResProduction[$ElementID]['formule']['energy']));
-        }
-        else
-        {
-            if($ElementID != 12)
-            {
-                $Caps['energy_max'] += floor(eval($_Vars_ResProduction[$ElementID]['formule']['energy']) * $Multiplier_Energy);
+            if ($subperiod['end'] > $EndTime) {
+                $subperiod['end'] = $EndTime;
             }
-            else
-            {
-                $MineDeuteriumUse = floor(eval($_Vars_ResProduction[$ElementID]['formule']['deuterium']) * ($_GameConfig['resource_multiplier'])) * (-1);
-                if($MineDeuteriumUse > 0)
-                {
-                    if($CurrentPlanet['deuterium'] <= 0)
-                    {
-                        if($Caps['deuterium_perhour'] == ($MineDeuteriumUse * (-1)))
-                        {
-                            // If no enough + production of deuterium
-                        }
-                        else
-                        {
-                            // If there is still some deuterium in + production to use
-                            $FusionReactorMulti = ($Caps['deuterium_perhour'] + $MineDeuteriumUse) / $MineDeuteriumUse;
-                            if($FusionReactorMulti > 1)
-                            {
-                                $FusionReactorMulti = 1;
-                            }
-                            $Caps['energy_max'] += floor(eval($_Vars_ResProduction[$ElementID]['formule']['energy']) * $FusionReactorMulti * $Multiplier_Energy);
-                        }
-                    }
-                    else
-                    {
-                        if($Caps['deuterium_perhour'] >= 0)
-                        {
-                            $Caps['energy_max'] += floor(eval($_Vars_ResProduction[$ElementID]['formule']['energy']) * $Multiplier_Energy);
-                        }
-                        else
-                        {
-                            $FusionReactorMulti = $CurrentPlanet['deuterium'] / ($MineDeuteriumUse / 3600);
-                            if($FusionReactorMulti > 1)
-                            {
-                                $FusionReactorMulti = 1;
-                            }
-                            $Caps['energy_max'] += floor(eval($_Vars_ResProduction[$ElementID]['formule']['energy']) * $FusionReactorMulti * $Multiplier_Energy);
-                        }
-                    }
-                }
+
+            $geologistTimelineSubperiods[] = $subperiod;
+        }
+    }
+    if (!empty($PremiumItemsArchive[6])) {
+        foreach ($PremiumItemsArchive[6] as $premiumItemData) {
+            $subperiod = [
+                'start' => $premiumItemData['start'],
+                'end' => $premiumItemData['end'],
+                'data' => [
+                    'hasEngineer' => true
+                ]
+            ];
+
+            if ($subperiod['start'] < $StartTime) {
+                $subperiod['start'] = $StartTime;
             }
+            if ($subperiod['end'] > $EndTime) {
+                $subperiod['end'] = $EndTime;
+            }
+
+            $engineerTimelineSubperiods[] = $subperiod;
         }
     }
 
-    if($Caps['energy_max'] == 0 AND abs($Caps['energy_used']) > 0)
-    {
-        $production_level = 0;
-    }
-    else if($Caps['energy_max'] > 0 AND abs($Caps['energy_used']) > $Caps['energy_max'])
-    {
-        $production_level = floor(($Caps['energy_max'] * 100) / abs($Caps['energy_used']));
-    }
-    else
-    {
-        $production_level = 100;
-    }
-    if($production_level > 100)
-    {
-        $production_level = 100;
-    }
+    $timeranges = mergeTimelines([
+        createTimeline(
+            [ 'start' => $StartTime, 'end' => $EndTime ],
+            $geologistTimelineSubperiods
+        ),
+        createTimeline(
+            [ 'start' => $StartTime, 'end' => $EndTime ],
+            $engineerTimelineSubperiods
+        )
+    ]);
 
-    if($CurrentPlanet['metal'] <= $CurrentPlanet['metal_max'])
-    {
-        $MetalProduction = ($ProductionTime * ($Caps['metal_perhour'] / 3600)) * (0.01 * $production_level);
-        $MetalBaseProduc = $ProductionTime * (($_GameConfig['metal_basic_income'] * $_GameConfig['resource_multiplier']) / 3600);
-        $MetalT = $MetalProduction + $MetalBaseProduc;
-        $MetalTheorical = $CurrentPlanet['metal'] + $MetalT;
+    $totalIncome = [
+        'metal' => 0,
+        'crystal' => 0,
+        'deuterium' => 0
+    ];
 
-        $Return['MetalProduction'] = $MetalT;
+    foreach ($timeranges as $timerange) {
+        $income = _calculateTotalResourceIncome2($CurrentPlanet, $CurrentUser, $timerange);
 
-        if($MetalTheorical < 0)
-        {
-            $MetalTheorical = 0;
-        }
-
-        if($MetalTheorical < $CurrentPlanet['metal_max'])
-        {
-            $CurrentPlanet['metal'] = $MetalTheorical;
-        }
-        else
-        {
-            $CurrentPlanet['metal'] = $CurrentPlanet['metal_max'];
-            $Return['MetalProduction'] -= ($MetalTheorical - $CurrentPlanet['metal']);
-        }
-    }
-
-    if($CurrentPlanet['crystal'] <= $CurrentPlanet['crystal_max'])
-    {
-        $CrystalProduction = ($ProductionTime * ($Caps['crystal_perhour'] / 3600)) * (0.01 * $production_level);
-        $CrystalBaseProduc = $ProductionTime * (($_GameConfig['crystal_basic_income'] * $_GameConfig['resource_multiplier']) / 3600);
-        $CrystalT = $CrystalProduction + $CrystalBaseProduc;
-        $CrystalTheorical = $CurrentPlanet['crystal'] + $CrystalT;
-
-        $Return['CrystalProduction'] = $CrystalT;
-
-        if($CrystalTheorical < 0)
-        {
-            $CrystalTheorical = 0;
-        }
-
-        if($CrystalTheorical < $CurrentPlanet['crystal_max'])
-        {
-            $CurrentPlanet['crystal'] = $CrystalTheorical;
-        }
-        else
-        {
-            $CurrentPlanet['crystal'] = $CurrentPlanet['crystal_max'];
-            $Return['CrystalProduction'] -= ($CrystalTheorical - $CurrentPlanet['crystal']);
-        }
-    }
-
-    if($CurrentPlanet['deuterium'] <= $CurrentPlanet['deuterium_max'])
-    {
-        $DeuteriumProduction = ($ProductionTime * ($Caps['deuterium_perhour'] / 3600)) * (0.01 * $production_level);
-        $DeuteriumBaseProduc = $ProductionTime * (($_GameConfig['deuterium_basic_income'] * $_GameConfig['resource_multiplier']) / 3600);
-        $DeuteriumT = $DeuteriumProduction + $DeuteriumBaseProduc;
-        $DeuteriumTheorical = $CurrentPlanet['deuterium'] + $DeuteriumT;
-
-        $Return['DeuteriumProduction'] = $DeuteriumT;
-
-        if($DeuteriumTheorical < 0)
-        {
-            $DeuteriumTheorical = 0;
-            $Return['DeuteriumProduction'] = $CurrentPlanet['deuterium'];
-        }
-
-        if($DeuteriumTheorical < $CurrentPlanet['deuterium_max'])
-        {
-            $CurrentPlanet['deuterium'] = $DeuteriumTheorical;
-        }
-        else
-        {
-            $CurrentPlanet['deuterium'] = $CurrentPlanet['deuterium_max'];
-            $Return['DeuteriumProduction'] -= ($DeuteriumTheorical - $CurrentPlanet['deuterium']);
+        foreach ($income as $resourceKey => $resourceIncome) {
+            $CurrentPlanet[$resourceKey] += $resourceIncome['income'];
+            $totalIncome[$resourceKey] += $resourceIncome['income'];
         }
     }
 
     $CurrentPlanet['last_update'] = $EndTime;
 
-    return isset($Return) ? $Return : null;
+    return [
+        'MetalProduction' => $totalIncome['metal'],
+        'CrystalProduction' => $totalIncome['crystal'],
+        'DeuteriumProduction' => $totalIncome['deuterium'],
+    ];
+}
+
+function _calculateTotalResourceIncome2(&$CurrentPlanet, $CurrentUser, $timerange) {
+    global $_Vars_ElementCategories;
+
+    $planetProduction = [
+        'metal_perhour' => 0,
+        'crystal_perhour' => 0,
+        'deuterium_perhour' => 0,
+        'energy_max' => 0,
+        'energy_used' => 0
+    ];
+
+    $productionTime = ($timerange['end'] - $timerange['start']);
+
+    // FIXME: try to apply this without modifying the user,
+    // even if it's a copied object
+    $CurrentUser['geologist_time'] = (
+        isset($timerange['data']['hasGeologist']) ?
+        $timerange['end'] :
+        0
+    );
+    $CurrentUser['engineer_time'] = (
+        isset($timerange['data']['hasEngineer']) ?
+        $timerange['end'] :
+        0
+    );
+
+    foreach ($_Vars_ElementCategories['prod'] as $elementID) {
+        $elementProduction = getElementProduction(
+            $elementID,
+            $CurrentPlanet,
+            $CurrentUser,
+            [
+                'isBoosted' => true,
+                'timerange' => [
+                    'start' => $timerange['start'],
+                    'end' => $timerange['end']
+                ]
+            ]
+        );
+
+        $planetProduction['metal_perhour'] += $elementProduction['metal'];
+        $planetProduction['crystal_perhour'] += $elementProduction['crystal'];
+        $planetProduction['deuterium_perhour'] += $elementProduction['deuterium'];
+
+        if ($elementProduction['energy'] > 0) {
+            $planetProduction['energy_max'] += $elementProduction['energy'];
+        } else {
+            $planetProduction['energy_used'] += $elementProduction['energy'];
+        }
+    }
+
+    // Set current IncomeLevels
+    // FIXME: check if these values should not already contain production levels applied
+    $CurrentPlanet['metal_perhour'] = $planetProduction['metal_perhour'];
+    $CurrentPlanet['crystal_perhour'] = $planetProduction['crystal_perhour'];
+    $CurrentPlanet['deuterium_perhour'] = $planetProduction['deuterium_perhour'];
+    $CurrentPlanet['energy_used'] = $planetProduction['energy_used'];
+    $CurrentPlanet['energy_max'] = $planetProduction['energy_max'];
+
+    $productionLevel = 0;
+
+    $energyAvailable = $planetProduction['energy_max'];
+    $energyUsedAbs = abs($planetProduction['energy_used']);
+
+    if ($energyUsedAbs == 0) {
+        $productionLevel = 100;
+    } else if ($energyAvailable >= $energyUsedAbs) {
+        $productionLevel = 100;
+    } else if ($energyAvailable == 0) {
+        $productionLevel = 0;
+    } else {
+        $productionLevel = floor(
+            ($energyAvailable / $energyUsedAbs) *
+            100
+        );
+    }
+
+    $income = [
+        'metal' => _calculateFinalResourceAmount2(
+            'metal',
+            $CurrentPlanet,
+            [
+                'productionTime' => $productionTime,
+                'productionLevel' => $productionLevel
+            ]
+        ),
+        'crystal' => _calculateFinalResourceAmount2(
+            'crystal',
+            $CurrentPlanet,
+            [
+                'productionTime' => $productionTime,
+                'productionLevel' => $productionLevel
+            ]
+        ),
+        'deuterium' => _calculateFinalResourceAmount2(
+            'deuterium',
+            $CurrentPlanet,
+            [
+                'productionTime' => $productionTime,
+                'productionLevel' => $productionLevel
+            ]
+        )
+    ];
+
+    return $income;
+}
+
+//  Arguments
+//      - $resourceKey (String)
+//      - $planet (&Object)
+//      - $params (Object)
+//          - productionTime (Number)
+//          - productionLevel (Number)
+//
+function _calculateFinalResourceAmount2($resourceKey, &$planet, $params) {
+    global $_GameConfig;
+
+    $productionTime = $params['productionTime'];
+    $productionLevel = $params['productionLevel'];
+
+    $resourceCurrentAmount = $planet[$resourceKey];
+    $resourceMaxStorage = ($planet["{$resourceKey}_max"] * MAX_OVERFLOW);
+    $resourceIncomePerSecond = [
+        'production' => ($planet["{$resourceKey}_perhour"] / 3600),
+        'base' => (
+            (
+                $_GameConfig["{$resourceKey}_basic_income"] *
+                $_GameConfig['resource_multiplier']
+            ) /
+            3600
+        )
+    ];
+
+    if ($resourceCurrentAmount >= $resourceMaxStorage) {
+        return [
+            'isUpdated' => false,
+            'income' => 0
+        ];
+    }
+
+    $theoreticalIncome = [
+        'production' => (
+            $productionTime *
+            $resourceIncomePerSecond['production'] *
+            (0.01 * $productionLevel)
+        ),
+        'base' => (
+            $productionTime *
+            $resourceIncomePerSecond['base']
+        )
+    ];
+    $totalTheoreticalIncome = $theoreticalIncome['production'] + $theoreticalIncome['base'];
+
+    $theoreticalAmount = $resourceCurrentAmount + $totalTheoreticalIncome;
+
+    if ($theoreticalAmount < 0) {
+        $theoreticalAmount = 0;
+    }
+
+    $finalAmount = (
+        $theoreticalAmount < $resourceMaxStorage ?
+        $theoreticalAmount :
+        $resourceMaxStorage
+    );
+    $finalIncome = ($finalAmount - $resourceCurrentAmount);
+
+    return [
+        'isUpdated' => ($finalIncome != 0),
+        'income' => $finalIncome
+    ];
 }
 
 $UID = isset($_POST['uid']) ? $_POST['uid'] : 0;
