@@ -70,11 +70,17 @@ function PlanetResourceUpdate($CurrentUser, &$CurrentPlanet, $UpdateTime, $Simul
         ]);
 
         foreach ($timeranges as $timerange) {
-            $hasAnyIncome = _calculateAndApplyPlanetResourcesIncome(
+            $income = _calculatePlanetResourcesIncome(
                 $CurrentPlanet,
                 $CurrentUser,
                 $timerange
             );
+
+            foreach ($income as $resourceKey => $resourceIncome) {
+                $CurrentPlanet[$resourceKey] += $resourceIncome['income'];
+            }
+
+            $hasAnyIncome = !empty($income);
 
             $NeedUpdate = $NeedUpdate || $hasAnyIncome;
         }
@@ -153,7 +159,9 @@ function PlanetResourceUpdate($CurrentUser, &$CurrentPlanet, $UpdateTime, $Simul
 //              - hasGeologist (true | null)
 //              - hasEngineer (true | null)
 //
-function _calculateAndApplyPlanetResourcesIncome(&$planet, &$user, $timerange) {
+//  Returns: Array<$resourceKey: string, $resourceIncome: Object>
+//
+function _calculatePlanetResourcesIncome(&$planet, &$user, $timerange) {
     global $_Vars_ElementCategories;
 
     $planetProduction = [
@@ -198,7 +206,7 @@ function _calculateAndApplyPlanetResourcesIncome(&$planet, &$user, $timerange) {
     $productionLevel = 0;
 
     if ($productionTime <= 0) {
-        return false;
+        return [];
     }
 
     // Calculate ProductionLevel
@@ -249,11 +257,7 @@ function _calculateAndApplyPlanetResourcesIncome(&$planet, &$user, $timerange) {
         )
     ];
 
-    foreach ($income as $resourceKey => $resourceIncomeResult) {
-        $planet[$resourceKey] += $resourceIncomeResult['income'];
-    }
-
-    return true;
+    return $income;
 }
 
 function _recalculateHourlyProductionLevels($changedProductionFactors, &$planet, &$user, $timerange) {
