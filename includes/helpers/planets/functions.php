@@ -291,6 +291,8 @@ function _getCurrentBoosters(&$user, $timestamp) {
 //        This includes any boosters that affect the extraction (eg. Geologist).
 //      - Planet's storage capacity of the resource is already calculated
 //        and available in $planet["{$resourceKey}_max"] property.
+//      - Planet's resources state represents the current state,
+//        which includes any previous incomes if the update happens in sequence.
 //
 //  Arguments
 //      - $resourceKey (String)
