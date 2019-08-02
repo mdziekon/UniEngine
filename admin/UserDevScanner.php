@@ -127,7 +127,14 @@ function ResourceUpdate(&$CurrentPlanet, $CurrentUser, $StartTime, $EndTime) {
     ];
 
     foreach ($timeranges as $timerange) {
-        $income = _calculateTotalResourceIncome($CurrentPlanet, $CurrentUser, $timerange);
+        $income = calculateTotalResourcesIncome(
+            $CurrentPlanet,
+            $CurrentUser,
+            $timerange,
+            [
+                'isVacationCheckEnabled' => false
+            ]
+        );
 
         foreach ($income as $resourceKey => $resourceIncome) {
             $CurrentPlanet[$resourceKey] += $resourceIncome['income'];
@@ -142,100 +149,6 @@ function ResourceUpdate(&$CurrentPlanet, $CurrentUser, $StartTime, $EndTime) {
         'CrystalProduction' => $totalIncome['crystal'],
         'DeuteriumProduction' => $totalIncome['deuterium'],
     ];
-}
-
-function _calculateTotalResourceIncome(&$CurrentPlanet, $CurrentUser, $timerange) {
-    global $_Vars_ElementCategories;
-
-    $planetProduction = [
-        'metal_perhour' => 0,
-        'crystal_perhour' => 0,
-        'deuterium_perhour' => 0,
-        'energy_max' => 0,
-        'energy_used' => 0
-    ];
-
-    foreach ($_Vars_ElementCategories['prod'] as $elementID) {
-        $elementProduction = getElementProduction(
-            $elementID,
-            $CurrentPlanet,
-            $CurrentUser,
-            [
-                'useCustomBoosters' => true,
-                'boosters' => $timerange['data'],
-            ]
-        );
-
-        $planetProduction['metal_perhour'] += $elementProduction['metal'];
-        $planetProduction['crystal_perhour'] += $elementProduction['crystal'];
-        $planetProduction['deuterium_perhour'] += $elementProduction['deuterium'];
-
-        if ($elementProduction['energy'] > 0) {
-            $planetProduction['energy_max'] += $elementProduction['energy'];
-        } else {
-            $planetProduction['energy_used'] += $elementProduction['energy'];
-        }
-    }
-
-    // Set current IncomeLevels
-    // FIXME: check if these values should not already contain production levels applied
-    $CurrentPlanet['metal_perhour'] = $planetProduction['metal_perhour'];
-    $CurrentPlanet['crystal_perhour'] = $planetProduction['crystal_perhour'];
-    $CurrentPlanet['deuterium_perhour'] = $planetProduction['deuterium_perhour'];
-    $CurrentPlanet['energy_used'] = $planetProduction['energy_used'];
-    $CurrentPlanet['energy_max'] = $planetProduction['energy_max'];
-
-    $productionTime = ($timerange['end'] - $timerange['start']);
-    $productionLevel = 0;
-
-    if ($productionTime <= 0) {
-        return [];
-    }
-
-    $energyAvailable = $planetProduction['energy_max'];
-    $energyUsedAbs = abs($planetProduction['energy_used']);
-
-    if ($energyUsedAbs == 0) {
-        $productionLevel = 100;
-    } else if ($energyAvailable >= $energyUsedAbs) {
-        $productionLevel = 100;
-    } else if ($energyAvailable == 0) {
-        $productionLevel = 0;
-    } else {
-        $productionLevel = floor(
-            ($energyAvailable / $energyUsedAbs) *
-            100
-        );
-    }
-
-    $income = [
-        'metal' => calculateRealResourceIncome(
-            'metal',
-            $CurrentPlanet,
-            [
-                'productionTime' => $productionTime,
-                'productionLevel' => $productionLevel
-            ]
-        ),
-        'crystal' => calculateRealResourceIncome(
-            'crystal',
-            $CurrentPlanet,
-            [
-                'productionTime' => $productionTime,
-                'productionLevel' => $productionLevel
-            ]
-        ),
-        'deuterium' => calculateRealResourceIncome(
-            'deuterium',
-            $CurrentPlanet,
-            [
-                'productionTime' => $productionTime,
-                'productionLevel' => $productionLevel
-            ]
-        )
-    ];
-
-    return $income;
 }
 
 $UID = isset($_POST['uid']) ? $_POST['uid'] : 0;

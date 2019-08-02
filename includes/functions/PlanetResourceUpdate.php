@@ -70,10 +70,13 @@ function PlanetResourceUpdate($CurrentUser, &$CurrentPlanet, $UpdateTime, $Simul
         ]);
 
         foreach ($timeranges as $timerange) {
-            $income = _calculatePlanetResourcesIncome(
+            $income = calculateTotalResourcesIncome(
                 $CurrentPlanet,
                 $CurrentUser,
-                $timerange
+                $timerange,
+                [
+                    'isVacationCheckEnabled' => true
+                ]
             );
 
             foreach ($income as $resourceKey => $resourceIncome) {
@@ -147,117 +150,6 @@ function PlanetResourceUpdate($CurrentUser, &$CurrentPlanet, $UpdateTime, $Simul
     }
 
     return $NeedUpdate;
-}
-
-//  Arguments:
-//      - $planet (&Object)
-//      - $user (&Object)
-//      - $timerange (Object)
-//          - start (Number)
-//          - end (Number)
-//          - data (Object)
-//              - hasGeologist (true | null)
-//              - hasEngineer (true | null)
-//
-//  Returns: Array<$resourceKey: string, $resourceIncome: Object>
-//
-function _calculatePlanetResourcesIncome(&$planet, &$user, $timerange) {
-    global $_Vars_ElementCategories;
-
-    $planetProduction = [
-        'metal_perhour' => 0,
-        'crystal_perhour' => 0,
-        'deuterium_perhour' => 0,
-        'energy_max' => 0,
-        'energy_used' => 0
-    ];
-
-    foreach ($_Vars_ElementCategories['prod'] as $elementID) {
-        $elementProduction = getElementProduction(
-            $elementID,
-            $planet,
-            $user,
-            [
-                'useCustomBoosters' => true,
-                'boosters' => $timerange['data'],
-            ]
-        );
-
-        $planetProduction['metal_perhour'] += $elementProduction['metal'];
-        $planetProduction['crystal_perhour'] += $elementProduction['crystal'];
-        $planetProduction['deuterium_perhour'] += $elementProduction['deuterium'];
-
-        if ($elementProduction['energy'] > 0) {
-            $planetProduction['energy_max'] += $elementProduction['energy'];
-        } else {
-            $planetProduction['energy_used'] += $elementProduction['energy'];
-        }
-    }
-
-    // Set current IncomeLevels
-    // FIXME: check if these values should not already contain production levels applied
-    $planet['metal_perhour'] = $planetProduction['metal_perhour'];
-    $planet['crystal_perhour'] = $planetProduction['crystal_perhour'];
-    $planet['deuterium_perhour'] = $planetProduction['deuterium_perhour'];
-    $planet['energy_used'] = $planetProduction['energy_used'];
-    $planet['energy_max'] = $planetProduction['energy_max'];
-
-    $productionTime = ($timerange['end'] - $timerange['start']);
-    $productionLevel = 0;
-
-    if ($productionTime <= 0) {
-        return [];
-    }
-
-    // Calculate ProductionLevel
-    if (!isOnVacation($user)) {
-        $energyAvailable = $planetProduction['energy_max'];
-        $energyUsedAbs = abs($planetProduction['energy_used']);
-
-        if ($energyUsedAbs == 0) {
-            $productionLevel = 100;
-        } else if ($energyAvailable >= $energyUsedAbs) {
-            $productionLevel = 100;
-        } else if ($energyAvailable == 0) {
-            $productionLevel = 0;
-        } else {
-            $productionLevel = floor(
-                ($energyAvailable / $energyUsedAbs) *
-                100
-            );
-        }
-    } else {
-        $productionLevel = 0;
-    }
-
-    $income = [
-        'metal' => calculateRealResourceIncome(
-            'metal',
-            $planet,
-            [
-                'productionTime' => $productionTime,
-                'productionLevel' => $productionLevel
-            ]
-        ),
-        'crystal' => calculateRealResourceIncome(
-            'crystal',
-            $planet,
-            [
-                'productionTime' => $productionTime,
-                'productionLevel' => $productionLevel
-            ]
-        ),
-        'deuterium' => calculateRealResourceIncome(
-            'deuterium',
-            $planet,
-            [
-                'productionTime' => $productionTime,
-                'productionLevel' => $productionLevel
-            ]
-        )
-    ];
-
-    return $income;
 }
 
 function _recalculateHourlyProductionLevels($changedProductionFactors, &$planet, &$user, $timerange) {

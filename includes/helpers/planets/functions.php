@@ -286,6 +286,130 @@ function _getCurrentBoosters(&$user, $timestamp) {
 }
 
 //  Assumptions:
+//      - See "calculateRealResourceIncome" documentation (same assumptions apply).
+//
+//  Arguments:
+//      - $planet (&Object)
+//      - $user (&Object)
+//      - $timerange (Object)
+//          - start (Number)
+//          - end (Number)
+//          - data (Object)
+//              - hasGeologist (true | null)
+//              - hasEngineer (true | null)
+//      - $options (Object) [default: []]
+//          - isVacationCheckEnabled (Boolean) [default: false]
+//              Should perform vacation check when calculating production level,
+//              based on current user's state.
+//
+//  Returns: Array<$resourceKey: string, $resourceIncome: Object>
+//
+function calculateTotalResourcesIncome(&$planet, &$user, $timerange, $options = []) {
+    global $_Vars_ElementCategories;
+
+    if (!isset($options['isVacationCheckEnabled'])) {
+        $options['isVacationCheckEnabled'] = false;
+    }
+
+    $planetProduction = [
+        'metal_perhour' => 0,
+        'crystal_perhour' => 0,
+        'deuterium_perhour' => 0,
+        'energy_max' => 0,
+        'energy_used' => 0
+    ];
+
+    foreach ($_Vars_ElementCategories['prod'] as $elementID) {
+        $elementProduction = getElementProduction(
+            $elementID,
+            $planet,
+            $user,
+            [
+                'useCustomBoosters' => true,
+                'boosters' => $timerange['data'],
+            ]
+        );
+
+        $planetProduction['metal_perhour'] += $elementProduction['metal'];
+        $planetProduction['crystal_perhour'] += $elementProduction['crystal'];
+        $planetProduction['deuterium_perhour'] += $elementProduction['deuterium'];
+
+        if ($elementProduction['energy'] > 0) {
+            $planetProduction['energy_max'] += $elementProduction['energy'];
+        } else {
+            $planetProduction['energy_used'] += $elementProduction['energy'];
+        }
+    }
+
+    // Set current IncomeLevels
+    // FIXME: check if these values should not already contain production levels applied
+    $planet['metal_perhour'] = $planetProduction['metal_perhour'];
+    $planet['crystal_perhour'] = $planetProduction['crystal_perhour'];
+    $planet['deuterium_perhour'] = $planetProduction['deuterium_perhour'];
+    $planet['energy_used'] = $planetProduction['energy_used'];
+    $planet['energy_max'] = $planetProduction['energy_max'];
+
+    $productionTime = ($timerange['end'] - $timerange['start']);
+    $productionLevel = 0;
+
+    if ($productionTime <= 0) {
+        return [];
+    }
+
+    $energyAvailable = $planetProduction['energy_max'];
+    $energyUsedAbs = abs($planetProduction['energy_used']);
+
+    if ($energyUsedAbs == 0) {
+        $productionLevel = 100;
+    } else if ($energyAvailable >= $energyUsedAbs) {
+        $productionLevel = 100;
+    } else if ($energyAvailable == 0) {
+        $productionLevel = 0;
+    } else {
+        $productionLevel = floor(
+            ($energyAvailable / $energyUsedAbs) *
+            100
+        );
+    }
+
+    if (
+        $options['isVacationCheckEnabled'] &&
+        isOnVacation($user)
+    ) {
+        $productionLevel = 0;
+    }
+
+    $income = [
+        'metal' => calculateRealResourceIncome(
+            'metal',
+            $planet,
+            [
+                'productionTime' => $productionTime,
+                'productionLevel' => $productionLevel
+            ]
+        ),
+        'crystal' => calculateRealResourceIncome(
+            'crystal',
+            $planet,
+            [
+                'productionTime' => $productionTime,
+                'productionLevel' => $productionLevel
+            ]
+        ),
+        'deuterium' => calculateRealResourceIncome(
+            'deuterium',
+            $planet,
+            [
+                'productionTime' => $productionTime,
+                'productionLevel' => $productionLevel
+            ]
+        )
+    ];
+
+    return $income;
+}
+
+//  Assumptions:
 //      - Planet's hourly extraction of the resource is already calculated
 //        and available in $planet["{$resourceKey}_perhour"] property.
 //        This includes any boosters that affect the extraction (eg. Geologist).
