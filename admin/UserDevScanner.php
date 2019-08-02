@@ -155,8 +155,6 @@ function _calculateTotalResourceIncome(&$CurrentPlanet, $CurrentUser, $timerange
         'energy_used' => 0
     ];
 
-    $productionTime = ($timerange['end'] - $timerange['start']);
-
     foreach ($_Vars_ElementCategories['prod'] as $elementID) {
         $elementProduction = getElementProduction(
             $elementID,
@@ -187,7 +185,12 @@ function _calculateTotalResourceIncome(&$CurrentPlanet, $CurrentUser, $timerange
     $CurrentPlanet['energy_used'] = $planetProduction['energy_used'];
     $CurrentPlanet['energy_max'] = $planetProduction['energy_max'];
 
+    $productionTime = ($timerange['end'] - $timerange['start']);
     $productionLevel = 0;
+
+    if ($productionTime <= 0) {
+        return [];
+    }
 
     $energyAvailable = $planetProduction['energy_max'];
     $energyUsedAbs = abs($planetProduction['energy_used']);
