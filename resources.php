@@ -158,10 +158,8 @@ function BuildRessourcePage($CurrentUser, &$CurrentPlanet)
                 $CurrentPlanet,
                 $CurrentUser,
                 [
-                    'isBoosted' => true,
-                    'timerange' => [
-                        'end' => $Now
-                    ]
+                    'useCurrentBoosters' => true,
+                    'currentTimestamp' => $Now,
                 ]
             );
 

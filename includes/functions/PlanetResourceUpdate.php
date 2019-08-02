@@ -20,16 +20,64 @@ function PlanetResourceUpdate($CurrentUser, &$CurrentPlanet, $UpdateTime, $Simul
 
     // Start ResourceUpdating
     if ($CurrentPlanet['planet_type'] == 1) {
-        $hasAnyIncome = _calculateAndApplyPlanetResourcesIncome(
-            $CurrentPlanet,
-            $CurrentUser,
-            [
-                'start' => $CurrentPlanet['last_update'],
-                'end' => $UpdateTime
-            ]
-        );
+        $thisUpdateTimerange = [
+            'start' => $CurrentPlanet['last_update'],
+            'end' => $UpdateTime
+        ];
 
-        $NeedUpdate = $hasAnyIncome;
+        $geologistTimelineSubperiods = [];
+        $engineerTimelineSubperiods = [];
+
+        $geologistBoosterEndtime = _getBoosterEndtime('geologist', $CurrentUser);
+        $engineerBoosterEndtime = _getBoosterEndtime('engineer', $CurrentUser);
+
+        if ($geologistBoosterEndtime > $thisUpdateTimerange['start']) {
+            $geologistTimelineSubperiods[] = [
+                'start' => $thisUpdateTimerange['start'],
+                'end' => (
+                    $geologistBoosterEndtime > $thisUpdateTimerange['end'] ?
+                    $thisUpdateTimerange['end'] :
+                    $geologistBoosterEndtime
+                ),
+                'data' => [
+                    'hasGeologist' => true
+                ]
+            ];
+        }
+        if ($engineerBoosterEndtime > $thisUpdateTimerange['start']) {
+            $engineerTimelineSubperiods[] = [
+                'start' => $thisUpdateTimerange['start'],
+                'end' => (
+                    $engineerBoosterEndtime > $thisUpdateTimerange['end'] ?
+                    $thisUpdateTimerange['end'] :
+                    $engineerBoosterEndtime
+                ),
+                'data' => [
+                    'hasEngineer' => true
+                ]
+            ];
+        }
+
+        $timeranges = mergeTimelines([
+            createTimeline(
+                $thisUpdateTimerange,
+                $geologistTimelineSubperiods
+            ),
+            createTimeline(
+                $thisUpdateTimerange,
+                $engineerTimelineSubperiods
+            )
+        ]);
+
+        foreach ($timeranges as $timerange) {
+            $hasAnyIncome = _calculateAndApplyPlanetResourcesIncome(
+                $CurrentPlanet,
+                $CurrentUser,
+                $timerange
+            );
+
+            $NeedUpdate = $NeedUpdate || $hasAnyIncome;
+        }
     }
 
     // End of ResourceUpdate
@@ -95,6 +143,16 @@ function PlanetResourceUpdate($CurrentUser, &$CurrentPlanet, $UpdateTime, $Simul
     return $NeedUpdate;
 }
 
+//  Arguments:
+//      - $planet (&Object)
+//      - $user (&Object)
+//      - $timerange (Object)
+//          - start (Number)
+//          - end (Number)
+//          - data (Object)
+//              - hasGeologist (true | null)
+//              - hasEngineer (true | null)
+//
 function _calculateAndApplyPlanetResourcesIncome(&$planet, &$user, $timerange) {
     global $_Vars_ElementCategories;
 
@@ -112,11 +170,8 @@ function _calculateAndApplyPlanetResourcesIncome(&$planet, &$user, $timerange) {
             $planet,
             $user,
             [
-                'isBoosted' => true,
-                'timerange' => [
-                    'start' => $timerange['start'],
-                    'end' => $timerange['end']
-                ]
+                'useCustomBoosters' => true,
+                'boosters' => $timerange['data'],
             ]
         );
 
@@ -233,11 +288,8 @@ function _recalculateHourlyProductionLevelOf($elementID, $productionFactors, &$p
         $planet,
         $user,
         [
-            'isBoosted' => true,
-            'timerange' => [
-                'start' => $timerange['start'],
-                'end' => $timerange['end']
-            ],
+            'useCustomBoosters' => true,
+            'boosters' => $timerange['data'],
             'customProductionFactor' => $productionFactors['old']
         ]
     );
@@ -265,11 +317,8 @@ function _recalculateHourlyProductionLevelOf($elementID, $productionFactors, &$p
         $planet,
         $user,
         [
-            'isBoosted' => true,
-            'timerange' => [
-                'start' => $timerange['end'],
-                'end' => $timerange['end']
-            ],
+            'useCustomBoosters' => true,
+            'boosters' => $timerange['data'],
             'customProductionFactor' => $productionFactors['new']
         ]
     );

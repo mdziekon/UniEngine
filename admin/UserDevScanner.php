@@ -127,7 +127,7 @@ function ResourceUpdate(&$CurrentPlanet, $CurrentUser, $StartTime, $EndTime) {
     ];
 
     foreach ($timeranges as $timerange) {
-        $income = _calculateTotalResourceIncome2($CurrentPlanet, $CurrentUser, $timerange);
+        $income = _calculateTotalResourceIncome($CurrentPlanet, $CurrentUser, $timerange);
 
         foreach ($income as $resourceKey => $resourceIncome) {
             $CurrentPlanet[$resourceKey] += $resourceIncome['income'];
@@ -144,7 +144,7 @@ function ResourceUpdate(&$CurrentPlanet, $CurrentUser, $StartTime, $EndTime) {
     ];
 }
 
-function _calculateTotalResourceIncome2(&$CurrentPlanet, $CurrentUser, $timerange) {
+function _calculateTotalResourceIncome(&$CurrentPlanet, $CurrentUser, $timerange) {
     global $_Vars_ElementCategories;
 
     $planetProduction = [
@@ -157,30 +157,14 @@ function _calculateTotalResourceIncome2(&$CurrentPlanet, $CurrentUser, $timerang
 
     $productionTime = ($timerange['end'] - $timerange['start']);
 
-    // FIXME: try to apply this without modifying the user,
-    // even if it's a copied object
-    $CurrentUser['geologist_time'] = (
-        isset($timerange['data']['hasGeologist']) ?
-        $timerange['end'] :
-        0
-    );
-    $CurrentUser['engineer_time'] = (
-        isset($timerange['data']['hasEngineer']) ?
-        $timerange['end'] :
-        0
-    );
-
     foreach ($_Vars_ElementCategories['prod'] as $elementID) {
         $elementProduction = getElementProduction(
             $elementID,
             $CurrentPlanet,
             $CurrentUser,
             [
-                'isBoosted' => true,
-                'timerange' => [
-                    'start' => $timerange['start'],
-                    'end' => $timerange['end']
-                ]
+                'useCustomBoosters' => true,
+                'boosters' => $timerange['data'],
             ]
         );
 

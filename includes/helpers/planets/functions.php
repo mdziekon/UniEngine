@@ -5,11 +5,16 @@
 //      - $planet (&Object)
 //      - $user (&Object)
 //      - $params (Object)
-//          - isBoosted (Boolean) [default: true]
-//              Should boosters be pre-applied
-//          - timerange (Object) [default: []]
-//              - end (Number) [default: 0]
-//              - start (Number) [default: timerange.end]
+//          - useCurrentBoosters (Boolean) [default: false]
+//              Should currently enabled ($user dependent) boosters be applied.
+//          - useCustomBoosters (Boolean) [default: false]
+//              Should custom boosters be applied.
+//          - currentTimestamp (Number) [default: 0]
+//              Timestamp to use when determining currently enabled boosters.
+//              See "useCurrentBoosters".
+//          - boosters (Object) [default: []]
+//              - hasGeologist (Boolean) [default: false]
+//              - hasEngineer (Boolean) [default: false]
 //          - customLevel (Number) [default: null]
 //          - customProductionFactor (Number) [default: null]
 //
@@ -23,17 +28,23 @@ function getElementProduction($elementID, &$planet, &$user, $params) {
         'energy' => 0
     ];
 
-    if (!isset($params['isBoosted'])) {
-        $params['isBoosted'] = true;
+    if (!isset($params['useCurrentBoosters'])) {
+        $params['useCurrentBoosters'] = false;
     }
-    if (!isset($params['timerange'])) {
-        $params['timerange'] = [];
+    if (!isset($params['useCustomBoosters'])) {
+        $params['useCustomBoosters'] = false;
     }
-    if (!isset($params['timerange']['end'])) {
-        $params['timerange']['end'] = 0;
+    if (!isset($params['currentTimestamp'])) {
+        $params['currentTimestamp'] = 0;
     }
-    if (!isset($params['timerange']['start'])) {
-        $params['timerange']['start'] = $params['timerange']['end'];
+    if (!isset($params['boosters'])) {
+        $params['boosters'] = [];
+    }
+    if (!isset($params['boosters']['hasGeologist'])) {
+        $params['boosters']['hasGeologist'] = false;
+    }
+    if (!isset($params['boosters']['hasEngineer'])) {
+        $params['boosters']['hasEngineer'] = false;
     }
     if (!isset($params['customLevel'])) {
         $params['customLevel'] = null;
@@ -42,8 +53,23 @@ function getElementProduction($elementID, &$planet, &$user, $params) {
         $params['customProductionFactor'] = null;
     }
 
-    $isBoosted = $params['isBoosted'];
-    $timerange = $params['timerange'];
+    $useCurrentBoosters = $params['useCurrentBoosters'];
+    $useCustomBoosters = $params['useCustomBoosters'];
+
+    $isBoosted = (
+        $useCurrentBoosters ||
+        $useCustomBoosters
+    );
+    $boosters = null;
+
+    if ($isBoosted) {
+        $boosters = (
+            $useCustomBoosters ?
+            $params['boosters'] :
+            _getCurrentBoosters($user, $params['currentTimestamp'])
+        );
+    }
+
     $hasCustomLevel = ($params['customLevel'] !== null);
     $customLevel = $params['customLevel'];
     $hasCustomProductionFactor = ($params['customProductionFactor'] !== null);
@@ -85,17 +111,12 @@ function getElementProduction($elementID, &$planet, &$user, $params) {
     ];
 
     if ($isBoosted) {
-        // FIXME: remove applicability ratios feature - production updaters
-        // should take care of this on their own, since there are multiple
-        // periods that may split the ranges, not just "one for all"
-        $boostersIncrease['geologist'] = (
-            0.15 *
-            _getBoosterApplicabilityRatio('geologist', $timerange, $user)
-        );
-        $boostersIncrease['engineer'] = (
-            0.10 *
-            _getBoosterApplicabilityRatio('engineer', $timerange, $user)
-        );
+        if ($boosters['hasGeologist']) {
+            $boostersIncrease['geologist'] = 0.15;
+        }
+        if ($boosters['hasEngineer']) {
+            $boostersIncrease['engineer'] = 0.10;
+        }
     }
 
     foreach ($elementProduction as $resourceKey => $resourceProduction) {
@@ -253,28 +274,15 @@ function _getBoosterEndtime($boosterKey, &$user) {
     return $user[$boosterEndtimeKey];
 }
 
-//  Arguments:
-//      - $boosterKey (String)
-//      - $timerange (Object)
-//          - start (Number)
-//          - end (Number)
-//      - $user (&Object)
-//
-function _getBoosterApplicabilityRatio($boosterKey, $timerange, &$user) {
-    $boosterEndtime = _getBoosterEndtime($boosterKey, $user);
+function _isBoosterActive($boosterKey, &$user, $timestamp) {
+    return (_getBoosterEndtime($boosterKey, $user) >= $timestamp);
+}
 
-    if ($boosterEndtime <= $timerange['start']) {
-        return 0;
-    }
-
-    if ($boosterEndtime >= $timerange['end']) {
-        return 1;
-    }
-
-    $applicableInRange = ($boosterEndtime - $timerange['start']);
-    $rangeLength = ($timerange['end'] - $timerange['start']);
-
-    return ($applicableInRange / $rangeLength);
+function _getCurrentBoosters(&$user, $timestamp) {
+    return [
+        'hasGeologist' => _isBoosterActive('geologist', $user, $timestamp),
+        'hasEngineer' => _isBoosterActive('engineer', $user, $timestamp),
+    ];
 }
 
 //  Assumptions:

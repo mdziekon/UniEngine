@@ -94,7 +94,7 @@ function HandlePlanetQueue_OnStructureBuildEnd(&$ThePlanet, &$TheUser, $CurrentT
                                 $ThePlanet,
                                 $emptyUser,
                                 [
-                                    'isBoosted' => false,
+                                    'useCurrentBoosters' => false,
                                     'customProductionFactor' => 10
                                 ]
                             );
@@ -120,7 +120,7 @@ function HandlePlanetQueue_OnStructureBuildEnd(&$ThePlanet, &$TheUser, $CurrentT
                                 $ThePlanet,
                                 $TheUser,
                                 [
-                                    'isBoosted' => false,
+                                    'useCurrentBoosters' => false,
                                     'customLevel' => ($ThePlanet[$_Vars_GameElements[$ElementID]] - 1),
                                     'customProductionFactor' => 10
                                 ]
@@ -130,7 +130,7 @@ function HandlePlanetQueue_OnStructureBuildEnd(&$ThePlanet, &$TheUser, $CurrentT
                                 $ThePlanet,
                                 $TheUser,
                                 [
-                                    'isBoosted' => false,
+                                    'useCurrentBoosters' => false,
                                     'customProductionFactor' => 10
                                 ]
                             );
@@ -195,7 +195,7 @@ function HandlePlanetQueue_OnStructureBuildEnd(&$ThePlanet, &$TheUser, $CurrentT
                                 $ThePlanet,
                                 $TheUser,
                                 [
-                                    'isBoosted' => false,
+                                    'useCurrentBoosters' => false,
                                     'customLevel' => ($ThePlanet[$_Vars_GameElements[$ElementID]] + 1),
                                     'customProductionFactor' => 10
                                 ]
@@ -205,7 +205,7 @@ function HandlePlanetQueue_OnStructureBuildEnd(&$ThePlanet, &$TheUser, $CurrentT
                                 $ThePlanet,
                                 $TheUser,
                                 [
-                                    'isBoosted' => false,
+                                    'useCurrentBoosters' => false,
                                     'customProductionFactor' => 10
                                 ]
                             );
