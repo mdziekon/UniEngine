@@ -20,14 +20,7 @@ if(defined('INSIDE'))
                     'metal' => ((30 * $level * pow((1.1), $level)) * (0.1 * $productionFactor)),
                     'energy' => (-1 * ((10 * $level * pow((1.1), $level)) * (0.1 * $productionFactor)))
                 ];
-            },
-            'formule' => array
-            (
-                'metal'        => 'return (30 * $BuildLevel * pow((1.1), $BuildLevel)) * (0.1 * $BuildLevelFactor);',
-                'crystal'    => 'return "0";',
-                'deuterium' => 'return "0";',
-                'energy'    => 'return - (10 * $BuildLevel * pow((1.1), $BuildLevel)) * (0.1 * $BuildLevelFactor);'
-            )
+            }
         ),
         // Crystal Mine
         2 => array
@@ -45,14 +38,7 @@ if(defined('INSIDE'))
                     'crystal' => ((20 * $level * pow((1.1), $level)) * (0.1 * $productionFactor)),
                     'energy' => (-1 * ((10 * $level * pow((1.1), $level)) * (0.1 * $productionFactor)))
                 ];
-            },
-            'formule' => array
-            (
-                'metal'        => 'return "0";',
-                'crystal'    => 'return (20 * $BuildLevel * pow((1.1), $BuildLevel)) * (0.1 * $BuildLevelFactor);',
-                'deuterium' => 'return "0";',
-                'energy'    => 'return - (10 * $BuildLevel * pow((1.1), $BuildLevel)) * (0.1 * $BuildLevelFactor);'
-            )
+            }
         ),
         // Deuterium Extractor
         3 => array
@@ -71,14 +57,7 @@ if(defined('INSIDE'))
                     'deuterium' => (((10 * $level * pow((1.1), $level)) * (-0.002 * $planetTemp + 1.28)) * (0.1 * $productionFactor)),
                     'energy' => (-1 * ((20 * $level * pow((1.1), $level)) * (0.1 * $productionFactor)))
                 ];
-            },
-            'formule' => array
-            (
-                'metal'        => 'return "0";',
-                'crystal'    => 'return "0";',
-                'deuterium' => 'return ((10 * $BuildLevel * pow((1.1), $BuildLevel)) * (-0.002 * $BuildTemp + 1.28)) * (0.1 * $BuildLevelFactor);',
-                'energy'    => 'return - (20 * $BuildLevel * pow((1.1), $BuildLevel)) * (0.1 * $BuildLevelFactor);'
-            )
+            }
         ),
         // Solar Energy Plant
         4 => array
@@ -95,14 +74,7 @@ if(defined('INSIDE'))
                 return [
                     'energy' => ((20 * $level * pow((1.1), $level)) * (0.1 * $productionFactor))
                 ];
-            },
-            'formule' => array
-            (
-                'metal'        => 'return "0";',
-                'crystal'    => 'return "0";',
-                'deuterium' => 'return "0";',
-                'energy'    => 'return (20 * $BuildLevel * pow((1.1), $BuildLevel)) * (0.1 * $BuildLevelFactor);'
-            )
+            }
         ),
         // Fusion Energy Planet
         12 => array
@@ -120,14 +92,7 @@ if(defined('INSIDE'))
                     'deuterium' => (-1 * ((10 * $level * pow((1.1), $level)) * (0.1 * $productionFactor))),
                     'energy' => ((50 * $level * pow((1.1), $level)) * (0.1 * $productionFactor))
                 ];
-            },
-            'formule' => array
-            (
-                'metal'        => 'return "0";',
-                'crystal'    => 'return "0";',
-                'deuterium' => 'return ((10 * $BuildLevel * pow((1.1), $BuildLevel)) * (0.1 * $BuildLevelFactor) * (-1));',
-                'energy'    => 'return (50 * $BuildLevel * pow((1.1), $BuildLevel)) * (0.1 * $BuildLevelFactor);'
-            )
+            }
         ),
         // Solar Satelite
         212 => array
@@ -146,14 +111,7 @@ if(defined('INSIDE'))
                 return [
                     'energy' => ((($planetTemp / 4) + 20) * $level * (0.1 * $productionFactor))
                 ];
-            },
-            'formule' => array
-            (
-                'metal'        => 'return "0";',
-                'crystal'    => 'return "0";',
-                'deuterium' => 'return "0";',
-                'energy'    => 'return (($BuildTemp / 4) + 20) * $BuildLevel * (0.1 * $BuildLevelFactor);'
-            )
+            }
         )
     );
 }
