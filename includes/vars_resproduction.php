@@ -2,11 +2,9 @@
 
 if(defined('INSIDE'))
 {
-    $_Vars_ResProduction = array
-    (
+    $_Vars_ResProduction = [
         // Metal Mine
-        1 => array
-        (
+        1 => [
             'metal' => 40,
             'crystal' => 10,
             'deuterium' => 0,
@@ -21,10 +19,9 @@ if(defined('INSIDE'))
                     'energy' => (-1 * ((10 * $level * pow((1.1), $level)) * (0.1 * $productionFactor)))
                 ];
             }
-        ),
+        ],
         // Crystal Mine
-        2 => array
-        (
+        2 => [
             'metal' => 30,
             'crystal' => 15,
             'deuterium' => 0,
@@ -39,10 +36,9 @@ if(defined('INSIDE'))
                     'energy' => (-1 * ((10 * $level * pow((1.1), $level)) * (0.1 * $productionFactor)))
                 ];
             }
-        ),
+        ],
         // Deuterium Extractor
-        3 => array
-        (
+        3 => [
             'metal' => 150,
             'crystal' => 50,
             'deuterium' => 0,
@@ -58,10 +54,9 @@ if(defined('INSIDE'))
                     'energy' => (-1 * ((20 * $level * pow((1.1), $level)) * (0.1 * $productionFactor)))
                 ];
             }
-        ),
+        ],
         // Solar Energy Plant
-        4 => array
-        (
+        4 => [
             'metal' => 50,
             'crystal' => 20,
             'deuterium' => 0,
@@ -75,10 +70,9 @@ if(defined('INSIDE'))
                     'energy' => ((20 * $level * pow((1.1), $level)) * (0.1 * $productionFactor))
                 ];
             }
-        ),
+        ],
         // Fusion Energy Planet
-        12 => array
-        (
+        12 => [
             'metal' => 500,
             'crystal' => 200,
             'deuterium' => 100,
@@ -93,10 +87,9 @@ if(defined('INSIDE'))
                     'energy' => ((50 * $level * pow((1.1), $level)) * (0.1 * $productionFactor))
                 ];
             }
-        ),
+        ],
         // Solar Satelite
-        212 => array
-        (
+        212 => [
             'metal' => 0,
             'crystal' => 2000,
             'deuterium' => 500,
@@ -112,8 +105,8 @@ if(defined('INSIDE'))
                     'energy' => ((($planetTemp / 4) + 20) * $level * (0.1 * $productionFactor))
                 ];
             }
-        )
-    );
+        ]
+    ];
 }
 
 ?>
