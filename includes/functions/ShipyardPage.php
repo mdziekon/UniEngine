@@ -2,7 +2,7 @@
 
 function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
 {
-    global $_Lang, $_Vars_GameElements, $_Vars_ElementCategories, $_SkinPath, $_GameConfig, $_POST, $UserDev_Log, $_Vars_ResProduction, $_EnginePath;
+    global $_Lang, $_Vars_GameElements, $_Vars_ElementCategories, $_SkinPath, $_GameConfig, $_POST, $UserDev_Log, $_EnginePath;
 
     include($_EnginePath.'includes/functions/GetMaxConstructibleElements.php');
     include($_EnginePath.'includes/functions/GetElementTechReq.php');

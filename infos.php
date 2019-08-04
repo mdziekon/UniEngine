@@ -162,7 +162,7 @@ function buildResourcesProductionTableHTML($elementID, &$planet, &$user, $timest
 
 function ShowProductionTable($CurrentUser, $CurrentPlanet, $BuildID, $Template)
 {
-    global $_Vars_ResProduction, $_Vars_GameElements, $_Vars_ElementCategories, $_GameConfig, $_EnginePath;
+    global $_Vars_GameElements, $_Vars_ElementCategories, $_GameConfig, $_EnginePath;
 
     include($_EnginePath.'includes/functions/GetMissileRange.php');
 

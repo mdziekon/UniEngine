@@ -2,7 +2,7 @@
 
 function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
 {
-    global $_EnginePath, $_Vars_ResProduction, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories,
+    global $_EnginePath, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories,
            $_SkinPath, $_GameConfig, $_GET, $_Vars_PremiumBuildingPrices, $_Vars_MaxElementLevel, $_Vars_PremiumBuildings;
 
     $BuildingPage = '';

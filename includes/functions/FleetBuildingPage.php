@@ -2,7 +2,7 @@
 
 function FleetBuildingPage(&$CurrentPlanet, $CurrentUser)
 {
-    global $_EnginePath, $_Lang, $_Vars_GameElements, $_SkinPath, $_POST, $_Vars_ElementCategories, $UserDev_Log, $_Vars_ResProduction;
+    global $_EnginePath, $_Lang, $_Vars_GameElements, $_SkinPath, $_POST, $_Vars_ElementCategories, $UserDev_Log;
 
     include($_EnginePath.'includes/functions/GetMaxConstructibleElements.php');
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
