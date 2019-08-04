@@ -14,7 +14,7 @@ $Now = time();
 function BuildRessourcePage($CurrentUser, &$CurrentPlanet)
 {
     global $_Lang, $_POST, $_GameConfig, $Now, $SetPercents, $UserDev_Log,
-        $_Vars_ResProduction, $_Vars_GameElements, $_Vars_ElementCategories, $_Vars_Prices;
+           $_Vars_GameElements, $_Vars_ElementCategories, $_Vars_Prices;
 
     includeLang('resources');
 
@@ -146,65 +146,66 @@ function BuildRessourcePage($CurrentUser, &$CurrentPlanet)
     $Loop = 0;
     foreach($_Vars_ElementCategories['prod'] as $ProdID)
     {
-        if(isset($_Vars_ResProduction[$ProdID]))
-        {
-            if($CurrentPlanet[$_Vars_GameElements[$ProdID]] <= 0)
-            {
-                $CurrRow[$Loop]['zero_level'] = ' class="red"';
-            }
-
-            $elementProduction = getElementProduction(
-                $ProdID,
-                $CurrentPlanet,
-                $CurrentUser,
-                [
-                    'useCurrentBoosters' => true,
-                    'currentTimestamp' => $Now,
-                ]
-            );
-
-            $CurrentPlanet['metal_perhour'] += $elementProduction['metal'];
-            $CurrentPlanet['crystal_perhour'] += $elementProduction['crystal'];
-            $CurrentPlanet['deuterium_perhour'] += $elementProduction['deuterium'];
-
-            if ($elementProduction['energy'] > 0) {
-                $CurrentPlanet['energy_max'] += $elementProduction['energy'];
-            } else {
-                $CurrentPlanet['energy_used'] += $elementProduction['energy'];
-            }
-
-            $Field = $_Vars_GameElements[$ProdID]."_workpercent";
-            $CurrRow[$Loop]['name'] = $_Vars_GameElements[$ProdID];
-            $CurrRow[$Loop]['workpercent'] = $CurrentPlanet[$Field];
-            $CurrRow[$Loop]['option'] = '';
-            for($Option = 10; $Option >= 0; $Option -= 1)
-            {
-                $OptValue = $Option * 10;
-                if($Option == $CurrRow[$Loop]['workpercent'])
-                {
-                    $OptSelected = ' selected=selected';
-                }
-                else
-                {
-                    $OptSelected = '';
-                }
-                $CurrRow[$Loop]['option'] .= "<option value=\"{$OptValue}\"{$OptSelected}>{$OptValue}%</option>";
-            }
-            $CurrRow[$Loop]['ID'] = $ProdID;
-            $CurrRow[$Loop]['type'] = $_Lang['tech'][$ProdID];
-            $CurrRow[$Loop]['level'] = ($ProdID > 200) ? $_Lang['quantity'] : $_Lang['level'];
-            $CurrRow[$Loop]['level_type'] = $CurrentPlanet[ $_Vars_GameElements[$ProdID] ];
-            if($ProdID > 200)
-            {
-                $CurrRow[$Loop]['level_type'] = prettyNumber($CurrRow[$Loop]['level_type']);
-            }
-            $CurrRow[$Loop]['metal_type'] = $elementProduction['metal'];
-            $CurrRow[$Loop]['crystal_type'] = $elementProduction['crystal'];
-            $CurrRow[$Loop]['deuterium_type'] = $elementProduction['deuterium'];
-            $CurrRow[$Loop]['energy_type'] = $elementProduction['energy'];
-
-            $Loop += 1;
+        if (_getElementProductionFormula($ProdID) == null) {
+            continue;
         }
+
+        if($CurrentPlanet[$_Vars_GameElements[$ProdID]] <= 0)
+        {
+            $CurrRow[$Loop]['zero_level'] = ' class="red"';
+        }
+
+        $elementProduction = getElementProduction(
+            $ProdID,
+            $CurrentPlanet,
+            $CurrentUser,
+            [
+                'useCurrentBoosters' => true,
+                'currentTimestamp' => $Now,
+            ]
+        );
+
+        $CurrentPlanet['metal_perhour'] += $elementProduction['metal'];
+        $CurrentPlanet['crystal_perhour'] += $elementProduction['crystal'];
+        $CurrentPlanet['deuterium_perhour'] += $elementProduction['deuterium'];
+
+        if ($elementProduction['energy'] > 0) {
+            $CurrentPlanet['energy_max'] += $elementProduction['energy'];
+        } else {
+            $CurrentPlanet['energy_used'] += $elementProduction['energy'];
+        }
+
+        $Field = $_Vars_GameElements[$ProdID]."_workpercent";
+        $CurrRow[$Loop]['name'] = $_Vars_GameElements[$ProdID];
+        $CurrRow[$Loop]['workpercent'] = $CurrentPlanet[$Field];
+        $CurrRow[$Loop]['option'] = '';
+        for($Option = 10; $Option >= 0; $Option -= 1)
+        {
+            $OptValue = $Option * 10;
+            if($Option == $CurrRow[$Loop]['workpercent'])
+            {
+                $OptSelected = ' selected=selected';
+            }
+            else
+            {
+                $OptSelected = '';
+            }
+            $CurrRow[$Loop]['option'] .= "<option value=\"{$OptValue}\"{$OptSelected}>{$OptValue}%</option>";
+        }
+        $CurrRow[$Loop]['ID'] = $ProdID;
+        $CurrRow[$Loop]['type'] = $_Lang['tech'][$ProdID];
+        $CurrRow[$Loop]['level'] = ($ProdID > 200) ? $_Lang['quantity'] : $_Lang['level'];
+        $CurrRow[$Loop]['level_type'] = $CurrentPlanet[ $_Vars_GameElements[$ProdID] ];
+        if($ProdID > 200)
+        {
+            $CurrRow[$Loop]['level_type'] = prettyNumber($CurrRow[$Loop]['level_type']);
+        }
+        $CurrRow[$Loop]['metal_type'] = $elementProduction['metal'];
+        $CurrRow[$Loop]['crystal_type'] = $elementProduction['crystal'];
+        $CurrRow[$Loop]['deuterium_type'] = $elementProduction['deuterium'];
+        $CurrRow[$Loop]['energy_type'] = $elementProduction['energy'];
+
+        $Loop += 1;
     }
 
     $parse['Production_of_resources_in_the_planet'] = str_replace('%s', (($CurrentPlanet['planet_type'] == 1) ? $_Lang['on_planet'] : $_Lang['on_moon']).' '.$CurrentPlanet['name'], $_Lang['Production_of_resources_in_the_planet']);
