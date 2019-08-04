@@ -5,11 +5,6 @@ if(defined('INSIDE'))
     $_Vars_ResProduction = [
         // Metal Mine
         1 => [
-            'metal' => 40,
-            'crystal' => 10,
-            'deuterium' => 0,
-            'energy' => 0,
-            'factor' => 1.5,
             'production' => function ($params) {
                 $level = $params['level'];
                 $productionFactor = $params['productionFactor'];
@@ -22,11 +17,6 @@ if(defined('INSIDE'))
         ],
         // Crystal Mine
         2 => [
-            'metal' => 30,
-            'crystal' => 15,
-            'deuterium' => 0,
-            'energy' => 0,
-            'factor' => 1.6,
             'production' => function ($params) {
                 $level = $params['level'];
                 $productionFactor = $params['productionFactor'];
@@ -39,11 +29,6 @@ if(defined('INSIDE'))
         ],
         // Deuterium Extractor
         3 => [
-            'metal' => 150,
-            'crystal' => 50,
-            'deuterium' => 0,
-            'energy' => 0,
-            'factor' => 1.5,
             'production' => function ($params) {
                 $level = $params['level'];
                 $productionFactor = $params['productionFactor'];
@@ -57,11 +42,6 @@ if(defined('INSIDE'))
         ],
         // Solar Energy Plant
         4 => [
-            'metal' => 50,
-            'crystal' => 20,
-            'deuterium' => 0,
-            'energy' => 0,
-            'factor' => 1.5,
             'production' => function ($params) {
                 $level = $params['level'];
                 $productionFactor = $params['productionFactor'];
@@ -73,11 +53,6 @@ if(defined('INSIDE'))
         ],
         // Fusion Energy Planet
         12 => [
-            'metal' => 500,
-            'crystal' => 200,
-            'deuterium' => 100,
-            'energy' => 0,
-            'factor' => 1.8,
             'production' => function ($params) {
                 $level = $params['level'];
                 $productionFactor = $params['productionFactor'];
@@ -90,11 +65,6 @@ if(defined('INSIDE'))
         ],
         // Solar Satelite
         212 => [
-            'metal' => 0,
-            'crystal' => 2000,
-            'deuterium' => 500,
-            'energy' => 0,
-            'factor' => 0.5,
             'production' => function ($params) {
                 // In this case, "level" means "count"
                 $level = $params['level'];
