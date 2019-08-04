@@ -409,6 +409,13 @@ if($AllowScan)
                 else if($Place == 3)
                 {
                     // HandlePlanetQueue_OnStructureBuildEnd [Building has ended]
+
+                    $ResUpdateReturn = ResourceUpdate($PlanetsDumpData[$Log['PlanetID']], $UserData, 'LA', $Log['Date']);
+                    if($ResUpdateReturn !== false)
+                    {
+                        $ScanLog['ResUpdates'] += 1;
+                    }
+
                     $PlanetsDumpData[$Log['PlanetID']][$_Vars_GameElements[$Log['ElementID']]] += ($Log['Code'] == 1 ? 1 : -1);
 
                     if($Log['ElementID'] == 22)
