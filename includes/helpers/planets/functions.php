@@ -311,6 +311,12 @@ function calculateTotalResourcesIncome(&$planet, &$user, $timerange, $options = 
         $options['isVacationCheckEnabled'] = false;
     }
 
+    $productionTime = ($timerange['end'] - $timerange['start']);
+
+    if ($productionTime <= 0) {
+        return [];
+    }
+
     $planetProduction = [
         'metal_perhour' => 0,
         'crystal_perhour' => 0,
@@ -349,12 +355,7 @@ function calculateTotalResourcesIncome(&$planet, &$user, $timerange, $options = 
     $planet['energy_used'] = $planetProduction['energy_used'];
     $planet['energy_max'] = $planetProduction['energy_max'];
 
-    $productionTime = ($timerange['end'] - $timerange['start']);
     $productionLevel = 0;
-
-    if ($productionTime <= 0) {
-        return [];
-    }
 
     $energyAvailable = $planetProduction['energy_max'];
     $energyUsedAbs = abs($planetProduction['energy_used']);
