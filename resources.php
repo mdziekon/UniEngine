@@ -246,116 +246,6 @@ function BuildRessourcePage($CurrentUser, &$CurrentPlanet)
     $parse['deuterium_basic_income'] = $_GameConfig['deuterium_basic_income'] * $_GameConfig['resource_multiplier'];
     $parse['energy_basic_income'] = $_GameConfig['energy_basic_income'];
 
-    //  Arguments:
-    //      - $resourceKey (String)
-    //      - $planet (&Object)
-    //      - $params (Object)
-    //          - productionLevel (Number)
-    //
-    function createResourceSummaryData ($resourceKey, &$planet, $params) {
-        $productionLevel = $params['productionLevel'];
-
-        $summaryData = [
-            'maxCapacity' => [
-                'value' => null,
-                'isOverflowing' => null
-            ],
-            'totalIncome' => [
-                'perHour' => null,
-                'perDay' => null,
-                'perWeek' => null,
-                'perMonth' => null
-            ],
-            'storageLoad' => [
-                'percent' => null
-            ]
-        ];
-
-        $resourceCurrentAmount = $planet[$resourceKey];
-        $storageMaxCapacity = $planet["{$resourceKey}_max"];
-
-        $summaryData['maxCapacity']['value'] = $storageMaxCapacity;
-        $summaryData['maxCapacity']['isOverflowing'] = ($storageMaxCapacity >= $resourceCurrentAmount);
-
-        $theoreticalResourceIncomePerSecond = calculateTotalTheoreticalResourceIncomePerSecond(
-            $resourceKey,
-            $planet
-        );
-        $realResourceIncomePerSecond = calculateTotalRealResourceIncomePerSecond([
-            'theoreticalIncomePerSecond' => $theoreticalResourceIncomePerSecond,
-            'productionLevel' => $productionLevel
-        ]);
-        $totalResourceIncomePerSecond = array_sum($realResourceIncomePerSecond);
-
-        $summaryData['totalIncome']['perHour'] = $totalResourceIncomePerSecond * TIME_HOUR;
-        $summaryData['totalIncome']['perDay'] = $totalResourceIncomePerSecond * TIME_DAY;
-        $summaryData['totalIncome']['perWeek'] = $totalResourceIncomePerSecond * TIME_DAY * 7;
-        $summaryData['totalIncome']['perMonth'] = $totalResourceIncomePerSecond * TIME_DAY * 30;
-
-        $storageLoadPercent = floor($resourceCurrentAmount / $storageMaxCapacity * 100);
-
-        $summaryData['storageLoad']['percent'] = $storageLoadPercent;
-
-        return $summaryData;
-    }
-
-    function createResourceSummaryTplData ($resourceKey, $summaryData) {
-        global $_Lang;
-
-        $summaryTplData = [
-            'maxCapacity' => null,
-            'totalIncome_perHour' => null,
-            'totalIncome_perDay' => null,
-            'totalIncome_perWeek' => null,
-            'totalIncome_perMonth' => null,
-            'storageLoad_percent' => null,
-            'storageLoad_barWidthPx' => null,
-            'storageLoad_barColor' => null,
-        ];
-
-        $summaryTplData['maxCapacity'] = (
-            prettyNumber($summaryData['maxCapacity']['value'] / 1000) .
-            " {$_Lang['k']}"
-        );
-        $summaryTplData['maxCapacity'] = (
-            $summaryData['maxCapacity']['isOverflowing'] ?
-            colorGreen($summaryTplData['maxCapacity']) :
-            colorRed($summaryTplData['maxCapacity'])
-        );
-
-        $summaryTplData['totalIncome_perHour'] = prettyColorNumber($summaryData['totalIncome']['perHour']);
-        $summaryTplData['totalIncome_perDay'] = prettyColorNumber($summaryData['totalIncome']['perDay']);
-        $summaryTplData['totalIncome_perWeek'] = prettyColorNumber($summaryData['totalIncome']['perWeek']);
-        $summaryTplData['totalIncome_perMonth'] = prettyColorNumber($summaryData['totalIncome']['perMonth']);
-
-        $storageLoadPercent = $summaryData['storageLoad']['percent'];
-        $storageLoadBarPixelsPerPercent = floor(250 / 100);
-        $storageLoadBarColor = null;
-
-        if ($storageLoadPercent >= 100) {
-            $storageLoadBarColor = "red";
-        } else if ($storageLoadPercent >= 80) {
-            $storageLoadBarColor = "orange";
-        } else {
-            $storageLoadBarColor = "lime";
-        }
-
-        $summaryTplData['storageLoad_percent'] = $storageLoadPercent;
-        $summaryTplData['storageLoad_barWidthPx'] = (
-            min($storageLoadPercent, 100) *
-            $storageLoadBarPixelsPerPercent
-        );
-        $summaryTplData['storageLoad_barColor'] = $storageLoadBarColor;
-
-        $result = [];
-
-        foreach ($summaryTplData as $entryKey => $entryValue) {
-            $result["resourceSummary_{$resourceKey}_{$entryKey}"] = $entryValue;
-        }
-
-        return $result;
-    }
-
     foreach ([ 'metal', 'crystal', 'deuterium' ] as $resourceKey) {
         $resourceSummaryData = createResourceSummaryData(
             $resourceKey,
@@ -399,44 +289,6 @@ function BuildRessourcePage($CurrentUser, &$CurrentPlanet)
         $parse['production_level'] .= '<br/>'.$_Lang['VacationMode'];
     }
 
-    function createShipsCargoHelperTplData ($shipID, &$planet) {
-        global $_Vars_GameElements, $_Vars_Prices, $_Lang;
-
-        $shipCapacity = $_Vars_Prices[$shipID]['capacity'];
-        $shipElementKey = $_Vars_GameElements[$shipID];
-
-        $allResources = (
-            $planet['metal'] +
-            $planet['crystal'] +
-            $planet['deuterium']
-        );
-
-
-        $requiredShipsCount = ceil($allResources / $shipCapacity);
-        $availableShipsCount = $planet[$shipElementKey];
-
-        $missingShipsCount = ($requiredShipsCount - $availableShipsCount);
-
-        $summary = [
-            'shipName' => $_Lang['tech'][$shipID],
-            'requiredCount' => prettyNumber($requiredShipsCount),
-            'availableCount' => prettyNumber($availableShipsCount),
-            'missingCount' => (
-                $missingShipsCount > 0 ?
-                prettyNumber($missingShipsCount) :
-                colorGreen($_Lang['no_need_more_transporters'])
-            ),
-        ];
-
-        $result = [];
-
-        foreach ($summary as $entryKey => $entryValue) {
-            $result["cargohelper_{$shipID}_{$entryKey}"] = $entryValue;
-        }
-
-        return $result;
-    }
-
     foreach ([ 202, 203, 217 ] as $shipID) {
         $shipCargoHelperTplData = createShipsCargoHelperTplData(
             $shipID,
@@ -466,6 +318,154 @@ function BuildRessourcePage($CurrentUser, &$CurrentPlanet)
     $page = parsetemplate($RessBodyTPL, $parse);
 
     return $page;
+}
+
+//  Arguments:
+//      - $resourceKey (String)
+//      - $planet (&Object)
+//      - $params (Object)
+//          - productionLevel (Number)
+//
+function createResourceSummaryData ($resourceKey, &$planet, $params) {
+    $productionLevel = $params['productionLevel'];
+
+    $summaryData = [
+        'maxCapacity' => [
+            'value' => null,
+            'isOverflowing' => null
+        ],
+        'totalIncome' => [
+            'perHour' => null,
+            'perDay' => null,
+            'perWeek' => null,
+            'perMonth' => null
+        ],
+        'storageLoad' => [
+            'percent' => null
+        ]
+    ];
+
+    $resourceCurrentAmount = $planet[$resourceKey];
+    $storageMaxCapacity = $planet["{$resourceKey}_max"];
+
+    $summaryData['maxCapacity']['value'] = $storageMaxCapacity;
+    $summaryData['maxCapacity']['isOverflowing'] = ($storageMaxCapacity >= $resourceCurrentAmount);
+
+    $theoreticalResourceIncomePerSecond = calculateTotalTheoreticalResourceIncomePerSecond(
+        $resourceKey,
+        $planet
+    );
+    $realResourceIncomePerSecond = calculateTotalRealResourceIncomePerSecond([
+        'theoreticalIncomePerSecond' => $theoreticalResourceIncomePerSecond,
+        'productionLevel' => $productionLevel
+    ]);
+    $totalResourceIncomePerSecond = array_sum($realResourceIncomePerSecond);
+
+    $summaryData['totalIncome']['perHour'] = $totalResourceIncomePerSecond * TIME_HOUR;
+    $summaryData['totalIncome']['perDay'] = $totalResourceIncomePerSecond * TIME_DAY;
+    $summaryData['totalIncome']['perWeek'] = $totalResourceIncomePerSecond * TIME_DAY * 7;
+    $summaryData['totalIncome']['perMonth'] = $totalResourceIncomePerSecond * TIME_DAY * 30;
+
+    $storageLoadPercent = floor($resourceCurrentAmount / $storageMaxCapacity * 100);
+
+    $summaryData['storageLoad']['percent'] = $storageLoadPercent;
+
+    return $summaryData;
+}
+
+function createResourceSummaryTplData ($resourceKey, $summaryData) {
+    global $_Lang;
+
+    $summaryTplData = [
+        'maxCapacity' => null,
+        'totalIncome_perHour' => null,
+        'totalIncome_perDay' => null,
+        'totalIncome_perWeek' => null,
+        'totalIncome_perMonth' => null,
+        'storageLoad_percent' => null,
+        'storageLoad_barWidthPx' => null,
+        'storageLoad_barColor' => null,
+    ];
+
+    $summaryTplData['maxCapacity'] = (
+        prettyNumber($summaryData['maxCapacity']['value'] / 1000) .
+        " {$_Lang['k']}"
+    );
+    $summaryTplData['maxCapacity'] = (
+        $summaryData['maxCapacity']['isOverflowing'] ?
+        colorGreen($summaryTplData['maxCapacity']) :
+        colorRed($summaryTplData['maxCapacity'])
+    );
+
+    $summaryTplData['totalIncome_perHour'] = prettyColorNumber($summaryData['totalIncome']['perHour']);
+    $summaryTplData['totalIncome_perDay'] = prettyColorNumber($summaryData['totalIncome']['perDay']);
+    $summaryTplData['totalIncome_perWeek'] = prettyColorNumber($summaryData['totalIncome']['perWeek']);
+    $summaryTplData['totalIncome_perMonth'] = prettyColorNumber($summaryData['totalIncome']['perMonth']);
+
+    $storageLoadPercent = $summaryData['storageLoad']['percent'];
+    $storageLoadBarPixelsPerPercent = floor(250 / 100);
+    $storageLoadBarColor = null;
+
+    if ($storageLoadPercent >= 100) {
+        $storageLoadBarColor = "red";
+    } else if ($storageLoadPercent >= 80) {
+        $storageLoadBarColor = "orange";
+    } else {
+        $storageLoadBarColor = "lime";
+    }
+
+    $summaryTplData['storageLoad_percent'] = $storageLoadPercent;
+    $summaryTplData['storageLoad_barWidthPx'] = (
+        min($storageLoadPercent, 100) *
+        $storageLoadBarPixelsPerPercent
+    );
+    $summaryTplData['storageLoad_barColor'] = $storageLoadBarColor;
+
+    $result = [];
+
+    foreach ($summaryTplData as $entryKey => $entryValue) {
+        $result["resourceSummary_{$resourceKey}_{$entryKey}"] = $entryValue;
+    }
+
+    return $result;
+}
+
+function createShipsCargoHelperTplData ($shipID, &$planet) {
+    global $_Vars_GameElements, $_Vars_Prices, $_Lang;
+
+    $shipCapacity = $_Vars_Prices[$shipID]['capacity'];
+    $shipElementKey = $_Vars_GameElements[$shipID];
+
+    $allResources = (
+        $planet['metal'] +
+        $planet['crystal'] +
+        $planet['deuterium']
+    );
+
+
+    $requiredShipsCount = ceil($allResources / $shipCapacity);
+    $availableShipsCount = $planet[$shipElementKey];
+
+    $missingShipsCount = ($requiredShipsCount - $availableShipsCount);
+
+    $summary = [
+        'shipName' => $_Lang['tech'][$shipID],
+        'requiredCount' => prettyNumber($requiredShipsCount),
+        'availableCount' => prettyNumber($availableShipsCount),
+        'missingCount' => (
+            $missingShipsCount > 0 ?
+            prettyNumber($missingShipsCount) :
+            colorGreen($_Lang['no_need_more_transporters'])
+        ),
+    ];
+
+    $result = [];
+
+    foreach ($summary as $entryKey => $entryValue) {
+        $result["cargohelper_{$shipID}_{$entryKey}"] = $entryValue;
+    }
+
+    return $result;
 }
 
 $Page = BuildRessourcePage($_User, $_Planet);
