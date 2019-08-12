@@ -447,23 +447,11 @@ function calculateTotalResourcesIncome(&$planet, &$user, $timerange, $options = 
 //          - productionLevel (Number)
 //
 function calculateRealResourceIncome($resourceKey, &$planet, $params) {
-    global $_GameConfig;
-
     $productionTime = $params['productionTime'];
     $productionLevel = $params['productionLevel'];
 
     $resourceCurrentAmount = $planet[$resourceKey];
     $resourceMaxStorage = ($planet["{$resourceKey}_max"] * MAX_OVERFLOW);
-    $resourceIncomePerSecond = [
-        'production' => ($planet["{$resourceKey}_perhour"] / 3600),
-        'base' => (
-            (
-                $_GameConfig["{$resourceKey}_basic_income"] *
-                $_GameConfig['resource_multiplier']
-            ) /
-            3600
-        )
-    ];
 
     if ($resourceCurrentAmount >= $resourceMaxStorage) {
         return [
@@ -472,15 +460,23 @@ function calculateRealResourceIncome($resourceKey, &$planet, $params) {
         ];
     }
 
+    $theoreticalResourceIncomePerSecond = calculateTotalTheoreticalResourceIncomePerSecond(
+        $resourceKey,
+        $planet
+    );
+    $realResourceIncomePerSecond = calculateTotalRealResourceIncomePerSecond([
+        'theoreticalIncomePerSecond' => $theoreticalResourceIncomePerSecond,
+        'productionLevel' => $productionLevel
+    ]);
+
     $theoreticalIncome = [
         'production' => (
             $productionTime *
-            $resourceIncomePerSecond['production'] *
-            (0.01 * $productionLevel)
+            $realResourceIncomePerSecond['production']
         ),
         'base' => (
             $productionTime *
-            $resourceIncomePerSecond['base']
+            $realResourceIncomePerSecond['base']
         )
     ];
     $totalTheoreticalIncome = $theoreticalIncome['production'] + $theoreticalIncome['base'];
@@ -501,6 +497,48 @@ function calculateRealResourceIncome($resourceKey, &$planet, $params) {
     return [
         'isUpdated' => ($finalIncome != 0),
         'income' => $finalIncome
+    ];
+}
+
+//  Assumptions:
+//      - Planet's hourly extraction of the resource is already calculated
+//        and available in $planet["{$resourceKey}_perhour"] property.
+//        This includes any boosters that affect the extraction (eg. Geologist).
+//
+function calculateTotalTheoreticalResourceIncomePerSecond($resourceKey, &$planet) {
+    global $_GameConfig;
+
+    return [
+        'production' => ($planet["{$resourceKey}_perhour"] / 3600),
+        'base' => (
+            (
+                $_GameConfig["{$resourceKey}_basic_income"] *
+                $_GameConfig['resource_multiplier']
+            ) /
+            3600
+        )
+    ];
+}
+
+//  Arguments:
+//      - $params (Object)
+//          - theoreticalIncomePerSecond (Object)
+//              - production (Number)
+//              - base (Number)
+//          - productionLevel (Number)
+//
+function calculateTotalRealResourceIncomePerSecond($params) {
+    $theoreticalIncomePerSecond = $params['theoreticalIncomePerSecond'];
+    $productionLevel = $params['productionLevel'];
+
+    return [
+        'production' => (
+            $theoreticalIncomePerSecond['production'] *
+            (0.01 * $productionLevel)
+        ),
+        'base' => (
+            $theoreticalIncomePerSecond['base']
+        )
     ];
 }
 
