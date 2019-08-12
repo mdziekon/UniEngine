@@ -13,7 +13,6 @@ $_Lang['Weekly']                                     = 'Tygodniowe';
 $_Lang['Monthly']                                    = 'Miesięczne';
 $_Lang['Storage_state']                              = 'Stan Magazynów';
 $_Lang['Calcule']                                    = 'Przelicz';
-$_Lang['o/o']                                        = '%';
 $_Lang['k']                                          = 'k';
 $_Lang['no_need_more_transporters']                  = 'Nie brakuje';
 

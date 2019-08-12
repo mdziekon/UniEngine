@@ -246,113 +246,133 @@ function BuildRessourcePage($CurrentUser, &$CurrentPlanet)
     $parse['deuterium_basic_income'] = $_GameConfig['deuterium_basic_income'] * $_GameConfig['resource_multiplier'];
     $parse['energy_basic_income'] = $_GameConfig['energy_basic_income'];
 
-    if($CurrentPlanet['metal_max'] < $CurrentPlanet['metal'])
-    {
-        $parse['metal_max'] = '<span class="red">';
-    }
-    else
-    {
-        $parse['metal_max'] = '<span class="lime">';
-    }
-    $parse['metal_max'] .= prettyNumber($CurrentPlanet['metal_max'] / 1000) ." {$_Lang['k']}</span>";
+    //  Arguments:
+    //      - $resourceKey (String)
+    //      - $planet (&Object)
+    //      - $params (Object)
+    //          - productionLevel (Number)
+    //
+    function createResourceSummaryData ($resourceKey, &$planet, $params) {
+        $productionLevel = $params['productionLevel'];
 
-    if($CurrentPlanet['crystal_max'] < $CurrentPlanet['crystal'])
-    {
-        $parse['crystal_max'] = '<span class="red">';
-    }
-    else
-    {
-        $parse['crystal_max'] = '<span class="lime">';
-    }
-    $parse['crystal_max'] .= prettyNumber($CurrentPlanet['crystal_max'] / 1000) ." {$_Lang['k']}</span>";
+        $summaryData = [
+            'maxCapacity' => [
+                'value' => null,
+                'isOverflowing' => null
+            ],
+            'totalIncome' => [
+                'perHour' => null,
+                'perDay' => null,
+                'perWeek' => null,
+                'perMonth' => null
+            ],
+            'storageLoad' => [
+                'percent' => null
+            ]
+        ];
 
-    if($CurrentPlanet['deuterium_max'] < $CurrentPlanet['deuterium'])
-    {
-        $parse['deuterium_max'] = '<span class="red">';
-    }
-    else
-    {
-        $parse['deuterium_max'] = '<span class="lime">';
-    }
-    $parse['deuterium_max'] .= prettyNumber($CurrentPlanet['deuterium_max'] / 1000) ." {$_Lang['k']}</span>";
+        $resourceCurrentAmount = $planet[$resourceKey];
+        $storageMaxCapacity = $planet["{$resourceKey}_max"];
 
-    $parse['metal_total'] = prettyColorNumber(floor(($CurrentPlanet['metal_perhour'] * 0.01 * $thisProductionEfficiency) + ($_GameConfig['metal_basic_income'] * $_GameConfig['resource_multiplier'])));
-    $parse['crystal_total'] = prettyColorNumber(floor(($CurrentPlanet['crystal_perhour'] * 0.01 * $thisProductionEfficiency) + ($_GameConfig['crystal_basic_income'] * $_GameConfig['resource_multiplier'])));
-    $parse['deuterium_total'] = prettyColorNumber(floor(($CurrentPlanet['deuterium_perhour'] * 0.01 * $thisProductionEfficiency) + ($_GameConfig['deuterium_basic_income'] * $_GameConfig['resource_multiplier'])));
+        $summaryData['maxCapacity']['value'] = $storageMaxCapacity;
+        $summaryData['maxCapacity']['isOverflowing'] = ($storageMaxCapacity >= $resourceCurrentAmount);
+
+        $theoreticalResourceIncomePerSecond = calculateTotalTheoreticalResourceIncomePerSecond(
+            $resourceKey,
+            $planet
+        );
+        $realResourceIncomePerSecond = calculateTotalRealResourceIncomePerSecond([
+            'theoreticalIncomePerSecond' => $theoreticalResourceIncomePerSecond,
+            'productionLevel' => $productionLevel
+        ]);
+        $totalResourceIncomePerSecond = array_sum($realResourceIncomePerSecond);
+
+        $summaryData['totalIncome']['perHour'] = $totalResourceIncomePerSecond * TIME_HOUR;
+        $summaryData['totalIncome']['perDay'] = $totalResourceIncomePerSecond * TIME_DAY;
+        $summaryData['totalIncome']['perWeek'] = $totalResourceIncomePerSecond * TIME_DAY * 7;
+        $summaryData['totalIncome']['perMonth'] = $totalResourceIncomePerSecond * TIME_DAY * 30;
+
+        $storageLoadPercent = floor($resourceCurrentAmount / $storageMaxCapacity * 100);
+
+        $summaryData['storageLoad']['percent'] = $storageLoadPercent;
+
+        return $summaryData;
+    }
+
+    function createResourceSummaryTplData ($resourceKey, $summaryData) {
+        global $_Lang;
+
+        $summaryTplData = [
+            'maxCapacity' => null,
+            'totalIncome_perHour' => null,
+            'totalIncome_perDay' => null,
+            'totalIncome_perWeek' => null,
+            'totalIncome_perMonth' => null,
+            'storageLoad_percent' => null,
+            'storageLoad_barWidthPx' => null,
+            'storageLoad_barColor' => null,
+        ];
+
+        $summaryTplData['maxCapacity'] = (
+            prettyNumber($summaryData['maxCapacity']['value'] / 1000) .
+            " {$_Lang['k']}"
+        );
+        $summaryTplData['maxCapacity'] = (
+            $summaryData['maxCapacity']['isOverflowing'] ?
+            colorGreen($summaryTplData['maxCapacity']) :
+            colorRed($summaryTplData['maxCapacity'])
+        );
+
+        $summaryTplData['totalIncome_perHour'] = prettyColorNumber($summaryData['totalIncome']['perHour']);
+        $summaryTplData['totalIncome_perDay'] = prettyColorNumber($summaryData['totalIncome']['perDay']);
+        $summaryTplData['totalIncome_perWeek'] = prettyColorNumber($summaryData['totalIncome']['perWeek']);
+        $summaryTplData['totalIncome_perMonth'] = prettyColorNumber($summaryData['totalIncome']['perMonth']);
+
+        $storageLoadPercent = $summaryData['storageLoad']['percent'];
+        $storageLoadBarPixelsPerPercent = floor(250 / 100);
+        $storageLoadBarColor = null;
+
+        if ($storageLoadPercent >= 100) {
+            $storageLoadBarColor = "red";
+        } else if ($storageLoadPercent >= 80) {
+            $storageLoadBarColor = "orange";
+        } else {
+            $storageLoadBarColor = "lime";
+        }
+
+        $summaryTplData['storageLoad_percent'] = $storageLoadPercent;
+        $summaryTplData['storageLoad_barWidthPx'] = (
+            min($storageLoadPercent, 100) *
+            $storageLoadBarPixelsPerPercent
+        );
+        $summaryTplData['storageLoad_barColor'] = $storageLoadBarColor;
+
+        $result = [];
+
+        foreach ($summaryTplData as $entryKey => $entryValue) {
+            $result["resourceSummary_{$resourceKey}_{$entryKey}"] = $entryValue;
+        }
+
+        return $result;
+    }
+
+    foreach ([ 'metal', 'crystal', 'deuterium' ] as $resourceKey) {
+        $resourceSummaryData = createResourceSummaryData(
+            $resourceKey,
+            $CurrentPlanet,
+            [
+                'productionLevel' => $thisProductionEfficiency
+            ]
+        );
+        $resourceSummaryTplData = createResourceSummaryTplData(
+            $resourceKey,
+            $resourceSummaryData
+        );
+
+        $parse = array_merge($parse, $resourceSummaryTplData);
+    }
+
     $parse['energy_total'] = prettyColorNumber(floor(($CurrentPlanet['energy_max'] + $_GameConfig['energy_basic_income']) + $CurrentPlanet['energy_used']));
-
-    $parse['daily_metal'] = floor(($CurrentPlanet['metal_perhour'] * 24* 0.01 * $thisProductionEfficiency) + ($parse['metal_basic_income'] * 24));
-    $parse['weekly_metal'] = floor(($CurrentPlanet['metal_perhour'] * 24 * 7* 0.01 * $thisProductionEfficiency) + ($parse['metal_basic_income'] * 24 * 7));
-    $parse['monthly_metal'] = floor(($CurrentPlanet['metal_perhour'] * 24 * 30 * 0.01 * $thisProductionEfficiency) + ($parse['metal_basic_income'] * 24 * 30 ));
-
-    $parse['daily_crystal'] = floor(($CurrentPlanet['crystal_perhour'] * 24* 0.01 * $thisProductionEfficiency) + ($parse['crystal_basic_income'] * 24));
-    $parse['weekly_crystal'] = floor(($CurrentPlanet['crystal_perhour'] * 24 * 7* 0.01 * $thisProductionEfficiency) + ($parse['crystal_basic_income'] * 24 * 7));
-    $parse['monthly_crystal'] = floor(($CurrentPlanet['crystal_perhour'] * 24 * 30 * 0.01 * $thisProductionEfficiency) + ($parse['crystal_basic_income'] * 24 * 30 ));
-
-    $parse['daily_deuterium'] = floor(($CurrentPlanet['deuterium_perhour'] * 24* 0.01 * $thisProductionEfficiency) + ($parse['deuterium_basic_income'] * 24));
-    $parse['weekly_deuterium'] = floor(($CurrentPlanet['deuterium_perhour'] * 24 * 7* 0.01 * $thisProductionEfficiency) + ($parse['deuterium_basic_income'] * 24 * 7));
-    $parse['monthly_deuterium'] = floor(($CurrentPlanet['deuterium_perhour'] * 24 * 30 * 0.01 * $thisProductionEfficiency) + ($parse['deuterium_basic_income'] * 24 * 30 ));
-
-    $parse['daily_metal'] = prettyColorNumber($parse['daily_metal']);
-    $parse['weekly_metal'] = prettyColorNumber($parse['weekly_metal']);
-    $parse['monthly_metal'] = prettyColorNumber($parse['monthly_metal']);
-
-    $parse['daily_crystal'] = prettyColorNumber($parse['daily_crystal']);
-    $parse['weekly_crystal'] = prettyColorNumber($parse['weekly_crystal']);
-    $parse['monthly_crystal'] = prettyColorNumber($parse['monthly_crystal']);
-
-    $parse['daily_deuterium'] = prettyColorNumber($parse['daily_deuterium']);
-    $parse['weekly_deuterium'] = prettyColorNumber($parse['weekly_deuterium']);
-    $parse['monthly_deuterium'] = prettyColorNumber($parse['monthly_deuterium']);
-
-    $parse['metal_storage'] = prettyNumber(floor($CurrentPlanet['metal'] / $CurrentPlanet['metal_max'] * 100)) . $_Lang['o/o'];
-    $parse['crystal_storage'] = prettyNumber(floor($CurrentPlanet['crystal'] / $CurrentPlanet['crystal_max'] * 100)) . $_Lang['o/o'];
-    $parse['deuterium_storage'] = prettyNumber(floor($CurrentPlanet['deuterium'] / $CurrentPlanet['deuterium_max'] * 100)) . $_Lang['o/o'];
-    $parse['metal_storage_bar'] = floor(($CurrentPlanet['metal'] / $CurrentPlanet['metal_max'] * 100) * 2.5);
-    $parse['crystal_storage_bar'] = floor(($CurrentPlanet['crystal'] / $CurrentPlanet['crystal_max'] * 100) * 2.5);
-    $parse['deuterium_storage_bar'] = floor(($CurrentPlanet['deuterium'] / $CurrentPlanet['deuterium_max'] * 100) * 2.5);
-
-    if($parse['metal_storage_bar'] > (100 * 2.5))
-    {
-        $parse['metal_storage_bar'] = 250;
-        $parse['metal_storage_barcolor'] = 'red';
-    }
-    else if($parse['metal_storage_bar'] > (80 * 2.5))
-    {
-        $parse['metal_storage_barcolor'] = 'orange';
-    }
-    else
-    {
-        $parse['metal_storage_barcolor'] = 'lime';
-    }
-
-    if($parse['crystal_storage_bar'] > (100 * 2.5))
-    {
-        $parse['crystal_storage_bar'] = 250;
-        $parse['crystal_storage_barcolor'] = 'red';
-    }
-    else if($parse['crystal_storage_bar'] > (80 * 2.5))
-    {
-        $parse['crystal_storage_barcolor'] = 'orange';
-    }
-    else
-    {
-        $parse['crystal_storage_barcolor'] = 'lime';
-    }
-
-    if($parse['deuterium_storage_bar'] > (100 * 2.5))
-    {
-        $parse['deuterium_storage_bar'] = 250;
-        $parse['deuterium_storage_barcolor'] = 'red';
-    }
-    else if($parse['deuterium_storage_bar'] > (80 * 2.5))
-    {
-        $parse['deuterium_storage_barcolor'] = 'orange';
-    }
-    else
-    {
-        $parse['deuterium_storage_barcolor'] = 'lime';
-    }
 
     if(isOnVacation($CurrentUser))
     {

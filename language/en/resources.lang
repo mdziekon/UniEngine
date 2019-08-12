@@ -13,7 +13,6 @@ $_Lang['Weekly']                                     = 'Weekly';
 $_Lang['Monthly']                                    = 'Monthly';
 $_Lang['Storage_state']                              = 'Storages load';
 $_Lang['Calcule']                                    = 'Recalculate';
-$_Lang['o/o']                                        = '%';
 $_Lang['k']                                          = 'k';
 $_Lang['Total']                                      = 'Total';
 $_Lang['MineUsage']                                  = 'Production';
