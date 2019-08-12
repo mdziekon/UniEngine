@@ -208,7 +208,19 @@ function BuildRessourcePage($CurrentUser, &$CurrentPlanet)
         $Loop += 1;
     }
 
-    $parse['Production_of_resources_in_the_planet'] = str_replace('%s', (($CurrentPlanet['planet_type'] == 1) ? $_Lang['on_planet'] : $_Lang['on_moon']).' '.$CurrentPlanet['name'], $_Lang['Production_of_resources_in_the_planet']);
+    $parse['Production_of_resources_in_the_planet'] = str_replace(
+        '%s',
+        (
+            (
+                ($CurrentPlanet['planet_type'] == 1) ?
+                $_Lang['on_planet'] :
+                $_Lang['on_moon']
+            ) .
+            ' ' .
+            $CurrentPlanet['name']
+        ),
+        $_Lang['Production_of_resources_in_the_planet']
+    );
 
     $thisProductionEfficiency = getPlanetsProductionEfficiency(
         $CurrentPlanet,
@@ -219,6 +231,30 @@ function BuildRessourcePage($CurrentUser, &$CurrentPlanet)
     );
 
     $parse['production_level'] = $thisProductionEfficiency;
+
+    if (isOnVacation($CurrentUser)) {
+        $parse['production_level'] = 0;
+    }
+
+    if ($parse['production_level'] > 50) {
+        $parse['production_level_barcolor'] = 'lime';
+    } else if($parse['production_level'] > 25) {
+        $parse['production_level_barcolor'] = 'orange';
+    } else {
+        $parse['production_level_barcolor'] = 'red';
+    }
+
+    $parse['production_level'] = $parse['production_level'] . '%';
+    if (isOnVacation($CurrentUser)) {
+        $parse['production_level'] .= '<br/>'.$_Lang['VacationMode'];
+    }
+
+    if ($CurrentUser['geologist_time'] > $Now) {
+        $parse['GeologistBonusPercent'] = '15';
+    } else {
+        $parse['GeologistBonusPercent'] = '0';
+    }
+
 
     if(!empty($CurrRow))
     {
@@ -237,14 +273,9 @@ function BuildRessourcePage($CurrentUser, &$CurrentPlanet)
                 $val['deuterium_type'] = prettyColorNumber($val['deuterium_type']);
             }
             $val['energy_type'] = prettyColorNumber($val['energy_type'], true);
-            $parse['resource_row'] .= parsetemplate ( $RessRowTPL, $val );
+            $parse['resource_row'] .= parsetemplate($RessRowTPL, $val);
         }
     }
-
-    $parse['metal_basic_income'] = $_GameConfig['metal_basic_income'] * $_GameConfig['resource_multiplier'];
-    $parse['crystal_basic_income'] = $_GameConfig['crystal_basic_income'] * $_GameConfig['resource_multiplier'];
-    $parse['deuterium_basic_income'] = $_GameConfig['deuterium_basic_income'] * $_GameConfig['resource_multiplier'];
-    $parse['energy_basic_income'] = $_GameConfig['energy_basic_income'];
 
     foreach ([ 'metal', 'crystal', 'deuterium' ] as $resourceKey) {
         $resourceSummaryData = createResourceSummaryData(
@@ -264,30 +295,6 @@ function BuildRessourcePage($CurrentUser, &$CurrentPlanet)
 
     $parse['energy_total'] = prettyColorNumber(floor(($CurrentPlanet['energy_max'] + $_GameConfig['energy_basic_income']) + $CurrentPlanet['energy_used']));
 
-    if(isOnVacation($CurrentUser))
-    {
-        $parse['production_level'] = 0;
-    }
-
-    if($parse['production_level'] > 50)
-    {
-        $parse['production_level_barcolor'] = 'lime';
-    }
-    else if($parse['production_level'] > 25)
-    {
-        $parse['production_level_barcolor'] = 'orange';
-    }
-    else
-    {
-        $parse['production_level_barcolor'] = 'red';
-    }
-
-    $parse['production_level'] = $parse['production_level'].'%';
-    if(isOnVacation($CurrentUser))
-    {
-        $parse['production_level'] .= '<br/>'.$_Lang['VacationMode'];
-    }
-
     foreach ([ 202, 203, 217 ] as $shipID) {
         $shipCargoHelperTplData = createShipsCargoHelperTplData(
             $shipID,
@@ -297,22 +304,22 @@ function BuildRessourcePage($CurrentUser, &$CurrentPlanet)
         $parse = array_merge($parse, $shipCargoHelperTplData);
     }
 
-    $parse['planet_type_res'] = ($CurrentPlanet['planet_type'] == 1) ? $_Lang['from_planet'] : $_Lang['from_moon'];
-    $parse['nazwa'] = $CurrentPlanet['name'];
+    $parse['PlanetData_type_langfrom'] = (
+        ($CurrentPlanet['planet_type'] == 1) ?
+        $_Lang['from_planet'] :
+        $_Lang['from_moon']
+    );
+    $parse['PlanetData_name'] = $CurrentPlanet['name'];
+
+    $parse['metal_basic_income'] = $_GameConfig['metal_basic_income'] * $_GameConfig['resource_multiplier'];
+    $parse['crystal_basic_income'] = $_GameConfig['crystal_basic_income'] * $_GameConfig['resource_multiplier'];
+    $parse['deuterium_basic_income'] = $_GameConfig['deuterium_basic_income'] * $_GameConfig['resource_multiplier'];
+    $parse['energy_basic_income'] = $_GameConfig['energy_basic_income'];
 
     $parse['metal_basic_income'] = prettyNumber($parse['metal_basic_income']);
     $parse['crystal_basic_income'] = prettyNumber($parse['crystal_basic_income']);
     $parse['deuterium_basic_income'] = prettyNumber($parse['deuterium_basic_income']);
     $parse['energy_basic_income']= prettyNumber($parse['energy_basic_income']);
-
-    if($CurrentUser['geologist_time'] > $Now)
-    {
-        $parse['GeologistBonusPercent'] = '15';
-    }
-    else
-    {
-        $parse['GeologistBonusPercent'] = '0';
-    }
 
     $page = parsetemplate($RessBodyTPL, $parse);
 

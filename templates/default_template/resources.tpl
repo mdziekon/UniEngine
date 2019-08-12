@@ -122,7 +122,7 @@ $(document).ready(function()
 <table width="750">
     <tbody>
         <tr>
-            <td class="c" colspan="4">{NeedenTransporters} {planet_type_res} {nazwa}</td>
+            <td class="c" colspan="4">{NeedenTransporters} {PlanetData_type_langfrom} {PlanetData_name}</td>
         </tr>
         <tr>
             <th>&nbsp;</th>
