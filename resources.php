@@ -409,7 +409,7 @@ function createResourceSummaryTplData ($resourceKey, $summaryData) {
     $summaryTplData['totalIncome_perMonth'] = prettyColorNumber($summaryData['totalIncome']['perMonth']);
 
     $storageLoadPercent = $summaryData['storageLoad']['percent'];
-    $storageLoadBarPixelsPerPercent = floor(250 / 100);
+    $storageLoadBarPixelsPerPercent = 250 / 100;
     $storageLoadBarColor = null;
 
     if ($storageLoadPercent >= 100) {
@@ -421,7 +421,7 @@ function createResourceSummaryTplData ($resourceKey, $summaryData) {
     }
 
     $summaryTplData['storageLoad_percent'] = $storageLoadPercent;
-    $summaryTplData['storageLoad_barWidthPx'] = (
+    $summaryTplData['storageLoad_barWidthPx'] = floor(
         min($storageLoadPercent, 100) *
         $storageLoadBarPixelsPerPercent
     );
