@@ -129,21 +129,24 @@ $(document).ready(function()
             <th>{Needen}</th>
             <th>{YouHave}</th>
             <th>{Missing}</th>
-        </tr><tr>
-            <th>{small_cargo_name}</th>
-            <th>{trans_s}</th>
-            <th>{have_s}</th>
-            <th>{missing_s}</th>
-        </tr><tr>
-            <th>{big_cargo_name}</th>
-            <th>{trans_b}</th>
-            <th>{have_b}</th>
-            <th>{missing_b}</th>
-        </tr><tr>
-            <th>{mega_cargo_name}</th>
-            <th>{trans_m}</th>
-            <th>{have_m}</th>
-            <th>{missing_m}</th>
+        </tr>
+        <tr>
+            <th>{cargohelper_202_shipName}</th>
+            <th>{cargohelper_202_requiredCount}</th>
+            <th>{cargohelper_202_availableCount}</th>
+            <th>{cargohelper_202_missingCount}</th>
+        </tr>
+        <tr>
+            <th>{cargohelper_203_shipName}</th>
+            <th>{cargohelper_203_requiredCount}</th>
+            <th>{cargohelper_203_availableCount}</th>
+            <th>{cargohelper_203_missingCount}</th>
+        </tr>
+        <tr>
+            <th>{cargohelper_217_shipName}</th>
+            <th>{cargohelper_217_requiredCount}</th>
+            <th>{cargohelper_217_availableCount}</th>
+            <th>{cargohelper_217_missingCount}</th>
         </tr>
     </tbody>
 </table>

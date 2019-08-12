@@ -14,7 +14,7 @@ $Now = time();
 function BuildRessourcePage($CurrentUser, &$CurrentPlanet)
 {
     global $_Lang, $_POST, $_GameConfig, $Now, $SetPercents, $UserDev_Log,
-           $_Vars_GameElements, $_Vars_ElementCategories, $_Vars_Prices;
+           $_Vars_GameElements, $_Vars_ElementCategories;
 
     includeLang('resources');
 
@@ -399,33 +399,55 @@ function BuildRessourcePage($CurrentUser, &$CurrentPlanet)
         $parse['production_level'] .= '<br/>'.$_Lang['VacationMode'];
     }
 
-    //-----------------------------------------
-    $NeedenSmallCargo = ceil(($CurrentPlanet['metal'] + $CurrentPlanet['crystal'] + $CurrentPlanet['deuterium']) / $_Vars_Prices[202]['capacity']);
-    $NeedenBigCargo = ceil(($CurrentPlanet['metal'] + $CurrentPlanet['crystal'] + $CurrentPlanet['deuterium']) / $_Vars_Prices[203]['capacity']);
-    $NeedenMegaCargo = ceil(($CurrentPlanet['metal'] + $CurrentPlanet['crystal'] + $CurrentPlanet['deuterium']) / $_Vars_Prices[217]['capacity']);
-    // Calculate how many is missing
-    $MissingSmallCargo = $NeedenSmallCargo - $CurrentPlanet['small_cargo_ship'];
-    $MissingBigCargo = $NeedenBigCargo - $CurrentPlanet['big_cargo_ship'];
-    $MissingMegaCargo = $NeedenMegaCargo - $CurrentPlanet['mega_cargo_ship'];
-    // Show us pretty numbers
-    $NoNeedMoreTransport = '<span class="lime">'.$_Lang['no_need_more_transporters'].'</span>';
-    $parse['missing_s'] = ($MissingSmallCargo > 0) ? prettyNumber($MissingSmallCargo) : $NoNeedMoreTransport;
-    $parse['missing_b'] = ($MissingBigCargo > 0) ? prettyNumber($MissingBigCargo) : $NoNeedMoreTransport;
-    $parse['missing_m'] = ($MissingMegaCargo > 0) ? prettyNumber($MissingMegaCargo) : $NoNeedMoreTransport;
+    function createShipsCargoHelperTplData ($shipID, &$planet) {
+        global $_Vars_GameElements, $_Vars_Prices, $_Lang;
 
-    $parse['have_s'] = prettyNumber($CurrentPlanet['small_cargo_ship']);
-    $parse['have_b'] = prettyNumber($CurrentPlanet['big_cargo_ship']);
-    $parse['have_m'] = prettyNumber($CurrentPlanet['mega_cargo_ship']);
+        $shipCapacity = $_Vars_Prices[$shipID]['capacity'];
+        $shipElementKey = $_Vars_GameElements[$shipID];
+
+        $allResources = (
+            $planet['metal'] +
+            $planet['crystal'] +
+            $planet['deuterium']
+        );
+
+
+        $requiredShipsCount = ceil($allResources / $shipCapacity);
+        $availableShipsCount = $planet[$shipElementKey];
+
+        $missingShipsCount = ($requiredShipsCount - $availableShipsCount);
+
+        $summary = [
+            'shipName' => $_Lang['tech'][$shipID],
+            'requiredCount' => prettyNumber($requiredShipsCount),
+            'availableCount' => prettyNumber($availableShipsCount),
+            'missingCount' => (
+                $missingShipsCount > 0 ?
+                prettyNumber($missingShipsCount) :
+                colorGreen($_Lang['no_need_more_transporters'])
+            ),
+        ];
+
+        $result = [];
+
+        foreach ($summary as $entryKey => $entryValue) {
+            $result["cargohelper_{$shipID}_{$entryKey}"] = $entryValue;
+        }
+
+        return $result;
+    }
+
+    foreach ([ 202, 203, 217 ] as $shipID) {
+        $shipCargoHelperTplData = createShipsCargoHelperTplData(
+            $shipID,
+            $CurrentPlanet
+        );
+
+        $parse = array_merge($parse, $shipCargoHelperTplData);
+    }
 
     $parse['planet_type_res'] = ($CurrentPlanet['planet_type'] == 1) ? $_Lang['from_planet'] : $_Lang['from_moon'];
     $parse['nazwa'] = $CurrentPlanet['name'];
-    $parse['trans_s'] = prettyNumber($NeedenSmallCargo);
-    $parse['trans_b'] = prettyNumber($NeedenBigCargo);
-    $parse['trans_m'] = prettyNumber($NeedenMegaCargo);
-
-    $parse['small_cargo_name'] = $_Lang['tech'][202];
-    $parse['big_cargo_name'] = $_Lang['tech'][203];
-    $parse['mega_cargo_name'] = $_Lang['tech'][217];
 
     $parse['metal_basic_income'] = prettyNumber($parse['metal_basic_income']);
     $parse['crystal_basic_income'] = prettyNumber($parse['crystal_basic_income']);
