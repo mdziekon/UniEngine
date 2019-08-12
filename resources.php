@@ -282,7 +282,6 @@ function BuildRessourcePage($CurrentUser, &$CurrentPlanet)
         $parse['production_level_barcolor'] = 'red';
     }
 
-    $parse['production_level_bar'] = $parse['production_level'] * 2.5;
     $parse['production_level'] = $parse['production_level'].'%';
     if(isOnVacation($CurrentUser))
     {
