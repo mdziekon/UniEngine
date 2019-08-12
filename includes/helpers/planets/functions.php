@@ -183,6 +183,43 @@ function getElementConsumedResourceKeys($elementID) {
     return $consumedResourceKeys;
 }
 
+//  Arguments:
+//      - $planetProduction (&Object)
+//      - $user (&Object)
+//      - $options (Object) [default: []]
+//          - isVacationCheckEnabled (Boolean) [default: false]
+//              Should perform vacation check when calculating production level,
+//              based on current user's state.
+//
+function getPlanetsProductionEfficiency(&$planetProduction, &$user, $options) {
+    $productionLevel = 0;
+
+    $energyAvailable = $planetProduction['energy_max'];
+    $energyUsedAbs = abs($planetProduction['energy_used']);
+
+    if ($energyUsedAbs == 0) {
+        $productionLevel = 100;
+    } else if ($energyAvailable >= $energyUsedAbs) {
+        $productionLevel = 100;
+    } else if ($energyAvailable == 0) {
+        $productionLevel = 0;
+    } else {
+        $productionLevel = floor(
+            ($energyAvailable / $energyUsedAbs) *
+            100
+        );
+    }
+
+    if (
+        $options['isVacationCheckEnabled'] &&
+        isOnVacation($user)
+    ) {
+        $productionLevel = 0;
+    }
+
+    return $productionLevel;
+}
+
 function _getTheoreticalElementProduction($elementID) {
     if (
         !_isElementStructure($elementID) &&
@@ -355,30 +392,13 @@ function calculateTotalResourcesIncome(&$planet, &$user, $timerange, $options = 
     $planet['energy_used'] = $planetProduction['energy_used'];
     $planet['energy_max'] = $planetProduction['energy_max'];
 
-    $productionLevel = 0;
-
-    $energyAvailable = $planetProduction['energy_max'];
-    $energyUsedAbs = abs($planetProduction['energy_used']);
-
-    if ($energyUsedAbs == 0) {
-        $productionLevel = 100;
-    } else if ($energyAvailable >= $energyUsedAbs) {
-        $productionLevel = 100;
-    } else if ($energyAvailable == 0) {
-        $productionLevel = 0;
-    } else {
-        $productionLevel = floor(
-            ($energyAvailable / $energyUsedAbs) *
-            100
-        );
-    }
-
-    if (
-        $options['isVacationCheckEnabled'] &&
-        isOnVacation($user)
-    ) {
-        $productionLevel = 0;
-    }
+    $productionLevel = getPlanetsProductionEfficiency(
+        $planetProduction,
+        $user,
+        [
+            'isVacationCheckEnabled' => $options['isVacationCheckEnabled']
+        ]
+    );
 
     $income = [
         'metal' => calculateRealResourceIncome(
