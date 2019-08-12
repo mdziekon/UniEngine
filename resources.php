@@ -209,22 +209,16 @@ function BuildRessourcePage($CurrentUser, &$CurrentPlanet)
     }
 
     $parse['Production_of_resources_in_the_planet'] = str_replace('%s', (($CurrentPlanet['planet_type'] == 1) ? $_Lang['on_planet'] : $_Lang['on_moon']).' '.$CurrentPlanet['name'], $_Lang['Production_of_resources_in_the_planet']);
-    if($CurrentPlanet['energy_max'] == 0 AND abs($CurrentPlanet['energy_used']) > 0)
-    {
-        $parse['production_level'] = 0;
-    }
-    else if($CurrentPlanet['energy_max'] > 0 AND abs($CurrentPlanet['energy_used']) > $CurrentPlanet['energy_max'])
-    {
-        $parse['production_level'] = floor(($CurrentPlanet['energy_max'] * 100) / abs($CurrentPlanet['energy_used']));
-    }
-    else
-    {
-        $parse['production_level'] = 100;
-    }
-    if($parse['production_level'] > 100)
-    {
-        $parse['production_level'] = 100;
-    }
+
+    $thisProductionEfficiency = getPlanetsProductionEfficiency(
+        $CurrentPlanet,
+        $CurrentUser,
+        [
+            'isVacationCheckEnabled' => false
+        ]
+    );
+
+    $parse['production_level'] = $thisProductionEfficiency;
 
     if(!empty($CurrRow))
     {
@@ -232,9 +226,9 @@ function BuildRessourcePage($CurrentUser, &$CurrentPlanet)
         {
             if($val['ID'] < 4)
             {
-                $val['metal_type'] = prettyColorNumber($val['metal_type'] * 0.01 * $parse['production_level']);
-                $val['crystal_type'] = prettyColorNumber($val['crystal_type'] * 0.01 * $parse['production_level']);
-                $val['deuterium_type'] = prettyColorNumber($val['deuterium_type'] * 0.01 * $parse['production_level']);
+                $val['metal_type'] = prettyColorNumber($val['metal_type'] * 0.01 * $thisProductionEfficiency);
+                $val['crystal_type'] = prettyColorNumber($val['crystal_type'] * 0.01 * $thisProductionEfficiency);
+                $val['deuterium_type'] = prettyColorNumber($val['deuterium_type'] * 0.01 * $thisProductionEfficiency);
             }
             else
             {
@@ -282,22 +276,22 @@ function BuildRessourcePage($CurrentUser, &$CurrentPlanet)
     }
     $parse['deuterium_max'] .= prettyNumber($CurrentPlanet['deuterium_max'] / 1000) ." {$_Lang['k']}</span>";
 
-    $parse['metal_total'] = prettyColorNumber(floor(($CurrentPlanet['metal_perhour'] * 0.01 * $parse['production_level']) + ($_GameConfig['metal_basic_income'] * $_GameConfig['resource_multiplier'])));
-    $parse['crystal_total'] = prettyColorNumber(floor(($CurrentPlanet['crystal_perhour'] * 0.01 * $parse['production_level']) + ($_GameConfig['crystal_basic_income'] * $_GameConfig['resource_multiplier'])));
-    $parse['deuterium_total'] = prettyColorNumber(floor(($CurrentPlanet['deuterium_perhour'] * 0.01 * $parse['production_level']) + ($_GameConfig['deuterium_basic_income'] * $_GameConfig['resource_multiplier'])));
+    $parse['metal_total'] = prettyColorNumber(floor(($CurrentPlanet['metal_perhour'] * 0.01 * $thisProductionEfficiency) + ($_GameConfig['metal_basic_income'] * $_GameConfig['resource_multiplier'])));
+    $parse['crystal_total'] = prettyColorNumber(floor(($CurrentPlanet['crystal_perhour'] * 0.01 * $thisProductionEfficiency) + ($_GameConfig['crystal_basic_income'] * $_GameConfig['resource_multiplier'])));
+    $parse['deuterium_total'] = prettyColorNumber(floor(($CurrentPlanet['deuterium_perhour'] * 0.01 * $thisProductionEfficiency) + ($_GameConfig['deuterium_basic_income'] * $_GameConfig['resource_multiplier'])));
     $parse['energy_total'] = prettyColorNumber(floor(($CurrentPlanet['energy_max'] + $_GameConfig['energy_basic_income']) + $CurrentPlanet['energy_used']));
 
-    $parse['daily_metal'] = floor(($CurrentPlanet['metal_perhour'] * 24* 0.01 * $parse['production_level']) + ($parse['metal_basic_income'] * 24));
-    $parse['weekly_metal'] = floor(($CurrentPlanet['metal_perhour'] * 24 * 7* 0.01 * $parse['production_level']) + ($parse['metal_basic_income'] * 24 * 7));
-    $parse['monthly_metal'] = floor(($CurrentPlanet['metal_perhour'] * 24 * 30 * 0.01 * $parse['production_level']) + ($parse['metal_basic_income'] * 24 * 30 ));
+    $parse['daily_metal'] = floor(($CurrentPlanet['metal_perhour'] * 24* 0.01 * $thisProductionEfficiency) + ($parse['metal_basic_income'] * 24));
+    $parse['weekly_metal'] = floor(($CurrentPlanet['metal_perhour'] * 24 * 7* 0.01 * $thisProductionEfficiency) + ($parse['metal_basic_income'] * 24 * 7));
+    $parse['monthly_metal'] = floor(($CurrentPlanet['metal_perhour'] * 24 * 30 * 0.01 * $thisProductionEfficiency) + ($parse['metal_basic_income'] * 24 * 30 ));
 
-    $parse['daily_crystal'] = floor(($CurrentPlanet['crystal_perhour'] * 24* 0.01 * $parse['production_level']) + ($parse['crystal_basic_income'] * 24));
-    $parse['weekly_crystal'] = floor(($CurrentPlanet['crystal_perhour'] * 24 * 7* 0.01 * $parse['production_level']) + ($parse['crystal_basic_income'] * 24 * 7));
-    $parse['monthly_crystal'] = floor(($CurrentPlanet['crystal_perhour'] * 24 * 30 * 0.01 * $parse['production_level']) + ($parse['crystal_basic_income'] * 24 * 30 ));
+    $parse['daily_crystal'] = floor(($CurrentPlanet['crystal_perhour'] * 24* 0.01 * $thisProductionEfficiency) + ($parse['crystal_basic_income'] * 24));
+    $parse['weekly_crystal'] = floor(($CurrentPlanet['crystal_perhour'] * 24 * 7* 0.01 * $thisProductionEfficiency) + ($parse['crystal_basic_income'] * 24 * 7));
+    $parse['monthly_crystal'] = floor(($CurrentPlanet['crystal_perhour'] * 24 * 30 * 0.01 * $thisProductionEfficiency) + ($parse['crystal_basic_income'] * 24 * 30 ));
 
-    $parse['daily_deuterium'] = floor(($CurrentPlanet['deuterium_perhour'] * 24* 0.01 * $parse['production_level']) + ($parse['deuterium_basic_income'] * 24));
-    $parse['weekly_deuterium'] = floor(($CurrentPlanet['deuterium_perhour'] * 24 * 7* 0.01 * $parse['production_level']) + ($parse['deuterium_basic_income'] * 24 * 7));
-    $parse['monthly_deuterium'] = floor(($CurrentPlanet['deuterium_perhour'] * 24 * 30 * 0.01 * $parse['production_level']) + ($parse['deuterium_basic_income'] * 24 * 30 ));
+    $parse['daily_deuterium'] = floor(($CurrentPlanet['deuterium_perhour'] * 24* 0.01 * $thisProductionEfficiency) + ($parse['deuterium_basic_income'] * 24));
+    $parse['weekly_deuterium'] = floor(($CurrentPlanet['deuterium_perhour'] * 24 * 7* 0.01 * $thisProductionEfficiency) + ($parse['deuterium_basic_income'] * 24 * 7));
+    $parse['monthly_deuterium'] = floor(($CurrentPlanet['deuterium_perhour'] * 24 * 30 * 0.01 * $thisProductionEfficiency) + ($parse['deuterium_basic_income'] * 24 * 30 ));
 
     $parse['daily_metal'] = prettyColorNumber($parse['daily_metal']);
     $parse['weekly_metal'] = prettyColorNumber($parse['weekly_metal']);
