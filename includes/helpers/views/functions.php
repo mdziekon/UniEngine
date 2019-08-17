@@ -50,6 +50,29 @@ function buildLinkHTML($params) {
         $params['attrs'] = [];
     }
 
+    $params['attrs']['href'] = buildHref([
+        'path' => $params['href'],
+        'query' => $params['query']
+    ]);
+
+    return buildDOMElementHTML([
+        'tagName' => 'a',
+        'contentHTML' => $params['text'],
+        'attrs' => $params['attrs']
+    ]);
+}
+
+//  $params (Object)
+//      - path (String)
+//      - query (Object | undefined)
+//
+function buildHref($params) {
+    $queryParams = [];
+
+    if (empty($params['query'])) {
+        $params['query'] = [];
+    }
+
     foreach ($params['query'] as $paramKey => $paramValue) {
         $queryParams[] = "{$paramKey}={$paramValue}";
     }
@@ -61,13 +84,7 @@ function buildLinkHTML($params) {
         $href .= "?{$queryParams}";
     }
 
-    $params['attrs']['href'] = $href;
-
-    return buildDOMElementHTML([
-        'tagName' => 'a',
-        'contentHTML' => $params['text'],
-        'attrs' => $params['attrs']
-    ]);
+    return $href;
 }
 
 ?>
