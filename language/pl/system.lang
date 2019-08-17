@@ -64,7 +64,6 @@ $_Lang['ServerStart_NotReached']    = 'Ten Serwer Gry zostanie uruchomiony <b cl
 $_Lang['ServerIsClosed']            = 'Serwer został wyłączony przez Administrację!';
 $_Lang['NonActiveBlock']            = '<b class="orange">Aby móc kontynuować rozgrywkę, musisz aktywować swoje konto poprzez Link Aktywacyjny otrzymany w Wiadomości EMail!</b><br/>Jeśli twoje konto pozostanie nieaktywne przez 7 dni od daty rejestracji, zostanie ono usunięte z Systemu!';
 
-$_Lang['PlanetList_MoonSign']           = 'Księżyc';
 $_Lang['PlanetList_MoonChar']           = 'K';
 $_Lang['PlanetList_TypeChange_Sign_M']  = 'K';
 $_Lang['PlanetList_TypeChange_Sign_P']  = 'P';

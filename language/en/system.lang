@@ -63,7 +63,6 @@ $_Lang['ServerStart_NotReached']                = 'This game server is going to 
 $_Lang['ServerIsClosed']                        = 'Game server is currently offline (disabled by Administration)!';
 $_Lang['NonActiveBlock']                        = '<b class="orange">You have to activate your account to continue your game play. Checkout your email account to find your account\'s activation link in the mail we\'ve sent to you upon registration.</b><br/>If your account will remain inactive for 7 days past the registration date, it will be automatically removed!';
 
-$_Lang['PlanetList_MoonSign']                   = 'Moon';
 $_Lang['PlanetList_MoonChar']                   = 'M';
 $_Lang['PlanetList_TypeChange_Sign_M']          = 'M';
 $_Lang['PlanetList_TypeChange_Sign_P']          = 'P';

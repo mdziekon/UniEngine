@@ -401,11 +401,7 @@ function _createPlanetsSelectorTplData($CurrentUser, $CurrentPlanet) {
         }
 
         if ($isMoon) {
-            if ($isCurrentSelector) {
-                $typeLabel = $_Lang['PlanetList_MoonChar'];
-            } else {
-                $typeLabel = $_Lang['PlanetList_MoonSign'];
-            }
+            $typeLabel = $_Lang['PlanetList_MoonChar'];
         }
 
         $entryPosition = "{$entry['galaxy']}:{$entry['system']}:{$entry['planet']}";
