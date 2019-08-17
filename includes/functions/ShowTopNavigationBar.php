@@ -8,121 +8,18 @@ function ShowTopNavigationBar($CurrentUser, $CurrentPlanet)
         return;
     }
 
-    // Create strings
-    $PlanetListOption_Mode = (isset($_GET['mode']) ? '&amp;mode='.$_GET['mode'] : '');
+    $parse = $_Lang;
+    $parse['skinpath'] = $_SkinPath;
+    $parse['image'] = $CurrentPlanet['image'];
 
     // Update Planet Resources
     $IsOnVacation = isOnVacation($CurrentUser);
     PlanetResourceUpdate($CurrentUser, $CurrentPlanet, time());
 
-    $parse = $_Lang;
-    $parse['skinpath'] = $_SkinPath;
-    $parse['image'] = $CurrentPlanet['image'];
-
-    // Create PlanetList (for Select)
-    $parse['planetlist'] = '';
-
-    $SQLResult_ThisUsersPlanets = SortUserPlanets($CurrentUser);
-
-    $OtherType_ID = 0;
-
-    while($CurPlanet = $SQLResult_ThisUsersPlanets->fetch_assoc())
-    {
-        if($CurPlanet['galaxy'] == $CurrentPlanet['galaxy'] AND $CurPlanet['system'] == $CurrentPlanet['system'] AND $CurPlanet['planet'] == $CurrentPlanet['planet'])
-        {
-            if($CurPlanet['id'] != $CurrentPlanet['id'])
-            {
-                $OtherType_ID = $CurPlanet['id'];
-            }
-        }
-
-        if($CurrentUser['planet_sort_moons'] == 1)
-        {
-            $ThisPos = "{$CurPlanet['galaxy']}:{$CurPlanet['system']}:{$CurPlanet['planet']}";
-            if($CurPlanet['planet_type'] == 1)
-            {
-                $PlanetListArray[$ThisPos] = $CurPlanet;
-            }
-            else
-            {
-                $MoonListArray[$ThisPos] = $CurPlanet;
-            }
-        }
-        else
-        {
-            if($CurPlanet['id'] == $CurrentUser['current_planet'])
-            {
-                $ThisPlanetSelected = ' selected';
-            }
-            else
-            {
-                $ThisPlanetSelected = '';
-            }
-            $parse['planetlist'] .= "\n<option {$ThisPlanetSelected} value=\"?cp={$CurPlanet['id']}{$PlanetListOption_Mode}&amp;re=0\">{$CurPlanet['name']} [{$CurPlanet['galaxy']}:{$CurPlanet['system']}:{$CurPlanet['planet']}]&nbsp;&nbsp;</option>";
-        }
-    }
-    if($CurrentUser['planet_sort_moons'] == 1)
-    {
-        if(!empty($PlanetListArray))
-        {
-            foreach($PlanetListArray as $Pos => $Planet)
-            {
-                $ParsedPlanetList[] = $Planet;
-                if(!empty($MoonListArray[$Pos]))
-                {
-                    $ParsedPlanetList[] = $MoonListArray[$Pos];
-                }
-            }
-            unset($PlanetListArray);
-            unset($MoonListArray);
-            foreach($ParsedPlanetList as $CurPlanet)
-            {
-                if($CurPlanet['id'] == $CurrentUser['current_planet'])
-                {
-                    $ThisPlanetSelected = ' selected';
-                }
-                else
-                {
-                    $ThisPlanetSelected = '';
-                }
-                if($CurPlanet['planet_type'] == 1)
-                {
-                    $ThisPlanetPos = "{$CurPlanet['galaxy']}:{$CurPlanet['system']}:{$CurPlanet['planet']}";
-                }
-                else
-                {
-                    if($ThisPlanetSelected != '')
-                    {
-                        $ThisPlanetPos = "{$CurPlanet['galaxy']}:{$CurPlanet['system']}:{$CurPlanet['planet']}] [{$_Lang['PlanetList_MoonChar']}";
-                    }
-                    else
-                    {
-                        $ThisPlanetPos = $_Lang['PlanetList_MoonSign'];
-                    }
-                }
-                $parse['planetlist'] .= "\n<option {$ThisPlanetSelected} value=\"?cp={$CurPlanet['id']}{$PlanetListOption_Mode}\">{$CurPlanet['name']} [{$ThisPlanetPos}]&nbsp;&nbsp;</option>";
-            }
-            unset($ParsedPlanetList);
-        }
-    }
-    if($OtherType_ID > 0)
-    {
-        $parse['Insert_TypeChange_ID'] = $OtherType_ID;
-        if($CurrentPlanet['planet_type'] == 1)
-        {
-            $parse['Insert_TypeChange_Sign'] = $_Lang['PlanetList_TypeChange_Sign_M'];
-            $parse['Insert_TypeChange_Title'] = $_Lang['PlanetList_TypeChange_Title_M'];
-        }
-        else
-        {
-            $parse['Insert_TypeChange_Sign'] = $_Lang['PlanetList_TypeChange_Sign_P'];
-            $parse['Insert_TypeChange_Title'] = $_Lang['PlanetList_TypeChange_Title_P'];
-        }
-    }
-    else
-    {
-        $parse['Insert_TypeChange_Hide'] = 'hide';
-    }
+    $parse = array_merge(
+        $parse,
+        _createPlanetsSelectorTplData($CurrentUser, $CurrentPlanet)
+    );
 
     // Calculate resources for JS RealTime Counters
 
@@ -418,6 +315,149 @@ function ShowTopNavigationBar($CurrentUser, $CurrentPlanet)
     $TopBar = parsetemplate(gettemplate('topnav'), $parse);
 
     return $TopBar;
+}
+
+function _createPlanetsSelectorTplData($CurrentUser, $CurrentPlanet) {
+    global $_Lang, $_GET;
+
+    $tplData = [];
+
+    $SQLResult_ThisUsersPlanets = SortUserPlanets($CurrentUser);
+
+    $OtherType_ID = 0;
+
+    $isMoonsSortingEnabled = ($CurrentUser['planet_sort_moons'] == 1);
+    $currentSelectionID = $CurrentUser['current_planet'];
+
+    // Capture any important possibly present query attributes from current page
+    // and re-apply them to the planet changing request query
+    $capturedQueryParams = [];
+
+    if (!empty($_GET['mode'])) {
+        $capturedQueryParams['mode'] = $_GET['mode'];
+    }
+
+    $isMoonPositionDisplayed = (
+        $isMoonsSortingEnabled ?
+        "only_current" :
+        "all"
+    );
+
+    $entriesList = [];
+    $entriesByPosition = [];
+
+    while ($thisEntry = $SQLResult_ThisUsersPlanets->fetch_assoc()) {
+        if (
+            $thisEntry['galaxy'] == $CurrentPlanet['galaxy'] &&
+            $thisEntry['system'] == $CurrentPlanet['system'] &&
+            $thisEntry['planet'] == $CurrentPlanet['planet'] &&
+            $thisEntry['id'] != $CurrentPlanet['id']
+        ) {
+            $OtherType_ID = $thisEntry['id'];
+        }
+
+        if (!$isMoonsSortingEnabled) {
+            $entriesList[] = $thisEntry;
+
+            continue;
+        }
+
+        $entryPosition = "{$thisEntry['galaxy']}:{$thisEntry['system']}:{$thisEntry['planet']}";
+
+        if (!isset($entriesByPosition[$entryPosition])) {
+            $entriesByPosition[$entryPosition] = [];
+        }
+
+        $entriesByPosition[$entryPosition][] = $thisEntry;
+    }
+
+    foreach ($entriesByPosition as $entryPosition => $entries) {
+        usort($entries, function ($left, $right) {
+            return (
+                (intval($left['planet_type']) < intval($right['planet_type'])) ?
+                -1 :
+                1
+            );
+        });
+
+        foreach ($entries as $entry) {
+            $entriesList[] = $entry;
+        }
+    }
+
+    $entriesList = array_map(function ($entry) use ($currentSelectionID, $capturedQueryParams, $isMoonPositionDisplayed, &$_Lang) {
+        $isCurrentSelector = ($entry['id'] == $currentSelectionID);
+        $isMoon = ($entry['planet_type'] == 3);
+
+        $isPositionDisplayed = true;
+        $typeLabel = "";
+
+        if (
+            $entry['planet_type'] == 3 &&
+            $isMoonPositionDisplayed === "only_current" &&
+            !$isCurrentSelector
+        ) {
+            $isPositionDisplayed = false;
+        }
+
+        if ($isMoon) {
+            if ($isCurrentSelector) {
+                $typeLabel = $_Lang['PlanetList_MoonChar'];
+            } else {
+                $typeLabel = $_Lang['PlanetList_MoonSign'];
+            }
+        }
+
+        $entryPosition = "{$entry['galaxy']}:{$entry['system']}:{$entry['planet']}";
+        $entryPositionDisplayValue = (
+            $isPositionDisplayed ?
+            "[{$entryPosition}]" :
+            ""
+        );
+        $entryTypeDisplayValue = (
+            $typeLabel ?
+            "[{$typeLabel}]" :
+            ""
+        );
+        $entryLabel = "{$entry['name']} {$entryPositionDisplayValue} {$entryTypeDisplayValue} &nbsp;&nbsp;";
+
+        $entryHTML = buildDOMElementHTML([
+            'tagName' => 'option',
+            'contentHTML' => $entryLabel,
+            'attrs' => [
+                'selected' => ($isCurrentSelector ? "selected" : null),
+                'value' => buildHref([
+                    'path' => '',
+                    'query' => array_merge(
+                        [
+                            'cp' => $entry['id'],
+                            're' => '0'
+                        ],
+                        $capturedQueryParams
+                    )
+                ])
+            ]
+        ]);
+
+        return $entryHTML;
+    }, $entriesList);
+
+    $tplData['planetlist'] = implode("\n", $entriesList);
+
+    if ($OtherType_ID > 0) {
+        $tplData['Insert_TypeChange_ID'] = $OtherType_ID;
+        if ($CurrentPlanet['planet_type'] == 1) {
+            $tplData['Insert_TypeChange_Sign'] = $_Lang['PlanetList_TypeChange_Sign_M'];
+            $tplData['Insert_TypeChange_Title'] = $_Lang['PlanetList_TypeChange_Title_M'];
+        } else {
+            $tplData['Insert_TypeChange_Sign'] = $_Lang['PlanetList_TypeChange_Sign_P'];
+            $tplData['Insert_TypeChange_Title'] = $_Lang['PlanetList_TypeChange_Title_P'];
+        }
+    } else {
+        $tplData['Insert_TypeChange_Hide'] = 'hide';
+    }
+
+    return $tplData;
 }
 
 ?>
