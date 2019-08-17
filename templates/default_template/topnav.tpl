@@ -18,7 +18,7 @@ $(document).ready(function()
                 <tr>
                     <td><img src="{skinpath}planeten/small/s_{image}.jpg" id="plImg"/></td>
                     <td valign="middle" align="center">
-                        <select id="planet" class="plSel plList">{planetlist}</select><br/>
+                        <select id="planet" class="plSel plList" autocomplete="off">{planetlist}</select><br/>
                         <input id="prevPl" class="plSel plBut" type="button" value="<<" title="{PrevPlanet}"/>
                         <input id="plType" class="plSel {Insert_TypeChange_Hide}" type="button" data-id="{Insert_TypeChange_ID}" value="{Insert_TypeChange_Sign}" title="{Insert_TypeChange_Title}"/>
                         <input id="nextPl" class="plSel plBut" type="button" value=">>" title="{NextPlanet}"/>
