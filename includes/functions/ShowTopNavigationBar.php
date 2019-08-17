@@ -294,23 +294,10 @@ function ShowTopNavigationBar($CurrentUser, $CurrentPlanet)
         $parse['ShowCount_DarkEnergy'] = '<span class="orange">'.$_User['darkEnergy'].'</span>';
     }
 
-    // Messages Counter
-    $Query_MsgCount = '';
-    $Query_MsgCount .= "SELECT COUNT(*) AS `Count` FROM {{table}} WHERE ";
-    $Query_MsgCount .= "`id_owner` = {$CurrentUser['id']} AND ";
-    $Query_MsgCount .= "`deleted` = false AND ";
-    $Query_MsgCount .= "`read` = false ";
-    $Query_MsgCount .= "LIMIT 1;";
-    $Result_MsgCount = doquery($Query_MsgCount, 'messages', true);
-    if($Result_MsgCount['Count'] > 0)
-    {
-        $parse['ShowCount_Messages'] = '[ <a href="messages.php">'.prettyNumber($Result_MsgCount['Count']).'</a> ]';
-        $NewMSGCount = $Result_MsgCount['Count'];
-    }
-    else
-    {
-        $parse['ShowCount_Messages'] = '0';
-    }
+    $parse = array_merge(
+        $parse,
+        _createUnreadMessagesCounterTplData($CurrentUser['id'])
+    );
 
     $TopBar = parsetemplate(gettemplate('topnav'), $parse);
 
@@ -433,6 +420,36 @@ function _createPlanetsSelectorTplData($CurrentUser, $CurrentPlanet) {
     } else {
         $tplData['Insert_TypeChange_Hide'] = 'hide';
     }
+
+    return $tplData;
+}
+
+function _createUnreadMessagesCounterTplData($userID) {
+    $tplData = [];
+
+    $Query_MsgCount  = '';
+    $Query_MsgCount .= "SELECT COUNT(*) AS `count` FROM {{table}} WHERE ";
+    $Query_MsgCount .= "`id_owner` = {$userID} AND ";
+    $Query_MsgCount .= "`deleted` = false AND ";
+    $Query_MsgCount .= "`read` = false ";
+    $Query_MsgCount .= "LIMIT 1;";
+
+    $Result_MsgCount = doquery($Query_MsgCount, 'messages', true);
+
+    $unreadMessagesCount = $Result_MsgCount['count'];
+
+    if ($unreadMessagesCount <= 0) {
+        $tplData['ShowCount_Messages'] = '0';
+
+        return $tplData;
+    }
+
+    $html_messagesLink = buildLinkHTML([
+        'href' => 'messages.php',
+        'text' => prettyNumber($unreadMessagesCount)
+    ]);
+
+    $tplData['ShowCount_Messages'] = "[ {$html_messagesLink} ]";
 
     return $tplData;
 }
