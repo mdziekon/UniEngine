@@ -74,6 +74,10 @@ function buildHref($params) {
     }
 
     foreach ($params['query'] as $paramKey => $paramValue) {
+        if ($paramValue === null) {
+            continue;
+        }
+
         $queryParams[] = "{$paramKey}={$paramValue}";
     }
 
