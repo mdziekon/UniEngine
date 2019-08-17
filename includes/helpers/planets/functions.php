@@ -1,5 +1,20 @@
 <?php
 
+//  Notes:
+//      - The algorithm does not take into account that buildings which use
+//        other resources as "production materials" (eg. Fusion Reactor uses Deuterium)
+//        might be receiving less than needed of that materials or even
+//        no production materials at all at given time.
+//
+//        However, in certain cases, such a thing would be nearly impossible to
+//        calculate properly (eg. in case of the Fusion Reactor, the fuel income
+//        would depend on the energy production, which in turn would affect...
+//        the fuel income, meaning it would be a recursive dependency, impossible
+//        to calculate in one iteration). It should also be noted that the same
+//        behaviour is currently found in the original game, so even the original
+//        creators are either not aware of the "problem", or they simply don't care.
+//
+//      - See "calculateRealResourceIncome" documentation (same assumptions apply).
 //  Arguments:
 //      - $elementID (Number)
 //      - $planet (&Object)
@@ -125,9 +140,6 @@ function getElementProduction($elementID, &$planet, &$user, $params) {
         }
 
         if ($resourceProduction <= 0) {
-            // TODO: correctly calculate when there is fuel usage
-            // eg. as in Fusion Reactor
-
             $production[$resourceKey] = $resourceProduction;
 
             continue;
