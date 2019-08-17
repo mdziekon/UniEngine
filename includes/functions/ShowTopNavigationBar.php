@@ -337,12 +337,6 @@ function _createPlanetsSelectorTplData($CurrentUser, $CurrentPlanet) {
         $capturedQueryParams['mode'] = $_GET['mode'];
     }
 
-    $isMoonPositionDisplayed = (
-        $isMoonsSortingEnabled ?
-        "only_current" :
-        "all"
-    );
-
     $entriesList = [];
     $entriesByPosition = [];
 
@@ -385,31 +379,18 @@ function _createPlanetsSelectorTplData($CurrentUser, $CurrentPlanet) {
         }
     }
 
-    $entriesList = array_map(function ($entry) use ($currentSelectionID, $capturedQueryParams, $isMoonPositionDisplayed, &$_Lang) {
+    $entriesList = array_map(function ($entry) use ($currentSelectionID, $capturedQueryParams, &$_Lang) {
         $isCurrentSelector = ($entry['id'] == $currentSelectionID);
         $isMoon = ($entry['planet_type'] == 3);
 
-        $isPositionDisplayed = true;
         $typeLabel = "";
-
-        if (
-            $entry['planet_type'] == 3 &&
-            $isMoonPositionDisplayed === "only_current" &&
-            !$isCurrentSelector
-        ) {
-            $isPositionDisplayed = false;
-        }
 
         if ($isMoon) {
             $typeLabel = $_Lang['PlanetList_MoonChar'];
         }
 
         $entryPosition = "{$entry['galaxy']}:{$entry['system']}:{$entry['planet']}";
-        $entryPositionDisplayValue = (
-            $isPositionDisplayed ?
-            "[{$entryPosition}]" :
-            ""
-        );
+        $entryPositionDisplayValue = "[{$entryPosition}]";
         $entryTypeDisplayValue = (
             $typeLabel ?
             "[{$typeLabel}]" :
