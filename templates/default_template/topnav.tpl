@@ -113,7 +113,7 @@ $(document).ready(function()
     );
 });
 </script>
-<script src="dist/js/resourceUpdate.cachebuster-1566163891699.min.js"></script>
+<script src="dist/js/resourceUpdate.cachebuster-1566165656693.min.js"></script>
 <link rel="stylesheet" type="text/css" href="dist/css/topNav.cachebuster-1546564327123.min.css"/>
 <table id="topnav_resources">
     <tr>
