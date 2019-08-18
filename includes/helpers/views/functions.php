@@ -82,14 +82,14 @@ function buildHref($params) {
         $queryParams[] = "{$paramKey}={$paramValue}";
     }
 
-    $href = $params['path'];
+    $fullHref = $params['path'];
     $queryParams = implode('&', $queryParams);
 
     if ($queryParams) {
-        $href .= "?{$queryParams}";
+        $fullHref .= "?{$queryParams}";
     }
 
-    return $href;
+    return $fullHref;
 }
 
 ?>
