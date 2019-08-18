@@ -2,7 +2,7 @@
 
 function ShowTopNavigationBar($CurrentUser, $CurrentPlanet)
 {
-    global $_Lang, $_GET, $_GameConfig, $_User, $_SkinPath, $NewMSGCount;
+    global $_Lang, $_GET, $_User, $_SkinPath;
 
     if (!$CurrentUser || !$CurrentPlanet) {
         return;
