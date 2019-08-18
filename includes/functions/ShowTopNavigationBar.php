@@ -263,11 +263,8 @@ function _createResourceStateDetailsTplData($resourceKey, &$planet, &$user, $par
     );
     $tplData["JSPerHour_{$resourceKeyCamelCase}"] = $totalResourceIncomePerHour;
     $tplData["TipIncome_{$resourceKeyCamelCase}"] = (
-        '(' .
         $labelsIncomeSign .
-        prettyNumber(abs(round($totalResourceIncomePerHour))) .
-        '/h' .
-        ')'
+        prettyNumber(abs(round($totalResourceIncomePerHour)))
     );
 
     $tplKeys_FullTime = "{$resourceKeyCamelCase}_full_time";

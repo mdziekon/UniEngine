@@ -1,19 +1,12 @@
-/* exported ReplaceArr, ArrayReplace, buildResourceUpdaterCache, updateResourceCounters */
+/* exported buildResourceUpdaterCache, updateResourceCounters */
+/* globals PHPInject_topnav_data, PHPInject_topnav_lang */
 
-var MToolTip = "";
-var CToolTip = "";
-var DToolTip = "";
-var EToolTip = "";
 var constants = {
     colorsValues: {
         red: "#ff0000",
         green: "#00ff00"
     }
 };
-
-var ReplaceArr = new Array("_ResName_", "_ResIncome_", "_ResFullTime_", "_ResStoreStatus_");
-var ResTipStyle = {classes: "tiptip_content ui-tooltip-tipsy ui-tooltip-shadow"};
-var qTipSettings = {show: {delay: 0, effect: false}, hide: {delay: 0, effect: false}, style: ResTipStyle};
 
 function number_format (value) {
     value += "";
@@ -181,14 +174,6 @@ function _updateResourceCounterDOM (selectors, resourceState) {
     selectors.$resourceStorage.css("color", resourceDisplayColor);
 }
 
-function ArrayReplace (Org, Search, Replace) {
-    var SearchLen = Search.length;
-    for (var i = 0; i < SearchLen; i += 1) {
-        Org = Org.replace(Search[i], Replace[i]);
-    }
-    return Org;
-}
-
 function planetSelector_changeSelection ($selectorEl, selectionIdxModifier) {
     const $options = $selectorEl.find("option");
     const $selectedOption = $options.filter(":selected");
@@ -214,13 +199,155 @@ function planetSelector_navigate ($selectorEl) {
     window.location = currentSelectionURL;
 }
 
+class ResourceTooltip {
+    constructor ({ resourceKey, $parentEl, values, bodyCreator }) {
+        this.resourceKey = resourceKey;
+        this.bodyCreator = bodyCreator;
+
+        this.cache = {
+            $parentEl,
+            $elements: undefined,
+            qTipAPI: undefined
+        };
+
+        this._initialise(values);
+    }
+
+    _initialise (values) {
+        const bodyHTML = this._createTooltipBody(values);
+
+        const $elements = this._getDOMElements();
+
+        const $hookEl = $elements.$hookEl;
+        const $targetEl = $elements.$tooltipTargetEl;
+        const $triggerEls = $elements.$tooltipTriggerEls;
+
+        const sharedSettings = {
+            show: {
+                delay: 0,
+                effect: false
+            },
+            hide: {
+                delay: 0,
+                effect: false
+            },
+            style: {
+                classes: "tiptip_content ui-tooltip-tipsy ui-tooltip-shadow"
+            }
+        };
+
+        const tooltipOptions = $.extend(
+            {},
+            {
+                content: bodyHTML,
+                position: {
+                    target: $targetEl,
+                    my: "top center",
+                    at: "bottom center",
+                    adjust: { y: 10 }
+                }
+            },
+            sharedSettings
+        );
+
+        $hookEl.qtip(tooltipOptions);
+
+        $triggerEls.not($hookEl)
+            .on("mouseenter", function () {
+                $hookEl.trigger("mouseenter");
+            })
+            .on("mouseleave", function () {
+                $hookEl.trigger("mouseleave");
+            });
+
+        this.cache.qTipAPI = $hookEl.qtip("api");
+    }
+
+    _findElements () {
+        const resourceKey = this._getResourceKey();
+        const $parentEl = this._getParentEl();
+
+        const $resourceEls = $parentEl.find(`[data-resource-key="${resourceKey}"]`);
+        const $hookEl = $resourceEls.filter(".tooltip-hook");
+        const $tooltipTargetEl = $resourceEls.filter(".tooltip-target");
+        const $tooltipTriggerEls = $resourceEls.filter(".tooltip-trigger");
+
+        return {
+            $hookEl,
+            $tooltipTargetEl,
+            $tooltipTriggerEls
+        };
+    }
+
+    _getResourceKey () {
+        return this.resourceKey;
+    }
+
+    _getParentEl () {
+        return this.cache.$parentEl;
+    }
+
+    _getDOMElements () {
+        if (!this.cache.$elements) {
+            this.cache.$elements = this._findElements();
+        }
+
+        return this.cache.$elements;
+    }
+
+    _createTooltipBody (values) {
+        return this.bodyCreator(values);
+    }
+}
+
+function createProductionResourceTooltipBody (values) {
+    const lang = PHPInject_topnav_lang;
+
+    const bodyHTML = `
+        <div class="center">
+            <b>${values.resourceName}</b>
+        </div>
+        <div class="center">
+            <b>(${values.incomePerHour} / h)</b>
+        </div>
+        <div>
+            <div class="ResL">
+                ${lang.When_full_store}
+            </div>
+            <div class="ResR">
+                ${values.fullStoreInText}
+            </div>
+        </div>
+        <div>
+            <div class="ResL">
+                ${lang.Store_Status}
+            </div>
+            <div class="ResR">
+                ${values.storeStatusText}
+            </div>
+        </div>
+    `;
+
+    return bodyHTML;
+}
+
+function createEnergyResourceTooltipBody (values) {
+    const bodyHTML = `
+        <div class="center">
+            <b>${values.resourceName}</b>
+        </div>
+        <div class="center">
+            <b>${values.unused}</b>
+        </div>
+        <div class="center">
+            (${values.used} / ${values.total})
+        </div>
+    `;
+
+    return bodyHTML;
+}
+
 $(document).ready(function () {
-    var ResElements = {
-        "met": $("#resMet"),
-        "cry": $("#resCry"),
-        "deu": $("#resDeu"),
-        "eng": $("#resEng")
-    };
     var PlanetList = $("#planet");
 
     if ($("#plType").is(":visible")) {
@@ -248,84 +375,19 @@ $(document).ready(function () {
         planetSelector_navigate(PlanetList);
     });
 
-    // qTips
-    ResElements["met"].qtip(
-        $.extend(
-            {
-                content: MToolTip,
-                position: {
-                    target: $("#metalmax"),
-                    my: "top center",
-                    at: "bottom center",
-                    adjust: { y: 10 }
-                }
-            },
-            qTipSettings
-        )
-    );
-    $(".resMet:not(#resMet)").hover(function () {
-        ResElements["met"].mouseover();
-    }, function () {
-        ResElements["met"].mouseout();
+    [ "metal", "crystal", "deuterium" ].forEach((resourceKey) => {
+        new ResourceTooltip({
+            resourceKey,
+            $parentEl: $("#topnav_resources"),
+            values: PHPInject_topnav_data.resourcesState[resourceKey],
+            bodyCreator: createProductionResourceTooltipBody
+        });
     });
 
-    ResElements["cry"].qtip(
-        $.extend(
-            {
-                content: CToolTip,
-                position: {
-                    target: $("#crystalmax"),
-                    my: "top center",
-                    at: "bottom center",
-                    adjust: { y: 10 }
-                }
-            },
-            qTipSettings
-        )
-    );
-    $(".resCry:not(#resCry)").hover(function () {
-        ResElements["cry"].mouseover();
-    }, function () {
-        ResElements["cry"].mouseout();
-    });
-
-    ResElements["deu"].qtip(
-        $.extend(
-            {
-                content: DToolTip,
-                position: {
-                    target: $("#deuteriummax"),
-                    my: "top center",
-                    at: "bottom center",
-                    adjust: { y: 10 }
-                }
-            },
-            qTipSettings
-        )
-    );
-    $(".resDeu:not(#resDeu)").hover(function () {
-        ResElements["deu"].mouseover();
-    }, function () {
-        ResElements["deu"].mouseout();
-    });
-
-    ResElements["eng"].qtip(
-        $.extend(
-            {
-                content: EToolTip,
-                position: {
-                    target: $("#showET"),
-                    my: "top center",
-                    at: "bottom center",
-                    adjust: { y: 10 }
-                }
-            },
-            qTipSettings
-        )
-    );
-    $(".resEnr:not(#resEng)").hover(function () {
-        ResElements["eng"].mouseover();
-    }, function () {
-        ResElements["eng"].mouseout();
+    new ResourceTooltip({
+        resourceKey: "energy",
+        $parentEl: $("#topnav_resources"),
+        values: PHPInject_topnav_data.specialResourcesState.energy,
+        bodyCreator: createEnergyResourceTooltipBody
     });
 });

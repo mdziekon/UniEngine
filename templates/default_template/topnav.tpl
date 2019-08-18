@@ -1,13 +1,36 @@
 <script>
 $(document).ready(function()
 {
-    var ResToolTip = '<div class="center"><b>_ResName_</b></div><div class="center"><b>_ResIncome_</b></div><div><div class="ResL">{When_full_store}</div><div class="ResR">_ResFullTime_</div></div><div><div class="ResL">{Store_Status}</div><div class="ResR">_ResStoreStatus_</div></div>';
-    MToolTip = ArrayReplace(ResToolTip, ReplaceArr, ['{Metal}', '{TipIncome_Metal}', '{Metal_full_time}', '{Metal_store_status}']);
-    CToolTip = ArrayReplace(ResToolTip, ReplaceArr, ['{Crystal}', '{TipIncome_Crystal}', '{Crystal_full_time}', '{Crystal_store_status}']);
-    DToolTip = ArrayReplace(ResToolTip, ReplaceArr, ['{Deuterium}', '{TipIncome_Deuterium}', '{Deuterium_full_time}', '{Deuterium_store_status}']);
-    EToolTip = '<div class="center"><b>{Energy}</b></div><div class="center"><b>{Energy_free}</b></div><div class="center">({Energy_used}/{Energy_total})</div>';
-
     var PHPInjectedData = {
+        resourcesState: {
+            metal: {
+                resourceName: "{Metal}",
+                incomePerHour: "{TipIncome_Metal}",
+                fullStoreInText: '{Metal_full_time}',
+                storeStatusText: '{Metal_store_status}'
+            },
+            crystal: {
+                resourceName: "{Crystal}",
+                incomePerHour: "{TipIncome_Crystal}",
+                fullStoreInText: '{Crystal_full_time}',
+                storeStatusText: '{Crystal_store_status}'
+            },
+            deuterium: {
+                resourceName: "{Deuterium}",
+                incomePerHour: "{TipIncome_Deuterium}",
+                fullStoreInText: '{Deuterium_full_time}',
+                storeStatusText: '{Deuterium_store_status}'
+            },
+        },
+        specialResourcesState: {
+            energy: {
+                resourceName: "{Energy}",
+                unused: `{Energy_free}`,
+                used: `{Energy_used}`,
+                total: `{Energy_total}`
+            }
+        },
+
         JSPerHour_Metal: {JSPerHour_Metal},
         JSStore_Metal: {JSStore_Metal},
         JSStoreOverflow_Metal: {JSStoreOverflow_Metal},
@@ -22,6 +45,12 @@ $(document).ready(function()
         JSStore_Deuterium: {JSStore_Deuterium},
         JSStoreOverflow_Deuterium: {JSStoreOverflow_Deuterium},
         JSCount_Deuterium: {JSCount_Deuterium},
+    };
+
+    window.PHPInject_topnav_data = PHPInjectedData;
+    window.PHPInject_topnav_lang = {
+        When_full_store: `{When_full_store}`,
+        Store_Status: `{Store_Status}`,
     };
 
     var resourcesDetails = [
@@ -104,37 +133,37 @@ $(document).ready(function()
         <td>
             <table id="resTopNav" border="0" cellpadding="0" cellspacing="0">
                 <tr class="tdct">
-                    <td class="w145 resMet" id="resMet"><a href="resources.php"><img src="{skinpath}images/metall.gif"/></a></td>
-                    <td class="w145 resCry" id="resCry"><a href="resources.php"><img src="{skinpath}images/kristall.gif"/></a></td>
-                    <td class="w145 resDeu" id="resDeu"><a href="resources.php"><img src="{skinpath}images/deuterium.gif"/></a></td>
-                    <td class="w145 resEnr" id="resEng"><a href="resources.php"><img src="{skinpath}images/energie.gif"/></a></td>
+                    <td class="w145 tooltip-hook tooltip-trigger" data-resource-key="metal"><a href="resources.php"><img src="{skinpath}images/metall.gif"/></a></td>
+                    <td class="w145 tooltip-hook tooltip-trigger" data-resource-key="crystal"><a href="resources.php"><img src="{skinpath}images/kristall.gif"/></a></td>
+                    <td class="w145 tooltip-hook tooltip-trigger" data-resource-key="deuterium"><a href="resources.php"><img src="{skinpath}images/deuterium.gif"/></a></td>
+                    <td class="w145 tooltip-hook tooltip-trigger" data-resource-key="energy"><a href="resources.php"><img src="{skinpath}images/energie.gif"/></a></td>
                     <td class="w50"></td>
                     <td class="w145"><a href="messages.php"><img src="{skinpath}images/message.gif" class="resImg"/></a></td>
                     <td class="w220"><img src="{skinpath}images/darkenergy.gif" class="resImg"/></td>
                 </tr>
                 <tr class="tdct">
-                    <td class="w145 resTD resMet">{Metal}</td>
-                    <td class="w145 resTD resCry">{Crystal}</td>
-                    <td class="w145 resTD resDeu">{Deuterium}</td>
-                    <td class="w145 resTD resEnr">{Energy}</td>
+                    <td class="w145 resTD tooltip-trigger" data-resource-key="metal">{Metal}</td>
+                    <td class="w145 resTD tooltip-trigger" data-resource-key="crystal">{Crystal}</td>
+                    <td class="w145 resTD tooltip-trigger" data-resource-key="deuterium">{Deuterium}</td>
+                    <td class="w145 resTD tooltip-trigger" data-resource-key="energy">{Energy}</td>
                     <td class="w50"></td>
                     <td class="w145"><a href="messages.php"><u><i><b>{Message}</b></i></u></a></td>
                     <td class="w220"><u><i><b>{DarkEnergy}</b></i></u></td>
                 </tr>
                 <tr class="tdct">
-                    <td class="w145 resMet" data-resource-key="metal"><div class="amount_display" id="metal" style="color: {ShowCountColor_Metal}">{ShowCount_Metal}</div></td>
-                    <td class="w145 resCry" data-resource-key="crystal"><div class="amount_display" id="crystal" style="color: {ShowCountColor_Crystal}">{ShowCount_Crystal}</div></td>
-                    <td class="w145 resDeu" data-resource-key="deuterium"><div class="amount_display" id="deut" style="color: {ShowCountColor_Deuterium}">{ShowCount_Deuterium}</div></td>
-                    <td class="w145 resEnr">{Energy_free}</td>
+                    <td class="w145 tooltip-trigger" data-resource-key="metal"><div class="amount_display" id="metal" style="color: {ShowCountColor_Metal}">{ShowCount_Metal}</div></td>
+                    <td class="w145 tooltip-trigger" data-resource-key="crystal"><div class="amount_display" id="crystal" style="color: {ShowCountColor_Crystal}">{ShowCount_Crystal}</div></td>
+                    <td class="w145 tooltip-trigger" data-resource-key="deuterium"><div class="amount_display" id="deut" style="color: {ShowCountColor_Deuterium}">{ShowCount_Deuterium}</div></td>
+                    <td class="w145 tooltip-trigger" data-resource-key="energy">{Energy_free}</td>
                     <td class="w50"></td>
                     <td class="w145">{ShowCount_Messages}</td>
                     <td class="w220">{ShowCount_DarkEnergy}</td>
                 </tr>
                 <tr class="tdct">
-                    <td class="w145 resMet" data-resource-key="metal"><div class="storage_display" id="metalmax" style="color: {ShowStoreColor_Metal}">{ShowStore_Metal}</div></td>
-                    <td class="w145 resCry" data-resource-key="crystal"><div class="storage_display" id="crystalmax" style="color: {ShowStoreColor_Crystal}">{ShowStore_Crystal}</div></td>
-                    <td class="w145 resDeu" data-resource-key="deuterium"><div class="storage_display" id="deuteriummax" style="color: {ShowStoreColor_Deuterium}">{ShowStore_Deuterium}</div></td>
-                    <td class="w145 resEnr" id="showET"></td>
+                    <td class="w145 tooltip-target tooltip-trigger" data-resource-key="metal"><div class="storage_display" style="color: {ShowStoreColor_Metal}">{ShowStore_Metal}</div></td>
+                    <td class="w145 tooltip-target tooltip-trigger" data-resource-key="crystal"><div class="storage_display" style="color: {ShowStoreColor_Crystal}">{ShowStore_Crystal}</div></td>
+                    <td class="w145 tooltip-target tooltip-trigger" data-resource-key="deuterium"><div class="storage_display" style="color: {ShowStoreColor_Deuterium}">{ShowStore_Deuterium}</div></td>
+                    <td class="w145 tooltip-target tooltip-trigger" data-resource-key="energy"></td>
                     <td class="w50"></td>
                     <td class="w145"></td>
                     <td class="w220"><a href="galacticshop.php"><b class="red">&#187; {GoToShop} &#171;</b></a></td>
