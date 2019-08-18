@@ -61,12 +61,15 @@ function buildLinkHTML($params) {
 }
 
 //  $params (Object)
-//      - path (String)
+//      - path (String | undefined) [default: ""]
 //      - query (Object | undefined)
 //
 function buildHref($params) {
     $queryParams = [];
 
+    if (empty($params['path'])) {
+        $params['path'] = '';
+    }
     if (empty($params['query'])) {
         $params['query'] = [];
     }
