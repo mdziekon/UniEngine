@@ -40,37 +40,49 @@ function ShowTopNavigationBar($CurrentUser, $CurrentPlanet)
     // > Metal
     if($CurrentPlanet['metal'] >= $CurrentPlanet['metal_max'])
     {
-        $parse['ShowCount_Metal'] = colorRed(prettyNumber($CurrentPlanet['metal']));
-        $parse['ShowStore_Metal'] = colorRed(prettyNumber($CurrentPlanet['metal_max']));
+        $parse['ShowCount_Metal'] = prettyNumber($CurrentPlanet['metal']);
+        $parse['ShowStore_Metal'] = prettyNumber($CurrentPlanet['metal_max']);
+        $parse['ShowCountColor_Metal'] = getColorHTMLValue('red');
+        $parse['ShowStoreColor_Metal'] = getColorHTMLValue('red');
     }
     else
     {
-        $parse['ShowCount_Metal'] = colorGreen(prettyNumber($CurrentPlanet['metal']));
-        $parse['ShowStore_Metal'] = colorGreen(prettyNumber($CurrentPlanet['metal_max']));
+        $parse['ShowCount_Metal'] = prettyNumber($CurrentPlanet['metal']);
+        $parse['ShowStore_Metal'] = prettyNumber($CurrentPlanet['metal_max']);
+        $parse['ShowCountColor_Metal'] = getColorHTMLValue('green');
+        $parse['ShowStoreColor_Metal'] = getColorHTMLValue('green');
     }
 
     // > Crystal
     if($CurrentPlanet['crystal'] >= $CurrentPlanet['crystal_max'])
     {
-        $parse['ShowCount_Crystal'] = colorRed(prettyNumber($CurrentPlanet['crystal']));
-        $parse['ShowStore_Crystal'] = colorRed(prettyNumber($CurrentPlanet['crystal_max']));
+        $parse['ShowCount_Crystal'] = prettyNumber($CurrentPlanet['crystal']);
+        $parse['ShowStore_Crystal'] = prettyNumber($CurrentPlanet['crystal_max']);
+        $parse['ShowCountColor_Crystal'] = getColorHTMLValue('red');
+        $parse['ShowStoreColor_Crystal'] = getColorHTMLValue('red');
     }
     else
     {
-        $parse['ShowCount_Crystal'] = colorGreen(prettyNumber($CurrentPlanet['crystal']));
-        $parse['ShowStore_Crystal'] = colorGreen(prettyNumber($CurrentPlanet['crystal_max']));
+        $parse['ShowCount_Crystal'] = prettyNumber($CurrentPlanet['crystal']);
+        $parse['ShowStore_Crystal'] = prettyNumber($CurrentPlanet['crystal_max']);
+        $parse['ShowCountColor_Crystal'] = getColorHTMLValue('green');
+        $parse['ShowStoreColor_Crystal'] = getColorHTMLValue('green');
     }
 
     // > Deuterium
     if($CurrentPlanet['deuterium'] >= $CurrentPlanet['deuterium_max'])
     {
-        $parse['ShowCount_Deuterium'] = colorRed(prettyNumber($CurrentPlanet['deuterium']));
-        $parse['ShowStore_Deuterium'] = colorRed(prettyNumber($CurrentPlanet['deuterium_max']));
+        $parse['ShowCount_Deuterium'] = prettyNumber($CurrentPlanet['deuterium']);
+        $parse['ShowStore_Deuterium'] = prettyNumber($CurrentPlanet['deuterium_max']);
+        $parse['ShowCountColor_Deuterium'] = getColorHTMLValue('red');
+        $parse['ShowStoreColor_Deuterium'] = getColorHTMLValue('red');
     }
     else
     {
-        $parse['ShowCount_Deuterium'] = colorGreen(prettyNumber($CurrentPlanet['deuterium']));
-        $parse['ShowStore_Deuterium'] = colorGreen(prettyNumber($CurrentPlanet['deuterium_max']));
+        $parse['ShowCount_Deuterium'] = prettyNumber($CurrentPlanet['deuterium']);
+        $parse['ShowStore_Deuterium'] = prettyNumber($CurrentPlanet['deuterium_max']);
+        $parse['ShowCountColor_Deuterium'] = getColorHTMLValue('green');
+        $parse['ShowStoreColor_Deuterium'] = getColorHTMLValue('green');
     }
 
     // > JS Vars

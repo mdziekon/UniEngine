@@ -1,38 +1,19 @@
-/* exported ReplaceArr, Update, ArrayReplace */
+/* exported ReplaceArr, ArrayReplace, updateResourceCounters */
 
 var MToolTip = "";
 var CToolTip = "";
 var DToolTip = "";
 var EToolTip = "";
-var Metal = false;
-var Crystal = false;
-var Deuterium = false;
-var UpdaterInit = false;
-var Metal_Rest = 0;
-var Crystal_Rest = 0;
-var Deuterium_Rest = 0;
-var red = "red";
-var lime = "lime";
-var UpdaterObjects = {};
+var constants = {
+    colorsValues: {
+        red: "red",
+        green: "lime"
+    }
+};
 
 var ReplaceArr = new Array("_ResName_", "_ResIncome_", "_ResFullTime_", "_ResStoreStatus_");
 var ResTipStyle = {classes: "tiptip_content ui-tooltip-tipsy ui-tooltip-shadow"};
 var qTipSettings = {show: {delay: 0, effect: false}, hide: {delay: 0, effect: false}, style: ResTipStyle};
-
-function intval (mixed_var, base) {
-    var tmp;
-    var type = typeof (mixed_var);
-    if (type === "boolean") {
-        return (mixed_var) ? 1 : 0;
-    } else if (type === "string") {
-        tmp = parseInt(mixed_var, base || 10);
-        return (isNaN(tmp) || !isFinite(tmp)) ? 0 : tmp;
-    } else if (type === "number" && isFinite(mixed_var)) {
-        return Math.floor(mixed_var);
-    } else {
-        return 0;
-    }
-}
 
 function number_format (value) {
     value += "";
@@ -43,115 +24,107 @@ function number_format (value) {
     return value;
 }
 
-function Update (
-    Met_PerHour,
-    Cry_PerHour,
-    Deu_PerHour,
-    Met_Max,
-    Cry_Max,
-    Deu_Max,
-    Met_MaxOver,
-    Cry_MaxOver,
-    Deu_MaxOver,
-    Met_Cur,
-    Cry_Cur,
-    Deu_Cur
-) {
-    var setMetalColor;
-    var setCrystalColor;
-    var setDeuteriumColor;
+//  Arguments:
+//      - params (object)
+//          - $parentEl (jQuery object)
+//          - timestamps (object)
+//              Unix timestamps as returned by JS's Date object.
+//              - initial (number) [unit: miliseconds]
+//              - current (number) [unit: miliseconds]
+//          - resources (array)
+//              - resourceKey (string)
+//              - storage (object)
+//                  - maxCapacity (number)
+//                  - overflowCapacity (number)
+//              - state (object)
+//                  - initial (number)
+//                  - incomePerHour (number)
+//
+function updateResourceCounters (params) {
+    const $parentEl = params.$parentEl;
 
-    if (UpdaterInit === false) {
-        UpdaterObjects.Metal = $("#metal");
-        UpdaterObjects.Crystal = $("#crystal");
-        UpdaterObjects.Deuterium = $("#deut");
-        UpdaterObjects.MetalMax = $("#metalmax");
-        UpdaterObjects.CrystalMax = $("#crystalmax");
-        UpdaterObjects.DeuteriumMax = $("#deuteriummax");
-        UpdaterInit = true;
-    }
+    const elapsedTime = Math.floor((params.timestamps.current - params.timestamps.initial) / 1000);
 
-    if (Metal === false) {
-        Metal = intval(Met_Cur);
-    }
-    if (Crystal === false) {
-        Crystal = intval(Cry_Cur);
-    }
-    if (Deuterium === false) {
-        Deuterium = intval(Deu_Cur);
-    }
-    if (Metal < Met_MaxOver) {
-        var Met_PerSec = Met_PerHour / 3600;
-        var IntMet_PerSec = intval(Met_PerSec);
-        var Met_Rest = Met_PerSec - IntMet_PerSec;
-        Metal += IntMet_PerSec;
-        Metal_Rest += Met_Rest;
-        if (Metal_Rest > 1) {
-            Metal += 1;
-            Metal_Rest -= 1;
-        }
-        if (Metal > Met_Max) {
-            setMetalColor = red;
-        } else {
-            setMetalColor = lime;
-        }
-        if (Metal > Met_MaxOver) {
-            Metal = intval(Met_MaxOver);
-        }
-    } else {
-        setMetalColor = red;
-    }
-    if (Crystal < Cry_MaxOver) {
-        var Cry_PerSec = Cry_PerHour / 3600;
-        var IntCry_PerSec = intval(Cry_PerSec);
-        var Cry_Rest = Cry_PerSec - IntCry_PerSec;
-        Crystal += IntCry_PerSec;
-        Crystal_Rest += Cry_Rest;
-        if (Crystal_Rest > 1) {
-            Crystal += 1;
-            Crystal_Rest -= 1;
-        }
-        if (Crystal > Cry_Max) {
-            setCrystalColor = red;
-        } else {
-            setCrystalColor = lime;
-        }
-        if (Crystal > Cry_MaxOver) {
-            Crystal = intval(Cry_MaxOver);
-        }
-    } else {
-        setCrystalColor = red;
-    }
-    if (Deuterium < Deu_MaxOver || Deu_PerHour < 0) {
-        var Deu_PerSec = Deu_PerHour / 3600;
-        var IntDeu_PerSec = intval(Deu_PerSec);
-        var Deu_Rest = Deu_PerSec - IntDeu_PerSec;
-        Deuterium += IntDeu_PerSec;
-        Deuterium_Rest += Deu_Rest;
-        if (Deuterium_Rest > 1) {
-            Deuterium += 1;
-            Deuterium_Rest -= 1;
-        }
-        if (Deuterium > Deu_Max) {
-            setDeuteriumColor = red;
-        } else {
-            setDeuteriumColor = lime;
-        }
-        if (Deuterium > Deu_MaxOver) {
-            if (Deu_PerHour > 0) {
-                Deuterium = intval(Deu_MaxOver);
-            }
-        }
-    } else {
-        setDeuteriumColor = red;
-    }
+    params.resources.forEach((resourceDetails) => {
+        const $resourceEl = $parentEl.find(`[data-resource-key="${resourceDetails.resourceKey}"]`);
 
-    UpdaterObjects.Metal.html(number_format(Metal)).css("color", setMetalColor);
-    UpdaterObjects.Crystal.html(number_format(Crystal)).css("color", setCrystalColor);
-    UpdaterObjects.Deuterium.html(number_format(Deuterium)).css("color", setDeuteriumColor);
-    UpdaterObjects.MetalMax.css("color", setMetalColor);
-    UpdaterObjects.CrystalMax.css("color", setCrystalColor);
-    UpdaterObjects.DeuteriumMax.css("color", setDeuteriumColor);
+        const selectors = {
+            $resourceAmount: $resourceEl.find(".amount_display"),
+            $resourceStorage: $resourceEl.find(".storage_display")
+        };
+
+        const resourceState = _calculateResourceState({
+            elapsedTime,
+            resourceDetails
+        });
+
+        _updateResourceCounterDOM(selectors, resourceState);
+    });
+}
+
+//  Arguments:
+//      - params (object)
+//          - elapsedTime (number) [unit: seconds]
+//              Time elapsed since the initial run.
+//          - resourceDetails (object)
+//              - storage (object)
+//                  - maxCapacity (number)
+//                  - overflowCapacity (number)
+//              - state (object)
+//                  - initial (number)
+//                  - incomePerHour (number)
+//
+//  Returns: object
+//      - currentResourceAmount (number)
+//      - hasReachedStorageMaxCapacity (boolean)
+//
+function _calculateResourceState (params) {
+    const maxPracticalStorage = Math.max(
+        params.resourceDetails.storage.maxCapacity,
+        params.resourceDetails.storage.overflowCapacity
+    );
+
+    const theoreticalIncome = (
+        (params.resourceDetails.state.incomePerHour / 3600) *
+        params.elapsedTime
+    );
+    const theoreticalResourceAmount = (
+        params.resourceDetails.state.initial +
+        theoreticalIncome
+    );
+
+    const finalResourceAmount = Math.min(
+        maxPracticalStorage,
+        theoreticalResourceAmount
+    );
+
+    const hasReachedStorageMaxCapacity = (finalResourceAmount >= params.resourceDetails.storage.maxCapacity);
+
+    return {
+        currentResourceAmount: finalResourceAmount,
+        hasReachedStorageMaxCapacity
+    };
+}
+
+//  Arguments:
+//      - selectors (object)
+//          - $resourceAmount
+//          - $resourceStorage
+//      - resourceState (object)
+//          - currentResourceAmount (number)
+//          - hasReachedStorageMaxCapacity (boolean)
+//
+function _updateResourceCounterDOM (selectors, resourceState) {
+    const resourceDisplayValue = number_format(Math.floor(resourceState.currentResourceAmount));
+    const resourceDisplayColor = (
+        resourceState.hasReachedStorageMaxCapacity ?
+            constants.colorsValues.red :
+            constants.colorsValues.green
+    );
+
+    selectors.$resourceAmount.html(resourceDisplayValue);
+    selectors.$resourceAmount.css("color", resourceDisplayColor);
+    selectors.$resourceStorage.css("color", resourceDisplayColor);
 }
 
 function ArrayReplace (Org, Search, Replace) {

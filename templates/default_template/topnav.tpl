@@ -6,12 +6,81 @@ $(document).ready(function()
     CToolTip = ArrayReplace(ResToolTip, ReplaceArr, ['{Crystal}', '{TipIncome_Crystal}', '{Crystal_full_time}', '{Crystal_store_status}']);
     DToolTip = ArrayReplace(ResToolTip, ReplaceArr, ['{Deuterium}', '{TipIncome_Deuterium}', '{Deuterium_full_time}', '{Deuterium_store_status}']);
     EToolTip = '<div class="center"><b>{Energy}</b></div><div class="center"><b>{Energy_free}</b></div><div class="center">({Energy_used}/{Energy_total})</div>';
-    setInterval("Update({JSPerHour_Metal}, {JSPerHour_Crystal}, {JSPerHour_Deuterium}, {JSStore_Metal}, {JSStore_Crystal}, {JSStore_Deuterium}, {JSStoreOverflow_Metal}, {JSStoreOverflow_Crystal}, {JSStoreOverflow_Deuterium}, {JSCount_Metal}, {JSCount_Crystal}, {JSCount_Deuterium})", 1000)
+
+    var PHPInjectedData = {
+        JSPerHour_Metal: {JSPerHour_Metal},
+        JSStore_Metal: {JSStore_Metal},
+        JSStoreOverflow_Metal: {JSStoreOverflow_Metal},
+        JSCount_Metal: {JSCount_Metal},
+
+        JSPerHour_Crystal: {JSPerHour_Crystal},
+        JSStore_Crystal: {JSStore_Crystal},
+        JSStoreOverflow_Crystal: {JSStoreOverflow_Crystal},
+        JSCount_Crystal: {JSCount_Crystal},
+
+        JSPerHour_Deuterium: {JSPerHour_Deuterium},
+        JSStore_Deuterium: {JSStore_Deuterium},
+        JSStoreOverflow_Deuterium: {JSStoreOverflow_Deuterium},
+        JSCount_Deuterium: {JSCount_Deuterium},
+    };
+
+    var resourcesDetails = [
+        {
+            resourceKey: "metal",
+            storage: {
+                maxCapacity: Math.floor(PHPInjectedData.JSStore_Metal),
+                overflowCapacity: Math.floor(PHPInjectedData.JSStoreOverflow_Metal)
+            },
+            state: {
+                initial: Math.floor(PHPInjectedData.JSCount_Metal),
+                incomePerHour: Math.floor(PHPInjectedData.JSPerHour_Metal),
+            }
+        },
+        {
+            resourceKey: "crystal",
+            storage: {
+                maxCapacity: Math.floor(PHPInjectedData.JSStore_Crystal),
+                overflowCapacity: Math.floor(PHPInjectedData.JSStoreOverflow_Crystal)
+            },
+            state: {
+                initial: Math.floor(PHPInjectedData.JSCount_Crystal),
+                incomePerHour: Math.floor(PHPInjectedData.JSPerHour_Crystal),
+            }
+        },
+        {
+            resourceKey: "deuterium",
+            storage: {
+                maxCapacity: Math.floor(PHPInjectedData.JSStore_Deuterium),
+                overflowCapacity: Math.floor(PHPInjectedData.JSStoreOverflow_Deuterium)
+            },
+            state: {
+                initial: Math.floor(PHPInjectedData.JSCount_Deuterium),
+                incomePerHour: Math.floor(PHPInjectedData.JSPerHour_Deuterium),
+            }
+        }
+    ];
+
+    var initialStateTimestamp = Date.now();
+    var $parentEl = $("#topnav_resources");
+
+    setInterval(
+        function () {
+            updateResourceCounters({
+                $parentEl,
+                timestamps: {
+                    initial: initialStateTimestamp,
+                    current: Date.now()
+                },
+                resources: resourcesDetails
+            });
+        },
+        1000
+    );
 });
 </script>
 <script src="dist/js/resourceUpdate.cachebuster-1563225437482.min.js"></script>
 <link rel="stylesheet" type="text/css" href="dist/css/topNav.cachebuster-1546564327123.min.css"/>
-<table>
+<table id="topnav_resources">
     <tr>
         <td>
             <table>
@@ -47,18 +116,18 @@ $(document).ready(function()
                     <td class="w220"><u><i><b>{DarkEnergy}</b></i></u></td>
                 </tr>
                 <tr class="tdct">
-                    <td class="w145 resMet"><div id="metal">{ShowCount_Metal}</div></td>
-                    <td class="w145 resCry"><div id="crystal">{ShowCount_Crystal}</div></td>
-                    <td class="w145 resDeu"><div id="deut">{ShowCount_Deuterium}</div></td>
+                    <td class="w145 resMet" data-resource-key="metal"><div class="amount_display" id="metal" style="color: {ShowCountColor_Metal}">{ShowCount_Metal}</div></td>
+                    <td class="w145 resCry" data-resource-key="crystal"><div class="amount_display" id="crystal" style="color: {ShowCountColor_Crystal}">{ShowCount_Crystal}</div></td>
+                    <td class="w145 resDeu" data-resource-key="deuterium"><div class="amount_display" id="deut" style="color: {ShowCountColor_Deuterium}">{ShowCount_Deuterium}</div></td>
                     <td class="w145 resEnr">{Energy_free}</td>
                     <td class="w50"></td>
                     <td class="w145">{ShowCount_Messages}</td>
                     <td class="w220">{ShowCount_DarkEnergy}</td>
                 </tr>
                 <tr class="tdct">
-                    <td class="w145 resMet"><div id="metalmax">{ShowStore_Metal}</div></td>
-                    <td class="w145 resCry"><div id="crystalmax">{ShowStore_Crystal}</div></td>
-                    <td class="w145 resDeu"><div id="deuteriummax">{ShowStore_Deuterium}</div></td>
+                    <td class="w145 resMet" data-resource-key="metal"><div class="storage_display" id="metalmax" style="color: {ShowStoreColor_Metal}">{ShowStore_Metal}</div></td>
+                    <td class="w145 resCry" data-resource-key="crystal"><div class="storage_display" id="crystalmax" style="color: {ShowStoreColor_Crystal}">{ShowStore_Crystal}</div></td>
+                    <td class="w145 resDeu" data-resource-key="deuterium"><div class="storage_display" id="deuteriummax" style="color: {ShowStoreColor_Deuterium}">{ShowStore_Deuterium}</div></td>
                     <td class="w145 resEnr" id="showET"></td>
                     <td class="w50"></td>
                     <td class="w145"></td>
