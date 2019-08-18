@@ -313,6 +313,8 @@ function _createResourceStateDetailsTplData($resourceKey, &$CurrentPlanet, &$Cur
 }
 
 function _createUnreadMessagesCounterTplData($userID) {
+    global $NewMSGCount;
+
     $tplData = [];
 
     $Query_MsgCount  = '';
@@ -331,6 +333,8 @@ function _createUnreadMessagesCounterTplData($userID) {
 
         return $tplData;
     }
+
+    $NewMSGCount = $unreadMessagesCount;
 
     $html_messagesLink = buildLinkHTML([
         'href' => 'messages.php',
