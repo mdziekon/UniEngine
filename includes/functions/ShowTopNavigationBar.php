@@ -1,6 +1,6 @@
 <?php
 
-function ShowTopNavigationBar($CurrentUser, $CurrentPlanet)
+function ShowTopNavigationBar(&$CurrentUser, $CurrentPlanet)
 {
     global $_Lang, $_SkinPath;
 
@@ -72,7 +72,7 @@ function ShowTopNavigationBar($CurrentUser, $CurrentPlanet)
     return $TopBar;
 }
 
-function _createPlanetsSelectorTplData($CurrentUser, $CurrentPlanet) {
+function _createPlanetsSelectorTplData(&$CurrentUser, &$CurrentPlanet) {
     global $_Lang, $_GET;
 
     $tplData = [];
@@ -307,7 +307,7 @@ function _createResourceStateDetailsTplData($resourceKey, &$CurrentPlanet, &$Cur
     return $tplData;
 }
 
-function _createPremiumResourceCounterTplData($user) {
+function _createPremiumResourceCounterTplData(&$user) {
     $tplData = [];
 
     $premiumResourceAmount = $user['darkEnergy'];
