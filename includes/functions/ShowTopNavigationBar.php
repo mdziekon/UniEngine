@@ -20,19 +20,10 @@ function ShowTopNavigationBar(&$CurrentUser, $CurrentPlanet)
         _createPlanetsSelectorTplData($CurrentUser, $CurrentPlanet)
     );
 
-    // > Energy
-    $EnergyFree = $CurrentPlanet['energy_max'] + $CurrentPlanet['energy_used'];
-    $EnergyPretty = prettyNumber($EnergyFree);
-    if($EnergyFree < 0)
-    {
-        $parse['Energy_free'] = colorRed($EnergyPretty);
-    }
-    else
-    {
-        $parse['Energy_free'] = colorGreen($EnergyPretty);
-    }
-    $parse['Energy_used'] = prettyNumber($CurrentPlanet['energy_max'] - $EnergyFree);
-    $parse['Energy_total'] = prettyNumber($CurrentPlanet['energy_max']);
+    $parse = array_merge(
+        $parse,
+        _createPlanetsEnergyStatusDetailsTplData($CurrentPlanet)
+    );
 
     // > Calculate incomes
     $productionLevel = getPlanetsProductionEfficiency(
@@ -188,6 +179,25 @@ function _createPlanetsSelectorTplData(&$CurrentUser, &$CurrentPlanet) {
     } else {
         $tplData['Insert_TypeChange_Hide'] = 'hide';
     }
+
+    return $tplData;
+}
+
+function _createPlanetsEnergyStatusDetailsTplData(&$planet) {
+    $tplData = [];
+
+    $unusedEnergy = ($planet['energy_max'] + $planet['energy_used']);
+
+    $tplData['Energy_free'] = colorizeString(
+        prettyNumber($unusedEnergy),
+        (
+            ($unusedEnergy >= 0) ?
+            "green" :
+            "red"
+        )
+    );
+    $tplData['Energy_used'] = prettyNumber($planet['energy_used'] * (-1));
+    $tplData['Energy_total'] = prettyNumber($planet['energy_max']);
 
     return $tplData;
 }
