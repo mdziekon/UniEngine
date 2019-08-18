@@ -62,17 +62,23 @@ $(document).ready(function()
 
     var initialStateTimestamp = Date.now();
     var $parentEl = $("#topnav_resources");
+    var countersCache = buildResourceUpdaterCache({
+        resources: resourcesDetails
+    });
 
     setInterval(
         function () {
-            updateResourceCounters({
-                $parentEl,
-                timestamps: {
-                    initial: initialStateTimestamp,
-                    current: Date.now()
+            updateResourceCounters(
+                {
+                    $parentEl,
+                    timestamps: {
+                        initial: initialStateTimestamp,
+                        current: Date.now()
+                    },
+                    resources: resourcesDetails
                 },
-                resources: resourcesDetails
-            });
+                countersCache
+            );
         },
         1000
     );

@@ -1,4 +1,4 @@
-/* exported ReplaceArr, ArrayReplace, updateResourceCounters */
+/* exported ReplaceArr, ArrayReplace, buildResourceUpdaterCache, updateResourceCounters */
 
 var MToolTip = "";
 var CToolTip = "";
@@ -26,6 +26,37 @@ function number_format (value) {
 
 //  Arguments:
 //      - params (object)
+//          - resources (array)
+//              - resourceKey (string)
+//              - storage (object)
+//                  - maxCapacity (number)
+//                  - overflowCapacity (number)
+//              - state (object)
+//                  - initial (number)
+//                  - incomePerHour (number)
+//
+//  Returns: object
+//      - previousElapsedTime (number)
+//      - resources (object<resourceKey: string, details: object>)
+//          - hasReachedRealMaxCapacity (boolean)
+//
+function buildResourceUpdaterCache (params) {
+    const cache = {
+        previousElapsedTime: -Infinity,
+        resources: {}
+    };
+
+    params.resources.forEach((resourceDetails) => {
+        cache.resources[resourceDetails.resourceKey] = {
+            hasReachedRealMaxCapacity: false
+        };
+    });
+
+    return cache;
+}
+
+//  Arguments:
+//      - params (object)
 //          - $parentEl (jQuery object)
 //          - timestamps (object)
 //              Unix timestamps as returned by JS's Date object.
@@ -39,14 +70,28 @@ function number_format (value) {
 //              - state (object)
 //                  - initial (number)
 //                  - incomePerHour (number)
+//      - cache (object)
+//          Same as returned by buildResourceUpdaterCache()
 //
-function updateResourceCounters (params) {
+function updateResourceCounters (params, cache) {
     const $parentEl = params.$parentEl;
 
     const elapsedTime = Math.floor((params.timestamps.current - params.timestamps.initial) / 1000);
 
+    // Opt: update only on full tick (each second)
+    if (elapsedTime <= cache.previousElapsedTime) {
+        return;
+    }
+
     params.resources.forEach((resourceDetails) => {
-        const $resourceEl = $parentEl.find(`[data-resource-key="${resourceDetails.resourceKey}"]`);
+        const resourceKey = resourceDetails.resourceKey;
+
+        // Opt: prevent further calculations if store is already full
+        if (cache.resources[resourceKey].hasReachedRealMaxCapacity) {
+            return;
+        }
+
+        const $resourceEl = $parentEl.find(`[data-resource-key="${resourceKey}"]`);
 
         const selectors = {
             $resourceAmount: $resourceEl.find(".amount_display"),
@@ -59,7 +104,13 @@ function updateResourceCounters (params) {
         });
 
         _updateResourceCounterDOM(selectors, resourceState);
+
+        // Update per-resource cache
+        cache.resources[resourceKey].hasReachedRealMaxCapacity = resourceState.hasReachedRealMaxCapacity;
     });
+
+    // Update cache
+    cache.previousElapsedTime = elapsedTime;
 }
 
 //  Arguments:
@@ -77,6 +128,7 @@ function updateResourceCounters (params) {
 //  Returns: object
 //      - currentResourceAmount (number)
 //      - hasReachedStorageMaxCapacity (boolean)
+//      - hasReachedRealMaxCapacity (boolean)
 //
 function _calculateResourceState (params) {
     const maxPracticalStorage = Math.max(
@@ -99,10 +151,12 @@ function _calculateResourceState (params) {
     );
 
     const hasReachedStorageMaxCapacity = (finalResourceAmount >= params.resourceDetails.storage.maxCapacity);
+    const hasReachedRealMaxCapacity = (finalResourceAmount >= maxPracticalStorage);
 
     return {
         currentResourceAmount: finalResourceAmount,
-        hasReachedStorageMaxCapacity
+        hasReachedStorageMaxCapacity,
+        hasReachedRealMaxCapacity
     };
 }
 
