@@ -2,7 +2,7 @@
 
 function ShowTopNavigationBar($CurrentUser, $CurrentPlanet)
 {
-    global $_Lang, $_GET, $_User, $_SkinPath;
+    global $_Lang, $_SkinPath;
 
     if (!$CurrentUser || !$CurrentPlanet) {
         return;
