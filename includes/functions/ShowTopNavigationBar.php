@@ -13,15 +13,12 @@ function ShowTopNavigationBar($CurrentUser, $CurrentPlanet)
     $parse['image'] = $CurrentPlanet['image'];
 
     // Update Planet Resources
-    $IsOnVacation = isOnVacation($CurrentUser);
     PlanetResourceUpdate($CurrentUser, $CurrentPlanet, time());
 
     $parse = array_merge(
         $parse,
         _createPlanetsSelectorTplData($CurrentUser, $CurrentPlanet)
     );
-
-    // Calculate resources for JS RealTime Counters
 
     // > Energy
     $EnergyFree = $CurrentPlanet['energy_max'] + $CurrentPlanet['energy_used'];
@@ -37,65 +34,6 @@ function ShowTopNavigationBar($CurrentUser, $CurrentPlanet)
     $parse['Energy_used'] = prettyNumber($CurrentPlanet['energy_max'] - $EnergyFree);
     $parse['Energy_total'] = prettyNumber($CurrentPlanet['energy_max']);
 
-    // > Metal
-    if($CurrentPlanet['metal'] >= $CurrentPlanet['metal_max'])
-    {
-        $parse['ShowCount_Metal'] = prettyNumber($CurrentPlanet['metal']);
-        $parse['ShowStore_Metal'] = prettyNumber($CurrentPlanet['metal_max']);
-        $parse['ShowCountColor_Metal'] = getColorHTMLValue('red');
-        $parse['ShowStoreColor_Metal'] = getColorHTMLValue('red');
-    }
-    else
-    {
-        $parse['ShowCount_Metal'] = prettyNumber($CurrentPlanet['metal']);
-        $parse['ShowStore_Metal'] = prettyNumber($CurrentPlanet['metal_max']);
-        $parse['ShowCountColor_Metal'] = getColorHTMLValue('green');
-        $parse['ShowStoreColor_Metal'] = getColorHTMLValue('green');
-    }
-
-    // > Crystal
-    if($CurrentPlanet['crystal'] >= $CurrentPlanet['crystal_max'])
-    {
-        $parse['ShowCount_Crystal'] = prettyNumber($CurrentPlanet['crystal']);
-        $parse['ShowStore_Crystal'] = prettyNumber($CurrentPlanet['crystal_max']);
-        $parse['ShowCountColor_Crystal'] = getColorHTMLValue('red');
-        $parse['ShowStoreColor_Crystal'] = getColorHTMLValue('red');
-    }
-    else
-    {
-        $parse['ShowCount_Crystal'] = prettyNumber($CurrentPlanet['crystal']);
-        $parse['ShowStore_Crystal'] = prettyNumber($CurrentPlanet['crystal_max']);
-        $parse['ShowCountColor_Crystal'] = getColorHTMLValue('green');
-        $parse['ShowStoreColor_Crystal'] = getColorHTMLValue('green');
-    }
-
-    // > Deuterium
-    if($CurrentPlanet['deuterium'] >= $CurrentPlanet['deuterium_max'])
-    {
-        $parse['ShowCount_Deuterium'] = prettyNumber($CurrentPlanet['deuterium']);
-        $parse['ShowStore_Deuterium'] = prettyNumber($CurrentPlanet['deuterium_max']);
-        $parse['ShowCountColor_Deuterium'] = getColorHTMLValue('red');
-        $parse['ShowStoreColor_Deuterium'] = getColorHTMLValue('red');
-    }
-    else
-    {
-        $parse['ShowCount_Deuterium'] = prettyNumber($CurrentPlanet['deuterium']);
-        $parse['ShowStore_Deuterium'] = prettyNumber($CurrentPlanet['deuterium_max']);
-        $parse['ShowCountColor_Deuterium'] = getColorHTMLValue('green');
-        $parse['ShowStoreColor_Deuterium'] = getColorHTMLValue('green');
-    }
-
-    // > JS Vars
-    $parse['JSCount_Metal'] = $CurrentPlanet['metal'];
-    $parse['JSCount_Crystal'] = $CurrentPlanet['crystal'];
-    $parse['JSCount_Deuterium'] = $CurrentPlanet['deuterium'];
-    $parse['JSStore_Metal'] = $CurrentPlanet['metal_max'];
-    $parse['JSStore_Crystal'] = $CurrentPlanet['crystal_max'];
-    $parse['JSStore_Deuterium'] = $CurrentPlanet['deuterium_max'];
-    $parse['JSStoreOverflow_Metal'] = $CurrentPlanet['metal_max'] * MAX_OVERFLOW;
-    $parse['JSStoreOverflow_Crystal'] = $CurrentPlanet['crystal_max'] * MAX_OVERFLOW;
-    $parse['JSStoreOverflow_Deuterium'] = $CurrentPlanet['deuterium_max'] * MAX_OVERFLOW;
-
     // > Calculate incomes
     $productionLevel = getPlanetsProductionEfficiency(
         $CurrentPlanet,
@@ -106,195 +44,17 @@ function ShowTopNavigationBar($CurrentUser, $CurrentPlanet)
     );
 
     foreach ([ 'metal', 'crystal', 'deuterium' ] as $resourceKey) {
-        $theoreticalResourceIncomePerSecond = calculateTotalTheoreticalResourceIncomePerSecond(
-            $resourceKey,
-            $CurrentPlanet
-        );
-        $realResourceIncomePerSecond = calculateTotalRealResourceIncomePerSecond([
-            'theoreticalIncomePerSecond' => $theoreticalResourceIncomePerSecond,
-            'productionLevel' => $productionLevel
-        ]);
-
-        $totalResourceIncomePerSecond = (
-            $realResourceIncomePerSecond['production'] +
-            (
-                ($CurrentPlanet['planet_type'] == 1) ?
-                $realResourceIncomePerSecond['base'] :
-                0
+        $parse = array_merge(
+            $parse,
+            _createResourceStateDetailsTplData(
+                $resourceKey,
+                $CurrentPlanet,
+                $CurrentUser,
+                [
+                    'productionLevel' => $productionLevel
+                ]
             )
         );
-
-        $parse['JSPerHour_' . ucfirst($resourceKey)] = (
-            $totalResourceIncomePerSecond *
-            3600
-        );
-    }
-
-    // > Create ToolTip Infos
-    $parse['TipIncome_Metal'] = '('.(($parse['JSPerHour_Metal'] >= 0) ? '+' : '-').prettyNumber(abs(round($parse['JSPerHour_Metal']))).'/h)';
-    $parse['TipIncome_Crystal'] = '('.(($parse['JSPerHour_Crystal'] >= 0) ? '+' : '-').prettyNumber(abs(round($parse['JSPerHour_Crystal']))).'/h)';
-    $parse['TipIncome_Deuterium'] = '('.(($parse['JSPerHour_Deuterium'] >= 0) ? '+' : '-').prettyNumber(abs(round($parse['JSPerHour_Deuterium']))).'/h)';
-
-    $IncomePerSecond['met'] = $parse['JSPerHour_Metal'] / 3600;
-    $IncomePerSecond['cry'] = $parse['JSPerHour_Crystal'] / 3600;
-    $IncomePerSecond['deu'] = $parse['JSPerHour_Deuterium'] / 3600;
-
-    if($IncomePerSecond['met'] > 0)
-    {
-        $parse['Metal_full_time'] = (round($parse['JSStoreOverflow_Metal']) - round($CurrentPlanet['metal'])) / $IncomePerSecond['met'];
-        if($parse['Metal_full_time'] > 0)
-        {
-            $parse['Metal_full_time'] = $parse['full_in'].' <span id="metal_fullstore_counter">'.pretty_time($parse['Metal_full_time']).'</span>';
-        }
-        else
-        {
-            $parse['Metal_full_time'] = '<span class="red">'.$parse['full'].'</span>';
-        }
-    }
-    else
-    {
-        $parse['Metal_full_time'] = $_Lang['income_no_mine'];
-    }
-    if($IsOnVacation)
-    {
-        $parse['Metal_full_time'] = $_Lang['income_vacation'];
-    }
-
-    if($IncomePerSecond['cry'] > 0)
-    {
-        $parse['Crystal_full_time'] = (round($parse['JSStoreOverflow_Crystal']) - round($CurrentPlanet['crystal'])) / $IncomePerSecond['cry'];
-        if($parse['Crystal_full_time'] > 0)
-        {
-            $parse['Crystal_full_time'] = $parse['full_in'].' <span id="crystal_fullstore_counter">'.pretty_time($parse['Crystal_full_time']).'</span>';
-        }
-        else
-        {
-            $parse['Crystal_full_time'] = '<span class="red">'.$parse['full'].'</span>';
-        }
-    }
-    else
-    {
-        $parse['Crystal_full_time'] = $_Lang['income_no_mine'];
-    }
-    if($IsOnVacation)
-    {
-        $parse['Crystal_full_time'] = $_Lang['income_vacation'];
-    }
-
-    if($IncomePerSecond['deu'] > 0)
-    {
-        $parse['Deuterium_full_time'] = (round($parse['JSStoreOverflow_Deuterium']) - round($CurrentPlanet['deuterium'])) / $IncomePerSecond['deu'];
-        if($parse['Deuterium_full_time'] > 0)
-        {
-            $parse['Deuterium_full_time'] = $parse['full_in'].' <span id="deuterium_fullstore_counter">'.pretty_time($parse['Deuterium_full_time']).'</span>';
-        }
-        else
-        {
-            $parse['Deuterium_full_time'] = '<span class="red">'.$parse['full'].'</span>';
-        }
-    }
-    elseif($IncomePerSecond['deu'] < 0)
-    {
-        $parse['Deuterium_full_time'] = $_Lang['income_minus'];
-    }
-    else
-    {
-        $parse['Deuterium_full_time'] = $_Lang['income_no_mine'];
-    }
-    if($IsOnVacation)
-    {
-        $parse['Deuterium_full_time'] = $_Lang['income_vacation'];
-    }
-
-    // > Create ToolTip Storage Status
-    if($CurrentPlanet['metal'] > $CurrentPlanet['metal_max'])
-    {
-        if($CurrentPlanet['metal'] == $parse['JSStoreOverflow_Metal'])
-        {
-            $parse['Metal_store_status'] = $parse['Store_status_Full'];
-        }
-        else
-        {
-            $parse['Metal_store_status'] = $parse['Store_status_Overload'];
-        }
-    }
-    else
-    {
-        if($CurrentPlanet['metal'] > 0)
-        {
-            if($CurrentPlanet['metal'] >= ($CurrentPlanet['metal_max'] * 0.8))
-            {
-                $parse['Metal_store_status'] = $parse['Store_status_NearFull'];
-            }
-            else
-            {
-                $parse['Metal_store_status'] = $parse['Store_status_OK'];
-            }
-        }
-        else
-        {
-            $parse['Metal_store_status'] = $parse['Store_status_Empty'];
-        }
-    }
-
-    if($CurrentPlanet['crystal'] > $CurrentPlanet['crystal_max'])
-    {
-        if($CurrentPlanet['crystal'] == $parse['JSStoreOverflow_Crystal'])
-        {
-            $parse['Crystal_store_status'] = $parse['Store_status_Full'];
-        }
-        else
-        {
-            $parse['Crystal_store_status'] = $parse['Store_status_Overload'];
-        }
-    }
-    else
-    {
-        if($CurrentPlanet['crystal'] > 0)
-        {
-            if($CurrentPlanet['crystal'] >= ($CurrentPlanet['crystal_max'] * 0.8))
-            {
-                $parse['Crystal_store_status'] = $parse['Store_status_NearFull'];
-            }
-            else
-            {
-                $parse['Crystal_store_status'] = $parse['Store_status_OK'];
-            }
-        }
-        else
-        {
-            $parse['Crystal_store_status'] = $parse['Store_status_Empty'];
-        }
-    }
-
-    if($CurrentPlanet['deuterium'] > $CurrentPlanet['deuterium_max'])
-    {
-        if($CurrentPlanet['deuterium'] == $parse['JSStoreOverflow_Deuterium'])
-        {
-            $parse['Deuterium_store_status'] = $parse['Store_status_Full'];
-        }
-        else
-        {
-            $parse['Deuterium_store_status'] = $parse['Store_status_Overload'];
-        }
-    }
-    else
-    {
-        if($CurrentPlanet['metal'] > 0)
-        {
-            if($CurrentPlanet['deuterium'] >= ($CurrentPlanet['deuterium_max'] * 0.8))
-            {
-                $parse['Deuterium_store_status'] = $parse['Store_status_NearFull'];
-            }
-            else
-            {
-                $parse['Deuterium_store_status'] = $parse['Store_status_OK'];
-            }
-        }
-        else
-        {
-            $parse['Deuterium_store_status'] = $parse['Store_status_Empty'];
-        }
     }
 
     // Dark Energy
@@ -432,6 +192,121 @@ function _createPlanetsSelectorTplData($CurrentUser, $CurrentPlanet) {
         }
     } else {
         $tplData['Insert_TypeChange_Hide'] = 'hide';
+    }
+
+    return $tplData;
+}
+
+function _createResourceStateDetailsTplData($resourceKey, &$CurrentPlanet, &$CurrentUser, $params) {
+    global $_Lang;
+
+    $tplData = [];
+
+    $productionLevel = $params['productionLevel'];
+
+    $thresholds = [
+        'capacityAlmostFull' => 0.8
+    ];
+
+    $resourceKeyCamelCase = ucfirst($resourceKey);
+
+    $resourceAmount = $CurrentPlanet[$resourceKey];
+    $resourceMaxStorage = $CurrentPlanet["{$resourceKey}_max"];
+    $resourceMaxOverflowStorage = $resourceMaxStorage * MAX_OVERFLOW;
+
+    $theoreticalResourceIncomePerSecond = calculateTotalTheoreticalResourceIncomePerSecond(
+        $resourceKey,
+        $CurrentPlanet
+    );
+    $realResourceIncomePerSecond = calculateTotalRealResourceIncomePerSecond([
+        'theoreticalIncomePerSecond' => $theoreticalResourceIncomePerSecond,
+        'productionLevel' => $productionLevel
+    ]);
+    $totalResourceIncomePerSecond = (
+        $realResourceIncomePerSecond['production'] +
+        (
+            ($CurrentPlanet['planet_type'] == 1) ?
+            $realResourceIncomePerSecond['base'] :
+            0
+        )
+    );
+    $totalResourceIncomePerHour = (
+        $totalResourceIncomePerSecond *
+        3600
+    );
+
+    $hasOverflownStorage = ($resourceAmount >= $resourceMaxStorage);
+    $hasReachedMaxCapacity = ($resourceAmount >= $resourceMaxOverflowStorage);
+    $hasPositiveIncome = ($totalResourceIncomePerHour > 0);
+    $hasNegativeIncome = ($totalResourceIncomePerHour < 0);
+
+    $labelsIncomeSign = "";
+    if ($hasPositiveIncome) {
+        $labelsIncomeSign = "+";
+    } else if ($hasNegativeIncome) {
+        $labelsIncomeSign = "-";
+    }
+
+    $tplData["JSCount_{$resourceKeyCamelCase}"] = $resourceAmount;
+    $tplData["JSStore_{$resourceKeyCamelCase}"] = $resourceMaxStorage;
+    $tplData["JSStoreOverflow_{$resourceKeyCamelCase}"] = $resourceMaxOverflowStorage;
+    $tplData["ShowCount_{$resourceKeyCamelCase}"] = prettyNumber($resourceAmount);
+    $tplData["ShowStore_{$resourceKeyCamelCase}"] = prettyNumber($resourceMaxStorage);
+    $tplData["ShowCountColor_{$resourceKeyCamelCase}"] = getColorHTMLValue(
+        (!$hasOverflownStorage ? 'green' : 'red')
+    );
+    $tplData["ShowStoreColor_{$resourceKeyCamelCase}"] = getColorHTMLValue(
+        (!$hasOverflownStorage ? 'green' : 'red')
+    );
+    $tplData["JSPerHour_{$resourceKeyCamelCase}"] = $totalResourceIncomePerHour;
+    $tplData["TipIncome_{$resourceKeyCamelCase}"] = (
+        '(' .
+        $labelsIncomeSign .
+        prettyNumber(abs(round($totalResourceIncomePerHour))) .
+        '/h' .
+        ')'
+    );
+
+    $tplKeys_FullTime = "{$resourceKeyCamelCase}_full_time";
+    if ($hasPositiveIncome) {
+        $storageFullIn = ceil(($resourceMaxOverflowStorage - $resourceAmount) / $totalResourceIncomePerSecond);
+
+        if ($hasReachedMaxCapacity) {
+            $tplData[$tplKeys_FullTime] = colorRed($_Lang['full']);
+        } else {
+            $tplData[$tplKeys_FullTime] = (
+                $_Lang['full_in'] .
+                ' ' .
+                (
+                    '<span id="' . $resourceKey . '_fullstore_counter">' .
+                    pretty_time($storageFullIn) .
+                    '</span>'
+                )
+            );
+        }
+    } else if ($hasNegativeIncome) {
+        $tplData[$tplKeys_FullTime] = $_Lang['income_minus'];
+    } else if (isOnVacation($CurrentUser)) {
+        $tplData[$tplKeys_FullTime] = $_Lang['income_vacation'];
+    } else {
+        $tplData[$tplKeys_FullTime] = $_Lang['income_no_mine'];
+    }
+
+    $tplKeys_StoreStatus = "{$resourceKeyCamelCase}_store_status";
+    if ($hasOverflownStorage) {
+        if ($resourceMaxOverflowStorage > $resourceMaxStorage) {
+            $tplData[$tplKeys_StoreStatus] = $_Lang['Store_status_Overload'];
+        } else {
+            $tplData[$tplKeys_StoreStatus] = $_Lang['Store_status_Full'];
+        }
+    } else {
+        if ($resourceAmount <= 0) {
+            $tplData[$tplKeys_StoreStatus] = $_Lang['Store_status_Empty'];
+        } else if ($resourceAmount >= ($resourceMaxStorage * $thresholds['capacityAlmostFull'])) {
+            $tplData[$tplKeys_StoreStatus] = $_Lang['Store_status_NearFull'];
+        } else {
+            $tplData[$tplKeys_StoreStatus] = $_Lang['Store_status_OK'];
+        }
     }
 
     return $tplData;
