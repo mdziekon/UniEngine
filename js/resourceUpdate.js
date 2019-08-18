@@ -189,6 +189,31 @@ function ArrayReplace (Org, Search, Replace) {
     return Org;
 }
 
+function planetSelector_changeSelection ($selectorEl, selectionIdxModifier) {
+    const $options = $selectorEl.find("option");
+    const $selectedOption = $options.filter(":selected");
+
+    const currentSelectedIdx = $options.index($selectedOption);
+
+    const $changedSelection = $options.eq(currentSelectedIdx + selectionIdxModifier);
+
+    $selectorEl.val($changedSelection.val());
+}
+
+function planetSelector_switchPlanetType ($selectorEl, otherPlanetID) {
+    const $options = $selectorEl.find("option");
+
+    const $changedSelection = $options.filter(`[data-planet-id="${otherPlanetID}"]`);
+
+    $selectorEl.val($changedSelection.val());
+}
+
+function planetSelector_navigate ($selectorEl) {
+    const currentSelectionURL = $selectorEl.val();
+
+    window.location = currentSelectionURL;
+}
+
 $(document).ready(function () {
     var ResElements = {
         "met": $("#resMet"),
@@ -204,32 +229,23 @@ $(document).ready(function () {
         $(".plBut").width((PlanetList.width() / 2) + 1);
     }
 
-    // PlanetList Handler
-    $("#prevPl").click(function () {
-        if (PlanetList.children().length > 1) {
-            if (PlanetList.children(":first-child").is(":selected")) {
-                PlanetList.children(":last-child").attr("selected", true);
-            } else {
-                PlanetList.children(":selected").prev().attr("selected", true);
-            }
-            PlanetList.change();
-        }
+    $("#prevPl").on("click", function () {
+        planetSelector_changeSelection(PlanetList, -1);
+        planetSelector_navigate(PlanetList);
     });
-    $("#nextPl").click(function () {
-        if (PlanetList.children().length > 1) {
-            if (PlanetList.children(":last-child").is(":selected")) {
-                PlanetList.children(":first-child").attr("selected", true);
-            } else {
-                PlanetList.children(":selected").next().attr("selected", true);
-            }
-            PlanetList.change();
-        }
+    $("#nextPl").on("click", function () {
+        planetSelector_changeSelection(PlanetList, 1);
+        planetSelector_navigate(PlanetList);
     });
-    PlanetList.change(function () {
-        window.location = String($(this).val());
+    $("#plType").on("click", function (evt) {
+        const $btnEl = $(evt.currentTarget);
+        const otherPlanetID = $btnEl.data("id");
+
+        planetSelector_switchPlanetType(PlanetList, otherPlanetID);
+        planetSelector_navigate(PlanetList);
     });
-    $("#plType").click(function () {
-        PlanetList.val($("option[value*=\"cp=" + $(this).attr("data-id") + "\"]", PlanetList).val()).change();
+    PlanetList.on("change", function () {
+        planetSelector_navigate(PlanetList);
     });
 
     // qTips

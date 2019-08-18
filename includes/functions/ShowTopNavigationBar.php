@@ -146,6 +146,7 @@ function _createPlanetsSelectorTplData(&$user, &$planet) {
             'contentHTML' => $entryLabel,
             'attrs' => [
                 'selected' => ($isCurrentSelector ? "selected" : null),
+                'data-planet-id' => $entry['id'],
                 'value' => buildHref([
                     'path' => '',
                     'query' => array_merge(
