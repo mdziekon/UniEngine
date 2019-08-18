@@ -96,38 +96,39 @@ function ShowTopNavigationBar($CurrentUser, $CurrentPlanet)
     $parse['JSStoreOverflow_Crystal'] = $CurrentPlanet['crystal_max'] * MAX_OVERFLOW;
     $parse['JSStoreOverflow_Deuterium'] = $CurrentPlanet['deuterium_max'] * MAX_OVERFLOW;
 
-    // > Production Level
-    if(!$IsOnVacation)
-    {
-        if($CurrentPlanet['energy_max'] == 0 AND abs($CurrentPlanet['energy_used']) > 0)
-        {
-            $production_level = 0;
-            $CurrentPlanet['metal_perhour'] = $_GameConfig['metal_basic_income'];
-            $CurrentPlanet['crystal_perhour'] = $_GameConfig['crystal_basic_income'];
-            $CurrentPlanet['deuterium_perhour'] = $_GameConfig['deuterium_basic_income'];
-        }
-        else if($CurrentPlanet['energy_max'] > 0 AND abs($CurrentPlanet['energy_used']) > $CurrentPlanet['energy_max'])
-        {
-            $production_level = floor(($CurrentPlanet['energy_max'] * 100) / abs($CurrentPlanet['energy_used']));
-        }
-        else
-        {
-            $production_level = 100;
-        }
-        if($production_level > 100)
-        {
-            $production_level = 100;
-        }
-    }
-    else
-    {
-        $production_level = 0;
-    }
+    // > Calculate incomes
+    $productionLevel = getPlanetsProductionEfficiency(
+        $CurrentPlanet,
+        $CurrentUser,
+        [
+            'isVacationCheckEnabled' => true
+        ]
+    );
 
-    // > Income
-    $parse['JSPerHour_Metal']        = ($CurrentPlanet['metal_perhour'] * 0.01 * $production_level) + (($CurrentPlanet['planet_type'] == 1) ? ($_GameConfig['metal_basic_income'] * $_GameConfig['resource_multiplier']) : 0);
-    $parse['JSPerHour_Crystal']        = ($CurrentPlanet['crystal_perhour'] * 0.01 * $production_level) + (($CurrentPlanet['planet_type'] == 1) ? ($_GameConfig['crystal_basic_income'] * $_GameConfig['resource_multiplier']) : 0);
-    $parse['JSPerHour_Deuterium']    = ($CurrentPlanet['deuterium_perhour'] * 0.01 * $production_level) + (($CurrentPlanet['planet_type'] == 1) ? ($_GameConfig['deuterium_basic_income'] * $_GameConfig['resource_multiplier']) : 0);
+    foreach ([ 'metal', 'crystal', 'deuterium' ] as $resourceKey) {
+        $theoreticalResourceIncomePerSecond = calculateTotalTheoreticalResourceIncomePerSecond(
+            $resourceKey,
+            $CurrentPlanet
+        );
+        $realResourceIncomePerSecond = calculateTotalRealResourceIncomePerSecond([
+            'theoreticalIncomePerSecond' => $theoreticalResourceIncomePerSecond,
+            'productionLevel' => $productionLevel
+        ]);
+
+        $totalResourceIncomePerSecond = (
+            $realResourceIncomePerSecond['production'] +
+            (
+                ($CurrentPlanet['planet_type'] == 1) ?
+                $realResourceIncomePerSecond['base'] :
+                0
+            )
+        );
+
+        $parse['JSPerHour_' . ucfirst($resourceKey)] = (
+            $totalResourceIncomePerSecond *
+            3600
+        );
+    }
 
     // > Create ToolTip Infos
     $parse['TipIncome_Metal'] = '('.(($parse['JSPerHour_Metal'] >= 0) ? '+' : '-').prettyNumber(abs(round($parse['JSPerHour_Metal']))).'/h)';
