@@ -138,9 +138,12 @@ function _calculateResourceState (params) {
         theoreticalIncome
     );
 
-    const finalResourceAmount = Math.min(
-        maxPracticalStorage,
-        theoreticalResourceAmount
+    const finalResourceAmount = Math.max(
+        Math.min(
+            maxPracticalStorage,
+            theoreticalResourceAmount
+        ),
+        0
     );
 
     const hasReachedStorageMaxCapacity = (finalResourceAmount >= params.resourceDetails.storage.maxCapacity);
