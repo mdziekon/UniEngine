@@ -59,6 +59,18 @@ function getColorHTMLValue($colorName) {
     return $values[$colorName];
 }
 
+function colorizeString($content, $colorName) {
+    $colorValue = getColorHTMLValue($colorName);
+
+    return buildDOMElementHTML([
+        'tagName' => 'span',
+        'contentHTML' => $content,
+        'attrs' => [
+            'style' => "color: {$colorValue};"
+        ]
+    ]);
+}
+
 function colorRed($Number) {
     $colorValue = getColorHTMLValue('red');
     return "<font color=\"{$colorValue}\">{$Number}</font>";
