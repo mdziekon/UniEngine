@@ -27,7 +27,7 @@ function buildDOMElementHTML($params) {
 
     $attrs = implode(' ', $attrs);
 
-    if (empty($contentHTML)) {
+    if (!isset($contentHTML)) {
         return ("<{$elementName} {$attrs}/>");
     }
 
