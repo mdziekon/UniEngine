@@ -57,15 +57,10 @@ function ShowTopNavigationBar($CurrentUser, $CurrentPlanet)
         );
     }
 
-    // Dark Energy
-    if($_User['darkEnergy'] > 0)
-    {
-        $parse['ShowCount_DarkEnergy'] = '<span class="lime">'.prettyNumber($_User['darkEnergy']).'</span>';
-    }
-    else
-    {
-        $parse['ShowCount_DarkEnergy'] = '<span class="orange">'.$_User['darkEnergy'].'</span>';
-    }
+    $parse = array_merge(
+        $parse,
+        _createPremiumResourceCounterTplData($CurrentUser)
+    );
 
     $parse = array_merge(
         $parse,
@@ -308,6 +303,23 @@ function _createResourceStateDetailsTplData($resourceKey, &$CurrentPlanet, &$Cur
             $tplData[$tplKeys_StoreStatus] = $_Lang['Store_status_OK'];
         }
     }
+
+    return $tplData;
+}
+
+function _createPremiumResourceCounterTplData($user) {
+    $tplData = [];
+
+    $premiumResourceAmount = $user['darkEnergy'];
+
+    $tplData['ShowCount_DarkEnergy'] = colorizeString(
+        prettyNumber($premiumResourceAmount),
+        (
+            ($premiumResourceAmount > 0) ?
+            'green' :
+            'orange'
+        )
+    );
 
     return $tplData;
 }
