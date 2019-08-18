@@ -6,8 +6,8 @@ var DToolTip = "";
 var EToolTip = "";
 var constants = {
     colorsValues: {
-        red: "red",
-        green: "lime"
+        red: "#ff0000",
+        green: "#00ff00"
     }
 };
 
