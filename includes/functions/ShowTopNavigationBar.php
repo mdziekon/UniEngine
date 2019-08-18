@@ -1,76 +1,76 @@
 <?php
 
-function ShowTopNavigationBar(&$CurrentUser, $CurrentPlanet)
-{
+function ShowTopNavigationBar(&$user, $planet) {
     global $_Lang, $_SkinPath;
 
-    if (!$CurrentUser || !$CurrentPlanet) {
+    if (!$user || !$planet) {
         return;
     }
 
     // Update Planet Resources
-    PlanetResourceUpdate($CurrentUser, $CurrentPlanet, time());
+    PlanetResourceUpdate($user, $planet, time());
 
     $productionLevel = getPlanetsProductionEfficiency(
-        $CurrentPlanet,
-        $CurrentUser,
+        $planet,
+        $user,
         [
             'isVacationCheckEnabled' => true
         ]
     );
 
-    $parse = array_merge(
+    $templateDetails = array_merge(
         [
             'skinpath' => $_SkinPath,
-            'image' => $CurrentPlanet['image']
+            'image' => $planet['image']
         ],
         $_Lang,
-        _createPlanetsSelectorTplData($CurrentUser, $CurrentPlanet),
-        _createPlanetsEnergyStatusDetailsTplData($CurrentPlanet),
+        _createPlanetsSelectorTplData($user, $planet),
+        _createPlanetsEnergyStatusDetailsTplData($planet),
         _createResourceStateDetailsTplData(
             'metal',
-            $CurrentPlanet,
-            $CurrentUser,
+            $planet,
+            $user,
             [
                 'productionLevel' => $productionLevel
             ]
         ),
         _createResourceStateDetailsTplData(
             'crystal',
-            $CurrentPlanet,
-            $CurrentUser,
+            $planet,
+            $user,
             [
                 'productionLevel' => $productionLevel
             ]
         ),
         _createResourceStateDetailsTplData(
             'deuterium',
-            $CurrentPlanet,
-            $CurrentUser,
+            $planet,
+            $user,
             [
                 'productionLevel' => $productionLevel
             ]
         ),
-        _createPremiumResourceCounterTplData($CurrentUser),
-        _createUnreadMessagesCounterTplData($CurrentUser['id'])
+        _createPremiumResourceCounterTplData($user),
+        _createUnreadMessagesCounterTplData($user['id'])
     );
 
-    $TopBar = parsetemplate(gettemplate('topnav'), $parse);
+    $templateBody = gettemplate('topnav');
+    $componentBody = parsetemplate($templateBody, $templateDetails);
 
-    return $TopBar;
+    return $componentBody;
 }
 
-function _createPlanetsSelectorTplData(&$CurrentUser, &$CurrentPlanet) {
+function _createPlanetsSelectorTplData(&$user, &$planet) {
     global $_Lang, $_GET;
 
     $tplData = [];
 
-    $SQLResult_ThisUsersPlanets = SortUserPlanets($CurrentUser);
+    $SQLResult_ThisUsersPlanets = SortUserPlanets($user);
 
     $OtherType_ID = 0;
 
-    $isMoonsSortingEnabled = ($CurrentUser['planet_sort_moons'] == 1);
-    $currentSelectionID = $CurrentUser['current_planet'];
+    $isMoonsSortingEnabled = ($user['planet_sort_moons'] == 1);
+    $currentSelectionID = $user['current_planet'];
 
     // Capture any important possibly present query attributes from current page
     // and re-apply them to the planet changing request query
@@ -85,10 +85,10 @@ function _createPlanetsSelectorTplData(&$CurrentUser, &$CurrentPlanet) {
 
     while ($thisEntry = $SQLResult_ThisUsersPlanets->fetch_assoc()) {
         if (
-            $thisEntry['galaxy'] == $CurrentPlanet['galaxy'] &&
-            $thisEntry['system'] == $CurrentPlanet['system'] &&
-            $thisEntry['planet'] == $CurrentPlanet['planet'] &&
-            $thisEntry['id'] != $CurrentPlanet['id']
+            $thisEntry['galaxy'] == $planet['galaxy'] &&
+            $thisEntry['system'] == $planet['system'] &&
+            $thisEntry['planet'] == $planet['planet'] &&
+            $thisEntry['id'] != $planet['id']
         ) {
             $OtherType_ID = $thisEntry['id'];
         }
@@ -166,7 +166,7 @@ function _createPlanetsSelectorTplData(&$CurrentUser, &$CurrentPlanet) {
 
     if ($OtherType_ID > 0) {
         $tplData['Insert_TypeChange_ID'] = $OtherType_ID;
-        if ($CurrentPlanet['planet_type'] == 1) {
+        if ($planet['planet_type'] == 1) {
             $tplData['Insert_TypeChange_Sign'] = $_Lang['PlanetList_TypeChange_Sign_M'];
             $tplData['Insert_TypeChange_Title'] = $_Lang['PlanetList_TypeChange_Title_M'];
         } else {
@@ -199,7 +199,7 @@ function _createPlanetsEnergyStatusDetailsTplData(&$planet) {
     return $tplData;
 }
 
-function _createResourceStateDetailsTplData($resourceKey, &$CurrentPlanet, &$CurrentUser, $params) {
+function _createResourceStateDetailsTplData($resourceKey, &$planet, &$user, $params) {
     global $_Lang;
 
     $tplData = [];
@@ -212,13 +212,13 @@ function _createResourceStateDetailsTplData($resourceKey, &$CurrentPlanet, &$Cur
 
     $resourceKeyCamelCase = ucfirst($resourceKey);
 
-    $resourceAmount = $CurrentPlanet[$resourceKey];
-    $resourceMaxStorage = $CurrentPlanet["{$resourceKey}_max"];
+    $resourceAmount = $planet[$resourceKey];
+    $resourceMaxStorage = $planet["{$resourceKey}_max"];
     $resourceMaxOverflowStorage = $resourceMaxStorage * MAX_OVERFLOW;
 
     $theoreticalResourceIncomePerSecond = calculateTotalTheoreticalResourceIncomePerSecond(
         $resourceKey,
-        $CurrentPlanet
+        $planet
     );
     $realResourceIncomePerSecond = calculateTotalRealResourceIncomePerSecond([
         'theoreticalIncomePerSecond' => $theoreticalResourceIncomePerSecond,
@@ -227,7 +227,7 @@ function _createResourceStateDetailsTplData($resourceKey, &$CurrentPlanet, &$Cur
     $totalResourceIncomePerSecond = (
         $realResourceIncomePerSecond['production'] +
         (
-            ($CurrentPlanet['planet_type'] == 1) ?
+            ($planet['planet_type'] == 1) ?
             $realResourceIncomePerSecond['base'] :
             0
         )
@@ -288,7 +288,7 @@ function _createResourceStateDetailsTplData($resourceKey, &$CurrentPlanet, &$Cur
         }
     } else if ($hasNegativeIncome) {
         $tplData[$tplKeys_FullTime] = $_Lang['income_minus'];
-    } else if (isOnVacation($CurrentUser)) {
+    } else if (isOnVacation($user)) {
         $tplData[$tplKeys_FullTime] = $_Lang['income_vacation'];
     } else {
         $tplData[$tplKeys_FullTime] = $_Lang['income_no_mine'];
