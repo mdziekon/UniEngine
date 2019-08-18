@@ -8,24 +8,9 @@ function ShowTopNavigationBar(&$CurrentUser, $CurrentPlanet)
         return;
     }
 
-    $parse = $_Lang;
-    $parse['skinpath'] = $_SkinPath;
-    $parse['image'] = $CurrentPlanet['image'];
-
     // Update Planet Resources
     PlanetResourceUpdate($CurrentUser, $CurrentPlanet, time());
 
-    $parse = array_merge(
-        $parse,
-        _createPlanetsSelectorTplData($CurrentUser, $CurrentPlanet)
-    );
-
-    $parse = array_merge(
-        $parse,
-        _createPlanetsEnergyStatusDetailsTplData($CurrentPlanet)
-    );
-
-    // > Calculate incomes
     $productionLevel = getPlanetsProductionEfficiency(
         $CurrentPlanet,
         $CurrentUser,
@@ -34,27 +19,39 @@ function ShowTopNavigationBar(&$CurrentUser, $CurrentPlanet)
         ]
     );
 
-    foreach ([ 'metal', 'crystal', 'deuterium' ] as $resourceKey) {
-        $parse = array_merge(
-            $parse,
-            _createResourceStateDetailsTplData(
-                $resourceKey,
-                $CurrentPlanet,
-                $CurrentUser,
-                [
-                    'productionLevel' => $productionLevel
-                ]
-            )
-        );
-    }
-
     $parse = array_merge(
-        $parse,
-        _createPremiumResourceCounterTplData($CurrentUser)
-    );
-
-    $parse = array_merge(
-        $parse,
+        [
+            'skinpath' => $_SkinPath,
+            'image' => $CurrentPlanet['image']
+        ],
+        $_Lang,
+        _createPlanetsSelectorTplData($CurrentUser, $CurrentPlanet),
+        _createPlanetsEnergyStatusDetailsTplData($CurrentPlanet),
+        _createResourceStateDetailsTplData(
+            'metal',
+            $CurrentPlanet,
+            $CurrentUser,
+            [
+                'productionLevel' => $productionLevel
+            ]
+        ),
+        _createResourceStateDetailsTplData(
+            'crystal',
+            $CurrentPlanet,
+            $CurrentUser,
+            [
+                'productionLevel' => $productionLevel
+            ]
+        ),
+        _createResourceStateDetailsTplData(
+            'deuterium',
+            $CurrentPlanet,
+            $CurrentUser,
+            [
+                'productionLevel' => $productionLevel
+            ]
+        ),
+        _createPremiumResourceCounterTplData($CurrentUser),
         _createUnreadMessagesCounterTplData($CurrentUser['id'])
     );
 
