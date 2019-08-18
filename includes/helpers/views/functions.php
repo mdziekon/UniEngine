@@ -41,8 +41,6 @@ function buildDOMElementHTML($params) {
 //      - attrs (Object | undefined)
 //
 function buildLinkHTML($params) {
-    $queryParams = [];
-
     if (empty($params['query'])) {
         $params['query'] = [];
     }
