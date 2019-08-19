@@ -92,4 +92,24 @@ function buildHref($params) {
     return $fullHref;
 }
 
+//  Assumptions:
+//      - "system" lang file was been loaded already
+//
+function buildCommonJSInjectionHTML() {
+    global $_Lang;
+
+    static $wasInjected = false;
+
+    if ($wasInjected) {
+        return '';
+    }
+
+    $tplBody = gettemplate("_commonjs_injection");
+    $tplData = [
+        'LANG_daysFullJSFunction' => $_Lang['Chrono_PrettyTime']['chronoFormat']['daysFullJSFunction']
+    ];
+
+    return parsetemplate($tplBody, $tplData);
+}
+
 ?>
