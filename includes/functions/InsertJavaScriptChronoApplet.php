@@ -3,7 +3,7 @@
 function InsertJavaScriptChronoApplet($Type, $Ref, $Value, $FixedTime = false, $Reverse = false, $CallbackFunction = false, $params = [])
 {
     static $Created, $TPL_Instance;
-    global $_EnginePath, $_Lang;
+    global $_EnginePath;
 
     if ($Created !== true) {
         $TPL_Script = gettemplate('_JSTimer_script');
@@ -14,7 +14,7 @@ function InsertJavaScriptChronoApplet($Type, $Ref, $Value, $FixedTime = false, $
             [
                 'FilePath' => $_EnginePath,
                 'ServerTimestamp' => time(),
-                'LANG_daysFullJSFunction' => $_Lang['Chrono_PrettyTime']['chronoFormat']['daysFullJSFunction']
+                'PHPInject_commonJS_html' => buildCommonJSInjectionHTML()
             ]
         );
 
