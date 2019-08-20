@@ -1,5 +1,5 @@
-/* exported buildResourceUpdaterCache, updateResourceCounters */
-/* globals PHPInject_topnav_data, PHPInject_topnav_lang */
+/* exported buildResourceUpdaterCache, updateResourceCounters, createProductionResourceTooltipBody */
+/* globals uniengine, PHPInject_topnav_data, PHPInject_topnav_lang */
 
 var constants = {
     colorsValues: {
@@ -80,7 +80,7 @@ function updateResourceCounters (params, cache) {
         return;
     }
 
-    params.resources.forEach((resourceDetails) => {
+    const result = params.resources.map((resourceDetails) => {
         const resourceKey = resourceDetails.resourceKey;
 
         // Opt: prevent further calculations if store is already full
@@ -114,10 +114,17 @@ function updateResourceCounters (params, cache) {
         cache.resources[resourceKey].hasReachedRealMaxCapacity = resourceState.hasReachedRealMaxCapacity;
         cache.resources[resourceKey].hasDepletedStorage = resourceState.hasDepletedStorage;
         cache.resources[resourceKey].hasNoProduction = resourceState.hasNoProduction;
+
+        return {
+            resourceKey,
+            currentAmount: resourceState.currentResourceAmount
+        };
     });
 
     // Update cache
     cache.previousElapsedTime = elapsedTime;
+
+    return result;
 }
 
 //  Arguments:
@@ -229,6 +236,7 @@ class ResourceTooltip {
     constructor ({ resourceKey, $parentEl, values, bodyCreator }) {
         this.resourceKey = resourceKey;
         this.bodyCreator = bodyCreator;
+        this.initialValues = values;
 
         this.cache = {
             $parentEl,
@@ -237,6 +245,16 @@ class ResourceTooltip {
         };
 
         this._initialise(values);
+    }
+
+    updateValues (values) {
+        const initialValues = this._getInitialValues();
+
+        initialValues.state.current = values.state.current;
+
+        const bodyHTML = this._createTooltipBody(initialValues);
+
+        this._getQTipAPI().set("content.text", bodyHTML);
     }
 
     _initialise (values) {
@@ -321,27 +339,125 @@ class ResourceTooltip {
         return this.cache.$elements;
     }
 
+    _getInitialValues () {
+        return this.initialValues;
+    }
+
+    _getQTipAPI () {
+        return this.cache.qTipAPI;
+    }
+
     _createTooltipBody (values) {
         return this.bodyCreator(values);
     }
 }
 
+function _calculateTimeToStorageLimit ({ incomePerHour, currentAmount, storageMaxCapacity }) {
+    const resourceAmountDifference = (storageMaxCapacity - currentAmount);
+    const secondsToReachCapacity = Math.ceil(resourceAmountDifference / (incomePerHour / 3600));
+
+    return secondsToReachCapacity;
+}
+
+function _createResourceTimeToStorageDisplayValue ({
+    isOnVacation,
+    resourceState: { incomePerHour, currentAmount, storageMaxCapacity },
+    lang
+}) {
+    if (incomePerHour < 0) {
+        return lang.income_minus;
+    }
+    if (isOnVacation) {
+        return lang.income_vacation;
+    }
+    if (incomePerHour === 0) {
+        return lang.income_no_mine;
+    }
+    if (currentAmount >= storageMaxCapacity) {
+        return lang.income_full;
+    }
+
+    const secondsToReachCapacity = _calculateTimeToStorageLimit({ incomePerHour, currentAmount, storageMaxCapacity });
+
+    return uniengine.common.prettyTime({ seconds: secondsToReachCapacity });
+}
+
+function _createResourceStorageStatusDisplayValue ({
+    resourceState: { currentAmount, storageMaxCapacity, overflowMaxCapacity },
+    lang
+}) {
+    const capacityWarningThreshold = 0.8;
+
+    const hasOverflownStorage = (currentAmount >= storageMaxCapacity);
+
+    if (currentAmount <= 0) {
+        return lang.Store_status_Empty;
+    }
+
+    if (hasOverflownStorage) {
+        if (overflowMaxCapacity > storageMaxCapacity) {
+            return lang.Store_status_Overload;
+        }
+
+        return lang.Store_status_Full;
+    }
+
+    if (currentAmount >= (storageMaxCapacity * capacityWarningThreshold)) {
+        return lang.Store_status_NearFull;
+    }
+
+    return lang.Store_status_OK;
+}
+
 function createProductionResourceTooltipBody (values) {
     const lang = PHPInject_topnav_lang;
+
+    const incomeSign = (
+        values.state.incomePerHour >= 0 ?
+            "+" :
+            "-"
+    );
+    const fullStoreInText = _createResourceTimeToStorageDisplayValue({
+        resourceState: {
+            currentAmount: (
+                values.state.current !== undefined ?
+                    values.state.current :
+                    values.state.initial
+            ),
+            isOnVacation: values.isOnVacation,
+            incomePerHour: values.state.incomePerHour,
+            storageMaxCapacity: values.storage.maxCapacity,
+            overflowMaxCapacity: values.storage.overflowCapacity
+        },
+        lang
+    });
+    const storageStatusText = _createResourceStorageStatusDisplayValue({
+        resourceState: {
+            currentAmount: (
+                values.state.current !== undefined ?
+                    values.state.current :
+                    values.state.initial
+            ),
+            incomePerHour: values.state.incomePerHour,
+            storageMaxCapacity: values.storage.maxCapacity,
+            overflowMaxCapacity: values.storage.overflowCapacity
+        },
+        lang
+    });
 
     const bodyHTML = `
         <div class="center">
             <b>${values.resourceName}</b>
         </div>
         <div class="center">
-            <b>(${values.incomePerHour} / h)</b>
+            <b>(${incomeSign}${number_format(values.state.incomePerHour)} / h)</b>
         </div>
         <div>
             <div class="ResL">
                 ${lang.When_full_store}
             </div>
             <div class="ResR">
-                ${values.fullStoreInText}
+                ${fullStoreInText}
             </div>
         </div>
         <div>
@@ -349,7 +465,7 @@ function createProductionResourceTooltipBody (values) {
                 ${lang.Store_Status}
             </div>
             <div class="ResR">
-                ${values.storeStatusText}
+                ${storageStatusText}
             </div>
         </div>
     `;
@@ -399,15 +515,6 @@ $(document).ready(function () {
     });
     PlanetList.on("change", function () {
         planetSelector_navigate(PlanetList);
-    });
-
-    [ "metal", "crystal", "deuterium" ].forEach((resourceKey) => {
-        new ResourceTooltip({
-            resourceKey,
-            $parentEl: $("#topnav_resources"),
-            values: PHPInject_topnav_data.resourcesState[resourceKey],
-            bodyCreator: createProductionResourceTooltipBody
-        });
     });
 
     new ResourceTooltip({

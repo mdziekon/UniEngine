@@ -21,7 +21,12 @@ function ShowTopNavigationBar(&$user, $planet) {
     $templateDetails = array_merge(
         [
             'skinpath' => $_SkinPath,
-            'image' => $planet['image']
+            'image' => $planet['image'],
+            'isOnVacation' => (
+                isOnVacation($user) ?
+                'true' :
+                'false'
+            )
         ],
         $_Lang,
         [
@@ -32,7 +37,6 @@ function ShowTopNavigationBar(&$user, $planet) {
         _createResourceStateDetailsTplData(
             'metal',
             $planet,
-            $user,
             [
                 'productionLevel' => $productionLevel
             ]
@@ -40,7 +44,6 @@ function ShowTopNavigationBar(&$user, $planet) {
         _createResourceStateDetailsTplData(
             'crystal',
             $planet,
-            $user,
             [
                 'productionLevel' => $productionLevel
             ]
@@ -48,7 +51,6 @@ function ShowTopNavigationBar(&$user, $planet) {
         _createResourceStateDetailsTplData(
             'deuterium',
             $planet,
-            $user,
             [
                 'productionLevel' => $productionLevel
             ]
@@ -203,16 +205,10 @@ function _createPlanetsEnergyStatusDetailsTplData(&$planet) {
     return $tplData;
 }
 
-function _createResourceStateDetailsTplData($resourceKey, &$planet, &$user, $params) {
-    global $_Lang;
-
+function _createResourceStateDetailsTplData($resourceKey, &$planet, $params) {
     $tplData = [];
 
     $productionLevel = $params['productionLevel'];
-
-    $thresholds = [
-        'capacityAlmostFull' => 0.8
-    ];
 
     $resourceKeyCamelCase = ucfirst($resourceKey);
 
@@ -242,16 +238,6 @@ function _createResourceStateDetailsTplData($resourceKey, &$planet, &$user, $par
     );
 
     $hasOverflownStorage = ($resourceAmount >= $resourceMaxStorage);
-    $hasReachedMaxCapacity = ($resourceAmount >= $resourceMaxOverflowStorage);
-    $hasPositiveIncome = ($totalResourceIncomePerHour > 0);
-    $hasNegativeIncome = ($totalResourceIncomePerHour < 0);
-
-    $labelsIncomeSign = "";
-    if ($hasPositiveIncome) {
-        $labelsIncomeSign = "+";
-    } else if ($hasNegativeIncome) {
-        $labelsIncomeSign = "-";
-    }
 
     $tplData["JSCount_{$resourceKeyCamelCase}"] = $resourceAmount;
     $tplData["JSStore_{$resourceKeyCamelCase}"] = $resourceMaxStorage;
@@ -265,52 +251,6 @@ function _createResourceStateDetailsTplData($resourceKey, &$planet, &$user, $par
         (!$hasOverflownStorage ? 'green' : 'red')
     );
     $tplData["JSPerHour_{$resourceKeyCamelCase}"] = $totalResourceIncomePerHour;
-    $tplData["TipIncome_{$resourceKeyCamelCase}"] = (
-        $labelsIncomeSign .
-        prettyNumber(abs(round($totalResourceIncomePerHour)))
-    );
-
-    $tplKeys_FullTime = "{$resourceKeyCamelCase}_full_time";
-    if ($hasPositiveIncome) {
-        $storageFullIn = ceil(($resourceMaxOverflowStorage - $resourceAmount) / $totalResourceIncomePerSecond);
-
-        if ($hasReachedMaxCapacity) {
-            $tplData[$tplKeys_FullTime] = colorRed($_Lang['full']);
-        } else {
-            $tplData[$tplKeys_FullTime] = (
-                $_Lang['full_in'] .
-                ' ' .
-                (
-                    '<span id="' . $resourceKey . '_fullstore_counter">' .
-                    pretty_time($storageFullIn) .
-                    '</span>'
-                )
-            );
-        }
-    } else if ($hasNegativeIncome) {
-        $tplData[$tplKeys_FullTime] = $_Lang['income_minus'];
-    } else if (isOnVacation($user)) {
-        $tplData[$tplKeys_FullTime] = $_Lang['income_vacation'];
-    } else {
-        $tplData[$tplKeys_FullTime] = $_Lang['income_no_mine'];
-    }
-
-    $tplKeys_StoreStatus = "{$resourceKeyCamelCase}_store_status";
-    if ($hasOverflownStorage) {
-        if ($resourceMaxOverflowStorage > $resourceMaxStorage) {
-            $tplData[$tplKeys_StoreStatus] = $_Lang['Store_status_Overload'];
-        } else {
-            $tplData[$tplKeys_StoreStatus] = $_Lang['Store_status_Full'];
-        }
-    } else {
-        if ($resourceAmount <= 0) {
-            $tplData[$tplKeys_StoreStatus] = $_Lang['Store_status_Empty'];
-        } else if ($resourceAmount >= ($resourceMaxStorage * $thresholds['capacityAlmostFull'])) {
-            $tplData[$tplKeys_StoreStatus] = $_Lang['Store_status_NearFull'];
-        } else {
-            $tplData[$tplKeys_StoreStatus] = $_Lang['Store_status_OK'];
-        }
-    }
 
     return $tplData;
 }

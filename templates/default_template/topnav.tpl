@@ -3,26 +3,8 @@
 $(document).ready(function()
 {
     var PHPInjectedData = {
-        resourcesState: {
-            metal: {
-                resourceName: "{Metal}",
-                incomePerHour: "{TipIncome_Metal}",
-                fullStoreInText: '{Metal_full_time}',
-                storeStatusText: '{Metal_store_status}'
-            },
-            crystal: {
-                resourceName: "{Crystal}",
-                incomePerHour: "{TipIncome_Crystal}",
-                fullStoreInText: '{Crystal_full_time}',
-                storeStatusText: '{Crystal_store_status}'
-            },
-            deuterium: {
-                resourceName: "{Deuterium}",
-                incomePerHour: "{TipIncome_Deuterium}",
-                fullStoreInText: '{Deuterium_full_time}',
-                storeStatusText: '{Deuterium_store_status}'
-            },
-        },
+        isOnVacation: {isOnVacation},
+
         specialResourcesState: {
             energy: {
                 resourceName: "{Energy}",
@@ -52,11 +34,24 @@ $(document).ready(function()
     window.PHPInject_topnav_lang = {
         When_full_store: `{When_full_store}`,
         Store_Status: `{Store_Status}`,
+
+        income_minus: `{income_minus}`,
+        income_vacation: `{income_vacation}`,
+        income_no_mine: `{income_no_mine}`,
+        income_full: `{full}`,
+
+        Store_status_Overload: `{Store_status_Overload}`,
+        Store_status_Full: `{Store_status_Full}`,
+        Store_status_Empty: `{Store_status_Empty}`,
+        Store_status_NearFull: `{Store_status_NearFull}`,
+        Store_status_OK: `{Store_status_OK}`
     };
 
     var resourcesDetails = [
         {
             resourceKey: "metal",
+            resourceName: `{Metal}`,
+            isOnVacation: PHPInjectedData.isOnVacation,
             storage: {
                 maxCapacity: Math.floor(PHPInjectedData.JSStore_Metal),
                 overflowCapacity: Math.floor(PHPInjectedData.JSStoreOverflow_Metal)
@@ -68,6 +63,8 @@ $(document).ready(function()
         },
         {
             resourceKey: "crystal",
+            resourceName: `{Crystal}`,
+            isOnVacation: PHPInjectedData.isOnVacation,
             storage: {
                 maxCapacity: Math.floor(PHPInjectedData.JSStore_Crystal),
                 overflowCapacity: Math.floor(PHPInjectedData.JSStoreOverflow_Crystal)
@@ -79,6 +76,8 @@ $(document).ready(function()
         },
         {
             resourceKey: "deuterium",
+            resourceName: `{Deuterium}`,
+            isOnVacation: PHPInjectedData.isOnVacation,
             storage: {
                 maxCapacity: Math.floor(PHPInjectedData.JSStore_Deuterium),
                 overflowCapacity: Math.floor(PHPInjectedData.JSStoreOverflow_Deuterium)
@@ -96,9 +95,25 @@ $(document).ready(function()
         resources: resourcesDetails
     });
 
+    const resourceTooltips = resourcesDetails.map((resourceDetails) => {
+        const resourceKey = resourceDetails.resourceKey;
+
+        const tooltip = new ResourceTooltip({
+            resourceKey,
+            $parentEl,
+            values: resourceDetails,
+            bodyCreator: createProductionResourceTooltipBody
+        });
+
+        return {
+            resourceKey,
+            tooltip
+        };
+    });
+
     setInterval(
         function () {
-            updateResourceCounters(
+            const result = updateResourceCounters(
                 {
                     $parentEl,
                     timestamps: {
@@ -109,12 +124,32 @@ $(document).ready(function()
                 },
                 countersCache
             );
+
+            if (!result) {
+                return;
+            }
+
+            result.forEach((resourceUpdateResult) => {
+                if (!resourceUpdateResult) {
+                    return;
+                }
+
+                const tooltip = resourceTooltips
+                    .find((resourceTooltip) => resourceTooltip.resourceKey === resourceUpdateResult.resourceKey)
+                    .tooltip;
+
+                tooltip.updateValues({
+                    state: {
+                        current: resourceUpdateResult.currentAmount
+                    }
+                });
+            });
         },
         1000
     );
 });
 </script>
-<script src="dist/js/resourceUpdate.cachebuster-1566165656693.min.js"></script>
+<script src="dist/js/resourceUpdate.cachebuster-1566261410119.min.js"></script>
 <link rel="stylesheet" type="text/css" href="dist/css/topNav.cachebuster-1546564327123.min.css"/>
 <table id="topnav_resources">
     <tr>
