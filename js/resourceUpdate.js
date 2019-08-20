@@ -156,7 +156,10 @@ function _calculateResourceState (params) {
 
     const finalResourceAmount = Math.max(
         Math.min(
-            maxPracticalStorage,
+            Math.max(
+                maxPracticalStorage,
+                params.resourceDetails.state.initial
+            ),
             theoreticalResourceAmount
         ),
         0
