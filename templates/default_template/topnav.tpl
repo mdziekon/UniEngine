@@ -1,3 +1,4 @@
+{PHPInject_commonJS_html}
 <script>
 $(document).ready(function()
 {

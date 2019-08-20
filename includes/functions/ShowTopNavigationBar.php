@@ -24,6 +24,9 @@ function ShowTopNavigationBar(&$user, $planet) {
             'image' => $planet['image']
         ],
         $_Lang,
+        [
+            'PHPInject_commonJS_html' => buildCommonJSInjectionHTML()
+        ],
         _createPlanetsSelectorTplData($user, $planet),
         _createPlanetsEnergyStatusDetailsTplData($planet),
         _createResourceStateDetailsTplData(
