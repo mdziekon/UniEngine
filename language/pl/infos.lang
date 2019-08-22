@@ -14,6 +14,7 @@ $_Lang['nfo_used_deuter']           = "Zużycie Deuteru/h";
 $_Lang['nfo_prod_energy']           = "Produkcja energii";
 $_Lang['nfo_difference']            = "Różnica";
 $_Lang['nfo_prod_p_hour']           = "Wydobycie/h";
+$_Lang['nfo_prod_storagecapacity']  = "Pojemność";
 $_Lang['nfo_needed']                = "Wymagane surowce";
 $_Lang['nfo_dest_durati']           = "Czas niszczenia (o jeden poziom)";
 

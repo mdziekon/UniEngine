@@ -45,19 +45,45 @@ function prettyColorNumber($Number, $ZeroToOrange = false)
     }
 }
 
-function colorRed($Number)
-{
-    return "<font color=\"#ff0000\">{$Number}</font>";
+function getColorHTMLValues() {
+    return [
+        'red' => '#ff0000',
+        'green' => '#00ff00',
+        'orange' => 'orange'
+    ];
 }
 
-function colorGreen($Number)
-{
-    return "<font color=\"#00ff00\">{$Number}</font>";
+function getColorHTMLValue($colorName) {
+    $values = getColorHTMLValues();
+
+    return $values[$colorName];
 }
 
-function colorOrange($Number)
-{
-    return "<span style=\"color: orange;\">{$Number}</span>";
+function colorizeString($content, $colorName) {
+    $colorValue = getColorHTMLValue($colorName);
+
+    return buildDOMElementHTML([
+        'tagName' => 'span',
+        'contentHTML' => $content,
+        'attrs' => [
+            'style' => "color: {$colorValue};"
+        ]
+    ]);
+}
+
+function colorRed($Number) {
+    $colorValue = getColorHTMLValue('red');
+    return "<font color=\"{$colorValue}\">{$Number}</font>";
+}
+
+function colorGreen($Number) {
+    $colorValue = getColorHTMLValue('green');
+    return "<font color=\"{$colorValue}\">{$Number}</font>";
+}
+
+function colorOrange($Number) {
+    $colorValue = getColorHTMLValue('orange');
+    return "<span style=\"color: {$colorValue};\">{$Number}</span>";
 }
 
 ?>

@@ -85,6 +85,11 @@ function MissionCaseExpedition($FleetRow)
 
             $FleetCapacity = -($FleetRow['fleet_resource_metal'] + $FleetRow['fleet_resource_crystal'] + $FleetRow['fleet_resource_deuterium']);
 
+            $FleetPoints = 0;
+            $FleetMetalCost = 0;
+            $FleetCrystCost = 0;
+            $FleetDeuteCost = 0;
+
             $FleetArrTemp = explode(';', $FleetRow['fleet_array']);
             foreach($FleetArrTemp as $Ships)
             {
@@ -108,6 +113,7 @@ function MissionCaseExpedition($FleetRow)
             if($WhatHappened >= 1 AND $WhatHappened <= 15)
             {
                 // Partial/Complete Destruction
+                $NewFleetCount = 0;
 
                 $DestructionPercent = rand(1,100);
                 foreach($FleetArray as $Ship => $Count)
@@ -184,120 +190,106 @@ function MissionCaseExpedition($FleetRow)
             else if($WhatHappened >= 16 AND $WhatHappened <= 55)
             {
                 // Resources found
+                $anyResourceMaxIncome = 10000000;
 
-                $MaxResources = 10000000;
+                $resourceTypesList = [
+                    'Metal',
+                    'Crystal',
+                    'Deuterium'
+                ];
 
-                $MaxFoundMetal = $FleetMetalCost * 0.2;
-                $MaxFoundCrystal = $FleetCrystCost * 0.2;
-                $MaxFoundDeuterium = $FleetDeuteCost * 0.2;
-                if($MaxFoundMetal > $MaxResources)
-                {
-                    $MaxFoundMetal = $MaxResources;
-                }
-                if($MaxFoundCrystal > $MaxResources)
-                {
-                    $MaxFoundCrystal = $MaxResources;
-                }
-                if($MaxFoundDeuterium > $MaxResources)
-                {
-                    $MaxFoundDeuterium = $MaxResources;
-                }
-                $FoundMetal = rand(round((($MaxFoundMetal * 0.001) + 1) * (pow(1.2, $FleetStayDuration) - 0.2)), $MaxFoundMetal);
-                $FoundCrystal = rand(round((($MaxFoundCrystal * 0.001) + 1) * (pow(1.2, $FleetStayDuration) - 0.2)), $MaxFoundCrystal);
-                $FoundDeuterium = rand(round((($MaxFoundDeuterium * 0.001) + 1) * (pow(1.2, $FleetStayDuration) - 0.2)), $MaxFoundDeuterium);
+                $maxResourcesIncome = [
+                    'Metal' => ($FleetMetalCost * 0.2),
+                    'Crystal' => ($FleetCrystCost * 0.2),
+                    'Deuterium' => ($FleetDeuteCost * 0.2),
+                ];
 
-                $RandFirst = rand(0,2);
-                $RandSecond = rand(0,1);
-                $List = array('Metal', 'Crystal', 'Deuterium');
+                foreach ($resourceTypesList as $resourceKey) {
+                    if ($maxResourcesIncome[$resourceKey] <= $anyResourceMaxIncome) {
+                        continue;
+                    }
+
+                    $maxResourcesIncome[$resourceKey] = $anyResourceMaxIncome;
+                }
+
+                $foundResources = [
+                    'Metal' => rand(
+                        round((($maxResourcesIncome['Metal'] * 0.001) + 1) * (pow(1.2, $FleetStayDuration) - 0.2)),
+                        $maxResourcesIncome['Metal']
+                    ),
+                    'Crystal' => rand(
+                        round((($maxResourcesIncome['Crystal'] * 0.001) + 1) * (pow(1.2, $FleetStayDuration) - 0.2)),
+                        $maxResourcesIncome['Crystal']
+                    ),
+                    'Deuterium' => rand(
+                        round((($maxResourcesIncome['Deuterium'] * 0.001) + 1) * (pow(1.2, $FleetStayDuration) - 0.2)),
+                        $maxResourcesIncome['Deuterium']
+                    ),
+                ];
+
+                $resourceOrderRolls = [
+                    rand(0, 2),
+                    rand(0, 1),
+                    0
+                ];
+
                 $FleetInitCapacity = $FleetCapacity;
 
-                if($FleetCapacity > 0)
-                {
-                    eval('$FoundResource = $Found'.$List[$RandFirst].';');
-                    eval('$GottenResource = &$Gotten'.$List[$RandFirst].';');
-                    if($FleetCapacity > $FoundResource)
-                    {
-                        $GottenResource = $FoundResource;
+                $resourceTypesCount = count($resourceTypesList);
+
+                for ($i = 0; $i < $resourceTypesCount; $i++) {
+                    $resourceKeyRoll = $resourceOrderRolls[$i];
+                    $resourceKey = $resourceTypesList[$resourceKeyRoll];
+                    $thisResourceFound = $foundResources[$resourceKey];
+
+                    if ($FleetCapacity < $thisResourceFound) {
+                        $thisResourceFound = $FleetCapacity;
+                        $foundResources[$resourceKey] = $FleetCapacity;
                     }
-                    else
-                    {
-                        $GottenResource = $FleetCapacity;
-                    }
-                    $FleetCapacity -= $GottenResource;
 
-                    array_splice($List, $RandFirst, 1);
+                    $FleetCapacity -= $thisResourceFound;
 
-                    if($FleetCapacity > 0)
-                    {
-                        eval('$FoundResource = $Found'.$List[$RandSecond].';');
-                        eval('$GottenResource = &$Gotten'.$List[$RandSecond].';');
-                        if($FleetCapacity > $FoundResource)
-                        {
-                            $GottenResource = $FoundResource;
-                        }
-                        else
-                        {
-                            $GottenResource = $FleetCapacity;
-                        }
-                        $FleetCapacity -= $GottenResource;
-
-                        array_splice($List, $RandSecond, 1);
-
-                        if($FleetCapacity > 0)
-                        {
-                            eval('$FoundResource = $Found'.$List[0].';');
-                            eval('$GottenResource = &$Gotten'.$List[0].';');
-                            if($FleetCapacity > $FoundResource)
-                            {
-                                $GottenResource = $FoundResource;
-                            }
-                            else
-                            {
-                                $GottenResource = $FleetCapacity;
-                            }
-                            $FleetCapacity -= $GottenResource;
-                        }
-                    }
+                    array_splice($resourceTypesList, $resourceKeyRoll, 1);
                 }
 
                 $Message = false;
 
                 if($FleetCapacity < $FleetInitCapacity)
                 {
-                    if($GottenMetal > 0)
+                    if($foundResources['Metal'] > 0)
                     {
-                        $QryUpdateResources[] = "`fleet_resource_metal` = `fleet_resource_metal` + {$GottenMetal}";
-                        $MsgGottenArray[] = $_Lang['Metal'].': '.prettyNumber($GottenMetal);
-                        $FleetRow['fleet_resource_metal'] += $GottenMetal;
+                        $QryUpdateResources[] = "`fleet_resource_metal` = `fleet_resource_metal` + {$foundResources['Metal']}";
+                        $MsgGottenArray[] = $_Lang['Metal'].': '.prettyNumber($foundResources['Metal']);
+                        $FleetRow['fleet_resource_metal'] += $foundResources['Metal'];
                     }
                     else
                     {
-                        $GottenMetal = '0';
+                        $foundResources['Metal'] = '0';
                     }
-                    if($GottenCrystal > 0)
+                    if($foundResources['Crystal'] > 0)
                     {
-                        $QryUpdateResources[] = "`fleet_resource_crystal` = `fleet_resource_crystal` + {$GottenCrystal}";
-                        $MsgGottenArray[] = $_Lang['Crystal'].': '.prettyNumber($GottenCrystal);
-                        $FleetRow['fleet_resource_crystal'] += $GottenCrystal;
-                    }
-                    else
-                    {
-                        $GottenCrystal = '0';
-                    }
-                    if($GottenDeuterium > 0)
-                    {
-                        $QryUpdateResources[] = "`fleet_resource_deuterium` = `fleet_resource_deuterium` + {$GottenDeuterium}";
-                        $MsgGottenArray[] = $_Lang['Deuterium'].': '.prettyNumber($GottenDeuterium);
-                        $FleetRow['fleet_resource_deuterium'] += $GottenDeuterium;
+                        $QryUpdateResources[] = "`fleet_resource_crystal` = `fleet_resource_crystal` + {$foundResources['Crystal']}";
+                        $MsgGottenArray[] = $_Lang['Crystal'].': '.prettyNumber($foundResources['Crystal']);
+                        $FleetRow['fleet_resource_crystal'] += $foundResources['Crystal'];
                     }
                     else
                     {
-                        $GottenDeuterium = '0';
+                        $foundResources['Crystal'] = '0';
+                    }
+                    if($foundResources['Deuterium'] > 0)
+                    {
+                        $QryUpdateResources[] = "`fleet_resource_deuterium` = `fleet_resource_deuterium` + {$foundResources['Deuterium']}";
+                        $MsgGottenArray[] = $_Lang['Deuterium'].': '.prettyNumber($foundResources['Deuterium']);
+                        $FleetRow['fleet_resource_deuterium'] += $foundResources['Deuterium'];
+                    }
+                    else
+                    {
+                        $foundResources['Deuterium'] = '0';
                     }
 
-                    $return['fleet_end_resource_metal'] = $GottenMetal;
-                    $return['fleet_end_resource_crystal'] = $GottenCrystal;
-                    $return['fleet_end_resource_deuterium'] = $GottenDeuterium;
+                    $return['fleet_end_resource_metal'] = $foundResources['Metal'];
+                    $return['fleet_end_resource_crystal'] = $foundResources['Crystal'];
+                    $return['fleet_end_resource_deuterium'] = $foundResources['Deuterium'];
 
                     $QryUpdateFleet = "UPDATE {{table}} SET ";
                     $QryUpdateFleet .= implode(", ", $QryUpdateResources);
@@ -321,6 +313,7 @@ function MissionCaseExpedition($FleetRow)
             else if($WhatHappened >= 56 AND $WhatHappened <= 65)
             {
                 // Found Ships
+                $FoundShipsTotal = 0;
 
                 $MaxShipsPoints = 20000;
                 if($FleetPoints > $MaxShipsPoints)

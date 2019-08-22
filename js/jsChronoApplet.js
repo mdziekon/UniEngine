@@ -1,4 +1,4 @@
-/* globals Promise, Set */
+/* globals Promise, Set, uniengine */
 /* exported CountdownHandler */
 
 class CountdownHandler {
@@ -6,8 +6,7 @@ class CountdownHandler {
         this.registeredCountdowns = new Set();
         this.registeredIntervalID = undefined;
         this.config = {
-            serverTimestampOffset: config.serverTimestampOffset,
-            LANG: config.LANG
+            serverTimestampOffset: config.serverTimestampOffset
         };
     }
 
@@ -38,7 +37,6 @@ class CountdownHandler {
                 isReverse: countdownCtorArgs.isReverse,
                 reverseEndTimestamp: countdownCtorArgs.reverseEndTimestamp * 1000,
                 serverTimestampOffset: this.config.serverTimestampOffset,
-                LANG: this.config.LANG,
 
                 promiseResolver: resolve
             });
@@ -74,8 +72,7 @@ class CountdownHandler {
                 endTimestamp: countdown.endTimestamp,
                 isReverse: countdown.isReverse,
                 reverseEndTimestamp: countdown.reverseEndTimestamp,
-                serverTimestampOffset: countdown.serverTimestampOffset,
-                LANG: countdown.LANG
+                serverTimestampOffset: countdown.serverTimestampOffset
             });
 
             if (!result.hasFinished) {
@@ -94,7 +91,7 @@ class CountdownHandler {
         this._stopEventLoop();
     }
 
-    _onTimeCountdownTick ({ $element, endTimestamp, isReverse, reverseEndTimestamp, serverTimestampOffset, LANG }) {
+    _onTimeCountdownTick ({ $element, endTimestamp, isReverse, reverseEndTimestamp, serverTimestampOffset }) {
         const clientTimestamp = (new Date()).getTime();
         const currentTimestamp = clientTimestamp + serverTimestampOffset;
 
@@ -116,8 +113,7 @@ class CountdownHandler {
 
         if (!hasFinished) {
             countdownDisplayValue = this._createTimeCountdownDisplayValue({
-                seconds: (timestampDiff / 1000),
-                LANG
+                seconds: (timestampDiff / 1000)
             });
         } else {
             countdownDisplayValue = "-";
@@ -130,49 +126,7 @@ class CountdownHandler {
         };
     }
 
-    _createTimeCountdownDisplayValue ({ seconds, LANG }) {
-        seconds = Math.floor(seconds);
-
-        const SECONDS_IN_MINUTE = 60;
-        const SECONDS_IN_HOUR = 60 * SECONDS_IN_MINUTE;
-        const SECONDS_IN_DAY = 24 * SECONDS_IN_HOUR;
-
-        const days = Math.floor(seconds / SECONDS_IN_DAY);
-
-        seconds -= (days * SECONDS_IN_DAY);
-
-        const hours = Math.floor(seconds / SECONDS_IN_HOUR);
-
-        seconds -= (hours * SECONDS_IN_HOUR);
-
-        const minutes = Math.floor(seconds / SECONDS_IN_MINUTE);
-
-        seconds -= (minutes * SECONDS_IN_MINUTE);
-
-        const hoursString = strPadLeft(String(hours), 2, "0");
-        const minutesString = strPadLeft(String(minutes), 2, "0");
-        const secondsString = strPadLeft(String(seconds), 2, "0");
-
-        const timePieces = [];
-
-        if (days > 0) {
-            timePieces.push(LANG["Chrono_PrettyTime"]["chronoFormat"]["daysFullJSFunction"](days));
-        }
-
-        timePieces.push(`${hoursString}:${minutesString}:${secondsString}`);
-
-        return timePieces.join(" ");
+    _createTimeCountdownDisplayValue ({ seconds }) {
+        return uniengine.common.prettyTime({ seconds });
     }
-}
-
-function strPadLeft (value, desiredLenght, padString) {
-    const lengthLeft = desiredLenght - (value.length);
-
-    if (lengthLeft <= 0) {
-        return value;
-    }
-
-    const padding = (new Array(lengthLeft)).fill(padString, 0, lengthLeft).join("");
-
-    return `${padding}${value}`;
 }

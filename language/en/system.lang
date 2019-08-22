@@ -63,7 +63,6 @@ $_Lang['ServerStart_NotReached']                = 'This game server is going to 
 $_Lang['ServerIsClosed']                        = 'Game server is currently offline (disabled by Administration)!';
 $_Lang['NonActiveBlock']                        = '<b class="orange">You have to activate your account to continue your game play. Checkout your email account to find your account\'s activation link in the mail we\'ve sent to you upon registration.</b><br/>If your account will remain inactive for 7 days past the registration date, it will be automatically removed!';
 
-$_Lang['PlanetList_MoonSign']                   = 'Moon';
 $_Lang['PlanetList_MoonChar']                   = 'M';
 $_Lang['PlanetList_TypeChange_Sign_M']          = 'M';
 $_Lang['PlanetList_TypeChange_Sign_P']          = 'P';
@@ -172,16 +171,16 @@ $_Lang['Vacation_WarnMsg']                      = 'You cannot use this function 
 
 $_Lang['When_full_store']                       = 'Storage full in:';
 $_Lang['Store_Status']                          = 'Storage state:';
-$_Lang['full_in']                               = '';
 $_Lang['full']                                  = 'Full';
-$_Lang['income_no_mine']                        = '<span class="red">No mine</span>';
-$_Lang['income_vacation']                       = '<span class="orange">Vacation mode</span>';
-$_Lang['income_minus']                          = '<span class="red">Negative production</span>';
-$_Lang['Store_status_Full']                     = '<span class="red">Full</span>';
-$_Lang['Store_status_Overload']                 = '<span class="red">Overloaded</span>';
-$_Lang['Store_status_NearFull']                 = '<span class="orange">Almost full</span>';
-$_Lang['Store_status_OK']                       = '<span class="lime">OK</span>';
-$_Lang['Store_status_Empty']                    = '<span class="orange">Empty</span>';
+$_Lang['income_no_production']                  = 'No production';
+$_Lang['income_vacation']                       = 'Vacation mode';
+$_Lang['income_minus']                          = 'Negative production';
+$_Lang['Store_status_Full']                     = 'Full';
+$_Lang['Store_status_Overload']                 = 'Overloaded';
+$_Lang['Store_status_NearFull']                 = 'Almost full';
+$_Lang['Store_status_OK']                       = 'OK';
+$_Lang['Store_status_Empty']                    = 'Empty';
+$_Lang['topnav_incomeperhour_symbol']           = 'h';
 
 $_Lang['near_your_planet']                      = 'your planet';
 $_Lang['near_your_moon']                        = 'your moon';

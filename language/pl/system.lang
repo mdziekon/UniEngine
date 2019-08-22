@@ -64,7 +64,6 @@ $_Lang['ServerStart_NotReached']    = 'Ten Serwer Gry zostanie uruchomiony <b cl
 $_Lang['ServerIsClosed']            = 'Serwer został wyłączony przez Administrację!';
 $_Lang['NonActiveBlock']            = '<b class="orange">Aby móc kontynuować rozgrywkę, musisz aktywować swoje konto poprzez Link Aktywacyjny otrzymany w Wiadomości EMail!</b><br/>Jeśli twoje konto pozostanie nieaktywne przez 7 dni od daty rejestracji, zostanie ono usunięte z Systemu!';
 
-$_Lang['PlanetList_MoonSign']           = 'Księżyc';
 $_Lang['PlanetList_MoonChar']           = 'K';
 $_Lang['PlanetList_TypeChange_Sign_M']  = 'K';
 $_Lang['PlanetList_TypeChange_Sign_P']  = 'P';
@@ -165,18 +164,18 @@ $_Lang['Vacation'] = 'Urlop';
 $_Lang['VacationMode'] = 'Tryb Urlopu';
 $_Lang['Vacation_WarnMsg'] = 'Nie możesz używać tej funkcji będąc na Urlopie!';
 
-$_Lang['When_full_store'] = 'Zapełnienie magazynu:';
-$_Lang['Store_Status'] = 'Stan magazynu:';
-$_Lang['full_in'] = 'za';
-$_Lang['full'] = 'Pełny';
-$_Lang['income_no_mine'] = '<span class="red">Brak kopalni</span>';
-$_Lang['income_vacation'] = '<span class="orange">Tryb Urlopu</span>';
-$_Lang['income_minus'] = '<span class="red">Ujemne wydobycie</span>';
-$_Lang['Store_status_Full'] = '<span class="red">Zapełniony</span>';
-$_Lang['Store_status_Overload'] = '<span class="red">Przeładowany</span>';
-$_Lang['Store_status_NearFull'] = '<span class="orange">Bliski zapełnieniu</span>';
-$_Lang['Store_status_OK'] = '<span class="lime">OK</span>';
-$_Lang['Store_status_Empty'] = '<span class="orange">Pusty</span>';
+$_Lang['When_full_store']               = 'Zapełnienie magazynu:';
+$_Lang['Store_Status']                  = 'Stan magazynu:';
+$_Lang['full']                          = 'Pełny';
+$_Lang['income_no_production']          = 'Brak wydobycia';
+$_Lang['income_vacation']               = 'Tryb Urlopu';
+$_Lang['income_minus']                  = 'Ujemne wydobycie';
+$_Lang['Store_status_Full']             = 'Zapełniony';
+$_Lang['Store_status_Overload']         = 'Przeładowany';
+$_Lang['Store_status_NearFull']         = 'Bliski zapełnieniu';
+$_Lang['Store_status_OK']               = 'OK';
+$_Lang['Store_status_Empty']            = 'Pusty';
+$_Lang['topnav_incomeperhour_symbol']   = 'h';
 
 $_Lang['near_your_planet']  = 'twojej planety';
 $_Lang['near_your_moon']    = 'twojego księżyca';

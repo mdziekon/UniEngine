@@ -87,17 +87,22 @@ function HandlePlanetQueue_OnStructureBuildEnd(&$ThePlanet, &$TheUser, $CurrentT
                         },
                         'mainCheck' => function($JobArray) use ($ThePlanet, $ElementID)
                         {
-                            global $_Vars_ResProduction, $_GameConfig, $_Vars_GameElements;
+                            $emptyUser = [];
 
-                            $BuildTemp = $ThePlanet['temp_max'];
-                            $BuildLevelFactor = 10;
-                            $BuildLevel = $ThePlanet[$_Vars_GameElements[$ElementID]];
-                            $ThisExtraction = floor(eval($_Vars_ResProduction[$ElementID]['formule'][$JobArray['resource']]) * $_GameConfig['resource_multiplier'] * 1);
+                            $elementProduction = getElementProduction(
+                                $ElementID,
+                                $ThePlanet,
+                                $emptyUser,
+                                [
+                                    'useCurrentBoosters' => false,
+                                    'customProductionFactor' => 10
+                                ]
+                            );
 
-                            if($ThisExtraction < $JobArray['level'])
-                            {
-                                return true;
-                            }
+                            $thisResourceKey = $JobArray['resource'];
+                            $thisResourceExtraction = $elementProduction[$thisResourceKey];
+
+                            return ($thisResourceExtraction < $JobArray['level']);
                         }
                     ));
                     Tasks_TriggerTask($TheUser, 'REACH_TOTAL_EXTRACTION_LEVEL', array
@@ -108,16 +113,35 @@ function HandlePlanetQueue_OnStructureBuildEnd(&$ThePlanet, &$TheUser, $CurrentT
                         },
                         'mainCheck' => function($JobArray, $ThisCat, $TaskID, $JobID) use ($ThePlanet, $TheUser, $ElementID)
                         {
-                            global $_Vars_ResProduction, $_GameConfig, $_Vars_GameElements;
+                            global $_Vars_GameElements;
 
-                            $BuildTemp = $ThePlanet['temp_max'];
-                            $BuildLevelFactor = 10;
-                            $BuildLevel = $ThePlanet[$_Vars_GameElements[$ElementID]] - 1;
-                            $PreviousExtraction = floor(eval($_Vars_ResProduction[$ElementID]['formule'][$JobArray['resource']]) * $_GameConfig['resource_multiplier'] * 1);
-                            $BuildLevel = $ThePlanet[$_Vars_GameElements[$ElementID]];
-                            $ThisExtraction = floor(eval($_Vars_ResProduction[$ElementID]['formule'][$JobArray['resource']]) * $_GameConfig['resource_multiplier'] * 1);
-                            $Difference = $ThisExtraction - $PreviousExtraction;
-                            return Tasks_TriggerTask_MainCheck_Progressive($JobArray, $ThisCat, $TaskID, $JobID, $TheUser, $Difference);
+                            $oldElementProduction = getElementProduction(
+                                $ElementID,
+                                $ThePlanet,
+                                $TheUser,
+                                [
+                                    'useCurrentBoosters' => false,
+                                    'customLevel' => ($ThePlanet[$_Vars_GameElements[$ElementID]] - 1),
+                                    'customProductionFactor' => 10
+                                ]
+                            );
+                            $newElementProduction = getElementProduction(
+                                $ElementID,
+                                $ThePlanet,
+                                $TheUser,
+                                [
+                                    'useCurrentBoosters' => false,
+                                    'customProductionFactor' => 10
+                                ]
+                            );
+
+                            $thisResourceKey = $JobArray['resource'];
+                            $oldResourceExtraction = $oldElementProduction[$thisResourceKey];
+                            $newResourceExtraction = $newElementProduction[$thisResourceKey];
+
+                            $extractionDifference = ($newResourceExtraction - $oldResourceExtraction);
+
+                            return Tasks_TriggerTask_MainCheck_Progressive($JobArray, $ThisCat, $TaskID, $JobID, $TheUser, $extractionDifference);
                         }
                     ));
                 }
@@ -153,7 +177,7 @@ function HandlePlanetQueue_OnStructureBuildEnd(&$ThePlanet, &$TheUser, $CurrentT
             }
             else
             {
-                // Prevent building and destroying to make mission
+                // Prevent building and destroying to progress / complete missions
                 if(in_array($ElementID, $_Vars_ElementCategories['prod']))
                 {
                     Tasks_TriggerTask($TheUser, 'REACH_TOTAL_EXTRACTION_LEVEL', array
@@ -164,26 +188,44 @@ function HandlePlanetQueue_OnStructureBuildEnd(&$ThePlanet, &$TheUser, $CurrentT
                         },
                         'mainCheck' => function($JobArray, $ThisCat, $TaskID, $JobID) use ($ThePlanet, $TheUser, $ElementID)
                         {
-                            global $_Vars_ResProduction, $_GameConfig, $_Vars_GameElements, $UserTasksUpdate;
+                            global $_Vars_GameElements, $UserTasksUpdate;
 
-                            $BuildTemp = $ThePlanet['temp_max'];
-                            $BuildLevelFactor = 10;
-                            $BuildLevel = $ThePlanet[$_Vars_GameElements[$ElementID]] + 1;
-                            $PreviousExtraction = floor(eval($_Vars_ResProduction[$ElementID]['formule'][$JobArray['resource']]) * $_GameConfig['resource_multiplier'] * 1);
-                            $BuildLevel = $ThePlanet[$_Vars_GameElements[$ElementID]];
-                            $ThisExtraction = floor(eval($_Vars_ResProduction[$ElementID]['formule'][$JobArray['resource']]) * $_GameConfig['resource_multiplier'] * 1);
-                            $Difference = $PreviousExtraction - $ThisExtraction;
+                            $oldElementProduction = getElementProduction(
+                                $ElementID,
+                                $ThePlanet,
+                                $TheUser,
+                                [
+                                    'useCurrentBoosters' => false,
+                                    'customLevel' => ($ThePlanet[$_Vars_GameElements[$ElementID]] + 1),
+                                    'customProductionFactor' => 10
+                                ]
+                            );
+                            $newElementProduction = getElementProduction(
+                                $ElementID,
+                                $ThePlanet,
+                                $TheUser,
+                                [
+                                    'useCurrentBoosters' => false,
+                                    'customProductionFactor' => 10
+                                ]
+                            );
 
-                            if(!empty($UserTasksUpdate[$TheUser['id']]['status'][$ThisCat][$TaskID][$JobID]))
-                            {
+                            $thisResourceKey = $JobArray['resource'];
+                            $oldResourceExtraction = $oldElementProduction[$thisResourceKey];
+                            $newResourceExtraction = $newElementProduction[$thisResourceKey];
+
+                            $extractionDifference = ($oldResourceExtraction - $newResourceExtraction);
+
+                            if(!empty($UserTasksUpdate[$TheUser['id']]['status'][$ThisCat][$TaskID][$JobID])) {
                                 $TheUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] = $UserTasksUpdate[$TheUser['id']]['status'][$ThisCat][$TaskID][$JobID];
                             }
-                            if($TheUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] <= 0)
-                            {
+                            if($TheUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] <= 0) {
                                 return true;
                             }
-                            $TheUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] -= $Difference;
+
+                            $TheUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] -= $extractionDifference;
                             $UserTasksUpdate[$TheUser['id']]['status'][$ThisCat][$TaskID][$JobID] = $TheUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID];
+
                             return true;
                         }
                     ));

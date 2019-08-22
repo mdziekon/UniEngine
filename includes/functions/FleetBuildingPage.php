@@ -2,7 +2,7 @@
 
 function FleetBuildingPage(&$CurrentPlanet, $CurrentUser)
 {
-    global $_EnginePath, $_Lang, $_Vars_GameElements, $_SkinPath, $_POST, $_Vars_ElementCategories, $UserDev_Log, $_Vars_ResProduction;
+    global $_EnginePath, $_Lang, $_Vars_GameElements, $_SkinPath, $_POST, $_Vars_ElementCategories, $UserDev_Log;
 
     include($_EnginePath.'includes/functions/GetMaxConstructibleElements.php');
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
@@ -122,10 +122,25 @@ function FleetBuildingPage(&$CurrentPlanet, $CurrentUser)
         $Row['Description'] = $_Lang['WorldElements_Detailed'][$Element]['description_short'];
         if($Element == 212)
         {
-            $BuildLevelFactor = 10;
-            $BuildLevel = 1;
-            $BuildTemp = $CurrentPlanet['temp_max'];
-            $Row['SateliteInfo'] = '<br/>'.sprintf($_Lang['SatelitesEnergy'], prettyNumber(floor(eval($_Vars_ResProduction[$Element]['formule']['energy']))));
+            $solarSatelliteEnergyProduction = getElementProduction(
+                $Element,
+                $CurrentPlanet,
+                $CurrentUser,
+                [
+                    'useCurrentBoosters' => true,
+                    'currentTimestamp' => $Now,
+                    'customLevel' => 1,
+                    'customProductionFactor' => 10
+                ]
+            );
+
+            $Row['SateliteInfo'] = (
+                '<br/>' .
+                sprintf(
+                    $_Lang['SatelitesEnergy'],
+                    prettyNumber($solarSatelliteEnergyProduction['energy'])
+                )
+            );
         }
 
         if(IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $Element))

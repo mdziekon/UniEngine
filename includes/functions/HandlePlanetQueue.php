@@ -26,6 +26,9 @@ function HandlePlanetQueue(&$ThePlanet, &$TheUser, $CurrentTime = false, $ForMul
     $IDX = 0;
     while(!empty($QueueList))
     {
+        // Calculate income just before we apply the upgrades
+        PlanetResourceUpdate($TheUser, $ThePlanet, $QueueList[$IDX]['endtime'], true);
+
         $NeedQueueListRebuild = false;
         if($QueueList[$IDX]['type'] === 1)
         {

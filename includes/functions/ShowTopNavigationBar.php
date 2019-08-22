@@ -1,427 +1,304 @@
 <?php
 
-function ShowTopNavigationBar($CurrentUser, $CurrentPlanet)
-{
-    global $_Lang, $_GET, $_GameConfig, $_User, $_SkinPath, $NewMSGCount;
+function ShowTopNavigationBar(&$user, $planet) {
+    global $_Lang, $_SkinPath;
 
-    if($CurrentUser)
-    {
-        if(!$CurrentPlanet)
-        {
-            return false;
-        }
-
-        // Create strings
-        $PlanetListOption_Mode = (isset($_GET['mode']) ? '&amp;mode='.$_GET['mode'] : '');
-
-        // Update Planet Resources
-        $IsOnVacation = isOnVacation($CurrentUser);
-        PlanetResourceUpdate($CurrentUser, $CurrentPlanet, time());
-
-        $parse = $_Lang;
-        $parse['skinpath'] = $_SkinPath;
-        $parse['image'] = $CurrentPlanet['image'];
-
-        // Create PlanetList (for Select)
-        $parse['planetlist'] = '';
-
-        $SQLResult_ThisUsersPlanets = SortUserPlanets($CurrentUser);
-
-        $OtherType_ID = 0;
-
-        while($CurPlanet = $SQLResult_ThisUsersPlanets->fetch_assoc())
-        {
-            if($CurPlanet['galaxy'] == $CurrentPlanet['galaxy'] AND $CurPlanet['system'] == $CurrentPlanet['system'] AND $CurPlanet['planet'] == $CurrentPlanet['planet'])
-            {
-                if($CurPlanet['id'] != $CurrentPlanet['id'])
-                {
-                    $OtherType_ID = $CurPlanet['id'];
-                }
-            }
-
-            if($CurrentUser['planet_sort_moons'] == 1)
-            {
-                $ThisPos = "{$CurPlanet['galaxy']}:{$CurPlanet['system']}:{$CurPlanet['planet']}";
-                if($CurPlanet['planet_type'] == 1)
-                {
-                    $PlanetListArray[$ThisPos] = $CurPlanet;
-                }
-                else
-                {
-                    $MoonListArray[$ThisPos] = $CurPlanet;
-                }
-            }
-            else
-            {
-                if($CurPlanet['id'] == $CurrentUser['current_planet'])
-                {
-                    $ThisPlanetSelected = ' selected';
-                }
-                else
-                {
-                    $ThisPlanetSelected = '';
-                }
-                $parse['planetlist'] .= "\n<option {$ThisPlanetSelected} value=\"?cp={$CurPlanet['id']}{$PlanetListOption_Mode}&amp;re=0\">{$CurPlanet['name']} [{$CurPlanet['galaxy']}:{$CurPlanet['system']}:{$CurPlanet['planet']}]&nbsp;&nbsp;</option>";
-            }
-        }
-        if($CurrentUser['planet_sort_moons'] == 1)
-        {
-            if(!empty($PlanetListArray))
-            {
-                foreach($PlanetListArray as $Pos => $Planet)
-                {
-                    $ParsedPlanetList[] = $Planet;
-                    if(!empty($MoonListArray[$Pos]))
-                    {
-                        $ParsedPlanetList[] = $MoonListArray[$Pos];
-                    }
-                }
-                unset($PlanetListArray);
-                unset($MoonListArray);
-                foreach($ParsedPlanetList as $CurPlanet)
-                {
-                    if($CurPlanet['id'] == $CurrentUser['current_planet'])
-                    {
-                        $ThisPlanetSelected = ' selected';
-                    }
-                    else
-                    {
-                        $ThisPlanetSelected = '';
-                    }
-                    if($CurPlanet['planet_type'] == 1)
-                    {
-                        $ThisPlanetPos = "{$CurPlanet['galaxy']}:{$CurPlanet['system']}:{$CurPlanet['planet']}";
-                    }
-                    else
-                    {
-                        if($ThisPlanetSelected != '')
-                        {
-                            $ThisPlanetPos = "{$CurPlanet['galaxy']}:{$CurPlanet['system']}:{$CurPlanet['planet']}] [{$_Lang['PlanetList_MoonChar']}";
-                        }
-                        else
-                        {
-                            $ThisPlanetPos = $_Lang['PlanetList_MoonSign'];
-                        }
-                    }
-                    $parse['planetlist'] .= "\n<option {$ThisPlanetSelected} value=\"?cp={$CurPlanet['id']}{$PlanetListOption_Mode}\">{$CurPlanet['name']} [{$ThisPlanetPos}]&nbsp;&nbsp;</option>";
-                }
-                unset($ParsedPlanetList);
-            }
-        }
-        if($OtherType_ID > 0)
-        {
-            $parse['Insert_TypeChange_ID'] = $OtherType_ID;
-            if($CurrentPlanet['planet_type'] == 1)
-            {
-                $parse['Insert_TypeChange_Sign'] = $_Lang['PlanetList_TypeChange_Sign_M'];
-                $parse['Insert_TypeChange_Title'] = $_Lang['PlanetList_TypeChange_Title_M'];
-            }
-            else
-            {
-                $parse['Insert_TypeChange_Sign'] = $_Lang['PlanetList_TypeChange_Sign_P'];
-                $parse['Insert_TypeChange_Title'] = $_Lang['PlanetList_TypeChange_Title_P'];
-            }
-        }
-        else
-        {
-            $parse['Insert_TypeChange_Hide'] = 'hide';
-        }
-
-        // Calculate resources for JS RealTime Counters
-
-        // > Energy
-        $EnergyFree = $CurrentPlanet['energy_max'] + $CurrentPlanet['energy_used'];
-        $EnergyPretty = prettyNumber($EnergyFree);
-        if($EnergyFree < 0)
-        {
-            $parse['Energy_free'] = colorRed($EnergyPretty);
-        }
-        else
-        {
-            $parse['Energy_free'] = colorGreen($EnergyPretty);
-        }
-        $parse['Energy_used'] = prettyNumber($CurrentPlanet['energy_max'] - $EnergyFree);
-        $parse['Energy_total'] = prettyNumber($CurrentPlanet['energy_max']);
-
-        // > Metal
-        if($CurrentPlanet['metal'] >= $CurrentPlanet['metal_max'])
-        {
-            $parse['ShowCount_Metal'] = colorRed(prettyNumber($CurrentPlanet['metal']));
-            $parse['ShowStore_Metal'] = colorRed(prettyNumber($CurrentPlanet['metal_max']));
-        }
-        else
-        {
-            $parse['ShowCount_Metal'] = colorGreen(prettyNumber($CurrentPlanet['metal']));
-            $parse['ShowStore_Metal'] = colorGreen(prettyNumber($CurrentPlanet['metal_max']));
-        }
-
-        // > Crystal
-        if($CurrentPlanet['crystal'] >= $CurrentPlanet['crystal_max'])
-        {
-            $parse['ShowCount_Crystal'] = colorRed(prettyNumber($CurrentPlanet['crystal']));
-            $parse['ShowStore_Crystal'] = colorRed(prettyNumber($CurrentPlanet['crystal_max']));
-        }
-        else
-        {
-            $parse['ShowCount_Crystal'] = colorGreen(prettyNumber($CurrentPlanet['crystal']));
-            $parse['ShowStore_Crystal'] = colorGreen(prettyNumber($CurrentPlanet['crystal_max']));
-        }
-
-        // > Deuterium
-        if($CurrentPlanet['deuterium'] >= $CurrentPlanet['deuterium_max'])
-        {
-            $parse['ShowCount_Deuterium'] = colorRed(prettyNumber($CurrentPlanet['deuterium']));
-            $parse['ShowStore_Deuterium'] = colorRed(prettyNumber($CurrentPlanet['deuterium_max']));
-        }
-        else
-        {
-            $parse['ShowCount_Deuterium'] = colorGreen(prettyNumber($CurrentPlanet['deuterium']));
-            $parse['ShowStore_Deuterium'] = colorGreen(prettyNumber($CurrentPlanet['deuterium_max']));
-        }
-
-        // > JS Vars
-        $parse['JSCount_Metal'] = $CurrentPlanet['metal'];
-        $parse['JSCount_Crystal'] = $CurrentPlanet['crystal'];
-        $parse['JSCount_Deuterium'] = $CurrentPlanet['deuterium'];
-        $parse['JSStore_Metal'] = $CurrentPlanet['metal_max'];
-        $parse['JSStore_Crystal'] = $CurrentPlanet['crystal_max'];
-        $parse['JSStore_Deuterium'] = $CurrentPlanet['deuterium_max'];
-        $parse['JSStoreOverflow_Metal'] = $CurrentPlanet['metal_max'] * MAX_OVERFLOW;
-        $parse['JSStoreOverflow_Crystal'] = $CurrentPlanet['crystal_max'] * MAX_OVERFLOW;
-        $parse['JSStoreOverflow_Deuterium'] = $CurrentPlanet['deuterium_max'] * MAX_OVERFLOW;
-
-        // > Production Level
-        if(!$IsOnVacation)
-        {
-            if($CurrentPlanet['energy_max'] == 0 AND abs($CurrentPlanet['energy_used']) > 0)
-            {
-                $production_level = 0;
-                $CurrentPlanet['metal_perhour'] = $_GameConfig['metal_basic_income'];
-                $CurrentPlanet['crystal_perhour'] = $_GameConfig['crystal_basic_income'];
-                $CurrentPlanet['deuterium_perhour'] = $_GameConfig['deuterium_basic_income'];
-            }
-            else if($CurrentPlanet['energy_max'] > 0 AND abs($CurrentPlanet['energy_used']) > $CurrentPlanet['energy_max'])
-            {
-                $production_level = floor(($CurrentPlanet['energy_max'] * 100) / abs($CurrentPlanet['energy_used']));
-            }
-            else
-            {
-                $production_level = 100;
-            }
-            if($production_level > 100)
-            {
-                $production_level = 100;
-            }
-        }
-        else
-        {
-            $production_level = 0;
-        }
-
-        // > Income
-        $parse['JSPerHour_Metal']        = ($CurrentPlanet['metal_perhour'] * 0.01 * $production_level) + (($CurrentPlanet['planet_type'] == 1) ? ($_GameConfig['metal_basic_income'] * $_GameConfig['resource_multiplier']) : 0);
-        $parse['JSPerHour_Crystal']        = ($CurrentPlanet['crystal_perhour'] * 0.01 * $production_level) + (($CurrentPlanet['planet_type'] == 1) ? ($_GameConfig['crystal_basic_income'] * $_GameConfig['resource_multiplier']) : 0);
-        $parse['JSPerHour_Deuterium']    = ($CurrentPlanet['deuterium_perhour'] * 0.01 * $production_level) + (($CurrentPlanet['planet_type'] == 1) ? ($_GameConfig['deuterium_basic_income'] * $_GameConfig['resource_multiplier']) : 0);
-
-        // > Create ToolTip Infos
-        $parse['TipIncome_Metal'] = '('.(($parse['JSPerHour_Metal'] >= 0) ? '+' : '-').prettyNumber(abs(round($parse['JSPerHour_Metal']))).'/h)';
-        $parse['TipIncome_Crystal'] = '('.(($parse['JSPerHour_Crystal'] >= 0) ? '+' : '-').prettyNumber(abs(round($parse['JSPerHour_Crystal']))).'/h)';
-        $parse['TipIncome_Deuterium'] = '('.(($parse['JSPerHour_Deuterium'] >= 0) ? '+' : '-').prettyNumber(abs(round($parse['JSPerHour_Deuterium']))).'/h)';
-
-        $IncomePerSecond['met'] = $parse['JSPerHour_Metal'] / 3600;
-        $IncomePerSecond['cry'] = $parse['JSPerHour_Crystal'] / 3600;
-        $IncomePerSecond['deu'] = $parse['JSPerHour_Deuterium'] / 3600;
-
-        if($IncomePerSecond['met'] > 0)
-        {
-            $parse['Metal_full_time'] = (round($parse['JSStoreOverflow_Metal']) - round($CurrentPlanet['metal'])) / $IncomePerSecond['met'];
-            if($parse['Metal_full_time'] > 0)
-            {
-                $parse['Metal_full_time'] = $parse['full_in'].' <span id="metal_fullstore_counter">'.pretty_time($parse['Metal_full_time']).'</span>';
-            }
-            else
-            {
-                $parse['Metal_full_time'] = '<span class="red">'.$parse['full'].'</span>';
-            }
-        }
-        else
-        {
-            $parse['Metal_full_time'] = $_Lang['income_no_mine'];
-        }
-        if($IsOnVacation)
-        {
-            $parse['Metal_full_time'] = $_Lang['income_vacation'];
-        }
-
-        if($IncomePerSecond['cry'] > 0)
-        {
-            $parse['Crystal_full_time'] = (round($parse['JSStoreOverflow_Crystal']) - round($CurrentPlanet['crystal'])) / $IncomePerSecond['cry'];
-            if($parse['Crystal_full_time'] > 0)
-            {
-                $parse['Crystal_full_time'] = $parse['full_in'].' <span id="crystal_fullstore_counter">'.pretty_time($parse['Crystal_full_time']).'</span>';
-            }
-            else
-            {
-                $parse['Crystal_full_time'] = '<span class="red">'.$parse['full'].'</span>';
-            }
-        }
-        else
-        {
-            $parse['Crystal_full_time'] = $_Lang['income_no_mine'];
-        }
-        if($IsOnVacation)
-        {
-            $parse['Crystal_full_time'] = $_Lang['income_vacation'];
-        }
-
-        if($IncomePerSecond['deu'] > 0)
-        {
-            $parse['Deuterium_full_time'] = (round($parse['JSStoreOverflow_Deuterium']) - round($CurrentPlanet['deuterium'])) / $IncomePerSecond['deu'];
-            if($parse['Deuterium_full_time'] > 0)
-            {
-                $parse['Deuterium_full_time'] = $parse['full_in'].' <span id="deuterium_fullstore_counter">'.pretty_time($parse['Deuterium_full_time']).'</span>';
-            }
-            else
-            {
-                $parse['Deuterium_full_time'] = '<span class="red">'.$parse['full'].'</span>';
-            }
-        }
-        elseif($IncomePerSecond['deu'] < 0)
-        {
-            $parse['Deuterium_full_time'] = $_Lang['income_minus'];
-        }
-        else
-        {
-            $parse['Deuterium_full_time'] = $_Lang['income_no_mine'];
-        }
-        if($IsOnVacation)
-        {
-            $parse['Deuterium_full_time'] = $_Lang['income_vacation'];
-        }
-
-        // > Create ToolTip Storage Status
-        if($CurrentPlanet['metal'] > $CurrentPlanet['metal_max'])
-        {
-            if($CurrentPlanet['metal'] == $parse['JSStoreOverflow_Metal'])
-            {
-                $parse['Metal_store_status'] = $parse['Store_status_Full'];
-            }
-            else
-            {
-                $parse['Metal_store_status'] = $parse['Store_status_Overload'];
-            }
-        }
-        else
-        {
-            if($CurrentPlanet['metal'] > 0)
-            {
-                if($CurrentPlanet['metal'] >= ($CurrentPlanet['metal_max'] * 0.8))
-                {
-                    $parse['Metal_store_status'] = $parse['Store_status_NearFull'];
-                }
-                else
-                {
-                    $parse['Metal_store_status'] = $parse['Store_status_OK'];
-                }
-            }
-            else
-            {
-                $parse['Metal_store_status'] = $parse['Store_status_Empty'];
-            }
-        }
-
-        if($CurrentPlanet['crystal'] > $CurrentPlanet['crystal_max'])
-        {
-            if($CurrentPlanet['crystal'] == $parse['JSStoreOverflow_Crystal'])
-            {
-                $parse['Crystal_store_status'] = $parse['Store_status_Full'];
-            }
-            else
-            {
-                $parse['Crystal_store_status'] = $parse['Store_status_Overload'];
-            }
-        }
-        else
-        {
-            if($CurrentPlanet['crystal'] > 0)
-            {
-                if($CurrentPlanet['crystal'] >= ($CurrentPlanet['crystal_max'] * 0.8))
-                {
-                    $parse['Crystal_store_status'] = $parse['Store_status_NearFull'];
-                }
-                else
-                {
-                    $parse['Crystal_store_status'] = $parse['Store_status_OK'];
-                }
-            }
-            else
-            {
-                $parse['Crystal_store_status'] = $parse['Store_status_Empty'];
-            }
-        }
-
-        if($CurrentPlanet['deuterium'] > $CurrentPlanet['deuterium_max'])
-        {
-            if($CurrentPlanet['deuterium'] == $parse['JSStoreOverflow_Deuterium'])
-            {
-                $parse['Deuterium_store_status'] = $parse['Store_status_Full'];
-            }
-            else
-            {
-                $parse['Deuterium_store_status'] = $parse['Store_status_Overload'];
-            }
-        }
-        else
-        {
-            if($CurrentPlanet['metal'] > 0)
-            {
-                if($CurrentPlanet['deuterium'] >= ($CurrentPlanet['deuterium_max'] * 0.8))
-                {
-                    $parse['Deuterium_store_status'] = $parse['Store_status_NearFull'];
-                }
-                else
-                {
-                    $parse['Deuterium_store_status'] = $parse['Store_status_OK'];
-                }
-            }
-            else
-            {
-                $parse['Deuterium_store_status'] = $parse['Store_status_Empty'];
-            }
-        }
-
-        // Dark Energy
-        if($_User['darkEnergy'] > 0)
-        {
-            $parse['ShowCount_DarkEnergy'] = '<span class="lime">'.prettyNumber($_User['darkEnergy']).'</span>';
-        }
-        else
-        {
-            $parse['ShowCount_DarkEnergy'] = '<span class="orange">'.$_User['darkEnergy'].'</span>';
-        }
-
-        // Messages Counter
-        $Query_MsgCount = '';
-        $Query_MsgCount .= "SELECT COUNT(*) AS `Count` FROM {{table}} WHERE ";
-        $Query_MsgCount .= "`id_owner` = {$CurrentUser['id']} AND ";
-        $Query_MsgCount .= "`deleted` = false AND ";
-        $Query_MsgCount .= "`read` = false ";
-        $Query_MsgCount .= "LIMIT 1;";
-        $Result_MsgCount = doquery($Query_MsgCount, 'messages', true);
-        if($Result_MsgCount['Count'] > 0)
-        {
-            $parse['ShowCount_Messages'] = '[ <a href="messages.php">'.prettyNumber($Result_MsgCount['Count']).'</a> ]';
-            $NewMSGCount = $Result_MsgCount['Count'];
-        }
-        else
-        {
-            $parse['ShowCount_Messages'] = '0';
-        }
-
-        $TopBar = parsetemplate(gettemplate('topnav'), $parse);
-
-        return $TopBar;
+    if (!$user || !$planet) {
+        return;
     }
+
+    // Update Planet Resources
+    PlanetResourceUpdate($user, $planet, time());
+
+    $productionLevel = getPlanetsProductionEfficiency(
+        $planet,
+        $user,
+        [
+            'isVacationCheckEnabled' => true
+        ]
+    );
+
+    $templateDetails = array_merge(
+        [
+            'skinpath' => $_SkinPath,
+            'image' => $planet['image']
+        ],
+        $_Lang,
+        [
+            'PHPInject_commonJS_html' => buildCommonJSInjectionHTML(),
+
+            'PHPInject_isOnVacation' => (isOnVacation($user) ? 'true' : 'false'),
+        ],
+        _createPlanetsSelectorTplData($user, $planet),
+        _createPlanetsEnergyStatusDetailsTplData($planet),
+        _createResourceStateDetailsTplData(
+            'metal',
+            $planet,
+            [
+                'productionLevel' => $productionLevel
+            ]
+        ),
+        _createResourceStateDetailsTplData(
+            'crystal',
+            $planet,
+            [
+                'productionLevel' => $productionLevel
+            ]
+        ),
+        _createResourceStateDetailsTplData(
+            'deuterium',
+            $planet,
+            [
+                'productionLevel' => $productionLevel
+            ]
+        ),
+        _createPremiumResourceCounterTplData($user),
+        _createUnreadMessagesCounterTplData($user['id'])
+    );
+
+    $templateBody = gettemplate('topnav');
+    $componentBody = parsetemplate($templateBody, $templateDetails);
+
+    return $componentBody;
+}
+
+function _createPlanetsSelectorTplData(&$user, &$planet) {
+    global $_Lang, $_GET;
+
+    $tplData = [];
+
+    $SQLResult_ThisUsersPlanets = SortUserPlanets($user);
+
+    $OtherType_ID = 0;
+
+    $isMoonsSortingEnabled = ($user['planet_sort_moons'] == 1);
+    $currentSelectionID = $user['current_planet'];
+
+    // Capture any important possibly present query attributes from current page
+    // and re-apply them to the planet changing request query
+    $capturedQueryParams = [];
+
+    if (!empty($_GET['mode'])) {
+        $capturedQueryParams['mode'] = $_GET['mode'];
+    }
+
+    $entriesList = [];
+    $entriesByPosition = [];
+
+    while ($thisEntry = $SQLResult_ThisUsersPlanets->fetch_assoc()) {
+        if (
+            $thisEntry['galaxy'] == $planet['galaxy'] &&
+            $thisEntry['system'] == $planet['system'] &&
+            $thisEntry['planet'] == $planet['planet'] &&
+            $thisEntry['id'] != $planet['id']
+        ) {
+            $OtherType_ID = $thisEntry['id'];
+        }
+
+        if (!$isMoonsSortingEnabled) {
+            $entriesList[] = $thisEntry;
+
+            continue;
+        }
+
+        $entryPosition = "{$thisEntry['galaxy']}:{$thisEntry['system']}:{$thisEntry['planet']}";
+
+        if (!isset($entriesByPosition[$entryPosition])) {
+            $entriesByPosition[$entryPosition] = [];
+        }
+
+        $entriesByPosition[$entryPosition][] = $thisEntry;
+    }
+
+    foreach ($entriesByPosition as $entryPosition => $entries) {
+        usort($entries, function ($left, $right) {
+            return (
+                (intval($left['planet_type']) < intval($right['planet_type'])) ?
+                -1 :
+                1
+            );
+        });
+
+        foreach ($entries as $entry) {
+            $entriesList[] = $entry;
+        }
+    }
+
+    $entriesList = array_map(function ($entry) use ($currentSelectionID, $capturedQueryParams, &$_Lang) {
+        $isCurrentSelector = ($entry['id'] == $currentSelectionID);
+        $isMoon = ($entry['planet_type'] == 3);
+
+        $typeLabel = "";
+
+        if ($isMoon) {
+            $typeLabel = $_Lang['PlanetList_MoonChar'];
+        }
+
+        $entryPosition = "{$entry['galaxy']}:{$entry['system']}:{$entry['planet']}";
+        $entryPositionDisplayValue = "[{$entryPosition}]";
+        $entryTypeDisplayValue = (
+            $typeLabel ?
+            "[{$typeLabel}]" :
+            ""
+        );
+        $entryLabel = "{$entry['name']} {$entryPositionDisplayValue} {$entryTypeDisplayValue} &nbsp;&nbsp;";
+
+        $entryHTML = buildDOMElementHTML([
+            'tagName' => 'option',
+            'contentHTML' => $entryLabel,
+            'attrs' => [
+                'selected' => ($isCurrentSelector ? "selected" : null),
+                'data-planet-id' => $entry['id'],
+                'value' => buildHref([
+                    'path' => '',
+                    'query' => array_merge(
+                        [
+                            'cp' => $entry['id'],
+                            're' => '0'
+                        ],
+                        $capturedQueryParams
+                    )
+                ])
+            ]
+        ]);
+
+        return $entryHTML;
+    }, $entriesList);
+
+    $tplData['planetlist'] = implode("\n", $entriesList);
+
+    if ($OtherType_ID > 0) {
+        $tplData['Insert_TypeChange_ID'] = $OtherType_ID;
+        if ($planet['planet_type'] == 1) {
+            $tplData['Insert_TypeChange_Sign'] = $_Lang['PlanetList_TypeChange_Sign_M'];
+            $tplData['Insert_TypeChange_Title'] = $_Lang['PlanetList_TypeChange_Title_M'];
+        } else {
+            $tplData['Insert_TypeChange_Sign'] = $_Lang['PlanetList_TypeChange_Sign_P'];
+            $tplData['Insert_TypeChange_Title'] = $_Lang['PlanetList_TypeChange_Title_P'];
+        }
+    } else {
+        $tplData['Insert_TypeChange_Hide'] = 'hide';
+    }
+
+    return $tplData;
+}
+
+function _createPlanetsEnergyStatusDetailsTplData(&$planet) {
+    $tplData = [];
+
+    $unusedEnergy = ($planet['energy_max'] + $planet['energy_used']);
+
+    $tplData['PHPData_resource_energy_unused_html'] = colorizeString(
+        prettyNumber($unusedEnergy),
+        (
+            ($unusedEnergy >= 0) ?
+            "green" :
+            "red"
+        )
+    );
+
+    $tplData['PHPInject_energy_unused'] = $unusedEnergy;
+    $tplData['PHPInject_energy_used'] = ($planet['energy_used'] * (-1));
+    $tplData['PHPInject_energy_total'] = ($planet['energy_max']);
+
+    return $tplData;
+}
+
+function _createResourceStateDetailsTplData($resourceKey, &$planet, $params) {
+    $tplData = [];
+
+    $productionLevel = $params['productionLevel'];
+
+    $resourceAmount = $planet[$resourceKey];
+    $resourceMaxStorage = $planet["{$resourceKey}_max"];
+    $resourceMaxOverflowStorage = $resourceMaxStorage * MAX_OVERFLOW;
+
+    $theoreticalResourceIncomePerSecond = calculateTotalTheoreticalResourceIncomePerSecond(
+        $resourceKey,
+        $planet
+    );
+    $realResourceIncomePerSecond = calculateTotalRealResourceIncomePerSecond([
+        'theoreticalIncomePerSecond' => $theoreticalResourceIncomePerSecond,
+        'productionLevel' => $productionLevel
+    ]);
+    $totalResourceIncomePerSecond = (
+        $realResourceIncomePerSecond['production'] +
+        (
+            ($planet['planet_type'] == 1) ?
+            $realResourceIncomePerSecond['base'] :
+            0
+        )
+    );
+    $totalResourceIncomePerHour = (
+        $totalResourceIncomePerSecond *
+        3600
+    );
+
+    $hasOverflownStorage = ($resourceAmount >= $resourceMaxStorage);
+
+    $tplData["PHPInject_resource_{$resourceKey}_state_amount"] = $resourceAmount;
+    $tplData["PHPInject_resource_{$resourceKey}_state_incomePerHour"] = $totalResourceIncomePerHour;
+    $tplData["PHPInject_resource_{$resourceKey}_storage_maxCapacity"] = $resourceMaxStorage;
+    $tplData["PHPInject_resource_{$resourceKey}_storage_overflowCapacity"] = $resourceMaxOverflowStorage;
+
+    $tplData["PHPData_resource_{$resourceKey}_state_amount_value"] = prettyNumber($resourceAmount);
+    $tplData["PHPData_resource_{$resourceKey}_storage_maxCapacity_value"] = prettyNumber($resourceMaxStorage);
+    $tplData["PHPData_resource_{$resourceKey}_state_amount_color"] = getColorHTMLValue(
+        (!$hasOverflownStorage ? 'green' : 'red')
+    );
+
+    return $tplData;
+}
+
+function _createPremiumResourceCounterTplData(&$user) {
+    $tplData = [];
+
+    $premiumResourceAmount = $user['darkEnergy'];
+
+    $tplData['PHPData_premiumresource_darkenergy_amount_html'] = colorizeString(
+        prettyNumber($premiumResourceAmount),
+        (
+            ($premiumResourceAmount > 0) ?
+            'green' :
+            'orange'
+        )
+    );
+
+    return $tplData;
+}
+
+function _createUnreadMessagesCounterTplData($userID) {
+    global $NewMSGCount;
+
+    $tplData = [];
+
+    $Query_MsgCount  = '';
+    $Query_MsgCount .= "SELECT COUNT(*) AS `count` FROM {{table}} WHERE ";
+    $Query_MsgCount .= "`id_owner` = {$userID} AND ";
+    $Query_MsgCount .= "`deleted` = false AND ";
+    $Query_MsgCount .= "`read` = false ";
+    $Query_MsgCount .= "LIMIT 1;";
+
+    $Result_MsgCount = doquery($Query_MsgCount, 'messages', true);
+
+    $unreadMessagesCount = $Result_MsgCount['count'];
+
+    if ($unreadMessagesCount <= 0) {
+        $tplData['PHPData_messages_unread_amount_html'] = '0';
+
+        return $tplData;
+    }
+
+    $NewMSGCount = $unreadMessagesCount;
+
+    $html_messagesLink = buildLinkHTML([
+        'href' => 'messages.php',
+        'text' => prettyNumber($unreadMessagesCount)
+    ]);
+
+    $tplData['PHPData_messages_unread_amount_html'] = "[ {$html_messagesLink} ]";
+
+    return $tplData;
 }
 
 ?>

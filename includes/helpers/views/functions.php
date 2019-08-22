@@ -27,7 +27,7 @@ function buildDOMElementHTML($params) {
 
     $attrs = implode(' ', $attrs);
 
-    if (empty($contentHTML)) {
+    if (!isset($contentHTML)) {
         return ("<{$elementName} {$attrs}/>");
     }
 
@@ -41,8 +41,6 @@ function buildDOMElementHTML($params) {
 //      - attrs (Object | undefined)
 //
 function buildLinkHTML($params) {
-    $queryParams = [];
-
     if (empty($params['query'])) {
         $params['query'] = [];
     }
@@ -50,24 +48,68 @@ function buildLinkHTML($params) {
         $params['attrs'] = [];
     }
 
-    foreach ($params['query'] as $paramKey => $paramValue) {
-        $queryParams[] = "{$paramKey}={$paramValue}";
-    }
-
-    $href = $params['href'];
-    $queryParams = implode('&', $queryParams);
-
-    if ($queryParams) {
-        $href .= "?{$queryParams}";
-    }
-
-    $params['attrs']['href'] = $href;
+    $params['attrs']['href'] = buildHref([
+        'path' => $params['href'],
+        'query' => $params['query']
+    ]);
 
     return buildDOMElementHTML([
         'tagName' => 'a',
         'contentHTML' => $params['text'],
         'attrs' => $params['attrs']
     ]);
+}
+
+//  $params (Object)
+//      - path (String | undefined) [default: ""]
+//      - query (Object | undefined)
+//
+function buildHref($params) {
+    $queryParams = [];
+
+    if (empty($params['path'])) {
+        $params['path'] = '';
+    }
+    if (empty($params['query'])) {
+        $params['query'] = [];
+    }
+
+    foreach ($params['query'] as $paramKey => $paramValue) {
+        if ($paramValue === null) {
+            continue;
+        }
+
+        $queryParams[] = "{$paramKey}={$paramValue}";
+    }
+
+    $fullHref = $params['path'];
+    $queryParams = implode('&', $queryParams);
+
+    if ($queryParams) {
+        $fullHref .= "?{$queryParams}";
+    }
+
+    return $fullHref;
+}
+
+//  Assumptions:
+//      - "system" lang file was been loaded already
+//
+function buildCommonJSInjectionHTML() {
+    global $_Lang;
+
+    static $wasInjected = false;
+
+    if ($wasInjected) {
+        return '';
+    }
+
+    $tplBody = gettemplate("_commonjs_injection");
+    $tplData = [
+        'LANG_daysFullJSFunction' => $_Lang['Chrono_PrettyTime']['chronoFormat']['daysFullJSFunction']
+    ];
+
+    return parsetemplate($tplBody, $tplData);
 }
 
 ?>

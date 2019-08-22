@@ -51,17 +51,17 @@ $(document).ready(function()
             </tr>
             <tr>
                 <th height="22">{Stores_capacity}</th>
-                <th>{metal_max}</th>
-                <th>{crystal_max}</th>
-                <th>{deuterium_max}</th>
+                <th>{resourceSummary_metal_maxCapacity}</th>
+                <th>{resourceSummary_crystal_maxCapacity}</th>
+                <th>{resourceSummary_deuterium_maxCapacity}</th>
                 <th><b>-</b></th>
                 <th><b>-</b></th>
             </tr>
             <tr>
                 <th height="22">{Total}:</th>
-                <th><b>{metal_total}</b></th>
-                <th><b>{crystal_total}</b></th>
-                <th><b>{deuterium_total}</b></th>
+                <th><b>{resourceSummary_metal_totalIncome_perHour}</b></th>
+                <th><b>{resourceSummary_crystal_totalIncome_perHour}</b></th>
+                <th><b>{resourceSummary_deuterium_totalIncome_perHour}</b></th>
                 <th><b>{energy_total}</b></th>
                 <th>
                     <select style="font-weight: bold; width: 60px;" class="TotalUsage">
@@ -102,19 +102,19 @@ $(document).ready(function()
             <th>{Monthly}</th>
         </tr><tr>
             <th>{Metal}</th>
-            <th>{daily_metal}</th>
-            <th>{weekly_metal}</th>
-            <th>{monthly_metal}</th>
+            <th>{resourceSummary_metal_totalIncome_perDay}</th>
+            <th>{resourceSummary_metal_totalIncome_perWeek}</th>
+            <th>{resourceSummary_metal_totalIncome_perMonth}</th>
         </tr><tr>
             <th>{Crystal}</th>
-            <th>{daily_crystal}</th>
-            <th>{weekly_crystal}</th>
-            <th>{monthly_crystal}</th>
+            <th>{resourceSummary_crystal_totalIncome_perDay}</th>
+            <th>{resourceSummary_crystal_totalIncome_perWeek}</th>
+            <th>{resourceSummary_crystal_totalIncome_perMonth}</th>
         </tr><tr>
             <th>{Deuterium}</th>
-            <th>{daily_deuterium}</th>
-            <th>{weekly_deuterium}</th>
-            <th>{monthly_deuterium}</th>
+            <th>{resourceSummary_deuterium_totalIncome_perDay}</th>
+            <th>{resourceSummary_deuterium_totalIncome_perWeek}</th>
+            <th>{resourceSummary_deuterium_totalIncome_perMonth}</th>
         </tr>
     </tbody>
 </table>
@@ -122,28 +122,31 @@ $(document).ready(function()
 <table width="750">
     <tbody>
         <tr>
-            <td class="c" colspan="4">{NeedenTransporters} {planet_type_res} {nazwa}</td>
+            <td class="c" colspan="4">{NeedenTransporters} {PlanetData_type_langfrom} {PlanetData_name}</td>
         </tr>
         <tr>
             <th>&nbsp;</th>
             <th>{Needen}</th>
             <th>{YouHave}</th>
             <th>{Missing}</th>
-        </tr><tr>
-            <th>{small_cargo_name}</th>
-            <th>{trans_s}</th>
-            <th>{have_s}</th>
-            <th>{missing_s}</th>
-        </tr><tr>
-            <th>{big_cargo_name}</th>
-            <th>{trans_b}</th>
-            <th>{have_b}</th>
-            <th>{missing_b}</th>
-        </tr><tr>
-            <th>{mega_cargo_name}</th>
-            <th>{trans_m}</th>
-            <th>{have_m}</th>
-            <th>{missing_m}</th>
+        </tr>
+        <tr>
+            <th>{cargohelper_202_shipName}</th>
+            <th>{cargohelper_202_requiredCount}</th>
+            <th>{cargohelper_202_availableCount}</th>
+            <th>{cargohelper_202_missingCount}</th>
+        </tr>
+        <tr>
+            <th>{cargohelper_203_shipName}</th>
+            <th>{cargohelper_203_requiredCount}</th>
+            <th>{cargohelper_203_availableCount}</th>
+            <th>{cargohelper_203_missingCount}</th>
+        </tr>
+        <tr>
+            <th>{cargohelper_217_shipName}</th>
+            <th>{cargohelper_217_requiredCount}</th>
+            <th>{cargohelper_217_availableCount}</th>
+            <th>{cargohelper_217_missingCount}</th>
         </tr>
     </tbody>
 </table>
@@ -154,30 +157,30 @@ $(document).ready(function()
             <td class="c" colspan="3">{Storage_state}</td>
         </tr><tr>
             <th>{Metal}</th>
-            <th>{metal_storage}</th>
+            <th>{resourceSummary_metal_storageLoad_percent}%</th>
             <th width="250">
                 <div style="border: 1px solid rgb(153, 153, 255); width: 250px;">
-                <div id="AlmMBar" style="background-color: {metal_storage_barcolor}; width: {metal_storage_bar}px;">
+                <div id="AlmMBar" style="background-color: {resourceSummary_metal_storageLoad_barColor}; width: {resourceSummary_metal_storageLoad_barWidthPx}px;">
                 &nbsp;
                 </div>
                 </div>
             </th>
         </tr><tr>
             <th>{Crystal}</th>
-            <th>{crystal_storage}</th>
+            <th>{resourceSummary_crystal_storageLoad_percent}%</th>
             <th width="250">
                 <div style="border: 1px solid rgb(153, 153, 255); width: 250px;">
-                <div id="AlmCBar" style="background-color: {crystal_storage_barcolor}; width: {crystal_storage_bar}px;">
+                <div id="AlmCBar" style="background-color: {resourceSummary_crystal_storageLoad_barColor}; width: {resourceSummary_crystal_storageLoad_barWidthPx}px;">
                 &nbsp;
                 </div>
                 </div>
             </th>
         </tr><tr>
             <th>{Deuterium}</th>
-            <th>{deuterium_storage}</th>
+            <th>{resourceSummary_deuterium_storageLoad_percent}%</th>
             <th width="250">
                 <div style="border: 1px solid rgb(153, 153, 255); width: 250px;">
-                <div id="AlmDBar" style="background-color: {deuterium_storage_barcolor}; width: {deuterium_storage_bar}px;">
+                <div id="AlmDBar" style="background-color: {resourceSummary_deuterium_storageLoad_barColor}; width: {resourceSummary_deuterium_storageLoad_barWidthPx}px;">
                 &nbsp;
                 </div>
                 </div>

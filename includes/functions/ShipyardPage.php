@@ -2,7 +2,7 @@
 
 function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
 {
-    global $_Lang, $_Vars_GameElements, $_Vars_ElementCategories, $_SkinPath, $_GameConfig, $_POST, $UserDev_Log, $_Vars_ResProduction, $_EnginePath;
+    global $_Lang, $_Vars_GameElements, $_Vars_ElementCategories, $_SkinPath, $_GameConfig, $_POST, $UserDev_Log, $_EnginePath;
 
     include($_EnginePath.'includes/functions/GetMaxConstructibleElements.php');
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
@@ -434,17 +434,53 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
         $ElementParser['BuildTime'] = GetBuildingTime($CurrentUser, $CurrentPlanet, $ElementID);
         $ElementTimeArray[$ElementID] = $ElementParser['BuildTime'];
         $ElementParser['BuildTime'] = pretty_time($ElementParser['BuildTime']);
-        if($ElementID == 212)
-        {
-            $BuildLevelFactor = 10;
-            $BuildLevel = 1;
-            $BuildTemp= $CurrentPlanet['temp_max'];
-            $ElementParser['AdditionalNfo'][] = parsetemplate($TPL['infobox_additionalnfo'], array
-            (
-                'Label' => $_Lang['Energy'],
-                'ValueClasses' => 'lime',
-                'Value' => '+'.prettyNumber(floor(eval($_Vars_ResProduction[$ElementID]['formule']['energy'])))
-            ));
+
+        if (in_array($ElementID, $_Vars_ElementCategories['prod'])) {
+            // Calculate theoretical production increase
+            $productionIncrease = getElementProduction(
+                $ElementID,
+                $CurrentPlanet,
+                $CurrentUser,
+                [
+                    'useCurrentBoosters' => true,
+                    'currentTimestamp' => $Now,
+                    'customLevel' => 1,
+                    'customProductionFactor' => 10
+                ]
+            );
+
+            $resourceLabels = [
+                'metal' => $_Lang['Metal'],
+                'crystal' => $_Lang['Crystal'],
+                'deuterium' => $_Lang['Deuterium'],
+                'energy' => $_Lang['Energy'],
+            ];
+
+            foreach ($productionIncrease as $resourceKey => $difference) {
+                if ($difference == 0) {
+                    continue;
+                }
+
+                $differenceFormatted = prettyNumber($difference);
+                $label = $resourceLabels[$resourceKey];
+
+                $ElementParser['AdditionalNfo'][] = parsetemplate(
+                    $TPL['infobox_additionalnfo'],
+                    [
+                        'Label' => $label,
+                        'ValueClasses' => (
+                            $difference >= 0 ?
+                            'lime' :
+                            'red'
+                        ),
+                        'Value' => (
+                            $difference >= 0 ?
+                            ('+' . $differenceFormatted) :
+                            $differenceFormatted
+                        )
+                    ]
+                );
+            }
         }
 
         if(IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $ElementID))
@@ -567,12 +603,25 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
     $Parse['Insert_PlanetPos_Planet'] = $CurrentPlanet['planet'];
     $Parse['Insert_Overview_ShipyardLevel'] = $CurrentPlanet[$_Vars_GameElements[21]];
     $Parse['Insert_Overview_NanoFactoryLevel'] = $CurrentPlanet[$_Vars_GameElements[15]];
-    $Parse['Insert_Overview_Temperature'] = sprintf($_Lang['Overview_Form_Temperature'], $CurrentPlanet['temp_min'], $CurrentPlanet['temp_max']);
+    $Parse['Insert_Overview_Temperature'] = sprintf(
+        $_Lang['Overview_Form_Temperature'],
+        $CurrentPlanet['temp_min'],
+        $CurrentPlanet['temp_max']
+    );
 
-    $BuildLevelFactor = 10;
-    $BuildLevel = 1;
-    $BuildTemp = $CurrentPlanet['temp_max'];
-    $Parse['Insert_Overview_SolarSateliteEnergy'] = prettyNumber(floor(eval($_Vars_ResProduction[212]['formule']['energy'])));
+    $solarSatelliteEnergyProduction = getElementProduction(
+        212,
+        $CurrentPlanet,
+        $CurrentUser,
+        [
+            'useCurrentBoosters' => true,
+            'currentTimestamp' => $Now,
+            'customLevel' => 1,
+            'customProductionFactor' => 10
+        ]
+    );
+
+    $Parse['Insert_Overview_SolarSateliteEnergy'] = prettyNumber($solarSatelliteEnergyProduction['energy']);
 
     $Page = parsetemplate(gettemplate('buildings_compact_body_shipyard'), $Parse);
 

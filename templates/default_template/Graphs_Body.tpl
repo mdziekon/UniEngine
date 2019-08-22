@@ -77,7 +77,7 @@ function Graph() {
 
     var previousPoint = null;
 
-    function drawGraph(elt, graph, Units, ToolTipText) {
+    function drawGraph(elt, graph, Units, tooltipGen) {
         var options = {
             yaxis: {
                 min: 0,
@@ -170,7 +170,17 @@ function Graph() {
                 var ModeName = mode.name;
                 var FullDate = graph.runs[x].fullDate;
 
-                text = eval(ToolTipText);
+                var tooltipParams = {
+                    RunResult: RunResult,
+                    ModeName: ModeName,
+                    UserID: UserID,
+                    OtherDate: OtherDate,
+                    Username: Username,
+                    FullDate: FullDate
+                };
+
+                text = tooltipGen(tooltipParams);
+
                 showToolTip(item.pageX, item.pageY, text);
             }
         });
@@ -189,7 +199,7 @@ function Graph() {
     $(document).ready(function () {
         {/literal}
         {foreach from=$graphs key=k item=v}
-        drawGraph($("#{$k}"), Graphs.{$k}, '{$v.graphdata.units}', "{$v.graphdata.tooltiptext}");
+        drawGraph($("#{$k}"), Graphs.{$k}, '{$v.graphdata.units}', {$v.graphdata.tooltipGenFunction});
         {/foreach}
         {literal}
     });

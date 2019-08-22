@@ -8,6 +8,7 @@ if(defined('INSIDE'))
     $_Vars_ElementCategories['defense']                 = array(401, 402, 403, 404, 405, 406, 407, 408, 502, 503);
     $_Vars_ElementCategories['rockets']                 = array(502, 503);
     $_Vars_ElementCategories['prod']                    = array(1, 2, 3, 4, 12, 212);
+    $_Vars_ElementCategories['storages']                = array(22, 23, 24);
     $_Vars_ElementCategories['units']['military']       = array(204, 205, 206, 207, 210, 211, 213, 214, 215, 216, 218, 220, 221, 222, 223, 224, 401, 402, 403, 404, 405, 406, 407, 408, 502, 503);
     $_Vars_ElementCategories['units']['civil']          = array(202, 203, 208, 209, 212, 217);
 

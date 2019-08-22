@@ -2,7 +2,7 @@
 
 function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
 {
-    global $_EnginePath, $_Vars_ResProduction, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories,
+    global $_EnginePath, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories,
            $_SkinPath, $_GameConfig, $_GET, $_Vars_PremiumBuildingPrices, $_Vars_MaxElementLevel, $_Vars_PremiumBuildings;
 
     $BuildingPage = '';
@@ -189,71 +189,45 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
             }
             $parse['nivel'] = ($BuildingLevel == 0) ? '' : " ({$_Lang['level']} {$PlanetLevel})";
 
-            if(in_array($Element, array(1, 2, 3, 4, 12)))
-            {
+            if (in_array($Element, array(1, 2, 3, 4, 12))) {
                 // Show energy on BuildingPage
-                $Prod[4] = null;
-                $Prod[3] = null;
-                $ActualNeedDeut = null;
-                $BuildLevelFactor = 10;
-                $BuildTemp = $CurrentPlanet['temp_max'];
-                $CurrentBuildtLvl = $BuildingLevel;
-                $BuildLevel = ($CurrentBuildtLvl > 0) ? $CurrentBuildtLvl : 0;
+                $thisLevelProduction = getElementProduction(
+                    $Element,
+                    $CurrentPlanet,
+                    $CurrentUser,
+                    [
+                        'useCurrentBoosters' => true,
+                        'currentTimestamp' => $Now,
+                        'customLevel' => $BuildingLevel,
+                        'customProductionFactor' => 10
+                    ]
+                );
+                $nextLevelProduction = getElementProduction(
+                    $Element,
+                    $CurrentPlanet,
+                    $CurrentUser,
+                    [
+                        'useCurrentBoosters' => true,
+                        'currentTimestamp' => $Now,
+                        'customLevel' => ($BuildingLevel + 1),
+                        'customProductionFactor' => 10
+                    ]
+                );
 
-                // --- Calculate ThisLevel Income
-                if($Element == 12)
-                {
-                    $Prod[3] = (floor(eval($_Vars_ResProduction[$Element]['formule']['deuterium']) * $_GameConfig['resource_multiplier']));
-                    $ActualNeedDeut = $Prod[3];
-                }
-                if($Element == 4 OR $Element == 12)
-                {
-                    // If it's Power Station
-                    $Prod[4] = (floor(eval($_Vars_ResProduction[$Element]['formule']['energy']) * $EnergyMulti));
-                }
-                else
-                {
-                    // If it's Mine
-                    $Prod[4] = (floor(eval($_Vars_ResProduction[$Element]['formule']['energy'])));
-                }
-                $ActualNeed = $Prod[4];
+                $energyDifference = ($nextLevelProduction['energy'] - $thisLevelProduction['energy']);
+                $deuteriumDifference = ($nextLevelProduction['deuterium'] - $thisLevelProduction['deuterium']);
 
-                // --- Calculate NextLevel Income
-                $BuildLevel += 1;
-                if($Element == 12)
-                {
-                    $Prod[3] = (floor(eval($_Vars_ResProduction[$Element]['formule']['deuterium']) * $_GameConfig['resource_multiplier']));
-                }
-                if($Element == 4 OR $Element == 12)
-                {
-                    // If it's Power Station
-                    $Prod[4] = (floor(eval($_Vars_ResProduction[$Element]['formule']['energy']) * $EnergyMulti));
-                }
-                else
-                {
-                    // If it's Mine
-                    $Prod[4] = (floor(eval($_Vars_ResProduction[$Element]['formule']['energy'])));
-                }
+                $energyDifferenceFormatted = prettyColorNumber(floor($energyDifference));
 
-                $EnergyNeed = prettyColorNumber(floor($Prod[4] - $ActualNeed));
+                if ($Element >= 1 && $Element <= 3) {
+                    $parse['build_need_diff'] = "(<span class=\"red\">{$_Lang['Energy']}: {$energyDifferenceFormatted}</span>)";
+                } else if ($Element == 4) {
+                    $parse['build_need_diff'] = "(<span class=\"lime\">{$_Lang['Energy']}: +{$energyDifferenceFormatted}</span>)";
+                } else if ($Element == 12) {
+                    $deuteriumDifferenceFormatted = prettyColorNumber(floor($deuteriumDifference));
 
-                if($Element >= 1 AND $Element <= 3)
-                {
-                    $parse['build_need_diff'] = "(<span class=\"red\">{$_Lang['Energy']}: {$EnergyNeed}</span>)";
+                    $parse['build_need_diff'] = "(<span class=\"lime\">{$_Lang['Energy']}: +{$energyDifferenceFormatted}</span> | <span class=\"red\">{$_Lang['Deuterium']}: {$deuteriumDifferenceFormatted}</span>)";
                 }
-                else if($Element == 4 OR $Element == 12)
-                {
-                    $DeuteriumNeeded = prettyColorNumber(floor($Prod[3] - $ActualNeedDeut));
-                    if($Element != 12)
-                    {
-                        $parse['build_need_diff'] = "(<span class=\"lime\">{$_Lang['Energy']}: +{$EnergyNeed}</span>)";
-                    }
-                    else
-                    {
-                        $parse['build_need_diff'] = "(<span class=\"lime\">{$_Lang['Energy']}: +{$EnergyNeed}</span> | <span class=\"red\">{$_Lang['Deuterium']}: {$DeuteriumNeeded}</span>)";
-                    }
-                }
-                $BuildLevel = 0;
             }
 
             $parse['n'] = $ElementName;
