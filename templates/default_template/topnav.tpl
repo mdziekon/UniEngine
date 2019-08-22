@@ -5,15 +5,6 @@ $(document).ready(function()
     var PHPInjectedData = {
         isOnVacation: {isOnVacation},
 
-        specialResourcesState: {
-            energy: {
-                resourceName: "{Energy}",
-                unused: `{Energy_free}`,
-                used: `{Energy_used}`,
-                total: `{Energy_total}`
-            }
-        },
-
         JSPerHour_Metal: {JSPerHour_Metal},
         JSStore_Metal: {JSStore_Metal},
         JSStoreOverflow_Metal: {JSStoreOverflow_Metal},
@@ -30,7 +21,16 @@ $(document).ready(function()
         JSCount_Deuterium: {JSCount_Deuterium},
     };
 
-    window.PHPInject_topnav_data = PHPInjectedData;
+    window.PHPInject_topnav_data = {
+        specialResourcesState: {
+            energy: {
+                resourceName: "{Energy}",
+                unused: `{Energy_free}`,
+                used: `{Energy_used}`,
+                total: `{Energy_total}`
+            }
+        },
+    };
     window.PHPInject_topnav_lang = {
         When_full_store: `{When_full_store}`,
         Store_Status: `{Store_Status}`,
