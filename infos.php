@@ -165,7 +165,7 @@ function buildStoragesCapacityTableHTML($elementID, &$planet, &$user, $rowTPL) {
 
     $currentLevel = $planet[$elementPlanetKey];
 
-    $currentLevelCapacity = (floor(BASE_STORAGE_SIZE * pow(1.7, $currentLevel)));
+    $currentLevelCapacity = getElementStorageCapacities($elementID, $planet, []);
 
     $tableRangeStartLevel = $currentLevel - 3;
     $tableRangeEndLevel = $currentLevel + 6;
@@ -176,6 +176,9 @@ function buildStoragesCapacityTableHTML($elementID, &$planet, &$user, $rowTPL) {
         $tableRangeStartLevel += $offset;
         $tableRangeEndLevel += $offset;
     }
+
+    // Supports only one resource type
+    $capacityResourceKey = getElementStoredResourceKeys($elementID)[0];
 
     $resultHTML = '';
 
@@ -193,10 +196,18 @@ function buildStoragesCapacityTableHTML($elementID, &$planet, &$user, $rowTPL) {
             $rowData['build_lvl'] = $iterLevel;
         }
 
-        $iterLevelCapacity = (floor(BASE_STORAGE_SIZE * pow(1.7, $iterLevel)));
-        $capacityDifference = ($iterLevelCapacity - $currentLevelCapacity);
+        $iterLevelCapacity = getElementStorageCapacities(
+            $elementID,
+            $planet,
+            [
+                'customLevel' => $iterLevel
+            ]
+        );
 
-        $rowData['build_capacity'] = prettyNumber($iterLevelCapacity);
+        $resourceCapacity = $iterLevelCapacity[$capacityResourceKey];
+        $capacityDifference = ($resourceCapacity - $currentLevelCapacity[$capacityResourceKey]);
+
+        $rowData['build_capacity'] = prettyNumber($resourceCapacity);
         $rowData['build_capacity_diff'] = prettyColorNumber(floor($capacityDifference));
 
         $resultHTML .= parsetemplate($rowTPL, $rowData);
