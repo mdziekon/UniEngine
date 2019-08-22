@@ -12,6 +12,15 @@ function getReferralID() {
     return intval($_GET[$referralIDKey]);
 }
 
+function getNavigationRedirectHeader($pageName) {
+    $_EnginePath = './';
+    include_once($_EnginePath . 'includes/helpers/common/navigation.php');
+
+    $pageURL = \UniEngine\Engine\Includes\Helpers\Common\Navigation\getPageURL($pageName, []);
+
+    return "Location: {$pageURL}";
+}
+
 function hasValidReferralData() {
     $referralID = getReferralID();
 
@@ -53,7 +62,7 @@ function onValidReferralDataProvided($referralID) {
 
 function renderPage() {
     if (!hasValidReferralData()) {
-        header('Location: login.php');
+        header(getNavigationRedirectHeader("login"));
 
         return;
     }
@@ -62,7 +71,7 @@ function renderPage() {
 
     onValidReferralDataProvided($referralID);
 
-    header('Location: reg_mainpage.php');
+    header(getNavigationRedirectHeader("registration"));
 }
 
 renderPage();
