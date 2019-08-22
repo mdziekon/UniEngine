@@ -61,9 +61,11 @@ function ResourceUpdate(&$CurrentPlanet, $CurrentUser, $StartTime, $EndTime) {
     );
 
     // Calculate Place in Storages
-    $CurrentPlanet['metal_max'] = (floor(BASE_STORAGE_SIZE * pow(1.7, $CurrentPlanet[$_Vars_GameElements[22]])));
-    $CurrentPlanet['crystal_max'] = (floor(BASE_STORAGE_SIZE * pow(1.7, $CurrentPlanet[$_Vars_GameElements[23]])));
-    $CurrentPlanet['deuterium_max'] = (floor(BASE_STORAGE_SIZE * pow(1.7, $CurrentPlanet[$_Vars_GameElements[24]])));
+    $totalCapacities = getPlanetTotalStorageCapacities($CurrentPlanet);
+
+    foreach ($totalCapacities as $resourceKey => $resourceCapacity) {
+        $CurrentPlanet["{$resourceKey}_max"] = $resourceCapacity;
+    }
 
     $geologistTimelineSubperiods = [];
     $engineerTimelineSubperiods = [];

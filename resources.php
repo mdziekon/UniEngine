@@ -131,9 +131,11 @@ function BuildRessourcePage($CurrentUser, &$CurrentPlanet)
 
     // -------------------------------------------------------------------------------------------------------
     // Calculate Storage
-    $CurrentPlanet['metal_max'] = floor(BASE_STORAGE_SIZE * pow (1.7, $CurrentPlanet[$_Vars_GameElements[22]]));
-    $CurrentPlanet['crystal_max'] = floor(BASE_STORAGE_SIZE * pow (1.7, $CurrentPlanet[$_Vars_GameElements[23]]));
-    $CurrentPlanet['deuterium_max'] = floor(BASE_STORAGE_SIZE * pow (1.7, $CurrentPlanet[$_Vars_GameElements[24]]));
+    $totalCapacities = getPlanetTotalStorageCapacities($CurrentPlanet);
+
+    foreach ($totalCapacities as $resourceKey => $resourceCapacity) {
+        $CurrentPlanet["{$resourceKey}_max"] = $resourceCapacity;
+    }
 
     // -------------------------------------------------------------------------------------------------------
     $parse['resource_row'] = '';
