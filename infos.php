@@ -160,6 +160,51 @@ function buildResourcesProductionTableHTML($elementID, &$planet, &$user, $timest
     return $resultHTML;
 }
 
+function buildStoragesCapacityTableHTML($elementID, &$planet, &$user, $rowTPL) {
+    $elementPlanetKey = _getElementPlanetKey($elementID);
+
+    $currentLevel = $planet[$elementPlanetKey];
+
+    $currentLevelCapacity = (floor(BASE_STORAGE_SIZE * pow(1.7, $currentLevel)));
+
+    $tableRangeStartLevel = $currentLevel - 3;
+    $tableRangeEndLevel = $currentLevel + 6;
+
+    if ($tableRangeStartLevel < 0) {
+        $offset = $tableRangeStartLevel * (-1);
+
+        $tableRangeStartLevel += $offset;
+        $tableRangeEndLevel += $offset;
+    }
+
+    $resultHTML = '';
+
+    for (
+        $iterLevel = $tableRangeStartLevel;
+        $iterLevel <= $tableRangeEndLevel;
+        $iterLevel++
+    ) {
+        $rowData = [];
+
+        if ($iterLevel == $currentLevel) {
+            $rowData['build_lvl'] = "<span class=\"red\">{$iterLevel}</span>";
+            $rowData['IsCurrent'] = ' class="thisLevel"';
+        } else {
+            $rowData['build_lvl'] = $iterLevel;
+        }
+
+        $iterLevelCapacity = (floor(BASE_STORAGE_SIZE * pow(1.7, $iterLevel)));
+        $capacityDifference = ($iterLevelCapacity - $currentLevelCapacity);
+
+        $rowData['build_capacity'] = prettyNumber($iterLevelCapacity);
+        $rowData['build_capacity_diff'] = prettyColorNumber(floor($capacityDifference));
+
+        $resultHTML .= parsetemplate($rowTPL, $rowData);
+    }
+
+    return $resultHTML;
+}
+
 function ShowProductionTable($CurrentUser, $CurrentPlanet, $BuildID, $Template)
 {
     global $_Vars_GameElements, $_Vars_ElementCategories, $_GameConfig, $_EnginePath;
@@ -172,6 +217,14 @@ function ShowProductionTable($CurrentUser, $CurrentPlanet, $BuildID, $Template)
             $CurrentPlanet,
             $CurrentUser,
             time(),
+            $Template
+        );
+    }
+    if (in_array($BuildID, $_Vars_ElementCategories['storages'])) {
+        return buildStoragesCapacityTableHTML(
+            $BuildID,
+            $CurrentPlanet,
+            $CurrentUser,
             $Template
         );
     }
@@ -346,6 +399,15 @@ else if($BuildID == 12)
     {
         $PageTPL = gettemplate('info_buildings_general');
     }
+}
+else if(in_array($BuildID, $_Vars_ElementCategories['storages']))
+{
+    // Storages
+    $DestroyTPL = gettemplate('info_buildings_destroy');
+
+    $PageTPL = gettemplate('info_buildings_table');
+    $TPL_Production_Header = gettemplate('infos_production_header_storages');
+    $TPL_Production_Rows = gettemplate('infos_production_rows_storages');
 }
 else if($BuildID >= 14 AND $BuildID <= 32)
 {
