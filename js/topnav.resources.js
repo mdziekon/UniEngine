@@ -120,9 +120,18 @@ function updateResourceCounters (params, cache) {
         );
 
         // Update per-resource cache
-        cache.resources[resourceKey].hasReachedRealMaxCapacity = resourceState.hasReachedRealMaxCapacity;
-        cache.resources[resourceKey].hasDepletedStorage = resourceState.hasDepletedStorage;
-        cache.resources[resourceKey].hasNoProduction = resourceState.hasNoProduction;
+        cache.resources[resourceKey].hasReachedRealMaxCapacity = (
+            resourceState.hasReachedRealMaxCapacity ||
+            cache.resources[resourceKey].hasReachedRealMaxCapacity
+        );
+        cache.resources[resourceKey].hasDepletedStorage = (
+            resourceState.hasDepletedStorage ||
+            cache.resources[resourceKey].hasDepletedStorage
+        );
+        cache.resources[resourceKey].hasNoProduction = (
+            resourceState.hasNoProduction ||
+            cache.resources[resourceKey].hasNoProduction
+        );
 
         return {
             resourceKey,
@@ -151,14 +160,21 @@ function updateResourceCounters (params, cache) {
 //  Returns: object
 //      - currentResourceAmount (number)
 //      - hasReachedRealMaxCapacity (boolean)
-//      - hasDepletedStorage (boolean)
-//      - hasNoProduction (boolean)
+//      - hasDepletedStorage (boolean | undefined)
+//      - hasNoProduction (boolean | undefined)
 //
 function _calculateResourceState (params) {
     const maxPracticalStorage = Math.max(
         params.resourceDetails.storage.maxCapacity,
         params.resourceDetails.storage.overflowCapacity
     );
+
+    if (params.resourceDetails.state.initial >= maxPracticalStorage) {
+        return {
+            currentResourceAmount: params.resourceDetails.state.initial,
+            hasReachedRealMaxCapacity: true
+        };
+    }
 
     const theoreticalIncome = (
         (params.resourceDetails.state.incomePerHour / 3600) *
@@ -171,10 +187,7 @@ function _calculateResourceState (params) {
 
     const finalResourceAmount = Math.max(
         Math.min(
-            Math.max(
-                maxPracticalStorage,
-                params.resourceDetails.state.initial
-            ),
+            maxPracticalStorage,
             theoreticalResourceAmount
         ),
         0
