@@ -1,25 +1,79 @@
 <?php
 
-if(!empty($_GET['r']))
-{
-    $ID = intval($_GET['r']);
-    if($ID > 0)
-    {
-        define('INSIDE', true);
+function getReferralID() {
+    global $_GET;
 
-        $_EnginePath = './';
-        include($_EnginePath.'includes/constants.php');
+    $referralIDKey = 'r';
 
-        if($_COOKIE[REFERING_COOKIENAME] <= 0)
-        {
-            setcookie(REFERING_COOKIENAME, $ID, time() + (14*24*60*60), '', GAMEURL_DOMAIN);
-        }
-        header('Location: reg.php');
-        die();
+    if (empty($_GET[$referralIDKey])) {
+        return null;
     }
+
+    return intval($_GET[$referralIDKey]);
 }
 
-header('Location: login.php');
-die();
+function getNavigationRedirectHeader($pageName) {
+    $_EnginePath = './';
+    include_once($_EnginePath . 'includes/helpers/common/navigation.php');
+
+    $pageURL = \UniEngine\Engine\Includes\Helpers\Common\Navigation\getPageURL($pageName, []);
+
+    return "Location: {$pageURL}";
+}
+
+function hasValidReferralData() {
+    $referralID = getReferralID();
+
+    return ($referralID > 0);
+}
+
+function hasReferralCookie() {
+    global $_COOKIE;
+
+    $referralCookieKey = REFERING_COOKIENAME;
+
+    return (!empty($_COOKIE[$referralCookieKey]));
+}
+
+function onValidReferralDataProvided($referralID) {
+    global $_COOKIE;
+
+    define('INSIDE', true);
+
+    $_EnginePath = './';
+    include_once($_EnginePath . 'includes/constants.php');
+
+    if (hasReferralCookie()) {
+        return;
+    }
+
+    $nowTimestamp = time();
+    $referralCookieTTLDays = 14;
+    $referralCookieTTL = ($referralCookieTTLDays * TIME_DAY);
+
+    setcookie(
+        REFERING_COOKIENAME,
+        $referralID,
+        $nowTimestamp + $referralCookieTTL,
+        '',
+        GAMEURL_DOMAIN
+    );
+}
+
+function renderPage() {
+    if (!hasValidReferralData()) {
+        header(getNavigationRedirectHeader("login"));
+
+        return;
+    }
+
+    $referralID = getReferralID();
+
+    onValidReferralDataProvided($referralID);
+
+    header(getNavigationRedirectHeader("registration"));
+}
+
+renderPage();
 
 ?>
