@@ -195,6 +195,22 @@ function getElementConsumedResourceKeys($elementID) {
     return $consumedResourceKeys;
 }
 
+function getElementStoredResourceKeys($elementID) {
+    $theoreticalCapacities = _getTheoreticalElementCapacities($elementID);
+
+    $storedResourceKeys = [];
+
+    foreach ($theoreticalCapacities as $resourceKey => $resourceCapacity) {
+        if ($resourceCapacity <= 0) {
+            continue;
+        }
+
+        $storedResourceKeys[] = $resourceKey;
+    }
+
+    return $storedResourceKeys;
+}
+
 //  Arguments:
 //      - $planetProduction (&Object)
 //      - $user (&Object)
@@ -232,6 +248,60 @@ function getPlanetsProductionEfficiency(&$planetProduction, &$user, $options) {
     return $productionLevel;
 }
 
+//  Arguments:
+//      - $elementID (Number)
+//      - $planet (&Object)
+//      - $params (Object)
+//          - customLevel (Number) [default: null]
+//
+function getElementStorageCapacities($elementID, &$planet, $params) {
+    global $_GameConfig;
+
+    $capacities = [
+        'metal' => 0,
+        'crystal' => 0,
+        'deuterium' => 0
+    ];
+
+    if (!isset($params['customLevel'])) {
+        $params['customLevel'] = null;
+    }
+
+    $hasCustomLevel = ($params['customLevel'] !== null);
+    $customLevel = $params['customLevel'];
+
+    if (!_isElementStorageStructure($elementID)) {
+        return $capacities;
+    }
+
+    $capacityFormula = _getElementStorageCapacityFormula($elementID);
+
+    if (!is_callable($capacityFormula)) {
+        return $capacities;
+    }
+
+    $elementPlanetKey = _getElementPlanetKey($elementID);
+    $elementParams = [
+        'level' => (
+            $hasCustomLevel ?
+            $customLevel :
+            $planet[$elementPlanetKey]
+        )
+    ];
+
+    $elementCapacities = $capacityFormula($elementParams);
+
+    foreach ($elementCapacities as $resourceKey => $resourceCapacity) {
+        $capacities[$resourceKey] = $resourceCapacity;
+    }
+
+    foreach ($capacities as $resourceKey => $resourceCapacity) {
+        $capacities[$resourceKey] = floor($resourceCapacity);
+    }
+
+    return $capacities;
+}
+
 function _getTheoreticalElementProduction($elementID) {
     if (
         !_isElementStructure($elementID) &&
@@ -253,6 +323,24 @@ function _getTheoreticalElementProduction($elementID) {
     ];
 
     return $productionFormula($elementParams);
+}
+
+function _getTheoreticalElementCapacities($elementID) {
+    if (!_isElementStorageStructure($elementID)) {
+        return [];
+    }
+
+    $capacityFormula = _getElementStorageCapacityFormula($elementID);
+
+    if (!is_callable($capacityFormula)) {
+        return [];
+    }
+
+    $elementParams = [
+        'level' => 1
+    ];
+
+    return $capacityFormula($elementParams);
 }
 
 function _isResourceProductionSpeedMultiplicable($resourceKey) {
@@ -288,6 +376,12 @@ function _isElementStructure($elementID) {
     return in_array($elementID, $_Vars_ElementCategories['build']);
 }
 
+function _isElementStorageStructure($elementID) {
+    global $_Vars_ElementCategories;
+
+    return in_array($elementID, $_Vars_ElementCategories['storages']);
+}
+
 function _isElementShip($elementID) {
     global $_Vars_ElementCategories;
 
@@ -315,6 +409,16 @@ function _getElementProductionFormula($elementID) {
     }
 
     return $_Vars_ResProduction[$elementID]['production'];
+}
+
+function _getElementStorageCapacityFormula($elementID) {
+    global $_Vars_ResStorages;
+
+    if (!isset($_Vars_ResStorages[$elementID]['capacity'])) {
+        return null;
+    }
+
+    return $_Vars_ResStorages[$elementID]['capacity'];
 }
 
 function _getBoosterEndtime($boosterKey, &$user) {

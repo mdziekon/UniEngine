@@ -77,6 +77,39 @@ if(defined('INSIDE'))
             }
         ]
     ];
+
+    $_Vars_ResStorages = [
+        // Metal storage
+        22 => [
+            'capacity' => function ($params) {
+                $level = $params['level'];
+
+                return [
+                    'metal' => (BASE_STORAGE_SIZE * pow(1.7, $level))
+                ];
+            }
+        ],
+        // Crystal storage
+        23 => [
+            'capacity' => function ($params) {
+                $level = $params['level'];
+
+                return [
+                    'crystal' => (BASE_STORAGE_SIZE * pow(1.7, $level))
+                ];
+            }
+        ],
+        // Deuterium tank
+        24 => [
+            'capacity' => function ($params) {
+                $level = $params['level'];
+
+                return [
+                    'deuterium' => (BASE_STORAGE_SIZE * pow(1.7, $level))
+                ];
+            }
+        ],
+    ];
 }
 
 ?>
