@@ -60,7 +60,7 @@ function renderPage() {
 
     onValidReferralDataProvided($referralID);
 
-    header('Location: reg.php');
+    header('Location: reg_mainpage.php');
 }
 
 renderPage();
