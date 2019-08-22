@@ -33,7 +33,6 @@ function number_format (value) {
 //      - resources (object<resourceKey: string, details: object>)
 //          - hasReachedRealMaxCapacity (boolean)
 //          - hasDepletedStorage (boolean)
-//          - hasNoProduction (boolean)
 //
 function buildResourceUpdaterCache (params) {
     const cache = {
@@ -44,8 +43,7 @@ function buildResourceUpdaterCache (params) {
     params.resources.forEach((resourceDetails) => {
         cache.resources[resourceDetails.resourceKey] = {
             hasReachedRealMaxCapacity: false,
-            hasDepletedStorage: false,
-            hasNoProduction: false
+            hasDepletedStorage: false
         };
     });
 
@@ -92,7 +90,7 @@ function updateResourceCounters (params, cache) {
             return;
         }
         // Opt: prevent further calculations if there is no resource production
-        if (cache.resources[resourceKey].hasNoProduction) {
+        if (resourceDetails.state.incomePerHour === 0) {
             return;
         }
 
@@ -128,10 +126,6 @@ function updateResourceCounters (params, cache) {
             resourceState.hasDepletedStorage ||
             cache.resources[resourceKey].hasDepletedStorage
         );
-        cache.resources[resourceKey].hasNoProduction = (
-            resourceState.hasNoProduction ||
-            cache.resources[resourceKey].hasNoProduction
-        );
 
         return {
             resourceKey,
@@ -161,7 +155,6 @@ function updateResourceCounters (params, cache) {
 //      - currentResourceAmount (number)
 //      - hasReachedRealMaxCapacity (boolean)
 //      - hasDepletedStorage (boolean | undefined)
-//      - hasNoProduction (boolean | undefined)
 //
 function _calculateResourceState (params) {
     const maxPracticalStorage = Math.max(
@@ -195,13 +188,11 @@ function _calculateResourceState (params) {
 
     const hasReachedRealMaxCapacity = (finalResourceAmount >= maxPracticalStorage);
     const hasDepletedStorage = (finalResourceAmount <= 0 && theoreticalIncome < 0);
-    const hasNoProduction = (theoreticalIncome == 0);
 
     return {
         currentResourceAmount: finalResourceAmount,
         hasReachedRealMaxCapacity,
-        hasDepletedStorage,
-        hasNoProduction
+        hasDepletedStorage
     };
 }
 
