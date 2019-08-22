@@ -160,7 +160,7 @@ function buildResourcesProductionTableHTML($elementID, &$planet, &$user, $timest
     return $resultHTML;
 }
 
-function buildStoragesCapacityTableHTML($elementID, &$planet, &$user, $rowTPL) {
+function buildStoragesCapacityTableHTML($elementID, &$planet, $rowTPL) {
     $elementPlanetKey = _getElementPlanetKey($elementID);
 
     $currentLevel = $planet[$elementPlanetKey];
@@ -235,7 +235,6 @@ function ShowProductionTable($CurrentUser, $CurrentPlanet, $BuildID, $Template)
         return buildStoragesCapacityTableHTML(
             $BuildID,
             $CurrentPlanet,
-            $CurrentUser,
             $Template
         );
     }
