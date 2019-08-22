@@ -1,135 +1,73 @@
 {PHPInject_commonJS_html}
 <script>
-$(document).ready(function()
-{
-    window.PHPInject_topnav_data = {
-        specialResourcesState: {
-            energy: {
-                resourceName: "{Energy}",
-                unused: {PHPInject_energy_unused},
-                used: {PHPInject_energy_used},
-                total: {PHPInject_energy_total}
+window.PHPInject_topnav_data = {
+    specialResourcesState: {
+        energy: {
+            resourceName: "{Energy}",
+            unused: {PHPInject_energy_unused},
+            used: {PHPInject_energy_used},
+            total: {PHPInject_energy_total}
+        }
+    },
+    resourcesDetails: [
+        {
+            resourceKey: "metal",
+            resourceName: `{Metal}`,
+            isOnVacation: {PHPInject_isOnVacation},
+            storage: {
+                maxCapacity: Math.floor({PHPInject_resource_metal_storage_maxCapacity}),
+                overflowCapacity: Math.floor({PHPInject_resource_metal_storage_overflowCapacity})
+            },
+            state: {
+                initial: Math.floor({PHPInject_resource_metal_state_amount}),
+                incomePerHour: Math.floor({PHPInject_resource_metal_state_incomePerHour}),
             }
         },
-        resourcesDetails: [
-            {
-                resourceKey: "metal",
-                resourceName: `{Metal}`,
-                isOnVacation: {PHPInject_isOnVacation},
-                storage: {
-                    maxCapacity: Math.floor({PHPInject_resource_metal_storage_maxCapacity}),
-                    overflowCapacity: Math.floor({PHPInject_resource_metal_storage_overflowCapacity})
-                },
-                state: {
-                    initial: Math.floor({PHPInject_resource_metal_state_amount}),
-                    incomePerHour: Math.floor({PHPInject_resource_metal_state_incomePerHour}),
-                }
+        {
+            resourceKey: "crystal",
+            resourceName: `{Crystal}`,
+            isOnVacation: {PHPInject_isOnVacation},
+            storage: {
+                maxCapacity: Math.floor({PHPInject_resource_crystal_storage_maxCapacity}),
+                overflowCapacity: Math.floor({PHPInject_resource_crystal_storage_overflowCapacity})
             },
-            {
-                resourceKey: "crystal",
-                resourceName: `{Crystal}`,
-                isOnVacation: {PHPInject_isOnVacation},
-                storage: {
-                    maxCapacity: Math.floor({PHPInject_resource_crystal_storage_maxCapacity}),
-                    overflowCapacity: Math.floor({PHPInject_resource_crystal_storage_overflowCapacity})
-                },
-                state: {
-                    initial: Math.floor({PHPInject_resource_crystal_state_amount}),
-                    incomePerHour: Math.floor({PHPInject_resource_crystal_state_incomePerHour}),
-                }
-            },
-            {
-                resourceKey: "deuterium",
-                resourceName: `{Deuterium}`,
-                isOnVacation: {PHPInject_isOnVacation},
-                storage: {
-                    maxCapacity: Math.floor({PHPInject_resource_deuterium_storage_maxCapacity}),
-                    overflowCapacity: Math.floor({PHPInject_resource_deuterium_storage_overflowCapacity})
-                },
-                state: {
-                    initial: Math.floor({PHPInject_resource_deuterium_state_amount}),
-                    incomePerHour: Math.floor({PHPInject_resource_deuterium_state_incomePerHour}),
-                }
+            state: {
+                initial: Math.floor({PHPInject_resource_crystal_state_amount}),
+                incomePerHour: Math.floor({PHPInject_resource_crystal_state_incomePerHour}),
             }
-        ]
-    };
-    window.PHPInject_topnav_lang = {
-        When_full_store: `{When_full_store}`,
-        Store_Status: `{Store_Status}`,
-
-        income_minus: `{income_minus}`,
-        income_vacation: `{income_vacation}`,
-        income_no_production: `{income_no_production}`,
-        income_full: `{full}`,
-
-        Store_status_Overload: `{Store_status_Overload}`,
-        Store_status_Full: `{Store_status_Full}`,
-        Store_status_Empty: `{Store_status_Empty}`,
-        Store_status_NearFull: `{Store_status_NearFull}`,
-        Store_status_OK: `{Store_status_OK}`
-    };
-
-    var initialStateTimestamp = Date.now();
-    var $parentEl = $("#topnav_resources");
-    var countersCache = buildResourceUpdaterCache({
-        resources: window.PHPInject_topnav_data.resourcesDetails
-    });
-
-    const resourceTooltips = window.PHPInject_topnav_data.resourcesDetails.map((resourceDetails) => {
-        const resourceKey = resourceDetails.resourceKey;
-
-        const tooltip = new ResourceTooltip({
-            resourceKey,
-            $parentEl,
-            values: resourceDetails,
-            bodyCreator: createProductionResourceTooltipBody
-        });
-
-        return {
-            resourceKey,
-            tooltip
-        };
-    });
-
-    setInterval(
-        function () {
-            const result = updateResourceCounters(
-                {
-                    $parentEl,
-                    timestamps: {
-                        initial: initialStateTimestamp,
-                        current: Date.now()
-                    },
-                    resources: window.PHPInject_topnav_data.resourcesDetails
-                },
-                countersCache
-            );
-
-            if (!result) {
-                return;
-            }
-
-            result.forEach((resourceUpdateResult) => {
-                if (!resourceUpdateResult) {
-                    return;
-                }
-
-                const tooltip = resourceTooltips
-                    .find((resourceTooltip) => resourceTooltip.resourceKey === resourceUpdateResult.resourceKey)
-                    .tooltip;
-
-                tooltip.updateValues({
-                    state: {
-                        current: resourceUpdateResult.currentAmount
-                    }
-                });
-            });
         },
-        1000
-    );
-});
+        {
+            resourceKey: "deuterium",
+            resourceName: `{Deuterium}`,
+            isOnVacation: {PHPInject_isOnVacation},
+            storage: {
+                maxCapacity: Math.floor({PHPInject_resource_deuterium_storage_maxCapacity}),
+                overflowCapacity: Math.floor({PHPInject_resource_deuterium_storage_overflowCapacity})
+            },
+            state: {
+                initial: Math.floor({PHPInject_resource_deuterium_state_amount}),
+                incomePerHour: Math.floor({PHPInject_resource_deuterium_state_incomePerHour}),
+            }
+        }
+    ]
+};
+window.PHPInject_topnav_lang = {
+    When_full_store: `{When_full_store}`,
+    Store_Status: `{Store_Status}`,
+
+    income_minus: `{income_minus}`,
+    income_vacation: `{income_vacation}`,
+    income_no_production: `{income_no_production}`,
+    income_full: `{full}`,
+
+    Store_status_Overload: `{Store_status_Overload}`,
+    Store_status_Full: `{Store_status_Full}`,
+    Store_status_Empty: `{Store_status_Empty}`,
+    Store_status_NearFull: `{Store_status_NearFull}`,
+    Store_status_OK: `{Store_status_OK}`
+};
 </script>
-<script src="dist/js/topnav.resources.cachebuster-1566487990541.min.js"></script>
+<script src="dist/js/topnav.resources.cachebuster-1566489883757.min.js"></script>
 <script src="dist/js/topnav.planet_selector.cachebuster-1566475997888.min.js"></script>
 <link rel="stylesheet" type="text/css" href="dist/css/topNav.cachebuster-1546564327123.min.css"/>
 <table id="topnav_resources">

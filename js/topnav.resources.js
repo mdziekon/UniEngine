@@ -482,10 +482,70 @@ function createEnergyResourceTooltipBody (values) {
 }
 
 $(document).ready(function () {
+    const phpInjectData = PHPInject_topnav_data;
+
+    const initialStateTimestamp = Date.now();
+    const $parentEl = $("#topnav_resources");
+    const countersCache = buildResourceUpdaterCache({
+        resources: phpInjectData.resourcesDetails
+    });
+
+    const resourceTooltips = phpInjectData.resourcesDetails.map((resourceDetails) => {
+        const resourceKey = resourceDetails.resourceKey;
+
+        const tooltip = new ResourceTooltip({
+            resourceKey,
+            $parentEl,
+            values: resourceDetails,
+            bodyCreator: createProductionResourceTooltipBody
+        });
+
+        return {
+            resourceKey,
+            tooltip
+        };
+    });
+
     new ResourceTooltip({
         resourceKey: "energy",
-        $parentEl: $("#topnav_resources"),
-        values: PHPInject_topnav_data.specialResourcesState.energy,
+        $parentEl,
+        values: phpInjectData.specialResourcesState.energy,
         bodyCreator: createEnergyResourceTooltipBody
     });
+
+    const onUpdateResourceCountersEvent = () => {
+        const result = updateResourceCounters(
+            {
+                $parentEl,
+                timestamps: {
+                    initial: initialStateTimestamp,
+                    current: Date.now()
+                },
+                resources: phpInjectData.resourcesDetails
+            },
+            countersCache
+        );
+
+        if (!result) {
+            return;
+        }
+
+        result.forEach((resourceUpdateResult) => {
+            if (!resourceUpdateResult) {
+                return;
+            }
+
+            const tooltip = resourceTooltips
+                .find((resourceTooltip) => resourceTooltip.resourceKey === resourceUpdateResult.resourceKey)
+                .tooltip;
+
+            tooltip.updateValues({
+                state: {
+                    current: resourceUpdateResult.currentAmount
+                }
+            });
+        });
+    };
+
+    setInterval(onUpdateResourceCountersEvent, 1000);
 });
