@@ -206,45 +206,45 @@ $(document).ready(function()
                 </tr>
                 <tr class="tdct">
                     <td class="w145 tooltip-trigger" data-resource-key="metal">
-                        <div class="amount_display" id="metal" style="color: {ShowCountColor_Metal}">
-                            {ShowCount_Metal}
+                        <div class="amount_display" id="metal" style="color: {PHPData_resource_metal_state_amount_color}">
+                            {PHPData_resource_metal_state_amount_value}
                         </div>
                     </td>
                     <td class="w145 tooltip-trigger" data-resource-key="crystal">
-                        <div class="amount_display" id="crystal" style="color: {ShowCountColor_Crystal}">
-                            {ShowCount_Crystal}
+                        <div class="amount_display" id="crystal" style="color: {PHPData_resource_crystal_state_amount_color}">
+                            {PHPData_resource_crystal_state_amount_value}
                         </div>
                     </td>
                     <td class="w145 tooltip-trigger" data-resource-key="deuterium">
-                        <div class="amount_display" id="deut" style="color: {ShowCountColor_Deuterium}">
-                            {ShowCount_Deuterium}
+                        <div class="amount_display" id="deut" style="color: {PHPData_resource_deuterium_state_amount_color}">
+                            {PHPData_resource_deuterium_state_amount_value}
                         </div>
                     </td>
                     <td class="w145 tooltip-trigger" data-resource-key="energy">
-                        {Energy_free}
+                        {PHPData_resource_energy_unused_html}
                     </td>
                     <td class="w50"></td>
                     <td class="w145">
-                        {ShowCount_Messages}
+                        {PHPData_messages_unread_amount_html}
                     </td>
                     <td class="w220">
-                        {ShowCount_DarkEnergy}
+                        {PHPData_premiumresource_darkenergy_amount_html}
                     </td>
                 </tr>
                 <tr class="tdct">
                     <td class="w145 tooltip-target tooltip-trigger" data-resource-key="metal">
-                        <div class="storage_display" style="color: {ShowStoreColor_Metal}">
-                            {ShowStore_Metal}
+                        <div class="storage_display" style="color: {PHPData_resource_metal_state_amount_color}">
+                            {PHPData_resource_metal_storage_maxCapacity_value}
                         </div>
                     </td>
                     <td class="w145 tooltip-target tooltip-trigger" data-resource-key="crystal">
-                        <div class="storage_display" style="color: {ShowStoreColor_Crystal}">
-                            {ShowStore_Crystal}
+                        <div class="storage_display" style="color: {PHPData_resource_crystal_state_amount_color}">
+                            {PHPData_resource_crystal_storage_maxCapacity_value}
                         </div>
                     </td>
                     <td class="w145 tooltip-target tooltip-trigger" data-resource-key="deuterium">
-                        <div class="storage_display" style="color: {ShowStoreColor_Deuterium}">
-                            {ShowStore_Deuterium}
+                        <div class="storage_display" style="color: {PHPData_resource_deuterium_state_amount_color}">
+                            {PHPData_resource_deuterium_storage_maxCapacity_value}
                         </div>
                     </td>
                     <td class="w145 tooltip-target" data-resource-key="energy"></td>

@@ -188,7 +188,7 @@ function _createPlanetsEnergyStatusDetailsTplData(&$planet) {
 
     $unusedEnergy = ($planet['energy_max'] + $planet['energy_used']);
 
-    $tplData['Energy_free'] = colorizeString(
+    $tplData['PHPData_resource_energy_unused_html'] = colorizeString(
         prettyNumber($unusedEnergy),
         (
             ($unusedEnergy >= 0) ?
@@ -196,6 +196,7 @@ function _createPlanetsEnergyStatusDetailsTplData(&$planet) {
             "red"
         )
     );
+
     $tplData['PHPInject_energy_unused'] = $unusedEnergy;
     $tplData['PHPInject_energy_used'] = ($planet['energy_used'] * (-1));
     $tplData['PHPInject_energy_total'] = ($planet['energy_max']);
@@ -207,8 +208,6 @@ function _createResourceStateDetailsTplData($resourceKey, &$planet, $params) {
     $tplData = [];
 
     $productionLevel = $params['productionLevel'];
-
-    $resourceKeyCamelCase = ucfirst($resourceKey);
 
     $resourceAmount = $planet[$resourceKey];
     $resourceMaxStorage = $planet["{$resourceKey}_max"];
@@ -242,12 +241,9 @@ function _createResourceStateDetailsTplData($resourceKey, &$planet, $params) {
     $tplData["PHPInject_resource_{$resourceKey}_storage_maxCapacity"] = $resourceMaxStorage;
     $tplData["PHPInject_resource_{$resourceKey}_storage_overflowCapacity"] = $resourceMaxOverflowStorage;
 
-    $tplData["ShowCount_{$resourceKeyCamelCase}"] = prettyNumber($resourceAmount);
-    $tplData["ShowStore_{$resourceKeyCamelCase}"] = prettyNumber($resourceMaxStorage);
-    $tplData["ShowCountColor_{$resourceKeyCamelCase}"] = getColorHTMLValue(
-        (!$hasOverflownStorage ? 'green' : 'red')
-    );
-    $tplData["ShowStoreColor_{$resourceKeyCamelCase}"] = getColorHTMLValue(
+    $tplData["PHPData_resource_{$resourceKey}_state_amount_value"] = prettyNumber($resourceAmount);
+    $tplData["PHPData_resource_{$resourceKey}_storage_maxCapacity_value"] = prettyNumber($resourceMaxStorage);
+    $tplData["PHPData_resource_{$resourceKey}_state_amount_color"] = getColorHTMLValue(
         (!$hasOverflownStorage ? 'green' : 'red')
     );
 
@@ -259,7 +255,7 @@ function _createPremiumResourceCounterTplData(&$user) {
 
     $premiumResourceAmount = $user['darkEnergy'];
 
-    $tplData['ShowCount_DarkEnergy'] = colorizeString(
+    $tplData['PHPData_premiumresource_darkenergy_amount_html'] = colorizeString(
         prettyNumber($premiumResourceAmount),
         (
             ($premiumResourceAmount > 0) ?
@@ -288,7 +284,7 @@ function _createUnreadMessagesCounterTplData($userID) {
     $unreadMessagesCount = $Result_MsgCount['count'];
 
     if ($unreadMessagesCount <= 0) {
-        $tplData['ShowCount_Messages'] = '0';
+        $tplData['PHPData_messages_unread_amount_html'] = '0';
 
         return $tplData;
     }
@@ -300,7 +296,7 @@ function _createUnreadMessagesCounterTplData($userID) {
         'text' => prettyNumber($unreadMessagesCount)
     ]);
 
-    $tplData['ShowCount_Messages'] = "[ {$html_messagesLink} ]";
+    $tplData['PHPData_messages_unread_amount_html'] = "[ {$html_messagesLink} ]";
 
     return $tplData;
 }
