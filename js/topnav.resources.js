@@ -386,7 +386,7 @@ function _createResourceTimeToStorageDisplayValue ({
 }
 
 function _createResourceStorageStatusDisplayValue ({
-    resourceState: { currentAmount, storageMaxCapacity, overflowMaxCapacity },
+    resourceState: { currentAmount, storageMaxCapacity },
     lang
 }) {
     const capacityWarningThreshold = 0.8;
@@ -401,7 +401,7 @@ function _createResourceStorageStatusDisplayValue ({
     }
 
     if (hasOverflownStorage) {
-        if (overflowMaxCapacity > storageMaxCapacity) {
+        if (currentAmount > storageMaxCapacity) {
             return colorizeString(
                 lang.Store_status_Overload,
                 "red"
@@ -457,8 +457,7 @@ function createProductionResourceTooltipBody (values) {
                     values.state.initial
             ),
             incomePerHour: values.state.incomePerHour,
-            storageMaxCapacity: values.storage.maxCapacity,
-            overflowMaxCapacity: values.storage.overflowCapacity
+            storageMaxCapacity: values.storage.maxCapacity
         },
         lang
     });
