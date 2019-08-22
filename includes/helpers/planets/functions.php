@@ -302,6 +302,26 @@ function getElementStorageCapacities($elementID, &$planet, $params) {
     return $capacities;
 }
 
+function getPlanetTotalStorageCapacities(&$planet) {
+    global $_Vars_ElementCategories;
+
+    $totalCapacities = [
+        'metal' => 0,
+        'crystal' => 0,
+        'deuterium' => 0
+    ];
+
+    foreach ($_Vars_ElementCategories['storages'] as $elementID) {
+        $elementCapacities = getElementStorageCapacities($elementID, $planet, []);
+
+        foreach ($totalCapacities as $resourceKey => $_resourceCapacity) {
+            $totalCapacities[$resourceKey] += $elementCapacities[$resourceKey];
+        }
+    }
+
+    return $totalCapacities;
+}
+
 function _getTheoreticalElementProduction($elementID) {
     if (
         !_isElementStructure($elementID) &&
