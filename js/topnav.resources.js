@@ -357,7 +357,7 @@ function _createResourceTimeToStorageDisplayValue ({
         return lang.income_vacation;
     }
     if (incomePerHour === 0) {
-        return lang.income_no_mine;
+        return lang.income_no_production;
     }
     if (currentAmount >= storageMaxCapacity) {
         return lang.income_full;

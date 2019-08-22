@@ -173,7 +173,7 @@ $_Lang['When_full_store']                       = 'Storage full in:';
 $_Lang['Store_Status']                          = 'Storage state:';
 $_Lang['full_in']                               = '';
 $_Lang['full']                                  = 'Full';
-$_Lang['income_no_mine']                        = '<span class="red">No mine</span>';
+$_Lang['income_no_production']                  = '<span class="red">No production</span>';
 $_Lang['income_vacation']                       = '<span class="orange">Vacation mode</span>';
 $_Lang['income_minus']                          = '<span class="red">Negative production</span>';
 $_Lang['Store_status_Full']                     = '<span class="red">Full</span>';

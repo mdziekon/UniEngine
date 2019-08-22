@@ -168,7 +168,7 @@ $_Lang['When_full_store'] = 'Zapełnienie magazynu:';
 $_Lang['Store_Status'] = 'Stan magazynu:';
 $_Lang['full_in'] = 'za';
 $_Lang['full'] = 'Pełny';
-$_Lang['income_no_mine'] = '<span class="red">Brak kopalni</span>';
+$_Lang['income_no_production'] = '<span class="red">Brak wydobycia</span>';
 $_Lang['income_vacation'] = '<span class="orange">Tryb Urlopu</span>';
 $_Lang['income_minus'] = '<span class="red">Ujemne wydobycie</span>';
 $_Lang['Store_status_Full'] = '<span class="red">Zapełniony</span>';

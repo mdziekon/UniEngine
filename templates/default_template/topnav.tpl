@@ -37,7 +37,7 @@ $(document).ready(function()
 
         income_minus: `{income_minus}`,
         income_vacation: `{income_vacation}`,
-        income_no_mine: `{income_no_mine}`,
+        income_no_production: `{income_no_production}`,
         income_full: `{full}`,
 
         Store_status_Overload: `{Store_status_Overload}`,
@@ -149,7 +149,7 @@ $(document).ready(function()
     );
 });
 </script>
-<script src="dist/js/topnav.resources.cachebuster-1566486206389.min.js"></script>
+<script src="dist/js/topnav.resources.cachebuster-1566487990541.min.js"></script>
 <script src="dist/js/topnav.planet_selector.cachebuster-1566475997888.min.js"></script>
 <link rel="stylesheet" type="text/css" href="dist/css/topNav.cachebuster-1546564327123.min.css"/>
 <table id="topnav_resources">
