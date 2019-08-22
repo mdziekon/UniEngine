@@ -11,6 +11,47 @@ $(document).ready(function()
                 total: {PHPInject_energy_total}
             }
         },
+        resourcesDetails: [
+            {
+                resourceKey: "metal",
+                resourceName: `{Metal}`,
+                isOnVacation: {PHPInject_isOnVacation},
+                storage: {
+                    maxCapacity: Math.floor({PHPInject_resource_metal_storage_maxCapacity}),
+                    overflowCapacity: Math.floor({PHPInject_resource_metal_storage_overflowCapacity})
+                },
+                state: {
+                    initial: Math.floor({PHPInject_resource_metal_state_amount}),
+                    incomePerHour: Math.floor({PHPInject_resource_metal_state_incomePerHour}),
+                }
+            },
+            {
+                resourceKey: "crystal",
+                resourceName: `{Crystal}`,
+                isOnVacation: {PHPInject_isOnVacation},
+                storage: {
+                    maxCapacity: Math.floor({PHPInject_resource_crystal_storage_maxCapacity}),
+                    overflowCapacity: Math.floor({PHPInject_resource_crystal_storage_overflowCapacity})
+                },
+                state: {
+                    initial: Math.floor({PHPInject_resource_crystal_state_amount}),
+                    incomePerHour: Math.floor({PHPInject_resource_crystal_state_incomePerHour}),
+                }
+            },
+            {
+                resourceKey: "deuterium",
+                resourceName: `{Deuterium}`,
+                isOnVacation: {PHPInject_isOnVacation},
+                storage: {
+                    maxCapacity: Math.floor({PHPInject_resource_deuterium_storage_maxCapacity}),
+                    overflowCapacity: Math.floor({PHPInject_resource_deuterium_storage_overflowCapacity})
+                },
+                state: {
+                    initial: Math.floor({PHPInject_resource_deuterium_state_amount}),
+                    incomePerHour: Math.floor({PHPInject_resource_deuterium_state_incomePerHour}),
+                }
+            }
+        ]
     };
     window.PHPInject_topnav_lang = {
         When_full_store: `{When_full_store}`,
@@ -28,55 +69,13 @@ $(document).ready(function()
         Store_status_OK: `{Store_status_OK}`
     };
 
-    var resourcesDetails = [
-        {
-            resourceKey: "metal",
-            resourceName: `{Metal}`,
-            isOnVacation: {PHPInject_isOnVacation},
-            storage: {
-                maxCapacity: Math.floor({PHPInject_resource_metal_storage_maxCapacity}),
-                overflowCapacity: Math.floor({PHPInject_resource_metal_storage_overflowCapacity})
-            },
-            state: {
-                initial: Math.floor({PHPInject_resource_metal_state_amount}),
-                incomePerHour: Math.floor({PHPInject_resource_metal_state_incomePerHour}),
-            }
-        },
-        {
-            resourceKey: "crystal",
-            resourceName: `{Crystal}`,
-            isOnVacation: {PHPInject_isOnVacation},
-            storage: {
-                maxCapacity: Math.floor({PHPInject_resource_crystal_storage_maxCapacity}),
-                overflowCapacity: Math.floor({PHPInject_resource_crystal_storage_overflowCapacity})
-            },
-            state: {
-                initial: Math.floor({PHPInject_resource_crystal_state_amount}),
-                incomePerHour: Math.floor({PHPInject_resource_crystal_state_incomePerHour}),
-            }
-        },
-        {
-            resourceKey: "deuterium",
-            resourceName: `{Deuterium}`,
-            isOnVacation: {PHPInject_isOnVacation},
-            storage: {
-                maxCapacity: Math.floor({PHPInject_resource_deuterium_storage_maxCapacity}),
-                overflowCapacity: Math.floor({PHPInject_resource_deuterium_storage_overflowCapacity})
-            },
-            state: {
-                initial: Math.floor({PHPInject_resource_deuterium_state_amount}),
-                incomePerHour: Math.floor({PHPInject_resource_deuterium_state_incomePerHour}),
-            }
-        }
-    ];
-
     var initialStateTimestamp = Date.now();
     var $parentEl = $("#topnav_resources");
     var countersCache = buildResourceUpdaterCache({
-        resources: resourcesDetails
+        resources: window.PHPInject_topnav_data.resourcesDetails
     });
 
-    const resourceTooltips = resourcesDetails.map((resourceDetails) => {
+    const resourceTooltips = window.PHPInject_topnav_data.resourcesDetails.map((resourceDetails) => {
         const resourceKey = resourceDetails.resourceKey;
 
         const tooltip = new ResourceTooltip({
@@ -101,7 +100,7 @@ $(document).ready(function()
                         initial: initialStateTimestamp,
                         current: Date.now()
                     },
-                    resources: resourcesDetails
+                    resources: window.PHPInject_topnav_data.resourcesDetails
                 },
                 countersCache
             );
