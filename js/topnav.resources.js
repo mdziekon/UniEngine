@@ -4,6 +4,7 @@
 var constants = {
     colorsValues: {
         red: "#ff0000",
+        orange: "orange",
         green: "#00ff00"
     }
 };
@@ -15,6 +16,10 @@ function number_format (value) {
         value = value.replace(rgx, "$1" + "." + "$2");
     }
     return value;
+}
+
+function colorizeString (content, colorName) {
+    return `<span style="color: ${constants.colorsValues[colorName]}">${content}</span>`;
 }
 
 //  Arguments:
@@ -351,16 +356,28 @@ function _createResourceTimeToStorageDisplayValue ({
     lang
 }) {
     if (incomePerHour < 0) {
-        return lang.income_minus;
+        return colorizeString(
+            lang.income_minus,
+            "red"
+        );
     }
     if (isOnVacation) {
-        return lang.income_vacation;
+        return colorizeString(
+            lang.income_vacation,
+            "orange"
+        );
     }
     if (incomePerHour === 0) {
-        return lang.income_no_production;
+        return colorizeString(
+            lang.income_no_production,
+            "red"
+        );
     }
     if (currentAmount >= storageMaxCapacity) {
-        return lang.income_full;
+        return colorizeString(
+            lang.income_full,
+            "red"
+        );
     }
 
     const secondsToReachCapacity = _calculateTimeToStorageLimit({ incomePerHour, currentAmount, storageMaxCapacity });
@@ -377,22 +394,37 @@ function _createResourceStorageStatusDisplayValue ({
     const hasOverflownStorage = (currentAmount >= storageMaxCapacity);
 
     if (currentAmount <= 0) {
-        return lang.Store_status_Empty;
+        return colorizeString(
+            lang.Store_status_Empty,
+            "orange"
+        );
     }
 
     if (hasOverflownStorage) {
         if (overflowMaxCapacity > storageMaxCapacity) {
-            return lang.Store_status_Overload;
+            return colorizeString(
+                lang.Store_status_Overload,
+                "red"
+            );
         }
 
-        return lang.Store_status_Full;
+        return colorizeString(
+            lang.Store_status_Full,
+            "red"
+        );
     }
 
     if (currentAmount >= (storageMaxCapacity * capacityWarningThreshold)) {
-        return lang.Store_status_NearFull;
+        return colorizeString(
+            lang.Store_status_NearFull,
+            "orange"
+        );
     }
 
-    return lang.Store_status_OK;
+    return colorizeString(
+        lang.Store_status_OK,
+        "green"
+    );
 }
 
 function createProductionResourceTooltipBody (values) {
