@@ -25,9 +25,9 @@ $(document).ready(function()
         specialResourcesState: {
             energy: {
                 resourceName: "{Energy}",
-                unused: `{Energy_free}`,
-                used: `{Energy_used}`,
-                total: `{Energy_total}`
+                unused: {PHPInject_energy_unused},
+                used: {PHPInject_energy_used},
+                total: {PHPInject_energy_total}
             }
         },
     };
@@ -149,7 +149,7 @@ $(document).ready(function()
     );
 });
 </script>
-<script src="dist/js/topnav.resources.cachebuster-1566484599465.min.js"></script>
+<script src="dist/js/topnav.resources.cachebuster-1566486206389.min.js"></script>
 <script src="dist/js/topnav.planet_selector.cachebuster-1566475997888.min.js"></script>
 <link rel="stylesheet" type="text/css" href="dist/css/topNav.cachebuster-1546564327123.min.css"/>
 <table id="topnav_resources">

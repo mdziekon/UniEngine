@@ -460,15 +460,21 @@ function createProductionResourceTooltipBody (values) {
 }
 
 function createEnergyResourceTooltipBody (values) {
+    const energyUnusedColor = (
+        values.unused >= 0 ?
+            constants.colorsValues.green :
+            constants.colorsValues.red
+    );
+
     const bodyHTML = `
         <div class="center">
             <b>${values.resourceName}</b>
         </div>
         <div class="center">
-            <b>${values.unused}</b>
+            <b style="color: ${energyUnusedColor}">${number_format(values.unused)}</b>
         </div>
         <div class="center">
-            (${values.used} / ${values.total})
+            (${number_format(values.used)} / ${number_format(values.total)})
         </div>
     `;
 

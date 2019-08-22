@@ -199,8 +199,9 @@ function _createPlanetsEnergyStatusDetailsTplData(&$planet) {
             "red"
         )
     );
-    $tplData['Energy_used'] = prettyNumber($planet['energy_used'] * (-1));
-    $tplData['Energy_total'] = prettyNumber($planet['energy_max']);
+    $tplData['PHPInject_energy_unused'] = $unusedEnergy;
+    $tplData['PHPInject_energy_used'] = ($planet['energy_used'] * (-1));
+    $tplData['PHPInject_energy_total'] = ($planet['energy_max']);
 
     return $tplData;
 }
