@@ -266,7 +266,7 @@ $(document).ready(function()
                             {ShowStore_Deuterium}
                         </div>
                     </td>
-                    <td class="w145"></td>
+                    <td class="w145 tooltip-target" data-resource-key="energy"></td>
                     <td class="w50"></td>
                     <td class="w145"></td>
                     <td class="w220">
