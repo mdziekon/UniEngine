@@ -339,7 +339,8 @@ class ResourceTooltip {
 
 function _calculateTimeToStorageLimit ({ incomePerHour, currentAmount, storageMaxCapacity }) {
     const resourceAmountDifference = (storageMaxCapacity - currentAmount);
-    const secondsToReachCapacity = Math.ceil(resourceAmountDifference / (incomePerHour / 3600));
+    const incomePerSecond = (incomePerHour / 3600);
+    const secondsToReachCapacity = Math.ceil(resourceAmountDifference / incomePerSecond);
 
     return secondsToReachCapacity;
 }
