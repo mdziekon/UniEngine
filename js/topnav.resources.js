@@ -436,7 +436,7 @@ function createProductionResourceTooltipBody (values) {
             <b>${values.resourceName}</b>
         </div>
         <div class="center">
-            <b>(${incomeSign}${number_format(values.state.incomePerHour)} / h)</b>
+            <b>(${incomeSign}${number_format(values.state.incomePerHour)} / ${lang.topnav_incomeperhour_symbol})</b>
         </div>
         <div>
             <div class="ResL">

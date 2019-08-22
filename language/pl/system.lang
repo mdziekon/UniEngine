@@ -176,6 +176,7 @@ $_Lang['Store_status_Overload'] = '<span class="red">Przeładowany</span>';
 $_Lang['Store_status_NearFull'] = '<span class="orange">Bliski zapełnieniu</span>';
 $_Lang['Store_status_OK'] = '<span class="lime">OK</span>';
 $_Lang['Store_status_Empty'] = '<span class="orange">Pusty</span>';
+$_Lang['topnav_incomeperhour_symbol'] = 'h';
 
 $_Lang['near_your_planet']  = 'twojej planety';
 $_Lang['near_your_moon']    = 'twojego księżyca';

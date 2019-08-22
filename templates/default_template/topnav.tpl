@@ -55,6 +55,7 @@ window.PHPInject_topnav_lang = {
     When_full_store: `{When_full_store}`,
     Store_Status: `{Store_Status}`,
 
+    topnav_incomeperhour_symbol: `{topnav_incomeperhour_symbol}`,
     income_minus: `{income_minus}`,
     income_vacation: `{income_vacation}`,
     income_no_production: `{income_no_production}`,
@@ -67,7 +68,7 @@ window.PHPInject_topnav_lang = {
     Store_status_OK: `{Store_status_OK}`
 };
 </script>
-<script src="dist/js/topnav.resources.cachebuster-1566489883757.min.js"></script>
+<script src="dist/js/topnav.resources.cachebuster-1566490362596.min.js"></script>
 <script src="dist/js/topnav.planet_selector.cachebuster-1566475997888.min.js"></script>
 <link rel="stylesheet" type="text/css" href="dist/css/topNav.cachebuster-1546564327123.min.css"/>
 <table id="topnav_resources">

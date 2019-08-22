@@ -181,6 +181,7 @@ $_Lang['Store_status_Overload']                 = '<span class="red">Overloaded<
 $_Lang['Store_status_NearFull']                 = '<span class="orange">Almost full</span>';
 $_Lang['Store_status_OK']                       = '<span class="lime">OK</span>';
 $_Lang['Store_status_Empty']                    = '<span class="orange">Empty</span>';
+$_Lang['topnav_incomeperhour_symbol']           = 'h';
 
 $_Lang['near_your_planet']                      = 'your planet';
 $_Lang['near_your_moon']                        = 'your moon';
