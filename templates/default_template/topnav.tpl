@@ -2,25 +2,6 @@
 <script>
 $(document).ready(function()
 {
-    var PHPInjectedData = {
-        isOnVacation: {isOnVacation},
-
-        JSPerHour_Metal: {JSPerHour_Metal},
-        JSStore_Metal: {JSStore_Metal},
-        JSStoreOverflow_Metal: {JSStoreOverflow_Metal},
-        JSCount_Metal: {JSCount_Metal},
-
-        JSPerHour_Crystal: {JSPerHour_Crystal},
-        JSStore_Crystal: {JSStore_Crystal},
-        JSStoreOverflow_Crystal: {JSStoreOverflow_Crystal},
-        JSCount_Crystal: {JSCount_Crystal},
-
-        JSPerHour_Deuterium: {JSPerHour_Deuterium},
-        JSStore_Deuterium: {JSStore_Deuterium},
-        JSStoreOverflow_Deuterium: {JSStoreOverflow_Deuterium},
-        JSCount_Deuterium: {JSCount_Deuterium},
-    };
-
     window.PHPInject_topnav_data = {
         specialResourcesState: {
             energy: {
@@ -51,40 +32,40 @@ $(document).ready(function()
         {
             resourceKey: "metal",
             resourceName: `{Metal}`,
-            isOnVacation: PHPInjectedData.isOnVacation,
+            isOnVacation: {PHPInject_isOnVacation},
             storage: {
-                maxCapacity: Math.floor(PHPInjectedData.JSStore_Metal),
-                overflowCapacity: Math.floor(PHPInjectedData.JSStoreOverflow_Metal)
+                maxCapacity: Math.floor({PHPInject_resource_metal_storage_maxCapacity}),
+                overflowCapacity: Math.floor({PHPInject_resource_metal_storage_overflowCapacity})
             },
             state: {
-                initial: Math.floor(PHPInjectedData.JSCount_Metal),
-                incomePerHour: Math.floor(PHPInjectedData.JSPerHour_Metal),
+                initial: Math.floor({PHPInject_resource_metal_state_amount}),
+                incomePerHour: Math.floor({PHPInject_resource_metal_state_incomePerHour}),
             }
         },
         {
             resourceKey: "crystal",
             resourceName: `{Crystal}`,
-            isOnVacation: PHPInjectedData.isOnVacation,
+            isOnVacation: {PHPInject_isOnVacation},
             storage: {
-                maxCapacity: Math.floor(PHPInjectedData.JSStore_Crystal),
-                overflowCapacity: Math.floor(PHPInjectedData.JSStoreOverflow_Crystal)
+                maxCapacity: Math.floor({PHPInject_resource_crystal_storage_maxCapacity}),
+                overflowCapacity: Math.floor({PHPInject_resource_crystal_storage_overflowCapacity})
             },
             state: {
-                initial: Math.floor(PHPInjectedData.JSCount_Crystal),
-                incomePerHour: Math.floor(PHPInjectedData.JSPerHour_Crystal),
+                initial: Math.floor({PHPInject_resource_crystal_state_amount}),
+                incomePerHour: Math.floor({PHPInject_resource_crystal_state_incomePerHour}),
             }
         },
         {
             resourceKey: "deuterium",
             resourceName: `{Deuterium}`,
-            isOnVacation: PHPInjectedData.isOnVacation,
+            isOnVacation: {PHPInject_isOnVacation},
             storage: {
-                maxCapacity: Math.floor(PHPInjectedData.JSStore_Deuterium),
-                overflowCapacity: Math.floor(PHPInjectedData.JSStoreOverflow_Deuterium)
+                maxCapacity: Math.floor({PHPInject_resource_deuterium_storage_maxCapacity}),
+                overflowCapacity: Math.floor({PHPInject_resource_deuterium_storage_overflowCapacity})
             },
             state: {
-                initial: Math.floor(PHPInjectedData.JSCount_Deuterium),
-                incomePerHour: Math.floor(PHPInjectedData.JSPerHour_Deuterium),
+                initial: Math.floor({PHPInject_resource_deuterium_state_amount}),
+                incomePerHour: Math.floor({PHPInject_resource_deuterium_state_incomePerHour}),
             }
         }
     ];

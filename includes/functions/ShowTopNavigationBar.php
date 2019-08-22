@@ -21,16 +21,13 @@ function ShowTopNavigationBar(&$user, $planet) {
     $templateDetails = array_merge(
         [
             'skinpath' => $_SkinPath,
-            'image' => $planet['image'],
-            'isOnVacation' => (
-                isOnVacation($user) ?
-                'true' :
-                'false'
-            )
+            'image' => $planet['image']
         ],
         $_Lang,
         [
-            'PHPInject_commonJS_html' => buildCommonJSInjectionHTML()
+            'PHPInject_commonJS_html' => buildCommonJSInjectionHTML(),
+
+            'PHPInject_isOnVacation' => (isOnVacation($user) ? 'true' : 'false'),
         ],
         _createPlanetsSelectorTplData($user, $planet),
         _createPlanetsEnergyStatusDetailsTplData($planet),
@@ -240,9 +237,11 @@ function _createResourceStateDetailsTplData($resourceKey, &$planet, $params) {
 
     $hasOverflownStorage = ($resourceAmount >= $resourceMaxStorage);
 
-    $tplData["JSCount_{$resourceKeyCamelCase}"] = $resourceAmount;
-    $tplData["JSStore_{$resourceKeyCamelCase}"] = $resourceMaxStorage;
-    $tplData["JSStoreOverflow_{$resourceKeyCamelCase}"] = $resourceMaxOverflowStorage;
+    $tplData["PHPInject_resource_{$resourceKey}_state_amount"] = $resourceAmount;
+    $tplData["PHPInject_resource_{$resourceKey}_state_incomePerHour"] = $totalResourceIncomePerHour;
+    $tplData["PHPInject_resource_{$resourceKey}_storage_maxCapacity"] = $resourceMaxStorage;
+    $tplData["PHPInject_resource_{$resourceKey}_storage_overflowCapacity"] = $resourceMaxOverflowStorage;
+
     $tplData["ShowCount_{$resourceKeyCamelCase}"] = prettyNumber($resourceAmount);
     $tplData["ShowStore_{$resourceKeyCamelCase}"] = prettyNumber($resourceMaxStorage);
     $tplData["ShowCountColor_{$resourceKeyCamelCase}"] = getColorHTMLValue(
@@ -251,7 +250,6 @@ function _createResourceStateDetailsTplData($resourceKey, &$planet, $params) {
     $tplData["ShowStoreColor_{$resourceKeyCamelCase}"] = getColorHTMLValue(
         (!$hasOverflownStorage ? 'green' : 'red')
     );
-    $tplData["JSPerHour_{$resourceKeyCamelCase}"] = $totalResourceIncomePerHour;
 
     return $tplData;
 }
