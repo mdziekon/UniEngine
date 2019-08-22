@@ -1,25 +1,68 @@
 <?php
 
-if(!empty($_GET['r']))
-{
-    $ID = intval($_GET['r']);
-    if($ID > 0)
-    {
-        define('INSIDE', true);
+function getReferralID() {
+    global $_GET;
 
-        $_EnginePath = './';
-        include($_EnginePath.'includes/constants.php');
-
-        if($_COOKIE[REFERING_COOKIENAME] <= 0)
-        {
-            setcookie(REFERING_COOKIENAME, $ID, time() + (14*24*60*60), '', GAMEURL_DOMAIN);
-        }
-        header('Location: reg.php');
-        die();
+    if (empty($_GET['r'])) {
+        return null;
     }
+
+    return intval($_GET['r']);
 }
 
-header('Location: login.php');
-die();
+function hasValidReferralData() {
+    $referralID = getReferralID();
+
+    return ($referralID > 0);
+}
+
+function hasReferralCookie() {
+    global $_COOKIE;
+
+    $referralCookieKey = REFERING_COOKIENAME;
+
+    return (!empty($_COOKIE[$referralCookieKey]));
+}
+
+function onValidReferralDataProvided($referralID) {
+    global $_COOKIE;
+
+    define('INSIDE', true);
+
+    $_EnginePath = './';
+    include($_EnginePath . 'includes/constants.php');
+
+    if (hasReferralCookie()) {
+        return;
+    }
+
+    $nowTimestamp = time();
+    $referralCookieTTLDays = 14;
+    $referralCookieTTL = ($referralCookieTTLDays * TIME_DAY);
+
+    setcookie(
+        REFERING_COOKIENAME,
+        $referralID,
+        $nowTimestamp + $referralCookieTTL,
+        '',
+        GAMEURL_DOMAIN
+    );
+}
+
+function renderPage() {
+    if (!hasValidReferralData()) {
+        header('Location: login.php');
+
+        return;
+    }
+
+    $referralID = getReferralID();
+
+    onValidReferralDataProvided($referralID);
+
+    header('Location: reg.php');
+}
+
+renderPage();
 
 ?>
