@@ -41,7 +41,7 @@ function onValidReferralDataProvided($referralID) {
     define('INSIDE', true);
 
     $_EnginePath = './';
-    include($_EnginePath . 'includes/constants.php');
+    include_once($_EnginePath . 'includes/constants.php');
 
     if (hasReferralCookie()) {
         return;
