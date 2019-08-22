@@ -108,7 +108,16 @@ function updateResourceCounters (params, cache) {
             resourceDetails
         });
 
-        _updateResourceCounterDOM(selectors, resourceState);
+        _updateResourceCounterDOM(
+            selectors,
+            {
+                currentResourceAmount: resourceState.currentResourceAmount,
+                hasReachedStorageMaxCapacity: (
+                    resourceState.currentResourceAmount >=
+                    resourceDetails.storage.maxCapacity
+                )
+            }
+        );
 
         // Update per-resource cache
         cache.resources[resourceKey].hasReachedRealMaxCapacity = resourceState.hasReachedRealMaxCapacity;
@@ -141,7 +150,6 @@ function updateResourceCounters (params, cache) {
 //
 //  Returns: object
 //      - currentResourceAmount (number)
-//      - hasReachedStorageMaxCapacity (boolean)
 //      - hasReachedRealMaxCapacity (boolean)
 //      - hasDepletedStorage (boolean)
 //      - hasNoProduction (boolean)
@@ -172,14 +180,12 @@ function _calculateResourceState (params) {
         0
     );
 
-    const hasReachedStorageMaxCapacity = (finalResourceAmount >= params.resourceDetails.storage.maxCapacity);
     const hasReachedRealMaxCapacity = (finalResourceAmount >= maxPracticalStorage);
     const hasDepletedStorage = (finalResourceAmount <= 0 && theoreticalIncome < 0);
     const hasNoProduction = (theoreticalIncome == 0);
 
     return {
         currentResourceAmount: finalResourceAmount,
-        hasReachedStorageMaxCapacity,
         hasReachedRealMaxCapacity,
         hasDepletedStorage,
         hasNoProduction
