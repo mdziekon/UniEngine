@@ -207,31 +207,6 @@ function _updateResourceCounterDOM (selectors, resourceState) {
     selectors.$resourceStorage.css("color", resourceDisplayColor);
 }
 
-function planetSelector_changeSelection ($selectorEl, selectionIdxModifier) {
-    const $options = $selectorEl.find("option");
-    const $selectedOption = $options.filter(":selected");
-
-    const currentSelectedIdx = $options.index($selectedOption);
-
-    const $changedSelection = $options.eq(currentSelectedIdx + selectionIdxModifier);
-
-    $selectorEl.val($changedSelection.val());
-}
-
-function planetSelector_switchPlanetType ($selectorEl, otherPlanetID) {
-    const $options = $selectorEl.find("option");
-
-    const $changedSelection = $options.filter(`[data-planet-id="${otherPlanetID}"]`);
-
-    $selectorEl.val($changedSelection.val());
-}
-
-function planetSelector_navigate ($selectorEl) {
-    const currentSelectionURL = $selectorEl.val();
-
-    window.location = currentSelectionURL;
-}
-
 class ResourceTooltip {
     constructor ({ resourceKey, $parentEl, values, bodyCreator }) {
         this.resourceKey = resourceKey;
@@ -490,33 +465,6 @@ function createEnergyResourceTooltipBody (values) {
 }
 
 $(document).ready(function () {
-    var PlanetList = $("#planet");
-
-    if ($("#plType").is(":visible")) {
-        $(".plBut").width((PlanetList.width() / 2) - $("#plType").width() + 2);
-    } else {
-        $(".plBut").width((PlanetList.width() / 2) + 1);
-    }
-
-    $("#prevPl").on("click", function () {
-        planetSelector_changeSelection(PlanetList, -1);
-        planetSelector_navigate(PlanetList);
-    });
-    $("#nextPl").on("click", function () {
-        planetSelector_changeSelection(PlanetList, 1);
-        planetSelector_navigate(PlanetList);
-    });
-    $("#plType").on("click", function (evt) {
-        const $btnEl = $(evt.currentTarget);
-        const otherPlanetID = $btnEl.data("id");
-
-        planetSelector_switchPlanetType(PlanetList, otherPlanetID);
-        planetSelector_navigate(PlanetList);
-    });
-    PlanetList.on("change", function () {
-        planetSelector_navigate(PlanetList);
-    });
-
     new ResourceTooltip({
         resourceKey: "energy",
         $parentEl: $("#topnav_resources"),
