@@ -3,11 +3,13 @@
 function getReferralID() {
     global $_GET;
 
-    if (empty($_GET['r'])) {
+    $referralIDKey = 'r';
+
+    if (empty($_GET[$referralIDKey])) {
         return null;
     }
 
-    return intval($_GET['r']);
+    return intval($_GET[$referralIDKey]);
 }
 
 function hasValidReferralData() {
