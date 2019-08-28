@@ -33,6 +33,9 @@
 //          - customLevel (Number) [default: null]
 //          - customProductionFactor (Number) [default: null]
 //
+
+use UniEngine\Engine\Includes\Helpers\World\Elements;
+
 function getElementProduction($elementID, &$planet, &$user, $params) {
     global $_GameConfig;
 
@@ -91,8 +94,8 @@ function getElementProduction($elementID, &$planet, &$user, $params) {
     $customProductionFactor = $params['customProductionFactor'];
 
     if (
-        !_isElementStructure($elementID) &&
-        !_isElementShip($elementID)
+        !Elements\isStructure($elementID) &&
+        !Elements\isShip($elementID)
     ) {
         return $production;
     }
@@ -270,7 +273,7 @@ function getElementStorageCapacities($elementID, &$planet, $params) {
     $hasCustomLevel = ($params['customLevel'] !== null);
     $customLevel = $params['customLevel'];
 
-    if (!_isElementStorageStructure($elementID)) {
+    if (!Elements\isStorageStructure($elementID)) {
         return $capacities;
     }
 
@@ -324,8 +327,8 @@ function getPlanetTotalStorageCapacities(&$planet) {
 
 function _getTheoreticalElementProduction($elementID) {
     if (
-        !_isElementStructure($elementID) &&
-        !_isElementShip($elementID)
+        !Elements\isStructure($elementID) &&
+        !Elements\isShip($elementID)
     ) {
         return [];
     }
@@ -346,7 +349,7 @@ function _getTheoreticalElementProduction($elementID) {
 }
 
 function _getTheoreticalElementCapacities($elementID) {
-    if (!_isElementStorageStructure($elementID)) {
+    if (!Elements\isStorageStructure($elementID)) {
         return [];
     }
 
@@ -388,24 +391,6 @@ function _isResourceBoosterApplicable($resourceKey, $boosterKey) {
     $applicabilityTable = $applicabilityMatrix[$boosterKey];
 
     return in_array($resourceKey, $applicabilityTable);
-}
-
-function _isElementStructure($elementID) {
-    global $_Vars_ElementCategories;
-
-    return in_array($elementID, $_Vars_ElementCategories['build']);
-}
-
-function _isElementStorageStructure($elementID) {
-    global $_Vars_ElementCategories;
-
-    return in_array($elementID, $_Vars_ElementCategories['storages']);
-}
-
-function _isElementShip($elementID) {
-    global $_Vars_ElementCategories;
-
-    return in_array($elementID, $_Vars_ElementCategories['fleet']);
 }
 
 function _getElementPlanetKey($elementID) {
