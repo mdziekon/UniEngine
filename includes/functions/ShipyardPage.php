@@ -494,7 +494,7 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
             $ElementParser['ElementTechDiv'] = GetElementTechReq($CurrentUser, $CurrentPlanet, $ElementID, true);
             $ElementParser['HideResReqDiv'] = 'hide';
         }
-        $HasResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, true, false, true);
+        $HasResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, false, true);
 
         $BlockReason = array();
 

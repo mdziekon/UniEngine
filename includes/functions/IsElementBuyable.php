@@ -2,7 +2,7 @@
 
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 
-function IsElementBuyable($TheUser, $ThePlanet, $ElementID, $Incremental = true, $ForDestroy = false, $GetPremiumData = false)
+function IsElementBuyable($TheUser, $ThePlanet, $ElementID, $ForDestroy = false, $GetPremiumData = false)
 {
     if(isOnVacation($TheUser))
     {

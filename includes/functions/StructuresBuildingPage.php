@@ -447,7 +447,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 $ElementParser['ElementTechDiv'] = GetElementTechReq($CurrentUser, $CurrentPlanet, $ElementID, true);
                 $ElementParser['HideResReqDiv'] = 'hide';
             }
-            if(IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, true, false, true) === false)
+            if(IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, false, true) === false)
             {
                 $HasResources = false;
                 if($Queue['lenght'] == 0)
@@ -460,7 +460,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                     $ElementParser['BuildButtonColor'] = 'buildDo_Orange';
                 }
             }
-            if(IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, true, true) === false)
+            if(IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, true) === false)
             {
                 if($Queue['lenght'] == 0)
                 {
