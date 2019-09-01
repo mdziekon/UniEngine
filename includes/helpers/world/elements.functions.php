@@ -174,7 +174,7 @@ function calculatePurchaseCost($elementID, &$planet, &$user, $params) {
 
     if ($elementLevel < 0) {
         // Prevent negative level being used to calculate costs
-        throw new \Exception("UniEngine::calculatePurchaseCost(): cannot use negative element's level to calculate purchase cost");
+        $elementLevel = 0;
     }
 
     $upgradeCost = array_map(
