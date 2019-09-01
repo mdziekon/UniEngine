@@ -179,7 +179,7 @@ function calculatePurchasePlanetaryCost($elementID, &$planet, &$user, $params) {
 
     $upgradeCost = array_map(
         function ($costValue) use ($elementLevel, $costFactor) {
-            return floor($costValue * pow($elementLevel, $costFactor));
+            return floor($costValue * pow($costFactor, $elementLevel));
         },
         $costBase
     );
