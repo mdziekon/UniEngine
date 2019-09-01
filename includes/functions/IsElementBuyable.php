@@ -9,7 +9,7 @@ function IsElementBuyable($TheUser, $ThePlanet, $ElementID, $ForDestroy = false,
         return false;
     }
 
-    $elementCost = Elements\calculatePurchaseCost(
+    $elementPlanetaryCost = Elements\calculatePurchasePlanetaryCost(
         $ElementID,
         $ThePlanet,
         $TheUser,
@@ -22,7 +22,7 @@ function IsElementBuyable($TheUser, $ThePlanet, $ElementID, $ForDestroy = false,
         ]
     );
 
-    foreach ($elementCost as $costResourceKey => $costValue) {
+    foreach ($elementPlanetaryCost as $costResourceKey => $costValue) {
         if ($costValue > $ThePlanet[$costResourceKey]) {
             return false;
         }

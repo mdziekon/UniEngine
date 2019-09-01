@@ -70,7 +70,7 @@ function isDowngradeable($elementID) {
     return isStructure($elementID);
 }
 
-function getElementCostBase($elementID) {
+function getElementPlanetaryCostBase($elementID) {
     global $_Vars_Prices;
 
     $costResources = [
@@ -97,7 +97,7 @@ function getElementCostBase($elementID) {
     return $baseCost;
 }
 
-function getElementCostFactor($elementID) {
+function getElementPlanetaryCostFactor($elementID) {
     global $_Vars_Prices;
 
     return $_Vars_Prices[$elementID]['factor'];
@@ -141,24 +141,24 @@ function getElementCurrentLevel($elementID, &$planet, &$user) {
 //  Returns:
 //      Object<resource: string, cost: number>
 //
-function calculatePurchaseCost($elementID, &$planet, &$user, $params) {
+function calculatePurchasePlanetaryCost($elementID, &$planet, &$user, $params) {
     if (!isset($params['purchaseMode'])) {
         $params['purchaseMode'] = PurchaseMode::Upgrade;
     }
 
     $purchaseMode = $params['purchaseMode'];
-    $costBase = getElementCostBase($elementID);
-    $costFactor = getElementCostFactor($elementID);
+    $costBase = getElementPlanetaryCostBase($elementID);
+    $costFactor = getElementPlanetaryCostFactor($elementID);
 
     if (!isPurchaseable($elementID)) {
-        throw new \Exception("UniEngine::calculatePurchaseCost(): element with ID '{$elementID}' is not purchaseable");
+        throw new \Exception("UniEngine::calculatePurchasePlanetaryCost(): element with ID '{$elementID}' is not purchaseable");
     }
 
     if (
         $purchaseMode === PurchaseMode::Downgrade &&
         !isDowngradeable($elementID)
     ) {
-        throw new \Exception("UniEngine::calculatePurchaseCost(): element with ID '{$elementID}' is not downgradeable");
+        throw new \Exception("UniEngine::calculatePurchasePlanetaryCost(): element with ID '{$elementID}' is not downgradeable");
     }
 
     if (isConstructibleInHangar($elementID)) {
