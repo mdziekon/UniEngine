@@ -9,7 +9,7 @@ function IsElementBuyable($TheUser, $ThePlanet, $ElementID, $ForDestroy = false,
         return false;
     }
 
-    $elementPlanetaryCost = Elements\calculatePurchasePlanetaryCost(
+    $elementPurchaseCost = Elements\calculatePurchaseCost(
         $ElementID,
         $ThePlanet,
         $TheUser,
@@ -22,18 +22,17 @@ function IsElementBuyable($TheUser, $ThePlanet, $ElementID, $ForDestroy = false,
         ]
     );
 
-    foreach ($elementPlanetaryCost as $costResourceKey => $costValue) {
+    foreach ($elementPurchaseCost['planetary'] as $costResourceKey => $costValue) {
         if ($costValue > $ThePlanet[$costResourceKey]) {
             return false;
         }
     }
 
-    if($GetPremiumData)
-    {
-        global $_Vars_PremiumBuildingPrices;
-        if(isset($_Vars_PremiumBuildingPrices[$ElementID]) && $_Vars_PremiumBuildingPrices[$ElementID] > $TheUser['darkEnergy'])
-        {
-            return false;
+    if ($GetPremiumData) {
+        foreach ($elementPurchaseCost['user'] as $costResourceKey => $costValue) {
+            if ($costValue > $TheUser[$costResourceKey]) {
+                return false;
+            }
         }
     }
 
