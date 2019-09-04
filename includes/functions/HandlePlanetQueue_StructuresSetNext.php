@@ -37,7 +37,7 @@ function HandlePlanetQueue_StructuresSetNext(&$ThePlanet, &$TheUser, $CurrentTim
             $BlockBuilding = false;
             $BlockReason = false;
 
-            $HaveResources = IsElementBuyable($TheUser, $ThePlanet, $ElementID, $ForDestroy);
+            $HaveResources = IsElementBuyable($TheUser, $ThePlanet, $ElementID, $ForDestroy, true);
             if($HaveResources === true)
             {
                 if($ForDestroy === true)

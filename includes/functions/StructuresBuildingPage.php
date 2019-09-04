@@ -460,7 +460,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                     $ElementParser['BuildButtonColor'] = 'buildDo_Orange';
                 }
             }
-            if(IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, true) === false)
+            if(IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, true, true) === false)
             {
                 if($Queue['lenght'] == 0)
                 {

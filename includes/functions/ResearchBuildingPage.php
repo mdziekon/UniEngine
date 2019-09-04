@@ -158,7 +158,7 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePl
             $SearchTime = GetBuildingTime($CurrentUser, $CurrentPlanet, $Tech);
             $RowParse['search_time'] = ShowBuildTime($SearchTime);
             $RowParse['tech_restp'] = GetRestPrice ($CurrentUser, $CurrentPlanet, $Tech, true);
-            $CanBeDone = IsElementBuyable($CurrentUser, $CurrentPlanet, $Tech);
+            $CanBeDone = IsElementBuyable($CurrentUser, $CurrentPlanet, $Tech, false, true);
 
             // Check if user can do the research (TechQueue is empty)
             if(!isOnVacation($CurrentUser))
