@@ -90,7 +90,10 @@ function isUpgradeable($elementID) {
 }
 
 function isDowngradeable($elementID) {
-    return isStructure($elementID);
+    return (
+        isStructure($elementID) &&
+        !isIndestructibleStructure($elementID)
+    );
 }
 
 function getElementPlanetaryCostBase($elementID) {
