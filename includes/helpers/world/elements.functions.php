@@ -47,6 +47,15 @@ function isStorageStructure($elementID) {
     return in_array($elementID, $_Vars_ElementCategories['storages']);
 }
 
+function isIndestructibleStructure($elementID) {
+    global $_Vars_IndestructibleBuildings;
+
+    return (
+        isset($_Vars_IndestructibleBuildings[$elementID]) &&
+        $_Vars_IndestructibleBuildings[$elementID]
+    );
+}
+
 function isConstructibleInHangar($elementID) {
     return (
         isShip($elementID) ||
