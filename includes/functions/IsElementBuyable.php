@@ -7,18 +7,22 @@ function IsElementBuyable($TheUser, $ThePlanet, $ElementID, $ForDestroy = false)
         return false;
     }
 
-    $elementPurchaseCost = Elements\calculatePurchaseCost(
-        $ElementID,
-        $ThePlanet,
-        $TheUser,
-        [
-            'purchaseMode' => (
-                !$ForDestroy ?
-                Elements\PurchaseMode::Upgrade :
-                Elements\PurchaseMode::Downgrade
-            )
-        ]
-    );
+    try {
+        $elementPurchaseCost = Elements\calculatePurchaseCost(
+            $ElementID,
+            $ThePlanet,
+            $TheUser,
+            [
+                'purchaseMode' => (
+                    !$ForDestroy ?
+                    Elements\PurchaseMode::Upgrade :
+                    Elements\PurchaseMode::Downgrade
+                )
+            ]
+        );
+    } catch (Elements\PurchaseCostCalculationException $exception) {
+        return false;
+    }
 
     foreach ($elementPurchaseCost['planetary'] as $costResourceKey => $costValue) {
         if ($costValue > $ThePlanet[$costResourceKey]) {
