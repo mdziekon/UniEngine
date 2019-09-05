@@ -260,6 +260,12 @@ function calculatePurchaseCost($elementID, &$planet, &$user, $params) {
         $elementLevel = 0;
     }
 
+    $maxUpgradeLevel = getElementMaxUpgradeLevel($elementID);
+
+    if ($elementLevel >= $maxUpgradeLevel) {
+        throw new PurchaseCostCalculationException("UniEngine::calculatePurchaseCost(): element with ID '{$elementID}' has reached its maximum upgrade level");
+    }
+
     return [
         'planetary' => _calculateUpgradableElementPurchaseCosts(
             $elementID,
