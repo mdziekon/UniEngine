@@ -22,6 +22,7 @@ if (defined('INSTALL_NOTDONE')) {
     die();
 }
 
+include($_EnginePath.'common/_includes.php');
 include($_EnginePath.'includes/functions.php');
 include($_EnginePath.'includes/unlocalised.php');
 include($_EnginePath.'includes/helpers/_includes.php');

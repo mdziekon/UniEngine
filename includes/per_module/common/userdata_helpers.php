@@ -1,7 +1,8 @@
 <?php
 
-class UniEngineException extends \Exception {};
-class UniEngineDataFetchException extends UniEngineException {};
+use UniEngine\Engine\Common\Exceptions;
+
+class UniEngineDataFetchException extends Exceptions\UniEngineException {};
 class UniEnginePlanetDataFetchException extends UniEngineDataFetchException {};
 
 //  Arguments
