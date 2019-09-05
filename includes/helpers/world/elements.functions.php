@@ -2,10 +2,14 @@
 
 namespace UniEngine\Engine\Includes\Helpers\World\Elements;
 
+use UniEngine\Engine\Common\Exceptions;
+
 abstract class PurchaseMode {
     const Upgrade = 0;
     const Downgrade = 1;
 }
+
+class PurchaseCostCalculationException extends Exceptions\UniEngineException {};
 
 function isStructure($elementID) {
     global $_Vars_ElementCategories;
@@ -197,14 +201,14 @@ function calculatePurchaseCost($elementID, &$planet, &$user, $params) {
     $purchaseMode = $params['purchaseMode'];
 
     if (!isPurchaseable($elementID)) {
-        throw new \Exception("UniEngine::calculatePurchaseCost(): element with ID '{$elementID}' is not purchaseable");
+        throw new PurchaseCostCalculationException("UniEngine::calculatePurchaseCost(): element with ID '{$elementID}' is not purchaseable");
     }
 
     if (
         $purchaseMode === PurchaseMode::Downgrade &&
         !isDowngradeable($elementID)
     ) {
-        throw new \Exception("UniEngine::calculatePurchaseCost(): element with ID '{$elementID}' is not downgradeable");
+        throw new PurchaseCostCalculationException("UniEngine::calculatePurchaseCost(): element with ID '{$elementID}' is not downgradeable");
     }
 
     $planetaryCostBase = getElementPlanetaryCostBase($elementID);
