@@ -102,15 +102,6 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
         $CanBuildElement = false;
     }
 
-    if($CurrentUser['engineer_time'] > $Now)
-    {
-        $EnergyMulti = 1.10;
-    }
-    else
-    {
-        $EnergyMulti = 1;
-    }
-
     if(!empty($CurrentPlanet['buildQueue']))
     {
         $LockResources = array
