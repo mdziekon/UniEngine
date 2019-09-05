@@ -2,7 +2,7 @@
 
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 
-function IsElementBuyable($TheUser, $ThePlanet, $ElementID, $ForDestroy = false, $GetPremiumData = false) {
+function IsElementBuyable($TheUser, $ThePlanet, $ElementID, $ForDestroy = false) {
     if (isOnVacation($TheUser)) {
         return false;
     }
@@ -26,11 +26,9 @@ function IsElementBuyable($TheUser, $ThePlanet, $ElementID, $ForDestroy = false,
         }
     }
 
-    if ($GetPremiumData) {
-        foreach ($elementPurchaseCost['user'] as $costResourceKey => $costValue) {
-            if ($costValue > $TheUser[$costResourceKey]) {
-                return false;
-            }
+    foreach ($elementPurchaseCost['user'] as $costResourceKey => $costValue) {
+        if ($costValue > $TheUser[$costResourceKey]) {
+            return false;
         }
     }
 

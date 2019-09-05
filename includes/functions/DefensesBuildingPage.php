@@ -205,7 +205,7 @@ function DefensesBuildingPage(&$CurrentPlanet, $CurrentUser)
 
         if(IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $Element))
         {
-            $CanBuildOne = IsElementBuyable($CurrentUser, $CurrentPlanet, $Element, false, true);
+            $CanBuildOne = IsElementBuyable($CurrentUser, $CurrentPlanet, $Element, false);
             $BuildOneElementTime = GetBuildingTime($CurrentUser, $CurrentPlanet, $Element);
 
             $Row['GetElementPrice'] = GetElementPrice($CurrentUser, $CurrentPlanet, $Element, false);
