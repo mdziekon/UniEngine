@@ -96,6 +96,16 @@ function isDowngradeable($elementID) {
     );
 }
 
+function getElementMaxUpgradeLevel($elementID) {
+    global $_Vars_MaxElementLevel;
+
+    if (!isset($_Vars_MaxElementLevel[$elementID])) {
+        return INF;
+    }
+
+    return $_Vars_MaxElementLevel[$elementID];
+}
+
 function getElementPlanetaryCostBase($elementID) {
     global $_Vars_Prices;
 
