@@ -61,7 +61,7 @@ function isPurchaseable($elementID) {
     );
 }
 
-function isCountable($elementID) {
+function isPurchaseableByUnits($elementID) {
     return (
         isShip($elementID) ||
         isDefenseSystem($elementID) ||
@@ -210,7 +210,9 @@ function calculatePurchaseCost($elementID, &$planet, &$user, $params) {
     $planetaryCostBase = getElementPlanetaryCostBase($elementID);
     $userCostBase = getElementUserCostBase($elementID);
 
-    if (isCountable($elementID)) {
+    if (isPurchaseableByUnits($elementID)) {
+        // This element is purchaseable on a unit basis, therefore there is no
+        // upgrade price factor calculation required (nor it is wanted).
         return [
             'planetary' => $planetaryCostBase,
             'user' => $userCostBase
