@@ -41,6 +41,16 @@ function isMissile($elementID) {
     return in_array($elementID, $_Vars_ElementCategories['rockets']);
 }
 
+function isStructureAvailableOnPlanetType($elementID, $planetType) {
+    global $_Vars_ElementCategories;
+
+    if ($planetType != 1 && $planetType != 3) {
+        throw new Exceptions\UniEngineException("Invalid planetType '{$planetType}'");
+    }
+
+    return in_array($elementID, $_Vars_ElementCategories['buildOn'][$planetType]);
+}
+
 function isStorageStructure($elementID) {
     global $_Vars_ElementCategories;
 
