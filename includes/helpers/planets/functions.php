@@ -1,5 +1,7 @@
 <?php
 
+use UniEngine\Engine\Includes\Helpers\World\Elements;
+
 //  Notes:
 //      - The algorithm does not take into account that buildings which use
 //        other resources as "production materials" (eg. Fusion Reactor uses Deuterium)
@@ -33,9 +35,6 @@
 //          - customLevel (Number) [default: null]
 //          - customProductionFactor (Number) [default: null]
 //
-
-use UniEngine\Engine\Includes\Helpers\World\Elements;
-
 function getElementProduction($elementID, &$planet, &$user, $params) {
     global $_GameConfig;
 
