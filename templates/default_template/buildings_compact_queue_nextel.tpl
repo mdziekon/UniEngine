@@ -28,7 +28,7 @@
         colspan="2"
     >
         <a href="buildings.php?listid={ListID}&amp;cmd=remove">
-            {RemoveText}
+            {Lang_CancelBtn_Text}
         </a>
     </th>
 </tr>

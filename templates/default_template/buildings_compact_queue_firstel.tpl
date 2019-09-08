@@ -66,9 +66,9 @@
         <a
             id="QueueCancel"
             href="buildings.php?listid={ListID}&amp;cmd=cancel"
-            class="cancelQueue {PremBlock}"
+            class="cancelQueue {Data_CancelLock_class}"
         >
-            {CancelText}
+            {Lang_CancelBtn_Text}
         </a>
     </th>
 </tr>
