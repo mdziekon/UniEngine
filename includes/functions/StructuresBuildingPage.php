@@ -255,15 +255,15 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     }
     // End of - Handle Commands
 
+    $LockResources['metal'] = 0;
+    $LockResources['crystal'] = 0;
+    $LockResources['deuterium'] = 0;
+
     // Display queue
     $buildingsQueue = Planets\Queues\parseStructuresQueueString($CurrentPlanet['buildQueue']);
     $queueUnfinishedLenght = 0;
 
     if (!empty($buildingsQueue)) {
-        $LockResources['metal'] = 0;
-        $LockResources['crystal'] = 0;
-        $LockResources['deuterium'] = 0;
-
         $queueElementsTplData = [];
         $queueDisplayIdx = 0;
 
@@ -384,9 +384,9 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             $queueDisplayIdx += 1;
         }
 
-        $CurrentPlanet['metal'] -= (isset($LockResources['metal']) ? $LockResources['metal'] : 0);
-        $CurrentPlanet['crystal'] -= (isset($LockResources['crystal']) ? $LockResources['crystal'] : 0);
-        $CurrentPlanet['deuterium'] -= (isset($LockResources['deuterium']) ? $LockResources['deuterium'] : 0);
+        $CurrentPlanet['metal'] -= $LockResources['metal'];
+        $CurrentPlanet['crystal'] -= $LockResources['crystal'];
+        $CurrentPlanet['deuterium'] -= $LockResources['deuterium'];
 
         $queueUnfinishedLenght = $queueDisplayIdx;
 
@@ -818,9 +818,9 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             $CurrentPlanet[$_Vars_GameElements[$ElementID]] += $Modifier;
         }
     }
-    $CurrentPlanet['metal'] += (isset($LockResources['metal']) ? $LockResources['metal'] : 0);
-    $CurrentPlanet['crystal'] += (isset($LockResources['crystal']) ? $LockResources['crystal'] : 0);
-    $CurrentPlanet['deuterium'] += (isset($LockResources['deuterium']) ? $LockResources['deuterium'] : 0);
+    $CurrentPlanet['metal'] += $LockResources['metal'];
+    $CurrentPlanet['crystal'] += $LockResources['crystal'];
+    $CurrentPlanet['deuterium'] += $LockResources['deuterium'];
 
     // Create Structures List
     $ThisRowIndex = 0;
