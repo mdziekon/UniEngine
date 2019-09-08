@@ -9,6 +9,7 @@ include($includePath . './views/functions.php');
 include($includePath . './world/elements.functions.php');
 include($includePath . './users/functions.php');
 include($includePath . './planets/functions.php');
+include($includePath . './planets/planetQueues.functions.php');
 include($includePath . './fleets/functions.php');
 
 ?>
