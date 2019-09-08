@@ -51,6 +51,15 @@ function isStructureAvailableOnPlanetType($elementID, $planetType) {
     return in_array($elementID, $_Vars_ElementCategories['buildOn'][$planetType]);
 }
 
+function isPremiumStructure($elementID) {
+    global $_Vars_PremiumBuildings;
+
+    return (
+        isset($_Vars_PremiumBuildings[$elementID]) &&
+        $_Vars_PremiumBuildings[$elementID]
+    );
+}
+
 function isStorageStructure($elementID) {
     global $_Vars_ElementCategories;
 
@@ -66,12 +75,9 @@ function isIndestructibleStructure($elementID) {
     );
 }
 
-function isNonCancellableOnceInProgress($elementID) {
-    global $_Vars_PremiumBuildings;
-
+function isCancellableOnceInProgress($elementID) {
     return (
-        isset($_Vars_PremiumBuildings[$elementID]) &&
-        $_Vars_PremiumBuildings[$elementID]
+        !isPremiumStructure($elementID)
     );
 }
 
