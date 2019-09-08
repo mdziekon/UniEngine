@@ -1,6 +1,7 @@
 <?php
 
 use UniEngine\Engine\Includes\Helpers\World\Elements;
+use UniEngine\Engine\Includes\Helpers\Planets;
 
 //  Arguments:
 //      - $user
@@ -254,166 +255,166 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     }
     // End of - Handle Commands
 
-    // Parse Queue
-    $CurrentQueue = $CurrentPlanet['buildQueue'];
-    if(!empty($CurrentQueue))
-    {
+    // Display queue
+    $buildingsQueue = Planets\Queues\parseStructuresQueueString($CurrentPlanet['buildQueue']);
+    $queueUnfinishedLenght = 0;
+
+    if (!empty($buildingsQueue)) {
         $LockResources['metal'] = 0;
         $LockResources['crystal'] = 0;
         $LockResources['deuterium'] = 0;
 
-        $CurrentQueue = explode(';', $CurrentQueue);
-        $QueueIndex = 0;
-        foreach($CurrentQueue as $QueueID => $QueueData)
-        {
-            $QueueData = explode(',', $QueueData);
-            $BuildEndTime = $QueueData[3];
-            if($BuildEndTime >= $Now)
-            {
-                $ListID = $QueueIndex + 1;
-                $ElementID = $QueueData[0];
-                $ElementLevel = $QueueData[1];
-                $ElementMode = $QueueData[4];
-                $ElementBuildtime = $BuildEndTime - $Now;
-                $ElementName = $_Lang['tech'][$ElementID];
-                if($ElementMode != 'build')
-                {
-                    $ElementLevel += 1;
-                    $ElementModeColor = 'red';
-                    $ThisForDestroy = true;
-                }
-                else
-                {
-                    $ElementModeColor = 'lime';
-                    $ThisForDestroy = false;
-                }
+        $queueElementsTplData = [];
+        $queueDisplayIdx = 0;
 
-                $isFirstQueueElement = ($QueueID === 0);
-
-                $queueElementTplData = [
-                    'ListID'                => $ListID,
-                    'ElementNo'             => $ListID,
-                    'ElementID'             => $ElementID,
-                    'Name'                  => $ElementName,
-                    'Level'                 => $ElementLevel,
-                    'PlanetID'              => $CurrentPlanet['id'],
-                    'BuildTime'             => pretty_time($BuildEndTime - $PreviousBuildEndTime),
-                    'EndTimer'              => pretty_time($ElementBuildtime, true),
-                    'EndTimeExpand'         => date('H:i:s', $BuildEndTime),
-                    'EndDate'               => date('d/m | H:i:s', $BuildEndTime),
-                    'EndDateExpand'         => prettyDate('d m Y', $BuildEndTime, 1),
-
-                    'ChronoAppletScript'    => '',
-                    'Data_CancelLock_class' => (
-                        Elements\isCancellableOnceInProgress($ElementID) ?
-                        '' :
-                        'premblock'
-                    ),
-                    'ModeText'              => (
-                        !$ThisForDestroy ?
-                        $_Lang['Queue_Mode_Build_1'] :
-                        $_Lang['Queue_Mode_Destroy_1']
-                    ),
-                    'ModeColor'             => $ElementModeColor,
-                    'Lang_CancelBtn_Text'   => (
-                        $isFirstQueueElement ?
-                        (
-                            (!Elements\isCancellableOnceInProgress($ElementID)) ?
-                            $_Lang['Queue_Cancel_CantCancel'] :
-                            (
-                                !$ThisForDestroy ?
-                                $_Lang['Queue_Cancel_Build'] :
-                                $_Lang['Queue_Cancel_Destroy']
-                            )
-                        ) :
-                        $_Lang['Queue_Cancel_Remove']
-                    ),
-                    'InfoBox_BuildTime'     => (
-                        !$ThisForDestroy ?
-                        $_Lang['InfoBox_BuildTime'] :
-                        $_Lang['InfoBox_DestroyTime']
-                    ),
-
-                    'SkinPath'              => $_SkinPath,
-                    'LevelText'             => $_Lang['level'],
-                    'EndText'               => $_Lang['Queue_EndTime'],
-                    'EndTitleBeg'           => $_Lang['Queue_EndTitleBeg'],
-                    'EndTitleHour'          => $_Lang['Queue_EndTitleHour'],
-                ];
-
-                if ($isFirstQueueElement) {
-                    include_once($_EnginePath . '/includes/functions/InsertJavaScriptChronoApplet.php');
-
-                    $queueElementTplData['ChronoAppletScript'] = InsertJavaScriptChronoApplet(
-                        'QueueFirstTimer',
-                        '',
-                        $BuildEndTime,
-                        true,
-                        false,
-                        'function() { onQueuesFirstElementFinished(); }'
-                    );
-                }
-
-                $QueueParser[] = $queueElementTplData;
-
-                if (!$isFirstQueueElement) {
-                    $GetResourcesToLock = GetBuildingPrice($CurrentUser, $CurrentPlanet, $ElementID, true, $ThisForDestroy);
-                    $LockResources['metal'] += $GetResourcesToLock['metal'];
-                    $LockResources['crystal'] += $GetResourcesToLock['crystal'];
-                    $LockResources['deuterium'] += $GetResourcesToLock['deuterium'];
-                }
-
-                if(!isset($LevelModifiers[$ElementID]))
-                {
-                    $LevelModifiers[$ElementID] = 0;
-                }
-                if($ThisForDestroy)
-                {
-                    $LevelModifiers[$ElementID] += 1;
-                    $CurrentPlanet[$_Vars_GameElements[$ElementID]] -= 1;
-                    $FieldsModifier += 2;
-                }
-                else
-                {
-                    $LevelModifiers[$ElementID] -= 1;
-                    $CurrentPlanet[$_Vars_GameElements[$ElementID]] += 1;
-                }
-
-                $QueueIndex += 1;
+        foreach ($buildingsQueue as $queueIdx => $queueElement) {
+            if ($queueElement['endTimestamp'] < $Now) {
+                continue;
             }
-            $PreviousBuildEndTime = $BuildEndTime;
+
+            $listID = $queueDisplayIdx + 1;
+            $elementID = $queueElement['elementID'];
+            $elementLevel = $queueElement['level'];
+            $progressDuration = $queueElement['duration'];
+            $progressEndTime = $queueElement['endTimestamp'];
+            $progressTimeLeft = $progressEndTime - $Now;
+            $isUpgrading = (
+                $queueElement['mode'] == 'build' ?
+                true :
+                false
+            );
+            $isFirstQueueElement = ($queueIdx === 0);
+
+            if ($queueElement['mode'] != 'build') {
+                $elementLevel += 1;
+            }
+
+            $queueElementTplData = [
+                'ListID'                => $listID,
+                'ElementNo'             => $listID,
+                'ElementID'             => $elementID,
+                'Name'                  => $_Lang['tech'][$elementID],
+                'Level'                 => $elementLevel,
+                'PlanetID'              => $CurrentPlanet['id'],
+                'BuildTime'             => pretty_time($progressDuration),
+                'EndTimer'              => pretty_time($progressTimeLeft, true),
+                'EndTimeExpand'         => date('H:i:s', $progressEndTime),
+                'EndDate'               => date('d/m | H:i:s', $progressEndTime),
+                'EndDateExpand'         => prettyDate('d m Y', $progressEndTime, 1),
+
+                'ChronoAppletScript'    => '',
+                'Data_CancelLock_class' => (
+                    Elements\isCancellableOnceInProgress($elementID) ?
+                    '' :
+                    'premblock'
+                ),
+                'ModeText'              => (
+                    $isUpgrading ?
+                    $_Lang['Queue_Mode_Build_1'] :
+                    $_Lang['Queue_Mode_Destroy_1']
+                ),
+                'ModeColor'             => (
+                    $isUpgrading ?
+                    'lime' :
+                    'red'
+                ),
+                'Lang_CancelBtn_Text'   => (
+                    $isFirstQueueElement ?
+                    (
+                        (!Elements\isCancellableOnceInProgress($elementID)) ?
+                        $_Lang['Queue_Cancel_CantCancel'] :
+                        (
+                            $isUpgrading ?
+                            $_Lang['Queue_Cancel_Build'] :
+                            $_Lang['Queue_Cancel_Destroy']
+                        )
+                    ) :
+                    $_Lang['Queue_Cancel_Remove']
+                ),
+                'InfoBox_BuildTime'     => (
+                    $isUpgrading ?
+                    $_Lang['InfoBox_BuildTime'] :
+                    $_Lang['InfoBox_DestroyTime']
+                ),
+
+                'SkinPath'              => $_SkinPath,
+                'LevelText'             => $_Lang['level'],
+                'EndText'               => $_Lang['Queue_EndTime'],
+                'EndTitleBeg'           => $_Lang['Queue_EndTitleBeg'],
+                'EndTitleHour'          => $_Lang['Queue_EndTitleHour'],
+            ];
+
+            if ($isFirstQueueElement) {
+                include_once($_EnginePath . '/includes/functions/InsertJavaScriptChronoApplet.php');
+
+                $queueElementTplData['ChronoAppletScript'] = InsertJavaScriptChronoApplet(
+                    'QueueFirstTimer',
+                    '',
+                    $progressEndTime,
+                    true,
+                    false,
+                    'function() { onQueuesFirstElementFinished(); }'
+                );
+            }
+
+            $queueElementsTplData[] = $queueElementTplData;
+
+            if (!$isFirstQueueElement) {
+                $GetResourcesToLock = GetBuildingPrice($CurrentUser, $CurrentPlanet, $elementID, true, !$isUpgrading);
+                $LockResources['metal'] += $GetResourcesToLock['metal'];
+                $LockResources['crystal'] += $GetResourcesToLock['crystal'];
+                $LockResources['deuterium'] += $GetResourcesToLock['deuterium'];
+            }
+
+            if (!isset($LevelModifiers[$elementID])) {
+                $LevelModifiers[$elementID] = 0;
+            }
+
+            $elementPlanetKey = _getElementPlanetKey($elementID);
+
+            if (!$isUpgrading) {
+                $LevelModifiers[$elementID] += 1;
+                $CurrentPlanet[$elementPlanetKey] -= 1;
+                $FieldsModifier += 2;
+            } else {
+                $LevelModifiers[$elementID] -= 1;
+                $CurrentPlanet[$elementPlanetKey] += 1;
+            }
+
+            $queueDisplayIdx += 1;
         }
+
         $CurrentPlanet['metal'] -= (isset($LockResources['metal']) ? $LockResources['metal'] : 0);
         $CurrentPlanet['crystal'] -= (isset($LockResources['crystal']) ? $LockResources['crystal'] : 0);
         $CurrentPlanet['deuterium'] -= (isset($LockResources['deuterium']) ? $LockResources['deuterium'] : 0);
 
-        $Queue['lenght'] = $QueueIndex;
-        if(!empty($QueueParser))
-        {
+        $queueUnfinishedLenght = $queueDisplayIdx;
+
+        if (!empty($queueElementsTplData)) {
             $Parse['Create_Queue'] = '';
-            foreach($QueueParser as $QueueID => $QueueData)
-            {
-                if($QueueID == 0)
-                {
-                    $ThisTPL = gettemplate('buildings_compact_queue_firstel');
-                }
-                else if($QueueID == 1)
-                {
-                    $ThisTPL = gettemplate('buildings_compact_queue_nextel');
-                }
-                $Parse['Create_Queue'] .= parsetemplate($ThisTPL, $QueueData);
+
+            foreach ($queueElementsTplData as $elementIdx => $queueElementTplData) {
+                $tplBody = (
+                    $elementIdx === 0 ?
+                    gettemplate('buildings_compact_queue_firstel') :
+                    gettemplate('buildings_compact_queue_nextel')
+                );
+
+                $Parse['Create_Queue'] .= parsetemplate($tplBody, $queueElementTplData);
             }
         }
+    } else {
+        $Parse['Create_Queue'] = parsetemplate(
+            $TPL['queue_topinfo'],
+            [
+                'InfoText' => $_Lang['Queue_Empty']
+            ]
+        );
     }
-    else
-    {
-        $Queue['lenght'] = 0;
-        $Parse['Create_Queue'] = parsetemplate($TPL['queue_topinfo'], array('InfoText' => $_Lang['Queue_Empty']));
-    }
-    // End of - Parse Queue
+    // End of - Display queue
 
     // Parse all available buildings
-    if(($CurrentPlanet['field_current'] + $Queue['lenght'] - $FieldsModifier) < CalculateMaxPlanetFields($CurrentPlanet))
+    if(($CurrentPlanet['field_current'] + $queueUnfinishedLenght - $FieldsModifier) < CalculateMaxPlanetFields($CurrentPlanet))
     {
         $HasLeftFields = true;
     }
@@ -421,7 +422,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     {
         $HasLeftFields = false;
     }
-    if($Queue['lenght'] < ((isPro($CurrentUser)) ? MAX_BUILDING_QUEUE_SIZE_PRO : MAX_BUILDING_QUEUE_SIZE))
+    if($queueUnfinishedLenght < ((isPro($CurrentUser)) ? MAX_BUILDING_QUEUE_SIZE_PRO : MAX_BUILDING_QUEUE_SIZE))
     {
         $CanAddToQueue = true;
     }
@@ -536,7 +537,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                         {
                             $ResMinusColor = 'red';
                             $MinusValue = '('.prettyNumber($UseVar[$Key] - $Value).')';
-                            if($Queue['lenght'] > 0)
+                            if($queueUnfinishedLenght > 0)
                             {
                                 $ResColor = 'orange';
                             }
@@ -592,7 +593,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             if(IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, false) === false)
             {
                 $HasResources = false;
-                if($Queue['lenght'] == 0)
+                if($queueUnfinishedLenght == 0)
                 {
                     $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
                     $HideButton_QuickBuild = true;
@@ -604,7 +605,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             }
             if(IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, true) === false)
             {
-                if($Queue['lenght'] == 0)
+                if($queueUnfinishedLenght == 0)
                 {
                     $ElementParser['DestroyButtonColor'] = 'destroyDo_Gray';
                 }
@@ -692,7 +693,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                         {
                             if($CurrentPlanet[$Key] < $Value)
                             {
-                                if($Queue['lenght'] > 0)
+                                if($queueUnfinishedLenght > 0)
                                 {
                                     $ResColor = 'orange';
                                 }
@@ -706,7 +707,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                         {
                             if($CurrentUser[$Key] < $Value)
                             {
-                                if($Queue['lenght'] > 0)
+                                if($queueUnfinishedLenght > 0)
                                 {
                                     $ResColor = 'orange';
                                 }
