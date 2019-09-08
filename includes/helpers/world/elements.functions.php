@@ -66,6 +66,15 @@ function isIndestructibleStructure($elementID) {
     );
 }
 
+function isNonCancellableOnceInProgress($elementID) {
+    global $_Vars_PremiumBuildings;
+
+    return (
+        isset($_Vars_PremiumBuildings[$elementID]) &&
+        $_Vars_PremiumBuildings[$elementID]
+    );
+}
+
 function isConstructibleInHangar($elementID) {
     return (
         isShip($elementID) ||
