@@ -7,6 +7,8 @@ $_AllowInVacationMode = true;
 $_EnginePath = './';
 include($_EnginePath.'common.php');
 
+use UniEngine\Engine\Includes\Helpers\Users;
+
 loggedCheck();
 
 $ChronoAppletIncluded = false;
@@ -592,7 +594,7 @@ else if(in_array($BuildID, $_Vars_ElementCategories['fleet']) OR in_array($Build
         $thisShipsCurrentSpeedModifier = (
             $thisShipsUsedEngine['engineIdx'] === -1 ?
             0 :
-            getUsersEngineSpeedTechModifier($thisShipsUsedEngine['tech'], $user)
+            Users\getUsersEngineSpeedTechModifier($thisShipsUsedEngine['tech'], $user)
         );
         $thisShipsEngines = getShipsEngines($BuildID);
 

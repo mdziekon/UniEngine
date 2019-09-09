@@ -1,8 +1,6 @@
 <?php
 
-function getUsersCurrentIP() {
-    return $_SERVER['REMOTE_ADDR'];
-}
+namespace UniEngine\Engine\Includes\Helpers\Users;
 
 function getUsersTechLevel($techID, $user) {
     global $_Vars_GameElements;
