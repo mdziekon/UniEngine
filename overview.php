@@ -7,6 +7,8 @@ $_AllowInVacationMode = true;
 $_EnginePath = './';
 include($_EnginePath.'common.php');
 
+use UniEngine\Engine\Includes\Helpers\Users;
+
 loggedCheck();
 
 $Now = time();
@@ -150,7 +152,7 @@ if($_User['first_login'] == 0)
     }
 
     // Check, if this IP is Proxy
-    $usersIP = getUsersCurrentIP();
+    $usersIP = Users\Session\getCurrentIP();
     $IPHash = md5($usersIP);
     $Query_CheckProxy = "SELECT `ID`, `isProxy` FROM {{table}} WHERE `ValueHash` = '{$IPHash}' LIMIT 1;";
     $Result_CheckProxy = doquery($Query_CheckProxy, 'used_ip_and_ua', true);

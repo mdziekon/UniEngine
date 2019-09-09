@@ -1,6 +1,7 @@
 <?php
 
 use UniEngine\Engine\Common\Exceptions;
+use UniEngine\Engine\Includes\Helpers\Users;
 
 class UniEngineDataFetchException extends Exceptions\UniEngineException {};
 class UniEnginePlanetDataFetchException extends UniEngineDataFetchException {};
@@ -55,7 +56,7 @@ function isUserBlockedByActivationRequirement (&$user, $params) {
 //
 function handleUserIPChangeCheck (&$user) {
     $previousIP = getPreviousLastIPValue();
-    $currentIP = getUsersCurrentIP();
+    $currentIP = Users\Session\getCurrentIP();
 
     $hasEmptyPreviousIP = empty($previousIP);
     $hasDifferentIP = (
