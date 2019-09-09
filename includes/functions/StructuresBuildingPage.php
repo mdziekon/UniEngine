@@ -423,14 +423,21 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     {
         $HasLeftFields = false;
     }
-    if($queueUnfinishedLenght < ((isPro($CurrentUser)) ? MAX_BUILDING_QUEUE_SIZE_PRO : MAX_BUILDING_QUEUE_SIZE))
-    {
+
+    if ($queueUnfinishedLenght < Users\getMaxStructuresQueueLength($CurrentUser)) {
         $CanAddToQueue = true;
-    }
-    else
-    {
+    } else {
         $CanAddToQueue = false;
-        $Parse['Create_Queue'] = parsetemplate($TPL['queue_topinfo'], array('InfoColor' => 'red', 'InfoText' => $_Lang['Queue_Full'])).$Parse['Create_Queue'];
+
+        $queueFullMsgHTML = parsetemplate(
+            $TPL['queue_topinfo'],
+            [
+                'InfoColor' => 'red',
+                'InfoText' => $_Lang['Queue_Full']
+            ]
+        );
+
+        $Parse['Create_Queue'] = $queueFullMsgHTML . $Parse['Create_Queue'];
     }
 
     $ResImages = array
