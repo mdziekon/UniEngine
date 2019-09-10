@@ -3,6 +3,7 @@
 namespace UniEngine\Engine\Includes\Helpers\World\Elements;
 
 use UniEngine\Engine\Common\Exceptions;
+use UniEngine\Engine\Includes\Helpers\World\Resources;
 
 abstract class PurchaseMode {
     const Upgrade = 0;
@@ -134,12 +135,7 @@ function getElementMaxUpgradeLevel($elementID) {
 function getElementPlanetaryCostBase($elementID) {
     global $_Vars_Prices;
 
-    $costResources = [
-        'metal',
-        'crystal',
-        'deuterium',
-        'energy_max'
-    ];
+    $costResources = Resources\getKnownPlanetaryResourceKeys();
 
     $baseCost = [];
 
@@ -161,9 +157,7 @@ function getElementPlanetaryCostBase($elementID) {
 function getElementUserCostBase($elementID) {
     global $_Vars_PremiumBuildingPrices;
 
-    $costResources = [
-        'darkEnergy',
-    ];
+    $costResources = Resources\getKnownUserResourceKeys();
 
     $baseCost = [];
 
