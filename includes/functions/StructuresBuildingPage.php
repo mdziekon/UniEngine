@@ -208,7 +208,7 @@ function _handleStructureCommandInsert(&$user, &$planet, &$input, $params) {
 function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 {
     global    $_Lang, $_SkinPath, $_GameConfig, $_GET, $_EnginePath,
-            $_Vars_GameElements, $_Vars_ElementCategories, $_Vars_MaxElementLevel, $_Vars_PremiumBuildings, $_Vars_IndestructibleBuildings;
+            $_Vars_GameElements, $_Vars_ElementCategories, $_Vars_IndestructibleBuildings;
 
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
     includeLang('worldElements.detailed');
