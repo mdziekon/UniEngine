@@ -197,15 +197,31 @@ function getElementUserCostFactor($elementID) {
     return 1;
 }
 
+function getElementState($elementID, &$planet, &$user) {
+    if (
+        isStructure($elementID) ||
+        isTechnology($elementID)
+    ) {
+        return [
+            'level' => getElementCurrentLevel($elementID, $planet, $user)
+        ];
+    }
+
+    if (isConstructibleInHangar($elementID)) {
+        return [
+            'count' => getElementCurrentCount($elementID, $planet, $user)
+        ];
+    }
+
+    throw new \Exception("UniEngine::getElementState(): cannot retrieve element's state of an element with ID '{$elementID}'");
+}
+
 function getElementCurrentLevel($elementID, &$planet, &$user) {
     global $_Vars_GameElements;
 
     $elementKey = $_Vars_GameElements[$elementID];
 
-    if (
-        isStructure($elementID) ||
-        isConstructibleInHangar($elementID)
-    ) {
+    if (isStructure($elementID)) {
         if (empty($planet[$elementKey])) {
             return 0;
         }
@@ -224,10 +240,25 @@ function getElementCurrentLevel($elementID, &$planet, &$user) {
     throw new \Exception("UniEngine::getElementCurrentLevel(): cannot retrieve element's level of an element with ID '{$elementID}'");
 }
 
+function getElementCurrentCount($elementID, &$planet, &$user) {
+    global $_Vars_GameElements;
+
+    $elementKey = $_Vars_GameElements[$elementID];
+
+    if (isConstructibleInHangar($elementID)) {
+        if (empty($planet[$elementKey])) {
+            return 0;
+        }
+
+        return $planet[$elementKey];
+    }
+
+    throw new \Exception("UniEngine::getElementCurrentCount(): cannot retrieve element's level of an element with ID '{$elementID}'");
+}
+
 //  Arguments:
 //      - $elementID
-//      - $planet
-//      - $user
+//      - $elementState
 //      - $params (Object)
 //          - purchaseMode (PurchaseMode::Upgrade | PurchaseMode::Downgrade | undefined)
 //              [default: PurchaseMode::Upgrade]
@@ -240,7 +271,7 @@ function getElementCurrentLevel($elementID, &$planet, &$user) {
 //  Notes:
 //      - The returned arrays will contain only non-zero costs (> 0).
 //
-function calculatePurchaseCost($elementID, $elementLevel, $params) {
+function calculatePurchaseCost($elementID, $elementState, $params) {
     if (!isset($params['purchaseMode'])) {
         $params['purchaseMode'] = PurchaseMode::Upgrade;
     }
@@ -276,8 +307,8 @@ function calculatePurchaseCost($elementID, $elementLevel, $params) {
     // Downgrade costs are calculated as previously paid upgrade cost, but halved
     $elementLevel = (
         ($purchaseMode === PurchaseMode::Upgrade) ?
-        $elementLevel :
-        $elementLevel - 1
+        $elementState['level'] :
+        $elementState['level'] - 1
     );
 
     if ($elementLevel < 0) {

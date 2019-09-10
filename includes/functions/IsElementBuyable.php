@@ -10,7 +10,7 @@ function IsElementBuyable($TheUser, $ThePlanet, $ElementID, $ForDestroy = false)
     try {
         $elementPurchaseCost = Elements\calculatePurchaseCost(
             $ElementID,
-            Elements\getElementCurrentLevel($ElementID, $ThePlanet, $TheUser),
+            Elements\getElementState($ElementID, $ThePlanet, $TheUser),
             [
                 'purchaseMode' => (
                     !$ForDestroy ?
