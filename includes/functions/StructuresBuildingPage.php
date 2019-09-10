@@ -259,6 +259,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     $LockResources['metal'] = 0;
     $LockResources['crystal'] = 0;
     $LockResources['deuterium'] = 0;
+    $LevelModifiers = [];
 
     // Display queue
     $buildingsQueue = Planets\Queues\parseStructuresQueueString($CurrentPlanet['buildQueue']);
