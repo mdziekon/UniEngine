@@ -500,7 +500,10 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         $ElementParser['ElementName'] = $_Lang['tech'][$ElementID];
         $ElementParser['ElementID'] = $ElementID;
         $ElementParser['ElementLevel'] = prettyNumber($CurrentPlanet[$_Vars_GameElements[$ElementID]]);
-        $ElementParser['ElementRealLevel'] = prettyNumber($CurrentPlanet[$_Vars_GameElements[$ElementID]] + (isset($LevelModifiers[$ElementID]) ? $LevelModifiers[$ElementID] : 0));
+        $ElementParser['ElementRealLevel'] = prettyNumber(
+            $CurrentPlanet[$_Vars_GameElements[$ElementID]] +
+            (isset($LevelModifiers[$ElementID]) ? $LevelModifiers[$ElementID] : 0)
+        );
         $ElementParser['BuildLevel'] = prettyNumber($CurrentPlanet[$_Vars_GameElements[$ElementID]] + 1);
         $ElementParser['DestroyLevel'] = prettyNumber($CurrentPlanet[$_Vars_GameElements[$ElementID]] - 1);
         $ElementParser['Desc'] = $_Lang['WorldElements_Detailed'][$ElementID]['description_short'];
@@ -529,9 +532,11 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             unset($ElementParser['levelmodif']);
         }
 
-        if(!(isset($_Vars_MaxElementLevel[$ElementID]) && $_Vars_MaxElementLevel[$ElementID] > 0 && $NextLevel > $_Vars_MaxElementLevel[$ElementID]))
-        {
+        $maxLevel = Elements\getElementMaxUpgradeLevel($ElementID);
+
+        if ($NextLevel <= $maxLevel) {
             $ElementParser['ElementPrice'] = GetBuildingPrice($CurrentUser, $CurrentPlanet, $ElementID, true, false, true);
+
             foreach($ElementParser['ElementPrice'] as $Key => $Value)
             {
                 if($Value > 0)
@@ -580,9 +585,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 }
             }
             $ElementParser['BuildTime'] = pretty_time(GetBuildingTime($CurrentUser, $CurrentPlanet, $ElementID));
-        }
-        else
-        {
+        } else {
             $MaxLevelReached = true;
             $ElementParser['HideBuildInfo'] = 'hide';
             $ElementParser['HideBuildWarn'] = '';
@@ -590,6 +593,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             $ElementParser['BuildWarn_Color'] = 'red';
             $ElementParser['BuildWarn_Text'] = $_Lang['ListBox_Disallow_MaxLevelReached'];
         }
+
         if($CurrentLevel == 0 || (isset($_Vars_IndestructibleBuildings[$ElementID]) && $_Vars_IndestructibleBuildings[$ElementID]))
         {
             $HideButton_Destroy = true;
