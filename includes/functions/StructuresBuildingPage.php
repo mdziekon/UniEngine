@@ -207,8 +207,8 @@ function _handleStructureCommandInsert(&$user, &$planet, &$input, $params) {
 
 function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 {
-    global    $_Lang, $_SkinPath, $_GameConfig, $_GET, $_EnginePath,
-            $_Vars_GameElements, $_Vars_ElementCategories, $_Vars_IndestructibleBuildings;
+    global $_Lang, $_SkinPath, $_GameConfig, $_GET, $_EnginePath,
+        $_Vars_GameElements, $_Vars_ElementCategories;
 
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
     includeLang('worldElements.detailed');
@@ -595,10 +595,13 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             $ElementParser['BuildWarn_Text'] = $_Lang['ListBox_Disallow_MaxLevelReached'];
         }
 
-        if($CurrentLevel == 0 || (isset($_Vars_IndestructibleBuildings[$ElementID]) && $_Vars_IndestructibleBuildings[$ElementID]))
-        {
+        if (
+            $CurrentLevel == 0 ||
+            Elements\isIndestructibleStructure($ElementID)
+        ) {
             $HideButton_Destroy = true;
         }
+
         if(IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $ElementID))
         {
             $TechLevelOK = true;
