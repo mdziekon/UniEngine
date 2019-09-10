@@ -240,7 +240,7 @@ function getElementCurrentLevel($elementID, &$planet, &$user) {
 //  Notes:
 //      - The returned arrays will contain only non-zero costs (> 0).
 //
-function calculatePurchaseCost($elementID, &$planet, &$user, $params) {
+function calculatePurchaseCost($elementID, $elementLevel, $params) {
     if (!isset($params['purchaseMode'])) {
         $params['purchaseMode'] = PurchaseMode::Upgrade;
     }
@@ -276,8 +276,8 @@ function calculatePurchaseCost($elementID, &$planet, &$user, $params) {
     // Downgrade costs are calculated as previously paid upgrade cost, but halved
     $elementLevel = (
         ($purchaseMode === PurchaseMode::Upgrade) ?
-        getElementCurrentLevel($elementID, $planet, $user) :
-        getElementCurrentLevel($elementID, $planet, $user) - 1
+        $elementLevel :
+        $elementLevel - 1
     );
 
     if ($elementLevel < 0) {
