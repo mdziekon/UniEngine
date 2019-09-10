@@ -258,9 +258,7 @@ function getElementCurrentCount($elementID, &$planet, &$user) {
 //              [default: PurchaseMode::Upgrade]
 //
 //  Returns:
-//      Object:
-//          - planetary (Object<resource: string, cost: number>)
-//          - user (Object<resource: string, cost: number>)
+//      Object<resource: string, cost: number>
 //
 //  Notes:
 //      - The returned arrays will contain only non-zero costs (> 0).
@@ -289,10 +287,10 @@ function calculatePurchaseCost($elementID, $elementState, $params) {
     if (isPurchaseableByUnits($elementID)) {
         // This element is purchaseable on a unit basis, therefore there is no
         // upgrade price factor calculation required (nor it is wanted).
-        return [
-            'planetary' => $planetaryCostBase,
-            'user' => $userCostBase
-        ];
+        return array_merge(
+            $planetaryCostBase,
+            $userCostBase
+        );
     }
 
     $planetaryCostFactor = getElementPlanetaryCostFactor($elementID);
@@ -316,8 +314,8 @@ function calculatePurchaseCost($elementID, $elementState, $params) {
         throw new PurchaseCostCalculationException("UniEngine::calculatePurchaseCost(): element with ID '{$elementID}' has reached its maximum upgrade level");
     }
 
-    return [
-        'planetary' => _calculateUpgradableElementPurchaseCosts(
+    return array_merge(
+        _calculateUpgradableElementPurchaseCosts(
             $elementID,
             [
                 'elementLevel' => $elementLevel,
@@ -326,7 +324,7 @@ function calculatePurchaseCost($elementID, $elementState, $params) {
                 'purchaseMode' => $purchaseMode
             ]
         ),
-        'user' => _calculateUpgradableElementPurchaseCosts(
+        _calculateUpgradableElementPurchaseCosts(
             $elementID,
             [
                 'elementLevel' => $elementLevel,
@@ -335,7 +333,7 @@ function calculatePurchaseCost($elementID, $elementState, $params) {
                 'purchaseMode' => $purchaseMode
             ]
         )
-    ];
+    );
 }
 
 //  Arguments
