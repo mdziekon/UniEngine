@@ -225,22 +225,22 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 
     // Get Templates
     $TPL['list_element']                = gettemplate('buildings_compact_list_element_structures');
-    $TPL['list_levelmodif']                = gettemplate('buildings_compact_list_levelmodif');
-    $TPL['list_hidden']                    = gettemplate('buildings_compact_list_hidden');
+    $TPL['list_levelmodif']             = gettemplate('buildings_compact_list_levelmodif');
+    $TPL['list_hidden']                 = gettemplate('buildings_compact_list_hidden');
     $TPL['list_row']                    = gettemplate('buildings_compact_list_row');
-    $TPL['list_breakrow']                = gettemplate('buildings_compact_list_breakrow');
-    $TPL['list_disabled']                = gettemplate('buildings_compact_list_disabled');
-    $TPL['list_partdisabled']            = parsetemplate($TPL['list_disabled'], array('AddOpacity' => 'dPart'));
-    $TPL['list_disabled']                = parsetemplate($TPL['list_disabled'], array('AddOpacity' => ''));
-    $TPL['queue_topinfo']                = gettemplate('buildings_compact_queue_topinfo');
+    $TPL['list_breakrow']               = gettemplate('buildings_compact_list_breakrow');
+    $TPL['list_disabled']               = gettemplate('buildings_compact_list_disabled');
+    $TPL['list_partdisabled']           = parsetemplate($TPL['list_disabled'], [ 'AddOpacity' => 'dPart' ]);
+    $TPL['list_disabled']               = parsetemplate($TPL['list_disabled'], [ 'AddOpacity' => '' ]);
+    $TPL['queue_topinfo']               = gettemplate('buildings_compact_queue_topinfo');
     $TPL['infobox_body']                = gettemplate('buildings_compact_infobox_body_structures');
-    $TPL['infobox_levelmodif']            = gettemplate('buildings_compact_infobox_levelmodif');
-    $TPL['infobox_req_res']                = gettemplate('buildings_compact_infobox_req_res');
-    $TPL['infobox_req_desttable']        = gettemplate('buildings_compact_infobox_req_desttable');
-    $TPL['infobox_req_destres']            = gettemplate('buildings_compact_infobox_req_destres');
-    $TPL['infobox_additionalnfo']        = gettemplate('buildings_compact_infobox_additionalnfo');
+    $TPL['infobox_levelmodif']          = gettemplate('buildings_compact_infobox_levelmodif');
+    $TPL['infobox_req_res']             = gettemplate('buildings_compact_infobox_req_res');
+    $TPL['infobox_req_desttable']       = gettemplate('buildings_compact_infobox_req_desttable');
+    $TPL['infobox_req_destres']         = gettemplate('buildings_compact_infobox_req_destres');
+    $TPL['infobox_additionalnfo']       = gettemplate('buildings_compact_infobox_additionalnfo');
     $TPL['infobox_req_selector_single'] = gettemplate('buildings_compact_infobox_req_selector_single');
-    $TPL['infobox_req_selector_dual']    = gettemplate('buildings_compact_infobox_req_selector_dual');
+    $TPL['infobox_req_selector_dual']   = gettemplate('buildings_compact_infobox_req_selector_dual');
 
     // Handle Commands
     $cmdResult = _handleStructureCommand(
@@ -442,38 +442,35 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         $Parse['Create_Queue'] = $queueFullMsgHTML . $Parse['Create_Queue'];
     }
 
-    $ResImages = array
-    (
-        'metal' => 'metall',
-        'crystal' => 'kristall',
-        'deuterium' => 'deuterium',
-        'energy_max' => 'energie',
-        'darkEnergy' => 'darkenergy'
-    );
-    $ResLangs = array
-    (
-        'metal' => $_Lang['Metal'],
-        'crystal' => $_Lang['Crystal'],
-        'deuterium' => $_Lang['Deuterium'],
-        'energy_max' => $_Lang['Energy'],
-        'darkEnergy' => $_Lang['DarkEnergy']
-    );
+    $ResImages = [
+        'metal'         => 'metall',
+        'crystal'       => 'kristall',
+        'deuterium'     => 'deuterium',
+        'energy_max'    => 'energie',
+        'darkEnergy'    => 'darkenergy'
+    ];
+    $ResLangs = [
+        'metal'         => $_Lang['Metal'],
+        'crystal'       => $_Lang['Crystal'],
+        'deuterium'     => $_Lang['Deuterium'],
+        'energy_max'    => $_Lang['Energy'],
+        'darkEnergy'    => $_Lang['DarkEnergy']
+    ];
 
-    $ElementParserDefault = array
-    (
-        'SkinPath'                        => $_SkinPath,
-        'InfoBox_Level'                    => $_Lang['InfoBox_Level'],
-        'InfoBox_Build'                    => $_Lang['InfoBox_Build'],
-        'InfoBox_Destroy'                => $_Lang['InfoBox_Destroy'],
-        'InfoBox_RequirementsFor'        => $_Lang['InfoBox_RequirementsFor'],
-        'InfoBox_ResRequirements'        => $_Lang['InfoBox_ResRequirements'],
-        'InfoBox_TechRequirements'        => $_Lang['InfoBox_TechRequirements'],
-        'InfoBox_Requirements_Res'        => $_Lang['InfoBox_Requirements_Res'],
-        'InfoBox_Requirements_Tech'        => $_Lang['InfoBox_Requirements_Tech'],
-        'InfoBox_BuildTime'                => $_Lang['InfoBox_BuildTime'],
-        'InfoBox_ShowTechReq'            => $_Lang['InfoBox_ShowTechReq'],
-        'InfoBox_ShowResReq'            => $_Lang['InfoBox_ShowResReq'],
-    );
+    $ElementParserDefault = [
+        'SkinPath'                  => $_SkinPath,
+        'InfoBox_Level'             => $_Lang['InfoBox_Level'],
+        'InfoBox_Build'             => $_Lang['InfoBox_Build'],
+        'InfoBox_Destroy'           => $_Lang['InfoBox_Destroy'],
+        'InfoBox_RequirementsFor'   => $_Lang['InfoBox_RequirementsFor'],
+        'InfoBox_ResRequirements'   => $_Lang['InfoBox_ResRequirements'],
+        'InfoBox_TechRequirements'  => $_Lang['InfoBox_TechRequirements'],
+        'InfoBox_Requirements_Res'  => $_Lang['InfoBox_Requirements_Res'],
+        'InfoBox_Requirements_Tech' => $_Lang['InfoBox_Requirements_Tech'],
+        'InfoBox_BuildTime'         => $_Lang['InfoBox_BuildTime'],
+        'InfoBox_ShowTechReq'       => $_Lang['InfoBox_ShowTechReq'],
+        'InfoBox_ShowResReq'        => $_Lang['InfoBox_ShowResReq'],
+    ];
 
     $Parse['Create_DestroyTips'] = '';
 
@@ -634,7 +631,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             }
         }
 
-        $BlockReason = array();
+        $BlockReason = [];
 
         if($MaxLevelReached)
         {
