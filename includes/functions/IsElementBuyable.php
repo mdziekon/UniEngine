@@ -1,6 +1,7 @@
 <?php
 
 use UniEngine\Engine\Includes\Helpers\World\Elements;
+use UniEngine\Engine\Includes\Helpers\World\Resources;
 
 function IsElementBuyable($TheUser, $ThePlanet, $ElementID, $ForDestroy = false) {
     if (isOnVacation($TheUser)) {
@@ -23,14 +24,14 @@ function IsElementBuyable($TheUser, $ThePlanet, $ElementID, $ForDestroy = false)
         return false;
     }
 
-    foreach ($elementPurchaseCost['planetary'] as $costResourceKey => $costValue) {
-        if ($costValue > $ThePlanet[$costResourceKey]) {
-            return false;
-        }
-    }
+    foreach ($elementPurchaseCost as $costResourceKey => $costValue) {
+        $currentResourceState = Resources\getResourceState(
+            $costResourceKey,
+            $TheUser,
+            $ThePlanet
+        );
 
-    foreach ($elementPurchaseCost['user'] as $costResourceKey => $costValue) {
-        if ($costValue > $TheUser[$costResourceKey]) {
+        if ($costValue > $currentResourceState) {
             return false;
         }
     }
