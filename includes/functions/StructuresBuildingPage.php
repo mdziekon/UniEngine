@@ -701,48 +701,41 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         {
             $ElementDestroyCost = GetBuildingPrice($CurrentUser, $CurrentPlanet, $ElementID, true, true, true);
             $ElementParser['Create_DestroyTips_Res'] = '';
-            foreach($ElementDestroyCost as $Key => $Value)
-            {
-                if($Value > 0)
-                {
-                    $ResColor = '';
-                    if($Key != 'darkEnergy')
-                    {
-                        if($CurrentPlanet[$Key] < $Value)
-                        {
-                            if($queueUnfinishedLenght > 0)
-                            {
-                                $ResColor = 'orange';
-                            }
-                            else
-                            {
-                                $ResColor = 'red';
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if($CurrentUser[$Key] < $Value)
-                        {
-                            if($queueUnfinishedLenght > 0)
-                            {
-                                $ResColor = 'orange';
-                            }
-                            else
-                            {
-                                $ResColor = 'red';
-                            }
-                        }
-                    }
-                    $ElementParser['ElementPrices'] = array('Name' => $ResLangs[$Key], 'Color' => $ResColor, 'Value' => prettyNumber($Value));
-                    $ElementParser['Create_DestroyTips_Res'] .= trim(
-                        parsetemplate(
-                            $TPL['infobox_req_destres'],
-                            $ElementParser['ElementPrices']
-                        )
+
+            foreach ($ElementDestroyCost as $Key => $Value) {
+                if (!($Value > 0)) {
+                    continue;
+                }
+
+                $ResColor = '';
+
+                if ($Key != 'darkEnergy') {
+                    $UseVar = &$CurrentPlanet;
+                } else {
+                    $UseVar = &$CurrentUser;
+                }
+
+                if ($UseVar[$Key] < $Value) {
+                    $ResColor = (
+                        $queueUnfinishedLenght > 0 ?
+                        'orange' :
+                        'red'
                     );
                 }
+
+                $ElementParser['ElementPrices'] = [
+                    'Name' => $ResLangs[$Key],
+                    'Color' => $ResColor,
+                    'Value' => prettyNumber($Value)
+                ];
+                $ElementParser['Create_DestroyTips_Res'] .= trim(
+                    parsetemplate(
+                        $TPL['infobox_req_destres'],
+                        $ElementParser['ElementPrices']
+                    )
+                );
             }
+
             if(!isset($Parse['Create_DestroyTips']))
             {
                 $Parse['Create_DestroyTips'] = '';
