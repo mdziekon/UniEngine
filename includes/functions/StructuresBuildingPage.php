@@ -474,6 +474,8 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         'InfoBox_ShowResReq'            => $_Lang['InfoBox_ShowResReq'],
     );
 
+    $Parse['Create_DestroyTips'] = '';
+
     foreach ($_Vars_ElementCategories['build'] as $ElementID) {
         $isAvailableOnThisPlanetType = Elements\isStructureAvailableOnPlanetType(
             $ElementID,
@@ -535,51 +537,60 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         $maxLevel = Elements\getElementMaxUpgradeLevel($ElementID);
 
         if ($NextLevel <= $maxLevel) {
-            $ElementParser['ElementPrice'] = GetBuildingPrice($CurrentUser, $CurrentPlanet, $ElementID, true, false, true);
+            $upgradeCost = Elements\calculatePurchaseCost(
+                $ElementID,
+                Elements\getElementState($ElementID, $CurrentPlanet, $CurrentUser),
+                [
+                    'purchaseMode' => Elements\PurchaseMode::Upgrade
+                ]
+            );
 
-            foreach ($ElementParser['ElementPrice'] as $Key => $Value) {
-                if (!($Value > 0)) {
-                    continue;
+            $ElementParser['ElementPriceDiv'] = '';
+
+            foreach ($upgradeCost as $costType => $upgradeCostResources) {
+                switch ($costType) {
+                    case 'planetary':
+                        $resourceStateContainerVariable = &$CurrentPlanet;
+                        break;
+                    case 'user':
+                        $resourceStateContainerVariable = &$CurrentUser;
+                        break;
                 }
 
-                $ResColor = '';
-                $ResMinusColor = '';
-                $MinusValue = '&nbsp;';
+                foreach ($upgradeCostResources as $costResourceKey => $costValue) {
+                    $ResColor = '';
+                    $ResMinusColor = '';
+                    $MinusValue = '&nbsp;';
 
-                if ($Key != 'darkEnergy') {
-                    $UseVar = &$CurrentPlanet;
-                } else {
-                    $UseVar = &$CurrentUser;
-                }
+                    $currentResourceState = $resourceStateContainerVariable[$costResourceKey];
+                    $resourceLeft = $currentResourceState - $costValue;
+                    $hasResourceDeficit = ($resourceLeft < 0);
 
-                if ($UseVar[$Key] < $Value) {
-                    $ResMinusColor = 'red';
-                    $MinusValue = '('.prettyNumber($UseVar[$Key] - $Value).')';
-                    $ResColor = (
-                        $queueUnfinishedLenght > 0 ?
-                        'orange' :
-                        'red'
+                    if ($hasResourceDeficit) {
+                        $ResMinusColor = 'red';
+                        $MinusValue = '(' . prettyNumber($resourceLeft) . ')';
+                        $ResColor = (
+                            $queueUnfinishedLenght > 0 ?
+                            'orange' :
+                            'red'
+                        );
+                    }
+
+                    $ElementParser['ElementPrices'] = [
+                        'SkinPath'      => $_SkinPath,
+                        'ResName'       => $costResourceKey,
+                        'ResImg'        => $ResImages[$costResourceKey],
+                        'ResColor'      => $ResColor,
+                        'Value'         => prettyNumber($costValue),
+                        'ResMinusColor' => $ResMinusColor,
+                        'MinusValue'    => $MinusValue,
+                    ];
+
+                    $ElementParser['ElementPriceDiv'] .= parsetemplate(
+                        $TPL['infobox_req_res'],
+                        $ElementParser['ElementPrices']
                     );
                 }
-
-                $ElementParser['ElementPrices'] = [
-                    'SkinPath' => $_SkinPath,
-                    'ResName' => $Key,
-                    'ResImg' => $ResImages[$Key],
-                    'ResColor' => $ResColor,
-                    'Value' => prettyNumber($Value),
-                    'ResMinusColor' => $ResMinusColor,
-                    'MinusValue' => $MinusValue,
-                ];
-
-                if(!isset($ElementParser['ElementPriceDiv'])) {
-                    $ElementParser['ElementPriceDiv'] = '';
-                }
-
-                $ElementParser['ElementPriceDiv'] .= parsetemplate(
-                    $TPL['infobox_req_res'],
-                    $ElementParser['ElementPrices']
-                );
             }
 
             $ElementParser['BuildTime'] = pretty_time(GetBuildingTime($CurrentUser, $CurrentPlanet, $ElementID));
@@ -699,55 +710,65 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         }
         else
         {
-            $ElementDestroyCost = GetBuildingPrice($CurrentUser, $CurrentPlanet, $ElementID, true, true, true);
+            $downgradeCost = Elements\calculatePurchaseCost(
+                $ElementID,
+                Elements\getElementState($ElementID, $CurrentPlanet, $CurrentUser),
+                [
+                    'purchaseMode' => Elements\PurchaseMode::Downgrade
+                ]
+            );
+
             $ElementParser['Create_DestroyTips_Res'] = '';
 
-            foreach ($ElementDestroyCost as $Key => $Value) {
-                if (!($Value > 0)) {
-                    continue;
+            foreach ($downgradeCost as $costType => $downgradeCostResources) {
+                switch ($costType) {
+                    case 'planetary':
+                        $resourceStateContainerVariable = &$CurrentPlanet;
+                        break;
+                    case 'user':
+                        $resourceStateContainerVariable = &$CurrentUser;
+                        break;
                 }
 
-                $ResColor = '';
+                foreach ($downgradeCostResources as $costResourceKey => $costValue) {
+                    $ResColor = '';
 
-                if ($Key != 'darkEnergy') {
-                    $UseVar = &$CurrentPlanet;
-                } else {
-                    $UseVar = &$CurrentUser;
-                }
+                    $currentResourceState = $resourceStateContainerVariable[$costResourceKey];
+                    $resourceLeft = ($currentResourceState - $costValue);
+                    $hasResourceDeficit = ($resourceLeft < 0);
 
-                if ($UseVar[$Key] < $Value) {
-                    $ResColor = (
-                        $queueUnfinishedLenght > 0 ?
-                        'orange' :
-                        'red'
+                    if ($hasResourceDeficit) {
+                        $ResColor = (
+                            $queueUnfinishedLenght > 0 ?
+                            'orange' :
+                            'red'
+                        );
+                    }
+
+                    $ElementParser['ElementPrices'] = [
+                        'Name' => $ResLangs[$costResourceKey],
+                        'Color' => $ResColor,
+                        'Value' => prettyNumber($costValue)
+                    ];
+                    $ElementParser['Create_DestroyTips_Res'] .= trim(
+                        parsetemplate(
+                            $TPL['infobox_req_destres'],
+                            $ElementParser['ElementPrices']
+                        )
                     );
                 }
-
-                $ElementParser['ElementPrices'] = [
-                    'Name' => $ResLangs[$Key],
-                    'Color' => $ResColor,
-                    'Value' => prettyNumber($Value)
-                ];
-                $ElementParser['Create_DestroyTips_Res'] .= trim(
-                    parsetemplate(
-                        $TPL['infobox_req_destres'],
-                        $ElementParser['ElementPrices']
-                    )
-                );
             }
 
-            if(!isset($Parse['Create_DestroyTips']))
-            {
-                $Parse['Create_DestroyTips'] = '';
-            }
-            $Parse['Create_DestroyTips'] .= parsetemplate($TPL['infobox_req_desttable'], array
-            (
-                'ElementID' => $ElementID,
-                'InfoBox_DestroyCost' => $_Lang['InfoBox_DestroyCost'],
-                'InfoBox_DestroyTime' => $_Lang['InfoBox_DestroyTime'],
-                'Resources' => $ElementParser['Create_DestroyTips_Res'],
-                'DestroyTime' => pretty_time(GetBuildingTime($CurrentUser, $CurrentPlanet, $ElementID) / 2)
-            ));
+            $Parse['Create_DestroyTips'] .= parsetemplate(
+                $TPL['infobox_req_desttable'],
+                [
+                    'ElementID' => $ElementID,
+                    'InfoBox_DestroyCost' => $_Lang['InfoBox_DestroyCost'],
+                    'InfoBox_DestroyTime' => $_Lang['InfoBox_DestroyTime'],
+                    'Resources' => $ElementParser['Create_DestroyTips_Res'],
+                    'DestroyTime' => pretty_time(GetBuildingTime($CurrentUser, $CurrentPlanet, $ElementID) / 2)
+                ]
+            );
         }
 
         if(in_array($ElementID, $_Vars_ElementCategories['prod']))
