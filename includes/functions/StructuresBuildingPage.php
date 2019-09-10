@@ -537,53 +537,51 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         if ($NextLevel <= $maxLevel) {
             $ElementParser['ElementPrice'] = GetBuildingPrice($CurrentUser, $CurrentPlanet, $ElementID, true, false, true);
 
-            foreach($ElementParser['ElementPrice'] as $Key => $Value)
-            {
-                if($Value > 0)
-                {
-                    $ResColor = '';
-                    $ResMinusColor = '';
-                    $MinusValue = '&nbsp;';
-
-                    if($Key != 'darkEnergy')
-                    {
-                        $UseVar = &$CurrentPlanet;
-                    }
-                    else
-                    {
-                        $UseVar = &$CurrentUser;
-                    }
-                    if($UseVar[$Key] < $Value)
-                    {
-                        $ResMinusColor = 'red';
-                        $MinusValue = '('.prettyNumber($UseVar[$Key] - $Value).')';
-                        if($queueUnfinishedLenght > 0)
-                        {
-                            $ResColor = 'orange';
-                        }
-                        else
-                        {
-                            $ResColor = 'red';
-                        }
-                    }
-
-                    $ElementParser['ElementPrices'] = array
-                    (
-                        'SkinPath' => $_SkinPath,
-                        'ResName' => $Key,
-                        'ResImg' => $ResImages[$Key],
-                        'ResColor' => $ResColor,
-                        'Value' => prettyNumber($Value),
-                        'ResMinusColor' => $ResMinusColor,
-                        'MinusValue' => $MinusValue,
-                    );
-                    if(!isset($ElementParser['ElementPriceDiv']))
-                    {
-                        $ElementParser['ElementPriceDiv'] = '';
-                    }
-                    $ElementParser['ElementPriceDiv'] .= parsetemplate($TPL['infobox_req_res'], $ElementParser['ElementPrices']);
+            foreach ($ElementParser['ElementPrice'] as $Key => $Value) {
+                if (!($Value > 0)) {
+                    continue;
                 }
+
+                $ResColor = '';
+                $ResMinusColor = '';
+                $MinusValue = '&nbsp;';
+
+                if ($Key != 'darkEnergy') {
+                    $UseVar = &$CurrentPlanet;
+                } else {
+                    $UseVar = &$CurrentUser;
+                }
+
+                if ($UseVar[$Key] < $Value) {
+                    $ResMinusColor = 'red';
+                    $MinusValue = '('.prettyNumber($UseVar[$Key] - $Value).')';
+                    $ResColor = (
+                        $queueUnfinishedLenght > 0 ?
+                        'orange' :
+                        'red'
+                    );
+                }
+
+                $ElementParser['ElementPrices'] = [
+                    'SkinPath' => $_SkinPath,
+                    'ResName' => $Key,
+                    'ResImg' => $ResImages[$Key],
+                    'ResColor' => $ResColor,
+                    'Value' => prettyNumber($Value),
+                    'ResMinusColor' => $ResMinusColor,
+                    'MinusValue' => $MinusValue,
+                ];
+
+                if(!isset($ElementParser['ElementPriceDiv'])) {
+                    $ElementParser['ElementPriceDiv'] = '';
+                }
+
+                $ElementParser['ElementPriceDiv'] .= parsetemplate(
+                    $TPL['infobox_req_res'],
+                    $ElementParser['ElementPrices']
+                );
             }
+
             $ElementParser['BuildTime'] = pretty_time(GetBuildingTime($CurrentUser, $CurrentPlanet, $ElementID));
         } else {
             $MaxLevelReached = true;
