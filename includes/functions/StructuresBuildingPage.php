@@ -146,7 +146,7 @@ function _handleStructureCommandRemove(&$user, &$planet, &$input) {
 //          - cmd (EnumString: 'insert' | 'destroy')
 //
 function _handleStructureCommandInsert(&$user, &$planet, &$input, $params) {
-    global $_EnginePath, $_GameConfig;
+    global $_EnginePath;
 
     $cmd = $params['cmd'];
 
@@ -178,7 +178,7 @@ function _handleStructureCommandInsert(&$user, &$planet, &$input, $params) {
         $elementID == 31 &&
         $planet['techQueue_Planet'] > 0 &&
         $planet['techQueue_EndTime'] > 0 &&
-        $_GameConfig['BuildLabWhileRun'] != 1
+        !isLabUpgradableWhileInUse()
     ) {
         return [
             'isSuccess' => false,
@@ -208,7 +208,7 @@ function _handleStructureCommandInsert(&$user, &$planet, &$input, $params) {
 
 function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 {
-    global $_Lang, $_SkinPath, $_GameConfig, $_GET, $_EnginePath, $_Vars_ElementCategories;
+    global $_Lang, $_SkinPath, $_GET, $_EnginePath, $_Vars_ElementCategories;
 
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
     includeLang('worldElements.detailed');
@@ -429,7 +429,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     $isBlockingTechResearchInProgress = (
         $CurrentUser['techQueue_Planet'] > 0 &&
         $CurrentUser['techQueue_EndTime'] > 0 &&
-        $_GameConfig['BuildLabWhileRun'] != 1
+        !isLabUpgradableWhileInUse()
     );
 
     if ($isQueueFull) {
