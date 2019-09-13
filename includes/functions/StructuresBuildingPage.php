@@ -1,5 +1,6 @@
 <?php
 
+use UniEngine\Engine\Includes\Helpers\Common;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 use UniEngine\Engine\Includes\Helpers\World\Resources;
 use UniEngine\Engine\Includes\Helpers\Planets;
@@ -859,36 +860,41 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     $CurrentPlanet['deuterium'] += $LockResources['deuterium'];
 
     // Create Structures List
-    $ThisRowIndex = 0;
-    $InRowCount = 0;
-    foreach ($StructuresList as $ParsedData) {
-        if ($InRowCount == $ElementsPerRow) {
-            $ParsedRows[($ThisRowIndex + 1)] = $TPL['list_breakrow'];
-            $ThisRowIndex += 2;
-            $InRowCount = 0;
-        }
+    $groupedStructureRows = Common\Utils\groupInRows($StructuresList, $ElementsPerRow);
+    $parsedStructureRows = array_map(
+        function ($elementsInRow) use (&$TPL, $ElementsPerRow) {
+            $mergedElementsInRow = implode('', $elementsInRow);
+            $emptySpaceFiller = '';
 
-        if (!isset($StructureRows[$ThisRowIndex]['Elements'])) {
-            $StructureRows[$ThisRowIndex]['Elements'] = '';
-        }
-        $StructureRows[$ThisRowIndex]['Elements'] .= $ParsedData;
-        $InRowCount += 1;
-    }
-    if ($InRowCount < $ElementsPerRow) {
-        if (!isset($StructureRows[$ThisRowIndex]['Elements'])) {
-            $StructureRows[$ThisRowIndex]['Elements'] = '';
-        }
-        $StructureRows[$ThisRowIndex]['Elements'] .= str_repeat($TPL['list_hidden'], ($ElementsPerRow - $InRowCount));
-    }
-    foreach ($StructureRows as $Index => $Data) {
-        $ParsedRows[$Index] = parsetemplate($TPL['list_row'], $Data);
-    }
-    ksort($ParsedRows, SORT_ASC);
-    $Parse['Create_StructuresList'] = implode('', $ParsedRows);
+            $elementsInRowCount = count($elementsInRow);
+
+            if ($elementsInRowCount < $ElementsPerRow) {
+                $emptySpaceFiller = str_repeat(
+                    $TPL['list_hidden'],
+                    ($ElementsPerRow - $elementsInRowCount)
+                );
+            }
+
+            return parsetemplate(
+                $TPL['list_row'],
+                [
+                    'Elements' => ($mergedElementsInRow . $emptySpaceFiller)
+                ]
+            );
+        },
+        $groupedStructureRows
+    );
+
+    $Parse['Create_StructuresList'] = implode(
+        $TPL['list_breakrow'],
+        $parsedStructureRows
+    );
     $Parse['Create_ElementsInfoBoxes'] = implode('', $InfoBoxes);
+
     if ($ShowElementID > 0) {
         $Parse['Create_ShowElementOnStartup'] = $ShowElementID;
     }
+
     $MaxFields = CalculateMaxPlanetFields($CurrentPlanet);
     if ($CurrentPlanet['field_current'] == $MaxFields) {
         $Parse['Insert_Overview_Fields_Used_Color'] = 'red';
