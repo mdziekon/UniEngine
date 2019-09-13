@@ -208,8 +208,7 @@ function _handleStructureCommandInsert(&$user, &$planet, &$input, $params) {
 
 function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 {
-    global $_Lang, $_SkinPath, $_GameConfig, $_GET, $_EnginePath,
-        $_Vars_GameElements, $_Vars_ElementCategories;
+    global $_Lang, $_SkinPath, $_GameConfig, $_GET, $_EnginePath, $_Vars_ElementCategories;
 
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
     includeLang('worldElements.detailed');
@@ -852,7 +851,9 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 
     if (!empty($LevelModifiers)) {
         foreach ($LevelModifiers as $ElementID => $Modifier) {
-            $CurrentPlanet[$_Vars_GameElements[$ElementID]] += $Modifier;
+            $elementPlanetKey = _getElementPlanetKey($ElementID);
+
+            $CurrentPlanet[$elementPlanetKey] += $Modifier;
         }
     }
     $CurrentPlanet['metal'] += $LockResources['metal'];
