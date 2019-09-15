@@ -223,23 +223,23 @@ function StructuresBuildingPage (&$CurrentPlanet, $CurrentUser) {
     $const_ElementsPerRow = 7;
 
     // Get Templates
-    $tplBody['list_element']                = gettemplate('buildings_compact_list_element_structures');
-    $tplBody['list_levelmodif']             = gettemplate('buildings_compact_list_levelmodif');
-    $tplBody['list_hidden']                 = gettemplate('buildings_compact_list_hidden');
-    $tplBody['list_row']                    = gettemplate('buildings_compact_list_row');
-    $tplBody['list_breakrow']               = gettemplate('buildings_compact_list_breakrow');
-    $tplBody['list_disabled']               = gettemplate('buildings_compact_list_disabled');
-    $tplBody['list_partdisabled']           = parsetemplate($tplBody['list_disabled'], [ 'AddOpacity' => 'dPart' ]);
-    $tplBody['list_disabled']               = parsetemplate($tplBody['list_disabled'], [ 'AddOpacity' => '' ]);
-    $tplBody['queue_topinfo']               = gettemplate('buildings_compact_queue_topinfo');
-    $tplBody['infobox_body']                = gettemplate('buildings_compact_infobox_body_structures');
-    $tplBody['infobox_levelmodif']          = gettemplate('buildings_compact_infobox_levelmodif');
-    $tplBody['infobox_req_res']             = gettemplate('buildings_compact_infobox_req_res');
-    $tplBody['infobox_req_desttable']       = gettemplate('buildings_compact_infobox_req_desttable');
-    $tplBody['infobox_req_destres']         = gettemplate('buildings_compact_infobox_req_destres');
-    $tplBody['infobox_additionalnfo']       = gettemplate('buildings_compact_infobox_additionalnfo');
-    $tplBody['infobox_req_selector_single'] = gettemplate('buildings_compact_infobox_req_selector_single');
-    $tplBody['infobox_req_selector_dual']   = gettemplate('buildings_compact_infobox_req_selector_dual');
+    $tplBodyCache['list_element']                = gettemplate('buildings_compact_list_element_structures');
+    $tplBodyCache['list_levelmodif']             = gettemplate('buildings_compact_list_levelmodif');
+    $tplBodyCache['list_hidden']                 = gettemplate('buildings_compact_list_hidden');
+    $tplBodyCache['list_row']                    = gettemplate('buildings_compact_list_row');
+    $tplBodyCache['list_breakrow']               = gettemplate('buildings_compact_list_breakrow');
+    $tplBodyCache['list_disabled']               = gettemplate('buildings_compact_list_disabled');
+    $tplBodyCache['list_partdisabled']           = parsetemplate($tplBodyCache['list_disabled'], [ 'AddOpacity' => 'dPart' ]);
+    $tplBodyCache['list_disabled']               = parsetemplate($tplBodyCache['list_disabled'], [ 'AddOpacity' => '' ]);
+    $tplBodyCache['queue_topinfo']               = gettemplate('buildings_compact_queue_topinfo');
+    $tplBodyCache['infobox_body']                = gettemplate('buildings_compact_infobox_body_structures');
+    $tplBodyCache['infobox_levelmodif']          = gettemplate('buildings_compact_infobox_levelmodif');
+    $tplBodyCache['infobox_req_res']             = gettemplate('buildings_compact_infobox_req_res');
+    $tplBodyCache['infobox_req_desttable']       = gettemplate('buildings_compact_infobox_req_desttable');
+    $tplBodyCache['infobox_req_destres']         = gettemplate('buildings_compact_infobox_req_destres');
+    $tplBodyCache['infobox_additionalnfo']       = gettemplate('buildings_compact_infobox_additionalnfo');
+    $tplBodyCache['infobox_req_selector_single'] = gettemplate('buildings_compact_infobox_req_selector_single');
+    $tplBodyCache['infobox_req_selector_dual']   = gettemplate('buildings_compact_infobox_req_selector_dual');
 
     // Handle Commands
     $cmdResult = _handleStructureCommand(
@@ -394,18 +394,18 @@ function StructuresBuildingPage (&$CurrentPlanet, $CurrentUser) {
             $Parse['Create_Queue'] = '';
 
             foreach ($queueElementsTplData as $elementIdx => $queueElementTplData) {
-                $tplBody = (
+                $queueElementTPLBody = (
                     $elementIdx === 0 ?
                     gettemplate('buildings_compact_queue_firstel') :
                     gettemplate('buildings_compact_queue_nextel')
                 );
 
-                $Parse['Create_Queue'] .= parsetemplate($tplBody, $queueElementTplData);
+                $Parse['Create_Queue'] .= parsetemplate($queueElementTPLBody, $queueElementTplData);
             }
         }
     } else {
         $Parse['Create_Queue'] = parsetemplate(
-            $tplBody['queue_topinfo'],
+            $tplBodyCache['queue_topinfo'],
             [
                 'InfoText' => $_Lang['Queue_Empty']
             ]
@@ -435,7 +435,7 @@ function StructuresBuildingPage (&$CurrentPlanet, $CurrentUser) {
 
     if ($isQueueFull) {
         $queueFullMsgHTML = parsetemplate(
-            $tplBody['queue_topinfo'],
+            $tplBodyCache['queue_topinfo'],
             [
                 'InfoColor' => 'red',
                 'InfoText' => $_Lang['Queue_Full']
@@ -562,8 +562,8 @@ function StructuresBuildingPage (&$CurrentPlanet, $CurrentUser) {
                 $elementLevelModifierTPLData['modText'] = '+' . prettyNumber($elementQueueLevelModifier * (-1));
             }
 
-            $elementTPLData['LevelModifier'] = parsetemplate($tplBody['infobox_levelmodif'], $elementLevelModifierTPLData);
-            $elementTPLData['ElementLevelModif'] = parsetemplate($tplBody['list_levelmodif'], $elementLevelModifierTPLData);
+            $elementTPLData['LevelModifier'] = parsetemplate($tplBodyCache['infobox_levelmodif'], $elementLevelModifierTPLData);
+            $elementTPLData['ElementLevelModif'] = parsetemplate($tplBodyCache['list_levelmodif'], $elementLevelModifierTPLData);
         }
 
         if ($isUpgradeable) {
@@ -612,7 +612,7 @@ function StructuresBuildingPage (&$CurrentPlanet, $CurrentUser) {
                 ];
 
                 $elementTPLData['ElementPriceDiv'] .= parsetemplate(
-                    $tplBody['infobox_req_res'],
+                    $tplBodyCache['infobox_req_res'],
                     $elementTPLData['ElementPrices']
                 );
             }
@@ -658,14 +658,14 @@ function StructuresBuildingPage (&$CurrentPlanet, $CurrentUser) {
                 ];
                 $elementTPLData['Create_DestroyTips_Res'] .= trim(
                     parsetemplate(
-                        $tplBody['infobox_req_destres'],
+                        $tplBodyCache['infobox_req_destres'],
                         $elementTPLData['ElementPrices']
                     )
                 );
             }
 
             $Parse['Create_DestroyTips'] .= parsetemplate(
-                $tplBody['infobox_req_desttable'],
+                $tplBodyCache['infobox_req_desttable'],
                 [
                     'ElementID' => $elementID,
                     'InfoBox_DestroyCost' => $_Lang['InfoBox_DestroyCost'],
@@ -677,9 +677,9 @@ function StructuresBuildingPage (&$CurrentPlanet, $CurrentUser) {
         }
 
         if ($hasTechnologyRequirementsMet) {
-            $elementTPLData['ElementRequirementsHeadline'] = $tplBody['infobox_req_selector_single'];
+            $elementTPLData['ElementRequirementsHeadline'] = $tplBodyCache['infobox_req_selector_single'];
         } else {
-            $elementTPLData['ElementRequirementsHeadline'] = $tplBody['infobox_req_selector_dual'];
+            $elementTPLData['ElementRequirementsHeadline'] = $tplBodyCache['infobox_req_selector_dual'];
             $elementTPLData['ElementTechDiv'] = GetElementTechReq($CurrentUser, $CurrentPlanet, $elementID, true);
             $elementTPLData['HideResReqDiv'] = 'hide';
         }
@@ -722,7 +722,7 @@ function StructuresBuildingPage (&$CurrentPlanet, $CurrentUser) {
                 $label = $resourceLabels[$resourceKey];
 
                 $elementProductionChangeTPLRows[] = parsetemplate(
-                    $tplBody['infobox_additionalnfo'],
+                    $tplBodyCache['infobox_additionalnfo'],
                     [
                         'Label' => $label,
                         'ValueClasses' => (
@@ -832,8 +832,8 @@ function StructuresBuildingPage (&$CurrentPlanet, $CurrentUser) {
         if (!empty($upgradeBlockers)) {
             $elementTPLData['ElementDisabled'] = (
                 $canQueueUpgrade ?
-                $tplBody['list_partdisabled'] :
-                $tplBody['list_disabled']
+                $tplBodyCache['list_partdisabled'] :
+                $tplBodyCache['list_disabled']
             );
 
             $elementTPLData['ElementDisableReason'] = end($upgradeBlockers);
@@ -843,8 +843,8 @@ function StructuresBuildingPage (&$CurrentPlanet, $CurrentUser) {
             $elementTPLData['ElementRequirementsHeadline'],
             $elementTPLData
         );
-        $elementsListIcons[] = parsetemplate($tplBody['list_element'], $elementTPLData);
-        $elementsListDetailedInfoboxes[] = parsetemplate($tplBody['infobox_body'], $elementTPLData);
+        $elementsListIcons[] = parsetemplate($tplBodyCache['list_element'], $elementTPLData);
+        $elementsListDetailedInfoboxes[] = parsetemplate($tplBodyCache['infobox_body'], $elementTPLData);
     }
 
     if (!empty($queueElementLevelModifiers)) {
@@ -861,7 +861,7 @@ function StructuresBuildingPage (&$CurrentPlanet, $CurrentUser) {
     // Create Structures List
     $groupedStructureRows = Common\Utils\groupInRows($elementsListIcons, $const_ElementsPerRow);
     $parsedStructureRows = array_map(
-        function ($elementsInRow) use (&$tplBody, $const_ElementsPerRow) {
+        function ($elementsInRow) use (&$tplBodyCache, $const_ElementsPerRow) {
             $mergedElementsInRow = implode('', $elementsInRow);
             $emptySpaceFiller = '';
 
@@ -869,13 +869,13 @@ function StructuresBuildingPage (&$CurrentPlanet, $CurrentUser) {
 
             if ($elementsInRowCount < $const_ElementsPerRow) {
                 $emptySpaceFiller = str_repeat(
-                    $tplBody['list_hidden'],
+                    $tplBodyCache['list_hidden'],
                     ($const_ElementsPerRow - $elementsInRowCount)
                 );
             }
 
             return parsetemplate(
-                $tplBody['list_row'],
+                $tplBodyCache['list_row'],
                 [
                     'Elements' => ($mergedElementsInRow . $emptySpaceFiller)
                 ]
@@ -885,7 +885,7 @@ function StructuresBuildingPage (&$CurrentPlanet, $CurrentUser) {
     );
 
     $Parse['Create_StructuresList'] = implode(
-        $tplBody['list_breakrow'],
+        $tplBodyCache['list_breakrow'],
         $parsedStructureRows
     );
     $Parse['Create_ElementsInfoBoxes'] = implode(
