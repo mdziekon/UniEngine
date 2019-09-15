@@ -206,41 +206,40 @@ function _handleStructureCommandInsert(&$user, &$planet, &$input, $params) {
     ];
 }
 
-function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
-{
+function StructuresBuildingPage (&$CurrentPlanet, $CurrentUser) {
     global $_Lang, $_SkinPath, $_GET, $_EnginePath, $_Vars_ElementCategories;
 
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
     includeLang('worldElements.detailed');
 
-    $Now = time();
+    $currentTimestamp = time();
     $Parse = &$_Lang;
-    $ShowElementID = 0;
-    $FieldsModifier = 0;
+    $highlightElementID = 0;
+    $fieldsModifierByQueuedDowngrades = 0;
 
-    PlanetResourceUpdate($CurrentUser, $CurrentPlanet, $Now);
+    PlanetResourceUpdate($CurrentUser, $CurrentPlanet, $currentTimestamp);
 
     // Constants
-    $ElementsPerRow = 7;
+    $const_ElementsPerRow = 7;
 
     // Get Templates
-    $TPL['list_element']                = gettemplate('buildings_compact_list_element_structures');
-    $TPL['list_levelmodif']             = gettemplate('buildings_compact_list_levelmodif');
-    $TPL['list_hidden']                 = gettemplate('buildings_compact_list_hidden');
-    $TPL['list_row']                    = gettemplate('buildings_compact_list_row');
-    $TPL['list_breakrow']               = gettemplate('buildings_compact_list_breakrow');
-    $TPL['list_disabled']               = gettemplate('buildings_compact_list_disabled');
-    $TPL['list_partdisabled']           = parsetemplate($TPL['list_disabled'], [ 'AddOpacity' => 'dPart' ]);
-    $TPL['list_disabled']               = parsetemplate($TPL['list_disabled'], [ 'AddOpacity' => '' ]);
-    $TPL['queue_topinfo']               = gettemplate('buildings_compact_queue_topinfo');
-    $TPL['infobox_body']                = gettemplate('buildings_compact_infobox_body_structures');
-    $TPL['infobox_levelmodif']          = gettemplate('buildings_compact_infobox_levelmodif');
-    $TPL['infobox_req_res']             = gettemplate('buildings_compact_infobox_req_res');
-    $TPL['infobox_req_desttable']       = gettemplate('buildings_compact_infobox_req_desttable');
-    $TPL['infobox_req_destres']         = gettemplate('buildings_compact_infobox_req_destres');
-    $TPL['infobox_additionalnfo']       = gettemplate('buildings_compact_infobox_additionalnfo');
-    $TPL['infobox_req_selector_single'] = gettemplate('buildings_compact_infobox_req_selector_single');
-    $TPL['infobox_req_selector_dual']   = gettemplate('buildings_compact_infobox_req_selector_dual');
+    $tplBody['list_element']                = gettemplate('buildings_compact_list_element_structures');
+    $tplBody['list_levelmodif']             = gettemplate('buildings_compact_list_levelmodif');
+    $tplBody['list_hidden']                 = gettemplate('buildings_compact_list_hidden');
+    $tplBody['list_row']                    = gettemplate('buildings_compact_list_row');
+    $tplBody['list_breakrow']               = gettemplate('buildings_compact_list_breakrow');
+    $tplBody['list_disabled']               = gettemplate('buildings_compact_list_disabled');
+    $tplBody['list_partdisabled']           = parsetemplate($tplBody['list_disabled'], [ 'AddOpacity' => 'dPart' ]);
+    $tplBody['list_disabled']               = parsetemplate($tplBody['list_disabled'], [ 'AddOpacity' => '' ]);
+    $tplBody['queue_topinfo']               = gettemplate('buildings_compact_queue_topinfo');
+    $tplBody['infobox_body']                = gettemplate('buildings_compact_infobox_body_structures');
+    $tplBody['infobox_levelmodif']          = gettemplate('buildings_compact_infobox_levelmodif');
+    $tplBody['infobox_req_res']             = gettemplate('buildings_compact_infobox_req_res');
+    $tplBody['infobox_req_desttable']       = gettemplate('buildings_compact_infobox_req_desttable');
+    $tplBody['infobox_req_destres']         = gettemplate('buildings_compact_infobox_req_destres');
+    $tplBody['infobox_additionalnfo']       = gettemplate('buildings_compact_infobox_additionalnfo');
+    $tplBody['infobox_req_selector_single'] = gettemplate('buildings_compact_infobox_req_selector_single');
+    $tplBody['infobox_req_selector_dual']   = gettemplate('buildings_compact_infobox_req_selector_dual');
 
     // Handle Commands
     $cmdResult = _handleStructureCommand(
@@ -248,19 +247,21 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         $CurrentPlanet,
         $_GET,
         [
-            "timestamp" => $Now
+            "timestamp" => $currentTimestamp
         ]
     );
 
     if ($cmdResult['isSuccess']) {
-        $ShowElementID = $cmdResult['payload']['elementID'];
+        $highlightElementID = $cmdResult['payload']['elementID'];
     }
     // End of - Handle Commands
 
-    $LockResources['metal'] = 0;
-    $LockResources['crystal'] = 0;
-    $LockResources['deuterium'] = 0;
-    $LevelModifiers = [];
+    $queueTempResourcesLock = [
+        'metal' => 0,
+        'crystal' => 0,
+        'deuterium' => 0
+    ];
+    $queueElementLevelModifiers = [];
 
     // Display queue
     $buildingsQueue = Planets\Queues\parseStructuresQueueString($CurrentPlanet['buildQueue']);
@@ -271,7 +272,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         $queueDisplayIdx = 0;
 
         foreach ($buildingsQueue as $queueIdx => $queueElement) {
-            if ($queueElement['endTimestamp'] < $Now) {
+            if ($queueElement['endTimestamp'] < $currentTimestamp) {
                 continue;
             }
 
@@ -280,7 +281,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             $elementLevel = $queueElement['level'];
             $progressDuration = $queueElement['duration'];
             $progressEndTime = $queueElement['endTimestamp'];
-            $progressTimeLeft = $progressEndTime - $Now;
+            $progressTimeLeft = $progressEndTime - $currentTimestamp;
             $isUpgrading = (
                 $queueElement['mode'] == 'build' ?
                 true :
@@ -363,33 +364,33 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             $queueElementsTplData[] = $queueElementTplData;
 
             if (!$isFirstQueueElement) {
-                $GetResourcesToLock = GetBuildingPrice($CurrentUser, $CurrentPlanet, $elementID, true, !$isUpgrading);
-                $LockResources['metal'] += $GetResourcesToLock['metal'];
-                $LockResources['crystal'] += $GetResourcesToLock['crystal'];
-                $LockResources['deuterium'] += $GetResourcesToLock['deuterium'];
+                $elementCost = GetBuildingPrice($CurrentUser, $CurrentPlanet, $elementID, true, !$isUpgrading);
+                $queueTempResourcesLock['metal'] += $elementCost['metal'];
+                $queueTempResourcesLock['crystal'] += $elementCost['crystal'];
+                $queueTempResourcesLock['deuterium'] += $elementCost['deuterium'];
             }
 
-            if (!isset($LevelModifiers[$elementID])) {
-                $LevelModifiers[$elementID] = 0;
+            if (!isset($queueElementLevelModifiers[$elementID])) {
+                $queueElementLevelModifiers[$elementID] = 0;
             }
 
             $elementPlanetKey = _getElementPlanetKey($elementID);
 
             if (!$isUpgrading) {
-                $LevelModifiers[$elementID] += 1;
+                $queueElementLevelModifiers[$elementID] += 1;
                 $CurrentPlanet[$elementPlanetKey] -= 1;
-                $FieldsModifier += 2;
+                $fieldsModifierByQueuedDowngrades += 2;
             } else {
-                $LevelModifiers[$elementID] -= 1;
+                $queueElementLevelModifiers[$elementID] -= 1;
                 $CurrentPlanet[$elementPlanetKey] += 1;
             }
 
             $queueDisplayIdx += 1;
         }
 
-        $CurrentPlanet['metal'] -= $LockResources['metal'];
-        $CurrentPlanet['crystal'] -= $LockResources['crystal'];
-        $CurrentPlanet['deuterium'] -= $LockResources['deuterium'];
+        $CurrentPlanet['metal'] -= $queueTempResourcesLock['metal'];
+        $CurrentPlanet['crystal'] -= $queueTempResourcesLock['crystal'];
+        $CurrentPlanet['deuterium'] -= $queueTempResourcesLock['deuterium'];
 
         $queueUnfinishedLenght = $queueDisplayIdx;
 
@@ -408,7 +409,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         }
     } else {
         $Parse['Create_Queue'] = parsetemplate(
-            $TPL['queue_topinfo'],
+            $tplBody['queue_topinfo'],
             [
                 'InfoText' => $_Lang['Queue_Empty']
             ]
@@ -418,7 +419,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 
     // Parse all available buildings
     $hasAvailableFieldsOnPlanet = (
-        ($CurrentPlanet['field_current'] + $queueUnfinishedLenght - $FieldsModifier) <
+        ($CurrentPlanet['field_current'] + $queueUnfinishedLenght - $fieldsModifierByQueuedDowngrades) <
         CalculateMaxPlanetFields($CurrentPlanet)
     );
     $isOnVacation = isOnVacation($CurrentUser);
@@ -434,7 +435,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 
     if ($isQueueFull) {
         $queueFullMsgHTML = parsetemplate(
-            $TPL['queue_topinfo'],
+            $tplBody['queue_topinfo'],
             [
                 'InfoColor' => 'red',
                 'InfoText' => $_Lang['Queue_Full']
@@ -444,22 +445,24 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         $Parse['Create_Queue'] = $queueFullMsgHTML . $Parse['Create_Queue'];
     }
 
-    $ResImages = [
+    $resourceIcons = [
         'metal'         => 'metall',
         'crystal'       => 'kristall',
         'deuterium'     => 'deuterium',
+        'energy'        => 'energie',
         'energy_max'    => 'energie',
         'darkEnergy'    => 'darkenergy'
     ];
-    $ResLangs = [
+    $resourceLabels = [
         'metal'         => $_Lang['Metal'],
         'crystal'       => $_Lang['Crystal'],
         'deuterium'     => $_Lang['Deuterium'],
+        'energy'        => $_Lang['Energy'],
         'energy_max'    => $_Lang['Energy'],
         'darkEnergy'    => $_Lang['DarkEnergy']
     ];
 
-    $ElementParserDefault = [
+    $elementTPLDataDefaults = [
         'SkinPath'                  => $_SkinPath,
         'InfoBox_Level'             => $_Lang['InfoBox_Level'],
         'InfoBox_Build'             => $_Lang['InfoBox_Build'],
@@ -476,9 +479,12 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 
     $Parse['Create_DestroyTips'] = '';
 
-    foreach ($_Vars_ElementCategories['build'] as $ElementID) {
+    $elementsListIcons = [];
+    $elementsListDetailedInfoboxes = [];
+
+    foreach ($_Vars_ElementCategories['build'] as $elementID) {
         $isAvailableOnThisPlanetType = Elements\isStructureAvailableOnPlanetType(
-            $ElementID,
+            $elementID,
             $CurrentPlanet['planet_type']
         );
 
@@ -486,60 +492,60 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             continue;
         }
 
-        $ElementParser = $ElementParserDefault;
+        $elementTPLData = $elementTPLDataDefaults;
 
-        $elementCurrentLevel = Elements\getElementCurrentLevel($ElementID, $CurrentPlanet, $CurrentUser);
+        $elementCurrentLevel = Elements\getElementCurrentLevel($elementID, $CurrentPlanet, $CurrentUser);
         $elementNextLevel = $elementCurrentLevel + 1;
         $elementPreviousLevel = $elementCurrentLevel - 1;
-        $elementMaxLevel = Elements\getElementMaxUpgradeLevel($ElementID);
+        $elementMaxLevel = Elements\getElementMaxUpgradeLevel($elementID);
         $elementQueueLevelModifier = (
-            isset($LevelModifiers[$ElementID]) ?
-            $LevelModifiers[$ElementID] :
+            isset($queueElementLevelModifiers[$elementID]) ?
+            $queueElementLevelModifiers[$elementID] :
             0
         );
-        $isInQueue = isset($LevelModifiers[$ElementID]);
+        $isInQueue = isset($queueElementLevelModifiers[$elementID]);
         $isLevelDowngradeable = ($elementPreviousLevel >= 0);
-        $isProductionRelatedStructure = in_array($ElementID, $_Vars_ElementCategories['prod']);
+        $isProductionRelatedStructure = in_array($elementID, $_Vars_ElementCategories['prod']);
         $isBlockedByTechResearchProgress = (
-            $ElementID == 31 &&
+            $elementID == 31 &&
             $isBlockingTechResearchInProgress
         );
         $hasReachedMaxLevel = ($elementCurrentLevel >= $elementMaxLevel);
         $hasTechnologyRequirementsMet = IsTechnologieAccessible(
             $CurrentUser,
             $CurrentPlanet,
-            $ElementID
+            $elementID
         );
 
         $isUpgradeable = (!$hasReachedMaxLevel);
         $isDowngradeable = (
             $isLevelDowngradeable &&
-            !Elements\isIndestructibleStructure($ElementID)
+            !Elements\isIndestructibleStructure($elementID)
         );
 
         $hasUpgradeResources = (
             $isUpgradeable ?
-            IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, false) :
+            IsElementBuyable($CurrentUser, $CurrentPlanet, $elementID, false) :
             null
         );
         $hasDowngradeResources = (
             $isDowngradeable ?
-            IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, true) :
+            IsElementBuyable($CurrentUser, $CurrentPlanet, $elementID, true) :
             null
         );
 
-        $ElementParser['ElementName'] = $_Lang['tech'][$ElementID];
-        $ElementParser['ElementID'] = $ElementID;
-        $ElementParser['ElementLevel'] = prettyNumber($elementCurrentLevel);
-        $ElementParser['ElementRealLevel'] = prettyNumber(
+        $elementTPLData['ElementName'] = $_Lang['tech'][$elementID];
+        $elementTPLData['ElementID'] = $elementID;
+        $elementTPLData['ElementLevel'] = prettyNumber($elementCurrentLevel);
+        $elementTPLData['ElementRealLevel'] = prettyNumber(
             $elementCurrentLevel +
             $elementQueueLevelModifier
         );
-        $ElementParser['BuildLevel'] = prettyNumber($elementNextLevel);
-        $ElementParser['DestroyLevel'] = prettyNumber($elementPreviousLevel);
-        $ElementParser['Desc'] = $_Lang['WorldElements_Detailed'][$ElementID]['description_short'];
-        $ElementParser['BuildButtonColor'] = 'buildDo_Green';
-        $ElementParser['DestroyButtonColor'] = 'buildDo_Red';
+        $elementTPLData['BuildLevel'] = prettyNumber($elementNextLevel);
+        $elementTPLData['DestroyLevel'] = prettyNumber($elementPreviousLevel);
+        $elementTPLData['Desc'] = $_Lang['WorldElements_Detailed'][$elementID]['description_short'];
+        $elementTPLData['BuildButtonColor'] = 'buildDo_Green';
+        $elementTPLData['DestroyButtonColor'] = 'buildDo_Red';
 
         // Generate all additional informations
         if ($isInQueue) {
@@ -556,20 +562,20 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 $elementLevelModifierTPLData['modText'] = '+' . prettyNumber($elementQueueLevelModifier * (-1));
             }
 
-            $ElementParser['LevelModifier'] = parsetemplate($TPL['infobox_levelmodif'], $elementLevelModifierTPLData);
-            $ElementParser['ElementLevelModif'] = parsetemplate($TPL['list_levelmodif'], $elementLevelModifierTPLData);
+            $elementTPLData['LevelModifier'] = parsetemplate($tplBody['infobox_levelmodif'], $elementLevelModifierTPLData);
+            $elementTPLData['ElementLevelModif'] = parsetemplate($tplBody['list_levelmodif'], $elementLevelModifierTPLData);
         }
 
         if ($isUpgradeable) {
             $upgradeCost = Elements\calculatePurchaseCost(
-                $ElementID,
-                Elements\getElementState($ElementID, $CurrentPlanet, $CurrentUser),
+                $elementID,
+                Elements\getElementState($elementID, $CurrentPlanet, $CurrentUser),
                 [
                     'purchaseMode' => Elements\PurchaseMode::Upgrade
                 ]
             );
 
-            $ElementParser['ElementPriceDiv'] = '';
+            $elementTPLData['ElementPriceDiv'] = '';
 
             foreach ($upgradeCost as $costResourceKey => $costValue) {
                 $currentResourceState = Resources\getResourceState(
@@ -578,52 +584,52 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                     $CurrentPlanet
                 );
 
-                $ResColor = '';
-                $ResMinusColor = '';
-                $MinusValue = '&nbsp;';
+                $resourceCostColor = '';
+                $resourceDeficitColor = '';
+                $resourceDeficitValue = '&nbsp;';
 
                 $resourceLeft = $currentResourceState - $costValue;
                 $hasResourceDeficit = ($resourceLeft < 0);
 
                 if ($hasResourceDeficit) {
-                    $ResMinusColor = 'red';
-                    $MinusValue = '(' . prettyNumber($resourceLeft) . ')';
-                    $ResColor = (
+                    $resourceDeficitColor = 'red';
+                    $resourceDeficitValue = '(' . prettyNumber($resourceLeft) . ')';
+                    $resourceCostColor = (
                         $queueUnfinishedLenght > 0 ?
                         'orange' :
                         'red'
                     );
                 }
 
-                $ElementParser['ElementPrices'] = [
+                $elementTPLData['ElementPrices'] = [
                     'SkinPath'      => $_SkinPath,
                     'ResName'       => $costResourceKey,
-                    'ResImg'        => $ResImages[$costResourceKey],
-                    'ResColor'      => $ResColor,
+                    'ResImg'        => $resourceIcons[$costResourceKey],
+                    'ResColor'      => $resourceCostColor,
                     'Value'         => prettyNumber($costValue),
-                    'ResMinusColor' => $ResMinusColor,
-                    'MinusValue'    => $MinusValue,
+                    'ResMinusColor' => $resourceDeficitColor,
+                    'MinusValue'    => $resourceDeficitValue,
                 ];
 
-                $ElementParser['ElementPriceDiv'] .= parsetemplate(
-                    $TPL['infobox_req_res'],
-                    $ElementParser['ElementPrices']
+                $elementTPLData['ElementPriceDiv'] .= parsetemplate(
+                    $tplBody['infobox_req_res'],
+                    $elementTPLData['ElementPrices']
                 );
             }
 
-            $ElementParser['BuildTime'] = pretty_time(GetBuildingTime($CurrentUser, $CurrentPlanet, $ElementID));
+            $elementTPLData['BuildTime'] = pretty_time(GetBuildingTime($CurrentUser, $CurrentPlanet, $elementID));
         }
 
         if ($isDowngradeable) {
             $downgradeCost = Elements\calculatePurchaseCost(
-                $ElementID,
-                Elements\getElementState($ElementID, $CurrentPlanet, $CurrentUser),
+                $elementID,
+                Elements\getElementState($elementID, $CurrentPlanet, $CurrentUser),
                 [
                     'purchaseMode' => Elements\PurchaseMode::Downgrade
                 ]
             );
 
-            $ElementParser['Create_DestroyTips_Res'] = '';
+            $elementTPLData['Create_DestroyTips_Res'] = '';
 
             foreach ($downgradeCost as $costResourceKey => $costValue) {
                 $currentResourceState = Resources\getResourceState(
@@ -632,51 +638,51 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                     $CurrentPlanet
                 );
 
-                $ResColor = '';
+                $resourceCostColor = '';
 
                 $currentResourceState = $resourceStateContainerVariable[$costResourceKey];
                 $resourceLeft = ($currentResourceState - $costValue);
                 $hasResourceDeficit = ($resourceLeft < 0);
 
                 if ($hasResourceDeficit) {
-                    $ResColor = (
+                    $resourceCostColor = (
                         $queueUnfinishedLenght > 0 ?
                         'orange' :
                         'red'
                     );
                 }
 
-                $ElementParser['ElementPrices'] = [
-                    'Name' => $ResLangs[$costResourceKey],
-                    'Color' => $ResColor,
+                $elementTPLData['ElementPrices'] = [
+                    'Name' => $resourceLabels[$costResourceKey],
+                    'Color' => $resourceCostColor,
                     'Value' => prettyNumber($costValue)
                 ];
-                $ElementParser['Create_DestroyTips_Res'] .= trim(
+                $elementTPLData['Create_DestroyTips_Res'] .= trim(
                     parsetemplate(
-                        $TPL['infobox_req_destres'],
-                        $ElementParser['ElementPrices']
+                        $tplBody['infobox_req_destres'],
+                        $elementTPLData['ElementPrices']
                     )
                 );
             }
 
             $Parse['Create_DestroyTips'] .= parsetemplate(
-                $TPL['infobox_req_desttable'],
+                $tplBody['infobox_req_desttable'],
                 [
-                    'ElementID' => $ElementID,
+                    'ElementID' => $elementID,
                     'InfoBox_DestroyCost' => $_Lang['InfoBox_DestroyCost'],
                     'InfoBox_DestroyTime' => $_Lang['InfoBox_DestroyTime'],
-                    'Resources' => $ElementParser['Create_DestroyTips_Res'],
-                    'DestroyTime' => pretty_time(GetBuildingTime($CurrentUser, $CurrentPlanet, $ElementID) / 2)
+                    'Resources' => $elementTPLData['Create_DestroyTips_Res'],
+                    'DestroyTime' => pretty_time(GetBuildingTime($CurrentUser, $CurrentPlanet, $elementID) / 2)
                 ]
             );
         }
 
         if ($hasTechnologyRequirementsMet) {
-            $ElementParser['ElementRequirementsHeadline'] = $TPL['infobox_req_selector_single'];
+            $elementTPLData['ElementRequirementsHeadline'] = $tplBody['infobox_req_selector_single'];
         } else {
-            $ElementParser['ElementRequirementsHeadline'] = $TPL['infobox_req_selector_dual'];
-            $ElementParser['ElementTechDiv'] = GetElementTechReq($CurrentUser, $CurrentPlanet, $ElementID, true);
-            $ElementParser['HideResReqDiv'] = 'hide';
+            $elementTPLData['ElementRequirementsHeadline'] = $tplBody['infobox_req_selector_dual'];
+            $elementTPLData['ElementTechDiv'] = GetElementTechReq($CurrentUser, $CurrentPlanet, $elementID, true);
+            $elementTPLData['HideResReqDiv'] = 'hide';
         }
 
         if ($isProductionRelatedStructure) {
@@ -684,34 +690,27 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 
             // Calculate theoretical production increase
             $thisLevelProduction = getElementProduction(
-                $ElementID,
+                $elementID,
                 $CurrentPlanet,
                 $CurrentUser,
                 [
                     'useCurrentBoosters' => true,
-                    'currentTimestamp' => $Now,
+                    'currentTimestamp' => $currentTimestamp,
                     'customLevel' => $elementCurrentLevel,
                     'customProductionFactor' => 10
                 ]
             );
             $nextLevelProduction = getElementProduction(
-                $ElementID,
+                $elementID,
                 $CurrentPlanet,
                 $CurrentUser,
                 [
                     'useCurrentBoosters' => true,
-                    'currentTimestamp' => $Now,
+                    'currentTimestamp' => $currentTimestamp,
                     'customLevel' => $elementNextLevel,
                     'customProductionFactor' => 10
                 ]
             );
-
-            $resourceLabels = [
-                'metal' => $_Lang['Metal'],
-                'crystal' => $_Lang['Crystal'],
-                'deuterium' => $_Lang['Deuterium'],
-                'energy' => $_Lang['Energy'],
-            ];
 
             foreach ($nextLevelProduction as $resourceKey => $nextLevelResourceProduction) {
                 $difference = ($nextLevelResourceProduction - $thisLevelProduction[$resourceKey]);
@@ -724,7 +723,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 $label = $resourceLabels[$resourceKey];
 
                 $elementProductionChangeTPLRows[] = parsetemplate(
-                    $TPL['infobox_additionalnfo'],
+                    $tplBody['infobox_additionalnfo'],
                     [
                         'Label' => $label,
                         'ValueClasses' => (
@@ -741,7 +740,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 );
             }
 
-            $ElementParser['AdditionalNfo'] = implode('', $elementProductionChangeTPLRows);
+            $elementTPLData['AdditionalNfo'] = implode('', $elementProductionChangeTPLRows);
         }
 
         // Perform all necessary tests to determine if actions are possible
@@ -779,20 +778,20 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         );
 
         // Set all template details based on the state of the structure
-        $ElementParser['HideBuildInfo'] = ($isUpgradeHardBlocked ? 'hide' : '');
-        $ElementParser['HideBuildWarn'] = (!$isUpgradeHardBlocked ? 'hide' : '');
-        $ElementParser['BuildWarn_Color'] = ($isUpgradeHardBlocked ? 'red' : '');
+        $elementTPLData['HideBuildInfo'] = ($isUpgradeHardBlocked ? 'hide' : '');
+        $elementTPLData['HideBuildWarn'] = (!$isUpgradeHardBlocked ? 'hide' : '');
+        $elementTPLData['BuildWarn_Color'] = ($isUpgradeHardBlocked ? 'red' : '');
 
-        $ElementParser['HideBuildButton'] = ($isUpgradeHardBlocked ? 'hide' : '');
-        $ElementParser['HideDestroyButton'] = ($isDowngradeHardBlocked ? 'hide' : '');
-        $ElementParser['HideQuickBuildButton'] = (!$canQueueUpgrade ? 'hide' : '');
+        $elementTPLData['HideBuildButton'] = ($isUpgradeHardBlocked ? 'hide' : '');
+        $elementTPLData['HideDestroyButton'] = ($isDowngradeHardBlocked ? 'hide' : '');
+        $elementTPLData['HideQuickBuildButton'] = (!$canQueueUpgrade ? 'hide' : '');
 
-        $ElementParser['BuildWarn_Text'] = (
+        $elementTPLData['BuildWarn_Text'] = (
             $isUpgradeHardBlocked && $hasReachedMaxLevel ?
             $_Lang['ListBox_Disallow_MaxLevelReached'] :
             ''
         );
-        $ElementParser['BuildButtonColor'] = (
+        $elementTPLData['BuildButtonColor'] = (
             $canStartUpgrade ?
             'buildDo_Green' :
             (
@@ -801,7 +800,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 'buildDo_Gray'
             )
         );
-        $ElementParser['DestroyButtonColor'] = (
+        $elementTPLData['DestroyButtonColor'] = (
             $canQueueDowngrade ?
             'buildDo_Red' :
             'destroyDo_Gray'
@@ -832,52 +831,52 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         }
 
         if (!empty($upgradeBlockers)) {
-            $ElementParser['ElementDisabled'] = (
+            $elementTPLData['ElementDisabled'] = (
                 $canQueueUpgrade ?
-                $TPL['list_partdisabled'] :
-                $TPL['list_disabled']
+                $tplBody['list_partdisabled'] :
+                $tplBody['list_disabled']
             );
 
-            $ElementParser['ElementDisableReason'] = end($upgradeBlockers);
+            $elementTPLData['ElementDisableReason'] = end($upgradeBlockers);
         }
 
-        $ElementParser['ElementRequirementsHeadline'] = parsetemplate(
-            $ElementParser['ElementRequirementsHeadline'],
-            $ElementParser
+        $elementTPLData['ElementRequirementsHeadline'] = parsetemplate(
+            $elementTPLData['ElementRequirementsHeadline'],
+            $elementTPLData
         );
-        $StructuresList[] = parsetemplate($TPL['list_element'], $ElementParser);
-        $InfoBoxes[] = parsetemplate($TPL['infobox_body'], $ElementParser);
+        $elementsListIcons[] = parsetemplate($tplBody['list_element'], $elementTPLData);
+        $elementsListDetailedInfoboxes[] = parsetemplate($tplBody['infobox_body'], $elementTPLData);
     }
 
-    if (!empty($LevelModifiers)) {
-        foreach ($LevelModifiers as $ElementID => $Modifier) {
-            $elementPlanetKey = _getElementPlanetKey($ElementID);
+    if (!empty($queueElementLevelModifiers)) {
+        foreach ($queueElementLevelModifiers as $elementID => $levelModifier) {
+            $elementPlanetKey = _getElementPlanetKey($elementID);
 
-            $CurrentPlanet[$elementPlanetKey] += $Modifier;
+            $CurrentPlanet[$elementPlanetKey] += $levelModifier;
         }
     }
-    $CurrentPlanet['metal'] += $LockResources['metal'];
-    $CurrentPlanet['crystal'] += $LockResources['crystal'];
-    $CurrentPlanet['deuterium'] += $LockResources['deuterium'];
+    $CurrentPlanet['metal'] += $queueTempResourcesLock['metal'];
+    $CurrentPlanet['crystal'] += $queueTempResourcesLock['crystal'];
+    $CurrentPlanet['deuterium'] += $queueTempResourcesLock['deuterium'];
 
     // Create Structures List
-    $groupedStructureRows = Common\Utils\groupInRows($StructuresList, $ElementsPerRow);
+    $groupedStructureRows = Common\Utils\groupInRows($elementsListIcons, $const_ElementsPerRow);
     $parsedStructureRows = array_map(
-        function ($elementsInRow) use (&$TPL, $ElementsPerRow) {
+        function ($elementsInRow) use (&$tplBody, $const_ElementsPerRow) {
             $mergedElementsInRow = implode('', $elementsInRow);
             $emptySpaceFiller = '';
 
             $elementsInRowCount = count($elementsInRow);
 
-            if ($elementsInRowCount < $ElementsPerRow) {
+            if ($elementsInRowCount < $const_ElementsPerRow) {
                 $emptySpaceFiller = str_repeat(
-                    $TPL['list_hidden'],
-                    ($ElementsPerRow - $elementsInRowCount)
+                    $tplBody['list_hidden'],
+                    ($const_ElementsPerRow - $elementsInRowCount)
                 );
             }
 
             return parsetemplate(
-                $TPL['list_row'],
+                $tplBody['list_row'],
                 [
                     'Elements' => ($mergedElementsInRow . $emptySpaceFiller)
                 ]
@@ -887,24 +886,20 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     );
 
     $Parse['Create_StructuresList'] = implode(
-        $TPL['list_breakrow'],
+        $tplBody['list_breakrow'],
         $parsedStructureRows
     );
-    $Parse['Create_ElementsInfoBoxes'] = implode('', $InfoBoxes);
+    $Parse['Create_ElementsInfoBoxes'] = implode(
+        '',
+        $elementsListDetailedInfoboxes
+    );
 
-    if ($ShowElementID > 0) {
-        $Parse['Create_ShowElementOnStartup'] = $ShowElementID;
-    }
-
-    $MaxFields = CalculateMaxPlanetFields($CurrentPlanet);
-    if ($CurrentPlanet['field_current'] == $MaxFields) {
-        $Parse['Insert_Overview_Fields_Used_Color'] = 'red';
-    } else if($CurrentPlanet['field_current'] >= ($MaxFields * 0.9)) {
-        $Parse['Insert_Overview_Fields_Used_Color'] = 'orange';
-    } else {
-        $Parse['Insert_Overview_Fields_Used_Color'] = 'lime';
+    if ($highlightElementID > 0) {
+        $Parse['Create_ShowElementOnStartup'] = $highlightElementID;
     }
     // End of - Parse all available buildings
+
+    $planetsMaxFields = CalculateMaxPlanetFields($CurrentPlanet);
 
     $Parse['Insert_SkinPath'] = $_SkinPath;
     $Parse['Insert_PlanetImg'] = $CurrentPlanet['image'];
@@ -915,10 +910,10 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     $Parse['Insert_PlanetPos_Planet'] = $CurrentPlanet['planet'];
     $Parse['Insert_Overview_Diameter'] = prettyNumber($CurrentPlanet['diameter']);
     $Parse['Insert_Overview_Fields_Used'] = prettyNumber($CurrentPlanet['field_current']);
-    $Parse['Insert_Overview_Fields_Max'] = prettyNumber($MaxFields);
+    $Parse['Insert_Overview_Fields_Max'] = prettyNumber($planetsMaxFields);
     $Parse['Insert_Overview_Fields_Percent'] = sprintf(
         '%0.2f',
-        ($CurrentPlanet['field_current'] / $MaxFields) * 100
+        ($CurrentPlanet['field_current'] / $planetsMaxFields) * 100
     );
     $Parse['Insert_Overview_Temperature'] = sprintf(
         $_Lang['Overview_Form_Temperature'],
@@ -926,9 +921,18 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         $CurrentPlanet['temp_max']
     );
 
-    $Page = parsetemplate(gettemplate('buildings_compact_body_structures'), $Parse);
+    if ($CurrentPlanet['field_current'] == $planetsMaxFields) {
+        $Parse['Insert_Overview_Fields_Used_Color'] = 'red';
+    } else if($CurrentPlanet['field_current'] >= ($planetsMaxFields * 0.9)) {
+        $Parse['Insert_Overview_Fields_Used_Color'] = 'orange';
+    } else {
+        $Parse['Insert_Overview_Fields_Used_Color'] = 'lime';
+    }
 
-    display($Page, $_Lang['Builds']);
+    $pageTPLBody = gettemplate('buildings_compact_body_structures');
+    $pageHTML = parsetemplate($pageTPLBody, $Parse);
+
+    display($pageHTML, $_Lang['Builds']);
 }
 
 ?>
