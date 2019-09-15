@@ -388,10 +388,6 @@ function StructuresBuildingPage (&$CurrentPlanet, $CurrentUser) {
             $queueDisplayIdx += 1;
         }
 
-        $CurrentPlanet['metal'] -= $queueTempResourcesLock['metal'];
-        $CurrentPlanet['crystal'] -= $queueTempResourcesLock['crystal'];
-        $CurrentPlanet['deuterium'] -= $queueTempResourcesLock['deuterium'];
-
         $queueUnfinishedLenght = $queueDisplayIdx;
 
         if (!empty($queueElementsTplData)) {
@@ -416,6 +412,10 @@ function StructuresBuildingPage (&$CurrentPlanet, $CurrentUser) {
         );
     }
     // End of - Display queue
+
+    $CurrentPlanet['metal'] -= $queueTempResourcesLock['metal'];
+    $CurrentPlanet['crystal'] -= $queueTempResourcesLock['crystal'];
+    $CurrentPlanet['deuterium'] -= $queueTempResourcesLock['deuterium'];
 
     // Parse all available buildings
     $hasAvailableFieldsOnPlanet = (
