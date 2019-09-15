@@ -640,7 +640,6 @@ function StructuresBuildingPage (&$CurrentPlanet, $CurrentUser) {
 
                 $resourceCostColor = '';
 
-                $currentResourceState = $resourceStateContainerVariable[$costResourceKey];
                 $resourceLeft = ($currentResourceState - $costValue);
                 $hasResourceDeficit = ($resourceLeft < 0);
 
