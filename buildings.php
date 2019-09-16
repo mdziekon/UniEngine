@@ -100,8 +100,12 @@ switch($_GET['mode'])
         }
         else
         {
-            include($_EnginePath.'includes/functions/StructuresBuildingPage.php');
-            StructuresBuildingPage($_Planet, $_User);
+            include($_EnginePath . 'modules/structures/_includes.php');
+
+            UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\render(
+                $_Planet,
+                $_User
+            );
         }
         break;
 }
