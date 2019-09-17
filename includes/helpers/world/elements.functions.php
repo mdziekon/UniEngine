@@ -207,7 +207,7 @@ function getElementState($elementID, &$planet, &$user) {
         ];
     }
 
-    throw new \Exception("UniEngine::getElementState(): cannot retrieve element's state of an element with ID '{$elementID}'");
+    throw new Exceptions\UniEngineException("Cannot retrieve element's state of an element with ID '{$elementID}'");
 }
 
 function getElementCurrentLevel($elementID, &$planet, &$user) {
@@ -231,7 +231,7 @@ function getElementCurrentLevel($elementID, &$planet, &$user) {
         return $user[$elementKey];
     }
 
-    throw new \Exception("UniEngine::getElementCurrentLevel(): cannot retrieve element's level of an element with ID '{$elementID}'");
+    throw new Exceptions\UniEngineException("Cannot retrieve element's level of an element with ID '{$elementID}'");
 }
 
 function getElementCurrentCount($elementID, &$planet, &$user) {
@@ -247,7 +247,7 @@ function getElementCurrentCount($elementID, &$planet, &$user) {
         return $planet[$elementKey];
     }
 
-    throw new \Exception("UniEngine::getElementCurrentCount(): cannot retrieve element's level of an element with ID '{$elementID}'");
+    throw new Exceptions\UniEngineException("Cannot retrieve element's level of an element with ID '{$elementID}'");
 }
 
 //  Arguments:
@@ -271,14 +271,14 @@ function calculatePurchaseCost($elementID, $elementState, $params) {
     $purchaseMode = $params['purchaseMode'];
 
     if (!isPurchaseable($elementID)) {
-        throw new PurchaseCostCalculationException("UniEngine::calculatePurchaseCost(): element with ID '{$elementID}' is not purchaseable");
+        throw new PurchaseCostCalculationException("Element with ID '{$elementID}' is not purchaseable");
     }
 
     if (
         $purchaseMode === PurchaseMode::Downgrade &&
         !isDowngradeable($elementID)
     ) {
-        throw new PurchaseCostCalculationException("UniEngine::calculatePurchaseCost(): element with ID '{$elementID}' is not downgradeable");
+        throw new PurchaseCostCalculationException("Element with ID '{$elementID}' is not downgradeable");
     }
 
     $planetaryCostBase = getElementPlanetaryCostBase($elementID);
@@ -311,7 +311,7 @@ function calculatePurchaseCost($elementID, $elementState, $params) {
     $maxUpgradeLevel = getElementMaxUpgradeLevel($elementID);
 
     if ($elementLevel >= $maxUpgradeLevel) {
-        throw new PurchaseCostCalculationException("UniEngine::calculatePurchaseCost(): element with ID '{$elementID}' has reached its maximum upgrade level");
+        throw new PurchaseCostCalculationException("Element with ID '{$elementID}' has reached its maximum upgrade level");
     }
 
     return array_merge(
