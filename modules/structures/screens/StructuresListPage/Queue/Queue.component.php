@@ -12,6 +12,14 @@ use UniEngine\Engine\Includes\Helpers\Users;
 //          - planet (Object)
 //          - currentTimestamp (Number)
 //
+//  Returns: Object
+//      - componentHTML (String)
+//      - parsedDetails (Object)
+//          - queuedResourcesToUse (Object<resourceKey: string, value: number>)
+//          - queuedElementLevelModifiers (Object<elementID: string, levelModifier: number>)
+//          - fieldsModifier (Number)
+//          - unfinishedLength (Number)
+//
 function render ($props) {
     global $_Lang, $_SkinPath, $_EnginePath;
 
@@ -216,10 +224,10 @@ function render ($props) {
 
     return [
         'componentHTML' => $componentHTML,
-        'planetModifiers' => [
+        'parsedDetails' => [
             'queuedResourcesToUse' => $queuedResourcesToUse,
             'queuedElementLevelModifiers' => $queuedElementLevelModifiers,
-            'fields' => $fieldsModifierByQueuedDowngrades,
+            'fieldsModifier' => $fieldsModifierByQueuedDowngrades,
             'unfinishedLength' => $queueUnfinishedLenght
         ]
     ];

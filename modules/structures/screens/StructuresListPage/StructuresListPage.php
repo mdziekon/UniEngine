@@ -65,10 +65,10 @@ function render (&$CurrentPlanet, $CurrentUser) {
         'currentTimestamp' => $currentTimestamp
     ]);
 
-    $queueTempResourcesLock = $queueComponent['planetModifiers']['queuedResourcesToUse'];
-    $queueUnfinishedLenght = $queueComponent['planetModifiers']['unfinishedLength'];
-    $queuedElementLevelModifiers = $queueComponent['planetModifiers']['queuedElementLevelModifiers'];
-    $fieldsModifierByQueuedDowngrades = $queueComponent['planetModifiers']['fields'];
+    $queueTempResourcesLock = $queueComponent['parsedDetails']['queuedResourcesToUse'];
+    $queueUnfinishedLenght = $queueComponent['parsedDetails']['unfinishedLength'];
+    $queuedElementLevelModifiers = $queueComponent['parsedDetails']['queuedElementLevelModifiers'];
+    $fieldsModifierByQueuedDowngrades = $queueComponent['parsedDetails']['fieldsModifier'];
 
     $Parse['Create_Queue'] = $queueComponent['componentHTML'];
 
