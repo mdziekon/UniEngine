@@ -5,9 +5,9 @@ namespace UniEngine\Engine\Modules\Structures\Screens\StructuresListPage;
 use UniEngine\Engine\Includes\Helpers\Common;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 use UniEngine\Engine\Includes\Helpers\World\Resources;
-use UniEngine\Engine\Includes\Helpers\Planets;
 use UniEngine\Engine\Includes\Helpers\Users;
 use UniEngine\Engine\Modules\Structures\Input;
+use UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\Queue;
 
 function render (&$CurrentPlanet, $CurrentUser) {
     global $_Lang, $_SkinPath, $_GET, $_EnginePath, $_Vars_ElementCategories;
@@ -34,7 +34,6 @@ function render (&$CurrentPlanet, $CurrentUser) {
     $tplBodyCache['list_disabled']               = gettemplate('buildings_compact_list_disabled');
     $tplBodyCache['list_partdisabled']           = parsetemplate($tplBodyCache['list_disabled'], [ 'AddOpacity' => 'dPart' ]);
     $tplBodyCache['list_disabled']               = parsetemplate($tplBodyCache['list_disabled'], [ 'AddOpacity' => '' ]);
-    $tplBodyCache['queue_topinfo']               = gettemplate('buildings_compact_queue_topinfo');
     $tplBodyCache['infobox_body']                = gettemplate('buildings_compact_infobox_body_structures');
     $tplBodyCache['infobox_levelmodif']          = gettemplate('buildings_compact_infobox_levelmodif');
     $tplBodyCache['infobox_req_res']             = gettemplate('buildings_compact_infobox_req_res');
@@ -59,166 +58,30 @@ function render (&$CurrentPlanet, $CurrentUser) {
     }
     // End of - Handle Commands
 
-    $queueTempResourcesLock = [
-        'metal' => 0,
-        'crystal' => 0,
-        'deuterium' => 0
-    ];
-    $queueElementLevelModifiers = [];
-
     // Display queue
-    $buildingsQueue = Planets\Queues\parseStructuresQueueString($CurrentPlanet['buildQueue']);
-    $queueUnfinishedLenght = 0;
+    $queueComponent = Queue\render([
+        'planet' => &$CurrentPlanet,
+        'user' => &$CurrentUser,
+        'currentTimestamp' => $currentTimestamp
+    ]);
 
-    if (!empty($buildingsQueue)) {
-        $queueElementsTplData = [];
-        $queueDisplayIdx = 0;
+    $queueTempResourcesLock = $queueComponent['planetModifiers']['queuedResourcesToUse'];
+    $queueUnfinishedLenght = $queueComponent['planetModifiers']['unfinishedLength'];
+    $queuedElementLevelModifiers = $queueComponent['planetModifiers']['queuedElementLevelModifiers'];
+    $fieldsModifierByQueuedDowngrades = $queueComponent['planetModifiers']['fields'];
 
-        foreach ($buildingsQueue as $queueIdx => $queueElement) {
-            if ($queueElement['endTimestamp'] < $currentTimestamp) {
-                continue;
-            }
+    $Parse['Create_Queue'] = $queueComponent['componentHTML'];
 
-            $listID = $queueDisplayIdx + 1;
-            $elementID = $queueElement['elementID'];
-            $elementLevel = $queueElement['level'];
-            $progressDuration = $queueElement['duration'];
-            $progressEndTime = $queueElement['endTimestamp'];
-            $progressTimeLeft = $progressEndTime - $currentTimestamp;
-            $isUpgrading = (
-                $queueElement['mode'] == 'build' ?
-                true :
-                false
-            );
-            $isFirstQueueElement = ($queueIdx === 0);
-
-            if ($queueElement['mode'] != 'build') {
-                $elementLevel += 1;
-            }
-
-            $queueElementTplData = [
-                'ListID'                => $listID,
-                'ElementNo'             => $listID,
-                'ElementID'             => $elementID,
-                'Name'                  => $_Lang['tech'][$elementID],
-                'Level'                 => $elementLevel,
-                'PlanetID'              => $CurrentPlanet['id'],
-                'BuildTime'             => pretty_time($progressDuration),
-                'EndTimer'              => pretty_time($progressTimeLeft, true),
-                'EndTimeExpand'         => date('H:i:s', $progressEndTime),
-                'EndDate'               => date('d/m | H:i:s', $progressEndTime),
-                'EndDateExpand'         => prettyDate('d m Y', $progressEndTime, 1),
-
-                'ChronoAppletScript'    => '',
-                'Data_CancelLock_class' => (
-                    Elements\isCancellableOnceInProgress($elementID) ?
-                    '' :
-                    'premblock'
-                ),
-                'ModeText'              => (
-                    $isUpgrading ?
-                    $_Lang['Queue_Mode_Build_1'] :
-                    $_Lang['Queue_Mode_Destroy_1']
-                ),
-                'ModeColor'             => (
-                    $isUpgrading ?
-                    'lime' :
-                    'red'
-                ),
-                'Lang_CancelBtn_Text'   => (
-                    $isFirstQueueElement ?
-                    (
-                        (!Elements\isCancellableOnceInProgress($elementID)) ?
-                        $_Lang['Queue_Cancel_CantCancel'] :
-                        (
-                            $isUpgrading ?
-                            $_Lang['Queue_Cancel_Build'] :
-                            $_Lang['Queue_Cancel_Destroy']
-                        )
-                    ) :
-                    $_Lang['Queue_Cancel_Remove']
-                ),
-                'InfoBox_BuildTime'     => (
-                    $isUpgrading ?
-                    $_Lang['InfoBox_BuildTime'] :
-                    $_Lang['InfoBox_DestroyTime']
-                ),
-
-                'SkinPath'              => $_SkinPath,
-                'LevelText'             => $_Lang['level'],
-                'EndText'               => $_Lang['Queue_EndTime'],
-                'EndTitleBeg'           => $_Lang['Queue_EndTitleBeg'],
-                'EndTitleHour'          => $_Lang['Queue_EndTitleHour'],
-            ];
-
-            if ($isFirstQueueElement) {
-                include_once($_EnginePath . '/includes/functions/InsertJavaScriptChronoApplet.php');
-
-                $queueElementTplData['ChronoAppletScript'] = InsertJavaScriptChronoApplet(
-                    'QueueFirstTimer',
-                    '',
-                    $progressEndTime,
-                    true,
-                    false,
-                    'function() { onQueuesFirstElementFinished(); }'
-                );
-            }
-
-            $queueElementsTplData[] = $queueElementTplData;
-
-            if (!$isFirstQueueElement) {
-                $elementCost = GetBuildingPrice($CurrentUser, $CurrentPlanet, $elementID, true, !$isUpgrading);
-                $queueTempResourcesLock['metal'] += $elementCost['metal'];
-                $queueTempResourcesLock['crystal'] += $elementCost['crystal'];
-                $queueTempResourcesLock['deuterium'] += $elementCost['deuterium'];
-            }
-
-            if (!isset($queueElementLevelModifiers[$elementID])) {
-                $queueElementLevelModifiers[$elementID] = 0;
-            }
-
-            $elementPlanetKey = _getElementPlanetKey($elementID);
-
-            if (!$isUpgrading) {
-                $queueElementLevelModifiers[$elementID] += 1;
-                $CurrentPlanet[$elementPlanetKey] -= 1;
-                $fieldsModifierByQueuedDowngrades += 2;
-            } else {
-                $queueElementLevelModifiers[$elementID] -= 1;
-                $CurrentPlanet[$elementPlanetKey] += 1;
-            }
-
-            $queueDisplayIdx += 1;
-        }
-
-        $queueUnfinishedLenght = $queueDisplayIdx;
-
-        if (!empty($queueElementsTplData)) {
-            $Parse['Create_Queue'] = '';
-
-            foreach ($queueElementsTplData as $elementIdx => $queueElementTplData) {
-                $queueElementTPLBody = (
-                    $elementIdx === 0 ?
-                    gettemplate('buildings_compact_queue_firstel') :
-                    gettemplate('buildings_compact_queue_nextel')
-                );
-
-                $Parse['Create_Queue'] .= parsetemplate($queueElementTPLBody, $queueElementTplData);
-            }
-        }
-    } else {
-        $Parse['Create_Queue'] = parsetemplate(
-            $tplBodyCache['queue_topinfo'],
-            [
-                'InfoText' => $_Lang['Queue_Empty']
-            ]
-        );
-    }
-    // End of - Display queue
-
+    // Apply queue modifiers
     $CurrentPlanet['metal'] -= $queueTempResourcesLock['metal'];
     $CurrentPlanet['crystal'] -= $queueTempResourcesLock['crystal'];
     $CurrentPlanet['deuterium'] -= $queueTempResourcesLock['deuterium'];
+
+    foreach($queuedElementLevelModifiers as $elementID => $levelModifier) {
+        $elementPlanetKey = _getElementPlanetKey($elementID);
+
+        $CurrentPlanet[$elementPlanetKey] += $levelModifier;
+    }
 
     // Parse all available buildings
     $hasAvailableFieldsOnPlanet = (
@@ -297,23 +160,23 @@ function render (&$CurrentPlanet, $CurrentUser) {
 
         $elementTPLData = $elementTPLDataDefaults;
 
-        $elementCurrentLevel = Elements\getElementCurrentLevel($elementID, $CurrentPlanet, $CurrentUser);
-        $elementNextLevel = $elementCurrentLevel + 1;
-        $elementPreviousLevel = $elementCurrentLevel - 1;
+        $elementCurrentQueuedLevel = Elements\getElementCurrentLevel($elementID, $CurrentPlanet, $CurrentUser);
+        $elementNextLevel = $elementCurrentQueuedLevel + 1;
+        $elementPreviousLevel = $elementCurrentQueuedLevel - 1;
         $elementMaxLevel = Elements\getElementMaxUpgradeLevel($elementID);
         $elementQueueLevelModifier = (
-            isset($queueElementLevelModifiers[$elementID]) ?
-            $queueElementLevelModifiers[$elementID] :
+            isset($queuedElementLevelModifiers[$elementID]) ?
+            $queuedElementLevelModifiers[$elementID] :
             0
         );
-        $isInQueue = isset($queueElementLevelModifiers[$elementID]);
+        $isInQueue = isset($queuedElementLevelModifiers[$elementID]);
         $isLevelDowngradeable = ($elementPreviousLevel >= 0);
         $isProductionRelatedStructure = in_array($elementID, $_Vars_ElementCategories['prod']);
         $isBlockedByTechResearchProgress = (
             $elementID == 31 &&
             $isBlockingTechResearchInProgress
         );
-        $hasReachedMaxLevel = ($elementCurrentLevel >= $elementMaxLevel);
+        $hasReachedMaxLevel = ($elementCurrentQueuedLevel >= $elementMaxLevel);
         $hasTechnologyRequirementsMet = IsTechnologieAccessible(
             $CurrentUser,
             $CurrentPlanet,
@@ -339,9 +202,9 @@ function render (&$CurrentPlanet, $CurrentUser) {
 
         $elementTPLData['ElementName'] = $_Lang['tech'][$elementID];
         $elementTPLData['ElementID'] = $elementID;
-        $elementTPLData['ElementLevel'] = prettyNumber($elementCurrentLevel);
+        $elementTPLData['ElementLevel'] = prettyNumber($elementCurrentQueuedLevel);
         $elementTPLData['ElementRealLevel'] = prettyNumber(
-            $elementCurrentLevel +
+            $elementCurrentQueuedLevel -
             $elementQueueLevelModifier
         );
         $elementTPLData['BuildLevel'] = prettyNumber($elementNextLevel);
@@ -354,15 +217,15 @@ function render (&$CurrentPlanet, $CurrentUser) {
         if ($isInQueue) {
             $elementLevelModifierTPLData = [];
 
-            if ($elementQueueLevelModifier > 0) {
+            if ($elementQueueLevelModifier < 0) {
                 $elementLevelModifierTPLData['modColor'] = 'red';
-                $elementLevelModifierTPLData['modText'] = prettyNumber($elementQueueLevelModifier * (-1));
+                $elementLevelModifierTPLData['modText'] = prettyNumber($elementQueueLevelModifier);
             } else if ($elementQueueLevelModifier == 0) {
                 $elementLevelModifierTPLData['modColor'] = 'orange';
                 $elementLevelModifierTPLData['modText'] = '0';
             } else {
                 $elementLevelModifierTPLData['modColor'] = 'lime';
-                $elementLevelModifierTPLData['modText'] = '+' . prettyNumber($elementQueueLevelModifier * (-1));
+                $elementLevelModifierTPLData['modText'] = '+' . prettyNumber($elementQueueLevelModifier);
             }
 
             $elementTPLData['LevelModifier'] = parsetemplate($tplBodyCache['infobox_levelmodif'], $elementLevelModifierTPLData);
@@ -498,7 +361,7 @@ function render (&$CurrentPlanet, $CurrentUser) {
                 [
                     'useCurrentBoosters' => true,
                     'currentTimestamp' => $currentTimestamp,
-                    'customLevel' => $elementCurrentLevel,
+                    'customLevel' => $elementCurrentQueuedLevel,
                     'customProductionFactor' => 10
                 ]
             );
@@ -650,16 +513,16 @@ function render (&$CurrentPlanet, $CurrentUser) {
         $elementsListDetailedInfoboxes[] = parsetemplate($tplBodyCache['infobox_body'], $elementTPLData);
     }
 
-    if (!empty($queueElementLevelModifiers)) {
-        foreach ($queueElementLevelModifiers as $elementID => $levelModifier) {
-            $elementPlanetKey = _getElementPlanetKey($elementID);
-
-            $CurrentPlanet[$elementPlanetKey] += $levelModifier;
-        }
-    }
+    // Restore original state by unapplying queue modifiers
     $CurrentPlanet['metal'] += $queueTempResourcesLock['metal'];
     $CurrentPlanet['crystal'] += $queueTempResourcesLock['crystal'];
     $CurrentPlanet['deuterium'] += $queueTempResourcesLock['deuterium'];
+
+    foreach ($queuedElementLevelModifiers as $elementID => $levelModifier) {
+        $elementPlanetKey = _getElementPlanetKey($elementID);
+
+        $CurrentPlanet[$elementPlanetKey] -= $levelModifier;
+    }
 
     // Create Structures List
     $groupedStructureRows = Common\Utils\groupInRows($elementsListIcons, $const_ElementsPerRow);
