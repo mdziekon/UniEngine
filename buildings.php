@@ -95,7 +95,8 @@ switch($_GET['mode'])
     default:
         if($OldViewMode)
         {
-            include($_EnginePath.'includes/functions/BatimentBuildingPage.php');
+            include($_EnginePath . 'modules/structures/_includes.php');
+            include($_EnginePath . 'includes/functions/BatimentBuildingPage.php');
             BatimentBuildingPage($_Planet, $_User);
         }
         else
