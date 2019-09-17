@@ -88,6 +88,7 @@ function render (&$CurrentPlanet, $CurrentUser) {
         ($CurrentPlanet['field_current'] + $queueUnfinishedElementsCount - $fieldsModifierByQueuedDowngrades) <
         CalculateMaxPlanetFields($CurrentPlanet)
     );
+    $hasElementsInQueue = ($queueUnfinishedElementsCount > 0);
     $isOnVacation = isOnVacation($CurrentUser);
     $isQueueFull = (
         $queueUnfinishedElementsCount >=
@@ -260,7 +261,7 @@ function render (&$CurrentPlanet, $CurrentUser) {
                     $resourceDeficitColor = 'red';
                     $resourceDeficitValue = '(' . prettyNumber($resourceLeft) . ')';
                     $resourceCostColor = (
-                        $queueUnfinishedElementsCount > 0 ?
+                        $hasElementsInQueue ?
                         'orange' :
                         'red'
                     );
@@ -310,7 +311,7 @@ function render (&$CurrentPlanet, $CurrentUser) {
 
                 if ($hasResourceDeficit) {
                     $resourceCostColor = (
-                        $queueUnfinishedElementsCount > 0 ?
+                        $hasElementsInQueue ?
                         'orange' :
                         'red'
                     );
@@ -426,7 +427,7 @@ function render (&$CurrentPlanet, $CurrentUser) {
         );
         $canQueueUpgrade = (
             !$isUpgradeHardBlocked &&
-            ($hasUpgradeResources || $queueUnfinishedElementsCount > 0) &&
+            ($hasUpgradeResources || $hasElementsInQueue) &&
             $hasTechnologyRequirementsMet &&
             !$isBlockedByTechResearchProgress &&
             $hasAvailableFieldsOnPlanet &&
@@ -435,7 +436,7 @@ function render (&$CurrentPlanet, $CurrentUser) {
         );
         $canQueueDowngrade = (
             !$isDowngradeHardBlocked &&
-            ($hasDowngradeResources || $queueUnfinishedElementsCount > 0) &&
+            ($hasDowngradeResources || $hasElementsInQueue) &&
             !$isBlockedByTechResearchProgress &&
             !$isQueueFull &&
             !$isOnVacation
