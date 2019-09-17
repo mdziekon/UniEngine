@@ -100,18 +100,6 @@ function render (&$CurrentPlanet, $CurrentUser) {
         !isLabUpgradableWhileInUse()
     );
 
-    if ($isQueueFull) {
-        $queueFullMsgHTML = parsetemplate(
-            $tplBodyCache['queue_topinfo'],
-            [
-                'InfoColor' => 'red',
-                'InfoText' => $_Lang['Queue_Full']
-            ]
-        );
-
-        $Parse['Create_Queue'] = $queueFullMsgHTML . $Parse['Create_Queue'];
-    }
-
     $resourceIcons = [
         'metal'         => 'metall',
         'crystal'       => 'kristall',
