@@ -66,7 +66,7 @@ function render (&$CurrentPlanet, $CurrentUser) {
     ]);
 
     $queueTempResourcesLock = $queueComponent['parsedDetails']['queuedResourcesToUse'];
-    $queueUnfinishedLenght = $queueComponent['parsedDetails']['unfinishedLength'];
+    $queueUnfinishedElementsCount = $queueComponent['parsedDetails']['unfinishedElementsCount'];
     $queuedElementLevelModifiers = $queueComponent['parsedDetails']['queuedElementLevelModifiers'];
     $fieldsModifierByQueuedDowngrades = $queueComponent['parsedDetails']['fieldsModifier'];
 
@@ -85,12 +85,12 @@ function render (&$CurrentPlanet, $CurrentUser) {
 
     // Parse all available buildings
     $hasAvailableFieldsOnPlanet = (
-        ($CurrentPlanet['field_current'] + $queueUnfinishedLenght - $fieldsModifierByQueuedDowngrades) <
+        ($CurrentPlanet['field_current'] + $queueUnfinishedElementsCount - $fieldsModifierByQueuedDowngrades) <
         CalculateMaxPlanetFields($CurrentPlanet)
     );
     $isOnVacation = isOnVacation($CurrentUser);
     $isQueueFull = (
-        $queueUnfinishedLenght >=
+        $queueUnfinishedElementsCount >=
         Users\getMaxStructuresQueueLength($CurrentUser)
     );
     $isBlockingTechResearchInProgress = (
@@ -260,7 +260,7 @@ function render (&$CurrentPlanet, $CurrentUser) {
                     $resourceDeficitColor = 'red';
                     $resourceDeficitValue = '(' . prettyNumber($resourceLeft) . ')';
                     $resourceCostColor = (
-                        $queueUnfinishedLenght > 0 ?
+                        $queueUnfinishedElementsCount > 0 ?
                         'orange' :
                         'red'
                     );
@@ -310,7 +310,7 @@ function render (&$CurrentPlanet, $CurrentUser) {
 
                 if ($hasResourceDeficit) {
                     $resourceCostColor = (
-                        $queueUnfinishedLenght > 0 ?
+                        $queueUnfinishedElementsCount > 0 ?
                         'orange' :
                         'red'
                     );
@@ -426,7 +426,7 @@ function render (&$CurrentPlanet, $CurrentUser) {
         );
         $canQueueUpgrade = (
             !$isUpgradeHardBlocked &&
-            ($hasUpgradeResources || $queueUnfinishedLenght > 0) &&
+            ($hasUpgradeResources || $queueUnfinishedElementsCount > 0) &&
             $hasTechnologyRequirementsMet &&
             !$isBlockedByTechResearchProgress &&
             $hasAvailableFieldsOnPlanet &&
@@ -435,7 +435,7 @@ function render (&$CurrentPlanet, $CurrentUser) {
         );
         $canQueueDowngrade = (
             !$isDowngradeHardBlocked &&
-            ($hasDowngradeResources || $queueUnfinishedLenght > 0) &&
+            ($hasDowngradeResources || $queueUnfinishedElementsCount > 0) &&
             !$isBlockedByTechResearchProgress &&
             !$isQueueFull &&
             !$isOnVacation

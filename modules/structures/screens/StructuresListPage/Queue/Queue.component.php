@@ -18,7 +18,7 @@ use UniEngine\Engine\Includes\Helpers\Users;
 //          - queuedResourcesToUse (Object<resourceKey: string, value: number>)
 //          - queuedElementLevelModifiers (Object<elementID: string, levelModifier: number>)
 //          - fieldsModifier (Number)
-//          - unfinishedLength (Number)
+//          - unfinishedElementsCount (Number)
 //
 function render ($props) {
     global $_Lang, $_SkinPath, $_EnginePath;
@@ -223,7 +223,7 @@ function render ($props) {
             'queuedResourcesToUse' => $queuedResourcesToUse,
             'queuedElementLevelModifiers' => $queuedElementLevelModifiers,
             'fieldsModifier' => $fieldsModifierByQueuedDowngrades,
-            'unfinishedLength' => $queueUnfinishedElementsCount
+            'unfinishedElementsCount' => $queueUnfinishedElementsCount
         ]
     ];
 }
