@@ -62,7 +62,7 @@ function render (&$CurrentPlanet, $CurrentUser) {
     $queueComponent = Queue\render([
         'planet' => &$CurrentPlanet,
         'user' => &$CurrentUser,
-        'currentTimestamp' => $currentTimestamp
+        'timestamp' => $currentTimestamp
     ]);
 
     $queueTempResourcesLock = $queueComponent['parsedDetails']['queuedResourcesToUse'];

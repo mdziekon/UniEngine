@@ -10,7 +10,7 @@ use UniEngine\Engine\Includes\Helpers\Users;
 //      - $props (Object)
 //          - user (Object)
 //          - planet (Object)
-//          - currentTimestamp (Number)
+//          - timestamp (Number)
 //
 //  Returns: Object
 //      - componentHTML (String)
@@ -27,7 +27,7 @@ function render ($props) {
 
     $planet = &$props['planet'];
     $user = &$props['user'];
-    $currentTimestamp = $props['currentTimestamp'];
+    $currentTimestamp = $props['timestamp'];
 
     $componentTPLData = [
         'queueElements' => [],
