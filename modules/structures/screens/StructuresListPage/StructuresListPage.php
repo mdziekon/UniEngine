@@ -202,7 +202,6 @@ function render (&$CurrentPlanet, $CurrentUser) {
 
         $elementTPLData['ElementName'] = $_Lang['tech'][$elementID];
         $elementTPLData['ElementID'] = $elementID;
-        $elementTPLData['ElementLevel'] = prettyNumber($elementCurrentQueuedLevel);
         $elementTPLData['ElementRealLevel'] = prettyNumber(
             $elementCurrentQueuedLevel -
             $elementQueueLevelModifier
