@@ -1,6 +1,7 @@
 <?php
 
 use UniEngine\Engine\Modules\Structures\Input;
+use UniEngine\Engine\Includes\Helpers\Users;
 
 function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
 {
@@ -34,14 +35,10 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
     include($_EnginePath.'includes/functions/ShowBuildingQueue.php');
     $Queue = ShowBuildingQueue($CurrentPlanet, $CurrentUser);
 
-    if($Queue['lenght'] < ((isPro($CurrentUser)) ? MAX_BUILDING_QUEUE_SIZE_PRO : MAX_BUILDING_QUEUE_SIZE ))
-    {
-        $CanBuildElement = true;
-    }
-    else
-    {
-        $CanBuildElement = false;
-    }
+    $isQueueFull = (
+        $Queue['lenght'] >=
+        Users\getMaxStructuresQueueLength($CurrentUser)
+    );
 
     if(!empty($CurrentPlanet['buildQueue']))
     {
@@ -242,7 +239,7 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
                 {
                     // Don't do anything here
                 }
-                else if($RoomIsOk AND $CanBuildElement)
+                else if($RoomIsOk AND !$isQueueFull)
                 {
                     if($Queue['lenght'] == 0)
                     {
@@ -283,7 +280,7 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
                         $parse['click'] = "<a href=\"?cmd=insert&building={$Element}\" class=\"{$ThisColor}\">{$_Lang['InBuildQueue']}<br/>({$_Lang['level']} {$NextBuildLevel})</a>";
                     }
                 }
-                else if($RoomIsOk AND !$CanBuildElement)
+                else if($RoomIsOk AND $isQueueFull)
                 {
                     $parse['click'] = "<span class=\"red\">{$_Lang['QueueIsFull']}</span>";
                 }
