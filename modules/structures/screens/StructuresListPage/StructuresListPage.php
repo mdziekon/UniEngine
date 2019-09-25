@@ -100,7 +100,6 @@ function render (&$CurrentPlanet, $CurrentUser) {
 
     $elementTPLDataDefaults = [
         'SkinPath'                  => $_SkinPath,
-        // 'InfoBox_TechRequirements'  => $_Lang['InfoBox_TechRequirements'],
     ];
 
     $Parse['Create_DestroyTips'] = '';

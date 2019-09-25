@@ -330,7 +330,6 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
         'InfoBox_Build'                => $_Lang['InfoBox_DoResearch'],
         'InfoBox_RequirementsFor'    => $_Lang['InfoBox_RequirementsForShip'],
         'InfoBox_ResRequirements'    => $_Lang['InfoBox_ResRequirementsShip'],
-        'InfoBox_TechRequirements'    => $_Lang['InfoBox_TechRequirements'],
         'InfoBox_Requirements_Res'    => $_Lang['InfoBox_Requirements_Res'],
         'InfoBox_Requirements_Tech'    => $_Lang['InfoBox_Requirements_Tech'],
         'InfoBox_BuildTime'            => $_Lang['InfoBox_ConstructionTime'],
