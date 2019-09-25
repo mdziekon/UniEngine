@@ -31,8 +31,6 @@ function render (&$CurrentPlanet, $CurrentUser) {
     $tplBodyCache['list_hidden']                 = gettemplate('buildings_compact_list_hidden');
     $tplBodyCache['list_row']                    = gettemplate('buildings_compact_list_row');
     $tplBodyCache['list_breakrow']               = gettemplate('buildings_compact_list_breakrow');
-    $tplBodyCache['infobox_req_desttable']       = gettemplate('buildings_compact_infobox_req_desttable');
-    $tplBodyCache['infobox_req_destres']         = gettemplate('buildings_compact_infobox_req_destres');
 
     // Handle Commands
     $cmdResult = Input\UserCommands\handleStructureCommand(
@@ -109,6 +107,7 @@ function render (&$CurrentPlanet, $CurrentUser) {
 
     $elementsListIcons = [];
     $elementsListDetailedInfoboxes = [];
+    $elementsDestructionDetails = [];
 
     foreach ($_Vars_ElementCategories['build'] as $elementID) {
         $isAvailableOnThisPlanetType = Elements\isStructureAvailableOnPlanetType(
@@ -170,7 +169,7 @@ function render (&$CurrentPlanet, $CurrentUser) {
                 ]
             );
 
-            $elementTPLData['Create_DestroyTips_Res'] = '';
+            $elementDowngradeResources = [];
 
             foreach ($downgradeCost as $costResourceKey => $costValue) {
                 $currentResourceState = Resources\getResourceState(
@@ -179,42 +178,32 @@ function render (&$CurrentPlanet, $CurrentUser) {
                     $CurrentPlanet
                 );
 
-                $resourceCostColor = '';
-
                 $resourceLeft = ($currentResourceState - $costValue);
                 $hasResourceDeficit = ($resourceLeft < 0);
 
-                if ($hasResourceDeficit) {
-                    $resourceCostColor = (
+                $resourceCostColor = (
+                    !$hasResourceDeficit ?
+                    '' :
+                    (
                         $hasElementsInQueue ?
                         'orange' :
                         'red'
-                    );
-                }
-
-                $elementTPLData['ElementPrices'] = [
-                    'Name' => $resourceLabels[$costResourceKey],
-                    'Color' => $resourceCostColor,
-                    'Value' => prettyNumber($costValue)
-                ];
-                $elementTPLData['Create_DestroyTips_Res'] .= trim(
-                    parsetemplate(
-                        $tplBodyCache['infobox_req_destres'],
-                        $elementTPLData['ElementPrices']
                     )
                 );
+
+                $elementDowngradeResources[] = [
+                    'name' => $resourceLabels[$costResourceKey],
+                    'color' => $resourceCostColor,
+                    'value' => prettyNumber($costValue)
+                ];
             }
 
-            $Parse['Create_DestroyTips'] .= parsetemplate(
-                $tplBodyCache['infobox_req_desttable'],
-                [
-                    'ElementID' => $elementID,
-                    'InfoBox_DestroyCost' => $_Lang['InfoBox_DestroyCost'],
-                    'InfoBox_DestroyTime' => $_Lang['InfoBox_DestroyTime'],
-                    'Resources' => $elementTPLData['Create_DestroyTips_Res'],
-                    'DestroyTime' => pretty_time(GetBuildingTime($CurrentUser, $CurrentPlanet, $elementID) / 2)
-                ]
-            );
+            $destructionTime = GetBuildingTime($CurrentUser, $CurrentPlanet, $elementID) / 2;
+
+            $elementsDestructionDetails[$elementID] = [
+                'resources' => $elementDowngradeResources,
+                'destructionTime' => pretty_time($destructionTime)
+            ];
         }
 
         // Perform all necessary tests to determine if actions are possible
@@ -358,6 +347,7 @@ function render (&$CurrentPlanet, $CurrentUser) {
         '',
         $elementsListDetailedInfoboxes
     );
+    $Parse['PHPData_ElementsDestructionDetailsJSON'] = json_encode($elementsDestructionDetails);
 
     if ($highlightElementID > 0) {
         $Parse['Create_ShowElementOnStartup'] = $highlightElementID;
