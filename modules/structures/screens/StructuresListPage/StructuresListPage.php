@@ -98,12 +98,6 @@ function render (&$CurrentPlanet, $CurrentUser) {
         'darkEnergy'    => $_Lang['DarkEnergy']
     ];
 
-    $elementTPLDataDefaults = [
-        'SkinPath'                  => $_SkinPath,
-    ];
-
-    $Parse['Create_DestroyTips'] = '';
-
     $elementsListIcons = [];
     $elementsListDetailedInfoboxes = [];
     $elementsDestructionDetails = [];
@@ -117,8 +111,6 @@ function render (&$CurrentPlanet, $CurrentUser) {
         if (!$isAvailableOnThisPlanetType) {
             continue;
         }
-
-        $elementTPLData = $elementTPLDataDefaults;
 
         $elementCurrentQueuedLevel = Elements\getElementCurrentLevel($elementID, $CurrentPlanet, $CurrentUser);
         $elementPreviousLevel = $elementCurrentQueuedLevel - 1;
