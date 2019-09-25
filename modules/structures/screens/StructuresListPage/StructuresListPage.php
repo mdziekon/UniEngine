@@ -8,6 +8,8 @@ use UniEngine\Engine\Includes\Helpers\World\Resources;
 use UniEngine\Engine\Includes\Helpers\Users;
 use UniEngine\Engine\Modules\Structures\Input;
 use UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\Queue;
+use UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\ModernElementListIcon;
+use UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\ModernElementInfoCard;
 
 function render (&$CurrentPlanet, $CurrentUser) {
     global $_Lang, $_SkinPath, $_GET, $_EnginePath, $_Vars_ElementCategories;
@@ -26,22 +28,11 @@ function render (&$CurrentPlanet, $CurrentUser) {
     $const_ElementsPerRow = 7;
 
     // Get Templates
-    $tplBodyCache['list_element']                = gettemplate('buildings_compact_list_element_structures');
-    $tplBodyCache['list_levelmodif']             = gettemplate('buildings_compact_list_levelmodif');
     $tplBodyCache['list_hidden']                 = gettemplate('buildings_compact_list_hidden');
     $tplBodyCache['list_row']                    = gettemplate('buildings_compact_list_row');
     $tplBodyCache['list_breakrow']               = gettemplate('buildings_compact_list_breakrow');
-    $tplBodyCache['list_disabled']               = gettemplate('buildings_compact_list_disabled');
-    $tplBodyCache['list_partdisabled']           = parsetemplate($tplBodyCache['list_disabled'], [ 'AddOpacity' => 'dPart' ]);
-    $tplBodyCache['list_disabled']               = parsetemplate($tplBodyCache['list_disabled'], [ 'AddOpacity' => '' ]);
-    $tplBodyCache['infobox_body']                = gettemplate('buildings_compact_infobox_body_structures');
-    $tplBodyCache['infobox_levelmodif']          = gettemplate('buildings_compact_infobox_levelmodif');
-    $tplBodyCache['infobox_req_res']             = gettemplate('buildings_compact_infobox_req_res');
     $tplBodyCache['infobox_req_desttable']       = gettemplate('buildings_compact_infobox_req_desttable');
     $tplBodyCache['infobox_req_destres']         = gettemplate('buildings_compact_infobox_req_destres');
-    $tplBodyCache['infobox_additionalnfo']       = gettemplate('buildings_compact_infobox_additionalnfo');
-    $tplBodyCache['infobox_req_selector_single'] = gettemplate('buildings_compact_infobox_req_selector_single');
-    $tplBodyCache['infobox_req_selector_dual']   = gettemplate('buildings_compact_infobox_req_selector_dual');
 
     // Handle Commands
     $cmdResult = Input\UserCommands\handleStructureCommand(
@@ -100,14 +91,6 @@ function render (&$CurrentPlanet, $CurrentUser) {
         !isLabUpgradableWhileInUse()
     );
 
-    $resourceIcons = [
-        'metal'         => 'metall',
-        'crystal'       => 'kristall',
-        'deuterium'     => 'deuterium',
-        'energy'        => 'energie',
-        'energy_max'    => 'energie',
-        'darkEnergy'    => 'darkenergy'
-    ];
     $resourceLabels = [
         'metal'         => $_Lang['Metal'],
         'crystal'       => $_Lang['Crystal'],
@@ -119,17 +102,7 @@ function render (&$CurrentPlanet, $CurrentUser) {
 
     $elementTPLDataDefaults = [
         'SkinPath'                  => $_SkinPath,
-        'InfoBox_Level'             => $_Lang['InfoBox_Level'],
-        'InfoBox_Build'             => $_Lang['InfoBox_Build'],
-        'InfoBox_Destroy'           => $_Lang['InfoBox_Destroy'],
-        'InfoBox_RequirementsFor'   => $_Lang['InfoBox_RequirementsFor'],
-        'InfoBox_ResRequirements'   => $_Lang['InfoBox_ResRequirements'],
-        'InfoBox_TechRequirements'  => $_Lang['InfoBox_TechRequirements'],
-        'InfoBox_Requirements_Res'  => $_Lang['InfoBox_Requirements_Res'],
-        'InfoBox_Requirements_Tech' => $_Lang['InfoBox_Requirements_Tech'],
-        'InfoBox_BuildTime'         => $_Lang['InfoBox_BuildTime'],
-        'InfoBox_ShowTechReq'       => $_Lang['InfoBox_ShowTechReq'],
-        'InfoBox_ShowResReq'        => $_Lang['InfoBox_ShowResReq'],
+        // 'InfoBox_TechRequirements'  => $_Lang['InfoBox_TechRequirements'],
     ];
 
     $Parse['Create_DestroyTips'] = '';
@@ -150,7 +123,6 @@ function render (&$CurrentPlanet, $CurrentUser) {
         $elementTPLData = $elementTPLDataDefaults;
 
         $elementCurrentQueuedLevel = Elements\getElementCurrentLevel($elementID, $CurrentPlanet, $CurrentUser);
-        $elementNextLevel = $elementCurrentQueuedLevel + 1;
         $elementPreviousLevel = $elementCurrentQueuedLevel - 1;
         $elementMaxLevel = Elements\getElementMaxUpgradeLevel($elementID);
         $elementQueueLevelModifier = (
@@ -160,7 +132,6 @@ function render (&$CurrentPlanet, $CurrentUser) {
         );
         $isInQueue = isset($queuedElementLevelModifiers[$elementID]);
         $isLevelDowngradeable = ($elementPreviousLevel >= 0);
-        $isProductionRelatedStructure = in_array($elementID, $_Vars_ElementCategories['prod']);
         $isBlockedByTechResearchProgress = (
             $elementID == 31 &&
             $isBlockingTechResearchInProgress
@@ -189,91 +160,7 @@ function render (&$CurrentPlanet, $CurrentUser) {
             null
         );
 
-        $elementTPLData['ElementName'] = $_Lang['tech'][$elementID];
-        $elementTPLData['ElementID'] = $elementID;
-        $elementTPLData['ElementRealLevel'] = prettyNumber(
-            $elementCurrentQueuedLevel -
-            $elementQueueLevelModifier
-        );
-        $elementTPLData['BuildLevel'] = prettyNumber($elementNextLevel);
-        $elementTPLData['DestroyLevel'] = prettyNumber($elementPreviousLevel);
-        $elementTPLData['Desc'] = $_Lang['WorldElements_Detailed'][$elementID]['description_short'];
-        $elementTPLData['BuildButtonColor'] = 'buildDo_Green';
-        $elementTPLData['DestroyButtonColor'] = 'buildDo_Red';
-
         // Generate all additional informations
-        if ($isInQueue) {
-            $elementLevelModifierTPLData = [];
-
-            if ($elementQueueLevelModifier < 0) {
-                $elementLevelModifierTPLData['modColor'] = 'red';
-                $elementLevelModifierTPLData['modText'] = prettyNumber($elementQueueLevelModifier);
-            } else if ($elementQueueLevelModifier == 0) {
-                $elementLevelModifierTPLData['modColor'] = 'orange';
-                $elementLevelModifierTPLData['modText'] = '0';
-            } else {
-                $elementLevelModifierTPLData['modColor'] = 'lime';
-                $elementLevelModifierTPLData['modText'] = '+' . prettyNumber($elementQueueLevelModifier);
-            }
-
-            $elementTPLData['LevelModifier'] = parsetemplate($tplBodyCache['infobox_levelmodif'], $elementLevelModifierTPLData);
-            $elementTPLData['ElementLevelModif'] = parsetemplate($tplBodyCache['list_levelmodif'], $elementLevelModifierTPLData);
-        }
-
-        if ($isUpgradeable) {
-            $upgradeCost = Elements\calculatePurchaseCost(
-                $elementID,
-                Elements\getElementState($elementID, $CurrentPlanet, $CurrentUser),
-                [
-                    'purchaseMode' => Elements\PurchaseMode::Upgrade
-                ]
-            );
-
-            $elementTPLData['ElementPriceDiv'] = '';
-
-            foreach ($upgradeCost as $costResourceKey => $costValue) {
-                $currentResourceState = Resources\getResourceState(
-                    $costResourceKey,
-                    $CurrentUser,
-                    $CurrentPlanet
-                );
-
-                $resourceCostColor = '';
-                $resourceDeficitColor = '';
-                $resourceDeficitValue = '&nbsp;';
-
-                $resourceLeft = $currentResourceState - $costValue;
-                $hasResourceDeficit = ($resourceLeft < 0);
-
-                if ($hasResourceDeficit) {
-                    $resourceDeficitColor = 'red';
-                    $resourceDeficitValue = '(' . prettyNumber($resourceLeft) . ')';
-                    $resourceCostColor = (
-                        $hasElementsInQueue ?
-                        'orange' :
-                        'red'
-                    );
-                }
-
-                $elementTPLData['ElementPrices'] = [
-                    'SkinPath'      => $_SkinPath,
-                    'ResName'       => $costResourceKey,
-                    'ResImg'        => $resourceIcons[$costResourceKey],
-                    'ResColor'      => $resourceCostColor,
-                    'Value'         => prettyNumber($costValue),
-                    'ResMinusColor' => $resourceDeficitColor,
-                    'MinusValue'    => $resourceDeficitValue,
-                ];
-
-                $elementTPLData['ElementPriceDiv'] .= parsetemplate(
-                    $tplBodyCache['infobox_req_res'],
-                    $elementTPLData['ElementPrices']
-                );
-            }
-
-            $elementTPLData['BuildTime'] = pretty_time(GetBuildingTime($CurrentUser, $CurrentPlanet, $elementID));
-        }
-
         if ($isDowngradeable) {
             $downgradeCost = Elements\calculatePurchaseCost(
                 $elementID,
@@ -330,72 +217,6 @@ function render (&$CurrentPlanet, $CurrentUser) {
             );
         }
 
-        if ($hasTechnologyRequirementsMet) {
-            $elementTPLData['ElementRequirementsHeadline'] = $tplBodyCache['infobox_req_selector_single'];
-        } else {
-            $elementTPLData['ElementRequirementsHeadline'] = $tplBodyCache['infobox_req_selector_dual'];
-            $elementTPLData['ElementTechDiv'] = GetElementTechReq($CurrentUser, $CurrentPlanet, $elementID, true);
-            $elementTPLData['HideResReqDiv'] = 'hide';
-        }
-
-        if ($isProductionRelatedStructure) {
-            $elementProductionChangeTPLRows = [];
-
-            // Calculate theoretical production increase
-            $thisLevelProduction = getElementProduction(
-                $elementID,
-                $CurrentPlanet,
-                $CurrentUser,
-                [
-                    'useCurrentBoosters' => true,
-                    'currentTimestamp' => $currentTimestamp,
-                    'customLevel' => $elementCurrentQueuedLevel,
-                    'customProductionFactor' => 10
-                ]
-            );
-            $nextLevelProduction = getElementProduction(
-                $elementID,
-                $CurrentPlanet,
-                $CurrentUser,
-                [
-                    'useCurrentBoosters' => true,
-                    'currentTimestamp' => $currentTimestamp,
-                    'customLevel' => $elementNextLevel,
-                    'customProductionFactor' => 10
-                ]
-            );
-
-            foreach ($nextLevelProduction as $resourceKey => $nextLevelResourceProduction) {
-                $difference = ($nextLevelResourceProduction - $thisLevelProduction[$resourceKey]);
-
-                if ($difference == 0) {
-                    continue;
-                }
-
-                $differenceFormatted = prettyNumber($difference);
-                $label = $resourceLabels[$resourceKey];
-
-                $elementProductionChangeTPLRows[] = parsetemplate(
-                    $tplBodyCache['infobox_additionalnfo'],
-                    [
-                        'Label' => $label,
-                        'ValueClasses' => (
-                            $difference >= 0 ?
-                            'lime' :
-                            'red'
-                        ),
-                        'Value' => (
-                            $difference >= 0 ?
-                            ('+' . $differenceFormatted) :
-                            $differenceFormatted
-                        )
-                    ]
-                );
-            }
-
-            $elementTPLData['AdditionalNfo'] = implode('', $elementProductionChangeTPLRows);
-        }
-
         // Perform all necessary tests to determine if actions are possible
         $isUpgradeHardBlocked = (
             !$isUpgradeable
@@ -430,35 +251,6 @@ function render (&$CurrentPlanet, $CurrentUser) {
             !$isOnVacation
         );
 
-        // Set all template details based on the state of the structure
-        $elementTPLData['HideBuildInfo'] = ($isUpgradeHardBlocked ? 'hide' : '');
-        $elementTPLData['HideBuildWarn'] = (!$isUpgradeHardBlocked ? 'hide' : '');
-        $elementTPLData['BuildWarn_Color'] = ($isUpgradeHardBlocked ? 'red' : '');
-
-        $elementTPLData['HideBuildButton'] = ($isUpgradeHardBlocked ? 'hide' : '');
-        $elementTPLData['HideDestroyButton'] = ($isDowngradeHardBlocked ? 'hide' : '');
-        $elementTPLData['HideQuickBuildButton'] = (!$canQueueUpgrade ? 'hide' : '');
-
-        $elementTPLData['BuildWarn_Text'] = (
-            $isUpgradeHardBlocked && $hasReachedMaxLevel ?
-            $_Lang['ListBox_Disallow_MaxLevelReached'] :
-            ''
-        );
-        $elementTPLData['BuildButtonColor'] = (
-            $canStartUpgrade ?
-            'buildDo_Green' :
-            (
-                $canQueueUpgrade ?
-                'buildDo_Orange' :
-                'buildDo_Gray'
-            )
-        );
-        $elementTPLData['DestroyButtonColor'] = (
-            $canQueueDowngrade ?
-            'buildDo_Red' :
-            'destroyDo_Gray'
-        );
-
         $upgradeBlockers = [];
 
         if ($hasReachedMaxLevel) {
@@ -483,22 +275,42 @@ function render (&$CurrentPlanet, $CurrentUser) {
             $upgradeBlockers[] = $_Lang['ListBox_Disallow_VacationMode'];
         }
 
-        if (!empty($upgradeBlockers)) {
-            $elementTPLData['ElementDisabled'] = (
-                $canQueueUpgrade ?
-                $tplBodyCache['list_partdisabled'] :
-                $tplBodyCache['list_disabled']
-            );
+        $elementListIcon = ModernElementListIcon\render([
+            'elementID' => $elementID,
+            'elementCurrentLevel' => (
+                $elementCurrentQueuedLevel -
+                $elementQueueLevelModifier
+            ),
+            'elementQueueLevelModifier' => $elementQueueLevelModifier,
+            'isInQueue' => $isInQueue,
+            'canStartUpgrade' => $canStartUpgrade,
+            'canQueueUpgrade' => $canQueueUpgrade,
+            'upgradeBlockersList' => $upgradeBlockers
+        ]);
+        $elementInfoCard = ModernElementInfoCard\render([
+            'user' => $CurrentUser,
+            'planet' => $CurrentPlanet,
+            'currentTimestamp' => $currentTimestamp,
+            'elementID' => $elementID,
+            'elementCurrentLevel' => (
+                $elementCurrentQueuedLevel -
+                $elementQueueLevelModifier
+            ),
+            'elementQueueLevelModifier' => $elementQueueLevelModifier,
+            'isQueueActive' => $hasElementsInQueue,
+            'isInQueue' => $isInQueue,
+            'isUpgradeable' => $isUpgradeable,
+            'isUpgradeHardBlocked' => $isUpgradeHardBlocked,
+            'isDowngradeHardBlocked' => $isDowngradeHardBlocked,
+            'hasReachedMaxLevel' => $hasReachedMaxLevel,
+            'hasTechnologyRequirementsMet' => $hasTechnologyRequirementsMet,
+            'canStartUpgrade' => $canStartUpgrade,
+            'canQueueUpgrade' => $canQueueUpgrade,
+            'canQueueDowngrade' => $canQueueDowngrade
+        ]);
 
-            $elementTPLData['ElementDisableReason'] = end($upgradeBlockers);
-        }
-
-        $elementTPLData['ElementRequirementsHeadline'] = parsetemplate(
-            $elementTPLData['ElementRequirementsHeadline'],
-            $elementTPLData
-        );
-        $elementsListIcons[] = parsetemplate($tplBodyCache['list_element'], $elementTPLData);
-        $elementsListDetailedInfoboxes[] = parsetemplate($tplBodyCache['infobox_body'], $elementTPLData);
+        $elementsListIcons[] = $elementListIcon['componentHTML'];
+        $elementsListDetailedInfoboxes[] = $elementInfoCard['componentHTML'];
     }
 
     // Restore original state by unapplying queue modifiers
