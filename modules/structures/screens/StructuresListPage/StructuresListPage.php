@@ -22,15 +22,23 @@ function render (&$CurrentPlanet, $CurrentUser) {
     $highlightElementID = 0;
     $fieldsModifierByQueuedDowngrades = 0;
 
+    $isModernLayoutEnabled = (
+        $CurrentUser['settings_DevelopmentOld'] != 1 ?
+        true :
+        false
+    );
+
     PlanetResourceUpdate($CurrentUser, $CurrentPlanet, $currentTimestamp);
 
     // Constants
     $const_ElementsPerRow = 7;
 
     // Get Templates
-    $tplBodyCache['list_hidden']                 = gettemplate('buildings_compact_list_hidden');
-    $tplBodyCache['list_row']                    = gettemplate('buildings_compact_list_row');
-    $tplBodyCache['list_breakrow']               = gettemplate('buildings_compact_list_breakrow');
+    $tplBodyCache = [
+        'list_hidden'   => gettemplate('buildings_compact_list_hidden'),
+        'list_row'      => gettemplate('buildings_compact_list_row'),
+        'list_breakrow' => gettemplate('buildings_compact_list_breakrow'),
+    ];
 
     // Handle Commands
     $cmdResult = Input\UserCommands\handleStructureCommand(
