@@ -7,7 +7,7 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 use UniEngine\Engine\Includes\Helpers\World\Resources;
 use UniEngine\Engine\Includes\Helpers\Users;
 use UniEngine\Engine\Modules\Structures\Input;
-use UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\Queue;
+use UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\ModernQueue;
 use UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\ModernElementListIcon;
 use UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\ModernElementInfoCard;
 
@@ -56,7 +56,7 @@ function render (&$CurrentPlanet, $CurrentUser) {
     // End of - Handle Commands
 
     // Display queue
-    $queueComponent = Queue\render([
+    $queueComponent = ModernQueue\render([
         'planet' => &$CurrentPlanet,
         'user' => &$CurrentUser,
         'timestamp' => $currentTimestamp

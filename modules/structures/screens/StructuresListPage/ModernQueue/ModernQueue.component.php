@@ -1,6 +1,6 @@
 <?php
 
-namespace UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\Queue;
+namespace UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\ModernQueue;
 
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 use UniEngine\Engine\Includes\Helpers\Planets;
