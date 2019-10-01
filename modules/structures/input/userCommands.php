@@ -186,11 +186,7 @@ function _handleStructureCommandInsert(&$user, &$planet, &$input, $params) {
         ];
     }
 
-    $purchaseMode = (
-        $cmd === 'insert' ?
-        true :
-        false
-    );
+    $purchaseMode = ($cmd === 'insert');
 
     include($_EnginePath.'includes/functions/AddBuildingToQueue.php');
 

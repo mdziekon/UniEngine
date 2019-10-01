@@ -63,14 +63,10 @@ function render ($props) {
         $progressDuration = $queueElement['duration'];
         $progressEndTime = $queueElement['endTimestamp'];
         $progressTimeLeft = $progressEndTime - $currentTimestamp;
-        $isUpgrading = (
-            $queueElement['mode'] == 'build' ?
-            true :
-            false
-        );
+        $isUpgrading = ($queueElement['mode'] == 'build');
         $isFirstQueueElement = ($queueIdx === 0);
 
-        if ($queueElement['mode'] != 'build') {
+        if (!$isUpgrading) {
             $elementLevel += 1;
         }
 
