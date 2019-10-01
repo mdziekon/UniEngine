@@ -115,7 +115,7 @@ function _handleStructureCommandRemove(&$user, &$planet, &$input) {
         -1
     );
 
-    if ($listElementIdx <= 0) {
+    if ($listElementIdx <= 1) {
         return [
             'isSuccess' => false,
             'error' => [
