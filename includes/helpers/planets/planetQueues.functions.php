@@ -25,4 +25,23 @@ function parseStructuresQueueString($queueString) {
     );
 }
 
+function serializeStructuresQueue($queue) {
+    $serializedElements = array_map(
+        function ($queueElement) {
+            $detailsAsArray = [
+                $queueElement['elementID'],
+                $queueElement['level'],
+                $queueElement['duration'],
+                $queueElement['endTimestamp'],
+                $queueElement['mode']
+            ];
+
+            return implode(",", $detailsAsArray);
+        },
+        $queue
+    );
+
+    return implode(";", $serializedElements);
+}
+
 ?>
