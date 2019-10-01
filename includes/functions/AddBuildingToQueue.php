@@ -3,7 +3,7 @@
 use UniEngine\Engine\Includes\Helpers\Planets;
 use UniEngine\Engine\Includes\Helpers\Users;
 
-function AddBuildingToQueue(&$planet, $user, $newElementID, $newElementIsUpgrading = true) {
+function AddBuildingToQueue(&$planet, $user, $newElementID, $newElementIsUpgrading) {
     $queue = Planets\Queues\parseStructuresQueueString($planet['buildQueue']);
     $queueLength = count($queue);
 
