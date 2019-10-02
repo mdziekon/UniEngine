@@ -12,10 +12,6 @@ use UniEngine\Engine\Includes\Helpers\Planets;
 function RemoveBuildingFromQueue(&$planet, $user, $listID) {
     $removedElementIdx = $listID - 1;
 
-    if ($listID < 1) {
-        return;
-    }
-
     $queue = Planets\Queues\parseStructuresQueueString($planet['buildQueue']);
     $queueLength = count($queue);
 
@@ -34,12 +30,21 @@ function RemoveBuildingFromQueue(&$planet, $user, $listID) {
     // - removing robo or nano factory might have increased upgrade durations
     $newQueue = [];
 
+    // TODO: accept argument that allows to configure this variable
+    $currentTimestamp = time();
     $tempPlanet = $planet;
     $summedDurationDifference = 0;
 
     foreach ($queue as $queueElementIdx => $queueElement) {
         if ($queueElementIdx == $removedElementIdx) {
-            $summedDurationDifference += $queueElement['duration'];
+            if ($queueElementIdx === 0) {
+                $summedDurationDifference += (
+                    $queueElement['endTimestamp'] -
+                    $currentTimestamp
+                );
+            } else {
+                $summedDurationDifference += $queueElement['duration'];
+            }
 
             continue;
         }
