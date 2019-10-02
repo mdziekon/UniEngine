@@ -2,6 +2,12 @@
 
 namespace UniEngine\Engine\Includes\Helpers\Planets\Queues;
 
+function getQueueLength($planet) {
+    $queue = parseStructuresQueueString($planet['buildQueue']);
+
+    return count($queue);
+}
+
 function parseStructuresQueueString($queueString) {
     if (empty($queueString)) {
         return [];
