@@ -2,7 +2,7 @@
 
 function CancelBuildingFromQueue(&$CurrentPlanet, $CurrentUser)
 {
-    global $_Vars_PremiumBuildings, $_Vars_GameElements, $UserDev_Log;
+    global $_Vars_GameElements, $UserDev_Log;
 
     $Element = null;
 
@@ -22,46 +22,39 @@ function CancelBuildingFromQueue(&$CurrentPlanet, $CurrentUser)
         $RemovedTime = $CanceledIDArray[3] - $Now;
         $BuildMode = $CanceledIDArray[4]; // Element Build Mode (build/destroy)
 
-        if(isset($_Vars_PremiumBuildings[$Element]) && $_Vars_PremiumBuildings[$Element] == 1)
+        if($ActualCount > 1)
         {
-            return false;
+            array_shift($QueueArray);
+            // Now update all other elements
+            $TempPlanet = $CurrentPlanet;
+            foreach($QueueArray as &$Data)
+            {
+                $Data = explode(',', $Data);
+                $TempTime = GetBuildingTime($CurrentUser, $TempPlanet, $Data[0]);
+                if($Data[4] == 'build')
+                {
+                    $TempPlanet[$_Vars_GameElements[$Data[0]]] += 1;
+                }
+                else
+                {
+                    $TempTime /= 2;
+                    $TempPlanet[$_Vars_GameElements[$Data[0]]] -= 1;
+                }
+                $RemovedTime += ($Data[2] - $TempTime);
+                $Data[1] = $TempPlanet[$_Vars_GameElements[$Data[0]]];
+                $Data[2] = $TempTime;
+                $Data[3] -= $RemovedTime;
+                $Data = implode(',', $Data);
+            }
+            $NewQueue = implode(';', $QueueArray);
+            $ReturnValue = true;
         }
         else
         {
-            if($ActualCount > 1)
-            {
-                array_shift($QueueArray);
-                // Now update all other elements
-                $TempPlanet = $CurrentPlanet;
-                foreach($QueueArray as &$Data)
-                {
-                    $Data = explode(',', $Data);
-                    $TempTime = GetBuildingTime($CurrentUser, $TempPlanet, $Data[0]);
-                    if($Data[4] == 'build')
-                    {
-                        $TempPlanet[$_Vars_GameElements[$Data[0]]] += 1;
-                    }
-                    else
-                    {
-                        $TempTime /= 2;
-                        $TempPlanet[$_Vars_GameElements[$Data[0]]] -= 1;
-                    }
-                    $RemovedTime += ($Data[2] - $TempTime);
-                    $Data[1] = $TempPlanet[$_Vars_GameElements[$Data[0]]];
-                    $Data[2] = $TempTime;
-                    $Data[3] -= $RemovedTime;
-                    $Data = implode(',', $Data);
-                }
-                $NewQueue = implode(';', $QueueArray);
-                $ReturnValue = true;
-            }
-            else
-            {
-                $NewQueue = '0';
-                $ReturnValue = false;
-            }
-            $BuildEndTime = '0';
+            $NewQueue = '0';
+            $ReturnValue = false;
         }
+        $BuildEndTime = '0';
 
         // Now let's return used resources
         // First - check mode

@@ -98,6 +98,28 @@ function _handleStructureCommandCancel(&$user, &$planet) {
 
     include($_EnginePath . 'includes/functions/CancelBuildingFromQueue.php');
 
+    $queueLength = Planets\Queues\getQueueLength($planet);
+
+    if ($queueLength === 0) {
+        return [
+            'isSuccess' => false,
+            'error' => [
+                'queueEmpty' => true
+            ]
+        ];
+    }
+
+    $queueFirstElement = Planets\Queues\getFirstQueueElement($planet);
+
+    if (!Elements\isCancellableOnceInProgress($queueFirstElement['elementID'])) {
+        return [
+            'isSuccess' => false,
+            'error' => [
+                'notCancellable' => true
+            ]
+        ];
+    }
+
     $highlightElementID = CancelBuildingFromQueue($planet, $user);
 
     return [
