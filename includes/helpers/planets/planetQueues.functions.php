@@ -8,6 +8,16 @@ function getQueueLength($planet) {
     return count($queue);
 }
 
+function getFirstQueueElement($planet) {
+    $queue = parseStructuresQueueString($planet['buildQueue']);
+
+    if (count($queue) < 1) {
+        return null;
+    }
+
+    return $queue[0];
+}
+
 function parseStructuresQueueString($queueString) {
     if (empty($queueString)) {
         return [];
