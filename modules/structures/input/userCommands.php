@@ -96,6 +96,7 @@ function handleStructureCommand(&$user, &$planet, &$input, $params) {
 function _handleStructureCommandCancel(&$user, &$planet) {
     global $_EnginePath;
 
+    include($_EnginePath . 'includes/functions/RemoveBuildingFromQueue.php');
     include($_EnginePath . 'includes/functions/CancelBuildingFromQueue.php');
 
     $queueLength = Planets\Queues\getQueueLength($planet);
