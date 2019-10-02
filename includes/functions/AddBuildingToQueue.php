@@ -1,7 +1,6 @@
 <?php
 
 use UniEngine\Engine\Includes\Helpers\Planets;
-use UniEngine\Engine\Includes\Helpers\Users;
 
 function AddBuildingToQueue(&$planet, $user, $newElementID, $newElementIsUpgrading) {
     $queue = Planets\Queues\parseStructuresQueueString($planet['buildQueue']);
@@ -9,12 +8,6 @@ function AddBuildingToQueue(&$planet, $user, $newElementID, $newElementIsUpgradi
 
     $currentTimestamp = time();
     $isFirstElement = ($queueLength === 0);
-
-    $userMaxQueueLength = Users\getMaxStructuresQueueLength($user);
-
-    if ($queueLength >= $userMaxQueueLength) {
-        return false;
-    }
 
     $tempPlanet = $planet;
 

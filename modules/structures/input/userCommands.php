@@ -3,6 +3,8 @@
 namespace UniEngine\Engine\Modules\Structures\Input\UserCommands;
 
 use UniEngine\Engine\Includes\Helpers\World\Elements;
+use UniEngine\Engine\Includes\Helpers\Planets;
+use UniEngine\Engine\Includes\Helpers\Users;
 
 //  Arguments:
 //      - $user
@@ -182,6 +184,18 @@ function _handleStructureCommandInsert(&$user, &$planet, &$input, $params) {
             'isSuccess' => false,
             'error' => [
                 'researchInProgress' => true
+            ]
+        ];
+    }
+
+    $queueLength = Planets\Queues\getQueueLength($planet);
+    $userMaxQueueLength = Users\getMaxStructuresQueueLength($user);
+
+    if ($queueLength >= $userMaxQueueLength) {
+        return [
+            'isSuccess' => false,
+            'error' => [
+                'queueFull' => true
             ]
         ];
     }
