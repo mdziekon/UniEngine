@@ -19,6 +19,15 @@ function getKnownUserResourceKeys() {
     ];
 }
 
+function getKnownSpendableResourceKeys() {
+    return [
+        'metal',
+        'crystal',
+        'deuterium',
+        'darkEnergy'
+    ];
+}
+
 function isResource($resourceKey) {
     return (
         isPlanetaryResource($resourceKey) ||
@@ -34,6 +43,12 @@ function isPlanetaryResource($resourceKey) {
 
 function isUserResource($resourceKey) {
     $knownResources = getKnownUserResourceKeys();
+
+    return in_array($resourceKey, $knownResources);
+}
+
+function isSpendableResource($resourceKey) {
+    $knownResources = getKnownSpendableResourceKeys();
 
     return in_array($resourceKey, $knownResources);
 }
