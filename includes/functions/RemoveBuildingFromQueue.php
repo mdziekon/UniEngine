@@ -13,14 +13,6 @@ function RemoveBuildingFromQueue(&$planet, $user, $listID) {
     $removedElementIdx = $listID - 1;
 
     $queue = Planets\Queues\parseStructuresQueueString($planet['buildQueue']);
-    $queueLength = count($queue);
-
-    if ($queueLength === 0) {
-        return;
-    }
-    if ($removedElementIdx >= $queueLength) {
-        return;
-    }
 
     $removedQueueElement = $queue[$removedElementIdx];
     $removedElementID = $removedQueueElement['elementID'];

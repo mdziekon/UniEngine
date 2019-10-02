@@ -148,6 +148,17 @@ function _handleStructureCommandRemove(&$user, &$planet, &$input) {
         ];
     }
 
+    $queueLength = Planets\Queues\getQueueLength($planet);
+
+    if ($queueLength < $listElementIdx) {
+        return [
+            'isSuccess' => false,
+            'error' => [
+                'listIndexOutOfBound' => true
+            ]
+        ];
+    }
+
     include($_EnginePath . 'includes/functions/RemoveBuildingFromQueue.php');
 
     $highlightElementID = RemoveBuildingFromQueue($planet, $user, $listElementIdx);
