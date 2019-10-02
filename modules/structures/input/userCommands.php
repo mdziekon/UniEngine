@@ -49,18 +49,33 @@ function handleStructureCommand(&$user, &$planet, &$input, $params) {
 
     switch ($cmd) {
         case "cancel":
-            $cmdResult = _handleStructureCommandCancel($user, $planet);
+            $cmdResult = _handleStructureCommandCancel(
+                $user,
+                $planet,
+                [ 'timestamp' => $timestamp ]
+            );
 
             break;
         case 'remove':
-            $cmdResult = _handleStructureCommandRemove($user, $planet, $input);
+            $cmdResult = _handleStructureCommandRemove(
+                $user,
+                $planet,
+                $input,
+                [ 'timestamp' => $timestamp ]
+            );
 
             break;
         case "insert":
         case "destroy":
-            $cmdResult = _handleStructureCommandInsert($user, $planet, $input, [
-                'cmd' => $cmd
-            ]);
+            $cmdResult = _handleStructureCommandInsert(
+                $user,
+                $planet,
+                $input,
+                [
+                    'cmd' => $cmd,
+                    'timestamp' => $timestamp
+                ]
+            );
 
             break;
     }
@@ -93,8 +108,10 @@ function handleStructureCommand(&$user, &$planet, &$input, $params) {
     ];
 }
 
-function _handleStructureCommandCancel(&$user, &$planet) {
+function _handleStructureCommandCancel(&$user, &$planet, $params) {
     global $_EnginePath;
+
+    $timestamp = $params['timestamp'];
 
     include($_EnginePath . 'includes/functions/RemoveBuildingFromQueue.php');
     include($_EnginePath . 'includes/functions/CancelBuildingFromQueue.php');
@@ -121,7 +138,11 @@ function _handleStructureCommandCancel(&$user, &$planet) {
         ];
     }
 
-    $highlightElementID = CancelBuildingFromQueue($planet, $user);
+    $highlightElementID = CancelBuildingFromQueue(
+        $planet,
+        $user,
+        [ 'currentTimestamp' => $timestamp ]
+    );
 
     return [
         'isSuccess' => true,
@@ -131,8 +152,10 @@ function _handleStructureCommandCancel(&$user, &$planet) {
     ];
 }
 
-function _handleStructureCommandRemove(&$user, &$planet, &$input) {
+function _handleStructureCommandRemove(&$user, &$planet, &$input, $params) {
     global $_EnginePath;
+
+    $timestamp = $params['timestamp'];
 
     $listElementIdx = (
         isset($input['listid']) ?
@@ -162,7 +185,12 @@ function _handleStructureCommandRemove(&$user, &$planet, &$input) {
 
     include($_EnginePath . 'includes/functions/RemoveBuildingFromQueue.php');
 
-    $highlightElementID = RemoveBuildingFromQueue($planet, $user, $listElementIdx);
+    $highlightElementID = RemoveBuildingFromQueue(
+        $planet,
+        $user,
+        $listElementIdx,
+        [ 'currentTimestamp' => $timestamp ]
+    );
 
     return [
         'isSuccess' => true,
@@ -178,11 +206,13 @@ function _handleStructureCommandRemove(&$user, &$planet, &$input) {
 //      - $input
 //      - $params (Object)
 //          - cmd (EnumString: 'insert' | 'destroy')
+//          - timestamp (Number)
 //
 function _handleStructureCommandInsert(&$user, &$planet, &$input, $params) {
     global $_EnginePath;
 
     $cmd = $params['cmd'];
+    $timestamp = $params['timestamp'];
 
     $elementID = (
         isset($input['building']) ?
@@ -238,7 +268,13 @@ function _handleStructureCommandInsert(&$user, &$planet, &$input, $params) {
 
     include($_EnginePath.'includes/functions/AddBuildingToQueue.php');
 
-    AddBuildingToQueue($planet, $user, $elementID, $purchaseMode);
+    AddBuildingToQueue(
+        $planet,
+        $user,
+        $elementID,
+        $purchaseMode,
+        [ 'currentTimestamp' => $timestamp ]
+    );
 
     return [
         'isSuccess' => true,

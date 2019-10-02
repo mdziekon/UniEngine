@@ -4,8 +4,16 @@ use UniEngine\Engine\Includes\Helpers\Planets;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 use UniEngine\Engine\Includes\Helpers\World\Resources;
 
-function CancelBuildingFromQueue(&$planet, $user) {
+//  Arguments:
+//      - $planet (Object)
+//      - $user (Object)
+//      - $params (Object)
+//          - currentTimestamp (Number)
+//
+function CancelBuildingFromQueue(&$planet, $user, $params) {
     global $UserDev_Log;
+
+    $currentTimestamp = $params['currentTimestamp'];
 
     $queue = Planets\Queues\parseStructuresQueueString($planet['buildQueue']);
 
@@ -13,9 +21,13 @@ function CancelBuildingFromQueue(&$planet, $user) {
     $elementID = $firstQueueElement['elementID'];
     $isUpgrading = ($firstQueueElement['mode'] === 'build');
 
-    $currentTimestamp = time();
 
-    RemoveBuildingFromQueue($planet, $user, 1);
+    RemoveBuildingFromQueue(
+        $planet,
+        $user,
+        1,
+        [ 'currentTimestamp' => $currentTimestamp ]
+    );
 
     $purchaseCost = Elements\calculatePurchaseCost(
         $elementID,

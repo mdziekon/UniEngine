@@ -2,11 +2,19 @@
 
 use UniEngine\Engine\Includes\Helpers\Planets;
 
-function AddBuildingToQueue(&$planet, $user, $newElementID, $newElementIsUpgrading) {
+//  Arguments:
+//      - $planet (Object)
+//      - $user (Object)
+//      - $newElementID (String)
+//      - $newElementIsUpgrading (Boolean)
+//      - $params (Object)
+//          - currentTimestamp (Number)
+//
+function AddBuildingToQueue(&$planet, $user, $newElementID, $newElementIsUpgrading, $params) {
+    $currentTimestamp = $params['currentTimestamp'];
+
     $queue = Planets\Queues\parseStructuresQueueString($planet['buildQueue']);
     $queueLength = count($queue);
-
-    $currentTimestamp = time();
     $isFirstElement = ($queueLength === 0);
 
     $tempPlanet = $planet;
