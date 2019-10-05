@@ -81,7 +81,7 @@ function render ($props) {
             'Data_ElementName'                      => $_Lang['tech'][$elementID],
             'Data_ElementLevel'                     => $elementLevel,
             'Data_PlanetID'                         => $planetID,
-            'Data_BuildTimeEndFormatted'            => pretty_time($progressTimeLeft, true),
+            'Data_BuildTimeEndFormatted'            => pretty_time($progressTimeLeft, true, 'D'),
             'Data_ElementProgressEndTimeDatepoint'  => date('d/m | H:i:s', $progressEndTime),
             'Data_ElementCancellableClass'          => $elementCancellableClass,
 

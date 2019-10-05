@@ -78,7 +78,7 @@ function render ($props) {
             'Level'                 => $elementLevel,
             'PlanetID'              => $planet['id'],
             'BuildTime'             => pretty_time($progressDuration),
-            'EndTimer'              => pretty_time($progressTimeLeft, true),
+            'EndTimer'              => pretty_time($progressTimeLeft, true, 'D'),
             'EndTimeExpand'         => date('H:i:s', $progressEndTime),
             'EndDate'               => date('d/m | H:i:s', $progressEndTime),
             'EndDateExpand'         => prettyDate('d m Y', $progressEndTime, 1),
