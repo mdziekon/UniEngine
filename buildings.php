@@ -93,21 +93,13 @@ switch($_GET['mode'])
         }
         break;
     default:
-        if($OldViewMode)
-        {
-            include($_EnginePath . 'modules/structures/_includes.php');
-            include($_EnginePath . 'includes/functions/BatimentBuildingPage.php');
-            BatimentBuildingPage($_Planet, $_User);
-        }
-        else
-        {
-            include($_EnginePath . 'modules/structures/_includes.php');
+        include($_EnginePath . 'modules/structures/_includes.php');
 
-            UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\render(
-                $_Planet,
-                $_User
-            );
-        }
+        UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\render(
+            $_Planet,
+            $_User
+        );
+
         break;
 }
 

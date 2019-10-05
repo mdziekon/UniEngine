@@ -10,6 +10,8 @@ use UniEngine\Engine\Modules\Structures\Input;
 use UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\ModernQueue;
 use UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\ModernElementListIcon;
 use UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\ModernElementInfoCard;
+use UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\LegacyQueue;
+use UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\LegacyElementListItem;
 
 function render (&$CurrentPlanet, $CurrentUser) {
     global $_Lang, $_SkinPath, $_GET, $_EnginePath, $_Vars_ElementCategories;
@@ -109,6 +111,7 @@ function render (&$CurrentPlanet, $CurrentUser) {
     $elementsListIcons = [];
     $elementsListDetailedInfoboxes = [];
     $elementsDestructionDetails = [];
+    $elementsListItems = [];
 
     foreach ($_Vars_ElementCategories['build'] as $elementID) {
         $isAvailableOnThisPlanetType = Elements\isStructureAvailableOnPlanetType(
@@ -127,6 +130,10 @@ function render (&$CurrentPlanet, $CurrentUser) {
             isset($queuedElementLevelModifiers[$elementID]) ?
             $queuedElementLevelModifiers[$elementID] :
             0
+        );
+        $elementCurrentPlanetLevel = (
+            $elementCurrentQueuedLevel -
+            $elementQueueLevelModifier
         );
         $isInQueue = isset($queuedElementLevelModifiers[$elementID]);
         $isLevelDowngradeable = ($elementPreviousLevel >= 0);
@@ -263,42 +270,56 @@ function render (&$CurrentPlanet, $CurrentUser) {
             $upgradeBlockers[] = $_Lang['ListBox_Disallow_VacationMode'];
         }
 
-        $elementListIcon = ModernElementListIcon\render([
-            'elementID' => $elementID,
-            'elementCurrentLevel' => (
-                $elementCurrentQueuedLevel -
-                $elementQueueLevelModifier
-            ),
-            'elementQueueLevelModifier' => $elementQueueLevelModifier,
-            'isInQueue' => $isInQueue,
-            'canStartUpgrade' => $canStartUpgrade,
-            'canQueueUpgrade' => $canQueueUpgrade,
-            'upgradeBlockersList' => $upgradeBlockers
-        ]);
-        $elementInfoCard = ModernElementInfoCard\render([
-            'user' => $CurrentUser,
-            'planet' => $CurrentPlanet,
-            'currentTimestamp' => $currentTimestamp,
-            'elementID' => $elementID,
-            'elementCurrentLevel' => (
-                $elementCurrentQueuedLevel -
-                $elementQueueLevelModifier
-            ),
-            'elementQueueLevelModifier' => $elementQueueLevelModifier,
-            'isQueueActive' => $hasElementsInQueue,
-            'isInQueue' => $isInQueue,
-            'isUpgradeable' => $isUpgradeable,
-            'isUpgradeHardBlocked' => $isUpgradeHardBlocked,
-            'isDowngradeHardBlocked' => $isDowngradeHardBlocked,
-            'hasReachedMaxLevel' => $hasReachedMaxLevel,
-            'hasTechnologyRequirementsMet' => $hasTechnologyRequirementsMet,
-            'canStartUpgrade' => $canStartUpgrade,
-            'canQueueUpgrade' => $canQueueUpgrade,
-            'canQueueDowngrade' => $canQueueDowngrade
-        ]);
+        if ($isModernLayoutEnabled) {
+            $elementListIcon = ModernElementListIcon\render([
+                'elementID' => $elementID,
+                'elementCurrentLevel' => $elementCurrentPlanetLevel,
+                'elementQueueLevelModifier' => $elementQueueLevelModifier,
+                'isInQueue' => $isInQueue,
+                'canStartUpgrade' => $canStartUpgrade,
+                'canQueueUpgrade' => $canQueueUpgrade,
+                'upgradeBlockersList' => $upgradeBlockers
+            ]);
+            $elementInfoCard = ModernElementInfoCard\render([
+                'user' => $CurrentUser,
+                'planet' => $CurrentPlanet,
+                'currentTimestamp' => $currentTimestamp,
+                'elementID' => $elementID,
+                'elementCurrentLevel' => $elementCurrentPlanetLevel,
+                'elementQueueLevelModifier' => $elementQueueLevelModifier,
+                'isQueueActive' => $hasElementsInQueue,
+                'isInQueue' => $isInQueue,
+                'isUpgradeable' => $isUpgradeable,
+                'isUpgradeHardBlocked' => $isUpgradeHardBlocked,
+                'isDowngradeHardBlocked' => $isDowngradeHardBlocked,
+                'hasReachedMaxLevel' => $hasReachedMaxLevel,
+                'hasTechnologyRequirementsMet' => $hasTechnologyRequirementsMet,
+                'canStartUpgrade' => $canStartUpgrade,
+                'canQueueUpgrade' => $canQueueUpgrade,
+                'canQueueDowngrade' => $canQueueDowngrade
+            ]);
 
-        $elementsListIcons[] = $elementListIcon['componentHTML'];
-        $elementsListDetailedInfoboxes[] = $elementInfoCard['componentHTML'];
+            $elementsListIcons[] = $elementListIcon['componentHTML'];
+            $elementsListDetailedInfoboxes[] = $elementInfoCard['componentHTML'];
+        } else {
+            $elementListItem = LegacyElementListItem\render([
+                'user' => $CurrentUser,
+                'planet' => $CurrentPlanet,
+                'currentTimestamp' => $currentTimestamp,
+                'elementID' => $elementID,
+                'elementCurrentLevel' => $elementCurrentPlanetLevel,
+                'elementQueueLevelModifier' => $elementQueueLevelModifier,
+                'isQueueActive' => $hasElementsInQueue,
+                'isInQueue' => $isInQueue,
+                'isUpgradeable' => $isUpgradeable,
+                'hasTechnologyRequirementsMet' => $hasTechnologyRequirementsMet,
+                'canStartUpgrade' => $canStartUpgrade,
+                'canQueueUpgrade' => $canQueueUpgrade,
+                'upgradeBlockersList' => $upgradeBlockers
+            ]);
+
+            $elementsListItems[] = $elementListItem['componentHTML'];
+        }
     }
 
     // Restore original state by unapplying queue modifiers
@@ -312,79 +333,106 @@ function render (&$CurrentPlanet, $CurrentUser) {
         $CurrentPlanet[$elementPlanetKey] -= $levelModifier;
     }
 
-    // Create Structures List
-    $groupedStructureRows = Common\Utils\groupInRows($elementsListIcons, $const_ElementsPerRow);
-    $parsedStructureRows = array_map(
-        function ($elementsInRow) use (&$tplBodyCache, $const_ElementsPerRow) {
-            $mergedElementsInRow = implode('', $elementsInRow);
-            $emptySpaceFiller = '';
+    if ($isModernLayoutEnabled) {
+        // Create Structures List
+        $groupedStructureRows = Common\Utils\groupInRows($elementsListIcons, $const_ElementsPerRow);
+        $parsedStructureRows = array_map(
+            function ($elementsInRow) use (&$tplBodyCache, $const_ElementsPerRow) {
+                $mergedElementsInRow = implode('', $elementsInRow);
+                $emptySpaceFiller = '';
 
-            $elementsInRowCount = count($elementsInRow);
+                $elementsInRowCount = count($elementsInRow);
 
-            if ($elementsInRowCount < $const_ElementsPerRow) {
-                $emptySpaceFiller = str_repeat(
-                    $tplBodyCache['list_hidden'],
-                    ($const_ElementsPerRow - $elementsInRowCount)
+                if ($elementsInRowCount < $const_ElementsPerRow) {
+                    $emptySpaceFiller = str_repeat(
+                        $tplBodyCache['list_hidden'],
+                        ($const_ElementsPerRow - $elementsInRowCount)
+                    );
+                }
+
+                return parsetemplate(
+                    $tplBodyCache['list_row'],
+                    [
+                        'Elements' => ($mergedElementsInRow . $emptySpaceFiller)
+                    ]
                 );
-            }
+            },
+            $groupedStructureRows
+        );
 
-            return parsetemplate(
-                $tplBodyCache['list_row'],
-                [
-                    'Elements' => ($mergedElementsInRow . $emptySpaceFiller)
-                ]
-            );
-        },
-        $groupedStructureRows
-    );
+        $Parse['Create_StructuresList'] = implode(
+            $tplBodyCache['list_breakrow'],
+            $parsedStructureRows
+        );
+        $Parse['Create_ElementsInfoBoxes'] = implode(
+            '',
+            $elementsListDetailedInfoboxes
+        );
+        $Parse['PHPData_ElementsDestructionDetailsJSON'] = json_encode($elementsDestructionDetails);
 
-    $Parse['Create_StructuresList'] = implode(
-        $tplBodyCache['list_breakrow'],
-        $parsedStructureRows
-    );
-    $Parse['Create_ElementsInfoBoxes'] = implode(
-        '',
-        $elementsListDetailedInfoboxes
-    );
-    $Parse['PHPData_ElementsDestructionDetailsJSON'] = json_encode($elementsDestructionDetails);
+        if ($highlightElementID > 0) {
+            $Parse['Create_ShowElementOnStartup'] = $highlightElementID;
+        }
+        // End of - Parse all available buildings
 
-    if ($highlightElementID > 0) {
-        $Parse['Create_ShowElementOnStartup'] = $highlightElementID;
-    }
-    // End of - Parse all available buildings
+        $planetsMaxFields = CalculateMaxPlanetFields($CurrentPlanet);
 
-    $planetsMaxFields = CalculateMaxPlanetFields($CurrentPlanet);
+        $Parse['Insert_SkinPath'] = $_SkinPath;
+        $Parse['Insert_PlanetImg'] = $CurrentPlanet['image'];
+        $Parse['Insert_PlanetType'] = $_Lang['PlanetType_'.$CurrentPlanet['planet_type']];
+        $Parse['Insert_PlanetName'] = $CurrentPlanet['name'];
+        $Parse['Insert_PlanetPos_Galaxy'] = $CurrentPlanet['galaxy'];
+        $Parse['Insert_PlanetPos_System'] = $CurrentPlanet['system'];
+        $Parse['Insert_PlanetPos_Planet'] = $CurrentPlanet['planet'];
+        $Parse['Insert_Overview_Diameter'] = prettyNumber($CurrentPlanet['diameter']);
+        $Parse['Insert_Overview_Fields_Used'] = prettyNumber($CurrentPlanet['field_current']);
+        $Parse['Insert_Overview_Fields_Max'] = prettyNumber($planetsMaxFields);
+        $Parse['Insert_Overview_Fields_Percent'] = sprintf(
+            '%0.2f',
+            ($CurrentPlanet['field_current'] / $planetsMaxFields) * 100
+        );
+        $Parse['Insert_Overview_Temperature'] = sprintf(
+            $_Lang['Overview_Form_Temperature'],
+            $CurrentPlanet['temp_min'],
+            $CurrentPlanet['temp_max']
+        );
 
-    $Parse['Insert_SkinPath'] = $_SkinPath;
-    $Parse['Insert_PlanetImg'] = $CurrentPlanet['image'];
-    $Parse['Insert_PlanetType'] = $_Lang['PlanetType_'.$CurrentPlanet['planet_type']];
-    $Parse['Insert_PlanetName'] = $CurrentPlanet['name'];
-    $Parse['Insert_PlanetPos_Galaxy'] = $CurrentPlanet['galaxy'];
-    $Parse['Insert_PlanetPos_System'] = $CurrentPlanet['system'];
-    $Parse['Insert_PlanetPos_Planet'] = $CurrentPlanet['planet'];
-    $Parse['Insert_Overview_Diameter'] = prettyNumber($CurrentPlanet['diameter']);
-    $Parse['Insert_Overview_Fields_Used'] = prettyNumber($CurrentPlanet['field_current']);
-    $Parse['Insert_Overview_Fields_Max'] = prettyNumber($planetsMaxFields);
-    $Parse['Insert_Overview_Fields_Percent'] = sprintf(
-        '%0.2f',
-        ($CurrentPlanet['field_current'] / $planetsMaxFields) * 100
-    );
-    $Parse['Insert_Overview_Temperature'] = sprintf(
-        $_Lang['Overview_Form_Temperature'],
-        $CurrentPlanet['temp_min'],
-        $CurrentPlanet['temp_max']
-    );
+        if ($CurrentPlanet['field_current'] == $planetsMaxFields) {
+            $Parse['Insert_Overview_Fields_Used_Color'] = 'red';
+        } else if($CurrentPlanet['field_current'] >= ($planetsMaxFields * 0.9)) {
+            $Parse['Insert_Overview_Fields_Used_Color'] = 'orange';
+        } else {
+            $Parse['Insert_Overview_Fields_Used_Color'] = 'lime';
+        }
 
-    if ($CurrentPlanet['field_current'] == $planetsMaxFields) {
-        $Parse['Insert_Overview_Fields_Used_Color'] = 'red';
-    } else if($CurrentPlanet['field_current'] >= ($planetsMaxFields * 0.9)) {
-        $Parse['Insert_Overview_Fields_Used_Color'] = 'orange';
+        $pageTPLBody = gettemplate('buildings_compact_body_structures');
+        $pageHTML = parsetemplate($pageTPLBody, $Parse);
     } else {
-        $Parse['Insert_Overview_Fields_Used_Color'] = 'lime';
-    }
+        $planetsMaxFields = CalculateMaxPlanetFields($CurrentPlanet);
 
-    $pageTPLBody = gettemplate('buildings_compact_body_structures');
-    $pageHTML = parsetemplate($pageTPLBody, $Parse);
+        $Parse['PHPInject_ElementsListHTML'] = implode(
+            '',
+            $elementsListItems
+        );
+
+        if ($hasElementsInQueue) {
+            $queueComponent = LegacyQueue\render([
+                'planet' => $CurrentPlanet,
+                'currentTimestamp' => $currentTimestamp
+            ]);
+
+            $Parse['PHPInject_Queue'] = $queueComponent['componentHTML'];
+        }
+
+        $Parse['Insert_Overview_Fields_Used'] = prettyNumber($CurrentPlanet['field_current']);
+        $Parse['Insert_Overview_Fields_Max'] = prettyNumber($planetsMaxFields);
+        $Parse['Insert_Overview_Fields_Available'] = prettyNumber(
+            $planetsMaxFields - $CurrentPlanet['field_current']
+        );
+
+        $pageTPLBody = gettemplate('buildings_legacy_body_structures');
+        $pageHTML = parsetemplate($pageTPLBody, $Parse);
+    }
 
     display($pageHTML, $_Lang['Builds']);
 }
