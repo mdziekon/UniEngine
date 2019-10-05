@@ -51,7 +51,7 @@ function render ($props) {
 
         $elementCancellableClass = (
             !Elements\isCancellableOnceInProgress($elementID) ?
-            'queue_element_cancel_blocked red' :
+            'premblock' :
             ''
         );
 

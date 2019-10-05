@@ -1,4 +1,6 @@
 <script>
+var ShowElementOnStartup = '';
+var RunQueueHandler = 'false';
 var JSLang = {
     Queue_Cancel_Go: "{Queue_Cancel_Go}",
     Queue_CantCancel_Premium: "{Queue_CantCancel_Premium}",
@@ -18,6 +20,7 @@ function onQueuesFirstElementFinished () {
 }
 
 </script>
+<script src="dist/js/structures.cachebuster-1569443741057.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="dist/css/structures.cachebuster-1546565145290.min.css" />
 
 <!--

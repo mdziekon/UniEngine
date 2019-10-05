@@ -18,7 +18,7 @@
             <a
                 id="QueueCancel"
                 href="buildings.php?listid={Data_ListID}&amp;cmd=cancel&amp;planet={Data_PlanetID}"
-                class="queue_element_cancel_first {Data_ElementCancellableClass}"
+                class="cancelQueue {Data_ElementCancellableClass}"
             >
                 {Lang_DeleteFirstElement}
             </a>
