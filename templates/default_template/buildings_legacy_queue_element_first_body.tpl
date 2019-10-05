@@ -14,7 +14,7 @@
         <div id="bxxQueueFirstTimer" class="z">
             {Data_BuildTimeEndFormatted}
         </div>
-        <div id="dlink">
+        <div>
             <a
                 id="QueueCancel"
                 href="buildings.php?listid={Data_ListID}&amp;cmd=cancel&amp;planet={Data_PlanetID}"
