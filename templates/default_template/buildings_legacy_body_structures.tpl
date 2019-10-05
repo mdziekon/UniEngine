@@ -23,22 +23,14 @@ function onQueuesFirstElementFinished () {
 <script src="dist/js/structures.cachebuster-1569443741057.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="dist/css/structures.cachebuster-1546565145290.min.css" />
 
-<!--
-    language values to change:
-
-    bld_usedcells
-    bld_theyare
-    bld_cellfree
- -->
-
 <br/>
 <table width="650">
     {PHPInject_Queue}
     <tr>
-        <th>{bld_usedcells}</th>
+        <th>{BuildingsLegacy_ListTitle}</th>
         <th>
             <span class="lime">{Insert_Overview_Fields_Used}</span> / <span class="red">{Insert_Overview_Fields_Max}</span>
-            [{bld_theyare} {Insert_Overview_Fields_Available} {bld_cellfree}]
+            [{BuildingsLegacy_FieldsLeft}: {Insert_Overview_Fields_Available}]
         </th>
         <th style="width: 100px;">&nbsp;</th>
     </tr>
