@@ -1,6 +1,8 @@
 <script>
 var JSLang = {
-
+    Queue_Cancel_Go: "{Queue_Cancel_Go}",
+    Queue_CantCancel_Premium: "{Queue_CantCancel_Premium}",
+    Queue_ConfirmCancel: "{Queue_ConfirmCancel}"
 };
 
 function onQueuesFirstElementFinished () {
