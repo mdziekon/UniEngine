@@ -16,8 +16,6 @@ use UniEngine\Engine\Includes\Helpers\Planets;
 function render ($props) {
     global $_Lang, $_EnginePath;
 
-    include($_EnginePath . 'includes/functions/InsertBuildListScript.php');
-
     $tplBodyCache = [
         'queue_body' => gettemplate('buildings_legacy_queue_body'),
         'queue_element_first_body' => gettemplate('buildings_legacy_queue_element_first_body'),
@@ -34,7 +32,7 @@ function render ($props) {
     $queueElementsTplData = [];
     $queueUnfinishedElementsCount = 0;
 
-    foreach ($queueElements as $queueElement) {
+    foreach ($queueElements as $queueIdx => $queueElement) {
         if ($queueElement['endTimestamp'] < $currentTimestamp) {
             continue;
         }
@@ -45,6 +43,7 @@ function render ($props) {
         $progressEndTime = $queueElement['endTimestamp'];
         $progressTimeLeft = $progressEndTime - $currentTimestamp;
         $isUpgrading = ($queueElement['mode'] == 'build');
+        $isFirstQueueElement = ($queueIdx === 0);
 
         if (!$isUpgrading) {
             $elementLevel += 1;
@@ -62,16 +61,33 @@ function render ($props) {
             ''
         );
 
+        $elementChronoAppletScript = '';
+
+        if ($isFirstQueueElement) {
+            include_once($_EnginePath . '/includes/functions/InsertJavaScriptChronoApplet.php');
+
+            $elementChronoAppletScript = InsertJavaScriptChronoApplet(
+                'QueueFirstTimer',
+                '',
+                $progressEndTime,
+                true,
+                false,
+                'function() { onQueuesFirstElementFinished(); }'
+            );
+        }
+
         $queueElementTplData = [
             'Data_ListID'                           => $listID,
             'Data_ElementName'                      => $_Lang['tech'][$elementID],
             'Data_ElementLevel'                     => $elementLevel,
             'Data_PlanetID'                         => $planetID,
-            'Data_BuildTimeSecondsLeft'             => $progressTimeLeft,
+            'Data_BuildTimeEndFormatted'            => pretty_time($progressTimeLeft, true),
             'Data_ElementProgressEndTimeDatepoint'  => date('d/m | H:i:s', $progressEndTime),
             'Data_ElementCancellableClass'          => $elementCancellableClass,
 
             'Data_HideIsDowngradeLabelClass'        => $hideIsDowngradeLabelClass,
+
+            'PHPInject_ChronoAppletScriptCode'      => $elementChronoAppletScript,
 
             'Lang_Level'                            => $_Lang['level'],
             'Lang_DowngradeLabel'                   => $_Lang['destroy'],
@@ -85,7 +101,6 @@ function render ($props) {
     }
 
     $componentTPLData = [
-        'PHPInject_QueueScript' => InsertBuildListScript('buildings'),
         'Data_QueueElements' => '',
     ];
 
