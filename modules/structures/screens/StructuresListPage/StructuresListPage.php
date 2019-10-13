@@ -58,18 +58,16 @@ function render (&$CurrentPlanet, $CurrentUser) {
     // End of - Handle Commands
 
     // Display queue
-    $queueComponent = ModernQueue\render([
+    $queueStateDetails = Helpers\getQueueStateDetails([
         'planet' => &$CurrentPlanet,
         'user' => &$CurrentUser,
         'timestamp' => $currentTimestamp
     ]);
 
-    $queueTempResourcesLock = $queueComponent['parsedDetails']['queuedResourcesToUse'];
-    $queueUnfinishedElementsCount = $queueComponent['parsedDetails']['unfinishedElementsCount'];
-    $queuedElementLevelModifiers = $queueComponent['parsedDetails']['queuedElementLevelModifiers'];
-    $fieldsModifierByQueuedDowngrades = $queueComponent['parsedDetails']['fieldsModifier'];
-
-    $Parse['Create_Queue'] = $queueComponent['componentHTML'];
+    $queueTempResourcesLock = $queueStateDetails['queuedResourcesToUse'];
+    $queueUnfinishedElementsCount = $queueStateDetails['unfinishedElementsCount'];
+    $queuedElementLevelModifiers = $queueStateDetails['queuedElementLevelModifiers'];
+    $fieldsModifierByQueuedDowngrades = $queueStateDetails['fieldsModifier'];
 
     // Apply queue modifiers
     $CurrentPlanet['metal'] -= $queueTempResourcesLock['metal'];
@@ -404,6 +402,14 @@ function render (&$CurrentPlanet, $CurrentUser) {
         } else {
             $Parse['Insert_Overview_Fields_Used_Color'] = 'lime';
         }
+
+        $queueComponent = ModernQueue\render([
+            'planet' => &$CurrentPlanet,
+            'user' => &$CurrentUser,
+            'timestamp' => $currentTimestamp
+        ]);
+
+        $Parse['Create_Queue'] = $queueComponent['componentHTML'];
 
         $pageTPLBody = gettemplate('buildings_compact_body_structures');
         $pageHTML = parsetemplate($pageTPLBody, $Parse);

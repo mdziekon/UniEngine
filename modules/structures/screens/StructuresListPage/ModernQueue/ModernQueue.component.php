@@ -14,11 +14,6 @@ use UniEngine\Engine\Includes\Helpers\Users;
 //
 //  Returns: Object
 //      - componentHTML (String)
-//      - parsedDetails (Object)
-//          - queuedResourcesToUse (Object<resourceKey: string, value: number>)
-//          - queuedElementLevelModifiers (Object<elementID: string, levelModifier: number>)
-//          - fieldsModifier (Number)
-//          - unfinishedElementsCount (Number)
 //
 function render ($props) {
     global $_Lang, $_SkinPath, $_EnginePath;
@@ -38,14 +33,6 @@ function render ($props) {
         'queue_elements_first' => gettemplate('buildings_compact_queue_firstel'),
         'queue_elements_next' => gettemplate('buildings_compact_queue_nextel')
     ];
-
-    $queuedResourcesToUse = [
-        'metal' => 0,
-        'crystal' => 0,
-        'deuterium' => 0
-    ];
-    $queuedElementLevelModifiers = [];
-    $fieldsModifierByQueuedDowngrades = 0;
 
     $buildingsQueue = Planets\Queues\parseStructuresQueueString($planet['buildQueue']);
 
@@ -139,35 +126,6 @@ function render ($props) {
         }
 
         $queueElementsTplData[] = $queueElementTplData;
-        $elementPlanetKey = _getElementPlanetKey($elementID);
-
-        if (!$isFirstQueueElement) {
-            $temporaryLevelModifier = (
-                isset($queuedElementLevelModifiers[$elementID]) ?
-                $queuedElementLevelModifiers[$elementID] :
-                0
-            );
-
-            $planet[$elementPlanetKey] += $temporaryLevelModifier;
-
-            $elementCost = GetBuildingPrice($user, $planet, $elementID, true, !$isUpgrading);
-            $queuedResourcesToUse['metal'] += $elementCost['metal'];
-            $queuedResourcesToUse['crystal'] += $elementCost['crystal'];
-            $queuedResourcesToUse['deuterium'] += $elementCost['deuterium'];
-
-            $planet[$elementPlanetKey] -= $temporaryLevelModifier;
-        }
-
-        if (!isset($queuedElementLevelModifiers[$elementID])) {
-            $queuedElementLevelModifiers[$elementID] = 0;
-        }
-
-        if (!$isUpgrading) {
-            $queuedElementLevelModifiers[$elementID] -= 1;
-            $fieldsModifierByQueuedDowngrades += 2;
-        } else {
-            $queuedElementLevelModifiers[$elementID] += 1;
-        }
 
         $queueUnfinishedElementsCount += 1;
     }
@@ -214,13 +172,7 @@ function render ($props) {
     );
 
     return [
-        'componentHTML' => $componentHTML,
-        'parsedDetails' => [
-            'queuedResourcesToUse' => $queuedResourcesToUse,
-            'queuedElementLevelModifiers' => $queuedElementLevelModifiers,
-            'fieldsModifier' => $fieldsModifierByQueuedDowngrades,
-            'unfinishedElementsCount' => $queueUnfinishedElementsCount
-        ]
+        'componentHTML' => $componentHTML
     ];
 }
 
