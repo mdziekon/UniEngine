@@ -6,8 +6,9 @@ use UniEngine\Engine\Includes\Helpers\Common;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 use UniEngine\Engine\Includes\Helpers\World\Resources;
 use UniEngine\Engine\Includes\Helpers\Users;
+use UniEngine\Engine\Includes\Helpers\Planets;
 use UniEngine\Engine\Modules\Structures\Input;
-use UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\ModernQueue;
+use UniEngine\Engine\Modules\Development\Components\ModernQueue;
 use UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\ModernElementListIcon;
 use UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\ModernElementInfoCard;
 use UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\LegacyQueue;
@@ -404,9 +405,12 @@ function render (&$CurrentPlanet, $CurrentUser) {
         }
 
         $queueComponent = ModernQueue\render([
-            'planet' => &$CurrentPlanet,
             'user' => &$CurrentUser,
-            'timestamp' => $currentTimestamp
+            'planet' => &$CurrentPlanet,
+            'queue' => Planets\Queues\parseStructuresQueueString($CurrentPlanet['buildQueue']),
+            'queueMaxLength' => Users\getMaxStructuresQueueLength($CurrentUser),
+            'timestamp' => $currentTimestamp,
+            'infoComponents' => []
         ]);
 
         $Parse['Create_Queue'] = $queueComponent['componentHTML'];

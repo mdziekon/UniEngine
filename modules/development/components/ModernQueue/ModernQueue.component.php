@@ -1,16 +1,23 @@
 <?php
 
-namespace UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\ModernQueue;
+namespace UniEngine\Engine\Modules\Development\Components\ModernQueue;
 
 use UniEngine\Engine\Includes\Helpers\World\Elements;
-use UniEngine\Engine\Includes\Helpers\Planets;
-use UniEngine\Engine\Includes\Helpers\Users;
 
 //  Arguments
 //      - $props (Object)
 //          - user (Object)
 //          - planet (Object)
+//          - queue (Array<QueueElement>)
+//              QueueElement: Object
+//                  - elementID (Number)
+//                  - level (Number)
+//                  - duration (Number)
+//                  - endTimestamp (Number)
+//                  - mode (String)
+//          - queueMaxLength (Number)
 //          - timestamp (Number)
+//          - infoComponents (Array<String: componentHTML> | undefined)
 //
 //  Returns: Object
 //      - componentHTML (String)
@@ -22,24 +29,29 @@ function render ($props) {
 
     $planet = &$props['planet'];
     $user = &$props['user'];
+    $queue = $props['queue'];
+    $queueMaxLength = $props['queueMaxLength'];
     $currentTimestamp = $props['timestamp'];
+    $infoComponents = (
+        isset($props['infoComponents']) ?
+        $props['infoComponents'] :
+        []
+    );
 
     $componentTPLData = [
         'queueElements' => [],
-        'queueTopInfobox' => ''
+        'queueTopInfobox' => []
     ];
     $tplBodyCache = [
-        'queue_topinfo' => gettemplate('buildings_compact_queue_topinfo'),
-        'queue_elements_first' => gettemplate('buildings_compact_queue_firstel'),
-        'queue_elements_next' => gettemplate('buildings_compact_queue_nextel')
+        'row_infobox_generic' => gettemplate('modules/development/components/ModernQueue/row_infobox_generic'),
+        'row_element_firstel' => gettemplate('modules/development/components/ModernQueue/row_element_firstel'),
+        'row_element_nextel' => gettemplate('modules/development/components/ModernQueue/row_element_nextel')
     ];
-
-    $buildingsQueue = Planets\Queues\parseStructuresQueueString($planet['buildQueue']);
 
     $queueElementsTplData = [];
     $queueUnfinishedElementsCount = 0;
 
-    foreach ($buildingsQueue as $queueIdx => $queueElement) {
+    foreach ($queue as $queueIdx => $queueElement) {
         if ($queueElement['endTimestamp'] < $currentTimestamp) {
             continue;
         }
@@ -134,40 +146,43 @@ function render ($props) {
         foreach ($queueElementsTplData as $elementIdx => $queueElementTplData) {
             $queueElementTPLBody = (
                 $elementIdx === 0 ?
-                $tplBodyCache['queue_elements_first'] :
-                $tplBodyCache['queue_elements_next']
+                $tplBodyCache['row_element_firstel'] :
+                $tplBodyCache['row_element_nextel']
             );
 
             $componentTPLData['queueElements'][] = parsetemplate($queueElementTPLBody, $queueElementTplData);
         }
     } else {
-        $componentTPLData['queueElements'][] = parsetemplate(
-            $tplBodyCache['queue_topinfo'],
+        $componentTPLData['queueTopInfobox'][] = parsetemplate(
+            $tplBodyCache['row_infobox_generic'],
             [
                 'InfoText' => $_Lang['Queue_Empty']
             ]
         );
     }
 
-    $isQueueFull = (
-        $queueUnfinishedElementsCount >=
-        Users\getMaxStructuresQueueLength($user)
-    );
+    $isQueueFull = ($queueUnfinishedElementsCount >= $queueMaxLength);
 
     if ($isQueueFull) {
         $queueFullMsgHTML = parsetemplate(
-            $tplBodyCache['queue_topinfo'],
+            $tplBodyCache['row_infobox_generic'],
             [
                 'InfoColor' => 'red',
                 'InfoText' => $_Lang['Queue_Full']
             ]
         );
 
-        $componentTPLData['queueTopInfobox'] = $queueFullMsgHTML;
+        $componentTPLData['queueTopInfobox'][] = $queueFullMsgHTML;
+    }
+
+    if (!empty($infoComponents)) {
+        foreach ($infoComponents as $infoComponentHTML) {
+            $componentTPLData['queueTopInfobox'][] = $infoComponentHTML;
+        }
     }
 
     $componentHTML = (
-        $componentTPLData['queueTopInfobox'] .
+        implode('', $componentTPLData['queueTopInfobox']) .
         implode('', $componentTPLData['queueElements'])
     );
 
