@@ -9,9 +9,9 @@ use UniEngine\Engine\Includes\Helpers\Users;
 use UniEngine\Engine\Includes\Helpers\Planets;
 use UniEngine\Engine\Modules\Structures\Input;
 use UniEngine\Engine\Modules\Development\Components\ModernQueue;
+use UniEngine\Engine\Modules\Development\Components\LegacyQueue;
 use UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\ModernElementListIcon;
 use UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\ModernElementInfoCard;
-use UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\LegacyQueue;
 use UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\LegacyElementListItem;
 
 function render (&$CurrentPlanet, $CurrentUser) {
@@ -428,6 +428,7 @@ function render (&$CurrentPlanet, $CurrentUser) {
         if ($hasElementsInQueue) {
             $queueComponent = LegacyQueue\render([
                 'planet' => $CurrentPlanet,
+                'queue' => Planets\Queues\parseStructuresQueueString($CurrentPlanet['buildQueue']),
                 'currentTimestamp' => $currentTimestamp
             ]);
 

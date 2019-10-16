@@ -7,6 +7,7 @@ call_user_func(function () {
     $includePath = $_EnginePath . 'modules/development/';
 
     include($includePath . './components/ModernQueue/ModernQueue.component.php');
+    include($includePath . './components/LegacyQueue/LegacyQueue.component.php');
 });
 
 ?>

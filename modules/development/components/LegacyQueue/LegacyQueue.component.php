@@ -1,13 +1,19 @@
 <?php
 
-namespace UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\LegacyQueue;
+namespace UniEngine\Engine\Modules\Development\Components\LegacyQueue;
 
 use UniEngine\Engine\Includes\Helpers\World\Elements;
-use UniEngine\Engine\Includes\Helpers\Planets;
 
 //  Arguments
 //      - $props (Object)
 //          - planet (Object)
+//          - queue (Array<QueueElement>)
+//              QueueElement: Object
+//                  - elementID (Number)
+//                  - level (Number)
+//                  - duration (Number)
+//                  - endTimestamp (Number)
+//                  - mode (String)
 //          - currentTimestamp (Number)
 //
 //  Returns: Object
@@ -17,22 +23,21 @@ function render ($props) {
     global $_Lang, $_EnginePath;
 
     $tplBodyCache = [
-        'queue_body' => gettemplate('buildings_legacy_queue_body'),
-        'queue_element_first_body' => gettemplate('buildings_legacy_queue_element_first_body'),
-        'queue_element_next_body' => gettemplate('buildings_legacy_queue_element_next_body'),
+        'body' => gettemplate('modules/development/components/LegacyQueue/body'),
+        'row_element_firstel' => gettemplate('modules/development/components/LegacyQueue/row_element_firstel'),
+        'row_element_nextel' => gettemplate('modules/development/components/LegacyQueue/row_element_nextel')
     ];
 
     $planet = $props['planet'];
+    $queue = $props['queue'];
     $currentTimestamp = $props['currentTimestamp'];
 
     $planetID = $planet['id'];
 
-    $queueElements = Planets\Queues\parseStructuresQueueString($planet['buildQueue']);
-
     $queueElementsTplData = [];
     $queueUnfinishedElementsCount = 0;
 
-    foreach ($queueElements as $queueIdx => $queueElement) {
+    foreach ($queue as $queueIdx => $queueElement) {
         if ($queueElement['endTimestamp'] < $currentTimestamp) {
             continue;
         }
@@ -110,8 +115,8 @@ function render ($props) {
         foreach ($queueElementsTplData as $elementIdx => $queueElementTplData) {
             $queueElementTPLBody = (
                 $elementIdx === 0 ?
-                $tplBodyCache['queue_element_first_body'] :
-                $tplBodyCache['queue_element_next_body']
+                $tplBodyCache['row_element_firstel'] :
+                $tplBodyCache['row_element_nextel']
             );
 
             $queueElementsHTMLParts[] = parsetemplate($queueElementTPLBody, $queueElementTplData);
@@ -120,7 +125,7 @@ function render ($props) {
         $componentTPLData['Data_QueueElements'] = implode('', $queueElementsHTMLParts);
     }
 
-    $componentTPLBody = $tplBodyCache['queue_body'];
+    $componentTPLBody = $tplBodyCache['body'];
     $componentHTML = parsetemplate($componentTPLBody, $componentTPLData);
 
     return [
