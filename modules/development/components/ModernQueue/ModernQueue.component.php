@@ -77,6 +77,40 @@ function render ($props) {
             $elementLevel += 1;
         }
 
+        $elementCancellableClass = (
+            !Elements\isCancellableOnceInProgress($elementID) ?
+            'premblock' :
+            ''
+        );
+        $elementModeLabelText = (
+            $isUpgrading ?
+            $_Lang['Queue_Mode_Build_1'] :
+            $_Lang['Queue_Mode_Destroy_1']
+        );
+        $elementModeLabelColorClass = (
+            $isUpgrading ?
+            'lime' :
+            'red'
+        );
+        $elementCancelButtonText = (
+            $isFirstQueueElement ?
+            (
+                (!Elements\isCancellableOnceInProgress($elementID)) ?
+                $_Lang['Queue_Cancel_CantCancel'] :
+                (
+                    $isUpgrading ?
+                    $_Lang['Queue_Cancel_Build'] :
+                    $_Lang['Queue_Cancel_Destroy']
+                )
+            ) :
+            $_Lang['Queue_Cancel_Remove']
+        );
+        $elementBuildTimeLabelText = (
+            $isUpgrading ?
+            $_Lang['InfoBox_BuildTime'] :
+            $_Lang['InfoBox_DestroyTime']
+        );
+
         $elementChronoAppletScript = '';
 
         if ($isFirstQueueElement) {
@@ -93,18 +127,18 @@ function render ($props) {
         }
 
         $queueElementTplData = [
-            'Data_SkinPath'              => $_SkinPath,
-            'Data_ListID'                => $listID,
-            'Data_ElementNo'             => $listID,
-            'Data_ElementID'             => $elementID,
-            'Data_Name'                  => $_Lang['tech'][$elementID],
-            'Data_Level'                 => $elementLevel,
-            'Data_PlanetID'              => $planet['id'],
-            'Data_BuildTime'             => pretty_time($progressDuration),
-            'Data_EndTimer'              => pretty_time($progressTimeLeft, true, 'D'),
-            'Data_EndTimeExpand'         => date('H:i:s', $progressEndTime),
-            'Data_EndDate'               => date('d/m | H:i:s', $progressEndTime),
-            'Data_EndDateExpand'         => prettyDate('d m Y', $progressEndTime, 1),
+            'Data_SkinPath'                     => $_SkinPath,
+            'Data_ListID'                       => $listID,
+            'Data_ElementNo'                    => $listID,
+            'Data_ElementID'                    => $elementID,
+            'Data_Name'                         => $_Lang['tech'][$elementID],
+            'Data_Level'                        => $elementLevel,
+            'Data_PlanetID'                     => $planet['id'],
+            'Data_BuildTime'                    => pretty_time($progressDuration),
+            'Data_EndTimer'                     => pretty_time($progressTimeLeft, true, 'D'),
+            'Data_EndTimeExpand'                => date('H:i:s', $progressEndTime),
+            'Data_EndDate'                      => date('d/m | H:i:s', $progressEndTime),
+            'Data_EndDateExpand'                => prettyDate('d m Y', $progressEndTime, 1),
 
             'Data_RemoveElementFromQueueLinkHref' => $getQueueElementCancellationLinkHref([
                 'queueElementIdx'   => $queueIdx,
@@ -116,40 +150,11 @@ function render ($props) {
                 'mode'              => $queueElement['mode']
             ]),
 
-            'Data_CancelLock_class' => (
-                Elements\isCancellableOnceInProgress($elementID) ?
-                '' :
-                'premblock'
-            ),
-
-            'Data_ModeText' => (
-                $isUpgrading ?
-                $_Lang['Queue_Mode_Build_1'] :
-                $_Lang['Queue_Mode_Destroy_1']
-            ),
-            'Data_ModeColor' => (
-                $isUpgrading ?
-                'lime' :
-                'red'
-            ),
-            'Data_CancelBtn_Text' => (
-                $isFirstQueueElement ?
-                (
-                    (!Elements\isCancellableOnceInProgress($elementID)) ?
-                    $_Lang['Queue_Cancel_CantCancel'] :
-                    (
-                        $isUpgrading ?
-                        $_Lang['Queue_Cancel_Build'] :
-                        $_Lang['Queue_Cancel_Destroy']
-                    )
-                ) :
-                $_Lang['Queue_Cancel_Remove']
-            ),
-            'Data_BuildTimeLabel' => (
-                $isUpgrading ?
-                $_Lang['InfoBox_BuildTime'] :
-                $_Lang['InfoBox_DestroyTime']
-            ),
+            'Data_ModeText'                     => $elementModeLabelText,
+            'Data_CancelBtn_Text'               => $elementCancelButtonText,
+            'Data_BuildTimeLabel'               => $elementBuildTimeLabelText,
+            'Data_CancelLock_class'             => $elementCancellableClass,
+            'Data_ModeColor'                    => $elementModeLabelColorClass,
 
             'PHPInject_ChronoAppletScriptCode'  => $elementChronoAppletScript,
 
