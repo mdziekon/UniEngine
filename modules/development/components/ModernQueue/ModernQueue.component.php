@@ -67,6 +67,41 @@ function render ($props) {
             $elementLevel += 1;
         }
 
+        $elementChronoAppletScript = '';
+
+        if ($isFirstQueueElement) {
+            include_once($_EnginePath . '/includes/functions/InsertJavaScriptChronoApplet.php');
+
+            $elementChronoAppletScript = InsertJavaScriptChronoApplet(
+                'QueueFirstTimer',
+                '',
+                $progressEndTime,
+                true,
+                false,
+                'function() { onQueuesFirstElementFinished(); }'
+            );
+        }
+
+        $elementQueueRemovalLinkHref = '';
+
+        if ($isFirstQueueElement) {
+            $elementQueueRemovalLinkHref = buildHref([
+                'path' => 'buildings.php',
+                'query' => [
+                    'cmd' => 'cancel',
+                    'listid' => $listID
+                ]
+            ]);
+        } else {
+            $elementQueueRemovalLinkHref = buildHref([
+                'path' => 'buildings.php',
+                'query' => [
+                    'cmd' => 'remove',
+                    'listid' => $listID
+                ]
+            ]);
+        }
+
         $queueElementTplData = [
             'ListID'                => $listID,
             'ElementNo'             => $listID,
@@ -80,7 +115,9 @@ function render ($props) {
             'EndDate'               => date('d/m | H:i:s', $progressEndTime),
             'EndDateExpand'         => prettyDate('d m Y', $progressEndTime, 1),
 
-            'ChronoAppletScript'    => '',
+            'Data_RemoveElementFromQueueLinkHref' => $elementQueueRemovalLinkHref,
+
+            'ChronoAppletScript'    => $elementChronoAppletScript,
             'Data_CancelLock_class' => (
                 Elements\isCancellableOnceInProgress($elementID) ?
                 '' :
@@ -121,35 +158,6 @@ function render ($props) {
             'EndTitleBeg'           => $_Lang['Queue_EndTitleBeg'],
             'EndTitleHour'          => $_Lang['Queue_EndTitleHour'],
         ];
-
-        if ($isFirstQueueElement) {
-            include_once($_EnginePath . '/includes/functions/InsertJavaScriptChronoApplet.php');
-
-            $queueElementTplData['ChronoAppletScript'] = InsertJavaScriptChronoApplet(
-                'QueueFirstTimer',
-                '',
-                $progressEndTime,
-                true,
-                false,
-                'function() { onQueuesFirstElementFinished(); }'
-            );
-
-            $queueElementTplData['Data_RemoveElementFromQueueLinkHref'] = buildHref([
-                'path' => 'buildings.php',
-                'query' => [
-                    'cmd' => 'cancel',
-                    'listid' => $listID
-                ]
-            ]);
-        } else {
-            $queueElementTplData['Data_RemoveElementFromQueueLinkHref'] = buildHref([
-                'path' => 'buildings.php',
-                'query' => [
-                    'cmd' => 'remove',
-                    'listid' => $listID
-                ]
-            ]);
-        }
 
         $queueElementsTplData[] = $queueElementTplData;
 
