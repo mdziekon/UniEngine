@@ -1,4 +1,4 @@
-{ChronoAppletScript}
+{PHPInject_ChronoAppletScriptCode}
 <tr>
     <th
         class="pad2"
@@ -6,7 +6,7 @@
         id="bxxQueueFirstTimer"
         colspan="2"
     >
-        {EndTimer}
+        {Data_EndTimer}
     </th>
 </tr>
 <tr>
@@ -20,9 +20,9 @@
                     valign="top"
                     style="width: 70px;"
                 >
-                    <a href="infos.php?gid={ElementID}">
+                    <a href="infos.php?gid={Data_ElementID}">
                         <img
-                            src="{SkinPath}gebaeude/{ElementID}.gif"
+                            src="{Data_SkinPath}gebaeude/{Data_ElementID}.gif"
                             width="64"
                             height="64"
                             class="buildImg"
@@ -33,25 +33,25 @@
                     style="text-align: left;"
                     valign="top"
                 >
-                    <a href="infos.php?gid={ElementID}">
-                        <b>{Name}</b>
+                    <a href="infos.php?gid={Data_ElementID}">
+                        <b>{Data_Name}</b>
                     </a>
                     <br />
                     <b>
-                        {LevelText} {Level},
+                        {Lang_LevelText} {Data_Level},
                     </b>
-                    <b class="{ModeColor}">
-                        {ModeText}
+                    <b class="{Data_ModeColor}">
+                        {Data_ModeText}
                     </b>
                     <br /><br />
                     <b>
-                        {EndText}:
+                        {Lang_EndText}:
                     </b>
                     <b
                         class="lime endDate"
-                        title="<center>{EndTitleBeg} {EndDateExpand}<br/>{EndTitleHour} {EndTimeExpand}</center>"
+                        title="<center>{Lang_EndTitleBeg} {Data_EndDateExpand}<br/>{Lang_EndTitleHour} {Data_EndTimeExpand}</center>"
                     >
-                        {EndDate}
+                        {Data_EndDate}
                     </b>
                 </td>
             </tr>
@@ -68,7 +68,7 @@
             href="{Data_RemoveElementFromQueueLinkHref}"
             class="cancelQueue {Data_CancelLock_class}"
         >
-            {Lang_CancelBtn_Text}
+            {Data_CancelBtn_Text}
         </a>
     </th>
 </tr>

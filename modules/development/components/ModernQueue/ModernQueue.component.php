@@ -103,37 +103,38 @@ function render ($props) {
         }
 
         $queueElementTplData = [
-            'ListID'                => $listID,
-            'ElementNo'             => $listID,
-            'ElementID'             => $elementID,
-            'Name'                  => $_Lang['tech'][$elementID],
-            'Level'                 => $elementLevel,
-            'PlanetID'              => $planet['id'],
-            'BuildTime'             => pretty_time($progressDuration),
-            'EndTimer'              => pretty_time($progressTimeLeft, true, 'D'),
-            'EndTimeExpand'         => date('H:i:s', $progressEndTime),
-            'EndDate'               => date('d/m | H:i:s', $progressEndTime),
-            'EndDateExpand'         => prettyDate('d m Y', $progressEndTime, 1),
+            'Data_SkinPath'              => $_SkinPath,
+            'Data_ListID'                => $listID,
+            'Data_ElementNo'             => $listID,
+            'Data_ElementID'             => $elementID,
+            'Data_Name'                  => $_Lang['tech'][$elementID],
+            'Data_Level'                 => $elementLevel,
+            'Data_PlanetID'              => $planet['id'],
+            'Data_BuildTime'             => pretty_time($progressDuration),
+            'Data_EndTimer'              => pretty_time($progressTimeLeft, true, 'D'),
+            'Data_EndTimeExpand'         => date('H:i:s', $progressEndTime),
+            'Data_EndDate'               => date('d/m | H:i:s', $progressEndTime),
+            'Data_EndDateExpand'         => prettyDate('d m Y', $progressEndTime, 1),
 
             'Data_RemoveElementFromQueueLinkHref' => $elementQueueRemovalLinkHref,
 
-            'ChronoAppletScript'    => $elementChronoAppletScript,
             'Data_CancelLock_class' => (
                 Elements\isCancellableOnceInProgress($elementID) ?
                 '' :
                 'premblock'
             ),
-            'ModeText'              => (
+
+            'Data_ModeText' => (
                 $isUpgrading ?
                 $_Lang['Queue_Mode_Build_1'] :
                 $_Lang['Queue_Mode_Destroy_1']
             ),
-            'ModeColor'             => (
+            'Data_ModeColor' => (
                 $isUpgrading ?
                 'lime' :
                 'red'
             ),
-            'Lang_CancelBtn_Text'   => (
+            'Data_CancelBtn_Text' => (
                 $isFirstQueueElement ?
                 (
                     (!Elements\isCancellableOnceInProgress($elementID)) ?
@@ -146,17 +147,18 @@ function render ($props) {
                 ) :
                 $_Lang['Queue_Cancel_Remove']
             ),
-            'InfoBox_BuildTime'     => (
+            'Data_BuildTimeLabel' => (
                 $isUpgrading ?
                 $_Lang['InfoBox_BuildTime'] :
                 $_Lang['InfoBox_DestroyTime']
             ),
 
-            'SkinPath'              => $_SkinPath,
-            'LevelText'             => $_Lang['level'],
-            'EndText'               => $_Lang['Queue_EndTime'],
-            'EndTitleBeg'           => $_Lang['Queue_EndTitleBeg'],
-            'EndTitleHour'          => $_Lang['Queue_EndTitleHour'],
+            'PHPInject_ChronoAppletScriptCode'  => $elementChronoAppletScript,
+
+            'Lang_LevelText'                    => $_Lang['level'],
+            'Lang_EndText'                      => $_Lang['Queue_EndTime'],
+            'Lang_EndTitleBeg'                  => $_Lang['Queue_EndTitleBeg'],
+            'Lang_EndTitleHour'                 => $_Lang['Queue_EndTitleHour'],
         ];
 
         $queueElementsTplData[] = $queueElementTplData;

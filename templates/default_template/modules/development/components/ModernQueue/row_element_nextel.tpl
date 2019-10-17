@@ -6,19 +6,19 @@
         class="pad2 w20x"
         rowspan="2"
     >
-        {ElementNo}
+        {Data_ElementNo}
     </th>
     <th class="pad2">
-        <a href="infos.php?gid={ElementID}">
-            {Name}
+        <a href="infos.php?gid={Data_ElementID}">
+            {Data_Name}
         </a>
-        ({LevelText} {Level}, <b class="{ModeColor}">{ModeText}</b>)
+        ({Lang_LevelText} {Data_Level}, <b class="{Data_ModeColor}">{Data_ModeText}</b>)
         <br />
         <b
             class="lime endDate"
-            title="<center>{EndTitleBeg} {EndDateExpand}<br/>{EndTitleHour} {EndTimeExpand}<br/>({InfoBox_BuildTime}: {BuildTime})</center>"
+            title="<center>{Lang_EndTitleBeg} {Data_EndDateExpand}<br/>{Lang_EndTitleHour} {Data_EndTimeExpand}<br/>({Data_BuildTimeLabel}: {Data_BuildTime})</center>"
         >
-            {EndDate}
+            {Data_EndDate}
         </b>
     </th>
 </tr>
@@ -28,7 +28,7 @@
         colspan="2"
     >
         <a href="{Data_RemoveElementFromQueueLinkHref}">
-            {Lang_CancelBtn_Text}
+            {Data_CancelBtn_Text}
         </a>
     </th>
 </tr>
