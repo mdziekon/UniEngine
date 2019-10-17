@@ -65,7 +65,7 @@
     >
         <a
             id="QueueCancel"
-            href="buildings.php?listid={ListID}&amp;cmd=cancel"
+            href="{Data_RemoveElementFromQueueLinkHref}"
             class="cancelQueue {Data_CancelLock_class}"
         >
             {Lang_CancelBtn_Text}

@@ -9,7 +9,7 @@
         </b>
     </td>
     <td class="k">
-        <a href="buildings.php?listid={Data_ListID}&amp;cmd=remove&amp;planet={Data_PlanetID}">
+        <a href="{Data_RemoveElementFromQueueLinkHref}">
             {Lang_DeleteNextElement}
         </a>
         <br/><br/>

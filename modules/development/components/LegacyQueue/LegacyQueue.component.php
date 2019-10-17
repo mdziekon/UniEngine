@@ -81,6 +81,26 @@ function render ($props) {
             );
         }
 
+        $elementQueueRemovalLinkHref = '';
+
+        if ($isFirstQueueElement) {
+            $elementQueueRemovalLinkHref = buildHref([
+                'path' => 'buildings.php',
+                'query' => [
+                    'cmd' => 'cancel',
+                    'listid' => $listID
+                ]
+            ]);
+        } else {
+            $elementQueueRemovalLinkHref = buildHref([
+                'path' => 'buildings.php',
+                'query' => [
+                    'cmd' => 'remove',
+                    'listid' => $listID
+                ]
+            ]);
+        }
+
         $queueElementTplData = [
             'Data_ListID'                           => $listID,
             'Data_ElementName'                      => $_Lang['tech'][$elementID],
@@ -88,8 +108,10 @@ function render ($props) {
             'Data_PlanetID'                         => $planetID,
             'Data_BuildTimeEndFormatted'            => pretty_time($progressTimeLeft, true, 'D'),
             'Data_ElementProgressEndTimeDatepoint'  => date('d/m | H:i:s', $progressEndTime),
-            'Data_ElementCancellableClass'          => $elementCancellableClass,
 
+            'Data_RemoveElementFromQueueLinkHref'   => $elementQueueRemovalLinkHref,
+
+            'Data_ElementCancellableClass'          => $elementCancellableClass,
             'Data_HideIsDowngradeLabelClass'        => $hideIsDowngradeLabelClass,
 
             'PHPInject_ChronoAppletScriptCode'      => $elementChronoAppletScript,

@@ -27,7 +27,7 @@
         class="pad2"
         colspan="2"
     >
-        <a href="buildings.php?listid={ListID}&amp;cmd=remove">
+        <a href="{Data_RemoveElementFromQueueLinkHref}">
             {Lang_CancelBtn_Text}
         </a>
     </th>

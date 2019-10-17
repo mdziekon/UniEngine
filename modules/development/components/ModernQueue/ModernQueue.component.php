@@ -133,6 +133,22 @@ function render ($props) {
                 false,
                 'function() { onQueuesFirstElementFinished(); }'
             );
+
+            $queueElementTplData['Data_RemoveElementFromQueueLinkHref'] = buildHref([
+                'path' => 'buildings.php',
+                'query' => [
+                    'cmd' => 'cancel',
+                    'listid' => $listID
+                ]
+            ]);
+        } else {
+            $queueElementTplData['Data_RemoveElementFromQueueLinkHref'] = buildHref([
+                'path' => 'buildings.php',
+                'query' => [
+                    'cmd' => 'remove',
+                    'listid' => $listID
+                ]
+            ]);
         }
 
         $queueElementsTplData[] = $queueElementTplData;

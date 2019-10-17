@@ -17,7 +17,7 @@
         <div>
             <a
                 id="QueueCancel"
-                href="buildings.php?listid={Data_ListID}&amp;cmd=cancel&amp;planet={Data_PlanetID}"
+                href="{Data_RemoveElementFromQueueLinkHref}"
                 class="cancelQueue {Data_ElementCancellableClass}"
             >
                 {Lang_DeleteFirstElement}
