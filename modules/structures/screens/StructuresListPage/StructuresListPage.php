@@ -405,7 +405,6 @@ function render (&$CurrentPlanet, $CurrentUser) {
         }
 
         $queueComponent = ModernQueue\render([
-            'user' => &$CurrentUser,
             'planet' => &$CurrentPlanet,
             'queue' => Planets\Queues\parseStructuresQueueString($CurrentPlanet['buildQueue']),
             'queueMaxLength' => Users\getMaxStructuresQueueLength($CurrentUser),

@@ -6,7 +6,6 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 
 //  Arguments
 //      - $props (Object)
-//          - user (Object)
 //          - planet (Object)
 //          - queue (Array<QueueElement>)
 //              QueueElement: Object
@@ -28,7 +27,6 @@ function render ($props) {
     includeLang('worldElements.detailed');
 
     $planet = &$props['planet'];
-    $user = &$props['user'];
     $queue = $props['queue'];
     $queueMaxLength = $props['queueMaxLength'];
     $currentTimestamp = $props['timestamp'];
