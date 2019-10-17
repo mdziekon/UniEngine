@@ -409,7 +409,22 @@ function render (&$CurrentPlanet, $CurrentUser) {
             'queue' => Planets\Queues\parseStructuresQueueString($CurrentPlanet['buildQueue']),
             'queueMaxLength' => Users\getMaxStructuresQueueLength($CurrentUser),
             'timestamp' => $currentTimestamp,
-            'infoComponents' => []
+            'infoComponents' => [],
+
+            'getQueueElementCancellationLinkHref' => function ($queueElement) {
+                $queueElementIdx = $queueElement['queueElementIdx'];
+                $listID = $queueElement['listID'];
+                $isFirstQueueElement = ($queueElementIdx === 0);
+                $cmd = ($isFirstQueueElement ? "cancel" : "remove");
+
+                return buildHref([
+                    'path' => 'buildings.php',
+                    'query' => [
+                        'cmd' => $cmd,
+                        'listid' => $listID
+                    ]
+                ]);
+            }
         ]);
 
         $Parse['Create_Queue'] = $queueComponent['componentHTML'];
@@ -428,7 +443,22 @@ function render (&$CurrentPlanet, $CurrentUser) {
             $queueComponent = LegacyQueue\render([
                 'planet' => $CurrentPlanet,
                 'queue' => Planets\Queues\parseStructuresQueueString($CurrentPlanet['buildQueue']),
-                'currentTimestamp' => $currentTimestamp
+                'currentTimestamp' => $currentTimestamp,
+
+                'getQueueElementCancellationLinkHref' => function ($queueElement) {
+                    $queueElementIdx = $queueElement['queueElementIdx'];
+                    $listID = $queueElement['listID'];
+                    $isFirstQueueElement = ($queueElementIdx === 0);
+                    $cmd = ($isFirstQueueElement ? "cancel" : "remove");
+
+                    return buildHref([
+                        'path' => 'buildings.php',
+                        'query' => [
+                            'cmd' => $cmd,
+                            'listid' => $listID
+                        ]
+                    ]);
+                }
             ]);
 
             $Parse['PHPInject_Queue'] = $queueComponent['componentHTML'];

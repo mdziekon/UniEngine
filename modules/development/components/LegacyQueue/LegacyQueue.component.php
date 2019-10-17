@@ -15,6 +15,14 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 //                  - endTimestamp (Number)
 //                  - mode (String)
 //          - currentTimestamp (Number)
+//          - getQueueElementCancellationLinkHref (Function: (ExtendedQueueElement) => String)
+//              ExtendedQueueElement: Object
+//                  - listID (Number)
+//                  - elementID (Number)
+//                  - level (Number)
+//                  - duration (Number)
+//                  - endTimestamp (Number)
+//                  - mode (String)
 //
 //  Returns: Object
 //      - componentHTML (String)
@@ -31,6 +39,7 @@ function render ($props) {
     $planet = $props['planet'];
     $queue = $props['queue'];
     $currentTimestamp = $props['currentTimestamp'];
+    $getQueueElementCancellationLinkHref = $props['getQueueElementCancellationLinkHref'];
 
     $planetID = $planet['id'];
 
@@ -81,26 +90,6 @@ function render ($props) {
             );
         }
 
-        $elementQueueRemovalLinkHref = '';
-
-        if ($isFirstQueueElement) {
-            $elementQueueRemovalLinkHref = buildHref([
-                'path' => 'buildings.php',
-                'query' => [
-                    'cmd' => 'cancel',
-                    'listid' => $listID
-                ]
-            ]);
-        } else {
-            $elementQueueRemovalLinkHref = buildHref([
-                'path' => 'buildings.php',
-                'query' => [
-                    'cmd' => 'remove',
-                    'listid' => $listID
-                ]
-            ]);
-        }
-
         $queueElementTplData = [
             'Data_ListID'                           => $listID,
             'Data_ElementName'                      => $_Lang['tech'][$elementID],
@@ -109,7 +98,15 @@ function render ($props) {
             'Data_BuildTimeEndFormatted'            => pretty_time($progressTimeLeft, true, 'D'),
             'Data_ElementProgressEndTimeDatepoint'  => date('d/m | H:i:s', $progressEndTime),
 
-            'Data_RemoveElementFromQueueLinkHref'   => $elementQueueRemovalLinkHref,
+            'Data_RemoveElementFromQueueLinkHref'   => $getQueueElementCancellationLinkHref([
+                'queueElementIdx'   => $queueIdx,
+                'listID'            => $listID,
+                'elementID'         => $queueElement['elementID'],
+                'level'             => $queueElement['level'],
+                'duration'          => $queueElement['duration'],
+                'endTimestamp'      => $queueElement['endTimestamp'],
+                'mode'              => $queueElement['mode']
+            ]),
 
             'Data_ElementCancellableClass'          => $elementCancellableClass,
             'Data_HideIsDowngradeLabelClass'        => $hideIsDowngradeLabelClass,

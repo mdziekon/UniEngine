@@ -17,6 +17,15 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 //          - queueMaxLength (Number)
 //          - timestamp (Number)
 //          - infoComponents (Array<String: componentHTML> | undefined)
+//          - getQueueElementCancellationLinkHref (Function: (ExtendedQueueElement) => String)
+//              ExtendedQueueElement: Object
+//                  - queueElementIdx (Number)
+//                  - listID (Number)
+//                  - elementID (Number)
+//                  - level (Number)
+//                  - duration (Number)
+//                  - endTimestamp (Number)
+//                  - mode (String)
 //
 //  Returns: Object
 //      - componentHTML (String)
@@ -35,6 +44,7 @@ function render ($props) {
         $props['infoComponents'] :
         []
     );
+    $getQueueElementCancellationLinkHref = $props['getQueueElementCancellationLinkHref'];
 
     $componentTPLData = [
         'queueElements' => [],
@@ -82,26 +92,6 @@ function render ($props) {
             );
         }
 
-        $elementQueueRemovalLinkHref = '';
-
-        if ($isFirstQueueElement) {
-            $elementQueueRemovalLinkHref = buildHref([
-                'path' => 'buildings.php',
-                'query' => [
-                    'cmd' => 'cancel',
-                    'listid' => $listID
-                ]
-            ]);
-        } else {
-            $elementQueueRemovalLinkHref = buildHref([
-                'path' => 'buildings.php',
-                'query' => [
-                    'cmd' => 'remove',
-                    'listid' => $listID
-                ]
-            ]);
-        }
-
         $queueElementTplData = [
             'Data_SkinPath'              => $_SkinPath,
             'Data_ListID'                => $listID,
@@ -116,7 +106,15 @@ function render ($props) {
             'Data_EndDate'               => date('d/m | H:i:s', $progressEndTime),
             'Data_EndDateExpand'         => prettyDate('d m Y', $progressEndTime, 1),
 
-            'Data_RemoveElementFromQueueLinkHref' => $elementQueueRemovalLinkHref,
+            'Data_RemoveElementFromQueueLinkHref' => $getQueueElementCancellationLinkHref([
+                'queueElementIdx'   => $queueIdx,
+                'listID'            => $listID,
+                'elementID'         => $queueElement['elementID'],
+                'level'             => $queueElement['level'],
+                'duration'          => $queueElement['duration'],
+                'endTimestamp'      => $queueElement['endTimestamp'],
+                'mode'              => $queueElement['mode']
+            ]),
 
             'Data_CancelLock_class' => (
                 Elements\isCancellableOnceInProgress($elementID) ?
