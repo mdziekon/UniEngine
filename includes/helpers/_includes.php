@@ -2,6 +2,7 @@
 
 $includePath = $_EnginePath . 'includes/helpers/';
 
+include($includePath . './common/collections.functions.php');
 include($includePath . './common/utils.functions.php');
 include($includePath . './common/time.functions.php');
 include($includePath . './common/navigation.functions.php');
