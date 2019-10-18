@@ -12,6 +12,7 @@ include($includePath . './world/elements.functions.php');
 include($includePath . './users/functions.php');
 include($includePath . './users/session.functions.php');
 include($includePath . './planets/functions.php');
+include($includePath . './planets/elements.functions.php');
 include($includePath . './planets/research.queues.functions.php');
 include($includePath . './planets/structures.queues.functions.php');
 include($includePath . './fleets/functions.php');
