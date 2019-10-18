@@ -24,6 +24,18 @@ function getFirstQueueElement($planet) {
     return $queue[0];
 }
 
+function hasElementInQueue($planet, $elementID) {
+    $queueString = getQueueString($planet);
+    $elementIDString = "{$elementID}";
+
+    $elementIDStringLength = strlen($elementIDString);
+
+    return (
+        substr($queueString, 0, ($elementIDStringLength + 1)) == "{$elementIDString}," ||
+        strstr($queueString, ";{$elementIDString},") !== false
+    );
+}
+
 function parseQueueString($queueString) {
     if (empty($queueString)) {
         return [];
