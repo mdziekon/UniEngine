@@ -1,15 +1,15 @@
 <?php
 
-namespace UniEngine\Engine\Includes\Helpers\Planets\Queues;
+namespace UniEngine\Engine\Includes\Helpers\Planets\Queues\Structures;
 
 function getQueueLength($planet) {
-    $queue = parseStructuresQueueString($planet['buildQueue']);
+    $queue = parseQueueString($planet['buildQueue']);
 
     return count($queue);
 }
 
 function getFirstQueueElement($planet) {
-    $queue = parseStructuresQueueString($planet['buildQueue']);
+    $queue = parseQueueString($planet['buildQueue']);
 
     if (count($queue) < 1) {
         return null;
@@ -18,7 +18,7 @@ function getFirstQueueElement($planet) {
     return $queue[0];
 }
 
-function parseStructuresQueueString($queueString) {
+function parseQueueString($queueString) {
     if (empty($queueString)) {
         return [];
     }
@@ -41,7 +41,7 @@ function parseStructuresQueueString($queueString) {
     );
 }
 
-function serializeStructuresQueue($queue) {
+function serializeQueue($queue) {
     $serializedElements = array_map(
         function ($queueElement) {
             $detailsAsArray = [

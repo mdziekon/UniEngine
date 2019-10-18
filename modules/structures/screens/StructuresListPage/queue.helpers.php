@@ -29,7 +29,7 @@ function getQueueStateDetails ($props) {
     $queuedElementLevelModifiers = [];
     $fieldsModifierByQueuedDowngrades = 0;
 
-    $buildingsQueue = Planets\Queues\parseStructuresQueueString($planet['buildQueue']);
+    $buildingsQueue = Planets\Queues\Structures\parseQueueString($planet['buildQueue']);
 
     $queueUnfinishedElementsCount = 0;
 

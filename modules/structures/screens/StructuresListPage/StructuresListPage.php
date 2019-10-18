@@ -406,7 +406,7 @@ function render (&$CurrentPlanet, $CurrentUser) {
 
         $queueComponent = ModernQueue\render([
             'planet' => &$CurrentPlanet,
-            'queue' => Planets\Queues\parseStructuresQueueString($CurrentPlanet['buildQueue']),
+            'queue' => Planets\Queues\Structures\parseQueueString($CurrentPlanet['buildQueue']),
             'queueMaxLength' => Users\getMaxStructuresQueueLength($CurrentUser),
             'timestamp' => $currentTimestamp,
             'infoComponents' => [],
@@ -442,7 +442,7 @@ function render (&$CurrentPlanet, $CurrentUser) {
         if ($hasElementsInQueue) {
             $queueComponent = LegacyQueue\render([
                 'planet' => $CurrentPlanet,
-                'queue' => Planets\Queues\parseStructuresQueueString($CurrentPlanet['buildQueue']),
+                'queue' => Planets\Queues\Structures\parseQueueString($CurrentPlanet['buildQueue']),
                 'currentTimestamp' => $currentTimestamp,
 
                 'getQueueElementCancellationLinkHref' => function ($queueElement) {

@@ -116,7 +116,7 @@ function _handleStructureCommandCancel(&$user, &$planet, $params) {
     include($_EnginePath . 'includes/functions/RemoveBuildingFromQueue.php');
     include($_EnginePath . 'includes/functions/CancelBuildingFromQueue.php');
 
-    $queueLength = Planets\Queues\getQueueLength($planet);
+    $queueLength = Planets\Queues\Structures\getQueueLength($planet);
 
     if ($queueLength === 0) {
         return [
@@ -127,7 +127,7 @@ function _handleStructureCommandCancel(&$user, &$planet, $params) {
         ];
     }
 
-    $queueFirstElement = Planets\Queues\getFirstQueueElement($planet);
+    $queueFirstElement = Planets\Queues\Structures\getFirstQueueElement($planet);
 
     if (!Elements\isCancellableOnceInProgress($queueFirstElement['elementID'])) {
         return [
@@ -172,7 +172,7 @@ function _handleStructureCommandRemove(&$user, &$planet, &$input, $params) {
         ];
     }
 
-    $queueLength = Planets\Queues\getQueueLength($planet);
+    $queueLength = Planets\Queues\Structures\getQueueLength($planet);
 
     if ($queueLength < $listElementIdx) {
         return [
@@ -252,7 +252,7 @@ function _handleStructureCommandInsert(&$user, &$planet, &$input, $params) {
         ];
     }
 
-    $queueLength = Planets\Queues\getQueueLength($planet);
+    $queueLength = Planets\Queues\Structures\getQueueLength($planet);
     $userMaxQueueLength = Users\getMaxStructuresQueueLength($user);
 
     if ($queueLength >= $userMaxQueueLength) {
