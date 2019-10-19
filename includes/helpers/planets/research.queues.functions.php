@@ -6,6 +6,10 @@ function getQueueString($planet) {
     return $planet['techQueue'];
 }
 
+function setQueueString(&$planet, $queueString) {
+    $planet['techQueue'] = $queueString;
+}
+
 function getQueueLength($planet) {
     $queueString = getQueueString($planet);
     $queue = parseQueueString($queueString);
