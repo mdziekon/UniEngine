@@ -1,63 +1,58 @@
 <?php
 
-function TechQueue_Add(&$ThePlanet, &$TheUser, $TechID)
-{
-    global $_Vars_GameElements;
+use UniEngine\Engine\Includes\Helpers\Planets;
 
-    if($TheUser['techQueue_EndTime'] > 0 AND $TheUser['techQueue_Planet'] != $ThePlanet['id'])
-    {
+function TechQueue_Add(&$planet, &$user, $newElementID) {
+    $currentTimestamp = time();
+
+    if (
+        $user['techQueue_EndTime'] > 0 &&
+        $user['techQueue_Planet'] != $planet['id']
+    ) {
         return false;
     }
 
-    if(!empty($ThePlanet['techQueue']))
-    {
-        $Queue = explode(';', $ThePlanet['techQueue']);
-        $QueueLength = count($Queue);
-    }
-    else
-    {
-        $Queue = [];
-        $QueueLength = 0;
-    }
+    $queueString = Planets\Queues\Research\getQueueString($planet);
+    $queue = Planets\Queues\Research\parseQueueString($queueString);
+    $queueLength = count($queue);
+    $isFirstElement = ($queueLength === 0);
 
-    $Modifier = [];
+    $tempUser = $user;
 
-    if($QueueLength > 0)
-    {
-        foreach($Queue as $QueueElement)
-        {
-            $QueueElement = explode(',', $QueueElement);
-            if(!isset($Modifier[$_Vars_GameElements[$QueueElement[0]]]))
-            {
-                $Modifier[$_Vars_GameElements[$QueueElement[0]]] = 0;
-            }
-            $Modifier[$_Vars_GameElements[$QueueElement[0]]] += 1;
-            $TheUser[$_Vars_GameElements[$QueueElement[0]]] += 1;
-            $StartTime = $QueueElement[3];
-        }
-    }
-    else
-    {
-        $StartTime = 0;
-    }
-    if($StartTime <= 0)
-    {
-        $StartTime = time();
-    }
-    $Time = GetBuildingTime($TheUser, $ThePlanet, $TechID);
-    $EndTime = $StartTime + $Time;
-    $NextLevel = $TheUser[$_Vars_GameElements[$TechID]] + 1;
+    foreach ($queue as $queueElement) {
+        $elementID = $queueElement['elementID'];
+        $elementPlanetKey = _getElementUserKey($elementID);
 
-    $Queue[] = "{$TechID},{$NextLevel},{$Time},{$EndTime}";
-
-    $ThePlanet['techQueue'] = implode(';', $Queue);
-
-    foreach($Modifier as $ElementField => $Value)
-    {
-        $TheUser[$ElementField] -= $Value;
+        $tempUser[$elementPlanetKey] += 1;
     }
 
-    return true;
+    $newElementPlanetKey = _getElementUserKey($newElementID);
+    $newElementLevel = ($tempUser[$newElementPlanetKey] + 1);
+    $newElementProgressTimeMultiplier = 1;
+    $newElementProgressTime = (
+        GetBuildingTime($tempUser, $planet, $newElementID) *
+        $newElementProgressTimeMultiplier
+    );
+    $newElementStartTimestamp = (
+        $isFirstElement ?
+        $currentTimestamp :
+        $queue[$queueLength - 1]['endTimestamp']
+    );
+    $newElementEndTimestamp = ($newElementStartTimestamp + $newElementProgressTime);
+
+    $newQueueElement = [
+        'elementID' => $newElementID,
+        'level' => $newElementLevel,
+        'duration' => $newElementProgressTime,
+        'endTimestamp' => $newElementEndTimestamp
+    ];
+
+    $queue[] = $newQueueElement;
+
+    Planets\Queues\Research\setQueueString(
+        $planet,
+        Planets\Queues\Research\serializeQueue($queue)
+    );
 }
 
 ?>
