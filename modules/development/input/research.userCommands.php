@@ -237,14 +237,27 @@ function _handleResearchCommandCancel(&$user, &$researchPlanet, &$input, $params
         ];
     }
 
-    include($_EnginePath . 'includes/functions/TechQueue_Remove.php');
+    $highlightElementID = null;
 
-    $highlightElementID = TechQueue_Remove(
-        $researchPlanet,
-        $user,
-        $queueElementIdx,
-        $timestamp
-    );
+    if ($queueElementIdx === 0) {
+        include($_EnginePath . 'includes/functions/TechQueue_Remove.php');
+
+        $highlightElementID = TechQueue_Remove(
+            $researchPlanet,
+            $user,
+            $queueElementIdx,
+            $timestamp
+        );
+    } else {
+        include($_EnginePath . 'includes/functions/TechQueue_RemoveQueued.php');
+
+        $highlightElementID = TechQueue_RemoveQueued(
+            $researchPlanet,
+            $user,
+            $queueElementIdx,
+            $timestamp
+        );
+    }
 
     $wasUserUpdated = (
         $highlightElementID !== false &&
