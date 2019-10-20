@@ -15,7 +15,8 @@ function RemoveBuildingFromQueue(&$planet, $user, $listID, $params) {
     $removedElementIdx = $listID - 1;
     $currentTimestamp = $params['currentTimestamp'];
 
-    $queue = Planets\Queues\Structures\parseQueueString($planet['buildQueue']);
+    $queueString = Planets\Queues\Structures\getQueueString($planet);
+    $queue = Planets\Queues\Structures\parseQueueString($queueString);
 
     $removedQueueElement = $queue[$removedElementIdx];
     $removedElementID = $removedQueueElement['elementID'];
@@ -81,7 +82,10 @@ function RemoveBuildingFromQueue(&$planet, $user, $listID, $params) {
         $newQueue[] = $newQueueElement;
     }
 
-    $planet['buildQueue'] = Planets\Queues\Structures\serializeQueue($newQueue);
+    Planets\Queues\Structures\setQueueString(
+        $planet,
+        Planets\Queues\Structures\serializeQueue($newQueue)
+    );
 
     return $removedElementID;
 }

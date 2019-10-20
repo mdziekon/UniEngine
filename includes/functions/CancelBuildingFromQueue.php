@@ -15,7 +15,8 @@ function CancelBuildingFromQueue(&$planet, $user, $params) {
 
     $currentTimestamp = $params['currentTimestamp'];
 
-    $queue = Planets\Queues\Structures\parseQueueString($planet['buildQueue']);
+    $queueString = Planets\Queues\Structures\getQueueString($planet);
+    $queue = Planets\Queues\Structures\parseQueueString($queueString);
 
     $firstQueueElement = $queue[0];
     $elementID = $firstQueueElement['elementID'];

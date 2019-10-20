@@ -13,7 +13,8 @@ use UniEngine\Engine\Includes\Helpers\Planets;
 function AddBuildingToQueue(&$planet, $user, $newElementID, $newElementIsUpgrading, $params) {
     $currentTimestamp = $params['currentTimestamp'];
 
-    $queue = Planets\Queues\Structures\parseQueueString($planet['buildQueue']);
+    $queueString = Planets\Queues\Structures\getQueueString($planet);
+    $queue = Planets\Queues\Structures\parseQueueString($queueString);
     $queueLength = count($queue);
     $isFirstElement = ($queueLength === 0);
 
@@ -59,7 +60,10 @@ function AddBuildingToQueue(&$planet, $user, $newElementID, $newElementIsUpgradi
 
     $queue[] = $newQueueElement;
 
-    $planet['buildQueue'] = Planets\Queues\Structures\serializeQueue($queue);
+    Planets\Queues\Structures\setQueueString(
+        $planet,
+        Planets\Queues\Structures\serializeQueue($queue)
+    );
 
     return count($queue);
 }
