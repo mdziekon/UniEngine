@@ -4,8 +4,16 @@ use UniEngine\Engine\Includes\Helpers\Planets;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 use UniEngine\Engine\Includes\Helpers\World\Resources;
 
-function TechQueue_Remove(&$planet, &$user, $currentTimestamp) {
+//  Arguments:
+//      - $planet (Object)
+//      - $user (Object)
+//      - $params (Object)
+//          - currentTimestamp (Number)
+//
+function TechQueue_Remove(&$planet, &$user, $params) {
     global $UserDev_Log;
+
+    $currentTimestamp = $params['currentTimestamp'];
 
     $queueString = Planets\Queues\Research\getQueueString($planet);
     $queue = Planets\Queues\Research\parseQueueString($queueString);
@@ -18,7 +26,7 @@ function TechQueue_Remove(&$planet, &$user, $currentTimestamp) {
         $planet,
         $user,
         0,
-        $currentTimestamp
+        [ "currentTimestamp" => $currentTimestamp ]
     );
 
     $purchaseCost = Elements\calculatePurchaseCost(

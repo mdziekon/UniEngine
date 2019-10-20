@@ -2,7 +2,17 @@
 
 use UniEngine\Engine\Includes\Helpers\Planets;
 
-function TechQueue_RemoveQueued(&$planet, &$user, $removedElementIdx, $currentTimestamp) {
+//  Arguments:
+//      - $planet (Object)
+//      - $user (Object)
+//      - $removedElementIdx (Number)
+//          - Index of the item to be removed. Starts from 0.
+//      - $params (Object)
+//          - currentTimestamp (Number)
+//
+function TechQueue_RemoveQueued(&$planet, &$user, $removedElementIdx, $params) {
+    $currentTimestamp = $params['currentTimestamp'];
+
     $queueString = Planets\Queues\Research\getQueueString($planet);
     $queue = Planets\Queues\Research\parseQueueString($queueString);
 

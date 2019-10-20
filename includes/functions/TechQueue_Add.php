@@ -2,8 +2,15 @@
 
 use UniEngine\Engine\Includes\Helpers\Planets;
 
-function TechQueue_Add(&$planet, &$user, $newElementID) {
-    $currentTimestamp = time();
+//  Arguments:
+//      - $planet (Object)
+//      - $user (Object)
+//      - $newElementID (String)
+//      - $params (Object)
+//          - currentTimestamp (Number)
+//
+function TechQueue_Add(&$planet, &$user, $newElementID, $params) {
+    $currentTimestamp = $params['currentTimestamp'];
 
     if (
         $user['techQueue_EndTime'] > 0 &&

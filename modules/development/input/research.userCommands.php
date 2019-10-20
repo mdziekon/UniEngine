@@ -184,7 +184,8 @@ function _handleResearchCommandInsert(&$user, &$researchPlanet, &$input, $params
     TechQueue_Add(
         $researchPlanet,
         $user,
-        $elementID
+        $elementID,
+        [ "currentTimestamp" => $timestamp ]
     );
 
     return [
@@ -246,7 +247,7 @@ function _handleResearchCommandCancel(&$user, &$researchPlanet, &$input, $params
         $highlightElementID = TechQueue_Remove(
             $researchPlanet,
             $user,
-            $timestamp
+            [ "currentTimestamp" => $timestamp ]
         );
     } else {
         include($_EnginePath . 'includes/functions/TechQueue_RemoveQueued.php');
@@ -255,7 +256,7 @@ function _handleResearchCommandCancel(&$user, &$researchPlanet, &$input, $params
             $researchPlanet,
             $user,
             $queueElementIdx,
-            $timestamp
+            [ "currentTimestamp" => $timestamp ]
         );
     }
 
