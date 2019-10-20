@@ -1,74 +1,61 @@
 <?php
 
-function TechQueue_Remove(&$ThePlanet, &$TheUser, $ElementID, $CurrentTime)
-{
-    global $_Vars_GameElements, $UserDev_Log;
+use UniEngine\Engine\Includes\Helpers\Planets;
+use UniEngine\Engine\Includes\Helpers\World\Elements;
+use UniEngine\Engine\Includes\Helpers\World\Resources;
 
-    $ElementID = intval($ElementID);
-    if($ElementID < 0)
-    {
-        $ElementID = 0;
-    }
+function TechQueue_Remove(&$planet, &$user, $currentTimestamp) {
+    global $UserDev_Log;
 
-    if(!empty($ThePlanet['techQueue']))
-    {
-        $Queue = explode(';', $ThePlanet['techQueue']);
-        $QueueLength = count($Queue);
-        if($QueueLength >= $ElementID)
-        {
-            $NewQueue = array();
-            $TempUser = $TheUser;
-            $RemovedTime = 0;
-            foreach($Queue as $QueueID => $QueueElement)
-            {
-                $QueueElement = explode(',', $QueueElement);
-                if($ElementID > $QueueID)
-                {
-                    $TempUser[$_Vars_GameElements[$QueueElement[0]]] += 1;
-                    $NewQueue[] = implode(',', $QueueElement);
-                    continue;
-                }
-                if($ElementID == $QueueID)
-                {
-                    $RemovedID = $QueueElement[0];
-                    if($ElementID == 0)
-                    {
-                        $Needed = GetBuildingPrice($TempUser, $ThePlanet, $RemovedID);
-                        $ThePlanet['metal'] += $Needed['metal'];
-                        $ThePlanet['crystal'] += $Needed['crystal'];
-                        $ThePlanet['deuterium'] += $Needed['deuterium'];
-                        $UserDev_Log[] = array('PlanetID' => $ThePlanet['id'], 'Date' => $CurrentTime, 'Place' => 4, 'Code' => 2, 'ElementID' => $RemovedID);
-                        $ThePlanet['techQueue_firstEndTime'] = 0;
-                        if($QueueLength == 1)
-                        {
-                            $TheUser['techQueue_Planet'] = '0';
-                            $TheUser['techQueue_EndTime'] = '0';
-                        }
-                        $RemovedTime = $QueueElement[3] - $CurrentTime;
-                    }
-                    else
-                    {
-                        $RemovedTime = $QueueElement[2];
-                    }
-                }
-                else
-                {
-                    $TempTime = GetBuildingTime($TempUser, $ThePlanet, $QueueElement[0]);
-                    $TempUser[$_Vars_GameElements[$QueueElement[0]]] += 1;
-                    $RemovedTime += ($QueueElement[2] - $TempTime);
-                    $QueueElement[1] = $TempUser[$_Vars_GameElements[$QueueElement[0]]];
-                    $QueueElement[2] = $TempTime;
-                    $QueueElement[3] -= $RemovedTime;
-                    $NewQueue[] = implode(',', $QueueElement);
-                }
-            }
-            $ThePlanet['techQueue'] = implode(';', $NewQueue);
+    $queueString = Planets\Queues\Research\getQueueString($planet);
+    $queue = Planets\Queues\Research\parseQueueString($queueString);
 
-            return isset($RemovedID) ? $RemovedID : null;
+    $queueLength = count($queue);
+    $firstQueueElement = $queue[0];
+    $elementID = $firstQueueElement['elementID'];
+
+    TechQueue_RemoveQueued(
+        $planet,
+        $user,
+        0,
+        $currentTimestamp
+    );
+
+    $purchaseCost = Elements\calculatePurchaseCost(
+        $elementID,
+        Elements\getElementState($elementID, $planet, $user),
+        [
+            'purchaseMode' => Elements\PurchaseMode::Upgrade
+        ]
+    );
+
+    foreach ($purchaseCost as $costResourceKey => $costValue) {
+        if (
+            !Resources\isPlanetaryResource($costResourceKey) ||
+            !Resources\isSpendableResource($costResourceKey)
+        ) {
+            continue;
         }
+
+        $planet[$costResourceKey] += $costValue;
     }
 
-    return false;
+    $planet['techQueue_firstEndTime'] = 0;
+    if ($queueLength === 1) {
+        $user['techQueue_Planet'] = '0';
+        $user['techQueue_EndTime'] = '0';
+    }
+
+    $newDevlogEntry = [
+        'PlanetID'  => $planet['id'],
+        'Date'      => $currentTimestamp,
+        'Place'     => 4,
+        'Code'      => 2,
+        'ElementID' => $elementID
+    ];
+    $UserDev_Log[] = $newDevlogEntry;
+
+    return $elementID;
 }
 
 ?>

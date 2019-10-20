@@ -241,11 +241,11 @@ function _handleResearchCommandCancel(&$user, &$researchPlanet, &$input, $params
 
     if ($queueElementIdx === 0) {
         include($_EnginePath . 'includes/functions/TechQueue_Remove.php');
+        include($_EnginePath . 'includes/functions/TechQueue_RemoveQueued.php');
 
         $highlightElementID = TechQueue_Remove(
             $researchPlanet,
             $user,
-            $queueElementIdx,
             $timestamp
         );
     } else {
