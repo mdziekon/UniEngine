@@ -218,7 +218,7 @@ function _handleResearchCommandCancel(&$user, &$researchPlanet, &$input, $params
 
     $queueLength = Planets\Queues\Research\getQueueLength($researchPlanet);
 
-    if ($queueLength < $queueElementIdx) {
+    if ($queueLength <= $queueElementIdx) {
         return [
             'isSuccess' => false,
             'error' => [
