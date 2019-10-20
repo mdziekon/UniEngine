@@ -227,15 +227,17 @@ function _handleResearchCommandCancel(&$user, &$researchPlanet, &$input, $params
         ];
     }
 
-    $queueFirstElement = Planets\Queues\Research\getFirstQueueElement($researchPlanet);
+    if ($queueElementIdx === 0) {
+        $queueFirstElement = Planets\Queues\Research\getFirstQueueElement($researchPlanet);
 
-    if (!Elements\isCancellableOnceInProgress($queueFirstElement['elementID'])) {
-        return [
-            'isSuccess' => false,
-            'error' => [
-                'notCancellable' => true
-            ]
-        ];
+        if (!Elements\isCancellableOnceInProgress($queueFirstElement['elementID'])) {
+            return [
+                'isSuccess' => false,
+                'error' => [
+                    'notCancellable' => true
+                ]
+            ];
+        }
     }
 
     $highlightElementID = null;
