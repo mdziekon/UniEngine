@@ -21,13 +21,13 @@ function TechQueue_Add(&$planet, &$user, $newElementID, $params) {
 
     foreach ($queue as $queueElement) {
         $elementID = $queueElement['elementID'];
-        $elementPlanetKey = _getElementUserKey($elementID);
+        $elementUserKey = _getElementUserKey($elementID);
 
-        $tempUser[$elementPlanetKey] += 1;
+        $tempUser[$elementUserKey] += 1;
     }
 
-    $newElementPlanetKey = _getElementUserKey($newElementID);
-    $newElementLevel = ($tempUser[$newElementPlanetKey] + 1);
+    $newElementUserKey = _getElementUserKey($newElementID);
+    $newElementLevel = ($tempUser[$newElementUserKey] + 1);
     $newElementProgressTimeMultiplier = 1;
     $newElementProgressTime = (
         GetBuildingTime($tempUser, $planet, $newElementID) *
