@@ -81,7 +81,10 @@ function handleResearchCommand(&$user, &$researchPlanet, &$input, $params) {
                 $user,
                 $researchPlanet,
                 $input,
-                [ 'timestamp' => $timestamp ]
+                [
+                    'timestamp' => $timestamp,
+                    'currentPlanet' => $currentPlanet
+                ]
             );
 
             break;
@@ -146,11 +149,13 @@ function handleResearchCommand(&$user, &$researchPlanet, &$input, $params) {
 //      - $input
 //      - $params (Object)
 //          - timestamp (Number)
+//          - currentPlanet (Object)
 //
 function _handleResearchCommandInsert(&$user, &$researchPlanet, &$input, $params) {
     global $_EnginePath;
 
     $timestamp = $params['timestamp'];
+    $currentPlanet = $params['currentPlanet'];
 
     $elementID = (
         isset($input['tech']) ?
@@ -175,6 +180,18 @@ function _handleResearchCommandInsert(&$user, &$researchPlanet, &$input, $params
             'isSuccess' => false,
             'error' => [
                 'queueFull' => true
+            ]
+        ];
+    }
+
+    if (
+        $user['techQueue_EndTime'] > 0 &&
+        $user['techQueue_Planet'] != $currentPlanet['id']
+    ) {
+        return [
+            'isSuccess' => false,
+            'error' => [
+                'differentResearchPlanet' => true
             ]
         ];
     }

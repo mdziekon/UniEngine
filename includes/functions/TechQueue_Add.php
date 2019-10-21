@@ -12,13 +12,6 @@ use UniEngine\Engine\Includes\Helpers\Planets;
 function TechQueue_Add(&$planet, &$user, $newElementID, $params) {
     $currentTimestamp = $params['currentTimestamp'];
 
-    if (
-        $user['techQueue_EndTime'] > 0 &&
-        $user['techQueue_Planet'] != $planet['id']
-    ) {
-        return false;
-    }
-
     $queueString = Planets\Queues\Research\getQueueString($planet);
     $queue = Planets\Queues\Research\parseQueueString($queueString);
     $queueLength = count($queue);
