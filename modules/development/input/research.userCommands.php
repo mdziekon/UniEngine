@@ -262,10 +262,7 @@ function _handleResearchCommandCancel(&$user, &$researchPlanet, &$input, $params
         );
     }
 
-    $wasUserUpdated = (
-        $highlightElementID !== false &&
-        $user['techQueue_Planet'] == '0'
-    );
+    $wasUserUpdated = ($user['techQueue_Planet'] == '0');
 
     return [
         'isSuccess' => true,
