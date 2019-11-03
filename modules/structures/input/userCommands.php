@@ -240,8 +240,8 @@ function _handleStructureCommandInsert(&$user, &$planet, &$input, $params) {
 
     if (
         $elementID == 31 &&
-        $planet['techQueue_Planet'] > 0 &&
-        $planet['techQueue_EndTime'] > 0 &&
+        $user['techQueue_Planet'] > 0 &&
+        $user['techQueue_EndTime'] > 0 &&
         !isLabUpgradableWhileInUse()
     ) {
         return [
