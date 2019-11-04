@@ -579,6 +579,11 @@ function calculateRealResourceIncome($resourceKey, &$planet, $params) {
     $resourceCurrentAmount = $planet[$resourceKey];
     $resourceMaxStorage = ($planet["{$resourceKey}_max"] * MAX_OVERFLOW);
 
+    // FIXME: this should be removed as it prevents "negative income" from being
+    // calculated when storage is considered full.
+    // Be aware that it will also require to change how later storage check
+    // is performed to prevent any resources loses caused by incorrect
+    // "final amount" calculations.
     if ($resourceCurrentAmount >= $resourceMaxStorage) {
         return [
             'isUpdated' => false,

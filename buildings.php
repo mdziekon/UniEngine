@@ -69,16 +69,24 @@ switch($_GET['mode'])
         }
         break;
     case 'research':
-        if($OldViewMode)
-        {
-            include($_EnginePath.'includes/functions/ResearchBuildingPage.php');
-            ResearchBuildingPage($_Planet, $_User, $InResearch, $ResearchPlanet);
-        }
-        else
-        {
-            include($_EnginePath.'includes/functions/LaboratoryPage.php');
-            LaboratoryPage($_Planet, $_User, $InResearch, $ResearchPlanet);
-        }
+        include($_EnginePath . 'modules/development/_includes.php');
+
+        UniEngine\Engine\Modules\Development\Screens\ResearchListPage\render(
+            $_Planet,
+            $_User,
+            $ResearchPlanet
+        );
+
+        // if($OldViewMode)
+        // {
+        //     include($_EnginePath.'includes/functions/ResearchBuildingPage.php');
+        //     ResearchBuildingPage($_Planet, $_User, $InResearch, $ResearchPlanet);
+        // }
+        // else
+        // {
+        //     include($_EnginePath.'includes/functions/LaboratoryPage.php');
+        //     LaboratoryPage($_Planet, $_User, $InResearch, $ResearchPlanet);
+        // }
         break;
     case 'defense':
         if($OldViewMode)
