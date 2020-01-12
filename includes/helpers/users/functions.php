@@ -1,9 +1,5 @@
 <?php
 
-function getUsersCurrentIP() {
-    return $_SERVER['REMOTE_ADDR'];
-}
-
 function getUsersTechLevel($techID, $user) {
     global $_Vars_GameElements;
 

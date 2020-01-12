@@ -1,5 +1,7 @@
 <?php
 
+use UniEngine\Engine\Includes\Helpers\Users;
+
 // TODO: Do not store this like this, it's ugly...
 function setPreviousLastIPValue(&$user) {
     global $_InMem_CheckUserSessionCookie_PreviousLastIP;
@@ -86,7 +88,7 @@ function CheckUserSessionCookie()
         $Query_UpdateUser .= "UPDATE {{table}} SET ";
         $Query_UpdateUser .= "`onlinetime` = UNIX_TIMESTAMP(), ";
         $Query_UpdateUser .= "`current_page` = '" . (getDBLink()->escape_string($_SERVER['REQUEST_URI'])) . "', ";
-        $Query_UpdateUser .= "`user_lastip` = '" . getUsersCurrentIP() . "', ";
+        $Query_UpdateUser .= "`user_lastip` = '" . (Users\Session\getCurrentIP()) . "', ";
         $Query_UpdateUser .= "`user_agent` = '" . (getDBLink()->escape_string($_SERVER['HTTP_USER_AGENT'])) . "', ";
         $Query_UpdateUser .= "`screen_settings` = '".preg_replace('#[^0-9\_]{1,}#si', '', $_COOKIE['var_1124'])."' ";
         $Query_UpdateUser .= "WHERE `id` = {$TheCookie[0]} LIMIT 1;";
