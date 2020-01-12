@@ -1,9 +1,9 @@
 <?php
 
+use UniEngine\Engine\Common\Exceptions;
 use UniEngine\Engine\Includes\Helpers\Users;
 
-class UniEngineException extends \Exception {};
-class UniEngineDataFetchException extends UniEngineException {};
+class UniEngineDataFetchException extends Exceptions\UniEngineException {};
 class UniEnginePlanetDataFetchException extends UniEngineDataFetchException {};
 
 //  Arguments
