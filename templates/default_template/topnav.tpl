@@ -68,7 +68,7 @@ window.PHPInject_topnav_lang = {
     Store_status_OK: `{Store_status_OK}`
 };
 </script>
-<script src="dist/js/topnav.resources.cachebuster-1570321752519.min.js"></script>
+<script src="dist/js/topnav.resources.cachebuster-1578869030582.min.js"></script>
 <script src="dist/js/topnav.planet_selector.cachebuster-1566475997888.min.js"></script>
 <link rel="stylesheet" type="text/css" href="dist/css/topNav.cachebuster-1546564327123.min.css"/>
 <table id="topnav_resources">
