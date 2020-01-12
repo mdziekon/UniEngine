@@ -433,7 +433,7 @@ function createProductionResourceTooltipBody (values) {
     const incomeSign = (
         values.state.incomePerHour >= 0 ?
             "+" :
-            "-"
+            ""
     );
     const fullStoreInText = _createResourceTimeToStorageDisplayValue({
         resourceState: {
