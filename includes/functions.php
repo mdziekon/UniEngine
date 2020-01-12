@@ -1,5 +1,7 @@
 <?php
 
+use UniEngine\Engine\Includes\Helpers\Users;
+
 function secureUserInput($input) {
     if (empty($input)) {
         return $input;
@@ -946,7 +948,7 @@ function CreateAccessLog($RootPath = '', $Prepend2Filename = '')
         $PostHash = '8d9c307cb7f3c4a32822a51922d1ceaa';
     }
     // --- Create other data ---
-    $CurrentIP = getUsersCurrentIP();
+    $CurrentIP = Users\Session\getCurrentIP();
     $CurrentBrowser = addslashes(trim($_SERVER['HTTP_USER_AGENT']));
     $CurrentScreen = (isset($_User['new_screen_settings']) ? $_User['new_screen_settings'] : '');
 

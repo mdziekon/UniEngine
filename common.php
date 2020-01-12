@@ -22,11 +22,14 @@ if (defined('INSTALL_NOTDONE')) {
     die();
 }
 
+include($_EnginePath.'common/_includes.php');
 include($_EnginePath.'includes/functions.php');
 include($_EnginePath.'includes/unlocalised.php');
 include($_EnginePath.'includes/helpers/_includes.php');
 include($_EnginePath.'includes/ingamefunctions.php');
 include($_EnginePath.'class/UniEngine_Cache.class.php');
+
+use UniEngine\Engine\Includes\Helpers\Users;
 
 $_MemCache = new UniEngine_Cache();
 
@@ -79,7 +82,7 @@ if (!isset($_SetAccessLogPreFilename)) {
 }
 CreateAccessLog($_SetAccessLogPath, $_SetAccessLogPreFilename);
 
-if (isIPBanned(getUsersCurrentIP(), $_GameConfig)) {
+if (isIPBanned(Users\Session\getCurrentIP(), $_GameConfig)) {
     message($_Lang['Game_blocked_for_this_IP'], $_GameConfig['game_name']);
 }
 

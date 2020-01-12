@@ -314,7 +314,6 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         'InfoBox_Destroy'                => $_Lang['InfoBox_Destroy'],
         'InfoBox_RequirementsFor'        => $_Lang['InfoBox_RequirementsFor'],
         'InfoBox_ResRequirements'        => $_Lang['InfoBox_ResRequirements'],
-        'InfoBox_TechRequirements'        => $_Lang['InfoBox_TechRequirements'],
         'InfoBox_Requirements_Res'        => $_Lang['InfoBox_Requirements_Res'],
         'InfoBox_Requirements_Tech'        => $_Lang['InfoBox_Requirements_Tech'],
         'InfoBox_BuildTime'                => $_Lang['InfoBox_BuildTime'],

@@ -6,6 +6,8 @@ $_EnginePath = './';
 
 include($_EnginePath.'common.php');
 
+use UniEngine\Engine\Includes\Helpers\Users;
+
 includeLang('reg_ajax');
 $Now = time();
 
@@ -37,6 +39,7 @@ if(isset($_GET['register']))
         $_GET['lang'] :
         null
     );
+    $userSessionIP = Users\Session\getCurrentIP();
 
     // Check if Username is correct
     $UsernameGood = false;
@@ -151,7 +154,7 @@ if(isset($_GET['register']))
 
         $recaptchaResponse = $recaptcha
             ->setExpectedHostname($RecaptchaServerIdentification)
-            ->verify($CaptchaResponse, getUsersCurrentIP());
+            ->verify($CaptchaResponse, $userSessionIP);
 
         if (!($recaptchaResponse->isSuccess())) {
             // ReCaptcha validation failed
@@ -322,7 +325,7 @@ if(isset($_GET['register']))
             $Query_InsertUser .= "`lang` = '{$LangCode}', ";
             $Query_InsertUser .= "`email` = '{$Email}', ";
             $Query_InsertUser .= "`email_2` = '{$Email}', ";
-            $Query_InsertUser .= "`ip_at_reg` = '" . getUsersCurrentIP() . "', ";
+            $Query_InsertUser .= "`ip_at_reg` = '" . $userSessionIP . "', ";
             $Query_InsertUser .= "`id_planet` = 0, ";
             $Query_InsertUser .= "`register_time` = {$Now}, ";
             $Query_InsertUser .= "`onlinetime` = {$Now} - (24*60*60), ";
@@ -362,7 +365,7 @@ if(isset($_GET['register']))
                     $Result_SelectReferrer = doquery($Query_SelectReferrer, 'users', true);
                     if($Result_SelectReferrer['id'] > 0)
                     {
-                        $UserIPs['r'] = trim(getUsersCurrentIP());
+                        $UserIPs['r'] = trim($userSessionIP);
                         $UserIPs['p'] = preg_replace('#[^a-zA-Z0-9\.\,\:\ ]{1,}#si', '', trim($_SERVER['HTTP_X_FORWARDED_FOR']));
                         if(empty($UserIPs['p']))
                         {

@@ -14,7 +14,7 @@ function getReferralID() {
 
 function getNavigationRedirectHeader($pageName) {
     $_EnginePath = './';
-    include_once($_EnginePath . 'includes/helpers/common/navigation.php');
+    include_once($_EnginePath . 'includes/helpers/common/navigation.functions.php');
 
     $pageURL = \UniEngine\Engine\Includes\Helpers\Common\Navigation\getPageURL($pageName, []);
 

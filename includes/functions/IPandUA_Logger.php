@@ -1,5 +1,7 @@
 <?php
 
+use UniEngine\Engine\Includes\Helpers\Users;
+
 function IPandUA_Logger($TheUser, $Failed = false)
 {
     if(!isset($TheUser['id']) || $TheUser['id'] <= 0)
@@ -13,7 +15,7 @@ function IPandUA_Logger($TheUser, $Failed = false)
 
     global $_SERVER;
 
-    $usersIP = getUsersCurrentIP();
+    $usersIP = Users\Session\getCurrentIP();
     $UAVal = getDBLink()->escape_string($_SERVER['HTTP_USER_AGENT']);
 
     $IPHash = md5($usersIP);

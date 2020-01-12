@@ -8,6 +8,8 @@ $_DontShowMenus = true;
 $_EnginePath = './';
 include($_EnginePath.'common.php');
 
+use UniEngine\Engine\Includes\Helpers\Users;
+
 includeLang('login');
 
 $sessionCookieKey = getSessionCookieKey();
@@ -55,7 +57,7 @@ if($_POST)
         $Search['mode'] = 1;
         $Search['where'] = "`username` = '{$Username}'";
         $Search['password'] = md5($_POST['password']);
-        $Search['IPHash'] = md5(getUsersCurrentIP());
+        $Search['IPHash'] = md5(Users\Session\getCurrentIP());
 
         $Query_LoginProtection = "SELECT `FailCount` FROM {{table}} WHERE `IP` = '{$Search['IPHash']}' AND `Date` >= (UNIX_TIMESTAMP() - ".LOGINPROTECTION_LOCKTIME.") LIMIT 1;";
         $Result_LoginProtection = doquery($Query_LoginProtection, 'login_protection', true);

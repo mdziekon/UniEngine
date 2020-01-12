@@ -577,17 +577,17 @@ elseif($_User['ally_id'] > 0 AND $_User['ally_request'] == 0)
     else if($mode == 'pactslist')
     {
         // User is trying to See Ally Pacts
-        include($_EnginePath.'modules/ally.pactslist.php');
+        include($_EnginePath.'modules/alliance/ally.pactslist.php');
     }
     else if($mode == 'newpact')
     {
         // User is trying to create new Pact
-        include($_EnginePath.'modules/ally.newpact.php');
+        include($_EnginePath.'modules/alliance/ally.newpact.php');
     }
     else if($mode == 'changepact')
     {
         // User is trying to modify existing Pact
-        include($_EnginePath.'modules/ally.changepact.php');
+        include($_EnginePath.'modules/alliance/ally.changepact.php');
     }
     else if($mode == 'circular' OR $mode == 'sendmsg')
     {

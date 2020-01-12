@@ -363,7 +363,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         'InfoBox_Build'                => $_Lang['InfoBox_DoResearch'],
         'InfoBox_RequirementsFor'    => $_Lang['InfoBox_RequirementsFor'],
         'InfoBox_ResRequirements'    => $_Lang['InfoBox_ResRequirements'],
-        'InfoBox_TechRequirements'    => $_Lang['InfoBox_TechRequirements'],
         'InfoBox_Requirements_Res'    => $_Lang['InfoBox_Requirements_Res'],
         'InfoBox_Requirements_Tech' => $_Lang['InfoBox_Requirements_Tech'],
         'InfoBox_BuildTime'            => $_Lang['InfoBox_ResearchTime'],
