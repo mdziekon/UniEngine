@@ -40,7 +40,6 @@ $_Lang['InfoBox_Build']                         = 'Upgrade<br/>to Level';
 $_Lang['InfoBox_Destroy']                       = 'Tear down<br/>to Level';
 $_Lang['InfoBox_RequirementsFor']               = 'Requirements for Level';
 $_Lang['InfoBox_ResRequirements']               = 'Resource requirements for Level';
-$_Lang['InfoBox_TechRequirements']              = 'Technological requirements for Level';
 $_Lang['InfoBox_Requirements_Tech']             = 'Technologies';
 $_Lang['InfoBox_Requirements_Res']              = 'Resources';
 $_Lang['InfoBox_BuildTime']                     = 'Construction time';

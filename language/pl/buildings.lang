@@ -37,7 +37,6 @@ $_Lang['InfoBox_Build']                 = 'Rozbuduj<br/>na Poziom';
 $_Lang['InfoBox_Destroy']               = 'Zburz<br/>do Poziomu';
 $_Lang['InfoBox_RequirementsFor']       = 'Wymagania na Poziom';
 $_Lang['InfoBox_ResRequirements']       = 'Wymagane Surowce na Poziom';
-$_Lang['InfoBox_TechRequirements']      = 'Wymagania Technologiczne';
 $_Lang['InfoBox_Requirements_Tech']     = 'Technologie';
 $_Lang['InfoBox_Requirements_Res']      = 'Surowce';
 $_Lang['InfoBox_BuildTime']             = 'Czas budowy';
