@@ -8,6 +8,7 @@ include($includePath . './uni/functions.php');
 include($includePath . './views/functions.php');
 include($includePath . './world/resources.functions.php');
 include($includePath . './world/elements.common.functions.php');
+include($includePath . './world/elements.cost.functions.php');
 include($includePath . './users/functions.php');
 include($includePath . './users/session.functions.php');
 include($includePath . './planets/functions.php');
