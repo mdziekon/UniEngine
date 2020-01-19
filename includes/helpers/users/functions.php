@@ -19,4 +19,12 @@ function getUsersEngineSpeedTechModifier($engineTechID, $user) {
     return (1 + ($engineTechSpeedModifier * $userTechLevel));
 }
 
+function getMaxStructuresQueueLength(&$user) {
+    return (
+        isPro($user) ?
+        MAX_BUILDING_QUEUE_SIZE_PRO :
+        MAX_BUILDING_QUEUE_SIZE
+    );
+}
+
 ?>

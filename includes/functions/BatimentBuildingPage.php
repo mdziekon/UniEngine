@@ -52,26 +52,31 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
                 {
                     case 'cancel':
                         // Cancel Current Building
+                        include($_EnginePath.'includes/functions/RemoveBuildingFromQueue.php');
                         include($_EnginePath.'includes/functions/CancelBuildingFromQueue.php');
-                        CancelBuildingFromQueue($CurrentPlanet, $CurrentUser);
+                        CancelBuildingFromQueue($CurrentPlanet, $CurrentUser, [ 'currentTimestamp' => $Now ]);
                         $CommandDone = true;
                         break;
                     case 'remove':
+                        if ($ListID <= 1) {
+                            break;
+                        }
+
                         // Remove planned Building from Queue
                         include($_EnginePath.'includes/functions/RemoveBuildingFromQueue.php');
-                        RemoveBuildingFromQueue($CurrentPlanet, $CurrentUser, $ListID);
+                        RemoveBuildingFromQueue($CurrentPlanet, $CurrentUser, $ListID, [ 'currentTimestamp' => $Now ]);
                         $CommandDone = true;
                         break;
                     case 'insert':
                         // Insert into Queue (to Build)
                         include($_EnginePath.'includes/functions/AddBuildingToQueue.php');
-                        AddBuildingToQueue($CurrentPlanet, $CurrentUser, $Element, true);
+                        AddBuildingToQueue($CurrentPlanet, $CurrentUser, $Element, true, [ 'currentTimestamp' => $Now ]);
                         $CommandDone = true;
                         break;
                     case 'destroy':
                         // Insert into Queue (to Destroy)
                         include($_EnginePath.'includes/functions/AddBuildingToQueue.php');
-                        AddBuildingToQueue($CurrentPlanet, $CurrentUser, $Element, false);
+                        AddBuildingToQueue($CurrentPlanet, $CurrentUser, $Element, false, [ 'currentTimestamp' => $Now ]);
                         $CommandDone = true;
                         break;
                     default:

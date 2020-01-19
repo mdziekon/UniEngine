@@ -45,16 +45,17 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             $TheCommand = $_GET['cmd'];
             if($TheCommand == 'cancel')
             {
+                include($_EnginePath.'includes/functions/RemoveBuildingFromQueue.php');
                 include($_EnginePath.'includes/functions/CancelBuildingFromQueue.php');
-                $ShowID = CancelBuildingFromQueue($CurrentPlanet, $CurrentUser);
+                $ShowID = CancelBuildingFromQueue($CurrentPlanet, $CurrentUser, [ 'currentTimestamp' => $Now ]);
                 $CommandDone = true;
             }
             else if($TheCommand == 'remove')
             {
-                if(!empty($_GET['listid']))
+                if(!empty($_GET['listid']) && intval($_GET['listid']) > 1)
                 {
                     include($_EnginePath.'includes/functions/RemoveBuildingFromQueue.php');
-                    $ShowID = RemoveBuildingFromQueue($CurrentPlanet, $CurrentUser, intval($_GET['listid']));
+                    $ShowID = RemoveBuildingFromQueue($CurrentPlanet, $CurrentUser, intval($_GET['listid']), [ 'currentTimestamp' => $Now ]);
                     $CommandDone = true;
                 }
             }
@@ -84,7 +85,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                         if($BlockCommand !== true)
                         {
                             include($_EnginePath.'includes/functions/AddBuildingToQueue.php');
-                            AddBuildingToQueue($CurrentPlanet, $CurrentUser, $ElementID, $AddMode);
+                            AddBuildingToQueue($CurrentPlanet, $CurrentUser, $ElementID, $AddMode, [ 'currentTimestamp' => $Now ]);
                             $CommandDone = true;
                         }
 

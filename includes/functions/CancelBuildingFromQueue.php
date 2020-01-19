@@ -1,108 +1,80 @@
 <?php
 
-function CancelBuildingFromQueue(&$CurrentPlanet, $CurrentUser)
-{
-    global $_Vars_PremiumBuildings, $_Vars_GameElements, $UserDev_Log;
+use UniEngine\Engine\Includes\Helpers\Planets;
+use UniEngine\Engine\Includes\Helpers\World\Elements;
+use UniEngine\Engine\Includes\Helpers\World\Resources;
 
-    $Element = null;
+//  Arguments:
+//      - $planet (Object)
+//      - $user (Object)
+//      - $params (Object)
+//          - currentTimestamp (Number)
+//
+function CancelBuildingFromQueue(&$planet, $user, $params) {
+    global $UserDev_Log;
 
-    $CurrentQueue = $CurrentPlanet['buildQueue'];
-    if($CurrentQueue != 0)
-    {
-        // "Translate" Queue string to Queue Array
-        $QueueArray = explode(';', $CurrentQueue);
-        // Get how many elements are in Queue
-        $ActualCount = count($QueueArray);
-        // This Time
-        $Now = time();
+    $currentTimestamp = $params['currentTimestamp'];
 
-        // Get Info about canceled element
-        $CanceledIDArray = explode(',', $QueueArray[0]);
-        $Element = $CanceledIDArray[0]; // ElementID
-        $RemovedTime = $CanceledIDArray[3] - $Now;
-        $BuildMode = $CanceledIDArray[4]; // Element Build Mode (build/destroy)
+    $queueString = Planets\Queues\Structures\getQueueString($planet);
+    $queue = Planets\Queues\Structures\parseQueueString($queueString);
 
-        if(isset($_Vars_PremiumBuildings[$Element]) && $_Vars_PremiumBuildings[$Element] == 1)
-        {
-            return false;
-        }
-        else
-        {
-            if($ActualCount > 1)
-            {
-                array_shift($QueueArray);
-                // Now update all other elements
-                $TempPlanet = $CurrentPlanet;
-                foreach($QueueArray as &$Data)
-                {
-                    $Data = explode(',', $Data);
-                    $TempTime = GetBuildingTime($CurrentUser, $TempPlanet, $Data[0]);
-                    if($Data[4] == 'build')
-                    {
-                        $TempPlanet[$_Vars_GameElements[$Data[0]]] += 1;
-                    }
-                    else
-                    {
-                        $TempTime /= 2;
-                        $TempPlanet[$_Vars_GameElements[$Data[0]]] -= 1;
-                    }
-                    $RemovedTime += ($Data[2] - $TempTime);
-                    $Data[1] = $TempPlanet[$_Vars_GameElements[$Data[0]]];
-                    $Data[2] = $TempTime;
-                    $Data[3] -= $RemovedTime;
-                    $Data = implode(',', $Data);
-                }
-                $NewQueue = implode(';', $QueueArray);
-                $ReturnValue = true;
-            }
-            else
-            {
-                $NewQueue = '0';
-                $ReturnValue = false;
-            }
-            $BuildEndTime = '0';
-        }
+    $firstQueueElement = $queue[0];
+    $elementID = $firstQueueElement['elementID'];
+    $isUpgrading = ($firstQueueElement['mode'] === 'build');
 
-        // Now let's return used resources
-        // First - check mode
-        if($BuildMode == 'destroy')
-        {
-             $ForDestroy = true;
-        }
-        else
-        {
-             $ForDestroy = false;
-        }
-
-        if($Element != false)
-        {
-             $Needed = GetBuildingPrice($CurrentUser, $CurrentPlanet, $Element, true, $ForDestroy);
-             $CurrentPlanet['metal'] += $Needed['metal'];
-             $CurrentPlanet['crystal'] += $Needed['crystal'];
-             $CurrentPlanet['deuterium'] += $Needed['deuterium'];
-
-            if($ForDestroy)
-            {
-                $SetCode = 2;
-            }
-            else
-            {
-                $SetCode = 1;
-            }
-            $UserDev_Log[] = array('PlanetID' => $CurrentPlanet['id'], 'Date' => $Now, 'Place' => 2, 'Code' => $SetCode, 'ElementID' => $Element);
-        }
+    // TODO: Remove these validators from here,
+    // they should be performed on the cmd pre-check level
+    $queueLength = count($queue);
+    if ($queueLength <= 0) {
+        return;
     }
-    else
-    {
-        $NewQueue = '0';
-        $BuildEndTime = '0';
-        $ReturnValue = false;
+    if (Elements\isIndestructibleStructure($elementID)) {
+        return;
     }
 
-    $CurrentPlanet['buildQueue'] = $NewQueue;
-    $CurrentPlanet['buildQueue_firstEndTime'] = $BuildEndTime;
 
-    return $Element;
+    RemoveBuildingFromQueue(
+        $planet,
+        $user,
+        1,
+        [ 'currentTimestamp' => $currentTimestamp ]
+    );
+
+    $purchaseCost = Elements\calculatePurchaseCost(
+        $elementID,
+        Elements\getElementState($elementID, $planet, $user),
+        [
+            'purchaseMode' => (
+                $isUpgrading ?
+                Elements\PurchaseMode::Upgrade :
+                Elements\PurchaseMode::Downgrade
+            )
+        ]
+    );
+
+    foreach ($purchaseCost as $costResourceKey => $costValue) {
+        if (
+            !Resources\isPlanetaryResource($costResourceKey) ||
+            !Resources\isSpendableResource($costResourceKey)
+        ) {
+            continue;
+        }
+
+        $planet[$costResourceKey] += $costValue;
+    }
+
+    $planet['buildQueue_firstEndTime'] = '0';
+
+    $newDevlogEntry = [
+        'PlanetID'  => $planet['id'],
+        'Date'      => $currentTimestamp,
+        'Place'     => 2,
+        'Code'      => ($isUpgrading ? 1 : 2),
+        'ElementID' => $elementID
+    ];
+    $UserDev_Log[] = $newDevlogEntry;
+
+    return $elementID;
 }
 
 ?>
