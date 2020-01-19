@@ -1,5 +1,7 @@
 <?php
 
+namespace UniEngine\Engine\Includes\Helpers\Users;
+
 function getUsersTechLevel($techID, $user) {
     global $_Vars_GameElements;
 
