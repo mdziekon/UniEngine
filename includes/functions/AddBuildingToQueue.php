@@ -48,7 +48,7 @@ function AddBuildingToQueue(&$planet, $user, $newElementID, $newElementIsUpgradi
         $queue[$queueLength - 1]['endTimestamp']
     );
     $newElementEndTimestamp = ($newElementStartTimestamp + $newElementProgressTime);
-    $newElementBuildModeLabel = ($newElementIsUpgrading ? "build" : "destroy");
+    $newElementBuildModeLabel = ($newElementIsUpgrading ? 'build' : 'destroy');
 
     $newQueueElement = [
         'elementID' => $newElementID,
