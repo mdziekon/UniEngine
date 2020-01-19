@@ -245,7 +245,7 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
                         $CurrentPlanet[$Key] -= $Value;
                     }
                 }
-                $HaveRessources = IsElementBuyable($CurrentUser, $CurrentPlanet, $Element, true, false);
+                $HaveRessources = IsElementBuyable($CurrentUser, $CurrentPlanet, $Element, false);
                 $ElementBuildTime = GetBuildingTime($CurrentUser, $CurrentPlanet, $Element);
                 $parse['time'] = ShowBuildTime($ElementBuildTime);
                 $parse['price'] = GetElementPrice($CurrentUser, $CurrentPlanet, $Element);

@@ -33,7 +33,7 @@ function HandlePlanetQueue_TechnologySetNext(&$ThePlanet, &$TheUser, $CurrentTim
             $BlockResearch = false;
             $BlockReason = false;
 
-            $HaveResources = IsElementBuyable($TheUser, $ThePlanet, $ElementID, true, false, true);
+            $HaveResources = IsElementBuyable($TheUser, $ThePlanet, $ElementID, false);
             if($HaveResources === true)
             {
                 if(IsTechnologieAccessible($TheUser, $ThePlanet, $ElementID))

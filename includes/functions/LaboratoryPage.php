@@ -470,7 +470,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             $ElementParser['ElementTechDiv'] = GetElementTechReq($CurrentUser, $CurrentPlanet, $ElementID, true);
             $ElementParser['HideResReqDiv'] = 'hide';
         }
-        if(IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, true, false, true) === false)
+        if(IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, false) === false)
         {
             $HasResources = false;
             if($Queue['lenght'] == 0)

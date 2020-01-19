@@ -1,69 +1,50 @@
 <?php
 
-function IsElementBuyable($TheUser, $ThePlanet, $ElementID, $Incremental = true, $ForDestroy = false, $GetPremiumData = false)
-{
-    global $_Vars_Prices, $_Vars_GameElements, $_Vars_ElementCategories;
+use UniEngine\Engine\Includes\Helpers\World\Elements;
+use UniEngine\Engine\Includes\Helpers\World\Resources;
 
-    if(isOnVacation($TheUser))
-    {
+//  Arguments:
+//      - $user (Object)
+//      - $planet (Object)
+//      - $elementID (String | Number)
+//      - $isDestruction (Boolean)
+//
+//  Returns:
+//      Boolean
+//
+//  Notes:
+//      - This function does not throw in case of cost calculation errors
+//        (eg. when a structure is not upgradeable anymore)
+//
+function IsElementBuyable($user, $planet, $elementID, $isDestruction) {
+    if (isOnVacation($user)) {
         return false;
     }
 
-    if($Incremental)
-    {
-        $level = 0;
-        if(in_array($ElementID, $_Vars_ElementCategories['tech']))
-        {
-            if(isset($TheUser[$_Vars_GameElements[$ElementID]]))
-            {
-                $level = $TheUser[$_Vars_GameElements[$ElementID]];
-            }
-        }
-        else
-        {
-            if(isset($ThePlanet[$_Vars_GameElements[$ElementID]]))
-            {
-                $level = $ThePlanet[$_Vars_GameElements[$ElementID]];
-            }
-        }
-    }
-    if($ForDestroy === true)
-    {
-        $level -= 1;
+    try {
+        $elementPurchaseCost = Elements\calculatePurchaseCost(
+            $elementID,
+            Elements\getElementState($elementID, $planet, $user),
+            [
+                'purchaseMode' => (
+                    !$isDestruction ?
+                    Elements\PurchaseMode::Upgrade :
+                    Elements\PurchaseMode::Downgrade
+                )
+            ]
+        );
+    } catch (Elements\PurchaseCostCalculationException $exception) {
+        return false;
     }
 
-    $array = array('metal', 'crystal', 'deuterium', 'energy_max');
+    foreach ($elementPurchaseCost as $costResourceKey => $costValue) {
+        $currentResourceState = Resources\getResourceState(
+            $costResourceKey,
+            $user,
+            $planet
+        );
 
-    foreach($array as $ResType)
-    {
-        if(isset($_Vars_Prices[$ElementID][$ResType]) && $_Vars_Prices[$ElementID][$ResType] > 0)
-        {
-            if($Incremental)
-            {
-                $cost[$ResType] = floor($_Vars_Prices[$ElementID][$ResType] * pow($_Vars_Prices[$ElementID]['factor'], $level));
-            }
-            else
-            {
-                $cost[$ResType] = floor($_Vars_Prices[$ElementID][$ResType]);
-            }
-
-            if($ForDestroy)
-            {
-                $cost[$ResType] = floor($cost[$ResType] / 2);
-            }
-
-            if($cost[$ResType] > $ThePlanet[$ResType])
-            {
-                return false;
-            }
-        }
-    }
-
-    if($GetPremiumData)
-    {
-        global $_Vars_PremiumBuildingPrices;
-        if(isset($_Vars_PremiumBuildingPrices[$ElementID]) && $_Vars_PremiumBuildingPrices[$ElementID] > $TheUser['darkEnergy'])
-        {
+        if ($costValue > $currentResourceState) {
             return false;
         }
     }
