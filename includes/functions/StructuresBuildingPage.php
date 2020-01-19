@@ -54,7 +54,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 if(!empty($_GET['listid']))
                 {
                     include($_EnginePath.'includes/functions/RemoveBuildingFromQueue.php');
-                    $ShowID = RemoveBuildingFromQueue($CurrentPlanet, $CurrentUser, intval($_GET['listid']));
+                    $ShowID = RemoveBuildingFromQueue($CurrentPlanet, $CurrentUser, intval($_GET['listid']), [ 'currentTimestamp' => $Now ]);
                     $CommandDone = true;
                 }
             }

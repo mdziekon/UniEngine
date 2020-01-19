@@ -1,91 +1,103 @@
 <?php
 
-function RemoveBuildingFromQueue(&$CurrentPlanet, $CurrentUser, $QueueID)
-{
-    global $_Vars_GameElements;
+use UniEngine\Engine\Includes\Helpers\Planets;
 
-    if($QueueID > 1)
-    {
-        $CurrentQueue = $CurrentPlanet['buildQueue'];
-        if($CurrentQueue != 0)
-        {
-            $Queue = explode(';', $CurrentQueue);
-            $QueueArray = [];
-            foreach($Queue as $ID => $Data)
-            {
-                if(!empty($Data))
-                {
-                    $Data = explode(',', $Data);
-                    $QueueArray[] = $Data;
-                }
-            }
-            $ElementCount = count($QueueArray);
-            if($QueueID <= $ElementCount)
-            {
-                if($QueueID == $ElementCount)
-                {
-                    $RemovedQID = $QueueID - 1;
-                    $ReturnID = $QueueArray[$RemovedQID][0];
-                    unset($QueueArray[$RemovedQID]);
-                    foreach($QueueArray as &$Data)
-                    {
-                        $Data = implode(',', $Data);
-                    }
-                    $NewQueue = implode(';', $QueueArray);
-                }
-                else
-                {
-                    $RemovedQID = $QueueID - 1;
-                    $RemovedTime = $QueueArray[$RemovedQID][2];
-                    $RemovedID = $QueueArray[$RemovedQID][0];
-                    $ReturnID = $RemovedID;
+//  Arguments:
+//      - $planet (Object)
+//      - $user (Object)
+//      - $listID (Number)
+//          - Index of the item to be removed.
+//            WARNING: starts from 1 instead of 0
+//      - $params (Object)
+//          - currentTimestamp (Number)
+//
+function RemoveBuildingFromQueue(&$planet, $user, $listID, $params) {
+    $removedElementIdx = $listID - 1;
+    $currentTimestamp = $params['currentTimestamp'];
 
-                    $TempPlanet = $CurrentPlanet;
-                    foreach($QueueArray as $ID => &$Data)
-                    {
-                        if($ID < $RemovedQID)
-                        {
-                            if($Data[4] == 'build')
-                            {
-                                $TempPlanet[$_Vars_GameElements[$Data[0]]] += 1;
-                            }
-                            else
-                            {
-                                $TempPlanet[$_Vars_GameElements[$Data[0]]] -= 1;
-                            }
-                            continue;
-                        }
-                        elseif($ID > $RemovedQID)
-                        {
-                            $TempTime = GetBuildingTime($CurrentUser, $TempPlanet, $Data[0]);
-                            if($Data[4] == 'build')
-                            {
-                                $TempPlanet[$_Vars_GameElements[$Data[0]]] += 1;
-                            }
-                            else
-                            {
-                                $TempTime /= 2;
-                                $TempPlanet[$_Vars_GameElements[$Data[0]]] -= 1;
-                            }
-                            $RemovedTime += ($Data[2] - $TempTime);
-                            $Data[1] = $TempPlanet[$_Vars_GameElements[$Data[0]]];
-                            $Data[2] = $TempTime;
-                            $Data[3] -= $RemovedTime;
-                        }
-                    }
-                    unset($QueueArray[$RemovedQID]);
-                    foreach($QueueArray as &$Data)
-                    {
-                        $Data = implode(',', $Data);
-                    }
-                    $NewQueue = implode(';', $QueueArray);
-                }
-                $CurrentPlanet['buildQueue'] = $NewQueue;
-            }
-        }
+    $queueString = Planets\Queues\Structures\getQueueString($planet);
+    $queue = Planets\Queues\Structures\parseQueueString($queueString);
+
+    // TODO: Remove these validators from here,
+    // they should be performed on the cmd pre-check level
+    $queueLength = count($queue);
+    if ($listID <= 1) {
+        return;
+    }
+    if ($queueLength < $listID) {
+        return;
     }
 
-    return $ReturnID;
+    $removedQueueElement = $queue[$removedElementIdx];
+    $removedElementID = $removedQueueElement['elementID'];
+
+    // Recalculate the queue, mostly its elements' durations
+    // - removing element with mode "build" might have changed next "destroy" elements
+    // - removing robo or nano factory might have increased upgrade durations
+    $newQueue = [];
+
+    $tempPlanet = $planet;
+    $summedDurationDifference = 0;
+
+    foreach ($queue as $queueElementIdx => $queueElement) {
+        if ($queueElementIdx == $removedElementIdx) {
+            if ($queueElementIdx === 0) {
+                $summedDurationDifference += (
+                    $queueElement['endTimestamp'] -
+                    $currentTimestamp
+                );
+            } else {
+                $summedDurationDifference += $queueElement['duration'];
+            }
+
+            continue;
+        }
+
+        $elementID = $queueElement['elementID'];
+        $elementPlanetKey = _getElementPlanetKey($elementID);
+        $isUpgrading = ($queueElement['mode'] == 'build');
+
+        if ($queueElementIdx < $removedElementIdx) {
+            $tempPlanet[$elementPlanetKey] += ($isUpgrading ? 1 : -1);
+
+            $newQueue[] = $queueElement;
+
+            continue;
+        }
+
+        $elementProgressTimeMultiplier = (
+            $isUpgrading ?
+            1 :
+            (1 / 2)
+        );
+        $elementNewProgressTime = (
+            GetBuildingTime($user, $tempPlanet, $elementID) *
+            $elementProgressTimeMultiplier
+        );
+        $progressTimeDifference = ($queueElement['duration'] - $elementNewProgressTime);
+
+        $summedDurationDifference += $progressTimeDifference;
+
+        $tempPlanet[$elementPlanetKey] += ($isUpgrading ? 1 : -1);
+
+        $newQueueElement = $queueElement;
+
+        $newQueueElement['level'] = $tempPlanet[$elementPlanetKey];
+        $newQueueElement['duration'] = $elementNewProgressTime;
+        $newQueueElement['endTimestamp'] = (
+            $queueElement['endTimestamp'] -
+            $summedDurationDifference
+        );
+
+        $newQueue[] = $newQueueElement;
+    }
+
+    Planets\Queues\Structures\setQueueString(
+        $planet,
+        Planets\Queues\Structures\serializeQueue($newQueue)
+    );
+
+    return $removedElementID;
 }
 
 ?>

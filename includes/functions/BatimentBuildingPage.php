@@ -59,7 +59,7 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
                     case 'remove':
                         // Remove planned Building from Queue
                         include($_EnginePath.'includes/functions/RemoveBuildingFromQueue.php');
-                        RemoveBuildingFromQueue($CurrentPlanet, $CurrentUser, $ListID);
+                        RemoveBuildingFromQueue($CurrentPlanet, $CurrentUser, $ListID, [ 'currentTimestamp' => $Now ]);
                         $CommandDone = true;
                         break;
                     case 'insert':
