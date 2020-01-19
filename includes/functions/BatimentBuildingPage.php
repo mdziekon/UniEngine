@@ -65,13 +65,13 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
                     case 'insert':
                         // Insert into Queue (to Build)
                         include($_EnginePath.'includes/functions/AddBuildingToQueue.php');
-                        AddBuildingToQueue($CurrentPlanet, $CurrentUser, $Element, true);
+                        AddBuildingToQueue($CurrentPlanet, $CurrentUser, $Element, true, [ 'currentTimestamp' => $Now ]);
                         $CommandDone = true;
                         break;
                     case 'destroy':
                         // Insert into Queue (to Destroy)
                         include($_EnginePath.'includes/functions/AddBuildingToQueue.php');
-                        AddBuildingToQueue($CurrentPlanet, $CurrentUser, $Element, false);
+                        AddBuildingToQueue($CurrentPlanet, $CurrentUser, $Element, false, [ 'currentTimestamp' => $Now ]);
                         $CommandDone = true;
                         break;
                     default:

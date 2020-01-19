@@ -84,7 +84,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                         if($BlockCommand !== true)
                         {
                             include($_EnginePath.'includes/functions/AddBuildingToQueue.php');
-                            AddBuildingToQueue($CurrentPlanet, $CurrentUser, $ElementID, $AddMode);
+                            AddBuildingToQueue($CurrentPlanet, $CurrentUser, $ElementID, $AddMode, [ 'currentTimestamp' => $Now ]);
                             $CommandDone = true;
                         }
 
