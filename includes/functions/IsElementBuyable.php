@@ -3,18 +3,31 @@
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 use UniEngine\Engine\Includes\Helpers\World\Resources;
 
-function IsElementBuyable($TheUser, $ThePlanet, $ElementID, $ForDestroy = false) {
-    if (isOnVacation($TheUser)) {
+//  Arguments:
+//      - $user (Object)
+//      - $planet (Object)
+//      - $elementID (String | Number)
+//      - $isDestruction (Boolean)
+//
+//  Returns:
+//      Boolean
+//
+//  Notes:
+//      - This function does not throw in case of cost calculation errors
+//        (eg. when a structure is not upgradeable anymore)
+//
+function IsElementBuyable($user, $planet, $elementID, $isDestruction) {
+    if (isOnVacation($user)) {
         return false;
     }
 
     try {
         $elementPurchaseCost = Elements\calculatePurchaseCost(
-            $ElementID,
-            Elements\getElementState($ElementID, $ThePlanet, $TheUser),
+            $elementID,
+            Elements\getElementState($elementID, $planet, $user),
             [
                 'purchaseMode' => (
-                    !$ForDestroy ?
+                    !$isDestruction ?
                     Elements\PurchaseMode::Upgrade :
                     Elements\PurchaseMode::Downgrade
                 )
@@ -27,8 +40,8 @@ function IsElementBuyable($TheUser, $ThePlanet, $ElementID, $ForDestroy = false)
     foreach ($elementPurchaseCost as $costResourceKey => $costValue) {
         $currentResourceState = Resources\getResourceState(
             $costResourceKey,
-            $TheUser,
-            $ThePlanet
+            $user,
+            $planet
         );
 
         if ($costValue > $currentResourceState) {
