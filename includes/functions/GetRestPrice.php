@@ -31,7 +31,7 @@ function GetRestPrice($TheUser, $ThePlanet, $ElementID, $userfactor = true)
         'energy_max'    => $_Lang["Energy"]
     );
 
-    $text = "<br><font color=\"#7f7f7f\">{$_Lang['Rest_ress']}: ";
+    $text = "<br><font color=\"#7f7f7f\">{$_Lang['ResourcesLeft']}: ";
     foreach($array as $ResType => $ResTitle)
     {
         if(isset($_Vars_Prices[$ElementID][$ResType]) && $_Vars_Prices[$ElementID][$ResType] != 0)

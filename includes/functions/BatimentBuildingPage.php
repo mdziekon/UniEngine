@@ -245,7 +245,7 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
                         $CurrentPlanet[$Key] -= $Value;
                     }
                 }
-                $HaveRessources = IsElementBuyable($CurrentUser, $CurrentPlanet, $Element, true, false);
+                $HaveRessources = IsElementBuyable($CurrentUser, $CurrentPlanet, $Element, false);
                 $ElementBuildTime = GetBuildingTime($CurrentUser, $CurrentPlanet, $Element);
                 $parse['time'] = ShowBuildTime($ElementBuildTime);
                 $parse['price'] = GetElementPrice($CurrentUser, $CurrentPlanet, $Element);
@@ -282,7 +282,7 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
 
                 if(isset($_Vars_PremiumBuildings[$Element]) && $_Vars_PremiumBuildings[$Element] == 1)
                 {
-                    $parse['rest_price'] = "<br/><font color=\"#7f7f7f\">{$_Lang['Rest_ress']}: {$_Lang['DarkEnergy']}";
+                    $parse['rest_price'] = "<br/><font color=\"#7f7f7f\">{$_Lang['ResourcesLeft']}: {$_Lang['DarkEnergy']}";
                     $parse['price'] = "{$_Lang['Requires']}: {$_Lang['DarkEnergy']} <span class=\"noresources\">";
                     if($CurrentUser['darkEnergy'] < $_Vars_PremiumBuildingPrices[$Element])
                     {

@@ -1,5 +1,7 @@
 <?php
 
+use UniEngine\Engine\Includes\Helpers\Users;
+
 function getShipsEngines($shipID) {
     global $_Vars_Prices;
 
@@ -31,7 +33,7 @@ function getShipsUsedEngineData($shipID, $user) {
 
         $engineTechID = $engineData['tech'];
         $engineTechMinLevel = $engineData['minlevel'];
-        $userTechLevel = getUsersTechLevel($engineTechID, $user);
+        $userTechLevel = Users\getUsersTechLevel($engineTechID, $user);
 
         if ($userTechLevel >= $engineTechMinLevel) {
             return [
@@ -61,7 +63,7 @@ function getShipsCurrentSpeed($shipID, $user) {
     }
 
     $engineTechID = $engineData['tech'];
-    $engineSpeedTechModifier = getUsersEngineSpeedTechModifier($engineTechID, $user);
+    $engineSpeedTechModifier = Users\getUsersEngineSpeedTechModifier($engineTechID, $user);
 
     // TODO: determine if the modifier should not be applied with a "base bias"
     // meaning that it starts "improving" it starting from the minimal tech level.
