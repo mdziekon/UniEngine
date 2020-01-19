@@ -21,7 +21,7 @@ function RemoveBuildingFromQueue(&$planet, $user, $listID, $params) {
     // TODO: Remove these validators from here,
     // they should be performed on the cmd pre-check level
     $queueLength = count($queue);
-    if ($listID <= 1) {
+    if ($listID <= 0) {
         return;
     }
     if ($queueLength < $listID) {

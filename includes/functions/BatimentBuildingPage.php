@@ -52,11 +52,16 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
                 {
                     case 'cancel':
                         // Cancel Current Building
+                        include($_EnginePath.'includes/functions/RemoveBuildingFromQueue.php');
                         include($_EnginePath.'includes/functions/CancelBuildingFromQueue.php');
-                        CancelBuildingFromQueue($CurrentPlanet, $CurrentUser);
+                        CancelBuildingFromQueue($CurrentPlanet, $CurrentUser, [ 'currentTimestamp' => $Now ]);
                         $CommandDone = true;
                         break;
                     case 'remove':
+                        if ($ListID <= 1) {
+                            break;
+                        }
+
                         // Remove planned Building from Queue
                         include($_EnginePath.'includes/functions/RemoveBuildingFromQueue.php');
                         RemoveBuildingFromQueue($CurrentPlanet, $CurrentUser, $ListID, [ 'currentTimestamp' => $Now ]);
