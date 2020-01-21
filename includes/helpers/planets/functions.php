@@ -398,6 +398,12 @@ function _getElementPlanetKey($elementID) {
     return $_Vars_GameElements[$elementID];
 }
 
+function _getElementUserKey($elementID) {
+    global $_Vars_GameElements;
+
+    return $_Vars_GameElements[$elementID];
+}
+
 function _getElementPlanetProductionFactor($elementID, &$planet) {
     $elementPlanetKey = _getElementPlanetKey($elementID);
     $productionFactorKey = $elementPlanetKey . '_workpercent';
