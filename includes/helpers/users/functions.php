@@ -35,4 +35,11 @@ function getMaxResearchQueueLength($user) {
     );
 }
 
+function isConductingResearch($user) {
+    return (
+        isset($user['techQueue_EndTime']) &&
+        $user['techQueue_EndTime'] > 0
+    );
+}
+
 ?>
