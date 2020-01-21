@@ -108,7 +108,7 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePl
                     {
                         // User requested do the research
                         include($_EnginePath.'includes/functions/TechQueue_Add.php');
-                        TechQueue_Add($ResearchPlanet, $CurrentUser, $TechID);
+                        TechQueue_Add($ResearchPlanet, $CurrentUser, $TechID, [ 'currentTimestamp' => $Now ]);
                         $ShowElementID = $TechID;
                         $CommandDone = true;
                     }
