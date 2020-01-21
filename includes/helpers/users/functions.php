@@ -27,4 +27,12 @@ function getMaxStructuresQueueLength(&$user) {
     );
 }
 
+function getMaxResearchQueueLength($user) {
+    return (
+        isPro($user) ?
+        MAX_TECH_QUEUE_LENGTH_PRO :
+        MAX_TECH_QUEUE_LENGTH
+    );
+}
+
 ?>
