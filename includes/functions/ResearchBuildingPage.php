@@ -92,8 +92,21 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePl
                     if($TheCommand == 'cancel')
                     {
                         // User requested cancel Action
-                        include($_EnginePath.'includes/functions/TechQueue_Remove.php');
-                        $ShowElementID = TechQueue_Remove($ResearchPlanet, $CurrentUser, $QueueElementID, $Now);
+                        $ShowElementID = false;
+
+                        if ($QueueElementID == 0) {
+                            include($_EnginePath.'includes/functions/TechQueue_Remove.php');
+                            $ShowElementID = TechQueue_Remove($ResearchPlanet, $CurrentUser, $QueueElementID, $Now);
+                        } else {
+                            include($_EnginePath.'includes/functions/TechQueue_RemoveQueued.php');
+                            $ShowElementID = TechQueue_RemoveQueued(
+                                $ResearchPlanet,
+                                $CurrentUser,
+                                $QueueElementID,
+                                [ 'currentTimestamp' => $Now ]
+                            );
+                        }
+
                         if($ShowElementID !== false AND $CurrentUser['techQueue_Planet'] == '0')
                         {
                             $UpdateUser = &$CurrentUser;
