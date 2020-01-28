@@ -1,5 +1,7 @@
 <?php
 
+use UniEngine\Engine\Modules\Development;
+
 function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
 {
     global $_EnginePath, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories,
@@ -20,80 +22,15 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
     PlanetResourceUpdate($CurrentUser, $CurrentPlanet, $Now);
 
     // Handle Commands
-    if(!isOnVacation($CurrentUser))
-    {
-        if(isset($_GET['cmd']))
-        {
-            $bDoItNow = false;
-            $TheCommand = $_GET['cmd'];
-            if(!empty($_GET['building']))
-            {
-                $Element = round(trim($_GET['building']));
-            }
-            if(!empty($_GET['listid']))
-            {
-                $ListID = round(trim($_GET['listid']));
-            }
-
-            if(isset($Element))
-            {
-                if(in_array($Element, $_Vars_ElementCategories['buildOn'][$CurrentPlanet['planet_type']]))
-                {
-                    $bDoItNow = true;
-                }
-            }
-            else if(isset($ListID))
-            {
-                $bDoItNow = true;
-            }
-            if($bDoItNow == true)
-            {
-                switch($TheCommand)
-                {
-                    case 'cancel':
-                        // Cancel Current Building
-                        include($_EnginePath.'includes/functions/RemoveBuildingFromQueue.php');
-                        include($_EnginePath.'includes/functions/CancelBuildingFromQueue.php');
-                        CancelBuildingFromQueue($CurrentPlanet, $CurrentUser, [ 'currentTimestamp' => $Now ]);
-                        $CommandDone = true;
-                        break;
-                    case 'remove':
-                        if ($ListID <= 1) {
-                            break;
-                        }
-
-                        // Remove planned Building from Queue
-                        include($_EnginePath.'includes/functions/RemoveBuildingFromQueue.php');
-                        RemoveBuildingFromQueue($CurrentPlanet, $CurrentUser, $ListID, [ 'currentTimestamp' => $Now ]);
-                        $CommandDone = true;
-                        break;
-                    case 'insert':
-                        // Insert into Queue (to Build)
-                        include($_EnginePath.'includes/functions/AddBuildingToQueue.php');
-                        AddBuildingToQueue($CurrentPlanet, $CurrentUser, $Element, true, [ 'currentTimestamp' => $Now ]);
-                        $CommandDone = true;
-                        break;
-                    case 'destroy':
-                        // Insert into Queue (to Destroy)
-                        include($_EnginePath.'includes/functions/AddBuildingToQueue.php');
-                        AddBuildingToQueue($CurrentPlanet, $CurrentUser, $Element, false, [ 'currentTimestamp' => $Now ]);
-                        $CommandDone = true;
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            if($CommandDone === true)
-            {
-                if(HandlePlanetQueue_StructuresSetNext($CurrentPlanet, $CurrentUser, $Now, true) === false)
-                {
-                    include($_EnginePath.'includes/functions/BuildingSavePlanetRecord.php');
-                    BuildingSavePlanetRecord($CurrentPlanet);
-                }
-            }
-        }
-    }
+    Development\Input\UserCommands\handleStructureCommand(
+        $CurrentUser,
+        $CurrentPlanet,
+        $_GET,
+        [
+            "timestamp" => $Now
+        ]
+    );
+    // End of - Handle Commands
 
     include($_EnginePath.'includes/functions/ShowBuildingQueue.php');
     $Queue = ShowBuildingQueue($CurrentPlanet, $CurrentUser);
