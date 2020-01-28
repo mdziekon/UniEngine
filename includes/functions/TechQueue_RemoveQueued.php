@@ -25,7 +25,7 @@ function TechQueue_RemoveQueued(&$planet, &$user, $removedElementIdx, $params) {
     if ($removedElementIdx < 0) {
         return;
     }
-    if ($queueLength < $removedElementIdx) {
+    if ($removedElementIdx >= $queueLength) {
         return;
     }
 
