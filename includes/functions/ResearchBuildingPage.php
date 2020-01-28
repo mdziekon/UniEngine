@@ -95,8 +95,13 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePl
                         $ShowElementID = false;
 
                         if ($QueueElementID == 0) {
+                            include($_EnginePath.'includes/functions/TechQueue_RemoveQueued.php');
                             include($_EnginePath.'includes/functions/TechQueue_Remove.php');
-                            $ShowElementID = TechQueue_Remove($ResearchPlanet, $CurrentUser, $QueueElementID, $Now);
+                            $ShowElementID = TechQueue_Remove(
+                                $ResearchPlanet,
+                                $CurrentUser,
+                                [ 'currentTimestamp' => $Now ]
+                            );
                         } else {
                             include($_EnginePath.'includes/functions/TechQueue_RemoveQueued.php');
                             $ShowElementID = TechQueue_RemoveQueued(
