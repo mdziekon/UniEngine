@@ -54,6 +54,7 @@ if(!isset($_GET['mode']))
 {
     $_GET['mode'] = '';
 }
+
 switch($_GET['mode'])
 {
     case 'fleet':

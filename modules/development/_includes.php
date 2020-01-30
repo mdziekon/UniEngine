@@ -9,6 +9,7 @@ call_user_func(function () {
     include($includePath . './components/ModernQueue/ModernQueue.component.php');
     include($includePath . './components/LegacyQueue/LegacyQueue.component.php');
     include($includePath . './input/research.userCommands.php');
+    include($includePath . './input/structures.userCommands.php');
 
     include($includePath . './screens/ResearchListPage/common.helpers.php');
     include($includePath . './screens/ResearchListPage/queue.helpers.php');

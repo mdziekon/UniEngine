@@ -3,7 +3,6 @@
 $includePath = $_EnginePath . 'modules/structures/';
 
 include($_EnginePath . 'modules/development/_includes.php');
-include($includePath . './input/userCommands.php');
 include($includePath . './screens/StructuresListPage/queue.helpers.php');
 include($includePath . './screens/StructuresListPage/StructuresListPage.php');
 include($includePath . './screens/StructuresListPage/LegacyElementListItem/LegacyElementListItem.component.php');

@@ -1,6 +1,6 @@
 <?php
 
-namespace UniEngine\Engine\Modules\Structures\Input\UserCommands;
+namespace UniEngine\Engine\Modules\Development\Input\UserCommands;
 
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 use UniEngine\Engine\Includes\Helpers\Planets;
@@ -138,7 +138,7 @@ function _handleStructureCommandCancel(&$user, &$planet, $params) {
         ];
     }
 
-    $highlightElementID = CancelBuildingFromQueue(
+    $canceledElementID = CancelBuildingFromQueue(
         $planet,
         $user,
         [ 'currentTimestamp' => $timestamp ]
@@ -147,7 +147,7 @@ function _handleStructureCommandCancel(&$user, &$planet, $params) {
     return [
         'isSuccess' => true,
         'payload' => [
-            'elementID' => $highlightElementID
+            'elementID' => $canceledElementID
         ]
     ];
 }
@@ -174,7 +174,8 @@ function _handleStructureCommandRemove(&$user, &$planet, &$input, $params) {
 
     $queueLength = Planets\Queues\Structures\getQueueLength($planet);
 
-    if ($queueLength < $listElementIdx) {
+    // Indexing starts from 1
+    if ($listElementIdx > $queueLength) {
         return [
             'isSuccess' => false,
             'error' => [
@@ -185,7 +186,7 @@ function _handleStructureCommandRemove(&$user, &$planet, &$input, $params) {
 
     include($_EnginePath . 'includes/functions/RemoveBuildingFromQueue.php');
 
-    $highlightElementID = RemoveBuildingFromQueue(
+    $removedElementID = RemoveBuildingFromQueue(
         $planet,
         $user,
         $listElementIdx,
@@ -195,7 +196,7 @@ function _handleStructureCommandRemove(&$user, &$planet, &$input, $params) {
     return [
         'isSuccess' => true,
         'payload' => [
-            'elementID' => $highlightElementID
+            'elementID' => $removedElementID
         ]
     ];
 }

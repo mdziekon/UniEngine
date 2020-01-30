@@ -7,7 +7,7 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 use UniEngine\Engine\Includes\Helpers\World\Resources;
 use UniEngine\Engine\Includes\Helpers\Users;
 use UniEngine\Engine\Includes\Helpers\Planets;
-use UniEngine\Engine\Modules\Structures\Input;
+use UniEngine\Engine\Modules\Development;
 use UniEngine\Engine\Modules\Development\Components\ModernQueue;
 use UniEngine\Engine\Modules\Development\Components\LegacyQueue;
 use UniEngine\Engine\Modules\Structures\Screens\StructuresListPage\ModernElementListIcon;
@@ -44,7 +44,7 @@ function render (&$CurrentPlanet, $CurrentUser) {
     ];
 
     // Handle Commands
-    $cmdResult = Input\UserCommands\handleStructureCommand(
+    $cmdResult = Development\Input\UserCommands\handleStructureCommand(
         $CurrentUser,
         $CurrentPlanet,
         $_GET,

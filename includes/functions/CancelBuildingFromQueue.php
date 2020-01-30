@@ -22,7 +22,6 @@ function CancelBuildingFromQueue(&$planet, $user, $params) {
     $elementID = $firstQueueElement['elementID'];
     $isUpgrading = ($firstQueueElement['mode'] === 'build');
 
-
     RemoveBuildingFromQueue(
         $planet,
         $user,
