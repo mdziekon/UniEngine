@@ -22,12 +22,6 @@ function TechQueue_Remove(&$planet, &$user, $params) {
     $firstQueueElement = $queue[0];
     $elementID = $firstQueueElement['elementID'];
 
-    // TODO: Remove these validators from here,
-    // they should be performed on the cmd pre-check level
-    if ($queueLength === 0) {
-        return;
-    }
-
     TechQueue_RemoveQueued(
         $planet,
         $user,
