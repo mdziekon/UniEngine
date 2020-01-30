@@ -22,17 +22,6 @@ function CancelBuildingFromQueue(&$planet, $user, $params) {
     $elementID = $firstQueueElement['elementID'];
     $isUpgrading = ($firstQueueElement['mode'] === 'build');
 
-    // TODO: Remove these validators from here,
-    // they should be performed on the cmd pre-check level
-    $queueLength = count($queue);
-    if ($queueLength <= 0) {
-        return;
-    }
-    if (Elements\isIndestructibleStructure($elementID)) {
-        return;
-    }
-
-
     RemoveBuildingFromQueue(
         $planet,
         $user,

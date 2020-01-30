@@ -1,7 +1,6 @@
 <?php
 
 use UniEngine\Engine\Includes\Helpers\Planets;
-use UniEngine\Engine\Includes\Helpers\Users;
 
 //  Arguments:
 //      - $planet (Object)
@@ -18,12 +17,6 @@ function AddBuildingToQueue(&$planet, $user, $newElementID, $newElementIsUpgradi
     $queue = Planets\Queues\Structures\parseQueueString($queueString);
     $queueLength = count($queue);
     $isFirstElement = ($queueLength === 0);
-
-    // TODO: Remove this check from here,
-    // it should be performed on the cmd pre-check level
-    if ($queueLength >= Users\getMaxStructuresQueueLength($user)) {
-        return false;
-    }
 
     $tempPlanet = $planet;
 

@@ -18,16 +18,6 @@ function RemoveBuildingFromQueue(&$planet, $user, $listID, $params) {
     $queueString = Planets\Queues\Structures\getQueueString($planet);
     $queue = Planets\Queues\Structures\parseQueueString($queueString);
 
-    // TODO: Remove these validators from here,
-    // they should be performed on the cmd pre-check level
-    $queueLength = count($queue);
-    if ($listID <= 0) {
-        return;
-    }
-    if ($queueLength < $listID) {
-        return;
-    }
-
     $removedQueueElement = $queue[$removedElementIdx];
     $removedElementID = $removedQueueElement['elementID'];
 

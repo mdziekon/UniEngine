@@ -74,75 +74,28 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePl
         $ResearchPlanet = &$CurrentPlanet;
     }
 
-    // Execute Commands
-    if(!isOnVacation($CurrentUser))
-    {
-        if(isset($_GET['cmd']))
-        {
-            if($LabInQueue === false)
-            {
-                $TheCommand = $_GET['cmd'];
-                $TechID = isset($_GET['tech']) ? intval($_GET['tech']) : 0;
-                $QueueElementID = isset($_GET['el']) ? intval($_GET['el']) : 0;
-
-                if((in_array($TechID, $_Vars_ElementCategories['tech']) AND $TheCommand == 'search') OR ($TheCommand == 'cancel' AND $QueueElementID >= 0))
-                {
-                    // Parse Commands
-                    $UpdateUser = null;
-                    if($TheCommand == 'cancel')
-                    {
-                        // User requested cancel Action
-                        $ShowElementID = false;
-
-                        if ($QueueElementID == 0) {
-                            include($_EnginePath.'includes/functions/TechQueue_RemoveQueued.php');
-                            include($_EnginePath.'includes/functions/TechQueue_Remove.php');
-                            $ShowElementID = TechQueue_Remove(
-                                $ResearchPlanet,
-                                $CurrentUser,
-                                [ 'currentTimestamp' => $Now ]
-                            );
-                        } else {
-                            include($_EnginePath.'includes/functions/TechQueue_RemoveQueued.php');
-                            $ShowElementID = TechQueue_RemoveQueued(
-                                $ResearchPlanet,
-                                $CurrentUser,
-                                $QueueElementID,
-                                [ 'currentTimestamp' => $Now ]
-                            );
-                        }
-
-                        if($ShowElementID !== false AND $CurrentUser['techQueue_Planet'] == '0')
-                        {
-                            $UpdateUser = &$CurrentUser;
-                        }
-                        else
-                        {
-                            $UpdateUser = false;
-                        }
-                        $CommandDone = true;
-                    }
-                    else if($TheCommand == 'search')
-                    {
-                        // User requested do the research
-                        include($_EnginePath.'includes/functions/TechQueue_Add.php');
-                        TechQueue_Add($ResearchPlanet, $CurrentUser, $TechID, [ 'currentTimestamp' => $Now ]);
-                        $ShowElementID = $TechID;
-                        $CommandDone = true;
-                    }
-
-                    if($CommandDone === true)
-                    {
-                        if(HandlePlanetQueue_TechnologySetNext($ResearchPlanet, $CurrentUser, $Now, true) === false)
-                        {
-                            include($_EnginePath.'includes/functions/PostResearchSaveChanges.php');
-                            PostResearchSaveChanges($ResearchPlanet, ($ResearchPlanet['id'] == $CurrentPlanet['id'] ? true : false), $UpdateUser);
-                        }
-                    }
-                }
-            }
-        }
+    // Handle Commands
+    // TODO: this should be changed on the queue rendering level
+    if (
+        isset($_GET) &&
+        isset($_GET['cmd']) &&
+        $_GET['cmd'] === 'cancel' &&
+        !isset($_GET['el'])
+    ) {
+        $_GET['el'] = '0';
     }
+
+    UniEngine\Engine\Modules\Development\Input\UserCommands\handleResearchCommand(
+        $CurrentUser,
+        $ResearchPlanet,
+        $_GET,
+        [
+            "timestamp" => $Now,
+            "currentPlanet" => $CurrentPlanet,
+            "hasPlanetsWithUnfinishedLabUpgrades" => $LabInQueue
+        ]
+    );
+    // End of - Handle Commands
 
     $TechRowTPL = gettemplate('buildings_research_row');
     $TechScrTPL = gettemplate('buildings_research_script');

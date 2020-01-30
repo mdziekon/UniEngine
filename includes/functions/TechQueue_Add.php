@@ -1,7 +1,6 @@
 <?php
 
 use UniEngine\Engine\Includes\Helpers\Planets;
-use UniEngine\Engine\Includes\Helpers\Users;
 
 //  Arguments:
 //      - $planet (Object)
@@ -17,15 +16,6 @@ function TechQueue_Add(&$planet, &$user, $newElementID, $params) {
     $queue = Planets\Queues\Research\parseQueueString($queueString);
     $queueLength = count($queue);
     $isFirstElement = ($queueLength === 0);
-
-    // TODO: Remove these checks from here,
-    // they should be performed on the cmd pre-check level
-    if (Users\isConductingResearch($user) && $user['current_planet'] != $planet['id']) {
-        return;
-    }
-    if ($queueLength >= Users\getMaxResearchQueueLength($user)) {
-        return;
-    }
 
     $tempUser = $user;
 

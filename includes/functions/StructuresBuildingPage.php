@@ -1,5 +1,7 @@
 <?php
 
+use UniEngine\Engine\Modules\Development;
+
 function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 {
     global    $_Lang, $_SkinPath, $_GameConfig, $_GET, $_EnginePath,
@@ -38,76 +40,17 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     $TPL['infobox_req_selector_dual']    = gettemplate('buildings_compact_infobox_req_selector_dual');
 
     // Handle Commands
-    if(!isOnVacation($CurrentUser))
-    {
-        if(!empty($_GET['cmd']))
-        {
-            $TheCommand = $_GET['cmd'];
-            if($TheCommand == 'cancel')
-            {
-                include($_EnginePath.'includes/functions/RemoveBuildingFromQueue.php');
-                include($_EnginePath.'includes/functions/CancelBuildingFromQueue.php');
-                $ShowID = CancelBuildingFromQueue($CurrentPlanet, $CurrentUser, [ 'currentTimestamp' => $Now ]);
-                $CommandDone = true;
-            }
-            else if($TheCommand == 'remove')
-            {
-                if(!empty($_GET['listid']) && intval($_GET['listid']) > 1)
-                {
-                    include($_EnginePath.'includes/functions/RemoveBuildingFromQueue.php');
-                    $ShowID = RemoveBuildingFromQueue($CurrentPlanet, $CurrentUser, intval($_GET['listid']), [ 'currentTimestamp' => $Now ]);
-                    $CommandDone = true;
-                }
-            }
-            else if($TheCommand == 'insert' OR $TheCommand == 'destroy')
-            {
-                if(!empty($_GET['building']))
-                {
-                    $ElementID = intval($_GET['building']);
-                    if(in_array($ElementID, $_Vars_ElementCategories['buildOn'][$CurrentPlanet['planet_type']]))
-                    {
-                        if($TheCommand == 'insert')
-                        {
-                            $AddMode = true;
-                        }
-                        else
-                        {
-                            $AddMode = false;
-                        }
-                        if($ElementID == 31 AND $CurrentUser['techQueue_Planet'] > 0 AND $CurrentUser['techQueue_EndTime'] > 0 AND $_GameConfig['BuildLabWhileRun'] != 1)
-                        {
-                            $BlockCommand = true;
-                        }
-                        else
-                        {
-                            $BlockCommand = false;
-                        }
-                        if($BlockCommand !== true)
-                        {
-                            include($_EnginePath.'includes/functions/AddBuildingToQueue.php');
-                            AddBuildingToQueue($CurrentPlanet, $CurrentUser, $ElementID, $AddMode, [ 'currentTimestamp' => $Now ]);
-                            $CommandDone = true;
-                        }
+    $cmdResult = Development\Input\UserCommands\handleStructureCommand(
+        $CurrentUser,
+        $CurrentPlanet,
+        $_GET,
+        [
+            "timestamp" => $Now
+        ]
+    );
 
-                        $ShowID = $ElementID;
-                    }
-                }
-            }
-
-            if($ShowID > 0)
-            {
-                $ShowElementID = $ShowID;
-            }
-
-            if($CommandDone === true)
-            {
-                if(HandlePlanetQueue_StructuresSetNext($CurrentPlanet, $CurrentUser, $Now, true) === false)
-                {
-                    include($_EnginePath.'includes/functions/BuildingSavePlanetRecord.php');
-                    BuildingSavePlanetRecord($CurrentPlanet);
-                }
-            }
-        }
+    if ($cmdResult['isSuccess']) {
+        $ShowElementID = $cmdResult['payload']['elementID'];
     }
     // End of - Handle Commands
 

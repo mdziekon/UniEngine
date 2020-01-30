@@ -19,16 +19,6 @@ function TechQueue_RemoveQueued(&$planet, &$user, $removedElementIdx, $params) {
     $removedQueueElement = $queue[$removedElementIdx];
     $removedElementID = $removedQueueElement['elementID'];
 
-    // TODO: Remove these validators from here,
-    // they should be performed on the cmd pre-check level
-    $queueLength = count($queue);
-    if ($removedElementIdx < 0) {
-        return;
-    }
-    if ($removedElementIdx >= $queueLength) {
-        return;
-    }
-
     // Recalculate the queue, mostly its elements' durations
     // - there might have been a special technology queued that causes duration change
     $newQueue = [];

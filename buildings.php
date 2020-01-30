@@ -54,6 +54,9 @@ if(!isset($_GET['mode']))
 {
     $_GET['mode'] = '';
 }
+
+include($_EnginePath . 'modules/development/_includes.php');
+
 switch($_GET['mode'])
 {
     case 'fleet':
