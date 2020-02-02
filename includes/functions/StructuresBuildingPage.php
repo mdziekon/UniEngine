@@ -35,8 +35,6 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     $TPL['infobox_body']                = gettemplate('buildings_compact_infobox_body_structures');
     $TPL['infobox_levelmodif']            = gettemplate('buildings_compact_infobox_levelmodif');
     $TPL['infobox_req_res']                = gettemplate('buildings_compact_infobox_req_res');
-    $TPL['infobox_req_desttable']        = gettemplate('buildings_compact_infobox_req_desttable');
-    $TPL['infobox_req_destres']            = gettemplate('buildings_compact_infobox_req_destres');
     $TPL['infobox_additionalnfo']        = gettemplate('buildings_compact_infobox_additionalnfo');
     $TPL['infobox_req_selector_single'] = gettemplate('buildings_compact_infobox_req_selector_single');
     $TPL['infobox_req_selector_dual']    = gettemplate('buildings_compact_infobox_req_selector_dual');
