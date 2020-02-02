@@ -19,11 +19,12 @@ function createDestructionTooltipContentHTML (props) {
                 <span class="destVal ${resourceColor}">
                     ${resourceValue}
                 </span>
+                <br/>
             `;
 
             return resourceHTML.trim();
         })
-        .join("<br/>");
+        .join("");
 
     const contentHTML = `
         <b class="destCost">

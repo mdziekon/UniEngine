@@ -26,7 +26,7 @@ function onQueuesFirstElementFinished () {
     }, 1000);
 }
 </script>
-<script src="dist/js/structures.cachebuster-1569443741057.min.js" type="text/javascript"></script>
+<script src="dist/js/structures.cachebuster-1580668095015.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="dist/css/structures.cachebuster-1546565145290.min.css" />
 <div style="height: 6px;"></div>
 <div class="w900x">

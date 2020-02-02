@@ -32,8 +32,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     $TPL['infobox_body']                = gettemplate('buildings_compact_infobox_body_lab');
     $TPL['infobox_levelmodif']            = gettemplate('buildings_compact_infobox_levelmodif');
     $TPL['infobox_req_res']                = gettemplate('buildings_compact_infobox_req_res');
-    $TPL['infobox_req_desttable']        = gettemplate('buildings_compact_infobox_req_desttable');
-    $TPL['infobox_req_destres']            = gettemplate('buildings_compact_infobox_req_destres');
     $TPL['infobox_additionalnfo']        = gettemplate('buildings_compact_infobox_additionalnfo');
     $TPL['infobox_req_selector_single'] = gettemplate('buildings_compact_infobox_req_selector_single');
     $TPL['infobox_req_selector_dual']    = gettemplate('buildings_compact_infobox_req_selector_dual');
@@ -333,8 +331,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         'InfoBox_Requirements_Res'    => $_Lang['InfoBox_Requirements_Res'],
         'InfoBox_Requirements_Tech' => $_Lang['InfoBox_Requirements_Tech'],
         'InfoBox_BuildTime'            => $_Lang['InfoBox_ResearchTime'],
-        'InfoBox_ShowTechReq'        => $_Lang['InfoBox_ShowTechReq'],
-        'InfoBox_ShowResReq'        => $_Lang['InfoBox_ShowResReq'],
         'ElementPriceDiv'            => ''
     );
 
