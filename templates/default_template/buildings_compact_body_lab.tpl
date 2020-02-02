@@ -25,13 +25,8 @@ function onQueuesFirstElementFinished () {
         document.location.href = "buildings.php?mode=research";
     }, 1000);
 }
-
-$(document).ready(function()
-{
-    {Create_DestroyTips}
-});
 </script>
-<script src="dist/js/structures.cachebuster-1546739003831.min.js" type="text/javascript"></script>
+<script src="dist/js/structures.cachebuster-1580668095015.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="dist/css/structures.cachebuster-1546565145290.min.css" />
 <div style="height: 6px;"></div>
 <div class="w900x">

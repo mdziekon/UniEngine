@@ -4,6 +4,8 @@ var RunQueueHandler = 'false';
 var JSLang = {
     'InfoBox_ShowResReq': '{InfoBox_ShowResReq}',
     'InfoBox_ShowTechReq': '{InfoBox_ShowTechReq}',
+    'InfoBox_DestroyCost': '{InfoBox_DestroyCost}',
+    'InfoBox_DestroyTime': '{InfoBox_DestroyTime}',
     'Metal': '{Metal}',
     'Crystal': '{Crystal}',
     'Deuterium': '{Deuterium}',
@@ -13,6 +15,7 @@ var JSLang = {
     'Queue_ConfirmCancel': '{Queue_ConfirmCancel}',
     'Queue_Cancel_Go': '{Queue_Cancel_Go}'
 };
+var elementsDestructionDetails = {PHPData_ElementsDestructionDetailsJSON};
 
 function onQueuesFirstElementFinished () {
     $("#QueueCancel")
@@ -26,15 +29,32 @@ function onQueuesFirstElementFinished () {
     }, 1000);
 }
 
-$(document).ready(function()
-{
-    {Create_DestroyTips}
+$(document).ready(function() {
+    const $parentEl = $("#structureslist_body");
+
+    Object
+        .entries(elementsDestructionDetails)
+        .forEach(([ elementID, destructionDetails ]) => {
+            const destructionTooltipContentHTML = createDestructionTooltipContentHTML({
+                LANG: JSLang,
+                resources: destructionDetails.resources,
+                destructionTime: destructionDetails.destructionTime
+            });
+
+            const $tooltipHandleEl = $parentEl.find("#bDest_" + elementID);
+
+            $tooltipHandleEl.tipTip({
+                maxWidth: "1000px",
+                delay: 100,
+                content: destructionTooltipContentHTML
+            });
+        });
 });
 </script>
-<script src="dist/js/structures.cachebuster-1546739003831.min.js" type="text/javascript"></script>
+<script src="dist/js/structures.cachebuster-1580668095015.min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="dist/css/structures.cachebuster-1546565145290.min.css" />
 <div style="height: 6px;"></div>
-<div class="w900x">
+<div id="structureslist_body" class="w900x">
     <div style="float: left; width: 600px;">
         <table class="w100p">
             <tr>

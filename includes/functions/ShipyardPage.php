@@ -334,8 +334,6 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
         'InfoBox_Requirements_Tech'    => $_Lang['InfoBox_Requirements_Tech'],
         'InfoBox_BuildTime'            => $_Lang['InfoBox_ConstructionTime'],
         'InfoBox_MaxConstructible'    => $_Lang['InfoBox_MaxConstructible'],
-        'InfoBox_ShowTechReq'        => $_Lang['InfoBox_ShowTechReq'],
-        'InfoBox_ShowResReq'        => $_Lang['InfoBox_ShowResReq'],
         'ElementPriceDiv'            => ''
     );
 
