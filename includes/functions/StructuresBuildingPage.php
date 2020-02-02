@@ -1,6 +1,8 @@
 <?php
 
 use UniEngine\Engine\Modules\Development;
+use UniEngine\Engine\Includes\Helpers\World\Elements;
+use UniEngine\Engine\Includes\Helpers\World\Resources;
 
 function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 {
@@ -263,8 +265,11 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         'InfoBox_BuildTime'                => $_Lang['InfoBox_BuildTime'],
         'InfoBox_ShowTechReq'            => $_Lang['InfoBox_ShowTechReq'],
         'InfoBox_ShowResReq'            => $_Lang['InfoBox_ShowResReq'],
+        'InfoBox_DestroyCost'           => $_Lang['InfoBox_DestroyCost'],
+        'InfoBox_DestroyTime'           => $_Lang['InfoBox_DestroyTime'],
     );
 
+    $hasElementsInQueue = ($Queue['lenght'] > 0);
     $resourceLabels = [
         'metal'         => $_Lang['Metal'],
         'crystal'       => $_Lang['Crystal'],
@@ -273,6 +278,8 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         'energy_max'    => $_Lang['Energy'],
         'darkEnergy'    => $_Lang['DarkEnergy']
     ];
+
+    $elementsDestructionDetails = [];
 
     foreach($_Vars_ElementCategories['build'] as $ElementID)
     {
@@ -491,62 +498,49 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             }
             else
             {
-                $ElementDestroyCost = GetBuildingPrice($CurrentUser, $CurrentPlanet, $ElementID, true, true, true);
-                $ElementParser['Create_DestroyTips_Res'] = '';
-                foreach($ElementDestroyCost as $Key => $Value)
-                {
-                    if($Value > 0)
-                    {
-                        $ResColor = '';
-                        if($Key != 'darkEnergy')
-                        {
-                            if($CurrentPlanet[$Key] < $Value)
-                            {
-                                if($Queue['lenght'] > 0)
-                                {
-                                    $ResColor = 'orange';
-                                }
-                                else
-                                {
-                                    $ResColor = 'red';
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if($CurrentUser[$Key] < $Value)
-                            {
-                                if($Queue['lenght'] > 0)
-                                {
-                                    $ResColor = 'orange';
-                                }
-                                else
-                                {
-                                    $ResColor = 'red';
-                                }
-                            }
-                        }
-                        $ElementParser['ElementPrices'] = array('Name' => $ResLangs[$Key], 'Color' => $ResColor, 'Value' => prettyNumber($Value));
-                        $ElementParser['Create_DestroyTips_Res'] .= trim(
-                            parsetemplate(
-                                $TPL['infobox_req_destres'],
-                                $ElementParser['ElementPrices']
-                            )
-                        );
-                    }
+                $downgradeCost = Elements\calculatePurchaseCost(
+                    $ElementID,
+                    Elements\getElementState($ElementID, $CurrentPlanet, $CurrentUser),
+                    [
+                        'purchaseMode' => Elements\PurchaseMode::Downgrade
+                    ]
+                );
+
+                $elementDowngradeResources = [];
+
+                foreach ($downgradeCost as $costResourceKey => $costValue) {
+                    $currentResourceState = Resources\getResourceState(
+                        $costResourceKey,
+                        $CurrentUser,
+                        $CurrentPlanet
+                    );
+
+                    $resourceLeft = ($currentResourceState - $costValue);
+                    $hasResourceDeficit = ($resourceLeft < 0);
+
+                    $resourceCostColor = (
+                        !$hasResourceDeficit ?
+                        '' :
+                        (
+                            $hasElementsInQueue ?
+                            'orange' :
+                            'red'
+                        )
+                    );
+
+                    $elementDowngradeResources[] = [
+                        'name' => $resourceLabels[$costResourceKey],
+                        'color' => $resourceCostColor,
+                        'value' => prettyNumber($costValue)
+                    ];
                 }
-                if(!isset($Parse['Create_DestroyTips']))
-                {
-                    $Parse['Create_DestroyTips'] = '';
-                }
-                $Parse['Create_DestroyTips'] .= parsetemplate($TPL['infobox_req_desttable'], array
-                (
-                    'ElementID' => $ElementID,
-                    'InfoBox_DestroyCost' => $_Lang['InfoBox_DestroyCost'],
-                    'InfoBox_DestroyTime' => $_Lang['InfoBox_DestroyTime'],
-                    'Resources' => $ElementParser['Create_DestroyTips_Res'],
-                    'DestroyTime' => pretty_time(GetBuildingTime($CurrentUser, $CurrentPlanet, $ElementID) / 2)
-                ));
+
+                $destructionTime = GetBuildingTime($CurrentUser, $CurrentPlanet, $ElementID) / 2;
+
+                $elementsDestructionDetails[$ElementID] = [
+                    'resources' => $elementDowngradeResources,
+                    'destructionTime' => pretty_time($destructionTime)
+                ];
             }
 
             if(in_array($ElementID, $_Vars_ElementCategories['prod']))
@@ -689,6 +683,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     $Parse['Insert_Overview_Fields_Max'] = prettyNumber($MaxFields);
     $Parse['Insert_Overview_Fields_Percent'] = sprintf('%0.2f', ($CurrentPlanet['field_current'] / $MaxFields) * 100);
     $Parse['Insert_Overview_Temperature'] = sprintf($_Lang['Overview_Form_Temperature'], $CurrentPlanet['temp_min'], $CurrentPlanet['temp_max']);
+    $Parse['PHPData_ElementsDestructionDetailsJSON'] = json_encode($elementsDestructionDetails);
 
     $Page = parsetemplate(gettemplate('buildings_compact_body_structures'), $Parse);
 
