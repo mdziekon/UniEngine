@@ -342,8 +342,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         'InfoBox_Requirements_Res'    => $_Lang['InfoBox_Requirements_Res'],
         'InfoBox_Requirements_Tech' => $_Lang['InfoBox_Requirements_Tech'],
         'InfoBox_BuildTime'            => $_Lang['InfoBox_ResearchTime'],
-        'InfoBox_ShowTechReq'        => $_Lang['InfoBox_ShowTechReq'],
-        'InfoBox_ShowResReq'        => $_Lang['InfoBox_ShowResReq'],
         'ElementPriceDiv'            => ''
     );
 
