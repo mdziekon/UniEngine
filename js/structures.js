@@ -1,4 +1,48 @@
 /* globals AllowPrettyInputBox, ShowElementOnStartup, JSLang, ShipPrices, ShipTimes, RunQueueHandler, Resources, QueueArray */
+/* exported createDestructionTooltipContentHTML */
+
+function createDestructionTooltipContentHTML (props) {
+    const LANG = props.LANG;
+    const resources = props.resources;
+    const destructionTime = props.destructionTime;
+
+    const resourcesListHTML = resources
+        .map(function (resourceDetails) {
+            const resourceName = resourceDetails.name;
+            const resourceColor = resourceDetails.color;
+            const resourceValue = resourceDetails.value;
+
+            const resourceHTML = `
+                <span class="destLab">
+                    ${resourceName}:
+                </span>
+                <span class="destVal ${resourceColor}">
+                    ${resourceValue}
+                </span>
+                <br/>
+            `;
+
+            return resourceHTML.trim();
+        })
+        .join("");
+
+    const contentHTML = `
+        <b class="destCost">
+            ${LANG["InfoBox_DestroyCost"]}:
+        </b>
+        <br />
+        ${resourcesListHTML}
+        <b class="destTime">
+            ${LANG["InfoBox_DestroyTime"]}:
+        </b>
+        <br/>
+        <span class="destTimeVal">
+            ${destructionTime}
+        </span>
+    `;
+
+    return contentHTML.trim();
+}
 
 $(document).ready(function () {
     var local_ShowElementOnStartup = ShowElementOnStartup;
