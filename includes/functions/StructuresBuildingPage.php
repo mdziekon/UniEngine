@@ -265,6 +265,15 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         'InfoBox_ShowResReq'            => $_Lang['InfoBox_ShowResReq'],
     );
 
+    $resourceLabels = [
+        'metal'         => $_Lang['Metal'],
+        'crystal'       => $_Lang['Crystal'],
+        'deuterium'     => $_Lang['Deuterium'],
+        'energy'        => $_Lang['Energy'],
+        'energy_max'    => $_Lang['Energy'],
+        'darkEnergy'    => $_Lang['DarkEnergy']
+    ];
+
     foreach($_Vars_ElementCategories['build'] as $ElementID)
     {
         if(in_array($ElementID, $_Vars_ElementCategories['buildOn'][$CurrentPlanet['planet_type']]))
@@ -565,13 +574,6 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                         'customProductionFactor' => 10
                     ]
                 );
-
-                $resourceLabels = [
-                    'metal' => $_Lang['Metal'],
-                    'crystal' => $_Lang['Crystal'],
-                    'deuterium' => $_Lang['Deuterium'],
-                    'energy' => $_Lang['Energy'],
-                ];
 
                 foreach ($nextLevelProduction as $resourceKey => $nextLevelResourceProduction) {
                     $difference = ($nextLevelResourceProduction - $thisLevelProduction[$resourceKey]);
