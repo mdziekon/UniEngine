@@ -3,6 +3,9 @@
 use UniEngine\Engine\Modules\Development;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 use UniEngine\Engine\Includes\Helpers\World\Resources;
+use UniEngine\Engine\Modules\Development\Components\ModernQueue;
+use UniEngine\Engine\Includes\Helpers\Planets;
+use UniEngine\Engine\Includes\Helpers\Users;
 
 function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 {
@@ -53,6 +56,31 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         $ShowElementID = $cmdResult['payload']['elementID'];
     }
     // End of - Handle Commands
+
+    $queueComponent = ModernQueue\render([
+        'planet' => &$CurrentPlanet,
+        'queue' => Planets\Queues\Structures\parseQueueString($CurrentPlanet['buildQueue']),
+        'queueMaxLength' => Users\getMaxStructuresQueueLength($CurrentUser),
+        'timestamp' => $Now,
+        'infoComponents' => [],
+
+        'getQueueElementCancellationLinkHref' => function ($queueElement) {
+            $queueElementIdx = $queueElement['queueElementIdx'];
+            $listID = $queueElement['listID'];
+            $isFirstQueueElement = ($queueElementIdx === 0);
+            $cmd = ($isFirstQueueElement ? "cancel" : "remove");
+
+            return buildHref([
+                'path' => 'buildings.php',
+                'query' => [
+                    'cmd' => $cmd,
+                    'listid' => $listID
+                ]
+            ]);
+        }
+    ]);
+
+    $Parse['Create_Queue'] = $queueComponent['componentHTML'];
 
     // Parse Queue
     $CurrentQueue = $CurrentPlanet['buildQueue'];
