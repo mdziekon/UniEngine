@@ -9,6 +9,8 @@ call_user_func(function () {
     include($includePath . './input/research.userCommands.php');
     include($includePath . './input/structures.userCommands.php');
 
+    include($includePath . './components/ModernQueue/ModernQueue.component.php');
+
 });
 
 ?>
