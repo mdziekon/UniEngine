@@ -11,6 +11,8 @@ call_user_func(function () {
 
     include($includePath . './components/ModernQueue/ModernQueue.component.php');
 
+    include($includePath . './screens/ResearchListPage/ModernQueuePlanetInfo/ModernQueuePlanetInfo.component.php');
+
 });
 
 ?>
