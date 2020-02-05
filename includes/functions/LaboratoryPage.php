@@ -1,6 +1,7 @@
 <?php
 
 use UniEngine\Engine\Modules\Development\Components\ModernQueue;
+use UniEngine\Engine\Modules\Development\Screens\ResearchListPage\ModernQueuePlanetInfo;
 use UniEngine\Engine\Includes\Helpers\Planets;
 use UniEngine\Engine\Includes\Helpers\Users;
 
@@ -178,6 +179,15 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     }
     // End of - Execute Commands
 
+    $planetInfoComponent = ModernQueuePlanetInfo\render([
+        'currentPlanet'     => &$CurrentPlanet,
+        'researchPlanet'    => &$ResearchPlanet,
+        'queue'             => Planets\Queues\Research\parseQueueString(
+            $ResearchPlanet['techQueue']
+        ),
+        'timestamp'         => $Now,
+    ]);
+
     $queueComponent = ModernQueue\render([
         'user'              => &$CurrentUser,
         'planet'            => &$ResearchPlanet,
@@ -186,7 +196,9 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         ),
         'queueMaxLength'    => Users\getMaxResearchQueueLength($CurrentUser),
         'timestamp'         => $Now,
-        'infoComponents'    => [],
+        'infoComponents'    => [
+            $planetInfoComponent['componentHTML']
+        ],
 
         'getQueueElementCancellationLinkHref' => function ($queueElement) {
             $listID = $queueElement['listID'];
