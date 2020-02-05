@@ -1,5 +1,9 @@
 <?php
 
+use UniEngine\Engine\Modules\Development\Components\ModernQueue;
+use UniEngine\Engine\Includes\Helpers\Planets;
+use UniEngine\Engine\Includes\Helpers\Users;
+
 function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 {
     global    $_EnginePath, $_Lang,
@@ -173,6 +177,32 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         $ResearchInThisLab = true;
     }
     // End of - Execute Commands
+
+    $queueComponent = ModernQueue\render([
+        'user'              => &$CurrentUser,
+        'planet'            => &$ResearchPlanet,
+        'queue'             => Planets\Queues\Research\parseQueueString(
+            $ResearchPlanet['techQueue']
+        ),
+        'queueMaxLength'    => Users\getMaxResearchQueueLength($CurrentUser),
+        'timestamp'         => $Now,
+        'infoComponents'    => [],
+
+        'getQueueElementCancellationLinkHref' => function ($queueElement) {
+            $listID = $queueElement['listID'];
+
+            return buildHref([
+                'path' => 'buildings.php',
+                'query' => [
+                    'mode' => 'research',
+                    'cmd' => 'cancel',
+                    'el' => ($listID - 1)
+                ]
+            ]);
+        }
+    ]);
+
+    $Parse['Create_Queue'] = $queueComponent['componentHTML'];
 
     // Parse Queue
     $CurrentQueue = (isset($ResearchPlanet['techQueue']) ? $ResearchPlanet['techQueue'] : false);
