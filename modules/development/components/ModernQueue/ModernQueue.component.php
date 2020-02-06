@@ -15,6 +15,7 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 //                  - endTimestamp (Number)
 //                  - mode (String)
 //          - queueMaxLength (Number)
+//          - isQueueEmptyInfoHidden (Boolean | undefined)
 //          - timestamp (Number)
 //          - infoComponents (Array<String: componentHTML> | undefined)
 //          - getQueueElementCancellationLinkHref (Function: (ExtendedQueueElement) => String)
@@ -35,9 +36,16 @@ function render ($props) {
 
     includeLang('worldElements.detailed');
 
+    $localTemplateLoader = createLocalTemplateLoader(__DIR__);
+
     $planet = &$props['planet'];
     $queue = $props['queue'];
     $queueMaxLength = $props['queueMaxLength'];
+    $isQueueEmptyInfoHidden = (
+        isset($props['isQueueEmptyInfoHidden']) ?
+        $props['isQueueEmptyInfoHidden'] :
+        false
+    );
     $currentTimestamp = $props['timestamp'];
     $infoComponents = (
         isset($props['infoComponents']) ?
@@ -51,9 +59,9 @@ function render ($props) {
         'queueTopInfobox' => []
     ];
     $tplBodyCache = [
-        'row_infobox_generic' => gettemplate('modules/development/components/ModernQueue/row_infobox_generic'),
-        'row_element_firstel' => gettemplate('modules/development/components/ModernQueue/row_element_firstel'),
-        'row_element_nextel' => gettemplate('modules/development/components/ModernQueue/row_element_nextel')
+        'row_infobox_generic' => $localTemplateLoader('row_infobox_generic'),
+        'row_element_firstel' => $localTemplateLoader('row_element_firstel'),
+        'row_element_nextel' => $localTemplateLoader('row_element_nextel')
     ];
 
     $queueElementsTplData = [];
@@ -179,7 +187,7 @@ function render ($props) {
 
             $componentTPLData['queueElements'][] = parsetemplate($queueElementTPLBody, $queueElementTplData);
         }
-    } else {
+    } else if (!$isQueueEmptyInfoHidden) {
         $componentTPLData['queueTopInfobox'][] = parsetemplate(
             $tplBodyCache['row_infobox_generic'],
             [

@@ -14,12 +14,15 @@ function render ($props) {
 
     includeLang('worldElements.detailed');
 
+    $localTemplateLoader = createLocalTemplateLoader(__DIR__);
+
     $planetsWithUnfinishedLabUpgrades = &$props['planetsWithUnfinishedLabUpgrades'];
 
     $hasPlanetsWithUnfinishedLabUpgrades = !empty($planetsWithUnfinishedLabUpgrades);
 
     $tplBodyCache = [
-        'queue_topinfo_planetlink' => gettemplate('buildings_compact_queue_planetlink'),
+        'queue_topinfo_planetlink' => $localTemplateLoader('row_infobox_planetlink'),
+        'queue_topinfo_otherplanetbox' => $localTemplateLoader('row_infobox_otherplanetbox'),
     ];
 
     if (!$hasPlanetsWithUnfinishedLabUpgrades) {
@@ -48,9 +51,12 @@ function render ($props) {
     $planetLinksHTML = implode('<br/>', $planetLinks);
 
     return [
-        'componentHTML' => sprintf(
-            $_Lang['Queue_LabInQueue'],
-            $planetLinksHTML
+        'componentHTML' => parsetemplate(
+            $tplBodyCache['queue_topinfo_otherplanetbox'],
+            [
+                'Lang_LabInQueue' => $_Lang['Queue_LabInQueue'],
+                'Data_planetLinks' => $planetLinksHTML
+            ]
         )
     ];
 }

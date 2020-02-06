@@ -19,6 +19,7 @@ call_user_func(function () {
     include($includePath . './screens/ResearchListPage/ModernQueuePlanetInfo/ModernQueuePlanetInfo.component.php');
     include($includePath . './screens/ResearchListPage/ModernElementListIcon/ModernElementListIcon.component.php');
     include($includePath . './screens/ResearchListPage/ModernElementInfoCard/ModernElementInfoCard.component.php');
+
 });
 
 ?>

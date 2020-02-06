@@ -23,6 +23,8 @@ function render ($props) {
 
     includeLang('worldElements.detailed');
 
+    $localTemplateLoader = createLocalTemplateLoader(__DIR__);
+
     $currentPlanet = &$props['currentPlanet'];
     $researchPlanet = &$props['researchPlanet'];
     $queue = $props['queue'];
@@ -31,7 +33,7 @@ function render ($props) {
     $isResearchConductedOnCurrentPlanet = ($currentPlanet['id'] === $researchPlanet['id']);
 
     $tplBodyCache = [
-        'queue_topinfo_researchplanet' => gettemplate('buildings_compact_queue_topinfo_researchplanet'),
+        'queue_topinfo_researchplanet' => $localTemplateLoader('row_infobox_researchplanet'),
     ];
 
     $queueUnfinishedElementsCount = 0;
@@ -60,8 +62,8 @@ function render ($props) {
             'orange'
         ),
         'Data_planetCoords_galaxy'      => $researchPlanet['galaxy'],
-        'Data_planetCoords_system'      => $researchPlanet['galaxy'],
-        'Data_planetCoords_planet'      => $researchPlanet['galaxy'],
+        'Data_planetCoords_system'      => $researchPlanet['system'],
+        'Data_planetCoords_planet'      => $researchPlanet['planet'],
 
         'Const_SkinPath'                => $_SkinPath,
         'Lang_ResearchOn'               => $_Lang['Queue_ResearchOn'],
