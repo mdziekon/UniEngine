@@ -15,6 +15,7 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 //                  - endTimestamp (Number)
 //                  - mode (String)
 //          - queueMaxLength (Number)
+//          - isQueueEmptyInfoHidden (Boolean | undefined)
 //          - timestamp (Number)
 //          - infoComponents (Array<String: componentHTML> | undefined)
 //          - getQueueElementCancellationLinkHref (Function: (ExtendedQueueElement) => String)
@@ -40,6 +41,11 @@ function render ($props) {
     $planet = &$props['planet'];
     $queue = $props['queue'];
     $queueMaxLength = $props['queueMaxLength'];
+    $isQueueEmptyInfoHidden = (
+        isset($props['isQueueEmptyInfoHidden']) ?
+        $props['isQueueEmptyInfoHidden'] :
+        false
+    );
     $currentTimestamp = $props['timestamp'];
     $infoComponents = (
         isset($props['infoComponents']) ?
@@ -181,7 +187,7 @@ function render ($props) {
 
             $componentTPLData['queueElements'][] = parsetemplate($queueElementTPLBody, $queueElementTplData);
         }
-    } else {
+    } else if (!$isQueueEmptyInfoHidden) {
         $componentTPLData['queueTopInfobox'][] = parsetemplate(
             $tplBodyCache['row_infobox_generic'],
             [
