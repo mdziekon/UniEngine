@@ -2,6 +2,7 @@
 
 use UniEngine\Engine\Modules\Development\Components\ModernQueue;
 use UniEngine\Engine\Modules\Development\Screens\ResearchListPage\ModernQueuePlanetInfo;
+use UniEngine\Engine\Modules\Development\Screens\ResearchListPage\ModernQueueLabUpgradeInfo;
 use UniEngine\Engine\Includes\Helpers\Planets;
 use UniEngine\Engine\Includes\Helpers\Users;
 
@@ -32,7 +33,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     $TPL['list_partdisabled']            = parsetemplate($TPL['list_disabled'], array('AddOpacity' => 'dPart'));
     $TPL['list_disabled']                = parsetemplate($TPL['list_disabled'], array('AddOpacity' => ''));
     $TPL['queue_topinfo']                = gettemplate('buildings_compact_queue_topinfo');
-    $TPL['queue_planetlink']            = gettemplate('buildings_compact_queue_planetlink');
     $TPL['infobox_body']                = gettemplate('buildings_compact_infobox_body_lab');
     $TPL['infobox_levelmodif']            = gettemplate('buildings_compact_infobox_levelmodif');
     $TPL['infobox_req_res']                = gettemplate('buildings_compact_infobox_req_res');
@@ -99,6 +99,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 
     // Check if Lab is in BuildQueue
     $LabInQueue = false;
+    $planetsWithUnfinishedLabUpgrades = [];
     if($_GameConfig['BuildLabWhileRun'] != 1 AND $LabInQueue_CheckID > 0)
     {
         include($_EnginePath.'/includes/functions/CheckLabInQueue.php');
@@ -119,12 +120,8 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             }
             else
             {
-                $LabInQueueAt[] = parsetemplate($TPL['queue_planetlink'], array
-                (
-                    'PlanetID' => $LabInQueue_CheckPlanet['id'],
-                    'PlanetName' => $LabInQueue_CheckPlanet['name'],
-                    'PlanetCoords' => "{$LabInQueue_CheckPlanet['galaxy']}:{$LabInQueue_CheckPlanet['system']}:{$LabInQueue_CheckPlanet['planet']}"
-                ));
+                $planetsWithUnfinishedLabUpgrades[] = $LabInQueue_CheckPlanet;
+
                 $LabInQueue = true;
             }
         }
@@ -177,6 +174,9 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         ),
         'timestamp'         => $Now,
     ]);
+    $labsUpgradeInfoComponent = ModernQueueLabUpgradeInfo\render([
+        'planetsWithUnfinishedLabUpgrades' => $planetsWithUnfinishedLabUpgrades
+    ]);
 
     $queueComponent = ModernQueue\render([
         'user'              => &$CurrentUser,
@@ -187,8 +187,12 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         'queueMaxLength'    => Users\getMaxResearchQueueLength($CurrentUser),
         'timestamp'         => $Now,
         'infoComponents'    => [
-            $planetInfoComponent['componentHTML']
+            $planetInfoComponent['componentHTML'],
+            $labsUpgradeInfoComponent['componentHTML']
         ],
+        'isQueueEmptyInfoHidden' => (
+            !empty($labsUpgradeInfoComponent['componentHTML'])
+        ),
 
         'getQueueElementCancellationLinkHref' => function ($queueElement) {
             $listID = $queueElement['listID'];
