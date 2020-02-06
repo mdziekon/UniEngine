@@ -32,7 +32,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     $TPL['list_disabled']                = gettemplate('buildings_compact_list_disabled');
     $TPL['list_partdisabled']            = parsetemplate($TPL['list_disabled'], array('AddOpacity' => 'dPart'));
     $TPL['list_disabled']                = parsetemplate($TPL['list_disabled'], array('AddOpacity' => ''));
-    $TPL['queue_topinfo']                = gettemplate('buildings_compact_queue_topinfo');
     $TPL['infobox_body']                = gettemplate('buildings_compact_infobox_body_lab');
     $TPL['infobox_levelmodif']            = gettemplate('buildings_compact_infobox_levelmodif');
     $TPL['infobox_req_res']                = gettemplate('buildings_compact_infobox_req_res');
