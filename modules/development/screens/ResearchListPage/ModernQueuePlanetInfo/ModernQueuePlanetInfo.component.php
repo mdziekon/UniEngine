@@ -62,8 +62,8 @@ function render ($props) {
             'orange'
         ),
         'Data_planetCoords_galaxy'      => $researchPlanet['galaxy'],
-        'Data_planetCoords_system'      => $researchPlanet['galaxy'],
-        'Data_planetCoords_planet'      => $researchPlanet['galaxy'],
+        'Data_planetCoords_system'      => $researchPlanet['system'],
+        'Data_planetCoords_planet'      => $researchPlanet['planet'],
 
         'Const_SkinPath'                => $_SkinPath,
         'Lang_ResearchOn'               => $_Lang['Queue_ResearchOn'],
