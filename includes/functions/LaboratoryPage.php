@@ -1,5 +1,11 @@
 <?php
 
+use UniEngine\Engine\Modules\Development\Components\ModernQueue;
+use UniEngine\Engine\Modules\Development\Screens\ResearchListPage\ModernQueuePlanetInfo;
+use UniEngine\Engine\Modules\Development\Screens\ResearchListPage\ModernQueueLabUpgradeInfo;
+use UniEngine\Engine\Includes\Helpers\Planets;
+use UniEngine\Engine\Includes\Helpers\Users;
+
 function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 {
     global    $_EnginePath, $_Lang,
@@ -26,8 +32,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     $TPL['list_disabled']                = gettemplate('buildings_compact_list_disabled');
     $TPL['list_partdisabled']            = parsetemplate($TPL['list_disabled'], array('AddOpacity' => 'dPart'));
     $TPL['list_disabled']                = parsetemplate($TPL['list_disabled'], array('AddOpacity' => ''));
-    $TPL['queue_topinfo']                = gettemplate('buildings_compact_queue_topinfo');
-    $TPL['queue_planetlink']            = gettemplate('buildings_compact_queue_planetlink');
     $TPL['infobox_body']                = gettemplate('buildings_compact_infobox_body_lab');
     $TPL['infobox_levelmodif']            = gettemplate('buildings_compact_infobox_levelmodif');
     $TPL['infobox_req_res']                = gettemplate('buildings_compact_infobox_req_res');
@@ -94,6 +98,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 
     // Check if Lab is in BuildQueue
     $LabInQueue = false;
+    $planetsWithUnfinishedLabUpgrades = [];
     if($_GameConfig['BuildLabWhileRun'] != 1 AND $LabInQueue_CheckID > 0)
     {
         include($_EnginePath.'/includes/functions/CheckLabInQueue.php');
@@ -114,12 +119,8 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             }
             else
             {
-                $LabInQueueAt[] = parsetemplate($TPL['queue_planetlink'], array
-                (
-                    'PlanetID' => $LabInQueue_CheckPlanet['id'],
-                    'PlanetName' => $LabInQueue_CheckPlanet['name'],
-                    'PlanetCoords' => "{$LabInQueue_CheckPlanet['galaxy']}:{$LabInQueue_CheckPlanet['system']}:{$LabInQueue_CheckPlanet['planet']}"
-                ));
+                $planetsWithUnfinishedLabUpgrades[] = $LabInQueue_CheckPlanet;
+
                 $LabInQueue = true;
             }
         }
@@ -138,16 +139,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     }
 
     // Handle Commands
-    // TODO: this should be changed on the queue rendering level
-    if (
-        isset($_GET) &&
-        isset($_GET['cmd']) &&
-        $_GET['cmd'] === 'cancel' &&
-        !isset($_GET['el'])
-    ) {
-        $_GET['el'] = '0';
-    }
-
     $cmdResult = UniEngine\Engine\Modules\Development\Input\UserCommands\handleResearchCommand(
         $CurrentUser,
         $ResearchPlanet,
@@ -174,6 +165,50 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     }
     // End of - Execute Commands
 
+    $planetInfoComponent = ModernQueuePlanetInfo\render([
+        'currentPlanet'     => &$CurrentPlanet,
+        'researchPlanet'    => &$ResearchPlanet,
+        'queue'             => Planets\Queues\Research\parseQueueString(
+            $ResearchPlanet['techQueue']
+        ),
+        'timestamp'         => $Now,
+    ]);
+    $labsUpgradeInfoComponent = ModernQueueLabUpgradeInfo\render([
+        'planetsWithUnfinishedLabUpgrades' => $planetsWithUnfinishedLabUpgrades
+    ]);
+
+    $queueComponent = ModernQueue\render([
+        'user'              => &$CurrentUser,
+        'planet'            => &$ResearchPlanet,
+        'queue'             => Planets\Queues\Research\parseQueueString(
+            $ResearchPlanet['techQueue']
+        ),
+        'queueMaxLength'    => Users\getMaxResearchQueueLength($CurrentUser),
+        'timestamp'         => $Now,
+        'infoComponents'    => [
+            $planetInfoComponent['componentHTML'],
+            $labsUpgradeInfoComponent['componentHTML']
+        ],
+        'isQueueEmptyInfoHidden' => (
+            !empty($labsUpgradeInfoComponent['componentHTML'])
+        ),
+
+        'getQueueElementCancellationLinkHref' => function ($queueElement) {
+            $listID = $queueElement['listID'];
+
+            return buildHref([
+                'path' => 'buildings.php',
+                'query' => [
+                    'mode' => 'research',
+                    'cmd' => 'cancel',
+                    'el' => ($listID - 1)
+                ]
+            ]);
+        }
+    ]);
+
+    $Parse['Create_Queue'] = $queueComponent['componentHTML'];
+
     // Parse Queue
     $CurrentQueue = (isset($ResearchPlanet['techQueue']) ? $ResearchPlanet['techQueue'] : false);
     if(!empty($CurrentQueue))
@@ -188,111 +223,42 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         {
             $QueueData = explode(',', $QueueData);
             $BuildEndTime = $QueueData[3];
-            if($BuildEndTime >= $Now)
-            {
-                $ListID = $QueueIndex;
-                $ElementID = $QueueData[0];
-                $ElementLevel = $QueueData[1];
-                $ElementBuildtime = $BuildEndTime - $Now;
-                $ElementName = $_Lang['tech'][$ElementID];
-                if($QueueIndex == 0)
-                {
-                    include($_EnginePath.'/includes/functions/InsertJavaScriptChronoApplet.php');
 
-                    $QueueParser[] = array
-                    (
-                        'ChronoAppletScript'    => InsertJavaScriptChronoApplet(
-                            'QueueFirstTimer',
-                            '',
-                            $BuildEndTime,
-                            true,
-                            false,
-                            'function() { onQueuesFirstElementFinished(); }'
-                        ),
-                        'EndTimer'                => pretty_time($ElementBuildtime, true),
-                        'SkinPath'                => $_SkinPath,
-                        'ElementID'                => $ElementID,
-                        'Name'                    => $ElementName,
-                        'LevelText'                => $_Lang['level'],
-                        'Level'                    => $ElementLevel,
-                        'PlanetID'                => $ResearchPlanet['id'],
-                        'PlanetImg'                => $ResearchPlanet['image'],
-                        'Queue_ResearchOn'        => $_Lang['Queue_ResearchOn'],
-                        'PlanetLabColor'        => ($ResearchInThisLab ? 'lime' : 'orange'),
-                        'PlanetName'            => $ResearchPlanet['name'],
-                        'PlanetCoords'            => "{$ResearchPlanet['galaxy']}:{$ResearchPlanet['system']}:{$ResearchPlanet['planet']}",
-                        'EndText'                => $_Lang['Queue_EndTime'],
-                        'EndDate'                => date('d/m | H:i:s', $BuildEndTime),
-                        'EndTitleBeg'            => $_Lang['Queue_EndTitleBeg'],
-                        'EndTitleHour'            => $_Lang['Queue_EndTitleHour'],
-                        'EndDateExpand'            => prettyDate('d m Y', $BuildEndTime, 1),
-                        'EndTimeExpand'            => date('H:i:s', $BuildEndTime),
-                        'PremBlock'                => (isset($_Vars_PremiumBuildings[$ElementID]) && $_Vars_PremiumBuildings[$ElementID] == 1 ? 'premblock' : ''),
-                        'CancelText'            => (isset($_Vars_PremiumBuildings[$ElementID]) && $_Vars_PremiumBuildings[$ElementID] == 1 ? $_Lang['Queue_Cancel_CantCancel'] : $_Lang['Queue_Cancel_Research'])
-                    );
-                }
-                else
-                {
-                    $QueueParser[] = array
-                    (
-                        'ElementNo'            => $ListID + 1,
-                        'ElementID'            => $ElementID,
-                        'Name'                => $ElementName,
-                        'LevelText'            => $_Lang['level'],
-                        'Level'                => $ElementLevel,
-                        'EndDate'            => date('d/m H:i:s', $BuildEndTime),
-                        'EndTitleBeg'        => $_Lang['Queue_EndTitleBeg'],
-                        'EndTitleHour'        => $_Lang['Queue_EndTitleHour'],
-                        'EndDateExpand'        => prettyDate('d m Y', $BuildEndTime, 1),
-                        'EndTimeExpand'        => date('H:i:s', $BuildEndTime),
-                        'InfoBox_BuildTime' => $_Lang['InfoBox_ResearchTime'],
-                        'BuildTime'            => pretty_time($BuildEndTime - $PreviousBuildEndTime),
-                        'ListID'            => $ListID,
-                        'RemoveText'        => $_Lang['Queue_Cancel_Remove']
-                    );
-
-                    $GetResourcesToLock = GetBuildingPrice($CurrentUser, $CurrentPlanet, $ElementID, true, false);
-                    $LockResources['metal'] += $GetResourcesToLock['metal'];
-                    $LockResources['crystal'] += $GetResourcesToLock['crystal'];
-                    $LockResources['deuterium'] += $GetResourcesToLock['deuterium'];
-                }
-
-                if(!isset($LevelModifiers[$ElementID]))
-                {
-                    $LevelModifiers[$ElementID] = 0;
-                }
-                $LevelModifiers[$ElementID] -= 1;
-                $CurrentUser[$_Vars_GameElements[$ElementID]] += 1;
-
-                $QueueIndex += 1;
+            if ($BuildEndTime < $Now) {
+                continue;
             }
-            $PreviousBuildEndTime = $BuildEndTime;
+
+            $ElementID = $QueueData[0];
+            if($QueueIndex == 0)
+            {
+                // Do nothing
+            }
+            else
+            {
+                $GetResourcesToLock = GetBuildingPrice($CurrentUser, $CurrentPlanet, $ElementID, true, false);
+                $LockResources['metal'] += $GetResourcesToLock['metal'];
+                $LockResources['crystal'] += $GetResourcesToLock['crystal'];
+                $LockResources['deuterium'] += $GetResourcesToLock['deuterium'];
+            }
+
+            if(!isset($LevelModifiers[$ElementID]))
+            {
+                $LevelModifiers[$ElementID] = 0;
+            }
+            $LevelModifiers[$ElementID] -= 1;
+            $CurrentUser[$_Vars_GameElements[$ElementID]] += 1;
+
+            $QueueIndex += 1;
         }
         $CurrentPlanet['metal'] -= (isset($LockResources['metal']) ? $LockResources['metal'] : 0);
         $CurrentPlanet['crystal'] -= (isset($LockResources['crystal']) ? $LockResources['crystal'] : 0);
         $CurrentPlanet['deuterium'] -= (isset($LockResources['deuterium']) ? $LockResources['deuterium'] : 0);
 
         $Queue['lenght'] = $QueueIndex;
-        if(!empty($QueueParser))
-        {
-            foreach($QueueParser as $QueueID => $QueueData)
-            {
-                if($QueueID == 0)
-                {
-                    $ThisTPL = gettemplate('buildings_compact_queue_firstel_lab');
-                }
-                else if($QueueID == 1)
-                {
-                    $ThisTPL = gettemplate('buildings_compact_queue_nextel_lab');
-                }
-                $Parse['Create_Queue'] .= parsetemplate($ThisTPL, $QueueData);
-            }
-        }
     }
     else
     {
         $Queue['lenght'] = 0;
-        $Parse['Create_Queue'] = parsetemplate($TPL['queue_topinfo'], array('InfoText' => $_Lang['Queue_Empty']));
     }
     if($LabInQueue === false)
     {
@@ -303,13 +269,11 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         else
         {
             $CanAddToQueue = false;
-            $Parse['Create_Queue'] = parsetemplate($TPL['queue_topinfo'], array('InfoColor' => 'red', 'InfoText' => $_Lang['Queue_Full'])).$Parse['Create_Queue'];
         }
     }
     else
     {
         $CanAddToQueue = false;
-        $Parse['Create_Queue'] = parsetemplate($TPL['queue_topinfo'], array('InfoColor' => 'red', 'InfoText' => sprintf($_Lang['Queue_LabInQueue'], implode('<br/>', $LabInQueueAt))));
     }
     // End of - Parse Queue
 

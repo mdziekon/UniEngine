@@ -91,7 +91,7 @@ $_Lang['InfoBox_ResearchTime']                  = 'Research time';
 $_Lang['Queue_Cancel_Research']                 = 'Cancel research';
 $_Lang['Queue_ResearchOn']                      = 'Research conducted on ';
 $_Lang['Queue_CantCancel_Premium_Lab']          = 'You cannot cancel research which required Dark Energy!';
-$_Lang['Queue_LabInQueue']                      = 'Queue is locked!<br/>Research lab is being upgraded on planets:<br/>%s';
+$_Lang['Queue_LabInQueue']                      = 'Queue is locked!<br/>Research lab is being upgraded on planets:';
 
 $_Lang['Queue_ListView_Info']                   = 'Research queue is available only when using the Grid Layout!';
 

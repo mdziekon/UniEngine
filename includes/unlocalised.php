@@ -28,6 +28,12 @@ function gettemplate($templatename)
     return ReadFromFile($_EnginePath . UNIENGINE_TEMPLATE_DIR . UNIENGINE_TEMPLATE_NAME . '/' . $templatename . '.tpl');
 }
 
+function createLocalTemplateLoader($loaderDirPath) {
+    return function ($templateName) use ($loaderDirPath) {
+        return ReadFromFile($loaderDirPath . '/' . $templateName . '.tpl');
+    };
+}
+
 function getDefaultUniLang() {
     if (defined('UNI_DEFAULT_LANG')) {
         return UNI_DEFAULT_LANG;
