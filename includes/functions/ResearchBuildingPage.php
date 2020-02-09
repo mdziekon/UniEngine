@@ -4,9 +4,8 @@ use UniEngine\Engine\Modules\Development\Components\LegacyQueue;
 use UniEngine\Engine\Includes\Helpers\Planets;
 use UniEngine\Engine\Includes\Helpers\Users;
 
-function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet)
-{
-    global $_EnginePath, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories, $_SkinPath, $_GameConfig, $_GET;
+function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
+    global $_EnginePath, $_Lang, $_Vars_ElementCategories, $_SkinPath, $_GameConfig, $_GET;
 
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
     include($_EnginePath.'includes/functions/GetElementPrice.php');
@@ -159,58 +158,60 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet)
     $TechRowTPL = gettemplate('buildings_research_row');
 
     $TechnoList = '';
-    foreach($_Vars_ElementCategories['tech'] as $Tech)
-    {
-        $RowParse = $_Lang;
-        $RowParse['skinpath'] = $_SkinPath;
-        $RowParse['tech_id'] = $Tech;
-        $building_level = $CurrentUser[$_Vars_GameElements[$Tech]];
+    foreach($_Vars_ElementCategories['tech'] as $elementID) {
+        $elementKey = _getElementUserKey($elementID);
+
+        $currentElementLevel = $CurrentUser[$elementKey];
         $queuedLevel = (
-            $building_level +
+            $currentElementLevel +
             (
-                isset($queuedElementsLevelModifiers[$Tech]) ?
-                $queuedElementsLevelModifiers[$Tech] :
+                isset($queuedElementsLevelModifiers[$elementID]) ?
+                $queuedElementsLevelModifiers[$elementID] :
                 0
             )
         );
-        $RowParse['tech_level'] = ($building_level == 0) ? '' : "({$_Lang['level']} {$building_level})";
-        $RowParse['tech_name'] = $_Lang['tech'][$Tech];
-        $RowParse['tech_descr'] = $_Lang['WorldElements_Detailed'][$Tech]['description_short'];
 
-        if (!IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $Tech)) {
+        $RowParse = $_Lang;
+        $RowParse['skinpath'] = $_SkinPath;
+        $RowParse['tech_id'] = $elementID;
+        $RowParse['tech_level'] = ($currentElementLevel == 0) ? '' : "({$_Lang['level']} {$currentElementLevel})";
+        $RowParse['tech_name'] = $_Lang['tech'][$elementID];
+        $RowParse['tech_descr'] = $_Lang['WorldElements_Detailed'][$elementID]['description_short'];
+
+        if (!IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $elementID)) {
             if ($CurrentUser['settings_ExpandedBuildView'] == 0) {
                 continue;
             }
 
             $RowParse['tech_link'] = '&nbsp;';
-            $RowParse['TechRequirementsPlace'] = GetElementTechReq($CurrentUser, $CurrentPlanet, $Tech);
+            $RowParse['TechRequirementsPlace'] = GetElementTechReq($CurrentUser, $CurrentPlanet, $elementID);
 
             $TechnoList .= parsetemplate($TechRowTPL, $RowParse);
 
             continue;
         }
 
-        if (isset($queuedElementsLevelModifiers[$Tech])) {
-            $CurrentUser[_getElementUserKey($Tech)] += $queuedElementsLevelModifiers[$Tech];
+        if (isset($queuedElementsLevelModifiers[$elementID])) {
+            $CurrentUser[$elementKey] += $queuedElementsLevelModifiers[$elementID];
         }
         foreach ($queuedElementsResourceLock as $resourceKey => $resourceAmount) {
             $CurrentPlanet[$resourceKey] -= $resourceAmount;
         }
 
-        $CanBeDone = IsElementBuyable($CurrentUser, $CurrentPlanet, $Tech, false);
-        $SearchTime = GetBuildingTime($CurrentUser, $CurrentPlanet, $Tech);
-        $RowParse['tech_price'] = GetElementPrice($CurrentUser, $CurrentPlanet, $Tech);
+        $CanBeDone = IsElementBuyable($CurrentUser, $CurrentPlanet, $elementID, false);
+        $SearchTime = GetBuildingTime($CurrentUser, $CurrentPlanet, $elementID);
+        $RowParse['tech_price'] = GetElementPrice($CurrentUser, $CurrentPlanet, $elementID);
         $RowParse['search_time'] = ShowBuildTime($SearchTime);
-        $RowParse['tech_restp'] = GetRestPrice($CurrentUser, $CurrentPlanet, $Tech, true);
+        $RowParse['tech_restp'] = GetRestPrice($CurrentUser, $CurrentPlanet, $elementID, true);
 
         $upgradeNextLevel = 1 + $queuedLevel;
 
-        if (isset($queuedElementsLevelModifiers[$Tech])) {
+        if (isset($queuedElementsLevelModifiers[$elementID])) {
             $RowParse['AddLevelPrice'] = "<b>[{$_Lang['level']}: {$upgradeNextLevel}]</b><br/>";
         }
 
-        if (isset($queuedElementsLevelModifiers[$Tech])) {
-            $CurrentUser[_getElementUserKey($Tech)] -= $queuedElementsLevelModifiers[$Tech];
+        if (isset($queuedElementsLevelModifiers[$elementID])) {
+            $CurrentUser[$elementKey] -= $queuedElementsLevelModifiers[$elementID];
         }
         foreach ($queuedElementsResourceLock as $resourceKey => $resourceAmount) {
             $CurrentPlanet[$resourceKey] += $resourceAmount;
@@ -267,7 +268,7 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet)
 
         $linkLabelColor = ($CanBeDone ? 'lime' : 'orange');
 
-        $linkURL = "buildings.php?mode=research&cmd=search&tech={$Tech}";
+        $linkURL = "buildings.php?mode=research&cmd=search&tech={$elementID}";
         $TechnoLink = "<a href=\"{$linkURL}\"><span class=\"{$linkLabelColor}\">{$linkLabel}</span></a>";
 
         $RowParse['tech_link'] = $TechnoLink;
