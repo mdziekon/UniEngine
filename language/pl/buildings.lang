@@ -91,8 +91,6 @@ $_Lang['Queue_ResearchOn']              = 'Badanie przeprowadzane na';
 $_Lang['Queue_CantCancel_Premium_Lab']  = 'Nie można przerwać badania, które wymagało Ciemnej Energii!';
 $_Lang['Queue_LabInQueue']              = 'Kolejka zablokowana!<br/>Laboratorium w rozbudowie na Planetach:';
 
-$_Lang['Queue_ListView_Info']           = 'Kolejka Badań jest dostępna tylko w Wyglądzie Kafelkowym!';
-
 // Shipyard
 $_Lang['Title_Shipyard']                = 'Stocznia';
 $_Lang['Title_Defense']                 = 'Obrona';
