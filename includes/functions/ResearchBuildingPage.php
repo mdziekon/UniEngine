@@ -4,7 +4,7 @@ use UniEngine\Engine\Modules\Development\Components\LegacyQueue;
 use UniEngine\Engine\Includes\Helpers\Planets;
 use UniEngine\Engine\Includes\Helpers\Users;
 
-function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
+function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet)
 {
     global $_EnginePath, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories, $_SkinPath, $_GameConfig, $_GET;
 

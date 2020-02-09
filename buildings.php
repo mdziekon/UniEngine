@@ -75,7 +75,7 @@ switch($_GET['mode'])
         if($OldViewMode)
         {
             include($_EnginePath.'includes/functions/ResearchBuildingPage.php');
-            ResearchBuildingPage($_Planet, $_User, $InResearch, $ResearchPlanet);
+            ResearchBuildingPage($_Planet, $_User, $ResearchPlanet);
         }
         else
         {
