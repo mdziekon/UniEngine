@@ -1,6 +1,8 @@
 <?php
 
 use UniEngine\Engine\Modules\Development;
+use UniEngine\Engine\Modules\Development\Components\LegacyQueue;
+use UniEngine\Engine\Includes\Helpers\Planets;
 
 function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
 {
@@ -32,10 +34,10 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
     );
     // End of - Handle Commands
 
-    include($_EnginePath.'includes/functions/ShowBuildingQueue.php');
-    $Queue = ShowBuildingQueue($CurrentPlanet, $CurrentUser);
+    $buildingsQueue = Planets\Queues\Structures\parseQueueString($CurrentPlanet['buildQueue']);
+    $buildingsQueueLength = count($buildingsQueue);
 
-    if($Queue['lenght'] < ((isPro($CurrentUser)) ? MAX_BUILDING_QUEUE_SIZE_PRO : MAX_BUILDING_QUEUE_SIZE ))
+    if($buildingsQueueLength < ((isPro($CurrentUser)) ? MAX_BUILDING_QUEUE_SIZE_PRO : MAX_BUILDING_QUEUE_SIZE ))
     {
         $CanBuildElement = true;
     }
@@ -52,6 +54,27 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
     {
         $EnergyMulti = 1;
     }
+
+    $queueComponent = LegacyQueue\render([
+        'planet' => $CurrentPlanet,
+        'queue' => Planets\Queues\Structures\parseQueueString($CurrentPlanet['buildQueue']),
+        'currentTimestamp' => $Now,
+
+        'getQueueElementCancellationLinkHref' => function ($queueElement) {
+            $queueElementIdx = $queueElement['queueElementIdx'];
+            $listID = $queueElement['listID'];
+            $isFirstQueueElement = ($queueElementIdx === 0);
+            $cmd = ($isFirstQueueElement ? "cancel" : "remove");
+
+            return buildHref([
+                'path' => 'buildings.php',
+                'query' => [
+                    'cmd' => $cmd,
+                    'listid' => $listID
+                ]
+            ]);
+        }
+    ]);
 
     if(!empty($CurrentPlanet['buildQueue']))
     {
@@ -108,7 +131,7 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
         {
             $ElementName = $_Lang['tech'][$Element];
             $CurrentMaxFields = CalculateMaxPlanetFields($CurrentPlanet);
-            if($CurrentPlanet['field_current'] < ($CurrentMaxFields - $Queue['lenght']))
+            if($CurrentPlanet['field_current'] < ($CurrentMaxFields - $buildingsQueueLength))
             {
                 $RoomIsOk = true;
             }
@@ -254,7 +277,7 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
                 }
                 else if($RoomIsOk AND $CanBuildElement)
                 {
-                    if($Queue['lenght'] == 0)
+                    if($buildingsQueueLength == 0)
                     {
                         if($NextBuildLevel == 1)
                         {
@@ -333,22 +356,11 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
 
     $parse = $_Lang;
 
-    if($Queue['lenght'] > 0)
-    {
-        include($_EnginePath.'includes/functions/InsertBuildListScript.php');
-        $parse['BuildListScript'] = InsertBuildListScript('buildings');
-        $parse['BuildList'] = $Queue['buildlist'];
-    }
-    else
-    {
-        $parse['BuildListScript'] = '';
-        $parse['BuildList'] = '';
-    }
-
     $parse['planet_field_current'] = $CurrentPlanet['field_current'];
     $parse['planet_field_max'] = CalculateMaxPlanetFields($CurrentPlanet);
     $parse['field_libre'] = $parse['planet_field_max'] - $CurrentPlanet['field_current'];
 
+    $parse['BuildList'] = $queueComponent['componentHTML'];
     $parse['BuildingsList'] = $BuildingPage;
 
     display(parsetemplate(gettemplate('buildings_builds'), $parse), $_Lang['Builds']);
