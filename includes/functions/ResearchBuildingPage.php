@@ -16,8 +16,7 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet)
     $Now = time();
 
     // Break on "no lab"
-    if($CurrentPlanet[$_Vars_GameElements[31]] <= 0)
-    {
+    if (!Planets\Elements\hasResearchLab($CurrentPlanet)) {
         message($_Lang['no_laboratory'], $_Lang['Research']);
     }
 
