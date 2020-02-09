@@ -6,7 +6,6 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 
 //  Arguments
 //      - $props (Object)
-//          - planet (Object)
 //          - queue (Array<QueueElement>)
 //              QueueElement: Object
 //                  - elementID (Number)
@@ -30,18 +29,17 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 function render ($props) {
     global $_Lang, $_EnginePath;
 
+    $localTemplateLoader = createLocalTemplateLoader(__DIR__);
+
     $tplBodyCache = [
-        'body' => gettemplate('modules/development/components/LegacyQueue/body'),
-        'row_element_firstel' => gettemplate('modules/development/components/LegacyQueue/row_element_firstel'),
-        'row_element_nextel' => gettemplate('modules/development/components/LegacyQueue/row_element_nextel')
+        'body' => $localTemplateLoader('queue_body'),
+        'row_element_firstel' => $localTemplateLoader('queue_element_firstel'),
+        'row_element_nextel' => $localTemplateLoader('queue_element_nextel')
     ];
 
-    $planet = $props['planet'];
     $queue = $props['queue'];
     $currentTimestamp = $props['currentTimestamp'];
     $getQueueElementCancellationLinkHref = $props['getQueueElementCancellationLinkHref'];
-
-    $planetID = $planet['id'];
 
     $queueElementsTplData = [];
     $queueUnfinishedElementsCount = 0;
@@ -94,7 +92,6 @@ function render ($props) {
             'Data_ListID'                           => $listID,
             'Data_ElementName'                      => $_Lang['tech'][$elementID],
             'Data_ElementLevel'                     => $elementLevel,
-            'Data_PlanetID'                         => $planetID,
             'Data_BuildTimeEndFormatted'            => pretty_time($progressTimeLeft, true, 'D'),
             'Data_ElementProgressEndTimeDatepoint'  => date('d/m | H:i:s', $progressEndTime),
 
@@ -126,6 +123,9 @@ function render ($props) {
 
     $componentTPLData = [
         'Data_QueueElements' => '',
+
+        'Queue_CantCancel_Premium' => $_Lang['Queue_CantCancel_Premium'],
+        'Queue_ConfirmCancel' => $_Lang['Queue_ConfirmCancel'],
     ];
 
     if (!empty($queueElementsTplData)) {

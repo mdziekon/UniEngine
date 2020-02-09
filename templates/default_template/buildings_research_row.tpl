@@ -5,6 +5,7 @@
     </th>
     <td class="l">
         <a href="infos.php?gid={tech_id}">{tech_name}</a> {tech_level}<br/>{tech_descr}<br/><br />
+        {AddLevelPrice}
         {tech_price}
         {search_time}
         {tech_restp}
