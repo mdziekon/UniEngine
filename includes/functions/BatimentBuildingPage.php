@@ -47,7 +47,7 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
     }
 
     $queueComponent = LegacyQueue\render([
-        'queue' => Planets\Queues\Structures\parseQueueString($CurrentPlanet['buildQueue']),
+        'queue' => $buildingsQueue,
         'currentTimestamp' => $Now,
 
         'getQueueElementCancellationLinkHref' => function ($queueElement) {
