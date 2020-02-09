@@ -10,7 +10,6 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
     include($_EnginePath.'includes/functions/GetElementPrice.php');
     include($_EnginePath.'includes/functions/GetRestPrice.php');
-    include($_EnginePath.'modules/development/input/research.userCommands.php');
     includeLang('worldElements.detailed');
 
     $Now = time();

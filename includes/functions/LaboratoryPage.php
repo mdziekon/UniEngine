@@ -13,7 +13,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             $_SkinPath, $_GameConfig, $_GET;
 
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
-    include($_EnginePath.'modules/development/input/research.userCommands.php');
     includeLang('worldElements.detailed');
 
     $Now = time();
