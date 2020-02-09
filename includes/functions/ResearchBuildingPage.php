@@ -261,8 +261,8 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePl
 
         $linkLabel = (
             ($upgradeNextLevel == 1) ?
-            $_Lang['Rechercher'] :
-            "{$_Lang['Rechercher']}<br/>{$_Lang['level']} {$upgradeNextLevel}"
+            $_Lang['ResearchBtnLabel'] :
+            "{$_Lang['ResearchBtnLabel']}<br/>{$_Lang['level']} {$upgradeNextLevel}"
         );
 
         if (!$isResearchInProgress && !$CanBeDone) {
