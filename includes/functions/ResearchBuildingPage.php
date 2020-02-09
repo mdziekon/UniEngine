@@ -142,80 +142,83 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePl
         $RowParse['tech_restp'] = GetRestPrice ($CurrentUser, $CurrentPlanet, $Tech, true);
         $CanBeDone = IsElementBuyable($CurrentUser, $CurrentPlanet, $Tech, false);
 
+        if (isOnVacation($CurrentUser)) {
+            $TechnoLink = "<span class=\"red\">{$_Lang['ListBox_Disallow_VacationMode']}</span>";
+            $RowParse['tech_link']= $TechnoLink;
+
+            $TechnoList .= parsetemplate($TechRowTPL, $RowParse);
+
+            continue;
+        }
+
         // Check if user can do the research (TechQueue is empty)
-        if(!isOnVacation($CurrentUser))
+        if(!$InResearch)
         {
-            if(!$InResearch)
+            // Yes! We can do the science!
+            $LevelToDo = 1 + $CurrentUser[$_Vars_GameElements[$Tech]];
+            // Check if is "buyable" & Lab is not in BuildQueue
+            if($CanBeDone AND !$LabInQueue)
             {
-                // Yes! We can do the science!
-                $LevelToDo = 1 + $CurrentUser[$_Vars_GameElements[$Tech]];
-                // Check if is "buyable" & Lab is not in BuildQueue
-                if($CanBeDone AND !$LabInQueue)
+                $TechnoLink = "<a href=\"buildings.php?mode=research&cmd=search&tech={$Tech}\">";
+                if($LevelToDo == 1)
                 {
-                    $TechnoLink = "<a href=\"buildings.php?mode=research&cmd=search&tech={$Tech}\">";
-                    if($LevelToDo == 1)
-                    {
-                        $TechnoLink .= "<span class=\"lime\">{$_Lang['Rechercher']}</span>";
-                    }
-                    else
-                    {
-                        $TechnoLink .= "<span class=\"lime\">{$_Lang['Rechercher']}<br/>{$_Lang['level']} {$LevelToDo}</span>";
-                    }
-                    $TechnoLink .= '</a>';
+                    $TechnoLink .= "<span class=\"lime\">{$_Lang['Rechercher']}</span>";
                 }
                 else
                 {
-                    if($LevelToDo == 1)
-                    {
-                        $TechnoLink = "<span class=\"red\">{$_Lang['Rechercher']}</span>";
-                    }
-                    else
-                    {
-                        $TechnoLink = "<span class=\"red\">{$_Lang['Rechercher']}<br/>{$_Lang['level']} {$LevelToDo}</span>";
-                    }
+                    $TechnoLink .= "<span class=\"lime\">{$_Lang['Rechercher']}<br/>{$_Lang['level']} {$LevelToDo}</span>";
                 }
+                $TechnoLink .= '</a>';
             }
             else
             {
-                // Research - underway
-                if($FirstElementID == $Tech)
+                if($LevelToDo == 1)
                 {
-                    // Include ChronoApplet
-                    include($_EnginePath.'includes/functions/InsertJavaScriptChronoApplet.php');
-                    $bloc = $_Lang;
-                    $bloc['Script'] = InsertJavaScriptChronoApplet(
-                        'res',
-                        '',
-                        $ResearchPlanet['techQueue_firstEndTime'],
-                        true,
-                        false,
-                        'function() { onQueuesFirstElementFinished(); }'
-                    );
-                    $bloc['SetStartTime'] = pretty_time($ResearchPlanet['techQueue_firstEndTime'] - $Now, true);
-                    $bloc['tech_home'] = $ResearchPlanet['id'];
-                    $bloc['tech_id']= $FirstElementID;
-                    if($ResearchPlanet['id'] != $CurrentPlanet['id'])
-                    {
-                        // Research is not on this planet
-                        $bloc['tech_name']= " {$_Lang['on']}<br/>{$ResearchPlanet['name']}<br/>[{$ResearchPlanet['galaxy']}:{$ResearchPlanet['system']}:{$ResearchPlanet['planet']}]";
-                    }
-                    else
-                    {
-                        // Research is on this planet
-                        $bloc['tech_name']= '';
-                    }
-                    $TechnoLink = parsetemplate($TechScrTPL, $bloc);
+                    $TechnoLink = "<span class=\"red\">{$_Lang['Rechercher']}</span>";
                 }
                 else
                 {
-                    $TechnoLink= '-';
+                    $TechnoLink = "<span class=\"red\">{$_Lang['Rechercher']}<br/>{$_Lang['level']} {$LevelToDo}</span>";
                 }
             }
         }
         else
         {
-            $TechnoLink = "<span class=\"red\">{$_Lang['ListBox_Disallow_VacationMode']}</span>";
+            // Research - underway
+            if($FirstElementID == $Tech)
+            {
+                // Include ChronoApplet
+                include($_EnginePath.'includes/functions/InsertJavaScriptChronoApplet.php');
+                $bloc = $_Lang;
+                $bloc['Script'] = InsertJavaScriptChronoApplet(
+                    'res',
+                    '',
+                    $ResearchPlanet['techQueue_firstEndTime'],
+                    true,
+                    false,
+                    'function() { onQueuesFirstElementFinished(); }'
+                );
+                $bloc['SetStartTime'] = pretty_time($ResearchPlanet['techQueue_firstEndTime'] - $Now, true);
+                $bloc['tech_home'] = $ResearchPlanet['id'];
+                $bloc['tech_id']= $FirstElementID;
+                if($ResearchPlanet['id'] != $CurrentPlanet['id'])
+                {
+                    // Research is not on this planet
+                    $bloc['tech_name']= " {$_Lang['on']}<br/>{$ResearchPlanet['name']}<br/>[{$ResearchPlanet['galaxy']}:{$ResearchPlanet['system']}:{$ResearchPlanet['planet']}]";
+                }
+                else
+                {
+                    // Research is on this planet
+                    $bloc['tech_name']= '';
+                }
+                $TechnoLink = parsetemplate($TechScrTPL, $bloc);
+            }
+            else
+            {
+                $TechnoLink= '-';
+            }
         }
+
         $RowParse['tech_link']= $TechnoLink;
 
         $TechnoList .= parsetemplate($TechRowTPL, $RowParse);
