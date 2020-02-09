@@ -128,6 +128,9 @@ function render ($props) {
 
     $componentTPLData = [
         'Data_QueueElements' => '',
+
+        'Queue_CantCancel_Premium' => $_Lang['Queue_CantCancel_Premium'],
+        'Queue_ConfirmCancel' => $_Lang['Queue_ConfirmCancel'],
     ];
 
     if (!empty($queueElementsTplData)) {

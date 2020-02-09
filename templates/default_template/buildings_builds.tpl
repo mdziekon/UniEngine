@@ -18,8 +18,6 @@
 </style>
 <script>
 var JSLang = {
-    'Queue_CantCancel_Premium': '{Queue_CantCancel_Premium}',
-    'Queue_ConfirmCancel': '{Queue_ConfirmCancel}',
     'Queue_Cancel_Go': '{Queue_Cancel_Go}'
 };
 
@@ -35,22 +33,8 @@ function onQueuesFirstElementFinished () {
     }, 1000);
 }
 
-$(document).ready(function()
-{
+$(document).ready(function () {
     $('.tReqDiv').tipTip({attribute: 'title', delay: 50});
-
-    $('.cancelQueue').click(function () {
-        if (!$(this).hasClass('cancelQueue')) {
-            return true;
-        }
-
-        if ($(this).hasClass('premblock')) {
-            alert(JSLang['Queue_CantCancel_Premium']);
-            return false;
-        } else {
-            return confirm(JSLang['Queue_ConfirmCancel']);
-        }
-    });
 });
 </script>
 <br/>
