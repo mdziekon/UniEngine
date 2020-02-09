@@ -6,7 +6,6 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 
 //  Arguments
 //      - $props (Object)
-//          - planet (Object)
 //          - queue (Array<QueueElement>)
 //              QueueElement: Object
 //                  - elementID (Number)
@@ -38,12 +37,9 @@ function render ($props) {
         'row_element_nextel' => $localTemplateLoader('queue_element_nextel')
     ];
 
-    $planet = $props['planet'];
     $queue = $props['queue'];
     $currentTimestamp = $props['currentTimestamp'];
     $getQueueElementCancellationLinkHref = $props['getQueueElementCancellationLinkHref'];
-
-    $planetID = $planet['id'];
 
     $queueElementsTplData = [];
     $queueUnfinishedElementsCount = 0;
@@ -96,7 +92,6 @@ function render ($props) {
             'Data_ListID'                           => $listID,
             'Data_ElementName'                      => $_Lang['tech'][$elementID],
             'Data_ElementLevel'                     => $elementLevel,
-            'Data_PlanetID'                         => $planetID,
             'Data_BuildTimeEndFormatted'            => pretty_time($progressTimeLeft, true, 'D'),
             'Data_ElementProgressEndTimeDatepoint'  => date('d/m | H:i:s', $progressEndTime),
 

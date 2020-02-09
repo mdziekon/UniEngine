@@ -47,7 +47,6 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
     }
 
     $queueComponent = LegacyQueue\render([
-        'planet' => $CurrentPlanet,
         'queue' => Planets\Queues\Structures\parseQueueString($CurrentPlanet['buildQueue']),
         'currentTimestamp' => $Now,
 
