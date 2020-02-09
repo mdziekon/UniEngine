@@ -46,15 +46,6 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
         $CanBuildElement = false;
     }
 
-    if($CurrentUser['engineer_time'] > $Now)
-    {
-        $EnergyMulti = 1.10;
-    }
-    else
-    {
-        $EnergyMulti = 1;
-    }
-
     $queueComponent = LegacyQueue\render([
         'planet' => $CurrentPlanet,
         'queue' => Planets\Queues\Structures\parseQueueString($CurrentPlanet['buildQueue']),

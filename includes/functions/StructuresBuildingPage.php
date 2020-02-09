@@ -152,22 +152,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     {
         $CanAddToQueue = false;
     }
-    if($CurrentUser['engineer_time'] > $Now)
-    {
-        $EnergyMulti = 1.10;
-    }
-    else
-    {
-        $EnergyMulti = 1;
-    }
-    if($CurrentUser['geologist_time'] > $Now)
-    {
-        $ResourceMulti = 1.15;
-    }
-    else
-    {
-        $ResourceMulti = 1;
-    }
+
     $ResImages = array
     (
         'metal' => 'metall',
