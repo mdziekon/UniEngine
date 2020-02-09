@@ -141,7 +141,6 @@ $_Lang['Disassembler_Sold_units']               = 'Recovered resources:<br/>%s M
 
 // ...
 $_Lang['ResearchTitle']                         = 'Research';
-$_Lang['AreYouSure']                            = 'Are you sure you want to cancel construction?';
 $_Lang['Hangar']                                = 'Shipyard';
 $_Lang['Fleet']                                 = "Fleet";
 $_Lang['Defense']                               = "Defenses";
@@ -185,7 +184,6 @@ $_Lang['CanBuildXMissiles']                     = 'Space left for these missiles
 $_Lang['NoMoreSpaceForThisMissiles']            = 'No more space left for these missiles!';
 $_Lang['QueueIsFull']                           = 'Queue is full';
 $_Lang['ActualProduction']                      = 'Currently constructing';
-$_Lang['CannotDeletePremiumBuilding_Warning']   = 'You cannot cancel construction which required Dark Energy!';
 $_Lang['SatelitesEnergy']                       = 'On this position, Solar Sattelite provides <b>%s</b> energy units.';
 
 ?>

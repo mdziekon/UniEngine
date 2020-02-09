@@ -139,7 +139,6 @@ $_Lang['Disassembler_Sold_units']             = 'Odzyskane surowce:<br/>%s jedno
 
 // ...
 $_Lang['ResearchTitle']                         = 'Badania';
-$_Lang['AreYouSure']                            = 'Czy jesteś pewien, że chcesz anulować budowę?';
 $_Lang['Hangar']                                = 'Stocznia';
 $_Lang['Fleet']                                 = "Flota";
 $_Lang['Defense']                               = "Obrona";
@@ -183,7 +182,6 @@ $_Lang['CanBuildXMissiles']                     = 'Ilość wolnego miejsca na te
 $_Lang['NoMoreSpaceForThisMissiles']            = 'Brak wolnego miejsca dla tych rakiety!';
 $_Lang['QueueIsFull']                           = 'Kolejka jest pełna';
 $_Lang['ActualProduction']                      = 'Aktualna produkcja';
-$_Lang['CannotDeletePremiumBuilding_Warning']   = 'Nie można przerwać budowy, która wymagała Ciemnej Energii!';
 $_Lang['SatelitesEnergy']                       = 'Na tej pozycji Satelita dostarcza <b>%s</b> Energii.';
 
 ?>
