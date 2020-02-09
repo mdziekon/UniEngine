@@ -39,6 +39,7 @@ $(document).ready(function()
         </tr>
     </tbody>
     {Insert_QueueInfo}
+    {Data_QueueComponentHTML}
     <tr>
         <th>{ResearchTitle}</th>
         <th>&nbsp;</th>

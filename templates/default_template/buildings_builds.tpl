@@ -17,8 +17,23 @@
 }
 </style>
 <script>
-$(document).ready(function()
-{
+var JSLang = {
+    'Queue_Cancel_Go': '{Queue_Cancel_Go}'
+};
+
+function onQueuesFirstElementFinished () {
+    $("#QueueCancel")
+        .html(JSLang['Queue_Cancel_Go'])
+        .attr("href", "buildings.php")
+        .removeClass("cancelQueue")
+        .addClass("lime");
+
+    window.setTimeout(function () {
+        document.location.href = "buildings.php";
+    }, 1000);
+}
+
+$(document).ready(function () {
     $('.tReqDiv').tipTip({attribute: 'title', delay: 50});
 });
 </script>

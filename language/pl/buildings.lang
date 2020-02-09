@@ -86,12 +86,9 @@ $_Lang['InfoBox_SelectTech']            = 'Wybierz technologię';
 $_Lang['InfoBox_DoResearch']            = 'Badaj<br/>na Poziom';
 $_Lang['InfoBox_ResearchTime']          = 'Czas badania';
 
-$_Lang['Queue_Cancel_Research']         = 'Przerwij badanie';
 $_Lang['Queue_ResearchOn']              = 'Badanie przeprowadzane na';
 $_Lang['Queue_CantCancel_Premium_Lab']  = 'Nie można przerwać badania, które wymagało Ciemnej Energii!';
 $_Lang['Queue_LabInQueue']              = 'Kolejka zablokowana!<br/>Laboratorium w rozbudowie na Planetach:';
-
-$_Lang['Queue_ListView_Info']           = 'Kolejka Badań jest dostępna tylko w Wyglądzie Kafelkowym!';
 
 // Shipyard
 $_Lang['Title_Shipyard']                = 'Stocznia';
@@ -139,7 +136,6 @@ $_Lang['Disassembler_Sold_units']             = 'Odzyskane surowce:<br/>%s jedno
 
 // ...
 $_Lang['ResearchTitle']                         = 'Badania';
-$_Lang['AreYouSure']                            = 'Czy jesteś pewien, że chcesz anulować budowę?';
 $_Lang['Hangar']                                = 'Stocznia';
 $_Lang['Fleet']                                 = "Flota";
 $_Lang['Defense']                               = "Obrona";
@@ -149,7 +145,7 @@ $_Lang['Requirements']                          = "Wymaga: ";
 $_Lang['Requires']                              = "Wymagane surowce";
 $_Lang['ResourcesLeft']                         = "Pozostanie surowców";
 $_Lang['TechRequirements']                      = 'Wymagania';
-$_Lang['Rechercher']                            = "Badanie";
+$_Lang['ResearchBtnLabel']                      = "Badanie";
 $_Lang['ConstructionTime']                      = "Czas budowy";
 $_Lang['Construire']                            = " Buduj ";
 $_Lang['BuildFirstLevel']                       = "Buduj";
@@ -183,7 +179,6 @@ $_Lang['CanBuildXMissiles']                     = 'Ilość wolnego miejsca na te
 $_Lang['NoMoreSpaceForThisMissiles']            = 'Brak wolnego miejsca dla tych rakiety!';
 $_Lang['QueueIsFull']                           = 'Kolejka jest pełna';
 $_Lang['ActualProduction']                      = 'Aktualna produkcja';
-$_Lang['CannotDeletePremiumBuilding_Warning']   = 'Nie można przerwać budowy, która wymagała Ciemnej Energii!';
 $_Lang['SatelitesEnergy']                       = 'Na tej pozycji Satelita dostarcza <b>%s</b> Energii.';
 
 ?>
