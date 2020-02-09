@@ -79,16 +79,6 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet)
     }
 
     // Handle Commands
-    // TODO: this should be changed on the queue rendering level
-    if (
-        isset($_GET) &&
-        isset($_GET['cmd']) &&
-        $_GET['cmd'] === 'cancel' &&
-        !isset($_GET['el'])
-    ) {
-        $_GET['el'] = '0';
-    }
-
     UniEngine\Engine\Modules\Development\Input\UserCommands\handleResearchCommand(
         $CurrentUser,
         $ResearchPlanet,
