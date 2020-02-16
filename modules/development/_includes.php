@@ -6,6 +6,8 @@ call_user_func(function () {
 
     $includePath = $_EnginePath . 'modules/development/';
 
+    include($includePath . './utils/queue.utils.php');
+
     include($includePath . './input/research.userCommands.php');
     include($includePath . './input/structures.userCommands.php');
 
