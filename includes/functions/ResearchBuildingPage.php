@@ -99,9 +99,7 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
     $isCurrentPlanetResearchPlanet = ($ResearchPlanet['id'] == $CurrentPlanet['id']);
 
     $queueComponent = LegacyQueue\render([
-        'queue' => Planets\Queues\Research\parseQueueString(
-            $ResearchPlanet['techQueue']
-        ),
+        'queue' => $researchQueue,
         'currentTimestamp' => $Now,
 
         'getQueueElementCancellationLinkHref' => function ($queueElement) {
