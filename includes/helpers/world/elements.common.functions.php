@@ -114,6 +114,29 @@ function isDowngradeable($elementID) {
     );
 }
 
+function isPlanetaryElement($elementID) {
+    return (
+        isStructure($elementID) ||
+        isConstructibleInHangar($elementID)
+    );
+}
+
+function isUserElement($elementID) {
+    return isTechnology($elementID);
+}
+
+function getElementKey($elementID) {
+    if (isPlanetaryElement($elementID)) {
+        return _getElementPlanetKey($elementID);
+    }
+
+    if (isUserElement($elementID)) {
+        return _getElementUserKey($elementID);
+    }
+
+    throw new Exceptions\UniEngineException("Cannot get element's key of an element with ID '{$elementID}'");
+}
+
 function getElementMaxUpgradeLevel($elementID) {
     global $_Vars_MaxElementLevel;
 
