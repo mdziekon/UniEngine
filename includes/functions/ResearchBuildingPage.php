@@ -125,13 +125,25 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
         'planet' => $CurrentPlanet,
     ]);
 
+    foreach ($queueStateDetails['queuedResourcesToUse'] as $resourceKey => $resourceValue) {
+        if (Resources\isPlanetaryResource($resourceKey)) {
+            $CurrentPlanet[$resourceKey] -= $resourceValue;
+        } else if (Resources\isUserResource($resourceKey)) {
+            $CurrentUser[$resourceKey] -= $resourceValue;
+        }
+    }
+    foreach ($queueStateDetails['queuedElementLevelModifiers'] as $elementID => $elementLevelModifier) {
+        $elementKey = Elements\getElementKey($elementID);
+        $CurrentUser[$elementKey] += $elementLevelModifier;
+    }
+
     $TechRowTPL = gettemplate('buildings_research_row');
 
     $TechnoList = '';
     foreach($_Vars_ElementCategories['tech'] as $elementID) {
         $elementKey = _getElementUserKey($elementID);
 
-        $currentElementLevel = $CurrentUser[$elementKey];
+        $queuedLevel = $CurrentUser[$elementKey];
         $isElementInQueue = isset(
             $queueStateDetails['queuedElementLevelModifiers'][$elementID]
         );
@@ -140,7 +152,7 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
             $queueStateDetails['queuedElementLevelModifiers'][$elementID] :
             0
         );
-        $queuedLevel = ($currentElementLevel + $elementQueueLevelModifier);
+        $currentElementLevel = ($queuedLevel - $elementQueueLevelModifier);
 
         $RowParse = $_Lang;
         $RowParse['skinpath'] = $_SkinPath;
@@ -162,18 +174,6 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
             continue;
         }
 
-        foreach ($queueStateDetails['queuedResourcesToUse'] as $resourceKey => $resourceValue) {
-            if (Resources\isPlanetaryResource($resourceKey)) {
-                $CurrentPlanet[$resourceKey] -= $resourceValue;
-            } else if (Resources\isUserResource($resourceKey)) {
-                $CurrentUser[$resourceKey] -= $resourceValue;
-            }
-        }
-        foreach ($queueStateDetails['queuedElementLevelModifiers'] as $queuedElementID => $queuedElementLevelModifier) {
-            $queuedElementKey = Elements\getElementKey($queuedElementID);
-            $CurrentUser[$queuedElementKey] += $queuedElementLevelModifier;
-        }
-
         $CanBeDone = IsElementBuyable($CurrentUser, $CurrentPlanet, $elementID, false);
         $SearchTime = GetBuildingTime($CurrentUser, $CurrentPlanet, $elementID);
         $RowParse['tech_price'] = GetElementPrice($CurrentUser, $CurrentPlanet, $elementID);
@@ -184,18 +184,6 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
 
         if ($isElementInQueue) {
             $RowParse['AddLevelPrice'] = "<b>[{$_Lang['level']}: {$upgradeNextLevel}]</b><br/>";
-        }
-
-        foreach ($queueStateDetails['queuedResourcesToUse'] as $resourceKey => $resourceValue) {
-            if (Resources\isPlanetaryResource($resourceKey)) {
-                $CurrentPlanet[$resourceKey] += $resourceValue;
-            } else if (Resources\isUserResource($resourceKey)) {
-                $CurrentUser[$resourceKey] += $resourceValue;
-            }
-        }
-        foreach ($queueStateDetails['queuedElementLevelModifiers'] as $queuedElementID => $queuedElementLevelModifier) {
-            $queuedElementKey = Elements\getElementKey($queuedElementID);
-            $CurrentUser[$queuedElementKey] -= $queuedElementLevelModifier;
         }
 
         if (isOnVacation($CurrentUser)) {
@@ -257,6 +245,18 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
         $TechnoList .= parsetemplate($TechRowTPL, $RowParse);
 
         continue;
+    }
+
+    foreach ($queueStateDetails['queuedResourcesToUse'] as $resourceKey => $resourceValue) {
+        if (Resources\isPlanetaryResource($resourceKey)) {
+            $CurrentPlanet[$resourceKey] += $resourceValue;
+        } else if (Resources\isUserResource($resourceKey)) {
+            $CurrentUser[$resourceKey] += $resourceValue;
+        }
+    }
+    foreach ($queueStateDetails['queuedElementLevelModifiers'] as $elementID => $elementLevelModifier) {
+        $elementKey = Elements\getElementKey($elementID);
+        $CurrentUser[$elementKey] -= $elementLevelModifier;
     }
 
     $PageParse = $_Lang;
