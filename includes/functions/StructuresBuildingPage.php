@@ -54,10 +54,13 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         $ShowElementID = $cmdResult['payload']['elementID'];
     }
     // End of - Handle Commands
+    $structuresQueueContent = Planets\Queues\Structures\parseQueueString(
+        $CurrentPlanet['buildQueue']
+    );
 
     $queueComponent = ModernQueue\render([
         'planet' => &$CurrentPlanet,
-        'queue' => Planets\Queues\Structures\parseQueueString($CurrentPlanet['buildQueue']),
+        'queue' => $structuresQueueContent,
         'queueMaxLength' => Users\getMaxStructuresQueueLength($CurrentUser),
         'timestamp' => $Now,
         'infoComponents' => [],
@@ -81,7 +84,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     $queueStateDetails = Development\Utils\getQueueStateDetails([
         'queue' => [
             'type' => Development\Utils\QueueType::Planetary,
-            'content' => Planets\Queues\Structures\parseQueueString($CurrentPlanet['buildQueue']),
+            'content' => $structuresQueueContent,
         ],
         'user' => $CurrentUser,
         'planet' => $CurrentPlanet,
