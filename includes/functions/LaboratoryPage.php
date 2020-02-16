@@ -167,13 +167,14 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         $ResearchInThisLab = true;
     }
     // End of - Execute Commands
+    $techQueueContent = Planets\Queues\Research\parseQueueString(
+        $ResearchPlanet['techQueue']
+    );
 
     $planetInfoComponent = ModernQueuePlanetInfo\render([
         'currentPlanet'     => &$CurrentPlanet,
         'researchPlanet'    => &$ResearchPlanet,
-        'queue'             => Planets\Queues\Research\parseQueueString(
-            $ResearchPlanet['techQueue']
-        ),
+        'queue'             => $techQueueContent,
         'timestamp'         => $Now,
     ]);
     $labsUpgradeInfoComponent = ModernQueueLabUpgradeInfo\render([
@@ -183,9 +184,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     $queueComponent = ModernQueue\render([
         'user'              => &$CurrentUser,
         'planet'            => &$ResearchPlanet,
-        'queue'             => Planets\Queues\Research\parseQueueString(
-            $ResearchPlanet['techQueue']
-        ),
+        'queue'             => $techQueueContent,
         'queueMaxLength'    => Users\getMaxResearchQueueLength($CurrentUser),
         'timestamp'         => $Now,
         'infoComponents'    => [
@@ -215,9 +214,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     $queueStateDetails = Development\Utils\getQueueStateDetails([
         'queue' => [
             'type' => Development\Utils\QueueType::Technology,
-            'content' => Planets\Queues\Research\parseQueueString(
-                $ResearchPlanet['techQueue']
-            ),
+            'content' => $techQueueContent,
         ],
         'user' => $CurrentUser,
         'planet' => $CurrentPlanet,
