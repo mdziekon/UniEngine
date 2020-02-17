@@ -213,7 +213,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 
     $queueStateDetails = Development\Utils\getQueueStateDetails([
         'queue' => [
-            'type' => Development\Utils\QueueType::Technology,
+            'type' => Development\Utils\QueueType::Research,
             'content' => $techQueueContent,
         ],
         'user' => $CurrentUser,

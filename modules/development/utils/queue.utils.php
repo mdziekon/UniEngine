@@ -8,7 +8,7 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 
 abstract class QueueType {
     const Planetary = 'QueueType::Planetary';
-    const Technology = 'QueueType::Technology';
+    const Research = 'QueueType::Research';
 }
 
 //  Arguments
@@ -47,7 +47,7 @@ function getQueueStateDetails ($props) {
 
     if ($queueType === QueueType::Planetary) {
         $objectToModifyLevels = &$planet;
-    } else if ($queueType === QueueType::Technology) {
+    } else if ($queueType === QueueType::Research) {
         $objectToModifyLevels = &$user;
     } else {
         throw new Exceptions\UniEngineException("Invalid queue type ('{$queueType}')");

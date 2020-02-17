@@ -118,7 +118,7 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
 
     $queueStateDetails = Development\Utils\getQueueStateDetails([
         'queue' => [
-            'type' => Development\Utils\QueueType::Technology,
+            'type' => Development\Utils\QueueType::Research,
             'content' => $researchQueue,
         ],
         'user' => $CurrentUser,
