@@ -35,6 +35,8 @@ function getQueueStateDetails ($props) {
     $queue = $props['queue']['content'];
     $queueType = $props['queue']['type'];
 
+    $objectToModifyLevels = [];
+
     if ($queueType === QueueType::Planetary) {
         $objectToModifyLevels = &$planet;
     } else if ($queueType === QueueType::Research) {
@@ -50,8 +52,6 @@ function getQueueStateDetails ($props) {
     );
 
     $queuedElementLevelModifiers = [];
-
-    $objectToModifyLevels = [];
 
     foreach ($queue as $queueIdx => $queueElement) {
         $elementID = $queueElement['elementID'];
