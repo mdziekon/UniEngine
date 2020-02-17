@@ -18,7 +18,6 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     $Now = time();
     $Parse = &$_Lang;
     $ShowElementID = 0;
-    $FieldsModifier = 0;
 
     PlanetResourceUpdate($CurrentUser, $CurrentPlanet, $Now);
 
@@ -55,10 +54,13 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         $ShowElementID = $cmdResult['payload']['elementID'];
     }
     // End of - Handle Commands
+    $structuresQueueContent = Planets\Queues\Structures\parseQueueString(
+        $CurrentPlanet['buildQueue']
+    );
 
     $queueComponent = ModernQueue\render([
         'planet' => &$CurrentPlanet,
-        'queue' => Planets\Queues\Structures\parseQueueString($CurrentPlanet['buildQueue']),
+        'queue' => $structuresQueueContent,
         'queueMaxLength' => Users\getMaxStructuresQueueLength($CurrentUser),
         'timestamp' => $Now,
         'infoComponents' => [],
@@ -79,64 +81,34 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         }
     ]);
 
+    $queueStateDetails = Development\Utils\getQueueStateDetails([
+        'queue' => [
+            'type' => Development\Utils\QueueType::Planetary,
+            'content' => $structuresQueueContent,
+        ],
+        'user' => $CurrentUser,
+        'planet' => $CurrentPlanet,
+    ]);
+    $elementsInQueue = $queueStateDetails['queuedElementsCount'];
+    $planetFieldsUsageCounter = 0;
+
+    foreach ($queueStateDetails['queuedResourcesToUse'] as $resourceKey => $resourceValue) {
+        if (Resources\isPlanetaryResource($resourceKey)) {
+            $CurrentPlanet[$resourceKey] -= $resourceValue;
+        } else if (Resources\isUserResource($resourceKey)) {
+            $CurrentUser[$resourceKey] -= $resourceValue;
+        }
+    }
+    foreach ($queueStateDetails['queuedElementLevelModifiers'] as $elementID => $elementLevelModifier) {
+        $elementKey = Elements\getElementKey($elementID);
+        $CurrentPlanet[$elementKey] += $elementLevelModifier;
+        $planetFieldsUsageCounter += $elementLevelModifier;
+    }
+
     $Parse['Create_Queue'] = $queueComponent['componentHTML'];
 
-    // Parse Queue
-    $CurrentQueue = $CurrentPlanet['buildQueue'];
-    if (!empty($CurrentQueue)) {
-        $LockResources['metal'] = 0;
-        $LockResources['crystal'] = 0;
-        $LockResources['deuterium'] = 0;
-
-        $CurrentQueue = explode(';', $CurrentQueue);
-        $QueueIndex = 0;
-
-        foreach ($CurrentQueue as $QueueID => $QueueData) {
-            $QueueData = explode(',', $QueueData);
-            $BuildEndTime = $QueueData[3];
-
-            if ($BuildEndTime < $Now) {
-                continue;
-            }
-
-            $ElementID = $QueueData[0];
-            $ElementMode = $QueueData[4];
-            $ThisForDestroy = ($ElementMode != 'build');
-
-            if ($QueueIndex != 0) {
-                $GetResourcesToLock = GetBuildingPrice($CurrentUser, $CurrentPlanet, $ElementID, true, $ThisForDestroy);
-                $LockResources['metal'] += $GetResourcesToLock['metal'];
-                $LockResources['crystal'] += $GetResourcesToLock['crystal'];
-                $LockResources['deuterium'] += $GetResourcesToLock['deuterium'];
-            }
-
-            if (!isset($LevelModifiers[$ElementID])) {
-                $LevelModifiers[$ElementID] = 0;
-            }
-            if ($ThisForDestroy) {
-                $LevelModifiers[$ElementID] += 1;
-                $CurrentPlanet[$_Vars_GameElements[$ElementID]] -= 1;
-                $FieldsModifier += 2;
-            } else {
-                $LevelModifiers[$ElementID] -= 1;
-                $CurrentPlanet[$_Vars_GameElements[$ElementID]] += 1;
-            }
-
-            $QueueIndex += 1;
-        }
-
-        $CurrentPlanet['metal'] -= (isset($LockResources['metal']) ? $LockResources['metal'] : 0);
-        $CurrentPlanet['crystal'] -= (isset($LockResources['crystal']) ? $LockResources['crystal'] : 0);
-        $CurrentPlanet['deuterium'] -= (isset($LockResources['deuterium']) ? $LockResources['deuterium'] : 0);
-
-        $Queue['lenght'] = $QueueIndex;
-    } else {
-        $Queue['lenght'] = 0;
-    }
-    // End of - Parse Queue
-
     // Parse all available buildings
-    if(($CurrentPlanet['field_current'] + $Queue['lenght'] - $FieldsModifier) < CalculateMaxPlanetFields($CurrentPlanet))
+    if(($CurrentPlanet['field_current'] + $planetFieldsUsageCounter) < CalculateMaxPlanetFields($CurrentPlanet))
     {
         $HasLeftFields = true;
     }
@@ -144,7 +116,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     {
         $HasLeftFields = false;
     }
-    if($Queue['lenght'] < ((isPro($CurrentUser)) ? MAX_BUILDING_QUEUE_SIZE_PRO : MAX_BUILDING_QUEUE_SIZE))
+    if($elementsInQueue < ((isPro($CurrentUser)) ? MAX_BUILDING_QUEUE_SIZE_PRO : MAX_BUILDING_QUEUE_SIZE))
     {
         $CanAddToQueue = true;
     }
@@ -183,7 +155,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         'InfoBox_BuildTime'                => $_Lang['InfoBox_BuildTime'],
     );
 
-    $hasElementsInQueue = ($Queue['lenght'] > 0);
+    $hasElementsInQueue = ($elementsInQueue > 0);
     $resourceLabels = [
         'metal'         => $_Lang['Metal'],
         'crystal'       => $_Lang['Crystal'],
@@ -203,6 +175,15 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 
             $CurrentLevel = $CurrentPlanet[$_Vars_GameElements[$ElementID]];
             $NextLevel = $CurrentPlanet[$_Vars_GameElements[$ElementID]] + 1;
+            $isElementInQueue = isset(
+                $queueStateDetails['queuedElementLevelModifiers'][$ElementID]
+            );
+            $elementQueueLevelModifier = (
+                $isElementInQueue ?
+                $queueStateDetails['queuedElementLevelModifiers'][$ElementID] :
+                0
+            );
+
             $MaxLevelReached = false;
             $TechLevelOK = false;
             $HasResources = true;
@@ -215,21 +196,24 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             $ElementParser['ElementName'] = $_Lang['tech'][$ElementID];
             $ElementParser['ElementID'] = $ElementID;
             $ElementParser['ElementLevel'] = prettyNumber($CurrentPlanet[$_Vars_GameElements[$ElementID]]);
-            $ElementParser['ElementRealLevel'] = prettyNumber($CurrentPlanet[$_Vars_GameElements[$ElementID]] + (isset($LevelModifiers[$ElementID]) ? $LevelModifiers[$ElementID] : 0));
+            $ElementParser['ElementRealLevel'] = prettyNumber(
+                $CurrentPlanet[$_Vars_GameElements[$ElementID]] +
+                ($elementQueueLevelModifier * -1)
+            );
             $ElementParser['BuildLevel'] = prettyNumber($CurrentPlanet[$_Vars_GameElements[$ElementID]] + 1);
             $ElementParser['DestroyLevel'] = prettyNumber($CurrentPlanet[$_Vars_GameElements[$ElementID]] - 1);
             $ElementParser['Desc'] = $_Lang['WorldElements_Detailed'][$ElementID]['description_short'];
             $ElementParser['BuildButtonColor'] = 'buildDo_Green';
             $ElementParser['DestroyButtonColor'] = 'buildDo_Red';
 
-            if(isset($LevelModifiers[$ElementID]))
+            if($isElementInQueue)
             {
-                if($LevelModifiers[$ElementID] > 0)
+                if($elementQueueLevelModifier < 0)
                 {
                     $ElementParser['levelmodif']['modColor'] = 'red';
-                    $ElementParser['levelmodif']['modText'] = prettyNumber($LevelModifiers[$ElementID] * (-1));
+                    $ElementParser['levelmodif']['modText'] = prettyNumber($elementQueueLevelModifier);
                 }
-                else if($LevelModifiers[$ElementID] == 0)
+                else if($elementQueueLevelModifier == 0)
                 {
                     $ElementParser['levelmodif']['modColor'] = 'orange';
                     $ElementParser['levelmodif']['modText'] = '0';
@@ -237,7 +221,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 else
                 {
                     $ElementParser['levelmodif']['modColor'] = 'lime';
-                    $ElementParser['levelmodif']['modText'] = '+'.prettyNumber($LevelModifiers[$ElementID] * (-1));
+                    $ElementParser['levelmodif']['modText'] = '+'.prettyNumber($elementQueueLevelModifier);
                 }
                 $ElementParser['LevelModifier'] = parsetemplate($TPL['infobox_levelmodif'], $ElementParser['levelmodif']);
                 $ElementParser['ElementLevelModif'] = parsetemplate($TPL['list_levelmodif'], $ElementParser['levelmodif']);
@@ -267,7 +251,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                         {
                             $ResMinusColor = 'red';
                             $MinusValue = '('.prettyNumber($UseVar[$Key] - $Value).')';
-                            if($Queue['lenght'] > 0)
+                            if($elementsInQueue > 0)
                             {
                                 $ResColor = 'orange';
                             }
@@ -323,7 +307,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             if(IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, false) === false)
             {
                 $HasResources = false;
-                if($Queue['lenght'] == 0)
+                if($elementsInQueue == 0)
                 {
                     $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
                     $HideButton_QuickBuild = true;
@@ -335,7 +319,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             }
             if(IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, true) === false)
             {
-                if($Queue['lenght'] == 0)
+                if($elementsInQueue == 0)
                 {
                     $ElementParser['DestroyButtonColor'] = 'destroyDo_Gray';
                 }
@@ -521,16 +505,17 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         }
     }
 
-    if(!empty($LevelModifiers))
-    {
-        foreach($LevelModifiers as $ElementID => $Modifier)
-        {
-            $CurrentPlanet[$_Vars_GameElements[$ElementID]] += $Modifier;
+    foreach ($queueStateDetails['queuedResourcesToUse'] as $resourceKey => $resourceValue) {
+        if (Resources\isPlanetaryResource($resourceKey)) {
+            $CurrentPlanet[$resourceKey] += $resourceValue;
+        } else if (Resources\isUserResource($resourceKey)) {
+            $CurrentUser[$resourceKey] += $resourceValue;
         }
     }
-    $CurrentPlanet['metal'] += (isset($LockResources['metal']) ? $LockResources['metal'] : 0);
-    $CurrentPlanet['crystal'] += (isset($LockResources['crystal']) ? $LockResources['crystal'] : 0);
-    $CurrentPlanet['deuterium'] += (isset($LockResources['deuterium']) ? $LockResources['deuterium'] : 0);
+    foreach ($queueStateDetails['queuedElementLevelModifiers'] as $elementID => $elementLevelModifier) {
+        $elementKey = Elements\getElementKey($elementID);
+        $CurrentPlanet[$elementKey] -= $elementLevelModifier;
+    }
 
     // Create Structures List
     $ThisRowIndex = 0;
