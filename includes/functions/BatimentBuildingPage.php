@@ -3,6 +3,8 @@
 use UniEngine\Engine\Modules\Development;
 use UniEngine\Engine\Modules\Development\Components\LegacyQueue;
 use UniEngine\Engine\Includes\Helpers\Planets;
+use UniEngine\Engine\Includes\Helpers\World\Elements;
+use UniEngine\Engine\Includes\Helpers\World\Resources;
 
 function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
 {
@@ -66,53 +68,27 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
         }
     ]);
 
-    if(!empty($CurrentPlanet['buildQueue']))
-    {
-        $LockResources = array
-        (
-            'metal' => 0,
-            'crystal' => 0,
-            'deuterium' => 0
-        );
+    $queueStateDetails = Development\Utils\getQueueStateDetails([
+        'queue' => [
+            'type' => Development\Utils\QueueType::Planetary,
+            'content' => $buildingsQueue,
+        ],
+        'user' => $CurrentUser,
+        'planet' => $CurrentPlanet,
+    ]);
+    $planetFieldsUsageCounter = 0;
 
-        $CurrentQueue = explode(';', $CurrentPlanet['buildQueue']);
-        foreach($CurrentQueue as $QueueIndex => $ThisBuilding)
-        {
-            $ThisBuilding = explode(',', $ThisBuilding);
-            $ElementID = $ThisBuilding[0]; //ElementID
-            $BuildMode = $ThisBuilding[4]; //BuildMode
-
-            if($QueueIndex > 0)
-            {
-                if($BuildMode == 'destroy')
-                {
-                    $ForDestroy = true;
-                }
-                else
-                {
-                    $ForDestroy = false;
-                }
-                $GetResourcesToLock = GetBuildingPrice($CurrentUser, $CurrentPlanet, $ElementID, true, $ForDestroy);
-                $LockResources['metal'] += $GetResourcesToLock['metal'];
-                $LockResources['crystal'] += $GetResourcesToLock['crystal'];
-                $LockResources['deuterium'] += $GetResourcesToLock['deuterium'];
-            }
-
-            if(!isset($LevelModifiers[$ElementID]))
-            {
-                $LevelModifiers[$ElementID] = 0;
-            }
-            if($BuildMode == 'destroy')
-            {
-                $LevelModifiers[$ElementID] += 1;
-                $CurrentPlanet[$_Vars_GameElements[$ElementID]] -= 1;
-            }
-            else
-            {
-                $LevelModifiers[$ElementID] -= 1;
-                $CurrentPlanet[$_Vars_GameElements[$ElementID]] += 1;
-            }
+    foreach ($queueStateDetails['queuedResourcesToUse'] as $resourceKey => $resourceValue) {
+        if (Resources\isPlanetaryResource($resourceKey)) {
+            $CurrentPlanet[$resourceKey] -= $resourceValue;
+        } else if (Resources\isUserResource($resourceKey)) {
+            $CurrentUser[$resourceKey] -= $resourceValue;
         }
+    }
+    foreach ($queueStateDetails['queuedElementLevelModifiers'] as $elementID => $elementLevelModifier) {
+        $elementKey = Elements\getElementKey($elementID);
+        $CurrentPlanet[$elementKey] += $elementLevelModifier;
+        $planetFieldsUsageCounter += $elementLevelModifier;
     }
 
     foreach($_Vars_ElementCategories['build'] as $Element)
@@ -134,14 +110,20 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
             $parse['skinpath'] = $_SkinPath;
             $parse['i'] = $Element;
             $BuildingLevel = $CurrentPlanet[$_Vars_GameElements[$Element]];
-            if(isset($LevelModifiers[$Element]))
-            {
-                $PlanetLevel = $BuildingLevel + $LevelModifiers[$Element];
-            }
-            else
-            {
-                $PlanetLevel = $BuildingLevel;
-            }
+            $isElementInQueue = isset(
+                $queueStateDetails['queuedElementLevelModifiers'][$Element]
+            );
+            $elementQueueLevelModifier = (
+                $isElementInQueue ?
+                $queueStateDetails['queuedElementLevelModifiers'][$Element] :
+                0
+            );
+
+            $PlanetLevel = (
+                $BuildingLevel +
+                ($elementQueueLevelModifier * -1)
+            );
+
             $parse['nivel'] = ($BuildingLevel == 0) ? '' : " ({$_Lang['level']} {$PlanetLevel})";
 
             if (in_array($Element, array(1, 2, 3, 4, 12))) {
@@ -193,27 +175,13 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
 
             if(IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $Element))
             {
-                if(!empty($LockResources))
-                {
-                    foreach($LockResources as $Key => $Value)
-                    {
-                        $CurrentPlanet[$Key] -= $Value;
-                    }
-                }
                 $HaveRessources = IsElementBuyable($CurrentUser, $CurrentPlanet, $Element, false);
                 $ElementBuildTime = GetBuildingTime($CurrentUser, $CurrentPlanet, $Element);
                 $parse['time'] = ShowBuildTime($ElementBuildTime);
                 $parse['price'] = GetElementPrice($CurrentUser, $CurrentPlanet, $Element);
                 $parse['rest_price'] = GetRestPrice($CurrentUser, $CurrentPlanet, $Element);
-                if(!empty($LockResources))
-                {
-                    foreach($LockResources as $Key => $Value)
-                    {
-                        $CurrentPlanet[$Key] += $Value;
-                    }
-                }
 
-                if(isset($LevelModifiers[$Element]) && $LevelModifiers[$Element] != 0)
+                if($isElementInQueue && $elementQueueLevelModifier != 0)
                 {
                     $parse['AddLevelPrice'] = "<b>[{$_Lang['level']}: {$NextBuildLevel}]</b><br/>";
                 }
@@ -336,12 +304,16 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
         }
     }
 
-    if(!empty($LevelModifiers))
-    {
-        foreach($LevelModifiers as $ElementID => $Modifier)
-        {
-            $CurrentPlanet[$_Vars_GameElements[$ElementID]] += $Modifier;
+    foreach ($queueStateDetails['queuedResourcesToUse'] as $resourceKey => $resourceValue) {
+        if (Resources\isPlanetaryResource($resourceKey)) {
+            $CurrentPlanet[$resourceKey] += $resourceValue;
+        } else if (Resources\isUserResource($resourceKey)) {
+            $CurrentUser[$resourceKey] += $resourceValue;
         }
+    }
+    foreach ($queueStateDetails['queuedElementLevelModifiers'] as $elementID => $elementLevelModifier) {
+        $elementKey = Elements\getElementKey($elementID);
+        $CurrentPlanet[$elementKey] -= $elementLevelModifier;
     }
 
     $parse = $_Lang;
