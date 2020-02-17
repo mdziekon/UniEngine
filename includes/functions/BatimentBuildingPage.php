@@ -96,13 +96,10 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
         if(in_array($Element, $_Vars_ElementCategories['buildOn'][$CurrentPlanet['planet_type']]))
         {
             $ElementName = $_Lang['tech'][$Element];
-            $CurrentMaxFields = CalculateMaxPlanetFields($CurrentPlanet);
-            if($CurrentPlanet['field_current'] < ($CurrentMaxFields - $buildingsQueueLength))
-            {
+
+            if(($CurrentPlanet['field_current'] + $planetFieldsUsageCounter) < CalculateMaxPlanetFields($CurrentPlanet)) {
                 $RoomIsOk = true;
-            }
-            else
-            {
+            } else {
                 $RoomIsOk = false;
             }
 
