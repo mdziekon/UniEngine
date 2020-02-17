@@ -35,6 +35,14 @@ function getQueueStateDetails ($props) {
     $queue = $props['queue']['content'];
     $queueType = $props['queue']['type'];
 
+    if ($queueType === QueueType::Planetary) {
+        $objectToModifyLevels = &$planet;
+    } else if ($queueType === QueueType::Research) {
+        $objectToModifyLevels = &$user;
+    } else {
+        throw new Exceptions\UniEngineException("Invalid queue type ('{$queueType}')");
+    }
+
     $resourceKeys = Resources\getKnownSpendableResourceKeys();
     $queuedResourcesToUse = array_map(
         function () { return 0; },
@@ -44,14 +52,6 @@ function getQueueStateDetails ($props) {
     $queuedElementLevelModifiers = [];
 
     $objectToModifyLevels = [];
-
-    if ($queueType === QueueType::Planetary) {
-        $objectToModifyLevels = &$planet;
-    } else if ($queueType === QueueType::Research) {
-        $objectToModifyLevels = &$user;
-    } else {
-        throw new Exceptions\UniEngineException("Invalid queue type ('{$queueType}')");
-    }
 
     foreach ($queue as $queueIdx => $queueElement) {
         $elementID = $queueElement['elementID'];
