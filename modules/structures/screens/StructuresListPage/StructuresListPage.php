@@ -60,7 +60,7 @@ function render (&$CurrentPlanet, $CurrentUser) {
     // Display queue
     $queueStateDetails = Development\Utils\getQueueStateDetails([
         'queue' => [
-            'type' => Development\Utils\QueueType::Research,
+            'type' => Development\Utils\QueueType::Planetary,
             'content' => Planets\Queues\Structures\parseQueueString(
                 $CurrentPlanet['buildQueue']
             ),
