@@ -4,8 +4,10 @@ namespace UniEngine\Engine\Modules\Development\Screens\ResearchListPage;
 
 use UniEngine\Engine\Includes\Helpers\Common;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
+use UniEngine\Engine\Includes\Helpers\World\Resources;
 use UniEngine\Engine\Includes\Helpers\Users;
 use UniEngine\Engine\Includes\Helpers\Planets;
+use UniEngine\Engine\Modules\Development;
 use UniEngine\Engine\Modules\Development\Input;
 use UniEngine\Engine\Modules\Development\Components\ModernQueue;
 use UniEngine\Engine\Modules\Development\Components\LegacyQueue;
@@ -94,32 +96,36 @@ function render (&$CurrentPlanet, $CurrentUser, $ResearchPlanet) {
     // End of - Handle Commands
 
     // Gather queue state details
-    $queueStateDetails = Helpers\getQueueStateDetails([
-        'planet' => &$planetConductingResearch,
-        'user' => &$CurrentUser,
-        'timestamp' => $currentTimestamp
+    $queueStateDetails = Development\Utils\getQueueStateDetails([
+        'queue' => [
+            'type' => Development\Utils\QueueType::Research,
+            'content' => Planets\Queues\Research\parseQueueString(
+                $planetConductingResearch['techQueue']
+            ),
+        ],
+        'user' => $CurrentUser,
+        'planet' => $CurrentPlanet,
     ]);
-
-    $queueTempResourcesLock = $queueStateDetails['queuedResourcesToUse'];
-    $queueUnfinishedElementsCount = $queueStateDetails['unfinishedElementsCount'];
-    $queuedElementLevelModifiers = $queueStateDetails['queuedElementLevelModifiers'];
+    $elementsInQueue = $queueStateDetails['queuedElementsCount'];
 
     // Apply queue modifiers
-    $CurrentPlanet['metal'] -= $queueTempResourcesLock['metal'];
-    $CurrentPlanet['crystal'] -= $queueTempResourcesLock['crystal'];
-    $CurrentPlanet['deuterium'] -= $queueTempResourcesLock['deuterium'];
-
-    foreach($queuedElementLevelModifiers as $elementID => $levelModifier) {
-        $elementPlanetKey = _getElementPlanetKey($elementID);
-
-        $CurrentUser[$elementPlanetKey] += $levelModifier;
+    foreach ($queueStateDetails['queuedResourcesToUse'] as $resourceKey => $resourceValue) {
+        if (Resources\isPlanetaryResource($resourceKey)) {
+            $CurrentPlanet[$resourceKey] -= $resourceValue;
+        } else if (Resources\isUserResource($resourceKey)) {
+            $CurrentUser[$resourceKey] -= $resourceValue;
+        }
+    }
+    foreach ($queueStateDetails['queuedElementLevelModifiers'] as $elementID => $elementLevelModifier) {
+        $elementKey = Elements\getElementKey($elementID);
+        $CurrentUser[$elementKey] += $elementLevelModifier;
     }
 
     // Parse all available structures
-    $hasElementsInQueue = ($queueUnfinishedElementsCount > 0);
+    $hasElementsInQueue = ($elementsInQueue > 0);
     $isOnVacation = isOnVacation($CurrentUser);
     $isQueueFull = (
-        $queueUnfinishedElementsCount >=
+        $elementsInQueue >=
         Users\getMaxResearchQueueLength($CurrentUser)
     );
     $isResearchBlockedByLabUpgradeInProgress = (
@@ -134,16 +140,16 @@ function render (&$CurrentPlanet, $CurrentUser, $ResearchPlanet) {
     foreach ($_Vars_ElementCategories['tech'] as $elementID) {
         $elementCurrentQueuedLevel = Elements\getElementCurrentLevel($elementID, $CurrentPlanet, $CurrentUser);
         $elementMaxLevel = Elements\getElementMaxUpgradeLevel($elementID);
+        $isInQueue = isset($queueStateDetails['queuedElementLevelModifiers'][$elementID]);
         $elementQueueLevelModifier = (
-            isset($queuedElementLevelModifiers[$elementID]) ?
-            $queuedElementLevelModifiers[$elementID] :
+            $isInQueue ?
+            $queueStateDetails['queuedElementLevelModifiers'][$elementID] :
             0
         );
         $elementCurrentLevel = (
             $elementCurrentQueuedLevel -
             $elementQueueLevelModifier
         );
-        $isInQueue = isset($queuedElementLevelModifiers[$elementID]);
         $hasReachedMaxLevel = ($elementCurrentQueuedLevel >= $elementMaxLevel);
         $hasTechnologyRequirementsMet = IsTechnologieAccessible(
             $CurrentUser,
@@ -264,15 +270,17 @@ function render (&$CurrentPlanet, $CurrentUser, $ResearchPlanet) {
         }
     }
 
-    // Restore original state by unapplying queue modifiers
-    $CurrentPlanet['metal'] += $queueTempResourcesLock['metal'];
-    $CurrentPlanet['crystal'] += $queueTempResourcesLock['crystal'];
-    $CurrentPlanet['deuterium'] += $queueTempResourcesLock['deuterium'];
-
-    foreach ($queuedElementLevelModifiers as $elementID => $levelModifier) {
-        $elementPlanetKey = _getElementPlanetKey($elementID);
-
-        $CurrentUser[$elementPlanetKey] -= $levelModifier;
+    // Restore resources & element levels to previous values
+    foreach ($queueStateDetails['queuedResourcesToUse'] as $resourceKey => $resourceValue) {
+        if (Resources\isPlanetaryResource($resourceKey)) {
+            $CurrentPlanet[$resourceKey] += $resourceValue;
+        } else if (Resources\isUserResource($resourceKey)) {
+            $CurrentUser[$resourceKey] += $resourceValue;
+        }
+    }
+    foreach ($queueStateDetails['queuedElementLevelModifiers'] as $elementID => $elementLevelModifier) {
+        $elementKey = Elements\getElementKey($elementID);
+        $CurrentUser[$elementKey] -= $elementLevelModifier;
     }
 
     if ($isModernLayoutEnabled) {

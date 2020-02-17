@@ -23,7 +23,6 @@ function render (&$CurrentPlanet, $CurrentUser) {
     $currentTimestamp = time();
     $Parse = &$_Lang;
     $highlightElementID = 0;
-    $fieldsModifierByQueuedDowngrades = 0;
 
     $isModernLayoutEnabled = (
         $CurrentUser['settings_DevelopmentOld'] != 1 ?
@@ -59,37 +58,42 @@ function render (&$CurrentPlanet, $CurrentUser) {
     // End of - Handle Commands
 
     // Display queue
-    $queueStateDetails = Helpers\getQueueStateDetails([
-        'planet' => &$CurrentPlanet,
-        'user' => &$CurrentUser,
-        'timestamp' => $currentTimestamp
+    $queueStateDetails = Development\Utils\getQueueStateDetails([
+        'queue' => [
+            'type' => Development\Utils\QueueType::Research,
+            'content' => Planets\Queues\Structures\parseQueueString(
+                $CurrentPlanet['buildQueue']
+            ),
+        ],
+        'user' => $CurrentUser,
+        'planet' => $CurrentPlanet,
     ]);
-
-    $queueTempResourcesLock = $queueStateDetails['queuedResourcesToUse'];
-    $queueUnfinishedElementsCount = $queueStateDetails['unfinishedElementsCount'];
-    $queuedElementLevelModifiers = $queueStateDetails['queuedElementLevelModifiers'];
-    $fieldsModifierByQueuedDowngrades = $queueStateDetails['fieldsModifier'];
+    $elementsInQueue = $queueStateDetails['queuedElementsCount'];
+    $planetFieldsUsageCounter = 0;
 
     // Apply queue modifiers
-    $CurrentPlanet['metal'] -= $queueTempResourcesLock['metal'];
-    $CurrentPlanet['crystal'] -= $queueTempResourcesLock['crystal'];
-    $CurrentPlanet['deuterium'] -= $queueTempResourcesLock['deuterium'];
-
-    foreach($queuedElementLevelModifiers as $elementID => $levelModifier) {
-        $elementPlanetKey = _getElementPlanetKey($elementID);
-
-        $CurrentPlanet[$elementPlanetKey] += $levelModifier;
+    foreach ($queueStateDetails['queuedResourcesToUse'] as $resourceKey => $resourceValue) {
+        if (Resources\isPlanetaryResource($resourceKey)) {
+            $CurrentPlanet[$resourceKey] -= $resourceValue;
+        } else if (Resources\isUserResource($resourceKey)) {
+            $CurrentUser[$resourceKey] -= $resourceValue;
+        }
+    }
+    foreach ($queueStateDetails['queuedElementLevelModifiers'] as $elementID => $elementLevelModifier) {
+        $elementKey = Elements\getElementKey($elementID);
+        $CurrentPlanet[$elementKey] += $elementLevelModifier;
+        $planetFieldsUsageCounter += $elementLevelModifier;
     }
 
     // Parse all available buildings
     $hasAvailableFieldsOnPlanet = (
-        ($CurrentPlanet['field_current'] + $queueUnfinishedElementsCount - $fieldsModifierByQueuedDowngrades) <
+        ($CurrentPlanet['field_current'] + $planetFieldsUsageCounter) <
         CalculateMaxPlanetFields($CurrentPlanet)
     );
-    $hasElementsInQueue = ($queueUnfinishedElementsCount > 0);
+    $hasElementsInQueue = ($elementsInQueue > 0);
     $isOnVacation = isOnVacation($CurrentUser);
     $isQueueFull = (
-        $queueUnfinishedElementsCount >=
+        $elementsInQueue >=
         Users\getMaxStructuresQueueLength($CurrentUser)
     );
     $isBlockingTechResearchInProgress = (
@@ -125,16 +129,16 @@ function render (&$CurrentPlanet, $CurrentUser) {
         $elementCurrentQueuedLevel = Elements\getElementCurrentLevel($elementID, $CurrentPlanet, $CurrentUser);
         $elementPreviousLevel = $elementCurrentQueuedLevel - 1;
         $elementMaxLevel = Elements\getElementMaxUpgradeLevel($elementID);
+        $isInQueue = isset($queueStateDetails['queuedElementLevelModifiers'][$elementID]);
         $elementQueueLevelModifier = (
-            isset($queuedElementLevelModifiers[$elementID]) ?
-            $queuedElementLevelModifiers[$elementID] :
+            $isInQueue ?
+            $queueStateDetails['queuedElementLevelModifiers'][$elementID] :
             0
         );
         $elementCurrentPlanetLevel = (
             $elementCurrentQueuedLevel -
             $elementQueueLevelModifier
         );
-        $isInQueue = isset($queuedElementLevelModifiers[$elementID]);
         $isLevelDowngradeable = ($elementPreviousLevel >= 0);
         $isBlockedByTechResearchProgress = (
             $elementID == 31 &&
@@ -321,15 +325,17 @@ function render (&$CurrentPlanet, $CurrentUser) {
         }
     }
 
-    // Restore original state by unapplying queue modifiers
-    $CurrentPlanet['metal'] += $queueTempResourcesLock['metal'];
-    $CurrentPlanet['crystal'] += $queueTempResourcesLock['crystal'];
-    $CurrentPlanet['deuterium'] += $queueTempResourcesLock['deuterium'];
-
-    foreach ($queuedElementLevelModifiers as $elementID => $levelModifier) {
-        $elementPlanetKey = _getElementPlanetKey($elementID);
-
-        $CurrentPlanet[$elementPlanetKey] -= $levelModifier;
+    // Restore resources & element levels to previous values
+    foreach ($queueStateDetails['queuedResourcesToUse'] as $resourceKey => $resourceValue) {
+        if (Resources\isPlanetaryResource($resourceKey)) {
+            $CurrentPlanet[$resourceKey] += $resourceValue;
+        } else if (Resources\isUserResource($resourceKey)) {
+            $CurrentUser[$resourceKey] += $resourceValue;
+        }
+    }
+    foreach ($queueStateDetails['queuedElementLevelModifiers'] as $elementID => $elementLevelModifier) {
+        $elementKey = Elements\getElementKey($elementID);
+        $CurrentPlanet[$elementKey] -= $elementLevelModifier;
     }
 
     if ($isModernLayoutEnabled) {
