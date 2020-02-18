@@ -51,12 +51,9 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         $HasLab = false;
     }
 
-    // Get OtherPlanets with Lab
-    $OtherLabs_ConnectedLabs = 0;
-    $OtherLabs_ConnectedLabsLevel = 0;
-    $OtherLabs_TotalLabsLevel = 0;
-    $OtherLabs_LabsCount = 0;
+    $researchNetworkStatus = Development\Utils\Research\fetchResearchNetworkStatus($CurrentUser);
 
+    // Get OtherPlanets with Lab
     $LabInQueue_CheckID = 0;
 
     $Query_GetOtherLabs = '';
@@ -67,7 +64,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 
     if($SQLResult_GetOtherLabs->num_rows > 0)
     {
-        $OtherLabs_Levels = [];
         while($FetchData = $SQLResult_GetOtherLabs->fetch_assoc())
         {
             if(!empty($FetchData['buildQueue']))
@@ -77,25 +73,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
                     $LabInQueue_CheckID = $FetchData['id'];
                 }
             }
-            if($FetchData[$_Vars_GameElements[31]] > 0)
-            {
-                $OtherLabs_Levels[] = $FetchData[$_Vars_GameElements[31]];
-            }
-        }
-        if(!empty($OtherLabs_Levels))
-        {
-            rsort($OtherLabs_Levels);
-            $OtherLabs_ConnectedLabsCount = 1 + $CurrentUser[$_Vars_GameElements[123]];
-            foreach($OtherLabs_Levels as $ThisLabLevel)
-            {
-                if($OtherLabs_ConnectedLabs < $OtherLabs_ConnectedLabsCount)
-                {
-                    $OtherLabs_ConnectedLabsLevel += $ThisLabLevel;
-                    $OtherLabs_ConnectedLabs += 1;
-                }
-                $OtherLabs_TotalLabsLevel += $ThisLabLevel;
-            }
-            $OtherLabs_LabsCount = count($OtherLabs_Levels);
         }
     }
 
@@ -539,10 +516,10 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     $Parse['Insert_PlanetPos_System'] = $CurrentPlanet['system'];
     $Parse['Insert_PlanetPos_Planet'] = $CurrentPlanet['planet'];
     $Parse['Insert_Overview_LabLevel'] = $CurrentPlanet[$_Vars_GameElements[31]];
-    $Parse['Insert_Overview_LabsConnected'] = prettyNumber($OtherLabs_ConnectedLabs);
-    $Parse['Insert_Overview_TotalLabsCount'] = prettyNumber($OtherLabs_LabsCount);
-    $Parse['Insert_Overview_LabPower'] = prettyNumber($OtherLabs_ConnectedLabsLevel);
-    $Parse['Insert_Overview_LabPowerTotal'] = prettyNumber($OtherLabs_TotalLabsLevel);
+    $Parse['Insert_Overview_LabsConnected'] = prettyNumber($researchNetworkStatus['connectedLabsCount']);
+    $Parse['Insert_Overview_TotalLabsCount'] = prettyNumber($researchNetworkStatus['allLabsCount']);
+    $Parse['Insert_Overview_LabPower'] = prettyNumber($researchNetworkStatus['connectedLabsLevel']);
+    $Parse['Insert_Overview_LabPowerTotal'] = prettyNumber($researchNetworkStatus['allLabsLevel']);
 
     $Page = parsetemplate(gettemplate('buildings_compact_body_lab'), $Parse);
 
