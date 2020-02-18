@@ -10,6 +10,12 @@ function getUsersTechLevel($techID, $user) {
     return $user[$userTechKey];
 }
 
+function getResearchNetworkSize($user) {
+    $researchNetworkTechElementID = 123;
+
+    return (1 + getUsersTechLevel($researchNetworkTechElementID, $user));
+}
+
 function getUsersEngineSpeedTechModifier($engineTechID, $user) {
     global $_Vars_TechSpeedModifiers;
 
