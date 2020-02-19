@@ -8,7 +8,7 @@ use UniEngine\Engine\Includes\Helpers\World\Resources;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 
 function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
-    global $_EnginePath, $_Lang, $_Vars_ElementCategories, $_SkinPath, $_GameConfig, $_GET;
+    global $_EnginePath, $_Lang, $_Vars_ElementCategories, $_SkinPath, $_GET;
 
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
     include($_EnginePath.'includes/functions/GetElementPrice.php');
@@ -22,49 +22,36 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
         message($_Lang['no_laboratory'], $_Lang['Research']);
     }
 
-    // Check if Lab is in BuildQueue
-    $LabInQueue = false;
-    if($_GameConfig['BuildLabWhileRun'] != 1)
-    {
-        $SQLResult_CheckOtherPlanets = doquery(
-            "SELECT * FROM {{table}} WHERE `id_owner` = {$CurrentUser['id']} AND (`buildQueue` LIKE '31,%' OR `buildQueue` LIKE '%;31,%');",
-            'planets'
+    $researchNetworkStatus = Development\Utils\Research\fetchResearchNetworkStatus($CurrentUser);
+    $planetsWithUnfinishedLabUpgrades = [];
+
+    if (
+        !isLabUpgradableWhileInUse() &&
+        !empty($researchNetworkStatus['planetsWithLabInStructuresQueue'])
+    ) {
+        $planetsUpdateResult = Development\Utils\Research\updatePlanetsWithLabsInQueue(
+            $CurrentUser,
+            [
+                'planetsWithLabInStructuresQueueIDs' => $researchNetworkStatus['planetsWithLabInStructuresQueue'],
+                'currentTimestamp' => $Now
+            ]
         );
 
-        if($SQLResult_CheckOtherPlanets->num_rows > 0)
-        {
-            include($_EnginePath.'/includes/functions/CheckLabInQueue.php');
+        $planetsWithUnfinishedLabUpgrades = $planetsUpdateResult['planetsWithUnfinishedLabUpgrades'];
+    }
 
-            $Results['planets'] = array();
-            while($PlanetsData = $SQLResult_CheckOtherPlanets->fetch_assoc())
-            {
-                // Update Planet - Building Queue
-                $CheckLab = CheckLabInQueue($PlanetsData);
-                if($CheckLab !== false)
-                {
-                    if($CheckLab <= $Now)
-                    {
-                        if(HandlePlanetQueue($PlanetsData, $CurrentUser, $Now, true) === true)
-                        {
-                            $Results['planets'][] = $PlanetsData;
-                        }
-                    }
-                    else
-                    {
-                        $LabInQueueAt[] = "{$PlanetsData['name']} [{$PlanetsData['galaxy']}:{$PlanetsData['system']}:{$PlanetsData['planet']}]";
-                        $LabInQueue = true;
-                    }
-                }
-            }
-            HandlePlanetUpdate_MultiUpdate($Results, $CurrentUser);
-        }
-    }
-    if(!$LabInQueue)
-    {
+    $hasPlanetsWithUnfinishedLabUpgrades = !empty($planetsWithUnfinishedLabUpgrades);
+
+    if(!$hasPlanetsWithUnfinishedLabUpgrades) {
         $_Lang['Input_HideNoResearch'] = 'display: none;';
-    }
-    else
-    {
+    } else {
+        $LabInQueueAt = array_map(
+            function ($planet) {
+                return "{$planet['name']} [{$planet['galaxy']}:{$planet['system']}:{$planet['planet']}]";
+            },
+            $planetsWithUnfinishedLabUpgrades
+        );
+
         $_Lang['labo_on_update'] = sprintf($_Lang['labo_on_update'], implode(', ', $LabInQueueAt));
     }
 
@@ -87,7 +74,7 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
         [
             "timestamp" => $Now,
             "currentPlanet" => $CurrentPlanet,
-            "hasPlanetsWithUnfinishedLabUpgrades" => $LabInQueue
+            "hasPlanetsWithUnfinishedLabUpgrades" => $hasPlanetsWithUnfinishedLabUpgrades
         ]
     );
     // End of - Handle Commands
@@ -200,7 +187,7 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
                 $isResearchInProgress &&
                 !$isCurrentPlanetResearchPlanet
             ) ||
-            $LabInQueue
+            $hasPlanetsWithUnfinishedLabUpgrades
         ) {
             $RowParse['tech_link'] = '&nbsp;';
 
