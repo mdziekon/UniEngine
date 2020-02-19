@@ -8,6 +8,27 @@ use UniEngine\Engine\Includes\Helpers\Planets;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 
 
+function _getLastQueuedLabEndtime($planet) {
+    $researchLabElementID = 31;
+
+    $structuresQueue = Planets\Queues\Structures\parseQueueString(
+        $planet['buildQueue']
+    );
+
+    $reversedQueue = array_reverse($structuresQueue);
+
+    foreach ($reversedQueue as $queueElement) {
+        if ($queueElement['elementID'] != $researchLabElementID) {
+            continue;
+        }
+
+        return intval($queueElement['endTimestamp']);
+    }
+
+    return -1;
+}
+
+
 function fetchResearchNetworkStatus($user) {
     $researchLabElementID = 31;
     $researchLabElementKey = Elements\getElementKey($researchLabElementID);
@@ -93,8 +114,6 @@ function updatePlanetsWithLabsInQueue(&$user, $params) {
     $planetsWithLabInQueueIDs = $params['planetsWithLabInStructuresQueueIDs'];
     $currentTimestamp = $params['currentTimestamp'];
 
-    include($_EnginePath . '/includes/functions/CheckLabInQueue.php');
-
     $planetsWithLabInQueueIDsString = implode(', ', $planetsWithLabInQueueIDs);
 
     $query_GetPlanetsWithLabInQueue = "";
@@ -109,9 +128,9 @@ function updatePlanetsWithLabsInQueue(&$user, $params) {
     $planetsWithUnfinishedLabUpgrades = [];
 
     while ($dbResultRow_Planet = $dbResult_GetPlanetsWithLabInQueue->fetch_assoc()) {
-        $lastLabUpgradeEndTimestamp = CheckLabInQueue($dbResultRow_Planet);
+        $lastLabUpgradeEndTimestamp = _getLastQueuedLabEndtime($dbResultRow_Planet);
 
-        if ($lastLabUpgradeEndTimestamp === false) {
+        if ($lastLabUpgradeEndTimestamp === -1) {
             continue;
         }
 
