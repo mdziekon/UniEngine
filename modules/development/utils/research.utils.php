@@ -77,4 +77,68 @@ function fetchResearchNetworkStatus($user) {
     ];
 }
 
+
+//  Arguments:
+//      - $user (&Object)
+//      - $params (Object)
+//          - planetsWithLabInStructuresQueueIDs (Array<String>)
+//          - currentTimestamp (Number)
+//
+//  Returns: Object
+//      - planetsWithUnfinishedLabUpgrades (Array<Object>)
+//
+function updatePlanetsWithLabsInQueue(&$user, $params) {
+    global $_EnginePath;
+
+    $planetsWithLabInQueueIDs = $params['planetsWithLabInStructuresQueueIDs'];
+    $currentTimestamp = $params['currentTimestamp'];
+
+    include($_EnginePath . '/includes/functions/CheckLabInQueue.php');
+
+    $planetsWithLabInQueueIDsString = implode(', ', $planetsWithLabInQueueIDs);
+
+    $query_GetPlanetsWithLabInQueue = "";
+    $query_GetPlanetsWithLabInQueue .= "SELECT * ";
+    $query_GetPlanetsWithLabInQueue .= "FROM {{table}} ";
+    $query_GetPlanetsWithLabInQueue .= "WHERE `id` IN ({$planetsWithLabInQueueIDsString}) ";
+    $query_GetPlanetsWithLabInQueue .= ";";
+
+    $dbResult_GetPlanetsWithLabInQueue = doquery($query_GetPlanetsWithLabInQueue, "planets");
+
+    $planetsToUpdate = [];
+    $planetsWithUnfinishedLabUpgrades = [];
+
+    while ($dbResultRow_Planet = $dbResult_GetPlanetsWithLabInQueue->fetch_assoc()) {
+        $lastLabUpgradeEndTimestamp = CheckLabInQueue($dbResultRow_Planet);
+
+        if (
+            $lastLabUpgradeEndTimestamp === false ||
+            $lastLabUpgradeEndTimestamp > $currentTimestamp
+        ) {
+            $planetsWithUnfinishedLabUpgrades[] = $dbResultRow_Planet;
+
+            continue;
+        }
+
+        $hasPlanetBeenUpdated = HandlePlanetQueue(
+            $dbResultRow_Planet,
+            $user,
+            $currentTimestamp,
+            true
+        );
+
+        if ($hasPlanetBeenUpdated) {
+            $planetsToUpdate[] = $dbResultRow_Planet;
+        }
+    }
+
+    if (!empty($planetsToUpdate)) {
+        HandlePlanetUpdate_MultiUpdate($planetsToUpdate, $user);
+    }
+
+    return [
+        'planetsWithUnfinishedLabUpgrades' => $planetsWithUnfinishedLabUpgrades
+    ];
+}
+
 ?>
