@@ -13,7 +13,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 {
     global    $_EnginePath, $_Lang,
             $_Vars_GameElements, $_Vars_ElementCategories, $_Vars_MaxElementLevel,
-            $_SkinPath, $_GameConfig, $_GET;
+            $_SkinPath, $_GET;
 
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
     includeLang('worldElements.detailed');
@@ -52,60 +52,24 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     }
 
     $researchNetworkStatus = Development\Utils\Research\fetchResearchNetworkStatus($CurrentUser);
-
-    // Get OtherPlanets with Lab
-    $LabInQueue_CheckID = 0;
-
-    $Query_GetOtherLabs = '';
-    $Query_GetOtherLabs .= "SELECT `id`, `buildQueue`, `{$_Vars_GameElements[31]}` FROM {{table}} ";
-    $Query_GetOtherLabs .= "WHERE `id_owner` = {$CurrentUser['id']} AND `planet_type` = 1;";
-
-    $SQLResult_GetOtherLabs = doquery($Query_GetOtherLabs, 'planets');
-
-    if($SQLResult_GetOtherLabs->num_rows > 0)
-    {
-        while($FetchData = $SQLResult_GetOtherLabs->fetch_assoc())
-        {
-            if(!empty($FetchData['buildQueue']))
-            {
-                if(substr($FetchData['buildQueue'], 0, 3) == '31,' OR strstr($FetchData['buildQueue'], ';31,') !== false)
-                {
-                    $LabInQueue_CheckID = $FetchData['id'];
-                }
-            }
-        }
-    }
-
-    // Check if Lab is in BuildQueue
-    $LabInQueue = false;
     $planetsWithUnfinishedLabUpgrades = [];
-    if($_GameConfig['BuildLabWhileRun'] != 1 AND $LabInQueue_CheckID > 0)
-    {
-        include($_EnginePath.'/includes/functions/CheckLabInQueue.php');
 
-        $LabInQueue_CheckPlanet = doquery("SELECT * FROM {{table}} WHERE `id` = {$LabInQueue_CheckID} LIMIT 1;", 'planets', true);
+    if (
+        !isLabUpgradableWhileInUse() &&
+        !empty($researchNetworkStatus['planetsWithLabInStructuresQueue'])
+    ) {
+        $planetsUpdateResult = Development\Utils\Research\updatePlanetsWithLabsInQueue(
+            $CurrentUser,
+            [
+                'planetsWithLabInStructuresQueueIDs' => $researchNetworkStatus['planetsWithLabInStructuresQueue'],
+                'currentTimestamp' => $Now
+            ]
+        );
 
-        $Results['planets'] = array();
-        // Update Planet - Building Queue
-        $CheckLab = CheckLabInQueue($LabInQueue_CheckPlanet);
-        if($CheckLab !== false)
-        {
-            if($CheckLab <= $Now)
-            {
-                if(HandlePlanetQueue($LabInQueue_CheckPlanet, $CurrentUser, $Now, true) === true)
-                {
-                    $Results['planets'][] = $LabInQueue_CheckPlanet;
-                }
-            }
-            else
-            {
-                $planetsWithUnfinishedLabUpgrades[] = $LabInQueue_CheckPlanet;
-
-                $LabInQueue = true;
-            }
-        }
-        HandlePlanetUpdate_MultiUpdate($Results, $CurrentUser);
+        $planetsWithUnfinishedLabUpgrades = $planetsUpdateResult['planetsWithUnfinishedLabUpgrades'];
     }
+
+    $hasPlanetsWithUnfinishedLabUpgrades = !empty($planetsWithUnfinishedLabUpgrades);
 
     PlanetResourceUpdate($CurrentUser, $CurrentPlanet, $Now);
 
@@ -126,7 +90,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         [
             "timestamp" => $Now,
             "currentPlanet" => $CurrentPlanet,
-            "hasPlanetsWithUnfinishedLabUpgrades" => $LabInQueue
+            "hasPlanetsWithUnfinishedLabUpgrades" => $hasPlanetsWithUnfinishedLabUpgrades
         ]
     );
 
@@ -210,7 +174,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         $CurrentUser[$elementKey] += $elementLevelModifier;
     }
 
-    if($LabInQueue === false)
+    if(!$hasPlanetsWithUnfinishedLabUpgrades)
     {
         if($elementsInQueue < ((isPro($CurrentUser)) ? MAX_TECH_QUEUE_LENGTH_PRO : MAX_TECH_QUEUE_LENGTH))
         {
@@ -415,7 +379,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
             $HideButton_QuickBuild = true;
         }
-        if($LabInQueue === true)
+        if($hasPlanetsWithUnfinishedLabUpgrades)
         {
             $BlockReason[] = $_Lang['ListBox_Disallow_LabInQueue'];
             $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
