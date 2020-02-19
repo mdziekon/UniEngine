@@ -44,14 +44,14 @@ function render (&$CurrentPlanet, $CurrentUser, $ResearchPlanet) {
         false
     );
 
-    $researchNetworkStatus = Helpers\getResearchNetworkStatus($CurrentUser);
+    $researchNetworkStatus = Development\Utils\Research\fetchResearchNetworkStatus($CurrentUser);
     $planetsWithUnfinishedLabUpgrades = [];
 
     if (
         !isLabUpgradableWhileInUse() &&
         !empty($researchNetworkStatus['planetsWithLabInStructuresQueue'])
     ) {
-        $planetsUpdateResult = Helpers\updatePlanetsWithLabsInQueue(
+        $planetsUpdateResult = Development\Utils\Research\updatePlanetsWithLabsInQueue(
             $CurrentUser,
             [
                 'planetsWithLabInStructuresQueueIDs' => $researchNetworkStatus['planetsWithLabInStructuresQueue'],

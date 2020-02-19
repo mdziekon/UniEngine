@@ -1,15 +1,37 @@
 <?php
 
-namespace UniEngine\Engine\Modules\Development\Screens\ResearchListPage\Helpers;
+namespace UniEngine\Engine\Modules\Development\Utils\Research;
 
 use UniEngine\Engine\Includes\Helpers\Common;
 use UniEngine\Engine\Includes\Helpers\Users;
 use UniEngine\Engine\Includes\Helpers\Planets;
+use UniEngine\Engine\Includes\Helpers\World\Elements;
 
 
-function getResearchNetworkStatus ($user) {
+function _getLastQueuedLabEndtime($planet) {
     $researchLabElementID = 31;
-    $researchLabElementKey = _getElementPlanetKey($researchLabElementID);
+
+    $structuresQueue = Planets\Queues\Structures\parseQueueString(
+        $planet['buildQueue']
+    );
+
+    $reversedQueue = array_reverse($structuresQueue);
+
+    foreach ($reversedQueue as $queueElement) {
+        if ($queueElement['elementID'] != $researchLabElementID) {
+            continue;
+        }
+
+        return intval($queueElement['endTimestamp']);
+    }
+
+    return -1;
+}
+
+
+function fetchResearchNetworkStatus($user) {
+    $researchLabElementID = 31;
+    $researchLabElementKey = Elements\getElementKey($researchLabElementID);
 
     $userID = $user['id'];
     $userResearchNetworkSize = Users\getResearchNetworkSize($user);
@@ -76,6 +98,7 @@ function getResearchNetworkStatus ($user) {
     ];
 }
 
+
 //  Arguments:
 //      - $user (&Object)
 //      - $params (Object)
@@ -85,13 +108,11 @@ function getResearchNetworkStatus ($user) {
 //  Returns: Object
 //      - planetsWithUnfinishedLabUpgrades (Array<Object>)
 //
-function updatePlanetsWithLabsInQueue (&$user, $params) {
+function updatePlanetsWithLabsInQueue(&$user, $params) {
     global $_EnginePath;
 
-    $planetsWithLabInQueueIDs = $params['planetsWithLabInQueueIDs'];
+    $planetsWithLabInQueueIDs = $params['planetsWithLabInStructuresQueueIDs'];
     $currentTimestamp = $params['currentTimestamp'];
-
-    include($_EnginePath . '/includes/functions/CheckLabInQueue.php');
 
     $planetsWithLabInQueueIDsString = implode(', ', $planetsWithLabInQueueIDs);
 
@@ -99,7 +120,6 @@ function updatePlanetsWithLabsInQueue (&$user, $params) {
     $query_GetPlanetsWithLabInQueue .= "SELECT * ";
     $query_GetPlanetsWithLabInQueue .= "FROM {{table}} ";
     $query_GetPlanetsWithLabInQueue .= "WHERE `id` IN ({$planetsWithLabInQueueIDsString}) ";
-    $query_GetPlanetsWithLabInQueue .= "LIMIT 1";
     $query_GetPlanetsWithLabInQueue .= ";";
 
     $dbResult_GetPlanetsWithLabInQueue = doquery($query_GetPlanetsWithLabInQueue, "planets");
@@ -107,27 +127,28 @@ function updatePlanetsWithLabsInQueue (&$user, $params) {
     $planetsToUpdate = [];
     $planetsWithUnfinishedLabUpgrades = [];
 
-    while ($dbResultRow_PlanetWithLabInQueue = $dbResult_GetPlanetsWithLabInQueue->fetch_assoc()) {
-        $lastLabUpgradeEndTimestamp = CheckLabInQueue($dbResultRow_PlanetWithLabInQueue);
+    while ($dbResultRow_Planet = $dbResult_GetPlanetsWithLabInQueue->fetch_assoc()) {
+        $lastLabUpgradeEndTimestamp = _getLastQueuedLabEndtime($dbResultRow_Planet);
 
-        if (
-            $lastLabUpgradeEndTimestamp === false ||
-            $lastLabUpgradeEndTimestamp > $currentTimestamp
-        ) {
-            $planetsWithUnfinishedLabUpgrades[] = $dbResultRow_PlanetWithLabInQueue;
+        if ($lastLabUpgradeEndTimestamp === -1) {
+            continue;
+        }
+
+        if ($lastLabUpgradeEndTimestamp > $currentTimestamp) {
+            $planetsWithUnfinishedLabUpgrades[] = $dbResultRow_Planet;
 
             continue;
         }
 
         $hasPlanetBeenUpdated = HandlePlanetQueue(
-            $dbResultRow_PlanetWithLabInQueue,
+            $dbResultRow_Planet,
             $user,
             $currentTimestamp,
             true
         );
 
         if ($hasPlanetBeenUpdated) {
-            $planetsToUpdate[] = $dbResultRow_PlanetWithLabInQueue;
+            $planetsToUpdate[] = $dbResultRow_Planet;
         }
     }
 
