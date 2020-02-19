@@ -111,10 +111,11 @@ function updatePlanetsWithLabsInQueue(&$user, $params) {
     while ($dbResultRow_Planet = $dbResult_GetPlanetsWithLabInQueue->fetch_assoc()) {
         $lastLabUpgradeEndTimestamp = CheckLabInQueue($dbResultRow_Planet);
 
-        if (
-            $lastLabUpgradeEndTimestamp === false ||
-            $lastLabUpgradeEndTimestamp > $currentTimestamp
-        ) {
+        if ($lastLabUpgradeEndTimestamp === false) {
+            continue;
+        }
+
+        if ($lastLabUpgradeEndTimestamp > $currentTimestamp) {
             $planetsWithUnfinishedLabUpgrades[] = $dbResultRow_Planet;
 
             continue;
