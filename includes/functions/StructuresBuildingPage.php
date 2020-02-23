@@ -33,7 +33,6 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     $TPL['list_disabled']                = gettemplate('buildings_compact_list_disabled');
     $TPL['list_partdisabled']            = parsetemplate($TPL['list_disabled'], array('AddOpacity' => 'dPart'));
     $TPL['list_disabled']                = parsetemplate($TPL['list_disabled'], array('AddOpacity' => ''));
-    $TPL['infobox_levelmodif']            = gettemplate('buildings_compact_infobox_levelmodif');
 
     // Handle Commands
     $cmdResult = Development\Input\UserCommands\handleStructureCommand(
