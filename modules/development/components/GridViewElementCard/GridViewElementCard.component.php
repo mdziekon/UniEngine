@@ -200,7 +200,7 @@ function render ($props) {
         'SubcomponentHTML_UpgradeRequirements' => $subcomponentUpgradeRequirementsHTML,
 
         'InfoBox_Level'                 => $_Lang['InfoBox_Level'],
-        'InfoBox_Build'                 => (
+        'InfoBox_UpgradeAction'         => (
             Elements\isStructure($elementID) ?
             $_Lang['InfoBox_Build'] :
             (
@@ -209,7 +209,7 @@ function render ($props) {
                 '-'
             )
         ),
-        'InfoBox_Destroy'                 => (
+        'InfoBox_DowngradeAction'       => (
             Elements\isStructure($elementID) ?
             $_Lang['InfoBox_Destroy'] :
             (

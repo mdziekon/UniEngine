@@ -25,7 +25,7 @@
                 href="{Data_UpgradeElementAction_LinkHref}"
             >
                 <span class="infoButtonText">
-                    {InfoBox_Build} {BuildLevel}
+                    {InfoBox_UpgradeAction} {BuildLevel}
                 </span>
             </a>
             <a
@@ -34,7 +34,7 @@
                 href="{Data_DowngradeElementAction_LinkHref}"
             >
                 <span class="infoButtonText">
-                    {InfoBox_Destroy} {DestroyLevel}
+                    {InfoBox_DowngradeAction} {DestroyLevel}
                 </span>
             </a>
         </td>
