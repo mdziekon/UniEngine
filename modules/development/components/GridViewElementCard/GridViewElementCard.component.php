@@ -145,22 +145,22 @@ function render ($props) {
 
 
     $componentTPLData = [
-        'SkinPath'                      => $_SkinPath,
+        'Data_SkinPath'                     => $_SkinPath,
 
-        'ElementID'                     => $elementID,
-        'ElementName'                   => $_Lang['tech'][$elementID],
-        'ElementRealLevel'              => prettyNumber($elementCurrentLevel),
-        'BuildLevel'                    => prettyNumber($elementNextLevelToQueue),
-        'DestroyLevel'                  => prettyNumber($elementPrevLevelToQueue),
-        'Desc'                          => $_Lang['WorldElements_Detailed'][$elementID]['description_short'],
+        'Data_ElementID'                    => $elementID,
+        'Data_ElementName'                  => $_Lang['tech'][$elementID],
+        'Data_ElementCurrentLeveL'          => prettyNumber($elementCurrentLevel),
+        'Data_NextUpgradeLevelToQueue'      => prettyNumber($elementNextLevelToQueue),
+        'Data_NextDowngradeLevelToQueue'    => prettyNumber($elementPrevLevelToQueue),
+        'Data_ElementDescription'           => $_Lang['WorldElements_Detailed'][$elementID]['description_short'],
 
-        'HideBuildButton'               => classNames([
+        'Data_UpgradeBtn_HideClass'         => classNames([
             'hide' => (!$isUpgradePossible),
         ]),
-        'HideDestroyButton'             => classNames([
+        'Data_DowngradeBtn_HideClass'       => classNames([
             'hide' => (!$isDowngradePossible),
         ]),
-        'BuildButtonColor'              => classNames([
+        'Data_UpgradeBtn_ColorClass'        => classNames([
             'buildDo_Green' => $isUpgradeAvailable,
             'buildDo_Orange' => (!$isUpgradeAvailable && $isUpgradeQueueable && $isQueueActive),
             'buildDo_Gray' => !(
@@ -168,7 +168,7 @@ function render ($props) {
                 (!$isUpgradeAvailable && $isUpgradeQueueable && $isQueueActive)
             ),
         ]),
-        'DestroyButtonColor'        => classNames([
+        'Data_DowngradeBtn_ColorClass'      => classNames([
             'buildDo_Red' => (
                 $isDowngradeAvailable ||
                 ($isDowngradeQueueable && $isQueueActive)
@@ -179,28 +179,24 @@ function render ($props) {
             ),
         ]),
 
-        'HideBuildInfo'                 => classNames([
+        'Data_UpgradeInfo_HideClass'        => classNames([
             'hide' => (!$isUpgradePossible),
         ]),
-        'HideBuildWarn'                 => classNames([
+        'Data_UpgradeImpossible_HideClass'  => classNames([
             'hide' => ($isUpgradePossible),
         ]),
-        'BuildWarn_Color'               => classNames([
-            'red' => (!$isUpgradePossible),
-        ]),
-        'BuildWarn_Text'                => implode(', ', $whyUpgradeImpossible),
+        'Data_UpgradeImpossible_ReasonText' => implode(', ', $whyUpgradeImpossible),
 
-        'LevelModifier'                 => $subcomponentLevelModifierHTML,
-        'BuildTime'                     => $subcomponentUpgradeTimeHTML,
-        'AdditionalNfo'                 => $subcomponentAdditionalInfoHTML,
+        'Data_UpgradeElementAction_LinkHref'    => $getUpgradeElementActionLinkHref(),
+        'Data_DowngradeElementAction_LinkHref'  => $getDowngradeElementActionLinkHref(),
 
-        'Data_UpgradeElementAction_LinkHref' => $getUpgradeElementActionLinkHref(),
-        'Data_DowngradeElementAction_LinkHref' => $getDowngradeElementActionLinkHref(),
+        'Subcomponent_LevelModifier'        => $subcomponentLevelModifierHTML,
+        'Subcomponent_BuildTime'            => $subcomponentUpgradeTimeHTML,
+        'Subcomponent_AdditionalNfo'        => $subcomponentAdditionalInfoHTML,
+        'Subcomponent_UpgradeRequirements'  => $subcomponentUpgradeRequirementsHTML,
 
-        'SubcomponentHTML_UpgradeRequirements' => $subcomponentUpgradeRequirementsHTML,
-
-        'InfoBox_Level'                 => $_Lang['InfoBox_Level'],
-        'InfoBox_UpgradeAction'         => (
+        'Lang_InfoBox_Level'                 => $_Lang['InfoBox_Level'],
+        'Lang_InfoBox_UpgradeAction'         => (
             Elements\isStructure($elementID) ?
             $_Lang['InfoBox_Build'] :
             (
@@ -209,7 +205,7 @@ function render ($props) {
                 '-'
             )
         ),
-        'InfoBox_DowngradeAction'       => (
+        'Lang_InfoBox_DowngradeAction'       => (
             Elements\isStructure($elementID) ?
             $_Lang['InfoBox_Destroy'] :
             (
@@ -218,7 +214,7 @@ function render ($props) {
                 '-'
             )
         ),
-        'InfoBox_BuildTime'             => (
+        'Lang_InfoBox_BuildTime'             => (
             Elements\isStructure($elementID) ?
             $_Lang['InfoBox_BuildTime'] :
             (

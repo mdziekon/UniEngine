@@ -1,68 +1,68 @@
 <tbody
-    id="nfoEl_{ElementID}"
+    id="nfoEl_{Data_ElementID}"
     class="hide"
 >
     <tr>
         <td class="infoImg">
-            <a href="infos.php?gid={ElementID}">
+            <a href="infos.php?gid={Data_ElementID}">
                 <img
-                    src="{SkinPath}gebaeude/{ElementID}.gif"
+                    src="{Data_SkinPath}gebaeude/{Data_ElementID}.gif"
                     class="infoImg"
                 />
             </a>
         </td>
         <td class="infoDes">
-            <a href="infos.php?gid={ElementID}"><b class="infoDesName">{ElementName}</b></a>
-            ({InfoBox_Level} {ElementRealLevel}) {LevelModifier}
+            <a href="infos.php?gid={Data_ElementID}"><b class="infoDesName">{Data_ElementName}</b></a>
+            ({Lang_InfoBox_Level} {Data_ElementCurrentLeveL}) {Subcomponent_LevelModifier}
             <br /><br />
             <span class="infoDesc">
-                {Desc}
+                {Data_ElementDescription}
             </span>
         </td>
         <td class="center infoAction">
             <a
-                class="{BuildButtonColor} infoButton {HideBuildButton}"
+                class="{Data_UpgradeBtn_ColorClass} infoButton {Data_UpgradeBtn_HideClass}"
                 href="{Data_UpgradeElementAction_LinkHref}"
             >
                 <span class="infoButtonText">
-                    {InfoBox_UpgradeAction} {BuildLevel}
+                    {Lang_InfoBox_UpgradeAction} {Data_NextUpgradeLevelToQueue}
                 </span>
             </a>
             <a
-                id="bDest_{ElementID}"
-                class="{DestroyButtonColor} infoButton destButton {HideDestroyButton}"
+                id="bDest_{Data_ElementID}"
+                class="{Data_DowngradeBtn_ColorClass} infoButton destButton {Data_DowngradeBtn_HideClass}"
                 href="{Data_DowngradeElementAction_LinkHref}"
             >
                 <span class="infoButtonText">
-                    {InfoBox_DowngradeAction} {DestroyLevel}
+                    {Lang_InfoBox_DowngradeAction} {Data_NextDowngradeLevelToQueue}
                 </span>
             </a>
         </td>
     </tr>
-    <tr class="{HideBuildInfo}">
+    <tr class="{Data_UpgradeInfo_HideClass}">
         <td colspan="3" class="infoDet">
             <div class="infoLeft">
-                {SubcomponentHTML_UpgradeRequirements}
+                {Subcomponent_UpgradeRequirements}
             </div>
             <div class="infoRight">
                 <b class="infoRLab">
-                    {InfoBox_BuildTime}:
+                    {Lang_InfoBox_BuildTime}:
                 </b>
                 <span class="infoRVal">
-                    {BuildTime}
+                    {Subcomponent_BuildTime}
                 </span>
                 <br />
-                {AdditionalNfo}
+                {Subcomponent_AdditionalNfo}
             </div>
         </td>
     </tr>
-    <tr class="{HideBuildWarn}">
+    <tr class="{Data_UpgradeImpossible_HideClass}">
         <td
             colspan="3"
             class="infoDet detWarn center"
         >
-            <b class="{BuildWarn_Color}">
-                {BuildWarn_Text}
+            <b class="red">
+                {Data_UpgradeImpossible_ReasonText}
             </b>
         </td>
     </tr>
