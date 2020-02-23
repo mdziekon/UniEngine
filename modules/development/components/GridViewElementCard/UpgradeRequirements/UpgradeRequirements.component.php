@@ -11,7 +11,6 @@ namespace UniEngine\Engine\Modules\Development\Components\GridViewElementCard\Up
 //          - elementDetails (Object)
 //              - currentLevel (Number)
 //              - queueLevelModifier (Number)
-//              - isUpgradePossible (Boolean)
 //              - hasTechnologyRequirementMet (Boolean)
 //
 //  Returns: Object
@@ -36,7 +35,6 @@ function render ($props) {
 
     $elementCurrentLevel = $elementDetails['currentLevel'];
     $elementQueueLevelModifier = $elementDetails['queueLevelModifier'];
-    $isUpgradePossible = $elementDetails['isUpgradePossible'];
     $hasTechnologyRequirementMet = $elementDetails['hasTechnologyRequirementMet'];
 
     $elementQueuedLevel = ($elementCurrentLevel + $elementQueueLevelModifier);
@@ -57,25 +55,23 @@ function render ($props) {
         ''
     );
 
-    if ($isUpgradePossible) {
-        $subcomponentUpgradeTemplate = (
-            $hasTechnologyRequirementMet ?
-            $tplBodyCache['headline_resourcesonly'] :
-            $tplBodyCache['headline_resourcesandtech']
-        );
+    $subcomponentUpgradeTemplate = (
+        $hasTechnologyRequirementMet ?
+        $tplBodyCache['headline_resourcesonly'] :
+        $tplBodyCache['headline_resourcesandtech']
+    );
 
-        $subcomponentHeadlineHTML = parsetemplate(
-            $subcomponentUpgradeTemplate,
-            [
-                'InfoBox_ResRequirements' => $_Lang['InfoBox_ResRequirements'],
-                'InfoBox_RequirementsFor' => $_Lang['InfoBox_RequirementsFor'],
-                'InfoBox_Requirements_Res' => $_Lang['InfoBox_Requirements_Res'],
-                'InfoBox_Requirements_Tech' => $_Lang['InfoBox_Requirements_Tech'],
+    $subcomponentHeadlineHTML = parsetemplate(
+        $subcomponentUpgradeTemplate,
+        [
+            'InfoBox_ResRequirements' => $_Lang['InfoBox_ResRequirements'],
+            'InfoBox_RequirementsFor' => $_Lang['InfoBox_RequirementsFor'],
+            'InfoBox_Requirements_Res' => $_Lang['InfoBox_Requirements_Res'],
+            'InfoBox_Requirements_Tech' => $_Lang['InfoBox_Requirements_Tech'],
 
-                'BuildLevel' => prettyNumber($elementNextLevelToQueue),
-            ]
-        );
-    }
+            'BuildLevel' => prettyNumber($elementNextLevelToQueue),
+        ]
+    );
 
 
     $componentHTML = parsetemplate(

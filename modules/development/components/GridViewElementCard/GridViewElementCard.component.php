@@ -116,7 +116,6 @@ function render ($props) {
             'elementDetails' => [
                 'currentLevel' => $elementCurrentLevel,
                 'queueLevelModifier' => $elementQueueLevelModifier,
-                'isUpgradePossible' => $isUpgradePossible,
                 'hasTechnologyRequirementMet' => $hasTechnologyRequirementMet,
             ],
         ]);
