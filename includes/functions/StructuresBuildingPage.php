@@ -403,6 +403,12 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                     ),
                     'hasTechnologyRequirementMet' => $hasTechnologyRequirementMet,
                 ],
+                'getUpgradeElementActionLinkHref' => function () use ($ElementID) {
+                    return "?cmd=insert&amp;building={$ElementID}";
+                },
+                'getDowngradeElementActionLinkHref' => function () use ($ElementID) {
+                    return "?cmd=destroy&amp;building={$ElementID}";
+                },
             ]);
 
             $InfoBoxes[] = $cardInfoComponent['componentHTML'];

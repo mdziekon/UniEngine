@@ -22,7 +22,7 @@
         <td class="center infoAction">
             <a
                 class="{BuildButtonColor} infoButton {HideBuildButton}"
-                href="?cmd=insert&amp;building={ElementID}"
+                href="{Data_UpgradeElementAction_LinkHref}"
             >
                 <span class="infoButtonText">
                     {InfoBox_Build} {BuildLevel}
@@ -31,7 +31,7 @@
             <a
                 id="bDest_{ElementID}"
                 class="{DestroyButtonColor} infoButton destButton {HideDestroyButton}"
-                href="?cmd=destroy&amp;building={ElementID}"
+                href="{Data_DowngradeElementAction_LinkHref}"
             >
                 <span class="infoButtonText">
                     {InfoBox_Destroy} {DestroyLevel}
@@ -48,7 +48,9 @@
                 <b class="infoRLab">
                     {InfoBox_BuildTime}:
                 </b>
-                <span class="infoRVal">{BuildTime}</span>
+                <span class="infoRVal">
+                    {BuildTime}
+                </span>
                 <br />
                 {AdditionalNfo}
             </div>

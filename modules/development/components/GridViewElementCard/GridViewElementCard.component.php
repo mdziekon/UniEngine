@@ -33,6 +33,8 @@ namespace UniEngine\Engine\Modules\Development\Components\GridViewElementCard;
 //              - isDowngradeQueueable (Boolean)
 //                  Similar to "isUpgradeQueueable".
 //              - hasTechnologyRequirementMet (Boolean)
+//          - getUpgradeElementActionLinkHref (Function: () => String)
+//          - getDowngradeElementActionLinkHref (Function: () => String)
 //
 //  Returns: Object
 //      - componentHTML (String)
@@ -53,6 +55,8 @@ function render ($props) {
     $timestamp = $props['timestamp'];
     $isQueueActive = $props['isQueueActive'];
     $elementDetails = $props['elementDetails'];
+    $getUpgradeElementActionLinkHref = $props['getUpgradeElementActionLinkHref'];
+    $getDowngradeElementActionLinkHref = $props['getDowngradeElementActionLinkHref'];
 
     $isInQueue = $elementDetails['isInQueue'];
     $elementQueueLevelModifier = $elementDetails['queueLevelModifier'];
@@ -187,6 +191,9 @@ function render ($props) {
         'LevelModifier'                 => $subcomponentLevelModifierHTML,
         'BuildTime'                     => $subcomponentUpgradeTimeHTML,
         'AdditionalNfo'                 => $subcomponentAdditionalInfoHTML,
+
+        'Data_UpgradeElementAction_LinkHref' => $getUpgradeElementActionLinkHref(),
+        'Data_DowngradeElementAction_LinkHref' => $getDowngradeElementActionLinkHref(),
 
         'SubcomponentHTML_UpgradeRequirements' => $subcomponentUpgradeRequirementsHTML,
 
