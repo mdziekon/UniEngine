@@ -2,6 +2,8 @@
 
 namespace UniEngine\Engine\Modules\Development\Components\GridViewElementCard;
 
+use UniEngine\Engine\Includes\Helpers\World\Elements;
+
 //  Notes:
 //  - Works only for Structures & Technologies
 //
@@ -198,9 +200,33 @@ function render ($props) {
         'SubcomponentHTML_UpgradeRequirements' => $subcomponentUpgradeRequirementsHTML,
 
         'InfoBox_Level'                 => $_Lang['InfoBox_Level'],
-        'InfoBox_Build'                 => $_Lang['InfoBox_Build'],
-        'InfoBox_Destroy'               => $_Lang['InfoBox_Destroy'],
-        'InfoBox_BuildTime'             => $_Lang['InfoBox_BuildTime'],
+        'InfoBox_Build'                 => (
+            Elements\isStructure($elementID) ?
+            $_Lang['InfoBox_Build'] :
+            (
+                Elements\isTechnology($elementID) ?
+                $_Lang['InfoBox_DoResearch'] :
+                '-'
+            )
+        ),
+        'InfoBox_Destroy'                 => (
+            Elements\isStructure($elementID) ?
+            $_Lang['InfoBox_Destroy'] :
+            (
+                Elements\isTechnology($elementID) ?
+                '-' :
+                '-'
+            )
+        ),
+        'InfoBox_BuildTime'             => (
+            Elements\isStructure($elementID) ?
+            $_Lang['InfoBox_BuildTime'] :
+            (
+                Elements\isTechnology($elementID) ?
+                $_Lang['InfoBox_ResearchTime'] :
+                '-'
+            )
+        ),
     ];
 
     $componentHTML = parsetemplate($tplBodyCache['body'], $componentTPLData);
