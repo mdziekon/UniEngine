@@ -1,1 +1,1 @@
-<b class="infoRLab {LabelClasses}">{Label}:</b> <span class="infoRVal {ValueClasses}">{Value}</span><br />
+<b class="infoRLab {LabelClasses}">{Label}:</b> <span class="infoRVal {ValueClasses}" {ValueOtherAttributes}>{Value}</span><br />
