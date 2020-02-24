@@ -335,7 +335,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             'planet' => $CurrentPlanet,
             'isQueueActive' => $hasElementsInQueue,
             'elementDetails' => [
-                'currentLevel' => (
+                'currentState' => (
                     $CurrentUser[$_Vars_GameElements[$ElementID]] +
                     ($elementQueueLevelModifier * -1)
                 ),

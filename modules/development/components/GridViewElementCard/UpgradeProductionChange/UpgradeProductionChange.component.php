@@ -11,7 +11,7 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 //          - planet (Object)
 //          - timestamp (Number)
 //          - elementDetails (Object)
-//              - currentLevel (Number)
+//              - currentState (Number)
 //              - queueLevelModifier (Number)
 //
 //  Returns: Object
@@ -32,10 +32,10 @@ function render ($props) {
     $timestamp = $props['timestamp'];
     $elementDetails = $props['elementDetails'];
 
-    $elementCurrentLevel = $elementDetails['currentLevel'];
+    $elementCurrentState = $elementDetails['currentState'];
     $elementQueueLevelModifier = $elementDetails['queueLevelModifier'];
 
-    $elementQueuedLevel = ($elementCurrentLevel + $elementQueueLevelModifier);
+    $elementQueuedLevel = ($elementCurrentState + $elementQueueLevelModifier);
     $elementNextLevelToQueue = ($elementQueuedLevel + 1);
     $isConstructibleInHangar = Elements\isConstructibleInHangar($elementID);
 

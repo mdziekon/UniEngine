@@ -424,7 +424,7 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
             'planet' => $CurrentPlanet,
             'isQueueActive' => false,
             'elementDetails' => [
-                'currentLevel' => $CurrentPlanet[$_Vars_GameElements[$ElementID]],
+                'currentState' => $CurrentPlanet[$_Vars_GameElements[$ElementID]],
                 'isInQueue' => false,
                 'queueLevelModifier' => 0,
                 'isUpgradePossible' => true,
@@ -454,7 +454,7 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
                             'planet' => $CurrentPlanet,
                             'timestamp' => $Now,
                             'elementDetails' => [
-                                'currentLevel' => 1,
+                                'currentState' => 1,
                                 'queueLevelModifier' => 0,
                             ],
                         ])['componentHTML'] :

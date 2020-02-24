@@ -4,9 +4,6 @@ namespace UniEngine\Engine\Modules\Development\Components\GridViewElementCard;
 
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 
-//  Notes:
-//  - Works only for Structures & Technologies
-//
 //  Arguments
 //      - $props (Object)
 //          - elementID (String)
@@ -14,7 +11,7 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 //          - planet (Object)
 //          - isQueueActive (Boolean)
 //          - elementDetails (Object)
-//              - currentLevel (Number)
+//              - currentState (Number)
 //              - isInQueue (Boolean)
 //              - queueLevelModifier (Number)
 //              - isUpgradePossible (Boolean)
@@ -73,7 +70,7 @@ function render ($props) {
 
     $isInQueue = $elementDetails['isInQueue'];
     $elementQueueLevelModifier = $elementDetails['queueLevelModifier'];
-    $elementCurrentLevel = $elementDetails['currentLevel'];
+    $elementCurrentState = $elementDetails['currentState'];
     $isUpgradePossible = $elementDetails['isUpgradePossible'];
     $isUpgradeAvailable = $elementDetails['isUpgradeAvailable'];
     $isUpgradeQueueable = $elementDetails['isUpgradeQueueable'];
@@ -84,7 +81,7 @@ function render ($props) {
     $hasTechnologyRequirementMet = $elementDetails['hasTechnologyRequirementMet'];
     $additionalUpgradeDetailsRows = $elementDetails['additionalUpgradeDetailsRows'];
 
-    $elementQueuedLevel = ($elementCurrentLevel + $elementQueueLevelModifier);
+    $elementQueuedLevel = ($elementCurrentState + $elementQueueLevelModifier);
     $elementNextLevelToQueue = ($elementQueuedLevel + 1);
     $elementPrevLevelToQueue = ($elementQueuedLevel - 1);
 
@@ -129,7 +126,7 @@ function render ($props) {
             'planet' => $planet,
             'isQueueActive' => $isQueueActive,
             'elementDetails' => [
-                'currentLevel' => $elementCurrentLevel,
+                'currentState' => $elementCurrentState,
                 'queueLevelModifier' => $elementQueueLevelModifier,
                 'hasTechnologyRequirementMet' => $hasTechnologyRequirementMet,
             ],
@@ -148,7 +145,7 @@ function render ($props) {
 
         'Data_ElementID'                    => $elementID,
         'Data_ElementName'                  => $_Lang['tech'][$elementID],
-        'Data_ElementCurrentState'          => prettyNumber($elementCurrentLevel),
+        'Data_ElementCurrentState'          => prettyNumber($elementCurrentState),
         'Data_NextUpgradeLevelToQueue'      => prettyNumber($elementNextLevelToQueue),
         'Data_NextDowngradeLevelToQueue'    => prettyNumber($elementPrevLevelToQueue),
         'Data_ElementDescription'           => $_Lang['WorldElements_Detailed'][$elementID]['description_short'],

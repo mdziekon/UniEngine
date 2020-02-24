@@ -11,7 +11,7 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 //          - planet (Object)
 //          - isQueueActive (Boolean)
 //          - elementDetails (Object)
-//              - currentLevel (Number)
+//              - currentState (Number)
 //              - queueLevelModifier (Number)
 //              - hasTechnologyRequirementMet (Boolean)
 //
@@ -35,11 +35,11 @@ function render ($props) {
     $isQueueActive = $props['isQueueActive'];
     $elementDetails = $props['elementDetails'];
 
-    $elementCurrentLevel = $elementDetails['currentLevel'];
+    $elementCurrentState = $elementDetails['currentState'];
     $elementQueueLevelModifier = $elementDetails['queueLevelModifier'];
     $hasTechnologyRequirementMet = $elementDetails['hasTechnologyRequirementMet'];
 
-    $elementQueuedLevel = ($elementCurrentLevel + $elementQueueLevelModifier);
+    $elementQueuedLevel = ($elementCurrentState + $elementQueueLevelModifier);
     $elementNextLevelToQueue = ($elementQueuedLevel + 1);
     $isElementUpgradeableType = Elements\isUpgradeable($elementID);
 

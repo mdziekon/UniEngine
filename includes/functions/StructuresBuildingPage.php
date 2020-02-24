@@ -351,7 +351,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 'planet' => $CurrentPlanet,
                 'isQueueActive' => $hasElementsInQueue,
                 'elementDetails' => [
-                    'currentLevel' => (
+                    'currentState' => (
                         $CurrentPlanet[$_Vars_GameElements[$ElementID]] +
                         ($elementQueueLevelModifier * -1)
                     ),
@@ -409,7 +409,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                                 'planet' => $CurrentPlanet,
                                 'timestamp' => $Now,
                                 'elementDetails' => [
-                                    'currentLevel' => (
+                                    'currentState' => (
                                         $CurrentPlanet[$_Vars_GameElements[$ElementID]] +
                                         ($elementQueueLevelModifier * -1)
                                     ),
