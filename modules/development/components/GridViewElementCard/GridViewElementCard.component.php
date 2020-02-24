@@ -43,6 +43,7 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 //              Should return the link to the appropriate command invoker.
 //              Note: returning empty string will make the link "invalid",
 //              meaning the button won't be displayed at all, even if the action is possible.
+//          - hideActionBtnsContainerWhenUnavailable (Boolean | undefined) [default: false]
 //
 //  Returns: Object
 //      - componentHTML (String)
@@ -64,6 +65,11 @@ function render ($props) {
     $elementDetails = $props['elementDetails'];
     $getUpgradeElementActionLinkHref = $props['getUpgradeElementActionLinkHref'];
     $getDowngradeElementActionLinkHref = $props['getDowngradeElementActionLinkHref'];
+    $hideActionBtnsContainerWhenUnavailable = (
+        isset($props['hideActionBtnsContainerWhenUnavailable']) ?
+        $props['hideActionBtnsContainerWhenUnavailable'] :
+        false
+    );
 
     $isInQueue = $elementDetails['isInQueue'];
     $elementQueueLevelModifier = $elementDetails['queueLevelModifier'];
@@ -162,6 +168,20 @@ function render ($props) {
                 !$hasValidDowngradeElementActionLink
             ),
         ]),
+        'Data_ActionBtns_HideClass'         => classNames([
+            'hide' => (
+                (
+                    !$isUpgradePossible ||
+                    !$hasValidUpgradeElementActionLink
+                ) &&
+                (
+                    !$isDowngradePossible ||
+                    !$hasValidDowngradeElementActionLink
+                ) &&
+                $hideActionBtnsContainerWhenUnavailable
+            ),
+        ]),
+
         'Data_UpgradeBtn_ColorClass'        => classNames([
             'buildDo_Green' => $isUpgradeAvailable,
             'buildDo_Orange' => (!$isUpgradeAvailable && $isUpgradeQueueable && $isQueueActive),

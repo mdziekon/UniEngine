@@ -19,7 +19,7 @@
                 {Data_ElementDescription}
             </span>
         </td>
-        <td class="center infoAction">
+        <td class="center infoAction {Data_ActionBtns_HideClass}">
             <a
                 class="{Data_UpgradeBtn_ColorClass} infoButton {Data_UpgradeBtn_HideClass}"
                 href="{Data_UpgradeElementAction_LinkHref}"
