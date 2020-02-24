@@ -131,10 +131,13 @@ function render ($props) {
 
         'Data_ElementID'                    => $elementID,
         'Data_ElementName'                  => $_Lang['tech'][$elementID],
-        'Data_ElementCurrentLeveL'          => prettyNumber($elementCurrentLevel),
+        'Data_ElementCurrentState'          => prettyNumber($elementCurrentLevel),
         'Data_NextUpgradeLevelToQueue'      => prettyNumber($elementNextLevelToQueue),
         'Data_NextDowngradeLevelToQueue'    => prettyNumber($elementPrevLevelToQueue),
         'Data_ElementDescription'           => $_Lang['WorldElements_Detailed'][$elementID]['description_short'],
+        'Data_ElementImg_ShipClass'         => classNames([
+            'shipImg' => Elements\isConstructibleInHangar($elementID),
+        ]),
 
         'Data_UpgradeBtn_HideClass'         => classNames([
             'hide' => (!$isUpgradePossible),
@@ -177,8 +180,12 @@ function render ($props) {
         'Subcomponent_AdditionalNfo'        => $subcomponentAdditionalInfoHTML,
         'Subcomponent_UpgradeRequirements'  => $subcomponentUpgradeRequirementsHTML,
 
-        'Lang_InfoBox_Level'                 => $_Lang['InfoBox_Level'],
-        'Lang_InfoBox_UpgradeAction'         => (
+        'Lang_InfoBox_CurrentState'         => (
+            (Elements\isStructure($elementID) || Elements\isTechnology($elementID)) ?
+            $_Lang['InfoBox_Level'] :
+            "{$_Lang['InfoBox_Count']}:"
+        ),
+        'Lang_InfoBox_UpgradeAction'        => (
             Elements\isStructure($elementID) ?
             $_Lang['InfoBox_Build'] :
             (
@@ -202,7 +209,11 @@ function render ($props) {
             (
                 Elements\isTechnology($elementID) ?
                 $_Lang['InfoBox_ResearchTime'] :
-                '-'
+                (
+                    Elements\isConstructibleInHangar($elementID) ?
+                    $_Lang['InfoBox_ConstructionTime'] :
+                    '-'
+                )
             )
         ),
     ];

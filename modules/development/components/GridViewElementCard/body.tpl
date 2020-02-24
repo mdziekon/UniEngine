@@ -3,17 +3,17 @@
     class="hide"
 >
     <tr>
-        <td class="infoImg">
+        <td class="infoImg {Data_ElementImg_ShipClass}">
             <a href="infos.php?gid={Data_ElementID}">
                 <img
                     src="{Data_SkinPath}gebaeude/{Data_ElementID}.gif"
-                    class="infoImg"
+                    class="infoImg {Data_ElementImg_ShipClass}"
                 />
             </a>
         </td>
         <td class="infoDes">
             <a href="infos.php?gid={Data_ElementID}"><b class="infoDesName">{Data_ElementName}</b></a>
-            ({Lang_InfoBox_Level} {Data_ElementCurrentLeveL}) {Subcomponent_LevelModifier}
+            ({Lang_InfoBox_CurrentState} {Data_ElementCurrentState}) {Subcomponent_LevelModifier}
             <br /><br />
             <span class="infoDesc">
                 {Data_ElementDescription}
