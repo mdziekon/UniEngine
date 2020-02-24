@@ -112,4 +112,33 @@ function buildCommonJSInjectionHTML() {
     return parsetemplate($tplBody, $tplData);
 }
 
+/**
+ * Merges provided CSS classes into one string applicable in HTML files.
+ *
+ * Classes are enabled either unconditionally (when provided as bare strings),
+ * or conditionally (when provided as key => value pair, where class is the key,
+ * and the value is boolean enablement flag).
+ */
+function classNames($classes) {
+    $enabledClasses = [];
+
+    foreach ($classes as $classKey => $classValue) {
+        if (is_int($classKey)) {
+            // Class was added without flag, enable unconditionally
+            $enabledClasses[] = $classValue;
+
+            continue;
+        }
+
+        // Class was added with flag, check if its value is truthy to enable it
+        if (!$classValue) {
+            continue;
+        }
+
+        $enabledClasses[] = $classKey;
+    }
+
+    return implode(' ', $enabledClasses);
+}
+
 ?>

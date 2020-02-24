@@ -153,7 +153,12 @@ function updatePlanetsWithLabsInQueue(&$user, $params) {
     }
 
     if (!empty($planetsToUpdate)) {
-        HandlePlanetUpdate_MultiUpdate($planetsToUpdate, $user);
+        HandlePlanetUpdate_MultiUpdate(
+            [
+                'planets' => $planetsToUpdate,
+            ],
+            $user
+        );
     }
 
     return [

@@ -1,5 +1,7 @@
 <?php
 
+use UniEngine\Engine\Modules\Development;
+
 function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
 {
     global $_Lang, $_Vars_GameElements, $_Vars_ElementCategories, $_SkinPath, $_GameConfig, $_POST, $UserDev_Log, $_EnginePath;
@@ -42,12 +44,8 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
     $TPL['list_disabled']                    = gettemplate('buildings_compact_list_disabled');
     $TPL['list_disabled']                    = parsetemplate($TPL['list_disabled'], array('AddOpacity' => ''));
     $TPL['queue_topinfo']                    = gettemplate('buildings_compact_queue_topinfo');
-    $TPL['infobox_body']                    = gettemplate('buildings_compact_infobox_body_shipyard');
-    $TPL['infobox_req_res']                    = gettemplate('buildings_compact_infobox_req_res');
     $TPL['infobox_additionalnfo']            = gettemplate('buildings_compact_infobox_additionalnfo');
     $TPL['infobox_additionalnfo_single']    = gettemplate('buildings_compact_infobox_additionalnfo_single');
-    $TPL['infobox_req_selector_single']        = gettemplate('buildings_compact_infobox_req_selector_single');
-    $TPL['infobox_req_selector_dual']        = gettemplate('buildings_compact_infobox_req_selector_dual');
 
     if($CurrentPlanet[$_Vars_GameElements[21]] > 0)
     {
@@ -306,66 +304,38 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
     }
     // End of - Parse Queue
 
-    $ResImages = array
-    (
-        'metal' => 'metall',
-        'crystal' => 'kristall',
-        'deuterium' => 'deuterium',
-        'energy_max' => 'energie',
-        'darkEnergy' => 'darkenergy'
-    );
-    $ResLangs = array
-    (
-        'metal' => $_Lang['Metal'],
-        'crystal' => $_Lang['Crystal'],
-        'deuterium' => $_Lang['Deuterium'],
-        'energy_max' => $_Lang['Energy'],
-        'darkEnergy' => $_Lang['DarkEnergy']
-    );
-
-    $ElementParserDefault = array
-    (
-        'SkinPath'                    => $_SkinPath,
-        'InfoBox_Count'                => $_Lang['InfoBox_Count'],
-        'InfoBox_Build'                => $_Lang['InfoBox_DoResearch'],
-        'InfoBox_RequirementsFor'    => $_Lang['InfoBox_RequirementsForShip'],
-        'InfoBox_ResRequirements'    => $_Lang['InfoBox_ResRequirementsShip'],
-        'InfoBox_Requirements_Res'    => $_Lang['InfoBox_Requirements_Res'],
-        'InfoBox_Requirements_Tech'    => $_Lang['InfoBox_Requirements_Tech'],
-        'InfoBox_BuildTime'            => $_Lang['InfoBox_ConstructionTime'],
-        'InfoBox_MaxConstructible'    => $_Lang['InfoBox_MaxConstructible'],
-        'ElementPriceDiv'            => ''
-    );
-
     $TabIndex = 1;
 
     foreach($_Vars_ElementCategories[$PageType] as $ElementID)
     {
-        $ElementParser = $ElementParserDefault;
+        $ElementParser = [
+            'SkinPath' => $_SkinPath,
+        ];
 
         $HasResources = true;
         $TechLevelOK = false;
         $BlockShield = false;
         $BlockMissile = false;
+        $maxElementsCount = 0;
 
         $ElementParser['ElementCount'] = prettyNumber($CurrentPlanet[$_Vars_GameElements[$ElementID]]);
         if(strlen($ElementParser['ElementCount']) > 10)
         {
             $ElementParser['IsBigNum'] = 'bignum';
         }
-        $ElementParser['MaxConstructible'] = GetMaxConstructibleElements($ElementID, $CurrentPlanet);
+        $maxElementsCount = GetMaxConstructibleElements($ElementID, $CurrentPlanet);
         if($IsInDefense)
         {
             if($ElementID == 407 OR $ElementID == 408)
             {
                 if($Shields[$ElementID] >= 1)
                 {
-                    $ElementParser['MaxConstructible'] = 0;
+                    $maxElementsCount = 0;
                     $BlockShield = true;
                 }
                 else
                 {
-                    $ElementParser['MaxConstructible'] = 1;
+                    $maxElementsCount = 1;
                 }
             }
             else if($ElementID == 502 OR $ElementID == 503)
@@ -373,124 +343,36 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
                 $MaxMissilesSpace = floor($SiloFreeSpace / $MissileSizes[$ElementID]);
                 if($MaxMissilesSpace > 0)
                 {
-                    if($MaxMissilesSpace < $ElementParser['MaxConstructible'])
+                    if($MaxMissilesSpace < $maxElementsCount)
                     {
-                        $ElementParser['MaxConstructible'] = $MaxMissilesSpace;
+                        $maxElementsCount = $MaxMissilesSpace;
                     }
                 }
                 else
                 {
                     $BlockMissile = true;
-                    $ElementParser['MaxConstructible'] = 0;
+                    $maxElementsCount = 0;
                 }
             }
         }
-        $ElementParser['MaxConstructible'] = prettyNumber($ElementParser['MaxConstructible']);
         $ElementParser['ElementName'] = $_Lang['tech'][$ElementID];
         $ElementParser['ElementID'] = $ElementID;
-        $ElementParser['Desc'] = $_Lang['WorldElements_Detailed'][$ElementID]['description_short'];
 
-        $ElementParser['ElementPrice'] = GetBuildingPrice($CurrentUser, $CurrentPlanet, $ElementID, true, false, true);
-        foreach($ElementParser['ElementPrice'] as $Key => $Value)
+        $elementPrice = GetBuildingPrice($CurrentUser, $CurrentPlanet, $ElementID, true, false, true);
+        foreach($elementPrice as $Key => $Value)
         {
             if($Value > 0)
             {
-                $ResColor = '';
-                $ResMinusColor = '';
-                $MinusValue = '&nbsp;';
-
-                if($Key != 'darkEnergy')
-                {
-                    $UseVar = &$CurrentPlanet;
-                }
-                else
-                {
-                    $UseVar = &$CurrentUser;
-                }
-                if($UseVar[$Key] < $Value)
-                {
-                    $ResMinusColor = 'red';
-                    $MinusValue = '('.prettyNumber($UseVar[$Key] - $Value).')';
-                    $ResColor = 'red';
-                }
-
-                $ElementParser['ElementPrices'] = array
-                (
-                    'SkinPath' => $_SkinPath,
-                    'ResName' => $Key,
-                    'ResImg' => $ResImages[$Key],
-                    'ResColor' => $ResColor,
-                    'Value' => prettyNumber($Value),
-                    'ResMinusColor' => $ResMinusColor,
-                    'MinusValue' => $MinusValue
-                );
-                $ElementParser['ElementPriceDiv'] .= parsetemplate($TPL['infobox_req_res'], $ElementParser['ElementPrices']);
                 $ElementPriceArray[$ElementID][$Key] = $Value;
             }
         }
-        $ElementParser['BuildTime'] = GetBuildingTime($CurrentUser, $CurrentPlanet, $ElementID);
-        $ElementTimeArray[$ElementID] = $ElementParser['BuildTime'];
-        $ElementParser['BuildTime'] = pretty_time($ElementParser['BuildTime']);
-
-        if (in_array($ElementID, $_Vars_ElementCategories['prod'])) {
-            // Calculate theoretical production increase
-            $productionIncrease = getElementProduction(
-                $ElementID,
-                $CurrentPlanet,
-                $CurrentUser,
-                [
-                    'useCurrentBoosters' => true,
-                    'currentTimestamp' => $Now,
-                    'customLevel' => 1,
-                    'customProductionFactor' => 10
-                ]
-            );
-
-            $resourceLabels = [
-                'metal' => $_Lang['Metal'],
-                'crystal' => $_Lang['Crystal'],
-                'deuterium' => $_Lang['Deuterium'],
-                'energy' => $_Lang['Energy'],
-            ];
-
-            foreach ($productionIncrease as $resourceKey => $difference) {
-                if ($difference == 0) {
-                    continue;
-                }
-
-                $differenceFormatted = prettyNumber($difference);
-                $label = $resourceLabels[$resourceKey];
-
-                $ElementParser['AdditionalNfo'][] = parsetemplate(
-                    $TPL['infobox_additionalnfo'],
-                    [
-                        'Label' => $label,
-                        'ValueClasses' => (
-                            $difference >= 0 ?
-                            'lime' :
-                            'red'
-                        ),
-                        'Value' => (
-                            $difference >= 0 ?
-                            ('+' . $differenceFormatted) :
-                            $differenceFormatted
-                        )
-                    ]
-                );
-            }
-        }
+        $ElementTimeArray[$ElementID] = GetBuildingTime($CurrentUser, $CurrentPlanet, $ElementID);
 
         if(IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $ElementID))
         {
             $TechLevelOK = true;
-            $ElementParser['ElementRequirementsHeadline'] = $TPL['infobox_req_selector_single'];
         }
-        else
-        {
-            $ElementParser['ElementRequirementsHeadline'] = $TPL['infobox_req_selector_dual'];
-            $ElementParser['ElementTechDiv'] = GetElementTechReq($CurrentUser, $CurrentPlanet, $ElementID, true);
-            $ElementParser['HideResReqDiv'] = 'hide';
-        }
+
         $HasResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, false);
 
         $BlockReason = array();
@@ -506,12 +388,10 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
         if($BlockShield)
         {
             $BlockReason[] = $_Lang['ListBox_Disallow_ShieldBlock'];
-            $ElementParser['AdditionalNfo'][] = parsetemplate($TPL['infobox_additionalnfo_single'], array('ValueClasses' => 'red', 'Value' => $_Lang['ListBox_Disallow_ShieldBlock']));
         }
         if($BlockMissile)
         {
             $BlockReason[] = $_Lang['ListBox_Disallow_MissileBlock'];
-            $ElementParser['AdditionalNfo'][] = parsetemplate($TPL['infobox_additionalnfo_single'], array('ValueClasses' => 'red', 'Value' => $_Lang['ListBox_Disallow_MissileBlock']));
         }
         if(!$HasShipyard)
         {
@@ -534,13 +414,86 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
             $TabIndex += 1;
         }
 
-        if(!empty($ElementParser['AdditionalNfo']))
-        {
-            $ElementParser['AdditionalNfo'] = implode('', $ElementParser['AdditionalNfo']);
-        }
-        $ElementParser['ElementRequirementsHeadline'] = parsetemplate($ElementParser['ElementRequirementsHeadline'], $ElementParser);
         $StructuresList[] = parsetemplate($TPL['list_element'], $ElementParser);
-        $InfoBoxes[] = parsetemplate($TPL['infobox_body'], $ElementParser);
+
+        $hasTechnologyRequirementMet = $TechLevelOK;
+
+        $cardInfoComponent = Development\Components\GridViewElementCard\render([
+            'elementID' => $ElementID,
+            'user' => $CurrentUser,
+            'planet' => $CurrentPlanet,
+            'isQueueActive' => false,
+            'elementDetails' => [
+                'currentState' => $CurrentPlanet[$_Vars_GameElements[$ElementID]],
+                'isInQueue' => false,
+                'queueLevelModifier' => 0,
+                'isUpgradePossible' => true,
+                'isUpgradeAvailable' => false,
+                'isUpgradeQueueable' => false,
+                'whyUpgradeImpossible' => [],
+                'isDowngradePossible' => false,
+                'isDowngradeAvailable' => false,
+                'isDowngradeQueueable' => false,
+                'hasTechnologyRequirementMet' => $hasTechnologyRequirementMet,
+                'additionalUpgradeDetailsRows' => [
+                    parsetemplate(
+                        $TPL['infobox_additionalnfo'],
+                        [
+                            'LabelClasses' => '',
+                            'Label' => $_Lang['InfoBox_MaxConstructible'],
+                            'ValueClasses' => '',
+                            'ValueOtherAttributes' => "id=\"maxConst_{$ElementID}\"",
+                            'Value' => prettyNumber($maxElementsCount),
+                        ]
+                    ),
+                    (
+                        in_array($ElementID, $_Vars_ElementCategories['prod']) ?
+                        Development\Components\GridViewElementCard\UpgradeProductionChange\render([
+                            'elementID' => $ElementID,
+                            'user' => $CurrentUser,
+                            'planet' => $CurrentPlanet,
+                            'timestamp' => $Now,
+                            'elementDetails' => [
+                                'currentState' => 1,
+                                'queueLevelModifier' => 0,
+                            ],
+                        ])['componentHTML'] :
+                        ''
+                    ),
+                    (
+                        $BlockShield ?
+                        parsetemplate(
+                            $TPL['infobox_additionalnfo_single'],
+                            [
+                                'ValueClasses' => 'red',
+                                'Value' => $_Lang['ListBox_Disallow_ShieldBlock'],
+                            ]
+                        ) :
+                        ''
+                    ),
+                    (
+                        $BlockMissile ?
+                        parsetemplate(
+                            $TPL['infobox_additionalnfo_single'],
+                            [
+                                'ValueClasses' => 'red',
+                                'Value' => $_Lang['ListBox_Disallow_MissileBlock'],
+                            ]
+                        ) :
+                        ''
+                    ),
+                ],
+            ],
+            'getUpgradeElementActionLinkHref' => function () {
+                return '';
+            },
+            'getDowngradeElementActionLinkHref' => function () {
+                return '';
+            },
+            'hideActionBtnsContainerWhenUnavailable' => true,
+        ]);
+
+        $InfoBoxes[] = $cardInfoComponent['componentHTML'];
     }
 
     // Create List
