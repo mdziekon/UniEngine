@@ -36,7 +36,13 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 //              - hasTechnologyRequirementMet (Boolean)
 //              - additionalUpgradeDetailsRows (Array<String>)
 //          - getUpgradeElementActionLinkHref (Function: () => String)
+//              Should return the link to the appropriate command invoker.
+//              Note: returning empty string will make the link "invalid",
+//              meaning the button won't be displayed at all, even if the action is possible.
 //          - getDowngradeElementActionLinkHref (Function: () => String)
+//              Should return the link to the appropriate command invoker.
+//              Note: returning empty string will make the link "invalid",
+//              meaning the button won't be displayed at all, even if the action is possible.
 //
 //  Returns: Object
 //      - componentHTML (String)
@@ -75,6 +81,11 @@ function render ($props) {
     $elementQueuedLevel = ($elementCurrentLevel + $elementQueueLevelModifier);
     $elementNextLevelToQueue = ($elementQueuedLevel + 1);
     $elementPrevLevelToQueue = ($elementQueuedLevel - 1);
+
+    $upgradeElementActionBtnLinkHref = $getUpgradeElementActionLinkHref();
+    $downgradeElementActionBtnLinkHref = $getDowngradeElementActionLinkHref();
+    $hasValidUpgradeElementActionLink = (strlen($upgradeElementActionBtnLinkHref) > 0);
+    $hasValidDowngradeElementActionLink = (strlen($downgradeElementActionBtnLinkHref) > 0);
 
     // Render subcomponents
     $subcomponentLevelModifierHTML = '';
@@ -140,10 +151,16 @@ function render ($props) {
         ]),
 
         'Data_UpgradeBtn_HideClass'         => classNames([
-            'hide' => (!$isUpgradePossible),
+            'hide' => (
+                !$isUpgradePossible ||
+                !$hasValidUpgradeElementActionLink
+            ),
         ]),
         'Data_DowngradeBtn_HideClass'       => classNames([
-            'hide' => (!$isDowngradePossible),
+            'hide' => (
+                !$isDowngradePossible ||
+                !$hasValidDowngradeElementActionLink
+            ),
         ]),
         'Data_UpgradeBtn_ColorClass'        => classNames([
             'buildDo_Green' => $isUpgradeAvailable,
@@ -172,8 +189,8 @@ function render ($props) {
         ]),
         'Data_UpgradeImpossible_ReasonText' => implode(', ', $whyUpgradeImpossible),
 
-        'Data_UpgradeElementAction_LinkHref'    => $getUpgradeElementActionLinkHref(),
-        'Data_DowngradeElementAction_LinkHref'  => $getDowngradeElementActionLinkHref(),
+        'Data_UpgradeElementAction_LinkHref'    => $upgradeElementActionBtnLinkHref,
+        'Data_DowngradeElementAction_LinkHref'  => $downgradeElementActionBtnLinkHref,
 
         'Subcomponent_LevelModifier'        => $subcomponentLevelModifierHTML,
         'Subcomponent_BuildTime'            => $subcomponentUpgradeTimeHTML,
