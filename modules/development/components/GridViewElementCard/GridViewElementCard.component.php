@@ -12,7 +12,6 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 //          - elementID (String)
 //          - user (Object)
 //          - planet (Object)
-//          - timestamp (Number)
 //          - isQueueActive (Boolean)
 //          - elementDetails (Object)
 //              - currentLevel (Number)
@@ -35,6 +34,7 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 //              - isDowngradeQueueable (Boolean)
 //                  Similar to "isUpgradeQueueable".
 //              - hasTechnologyRequirementMet (Boolean)
+//              - additionalUpgradeDetailsRows (Array<String>)
 //          - getUpgradeElementActionLinkHref (Function: () => String)
 //          - getDowngradeElementActionLinkHref (Function: () => String)
 //
@@ -54,7 +54,6 @@ function render ($props) {
     $elementID = $props['elementID'];
     $user = $props['user'];
     $planet = $props['planet'];
-    $timestamp = $props['timestamp'];
     $isQueueActive = $props['isQueueActive'];
     $elementDetails = $props['elementDetails'];
     $getUpgradeElementActionLinkHref = $props['getUpgradeElementActionLinkHref'];
@@ -71,18 +70,17 @@ function render ($props) {
     $isDowngradeAvailable = $elementDetails['isDowngradeAvailable'];
     $isDowngradeQueueable = $elementDetails['isDowngradeQueueable'];
     $hasTechnologyRequirementMet = $elementDetails['hasTechnologyRequirementMet'];
+    $additionalUpgradeDetailsRows = $elementDetails['additionalUpgradeDetailsRows'];
 
     $elementQueuedLevel = ($elementCurrentLevel + $elementQueueLevelModifier);
     $elementNextLevelToQueue = ($elementQueuedLevel + 1);
     $elementPrevLevelToQueue = ($elementQueuedLevel - 1);
 
-    $isProductionRelatedStructure = in_array($elementID, $_Vars_ElementCategories['prod']);
-
     // Render subcomponents
     $subcomponentLevelModifierHTML = '';
     $subcomponentUpgradeTimeHTML = '';
     $subcomponentUpgradeRequirementsHTML = '';
-    $subcomponentAdditionalInfoHTML = '';
+    $subcomponentAdditionalInfoHTML = implode('', $additionalUpgradeDetailsRows);
 
     if ($isInQueue) {
         $elementLevelModifierTPLData = [
@@ -125,21 +123,6 @@ function render ($props) {
         $upgradeTime = GetBuildingTime($user, $planet, $elementID);
 
         $subcomponentUpgradeTimeHTML = pretty_time($upgradeTime);
-    }
-
-    if ($isProductionRelatedStructure) {
-        $subcomponentAdditionalInfo = UpgradeProductionChange\render([
-            'elementID' => $elementID,
-            'user' => $user,
-            'planet' => $planet,
-            'timestamp' => $timestamp,
-            'elementDetails' => [
-                'currentLevel' => $elementCurrentLevel,
-                'queueLevelModifier' => $elementQueueLevelModifier,
-            ],
-        ]);
-
-        $subcomponentAdditionalInfoHTML = $subcomponentAdditionalInfo['componentHTML'];
     }
 
 

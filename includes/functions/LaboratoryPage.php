@@ -333,7 +333,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             'elementID' => $ElementID,
             'user' => $CurrentUser,
             'planet' => $CurrentPlanet,
-            'timestamp' => $Now,
             'isQueueActive' => $hasElementsInQueue,
             'elementDetails' => [
                 'currentLevel' => (
@@ -375,6 +374,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
                 'isDowngradeAvailable' => false,
                 'isDowngradeQueueable' => false,
                 'hasTechnologyRequirementMet' => $hasTechnologyRequirementMet,
+                'additionalUpgradeDetailsRows' => [],
             ],
             'getUpgradeElementActionLinkHref' => function () use ($ElementID) {
                 return "?mode=research&amp;cmd=search&amp;tech={$ElementID}";

@@ -349,7 +349,6 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 'elementID' => $ElementID,
                 'user' => $CurrentUser,
                 'planet' => $CurrentPlanet,
-                'timestamp' => $Now,
                 'isQueueActive' => $hasElementsInQueue,
                 'elementDetails' => [
                     'currentLevel' => (
@@ -401,6 +400,25 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                         !$isOnVacation
                     ),
                     'hasTechnologyRequirementMet' => $hasTechnologyRequirementMet,
+                    'additionalUpgradeDetailsRows' => [
+                        (
+                            in_array($ElementID, $_Vars_ElementCategories['prod']) ?
+                            Development\Components\GridViewElementCard\UpgradeProductionChange\render([
+                                'elementID' => $ElementID,
+                                'user' => $CurrentUser,
+                                'planet' => $CurrentPlanet,
+                                'timestamp' => $Now,
+                                'elementDetails' => [
+                                    'currentLevel' => (
+                                        $CurrentPlanet[$_Vars_GameElements[$ElementID]] +
+                                        ($elementQueueLevelModifier * -1)
+                                    ),
+                                    'queueLevelModifier' => $elementQueueLevelModifier,
+                                ],
+                            ])['componentHTML'] :
+                            ''
+                        ),
+                    ],
                 ],
                 'getUpgradeElementActionLinkHref' => function () use ($ElementID) {
                     return "?cmd=insert&amp;building={$ElementID}";
