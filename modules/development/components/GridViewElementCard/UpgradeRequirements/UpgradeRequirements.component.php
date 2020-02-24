@@ -2,6 +2,8 @@
 
 namespace UniEngine\Engine\Modules\Development\Components\GridViewElementCard\UpgradeRequirements;
 
+use UniEngine\Engine\Includes\Helpers\World\Elements;
+
 //  Arguments
 //      - $props (Object)
 //          - elementID (String)
@@ -39,6 +41,7 @@ function render ($props) {
 
     $elementQueuedLevel = ($elementCurrentLevel + $elementQueueLevelModifier);
     $elementNextLevelToQueue = ($elementQueuedLevel + 1);
+    $isElementUpgradeableType = Elements\isUpgradeable($elementID);
 
     // Render subcomponents
     $subcomponentHeadlineHTML = '';
@@ -64,12 +67,24 @@ function render ($props) {
     $subcomponentHeadlineHTML = parsetemplate(
         $subcomponentUpgradeTemplate,
         [
-            'InfoBox_ResRequirements' => $_Lang['InfoBox_ResRequirements'],
-            'InfoBox_RequirementsFor' => $_Lang['InfoBox_RequirementsFor'],
+            'InfoBox_ResRequirements' => (
+                $isElementUpgradeableType ?
+                $_Lang['InfoBox_ResRequirements'] :
+                $_Lang['InfoBox_ResRequirementsShip']
+            ),
+            'InfoBox_RequirementsFor' => (
+                $isElementUpgradeableType ?
+                $_Lang['InfoBox_RequirementsFor'] :
+                $_Lang['InfoBox_RequirementsForShip']
+            ),
             'InfoBox_Requirements_Res' => $_Lang['InfoBox_Requirements_Res'],
             'InfoBox_Requirements_Tech' => $_Lang['InfoBox_Requirements_Tech'],
 
-            'BuildLevel' => prettyNumber($elementNextLevelToQueue),
+            'BuildLevel' => (
+                $isElementUpgradeableType ?
+                prettyNumber($elementNextLevelToQueue) :
+                ''
+            ),
         ]
     );
 
