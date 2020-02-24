@@ -2,6 +2,8 @@
 
 namespace UniEngine\Engine\Modules\Development\Components\GridViewElementCard\UpgradeProductionChange;
 
+use UniEngine\Engine\Includes\Helpers\World\Elements;
+
 //  Arguments
 //      - $props (Object)
 //          - elementID (String)
@@ -35,6 +37,7 @@ function render ($props) {
 
     $elementQueuedLevel = ($elementCurrentLevel + $elementQueueLevelModifier);
     $elementNextLevelToQueue = ($elementQueuedLevel + 1);
+    $isConstructibleInHangar = Elements\isConstructibleInHangar($elementID);
 
     $resourceLabels = [
         'metal'         => $_Lang['Metal'],
@@ -47,6 +50,17 @@ function render ($props) {
 
     $elementProductionChangeRows = [];
 
+    $thisState = (
+        !$isConstructibleInHangar ?
+        $elementQueuedLevel :
+        0
+    );
+    $nextState = (
+        !$isConstructibleInHangar ?
+        $elementNextLevelToQueue :
+        1
+    );
+
     // Calculate theoretical production increase
     $thisLevelProduction = getElementProduction(
         $elementID,
@@ -55,7 +69,7 @@ function render ($props) {
         [
             'useCurrentBoosters' => true,
             'currentTimestamp' => $timestamp,
-            'customLevel' => $elementQueuedLevel,
+            'customLevel' => $thisState,
             'customProductionFactor' => 10
         ]
     );
@@ -66,7 +80,7 @@ function render ($props) {
         [
             'useCurrentBoosters' => true,
             'currentTimestamp' => $timestamp,
-            'customLevel' => $elementNextLevelToQueue,
+            'customLevel' => $nextState,
             'customProductionFactor' => 10
         ]
     );
