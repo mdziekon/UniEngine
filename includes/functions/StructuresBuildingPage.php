@@ -9,7 +9,7 @@ use UniEngine\Engine\Includes\Helpers\Users;
 
 function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 {
-    global $_Lang, $_SkinPath, $_GET, $_EnginePath, $_Vars_GameElements, $_Vars_ElementCategories;
+    global $_Lang, $_SkinPath, $_GET, $_EnginePath, $_Vars_ElementCategories;
 
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
     includeLang('worldElements.detailed');
@@ -131,7 +131,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 'SkinPath' => $_SkinPath,
             ];
 
-            $CurrentLevel = $CurrentPlanet[$_Vars_GameElements[$ElementID]];
+            $elementQueuedLevel = Elements\getElementState($ElementID, $CurrentPlanet, $CurrentUser)['level'];
             $isElementInQueue = isset(
                 $queueStateDetails['queuedElementLevelModifiers'][$ElementID]
             );
@@ -143,7 +143,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 
             $elementMaxLevel = Elements\getElementMaxUpgradeLevel($ElementID);
             $hasReachedMaxLevel = (
-                $CurrentPlanet[$_Vars_GameElements[$ElementID]] >=
+                $elementQueuedLevel >=
                 $elementMaxLevel
             );
 
@@ -157,7 +157,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 !isLabUpgradableWhileInUse()
             );
             $isDowngradePossible = (
-                ($CurrentPlanet[$_Vars_GameElements[$ElementID]] > 0) &&
+                ($elementQueuedLevel > 0) &&
                 !Elements\isIndestructibleStructure($ElementID)
             );
 
@@ -166,7 +166,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             $ElementParser['ElementName'] = $_Lang['tech'][$ElementID];
             $ElementParser['ElementID'] = $ElementID;
             $ElementParser['ElementRealLevel'] = prettyNumber(
-                $CurrentPlanet[$_Vars_GameElements[$ElementID]] +
+                $elementQueuedLevel +
                 ($elementQueueLevelModifier * -1)
             );
             $ElementParser['BuildButtonColor'] = 'buildDo_Green';
@@ -321,7 +321,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 'isQueueActive' => $hasElementsInQueue,
                 'elementDetails' => [
                     'currentState' => (
-                        $CurrentPlanet[$_Vars_GameElements[$ElementID]] +
+                        $elementQueuedLevel +
                         ($elementQueueLevelModifier * -1)
                     ),
                     'isInQueue' => $isElementInQueue,
@@ -376,7 +376,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                                 'timestamp' => $Now,
                                 'elementDetails' => [
                                     'currentState' => (
-                                        $CurrentPlanet[$_Vars_GameElements[$ElementID]] +
+                                        $elementQueuedLevel +
                                         ($elementQueueLevelModifier * -1)
                                     ),
                                     'queueLevelModifier' => $elementQueueLevelModifier,
