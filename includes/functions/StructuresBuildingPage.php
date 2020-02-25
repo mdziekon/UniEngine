@@ -150,6 +150,13 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             $hasTechnologyRequirementMet = IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $ElementID);
             $hasUpgradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, false);
 
+            $isBlockedByTechResearchProgress = (
+                $ElementID == 31 &&
+                $CurrentUser['techQueue_Planet'] > 0 &&
+                $CurrentUser['techQueue_EndTime'] > 0 &&
+                !isLabUpgradableWhileInUse()
+            );
+
             $HideButton_Destroy = false;
             $HideButton_QuickBuild = false;
 
@@ -214,8 +221,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 $HideButton_QuickBuild = true;
                 $HideButton_Destroy = true;
             }
-            if($ElementID == 31 AND $CurrentUser['techQueue_Planet'] > 0 AND $CurrentUser['techQueue_EndTime'] > 0 AND $_GameConfig['BuildLabWhileRun'] != 1)
-            {
+            if ($isBlockedByTechResearchProgress) {
                 $BlockReason[] = $_Lang['ListBox_Disallow_LabResearch'];
                 $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
                 $HideButton_QuickBuild = true;
@@ -304,12 +310,6 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 
             $StructuresList[] = parsetemplate($TPL['list_element'], $ElementParser);
 
-            $isBlockedByTechResearchProgress = (
-                $ElementID == 31 &&
-                $CurrentUser['techQueue_Planet'] > 0 &&
-                $CurrentUser['techQueue_EndTime'] > 0 &&
-                $_GameConfig['BuildLabWhileRun'] != 1
-            );
             $isOnVacation = isOnVacation($CurrentUser);
             $hasDowngradeResources = IsElementBuyable(
                 $CurrentUser,
