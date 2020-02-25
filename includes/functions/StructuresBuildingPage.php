@@ -132,7 +132,6 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             ];
 
             $CurrentLevel = $CurrentPlanet[$_Vars_GameElements[$ElementID]];
-            $NextLevel = $CurrentPlanet[$_Vars_GameElements[$ElementID]] + 1;
             $isElementInQueue = isset(
                 $queueStateDetails['queuedElementLevelModifiers'][$ElementID]
             );
