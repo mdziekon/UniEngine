@@ -149,8 +149,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             );
 
             $hasTechnologyRequirementMet = IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $ElementID);
-
-            $HasResources = true;
+            $hasUpgradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, false);
 
             $HideButton_Destroy = false;
             $HideButton_QuickBuild = false;
@@ -189,9 +188,8 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 $HideButton_Destroy = true;
             }
 
-            if(IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, false) === false)
+            if(!$hasUpgradeResources)
             {
-                $HasResources = false;
                 if($elementsInQueue == 0)
                 {
                     $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
@@ -210,7 +208,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 $BlockReason[] = $_Lang['ListBox_Disallow_MaxLevelReached'];
                 $HideButton_QuickBuild = true;
             }
-            else if(!$HasResources)
+            else if(!$hasUpgradeResources)
             {
                 $BlockReason[] = $_Lang['ListBox_Disallow_NoResources'];
             }
@@ -311,7 +309,6 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 
             $StructuresList[] = parsetemplate($TPL['list_element'], $ElementParser);
 
-            $hasUpgradeResources = $HasResources;
             $isBlockedByTechResearchProgress = (
                 $ElementID == 31 &&
                 $CurrentUser['techQueue_Planet'] > 0 &&
