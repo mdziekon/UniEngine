@@ -157,8 +157,11 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 $CurrentUser['techQueue_EndTime'] > 0 &&
                 !isLabUpgradableWhileInUse()
             );
+            $isDowngradePossible = (
+                ($CurrentPlanet[$_Vars_GameElements[$ElementID]] > 0) &&
+                !Elements\isIndestructibleStructure($ElementID)
+            );
 
-            $HideButton_Destroy = false;
             $HideButton_QuickBuild = false;
 
             $ElementParser['ElementName'] = $_Lang['tech'][$ElementID];
@@ -184,11 +187,6 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                         ),
                     ]
                 );
-            }
-
-            if($CurrentLevel == 0 || (isset($_Vars_IndestructibleBuildings[$ElementID]) && $_Vars_IndestructibleBuildings[$ElementID]))
-            {
-                $HideButton_Destroy = true;
             }
 
             if(!$hasUpgradeResources)
@@ -220,7 +218,6 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 $BlockReason[] = $_Lang['ListBox_Disallow_NoTech'];
                 $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
                 $HideButton_QuickBuild = true;
-                $HideButton_Destroy = true;
             }
             if ($isBlockedByTechResearchProgress) {
                 $BlockReason[] = $_Lang['ListBox_Disallow_LabResearch'];
@@ -262,7 +259,8 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             {
                 $ElementParser['HideQuickBuildButton'] = 'hide';
             }
-            if(!$HideButton_Destroy) {
+
+            if ($isDowngradePossible) {
                 $downgradeCost = Elements\calculatePurchaseCost(
                     $ElementID,
                     Elements\getElementState($ElementID, $CurrentPlanet, $CurrentUser),
@@ -356,10 +354,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                             ''
                         ),
                     ],
-                    'isDowngradePossible' => (
-                        ($CurrentPlanet[$_Vars_GameElements[$ElementID]] > 0) &&
-                        !Elements\isIndestructibleStructure($ElementID)
-                    ),
+                    'isDowngradePossible' => $isDowngradePossible,
                     'isDowngradeAvailable' => (
                         $hasDowngradeResources &&
                         !$isBlockedByTechResearchProgress &&
