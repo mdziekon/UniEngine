@@ -111,6 +111,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         Users\getMaxStructuresQueueLength($CurrentUser)
     );
     $hasElementsInQueue = ($elementsInQueue > 0);
+    $isUserOnVacation = isOnVacation($CurrentUser);
 
     $resourceLabels = [
         'metal'         => $_Lang['Metal'],
@@ -238,8 +239,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
                 $HideButton_QuickBuild = true;
             }
-            if(isOnVacation($CurrentUser))
-            {
+            if ($isUserOnVacation) {
                 $BlockReason[] = $_Lang['ListBox_Disallow_VacationMode'];
                 $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
                 $HideButton_QuickBuild = true;
@@ -310,7 +310,6 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 
             $StructuresList[] = parsetemplate($TPL['list_element'], $ElementParser);
 
-            $isOnVacation = isOnVacation($CurrentUser);
             $hasDowngradeResources = IsElementBuyable(
                 $CurrentUser,
                 $CurrentPlanet,
@@ -340,7 +339,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                         !$isBlockedByTechResearchProgress &&
                         $hasAvailableFieldsOnPlanet &&
                         !$isQueueFull &&
-                        !$isOnVacation
+                        !$isUserOnVacation
                     ),
                     'isUpgradeQueueable' => (
                         !$hasReachedMaxLevel &&
@@ -348,7 +347,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                         !$isBlockedByTechResearchProgress &&
                         $hasAvailableFieldsOnPlanet &&
                         !$isQueueFull &&
-                        !$isOnVacation
+                        !$$isUserOnVacation
                     ),
                     'whyUpgradeImpossible' => [
                         (
@@ -365,12 +364,12 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                         $hasDowngradeResources &&
                         !$isBlockedByTechResearchProgress &&
                         !$isQueueFull &&
-                        !$isOnVacation
+                        !$$isUserOnVacation
                     ),
                     'isDowngradeQueueable' => (
                         !$isBlockedByTechResearchProgress &&
                         !$isQueueFull &&
-                        !$isOnVacation
+                        !$$isUserOnVacation
                     ),
                     'hasTechnologyRequirementMet' => $hasTechnologyRequirementMet,
                     'additionalUpgradeDetailsRows' => [
