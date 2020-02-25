@@ -9,8 +9,7 @@ use UniEngine\Engine\Includes\Helpers\Users;
 
 function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 {
-    global    $_Lang, $_SkinPath, $_GameConfig, $_GET, $_EnginePath,
-            $_Vars_GameElements, $_Vars_ElementCategories, $_Vars_MaxElementLevel, $_Vars_IndestructibleBuildings;
+    global $_Lang, $_SkinPath, $_GET, $_EnginePath, $_Vars_GameElements, $_Vars_ElementCategories;
 
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
     includeLang('worldElements.detailed');
