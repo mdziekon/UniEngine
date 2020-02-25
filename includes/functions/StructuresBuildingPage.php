@@ -102,24 +102,16 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     $Parse['Create_Queue'] = $queueComponent['componentHTML'];
 
     // Parse all available buildings
-    if(($CurrentPlanet['field_current'] + $planetFieldsUsageCounter) < CalculateMaxPlanetFields($CurrentPlanet))
-    {
-        $HasLeftFields = true;
-    }
-    else
-    {
-        $HasLeftFields = false;
-    }
-    if($elementsInQueue < ((isPro($CurrentUser)) ? MAX_BUILDING_QUEUE_SIZE_PRO : MAX_BUILDING_QUEUE_SIZE))
-    {
-        $CanAddToQueue = true;
-    }
-    else
-    {
-        $CanAddToQueue = false;
-    }
-
+    $hasAvailableFieldsOnPlanet = (
+        ($CurrentPlanet['field_current'] + $planetFieldsUsageCounter) <
+        CalculateMaxPlanetFields($CurrentPlanet)
+    );
+    $isQueueFull = (
+        $elementsInQueue >=
+        Users\getMaxStructuresQueueLength($CurrentUser)
+    );
     $hasElementsInQueue = ($elementsInQueue > 0);
+
     $resourceLabels = [
         'metal'         => $_Lang['Metal'],
         'crystal'       => $_Lang['Crystal'],
@@ -240,13 +232,13 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
                 $HideButton_QuickBuild = true;
             }
-            if($HasLeftFields === false)
+            if(!$hasAvailableFieldsOnPlanet)
             {
                 $BlockReason[] = $_Lang['ListBox_Disallow_NoFreeFields'];
                 $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
                 $HideButton_QuickBuild = true;
             }
-            if($CanAddToQueue === false)
+            if($isQueueFull)
             {
                 $BlockReason[] = $_Lang['ListBox_Disallow_QueueIsFull'];
                 $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
@@ -335,8 +327,6 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 $CurrentUser['techQueue_EndTime'] > 0 &&
                 $_GameConfig['BuildLabWhileRun'] != 1
             );
-            $hasAvailableFieldsOnPlanet = $HasLeftFields;
-            $isQueueFull = !$CanAddToQueue;
             $isOnVacation = isOnVacation($CurrentUser);
             $hasDowngradeResources = IsElementBuyable(
                 $CurrentUser,
