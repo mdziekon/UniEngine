@@ -161,25 +161,21 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             );
             $ElementParser['BuildButtonColor'] = 'buildDo_Green';
 
-            if($isElementInQueue)
-            {
-                $levelmodif = [];
-                if($elementQueueLevelModifier < 0)
-                {
-                    $levelmodif['modColor'] = 'red';
-                    $levelmodif['modText'] = prettyNumber($elementQueueLevelModifier);
-                }
-                else if($elementQueueLevelModifier == 0)
-                {
-                    $levelmodif['modColor'] = 'orange';
-                    $levelmodif['modText'] = '0';
-                }
-                else
-                {
-                    $levelmodif['modColor'] = 'lime';
-                    $levelmodif['modText'] = '+'.prettyNumber($elementQueueLevelModifier);
-                }
-                $ElementParser['ElementLevelModif'] = parsetemplate($TPL['list_levelmodif'], $levelmodif);
+            if($isElementInQueue) {
+                $ElementParser['ElementLevelModif'] = parsetemplate(
+                    $TPL['list_levelmodif'],
+                    [
+                        'modColor' => classNames([
+                            'red' => ($elementQueueLevelModifier < 0),
+                            'orange' => ($elementQueueLevelModifier == 0),
+                            'lime' => ($elementQueueLevelModifier > 0),
+                        ]),
+                        'modText' => (
+                            ($elementQueueLevelModifier > 0 ? '+' : '') .
+                            prettyNumber($elementQueueLevelModifier)
+                        ),
+                    ]
+                );
             }
 
             if($CurrentLevel == 0 || (isset($_Vars_IndestructibleBuildings[$ElementID]) && $_Vars_IndestructibleBuildings[$ElementID]))
