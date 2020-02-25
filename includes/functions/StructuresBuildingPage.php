@@ -142,11 +142,15 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 0
             );
 
-            $MaxLevelReached = false;
+            $elementMaxLevel = Elements\getElementMaxUpgradeLevel($ElementID);
+            $hasReachedMaxLevel = (
+                $CurrentPlanet[$_Vars_GameElements[$ElementID]] >=
+                $elementMaxLevel
+            );
+
             $TechLevelOK = false;
             $HasResources = true;
 
-            $HideButton_Build = false;
             $HideButton_Destroy = false;
             $HideButton_QuickBuild = false;
 
@@ -179,13 +183,6 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 $ElementParser['ElementLevelModif'] = parsetemplate($TPL['list_levelmodif'], $levelmodif);
             }
 
-            if(!(isset($_Vars_MaxElementLevel[$ElementID]) && $_Vars_MaxElementLevel[$ElementID] > 0 && $NextLevel > $_Vars_MaxElementLevel[$ElementID]))
-            {}
-            else
-            {
-                $MaxLevelReached = true;
-                $HideButton_Build = true;
-            }
             if($CurrentLevel == 0 || (isset($_Vars_IndestructibleBuildings[$ElementID]) && $_Vars_IndestructibleBuildings[$ElementID]))
             {
                 $HideButton_Destroy = true;
@@ -211,9 +208,10 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 
             $BlockReason = array();
 
-            if($MaxLevelReached)
+            if($hasReachedMaxLevel)
             {
                 $BlockReason[] = $_Lang['ListBox_Disallow_MaxLevelReached'];
+                $HideButton_QuickBuild = true;
             }
             else if(!$HasResources)
             {
@@ -264,7 +262,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 $ElementParser['ElementDisableReason'] = end($BlockReason);
             }
 
-            if($HideButton_Build OR $HideButton_QuickBuild)
+            if($HideButton_QuickBuild)
             {
                 $ElementParser['HideQuickBuildButton'] = 'hide';
             }
@@ -315,9 +313,6 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             }
 
             $StructuresList[] = parsetemplate($TPL['list_element'], $ElementParser);
-
-            $elementMaxLevel = Elements\getElementMaxUpgradeLevel($ElementID);
-            $hasReachedMaxLevel = ($CurrentPlanet[$_Vars_GameElements[$ElementID]] >= $elementMaxLevel);
 
             $hasUpgradeResources = $HasResources;
             $hasTechnologyRequirementMet = $TechLevelOK;
