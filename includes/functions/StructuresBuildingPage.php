@@ -25,14 +25,14 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     $ElementsPerRow = 7;
 
     // Get Templates
-    $TPL['list_element']                = gettemplate('buildings_compact_list_element_structures');
-    $TPL['list_levelmodif']                = gettemplate('buildings_compact_list_levelmodif');
-    $TPL['list_hidden']                    = gettemplate('buildings_compact_list_hidden');
-    $TPL['list_row']                    = gettemplate('buildings_compact_list_row');
-    $TPL['list_breakrow']                = gettemplate('buildings_compact_list_breakrow');
-    $TPL['list_disabled']                = gettemplate('buildings_compact_list_disabled');
-    $TPL['list_partdisabled']            = parsetemplate($TPL['list_disabled'], array('AddOpacity' => 'dPart'));
-    $TPL['list_disabled']                = parsetemplate($TPL['list_disabled'], array('AddOpacity' => ''));
+    $TPL['list_element']        = gettemplate('buildings_compact_list_element_structures');
+    $TPL['list_levelmodif']     = gettemplate('buildings_compact_list_levelmodif');
+    $TPL['list_hidden']         = gettemplate('buildings_compact_list_hidden');
+    $TPL['list_row']            = gettemplate('buildings_compact_list_row');
+    $TPL['list_breakrow']       = gettemplate('buildings_compact_list_breakrow');
+    $TPL['list_disabled']       = gettemplate('buildings_compact_list_disabled');
+    $TPL['list_partdisabled']   = parsetemplate($TPL['list_disabled'], array('AddOpacity' => 'dPart'));
+    $TPL['list_disabled']       = parsetemplate($TPL['list_disabled'], array('AddOpacity' => ''));
 
     // Handle Commands
     $cmdResult = Development\Input\UserCommands\handleStructureCommand(
