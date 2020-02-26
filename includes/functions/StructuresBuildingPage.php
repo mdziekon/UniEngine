@@ -329,6 +329,17 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 $hasUpgradeResources
             );
 
+            $isDowngradeQueueable = (
+                $isDowngradePossible &&
+                !$$isUserOnVacation &&
+                !$isQueueFull &&
+                !$isBlockedByTechResearchProgress
+            );
+            $isDowngradeAvailableNow = (
+                $isDowngradeQueueable &&
+                $hasDowngradeResources
+            );
+
             $cardInfoComponent = Development\Components\GridViewElementCard\render([
                 'elementID' => $ElementID,
                 'user' => $CurrentUser,
@@ -349,17 +360,8 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                         ),
                     ],
                     'isDowngradePossible' => $isDowngradePossible,
-                    'isDowngradeAvailable' => (
-                        $hasDowngradeResources &&
-                        !$isBlockedByTechResearchProgress &&
-                        !$isQueueFull &&
-                        !$$isUserOnVacation
-                    ),
-                    'isDowngradeQueueable' => (
-                        !$isBlockedByTechResearchProgress &&
-                        !$isQueueFull &&
-                        !$$isUserOnVacation
-                    ),
+                    'isDowngradeAvailable' => $isDowngradeAvailableNow,
+                    'isDowngradeQueueable' => $isDowngradeQueueable,
                     'hasTechnologyRequirementMet' => $hasTechnologyRequirementMet,
                     'additionalUpgradeDetailsRows' => [
                         (
