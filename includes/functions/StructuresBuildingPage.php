@@ -326,6 +326,11 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 $ElementParser['HideQuickBuildButton'] = 'hide';
             }
 
+            $ElementParser['BuildButtonColor'] = classNames([
+                'buildDo_Green' => $isUpgradeAvailableNow,
+                'buildDo_Orange' => (!$isUpgradeAvailableNow && $isUpgradeQueueable),
+            ]);
+
             $StructuresList[] = parsetemplate($TPL['list_element'], $ElementParser);
 
             $cardInfoComponent = Development\Components\GridViewElementCard\render([
