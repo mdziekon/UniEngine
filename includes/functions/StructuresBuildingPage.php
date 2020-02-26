@@ -166,7 +166,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         $isUpgradePossible = (!$hasReachedMaxLevel);
         $isUpgradeQueueable = (
             $isUpgradePossible &&
-            !$$isUserOnVacation &&
+            !$isUserOnVacation &&
             !$isQueueFull &&
             $hasAvailableFieldsOnPlanet &&
             $hasTechnologyRequirementMet &&
@@ -187,7 +187,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         );
         $isDowngradeQueueable = (
             $isDowngradePossible &&
-            !$$isUserOnVacation &&
+            !$isUserOnVacation &&
             !$isQueueFull &&
             !$isBlockedByTechResearchProgress
         );
