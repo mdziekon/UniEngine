@@ -181,6 +181,10 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 $isUpgradeQueueable &&
                 $hasUpgradeResources
             );
+            $isUpgradeQueueableNow = (
+                $isUpgradeQueueable &&
+                $hasElementsInQueue
+            );
 
             $isDowngradePossible = (
                 ($elementQueuedLevel > 0) &&
@@ -298,16 +302,12 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 ];
             }
 
-            if (
-                !$isUpgradeQueueable ||
-                (!$hasUpgradeResources && !$hasElementsInQueue)
-            ) {
-                $ElementParser['HideQuickBuildButton'] = 'hide';
-            }
-
+            $ElementParser['HideQuickBuildButton'] = classNames([
+                'hide' => (!$isUpgradeAvailableNow && !$isUpgradeQueueableNow),
+            ]);
             $ElementParser['BuildButtonColor'] = classNames([
                 'buildDo_Green' => $isUpgradeAvailableNow,
-                'buildDo_Orange' => (!$isUpgradeAvailableNow && $isUpgradeQueueable),
+                'buildDo_Orange' => (!$isUpgradeAvailableNow && $isUpgradeQueueableNow),
             ]);
 
             $StructuresList[] = parsetemplate($TPL['list_element'], $ElementParser);
