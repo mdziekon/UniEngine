@@ -160,12 +160,42 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 $CurrentUser['techQueue_EndTime'] > 0 &&
                 !isLabUpgradableWhileInUse()
             );
+
+            $hasDowngradeResources = IsElementBuyable(
+                $CurrentUser,
+                $CurrentPlanet,
+                $ElementID,
+                true
+            );
+
+            $isUpgradePossible = (!$hasReachedMaxLevel);
+            $isUpgradeQueueable = (
+                $isUpgradePossible &&
+                !$$isUserOnVacation &&
+                !$isQueueFull &&
+                $hasAvailableFieldsOnPlanet &&
+                $hasTechnologyRequirementMet &&
+                !$isBlockedByTechResearchProgress
+            );
+            $isUpgradeAvailableNow = (
+                $isUpgradeQueueable &&
+                $hasUpgradeResources
+            );
+
             $isDowngradePossible = (
                 ($elementQueuedLevel > 0) &&
                 !Elements\isIndestructibleStructure($ElementID)
             );
-
-            $HideButton_QuickBuild = false;
+            $isDowngradeQueueable = (
+                $isDowngradePossible &&
+                !$$isUserOnVacation &&
+                !$isQueueFull &&
+                !$isBlockedByTechResearchProgress
+            );
+            $isDowngradeAvailableNow = (
+                $isDowngradeQueueable &&
+                $hasDowngradeResources
+            );
 
             $ElementParser['ElementName'] = $_Lang['tech'][$ElementID];
             $ElementParser['ElementID'] = $ElementID;
@@ -194,7 +224,6 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 if($elementsInQueue == 0)
                 {
                     $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
-                    $HideButton_QuickBuild = true;
                 }
                 else
                 {
@@ -204,42 +233,31 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 
             $BlockReason = array();
 
-            if($hasReachedMaxLevel)
-            {
+            if ($hasReachedMaxLevel) {
                 $BlockReason[] = $_Lang['ListBox_Disallow_MaxLevelReached'];
-                $HideButton_QuickBuild = true;
             }
-            else if(!$hasUpgradeResources)
-            {
+            else if (!$hasUpgradeResources) {
                 $BlockReason[] = $_Lang['ListBox_Disallow_NoResources'];
             }
-            if(!$hasTechnologyRequirementMet)
-            {
+            if (!$hasTechnologyRequirementMet) {
                 $BlockReason[] = $_Lang['ListBox_Disallow_NoTech'];
                 $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
-                $HideButton_QuickBuild = true;
             }
             if ($isBlockedByTechResearchProgress) {
                 $BlockReason[] = $_Lang['ListBox_Disallow_LabResearch'];
                 $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
-                $HideButton_QuickBuild = true;
             }
-            if(!$hasAvailableFieldsOnPlanet)
-            {
+            if (!$hasAvailableFieldsOnPlanet) {
                 $BlockReason[] = $_Lang['ListBox_Disallow_NoFreeFields'];
                 $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
-                $HideButton_QuickBuild = true;
             }
-            if($isQueueFull)
-            {
+            if ($isQueueFull) {
                 $BlockReason[] = $_Lang['ListBox_Disallow_QueueIsFull'];
                 $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
-                $HideButton_QuickBuild = true;
             }
             if ($isUserOnVacation) {
                 $BlockReason[] = $_Lang['ListBox_Disallow_VacationMode'];
                 $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
-                $HideButton_QuickBuild = true;
             }
 
             if(!empty($BlockReason))
@@ -253,11 +271,6 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                     $ElementParser['ElementDisabled'] = $TPL['list_disabled'];
                 }
                 $ElementParser['ElementDisableReason'] = end($BlockReason);
-            }
-
-            if($HideButton_QuickBuild)
-            {
-                $ElementParser['HideQuickBuildButton'] = 'hide';
             }
 
             if ($isDowngradePossible) {
@@ -306,39 +319,14 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 ];
             }
 
+            if (
+                !$isUpgradeQueueable ||
+                (!$hasUpgradeResources && !$hasElementsInQueue)
+            ) {
+                $ElementParser['HideQuickBuildButton'] = 'hide';
+            }
+
             $StructuresList[] = parsetemplate($TPL['list_element'], $ElementParser);
-
-            $hasDowngradeResources = IsElementBuyable(
-                $CurrentUser,
-                $CurrentPlanet,
-                $ElementID,
-                true
-            );
-
-            $isUpgradePossible = (!$hasReachedMaxLevel);
-            $isUpgradeQueueable = (
-                $isUpgradePossible &&
-                !$$isUserOnVacation &&
-                !$isQueueFull &&
-                $hasAvailableFieldsOnPlanet &&
-                $hasTechnologyRequirementMet &&
-                !$isBlockedByTechResearchProgress
-            );
-            $isUpgradeAvailableNow = (
-                $isUpgradeQueueable &&
-                $hasUpgradeResources
-            );
-
-            $isDowngradeQueueable = (
-                $isDowngradePossible &&
-                !$$isUserOnVacation &&
-                !$isQueueFull &&
-                !$isBlockedByTechResearchProgress
-            );
-            $isDowngradeAvailableNow = (
-                $isDowngradeQueueable &&
-                $hasDowngradeResources
-            );
 
             $cardInfoComponent = Development\Components\GridViewElementCard\render([
                 'elementID' => $ElementID,
