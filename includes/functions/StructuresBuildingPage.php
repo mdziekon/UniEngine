@@ -315,6 +315,20 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 true
             );
 
+            $isUpgradePossible = (!$hasReachedMaxLevel);
+            $isUpgradeQueueable = (
+                $isUpgradePossible &&
+                !$$isUserOnVacation &&
+                !$isQueueFull &&
+                $hasAvailableFieldsOnPlanet &&
+                $hasTechnologyRequirementMet &&
+                !$isBlockedByTechResearchProgress
+            );
+            $isUpgradeAvailableNow = (
+                $isUpgradeQueueable &&
+                $hasUpgradeResources
+            );
+
             $cardInfoComponent = Development\Components\GridViewElementCard\render([
                 'elementID' => $ElementID,
                 'user' => $CurrentUser,
@@ -324,26 +338,9 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                     'currentState' => $elementCurrentLevel,
                     'isInQueue' => $isElementInQueue,
                     'queueLevelModifier' => $elementQueueLevelModifier,
-                    'isUpgradePossible' => (
-                        !$hasReachedMaxLevel
-                    ),
-                    'isUpgradeAvailable' => (
-                        $hasUpgradeResources &&
-                        !$hasReachedMaxLevel &&
-                        $hasTechnologyRequirementMet &&
-                        !$isBlockedByTechResearchProgress &&
-                        $hasAvailableFieldsOnPlanet &&
-                        !$isQueueFull &&
-                        !$isUserOnVacation
-                    ),
-                    'isUpgradeQueueable' => (
-                        !$hasReachedMaxLevel &&
-                        $hasTechnologyRequirementMet &&
-                        !$isBlockedByTechResearchProgress &&
-                        $hasAvailableFieldsOnPlanet &&
-                        !$isQueueFull &&
-                        !$$isUserOnVacation
-                    ),
+                    'isUpgradePossible' => $isUpgradePossible,
+                    'isUpgradeAvailable' => $isUpgradeAvailableNow,
+                    'isUpgradeQueueable' => $isUpgradeQueueable,
                     'whyUpgradeImpossible' => [
                         (
                             $hasReachedMaxLevel ?
