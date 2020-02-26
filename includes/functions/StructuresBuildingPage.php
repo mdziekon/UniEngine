@@ -200,7 +200,6 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             $ElementParser['ElementName'] = $_Lang['tech'][$ElementID];
             $ElementParser['ElementID'] = $ElementID;
             $ElementParser['ElementRealLevel'] = prettyNumber($elementCurrentLevel);
-            $ElementParser['BuildButtonColor'] = 'buildDo_Green';
 
             if($isElementInQueue) {
                 $ElementParser['ElementLevelModif'] = parsetemplate(
@@ -219,18 +218,6 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 );
             }
 
-            if(!$hasUpgradeResources)
-            {
-                if($elementsInQueue == 0)
-                {
-                    $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
-                }
-                else
-                {
-                    $ElementParser['BuildButtonColor'] = 'buildDo_Orange';
-                }
-            }
-
             $BlockReason = array();
 
             if ($hasReachedMaxLevel) {
@@ -241,23 +228,18 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             }
             if (!$hasTechnologyRequirementMet) {
                 $BlockReason[] = $_Lang['ListBox_Disallow_NoTech'];
-                $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
             }
             if ($isBlockedByTechResearchProgress) {
                 $BlockReason[] = $_Lang['ListBox_Disallow_LabResearch'];
-                $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
             }
             if (!$hasAvailableFieldsOnPlanet) {
                 $BlockReason[] = $_Lang['ListBox_Disallow_NoFreeFields'];
-                $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
             }
             if ($isQueueFull) {
                 $BlockReason[] = $_Lang['ListBox_Disallow_QueueIsFull'];
-                $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
             }
             if ($isUserOnVacation) {
                 $BlockReason[] = $_Lang['ListBox_Disallow_VacationMode'];
-                $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
             }
 
             if(!empty($BlockReason))
