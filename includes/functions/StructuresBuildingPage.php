@@ -123,239 +123,239 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 
     $elementsDestructionDetails = [];
 
-    foreach($_Vars_ElementCategories['build'] as $ElementID)
-    {
-        if(in_array($ElementID, $_Vars_ElementCategories['buildOn'][$CurrentPlanet['planet_type']]))
+    foreach($_Vars_ElementCategories['build'] as $ElementID) {
+        if (!Elements\isStructureAvailableOnPlanetType($ElementID, $CurrentPlanet['planet_type'])) {
+            continue;
+        }
+
+        $ElementParser = [
+            'SkinPath' => $_SkinPath,
+        ];
+
+        $elementQueuedLevel = Elements\getElementState($ElementID, $CurrentPlanet, $CurrentUser)['level'];
+        $isElementInQueue = isset(
+            $queueStateDetails['queuedElementLevelModifiers'][$ElementID]
+        );
+        $elementQueueLevelModifier = (
+            $isElementInQueue ?
+            $queueStateDetails['queuedElementLevelModifiers'][$ElementID] :
+            0
+        );
+        $elementCurrentLevel = (
+            $elementQueuedLevel +
+            ($elementQueueLevelModifier * -1)
+        );
+
+        $elementMaxLevel = Elements\getElementMaxUpgradeLevel($ElementID);
+        $hasReachedMaxLevel = (
+            $elementQueuedLevel >=
+            $elementMaxLevel
+        );
+
+        $hasUpgradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, false);
+        $hasDowngradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, true);
+
+        $hasTechnologyRequirementMet = IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $ElementID);
+        $isBlockedByTechResearchProgress = (
+            $ElementID == 31 &&
+            $CurrentUser['techQueue_Planet'] > 0 &&
+            $CurrentUser['techQueue_EndTime'] > 0 &&
+            !isLabUpgradableWhileInUse()
+        );
+
+        $isUpgradePossible = (!$hasReachedMaxLevel);
+        $isUpgradeQueueable = (
+            $isUpgradePossible &&
+            !$$isUserOnVacation &&
+            !$isQueueFull &&
+            $hasAvailableFieldsOnPlanet &&
+            $hasTechnologyRequirementMet &&
+            !$isBlockedByTechResearchProgress
+        );
+        $isUpgradeAvailableNow = (
+            $isUpgradeQueueable &&
+            $hasUpgradeResources
+        );
+        $isUpgradeQueueableNow = (
+            $isUpgradeQueueable &&
+            $hasElementsInQueue
+        );
+
+        $isDowngradePossible = (
+            ($elementQueuedLevel > 0) &&
+            !Elements\isIndestructibleStructure($ElementID)
+        );
+        $isDowngradeQueueable = (
+            $isDowngradePossible &&
+            !$$isUserOnVacation &&
+            !$isQueueFull &&
+            !$isBlockedByTechResearchProgress
+        );
+        $isDowngradeAvailableNow = (
+            $isDowngradeQueueable &&
+            $hasDowngradeResources
+        );
+
+        $ElementParser['ElementName'] = $_Lang['tech'][$ElementID];
+        $ElementParser['ElementID'] = $ElementID;
+        $ElementParser['ElementRealLevel'] = prettyNumber($elementCurrentLevel);
+
+        if($isElementInQueue) {
+            $ElementParser['ElementLevelModif'] = parsetemplate(
+                $TPL['list_levelmodif'],
+                [
+                    'modColor' => classNames([
+                        'red' => ($elementQueueLevelModifier < 0),
+                        'orange' => ($elementQueueLevelModifier == 0),
+                        'lime' => ($elementQueueLevelModifier > 0),
+                    ]),
+                    'modText' => (
+                        ($elementQueueLevelModifier > 0 ? '+' : '') .
+                        prettyNumber($elementQueueLevelModifier)
+                    ),
+                ]
+            );
+        }
+
+        $BlockReason = array();
+
+        if ($hasReachedMaxLevel) {
+            $BlockReason[] = $_Lang['ListBox_Disallow_MaxLevelReached'];
+        }
+        else if (!$hasUpgradeResources) {
+            $BlockReason[] = $_Lang['ListBox_Disallow_NoResources'];
+        }
+        if (!$hasTechnologyRequirementMet) {
+            $BlockReason[] = $_Lang['ListBox_Disallow_NoTech'];
+        }
+        if ($isBlockedByTechResearchProgress) {
+            $BlockReason[] = $_Lang['ListBox_Disallow_LabResearch'];
+        }
+        if (!$hasAvailableFieldsOnPlanet) {
+            $BlockReason[] = $_Lang['ListBox_Disallow_NoFreeFields'];
+        }
+        if ($isQueueFull) {
+            $BlockReason[] = $_Lang['ListBox_Disallow_QueueIsFull'];
+        }
+        if ($isUserOnVacation) {
+            $BlockReason[] = $_Lang['ListBox_Disallow_VacationMode'];
+        }
+
+        if(!empty($BlockReason))
         {
-            $ElementParser = [
-                'SkinPath' => $_SkinPath,
-            ];
+            $ElementParser['ElementDisabled'] = (
+                $isUpgradeQueueable ?
+                $TPL['list_partdisabled'] :
+                $TPL['list_disabled']
+            );
+            $ElementParser['ElementDisableReason'] = end($BlockReason);
+        }
 
-            $elementQueuedLevel = Elements\getElementState($ElementID, $CurrentPlanet, $CurrentUser)['level'];
-            $isElementInQueue = isset(
-                $queueStateDetails['queuedElementLevelModifiers'][$ElementID]
-            );
-            $elementQueueLevelModifier = (
-                $isElementInQueue ?
-                $queueStateDetails['queuedElementLevelModifiers'][$ElementID] :
-                0
-            );
-            $elementCurrentLevel = (
-                $elementQueuedLevel +
-                ($elementQueueLevelModifier * -1)
-            );
-
-            $elementMaxLevel = Elements\getElementMaxUpgradeLevel($ElementID);
-            $hasReachedMaxLevel = (
-                $elementQueuedLevel >=
-                $elementMaxLevel
+        if ($isDowngradePossible) {
+            $downgradeCost = Elements\calculatePurchaseCost(
+                $ElementID,
+                Elements\getElementState($ElementID, $CurrentPlanet, $CurrentUser),
+                [
+                    'purchaseMode' => Elements\PurchaseMode::Downgrade
+                ]
             );
 
-            $hasUpgradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, false);
-            $hasDowngradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, true);
+            $elementDowngradeResources = [];
 
-            $hasTechnologyRequirementMet = IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $ElementID);
-            $isBlockedByTechResearchProgress = (
-                $ElementID == 31 &&
-                $CurrentUser['techQueue_Planet'] > 0 &&
-                $CurrentUser['techQueue_EndTime'] > 0 &&
-                !isLabUpgradableWhileInUse()
-            );
-
-            $isUpgradePossible = (!$hasReachedMaxLevel);
-            $isUpgradeQueueable = (
-                $isUpgradePossible &&
-                !$$isUserOnVacation &&
-                !$isQueueFull &&
-                $hasAvailableFieldsOnPlanet &&
-                $hasTechnologyRequirementMet &&
-                !$isBlockedByTechResearchProgress
-            );
-            $isUpgradeAvailableNow = (
-                $isUpgradeQueueable &&
-                $hasUpgradeResources
-            );
-            $isUpgradeQueueableNow = (
-                $isUpgradeQueueable &&
-                $hasElementsInQueue
-            );
-
-            $isDowngradePossible = (
-                ($elementQueuedLevel > 0) &&
-                !Elements\isIndestructibleStructure($ElementID)
-            );
-            $isDowngradeQueueable = (
-                $isDowngradePossible &&
-                !$$isUserOnVacation &&
-                !$isQueueFull &&
-                !$isBlockedByTechResearchProgress
-            );
-            $isDowngradeAvailableNow = (
-                $isDowngradeQueueable &&
-                $hasDowngradeResources
-            );
-
-            $ElementParser['ElementName'] = $_Lang['tech'][$ElementID];
-            $ElementParser['ElementID'] = $ElementID;
-            $ElementParser['ElementRealLevel'] = prettyNumber($elementCurrentLevel);
-
-            if($isElementInQueue) {
-                $ElementParser['ElementLevelModif'] = parsetemplate(
-                    $TPL['list_levelmodif'],
-                    [
-                        'modColor' => classNames([
-                            'red' => ($elementQueueLevelModifier < 0),
-                            'orange' => ($elementQueueLevelModifier == 0),
-                            'lime' => ($elementQueueLevelModifier > 0),
-                        ]),
-                        'modText' => (
-                            ($elementQueueLevelModifier > 0 ? '+' : '') .
-                            prettyNumber($elementQueueLevelModifier)
-                        ),
-                    ]
-                );
-            }
-
-            $BlockReason = array();
-
-            if ($hasReachedMaxLevel) {
-                $BlockReason[] = $_Lang['ListBox_Disallow_MaxLevelReached'];
-            }
-            else if (!$hasUpgradeResources) {
-                $BlockReason[] = $_Lang['ListBox_Disallow_NoResources'];
-            }
-            if (!$hasTechnologyRequirementMet) {
-                $BlockReason[] = $_Lang['ListBox_Disallow_NoTech'];
-            }
-            if ($isBlockedByTechResearchProgress) {
-                $BlockReason[] = $_Lang['ListBox_Disallow_LabResearch'];
-            }
-            if (!$hasAvailableFieldsOnPlanet) {
-                $BlockReason[] = $_Lang['ListBox_Disallow_NoFreeFields'];
-            }
-            if ($isQueueFull) {
-                $BlockReason[] = $_Lang['ListBox_Disallow_QueueIsFull'];
-            }
-            if ($isUserOnVacation) {
-                $BlockReason[] = $_Lang['ListBox_Disallow_VacationMode'];
-            }
-
-            if(!empty($BlockReason))
-            {
-                $ElementParser['ElementDisabled'] = (
-                    $isUpgradeQueueable ?
-                    $TPL['list_partdisabled'] :
-                    $TPL['list_disabled']
-                );
-                $ElementParser['ElementDisableReason'] = end($BlockReason);
-            }
-
-            if ($isDowngradePossible) {
-                $downgradeCost = Elements\calculatePurchaseCost(
-                    $ElementID,
-                    Elements\getElementState($ElementID, $CurrentPlanet, $CurrentUser),
-                    [
-                        'purchaseMode' => Elements\PurchaseMode::Downgrade
-                    ]
+            foreach ($downgradeCost as $costResourceKey => $costValue) {
+                $currentResourceState = Resources\getResourceState(
+                    $costResourceKey,
+                    $CurrentUser,
+                    $CurrentPlanet
                 );
 
-                $elementDowngradeResources = [];
+                $resourceLeft = ($currentResourceState - $costValue);
+                $hasResourceDeficit = ($resourceLeft < 0);
 
-                foreach ($downgradeCost as $costResourceKey => $costValue) {
-                    $currentResourceState = Resources\getResourceState(
-                        $costResourceKey,
-                        $CurrentUser,
-                        $CurrentPlanet
-                    );
+                $resourceCostColor = (
+                    !$hasResourceDeficit ?
+                    '' :
+                    (
+                        $hasElementsInQueue ?
+                        'orange' :
+                        'red'
+                    )
+                );
 
-                    $resourceLeft = ($currentResourceState - $costValue);
-                    $hasResourceDeficit = ($resourceLeft < 0);
-
-                    $resourceCostColor = (
-                        !$hasResourceDeficit ?
-                        '' :
-                        (
-                            $hasElementsInQueue ?
-                            'orange' :
-                            'red'
-                        )
-                    );
-
-                    $elementDowngradeResources[] = [
-                        'name' => $resourceLabels[$costResourceKey],
-                        'color' => $resourceCostColor,
-                        'value' => prettyNumber($costValue)
-                    ];
-                }
-
-                $destructionTime = GetBuildingTime($CurrentUser, $CurrentPlanet, $ElementID) / 2;
-
-                $elementsDestructionDetails[$ElementID] = [
-                    'resources' => $elementDowngradeResources,
-                    'destructionTime' => pretty_time($destructionTime)
+                $elementDowngradeResources[] = [
+                    'name' => $resourceLabels[$costResourceKey],
+                    'color' => $resourceCostColor,
+                    'value' => prettyNumber($costValue)
                 ];
             }
 
-            $ElementParser['HideQuickBuildButton'] = classNames([
-                'hide' => (!$isUpgradeAvailableNow && !$isUpgradeQueueableNow),
-            ]);
-            $ElementParser['BuildButtonColor'] = classNames([
-                'buildDo_Green' => $isUpgradeAvailableNow,
-                'buildDo_Orange' => (!$isUpgradeAvailableNow && $isUpgradeQueueableNow),
-            ]);
+            $destructionTime = GetBuildingTime($CurrentUser, $CurrentPlanet, $ElementID) / 2;
 
-            $StructuresList[] = parsetemplate($TPL['list_element'], $ElementParser);
-
-            $cardInfoComponent = Development\Components\GridViewElementCard\render([
-                'elementID' => $ElementID,
-                'user' => $CurrentUser,
-                'planet' => $CurrentPlanet,
-                'isQueueActive' => $hasElementsInQueue,
-                'elementDetails' => [
-                    'currentState' => $elementCurrentLevel,
-                    'isInQueue' => $isElementInQueue,
-                    'queueLevelModifier' => $elementQueueLevelModifier,
-                    'isUpgradePossible' => $isUpgradePossible,
-                    'isUpgradeAvailable' => $isUpgradeAvailableNow,
-                    'isUpgradeQueueable' => $isUpgradeQueueable,
-                    'whyUpgradeImpossible' => [
-                        (
-                            $hasReachedMaxLevel ?
-                            $_Lang['ListBox_Disallow_MaxLevelReached'] :
-                            ''
-                        ),
-                    ],
-                    'isDowngradePossible' => $isDowngradePossible,
-                    'isDowngradeAvailable' => $isDowngradeAvailableNow,
-                    'isDowngradeQueueable' => $isDowngradeQueueable,
-                    'hasTechnologyRequirementMet' => $hasTechnologyRequirementMet,
-                    'additionalUpgradeDetailsRows' => [
-                        (
-                            in_array($ElementID, $_Vars_ElementCategories['prod']) ?
-                            Development\Components\GridViewElementCard\UpgradeProductionChange\render([
-                                'elementID' => $ElementID,
-                                'user' => $CurrentUser,
-                                'planet' => $CurrentPlanet,
-                                'timestamp' => $Now,
-                                'elementDetails' => [
-                                    'currentState' => $elementCurrentLevel,
-                                    'queueLevelModifier' => $elementQueueLevelModifier,
-                                ],
-                            ])['componentHTML'] :
-                            ''
-                        ),
-                    ],
-                ],
-                'getUpgradeElementActionLinkHref' => function () use ($ElementID) {
-                    return "?cmd=insert&amp;building={$ElementID}";
-                },
-                'getDowngradeElementActionLinkHref' => function () use ($ElementID) {
-                    return "?cmd=destroy&amp;building={$ElementID}";
-                },
-            ]);
-
-            $InfoBoxes[] = $cardInfoComponent['componentHTML'];
+            $elementsDestructionDetails[$ElementID] = [
+                'resources' => $elementDowngradeResources,
+                'destructionTime' => pretty_time($destructionTime)
+            ];
         }
+
+        $ElementParser['HideQuickBuildButton'] = classNames([
+            'hide' => (!$isUpgradeAvailableNow && !$isUpgradeQueueableNow),
+        ]);
+        $ElementParser['BuildButtonColor'] = classNames([
+            'buildDo_Green' => $isUpgradeAvailableNow,
+            'buildDo_Orange' => (!$isUpgradeAvailableNow && $isUpgradeQueueableNow),
+        ]);
+
+        $StructuresList[] = parsetemplate($TPL['list_element'], $ElementParser);
+
+        $cardInfoComponent = Development\Components\GridViewElementCard\render([
+            'elementID' => $ElementID,
+            'user' => $CurrentUser,
+            'planet' => $CurrentPlanet,
+            'isQueueActive' => $hasElementsInQueue,
+            'elementDetails' => [
+                'currentState' => $elementCurrentLevel,
+                'isInQueue' => $isElementInQueue,
+                'queueLevelModifier' => $elementQueueLevelModifier,
+                'isUpgradePossible' => $isUpgradePossible,
+                'isUpgradeAvailable' => $isUpgradeAvailableNow,
+                'isUpgradeQueueable' => $isUpgradeQueueable,
+                'whyUpgradeImpossible' => [
+                    (
+                        $hasReachedMaxLevel ?
+                        $_Lang['ListBox_Disallow_MaxLevelReached'] :
+                        ''
+                    ),
+                ],
+                'isDowngradePossible' => $isDowngradePossible,
+                'isDowngradeAvailable' => $isDowngradeAvailableNow,
+                'isDowngradeQueueable' => $isDowngradeQueueable,
+                'hasTechnologyRequirementMet' => $hasTechnologyRequirementMet,
+                'additionalUpgradeDetailsRows' => [
+                    (
+                        in_array($ElementID, $_Vars_ElementCategories['prod']) ?
+                        Development\Components\GridViewElementCard\UpgradeProductionChange\render([
+                            'elementID' => $ElementID,
+                            'user' => $CurrentUser,
+                            'planet' => $CurrentPlanet,
+                            'timestamp' => $Now,
+                            'elementDetails' => [
+                                'currentState' => $elementCurrentLevel,
+                                'queueLevelModifier' => $elementQueueLevelModifier,
+                            ],
+                        ])['componentHTML'] :
+                        ''
+                    ),
+                ],
+            ],
+            'getUpgradeElementActionLinkHref' => function () use ($ElementID) {
+                return "?cmd=insert&amp;building={$ElementID}";
+            },
+            'getDowngradeElementActionLinkHref' => function () use ($ElementID) {
+                return "?cmd=destroy&amp;building={$ElementID}";
+            },
+        ]);
+
+        $InfoBoxes[] = $cardInfoComponent['componentHTML'];
     }
 
     foreach ($queueStateDetails['queuedResourcesToUse'] as $resourceKey => $resourceValue) {
