@@ -151,21 +151,15 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 $elementMaxLevel
             );
 
-            $hasTechnologyRequirementMet = IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $ElementID);
             $hasUpgradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, false);
+            $hasDowngradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, true);
 
+            $hasTechnologyRequirementMet = IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $ElementID);
             $isBlockedByTechResearchProgress = (
                 $ElementID == 31 &&
                 $CurrentUser['techQueue_Planet'] > 0 &&
                 $CurrentUser['techQueue_EndTime'] > 0 &&
                 !isLabUpgradableWhileInUse()
-            );
-
-            $hasDowngradeResources = IsElementBuyable(
-                $CurrentUser,
-                $CurrentPlanet,
-                $ElementID,
-                true
             );
 
             $isUpgradePossible = (!$hasReachedMaxLevel);
