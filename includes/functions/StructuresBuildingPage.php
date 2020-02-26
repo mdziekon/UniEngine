@@ -217,7 +217,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             );
         }
 
-        $BlockReason = array();
+        $BlockReason = [];
 
         if ($hasReachedMaxLevel) {
             $BlockReason[] = $_Lang['ListBox_Disallow_MaxLevelReached'];
@@ -241,8 +241,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             $BlockReason[] = $_Lang['ListBox_Disallow_VacationMode'];
         }
 
-        if(!empty($BlockReason))
-        {
+        if (!empty($BlockReason)) {
             $ElementParser['ElementDisabled'] = (
                 $isUpgradeQueueable ?
                 $TPL['list_partdisabled'] :
@@ -272,15 +271,10 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 $resourceLeft = ($currentResourceState - $costValue);
                 $hasResourceDeficit = ($resourceLeft < 0);
 
-                $resourceCostColor = (
-                    !$hasResourceDeficit ?
-                    '' :
-                    (
-                        $hasElementsInQueue ?
-                        'orange' :
-                        'red'
-                    )
-                );
+                $resourceCostColor = classNames([
+                    'red' => ($hasResourceDeficit && !$hasElementsInQueue),
+                    'orange' => ($hasResourceDeficit && $hasElementsInQueue),
+                ]);
 
                 $elementDowngradeResources[] = [
                     'name' => $resourceLabels[$costResourceKey],
