@@ -140,6 +140,10 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 $queueStateDetails['queuedElementLevelModifiers'][$ElementID] :
                 0
             );
+            $elementCurrentLevel = (
+                $elementQueuedLevel +
+                ($elementQueueLevelModifier * -1)
+            );
 
             $elementMaxLevel = Elements\getElementMaxUpgradeLevel($ElementID);
             $hasReachedMaxLevel = (
@@ -165,10 +169,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 
             $ElementParser['ElementName'] = $_Lang['tech'][$ElementID];
             $ElementParser['ElementID'] = $ElementID;
-            $ElementParser['ElementRealLevel'] = prettyNumber(
-                $elementQueuedLevel +
-                ($elementQueueLevelModifier * -1)
-            );
+            $ElementParser['ElementRealLevel'] = prettyNumber($elementCurrentLevel);
             $ElementParser['BuildButtonColor'] = 'buildDo_Green';
 
             if($isElementInQueue) {
@@ -320,10 +321,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 'planet' => $CurrentPlanet,
                 'isQueueActive' => $hasElementsInQueue,
                 'elementDetails' => [
-                    'currentState' => (
-                        $elementQueuedLevel +
-                        ($elementQueueLevelModifier * -1)
-                    ),
+                    'currentState' => $elementCurrentLevel,
                     'isInQueue' => $isElementInQueue,
                     'queueLevelModifier' => $elementQueueLevelModifier,
                     'isUpgradePossible' => (
@@ -375,10 +373,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                                 'planet' => $CurrentPlanet,
                                 'timestamp' => $Now,
                                 'elementDetails' => [
-                                    'currentState' => (
-                                        $elementQueuedLevel +
-                                        ($elementQueueLevelModifier * -1)
-                                    ),
+                                    'currentState' => $elementCurrentLevel,
                                     'queueLevelModifier' => $elementQueueLevelModifier,
                                 ],
                             ])['componentHTML'] :
