@@ -179,6 +179,8 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     }
     // End of - Parse Queue
 
+    $isOnVacation = isOnVacation($CurrentUser);
+
     foreach($_Vars_ElementCategories['tech'] as $ElementID)
     {
         $ElementParser = [
@@ -277,7 +279,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
             $HideButton_QuickBuild = true;
         }
-        if(isOnVacation($CurrentUser))
+        if($isOnVacation)
         {
             $BlockReason[] = $_Lang['ListBox_Disallow_VacationMode'];
             $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
@@ -306,7 +308,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 
         $hasElementsInQueue = ($elementsInQueue > 0);
         $isBlockedByLabUpgradeProgress = $hasPlanetsWithUnfinishedLabUpgrades;
-        $isOnVacation = isOnVacation($CurrentUser);
 
         $cardInfoComponent = Development\Components\GridViewElementCard\render([
             'elementID' => $ElementID,
