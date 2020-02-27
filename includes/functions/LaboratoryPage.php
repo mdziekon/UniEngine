@@ -195,10 +195,11 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             $queueStateDetails['queuedElementLevelModifiers'][$ElementID] :
             0
         );
-        $HasResources = true;
 
         $elementMaxLevel = Elements\getElementMaxUpgradeLevel($ElementID);
         $hasReachedMaxLevel = ($CurrentUser[$_Vars_GameElements[$ElementID]] >= $elementMaxLevel);
+
+        $hasUpgradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, false);
 
         $hasTechnologyRequirementMet = IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $ElementID);
 
@@ -227,16 +228,11 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             $HideButton_Build = true;
         }
 
-        if(IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, false) === false)
-        {
-            $HasResources = false;
-            if($elementsInQueue == 0)
-            {
+        if (!$hasUpgradeResources) {
+            if ($elementsInQueue == 0) {
                 $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
                 $HideButton_QuickBuild = true;
-            }
-            else
-            {
+            } else {
                 $ElementParser['BuildButtonColor'] = 'buildDo_Orange';
             }
         }
@@ -247,7 +243,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         {
             $BlockReason[] = $_Lang['ListBox_Disallow_MaxLevelReached'];
         }
-        else if(!$HasResources)
+        else if(!$hasUpgradeResources)
         {
             $BlockReason[] = $_Lang['ListBox_Disallow_NoResources'];
         }
@@ -308,7 +304,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 
         $StructuresList[] = parsetemplate($TPL['list_element'], $ElementParser);
 
-        $hasUpgradeResources = $HasResources;
         $hasElementsInQueue = ($elementsInQueue > 0);
         $isBlockedByLabUpgradeProgress = $hasPlanetsWithUnfinishedLabUpgrades;
         $isOnVacation = isOnVacation($CurrentUser);
