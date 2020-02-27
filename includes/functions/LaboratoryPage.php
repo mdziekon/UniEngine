@@ -93,15 +93,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     }
     // End of - Handle Commands
 
-    if($InResearch === true && $ResearchPlanet['id'] != $CurrentPlanet['id'])
-    {
-        $ResearchInThisLab = false;
-    }
-    else
-    {
-        $ResearchInThisLab = true;
-    }
-    // End of - Execute Commands
     $techQueueContent = Planets\Queues\Research\parseQueueString(
         $ResearchPlanet['techQueue']
     );
@@ -158,6 +149,10 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     $isQueueFull = (
         $elementsInQueue >=
         Users\getMaxResearchQueueLength($CurrentUser)
+    );
+    $canQueueResearchOnThisPlanet = (
+        !$InResearch ||
+        $ResearchPlanet['id'] == $CurrentPlanet['id']
     );
 
     foreach ($queueStateDetails['queuedResourcesToUse'] as $resourceKey => $resourceValue) {
@@ -260,7 +255,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
             $HideButton_QuickBuild = true;
         }
-        if($ResearchInThisLab === false)
+        if(!$canQueueResearchOnThisPlanet)
         {
             $BlockReason[] = $_Lang['ListBox_Disallow_NotThisLab'];
             $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
@@ -321,7 +316,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
                     $hasUpgradeResources &&
                     !$hasReachedMaxLevel &&
                     $HasLab &&
-                    $ResearchInThisLab &&
+                    $canQueueResearchOnThisPlanet &&
                     $hasTechnologyRequirementMet &&
                     !$isBlockedByLabUpgradeProgress &&
                     !$isQueueFull &&
@@ -330,7 +325,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
                 'isUpgradeQueueable' => (
                     !$hasReachedMaxLevel &&
                     $HasLab &&
-                    $ResearchInThisLab &&
+                    $canQueueResearchOnThisPlanet &&
                     $hasTechnologyRequirementMet &&
                     !$isBlockedByLabUpgradeProgress &&
                     !$isQueueFull &&
