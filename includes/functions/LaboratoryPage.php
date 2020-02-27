@@ -155,6 +155,10 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         'planet' => $CurrentPlanet,
     ]);
     $elementsInQueue = $queueStateDetails['queuedElementsCount'];
+    $isQueueFull = (
+        $elementsInQueue >=
+        Users\getMaxResearchQueueLength($CurrentUser)
+    );
 
     foreach ($queueStateDetails['queuedResourcesToUse'] as $resourceKey => $resourceValue) {
         if (Resources\isPlanetaryResource($resourceKey)) {
@@ -168,19 +172,9 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         $CurrentUser[$elementKey] += $elementLevelModifier;
     }
 
-    if(!$hasPlanetsWithUnfinishedLabUpgrades)
-    {
-        if($elementsInQueue < ((isPro($CurrentUser)) ? MAX_TECH_QUEUE_LENGTH_PRO : MAX_TECH_QUEUE_LENGTH))
-        {
-            $CanAddToQueue = true;
-        }
-        else
-        {
-            $CanAddToQueue = false;
-        }
-    }
-    else
-    {
+    if (!$hasPlanetsWithUnfinishedLabUpgrades) {
+        $CanAddToQueue = !$isQueueFull;
+    } else {
         $CanAddToQueue = false;
     }
     // End of - Parse Queue
@@ -323,10 +317,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         $hasTechnologyRequirementMet = $TechLevelOK;
         $hasElementsInQueue = ($elementsInQueue > 0);
         $isBlockedByLabUpgradeProgress = $hasPlanetsWithUnfinishedLabUpgrades;
-        $isQueueFull = (
-            $elementsInQueue >=
-            ((isPro($CurrentUser)) ? MAX_TECH_QUEUE_LENGTH_PRO : MAX_TECH_QUEUE_LENGTH)
-        );
         $isOnVacation = isOnVacation($CurrentUser);
 
         $cardInfoComponent = Development\Components\GridViewElementCard\render([
