@@ -195,8 +195,10 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             $queueStateDetails['queuedElementLevelModifiers'][$ElementID] :
             0
         );
-        $MaxLevelReached = false;
         $HasResources = true;
+
+        $elementMaxLevel = Elements\getElementMaxUpgradeLevel($ElementID);
+        $hasReachedMaxLevel = ($CurrentUser[$_Vars_GameElements[$ElementID]] >= $elementMaxLevel);
 
         $hasTechnologyRequirementMet = IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $ElementID);
 
@@ -219,11 +221,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             $ElementParser['ElementLevelModif'] = parsetemplate($TPL['list_levelmodif'], $levelmodif);
         }
 
-        if(!(isset($_Vars_MaxElementLevel[$ElementID]) && $_Vars_MaxElementLevel[$ElementID] > 0 && $NextLevel > $_Vars_MaxElementLevel[$ElementID]))
-        {}
-        else
-        {
-            $MaxLevelReached = true;
+        if ($hasReachedMaxLevel) {
             $HideButton_Build = true;
         }
 
@@ -243,7 +241,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 
         $BlockReason = array();
 
-        if($MaxLevelReached)
+        if($hasReachedMaxLevel)
         {
             $BlockReason[] = $_Lang['ListBox_Disallow_MaxLevelReached'];
         }
@@ -307,9 +305,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         }
 
         $StructuresList[] = parsetemplate($TPL['list_element'], $ElementParser);
-
-        $elementMaxLevel = Elements\getElementMaxUpgradeLevel($ElementID);
-        $hasReachedMaxLevel = ($CurrentUser[$_Vars_GameElements[$ElementID]] >= $elementMaxLevel);
 
         $hasUpgradeResources = $HasResources;
         $hasElementsInQueue = ($elementsInQueue > 0);
