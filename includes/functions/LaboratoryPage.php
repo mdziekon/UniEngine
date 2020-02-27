@@ -213,12 +213,14 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         );
         $ElementParser['BuildButtonColor'] = 'buildDo_Green';
 
-        if ($isElementInQueue)
-        {
-            $levelmodif = [];
-            $levelmodif['modColor'] = 'lime';
-            $levelmodif['modText'] = '+'.prettyNumber($elementQueueLevelModifier);
-            $ElementParser['ElementLevelModif'] = parsetemplate($TPL['list_levelmodif'], $levelmodif);
+        if ($isElementInQueue) {
+            $ElementParser['ElementLevelModif'] = parsetemplate(
+                $TPL['list_levelmodif'],
+                [
+                    'modColor' => 'lime',
+                    'modText' => '+'.prettyNumber($elementQueueLevelModifier),
+                ]
+            );
         }
 
         if ($hasReachedMaxLevel) {
