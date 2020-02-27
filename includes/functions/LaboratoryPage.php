@@ -196,8 +196,9 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             0
         );
         $MaxLevelReached = false;
-        $TechLevelOK = false;
         $HasResources = true;
+
+        $hasTechnologyRequirementMet = IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $ElementID);
 
         $HideButton_Build = false;
         $HideButton_QuickBuild = false;
@@ -225,10 +226,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             $MaxLevelReached = true;
             $HideButton_Build = true;
         }
-        if(IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $ElementID))
-        {
-            $TechLevelOK = true;
-        }
+
         if(IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, false) === false)
         {
             $HasResources = false;
@@ -253,7 +251,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         {
             $BlockReason[] = $_Lang['ListBox_Disallow_NoResources'];
         }
-        if(!$TechLevelOK)
+        if(!$hasTechnologyRequirementMet)
         {
             $BlockReason[] = $_Lang['ListBox_Disallow_NoTech'];
             $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
@@ -314,7 +312,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         $hasReachedMaxLevel = ($CurrentUser[$_Vars_GameElements[$ElementID]] >= $elementMaxLevel);
 
         $hasUpgradeResources = $HasResources;
-        $hasTechnologyRequirementMet = $TechLevelOK;
         $hasElementsInQueue = ($elementsInQueue > 0);
         $isBlockedByLabUpgradeProgress = $hasPlanetsWithUnfinishedLabUpgrades;
         $isOnVacation = isOnVacation($CurrentUser);
