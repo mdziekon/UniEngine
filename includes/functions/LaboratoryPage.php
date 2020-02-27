@@ -36,14 +36,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     $TPL['list_partdisabled']            = parsetemplate($TPL['list_disabled'], array('AddOpacity' => 'dPart'));
     $TPL['list_disabled']                = parsetemplate($TPL['list_disabled'], array('AddOpacity' => ''));
 
-    if($CurrentPlanet[$_Vars_GameElements[31]] > 0)
-    {
-        $HasLab = true;
-    }
-    else
-    {
-        $HasLab = false;
-    }
+    $hasResearchLab = Planets\Elements\hasResearchLab($CurrentPlanet);
 
     $researchNetworkStatus = Development\Utils\Research\fetchResearchNetworkStatus($CurrentUser);
     $planetsWithUnfinishedLabUpgrades = [];
@@ -249,8 +242,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
             $HideButton_QuickBuild = true;
         }
-        if($HasLab === false)
-        {
+        if (!$hasResearchLab) {
             $BlockReason[] = $_Lang['ListBox_Disallow_NoLab'];
             $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
             $HideButton_QuickBuild = true;
@@ -315,7 +307,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
                 'isUpgradeAvailable' => (
                     $hasUpgradeResources &&
                     !$hasReachedMaxLevel &&
-                    $HasLab &&
+                    $hasResearchLab &&
                     $canQueueResearchOnThisPlanet &&
                     $hasTechnologyRequirementMet &&
                     !$isBlockedByLabUpgradeProgress &&
@@ -324,7 +316,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
                 ),
                 'isUpgradeQueueable' => (
                     !$hasReachedMaxLevel &&
-                    $HasLab &&
+                    $hasResearchLab &&
                     $canQueueResearchOnThisPlanet &&
                     $hasTechnologyRequirementMet &&
                     !$isBlockedByLabUpgradeProgress &&
