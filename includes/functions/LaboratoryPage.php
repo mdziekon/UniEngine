@@ -171,12 +171,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         $elementKey = Elements\getElementKey($elementID);
         $CurrentUser[$elementKey] += $elementLevelModifier;
     }
-
-    if (!$hasPlanetsWithUnfinishedLabUpgrades) {
-        $CanAddToQueue = !$isQueueFull;
-    } else {
-        $CanAddToQueue = false;
-    }
     // End of - Parse Queue
 
     $isOnVacation = isOnVacation($CurrentUser);
@@ -255,8 +249,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
             $HideButton_QuickBuild = true;
         }
-        if($CanAddToQueue === false)
-        {
+        if ($isQueueFull) {
             $BlockReason[] = $_Lang['ListBox_Disallow_QueueIsFull'];
             $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
             $HideButton_QuickBuild = true;
