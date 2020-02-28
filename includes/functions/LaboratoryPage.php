@@ -143,10 +143,12 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         $elementsInQueue >=
         Users\getMaxResearchQueueLength($CurrentUser)
     );
+    $hasElementsInQueue = ($elementsInQueue > 0);
     $canQueueResearchOnThisPlanet = (
         !$InResearch ||
         $ResearchPlanet['id'] == $CurrentPlanet['id']
     );
+    $isUpgradeBlockedByLabUpgradeInProgress = $hasPlanetsWithUnfinishedLabUpgrades;
 
     foreach ($queueStateDetails['queuedResourcesToUse'] as $resourceKey => $resourceValue) {
         if (Resources\isPlanetaryResource($resourceKey)) {
@@ -213,7 +215,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         }
 
         if (!$hasUpgradeResources) {
-            if ($elementsInQueue == 0) {
+            if (!$hasElementsInQueue) {
                 $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
                 $HideButton_QuickBuild = true;
             } else {
@@ -253,7 +255,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
             $HideButton_QuickBuild = true;
         }
-        if($hasPlanetsWithUnfinishedLabUpgrades)
+        if($isUpgradeBlockedByLabUpgradeInProgress)
         {
             $BlockReason[] = $_Lang['ListBox_Disallow_LabInQueue'];
             $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
@@ -286,9 +288,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 
         $StructuresList[] = parsetemplate($TPL['list_element'], $ElementParser);
 
-        $hasElementsInQueue = ($elementsInQueue > 0);
-        $isBlockedByLabUpgradeProgress = $hasPlanetsWithUnfinishedLabUpgrades;
-
         $isUpgradePossible = (
             !$hasReachedMaxLevel
         );
@@ -298,7 +297,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             $hasResearchLab &&
             $canQueueResearchOnThisPlanet &&
             $hasTechnologyRequirementMet &&
-            !$isBlockedByLabUpgradeProgress &&
+            !$isUpgradeBlockedByLabUpgradeInProgress &&
             !$isQueueFull &&
             !$isOnVacation
         );
@@ -307,7 +306,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             $hasResearchLab &&
             $canQueueResearchOnThisPlanet &&
             $hasTechnologyRequirementMet &&
-            !$isBlockedByLabUpgradeProgress &&
+            !$isUpgradeBlockedByLabUpgradeInProgress &&
             !$isQueueFull &&
             !$isOnVacation
         );
