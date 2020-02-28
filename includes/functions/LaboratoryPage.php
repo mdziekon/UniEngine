@@ -289,6 +289,29 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         $hasElementsInQueue = ($elementsInQueue > 0);
         $isBlockedByLabUpgradeProgress = $hasPlanetsWithUnfinishedLabUpgrades;
 
+        $isUpgradePossible = (
+            !$hasReachedMaxLevel
+        );
+        $isUpgradeAvailable = (
+            $hasUpgradeResources &&
+            !$hasReachedMaxLevel &&
+            $hasResearchLab &&
+            $canQueueResearchOnThisPlanet &&
+            $hasTechnologyRequirementMet &&
+            !$isBlockedByLabUpgradeProgress &&
+            !$isQueueFull &&
+            !$isOnVacation
+        );
+        $isUpgradeQueueable = (
+            !$hasReachedMaxLevel &&
+            $hasResearchLab &&
+            $canQueueResearchOnThisPlanet &&
+            $hasTechnologyRequirementMet &&
+            !$isBlockedByLabUpgradeProgress &&
+            !$isQueueFull &&
+            !$isOnVacation
+        );
+
         $cardInfoComponent = Development\Components\GridViewElementCard\render([
             'elementID' => $ElementID,
             'user' => $CurrentUser,
@@ -298,28 +321,9 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
                 'currentState' => $elementCurrentLevel,
                 'isInQueue' => $isElementInQueue,
                 'queueLevelModifier' => $elementQueueLevelModifier,
-                'isUpgradePossible' => (
-                    !$hasReachedMaxLevel
-                ),
-                'isUpgradeAvailable' => (
-                    $hasUpgradeResources &&
-                    !$hasReachedMaxLevel &&
-                    $hasResearchLab &&
-                    $canQueueResearchOnThisPlanet &&
-                    $hasTechnologyRequirementMet &&
-                    !$isBlockedByLabUpgradeProgress &&
-                    !$isQueueFull &&
-                    !$isOnVacation
-                ),
-                'isUpgradeQueueable' => (
-                    !$hasReachedMaxLevel &&
-                    $hasResearchLab &&
-                    $canQueueResearchOnThisPlanet &&
-                    $hasTechnologyRequirementMet &&
-                    !$isBlockedByLabUpgradeProgress &&
-                    !$isQueueFull &&
-                    !$isOnVacation
-                ),
+                'isUpgradePossible' => $isUpgradePossible,
+                'isUpgradeAvailable' => $isUpgradeAvailable,
+                'isUpgradeQueueable' => $isUpgradeQueueable,
                 'whyUpgradeImpossible' => [
                     (
                         $hasReachedMaxLevel ?
