@@ -11,9 +11,7 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 
 function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 {
-    global    $_EnginePath, $_Lang,
-            $_Vars_GameElements, $_Vars_ElementCategories, $_Vars_MaxElementLevel,
-            $_SkinPath, $_GET;
+    global $_EnginePath, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories, $_SkinPath, $_GET;
 
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
     includeLang('worldElements.detailed');
@@ -27,23 +25,17 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     $ElementsPerRow = 7;
 
     // Get Templates
-    $TPL['list_element']                = gettemplate('buildings_compact_list_element_lab');
-    $TPL['list_levelmodif']                = gettemplate('buildings_compact_list_levelmodif');
-    $TPL['list_hidden']                    = gettemplate('buildings_compact_list_hidden');
-    $TPL['list_row']                    = gettemplate('buildings_compact_list_row');
-    $TPL['list_breakrow']                = gettemplate('buildings_compact_list_breakrow');
-    $TPL['list_disabled']                = gettemplate('buildings_compact_list_disabled');
-    $TPL['list_partdisabled']            = parsetemplate($TPL['list_disabled'], array('AddOpacity' => 'dPart'));
-    $TPL['list_disabled']                = parsetemplate($TPL['list_disabled'], array('AddOpacity' => ''));
+    $TPL['list_element']        = gettemplate('buildings_compact_list_element_lab');
+    $TPL['list_levelmodif']     = gettemplate('buildings_compact_list_levelmodif');
+    $TPL['list_hidden']         = gettemplate('buildings_compact_list_hidden');
+    $TPL['list_row']            = gettemplate('buildings_compact_list_row');
+    $TPL['list_breakrow']       = gettemplate('buildings_compact_list_breakrow');
+    $TPL['list_disabled']       = gettemplate('buildings_compact_list_disabled');
+    $TPL['list_partdisabled']   = parsetemplate($TPL['list_disabled'], array('AddOpacity' => 'dPart'));
+    $TPL['list_disabled']       = parsetemplate($TPL['list_disabled'], array('AddOpacity' => ''));
 
-    if($CurrentPlanet[$_Vars_GameElements[31]] > 0)
-    {
-        $HasLab = true;
-    }
-    else
-    {
-        $HasLab = false;
-    }
+    $isUserOnVacation = isOnVacation($CurrentUser);
+    $hasResearchLab = Planets\Elements\hasResearchLab($CurrentPlanet);
 
     $researchNetworkStatus = Development\Utils\Research\fetchResearchNetworkStatus($CurrentUser);
     $planetsWithUnfinishedLabUpgrades = [];
@@ -67,12 +59,9 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 
     PlanetResourceUpdate($CurrentUser, $CurrentPlanet, $Now);
 
-    if(is_array($ThePlanet))
-    {
+    if (is_array($ThePlanet)) {
         $ResearchPlanet = &$ThePlanet;
-    }
-    else
-    {
+    } else {
         $ResearchPlanet = &$CurrentPlanet;
     }
 
@@ -93,15 +82,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     }
     // End of - Handle Commands
 
-    if($InResearch === true && $ResearchPlanet['id'] != $CurrentPlanet['id'])
-    {
-        $ResearchInThisLab = false;
-    }
-    else
-    {
-        $ResearchInThisLab = true;
-    }
-    // End of - Execute Commands
     $techQueueContent = Planets\Queues\Research\parseQueueString(
         $ResearchPlanet['techQueue']
     );
@@ -155,6 +135,16 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         'planet' => $CurrentPlanet,
     ]);
     $elementsInQueue = $queueStateDetails['queuedElementsCount'];
+    $isQueueFull = (
+        $elementsInQueue >=
+        Users\getMaxResearchQueueLength($CurrentUser)
+    );
+    $hasElementsInQueue = ($elementsInQueue > 0);
+    $canQueueResearchOnThisPlanet = (
+        !$InResearch ||
+        $ResearchPlanet['id'] == $CurrentPlanet['id']
+    );
+    $isUpgradeBlockedByLabUpgradeInProgress = $hasPlanetsWithUnfinishedLabUpgrades;
 
     foreach ($queueStateDetails['queuedResourcesToUse'] as $resourceKey => $resourceValue) {
         if (Resources\isPlanetaryResource($resourceKey)) {
@@ -167,32 +157,14 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         $elementKey = Elements\getElementKey($elementID);
         $CurrentUser[$elementKey] += $elementLevelModifier;
     }
-
-    if(!$hasPlanetsWithUnfinishedLabUpgrades)
-    {
-        if($elementsInQueue < ((isPro($CurrentUser)) ? MAX_TECH_QUEUE_LENGTH_PRO : MAX_TECH_QUEUE_LENGTH))
-        {
-            $CanAddToQueue = true;
-        }
-        else
-        {
-            $CanAddToQueue = false;
-        }
-    }
-    else
-    {
-        $CanAddToQueue = false;
-    }
     // End of - Parse Queue
 
-    foreach($_Vars_ElementCategories['tech'] as $ElementID)
-    {
+    foreach ($_Vars_ElementCategories['tech'] as $ElementID) {
         $ElementParser = [
             'SkinPath' => $_SkinPath,
         ];
 
-        $CurrentLevel = $CurrentUser[$_Vars_GameElements[$ElementID]];
-        $NextLevel = $CurrentUser[$_Vars_GameElements[$ElementID]] + 1;
+        $elementQueuedLevel = Elements\getElementState($ElementID, $CurrentPlanet, $CurrentUser)['level'];
         $isElementInQueue = isset(
             $queueStateDetails['queuedElementLevelModifiers'][$ElementID]
         );
@@ -201,133 +173,109 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             $queueStateDetails['queuedElementLevelModifiers'][$ElementID] :
             0
         );
-        $MaxLevelReached = false;
-        $TechLevelOK = false;
-        $HasResources = true;
+        $elementCurrentLevel = (
+            $elementQueuedLevel +
+            ($elementQueueLevelModifier * -1)
+        );
 
-        $HideButton_Build = false;
-        $HideButton_QuickBuild = false;
+        $elementMaxLevel = Elements\getElementMaxUpgradeLevel($ElementID);
+        $hasReachedMaxLevel = ($elementQueuedLevel >= $elementMaxLevel);
+
+        $hasUpgradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, false);
+
+        $hasTechnologyRequirementMet = IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $ElementID);
+
+        $isUpgradePossible = (
+            !$hasReachedMaxLevel
+        );
+        $isUpgradeAvailable = (
+            $hasUpgradeResources &&
+            !$hasReachedMaxLevel &&
+            $hasResearchLab &&
+            $canQueueResearchOnThisPlanet &&
+            $hasTechnologyRequirementMet &&
+            !$isUpgradeBlockedByLabUpgradeInProgress &&
+            !$isQueueFull &&
+            !$isUserOnVacation
+        );
+        $isUpgradeQueueable = (
+            !$hasReachedMaxLevel &&
+            $hasResearchLab &&
+            $canQueueResearchOnThisPlanet &&
+            $hasTechnologyRequirementMet &&
+            !$isUpgradeBlockedByLabUpgradeInProgress &&
+            !$isQueueFull &&
+            !$isUserOnVacation
+        );
+        $isUpgradeAvailableNow = (
+            $isUpgradeAvailable &&
+            $hasUpgradeResources
+        );
+        $isUpgradeQueueableNow = (
+            $isUpgradeQueueable &&
+            $hasElementsInQueue
+        );
 
         $ElementParser['ElementName'] = $_Lang['tech'][$ElementID];
         $ElementParser['ElementID'] = $ElementID;
-        $ElementParser['ElementRealLevel'] = prettyNumber(
-            $CurrentUser[$_Vars_GameElements[$ElementID]] +
-            ($elementQueueLevelModifier * -1)
-        );
-        $ElementParser['BuildButtonColor'] = 'buildDo_Green';
+        $ElementParser['ElementRealLevel'] = prettyNumber($elementCurrentLevel);
 
-        if ($isElementInQueue)
-        {
-            $levelmodif = [];
-            $levelmodif['modColor'] = 'lime';
-            $levelmodif['modText'] = '+'.prettyNumber($elementQueueLevelModifier);
-            $ElementParser['ElementLevelModif'] = parsetemplate($TPL['list_levelmodif'], $levelmodif);
+        if ($isElementInQueue) {
+            $ElementParser['ElementLevelModif'] = parsetemplate(
+                $TPL['list_levelmodif'],
+                [
+                    'modColor' => 'lime',
+                    'modText' => '+'.prettyNumber($elementQueueLevelModifier),
+                ]
+            );
         }
 
-        if(!(isset($_Vars_MaxElementLevel[$ElementID]) && $_Vars_MaxElementLevel[$ElementID] > 0 && $NextLevel > $_Vars_MaxElementLevel[$ElementID]))
-        {}
-        else
-        {
-            $MaxLevelReached = true;
-            $HideButton_Build = true;
-        }
-        if(IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $ElementID))
-        {
-            $TechLevelOK = true;
-        }
-        if(IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, false) === false)
-        {
-            $HasResources = false;
-            if($elementsInQueue == 0)
-            {
-                $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
-                $HideButton_QuickBuild = true;
-            }
-            else
-            {
-                $ElementParser['BuildButtonColor'] = 'buildDo_Orange';
-            }
-        }
+        $BlockReason = [];
 
-        $BlockReason = array();
-
-        if($MaxLevelReached)
-        {
+        if ($hasReachedMaxLevel) {
             $BlockReason[] = $_Lang['ListBox_Disallow_MaxLevelReached'];
         }
-        else if(!$HasResources)
-        {
+        if (!$hasUpgradeResources) {
             $BlockReason[] = $_Lang['ListBox_Disallow_NoResources'];
         }
-        if(!$TechLevelOK)
-        {
+        if (!$hasTechnologyRequirementMet) {
             $BlockReason[] = $_Lang['ListBox_Disallow_NoTech'];
-            $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
-            $HideButton_QuickBuild = true;
         }
-        if($CanAddToQueue === false)
-        {
+        if ($isQueueFull) {
             $BlockReason[] = $_Lang['ListBox_Disallow_QueueIsFull'];
-            $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
-            $HideButton_QuickBuild = true;
         }
-        if($HasLab === false)
-        {
+        if (!$hasResearchLab) {
             $BlockReason[] = $_Lang['ListBox_Disallow_NoLab'];
-            $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
-            $HideButton_QuickBuild = true;
         }
-        if($ResearchInThisLab === false)
-        {
+        if (!$canQueueResearchOnThisPlanet) {
             $BlockReason[] = $_Lang['ListBox_Disallow_NotThisLab'];
-            $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
-            $HideButton_QuickBuild = true;
         }
-        if($hasPlanetsWithUnfinishedLabUpgrades)
-        {
+        if ($isUpgradeBlockedByLabUpgradeInProgress) {
             $BlockReason[] = $_Lang['ListBox_Disallow_LabInQueue'];
-            $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
-            $HideButton_QuickBuild = true;
         }
-        if(isOnVacation($CurrentUser))
-        {
+        if ($isUserOnVacation) {
             $BlockReason[] = $_Lang['ListBox_Disallow_VacationMode'];
-            $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
-            $HideButton_QuickBuild = true;
         }
 
-        if(!empty($BlockReason))
-        {
-            if($ElementParser['BuildButtonColor'] == 'buildDo_Orange')
-            {
-                $ElementParser['ElementDisabled'] = $TPL['list_partdisabled'];
-            }
-            else
-            {
-                $ElementParser['ElementDisabled'] = $TPL['list_disabled'];
-            }
+        if (!empty($BlockReason)) {
+            $ElementParser['ElementDisabled'] = (
+                $isUpgradeQueueable ?
+                $TPL['list_partdisabled'] :
+                $TPL['list_disabled']
+            );
             $ElementParser['ElementDisableReason'] = end($BlockReason);
         }
 
-        if($HideButton_Build OR $HideButton_QuickBuild)
-        {
-            $ElementParser['HideQuickBuildButton'] = 'hide';
-        }
+        $ElementParser['HideQuickBuildButton'] = classNames([
+            'hide' => (!$isUpgradeAvailableNow && !$isUpgradeQueueableNow),
+        ]);
+
+        $ElementParser['BuildButtonColor'] = classNames([
+            'buildDo_Green' => $isUpgradeAvailableNow,
+            'buildDo_Orange' => (!$isUpgradeAvailableNow && $isUpgradeQueueableNow),
+        ]);
 
         $StructuresList[] = parsetemplate($TPL['list_element'], $ElementParser);
-
-        $elementMaxLevel = Elements\getElementMaxUpgradeLevel($ElementID);
-        $hasReachedMaxLevel = ($CurrentUser[$_Vars_GameElements[$ElementID]] >= $elementMaxLevel);
-
-        $hasUpgradeResources = $HasResources;
-        $hasTechnologyRequirementMet = $TechLevelOK;
-        $hasElementsInQueue = ($elementsInQueue > 0);
-        $isBlockedByLabUpgradeProgress = $hasPlanetsWithUnfinishedLabUpgrades;
-        $isQueueFull = (
-            $elementsInQueue >=
-            ((isPro($CurrentUser)) ? MAX_TECH_QUEUE_LENGTH_PRO : MAX_TECH_QUEUE_LENGTH)
-        );
-        $isOnVacation = isOnVacation($CurrentUser);
 
         $cardInfoComponent = Development\Components\GridViewElementCard\render([
             'elementID' => $ElementID,
@@ -335,34 +283,12 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             'planet' => $CurrentPlanet,
             'isQueueActive' => $hasElementsInQueue,
             'elementDetails' => [
-                'currentState' => (
-                    $CurrentUser[$_Vars_GameElements[$ElementID]] +
-                    ($elementQueueLevelModifier * -1)
-                ),
+                'currentState' => $elementCurrentLevel,
                 'isInQueue' => $isElementInQueue,
                 'queueLevelModifier' => $elementQueueLevelModifier,
-                'isUpgradePossible' => (
-                    !$hasReachedMaxLevel
-                ),
-                'isUpgradeAvailable' => (
-                    $hasUpgradeResources &&
-                    !$hasReachedMaxLevel &&
-                    $HasLab &&
-                    $ResearchInThisLab &&
-                    $hasTechnologyRequirementMet &&
-                    !$isBlockedByLabUpgradeProgress &&
-                    !$isQueueFull &&
-                    !$isOnVacation
-                ),
-                'isUpgradeQueueable' => (
-                    !$hasReachedMaxLevel &&
-                    $HasLab &&
-                    $ResearchInThisLab &&
-                    $hasTechnologyRequirementMet &&
-                    !$isBlockedByLabUpgradeProgress &&
-                    !$isQueueFull &&
-                    !$isOnVacation
-                ),
+                'isUpgradePossible' => $isUpgradePossible,
+                'isUpgradeAvailable' => $isUpgradeAvailable,
+                'isUpgradeQueueable' => $isUpgradeQueueable,
                 'whyUpgradeImpossible' => [
                     (
                         $hasReachedMaxLevel ?
