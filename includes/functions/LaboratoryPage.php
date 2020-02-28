@@ -11,9 +11,7 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 
 function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 {
-    global    $_EnginePath, $_Lang,
-            $_Vars_GameElements, $_Vars_ElementCategories, $_Vars_MaxElementLevel,
-            $_SkinPath, $_GET;
+    global $_EnginePath, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories, $_SkinPath, $_GET;
 
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
     includeLang('worldElements.detailed');
