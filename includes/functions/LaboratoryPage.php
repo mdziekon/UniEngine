@@ -192,102 +192,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 
         $hasTechnologyRequirementMet = IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $ElementID);
 
-        $HideButton_Build = false;
-        $HideButton_QuickBuild = false;
-
-        $ElementParser['ElementName'] = $_Lang['tech'][$ElementID];
-        $ElementParser['ElementID'] = $ElementID;
-        $ElementParser['ElementRealLevel'] = prettyNumber($elementCurrentLevel);
-        $ElementParser['BuildButtonColor'] = 'buildDo_Green';
-
-        if ($isElementInQueue) {
-            $ElementParser['ElementLevelModif'] = parsetemplate(
-                $TPL['list_levelmodif'],
-                [
-                    'modColor' => 'lime',
-                    'modText' => '+'.prettyNumber($elementQueueLevelModifier),
-                ]
-            );
-        }
-
-        if ($hasReachedMaxLevel) {
-            $HideButton_Build = true;
-        }
-
-        if (!$hasUpgradeResources) {
-            if (!$hasElementsInQueue) {
-                $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
-                $HideButton_QuickBuild = true;
-            } else {
-                $ElementParser['BuildButtonColor'] = 'buildDo_Orange';
-            }
-        }
-
-        $BlockReason = array();
-
-        if($hasReachedMaxLevel)
-        {
-            $BlockReason[] = $_Lang['ListBox_Disallow_MaxLevelReached'];
-        }
-        else if(!$hasUpgradeResources)
-        {
-            $BlockReason[] = $_Lang['ListBox_Disallow_NoResources'];
-        }
-        if(!$hasTechnologyRequirementMet)
-        {
-            $BlockReason[] = $_Lang['ListBox_Disallow_NoTech'];
-            $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
-            $HideButton_QuickBuild = true;
-        }
-        if ($isQueueFull) {
-            $BlockReason[] = $_Lang['ListBox_Disallow_QueueIsFull'];
-            $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
-            $HideButton_QuickBuild = true;
-        }
-        if (!$hasResearchLab) {
-            $BlockReason[] = $_Lang['ListBox_Disallow_NoLab'];
-            $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
-            $HideButton_QuickBuild = true;
-        }
-        if(!$canQueueResearchOnThisPlanet)
-        {
-            $BlockReason[] = $_Lang['ListBox_Disallow_NotThisLab'];
-            $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
-            $HideButton_QuickBuild = true;
-        }
-        if($isUpgradeBlockedByLabUpgradeInProgress)
-        {
-            $BlockReason[] = $_Lang['ListBox_Disallow_LabInQueue'];
-            $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
-            $HideButton_QuickBuild = true;
-        }
-        if($isOnVacation)
-        {
-            $BlockReason[] = $_Lang['ListBox_Disallow_VacationMode'];
-            $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
-            $HideButton_QuickBuild = true;
-        }
-
-        if(!empty($BlockReason))
-        {
-            if($ElementParser['BuildButtonColor'] == 'buildDo_Orange')
-            {
-                $ElementParser['ElementDisabled'] = $TPL['list_partdisabled'];
-            }
-            else
-            {
-                $ElementParser['ElementDisabled'] = $TPL['list_disabled'];
-            }
-            $ElementParser['ElementDisableReason'] = end($BlockReason);
-        }
-
-        if($HideButton_Build OR $HideButton_QuickBuild)
-        {
-            $ElementParser['HideQuickBuildButton'] = 'hide';
-        }
-
-        $StructuresList[] = parsetemplate($TPL['list_element'], $ElementParser);
-
         $isUpgradePossible = (
             !$hasReachedMaxLevel
         );
@@ -310,6 +214,84 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             !$isQueueFull &&
             !$isOnVacation
         );
+
+        $ElementParser['ElementName'] = $_Lang['tech'][$ElementID];
+        $ElementParser['ElementID'] = $ElementID;
+        $ElementParser['ElementRealLevel'] = prettyNumber($elementCurrentLevel);
+        $ElementParser['BuildButtonColor'] = 'buildDo_Green';
+
+        if ($isElementInQueue) {
+            $ElementParser['ElementLevelModif'] = parsetemplate(
+                $TPL['list_levelmodif'],
+                [
+                    'modColor' => 'lime',
+                    'modText' => '+'.prettyNumber($elementQueueLevelModifier),
+                ]
+            );
+        }
+
+        if (!$hasUpgradeResources) {
+            if (!$hasElementsInQueue) {
+                $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
+            } else {
+                $ElementParser['BuildButtonColor'] = 'buildDo_Orange';
+            }
+        }
+
+        $BlockReason = array();
+
+        if ($hasReachedMaxLevel) {
+            $BlockReason[] = $_Lang['ListBox_Disallow_MaxLevelReached'];
+        }
+        if (!$hasUpgradeResources) {
+            $BlockReason[] = $_Lang['ListBox_Disallow_NoResources'];
+        }
+        if (!$hasTechnologyRequirementMet) {
+            $BlockReason[] = $_Lang['ListBox_Disallow_NoTech'];
+            $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
+        }
+        if ($isQueueFull) {
+            $BlockReason[] = $_Lang['ListBox_Disallow_QueueIsFull'];
+            $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
+        }
+        if (!$hasResearchLab) {
+            $BlockReason[] = $_Lang['ListBox_Disallow_NoLab'];
+            $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
+        }
+        if (!$canQueueResearchOnThisPlanet) {
+            $BlockReason[] = $_Lang['ListBox_Disallow_NotThisLab'];
+            $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
+        }
+        if ($isUpgradeBlockedByLabUpgradeInProgress) {
+            $BlockReason[] = $_Lang['ListBox_Disallow_LabInQueue'];
+            $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
+        }
+        if ($isOnVacation) {
+            $BlockReason[] = $_Lang['ListBox_Disallow_VacationMode'];
+            $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
+        }
+
+        if(!empty($BlockReason))
+        {
+            if($ElementParser['BuildButtonColor'] == 'buildDo_Orange')
+            {
+                $ElementParser['ElementDisabled'] = $TPL['list_partdisabled'];
+            }
+            else
+            {
+                $ElementParser['ElementDisabled'] = $TPL['list_disabled'];
+            }
+            $ElementParser['ElementDisableReason'] = end($BlockReason);
+        }
+
+        if (
+            !$isUpgradeQueueable ||
+            (!$hasUpgradeResources && !$hasElementsInQueue)
+        ) {
+            $ElementParser['HideQuickBuildButton'] = 'hide';
+        }
+
+        $StructuresList[] = parsetemplate($TPL['list_element'], $ElementParser);
 
         $cardInfoComponent = Development\Components\GridViewElementCard\render([
             'elementID' => $ElementID,
