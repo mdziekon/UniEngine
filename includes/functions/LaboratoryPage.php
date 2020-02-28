@@ -169,8 +169,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             'SkinPath' => $_SkinPath,
         ];
 
-        $CurrentLevel = $CurrentUser[$_Vars_GameElements[$ElementID]];
-        $NextLevel = $CurrentUser[$_Vars_GameElements[$ElementID]] + 1;
+        $elementQueuedLevel = Elements\getElementState($ElementID, $CurrentPlanet, $CurrentUser)['level'];
         $isElementInQueue = isset(
             $queueStateDetails['queuedElementLevelModifiers'][$ElementID]
         );
@@ -181,7 +180,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         );
 
         $elementMaxLevel = Elements\getElementMaxUpgradeLevel($ElementID);
-        $hasReachedMaxLevel = ($CurrentUser[$_Vars_GameElements[$ElementID]] >= $elementMaxLevel);
+        $hasReachedMaxLevel = ($elementQueuedLevel >= $elementMaxLevel);
 
         $hasUpgradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, false);
 
@@ -193,7 +192,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         $ElementParser['ElementName'] = $_Lang['tech'][$ElementID];
         $ElementParser['ElementID'] = $ElementID;
         $ElementParser['ElementRealLevel'] = prettyNumber(
-            $CurrentUser[$_Vars_GameElements[$ElementID]] +
+            $elementQueuedLevel +
             ($elementQueueLevelModifier * -1)
         );
         $ElementParser['BuildButtonColor'] = 'buildDo_Green';
@@ -296,7 +295,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             'isQueueActive' => $hasElementsInQueue,
             'elementDetails' => [
                 'currentState' => (
-                    $CurrentUser[$_Vars_GameElements[$ElementID]] +
+                    $elementQueuedLevel +
                     ($elementQueueLevelModifier * -1)
                 ),
                 'isInQueue' => $isElementInQueue,
