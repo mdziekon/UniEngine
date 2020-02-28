@@ -275,16 +275,12 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
         }
 
-        if(!empty($BlockReason))
-        {
-            if($ElementParser['BuildButtonColor'] == 'buildDo_Orange')
-            {
-                $ElementParser['ElementDisabled'] = $TPL['list_partdisabled'];
-            }
-            else
-            {
-                $ElementParser['ElementDisabled'] = $TPL['list_disabled'];
-            }
+        if (!empty($BlockReason)) {
+            $ElementParser['ElementDisabled'] = (
+                $isUpgradeQueueable ?
+                $TPL['list_partdisabled'] :
+                $TPL['list_disabled']
+            );
             $ElementParser['ElementDisableReason'] = end($BlockReason);
         }
 
