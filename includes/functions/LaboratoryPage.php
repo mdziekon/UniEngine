@@ -25,15 +25,16 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     $ElementsPerRow = 7;
 
     // Get Templates
-    $TPL['list_element']                = gettemplate('buildings_compact_list_element_lab');
-    $TPL['list_levelmodif']                = gettemplate('buildings_compact_list_levelmodif');
-    $TPL['list_hidden']                    = gettemplate('buildings_compact_list_hidden');
-    $TPL['list_row']                    = gettemplate('buildings_compact_list_row');
-    $TPL['list_breakrow']                = gettemplate('buildings_compact_list_breakrow');
-    $TPL['list_disabled']                = gettemplate('buildings_compact_list_disabled');
-    $TPL['list_partdisabled']            = parsetemplate($TPL['list_disabled'], array('AddOpacity' => 'dPart'));
-    $TPL['list_disabled']                = parsetemplate($TPL['list_disabled'], array('AddOpacity' => ''));
+    $TPL['list_element']        = gettemplate('buildings_compact_list_element_lab');
+    $TPL['list_levelmodif']     = gettemplate('buildings_compact_list_levelmodif');
+    $TPL['list_hidden']         = gettemplate('buildings_compact_list_hidden');
+    $TPL['list_row']            = gettemplate('buildings_compact_list_row');
+    $TPL['list_breakrow']       = gettemplate('buildings_compact_list_breakrow');
+    $TPL['list_disabled']       = gettemplate('buildings_compact_list_disabled');
+    $TPL['list_partdisabled']   = parsetemplate($TPL['list_disabled'], array('AddOpacity' => 'dPart'));
+    $TPL['list_disabled']       = parsetemplate($TPL['list_disabled'], array('AddOpacity' => ''));
 
+    $isUserOnVacation = isOnVacation($CurrentUser);
     $hasResearchLab = Planets\Elements\hasResearchLab($CurrentPlanet);
 
     $researchNetworkStatus = Development\Utils\Research\fetchResearchNetworkStatus($CurrentUser);
@@ -58,12 +59,9 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 
     PlanetResourceUpdate($CurrentUser, $CurrentPlanet, $Now);
 
-    if(is_array($ThePlanet))
-    {
+    if (is_array($ThePlanet)) {
         $ResearchPlanet = &$ThePlanet;
-    }
-    else
-    {
+    } else {
         $ResearchPlanet = &$CurrentPlanet;
     }
 
@@ -161,10 +159,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     }
     // End of - Parse Queue
 
-    $isOnVacation = isOnVacation($CurrentUser);
-
-    foreach($_Vars_ElementCategories['tech'] as $ElementID)
-    {
+    foreach ($_Vars_ElementCategories['tech'] as $ElementID) {
         $ElementParser = [
             'SkinPath' => $_SkinPath,
         ];
@@ -201,7 +196,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             $hasTechnologyRequirementMet &&
             !$isUpgradeBlockedByLabUpgradeInProgress &&
             !$isQueueFull &&
-            !$isOnVacation
+            !$isUserOnVacation
         );
         $isUpgradeQueueable = (
             !$hasReachedMaxLevel &&
@@ -210,7 +205,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             $hasTechnologyRequirementMet &&
             !$isUpgradeBlockedByLabUpgradeInProgress &&
             !$isQueueFull &&
-            !$isOnVacation
+            !$isUserOnVacation
         );
         $isUpgradeAvailableNow = (
             $isUpgradeAvailable &&
@@ -258,7 +253,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         if ($isUpgradeBlockedByLabUpgradeInProgress) {
             $BlockReason[] = $_Lang['ListBox_Disallow_LabInQueue'];
         }
-        if ($isOnVacation) {
+        if ($isUserOnVacation) {
             $BlockReason[] = $_Lang['ListBox_Disallow_VacationMode'];
         }
 
