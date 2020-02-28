@@ -214,6 +214,10 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             !$isQueueFull &&
             !$isOnVacation
         );
+        $isUpgradeAvailableNow = (
+            $isUpgradeAvailable &&
+            $hasUpgradeResources
+        );
 
         $ElementParser['ElementName'] = $_Lang['tech'][$ElementID];
         $ElementParser['ElementID'] = $ElementID;
@@ -290,6 +294,11 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         ) {
             $ElementParser['HideQuickBuildButton'] = 'hide';
         }
+
+        $ElementParser['BuildButtonColor'] = classNames([
+            'buildDo_Green' => $isUpgradeAvailableNow,
+            'buildDo_Orange' => (!$isUpgradeAvailableNow && $isUpgradeQueueable),
+        ]);
 
         $StructuresList[] = parsetemplate($TPL['list_element'], $ElementParser);
 
