@@ -178,6 +178,10 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             $queueStateDetails['queuedElementLevelModifiers'][$ElementID] :
             0
         );
+        $elementCurrentLevel = (
+            $elementQueuedLevel +
+            ($elementQueueLevelModifier * -1)
+        );
 
         $elementMaxLevel = Elements\getElementMaxUpgradeLevel($ElementID);
         $hasReachedMaxLevel = ($elementQueuedLevel >= $elementMaxLevel);
@@ -191,10 +195,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 
         $ElementParser['ElementName'] = $_Lang['tech'][$ElementID];
         $ElementParser['ElementID'] = $ElementID;
-        $ElementParser['ElementRealLevel'] = prettyNumber(
-            $elementQueuedLevel +
-            ($elementQueueLevelModifier * -1)
-        );
+        $ElementParser['ElementRealLevel'] = prettyNumber($elementCurrentLevel);
         $ElementParser['BuildButtonColor'] = 'buildDo_Green';
 
         if ($isElementInQueue) {
@@ -294,10 +295,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             'planet' => $CurrentPlanet,
             'isQueueActive' => $hasElementsInQueue,
             'elementDetails' => [
-                'currentState' => (
-                    $elementQueuedLevel +
-                    ($elementQueueLevelModifier * -1)
-                ),
+                'currentState' => $elementCurrentLevel,
                 'isInQueue' => $isElementInQueue,
                 'queueLevelModifier' => $elementQueueLevelModifier,
                 'isUpgradePossible' => (
