@@ -222,7 +222,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         $ElementParser['ElementName'] = $_Lang['tech'][$ElementID];
         $ElementParser['ElementID'] = $ElementID;
         $ElementParser['ElementRealLevel'] = prettyNumber($elementCurrentLevel);
-        $ElementParser['BuildButtonColor'] = 'buildDo_Green';
 
         if ($isElementInQueue) {
             $ElementParser['ElementLevelModif'] = parsetemplate(
@@ -234,15 +233,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             );
         }
 
-        if (!$hasUpgradeResources) {
-            if (!$hasElementsInQueue) {
-                $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
-            } else {
-                $ElementParser['BuildButtonColor'] = 'buildDo_Orange';
-            }
-        }
-
-        $BlockReason = array();
+        $BlockReason = [];
 
         if ($hasReachedMaxLevel) {
             $BlockReason[] = $_Lang['ListBox_Disallow_MaxLevelReached'];
@@ -252,27 +243,21 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         }
         if (!$hasTechnologyRequirementMet) {
             $BlockReason[] = $_Lang['ListBox_Disallow_NoTech'];
-            $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
         }
         if ($isQueueFull) {
             $BlockReason[] = $_Lang['ListBox_Disallow_QueueIsFull'];
-            $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
         }
         if (!$hasResearchLab) {
             $BlockReason[] = $_Lang['ListBox_Disallow_NoLab'];
-            $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
         }
         if (!$canQueueResearchOnThisPlanet) {
             $BlockReason[] = $_Lang['ListBox_Disallow_NotThisLab'];
-            $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
         }
         if ($isUpgradeBlockedByLabUpgradeInProgress) {
             $BlockReason[] = $_Lang['ListBox_Disallow_LabInQueue'];
-            $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
         }
         if ($isOnVacation) {
             $BlockReason[] = $_Lang['ListBox_Disallow_VacationMode'];
-            $ElementParser['BuildButtonColor'] = 'buildDo_Gray';
         }
 
         if (!empty($BlockReason)) {
