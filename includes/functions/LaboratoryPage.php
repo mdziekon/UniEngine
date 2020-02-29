@@ -185,30 +185,18 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 
         $hasTechnologyRequirementMet = IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $ElementID);
 
-        $isUpgradePossible = (
-            !$hasReachedMaxLevel
-        );
-        $isUpgradeAvailable = (
-            $hasUpgradeResources &&
-            !$hasReachedMaxLevel &&
-            $hasResearchLab &&
-            $canQueueResearchOnThisPlanet &&
-            $hasTechnologyRequirementMet &&
-            !$isUpgradeBlockedByLabUpgradeInProgress &&
-            !$isQueueFull &&
-            !$isUserOnVacation
-        );
+        $isUpgradePossible = (!$hasReachedMaxLevel);
         $isUpgradeQueueable = (
-            !$hasReachedMaxLevel &&
+            $isUpgradePossible &&
+            !$isUserOnVacation &&
+            !$isQueueFull &&
             $hasResearchLab &&
             $canQueueResearchOnThisPlanet &&
             $hasTechnologyRequirementMet &&
-            !$isUpgradeBlockedByLabUpgradeInProgress &&
-            !$isQueueFull &&
-            !$isUserOnVacation
+            !$isUpgradeBlockedByLabUpgradeInProgress
         );
         $isUpgradeAvailableNow = (
-            $isUpgradeAvailable &&
+            $isUpgradeQueueable &&
             $hasUpgradeResources
         );
         $isUpgradeQueueableNow = (
@@ -287,7 +275,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
                 'isInQueue' => $isElementInQueue,
                 'queueLevelModifier' => $elementQueueLevelModifier,
                 'isUpgradePossible' => $isUpgradePossible,
-                'isUpgradeAvailable' => $isUpgradeAvailable,
+                'isUpgradeAvailable' => $isUpgradeAvailableNow,
                 'isUpgradeQueueable' => $isUpgradeQueueable,
                 'whyUpgradeImpossible' => [
                     (
