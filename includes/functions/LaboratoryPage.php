@@ -197,11 +197,11 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 
         $BlockReason = [];
 
-        if ($hasReachedMaxLevel) {
-            $BlockReason[] = $_Lang['ListBox_Disallow_MaxLevelReached'];
-        }
         if (!$hasUpgradeResources) {
             $BlockReason[] = $_Lang['ListBox_Disallow_NoResources'];
+        }
+        if ($hasReachedMaxLevel) {
+            $BlockReason[] = $_Lang['ListBox_Disallow_MaxLevelReached'];
         }
         if (!$hasTechnologyRequirementMet) {
             $BlockReason[] = $_Lang['ListBox_Disallow_NoTech'];
