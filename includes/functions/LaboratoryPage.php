@@ -25,14 +25,9 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     $ElementsPerRow = 7;
 
     // Get Templates
-    $TPL['list_element']        = gettemplate('buildings_compact_list_element_lab');
-    $TPL['list_levelmodif']     = gettemplate('buildings_compact_list_levelmodif');
     $TPL['list_hidden']         = gettemplate('buildings_compact_list_hidden');
     $TPL['list_row']            = gettemplate('buildings_compact_list_row');
     $TPL['list_breakrow']       = gettemplate('buildings_compact_list_breakrow');
-    $TPL['list_disabled']       = gettemplate('buildings_compact_list_disabled');
-    $TPL['list_partdisabled']   = parsetemplate($TPL['list_disabled'], array('AddOpacity' => 'dPart'));
-    $TPL['list_disabled']       = parsetemplate($TPL['list_disabled'], array('AddOpacity' => ''));
 
     $isUserOnVacation = isOnVacation($CurrentUser);
     $hasResearchLab = Planets\Elements\hasResearchLab($CurrentPlanet);
@@ -160,10 +155,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     // End of - Parse Queue
 
     foreach ($_Vars_ElementCategories['tech'] as $ElementID) {
-        $ElementParser = [
-            'SkinPath' => $_SkinPath,
-        ];
-
         $elementQueuedLevel = Elements\getElementState($ElementID, $CurrentPlanet, $CurrentUser)['level'];
         $isElementInQueue = isset(
             $queueStateDetails['queuedElementLevelModifiers'][$ElementID]
@@ -204,20 +195,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             $hasElementsInQueue
         );
 
-        $ElementParser['ElementName'] = $_Lang['tech'][$ElementID];
-        $ElementParser['ElementID'] = $ElementID;
-        $ElementParser['ElementRealLevel'] = prettyNumber($elementCurrentLevel);
-
-        if ($isElementInQueue) {
-            $ElementParser['ElementLevelModif'] = parsetemplate(
-                $TPL['list_levelmodif'],
-                [
-                    'modColor' => 'lime',
-                    'modText' => '+'.prettyNumber($elementQueueLevelModifier),
-                ]
-            );
-        }
-
         $BlockReason = [];
 
         if ($hasReachedMaxLevel) {
@@ -245,25 +222,20 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             $BlockReason[] = $_Lang['ListBox_Disallow_VacationMode'];
         }
 
-        if (!empty($BlockReason)) {
-            $ElementParser['ElementDisabled'] = (
-                $isUpgradeQueueable ?
-                $TPL['list_partdisabled'] :
-                $TPL['list_disabled']
-            );
-            $ElementParser['ElementDisableReason'] = end($BlockReason);
-        }
-
-        $ElementParser['HideQuickBuildButton'] = classNames([
-            'hide' => (!$isUpgradeAvailableNow && !$isUpgradeQueueableNow),
+        $iconComponent = Development\Components\GridViewElementIcon\render([
+            'elementID' => $ElementID,
+            'elementDetails' => [
+                'currentState' => $elementCurrentLevel,
+                'queueLevelModifier' => $elementQueueLevelModifier,
+                'isInQueue' => $isElementInQueue,
+                'isUpgradeAvailableNow' => $isUpgradeAvailableNow,
+                'isUpgradeQueueableNow' => $isUpgradeQueueableNow,
+                'whyUpgradeImpossible' => [ end($BlockReason) ],
+            ],
+            'getUpgradeElementActionLinkHref' => function () use ($ElementID) {
+                return "?mode=research&amp;cmd=search&amp;tech={$ElementID}";
+            },
         ]);
-
-        $ElementParser['BuildButtonColor'] = classNames([
-            'buildDo_Green' => $isUpgradeAvailableNow,
-            'buildDo_Orange' => (!$isUpgradeAvailableNow && $isUpgradeQueueableNow),
-        ]);
-
-        $StructuresList[] = parsetemplate($TPL['list_element'], $ElementParser);
 
         $cardInfoComponent = Development\Components\GridViewElementCard\render([
             'elementID' => $ElementID,
@@ -298,6 +270,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             },
         ]);
 
+        $StructuresList[] = $iconComponent['componentHTML'];
         $InfoBoxes[] = $cardInfoComponent['componentHTML'];
     }
 
