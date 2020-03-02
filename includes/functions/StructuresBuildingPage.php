@@ -24,14 +24,9 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     $ElementsPerRow = 7;
 
     // Get Templates
-    $TPL['list_element']        = gettemplate('buildings_compact_list_element_structures');
-    $TPL['list_levelmodif']     = gettemplate('buildings_compact_list_levelmodif');
     $TPL['list_hidden']         = gettemplate('buildings_compact_list_hidden');
     $TPL['list_row']            = gettemplate('buildings_compact_list_row');
     $TPL['list_breakrow']       = gettemplate('buildings_compact_list_breakrow');
-    $TPL['list_disabled']       = gettemplate('buildings_compact_list_disabled');
-    $TPL['list_partdisabled']   = parsetemplate($TPL['list_disabled'], array('AddOpacity' => 'dPart'));
-    $TPL['list_disabled']       = parsetemplate($TPL['list_disabled'], array('AddOpacity' => ''));
 
     // Handle Commands
     $cmdResult = Development\Input\UserCommands\handleStructureCommand(
@@ -128,10 +123,6 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             continue;
         }
 
-        $ElementParser = [
-            'SkinPath' => $_SkinPath,
-        ];
-
         $elementQueuedLevel = Elements\getElementState($ElementID, $CurrentPlanet, $CurrentUser)['level'];
         $isElementInQueue = isset(
             $queueStateDetails['queuedElementLevelModifiers'][$ElementID]
@@ -196,34 +187,13 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             $hasDowngradeResources
         );
 
-        $ElementParser['ElementName'] = $_Lang['tech'][$ElementID];
-        $ElementParser['ElementID'] = $ElementID;
-        $ElementParser['ElementRealLevel'] = prettyNumber($elementCurrentLevel);
-
-        if($isElementInQueue) {
-            $ElementParser['ElementLevelModif'] = parsetemplate(
-                $TPL['list_levelmodif'],
-                [
-                    'modColor' => classNames([
-                        'red' => ($elementQueueLevelModifier < 0),
-                        'orange' => ($elementQueueLevelModifier == 0),
-                        'lime' => ($elementQueueLevelModifier > 0),
-                    ]),
-                    'modText' => (
-                        ($elementQueueLevelModifier > 0 ? '+' : '') .
-                        prettyNumber($elementQueueLevelModifier)
-                    ),
-                ]
-            );
-        }
-
         $BlockReason = [];
 
+        if (!$hasUpgradeResources) {
+            $BlockReason[] = $_Lang['ListBox_Disallow_NoResources'];
+        }
         if ($hasReachedMaxLevel) {
             $BlockReason[] = $_Lang['ListBox_Disallow_MaxLevelReached'];
-        }
-        else if (!$hasUpgradeResources) {
-            $BlockReason[] = $_Lang['ListBox_Disallow_NoResources'];
         }
         if (!$hasTechnologyRequirementMet) {
             $BlockReason[] = $_Lang['ListBox_Disallow_NoTech'];
@@ -239,15 +209,6 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         }
         if ($isUserOnVacation) {
             $BlockReason[] = $_Lang['ListBox_Disallow_VacationMode'];
-        }
-
-        if (!empty($BlockReason)) {
-            $ElementParser['ElementDisabled'] = (
-                $isUpgradeQueueable ?
-                $TPL['list_partdisabled'] :
-                $TPL['list_disabled']
-            );
-            $ElementParser['ElementDisableReason'] = end($BlockReason);
         }
 
         if ($isDowngradePossible) {
@@ -291,15 +252,20 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             ];
         }
 
-        $ElementParser['HideQuickBuildButton'] = classNames([
-            'hide' => (!$isUpgradeAvailableNow && !$isUpgradeQueueableNow),
+        $iconComponent = Development\Components\GridViewElementIcon\render([
+            'elementID' => $ElementID,
+            'elementDetails' => [
+                'currentState' => $elementCurrentLevel,
+                'queueLevelModifier' => $elementQueueLevelModifier,
+                'isInQueue' => $isElementInQueue,
+                'isUpgradeAvailableNow' => $isUpgradeAvailableNow,
+                'isUpgradeQueueableNow' => $isUpgradeQueueableNow,
+                'whyUpgradeImpossible' => [ end($BlockReason) ],
+            ],
+            'getUpgradeElementActionLinkHref' => function () use ($ElementID) {
+                return "?cmd=insert&amp;building={$ElementID}";
+            },
         ]);
-        $ElementParser['BuildButtonColor'] = classNames([
-            'buildDo_Green' => $isUpgradeAvailableNow,
-            'buildDo_Orange' => (!$isUpgradeAvailableNow && $isUpgradeQueueableNow),
-        ]);
-
-        $StructuresList[] = parsetemplate($TPL['list_element'], $ElementParser);
 
         $cardInfoComponent = Development\Components\GridViewElementCard\render([
             'elementID' => $ElementID,
@@ -349,6 +315,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             },
         ]);
 
+        $StructuresList[] = $iconComponent['componentHTML'];
         $InfoBoxes[] = $cardInfoComponent['componentHTML'];
     }
 
