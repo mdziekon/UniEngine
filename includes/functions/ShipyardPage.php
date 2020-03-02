@@ -2,6 +2,8 @@
 
 use UniEngine\Engine\Modules\Development;
 
+use UniEngine\Engine\Includes\Helpers\World\Elements;
+
 function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
 {
     global $_Lang, $_Vars_GameElements, $_Vars_ElementCategories, $_SkinPath, $_GameConfig, $_POST, $UserDev_Log, $_EnginePath;
@@ -9,6 +11,8 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
     include($_EnginePath.'includes/functions/GetMaxConstructibleElements.php');
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
     includeLang('worldElements.detailed');
+
+    $isUserOnVacation = isOnVacation($CurrentUser);
 
     $Now = time();
     $IsInFleet = false;
@@ -44,14 +48,7 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
     $TPL['infobox_additionalnfo']            = gettemplate('buildings_compact_infobox_additionalnfo');
     $TPL['infobox_additionalnfo_single']    = gettemplate('buildings_compact_infobox_additionalnfo_single');
 
-    if($CurrentPlanet[$_Vars_GameElements[21]] > 0)
-    {
-        $HasShipyard = true;
-    }
-    else
-    {
-        $HasShipyard = false;
-    }
+    $hasShipyard = ($CurrentPlanet[$_Vars_GameElements[21]] > 0);
 
     PlanetResourceUpdate($CurrentUser, $CurrentPlanet, $Now);
 
@@ -103,7 +100,7 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
     }
 
     // Execute Commands
-    if(!isOnVacation($CurrentUser))
+    if(!$isUserOnVacation)
     {
         if(isset($_POST['cmd']) && $_POST['cmd'] == 'exec')
         {
@@ -303,13 +300,15 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
 
     $TabIndex = 1;
 
-    foreach($_Vars_ElementCategories[$PageType] as $ElementID)
-    {
-        $HasResources = true;
-        $TechLevelOK = false;
-        $BlockShield = false;
-        $BlockMissile = false;
+    foreach ($_Vars_ElementCategories[$PageType] as $ElementID) {
+        $elementCurrentState = Elements\getElementState($ElementID, $CurrentPlanet, $CurrentUser)['count'];
+
+        $hasReachedShieldCountLimit = false;
+        $hasReachedMissileSiloCapacity = false;
         $maxElementsCount = 0;
+
+        $hasTechnologyRequirementMet = IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $ElementID);
+        $hasConstructionResourcesForOneUnit = IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, false);
 
         $maxElementsCount = GetMaxConstructibleElements($ElementID, $CurrentPlanet);
         if($IsInDefense)
@@ -319,7 +318,7 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
                 if($Shields[$ElementID] >= 1)
                 {
                     $maxElementsCount = 0;
-                    $BlockShield = true;
+                    $hasReachedShieldCountLimit = true;
                 }
                 else
                 {
@@ -338,67 +337,54 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
                 }
                 else
                 {
-                    $BlockMissile = true;
+                    $hasReachedMissileSiloCapacity = true;
                     $maxElementsCount = 0;
                 }
             }
         }
 
         $elementPrice = GetBuildingPrice($CurrentUser, $CurrentPlanet, $ElementID, true, false, true);
-        foreach($elementPrice as $Key => $Value)
-        {
-            if($Value > 0)
-            {
-                $ElementPriceArray[$ElementID][$Key] = $Value;
+        foreach ($elementPrice as $Key => $Value) {
+            if ($Value <= 0) {
+                continue;
             }
+
+            $ElementPriceArray[$ElementID][$Key] = $Value;
         }
         $ElementTimeArray[$ElementID] = GetBuildingTime($CurrentUser, $CurrentPlanet, $ElementID);
 
-        if(IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $ElementID))
-        {
-            $TechLevelOK = true;
-        }
 
-        $HasResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, false);
+        $BlockReason = [];
 
-        $BlockReason = array();
-
-        if(!$HasResources)
-        {
+        if (!$hasConstructionResourcesForOneUnit) {
             $BlockReason[] = $_Lang['ListBox_Disallow_NoResources'];
         }
-        if(!$TechLevelOK)
-        {
+        if (!$hasTechnologyRequirementMet) {
             $BlockReason[] = $_Lang['ListBox_Disallow_NoTech'];
         }
-        if($BlockShield)
-        {
+        if ($hasReachedShieldCountLimit) {
             $BlockReason[] = $_Lang['ListBox_Disallow_ShieldBlock'];
         }
-        if($BlockMissile)
-        {
+        if ($hasReachedMissileSiloCapacity) {
             $BlockReason[] = $_Lang['ListBox_Disallow_MissileBlock'];
         }
-        if(!$HasShipyard)
-        {
+        if (!$hasShipyard) {
             $BlockReason[] = $_Lang['ListBox_Disallow_NoShipyard'];
         }
-        if(isOnVacation($CurrentUser))
-        {
+        if ($isUserOnVacation) {
             $BlockReason[] = $_Lang['ListBox_Disallow_VacationMode'];
         }
 
-        $hasTechnologyRequirementMet = $TechLevelOK;
         $isUpgradeAvailableNow = (
-            !isOnVacation($CurrentUser) &&
-            $HasShipyard &&
+            !$isUserOnVacation &&
+            $hasShipyard &&
             $hasTechnologyRequirementMet &&
-            !$BlockShield &&
-            !$BlockMissile
+            !$hasReachedShieldCountLimit &&
+            !$hasReachedMissileSiloCapacity
         );
         $isUpgradeQueueableNow = (
             $isUpgradeAvailableNow &&
-            $HasResources
+            $hasConstructionResourcesForOneUnit
         );
 
         if ($isUpgradeAvailableNow) {
@@ -408,7 +394,7 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
         $iconComponent = Development\Components\GridViewElementIcon\render([
             'elementID' => $ElementID,
             'elementDetails' => [
-                'currentState' => $CurrentPlanet[$_Vars_GameElements[$ElementID]],
+                'currentState' => $elementCurrentState,
                 'queueLevelModifier' => 0,
                 'isInQueue' => false,
                 'isUpgradeAvailableNow' => $isUpgradeAvailableNow,
@@ -431,7 +417,7 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
             'planet' => $CurrentPlanet,
             'isQueueActive' => false,
             'elementDetails' => [
-                'currentState' => $CurrentPlanet[$_Vars_GameElements[$ElementID]],
+                'currentState' => $elementCurrentState,
                 'isInQueue' => false,
                 'queueLevelModifier' => 0,
                 'isUpgradePossible' => true,
@@ -468,7 +454,7 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
                         ''
                     ),
                     (
-                        $BlockShield ?
+                        $hasReachedShieldCountLimit ?
                         parsetemplate(
                             $TPL['infobox_additionalnfo_single'],
                             [
@@ -479,7 +465,7 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
                         ''
                     ),
                     (
-                        $BlockMissile ?
+                        $hasReachedMissileSiloCapacity ?
                         parsetemplate(
                             $TPL['infobox_additionalnfo_single'],
                             [
