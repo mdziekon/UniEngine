@@ -41,11 +41,11 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
     $QueueSize = ((isPro($CurrentUser)) ? MAX_FLEET_OR_DEFS_PER_ROW_PRO : MAX_FLEET_OR_DEFS_PER_ROW);
 
     // Get Templates
-    $TPL['list_hidden']                        = gettemplate('buildings_compact_list_hidden');
+    $TPL['list_hidden']                     = gettemplate('buildings_compact_list_hidden');
     $TPL['list_row']                        = gettemplate('buildings_compact_list_row');
-    $TPL['list_breakrow']                    = gettemplate('buildings_compact_list_breakrow');
-    $TPL['queue_topinfo']                    = gettemplate('buildings_compact_queue_topinfo');
-    $TPL['infobox_additionalnfo']            = gettemplate('buildings_compact_infobox_additionalnfo');
+    $TPL['list_breakrow']                   = gettemplate('buildings_compact_list_breakrow');
+    $TPL['queue_topinfo']                   = gettemplate('buildings_compact_queue_topinfo');
+    $TPL['infobox_additionalnfo']           = gettemplate('buildings_compact_infobox_additionalnfo');
     $TPL['infobox_additionalnfo_single']    = gettemplate('buildings_compact_infobox_additionalnfo_single');
 
     $hasShipyard = ($CurrentPlanet[$_Vars_GameElements[21]] > 0);
