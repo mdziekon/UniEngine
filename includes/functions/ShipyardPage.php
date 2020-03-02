@@ -37,12 +37,9 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
     $QueueSize = ((isPro($CurrentUser)) ? MAX_FLEET_OR_DEFS_PER_ROW_PRO : MAX_FLEET_OR_DEFS_PER_ROW);
 
     // Get Templates
-    $TPL['list_element']                    = gettemplate('buildings_compact_list_element_shipyard');
     $TPL['list_hidden']                        = gettemplate('buildings_compact_list_hidden');
     $TPL['list_row']                        = gettemplate('buildings_compact_list_row');
     $TPL['list_breakrow']                    = gettemplate('buildings_compact_list_breakrow');
-    $TPL['list_disabled']                    = gettemplate('buildings_compact_list_disabled');
-    $TPL['list_disabled']                    = parsetemplate($TPL['list_disabled'], array('AddOpacity' => ''));
     $TPL['queue_topinfo']                    = gettemplate('buildings_compact_queue_topinfo');
     $TPL['infobox_additionalnfo']            = gettemplate('buildings_compact_infobox_additionalnfo');
     $TPL['infobox_additionalnfo_single']    = gettemplate('buildings_compact_infobox_additionalnfo_single');
@@ -308,21 +305,12 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
 
     foreach($_Vars_ElementCategories[$PageType] as $ElementID)
     {
-        $ElementParser = [
-            'SkinPath' => $_SkinPath,
-        ];
-
         $HasResources = true;
         $TechLevelOK = false;
         $BlockShield = false;
         $BlockMissile = false;
         $maxElementsCount = 0;
 
-        $ElementParser['ElementCount'] = prettyNumber($CurrentPlanet[$_Vars_GameElements[$ElementID]]);
-        if(strlen($ElementParser['ElementCount']) > 10)
-        {
-            $ElementParser['IsBigNum'] = 'bignum';
-        }
         $maxElementsCount = GetMaxConstructibleElements($ElementID, $CurrentPlanet);
         if($IsInDefense)
         {
@@ -355,8 +343,6 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
                 }
             }
         }
-        $ElementParser['ElementName'] = $_Lang['tech'][$ElementID];
-        $ElementParser['ElementID'] = $ElementID;
 
         $elementPrice = GetBuildingPrice($CurrentUser, $CurrentPlanet, $ElementID, true, false, true);
         foreach($elementPrice as $Key => $Value)
@@ -402,21 +388,42 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
             $BlockReason[] = $_Lang['ListBox_Disallow_VacationMode'];
         }
 
-        if(!empty($BlockReason))
-        {
-            $ElementParser['ElementDisabled'] = $TPL['list_disabled'];
-            $ElementParser['ElementDisableInv'] = 'inv';
-            $ElementParser['ElementDisableReason'] = end($BlockReason);
-        }
-        else
-        {
-            $ElementParser['TabIndex'] = $TabIndex;
+        $hasTechnologyRequirementMet = $TechLevelOK;
+        $isUpgradeAvailableNow = (
+            !isOnVacation($CurrentUser) &&
+            $HasShipyard &&
+            $hasTechnologyRequirementMet &&
+            !$BlockShield &&
+            !$BlockMissile
+        );
+        $isUpgradeQueueableNow = (
+            $isUpgradeAvailableNow &&
+            $HasResources
+        );
+
+        if ($isUpgradeAvailableNow) {
             $TabIndex += 1;
         }
 
-        $StructuresList[] = parsetemplate($TPL['list_element'], $ElementParser);
-
-        $hasTechnologyRequirementMet = $TechLevelOK;
+        $iconComponent = Development\Components\GridViewElementIcon\render([
+            'elementID' => $ElementID,
+            'elementDetails' => [
+                'currentState' => $CurrentPlanet[$_Vars_GameElements[$ElementID]],
+                'queueLevelModifier' => 0,
+                'isInQueue' => false,
+                'isUpgradeAvailableNow' => $isUpgradeAvailableNow,
+                'isUpgradeQueueableNow' => $isUpgradeQueueableNow,
+                'whyUpgradeImpossible' => [ end($BlockReason) ],
+            ],
+            'getUpgradeElementActionLinkHref' => function () {
+                return "";
+            },
+            'tabIdx' => (
+                $isUpgradeAvailableNow ?
+                $TabIndex :
+                null
+            ),
+        ]);
 
         $cardInfoComponent = Development\Components\GridViewElementCard\render([
             'elementID' => $ElementID,
@@ -493,6 +500,7 @@ function ShipyardPage(&$CurrentPlanet, $CurrentUser, $PageType = 'fleet')
             'hideActionBtnsContainerWhenUnavailable' => true,
         ]);
 
+        $StructuresList[] = $iconComponent['componentHTML'];
         $InfoBoxes[] = $cardInfoComponent['componentHTML'];
     }
 
