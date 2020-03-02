@@ -18,12 +18,13 @@
             &nbsp;
         </span>
     </a>
-    <div class="ssBg">
+    <div class="ssBg {Data_ElementBackground_ShipClass}">
         &nbsp;
     </div>
-    <div class="ssLvl">
+    <div class="ssLvl {Data_ElementState_ShipClass}">
         {Data_ElementCurrentState}
     </div>
 
     {Subcomponent_LevelModifier}
+    {Subcomponent_Addon_CountableInputs}
 </div>
