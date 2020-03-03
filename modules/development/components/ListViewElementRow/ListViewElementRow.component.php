@@ -23,6 +23,10 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 //              Should return the link to the appropriate command invoker.
 //              Note: returning empty string will make the link "invalid",
 //              meaning the button won't be displayed at all, even if the action is possible.
+//          - showInactiveUpgradeActionLink (Boolean | undefined) [default: false]
+//              Determines whether the upgrade link should be shown when upgrade is neither
+//              available now nor queueable, however the reason why upgrade
+//              is impossible was not provided. The link is inactive though.
 //
 //  Returns: Object
 //      - componentHTML (String)
@@ -48,6 +52,11 @@ function render ($props) {
     $isQueueActive = $props['isQueueActive'];
     $elementDetails = $props['elementDetails'];
     $getUpgradeElementActionLinkHref = $props['getUpgradeElementActionLinkHref'];
+    $showInactiveUpgradeActionLink = (
+        isset($props['showInactiveUpgradeActionLink']) ?
+        $props['showInactiveUpgradeActionLink'] :
+        false
+    );
 
     $elementCurrentState = $elementDetails['currentState'];
     $isInQueue = $elementDetails['isInQueue'];
@@ -59,6 +68,7 @@ function render ($props) {
 
     $elementQueuedLevel = ($elementCurrentState + $elementQueueLevelModifier);
     $elementNextLevelToQueue = ($elementQueuedLevel + 1);
+    $hasUpgradeImpossibleReason = count($whyUpgradeImpossible) > 0;
 
     if (!$hasTechnologyRequirementMet && $user['settings_ExpandedBuildView'] == 0) {
         return [
@@ -170,11 +180,16 @@ function render ($props) {
         $subcomponentTechnologyRequirementsListHTML = GetElementTechReq($user, $planet, $elementID);
     }
 
-    if ($isUpgradeAvailableNow || $isUpgradeQueueableNow) {
+    if (
+        $isUpgradeAvailableNow ||
+        $isUpgradeQueueableNow ||
+        ($showInactiveUpgradeActionLink && !$hasUpgradeImpossibleReason)
+    ) {
         $upgradeActionLinkURL = $getUpgradeElementActionLinkHref();
         $upgradeActionLinkColorClass = classNames([
             'lime' => $isUpgradeAvailableNow,
             'orange' => (!$isUpgradeAvailableNow && $isUpgradeQueueableNow),
+            'red' => (!$isUpgradeAvailableNow && !$isUpgradeQueueableNow),
         ]);
         $upgradeActionLinkText = (
             $isQueueActive ?
@@ -186,14 +201,22 @@ function render ($props) {
             )
         );
 
-        $subcomponentUpgradeActionLinkHTML = (
-            "<a href=\"{$upgradeActionLinkURL}\" class=\"{$upgradeActionLinkColorClass}\">" .
-            $upgradeActionLinkText .
-            "</a>"
-        );
+        if ($isUpgradeAvailableNow || $isUpgradeQueueableNow) {
+            $subcomponentUpgradeActionLinkHTML = (
+                "<a href=\"{$upgradeActionLinkURL}\" class=\"{$upgradeActionLinkColorClass}\">" .
+                $upgradeActionLinkText .
+                "</a>"
+            );
+        } else {
+            $subcomponentUpgradeActionLinkHTML = (
+                "<span class=\"{$upgradeActionLinkColorClass}\">" .
+                $upgradeActionLinkText .
+                "</span>"
+            );
+        }
     } else {
         $upgradeUnavailableJoinedReasons = (
-            count($whyUpgradeImpossible) > 0 ?
+            $hasUpgradeImpossibleReason ?
             implode('<br/>', $whyUpgradeImpossible) :
             '&nbsp;'
         );
