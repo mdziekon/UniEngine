@@ -9,8 +9,7 @@ use UniEngine\Engine\Includes\Helpers\World\Resources;
 
 function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
 {
-    global $_Lang, $_Vars_GameElements, $_Vars_ElementCategories,
-           $_GameConfig, $_GET, $_Vars_PremiumBuildingPrices, $_Vars_MaxElementLevel, $_Vars_PremiumBuildings;
+    global $_Lang, $_GET, $_Vars_ElementCategories;
 
     $BuildingPage = '';
 
@@ -34,16 +33,6 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
     // End of - Handle Commands
 
     $buildingsQueue = Planets\Queues\Structures\parseQueueString($CurrentPlanet['buildQueue']);
-    $buildingsQueueLength = count($buildingsQueue);
-
-    if($buildingsQueueLength < ((isPro($CurrentUser)) ? MAX_BUILDING_QUEUE_SIZE_PRO : MAX_BUILDING_QUEUE_SIZE ))
-    {
-        $CanBuildElement = true;
-    }
-    else
-    {
-        $CanBuildElement = false;
-    }
 
     $queueComponent = LegacyQueue\render([
         'queue' => $buildingsQueue,
@@ -104,101 +93,6 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
     {
         if(in_array($Element, $_Vars_ElementCategories['buildOn'][$CurrentPlanet['planet_type']]))
         {
-            if(($CurrentPlanet['field_current'] + $planetFieldsUsageCounter) < CalculateMaxPlanetFields($CurrentPlanet)) {
-                $RoomIsOk = true;
-            } else {
-                $RoomIsOk = false;
-            }
-
-            $blockReason = [];
-
-            $NextBuildLevel = $CurrentPlanet[$_Vars_GameElements[$Element]] + 1;
-            $skip = false;
-
-            if(IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $Element))
-            {
-                $HaveRessources = IsElementBuyable($CurrentUser, $CurrentPlanet, $Element, false);
-
-                if($Element == 31)
-                {
-                    // Block Lab Upgrade is Research running (and Config dont allow that)
-                    if($CurrentUser['techQueue_Planet'] > 0 AND $CurrentUser['techQueue_EndTime'] > 0 AND $_GameConfig['BuildLabWhileRun'] != 1)
-                    {
-                        $blockReason[] = $_Lang['in_working'];
-                    }
-                }
-                if(!empty($_Vars_MaxElementLevel[$Element]))
-                {
-                    if($NextBuildLevel > $_Vars_MaxElementLevel[$Element])
-                    {
-                        $blockReason[] = $_Lang['onlyOneLevel'];
-                        $skip = true;
-                    }
-                }
-
-                if(isset($_Vars_PremiumBuildings[$Element]) && $_Vars_PremiumBuildings[$Element] == 1)
-                {
-                    if (
-                        $CurrentUser['darkEnergy'] < $_Vars_PremiumBuildingPrices[$Element] &&
-                        $skip == false
-                    ) {
-                        $blockReason[] = $_Lang['BuildFirstLevel'];
-                    }
-                }
-
-                if(isOnVacation($CurrentUser))
-                {
-                    $blockReason[] = $_Lang['ListBox_Disallow_VacationMode'];
-                }
-
-                if(!empty($blockReason))
-                {
-                    // Don't do anything here
-                }
-                else if($RoomIsOk AND $CanBuildElement)
-                {
-                    if($buildingsQueueLength == 0)
-                    {
-                        if($NextBuildLevel == 1)
-                        {
-                            if($HaveRessources == true)
-                            {
-                            }
-                            else
-                            {
-                                $blockReason[] = $_Lang['BuildFirstLevel'];
-                            }
-                        }
-                        else
-                        {
-                            if($HaveRessources == true)
-                            {
-                            }
-                            else
-                            {
-                                $blockReason[] = "{$_Lang['BuildNextLevel']} " . prettyNumber($NextBuildLevel);
-                            }
-                        }
-                    }
-
-                }
-                else if($RoomIsOk AND !$CanBuildElement)
-                {
-                    $blockReason[] = $_Lang['QueueIsFull'];
-                }
-                else
-                {
-                    if($CurrentPlanet['planet_type'] == 3)
-                    {
-                        $blockReason[] = $_Lang['NoMoreSpace_Moon'];
-                    }
-                    else
-                    {
-                        $blockReason[] = $_Lang['NoMoreSpace'];
-                    }
-                }
-            }
-
             $elementQueuedLevel = Elements\getElementState($Element, $CurrentPlanet, $CurrentUser)['level'];
             $isElementInQueue = isset(
                 $queueStateDetails['queuedElementLevelModifiers'][$Element]
@@ -247,6 +141,28 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
                 $hasElementsInQueue
             );
 
+            $blockReason = [];
+            $showInactiveUpgradeActionLink = false;
+
+            if ($hasReachedMaxLevel) {
+                $blockReason[] = $_Lang['ListBox_Disallow_MaxLevelReached'];
+            }
+            if ($isBlockedByTechResearchProgress) {
+                $blockReason[] = $_Lang['ListBox_Disallow_LabResearch'];
+            }
+            if (!$hasAvailableFieldsOnPlanet) {
+                $blockReason[] = $_Lang['ListBox_Disallow_NoFreeFields'];
+            }
+            if ($isQueueFull) {
+                $blockReason[] = $_Lang['ListBox_Disallow_QueueIsFull'];
+            }
+            if ($isUserOnVacation) {
+                $blockReason[] = $_Lang['ListBox_Disallow_VacationMode'];
+            }
+            if (!$hasUpgradeResources) {
+                $showInactiveUpgradeActionLink = true;
+            }
+
             $listElement = Development\Components\ListViewElementRow\render([
                 'elementID' => $Element,
                 'user' => $CurrentUser,
@@ -260,11 +176,16 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
                     'hasTechnologyRequirementMet' => $hasTechnologyRequirementMet,
                     'isUpgradeAvailableNow' => $isUpgradeAvailableNow,
                     'isUpgradeQueueableNow' => $isUpgradeQueueableNow,
-                    'whyUpgradeImpossible' => [ end($blockReason) ],
+                    'whyUpgradeImpossible' => (
+                        !empty($blockReason) ?
+                        [ end($blockReason) ] :
+                        []
+                    ),
                 ],
                 'getUpgradeElementActionLinkHref' => function () use ($Element) {
                     return "?cmd=insert&amp;building={$Element}";
                 },
+                'showInactiveUpgradeActionLink' => $showInactiveUpgradeActionLink,
             ]);
 
             $BuildingPage .= $listElement['componentHTML'];
