@@ -3,25 +3,22 @@
 use UniEngine\Engine\Modules\Development;
 use UniEngine\Engine\Modules\Development\Components\LegacyQueue;
 use UniEngine\Engine\Includes\Helpers\Planets;
+use UniEngine\Engine\Includes\Helpers\Users;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 use UniEngine\Engine\Includes\Helpers\World\Resources;
 
 function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
 {
-    global $_EnginePath, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories,
-           $_SkinPath, $_GameConfig, $_GET, $_Vars_PremiumBuildingPrices, $_Vars_MaxElementLevel, $_Vars_PremiumBuildings;
+    global $_Lang, $_Vars_GameElements, $_Vars_ElementCategories,
+           $_GameConfig, $_GET, $_Vars_PremiumBuildingPrices, $_Vars_MaxElementLevel, $_Vars_PremiumBuildings;
 
     $BuildingPage = '';
 
-    include($_EnginePath.'includes/functions/GetElementTechReq.php');
-    include($_EnginePath.'includes/functions/GetElementPrice.php');
-    include($_EnginePath.'includes/functions/GetRestPrice.php');
     includeLang('worldElements.detailed');
 
     CheckPlanetUsedFields ($CurrentPlanet);
 
     $Now = time();
-    $SubTemplate = gettemplate('buildings_builds_row');
 
     PlanetResourceUpdate($CurrentUser, $CurrentPlanet, $Now);
 
@@ -76,7 +73,9 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
         'user' => $CurrentUser,
         'planet' => $CurrentPlanet,
     ]);
+    $elementsInQueue = $queueStateDetails['queuedElementsCount'];
     $planetFieldsUsageCounter = 0;
+    $hasElementsInQueue = ($elementsInQueue > 0);
 
     foreach ($queueStateDetails['queuedResourcesToUse'] as $resourceKey => $resourceValue) {
         if (Resources\isPlanetaryResource($resourceKey)) {
@@ -91,142 +90,68 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
         $planetFieldsUsageCounter += $elementLevelModifier;
     }
 
+    $isUserOnVacation = isOnVacation($CurrentUser);
+    $hasAvailableFieldsOnPlanet = (
+        ($CurrentPlanet['field_current'] + $planetFieldsUsageCounter) <
+        CalculateMaxPlanetFields($CurrentPlanet)
+    );
+    $isQueueFull = (
+        $elementsInQueue >=
+        Users\getMaxStructuresQueueLength($CurrentUser)
+    );
+
     foreach($_Vars_ElementCategories['build'] as $Element)
     {
         if(in_array($Element, $_Vars_ElementCategories['buildOn'][$CurrentPlanet['planet_type']]))
         {
-            $ElementName = $_Lang['tech'][$Element];
-
             if(($CurrentPlanet['field_current'] + $planetFieldsUsageCounter) < CalculateMaxPlanetFields($CurrentPlanet)) {
                 $RoomIsOk = true;
             } else {
                 $RoomIsOk = false;
             }
 
-            $parse = array();
-            $parse['skinpath'] = $_SkinPath;
-            $parse['i'] = $Element;
-            $BuildingLevel = $CurrentPlanet[$_Vars_GameElements[$Element]];
-            $isElementInQueue = isset(
-                $queueStateDetails['queuedElementLevelModifiers'][$Element]
-            );
-            $elementQueueLevelModifier = (
-                $isElementInQueue ?
-                $queueStateDetails['queuedElementLevelModifiers'][$Element] :
-                0
-            );
+            $blockReason = [];
 
-            $PlanetLevel = (
-                $BuildingLevel +
-                ($elementQueueLevelModifier * -1)
-            );
-
-            $parse['nivel'] = ($BuildingLevel == 0) ? '' : " ({$_Lang['level']} {$PlanetLevel})";
-
-            if (in_array($Element, array(1, 2, 3, 4, 12))) {
-                // Show energy on BuildingPage
-                $thisLevelProduction = getElementProduction(
-                    $Element,
-                    $CurrentPlanet,
-                    $CurrentUser,
-                    [
-                        'useCurrentBoosters' => true,
-                        'currentTimestamp' => $Now,
-                        'customLevel' => $BuildingLevel,
-                        'customProductionFactor' => 10
-                    ]
-                );
-                $nextLevelProduction = getElementProduction(
-                    $Element,
-                    $CurrentPlanet,
-                    $CurrentUser,
-                    [
-                        'useCurrentBoosters' => true,
-                        'currentTimestamp' => $Now,
-                        'customLevel' => ($BuildingLevel + 1),
-                        'customProductionFactor' => 10
-                    ]
-                );
-
-                $energyDifference = ($nextLevelProduction['energy'] - $thisLevelProduction['energy']);
-                $deuteriumDifference = ($nextLevelProduction['deuterium'] - $thisLevelProduction['deuterium']);
-
-                $energyDifferenceFormatted = prettyColorNumber(floor($energyDifference));
-
-                if ($Element >= 1 && $Element <= 3) {
-                    $parse['build_need_diff'] = "(<span class=\"red\">{$_Lang['Energy']}: {$energyDifferenceFormatted}</span>)";
-                } else if ($Element == 4) {
-                    $parse['build_need_diff'] = "(<span class=\"lime\">{$_Lang['Energy']}: +{$energyDifferenceFormatted}</span>)";
-                } else if ($Element == 12) {
-                    $deuteriumDifferenceFormatted = prettyColorNumber(floor($deuteriumDifference));
-
-                    $parse['build_need_diff'] = "(<span class=\"lime\">{$_Lang['Energy']}: +{$energyDifferenceFormatted}</span> | <span class=\"red\">{$_Lang['Deuterium']}: {$deuteriumDifferenceFormatted}</span>)";
-                }
-            }
-
-            $parse['n'] = $ElementName;
-            $parse['Description'] = $_Lang['WorldElements_Detailed'][$Element]['description_short'];
-            $parse['click'] = '';
             $NextBuildLevel = $CurrentPlanet[$_Vars_GameElements[$Element]] + 1;
             $skip = false;
 
             if(IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $Element))
             {
                 $HaveRessources = IsElementBuyable($CurrentUser, $CurrentPlanet, $Element, false);
-                $ElementBuildTime = GetBuildingTime($CurrentUser, $CurrentPlanet, $Element);
-                $parse['time'] = ShowBuildTime($ElementBuildTime);
-                $parse['price'] = GetElementPrice($CurrentUser, $CurrentPlanet, $Element);
-                $parse['rest_price'] = GetRestPrice($CurrentUser, $CurrentPlanet, $Element);
-
-                if($isElementInQueue && $elementQueueLevelModifier != 0)
-                {
-                    $parse['AddLevelPrice'] = "<b>[{$_Lang['level']}: {$NextBuildLevel}]</b><br/>";
-                }
 
                 if($Element == 31)
                 {
                     // Block Lab Upgrade is Research running (and Config dont allow that)
                     if($CurrentUser['techQueue_Planet'] > 0 AND $CurrentUser['techQueue_EndTime'] > 0 AND $_GameConfig['BuildLabWhileRun'] != 1)
                     {
-                        $parse['click'] = "<span class=red>{$_Lang['in_working']}</span>";
+                        $blockReason[] = $_Lang['in_working'];
                     }
                 }
                 if(!empty($_Vars_MaxElementLevel[$Element]))
                 {
                     if($NextBuildLevel > $_Vars_MaxElementLevel[$Element])
                     {
-                        $parse['click'] = "<span class=red>{$_Lang['onlyOneLevel']}</span>";
+                        $blockReason[] = $_Lang['onlyOneLevel'];
                         $skip = true;
                     }
                 }
 
                 if(isset($_Vars_PremiumBuildings[$Element]) && $_Vars_PremiumBuildings[$Element] == 1)
                 {
-                    $parse['rest_price'] = "<br/><font color=\"#7f7f7f\">{$_Lang['ResourcesLeft']}: {$_Lang['DarkEnergy']}";
-                    $parse['price'] = "{$_Lang['Requires']}: {$_Lang['DarkEnergy']} <span class=\"noresources\">";
-                    if($CurrentUser['darkEnergy'] < $_Vars_PremiumBuildingPrices[$Element])
-                    {
-                        if($skip == false)
-                        {
-                            $parse['click'] = "<span class=\"red\">{$_Lang['BuildFirstLevel']}</span>";
-                        }
-                        $parse['price'] .= " <b class=\"red\"> ".prettyNumber($_Vars_PremiumBuildingPrices[$Element])."</b></span> ";
-                        $parse['rest_price'] .= "<b style=\"color: rgb(127, 95, 96);\"> ".prettyNumber($CurrentUser['darkEnergy'] - $_Vars_PremiumBuildingPrices[$Element])."</b>";
+                    if (
+                        $CurrentUser['darkEnergy'] < $_Vars_PremiumBuildingPrices[$Element] &&
+                        $skip == false
+                    ) {
+                        $blockReason[] = $_Lang['BuildFirstLevel'];
                     }
-                    else
-                    {
-                        $parse['price'] .= " <b class=\"lime\"> ".prettyNumber($_Vars_PremiumBuildingPrices[$Element])."</b></span> ";
-                        $parse['rest_price'] .= "<b style=\"color: rgb(95, 127, 108);\"> ".prettyNumber($CurrentUser['darkEnergy'] - $_Vars_PremiumBuildingPrices[$Element])."</b>";
-                    }
-                    $parse['rest_price'] .= '</font>';
                 }
 
                 if(isOnVacation($CurrentUser))
                 {
-                    $parse['click'] = "<span class=\"red\">{$_Lang['ListBox_Disallow_VacationMode']}</span>";
+                    $blockReason[] = $_Lang['ListBox_Disallow_VacationMode'];
                 }
 
-                if($parse['click'] != '')
+                if(!empty($blockReason))
                 {
                     // Don't do anything here
                 }
@@ -238,66 +163,111 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
                         {
                             if($HaveRessources == true)
                             {
-                                $parse['click'] = "<a href=\"?cmd=insert&building={$Element}\" class=\"lime\">{$_Lang['BuildFirstLevel']}</a>";
                             }
                             else
                             {
-                                $parse['click'] = "<span class=\"red\">{$_Lang['BuildFirstLevel']}</span>";
+                                $blockReason[] = $_Lang['BuildFirstLevel'];
                             }
                         }
                         else
                         {
                             if($HaveRessources == true)
                             {
-                                $parse['click'] = "<a href=\"?cmd=insert&building={$Element}\" class=\"lime\">{$_Lang['BuildNextLevel']} {$NextBuildLevel}</a>";
                             }
                             else
                             {
-                                $parse['click'] = "<span class=\"red\">{$_Lang['BuildNextLevel']} {$NextBuildLevel}</span>";
+                                $blockReason[] = "{$_Lang['BuildNextLevel']} " . prettyNumber($NextBuildLevel);
                             }
                         }
                     }
-                    else
-                    {
-                        if($HaveRessources == true)
-                        {
-                            $ThisColor = 'lime';
-                        }
-                        else
-                        {
-                            $ThisColor = 'orange';
-                        }
 
-                        $parse['click'] = "<a href=\"?cmd=insert&building={$Element}\" class=\"{$ThisColor}\">{$_Lang['InBuildQueue']}<br/>({$_Lang['level']} {$NextBuildLevel})</a>";
-                    }
                 }
                 else if($RoomIsOk AND !$CanBuildElement)
                 {
-                    $parse['click'] = "<span class=\"red\">{$_Lang['QueueIsFull']}</span>";
+                    $blockReason[] = $_Lang['QueueIsFull'];
                 }
                 else
                 {
                     if($CurrentPlanet['planet_type'] == 3)
                     {
-                        $parse['click'] = "<span class=\"red\">{$_Lang['NoMoreSpace_Moon']}</span>";
+                        $blockReason[] = $_Lang['NoMoreSpace_Moon'];
                     }
                     else
                     {
-                        $parse['click'] = "<span class=\"red\">{$_Lang['NoMoreSpace']}</span>";
+                        $blockReason[] = $_Lang['NoMoreSpace'];
                     }
                 }
             }
-            else
-            {
-                if($CurrentUser['settings_ExpandedBuildView'] == 0)
-                {
-                    continue;
-                }
-                $parse['click'] = '&nbsp;';
-                $parse['TechRequirementsPlace'] = GetElementTechReq($CurrentUser, $CurrentPlanet, $Element);
-            }
 
-            $BuildingPage .= parsetemplate($SubTemplate, $parse);
+            $elementQueuedLevel = Elements\getElementState($Element, $CurrentPlanet, $CurrentUser)['level'];
+            $isElementInQueue = isset(
+                $queueStateDetails['queuedElementLevelModifiers'][$Element]
+            );
+            $elementQueueLevelModifier = (
+                $isElementInQueue ?
+                $queueStateDetails['queuedElementLevelModifiers'][$Element] :
+                0
+            );
+            $elementCurrentLevel = (
+                $elementQueuedLevel +
+                ($elementQueueLevelModifier * -1)
+            );
+
+            $elementMaxLevel = Elements\getElementMaxUpgradeLevel($Element);
+            $hasReachedMaxLevel = (
+                $elementQueuedLevel >=
+                $elementMaxLevel
+            );
+
+            $hasUpgradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $Element, false);
+
+            $hasTechnologyRequirementMet = IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $Element);
+            $isBlockedByTechResearchProgress = (
+                $Element == 31 &&
+                $CurrentUser['techQueue_Planet'] > 0 &&
+                $CurrentUser['techQueue_EndTime'] > 0 &&
+                !isLabUpgradableWhileInUse()
+            );
+
+            $isUpgradePossible = (!$hasReachedMaxLevel);
+            $isUpgradeQueueable = (
+                $isUpgradePossible &&
+                !$isUserOnVacation &&
+                !$isQueueFull &&
+                $hasAvailableFieldsOnPlanet &&
+                $hasTechnologyRequirementMet &&
+                !$isBlockedByTechResearchProgress
+            );
+            $isUpgradeAvailableNow = (
+                $isUpgradeQueueable &&
+                $hasUpgradeResources
+            );
+            $isUpgradeQueueableNow = (
+                $isUpgradeQueueable &&
+                $hasElementsInQueue
+            );
+
+            $listElement = Development\Components\ListViewElementRow\render([
+                'elementID' => $Element,
+                'user' => $CurrentUser,
+                'planet' => $CurrentPlanet,
+                'timestamp' => $Now,
+                'isQueueActive' => $hasElementsInQueue,
+                'elementDetails' => [
+                    'currentState' => $elementCurrentLevel,
+                    'isInQueue' => $isElementInQueue,
+                    'queueLevelModifier' => $elementQueueLevelModifier,
+                    'hasTechnologyRequirementMet' => $hasTechnologyRequirementMet,
+                    'isUpgradeAvailableNow' => $isUpgradeAvailableNow,
+                    'isUpgradeQueueableNow' => $isUpgradeQueueableNow,
+                    'whyUpgradeImpossible' => [ end($blockReason) ],
+                ],
+                'getUpgradeElementActionLinkHref' => function () use ($Element) {
+                    return "?cmd=insert&amp;building={$Element}";
+                },
+            ]);
+
+            $BuildingPage .= $listElement['componentHTML'];
         }
     }
 
