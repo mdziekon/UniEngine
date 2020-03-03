@@ -14,6 +14,7 @@ call_user_func(function () {
 
     include($includePath . './components/ModernQueue/ModernQueue.component.php');
     include($includePath . './components/LegacyQueue/LegacyQueue.component.php');
+    include($includePath . './components/ListViewElementRow/ListViewElementRow.component.php');
     include($includePath . './components/GridViewElementIcon/GridViewElementIcon.component.php');
     include($includePath . './components/GridViewElementCard/GridViewElementCard.component.php');
     include($includePath . './components/GridViewElementCard/UpgradeRequirements/UpgradeRequirements.component.php');
