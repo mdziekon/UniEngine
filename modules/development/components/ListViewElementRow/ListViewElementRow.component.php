@@ -191,15 +191,26 @@ function render ($props) {
             'orange' => (!$isUpgradeAvailableNow && $isUpgradeQueueableNow),
             'red' => (!$isUpgradeAvailableNow && !$isUpgradeQueueableNow),
         ]);
-        $upgradeActionLinkText = (
-            $isQueueActive ?
-            "{$_Lang['InBuildQueue']}<br/>({$_Lang['level']} " . prettyNumber($elementNextLevelToQueue) . ")" :
-            (
+        $upgradeActionLinkText = '';
+
+        if (Elements\isStructure($elementID)) {
+            $upgradeActionLinkText = (
+                $isQueueActive ?
+                "{$_Lang['InBuildQueue']}<br/>({$_Lang['level']} " . prettyNumber($elementNextLevelToQueue) . ")" :
+                (
+                    $elementNextLevelToQueue === 1 ?
+                    $_Lang['BuildFirstLevel'] :
+                    "{$_Lang['BuildNextLevel']} " . prettyNumber($elementNextLevelToQueue)
+                )
+            );
+        }
+        if (Elements\isTechnology($elementID)) {
+            $upgradeActionLinkText = (
                 $elementNextLevelToQueue === 1 ?
-                $_Lang['BuildFirstLevel'] :
-                "{$_Lang['BuildNextLevel']} " . prettyNumber($elementNextLevelToQueue)
-            )
-        );
+                $_Lang['ResearchBtnLabel'] :
+                "{$_Lang['ResearchBtnLabel']}<br/>({$_Lang['level']} " . prettyNumber($elementNextLevelToQueue) . ")"
+            );
+        }
 
         if ($isUpgradeAvailableNow || $isUpgradeQueueableNow) {
             $subcomponentUpgradeActionLinkHTML = (
