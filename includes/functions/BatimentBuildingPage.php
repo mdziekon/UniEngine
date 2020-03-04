@@ -7,15 +7,14 @@ use UniEngine\Engine\Includes\Helpers\Users;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 use UniEngine\Engine\Includes\Helpers\World\Resources;
 
-function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
-{
+function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser) {
     global $_Lang, $_GET, $_Vars_ElementCategories;
 
     $BuildingPage = '';
 
     includeLang('worldElements.detailed');
 
-    CheckPlanetUsedFields ($CurrentPlanet);
+    CheckPlanetUsedFields($CurrentPlanet);
 
     $Now = time();
 
@@ -204,16 +203,22 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser)
         $CurrentPlanet[$elementKey] -= $elementLevelModifier;
     }
 
+    $tplBodyCache = [
+        'pageBody' => gettemplate('buildings_builds'),
+    ];
     $parse = $_Lang;
 
-    $parse['planet_field_current'] = $CurrentPlanet['field_current'];
-    $parse['planet_field_max'] = CalculateMaxPlanetFields($CurrentPlanet);
-    $parse['field_libre'] = $parse['planet_field_max'] - $CurrentPlanet['field_current'];
+    $parse['Insert_Overview_Fields_Used'] = $CurrentPlanet['field_current'];
+    $parse['Insert_Overview_Fields_Max'] = CalculateMaxPlanetFields($CurrentPlanet);
+    $parse['Insert_Overview_Fields_Available'] = CalculateMaxPlanetFields($CurrentPlanet) - $CurrentPlanet['field_current'];
 
-    $parse['BuildList'] = $queueComponent['componentHTML'];
-    $parse['BuildingsList'] = $BuildingPage;
+    $parse['PHPInject_QueueHTML'] = $queueComponent['componentHTML'];
+    $parse['PHPInject_ElementsListHTML'] = $BuildingPage;
 
-    display(parsetemplate(gettemplate('buildings_builds'), $parse), $_Lang['Builds']);
+    display(
+        parsetemplate($tplBodyCache['pageBody'], $parse),
+        $_Lang['Builds']
+    );
 }
 
 ?>

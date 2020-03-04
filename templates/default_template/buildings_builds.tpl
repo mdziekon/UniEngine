@@ -39,14 +39,17 @@ $(document).ready(function () {
 </script>
 <br/>
 <table width="650">
-    {BuildList}
+    {PHPInject_QueueHTML}
     <tr>
         <th>{BuildingsListView_ListTitle}</th>
         <th>
-            <span class="lime">{planet_field_current}</span> / <span class="red">{planet_field_max}</span> [{BuildingsListView_FieldsLeft}: {field_libre}]
+            <span class="lime">{Insert_Overview_Fields_Used}</span>
+            /
+            <span class="red">{Insert_Overview_Fields_Max}</span>
+            [{BuildingsListView_FieldsLeft}: {Insert_Overview_Fields_Available}]
         </th>
         <th style="width: 100px;">&nbsp;</th>
     </tr>
-    {BuildingsList}
+    {PHPInject_ElementsListHTML}
 </table>
 <br/>
