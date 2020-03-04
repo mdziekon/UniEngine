@@ -8,7 +8,7 @@
                 src="{Data_SkinPath}gebaeude/{Data_ElementID}.gif"
                 width="120"
                 height="120"
-                class="buildImg"
+                class="{Data_ElementImgClass}"
             />
         </a>
     </td>

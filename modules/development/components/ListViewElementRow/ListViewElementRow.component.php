@@ -246,6 +246,10 @@ function render ($props) {
         'Data_ElementID'                            => $elementID,
         'Data_ElementName'                          => $_Lang['tech'][$elementID],
         'Data_ElementDescription'                   => $_Lang['WorldElements_Detailed'][$elementID]['description_short'],
+        'Data_ElementImgClass'                      => classNames([
+            'buildImg' => Elements\isStructure($elementID),
+            'techImg' => Elements\isTechnology($elementID),
+        ]),
 
         'Subcomponent_CurrentStateLabel'            => $subcomponentCurrentStateLabelHTML,
         'Subcomponent_ProductionChange'             => $subcomponentProductionChangeRowHTML,
