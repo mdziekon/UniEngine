@@ -42,9 +42,9 @@ $(document).ready(function () {
 <table width="650">
     {BuildList}
     <tr>
-        <th>{bld_usedcells}</th>
+        <th>{BuildingsListView_ListTitle}</th>
         <th>
-            <span class="lime">{planet_field_current}</span> / <span class="red">{planet_field_max}</span> [{bld_theyare} {field_libre} {bld_cellfree}]
+            <span class="lime">{planet_field_current}</span> / <span class="red">{planet_field_max}</span> [{BuildingsListView_FieldsLeft}: {field_libre}]
         </th>
         <th style="width: 100px;">&nbsp;</th>
     </tr>
