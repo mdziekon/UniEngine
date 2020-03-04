@@ -38,7 +38,6 @@ $(document).ready(function () {
 });
 </script>
 <br/>
-{BuildListScript}
 <table width="650">
     {BuildList}
     <tr>
