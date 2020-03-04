@@ -8,11 +8,8 @@ use UniEngine\Engine\Includes\Helpers\World\Resources;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 
 function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
-    global $_EnginePath, $_Lang, $_Vars_ElementCategories, $_GET;
+    global $_Lang, $_GET, $_Vars_ElementCategories;
 
-    include($_EnginePath.'includes/functions/GetElementTechReq.php');
-    include($_EnginePath.'includes/functions/GetElementPrice.php');
-    include($_EnginePath.'includes/functions/GetRestPrice.php');
     includeLang('worldElements.detailed');
 
     $Now = time();
@@ -237,7 +234,11 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
         $CurrentUser[$elementKey] -= $elementLevelModifier;
     }
 
+    $tplBodyCache = [
+        'pageBody' => gettemplate('buildings_research'),
+    ];
     $PageParse = $_Lang;
+
     $PageParse['technolist'] = $TechnoList;
     $PageParse['Data_QueueComponentHTML'] = $queueComponent['componentHTML'];
 
@@ -256,7 +257,10 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
         );
     }
 
-    display(parsetemplate(gettemplate('buildings_research'), $PageParse), $_Lang['Research']);
+    display(
+        parsetemplate($tplBodyCache['pageBody'], $PageParse),
+        $_Lang['Research']
+    );
 }
 
 ?>
