@@ -16,6 +16,8 @@ call_user_func(function () {
     include($includePath . './components/LegacyQueue/LegacyQueue.component.php');
     include($includePath . './components/ListViewElementRow/ListViewElementRow.component.php');
     include($includePath . './components/ListViewElementRow/UpgradeProductionChange/UpgradeProductionChange.component.php');
+    include($includePath . './components/ListViewElementRow/UpgradeResourcesCost/UpgradeResourcesCost.component.php');
+    include($includePath . './components/ListViewElementRow/UpgradeResourcesRest/UpgradeResourcesRest.component.php');
     include($includePath . './components/GridViewElementIcon/GridViewElementIcon.component.php');
     include($includePath . './components/GridViewElementCard/GridViewElementCard.component.php');
     include($includePath . './components/GridViewElementCard/UpgradeRequirements/UpgradeRequirements.component.php');
