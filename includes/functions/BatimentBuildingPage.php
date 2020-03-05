@@ -174,6 +174,7 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser) {
                 'isInQueue' => $isElementInQueue,
                 'queueLevelModifier' => $elementQueueLevelModifier,
                 'hasTechnologyRequirementMet' => $hasTechnologyRequirementMet,
+                'isUpgradePossible' => $isUpgradePossible,
                 'isUpgradeAvailableNow' => $isUpgradeAvailableNow,
                 'isUpgradeQueueableNow' => $isUpgradeQueueableNow,
                 'whyUpgradeImpossible' => (

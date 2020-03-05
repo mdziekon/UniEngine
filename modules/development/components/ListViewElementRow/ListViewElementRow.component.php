@@ -16,6 +16,7 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 //              - isInQueue (Boolean)
 //              - queueLevelModifier (Number)
 //              - hasTechnologyRequirementMet (Boolean)
+//              - isUpgradePossible (Boolean)
 //              - isUpgradeAvailableNow (Boolean)
 //              - isUpgradeQueueableNow (Boolean)
 //              - whyUpgradeImpossible (String[])
@@ -62,6 +63,7 @@ function render ($props) {
     $isInQueue = $elementDetails['isInQueue'];
     $elementQueueLevelModifier = $elementDetails['queueLevelModifier'];
     $hasTechnologyRequirementMet = $elementDetails['hasTechnologyRequirementMet'];
+    $isUpgradePossible = $elementDetails['isUpgradePossible'];
     $isUpgradeAvailableNow = $elementDetails['isUpgradeAvailableNow'];
     $isUpgradeQueueableNow = $elementDetails['isUpgradeQueueableNow'];
     $whyUpgradeImpossible = $elementDetails['whyUpgradeImpossible'];

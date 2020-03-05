@@ -205,6 +205,7 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
                 'isInQueue' => $isElementInQueue,
                 'queueLevelModifier' => $elementQueueLevelModifier,
                 'hasTechnologyRequirementMet' => $hasTechnologyRequirementMet,
+                'isUpgradePossible' => $isUpgradePossible,
                 'isUpgradeAvailableNow' => $isUpgradeAvailableNow,
                 'isUpgradeQueueableNow' => $isUpgradeQueueableNow,
                 'whyUpgradeImpossible' => (
