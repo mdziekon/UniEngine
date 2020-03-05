@@ -30,7 +30,8 @@
                 <span>{Lang_ResourcesRest}:</span>
                 {Subcomponent_UpgradeResourcesLeftoverRow}
             </span>
-
+            <br/>
+            <span>{Lang_UpgradeTime}:</span>
             {Subcomponent_UpgradeTimeRow}
         </span>
         <span class="{Data_ProductionChangeLine_HideClass}">

@@ -105,7 +105,7 @@ function render ($props) {
     if ($isUpgradePossible && $hasTechnologyRequirementMet) {
         $elementUpgradeTime = GetBuildingTime($user, $planet, $elementID);
 
-        $subcomponentUpgradeTimeRowHTML = ShowBuildTime($elementUpgradeTime);
+        $subcomponentUpgradeTimeRowHTML = pretty_time($elementUpgradeTime);
         $subcomponentUpgradeCostRowHTML = UpgradeResourcesCost\render($props)['componentHTML'];
         $subcomponentUpgradeResourcesLeftoverRowHTML = UpgradeResourcesRest\render($props)['componentHTML'];
 
@@ -209,6 +209,7 @@ function render ($props) {
 
         'Lang_ResourcesCost'                        => $_Lang['Requires'],
         'Lang_ResourcesRest'                        => $_Lang['ResourcesLeft'],
+        'Lang_UpgradeTime'                          => $_Lang['ConstructionTime'],
         'Lang_ProductionChange'                     => $_Lang['ProductionChange'],
     ];
 
