@@ -36,8 +36,6 @@ function render ($props) {
     global $_EnginePath, $_SkinPath, $_Lang, $_Vars_ElementCategories;
 
     include_once($_EnginePath . 'includes/functions/GetElementTechReq.php');
-    include_once($_EnginePath . 'includes/functions/GetElementPrice.php');
-    include_once($_EnginePath . 'includes/functions/GetRestPrice.php');
 
     $localTemplateLoader = createLocalTemplateLoader(__DIR__);
 
