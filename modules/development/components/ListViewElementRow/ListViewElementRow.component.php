@@ -69,6 +69,7 @@ function render ($props) {
     $elementQueuedLevel = ($elementCurrentState + $elementQueueLevelModifier);
     $elementNextLevelToQueue = ($elementQueuedLevel + 1);
     $hasUpgradeImpossibleReason = count($whyUpgradeImpossible) > 0;
+    $isProductionRelatedElement = in_array($elementID, $_Vars_ElementCategories['prod']);
 
     if (!$hasTechnologyRequirementMet && $user['settings_ExpandedBuildView'] == 0) {
         return [
@@ -85,44 +86,8 @@ function render ($props) {
     $subcomponentTechnologyRequirementsListHTML = '';
     $subcomponentUpgradeActionLinkHTML = '';
 
-    if (in_array($elementID, $_Vars_ElementCategories['prod'])) {
-        $thisLevelProduction = getElementProduction(
-            $elementID,
-            $planet,
-            $user,
-            [
-                'useCurrentBoosters' => true,
-                'currentTimestamp' => $timestamp,
-                'customLevel' => $elementQueuedLevel,
-                'customProductionFactor' => 10
-            ]
-        );
-        $nextLevelProduction = getElementProduction(
-            $elementID,
-            $planet,
-            $user,
-            [
-                'useCurrentBoosters' => true,
-                'currentTimestamp' => $timestamp,
-                'customLevel' => $elementNextLevelToQueue,
-                'customProductionFactor' => 10
-            ]
-        );
-
-        $energyDifference = ($nextLevelProduction['energy'] - $thisLevelProduction['energy']);
-        $deuteriumDifference = ($nextLevelProduction['deuterium'] - $thisLevelProduction['deuterium']);
-
-        $energyDifferenceFormatted = prettyColorNumber(floor($energyDifference));
-
-        if ($elementID >= 1 && $elementID <= 3) {
-            $subcomponentProductionChangeRowHTML = "(<span class=\"red\">{$_Lang['Energy']}: {$energyDifferenceFormatted}</span>)";
-        } else if ($elementID == 4) {
-            $subcomponentProductionChangeRowHTML = "(<span class=\"lime\">{$_Lang['Energy']}: +{$energyDifferenceFormatted}</span>)";
-        } else if ($elementID == 12) {
-            $deuteriumDifferenceFormatted = prettyColorNumber(floor($deuteriumDifference));
-
-            $subcomponentProductionChangeRowHTML = "(<span class=\"lime\">{$_Lang['Energy']}: +{$energyDifferenceFormatted}</span> | <span class=\"red\">{$_Lang['Deuterium']}: {$deuteriumDifferenceFormatted}</span>)";
-        }
+    if ($isProductionRelatedElement) {
+        $subcomponentProductionChangeRowHTML = UpgradeProductionChange\render($props)['componentHTML'];
     }
 
     if ($elementCurrentState > 0) {
@@ -251,6 +216,10 @@ function render ($props) {
             'techImg' => Elements\isTechnology($elementID),
         ]),
 
+        'Data_ProductionChangeLine_HideClass'       => classNames([
+            'hide' => !$isProductionRelatedElement,
+        ]),
+
         'Subcomponent_CurrentStateLabel'            => $subcomponentCurrentStateLabelHTML,
         'Subcomponent_ProductionChange'             => $subcomponentProductionChangeRowHTML,
         'Subcomponent_UpgradeLevelHeaderRow'        => $subcomponentUpgradeLevelHeaderRowHTML,
@@ -259,6 +228,8 @@ function render ($props) {
         'Subcomponent_UpgradeResourcesLeftoverRow'  => $subcomponentUpgradeResourcesLeftoverRowHTML,
         'Subcomponent_TechnologyRequirementsList'   => $subcomponentTechnologyRequirementsListHTML,
         'Subcomponent_UpgradeActionLink'            => $subcomponentUpgradeActionLinkHTML,
+
+        'Lang_ProductionChange'                     => $_Lang['ProductionChange'],
     ];
 
     $componentHTML = parsetemplate($tplBodyCache['body'], $componentTPLData);

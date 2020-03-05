@@ -17,7 +17,6 @@
             {Data_ElementName}
         </a>
         {Subcomponent_CurrentStateLabel}
-        {Subcomponent_ProductionChange}
         <br/>
         {Data_ElementDescription}
         <br/>
@@ -26,6 +25,11 @@
         {Subcomponent_UpgradeCostRow}
         {Subcomponent_UpgradeResourcesLeftoverRow}
         {Subcomponent_UpgradeTimeRow}
+        <span class="{Data_ProductionChangeLine_HideClass}">
+            <br/>
+            <span>{Lang_ProductionChange}:</span>
+            {Subcomponent_ProductionChange}
+        </span>
 
         {Subcomponent_TechnologyRequirementsList}
     </td>

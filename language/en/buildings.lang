@@ -146,6 +146,7 @@ $_Lang['dispo']                                 = "Available";
 $_Lang['Requirements']                          = "Requirements: ";
 $_Lang['Requires']                              = "Resource requirements";
 $_Lang['ResourcesLeft']                         = "Resources left";
+$_Lang['ProductionChange']                      = 'Production change';
 $_Lang['TechRequirements']                      = 'Technological requirements';
 $_Lang['ResearchBtnLabel']                      = "Research";
 $_Lang['ConstructionTime']                      = "Construction time";
