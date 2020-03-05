@@ -207,7 +207,15 @@ function render ($props) {
 
         'Lang_ResourcesCost'                        => $_Lang['Requires'],
         'Lang_ResourcesRest'                        => $_Lang['ResourcesLeft'],
-        'Lang_UpgradeTime'                          => $_Lang['ConstructionTime'],
+        'Lang_UpgradeTime'                          => (
+            Elements\isStructure($elementID) ?
+            $_Lang['InfoBox_ConstructionTime'] :
+            (
+                Elements\isTechnology($elementID) ?
+                $_Lang['InfoBox_ResearchTime'] :
+                ''
+            )
+        ),
         'Lang_ProductionChange'                     => $_Lang['ProductionChange'],
     ];
 
