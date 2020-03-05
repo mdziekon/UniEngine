@@ -85,11 +85,10 @@ function render ($props) {
             $elementLevel += 1;
         }
 
-        $elementCancellableClass = (
-            !Elements\isCancellableOnceInProgress($elementID) ?
-            'premblock' :
-            ''
-        );
+        $elementCancellableClass = classNames([
+            'premblock' => !Elements\isCancellableOnceInProgress($elementID),
+        ]);
+
         $elementModeLabelText = (
             Elements\isStructure($elementID) ?
             (
@@ -103,11 +102,10 @@ function render ($props) {
                 ''
             )
         );
-        $elementModeLabelColorClass = (
-            $isUpgrading ?
-            'lime' :
-            'red'
-        );
+        $elementModeLabelColorClass = classNames([
+            'lime' => $isUpgrading,
+            'red' => !$isUpgrading,
+        ]);
         $elementCancelButtonText = (
             $isFirstQueueElement ?
             (
