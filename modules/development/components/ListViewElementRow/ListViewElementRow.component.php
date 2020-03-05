@@ -86,7 +86,7 @@ function render ($props) {
     $subcomponentTechnologyRequirementsListHTML = '';
     $subcomponentUpgradeActionLinkHTML = '';
 
-    if ($isProductionRelatedElement) {
+    if ($isUpgradePossible && $isProductionRelatedElement) {
         $subcomponentProductionChangeRowHTML = UpgradeProductionChange\render($props)['componentHTML'];
     }
 
@@ -190,7 +190,7 @@ function render ($props) {
         ]),
 
         'Data_ProductionChangeLine_HideClass'       => classNames([
-            'hide' => !$isProductionRelatedElement,
+            'hide' => !($isUpgradePossible && $isProductionRelatedElement),
         ]),
         'Data_UpgradeDetailsLines_HideClass'        => classNames([
             'hide' => !($isUpgradePossible && $hasTechnologyRequirementMet),
