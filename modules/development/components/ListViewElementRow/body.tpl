@@ -24,8 +24,8 @@
         <br/>
         {Subcomponent_UpgradeLevelHeaderRow}
         {Subcomponent_UpgradeCostRow}
-        {Subcomponent_UpgradeTimeRow}
         {Subcomponent_UpgradeResourcesLeftoverRow}
+        {Subcomponent_UpgradeTimeRow}
 
         {Subcomponent_TechnologyRequirementsList}
     </td>
