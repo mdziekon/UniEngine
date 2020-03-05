@@ -33,7 +33,7 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 //      - componentHTML (String)
 //
 function render ($props) {
-    global $_EnginePath, $_SkinPath, $_Lang, $_Vars_PremiumBuildingPrices, $_Vars_ElementCategories;
+    global $_EnginePath, $_SkinPath, $_Lang, $_Vars_ElementCategories;
 
     include_once($_EnginePath . 'includes/functions/GetElementTechReq.php');
     include_once($_EnginePath . 'includes/functions/GetElementPrice.php');
@@ -102,39 +102,12 @@ function render ($props) {
         );
     }
 
-    if ($hasTechnologyRequirementMet) {
+    if ($isUpgradePossible && $hasTechnologyRequirementMet) {
         $elementUpgradeTime = GetBuildingTime($user, $planet, $elementID);
 
         $subcomponentUpgradeTimeRowHTML = ShowBuildTime($elementUpgradeTime);
-
-        if (!Elements\isPremiumStructure($elementID)) {
-            $subcomponentUpgradeCostRowHTML = GetElementPrice($user, $planet, $elementID);
-            $subcomponentUpgradeResourcesLeftoverRowHTML = GetRestPrice($user, $planet, $elementID);
-        } else {
-            $resourceDiffValue = $user['darkEnergy'] - $_Vars_PremiumBuildingPrices[$elementID];
-            $resourceDiffCostColor = (
-                $resourceDiffValue < 0 ?
-                'red' :
-                'lime'
-            );
-            $resourceDiffRestColor = (
-                $resourceDiffValue < 0 ?
-                'rgb(127, 95, 96)' :
-                'rgb(95, 127, 108)'
-            );
-
-            $subcomponentUpgradeCostRowHTML = (
-                "{$_Lang['Requires']}: {$_Lang['DarkEnergy']} <span class=\"noresources\">" .
-                " <b class=\"{$resourceDiffCostColor}\"> " . prettyNumber($_Vars_PremiumBuildingPrices[$elementID]) . "</b></span> "
-            );
-
-            $subcomponentUpgradeResourcesLeftoverRowHTML = (
-                "<br/>" .
-                "<font color=\"#7f7f7f\">{$_Lang['ResourcesLeft']}: {$_Lang['DarkEnergy']}" .
-                "<b style=\"color: {$resourceDiffRestColor};\"> " . prettyNumber($resourceDiffValue) . "</b>" .
-                "</font>"
-            );
-        }
+        $subcomponentUpgradeCostRowHTML = UpgradeResourcesCost\render($props)['componentHTML'];
+        $subcomponentUpgradeResourcesLeftoverRowHTML = UpgradeResourcesRest\render($props)['componentHTML'];
 
         if ($isInQueue && $elementQueueLevelModifier != 0) {
             $subcomponentUpgradeLevelHeaderRowHTML = (
@@ -221,6 +194,9 @@ function render ($props) {
         'Data_ProductionChangeLine_HideClass'       => classNames([
             'hide' => !$isProductionRelatedElement,
         ]),
+        'Data_UpgradeDetailsLines_HideClass'        => classNames([
+            'hide' => !($isUpgradePossible && $hasTechnologyRequirementMet),
+        ]),
 
         'Subcomponent_CurrentStateLabel'            => $subcomponentCurrentStateLabelHTML,
         'Subcomponent_ProductionChange'             => $subcomponentProductionChangeRowHTML,
@@ -231,6 +207,8 @@ function render ($props) {
         'Subcomponent_TechnologyRequirementsList'   => $subcomponentTechnologyRequirementsListHTML,
         'Subcomponent_UpgradeActionLink'            => $subcomponentUpgradeActionLinkHTML,
 
+        'Lang_ResourcesCost'                        => $_Lang['Requires'],
+        'Lang_ResourcesRest'                        => $_Lang['ResourcesLeft'],
         'Lang_ProductionChange'                     => $_Lang['ProductionChange'],
     ];
 

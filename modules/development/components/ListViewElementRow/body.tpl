@@ -20,11 +20,19 @@
         <br/>
         {Data_ElementDescription}
         <br/>
-        <br/>
-        {Subcomponent_UpgradeLevelHeaderRow}
-        {Subcomponent_UpgradeCostRow}
-        {Subcomponent_UpgradeResourcesLeftoverRow}
-        {Subcomponent_UpgradeTimeRow}
+        <span class="{Data_UpgradeDetailsLines_HideClass}">
+            <br/>
+            {Subcomponent_UpgradeLevelHeaderRow}
+            <span>{Lang_ResourcesCost}:</span>
+            {Subcomponent_UpgradeCostRow}
+            <br/>
+            <span style="color: #7f7f7f;">
+                <span>{Lang_ResourcesRest}:</span>
+                {Subcomponent_UpgradeResourcesLeftoverRow}
+            </span>
+
+            {Subcomponent_UpgradeTimeRow}
+        </span>
         <span class="{Data_ProductionChangeLine_HideClass}">
             <br/>
             <span>{Lang_ProductionChange}:</span>
