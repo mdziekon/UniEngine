@@ -63,6 +63,7 @@ $_Lang['Queue_Mode_Destroy_1+']     = 'Wyburz';
 $_Lang['Queue_Mode_Build_1+']       = 'Buduj';
 $_Lang['Queue_Mode_Destroy_1']      = 'Wyburzanie';
 $_Lang['Queue_Mode_Build_1']        = 'Budowa';
+$_Lang['Queue_Mode_Research_1']     = 'Badanie';
 $_Lang['Queue_CantCancel_Premium']  = 'Nie można przerwać budowy, która wymagała Ciemnej Energii!';
 $_Lang['Queue_ConfirmCancel']       = 'Czy jesteś pewien, że chcesz anulować zadanie?';
 $_Lang['Queue_Cancel_CantCancel']   = 'Nie można przerwać';

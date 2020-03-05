@@ -61,17 +61,12 @@ function render ($props) {
             $elementLevel += 1;
         }
 
-        $elementCancellableClass = (
-            !Elements\isCancellableOnceInProgress($elementID) ?
-            'premblock' :
-            ''
-        );
-
-        $hideIsDowngradeLabelClass = (
-            $isUpgrading ?
-            'hide' :
-            ''
-        );
+        $elementCancellableClass = classNames([
+            'premblock' => !Elements\isCancellableOnceInProgress($elementID),
+        ]);
+        $hideIsDowngradeLabelClass = classNames([
+            'hide' => $isUpgrading,
+        ]);
 
         $elementChronoAppletScript = '';
 

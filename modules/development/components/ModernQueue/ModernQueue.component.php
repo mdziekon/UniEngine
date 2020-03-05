@@ -85,21 +85,27 @@ function render ($props) {
             $elementLevel += 1;
         }
 
-        $elementCancellableClass = (
-            !Elements\isCancellableOnceInProgress($elementID) ?
-            'premblock' :
-            ''
-        );
+        $elementCancellableClass = classNames([
+            'premblock' => !Elements\isCancellableOnceInProgress($elementID),
+        ]);
+
         $elementModeLabelText = (
-            $isUpgrading ?
-            $_Lang['Queue_Mode_Build_1'] :
-            $_Lang['Queue_Mode_Destroy_1']
+            Elements\isStructure($elementID) ?
+            (
+                $isUpgrading ?
+                $_Lang['Queue_Mode_Build_1'] :
+                $_Lang['Queue_Mode_Destroy_1']
+            ) :
+            (
+                Elements\isTechnology($elementID) ?
+                $_Lang['Queue_Mode_Research_1'] :
+                ''
+            )
         );
-        $elementModeLabelColorClass = (
-            $isUpgrading ?
-            'lime' :
-            'red'
-        );
+        $elementModeLabelColorClass = classNames([
+            'lime' => $isUpgrading,
+            'red' => !$isUpgrading,
+        ]);
         $elementCancelButtonText = (
             $isFirstQueueElement ?
             (

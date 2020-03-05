@@ -66,6 +66,7 @@ $_Lang['Queue_Mode_Destroy_1+']                 = 'Tear down';
 $_Lang['Queue_Mode_Build_1+']                   = 'Upgrade';
 $_Lang['Queue_Mode_Destroy_1']                  = 'Tearing down';
 $_Lang['Queue_Mode_Build_1']                    = 'Upgrading';
+$_Lang['Queue_Mode_Research_1']                 = 'Upgrading';
 $_Lang['Queue_CantCancel_Premium']              = 'You cannot cancel construction which required Dark Energy!';
 $_Lang['Queue_ConfirmCancel']                   = 'Are you sure you want to cancel this task?';
 $_Lang['Queue_Cancel_CantCancel']               = 'Cannot be cancelled';
