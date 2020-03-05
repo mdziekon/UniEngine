@@ -8,17 +8,16 @@ use UniEngine\Engine\Includes\Helpers\World\Resources;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 
 function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
-    global $_EnginePath, $_Lang, $_Vars_ElementCategories, $_SkinPath, $_GET;
+    global $_Lang, $_GET, $_Vars_ElementCategories;
 
-    include($_EnginePath.'includes/functions/GetElementTechReq.php');
-    include($_EnginePath.'includes/functions/GetElementPrice.php');
-    include($_EnginePath.'includes/functions/GetRestPrice.php');
     includeLang('worldElements.detailed');
 
     $Now = time();
+    $isUserOnVacation = isOnVacation($CurrentUser);
+    $hasResearchLab = Planets\Elements\hasResearchLab($CurrentPlanet);
 
     // Break on "no lab"
-    if (!Planets\Elements\hasResearchLab($CurrentPlanet)) {
+    if (!$hasResearchLab) {
         message($_Lang['no_laboratory'], $_Lang['Research']);
     }
 
@@ -81,9 +80,6 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
 
     $researchQueue = Planets\Queues\Research\parseQueueString($ResearchPlanet['techQueue']);
     $researchQueueLength = count($researchQueue);
-    $isQueueFull = ($researchQueueLength >= Users\getMaxResearchQueueLength($CurrentUser));
-    $isResearchInProgress = ($researchQueueLength > 0);
-    $isCurrentPlanetResearchPlanet = ($ResearchPlanet['id'] == $CurrentPlanet['id']);
 
     $queueComponent = LegacyQueue\render([
         'queue' => $researchQueue,
@@ -112,6 +108,16 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
         'planet' => $CurrentPlanet,
     ]);
 
+    $elementsInQueue = $queueStateDetails['queuedElementsCount'];
+    $isQueueFull = ($researchQueueLength >= Users\getMaxResearchQueueLength($CurrentUser));
+    $hasElementsInQueue = ($elementsInQueue > 0);
+    $isResearchInProgress = ($researchQueueLength > 0);
+    $canQueueResearchOnThisPlanet = (
+        !$isResearchInProgress ||
+        $ResearchPlanet['id'] == $CurrentPlanet['id']
+    );
+    $isUpgradeBlockedByLabUpgradeInProgress = $hasPlanetsWithUnfinishedLabUpgrades;
+
     foreach ($queueStateDetails['queuedResourcesToUse'] as $resourceKey => $resourceValue) {
         if (Resources\isPlanetaryResource($resourceKey)) {
             $CurrentPlanet[$resourceKey] -= $resourceValue;
@@ -124,13 +130,9 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
         $CurrentUser[$elementKey] += $elementLevelModifier;
     }
 
-    $TechRowTPL = gettemplate('buildings_research_row');
-
     $TechnoList = '';
     foreach($_Vars_ElementCategories['tech'] as $elementID) {
-        $elementKey = _getElementUserKey($elementID);
-
-        $queuedLevel = $CurrentUser[$elementKey];
+        $elementQueuedLevel = Elements\getElementState($elementID, $CurrentPlanet, $CurrentUser)['level'];
         $isElementInQueue = isset(
             $queueStateDetails['queuedElementLevelModifiers'][$elementID]
         );
@@ -139,99 +141,86 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
             $queueStateDetails['queuedElementLevelModifiers'][$elementID] :
             0
         );
-        $currentElementLevel = ($queuedLevel - $elementQueueLevelModifier);
-
-        $RowParse = $_Lang;
-        $RowParse['skinpath'] = $_SkinPath;
-        $RowParse['tech_id'] = $elementID;
-        $RowParse['tech_level'] = ($currentElementLevel == 0) ? '' : "({$_Lang['level']} {$currentElementLevel})";
-        $RowParse['tech_name'] = $_Lang['tech'][$elementID];
-        $RowParse['tech_descr'] = $_Lang['WorldElements_Detailed'][$elementID]['description_short'];
-
-        if (!IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $elementID)) {
-            if ($CurrentUser['settings_ExpandedBuildView'] == 0) {
-                continue;
-            }
-
-            $RowParse['tech_link'] = '&nbsp;';
-            $RowParse['TechRequirementsPlace'] = GetElementTechReq($CurrentUser, $CurrentPlanet, $elementID);
-
-            $TechnoList .= parsetemplate($TechRowTPL, $RowParse);
-
-            continue;
-        }
-
-        $CanBeDone = IsElementBuyable($CurrentUser, $CurrentPlanet, $elementID, false);
-        $SearchTime = GetBuildingTime($CurrentUser, $CurrentPlanet, $elementID);
-        $RowParse['tech_price'] = GetElementPrice($CurrentUser, $CurrentPlanet, $elementID);
-        $RowParse['search_time'] = ShowBuildTime($SearchTime);
-        $RowParse['tech_restp'] = GetRestPrice($CurrentUser, $CurrentPlanet, $elementID, true);
-
-        $upgradeNextLevel = 1 + $queuedLevel;
-
-        if ($isElementInQueue) {
-            $RowParse['AddLevelPrice'] = "<b>[{$_Lang['level']}: {$upgradeNextLevel}]</b><br/>";
-        }
-
-        if (isOnVacation($CurrentUser)) {
-            $TechnoLink = "<span class=\"red\">{$_Lang['ListBox_Disallow_VacationMode']}</span>";
-            $RowParse['tech_link'] = $TechnoLink;
-
-            $TechnoList .= parsetemplate($TechRowTPL, $RowParse);
-
-            continue;
-        }
-
-        if (
-            (
-                $isResearchInProgress &&
-                !$isCurrentPlanetResearchPlanet
-            ) ||
-            $hasPlanetsWithUnfinishedLabUpgrades
-        ) {
-            $RowParse['tech_link'] = '&nbsp;';
-
-            $TechnoList .= parsetemplate($TechRowTPL, $RowParse);
-
-            continue;
-        }
-
-        if ($isQueueFull) {
-            $TechnoLink = "<span class=\"red\">{$_Lang['QueueIsFull']}</span>";
-            $RowParse['tech_link'] = $TechnoLink;
-
-            $TechnoList .= parsetemplate($TechRowTPL, $RowParse);
-
-            continue;
-        }
-
-        $linkLabel = (
-            ($upgradeNextLevel == 1) ?
-            $_Lang['ResearchBtnLabel'] :
-            "{$_Lang['ResearchBtnLabel']}<br/>{$_Lang['level']} {$upgradeNextLevel}"
+        $elementCurrentLevel = (
+            $elementQueuedLevel +
+            ($elementQueueLevelModifier * -1)
         );
 
-        if (!$isResearchInProgress && !$CanBeDone) {
-            // Nothing queued and not enough resources to start research
+        $elementMaxLevel = Elements\getElementMaxUpgradeLevel($elementID);
+        $hasReachedMaxLevel = (
+            $elementQueuedLevel >=
+            $elementMaxLevel
+        );
 
-            $TechnoLink = "<span class=\"red\">{$linkLabel}</span>";
-            $RowParse['tech_link'] = $TechnoLink;
+        $hasUpgradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $elementID, false);
 
-            $TechnoList .= parsetemplate($TechRowTPL, $RowParse);
+        $hasTechnologyRequirementMet = IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $elementID);
 
-            continue;
+        $isUpgradePossible = (!$hasReachedMaxLevel);
+        $isUpgradeQueueable = (
+            $isUpgradePossible &&
+            !$isUserOnVacation &&
+            !$isQueueFull &&
+            $hasResearchLab &&
+            $canQueueResearchOnThisPlanet &&
+            $hasTechnologyRequirementMet &&
+            !$isUpgradeBlockedByLabUpgradeInProgress
+        );
+        $isUpgradeAvailableNow = (
+            $isUpgradeQueueable &&
+            $hasUpgradeResources
+        );
+        $isUpgradeQueueableNow = (
+            $isUpgradeQueueable &&
+            $hasElementsInQueue
+        );
+
+        $blockReason = [];
+        $showInactiveUpgradeActionLink = false;
+
+        if ($hasReachedMaxLevel) {
+            $blockReason[] = $_Lang['ListBox_Disallow_MaxLevelReached'];
+        }
+        if (!$hasResearchLab) {
+            $blockReason[] = $_Lang['ListBox_Disallow_NoLab'];
+        }
+        if ($isQueueFull) {
+            $blockReason[] = $_Lang['ListBox_Disallow_QueueIsFull'];
+        }
+        if ($isUserOnVacation) {
+            $blockReason[] = $_Lang['ListBox_Disallow_VacationMode'];
+        }
+        if ($isUpgradeQueueable && !$hasUpgradeResources) {
+            $showInactiveUpgradeActionLink = true;
         }
 
-        $linkLabelColor = ($CanBeDone ? 'lime' : 'orange');
+        $listElement = Development\Components\ListViewElementRow\render([
+            'elementID' => $elementID,
+            'user' => $CurrentUser,
+            'planet' => $CurrentPlanet,
+            'timestamp' => $Now,
+            'isQueueActive' => $hasElementsInQueue,
+            'elementDetails' => [
+                'currentState' => $elementCurrentLevel,
+                'isInQueue' => $isElementInQueue,
+                'queueLevelModifier' => $elementQueueLevelModifier,
+                'hasTechnologyRequirementMet' => $hasTechnologyRequirementMet,
+                'isUpgradePossible' => $isUpgradePossible,
+                'isUpgradeAvailableNow' => $isUpgradeAvailableNow,
+                'isUpgradeQueueableNow' => $isUpgradeQueueableNow,
+                'whyUpgradeImpossible' => (
+                    !empty($blockReason) ?
+                    [ end($blockReason) ] :
+                    []
+                ),
+            ],
+            'getUpgradeElementActionLinkHref' => function () use ($elementID) {
+                return "buildings.php?mode=research&amp;cmd=search&amp;tech={$elementID}";
+            },
+            'showInactiveUpgradeActionLink' => $showInactiveUpgradeActionLink,
+        ]);
 
-        $linkURL = "buildings.php?mode=research&cmd=search&tech={$elementID}";
-        $TechnoLink = "<a href=\"{$linkURL}\"><span class=\"{$linkLabelColor}\">{$linkLabel}</span></a>";
-
-        $RowParse['tech_link'] = $TechnoLink;
-
-        $TechnoList .= parsetemplate($TechRowTPL, $RowParse);
-
-        continue;
+        $TechnoList .= $listElement['componentHTML'];
     }
 
     foreach ($queueStateDetails['queuedResourcesToUse'] as $resourceKey => $resourceValue) {
@@ -246,11 +235,15 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
         $CurrentUser[$elementKey] -= $elementLevelModifier;
     }
 
+    $tplBodyCache = [
+        'pageBody' => gettemplate('buildings_research'),
+    ];
     $PageParse = $_Lang;
+
     $PageParse['technolist'] = $TechnoList;
     $PageParse['Data_QueueComponentHTML'] = $queueComponent['componentHTML'];
 
-    if ($isResearchInProgress && !$isCurrentPlanetResearchPlanet) {
+    if (!$canQueueResearchOnThisPlanet) {
         $PageParse['Insert_QueueInfo'] = parsetemplate(
             gettemplate('_singleRow'),
             [
@@ -265,7 +258,10 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
         );
     }
 
-    display(parsetemplate(gettemplate('buildings_research'), $PageParse), $_Lang['Research']);
+    display(
+        parsetemplate($tplBodyCache['pageBody'], $PageParse),
+        $_Lang['Research']
+    );
 }
 
 ?>
