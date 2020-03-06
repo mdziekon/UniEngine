@@ -107,15 +107,6 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     $hasElementsInQueue = ($elementsInQueue > 0);
     $isUserOnVacation = isOnVacation($CurrentUser);
 
-    $resourceLabels = [
-        'metal'         => $_Lang['Metal'],
-        'crystal'       => $_Lang['Crystal'],
-        'deuterium'     => $_Lang['Deuterium'],
-        'energy'        => $_Lang['Energy'],
-        'energy_max'    => $_Lang['Energy'],
-        'darkEnergy'    => $_Lang['DarkEnergy']
-    ];
-
     $elementsDestructionDetails = [];
 
     foreach($_Vars_ElementCategories['build'] as $ElementID) {
@@ -212,44 +203,12 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         }
 
         if ($isDowngradePossible) {
-            $downgradeCost = Elements\calculatePurchaseCost(
-                $ElementID,
-                Elements\getElementState($ElementID, $CurrentPlanet, $CurrentUser),
-                [
-                    'purchaseMode' => Elements\PurchaseMode::Downgrade
-                ]
-            );
-
-            $elementDowngradeResources = [];
-
-            foreach ($downgradeCost as $costResourceKey => $costValue) {
-                $currentResourceState = Resources\getResourceState(
-                    $costResourceKey,
-                    $CurrentUser,
-                    $CurrentPlanet
-                );
-
-                $resourceLeft = ($currentResourceState - $costValue);
-                $hasResourceDeficit = ($resourceLeft < 0);
-
-                $resourceCostColor = classNames([
-                    'red' => ($hasResourceDeficit && !$hasElementsInQueue),
-                    'orange' => ($hasResourceDeficit && $hasElementsInQueue),
-                ]);
-
-                $elementDowngradeResources[] = [
-                    'name' => $resourceLabels[$costResourceKey],
-                    'color' => $resourceCostColor,
-                    'value' => prettyNumber($costValue)
-                ];
-            }
-
-            $destructionTime = GetBuildingTime($CurrentUser, $CurrentPlanet, $ElementID) / 2;
-
-            $elementsDestructionDetails[$ElementID] = [
-                'resources' => $elementDowngradeResources,
-                'destructionTime' => pretty_time($destructionTime)
-            ];
+            $elementsDestructionDetails[$ElementID] = Development\Utils\Structures\getDestructionDetails([
+                'elementID' => $ElementID,
+                'planet' => $CurrentPlanet,
+                'user' => $CurrentUser,
+                'isQueueActive' => $hasElementsInQueue,
+            ]);
         }
 
         $iconComponent = Development\Components\GridViewElementIcon\render([
