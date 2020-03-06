@@ -22,4 +22,10 @@ function groupBy($collection, $iteratee) {
     return $groupedCollection;
 }
 
+function groupInRows($collection, $rowSize) {
+    return groupBy($collection, function ($value, $idx) use ($rowSize) {
+        return floor($idx / $rowSize);
+    });
+}
+
 ?>
