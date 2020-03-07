@@ -22,12 +22,15 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     PlanetResourceUpdate($CurrentUser, $CurrentPlanet, $Now);
 
     // Constants
-    $ElementsPerRow = 7;
+    $const_ElementsPerRow = 7;
 
     // Get Templates
-    $TPL['list_hidden']         = gettemplate('buildings_compact_list_hidden');
-    $TPL['list_row']            = gettemplate('buildings_compact_list_row');
-    $TPL['list_breakrow']       = gettemplate('buildings_compact_list_breakrow');
+    $tplBodyCache = [
+        'pageBody' => gettemplate('buildings_compact_body_structures'),
+        'list_hidden' => gettemplate('buildings_compact_list_hidden'),
+        'list_row' => gettemplate('buildings_compact_list_row'),
+        'list_breakrow' => gettemplate('buildings_compact_list_breakrow'),
+    ];
 
     // Handle Commands
     $cmdResult = Development\Input\UserCommands\handleStructureCommand(
@@ -93,8 +96,6 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         $CurrentPlanet[$elementKey] += $elementLevelModifier;
         $planetFieldsUsageCounter += $elementLevelModifier;
     }
-
-    $Parse['Create_Queue'] = $queueComponent['componentHTML'];
 
     // Parse all available buildings
     $planetsMaxFieldsCount = CalculateMaxPlanetFields($CurrentPlanet);
@@ -295,23 +296,23 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     }
 
     // Create Structures List
-    $groupedIcons = Common\Collections\groupInRows($elementsIconComponents, $ElementsPerRow);
+    $groupedIcons = Common\Collections\groupInRows($elementsIconComponents, $const_ElementsPerRow);
     $groupedIconRows = array_map(
-        function ($elementsInRow) use (&$TPL, $ElementsPerRow) {
+        function ($elementsInRow) use (&$tplBodyCache, $const_ElementsPerRow) {
             $mergedElementsInRow = implode('', $elementsInRow);
             $emptySpaceFiller = '';
 
             $elementsInRowCount = count($elementsInRow);
 
-            if ($elementsInRowCount < $ElementsPerRow) {
+            if ($elementsInRowCount < $const_ElementsPerRow) {
                 $emptySpaceFiller = str_repeat(
-                    $TPL['list_hidden'],
-                    ($ElementsPerRow - $elementsInRowCount)
+                    $tplBodyCache['list_hidden'],
+                    ($const_ElementsPerRow - $elementsInRowCount)
                 );
             }
 
             return parsetemplate(
-                $TPL['list_row'],
+                $tplBodyCache['list_row'],
                 [
                     'Elements' => ($mergedElementsInRow . $emptySpaceFiller)
                 ]
@@ -320,8 +321,9 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         $groupedIcons
     );
 
+    $Parse['Create_Queue'] = $queueComponent['componentHTML'];
     $Parse['Create_StructuresList'] = implode(
-        $TPL['list_breakrow'],
+        $tplBodyCache['list_breakrow'],
         $groupedIconRows
     );
     $Parse['Create_ElementsInfoBoxes'] = implode('', $elementsCardComponents);
@@ -338,8 +340,6 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         ),
         'lime' => ($CurrentPlanet['field_current'] < ($planetsMaxFieldsCount * 0.9)),
     ]);
-    // End of - Parse all available buildings
-
     $Parse['Insert_SkinPath'] = $_SkinPath;
     $Parse['Insert_PlanetImg'] = $CurrentPlanet['image'];
     $Parse['Insert_PlanetType'] = $_Lang['PlanetType_'.$CurrentPlanet['planet_type']];
@@ -361,9 +361,9 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     );
     $Parse['PHPData_ElementsDestructionDetailsJSON'] = json_encode($elementsDestructionDetails);
 
-    $Page = parsetemplate(gettemplate('buildings_compact_body_structures'), $Parse);
+    $pageHTML = parsetemplate($tplBodyCache['pageBody'], $Parse);
 
-    display($Page, $_Lang['Builds']);
+    display($pageHTML, $_Lang['Builds']);
 }
 
 ?>
