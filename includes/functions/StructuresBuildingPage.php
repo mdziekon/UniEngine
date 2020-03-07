@@ -16,7 +16,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     includeLang('worldElements.detailed');
 
     $Now = time();
-    $Parse = &$_Lang;
+    $pageTemplateData = &$_Lang;
     $ShowElementID = 0;
 
     PlanetResourceUpdate($CurrentUser, $CurrentPlanet, $Now);
@@ -321,18 +321,18 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         $groupedIcons
     );
 
-    $Parse['Create_Queue'] = $queueComponent['componentHTML'];
-    $Parse['Create_StructuresList'] = implode(
+    $pageTemplateData['Create_Queue'] = $queueComponent['componentHTML'];
+    $pageTemplateData['Create_StructuresList'] = implode(
         $tplBodyCache['list_breakrow'],
         $groupedIconRows
     );
-    $Parse['Create_ElementsInfoBoxes'] = implode('', $elementsCardComponents);
-    $Parse['Create_ShowElementOnStartup'] = (
+    $pageTemplateData['Create_ElementsInfoBoxes'] = implode('', $elementsCardComponents);
+    $pageTemplateData['Create_ShowElementOnStartup'] = (
         $ShowElementID > 0 ?
         $ShowElementID :
         ''
     );
-    $Parse['Insert_Overview_Fields_Used_Color'] = classNames([
+    $pageTemplateData['Insert_Overview_Fields_Used_Color'] = classNames([
         'red' => ($CurrentPlanet['field_current'] >= $planetsMaxFieldsCount),
         'orange' => (
             ($CurrentPlanet['field_current'] < $planetsMaxFieldsCount) &&
@@ -340,28 +340,28 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         ),
         'lime' => ($CurrentPlanet['field_current'] < ($planetsMaxFieldsCount * 0.9)),
     ]);
-    $Parse['Insert_SkinPath'] = $_SkinPath;
-    $Parse['Insert_PlanetImg'] = $CurrentPlanet['image'];
-    $Parse['Insert_PlanetType'] = $_Lang['PlanetType_'.$CurrentPlanet['planet_type']];
-    $Parse['Insert_PlanetName'] = $CurrentPlanet['name'];
-    $Parse['Insert_PlanetPos_Galaxy'] = $CurrentPlanet['galaxy'];
-    $Parse['Insert_PlanetPos_System'] = $CurrentPlanet['system'];
-    $Parse['Insert_PlanetPos_Planet'] = $CurrentPlanet['planet'];
-    $Parse['Insert_Overview_Diameter'] = prettyNumber($CurrentPlanet['diameter']);
-    $Parse['Insert_Overview_Fields_Used'] = prettyNumber($CurrentPlanet['field_current']);
-    $Parse['Insert_Overview_Fields_Max'] = prettyNumber($planetsMaxFieldsCount);
-    $Parse['Insert_Overview_Fields_Percent'] = sprintf(
+    $pageTemplateData['Insert_SkinPath'] = $_SkinPath;
+    $pageTemplateData['Insert_PlanetImg'] = $CurrentPlanet['image'];
+    $pageTemplateData['Insert_PlanetType'] = $_Lang['PlanetType_'.$CurrentPlanet['planet_type']];
+    $pageTemplateData['Insert_PlanetName'] = $CurrentPlanet['name'];
+    $pageTemplateData['Insert_PlanetPos_Galaxy'] = $CurrentPlanet['galaxy'];
+    $pageTemplateData['Insert_PlanetPos_System'] = $CurrentPlanet['system'];
+    $pageTemplateData['Insert_PlanetPos_Planet'] = $CurrentPlanet['planet'];
+    $pageTemplateData['Insert_Overview_Diameter'] = prettyNumber($CurrentPlanet['diameter']);
+    $pageTemplateData['Insert_Overview_Fields_Used'] = prettyNumber($CurrentPlanet['field_current']);
+    $pageTemplateData['Insert_Overview_Fields_Max'] = prettyNumber($planetsMaxFieldsCount);
+    $pageTemplateData['Insert_Overview_Fields_Percent'] = sprintf(
         '%0.2f',
         (($CurrentPlanet['field_current'] / $planetsMaxFieldsCount) * 100)
     );
-    $Parse['Insert_Overview_Temperature'] = sprintf(
+    $pageTemplateData['Insert_Overview_Temperature'] = sprintf(
         $_Lang['Overview_Form_Temperature'],
         $CurrentPlanet['temp_min'],
         $CurrentPlanet['temp_max']
     );
-    $Parse['PHPData_ElementsDestructionDetailsJSON'] = json_encode($elementsDestructionDetails);
+    $pageTemplateData['PHPData_ElementsDestructionDetailsJSON'] = json_encode($elementsDestructionDetails);
 
-    $pageHTML = parsetemplate($tplBodyCache['pageBody'], $Parse);
+    $pageHTML = parsetemplate($tplBodyCache['pageBody'], $pageTemplateData);
 
     display($pageHTML, $_Lang['Builds']);
 }
