@@ -8,11 +8,10 @@ use UniEngine\Engine\Modules\Development\Components\ModernQueue;
 use UniEngine\Engine\Includes\Helpers\Planets;
 use UniEngine\Engine\Includes\Helpers\Users;
 
-function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
-{
+function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser) {
     global $_Lang, $_SkinPath, $_GET, $_EnginePath, $_Vars_ElementCategories;
 
-    include($_EnginePath.'includes/functions/GetElementTechReq.php');
+    include($_EnginePath . 'includes/functions/GetElementTechReq.php');
     includeLang('worldElements.detailed');
 
     $Now = time();
@@ -114,7 +113,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     $elementsCardComponents = [];
     $elementsDestructionDetails = [];
 
-    foreach($_Vars_ElementCategories['build'] as $ElementID) {
+    foreach ($_Vars_ElementCategories['build'] as $ElementID) {
         if (!Elements\isStructureAvailableOnPlanetType($ElementID, $CurrentPlanet['planet_type'])) {
             continue;
         }
