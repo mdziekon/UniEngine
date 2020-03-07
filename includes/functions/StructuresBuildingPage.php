@@ -97,9 +97,10 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     $Parse['Create_Queue'] = $queueComponent['componentHTML'];
 
     // Parse all available buildings
+    $planetsMaxFieldsCount = CalculateMaxPlanetFields($CurrentPlanet);
     $hasAvailableFieldsOnPlanet = (
         ($CurrentPlanet['field_current'] + $planetFieldsUsageCounter) <
-        CalculateMaxPlanetFields($CurrentPlanet)
+        $planetsMaxFieldsCount
     );
     $isQueueFull = (
         $elementsInQueue >=
@@ -324,23 +325,19 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         $groupedIconRows
     );
     $Parse['Create_ElementsInfoBoxes'] = implode('', $elementsCardComponents);
-    if($ShowElementID > 0)
-    {
-        $Parse['Create_ShowElementOnStartup'] = $ShowElementID;
-    }
-    $MaxFields = CalculateMaxPlanetFields($CurrentPlanet);
-    if($CurrentPlanet['field_current'] == $MaxFields)
-    {
-        $Parse['Insert_Overview_Fields_Used_Color'] = 'red';
-    }
-    else if($CurrentPlanet['field_current'] >= ($MaxFields * 0.9))
-    {
-        $Parse['Insert_Overview_Fields_Used_Color'] = 'orange';
-    }
-    else
-    {
-        $Parse['Insert_Overview_Fields_Used_Color'] = 'lime';
-    }
+    $Parse['Create_ShowElementOnStartup'] = (
+        $ShowElementID > 0 ?
+        $ShowElementID :
+        ''
+    );
+    $Parse['Insert_Overview_Fields_Used_Color'] = classNames([
+        'red' => ($CurrentPlanet['field_current'] >= $planetsMaxFieldsCount),
+        'orange' => (
+            ($CurrentPlanet['field_current'] < $planetsMaxFieldsCount) &&
+            ($CurrentPlanet['field_current'] >= ($planetsMaxFieldsCount * 0.9))
+        ),
+        'lime' => ($CurrentPlanet['field_current'] < ($planetsMaxFieldsCount * 0.9)),
+    ]);
     // End of - Parse all available buildings
 
     $Parse['Insert_SkinPath'] = $_SkinPath;
@@ -352,9 +349,16 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     $Parse['Insert_PlanetPos_Planet'] = $CurrentPlanet['planet'];
     $Parse['Insert_Overview_Diameter'] = prettyNumber($CurrentPlanet['diameter']);
     $Parse['Insert_Overview_Fields_Used'] = prettyNumber($CurrentPlanet['field_current']);
-    $Parse['Insert_Overview_Fields_Max'] = prettyNumber($MaxFields);
-    $Parse['Insert_Overview_Fields_Percent'] = sprintf('%0.2f', ($CurrentPlanet['field_current'] / $MaxFields) * 100);
-    $Parse['Insert_Overview_Temperature'] = sprintf($_Lang['Overview_Form_Temperature'], $CurrentPlanet['temp_min'], $CurrentPlanet['temp_max']);
+    $Parse['Insert_Overview_Fields_Max'] = prettyNumber($planetsMaxFieldsCount);
+    $Parse['Insert_Overview_Fields_Percent'] = sprintf(
+        '%0.2f',
+        (($CurrentPlanet['field_current'] / $planetsMaxFieldsCount) * 100)
+    );
+    $Parse['Insert_Overview_Temperature'] = sprintf(
+        $_Lang['Overview_Form_Temperature'],
+        $CurrentPlanet['temp_min'],
+        $CurrentPlanet['temp_max']
+    );
     $Parse['PHPData_ElementsDestructionDetailsJSON'] = json_encode($elementsDestructionDetails);
 
     $Page = parsetemplate(gettemplate('buildings_compact_body_structures'), $Parse);
