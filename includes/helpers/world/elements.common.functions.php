@@ -68,6 +68,12 @@ function isIndestructibleStructure($elementID) {
     );
 }
 
+function isProductionRelated($elementID) {
+    global $_Vars_ElementCategories;
+
+    return in_array($elementID, $_Vars_ElementCategories['prod']);
+}
+
 function isCancellableOnceInProgress($elementID) {
     return (
         !isPremiumStructure($elementID)
