@@ -255,7 +255,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 'hasTechnologyRequirementMet' => $hasTechnologyRequirementMet,
                 'additionalUpgradeDetailsRows' => [
                     (
-                        in_array($ElementID, $_Vars_ElementCategories['prod']) ?
+                        Elements\isProductionRelated($ElementID) ?
                         Development\Components\GridViewElementCard\UpgradeProductionChange\render([
                             'elementID' => $ElementID,
                             'user' => $CurrentUser,
