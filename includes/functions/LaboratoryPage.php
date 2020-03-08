@@ -19,16 +19,18 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 
     $Now = time();
     $Parse = &$_Lang;
-    $Parse['Create_Queue'] = '';
     $ShowElementID = 0;
 
     // Constants
     $ElementsPerRow = 7;
 
     // Get Templates
-    $TPL['list_hidden']         = gettemplate('buildings_compact_list_hidden');
-    $TPL['list_row']            = gettemplate('buildings_compact_list_row');
-    $TPL['list_breakrow']       = gettemplate('buildings_compact_list_breakrow');
+    $tplBodyCache = [
+        'pageBody' => gettemplate('buildings_compact_body_lab'),
+        'list_hidden' => gettemplate('buildings_compact_list_hidden'),
+        'list_row' => gettemplate('buildings_compact_list_row'),
+        'list_breakrow' => gettemplate('buildings_compact_list_breakrow'),
+    ];
 
     $isUserOnVacation = isOnVacation($CurrentUser);
     $hasResearchLab = Planets\Elements\hasResearchLab($CurrentPlanet);
@@ -119,8 +121,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             ]);
         }
     ]);
-
-    $Parse['Create_Queue'] = $queueComponent['componentHTML'];
 
     $queueStateDetails = Development\Utils\getQueueStateDetails([
         'queue' => [
@@ -293,7 +293,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     // Create List
     $groupedIcons = Common\Collections\groupInRows($elementsIconComponents, $ElementsPerRow);
     $groupedIconRows = array_map(
-        function ($elementsInRow) use (&$TPL, $ElementsPerRow) {
+        function ($elementsInRow) use (&$tplBodyCache, $ElementsPerRow) {
             $mergedElementsInRow = implode('', $elementsInRow);
             $emptySpaceFiller = '';
 
@@ -301,13 +301,13 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 
             if ($elementsInRowCount < $ElementsPerRow) {
                 $emptySpaceFiller = str_repeat(
-                    $TPL['list_hidden'],
+                    $tplBodyCache['list_hidden'],
                     ($ElementsPerRow - $elementsInRowCount)
                 );
             }
 
             return parsetemplate(
-                $TPL['list_row'],
+                $tplBodyCache['list_row'],
                 [
                     'Elements' => ($mergedElementsInRow . $emptySpaceFiller)
                 ]
@@ -316,17 +316,17 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         $groupedIcons
     );
 
+    $Parse['Create_Queue'] = $queueComponent['componentHTML'];
     $Parse['Create_StructuresList'] = implode(
-        $TPL['list_breakrow'],
+        $tplBodyCache['list_breakrow'],
         $groupedIconRows
     );
     $Parse['Create_ElementsInfoBoxes'] = implode('', $InfoBoxes);
-    if($ShowElementID > 0)
-    {
-        $Parse['Create_ShowElementOnStartup'] = $ShowElementID;
-    }
-    // End of - Parse all available technologies
-
+    $Parse['Create_ShowElementOnStartup'] = (
+        $ShowElementID > 0 ?
+        $ShowElementID :
+        ''
+    );
     $Parse['Insert_SkinPath'] = $_SkinPath;
     $Parse['Insert_PlanetImg'] = $CurrentPlanet['image'];
     $Parse['Insert_PlanetType'] = $_Lang['PlanetType_'.$CurrentPlanet['planet_type']];
@@ -340,7 +340,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     $Parse['Insert_Overview_LabPower'] = prettyNumber($researchNetworkStatus['connectedLabsLevel']);
     $Parse['Insert_Overview_LabPowerTotal'] = prettyNumber($researchNetworkStatus['allLabsLevel']);
 
-    $Page = parsetemplate(gettemplate('buildings_compact_body_lab'), $Parse);
+    $Page = parsetemplate($tplBodyCache['pageBody'], $Parse);
 
     display($Page, $_Lang['Research']);
 }
