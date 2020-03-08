@@ -10,7 +10,7 @@ use UniEngine\Engine\Includes\Helpers\Users;
 use UniEngine\Engine\Includes\Helpers\World\Resources;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 
-function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet) {
+function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
     global $_EnginePath, $_Lang, $_Vars_ElementCategories, $_SkinPath, $_GET;
 
     include($_EnginePath . 'includes/functions/GetElementTechReq.php');
@@ -135,8 +135,9 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet) 
         Users\getMaxResearchQueueLength($CurrentUser)
     );
     $hasElementsInQueue = ($elementsInQueue > 0);
+    $isResearchInProgress = $hasElementsInQueue;
     $canQueueResearchOnThisPlanet = (
-        !$InResearch ||
+        !$isResearchInProgress ||
         $ResearchPlanet['id'] == $CurrentPlanet['id']
     );
     $isUpgradeBlockedByLabUpgradeInProgress = $hasPlanetsWithUnfinishedLabUpgrades;

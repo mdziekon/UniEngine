@@ -39,12 +39,10 @@ if(!isset($_Planet))
 HandleFullUserUpdate($_User, $_Planet, $GetLabPlanet);
 if(isset($_User['techQueue_EndTime']) && $_User['techQueue_EndTime'] > 0)
 {
-    $InResearch = true;
     $ResearchPlanet = &$GetLabPlanet;
 }
 else
 {
-    $InResearch = false;
     $ResearchPlanet = false;
 }
 
@@ -80,7 +78,7 @@ switch($_GET['mode'])
         else
         {
             include($_EnginePath.'includes/functions/LaboratoryPage.php');
-            LaboratoryPage($_Planet, $_User, $InResearch, $ResearchPlanet);
+            LaboratoryPage($_Planet, $_User, $ResearchPlanet);
         }
         break;
     case 'defense':
