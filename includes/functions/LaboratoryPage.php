@@ -12,7 +12,7 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 
 function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
 {
-    global $_EnginePath, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories, $_SkinPath, $_GET;
+    global $_EnginePath, $_Lang, $_Vars_ElementCategories, $_SkinPath, $_GET;
 
     include($_EnginePath.'includes/functions/GetElementTechReq.php');
     includeLang('worldElements.detailed');
@@ -334,7 +334,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     $Parse['Insert_PlanetPos_Galaxy'] = $CurrentPlanet['galaxy'];
     $Parse['Insert_PlanetPos_System'] = $CurrentPlanet['system'];
     $Parse['Insert_PlanetPos_Planet'] = $CurrentPlanet['planet'];
-    $Parse['Insert_Overview_LabLevel'] = $CurrentPlanet[$_Vars_GameElements[31]];
+    $Parse['Insert_Overview_LabLevel'] = Elements\getElementState(31, $CurrentPlanet, $CurrentUser)['level'];
     $Parse['Insert_Overview_LabsConnected'] = prettyNumber($researchNetworkStatus['connectedLabsCount']);
     $Parse['Insert_Overview_TotalLabsCount'] = prettyNumber($researchNetworkStatus['allLabsCount']);
     $Parse['Insert_Overview_LabPower'] = prettyNumber($researchNetworkStatus['connectedLabsLevel']);
