@@ -129,6 +129,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
         'user' => $CurrentUser,
         'planet' => $CurrentPlanet,
     ]);
+
     $elementsInQueue = $queueStateDetails['queuedElementsCount'];
     $isQueueFull = (
         $elementsInQueue >=

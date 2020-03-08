@@ -78,11 +78,10 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
     );
     // End of - Handle Commands
 
-    $researchQueue = Planets\Queues\Research\parseQueueString($ResearchPlanet['techQueue']);
-    $researchQueueLength = count($researchQueue);
+    $techQueueContent = Planets\Queues\Research\parseQueueString($ResearchPlanet['techQueue']);
 
     $queueComponent = LegacyQueue\render([
-        'queue' => $researchQueue,
+        'queue' => $techQueueContent,
         'currentTimestamp' => $Now,
 
         'getQueueElementCancellationLinkHref' => function ($queueElement) {
@@ -102,16 +101,19 @@ function ResearchBuildingPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
     $queueStateDetails = Development\Utils\getQueueStateDetails([
         'queue' => [
             'type' => Development\Utils\QueueType::Research,
-            'content' => $researchQueue,
+            'content' => $techQueueContent,
         ],
         'user' => $CurrentUser,
         'planet' => $CurrentPlanet,
     ]);
 
     $elementsInQueue = $queueStateDetails['queuedElementsCount'];
-    $isQueueFull = ($researchQueueLength >= Users\getMaxResearchQueueLength($CurrentUser));
+    $isQueueFull = (
+        $elementsInQueue >=
+        Users\getMaxResearchQueueLength($CurrentUser)
+    );
     $hasElementsInQueue = ($elementsInQueue > 0);
-    $isResearchInProgress = ($researchQueueLength > 0);
+    $isResearchInProgress = $hasElementsInQueue;
     $canQueueResearchOnThisPlanet = (
         !$isResearchInProgress ||
         $ResearchPlanet['id'] == $CurrentPlanet['id']
