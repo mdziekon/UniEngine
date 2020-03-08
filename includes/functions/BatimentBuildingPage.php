@@ -79,27 +79,28 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser) {
     }
 
     $isUserOnVacation = isOnVacation($CurrentUser);
+    $planetsMaxFieldsCount = CalculateMaxPlanetFields($CurrentPlanet);
     $hasAvailableFieldsOnPlanet = (
         ($CurrentPlanet['field_current'] + $planetFieldsUsageCounter) <
-        CalculateMaxPlanetFields($CurrentPlanet)
+        $planetsMaxFieldsCount
     );
     $isQueueFull = (
         $elementsInQueue >=
         Users\getMaxStructuresQueueLength($CurrentUser)
     );
 
-    foreach ($_Vars_ElementCategories['build'] as $Element) {
-        if (!Elements\isStructureAvailableOnPlanetType($Element, $CurrentPlanet['planet_type'])) {
+    foreach ($_Vars_ElementCategories['build'] as $elementID) {
+        if (!Elements\isStructureAvailableOnPlanetType($elementID, $CurrentPlanet['planet_type'])) {
             continue;
         }
 
-        $elementQueuedLevel = Elements\getElementState($Element, $CurrentPlanet, $CurrentUser)['level'];
+        $elementQueuedLevel = Elements\getElementState($elementID, $CurrentPlanet, $CurrentUser)['level'];
         $isElementInQueue = isset(
-            $queueStateDetails['queuedElementLevelModifiers'][$Element]
+            $queueStateDetails['queuedElementLevelModifiers'][$elementID]
         );
         $elementQueueLevelModifier = (
             $isElementInQueue ?
-            $queueStateDetails['queuedElementLevelModifiers'][$Element] :
+            $queueStateDetails['queuedElementLevelModifiers'][$elementID] :
             0
         );
         $elementCurrentLevel = (
@@ -107,17 +108,17 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser) {
             ($elementQueueLevelModifier * -1)
         );
 
-        $elementMaxLevel = Elements\getElementMaxUpgradeLevel($Element);
+        $elementMaxLevel = Elements\getElementMaxUpgradeLevel($elementID);
         $hasReachedMaxLevel = (
             $elementQueuedLevel >=
             $elementMaxLevel
         );
 
-        $hasUpgradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $Element, false);
+        $hasUpgradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $elementID, false);
 
-        $hasTechnologyRequirementMet = IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $Element);
+        $hasTechnologyRequirementMet = IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $elementID);
         $isBlockedByTechResearchProgress = (
-            $Element == 31 &&
+            $elementID == 31 &&
             $CurrentUser['techQueue_Planet'] > 0 &&
             $CurrentUser['techQueue_EndTime'] > 0 &&
             !isLabUpgradableWhileInUse()
@@ -164,7 +165,7 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser) {
         }
 
         $listElement = Development\Components\ListViewElementRow\render([
-            'elementID' => $Element,
+            'elementID' => $elementID,
             'user' => $CurrentUser,
             'planet' => $CurrentPlanet,
             'timestamp' => $Now,
@@ -183,8 +184,8 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser) {
                     []
                 ),
             ],
-            'getUpgradeElementActionLinkHref' => function () use ($Element) {
-                return "?cmd=insert&amp;building={$Element}";
+            'getUpgradeElementActionLinkHref' => function () use ($elementID) {
+                return "?cmd=insert&amp;building={$elementID}";
             },
             'showInactiveUpgradeActionLink' => $showInactiveUpgradeActionLink,
         ]);
@@ -210,8 +211,8 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser) {
     $parse = $_Lang;
 
     $parse['Insert_Overview_Fields_Used'] = $CurrentPlanet['field_current'];
-    $parse['Insert_Overview_Fields_Max'] = CalculateMaxPlanetFields($CurrentPlanet);
-    $parse['Insert_Overview_Fields_Available'] = CalculateMaxPlanetFields($CurrentPlanet) - $CurrentPlanet['field_current'];
+    $parse['Insert_Overview_Fields_Max'] = $planetsMaxFieldsCount;
+    $parse['Insert_Overview_Fields_Available'] = $planetsMaxFieldsCount - $CurrentPlanet['field_current'];
 
     $parse['PHPInject_QueueHTML'] = $queueComponent['componentHTML'];
     $parse['PHPInject_ElementsListHTML'] = $BuildingPage;

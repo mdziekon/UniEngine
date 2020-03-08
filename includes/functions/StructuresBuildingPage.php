@@ -1,5 +1,6 @@
 <?php
 
+use UniEngine\Engine\Includes\Helpers\Common;
 use UniEngine\Engine\Modules\Development;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 use UniEngine\Engine\Includes\Helpers\World\Resources;
@@ -7,26 +8,28 @@ use UniEngine\Engine\Modules\Development\Components\ModernQueue;
 use UniEngine\Engine\Includes\Helpers\Planets;
 use UniEngine\Engine\Includes\Helpers\Users;
 
-function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
-{
+function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser) {
     global $_Lang, $_SkinPath, $_GET, $_EnginePath, $_Vars_ElementCategories;
 
-    include($_EnginePath.'includes/functions/GetElementTechReq.php');
+    include($_EnginePath . 'includes/functions/GetElementTechReq.php');
     includeLang('worldElements.detailed');
 
     $Now = time();
-    $Parse = &$_Lang;
+    $pageTemplateData = &$_Lang;
     $ShowElementID = 0;
 
     PlanetResourceUpdate($CurrentUser, $CurrentPlanet, $Now);
 
     // Constants
-    $ElementsPerRow = 7;
+    $const_ElementsPerRow = 7;
 
     // Get Templates
-    $TPL['list_hidden']         = gettemplate('buildings_compact_list_hidden');
-    $TPL['list_row']            = gettemplate('buildings_compact_list_row');
-    $TPL['list_breakrow']       = gettemplate('buildings_compact_list_breakrow');
+    $tplBodyCache = [
+        'pageBody' => gettemplate('buildings_compact_body_structures'),
+        'list_hidden' => gettemplate('buildings_compact_list_hidden'),
+        'list_row' => gettemplate('buildings_compact_list_row'),
+        'list_breakrow' => gettemplate('buildings_compact_list_breakrow'),
+    ];
 
     // Handle Commands
     $cmdResult = Development\Input\UserCommands\handleStructureCommand(
@@ -93,12 +96,11 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         $planetFieldsUsageCounter += $elementLevelModifier;
     }
 
-    $Parse['Create_Queue'] = $queueComponent['componentHTML'];
-
     // Parse all available buildings
+    $planetsMaxFieldsCount = CalculateMaxPlanetFields($CurrentPlanet);
     $hasAvailableFieldsOnPlanet = (
         ($CurrentPlanet['field_current'] + $planetFieldsUsageCounter) <
-        CalculateMaxPlanetFields($CurrentPlanet)
+        $planetsMaxFieldsCount
     );
     $isQueueFull = (
         $elementsInQueue >=
@@ -107,29 +109,22 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     $hasElementsInQueue = ($elementsInQueue > 0);
     $isUserOnVacation = isOnVacation($CurrentUser);
 
-    $resourceLabels = [
-        'metal'         => $_Lang['Metal'],
-        'crystal'       => $_Lang['Crystal'],
-        'deuterium'     => $_Lang['Deuterium'],
-        'energy'        => $_Lang['Energy'],
-        'energy_max'    => $_Lang['Energy'],
-        'darkEnergy'    => $_Lang['DarkEnergy']
-    ];
-
+    $elementsIconComponents = [];
+    $elementsCardComponents = [];
     $elementsDestructionDetails = [];
 
-    foreach($_Vars_ElementCategories['build'] as $ElementID) {
-        if (!Elements\isStructureAvailableOnPlanetType($ElementID, $CurrentPlanet['planet_type'])) {
+    foreach ($_Vars_ElementCategories['build'] as $elementID) {
+        if (!Elements\isStructureAvailableOnPlanetType($elementID, $CurrentPlanet['planet_type'])) {
             continue;
         }
 
-        $elementQueuedLevel = Elements\getElementState($ElementID, $CurrentPlanet, $CurrentUser)['level'];
+        $elementQueuedLevel = Elements\getElementState($elementID, $CurrentPlanet, $CurrentUser)['level'];
         $isElementInQueue = isset(
-            $queueStateDetails['queuedElementLevelModifiers'][$ElementID]
+            $queueStateDetails['queuedElementLevelModifiers'][$elementID]
         );
         $elementQueueLevelModifier = (
             $isElementInQueue ?
-            $queueStateDetails['queuedElementLevelModifiers'][$ElementID] :
+            $queueStateDetails['queuedElementLevelModifiers'][$elementID] :
             0
         );
         $elementCurrentLevel = (
@@ -137,18 +132,18 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
             ($elementQueueLevelModifier * -1)
         );
 
-        $elementMaxLevel = Elements\getElementMaxUpgradeLevel($ElementID);
+        $elementMaxLevel = Elements\getElementMaxUpgradeLevel($elementID);
         $hasReachedMaxLevel = (
             $elementQueuedLevel >=
             $elementMaxLevel
         );
 
-        $hasUpgradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, false);
-        $hasDowngradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, true);
+        $hasUpgradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $elementID, false);
+        $hasDowngradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $elementID, true);
 
-        $hasTechnologyRequirementMet = IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $ElementID);
+        $hasTechnologyRequirementMet = IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $elementID);
         $isBlockedByTechResearchProgress = (
-            $ElementID == 31 &&
+            $elementID == 31 &&
             $CurrentUser['techQueue_Planet'] > 0 &&
             $CurrentUser['techQueue_EndTime'] > 0 &&
             !isLabUpgradableWhileInUse()
@@ -174,7 +169,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
 
         $isDowngradePossible = (
             ($elementQueuedLevel > 0) &&
-            !Elements\isIndestructibleStructure($ElementID)
+            !Elements\isIndestructibleStructure($elementID)
         );
         $isDowngradeQueueable = (
             $isDowngradePossible &&
@@ -212,48 +207,16 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
         }
 
         if ($isDowngradePossible) {
-            $downgradeCost = Elements\calculatePurchaseCost(
-                $ElementID,
-                Elements\getElementState($ElementID, $CurrentPlanet, $CurrentUser),
-                [
-                    'purchaseMode' => Elements\PurchaseMode::Downgrade
-                ]
-            );
-
-            $elementDowngradeResources = [];
-
-            foreach ($downgradeCost as $costResourceKey => $costValue) {
-                $currentResourceState = Resources\getResourceState(
-                    $costResourceKey,
-                    $CurrentUser,
-                    $CurrentPlanet
-                );
-
-                $resourceLeft = ($currentResourceState - $costValue);
-                $hasResourceDeficit = ($resourceLeft < 0);
-
-                $resourceCostColor = classNames([
-                    'red' => ($hasResourceDeficit && !$hasElementsInQueue),
-                    'orange' => ($hasResourceDeficit && $hasElementsInQueue),
-                ]);
-
-                $elementDowngradeResources[] = [
-                    'name' => $resourceLabels[$costResourceKey],
-                    'color' => $resourceCostColor,
-                    'value' => prettyNumber($costValue)
-                ];
-            }
-
-            $destructionTime = GetBuildingTime($CurrentUser, $CurrentPlanet, $ElementID) / 2;
-
-            $elementsDestructionDetails[$ElementID] = [
-                'resources' => $elementDowngradeResources,
-                'destructionTime' => pretty_time($destructionTime)
-            ];
+            $elementsDestructionDetails[$elementID] = Development\Utils\Structures\getDestructionDetails([
+                'elementID' => $elementID,
+                'planet' => $CurrentPlanet,
+                'user' => $CurrentUser,
+                'isQueueActive' => $hasElementsInQueue,
+            ]);
         }
 
         $iconComponent = Development\Components\GridViewElementIcon\render([
-            'elementID' => $ElementID,
+            'elementID' => $elementID,
             'elementDetails' => [
                 'currentState' => $elementCurrentLevel,
                 'queueLevelModifier' => $elementQueueLevelModifier,
@@ -262,13 +225,13 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 'isUpgradeQueueableNow' => $isUpgradeQueueableNow,
                 'whyUpgradeImpossible' => [ end($BlockReason) ],
             ],
-            'getUpgradeElementActionLinkHref' => function () use ($ElementID) {
-                return "?cmd=insert&amp;building={$ElementID}";
+            'getUpgradeElementActionLinkHref' => function () use ($elementID) {
+                return "?cmd=insert&amp;building={$elementID}";
             },
         ]);
 
         $cardInfoComponent = Development\Components\GridViewElementCard\render([
-            'elementID' => $ElementID,
+            'elementID' => $elementID,
             'user' => $CurrentUser,
             'planet' => $CurrentPlanet,
             'isQueueActive' => $hasElementsInQueue,
@@ -292,9 +255,9 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                 'hasTechnologyRequirementMet' => $hasTechnologyRequirementMet,
                 'additionalUpgradeDetailsRows' => [
                     (
-                        in_array($ElementID, $_Vars_ElementCategories['prod']) ?
+                        Elements\isProductionRelated($elementID) ?
                         Development\Components\GridViewElementCard\UpgradeProductionChange\render([
-                            'elementID' => $ElementID,
+                            'elementID' => $elementID,
                             'user' => $CurrentUser,
                             'planet' => $CurrentPlanet,
                             'timestamp' => $Now,
@@ -307,16 +270,16 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
                     ),
                 ],
             ],
-            'getUpgradeElementActionLinkHref' => function () use ($ElementID) {
-                return "?cmd=insert&amp;building={$ElementID}";
+            'getUpgradeElementActionLinkHref' => function () use ($elementID) {
+                return "?cmd=insert&amp;building={$elementID}";
             },
-            'getDowngradeElementActionLinkHref' => function () use ($ElementID) {
-                return "?cmd=destroy&amp;building={$ElementID}";
+            'getDowngradeElementActionLinkHref' => function () use ($elementID) {
+                return "?cmd=destroy&amp;building={$elementID}";
             },
         ]);
 
-        $StructuresList[] = $iconComponent['componentHTML'];
-        $InfoBoxes[] = $cardInfoComponent['componentHTML'];
+        $elementsIconComponents[] = $iconComponent['componentHTML'];
+        $elementsCardComponents[] = $cardInfoComponent['componentHTML'];
     }
 
     foreach ($queueStateDetails['queuedResourcesToUse'] as $resourceKey => $resourceValue) {
@@ -332,75 +295,74 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser)
     }
 
     // Create Structures List
-    $ThisRowIndex = 0;
-    $InRowCount = 0;
-    foreach($StructuresList as $ParsedData)
-    {
-        if($InRowCount == $ElementsPerRow)
-        {
-            $ParsedRows[($ThisRowIndex + 1)] = $TPL['list_breakrow'];
-            $ThisRowIndex += 2;
-            $InRowCount = 0;
-        }
+    $groupedIcons = Common\Collections\groupInRows($elementsIconComponents, $const_ElementsPerRow);
+    $groupedIconRows = array_map(
+        function ($elementsInRow) use (&$tplBodyCache, $const_ElementsPerRow) {
+            $mergedElementsInRow = implode('', $elementsInRow);
+            $emptySpaceFiller = '';
 
-        if(!isset($StructureRows[$ThisRowIndex]['Elements']))
-        {
-            $StructureRows[$ThisRowIndex]['Elements'] = '';
-        }
-        $StructureRows[$ThisRowIndex]['Elements'] .= $ParsedData;
-        $InRowCount += 1;
-    }
-    if($InRowCount < $ElementsPerRow)
-    {
-        if(!isset($StructureRows[$ThisRowIndex]['Elements']))
-        {
-            $StructureRows[$ThisRowIndex]['Elements'] = '';
-        }
-        $StructureRows[$ThisRowIndex]['Elements'] .= str_repeat($TPL['list_hidden'], ($ElementsPerRow - $InRowCount));
-    }
-    foreach($StructureRows as $Index => $Data)
-    {
-        $ParsedRows[$Index] = parsetemplate($TPL['list_row'], $Data);
-    }
-    ksort($ParsedRows, SORT_ASC);
-    $Parse['Create_StructuresList'] = implode('', $ParsedRows);
-    $Parse['Create_ElementsInfoBoxes'] = implode('', $InfoBoxes);
-    if($ShowElementID > 0)
-    {
-        $Parse['Create_ShowElementOnStartup'] = $ShowElementID;
-    }
-    $MaxFields = CalculateMaxPlanetFields($CurrentPlanet);
-    if($CurrentPlanet['field_current'] == $MaxFields)
-    {
-        $Parse['Insert_Overview_Fields_Used_Color'] = 'red';
-    }
-    else if($CurrentPlanet['field_current'] >= ($MaxFields * 0.9))
-    {
-        $Parse['Insert_Overview_Fields_Used_Color'] = 'orange';
-    }
-    else
-    {
-        $Parse['Insert_Overview_Fields_Used_Color'] = 'lime';
-    }
-    // End of - Parse all available buildings
+            $elementsInRowCount = count($elementsInRow);
 
-    $Parse['Insert_SkinPath'] = $_SkinPath;
-    $Parse['Insert_PlanetImg'] = $CurrentPlanet['image'];
-    $Parse['Insert_PlanetType'] = $_Lang['PlanetType_'.$CurrentPlanet['planet_type']];
-    $Parse['Insert_PlanetName'] = $CurrentPlanet['name'];
-    $Parse['Insert_PlanetPos_Galaxy'] = $CurrentPlanet['galaxy'];
-    $Parse['Insert_PlanetPos_System'] = $CurrentPlanet['system'];
-    $Parse['Insert_PlanetPos_Planet'] = $CurrentPlanet['planet'];
-    $Parse['Insert_Overview_Diameter'] = prettyNumber($CurrentPlanet['diameter']);
-    $Parse['Insert_Overview_Fields_Used'] = prettyNumber($CurrentPlanet['field_current']);
-    $Parse['Insert_Overview_Fields_Max'] = prettyNumber($MaxFields);
-    $Parse['Insert_Overview_Fields_Percent'] = sprintf('%0.2f', ($CurrentPlanet['field_current'] / $MaxFields) * 100);
-    $Parse['Insert_Overview_Temperature'] = sprintf($_Lang['Overview_Form_Temperature'], $CurrentPlanet['temp_min'], $CurrentPlanet['temp_max']);
-    $Parse['PHPData_ElementsDestructionDetailsJSON'] = json_encode($elementsDestructionDetails);
+            if ($elementsInRowCount < $const_ElementsPerRow) {
+                $emptySpaceFiller = str_repeat(
+                    $tplBodyCache['list_hidden'],
+                    ($const_ElementsPerRow - $elementsInRowCount)
+                );
+            }
 
-    $Page = parsetemplate(gettemplate('buildings_compact_body_structures'), $Parse);
+            return parsetemplate(
+                $tplBodyCache['list_row'],
+                [
+                    'Elements' => ($mergedElementsInRow . $emptySpaceFiller)
+                ]
+            );
+        },
+        $groupedIcons
+    );
 
-    display($Page, $_Lang['Builds']);
+    $pageTemplateData['Create_Queue'] = $queueComponent['componentHTML'];
+    $pageTemplateData['Create_StructuresList'] = implode(
+        $tplBodyCache['list_breakrow'],
+        $groupedIconRows
+    );
+    $pageTemplateData['Create_ElementsInfoBoxes'] = implode('', $elementsCardComponents);
+    $pageTemplateData['Create_ShowElementOnStartup'] = (
+        $ShowElementID > 0 ?
+        $ShowElementID :
+        ''
+    );
+    $pageTemplateData['Insert_Overview_Fields_Used_Color'] = classNames([
+        'red' => ($CurrentPlanet['field_current'] >= $planetsMaxFieldsCount),
+        'orange' => (
+            ($CurrentPlanet['field_current'] < $planetsMaxFieldsCount) &&
+            ($CurrentPlanet['field_current'] >= ($planetsMaxFieldsCount * 0.9))
+        ),
+        'lime' => ($CurrentPlanet['field_current'] < ($planetsMaxFieldsCount * 0.9)),
+    ]);
+    $pageTemplateData['Insert_SkinPath'] = $_SkinPath;
+    $pageTemplateData['Insert_PlanetImg'] = $CurrentPlanet['image'];
+    $pageTemplateData['Insert_PlanetType'] = $_Lang['PlanetType_'.$CurrentPlanet['planet_type']];
+    $pageTemplateData['Insert_PlanetName'] = $CurrentPlanet['name'];
+    $pageTemplateData['Insert_PlanetPos_Galaxy'] = $CurrentPlanet['galaxy'];
+    $pageTemplateData['Insert_PlanetPos_System'] = $CurrentPlanet['system'];
+    $pageTemplateData['Insert_PlanetPos_Planet'] = $CurrentPlanet['planet'];
+    $pageTemplateData['Insert_Overview_Diameter'] = prettyNumber($CurrentPlanet['diameter']);
+    $pageTemplateData['Insert_Overview_Fields_Used'] = prettyNumber($CurrentPlanet['field_current']);
+    $pageTemplateData['Insert_Overview_Fields_Max'] = prettyNumber($planetsMaxFieldsCount);
+    $pageTemplateData['Insert_Overview_Fields_Percent'] = sprintf(
+        '%0.2f',
+        (($CurrentPlanet['field_current'] / $planetsMaxFieldsCount) * 100)
+    );
+    $pageTemplateData['Insert_Overview_Temperature'] = sprintf(
+        $_Lang['Overview_Form_Temperature'],
+        $CurrentPlanet['temp_min'],
+        $CurrentPlanet['temp_max']
+    );
+    $pageTemplateData['PHPData_ElementsDestructionDetailsJSON'] = json_encode($elementsDestructionDetails);
+
+    $pageHTML = parsetemplate($tplBodyCache['pageBody'], $pageTemplateData);
+
+    display($pageHTML, $_Lang['Builds']);
 }
 
 ?>

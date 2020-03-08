@@ -8,6 +8,7 @@ call_user_func(function () {
 
     include($includePath . './utils/queue.utils.php');
     include($includePath . './utils/research.utils.php');
+    include($includePath . './utils/structures.utils.php');
 
     include($includePath . './input/research.userCommands.php');
     include($includePath . './input/structures.userCommands.php');

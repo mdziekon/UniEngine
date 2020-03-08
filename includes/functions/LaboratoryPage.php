@@ -1,5 +1,6 @@
 <?php
 
+use UniEngine\Engine\Includes\Helpers\Common;
 use UniEngine\Engine\Modules\Development;
 use UniEngine\Engine\Modules\Development\Components\ModernQueue;
 use UniEngine\Engine\Modules\Development\Screens\ResearchListPage\ModernQueuePlanetInfo;
@@ -9,25 +10,26 @@ use UniEngine\Engine\Includes\Helpers\Users;
 use UniEngine\Engine\Includes\Helpers\World\Resources;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 
-function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
-{
-    global $_EnginePath, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories, $_SkinPath, $_GET;
+function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
+    global $_EnginePath, $_Lang, $_Vars_ElementCategories, $_SkinPath, $_GET;
 
-    include($_EnginePath.'includes/functions/GetElementTechReq.php');
+    include($_EnginePath . 'includes/functions/GetElementTechReq.php');
     includeLang('worldElements.detailed');
 
     $Now = time();
-    $Parse = &$_Lang;
-    $Parse['Create_Queue'] = '';
+    $pageTemplateData = &$_Lang;
     $ShowElementID = 0;
 
     // Constants
-    $ElementsPerRow = 7;
+    $const_ElementsPerRow = 7;
 
     // Get Templates
-    $TPL['list_hidden']         = gettemplate('buildings_compact_list_hidden');
-    $TPL['list_row']            = gettemplate('buildings_compact_list_row');
-    $TPL['list_breakrow']       = gettemplate('buildings_compact_list_breakrow');
+    $tplBodyCache = [
+        'pageBody' => gettemplate('buildings_compact_body_lab'),
+        'list_hidden' => gettemplate('buildings_compact_list_hidden'),
+        'list_row' => gettemplate('buildings_compact_list_row'),
+        'list_breakrow' => gettemplate('buildings_compact_list_breakrow'),
+    ];
 
     $isUserOnVacation = isOnVacation($CurrentUser);
     $hasResearchLab = Planets\Elements\hasResearchLab($CurrentPlanet);
@@ -119,8 +121,6 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         }
     ]);
 
-    $Parse['Create_Queue'] = $queueComponent['componentHTML'];
-
     $queueStateDetails = Development\Utils\getQueueStateDetails([
         'queue' => [
             'type' => Development\Utils\QueueType::Research,
@@ -129,14 +129,16 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         'user' => $CurrentUser,
         'planet' => $CurrentPlanet,
     ]);
+
     $elementsInQueue = $queueStateDetails['queuedElementsCount'];
     $isQueueFull = (
         $elementsInQueue >=
         Users\getMaxResearchQueueLength($CurrentUser)
     );
     $hasElementsInQueue = ($elementsInQueue > 0);
+    $isResearchInProgress = $hasElementsInQueue;
     $canQueueResearchOnThisPlanet = (
-        !$InResearch ||
+        !$isResearchInProgress ||
         $ResearchPlanet['id'] == $CurrentPlanet['id']
     );
     $isUpgradeBlockedByLabUpgradeInProgress = $hasPlanetsWithUnfinishedLabUpgrades;
@@ -154,14 +156,17 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     }
     // End of - Parse Queue
 
-    foreach ($_Vars_ElementCategories['tech'] as $ElementID) {
-        $elementQueuedLevel = Elements\getElementState($ElementID, $CurrentPlanet, $CurrentUser)['level'];
+    $elementsIconComponents = [];
+    $elementsCardComponents = [];
+
+    foreach ($_Vars_ElementCategories['tech'] as $elementID) {
+        $elementQueuedLevel = Elements\getElementState($elementID, $CurrentPlanet, $CurrentUser)['level'];
         $isElementInQueue = isset(
-            $queueStateDetails['queuedElementLevelModifiers'][$ElementID]
+            $queueStateDetails['queuedElementLevelModifiers'][$elementID]
         );
         $elementQueueLevelModifier = (
             $isElementInQueue ?
-            $queueStateDetails['queuedElementLevelModifiers'][$ElementID] :
+            $queueStateDetails['queuedElementLevelModifiers'][$elementID] :
             0
         );
         $elementCurrentLevel = (
@@ -169,12 +174,12 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
             ($elementQueueLevelModifier * -1)
         );
 
-        $elementMaxLevel = Elements\getElementMaxUpgradeLevel($ElementID);
+        $elementMaxLevel = Elements\getElementMaxUpgradeLevel($elementID);
         $hasReachedMaxLevel = ($elementQueuedLevel >= $elementMaxLevel);
 
-        $hasUpgradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, false);
+        $hasUpgradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $elementID, false);
 
-        $hasTechnologyRequirementMet = IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $ElementID);
+        $hasTechnologyRequirementMet = IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $elementID);
 
         $isUpgradePossible = (!$hasReachedMaxLevel);
         $isUpgradeQueueable = (
@@ -223,7 +228,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
         }
 
         $iconComponent = Development\Components\GridViewElementIcon\render([
-            'elementID' => $ElementID,
+            'elementID' => $elementID,
             'elementDetails' => [
                 'currentState' => $elementCurrentLevel,
                 'queueLevelModifier' => $elementQueueLevelModifier,
@@ -232,13 +237,13 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
                 'isUpgradeQueueableNow' => $isUpgradeQueueableNow,
                 'whyUpgradeImpossible' => [ end($BlockReason) ],
             ],
-            'getUpgradeElementActionLinkHref' => function () use ($ElementID) {
-                return "?mode=research&amp;cmd=search&amp;tech={$ElementID}";
+            'getUpgradeElementActionLinkHref' => function () use ($elementID) {
+                return "?mode=research&amp;cmd=search&amp;tech={$elementID}";
             },
         ]);
 
         $cardInfoComponent = Development\Components\GridViewElementCard\render([
-            'elementID' => $ElementID,
+            'elementID' => $elementID,
             'user' => $CurrentUser,
             'planet' => $CurrentPlanet,
             'isQueueActive' => $hasElementsInQueue,
@@ -262,16 +267,16 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
                 'hasTechnologyRequirementMet' => $hasTechnologyRequirementMet,
                 'additionalUpgradeDetailsRows' => [],
             ],
-            'getUpgradeElementActionLinkHref' => function () use ($ElementID) {
-                return "?mode=research&amp;cmd=search&amp;tech={$ElementID}";
+            'getUpgradeElementActionLinkHref' => function () use ($elementID) {
+                return "?mode=research&amp;cmd=search&amp;tech={$elementID}";
             },
             'getDowngradeElementActionLinkHref' => function () {
                 return '';
             },
         ]);
 
-        $StructuresList[] = $iconComponent['componentHTML'];
-        $InfoBoxes[] = $cardInfoComponent['componentHTML'];
+        $elementsIconComponents[] = $iconComponent['componentHTML'];
+        $elementsCardComponents[] = $cardInfoComponent['componentHTML'];
     }
 
     // Restore resources & element levels to previous values
@@ -288,57 +293,58 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
     }
 
     // Create List
-    $ThisRowIndex = 0;
-    $InRowCount = 0;
-    foreach($StructuresList as $ParsedData)
-    {
-        if($InRowCount == $ElementsPerRow)
-        {
-            $ParsedRows[($ThisRowIndex + 1)] = $TPL['list_breakrow'];
-            $ThisRowIndex += 2;
-            $InRowCount = 0;
-        }
+    $groupedIcons = Common\Collections\groupInRows($elementsIconComponents, $const_ElementsPerRow);
+    $groupedIconRows = array_map(
+        function ($elementsInRow) use (&$tplBodyCache, $const_ElementsPerRow) {
+            $mergedElementsInRow = implode('', $elementsInRow);
+            $emptySpaceFiller = '';
 
-        if(!isset($StructureRows[$ThisRowIndex]['Elements']))
-        {
-            $StructureRows[$ThisRowIndex]['Elements'] = '';
-        }
-        $StructureRows[$ThisRowIndex]['Elements'] .= $ParsedData;
-        $InRowCount += 1;
-    }
-    if($InRowCount < $ElementsPerRow)
-    {
-        $StructureRows[$ThisRowIndex]['Elements'] .= str_repeat($TPL['list_hidden'], ($ElementsPerRow - $InRowCount));
-    }
-    foreach($StructureRows as $Index => $Data)
-    {
-        $ParsedRows[$Index] = parsetemplate($TPL['list_row'], $Data);
-    }
-    ksort($ParsedRows, SORT_ASC);
-    $Parse['Create_StructuresList'] = implode('', $ParsedRows);
-    $Parse['Create_ElementsInfoBoxes'] = implode('', $InfoBoxes);
-    if($ShowElementID > 0)
-    {
-        $Parse['Create_ShowElementOnStartup'] = $ShowElementID;
-    }
-    // End of - Parse all available technologies
+            $elementsInRowCount = count($elementsInRow);
 
-    $Parse['Insert_SkinPath'] = $_SkinPath;
-    $Parse['Insert_PlanetImg'] = $CurrentPlanet['image'];
-    $Parse['Insert_PlanetType'] = $_Lang['PlanetType_'.$CurrentPlanet['planet_type']];
-    $Parse['Insert_PlanetName'] = $CurrentPlanet['name'];
-    $Parse['Insert_PlanetPos_Galaxy'] = $CurrentPlanet['galaxy'];
-    $Parse['Insert_PlanetPos_System'] = $CurrentPlanet['system'];
-    $Parse['Insert_PlanetPos_Planet'] = $CurrentPlanet['planet'];
-    $Parse['Insert_Overview_LabLevel'] = $CurrentPlanet[$_Vars_GameElements[31]];
-    $Parse['Insert_Overview_LabsConnected'] = prettyNumber($researchNetworkStatus['connectedLabsCount']);
-    $Parse['Insert_Overview_TotalLabsCount'] = prettyNumber($researchNetworkStatus['allLabsCount']);
-    $Parse['Insert_Overview_LabPower'] = prettyNumber($researchNetworkStatus['connectedLabsLevel']);
-    $Parse['Insert_Overview_LabPowerTotal'] = prettyNumber($researchNetworkStatus['allLabsLevel']);
+            if ($elementsInRowCount < $const_ElementsPerRow) {
+                $emptySpaceFiller = str_repeat(
+                    $tplBodyCache['list_hidden'],
+                    ($const_ElementsPerRow - $elementsInRowCount)
+                );
+            }
 
-    $Page = parsetemplate(gettemplate('buildings_compact_body_lab'), $Parse);
+            return parsetemplate(
+                $tplBodyCache['list_row'],
+                [
+                    'Elements' => ($mergedElementsInRow . $emptySpaceFiller)
+                ]
+            );
+        },
+        $groupedIcons
+    );
 
-    display($Page, $_Lang['Research']);
+    $pageTemplateData['Create_Queue'] = $queueComponent['componentHTML'];
+    $pageTemplateData['Create_StructuresList'] = implode(
+        $tplBodyCache['list_breakrow'],
+        $groupedIconRows
+    );
+    $pageTemplateData['Create_ElementsInfoBoxes'] = implode('', $elementsCardComponents);
+    $pageTemplateData['Create_ShowElementOnStartup'] = (
+        $ShowElementID > 0 ?
+        $ShowElementID :
+        ''
+    );
+    $pageTemplateData['Insert_SkinPath'] = $_SkinPath;
+    $pageTemplateData['Insert_PlanetImg'] = $CurrentPlanet['image'];
+    $pageTemplateData['Insert_PlanetType'] = $_Lang['PlanetType_'.$CurrentPlanet['planet_type']];
+    $pageTemplateData['Insert_PlanetName'] = $CurrentPlanet['name'];
+    $pageTemplateData['Insert_PlanetPos_Galaxy'] = $CurrentPlanet['galaxy'];
+    $pageTemplateData['Insert_PlanetPos_System'] = $CurrentPlanet['system'];
+    $pageTemplateData['Insert_PlanetPos_Planet'] = $CurrentPlanet['planet'];
+    $pageTemplateData['Insert_Overview_LabLevel'] = Elements\getElementState(31, $CurrentPlanet, $CurrentUser)['level'];
+    $pageTemplateData['Insert_Overview_LabsConnected'] = prettyNumber($researchNetworkStatus['connectedLabsCount']);
+    $pageTemplateData['Insert_Overview_TotalLabsCount'] = prettyNumber($researchNetworkStatus['allLabsCount']);
+    $pageTemplateData['Insert_Overview_LabPower'] = prettyNumber($researchNetworkStatus['connectedLabsLevel']);
+    $pageTemplateData['Insert_Overview_LabPowerTotal'] = prettyNumber($researchNetworkStatus['allLabsLevel']);
+
+    $pageHTML = parsetemplate($tplBodyCache['pageBody'], $pageTemplateData);
+
+    display($pageHTML, $_Lang['Research']);
 }
 
 ?>
