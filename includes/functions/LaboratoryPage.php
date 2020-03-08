@@ -17,11 +17,11 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet) 
     includeLang('worldElements.detailed');
 
     $Now = time();
-    $Parse = &$_Lang;
+    $pageTemplateData = &$_Lang;
     $ShowElementID = 0;
 
     // Constants
-    $ElementsPerRow = 7;
+    $const_ElementsPerRow = 7;
 
     // Get Templates
     $tplBodyCache = [
@@ -155,6 +155,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet) 
     // End of - Parse Queue
 
     $elementsIconComponents = [];
+    $elementsCardComponents = [];
 
     foreach ($_Vars_ElementCategories['tech'] as $ElementID) {
         $elementQueuedLevel = Elements\getElementState($ElementID, $CurrentPlanet, $CurrentUser)['level'];
@@ -273,7 +274,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet) 
         ]);
 
         $elementsIconComponents[] = $iconComponent['componentHTML'];
-        $InfoBoxes[] = $cardInfoComponent['componentHTML'];
+        $elementsCardComponents[] = $cardInfoComponent['componentHTML'];
     }
 
     // Restore resources & element levels to previous values
@@ -290,18 +291,18 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet) 
     }
 
     // Create List
-    $groupedIcons = Common\Collections\groupInRows($elementsIconComponents, $ElementsPerRow);
+    $groupedIcons = Common\Collections\groupInRows($elementsIconComponents, $const_ElementsPerRow);
     $groupedIconRows = array_map(
-        function ($elementsInRow) use (&$tplBodyCache, $ElementsPerRow) {
+        function ($elementsInRow) use (&$tplBodyCache, $const_ElementsPerRow) {
             $mergedElementsInRow = implode('', $elementsInRow);
             $emptySpaceFiller = '';
 
             $elementsInRowCount = count($elementsInRow);
 
-            if ($elementsInRowCount < $ElementsPerRow) {
+            if ($elementsInRowCount < $const_ElementsPerRow) {
                 $emptySpaceFiller = str_repeat(
                     $tplBodyCache['list_hidden'],
-                    ($ElementsPerRow - $elementsInRowCount)
+                    ($const_ElementsPerRow - $elementsInRowCount)
                 );
             }
 
@@ -315,33 +316,33 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet) 
         $groupedIcons
     );
 
-    $Parse['Create_Queue'] = $queueComponent['componentHTML'];
-    $Parse['Create_StructuresList'] = implode(
+    $pageTemplateData['Create_Queue'] = $queueComponent['componentHTML'];
+    $pageTemplateData['Create_StructuresList'] = implode(
         $tplBodyCache['list_breakrow'],
         $groupedIconRows
     );
-    $Parse['Create_ElementsInfoBoxes'] = implode('', $InfoBoxes);
-    $Parse['Create_ShowElementOnStartup'] = (
+    $pageTemplateData['Create_ElementsInfoBoxes'] = implode('', $elementsCardComponents);
+    $pageTemplateData['Create_ShowElementOnStartup'] = (
         $ShowElementID > 0 ?
         $ShowElementID :
         ''
     );
-    $Parse['Insert_SkinPath'] = $_SkinPath;
-    $Parse['Insert_PlanetImg'] = $CurrentPlanet['image'];
-    $Parse['Insert_PlanetType'] = $_Lang['PlanetType_'.$CurrentPlanet['planet_type']];
-    $Parse['Insert_PlanetName'] = $CurrentPlanet['name'];
-    $Parse['Insert_PlanetPos_Galaxy'] = $CurrentPlanet['galaxy'];
-    $Parse['Insert_PlanetPos_System'] = $CurrentPlanet['system'];
-    $Parse['Insert_PlanetPos_Planet'] = $CurrentPlanet['planet'];
-    $Parse['Insert_Overview_LabLevel'] = Elements\getElementState(31, $CurrentPlanet, $CurrentUser)['level'];
-    $Parse['Insert_Overview_LabsConnected'] = prettyNumber($researchNetworkStatus['connectedLabsCount']);
-    $Parse['Insert_Overview_TotalLabsCount'] = prettyNumber($researchNetworkStatus['allLabsCount']);
-    $Parse['Insert_Overview_LabPower'] = prettyNumber($researchNetworkStatus['connectedLabsLevel']);
-    $Parse['Insert_Overview_LabPowerTotal'] = prettyNumber($researchNetworkStatus['allLabsLevel']);
+    $pageTemplateData['Insert_SkinPath'] = $_SkinPath;
+    $pageTemplateData['Insert_PlanetImg'] = $CurrentPlanet['image'];
+    $pageTemplateData['Insert_PlanetType'] = $_Lang['PlanetType_'.$CurrentPlanet['planet_type']];
+    $pageTemplateData['Insert_PlanetName'] = $CurrentPlanet['name'];
+    $pageTemplateData['Insert_PlanetPos_Galaxy'] = $CurrentPlanet['galaxy'];
+    $pageTemplateData['Insert_PlanetPos_System'] = $CurrentPlanet['system'];
+    $pageTemplateData['Insert_PlanetPos_Planet'] = $CurrentPlanet['planet'];
+    $pageTemplateData['Insert_Overview_LabLevel'] = Elements\getElementState(31, $CurrentPlanet, $CurrentUser)['level'];
+    $pageTemplateData['Insert_Overview_LabsConnected'] = prettyNumber($researchNetworkStatus['connectedLabsCount']);
+    $pageTemplateData['Insert_Overview_TotalLabsCount'] = prettyNumber($researchNetworkStatus['allLabsCount']);
+    $pageTemplateData['Insert_Overview_LabPower'] = prettyNumber($researchNetworkStatus['connectedLabsLevel']);
+    $pageTemplateData['Insert_Overview_LabPowerTotal'] = prettyNumber($researchNetworkStatus['allLabsLevel']);
 
-    $Page = parsetemplate($tplBodyCache['pageBody'], $Parse);
+    $pageHTML = parsetemplate($tplBodyCache['pageBody'], $pageTemplateData);
 
-    display($Page, $_Lang['Research']);
+    display($pageHTML, $_Lang['Research']);
 }
 
 ?>
