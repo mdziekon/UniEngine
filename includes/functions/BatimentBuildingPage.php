@@ -79,9 +79,10 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser) {
     }
 
     $isUserOnVacation = isOnVacation($CurrentUser);
+    $planetsMaxFieldsCount = CalculateMaxPlanetFields($CurrentPlanet);
     $hasAvailableFieldsOnPlanet = (
         ($CurrentPlanet['field_current'] + $planetFieldsUsageCounter) <
-        CalculateMaxPlanetFields($CurrentPlanet)
+        $planetsMaxFieldsCount
     );
     $isQueueFull = (
         $elementsInQueue >=
@@ -210,8 +211,8 @@ function BatimentBuildingPage(&$CurrentPlanet, $CurrentUser) {
     $parse = $_Lang;
 
     $parse['Insert_Overview_Fields_Used'] = $CurrentPlanet['field_current'];
-    $parse['Insert_Overview_Fields_Max'] = CalculateMaxPlanetFields($CurrentPlanet);
-    $parse['Insert_Overview_Fields_Available'] = CalculateMaxPlanetFields($CurrentPlanet) - $CurrentPlanet['field_current'];
+    $parse['Insert_Overview_Fields_Max'] = $planetsMaxFieldsCount;
+    $parse['Insert_Overview_Fields_Available'] = $planetsMaxFieldsCount - $CurrentPlanet['field_current'];
 
     $parse['PHPInject_QueueHTML'] = $queueComponent['componentHTML'];
     $parse['PHPInject_ElementsListHTML'] = $BuildingPage;
