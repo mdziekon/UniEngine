@@ -159,14 +159,14 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
     $elementsIconComponents = [];
     $elementsCardComponents = [];
 
-    foreach ($_Vars_ElementCategories['tech'] as $ElementID) {
-        $elementQueuedLevel = Elements\getElementState($ElementID, $CurrentPlanet, $CurrentUser)['level'];
+    foreach ($_Vars_ElementCategories['tech'] as $elementID) {
+        $elementQueuedLevel = Elements\getElementState($elementID, $CurrentPlanet, $CurrentUser)['level'];
         $isElementInQueue = isset(
-            $queueStateDetails['queuedElementLevelModifiers'][$ElementID]
+            $queueStateDetails['queuedElementLevelModifiers'][$elementID]
         );
         $elementQueueLevelModifier = (
             $isElementInQueue ?
-            $queueStateDetails['queuedElementLevelModifiers'][$ElementID] :
+            $queueStateDetails['queuedElementLevelModifiers'][$elementID] :
             0
         );
         $elementCurrentLevel = (
@@ -174,12 +174,12 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
             ($elementQueueLevelModifier * -1)
         );
 
-        $elementMaxLevel = Elements\getElementMaxUpgradeLevel($ElementID);
+        $elementMaxLevel = Elements\getElementMaxUpgradeLevel($elementID);
         $hasReachedMaxLevel = ($elementQueuedLevel >= $elementMaxLevel);
 
-        $hasUpgradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, false);
+        $hasUpgradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $elementID, false);
 
-        $hasTechnologyRequirementMet = IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $ElementID);
+        $hasTechnologyRequirementMet = IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $elementID);
 
         $isUpgradePossible = (!$hasReachedMaxLevel);
         $isUpgradeQueueable = (
@@ -228,7 +228,7 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
         }
 
         $iconComponent = Development\Components\GridViewElementIcon\render([
-            'elementID' => $ElementID,
+            'elementID' => $elementID,
             'elementDetails' => [
                 'currentState' => $elementCurrentLevel,
                 'queueLevelModifier' => $elementQueueLevelModifier,
@@ -237,13 +237,13 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
                 'isUpgradeQueueableNow' => $isUpgradeQueueableNow,
                 'whyUpgradeImpossible' => [ end($BlockReason) ],
             ],
-            'getUpgradeElementActionLinkHref' => function () use ($ElementID) {
-                return "?mode=research&amp;cmd=search&amp;tech={$ElementID}";
+            'getUpgradeElementActionLinkHref' => function () use ($elementID) {
+                return "?mode=research&amp;cmd=search&amp;tech={$elementID}";
             },
         ]);
 
         $cardInfoComponent = Development\Components\GridViewElementCard\render([
-            'elementID' => $ElementID,
+            'elementID' => $elementID,
             'user' => $CurrentUser,
             'planet' => $CurrentPlanet,
             'isQueueActive' => $hasElementsInQueue,
@@ -267,8 +267,8 @@ function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $ThePlanet) {
                 'hasTechnologyRequirementMet' => $hasTechnologyRequirementMet,
                 'additionalUpgradeDetailsRows' => [],
             ],
-            'getUpgradeElementActionLinkHref' => function () use ($ElementID) {
-                return "?mode=research&amp;cmd=search&amp;tech={$ElementID}";
+            'getUpgradeElementActionLinkHref' => function () use ($elementID) {
+                return "?mode=research&amp;cmd=search&amp;tech={$elementID}";
             },
             'getDowngradeElementActionLinkHref' => function () {
                 return '';

@@ -113,18 +113,18 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser) {
     $elementsCardComponents = [];
     $elementsDestructionDetails = [];
 
-    foreach ($_Vars_ElementCategories['build'] as $ElementID) {
-        if (!Elements\isStructureAvailableOnPlanetType($ElementID, $CurrentPlanet['planet_type'])) {
+    foreach ($_Vars_ElementCategories['build'] as $elementID) {
+        if (!Elements\isStructureAvailableOnPlanetType($elementID, $CurrentPlanet['planet_type'])) {
             continue;
         }
 
-        $elementQueuedLevel = Elements\getElementState($ElementID, $CurrentPlanet, $CurrentUser)['level'];
+        $elementQueuedLevel = Elements\getElementState($elementID, $CurrentPlanet, $CurrentUser)['level'];
         $isElementInQueue = isset(
-            $queueStateDetails['queuedElementLevelModifiers'][$ElementID]
+            $queueStateDetails['queuedElementLevelModifiers'][$elementID]
         );
         $elementQueueLevelModifier = (
             $isElementInQueue ?
-            $queueStateDetails['queuedElementLevelModifiers'][$ElementID] :
+            $queueStateDetails['queuedElementLevelModifiers'][$elementID] :
             0
         );
         $elementCurrentLevel = (
@@ -132,18 +132,18 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser) {
             ($elementQueueLevelModifier * -1)
         );
 
-        $elementMaxLevel = Elements\getElementMaxUpgradeLevel($ElementID);
+        $elementMaxLevel = Elements\getElementMaxUpgradeLevel($elementID);
         $hasReachedMaxLevel = (
             $elementQueuedLevel >=
             $elementMaxLevel
         );
 
-        $hasUpgradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, false);
-        $hasDowngradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $ElementID, true);
+        $hasUpgradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $elementID, false);
+        $hasDowngradeResources = IsElementBuyable($CurrentUser, $CurrentPlanet, $elementID, true);
 
-        $hasTechnologyRequirementMet = IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $ElementID);
+        $hasTechnologyRequirementMet = IsTechnologieAccessible($CurrentUser, $CurrentPlanet, $elementID);
         $isBlockedByTechResearchProgress = (
-            $ElementID == 31 &&
+            $elementID == 31 &&
             $CurrentUser['techQueue_Planet'] > 0 &&
             $CurrentUser['techQueue_EndTime'] > 0 &&
             !isLabUpgradableWhileInUse()
@@ -169,7 +169,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser) {
 
         $isDowngradePossible = (
             ($elementQueuedLevel > 0) &&
-            !Elements\isIndestructibleStructure($ElementID)
+            !Elements\isIndestructibleStructure($elementID)
         );
         $isDowngradeQueueable = (
             $isDowngradePossible &&
@@ -207,8 +207,8 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser) {
         }
 
         if ($isDowngradePossible) {
-            $elementsDestructionDetails[$ElementID] = Development\Utils\Structures\getDestructionDetails([
-                'elementID' => $ElementID,
+            $elementsDestructionDetails[$elementID] = Development\Utils\Structures\getDestructionDetails([
+                'elementID' => $elementID,
                 'planet' => $CurrentPlanet,
                 'user' => $CurrentUser,
                 'isQueueActive' => $hasElementsInQueue,
@@ -216,7 +216,7 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser) {
         }
 
         $iconComponent = Development\Components\GridViewElementIcon\render([
-            'elementID' => $ElementID,
+            'elementID' => $elementID,
             'elementDetails' => [
                 'currentState' => $elementCurrentLevel,
                 'queueLevelModifier' => $elementQueueLevelModifier,
@@ -225,13 +225,13 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser) {
                 'isUpgradeQueueableNow' => $isUpgradeQueueableNow,
                 'whyUpgradeImpossible' => [ end($BlockReason) ],
             ],
-            'getUpgradeElementActionLinkHref' => function () use ($ElementID) {
-                return "?cmd=insert&amp;building={$ElementID}";
+            'getUpgradeElementActionLinkHref' => function () use ($elementID) {
+                return "?cmd=insert&amp;building={$elementID}";
             },
         ]);
 
         $cardInfoComponent = Development\Components\GridViewElementCard\render([
-            'elementID' => $ElementID,
+            'elementID' => $elementID,
             'user' => $CurrentUser,
             'planet' => $CurrentPlanet,
             'isQueueActive' => $hasElementsInQueue,
@@ -255,9 +255,9 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser) {
                 'hasTechnologyRequirementMet' => $hasTechnologyRequirementMet,
                 'additionalUpgradeDetailsRows' => [
                     (
-                        Elements\isProductionRelated($ElementID) ?
+                        Elements\isProductionRelated($elementID) ?
                         Development\Components\GridViewElementCard\UpgradeProductionChange\render([
-                            'elementID' => $ElementID,
+                            'elementID' => $elementID,
                             'user' => $CurrentUser,
                             'planet' => $CurrentPlanet,
                             'timestamp' => $Now,
@@ -270,11 +270,11 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser) {
                     ),
                 ],
             ],
-            'getUpgradeElementActionLinkHref' => function () use ($ElementID) {
-                return "?cmd=insert&amp;building={$ElementID}";
+            'getUpgradeElementActionLinkHref' => function () use ($elementID) {
+                return "?cmd=insert&amp;building={$elementID}";
             },
-            'getDowngradeElementActionLinkHref' => function () use ($ElementID) {
-                return "?cmd=destroy&amp;building={$ElementID}";
+            'getDowngradeElementActionLinkHref' => function () use ($elementID) {
+                return "?cmd=destroy&amp;building={$elementID}";
             },
         ]);
 
