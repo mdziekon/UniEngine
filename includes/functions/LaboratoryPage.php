@@ -10,11 +10,10 @@ use UniEngine\Engine\Includes\Helpers\Users;
 use UniEngine\Engine\Includes\Helpers\World\Resources;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 
-function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet)
-{
+function LaboratoryPage(&$CurrentPlanet, $CurrentUser, $InResearch, $ThePlanet) {
     global $_EnginePath, $_Lang, $_Vars_ElementCategories, $_SkinPath, $_GET;
 
-    include($_EnginePath.'includes/functions/GetElementTechReq.php');
+    include($_EnginePath . 'includes/functions/GetElementTechReq.php');
     includeLang('worldElements.detailed');
 
     $Now = time();
