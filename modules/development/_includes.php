@@ -25,6 +25,10 @@ call_user_func(function () {
     include($includePath . './components/GridViewElementCard/UpgradeRequirements/ResourcesList/ResourcesList.component.php');
     include($includePath . './components/GridViewElementCard/UpgradeProductionChange/UpgradeProductionChange.component.php');
 
+    include($includePath . './screens/StructuresView/StructuresView.component.php');
+    include($includePath . './screens/StructuresView/components/GridView/GridView.component.php');
+    include($includePath . './screens/StructuresView/components/ListView/ListView.component.php');
+
     include($includePath . './screens/ResearchListPage/ModernQueuePlanetInfo/ModernQueuePlanetInfo.component.php');
     include($includePath . './screens/ResearchListPage/ModernQueueLabUpgradeInfo/ModernQueueLabUpgradeInfo.component.php');
 
