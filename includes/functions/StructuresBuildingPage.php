@@ -240,8 +240,8 @@ function StructuresBuildingPage(&$CurrentPlanet, $CurrentUser) {
                 'isInQueue' => $isElementInQueue,
                 'queueLevelModifier' => $elementQueueLevelModifier,
                 'isUpgradePossible' => $isUpgradePossible,
-                'isUpgradeAvailable' => $isUpgradeAvailableNow,
-                'isUpgradeQueueable' => $isUpgradeQueueable,
+                'isUpgradeAvailableNow' => $isUpgradeAvailableNow,
+                'isUpgradeQueueableNow' => $isUpgradeQueueableNow,
                 'whyUpgradeImpossible' => [
                     (
                         $hasReachedMaxLevel ?
