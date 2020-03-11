@@ -55,6 +55,8 @@ if(!isset($_GET['mode']))
 
 include($_EnginePath . 'modules/development/_includes.php');
 
+use UniEngine\Engine\Modules\Development;
+
 switch($_GET['mode'])
 {
     case 'fleet':
@@ -94,16 +96,20 @@ switch($_GET['mode'])
         }
         break;
     default:
-        if($OldViewMode)
-        {
-            include($_EnginePath.'includes/functions/BatimentBuildingPage.php');
-            BatimentBuildingPage($_Planet, $_User);
-        }
-        else
-        {
-            include($_EnginePath.'includes/functions/StructuresBuildingPage.php');
-            StructuresBuildingPage($_Planet, $_User);
-        }
+        $pageView = Development\Screens\StructuresView\render([
+            'pageType' => (
+                $OldViewMode ?
+                Development\Screens\StructuresView\StructuresViewType::List :
+                Development\Screens\StructuresView\StructuresViewType::Grid
+            ),
+            'input' => $_GET,
+            'planet' => &$_Planet,
+            'user' => $_User,
+            'timestamp' => time(),
+        ]);
+
+        display($pageView['componentHTML'], $_Lang['Builds']);
+
         break;
 }
 

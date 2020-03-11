@@ -19,7 +19,9 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 //      - componentHTML (String)
 //
 function render ($props) {
-    global $_Lang;
+    global $_EnginePath, $_Lang;
+
+    include_once($_EnginePath . 'includes/functions/GetElementTechReq.php');
 
     $localTemplateLoader = createLocalTemplateLoader(__DIR__);
 

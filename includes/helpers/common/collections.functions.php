@@ -28,4 +28,10 @@ function groupInRows($collection, $rowSize) {
     });
 }
 
+function compact($collection) {
+    return array_filter($collection, function ($value) {
+        return $value;
+    });
+}
+
 ?>

@@ -15,22 +15,22 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 //              - isInQueue (Boolean)
 //              - queueLevelModifier (Number)
 //              - isUpgradePossible (Boolean)
-//              - isUpgradeAvailable (Boolean)
+//              - isUpgradeAvailableNow (Boolean)
 //                  Whether the upgrade is available at this moment,
 //                  meaning that we can start it right now.
-//              - isUpgradeQueueable (Boolean)
+//              - isUpgradeQueueableNow (Boolean)
 //                  Whether the requirements for the upgrade have been met,
 //                  however it's impossible to start the upgrade right now,
 //                  eg. because the resources are not yet available
 //                  (but they MIGHT be once the queue reaches this element).
 //                  Note: this flag works with conjunction with "isQueueActive".
-//              - whyUpgradeImpossible (String[])
 //              - isDowngradePossible (Boolean)
 //              - isDowngradeAvailable (Boolean)
 //                  Similar to "isUpgradeAvailable".
 //              - isDowngradeQueueable (Boolean)
 //                  Similar to "isUpgradeQueueable".
 //              - hasTechnologyRequirementMet (Boolean)
+//              - whyUpgradeImpossible (String[])
 //              - additionalUpgradeDetailsRows (Array<String>)
 //          - getUpgradeElementActionLinkHref (Function: () => String)
 //              Should return the link to the appropriate command invoker.
@@ -46,7 +46,7 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 //      - componentHTML (String)
 //
 function render ($props) {
-    global $_SkinPath, $_Lang, $_Vars_ElementCategories;
+    global $_SkinPath, $_Lang;
 
     $localTemplateLoader = createLocalTemplateLoader(__DIR__);
 
@@ -72,8 +72,8 @@ function render ($props) {
     $elementQueueLevelModifier = $elementDetails['queueLevelModifier'];
     $elementCurrentState = $elementDetails['currentState'];
     $isUpgradePossible = $elementDetails['isUpgradePossible'];
-    $isUpgradeAvailable = $elementDetails['isUpgradeAvailable'];
-    $isUpgradeQueueable = $elementDetails['isUpgradeQueueable'];
+    $isUpgradeAvailableNow = $elementDetails['isUpgradeAvailableNow'];
+    $isUpgradeQueueableNow = $elementDetails['isUpgradeQueueableNow'];
     $whyUpgradeImpossible = $elementDetails['whyUpgradeImpossible'];
     $isDowngradePossible = $elementDetails['isDowngradePossible'];
     $isDowngradeAvailable = $elementDetails['isDowngradeAvailable'];
@@ -180,11 +180,11 @@ function render ($props) {
         ]),
 
         'Data_UpgradeBtn_ColorClass'        => classNames([
-            'buildDo_Green' => $isUpgradeAvailable,
-            'buildDo_Orange' => (!$isUpgradeAvailable && $isUpgradeQueueable && $isQueueActive),
+            'buildDo_Green' => $isUpgradeAvailableNow,
+            'buildDo_Orange' => (!$isUpgradeAvailableNow && $isUpgradeQueueableNow),
             'buildDo_Gray' => !(
-                $isUpgradeAvailable ||
-                (!$isUpgradeAvailable && $isUpgradeQueueable && $isQueueActive)
+                $isUpgradeAvailableNow ||
+                (!$isUpgradeAvailableNow && $isUpgradeQueueableNow)
             ),
         ]),
         'Data_DowngradeBtn_ColorClass'      => classNames([
