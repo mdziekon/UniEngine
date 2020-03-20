@@ -104,7 +104,7 @@ function render ($props) {
     $hasElementsInQueue = ($elementsInQueue > 0);
     $isQueueFull = (
         $elementsInQueue >=
-        Users\getMaxStructuresQueueLength($CurrentUser)
+        Users\getMaxStructuresQueueLength($user)
     );
 
     // Iterate through all available elements
