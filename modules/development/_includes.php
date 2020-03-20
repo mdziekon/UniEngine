@@ -29,6 +29,10 @@ call_user_func(function () {
     include($includePath . './screens/StructuresView/components/GridView/GridView.component.php');
     include($includePath . './screens/StructuresView/components/ListView/ListView.component.php');
 
+    include($includePath . './screens/ResearchView/ResearchView.component.php');
+    include($includePath . './screens/ResearchView/components/GridView/GridView.component.php');
+    include($includePath . './screens/ResearchView/components/ListView/ListView.component.php');
+
     include($includePath . './screens/ResearchListPage/ModernQueuePlanetInfo/ModernQueuePlanetInfo.component.php');
     include($includePath . './screens/ResearchListPage/ModernQueueLabUpgradeInfo/ModernQueueLabUpgradeInfo.component.php');
 
