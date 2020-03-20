@@ -51,11 +51,6 @@ function render ($props) {
                 ''
             ),
             (
-                $upgradeBlockReasons['hasUnmetTechnologyRequirements'] ?
-                $_Lang['ListBox_Disallow_NoTech'] :
-                ''
-            ),
-            (
                 $upgradeBlockReasons['isBlockedByResearchInProgress'] ?
                 $_Lang['ListBox_Disallow_LabResearch'] :
                 ''
@@ -79,6 +74,7 @@ function render ($props) {
         $blockReasonWarnings = Common\Collections\compact($blockReasonWarnings);
 
         $showInactiveUpgradeActionLink = (
+            $elementDetails['isUpgradeQueueable'] &&
             $upgradeBlockReasons['hasInsufficientUpgradeResources']
         );
 

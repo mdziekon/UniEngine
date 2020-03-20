@@ -190,6 +190,7 @@ function render ($props) {
             'isInQueue' => $isElementInQueue,
             'queueLevelModifier' => $elementQueueLevelModifier,
             'isUpgradePossible' => $isUpgradePossible,
+            'isUpgradeQueueable' => $isUpgradeQueueable,
             'isUpgradeAvailableNow' => $isUpgradeAvailableNow,
             'isUpgradeQueueableNow' => $isUpgradeQueueableNow,
             'upgradeBlockReasons' => $upgradeBlockReasons,
