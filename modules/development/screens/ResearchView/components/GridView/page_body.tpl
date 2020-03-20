@@ -58,7 +58,7 @@ function onQueuesFirstElementFinished () {
                 <td class="c center">{ListBox_TechsList}</td>
             </tr>
             <tr>
-                <th class="pad1" style="padding-top: 5px;">{Create_StructuresList}</th>
+                <th class="pad1" style="padding-top: 5px;">{Create_ElementsList}</th>
             </tr>
         </table>
     </div>

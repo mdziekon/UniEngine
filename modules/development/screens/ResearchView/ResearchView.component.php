@@ -1,6 +1,6 @@
 <?php
 
-namespace UniEngine\Engine\Modules\Development\Screens\StructuresView;
+namespace UniEngine\Engine\Modules\Development\Screens\ResearchView;
 
 use UniEngine\Engine\Modules\Development;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
@@ -8,19 +8,20 @@ use UniEngine\Engine\Includes\Helpers\World\Resources;
 use UniEngine\Engine\Includes\Helpers\Planets;
 use UniEngine\Engine\Includes\Helpers\Users;
 
-abstract class StructuresViewType {
-    const Grid = 'StructuresViewType::Grid';
-    const List = 'StructuresViewType::List';
+abstract class ResearchViewType {
+    const Grid = 'ResearchViewType::Grid';
+    const List = 'ResearchViewType::List';
 }
 
 //  Arguments
 //      - $props (Object)
-//          - pageType (Enum: StructuresViewType)
+//          - pageType (Enum: ResearchViewType)
 //          - input (Object)
 //          - planet (&Object)
 //              Reference needed because the internal PlanetResourceUpdate()
 //              needs to persist the changes for the finishing display() call,
 //              which uses global $_Planet.
+//          - researchPlanet (&Object)
 //          - user (Object)
 //          - timestamp (Number)
 //
@@ -35,35 +36,53 @@ function render ($props) {
     $pageType = $props['pageType'];
     $input = $props['input'];
     $planet = &$props['planet'];
+    $researchPlanet = &$props['researchPlanet'];
     $user = $props['user'];
     $currentTimestamp = $props['timestamp'];
 
-    $planetType = $planet['planet_type'];
+    if (!is_array($researchPlanet)) {
+        $researchPlanet = &$planet;
+    }
 
-    $elementsList = array_filter(
-        $_Vars_ElementCategories['build'],
-        function ($elementID) use ($planetType) {
-            return Elements\isStructureAvailableOnPlanetType($elementID, $planetType);
-        }
-    );
+    $elementsList = $_Vars_ElementCategories['tech'];
 
     $highlightElementID = null;
-    $planetFieldsUsageCounter = 0;
-
-    // Preparations
-    CheckPlanetUsedFields($planet);
-    PlanetResourceUpdate($user, $planet, $currentTimestamp);
 
     $isUserOnVacation = isOnVacation($user);
-    $planetsMaxFieldsCount = CalculateMaxPlanetFields($planet);
+    $hasResearchLab = Planets\Elements\hasResearchLab($planet);
+
+    $researchNetworkStatus = Development\Utils\Research\fetchResearchNetworkStatus($user);
+    $planetsWithUnfinishedLabUpgrades = [];
+
+    // Preparations
+    if (
+        !isLabUpgradableWhileInUse() &&
+        !empty($researchNetworkStatus['planetsWithLabInStructuresQueue'])
+    ) {
+        $planetsUpdateResult = Development\Utils\Research\updatePlanetsWithLabsInQueue(
+            $user,
+            [
+                'planetsWithLabInStructuresQueueIDs' => $researchNetworkStatus['planetsWithLabInStructuresQueue'],
+                'currentTimestamp' => $currentTimestamp,
+            ]
+        );
+
+        $planetsWithUnfinishedLabUpgrades = $planetsUpdateResult['planetsWithUnfinishedLabUpgrades'];
+    }
+
+    $hasPlanetsWithUnfinishedLabUpgrades = !empty($planetsWithUnfinishedLabUpgrades);
+
+    PlanetResourceUpdate($user, $planet, $currentTimestamp);
 
     // Handle user input
-    $cmdResult = Development\Input\UserCommands\handleStructureCommand(
+    $cmdResult = Development\Input\UserCommands\handleResearchCommand(
         $user,
-        $planet,
+        $researchPlanet,
         $input,
         [
-            "timestamp" => $currentTimestamp
+            "timestamp" => $currentTimestamp,
+            "currentPlanet" => $planet,
+            "hasPlanetsWithUnfinishedLabUpgrades" => $hasPlanetsWithUnfinishedLabUpgrades,
         ]
     );
     if ($cmdResult['isSuccess']) {
@@ -71,11 +90,11 @@ function render ($props) {
     }
 
     // Handle queue display and data gathering
-    $queueContent = Planets\Queues\Structures\parseQueueString($planet['buildQueue']);
+    $queueContent = Planets\Queues\Research\parseQueueString($researchPlanet['techQueue']);
 
     $queueStateDetails = Development\Utils\getQueueStateDetails([
         'queue' => [
-            'type' => Development\Utils\QueueType::Planetary,
+            'type' => Development\Utils\QueueType::Research,
             'content' => $queueContent,
         ],
         'user' => $user,
@@ -92,20 +111,21 @@ function render ($props) {
     }
     foreach ($queueStateDetails['queuedElementLevelModifiers'] as $elementID => $elementLevelModifier) {
         $elementKey = Elements\getElementKey($elementID);
-        $planet[$elementKey] += $elementLevelModifier;
-        $planetFieldsUsageCounter += $elementLevelModifier;
+        $user[$elementKey] += $elementLevelModifier;
     }
 
-    $hasAvailableFieldsOnPlanet = (
-        ($planet['field_current'] + $planetFieldsUsageCounter) <
-        $planetsMaxFieldsCount
-    );
     $elementsInQueue = $queueStateDetails['queuedElementsCount'];
     $hasElementsInQueue = ($elementsInQueue > 0);
     $isQueueFull = (
         $elementsInQueue >=
-        Users\getMaxStructuresQueueLength($user)
+        Users\getMaxResearchQueueLength($user)
     );
+    $isResearchInProgress = $hasElementsInQueue;
+    $canQueueResearchOnThisPlanet = (
+        !$isResearchInProgress ||
+        $researchPlanet['id'] == $planet['id']
+    );
+    $isUpgradeBlockedByLabUpgradeInProgress = $hasPlanetsWithUnfinishedLabUpgrades;
 
     // Iterate through all available elements
     $elementsDetails = [];
@@ -132,24 +152,18 @@ function render ($props) {
         );
 
         $hasUpgradeResources = IsElementBuyable($user, $planet, $elementID, false);
-        $hasDowngradeResources = IsElementBuyable($user, $planet, $elementID, true);
 
         $hasTechnologyRequirementMet = IsTechnologieAccessible($user, $planet, $elementID);
-        $isBlockedByTechResearchProgress = (
-            $elementID == 31 &&
-            $user['techQueue_Planet'] > 0 &&
-            $user['techQueue_EndTime'] > 0 &&
-            !isLabUpgradableWhileInUse()
-        );
 
         $isUpgradePossible = (!$hasReachedMaxLevel);
         $isUpgradeQueueable = (
             $isUpgradePossible &&
             !$isUserOnVacation &&
             !$isQueueFull &&
-            $hasAvailableFieldsOnPlanet &&
+            $hasResearchLab &&
+            $canQueueResearchOnThisPlanet &&
             $hasTechnologyRequirementMet &&
-            !$isBlockedByTechResearchProgress
+            !$isUpgradeBlockedByLabUpgradeInProgress
         );
         $isUpgradeAvailableNow = (
             $isUpgradeQueueable &&
@@ -160,29 +174,15 @@ function render ($props) {
             $hasElementsInQueue
         );
 
-        $isDowngradePossible = (
-            ($elementQueuedLevel > 0) &&
-            !Elements\isIndestructibleStructure($elementID)
-        );
-        $isDowngradeQueueable = (
-            $isDowngradePossible &&
-            !$isUserOnVacation &&
-            !$isQueueFull &&
-            !$isBlockedByTechResearchProgress
-        );
-        $isDowngradeAvailableNow = (
-            $isDowngradeQueueable &&
-            $hasDowngradeResources
-        );
-
         $upgradeBlockReasons = [
             'isUserOnVacation' => $isUserOnVacation,
             'isQueueFull' => $isQueueFull,
-            'isBlockedByResearchInProgress' => $isBlockedByTechResearchProgress,
+            'hasNoLab' => !$hasResearchLab,
+            'isBlockedByLabUpgradeInProgress' => $isUpgradeBlockedByLabUpgradeInProgress,
             'hasInsufficientUpgradeResources' => !$hasUpgradeResources,
             'hasReachedMaxLevel' => $hasReachedMaxLevel,
             'hasUnmetTechnologyRequirements' => !$hasTechnologyRequirementMet,
-            'hasInsufficientPlanetFieldsLeft' => !$hasAvailableFieldsOnPlanet,
+            'hasOngoingResearchElsewhere' => !$canQueueResearchOnThisPlanet,
         ];
 
         $elementDetails = [
@@ -194,9 +194,6 @@ function render ($props) {
             'isUpgradeAvailableNow' => $isUpgradeAvailableNow,
             'isUpgradeQueueableNow' => $isUpgradeQueueableNow,
             'upgradeBlockReasons' => $upgradeBlockReasons,
-            'isDowngradePossible' => $isDowngradePossible,
-            'isDowngradeAvailable' => $isDowngradeAvailableNow,
-            'isDowngradeQueueable' => $isDowngradeQueueable,
             'hasTechnologyRequirementMet' => $hasTechnologyRequirementMet,
         ];
 
@@ -206,17 +203,21 @@ function render ($props) {
     $viewComponent = null;
     $viewProps = [
         'planet' => $planet,
+        'researchPlanet' => $researchPlanet,
         'user' => $user,
         'timestamp' => $currentTimestamp,
         'elementsDetails' => $elementsDetails,
         'highlightElementID' => $highlightElementID,
         'queueContent' => $queueContent,
         'isQueueActive' => $hasElementsInQueue,
+        'canQueueResearchOnThisPlanet' => $canQueueResearchOnThisPlanet,
+        'planetsWithUnfinishedLabUpgrades' => $planetsWithUnfinishedLabUpgrades,
+        'researchNetworkStatus' => $researchNetworkStatus,
     ];
 
-    if ($pageType === StructuresViewType::Grid) {
+    if ($pageType === ResearchViewType::Grid) {
         $viewComponent = Components\GridView\render($viewProps);
-    } else if ($pageType === StructuresViewType::List) {
+    } else if ($pageType === ResearchViewType::List) {
         $viewComponent = Components\ListView\render($viewProps);
     }
 
@@ -230,7 +231,7 @@ function render ($props) {
     }
     foreach ($queueStateDetails['queuedElementLevelModifiers'] as $elementID => $elementLevelModifier) {
         $elementKey = Elements\getElementKey($elementID);
-        $planet[$elementKey] -= $elementLevelModifier;
+        $user[$elementKey] -= $elementLevelModifier;
     }
 
     return [
