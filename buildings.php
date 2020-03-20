@@ -72,16 +72,21 @@ switch($_GET['mode'])
         }
         break;
     case 'research':
-        if($OldViewMode)
-        {
-            include($_EnginePath.'includes/functions/ResearchBuildingPage.php');
-            ResearchBuildingPage($_Planet, $_User, $ResearchPlanet);
-        }
-        else
-        {
-            include($_EnginePath.'includes/functions/LaboratoryPage.php');
-            LaboratoryPage($_Planet, $_User, $ResearchPlanet);
-        }
+        $pageView = Development\Screens\ResearchView\render([
+            'pageType' => (
+                $OldViewMode ?
+                Development\Screens\ResearchView\ResearchViewType::List :
+                Development\Screens\ResearchView\ResearchViewType::Grid
+            ),
+            'input' => $_GET,
+            'planet' => &$_Planet,
+            'researchPlanet' => &$ResearchPlanet,
+            'user' => $_User,
+            'timestamp' => time(),
+        ]);
+
+        display($pageView['componentHTML'], $_Lang['Research']);
+
         break;
     case 'defense':
         if($OldViewMode)
