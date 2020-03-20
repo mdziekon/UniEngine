@@ -34,9 +34,6 @@ function render ($props) {
 
     $tplBodyCache = [
         'pageBody' => $localTemplateLoader('page_body'),
-        'list_hidden' => gettemplate('buildings_compact_list_hidden'),
-        'list_row' => gettemplate('buildings_compact_list_row'),
-        'list_breakrow' => gettemplate('buildings_compact_list_breakrow'),
     ];
     $componentTplData = &$_Lang;
 
