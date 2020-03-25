@@ -17,7 +17,7 @@ matrix:
                 - composer install
 
             script:
-                - composer run-script ci-php-phpcs
+                - composer run-script ci:php:phpcs
 
         -
             # see https://docs.travis-ci.com/user/languages/javascript-with-nodejs/ for more hints
@@ -33,5 +33,5 @@ matrix:
                 - npm ci
 
             script:
-                - npm run ci-js-eslint
-                - npm run ci-css-stylelint
+                - npm run ci:js:eslint
+                - npm run ci:css:stylelint
