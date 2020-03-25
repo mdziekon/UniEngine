@@ -14,7 +14,7 @@ use UniEngine\Engine\Includes\Helpers\World\Resources;
  * @param number $props['maxPillagePercentage']
  * @param number $props['fleetTotalStorage']
  */
-function calculateResourcesPillage ($props) {
+function calculateEvenResourcesPillage ($props) {
     $planet = $props['planet'];
     $maxPillagePercentage = $props['maxPillagePercentage'];
     $fleetTotalStorage = $props['fleetTotalStorage'];
