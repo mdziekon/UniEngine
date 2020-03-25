@@ -18,6 +18,7 @@ matrix:
 
             script:
                 - composer run-script ci:php:phpcs
+                - composer run-script ci:php:test
 
         -
             # see https://docs.travis-ci.com/user/languages/javascript-with-nodejs/ for more hints
