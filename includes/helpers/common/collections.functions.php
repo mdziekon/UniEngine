@@ -34,4 +34,10 @@ function compact($collection) {
     });
 }
 
+function without($collection, $excludedElement) {
+    return array_filter($collection, function ($value) use ($excludedElement) {
+        return $value !== $excludedElement;
+    });
+}
+
 ?>
