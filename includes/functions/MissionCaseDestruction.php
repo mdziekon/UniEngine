@@ -1,5 +1,7 @@
 <?php
 
+use UniEngine\Engine\Modules\Flights;
+
 function MissionCaseDestruction($FleetRow, &$_FleetCache)
 {
     global    $_EnginePath, $_User, $_Vars_Prices, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories, $_GameConfig, $ChangeCoordinatesForFleets,
@@ -476,99 +478,27 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
                         }
                     }
 
-                    $StolenMet = 0;
-                    $StolenCry = 0;
-                    $StolenDeu = 0;
+                    $resourcesPillage = Flights\Utils\Missions\calculateEvenResourcesPillage([
+                        'maxPillagePerResource' => Flights\Utils\Missions\calculateMaxPlanetPillage([
+                            'planet' => $TargetPlanet,
+                            'maxPillagePercentage' => $ResourceSteal_Factor,
+                        ]),
+                        'fleetTotalStorage' => $FleetStorage,
+                    ]);
 
-                    $AllowTakeMoreMet = 0;
-                    $AllowTakeMoreCry = 0;
-                    $AllowTakeMoreDeu = 0;
+                    $StolenMet = $resourcesPillage['metal'];
+                    $StolenCry = $resourcesPillage['crystal'];
+                    $StolenDeu = $resourcesPillage['deuterium'];
 
-                    $MaxMetSteal = $TargetPlanet['metal'] * $ResourceSteal_Factor;
-                    $MaxCrySteal = $TargetPlanet['crystal'] * $ResourceSteal_Factor;
-                    $MaxDeuSteal = $TargetPlanet['deuterium'] * $ResourceSteal_Factor;
-
-                    $StoragePerResource = $FleetStorage / 3;
-
-                    // First - calculate, if any resource will leave free storage
-                    if($MaxMetSteal < $StoragePerResource)
-                    {
-                        $AllowTakeMore = ($StoragePerResource - $MaxMetSteal) / 2;
-                        $AllowTakeMoreCry += $AllowTakeMore;
-                        $AllowTakeMoreDeu += $AllowTakeMore;
-                        $GiveAwayMet = true;
-                    }
-
-                    if($MaxCrySteal < ($StoragePerResource + $AllowTakeMoreCry))
-                    {
-                        $AllowTakeMore = (($StoragePerResource + $AllowTakeMoreCry) - $MaxCrySteal) / 2;
-                        if($GiveAwayMet == false)
-                        {
-                            $AllowTakeMoreMet += $AllowTakeMore;
-                            $AllowTakeMoreDeu += $AllowTakeMore;
-                        }
-                        else
-                        {
-                            $AllowTakeMoreDeu += $AllowTakeMore * 2;
-                        }
-                        $GiveAwayCry = true;
-                    }
-
-                    if($MaxDeuSteal < ($StoragePerResource + $AllowTakeMoreDeu))
-                    {
-                        $AllowTakeMore = (($StoragePerResource + $AllowTakeMoreDeu) - $MaxDeuSteal) / 2;
-                        if($GiveAwayCry == false)
-                        {
-                            $AllowTakeMoreMet += $AllowTakeMore;
-                            $AllowTakeMoreCry += $AllowTakeMore;
-                        }
-                        else
-                        {
-                            $AllowTakeMoreMet += $AllowTakeMore * 2;
-                        }
-                    }
-
-                    //Second - calculate stolen resources
-                    if($MaxMetSteal > ($StoragePerResource + $AllowTakeMoreMet))
-                    {
-                        $StolenMet = $StoragePerResource + $AllowTakeMoreMet;
-                    }
-                    else
-                    {
-                        $StolenMet = $MaxMetSteal;
-                    }
-                    if($MaxCrySteal > ($StoragePerResource + $AllowTakeMoreCry))
-                    {
-                        $StolenCry = $StoragePerResource + $AllowTakeMoreCry;
-                    }
-                    else
-                    {
-                        $StolenCry = $MaxCrySteal;
-                    }
-                    if($MaxDeuSteal > ($StoragePerResource + $AllowTakeMoreDeu))
-                    {
-                        $StolenDeu = $StoragePerResource + $AllowTakeMoreDeu;
-                    }
-                    else
-                    {
-                        $StolenDeu = $MaxDeuSteal;
-                    }
-
-                    $StolenMet = floor($StolenMet);
-                    $StolenCry = floor($StolenCry);
-                    $StolenDeu = floor($StolenDeu);
-                    if($StolenMet > 0)
-                    {
+                    if ($StolenMet > 0) {
                         $UserDev_UpFl[$FleetRow['fleet_id']][] = 'M,'.$StolenMet;
                         $TriggerTasksCheck['atk']['BATTLE_COLLECT_METAL'] = $StolenMet;
                     }
-                    if($StolenCry > 0)
-                    {
+                    if ($StolenCry > 0) {
                         $UserDev_UpFl[$FleetRow['fleet_id']][] = 'C,'.$StolenCry;
                         $TriggerTasksCheck['atk']['BATTLE_COLLECT_CRYSTAL'] = $StolenCry;
                     }
-                    if($StolenDeu > 0)
-                    {
+                    if ($StolenDeu > 0) {
                         $UserDev_UpFl[$FleetRow['fleet_id']][] = 'D,'.$StolenDeu;
                         $TriggerTasksCheck['atk']['BATTLE_COLLECT_DEUTERIUM'] = $StolenDeu;
                     }
