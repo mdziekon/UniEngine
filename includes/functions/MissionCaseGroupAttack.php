@@ -533,7 +533,10 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
         $TotalCryStolen = 0;
         $TotalDeuStolen = 0;
 
-        $maxResourcesPillage = null;
+        $maxResourcesPillage = Flights\Utils\Missions\calculateMaxPlanetPillage([
+            'planet' => $TargetPlanet,
+            'maxPillagePercentage' => 0,
+        ]);
 
         if(!empty($AtkShips))
         {
