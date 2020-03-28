@@ -22,12 +22,14 @@ class CalculateEvenResourcesPillageTestCase extends TestCase {
      */
     public function itShouldPillageLimitedAmountOfResources($maxPillagePercentage, $maxPillagePerResource) {
         $params = [
-            'planet' => [
-                'metal' => 1000000,
-                'crystal' => 1000000,
-                'deuterium' => 1000000,
-            ],
-            'maxPillagePercentage' => $maxPillagePercentage,
+            'maxPillagePerResource' => Missions\calculateMaxPlanetPillage([
+                'planet' => [
+                    'metal' => 1000000,
+                    'crystal' => 1000000,
+                    'deuterium' => 1000000,
+                ],
+                'maxPillagePercentage' => $maxPillagePercentage,
+            ]),
             'fleetTotalStorage' => 100000000,
         ];
 
@@ -48,12 +50,14 @@ class CalculateEvenResourcesPillageTestCase extends TestCase {
      */
     public function itShouldEvenlyDistributePillageResourcesWhenStorageIsLimited() {
         $params = [
-            'planet' => [
-                'metal' => 1000000,
-                'crystal' => 1000000,
-                'deuterium' => 1000000,
-            ],
-            'maxPillagePercentage' => 0.5,
+            'maxPillagePerResource' => Missions\calculateMaxPlanetPillage([
+                'planet' => [
+                    'metal' => 1000000,
+                    'crystal' => 1000000,
+                    'deuterium' => 1000000,
+                ],
+                'maxPillagePercentage' => 0.5,
+            ]),
             'fleetTotalStorage' => 1000000,
         ];
 
@@ -84,8 +88,10 @@ class CalculateEvenResourcesPillageTestCase extends TestCase {
         $planet[$resourceKey] = 1000000;
 
         $params = [
-            'planet' => $planet,
-            'maxPillagePercentage' => 0.5,
+            'maxPillagePerResource' => Missions\calculateMaxPlanetPillage([
+                'planet' => $planet,
+                'maxPillagePercentage' => 0.5,
+            ]),
             'fleetTotalStorage' => 500000,
         ];
 
@@ -119,8 +125,10 @@ class CalculateEvenResourcesPillageTestCase extends TestCase {
         $planet[$resourceKey] = 0;
 
         $params = [
-            'planet' => $planet,
-            'maxPillagePercentage' => 0.5,
+            'maxPillagePerResource' => Missions\calculateMaxPlanetPillage([
+                'planet' => $planet,
+                'maxPillagePercentage' => 0.5,
+            ]),
             'fleetTotalStorage' => 1000000,
         ];
 
@@ -150,8 +158,10 @@ class CalculateEvenResourcesPillageTestCase extends TestCase {
         ];
 
         $params = [
-            'planet' => $planet,
-            'maxPillagePercentage' => 0.5,
+            'maxPillagePerResource' => Missions\calculateMaxPlanetPillage([
+                'planet' => $planet,
+                'maxPillagePercentage' => 0.5,
+            ]),
             'fleetTotalStorage' => 10000000,
         ];
 
@@ -192,8 +202,10 @@ class CalculateEvenResourcesPillageTestCase extends TestCase {
         $planet[$orderedResourceKeys[2]] = 100000;
 
         $params = [
-            'planet' => $planet,
-            'maxPillagePercentage' => 0.5,
+            'maxPillagePerResource' => Missions\calculateMaxPlanetPillage([
+                'planet' => $planet,
+                'maxPillagePercentage' => 0.5,
+            ]),
             'fleetTotalStorage' => 1750000,
         ];
 
@@ -234,8 +246,10 @@ class CalculateEvenResourcesPillageTestCase extends TestCase {
         $planet[$orderedResourceKeys[2]] = 70000;
 
         $params = [
-            'planet' => $planet,
-            'maxPillagePercentage' => 0.5,
+            'maxPillagePerResource' => Missions\calculateMaxPlanetPillage([
+                'planet' => $planet,
+                'maxPillagePercentage' => 0.5,
+            ]),
             'fleetTotalStorage' => 1000000,
         ];
 
@@ -270,12 +284,14 @@ class CalculateValuePrioritizedResourcesPillageTestCase extends TestCase {
      */
     public function itShouldPillageLimitedAmountOfResources($maxPillagePercentage, $maxPillagePerResource) {
         $params = [
-            'planet' => [
-                'metal' => 1000000,
-                'crystal' => 1000000,
-                'deuterium' => 1000000,
-            ],
-            'maxPillagePercentage' => $maxPillagePercentage,
+            'maxPillagePerResource' => Missions\calculateMaxPlanetPillage([
+                'planet' => [
+                    'metal' => 1000000,
+                    'crystal' => 1000000,
+                    'deuterium' => 1000000,
+                ],
+                'maxPillagePercentage' => $maxPillagePercentage,
+            ]),
             'fleetTotalStorage' => 100000000,
         ];
 
@@ -296,12 +312,14 @@ class CalculateValuePrioritizedResourcesPillageTestCase extends TestCase {
      */
     public function itShouldEvenlyDistributePillageResourcesWhenStorageIsLimited() {
         $params = [
-            'planet' => [
-                'metal' => 1000000,
-                'crystal' => 1000000,
-                'deuterium' => 1000000,
-            ],
-            'maxPillagePercentage' => 0.5,
+            'maxPillagePerResource' => Missions\calculateMaxPlanetPillage([
+                'planet' => [
+                    'metal' => 1000000,
+                    'crystal' => 1000000,
+                    'deuterium' => 1000000,
+                ],
+                'maxPillagePercentage' => 0.5,
+            ]),
             'fleetTotalStorage' => 1000000,
         ];
 
@@ -332,8 +350,10 @@ class CalculateValuePrioritizedResourcesPillageTestCase extends TestCase {
         $planet[$resourceKey] = 1000000;
 
         $params = [
-            'planet' => $planet,
-            'maxPillagePercentage' => 0.5,
+            'maxPillagePerResource' => Missions\calculateMaxPlanetPillage([
+                'planet' => $planet,
+                'maxPillagePercentage' => 0.5,
+            ]),
             'fleetTotalStorage' => 500000,
         ];
 
@@ -367,8 +387,10 @@ class CalculateValuePrioritizedResourcesPillageTestCase extends TestCase {
         $planet[$resourceKey] = 0;
 
         $params = [
-            'planet' => $planet,
-            'maxPillagePercentage' => 0.5,
+            'maxPillagePerResource' => Missions\calculateMaxPlanetPillage([
+                'planet' => $planet,
+                'maxPillagePercentage' => 0.5,
+            ]),
             'fleetTotalStorage' => 1000000,
         ];
 
@@ -398,8 +420,10 @@ class CalculateValuePrioritizedResourcesPillageTestCase extends TestCase {
         ];
 
         $params = [
-            'planet' => $planet,
-            'maxPillagePercentage' => 0.5,
+            'maxPillagePerResource' => Missions\calculateMaxPlanetPillage([
+                'planet' => $planet,
+                'maxPillagePercentage' => 0.5,
+            ]),
             'fleetTotalStorage' => 10000000,
         ];
 
@@ -440,8 +464,10 @@ class CalculateValuePrioritizedResourcesPillageTestCase extends TestCase {
         $planet[$orderedResourceKeys[2]] = 100000;
 
         $params = [
-            'planet' => $planet,
-            'maxPillagePercentage' => 0.5,
+            'maxPillagePerResource' => Missions\calculateMaxPlanetPillage([
+                'planet' => $planet,
+                'maxPillagePercentage' => 0.5,
+            ]),
             'fleetTotalStorage' => 1750000,
         ];
 
@@ -485,8 +511,10 @@ class CalculateValuePrioritizedResourcesPillageTestCase extends TestCase {
         $planet[$orderedResourceKeys[2]] = 70000;
 
         $params = [
-            'planet' => $planet,
-            'maxPillagePercentage' => 0.5,
+            'maxPillagePerResource' => Missions\calculateMaxPlanetPillage([
+                'planet' => $planet,
+                'maxPillagePercentage' => 0.5,
+            ]),
             'fleetTotalStorage' => 1000000,
         ];
 

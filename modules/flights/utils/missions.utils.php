@@ -5,18 +5,34 @@ namespace UniEngine\Engine\Modules\Flights\Utils\Missions;
 use UniEngine\Engine\Includes\Helpers\Common\Collections;
 use UniEngine\Engine\Includes\Helpers\World\Resources;
 
+function calculateMaxPlanetPillage ($props) {
+    $planet = $props['planet'];
+    $maxPillagePercentage = $props['maxPillagePercentage'];
+
+    $pillagableResourceKeys = Resources\getKnownPillagableResourceKeys();
+
+    $maxPillagePerResource = [];
+
+    foreach ($pillagableResourceKeys as $resourceKey) {
+        $maxPillagePerResource[$resourceKey] = (
+            $planet[$resourceKey] *
+            $maxPillagePercentage
+        );
+    }
+
+    return $maxPillagePerResource;
+}
+
 /**
  * Calculated resources pillage from a specified planet, trying to evenly fill
  * the entire available ships' storage capacity.
  *
  * @param object $props
- * @param object $props['planet']
- * @param number $props['maxPillagePercentage']
+ * @param object $props['maxPillagePerResource']
  * @param number $props['fleetTotalStorage']
  */
 function calculateEvenResourcesPillage ($props) {
-    $planet = $props['planet'];
-    $maxPillagePercentage = $props['maxPillagePercentage'];
+    $maxPillagePerResource = $props['maxPillagePerResource'];
     $fleetTotalStorage = $props['fleetTotalStorage'];
 
     $pillagableResourceKeys = Resources\getKnownPillagableResourceKeys();
@@ -28,15 +44,10 @@ function calculateEvenResourcesPillage ($props) {
     );
 
     $pillagedResources = [];
-    $maxPillagePerResource = [];
     $storagePerResource = [];
 
     foreach ($pillagableResourceKeys as $resourceKey) {
         $pillagedResources[$resourceKey] = 0;
-        $maxPillagePerResource[$resourceKey] = (
-            $planet[$resourceKey] *
-            $maxPillagePercentage
-        );
         $storagePerResource[$resourceKey] = $initialStoragePerOneResource;
     }
 
@@ -112,27 +123,20 @@ function calculateEvenResourcesPillage ($props) {
  * from least to most valuable resource).
  *
  * @param object $props
- * @param object $props['planet']
- * @param number $props['maxPillagePercentage']
+ * @param number $props['maxPillagePerResource']
  * @param number $props['fleetTotalStorage']
  */
 function calculateValuePrioritizedResourcesPillage ($props) {
-    $planet = $props['planet'];
-    $maxPillagePercentage = $props['maxPillagePercentage'];
+    $maxPillagePerResource = $props['maxPillagePerResource'];
     $fleetTotalStorage = $props['fleetTotalStorage'];
 
     $pillagableResourceKeys = Resources\getKnownPillagableResourceKeys();
     $pillagableResourceKeysCount = count($pillagableResourceKeys);
 
     $pillagedResources = [];
-    $maxPillagePerResource = [];
 
     foreach ($pillagableResourceKeys as $resourceKey) {
         $pillagedResources[$resourceKey] = 0;
-        $maxPillagePerResource[$resourceKey] = (
-            $planet[$resourceKey] *
-            $maxPillagePercentage
-        );
     }
 
     $unusedStorage = $fleetTotalStorage;
