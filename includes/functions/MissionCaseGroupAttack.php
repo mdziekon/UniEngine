@@ -8,7 +8,6 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
             $HPQ_PlanetUpdatedFields;
 
     $Return = array();
-    $fleetHasBeenDeleted = false;
     $Now = time();
 
     if($FleetRow['calcType'] == 1)
@@ -684,11 +683,6 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                     {
                         $UserDev_UpFl[$AttackingFleetID[$User]][] = "{$ShipID},{$ShipCount}";
                     }
-
-                    if($User == 0)
-                    {
-                        $fleetHasBeenDeleted = true;
-                    }
                 }
                 $i += 1;
             }
@@ -704,11 +698,6 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                         {
                             $UserDev_UpFl[$ID][] = "{$ShipID},{$ShipCount}";
                         }
-
-                        if($User == 0)
-                        {
-                            $fleetHasBeenDeleted = true;
-                        }
                     }
                 }
             }
@@ -723,11 +712,6 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                     foreach($AttackingFleets[$User] as $ShipID => $ShipCount)
                     {
                         $UserDev_UpFl[$ID][] = "{$ShipID},{$ShipCount}";
-                    }
-
-                    if($User == 0)
-                    {
-                        $fleetHasBeenDeleted = true;
                     }
                 }
             }

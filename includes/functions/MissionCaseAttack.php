@@ -8,7 +8,6 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
             $HPQ_PlanetUpdatedFields;
 
     $Return = array();
-    $fleetHasBeenDeleted = false;
     $Now = time();
 
     if($FleetRow['calcType'] == 1)
@@ -508,8 +507,6 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
             {
                 $UserDev_UpFl[$FleetRow['fleet_id']][] = $ShipID.','.$ShipCount;
             }
-
-            $fleetHasBeenDeleted = true;
         }
 
         // Parse result data - Defenders
