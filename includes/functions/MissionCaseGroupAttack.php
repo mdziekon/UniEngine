@@ -1,5 +1,7 @@
 <?php
 
+use UniEngine\Engine\Modules\Flights;
+
 function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 {
     global    $_EnginePath, $_Vars_Prices, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories, $_GameConfig, $UserStatsPattern, $UserStatsData, $UserDev_Log, $IncludeCombatEngine,
@@ -532,6 +534,8 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
         $TotalCryStolen = 0;
         $TotalDeuStolen = 0;
 
+        $maxResourcesPillage = null;
+
         if(!empty($AtkShips))
         {
             if($Result === COMBAT_ATK)
@@ -559,9 +563,10 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                     }
                 }
 
-                $MaxMetSteal = $TargetPlanet['metal'] * $ResourceSteal_Factor;
-                $MaxCrySteal = $TargetPlanet['crystal'] * $ResourceSteal_Factor;
-                $MaxDeuSteal = $TargetPlanet['deuterium'] * $ResourceSteal_Factor;
+                $maxResourcesPillage = Flights\Utils\Missions\calculateMaxPlanetPillage([
+                    'planet' => $TargetPlanet,
+                    'maxPillagePercentage' => $ResourceSteal_Factor,
+                ]);
             }
 
             foreach($AtkShips as $User => $Ships)
@@ -615,101 +620,32 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 
                     if($Result === COMBAT_ATK)
                     {
-                        // New SYSTEM
                         $FleetStorage -= $AttackingFleetRes[$AttackingFleetID[$User]]['metal'];
                         $FleetStorage -= $AttackingFleetRes[$AttackingFleetID[$User]]['crystal'];
                         $FleetStorage -= $AttackingFleetRes[$AttackingFleetID[$User]]['deuterium'];
 
                         if($FleetStorage > 0)
                         {
-                            $GiveAwayMet = false;
-                            $GiveAwayCry = false;
+                            $resourcesPillage = Flights\Utils\Missions\calculateEvenResourcesPillage([
+                                'maxPillagePerResource' => $maxResourcesPillage,
+                                'fleetTotalStorage' => $FleetStorage,
+                            ]);
 
-                            $AllowTakeMoreMet = 0;
-                            $AllowTakeMoreCry = 0;
-                            $AllowTakeMoreDeu = 0;
-
-                            $StoragePerResource = $FleetStorage / 3;
-
-                            // First - calculate, if any resource will leave free storage
-                            if($MaxMetSteal < $StoragePerResource)
-                            {
-                                $AllowTakeMore = ($StoragePerResource - $MaxMetSteal) / 2;
-                                $AllowTakeMoreCry += $AllowTakeMore;
-                                $AllowTakeMoreDeu += $AllowTakeMore;
-                                $GiveAwayMet = true;
+                            foreach ($resourcesPillage as $resourceKey => $resourcePillage) {
+                                $maxResourcesPillage[$resourceKey] -= $resourcePillage;
                             }
 
-                            if($MaxCrySteal < ($StoragePerResource + $AllowTakeMoreCry))
-                            {
-                                $AllowTakeMore = (($StoragePerResource + $AllowTakeMoreCry) - $MaxCrySteal) / 2;
-                                if($GiveAwayMet == false)
-                                {
-                                    $AllowTakeMoreMet += $AllowTakeMore;
-                                    $AllowTakeMoreDeu += $AllowTakeMore;
-                                }
-                                else
-                                {
-                                    $AllowTakeMoreDeu += $AllowTakeMore * 2;
-                                }
-                                $GiveAwayCry = true;
-                            }
+                            $QryUpdateFleets[$i]['metal'] = $resourcesPillage['metal'];
+                            $QryUpdateFleets[$i]['crystal'] = $resourcesPillage['crystal'];
+                            $QryUpdateFleets[$i]['deuterium'] = $resourcesPillage['deuterium'];
 
-                            if($MaxDeuSteal < ($StoragePerResource + $AllowTakeMoreDeu))
-                            {
-                                $AllowTakeMore = (($StoragePerResource + $AllowTakeMoreDeu) - $MaxDeuSteal) / 2;
-                                if($GiveAwayCry == false)
-                                {
-                                    $AllowTakeMoreMet += $AllowTakeMore;
-                                    $AllowTakeMoreCry += $AllowTakeMore;
-                                }
-                                else
-                                {
-                                    $AllowTakeMoreMet += $AllowTakeMore * 2;
-                                }
-                            }
+                            $Return['FleetArchive'][$AttackingFleetID[$User]]['Fleet_End_Res_Metal'] = $resourcesPillage['metal'];
+                            $Return['FleetArchive'][$AttackingFleetID[$User]]['Fleet_End_Res_Crystal'] = $resourcesPillage['crystal'];
+                            $Return['FleetArchive'][$AttackingFleetID[$User]]['Fleet_End_Res_Deuterium'] = $resourcesPillage['deuterium'];
 
-                            //Second - calculate stolen resources
-                            if($MaxMetSteal > ($StoragePerResource + $AllowTakeMoreMet))
-                            {
-                                $QryUpdateFleets[$i]['metal'] = floor($StoragePerResource + $AllowTakeMoreMet);
-                                $MaxMetSteal -= $QryUpdateFleets[$i]['metal'];
-                                $TotalMetStolen += $QryUpdateFleets[$i]['metal'];
-                            }
-                            else
-                            {
-                                $QryUpdateFleets[$i]['metal'] = floor($MaxMetSteal);
-                                $MaxMetSteal -= $QryUpdateFleets[$i]['metal'];
-                                $TotalMetStolen += $QryUpdateFleets[$i]['metal'];
-                            }
-                            if($MaxCrySteal > ($StoragePerResource + $AllowTakeMoreCry))
-                            {
-                                $QryUpdateFleets[$i]['crystal'] = floor($StoragePerResource + $AllowTakeMoreCry);
-                                $MaxCrySteal -= $QryUpdateFleets[$i]['crystal'];
-                                $TotalCryStolen += $QryUpdateFleets[$i]['crystal'];
-                            }
-                            else
-                            {
-                                $QryUpdateFleets[$i]['crystal'] = floor($MaxCrySteal);
-                                $MaxCrySteal -= $QryUpdateFleets[$i]['crystal'];
-                                $TotalCryStolen += $QryUpdateFleets[$i]['crystal'];
-                            }
-                            if($MaxDeuSteal > ($StoragePerResource + $AllowTakeMoreDeu))
-                            {
-                                $QryUpdateFleets[$i]['deuterium'] = floor($StoragePerResource + $AllowTakeMoreDeu);
-                                $MaxDeuSteal -= $QryUpdateFleets[$i]['deuterium'];
-                                $TotalDeuStolen += $QryUpdateFleets[$i]['deuterium'];
-                            }
-                            else
-                            {
-                                $QryUpdateFleets[$i]['deuterium'] = floor($MaxDeuSteal);
-                                $MaxDeuSteal -= $QryUpdateFleets[$i]['deuterium'];
-                                $TotalDeuStolen += $QryUpdateFleets[$i]['deuterium'];
-                            }
-
-                            $Return['FleetArchive'][$AttackingFleetID[$User]]['Fleet_End_Res_Metal'] = $QryUpdateFleets[$i]['metal'];
-                            $Return['FleetArchive'][$AttackingFleetID[$User]]['Fleet_End_Res_Crystal'] = $QryUpdateFleets[$i]['crystal'];
-                            $Return['FleetArchive'][$AttackingFleetID[$User]]['Fleet_End_Res_Deuterium'] = $QryUpdateFleets[$i]['deuterium'];
+                            $TotalMetStolen += $resourcesPillage['metal'];
+                            $TotalCryStolen += $resourcesPillage['crystal'];
+                            $TotalDeuStolen += $resourcesPillage['deuterium'];
 
                             if($QryUpdateFleets[$i]['metal'] > 0)
                             {
@@ -739,7 +675,6 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                                 $TriggerTasksCheck[$AttackingFleetOwners[$AttackingFleetID[$User]]]['BATTLE_COLLECT_DEUTERIUM'] += $QryUpdateFleets[$i]['deuterium'];
                             }
                         }
-                        // END OF NEW SYSTEM
                     }
                 }
                 else
