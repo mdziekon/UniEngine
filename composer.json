@@ -15,12 +15,14 @@
         "google/recaptcha": "~1.2"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "^3.3"
+        "squizlabs/php_codesniffer": "^3.3",
+        "phpunit/phpunit": "^8"
     },
     "scripts": {
         "migrate:run": "php ./utils/migrator/entry.php migrate:run",
         "migrate:make": "php ./utils/migrator/entry.php migrate:make",
-        "ci-php-lint": "find . -not \\( -path ./action_logs -prune \\) -not \\( -path ./cache -prune \\) -not \\( -path ./tmp -prune \\) -not \\( -path ./vendor -prune \\) -name '*.php' -print0 | xargs -0 -n1 php -l",
-        "ci-php-phpcs": "phpcs ./ --standard=phpcs.xml --extensions=php"
+        "ci:php:lint": "find . -not \\( -path ./action_logs -prune \\) -not \\( -path ./cache -prune \\) -not \\( -path ./tmp -prune \\) -not \\( -path ./vendor -prune \\) -name '*.php' -print0 | xargs -0 -n1 php -l",
+        "ci:php:phpcs": "phpcs ./ --standard=phpcs.xml --extensions=php",
+        "ci:php:test": "phpunit ./ --test-suffix UETest.php"
     }
 }

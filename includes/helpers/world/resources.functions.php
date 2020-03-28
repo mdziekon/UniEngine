@@ -28,6 +28,14 @@ function getKnownSpendableResourceKeys() {
     ];
 }
 
+function getKnownPillagableResourceKeys() {
+    return [
+        'metal',
+        'crystal',
+        'deuterium',
+    ];
+}
+
 function isResource($resourceKey) {
     return (
         isPlanetaryResource($resourceKey) ||

@@ -8,16 +8,15 @@ matrix:
 
             # list any PHP version you want to test against
             php:
-                # main version should be kept as close as possible to supported OMV's PHP version
-                # and dependencies should be updated with --prefer-lowest to prevent being ahead
-                - "7.0"
+                - "7.2"
 
             # install project dependencies
             install:
                 - composer install
 
             script:
-                - composer run-script ci-php-phpcs
+                - composer run-script ci:php:phpcs
+                - composer run-script ci:php:test
 
         -
             # see https://docs.travis-ci.com/user/languages/javascript-with-nodejs/ for more hints
@@ -33,5 +32,5 @@ matrix:
                 - npm ci
 
             script:
-                - npm run ci-js-eslint
-                - npm run ci-css-stylelint
+                - npm run ci:js:eslint
+                - npm run ci:css:stylelint

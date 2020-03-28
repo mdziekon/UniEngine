@@ -4,9 +4,9 @@
   "description": "OGame-like Game Engine",
   "main": "",
   "scripts": {
-    "ci-js-eslint": "eslint --quiet ./",
-    "ci-css-stylelint": "stylelint \"./**/*.css\"",
-    "build-minify": "gulp"
+    "ci:js:eslint": "eslint --quiet ./",
+    "ci:css:stylelint": "stylelint \"./**/*.css\"",
+    "build:minify": "gulp"
   },
   "repository": {
     "type": "git",
