@@ -970,40 +970,21 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
         }
 
         // Create debris field on the orbit
-        if($TotalLostMetal > 0 || $TotalLostCrystal > 0)
-        {
-            if($TotalLostCrystal == 0)
-            {
+        if ($TotalLostMetal > 0 || $TotalLostCrystal > 0) {
+            Flights\Utils\FleetCache\updateGalaxyDebris([
+                'debris' => [
+                    'metal' => $TotalLostMetal,
+                    'crystal' => $TotalLostCrystal,
+                ],
+                'targetPlanet' => $TargetPlanet,
+                'fleetCache' => &$_FleetCache,
+            ]);
+
+            if ($TotalLostCrystal == 0) {
                 $TotalLostCrystal = '0';
             }
-            if($TotalLostMetal == 0)
-            {
+            if ($TotalLostMetal == 0) {
                 $TotalLostMetal = '0';
-            }
-
-            if(isset($_FleetCache['galaxyMap']['byMoon'][$FleetRow['fleet_end_id']]) && $_FleetCache['galaxyMap']['byMoon'][$FleetRow['fleet_end_id']] > 0)
-            {
-                if(!isset($_FleetCache['galaxy'][$_FleetCache['galaxyMap']['byMoon'][$FleetRow['fleet_end_id']]]['metal']))
-                {
-                    $_FleetCache['galaxy'][$_FleetCache['galaxyMap']['byMoon'][$FleetRow['fleet_end_id']]]['metal'] = 0;
-                }
-                if(!isset($_FleetCache['galaxy'][$_FleetCache['galaxyMap']['byMoon'][$FleetRow['fleet_end_id']]]['crystal']))
-                {
-                    $_FleetCache['galaxy'][$_FleetCache['galaxyMap']['byMoon'][$FleetRow['fleet_end_id']]]['crystal'] = 0;
-                }
-
-                $_FleetCache['galaxy'][$_FleetCache['galaxyMap']['byMoon'][$FleetRow['fleet_end_id']]]['metal'] += $TotalLostMetal;
-                $_FleetCache['galaxy'][$_FleetCache['galaxyMap']['byMoon'][$FleetRow['fleet_end_id']]]['crystal'] += $TotalLostCrystal;
-                $_FleetCache['galaxy'][$_FleetCache['galaxyMap']['byMoon'][$FleetRow['fleet_end_id']]]['updated'] = true;
-                $_FleetCache['updated']['galaxy'] = true;
-            }
-            else
-            {
-                $Query_UpdateGalaxy = '';
-                $Query_UpdateGalaxy .= "UPDATE {{table}} SET `metal` = `metal` + {$TotalLostMetal}, `crystal` = `crystal` + {$TotalLostCrystal} ";
-                $Query_UpdateGalaxy .= "WHERE `id_moon` = {$FleetRow['fleet_end_id']} LIMIT 1; ";
-                $Query_UpdateGalaxy .= "-- MISSION DESTRUCTION [Q05][FID: {$FleetRow['fleet_id']}]";
-                doquery($Query_UpdateGalaxy, 'galaxy');
             }
         }
 
