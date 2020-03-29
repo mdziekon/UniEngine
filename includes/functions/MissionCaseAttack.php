@@ -815,13 +815,6 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
                 'targetPlanet' => $TargetPlanet,
                 'fleetCache' => &$_FleetCache,
             ]);
-
-            if ($TotalLostCrystal == 0) {
-                $TotalLostCrystal = '0';
-            }
-            if ($TotalLostMetal == 0) {
-                $TotalLostMetal = '0';
-            }
         }
 
         // Check if Moon has been created
@@ -1195,7 +1188,7 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
             prettyNumber($RealDebrisMetalAtk + $RealDebrisCrystalAtk + $RealDebrisDeuteriumAtk),
             prettyNumber($RealDebrisCrystalDef + $RealDebrisMetalDef + $RealDebrisDeuteriumDef),
             prettyNumber($StolenMet), prettyNumber($StolenCry), prettyNumber($StolenDeu),
-            prettyNumber(isset($TotalLostMetal) ? $TotalLostMetal : 0), prettyNumber(isset($TotalLostCrystal) ? $TotalLostCrystal : 0),
+            prettyNumber($TotalLostMetal), prettyNumber($TotalLostCrystal),
             $ReportHasHLinkRelative, $ReportHasHLinkReal
         );
         $Message = json_encode($Message);
