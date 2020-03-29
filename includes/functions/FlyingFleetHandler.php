@@ -827,11 +827,20 @@ function FlyingFleetHandler(&$planet, $IncludeFleetsFromEndIDs = array())
             if(!empty($_FleetCache['galaxy']) AND $_FleetCache['updated']['galaxy'] === true)
             {
                 $TempArray = array();
-                foreach($_FleetCache['galaxy'] as $ThisID => $ThisData)
-                {
-                    if($ThisData['updated'] === true)
-                    {
-                        $TempArray[] = "({$ThisID}, {$ThisData['metal']}, {$ThisData['crystal']})";
+                foreach ($_FleetCache['galaxy'] as $ThisID => $ThisData) {
+                    if ($ThisData['updated'] === true) {
+                        $entryMetalValue = (
+                            $ThisData['metal'] > 0 ?
+                            $ThisData['metal'] :
+                            '0'
+                        );
+                        $entryCrystalValue = (
+                            $ThisData['crystal'] > 0 ?
+                            $ThisData['crystal'] :
+                            '0'
+                        );
+
+                        $TempArray[] = "({$ThisID}, {$entryMetalValue}, {$entryCrystalValue})";
                     }
                 }
                 if(!empty($TempArray))
