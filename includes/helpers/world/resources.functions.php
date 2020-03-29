@@ -36,6 +36,13 @@ function getKnownPillagableResourceKeys() {
     ];
 }
 
+function getKnownDebrisRecoverableResourceKeys() {
+    return [
+        'metal',
+        'crystal',
+    ];
+}
+
 function isResource($resourceKey) {
     return (
         isPlanetaryResource($resourceKey) ||
