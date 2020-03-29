@@ -724,60 +724,35 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
             }
         }
 
-        // Calculate Debris & Looses - Init
-        $DebrisFactor_Fleet = $_GameConfig['Fleet_Cdr'] / 100;
-        $DebrisFactor_Defense = $_GameConfig['Defs_Cdr'] / 100;
+        // Calculate Debris & Looses
+        $debrisRecoveryPercentages = [
+            'ships' => ($_GameConfig['Fleet_Cdr'] / 100),
+            'defenses' => ($_GameConfig['Defs_Cdr'] / 100),
+        ];
 
-        // Calculate looses - attacker
-        if(!empty($AtkLost))
-        {
-            $DebrisMetalAtk = 0;
-            $DebrisCrystalAtk = 0;
-            foreach($AtkLost as $ID => $Count)
-            {
-                if(in_array($ID, $_Vars_ElementCategories['fleet']))
-                {
-                    if($DebrisFactor_Fleet > 0)
-                    {
-                        $DebrisMetalAtk += floor($_Vars_Prices[$ID]['metal'] * $Count * $DebrisFactor_Fleet);
-                        $DebrisCrystalAtk += floor($_Vars_Prices[$ID]['crystal'] * $Count * $DebrisFactor_Fleet);
-                    }
-                    $RealDebrisMetalAtk += floor($_Vars_Prices[$ID]['metal'] * $Count);
-                    $RealDebrisCrystalAtk += floor($_Vars_Prices[$ID]['crystal'] * $Count);
-                    $RealDebrisDeuteriumAtk += floor($_Vars_Prices[$ID]['deuterium'] * $Count);
-                }
-            }
-            $TotalLostMetal = $DebrisMetalAtk;
-            $TotalLostCrystal = $DebrisCrystalAtk;
-        }
-        // Calculate looses - defender
-        if(!empty($DefLost))
-        {
-            foreach($DefLost as $ID => $Count)
-            {
-                if(in_array($ID, $_Vars_ElementCategories['fleet']))
-                {
-                    if($DebrisFactor_Fleet > 0)
-                    {
-                        $DebrisMetalDef += floor($_Vars_Prices[$ID]['metal'] * $Count * $DebrisFactor_Fleet);
-                        $DebrisCrystalDef += floor($_Vars_Prices[$ID]['crystal'] * $Count * $DebrisFactor_Fleet);
-                    }
-                }
-                elseif(in_array($ID, $_Vars_ElementCategories['defense']))
-                {
-                    if($DebrisFactor_Defense > 0)
-                    {
-                        $DebrisMetalDef += floor($_Vars_Prices[$ID]['metal'] * $Count * $DebrisFactor_Defense);
-                        $DebrisCrystalDef += floor($_Vars_Prices[$ID]['crystal'] * $Count * $DebrisFactor_Defense);
-                    }
-                }
-                $RealDebrisMetalDef += floor($_Vars_Prices[$ID]['metal'] * $Count);
-                $RealDebrisCrystalDef += floor($_Vars_Prices[$ID]['crystal'] * $Count);
-                $RealDebrisDeuteriumDef += floor($_Vars_Prices[$ID]['deuterium'] * $Count);
-            }
-            $TotalLostMetal += $DebrisMetalDef;
-            $TotalLostCrystal += $DebrisCrystalDef;
-        }
+        $attackersResourceLosses = Flights\Utils\Calculations\calculateResourcesLoss([
+            'unitsLost' => $AtkLost,
+            'debrisRecoveryPercentages' => $debrisRecoveryPercentages,
+        ]);
+
+        $RealDebrisMetalAtk += $attackersResourceLosses['realLoss']['metal'];
+        $RealDebrisCrystalAtk += $attackersResourceLosses['realLoss']['crystal'];
+        $RealDebrisDeuteriumAtk += $attackersResourceLosses['realLoss']['deuterium'];
+        $TotalLostMetal += $attackersResourceLosses['recoverableLoss']['metal'];
+        $TotalLostCrystal += $attackersResourceLosses['recoverableLoss']['crystal'];
+
+        $defendersResourceLosses = Flights\Utils\Calculations\calculateResourcesLoss([
+            'unitsLost' => $DefLost,
+            'debrisRecoveryPercentages' => $debrisRecoveryPercentages,
+        ]);
+
+        $RealDebrisMetalDef += $defendersResourceLosses['realLoss']['metal'];
+        $RealDebrisCrystalDef += $defendersResourceLosses['realLoss']['crystal'];
+        $RealDebrisDeuteriumDef += $defendersResourceLosses['realLoss']['deuterium'];
+        $TotalLostMetal += $defendersResourceLosses['recoverableLoss']['metal'];
+        $TotalLostCrystal += $defendersResourceLosses['recoverableLoss']['crystal'];
+        $DebrisMetalDef += $defendersResourceLosses['recoverableLoss']['metal'];
+        $DebrisCrystalDef += $defendersResourceLosses['recoverableLoss']['crystal'];
 
         // Delete fleets (if necessary)
         if(!empty($DeleteFleet))
