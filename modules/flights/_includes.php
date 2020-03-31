@@ -8,6 +8,7 @@ call_user_func(function () {
 
     include($includePath . './utils/calculations/calculateResourcesLoss.utils.php');
     include($includePath . './utils/fleetCache/updateGalaxyDebris.utils.php');
+    include($includePath . './utils/modifiers/calculateMoraleModifiers.utils.php');
     include($includePath . './utils/missions.utils.php');
 
 });
