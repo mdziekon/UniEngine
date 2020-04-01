@@ -40,4 +40,55 @@ function calculateMoraleCombatModifiers ($props) {
     return $moraleCombatModifiers;
 }
 
+/**
+ * @param array $props
+ * @param number $props['mainAttackerMoraleLevel']
+ * @param number $props['mainDefenderMoraleLevel']
+ * @param boolean $props['isMainDefenderIdle']
+ * @param boolean $props['isTargetAbandoned']
+ */
+function calculateMoralePillageModifiers ($props) {
+    $mainAttackerMoraleLevel = $props['mainAttackerMoraleLevel'];
+    $mainDefenderMoraleLevel = $props['mainDefenderMoraleLevel'];
+    $isMainDefenderIdle = $props['isMainDefenderIdle'];
+    $isTargetAbandoned = $props['isTargetAbandoned'];
+
+    $modifiers = [];
+    $pillageModifiers = [];
+
+    if (
+        !$isTargetAbandoned &&
+        $mainDefenderMoraleLevel <= MORALE_PENALTY_RESOURCELOSE
+    ) {
+        $pillageModifiers[] = MORALE_PENALTY_RESOURCELOSE_STEALPERCENT;
+    }
+    if (
+        $mainAttackerMoraleLevel >= MORALE_BONUS_SOLOIDLERSTEAL &&
+        $isMainDefenderIdle
+    ) {
+        $pillageModifiers[] = MORALE_BONUS_SOLOIDLERSTEAL_STEALPERCENT;
+    }
+    if ($mainAttackerMoraleLevel <= MORALE_PENALTY_STEAL) {
+        $pillageModifiers[] = MORALE_PENALTY_STEAL_STEALPERCENT;
+    }
+    else if (
+        $mainAttackerMoraleLevel <= MORALE_PENALTY_IDLERSTEAL &&
+        $isMainDefenderIdle
+    ) {
+        $pillageModifiers[] = MORALE_PENALTY_IDLERSTEAL_STEALPERCENT;
+    }
+
+    if (!empty($pillageModifiers)) {
+        $modifiers['pillageFactor'] = (
+            (
+                array_sum($pillageModifiers) /
+                count($pillageModifiers)
+            ) /
+            100
+        );
+    }
+
+    return $modifiers;
+}
+
 ?>
