@@ -6,7 +6,7 @@ namespace UniEngine\Engine\Modules\Flights\Utils\Modifiers;
  * @param array $props
  * @param number $props['moraleLevel']
  */
-function calculateMoraleModifiers ($props) {
+function calculateMoraleCombatModifiers ($props) {
     $moraleLevel = $props['moraleLevel'];
 
     $moraleCombatModifiers = [];
