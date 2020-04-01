@@ -125,40 +125,14 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
             $AttackersData[0]['morale'] = $FleetRow['morale_level'];
             $AttackersData[0]['moralePoints'] = $FleetRow['morale_points'];
 
-            // Bonuses
-            if($FleetRow['morale_level'] >= MORALE_BONUS_FLEETPOWERUP1)
-            {
-                $AttackingTechs[0]['TotalForceFactor'] = MORALE_BONUS_FLEETPOWERUP1_FACTOR;
-            }
-            if($FleetRow['morale_level'] >= MORALE_BONUS_FLEETSHIELDUP1)
-            {
-                $AttackingTechs[0]['TotalShieldFactor'] = MORALE_BONUS_FLEETSHIELDUP1_FACTOR;
-            }
-            if($FleetRow['morale_level'] >= MORALE_BONUS_FLEETSDADDITION)
-            {
-                $AttackingTechs[0]['SDAdd'] = MORALE_BONUS_FLEETSDADDITION_VALUE;
-            }
-            // Penalties
-            if($FleetRow['morale_level'] <= MORALE_PENALTY_FLEETPOWERDOWN1)
-            {
-                $AttackingTechs[0]['TotalForceFactor'] = MORALE_PENALTY_FLEETPOWERDOWN1_FACTOR;
-            }
-            if($FleetRow['morale_level'] <= MORALE_PENALTY_FLEETPOWERDOWN2)
-            {
-                $AttackingTechs[0]['TotalForceFactor'] = MORALE_PENALTY_FLEETPOWERDOWN2_FACTOR;
-            }
-            if($FleetRow['morale_level'] <= MORALE_PENALTY_FLEETSHIELDDOWN1)
-            {
-                $AttackingTechs[0]['TotalShieldFactor'] = MORALE_PENALTY_FLEETSHIELDDOWN1_FACTOR;
-            }
-            if($FleetRow['morale_level'] <= MORALE_PENALTY_FLEETSHIELDDOWN2)
-            {
-                $AttackingTechs[0]['TotalShieldFactor'] = MORALE_PENALTY_FLEETSHIELDDOWN2_FACTOR;
-            }
-            if($FleetRow['morale_level'] <= MORALE_PENALTY_FLEETSDDOWN)
-            {
-                $AttackingTechs[0]['SDFactor'] = MORALE_PENALTY_FLEETSDDOWN_FACTOR;
-            }
+            $moraleCombatModifiers = Flights\Utils\Modifiers\calculateMoraleCombatModifiers([
+                'moraleLevel' => $FleetRow['morale_level'],
+            ]);
+
+            $AttackingTechs[0] = array_merge(
+                $AttackingTechs[0],
+                $moraleCombatModifiers
+            );
 
             if(!$IsAbandoned)
             {
@@ -172,40 +146,14 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
                 $DefendersData[0]['morale'] = $TargetUser['morale_level'];
                 $DefendersData[0]['moralePoints'] = $TargetUser['morale_points'];
 
-                // Bonuses
-                if($TargetUser['morale_level'] >= MORALE_BONUS_FLEETPOWERUP1)
-                {
-                    $DefendingTechs[0]['TotalForceFactor'] = MORALE_BONUS_FLEETPOWERUP1_FACTOR;
-                }
-                if($TargetUser['morale_level'] >= MORALE_BONUS_FLEETSHIELDUP1)
-                {
-                    $DefendingTechs[0]['TotalShieldFactor'] = MORALE_BONUS_FLEETSHIELDUP1_FACTOR;
-                }
-                if($TargetUser['morale_level'] >= MORALE_BONUS_FLEETSDADDITION)
-                {
-                    $DefendingTechs[0]['SDAdd'] = MORALE_BONUS_FLEETSDADDITION_VALUE;
-                }
-                // Penalties
-                if($TargetUser['morale_level'] <= MORALE_PENALTY_FLEETPOWERDOWN1)
-                {
-                    $DefendingTechs[0]['TotalForceFactor'] = MORALE_PENALTY_FLEETPOWERDOWN1_FACTOR;
-                }
-                if($TargetUser['morale_level'] <= MORALE_PENALTY_FLEETPOWERDOWN2)
-                {
-                    $DefendingTechs[0]['TotalForceFactor'] = MORALE_PENALTY_FLEETPOWERDOWN2_FACTOR;
-                }
-                if($TargetUser['morale_level'] <= MORALE_PENALTY_FLEETSHIELDDOWN1)
-                {
-                    $DefendingTechs[0]['TotalShieldFactor'] = MORALE_PENALTY_FLEETSHIELDDOWN1_FACTOR;
-                }
-                if($TargetUser['morale_level'] <= MORALE_PENALTY_FLEETSHIELDDOWN2)
-                {
-                    $DefendingTechs[0]['TotalShieldFactor'] = MORALE_PENALTY_FLEETSHIELDDOWN2_FACTOR;
-                }
-                if($TargetUser['morale_level'] <= MORALE_PENALTY_FLEETSDDOWN)
-                {
-                    $DefendingTechs[0]['SDFactor'] = MORALE_PENALTY_FLEETSDDOWN_FACTOR;
-                }
+                $moraleCombatModifiers = Flights\Utils\Modifiers\calculateMoraleCombatModifiers([
+                    'moraleLevel' => $TargetUser['morale_level'],
+                ]);
+
+                $DefendingTechs[0] = array_merge(
+                    $DefendingTechs[0],
+                    $moraleCombatModifiers
+                );
             }
         }
 
@@ -274,40 +222,14 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
                             $DefendersData[$i]['moralePoints'] = $_TempCache['MoraleCache'][$FleetData['fleet_owner']]['points'];
                         }
 
-                        // Bonuses
-                        if($DefendersData[$i]['morale'] >= MORALE_BONUS_FLEETPOWERUP1)
-                        {
-                            $DefendingTechs[$i]['TotalForceFactor'] = MORALE_BONUS_FLEETPOWERUP1_FACTOR;
-                        }
-                        if($DefendersData[$i]['morale'] >= MORALE_BONUS_FLEETSHIELDUP1)
-                        {
-                            $DefendingTechs[$i]['TotalShieldFactor'] = MORALE_BONUS_FLEETSHIELDUP1_FACTOR;
-                        }
-                        if($DefendersData[$i]['morale'] >= MORALE_BONUS_FLEETSDADDITION)
-                        {
-                            $DefendingTechs[$i]['SDAdd'] = MORALE_BONUS_FLEETSDADDITION_VALUE;
-                        }
-                        // Penalties
-                        if($DefendersData[$i]['morale'] <= MORALE_PENALTY_FLEETPOWERDOWN1)
-                        {
-                            $DefendingTechs[$i]['TotalForceFactor'] = MORALE_PENALTY_FLEETPOWERDOWN1_FACTOR;
-                        }
-                        if($DefendersData[$i]['morale'] <= MORALE_PENALTY_FLEETPOWERDOWN2)
-                        {
-                            $DefendingTechs[$i]['TotalForceFactor'] = MORALE_PENALTY_FLEETPOWERDOWN2_FACTOR;
-                        }
-                        if($DefendersData[$i]['morale'] <= MORALE_PENALTY_FLEETSHIELDDOWN1)
-                        {
-                            $DefendingTechs[$i]['TotalShieldFactor'] = MORALE_PENALTY_FLEETSHIELDDOWN1_FACTOR;
-                        }
-                        if($DefendersData[$i]['morale'] <= MORALE_PENALTY_FLEETSHIELDDOWN2)
-                        {
-                            $DefendingTechs[$i]['TotalShieldFactor'] = MORALE_PENALTY_FLEETSHIELDDOWN2_FACTOR;
-                        }
-                        if($DefendersData[$i]['morale'] <= MORALE_PENALTY_FLEETSDDOWN)
-                        {
-                            $DefendingTechs[$i]['SDFactor'] = MORALE_PENALTY_FLEETSDDOWN_FACTOR;
-                        }
+                        $moraleCombatModifiers = Flights\Utils\Modifiers\calculateMoraleCombatModifiers([
+                            'moraleLevel' => $DefendersData[$i]['morale'],
+                        ]);
+
+                        $DefendingTechs[$i] = array_merge(
+                            $DefendingTechs[$i],
+                            $moraleCombatModifiers
+                        );
                     }
 
                     $i += 1;
