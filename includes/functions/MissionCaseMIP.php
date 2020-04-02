@@ -54,7 +54,7 @@ function MissionCaseMIP($FleetRow, &$_FleetCache)
         }
 
         if (empty($UserStatsData[$FleetRow['fleet_owner']])) {
-            $UserStatsData[$FleetRow['fleet_owner']] = Flights\Utils\Initializers\initUserStatsMap();;
+            $UserStatsData[$FleetRow['fleet_owner']] = Flights\Utils\Initializers\initUserStatsMap();
         }
         if(!$IsAllyFight)
         {

@@ -2,13 +2,11 @@
 
 function FlyingFleetHandler(&$planet, $IncludeFleetsFromEndIDs = array())
 {
-    global $_EnginePath, $UserStatsPattern, $UserStatsData, $ChangeCoordinatesForFleets, $_Vars_ElementCategories, $_BenchTool, $_Cache, $_GalaxyRow;;
+    global $_EnginePath, $UserStatsData, $ChangeCoordinatesForFleets, $_Vars_ElementCategories, $_BenchTool, $_Cache, $_GalaxyRow;;
 
     include($_EnginePath . 'modules/flights/_includes.php');
 
     if(!empty($_BenchTool)){ $_BenchTool->simpleCountStart(false, 'telemetry__f0'); }
-
-    $UserStatsPattern = UniEngine\Engine\Modules\Flights\Utils\Initializers\initUserStatsMap();
 
     $FleetArchive_Fields = array
     (
