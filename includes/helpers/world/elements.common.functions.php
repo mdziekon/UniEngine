@@ -22,16 +22,19 @@ function isShip($elementID) {
     return in_array($elementID, $_Vars_ElementCategories['fleet']);
 }
 
-function isDefenseSystem($elementID) {
-    global $_Vars_ElementCategories;
-
-    return in_array($elementID, $_Vars_ElementCategories['defense']);
-}
-
 function isMissile($elementID) {
     global $_Vars_ElementCategories;
 
     return in_array($elementID, $_Vars_ElementCategories['rockets']);
+}
+
+function isDefenseSystem($elementID) {
+    global $_Vars_ElementCategories;
+
+    return (
+        in_array($elementID, $_Vars_ElementCategories['defense']) &&
+        !isMissile($elementID)
+    );
 }
 
 function isStructureAvailableOnPlanetType($elementID, $planetType) {
