@@ -5,7 +5,7 @@ use UniEngine\Engine\Modules\Flights;
 function MissionCaseDestruction($FleetRow, &$_FleetCache)
 {
     global    $_EnginePath, $_User, $_Vars_Prices, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories, $_GameConfig, $ChangeCoordinatesForFleets,
-            $UserStatsPattern, $UserStatsData, $UserDev_Log, $IncludeCombatEngine, $HPQ_PlanetUpdatedFields, $GlobalParsedTasks;
+            $UserStatsData, $UserDev_Log, $IncludeCombatEngine, $HPQ_PlanetUpdatedFields, $GlobalParsedTasks;
 
     $Return = array();
     $FleetDestroyedByMoon = false;
@@ -219,18 +219,14 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
             }
         }
 
-        foreach($AttackersIDs as $ID)
-        {
-            if(empty($UserStatsData[$ID]))
-            {
-                $UserStatsData[$ID] = $UserStatsPattern;
+        foreach ($AttackersIDs as $userID) {
+            if (empty($UserStatsData[$userID])) {
+                $UserStatsData[$userID] = Flights\Utils\Initializers\initUserStatsMap();
             }
         }
-        foreach($DefendersIDs as $ID)
-        {
-            if(empty($UserStatsData[$ID]))
-            {
-                $UserStatsData[$ID] = $UserStatsPattern;
+        foreach ($DefendersIDs as $userID) {
+            if (empty($UserStatsData[$userID])) {
+                $UserStatsData[$userID] = Flights\Utils\Initializers\initUserStatsMap();
             }
         }
 

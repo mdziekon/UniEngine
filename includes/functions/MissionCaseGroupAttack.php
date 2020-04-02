@@ -4,7 +4,7 @@ use UniEngine\Engine\Modules\Flights;
 
 function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 {
-    global    $_EnginePath, $_Vars_Prices, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories, $_GameConfig, $UserStatsPattern, $UserStatsData, $UserDev_Log, $IncludeCombatEngine,
+    global    $_EnginePath, $_Vars_Prices, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories, $_GameConfig, $UserStatsData, $UserDev_Log, $IncludeCombatEngine,
             $HPQ_PlanetUpdatedFields;
 
     $Return = array();
@@ -316,18 +316,14 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
             }
         }
 
-        foreach($AttackersIDs as $ID)
-        {
-            if(empty($UserStatsData[$ID]))
-            {
-                $UserStatsData[$ID] = $UserStatsPattern;
+        foreach ($AttackersIDs as $userID) {
+            if (empty($UserStatsData[$userID])) {
+                $UserStatsData[$userID] = Flights\Utils\Initializers\initUserStatsMap();
             }
         }
-        foreach($DefendersIDs as $ID)
-        {
-            if(empty($UserStatsData[$ID]))
-            {
-                $UserStatsData[$ID] = $UserStatsPattern;
+        foreach ($DefendersIDs as $userID) {
+            if (empty($UserStatsData[$userID])) {
+                $UserStatsData[$userID] = Flights\Utils\Initializers\initUserStatsMap();
             }
         }
 
