@@ -14,6 +14,10 @@ if(defined('INSIDE'))
 
     $_Vars_ElementCategories['buildOn'][1]              = array(1, 2, 3, 4, 12, 14, 15, 21, 22, 23, 24, 31, 33, 34, 44, 50);
     $_Vars_ElementCategories['buildOn'][3]              = array(14, 21, 22, 23, 24, 34, 41, 42, 43);
+
+    $_Vars_ElementCategories['techPurpose'] = [
+        'combat' => [ 109, 110, 111, 120, 121, 122, 125, 126, 199, ],
+    ];
 }
 
 ?>
