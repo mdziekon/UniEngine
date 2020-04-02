@@ -361,29 +361,17 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
                 if($FleetStorage > 0)
                 {
                     $ResourceSteal_Factor = (COMBAT_RESOURCESTEAL_PERCENT / 100);
-                    if(MORALE_ENABLED)
-                    {
-                        $ResourceSteal_NewFactor = [];
-                        if(!$IsAbandoned AND $TargetUser['morale_level'] <= MORALE_PENALTY_RESOURCELOSE)
-                        {
-                            $ResourceSteal_NewFactor[] = MORALE_PENALTY_RESOURCELOSE_STEALPERCENT;
-                        }
-                        if($FleetRow['morale_level'] >= MORALE_BONUS_SOLOIDLERSTEAL AND $IdleHours >= (7 * 24))
-                        {
-                            $ResourceSteal_NewFactor[] = MORALE_BONUS_SOLOIDLERSTEAL_STEALPERCENT;
-                        }
-                        if($FleetRow['morale_level'] <= MORALE_PENALTY_STEAL)
-                        {
-                            $ResourceSteal_NewFactor[] = MORALE_PENALTY_STEAL_STEALPERCENT;
-                        }
-                        else if($FleetRow['morale_level'] <= MORALE_PENALTY_IDLERSTEAL AND $IdleHours >= (7 * 24))
-                        {
-                            $ResourceSteal_NewFactor[] = MORALE_PENALTY_IDLERSTEAL_STEALPERCENT;
-                        }
 
-                        if(!empty($ResourceSteal_NewFactor))
-                        {
-                            $ResourceSteal_Factor = (array_sum($ResourceSteal_NewFactor) / count($ResourceSteal_NewFactor)) / 100;
+                    if (MORALE_ENABLED) {
+                        $moralePillageModifiers = Flights\Utils\Modifiers\calculateMoralePillageModifiers([
+                            'mainAttackerMoraleLevel' => $FleetRow['morale_level'],
+                            'mainDefenderMoraleLevel' => $TargetUser['morale_level'],
+                            'isMainDefenderIdle' => ($IdleHours >= (7 * 24)),
+                            'isTargetAbandoned' => $IsAbandoned,
+                        ]);
+
+                        if (isset($moralePillageModifiers['pillageFactor'])) {
+                            $ResourceSteal_Factor = $moralePillageModifiers['pillageFactor'];
                         }
                     }
 
