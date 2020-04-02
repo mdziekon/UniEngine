@@ -71,18 +71,10 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
         $AttackingFleets = array();
         $DefendingFleets = array();
 
-        $DefendingTechs[0] = array
-        (
-            109 => $TargetUser['tech_weapons'],
-            110 => $TargetUser['tech_armour'],
-            111 => $TargetUser['tech_shielding'],
-            120 => $TargetUser['tech_laser'],
-            121 => $TargetUser['tech_ion'],
-            122 => $TargetUser['tech_plasma'],
-            125 => $TargetUser['tech_antimatter'],
-            126 => $TargetUser['tech_disintegration'],
-            199 => $TargetUser['tech_graviton']
-        );
+        $DefendingTechs[0] = Flights\Utils\Initializers\initCombatTechnologiesMap([
+            'user' => $TargetUser,
+        ]);
+
         $DefendersData[0] = array
         (
             'id' => $TargetUser['id'],
@@ -95,18 +87,10 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
             $DefendersData[0]['ally'] = $TargetUser['ally_tag'];
         }
 
-        $AttackingTechs[0] = array
-        (
-            109 => $FleetRow['tech_weapons'],
-            110 => $FleetRow['tech_armour'],
-            111 => $FleetRow['tech_shielding'],
-            120 => $FleetRow['tech_laser'],
-            121 => $FleetRow['tech_ion'],
-            122 => $FleetRow['tech_plasma'],
-            125 => $FleetRow['tech_antimatter'],
-            126 => $FleetRow['tech_disintegration'],
-            199 => $FleetRow['tech_graviton']
-        );
+        $AttackingTechs[0] = Flights\Utils\Initializers\initCombatTechnologiesMap([
+            'user' => $FleetRow,
+        ]);
+
         $AttackersData[0] = array
         (
             'id' => $FleetRow['fleet_owner'],
@@ -174,18 +158,9 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
                 {
                     $DefendingFleets[$i] = String2Array($FleetData['fleet_array']);
                     $DefendingFleetID[$i] = $FleetData['fleet_id'];
-                    $DefendingTechs[$i] = array
-                    (
-                        109 => $FleetData['tech_weapons'],
-                        110 => $FleetData['tech_armour'],
-                        111 => $FleetData['tech_shielding'],
-                        120 => $FleetData['tech_laser'],
-                        121 => $FleetData['tech_ion'],
-                        122 => $FleetData['tech_plasma'],
-                        125 => $FleetData['tech_antimatter'],
-                        126 => $FleetData['tech_disintegration'],
-                        199 => $FleetData['tech_graviton']
-                    );
+                    $DefendingTechs[$i] = Flights\Utils\Initializers\initCombatTechnologiesMap([
+                        'user' => $FleetData,
+                    ]);
                     $DefendersData[$i] = array
                     (
                         'id' => $FleetData['fleet_owner'],
