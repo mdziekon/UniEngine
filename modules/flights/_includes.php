@@ -6,8 +6,10 @@ call_user_func(function () {
 
     $includePath = $_EnginePath . 'modules/flights/';
 
+    include($includePath . './utils/calculations/calculatePillageFactor.utils.php');
     include($includePath . './utils/calculations/calculateResourcesLoss.utils.php');
     include($includePath . './utils/fleetCache/updateGalaxyDebris.utils.php');
+    include($includePath . './utils/modifiers/calculateMoraleModifiers.utils.php');
     include($includePath . './utils/missions.utils.php');
 
 });
