@@ -441,12 +441,14 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                 $ResourceSteal_Factor = (COMBAT_RESOURCESTEAL_PERCENT / 100);
 
                 if (MORALE_ENABLED) {
+                    $hasOnlyOneAttacker = (count($AttackersIDs) === 1);
+
                     $moralePillageModifiers = Flights\Utils\Modifiers\calculateMoralePillageModifiers([
                         'mainAttackerMoraleLevel' => $FleetRow['morale_level'],
                         'mainDefenderMoraleLevel' => $TargetUser['morale_level'],
                         'isMainDefenderIdle' => ($IdleHours >= (7 * 24)),
                         'isTargetAbandoned' => $IsAbandoned,
-                        'areBonusModifiersDisabled' => true,
+                        'areBonusModifiersDisabled' => !$hasOnlyOneAttacker,
                     ]);
 
                     if (isset($moralePillageModifiers['pillageFactor'])) {
