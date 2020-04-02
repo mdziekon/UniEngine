@@ -438,27 +438,17 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
         {
             if($Result === COMBAT_ATK)
             {
-                $ResourceSteal_Factor = (COMBAT_RESOURCESTEAL_PERCENT / 100);
-
-                if (MORALE_ENABLED) {
-                    $hasOnlyOneAttacker = (count($AttackersIDs) === 1);
-
-                    $moralePillageModifiers = Flights\Utils\Modifiers\calculateMoralePillageModifiers([
-                        'mainAttackerMoraleLevel' => $FleetRow['morale_level'],
-                        'mainDefenderMoraleLevel' => $TargetUser['morale_level'],
-                        'isMainDefenderIdle' => ($IdleHours >= (7 * 24)),
-                        'isTargetAbandoned' => $IsAbandoned,
-                        'areBonusModifiersDisabled' => !$hasOnlyOneAttacker,
-                    ]);
-
-                    if (isset($moralePillageModifiers['pillageFactor'])) {
-                        $ResourceSteal_Factor = $moralePillageModifiers['pillageFactor'];
-                    }
-                }
+                $pillageFactor = Flights\Utils\Calculations\calculatePillageFactor([
+                    'mainAttackerMoraleLevel' => $FleetRow['morale_level'],
+                    'mainDefenderMoraleLevel' => $TargetUser['morale_level'],
+                    'isMainDefenderIdle' => ($IdleHours >= (7 * 24)),
+                    'isTargetAbandoned' => $IsAbandoned,
+                    'attackerIDs' => $AttackersIDs,
+                ]);
 
                 $maxResourcesPillage = Flights\Utils\Missions\calculateMaxPlanetPillage([
                     'planet' => $TargetPlanet,
-                    'maxPillagePercentage' => $ResourceSteal_Factor,
+                    'maxPillagePercentage' => $pillageFactor,
                 ]);
             }
 
