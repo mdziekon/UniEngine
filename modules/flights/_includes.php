@@ -9,6 +9,7 @@ call_user_func(function () {
     include($includePath . './utils/calculations/calculatePillageFactor.utils.php');
     include($includePath . './utils/calculations/calculateResourcesLoss.utils.php');
     include($includePath . './utils/fleetCache/updateGalaxyDebris.utils.php');
+    include($includePath . './utils/fleetCache/updateUserStats.utils.php');
     include($includePath . './utils/initializers/technologies.utils.php');
     include($includePath . './utils/initializers/userStats.utils.php');
     include($includePath . './utils/modifiers/calculateMoraleModifiers.utils.php');
