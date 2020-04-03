@@ -931,52 +931,16 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
             }
 
             // Update User Destroyed & Lost Stats
-            if(!empty($ShotDown))
-            {
-                foreach($ShotDown as $ThisType => $ThisData)
-                {
-                    foreach($ThisData as $ThisType2 => $ThisData2)
-                    {
-                        if($ThisType2 == 'd')
-                        {
-                            $ThisKey = 'destroyed_';
-                        }
-                        else
-                        {
-                            $ThisKey = 'lost_';
-                        }
-                        foreach($ThisData2 as $UserID => $DestShips)
-                        {
-                            if($UserID == 0)
-                            {
-                                if($ThisType == 'atk')
-                                {
-                                    $ThisUserID = $FleetRow['fleet_owner'];
-                                }
-                                else
-                                {
-                                    $ThisUserID = $TargetUser['id'];
-                                }
-                            }
-                            else
-                            {
-                                if($ThisType == 'atk')
-                                {
-                                    $ThisUserID = $AttackingFleetOwners[$AttackingFleetID[$UserID]];
-                                }
-                                else
-                                {
-                                    $ThisUserID = $DefendingFleetOwners[$DefendingFleetID[$UserID]];
-                                }
-                            }
-                            foreach($DestShips as $ShipID => $ShipCount)
-                            {
-                                $UserStatsData[$ThisUserID][$ThisKey.$ShipID] += $ShipCount;
-                            }
-                        }
-                    }
-                }
-            }
+            Flights\Utils\FleetCache\applyCombatUnitStats([
+                'userStats' => &$UserStatsData,
+                'combatShotdownResult' => $ShotDown,
+                'mainAttackerUserID' => $FleetRow['fleet_owner'],
+                'mainDefenderUserID' => $TargetUser['id'],
+                'attackingFleetIDs' => [],
+                'attackingFleetOwnerIDs' => [],
+                'defendingFleetIDs' => $DefendingFleetID,
+                'defendingFleetOwnerIDs' => $DefendingFleetOwners,
+            ]);
 
             if(!empty($ShotDown))
             {
