@@ -510,6 +510,22 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
                         $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_End_Res_Metal'] = 0;
                         $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_End_Res_Crystal'] = 0;
                         $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_End_Res_Deuterium'] = 0;
+
+                        foreach ($AttackingFleets[0] as $elementID => $elementOriginalCount) {
+                            $elementShotDownCount = (
+                                isset($ShotDown['atk']['l'][0][$elementID]) ?
+                                $ShotDown['atk']['l'][0][$elementID] :
+                                0
+                            );
+
+                            Flights\Utils\FleetCache\incrementUserStatsWorldElementCounter([
+                                'userStats' => &$UserStatsData,
+                                'userID' => $FleetRow['fleet_owner'],
+                                'elementID' => $elementID,
+                                'elementCount' => ($elementOriginalCount - $elementShotDownCount),
+                                'counterType' => Flights\Utils\FleetCache\WorldElementCounterType::ElementLost,
+                            ]);
+                        }
                     }
                 }
                 else
