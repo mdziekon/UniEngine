@@ -2,24 +2,11 @@
 
 function FlyingFleetHandler(&$planet, $IncludeFleetsFromEndIDs = array())
 {
-    global $_EnginePath, $UserStatsPattern, $UserStatsData, $ChangeCoordinatesForFleets, $_Vars_ElementCategories, $_BenchTool, $_Cache, $_GalaxyRow;;
+    global $_EnginePath, $UserStatsData, $ChangeCoordinatesForFleets, $_Vars_ElementCategories, $_BenchTool, $_Cache, $_GalaxyRow;;
 
     include($_EnginePath . 'modules/flights/_includes.php');
 
     if(!empty($_BenchTool)){ $_BenchTool->simpleCountStart(false, 'telemetry__f0'); }
-
-    $UserStatsPattern = array
-    (
-        'raids_won'                    => '0',
-        'raids_draw'                => '0',
-        'raids_lost'                => '0',
-        'raids_acs_won'                => '0',
-        'raids_inAlly'                => '0',
-        'raids_missileAttack'        => '0',
-        'moons_destroyed'            => '0',
-        'moons_created'                => '0',
-        'other_expeditions_count'    => '0',
-    );
 
     $FleetArchive_Fields = array
     (
@@ -42,12 +29,10 @@ function FlyingFleetHandler(&$planet, $IncludeFleetsFromEndIDs = array())
     {
         $ThisKey1 = 'destroyed_'.$ElementID;
         $CreateAchievementKeys[] = "`{$ThisKey1}`";
-        $UserStatsPattern[$ThisKey1] = '0';
         $UserStatsUpQuery[] = "`{$ThisKey1}` = `{$ThisKey1}` + VALUES(`{$ThisKey1}`)";
 
         $ThisKey2 = 'lost_'.$ElementID;
         $CreateAchievementKeys[] = "`{$ThisKey2}`";
-        $UserStatsPattern[$ThisKey2] = '0';
         $UserStatsUpQuery[] = "`{$ThisKey2}` = `{$ThisKey2}` + VALUES(`{$ThisKey2}`)";
     }
     foreach($_Vars_ElementCategories['defense'] as $ElementID)
@@ -59,12 +44,10 @@ function FlyingFleetHandler(&$planet, $IncludeFleetsFromEndIDs = array())
         }
         $ThisKey1 = 'destroyed_'.$ElementID;
         $CreateAchievementKeys[] = "`{$ThisKey1}`";
-        $UserStatsPattern[$ThisKey1] = '0';
         $UserStatsUpQuery[] = "`{$ThisKey1}` = `{$ThisKey1}` + VALUES(`{$ThisKey1}`)";
 
         $ThisKey2 = 'lost_'.$ElementID;
         $CreateAchievementKeys[] = "`{$ThisKey2}`";
-        $UserStatsPattern[$ThisKey2] = '0';
         $UserStatsUpQuery[] = "`{$ThisKey2}` = `{$ThisKey2}` + VALUES(`{$ThisKey2}`)";
     }
     $CreateAchievementKeys = implode(', ', $CreateAchievementKeys);

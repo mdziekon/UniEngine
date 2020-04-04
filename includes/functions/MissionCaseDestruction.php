@@ -5,7 +5,7 @@ use UniEngine\Engine\Modules\Flights;
 function MissionCaseDestruction($FleetRow, &$_FleetCache)
 {
     global    $_EnginePath, $_User, $_Vars_Prices, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories, $_GameConfig, $ChangeCoordinatesForFleets,
-            $UserStatsPattern, $UserStatsData, $UserDev_Log, $IncludeCombatEngine, $HPQ_PlanetUpdatedFields, $GlobalParsedTasks;
+            $UserStatsData, $UserDev_Log, $IncludeCombatEngine, $HPQ_PlanetUpdatedFields, $GlobalParsedTasks;
 
     $Return = array();
     $FleetDestroyedByMoon = false;
@@ -219,18 +219,14 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
             }
         }
 
-        foreach($AttackersIDs as $ID)
-        {
-            if(empty($UserStatsData[$ID]))
-            {
-                $UserStatsData[$ID] = $UserStatsPattern;
+        foreach ($AttackersIDs as $userID) {
+            if (empty($UserStatsData[$userID])) {
+                $UserStatsData[$userID] = Flights\Utils\Initializers\initUserStatsMap();
             }
         }
-        foreach($DefendersIDs as $ID)
-        {
-            if(empty($UserStatsData[$ID]))
-            {
-                $UserStatsData[$ID] = $UserStatsPattern;
+        foreach ($DefendersIDs as $userID) {
+            if (empty($UserStatsData[$userID])) {
+                $UserStatsData[$userID] = Flights\Utils\Initializers\initUserStatsMap();
             }
         }
 
@@ -514,6 +510,22 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
                         $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_End_Res_Metal'] = 0;
                         $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_End_Res_Crystal'] = 0;
                         $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_End_Res_Deuterium'] = 0;
+
+                        foreach ($AttackingFleets[0] as $elementID => $elementOriginalCount) {
+                            $elementShotDownCount = (
+                                isset($ShotDown['atk']['l'][0][$elementID]) ?
+                                $ShotDown['atk']['l'][0][$elementID] :
+                                0
+                            );
+
+                            Flights\Utils\FleetCache\incrementUserStatsWorldElementCounter([
+                                'userStats' => &$UserStatsData,
+                                'userID' => $FleetRow['fleet_owner'],
+                                'elementID' => $elementID,
+                                'elementCount' => ($elementOriginalCount - $elementShotDownCount),
+                                'counterType' => Flights\Utils\FleetCache\WorldElementCounterType::ElementLost,
+                            ]);
+                        }
                     }
                 }
                 else
@@ -1106,52 +1118,16 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
             }
 
             // Update User Destroyed & Lost Stats
-            if(!empty($ShotDown))
-            {
-                foreach($ShotDown as $ThisType => $ThisData)
-                {
-                    foreach($ThisData as $ThisType2 => $ThisData2)
-                    {
-                        if($ThisType2 == 'd')
-                        {
-                            $ThisKey = 'destroyed_';
-                        }
-                        else
-                        {
-                            $ThisKey = 'lost_';
-                        }
-                        foreach($ThisData2 as $UserID => $DestShips)
-                        {
-                            if($UserID == 0)
-                            {
-                                if($ThisType == 'atk')
-                                {
-                                    $ThisUserID = $FleetRow['fleet_owner'];
-                                }
-                                else
-                                {
-                                    $ThisUserID = $TargetUser['id'];
-                                }
-                            }
-                            else
-                            {
-                                if($ThisType == 'atk')
-                                {
-                                    $ThisUserID = $AttackingFleetOwners[$AttackingFleetID[$UserID]];
-                                }
-                                else
-                                {
-                                    $ThisUserID = $DefendingFleetOwners[$DefendingFleetID[$UserID]];
-                                }
-                            }
-                            foreach($DestShips as $ShipID => $ShipCount)
-                            {
-                                $UserStatsData[$ThisUserID][$ThisKey.$ShipID] += $ShipCount;
-                            }
-                        }
-                    }
-                }
-            }
+            Flights\Utils\FleetCache\applyCombatUnitStats([
+                'userStats' => &$UserStatsData,
+                'combatShotdownResult' => $ShotDown,
+                'mainAttackerUserID' => $FleetRow['fleet_owner'],
+                'mainDefenderUserID' => $TargetUser['id'],
+                'attackingFleetIDs' => [],
+                'attackingFleetOwnerIDs' => [],
+                'defendingFleetIDs' => $DefendingFleetID,
+                'defendingFleetOwnerIDs' => $DefendingFleetOwners,
+            ]);
 
             if(!empty($ShotDown))
             {

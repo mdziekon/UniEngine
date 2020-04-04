@@ -8,9 +8,11 @@
 // Before using it, make sure that it's fully compatible with FleetHandler function
 // -------------------------------------------
 
+use UniEngine\Engine\Modules\Flights;
+
 function MissionCaseExpedition($FleetRow)
 {
-    global $_Lang, $_Vars_Prices, $enforceSQLUpdate, $FleetArchivePattern, $UserStatsPattern, $UserStatsData;
+    global $_Lang, $_Vars_Prices, $enforceSQLUpdate, $FleetArchivePattern, $UserStatsData;
 
     $FleetOwner = $FleetRow['fleet_owner'];
     $MessSender = '003';
@@ -27,9 +29,8 @@ function MissionCaseExpedition($FleetRow)
         if($FleetRow['fleet_end_stay'] < time())
         {
             // Update user stats
-            if(empty($UserStatsData[$FleetOwner]))
-            {
-                $UserStatsData[$FleetOwner] = $UserStatsPattern;
+            if (empty($UserStatsData[$FleetOwner])) {
+                $UserStatsData[$FleetOwner] = Flights\Utils\Initializers\initUserStatsMap();
             }
             $UserStatsData[$FleetOwner]['other_expeditions_count'] += 1;
 

@@ -1,8 +1,10 @@
 <?php
 
+use UniEngine\Engine\Modules\Flights;
+
 function MissionCaseMIP($FleetRow, &$_FleetCache)
 {
-    global $_EnginePath, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories, $UserStatsPattern, $UserStatsData, $UserDev_Log, $HPQ_PlanetUpdatedFields;
+    global $_EnginePath, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories, $UserStatsData, $UserDev_Log, $HPQ_PlanetUpdatedFields;
     static $FunctionIncluded = false;
 
     $Return = array();
@@ -51,9 +53,8 @@ function MissionCaseMIP($FleetRow, &$_FleetCache)
             }
         }
 
-        if(empty($UserStatsData[$FleetRow['fleet_owner']]))
-        {
-            $UserStatsData[$FleetRow['fleet_owner']] = $UserStatsPattern;
+        if (empty($UserStatsData[$FleetRow['fleet_owner']])) {
+            $UserStatsData[$FleetRow['fleet_owner']] = Flights\Utils\Initializers\initUserStatsMap();
         }
         if(!$IsAllyFight)
         {
@@ -201,9 +202,8 @@ function MissionCaseMIP($FleetRow, &$_FleetCache)
                                 $AttackerReport[] = '{MIP_destroy}';
                                 $DefenderReport[] = '{MIP_destroy}';
 
-                                if(empty($UserStatsData[$TargetPlanet['id_owner']]))
-                                {
-                                    $UserStatsData[$TargetPlanet['id_owner']] = $UserStatsPattern;
+                                if (empty($UserStatsData[$TargetPlanet['id_owner']])) {
+                                    $UserStatsData[$TargetPlanet['id_owner']] = Flights\Utils\Initializers\initUserStatsMap();
                                 }
                             }
                             $CreateThisLine = '&bull; '.$_Lang['tech'][$key].' <b>( -'.prettyNumber($val).')</b> ['.prettyNumber($Attack['LeftDefs'][$key]).'/'.prettyNumber($Attack['LeftDefs'][$key] + $val).']';

@@ -1,8 +1,10 @@
 <?php
 
+use UniEngine\Engine\Modules\Flights;
+
 function MissionCaseSpy($FleetRow, &$_FleetCache)
 {
-    global    $_Lang, $_Vars_Prices, $_GameConfig, $_EnginePath, $UserStatsPattern, $UserStatsData, $UserDev_Log,
+    global    $_Lang, $_Vars_Prices, $_GameConfig, $_EnginePath, $UserStatsData, $UserDev_Log,
             $_User, $GlobalParsedTasks;
     static    $SpyTargetIncluded = false;
 
@@ -327,13 +329,11 @@ function MissionCaseSpy($FleetRow, &$_FleetCache)
             {
                 if($FleetRow['ally_id'] == 0 OR ($TargetUser['ally_id'] != $FleetRow['ally_id']))
                 {
-                    if(empty($UserStatsData[$FleetRow['fleet_owner']]))
-                    {
-                        $UserStatsData[$FleetRow['fleet_owner']] = $UserStatsPattern;
+                    if (empty($UserStatsData[$FleetRow['fleet_owner']])) {
+                        $UserStatsData[$FleetRow['fleet_owner']] = Flights\Utils\Initializers\initUserStatsMap();
                     }
-                    if(empty($UserStatsData[$TargetPlanet['id_owner']]))
-                    {
-                        $UserStatsData[$TargetPlanet['id_owner']] = $UserStatsPattern;
+                    if (empty($UserStatsData[$TargetPlanet['id_owner']])) {
+                        $UserStatsData[$TargetPlanet['id_owner']] = Flights\Utils\Initializers\initUserStatsMap();
                     }
                     $UserStatsData[$FleetRow['fleet_owner']]['lost_210'] += $ShipsCount;
                     $UserStatsData[$TargetPlanet['id_owner']]['destroyed_210'] += $ShipsCount;

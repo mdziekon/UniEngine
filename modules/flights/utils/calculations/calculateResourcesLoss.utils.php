@@ -39,7 +39,8 @@ function calculateResourcesLoss($params) {
     foreach ($unitsLost as $unitID => $unitAmount) {
         if (
             !Elements\isShip($unitID) &&
-            !Elements\isDefenseSystem($unitID)
+            !Elements\isDefenseSystem($unitID) &&
+            !Elements\isMissile($unitID)
         ) {
             continue;
         }
