@@ -18,6 +18,24 @@ function getShipsStorageCapacity($shipID) {
     return $_Vars_Prices[$shipID]['capacity'];
 }
 
+function canShipPillage($shipID) {
+    global $_Vars_Prices;
+
+    return (
+        !isset($_Vars_Prices[$shipID]['cantPillage']) ?
+            true :
+            ($_Vars_Prices[$shipID]['cantPillage'] !== true)
+    );
+}
+
+function getShipsPillageStorageCapacity($shipID) {
+    return (
+        canShipPillage($shipID) ?
+            getShipsStorageCapacity($shipID) :
+            0
+    );
+}
+
 function getShipsUsedEngineData($shipID, $user) {
     $engines = getShipsEngines($shipID);
 
