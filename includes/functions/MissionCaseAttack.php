@@ -278,7 +278,6 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
         $DefSysLost        = $Combat['DefSysLost'];
         $ShotDown        = $Combat['ShotDown'];
 
-        $FleetStorage = 0;
         // Parse result data - attacker fleet
         if(!empty($AtkShips[0]))
         {
@@ -294,10 +293,6 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
                     }
                     $QryUpdateFleets[0]['array'][] = "{$ID},{$Count}";
                     $QryUpdateFleets[0]['count'] += $Count;
-                }
-                if($Result === COMBAT_ATK && (!isset($_Vars_Prices[$ID]['cantPillage']) || $_Vars_Prices[$ID]['cantPillage'] !== true))
-                {
-                    $FleetStorage += $_Vars_Prices[$ID]['capacity'] * $Count;
                 }
 
                 if($Count < $AttackingFleets[0][$ID])
@@ -325,12 +320,12 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 
             if($Result === COMBAT_ATK)
             {
-                $FleetStorage -= $FleetRow['fleet_resource_metal'];
-                $FleetStorage -= $FleetRow['fleet_resource_crystal'];
-                $FleetStorage -= $FleetRow['fleet_resource_deuterium'];
+                $fleetPillageStorage = Flights\Utils\Calculations\calculatePillageStorage([
+                    'fleetRow' => $FleetRow,
+                    'ships' => $AtkShips[0],
+                ]);
 
-                if($FleetStorage > 0)
-                {
+                if ($fleetPillageStorage > 0) {
                     $pillageFactor = Flights\Utils\Calculations\calculatePillageFactor([
                         'mainAttackerMoraleLevel' => $FleetRow['morale_level'],
                         'mainDefenderMoraleLevel' => $TargetUser['morale_level'],
@@ -344,7 +339,7 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
                             'planet' => $TargetPlanet,
                             'maxPillagePercentage' => $pillageFactor,
                         ]),
-                        'fleetTotalStorage' => $FleetStorage,
+                        'fleetTotalStorage' => $fleetPillageStorage,
                     ]);
 
                     $StolenMet = $resourcesPillage['metal'];
