@@ -146,12 +146,13 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
             }
         }
 
+        $attackingFleetRowsById = [];
+
         $AttackersIDs[] = $FleetRow['fleet_owner'];
         $AttackingFleetOwners[$FleetRow['fleet_id']] = $FleetRow['fleet_owner'];
         $AttackingFleetID[0] = $FleetRow['fleet_id'];
-        $AttackingFleetRes[$FleetRow['fleet_id']]['metal'] = (isset($FleetRow['fleet_resouce_metal']) ? $FleetRow['fleet_resouce_metal'] : 0);
-        $AttackingFleetRes[$FleetRow['fleet_id']]['crystal'] = (isset($FleetRow['fleet_resouce_crystal']) ? $FleetRow['fleet_resouce_crystal'] : 0);
-        $AttackingFleetRes[$FleetRow['fleet_id']]['deuterium'] = (isset($FleetRow['fleet_resouce_deuterium']) ? $FleetRow['fleet_resouce_deuterium'] : 0);
+
+        $attackingFleetRowsById[$FleetRow['fleet_id']] = $FleetRow;
 
         $AttackingTechs[0] = Flights\Utils\Initializers\initCombatTechnologiesMap([
             'user' => $FleetRow,
@@ -177,9 +178,8 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
             foreach($_FleetCache['acsFleets'][$FleetRow['fleet_id']] as $FleetData)
             {
                 $AttackingFleets[$i] = String2Array($FleetData['fleet_array']);
-                $AttackingFleetRes[$FleetData['fleet_id']]['metal'] = (isset($FleetData['fleet_resouce_metal']) ? $FleetData['fleet_resouce_metal'] : 0);
-                $AttackingFleetRes[$FleetData['fleet_id']]['crystal'] = (isset($FleetData['fleet_resouce_crystal']) ? $FleetData['fleet_resouce_crystal'] : 0);
-                $AttackingFleetRes[$FleetData['fleet_id']]['deuterium'] = (isset($FleetData['fleet_resouce_deuterium']) ? $FleetData['fleet_resouce_deuterium'] : 0);
+                $attackingFleetRowsById[$FleetData['fleet_id']] = $FleetData;
+
                 $AttackingFleetID[$i] = $FleetData['fleet_id'];
                 $AttackingTechs[$i] = Flights\Utils\Initializers\initCombatTechnologiesMap([
                     'user' => $FleetData,
@@ -383,8 +383,6 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
         $ShotDown            = $Combat['ShotDown'];
         $ForceContribution    = $Combat['ForceContribution'];
 
-        $FleetStorage = 0;
-
         $i = 0;
         // Parse result data - attackers fleet
         $TotalMetStolen = 0;
@@ -416,7 +414,6 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 
             foreach($AtkShips as $User => $Ships)
             {
-                $FleetStorage = 0;
                 $CalculatedAtkFleets[] = $AttackingFleetID[$User];
                 if(!empty($Ships))
                 {
@@ -452,10 +449,6 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                             $QryUpdateFleets[$i]['array'][] = "{$ID},{$Count}";
                             $QryUpdateFleets[$i]['count'] += $Count;
                         }
-                        if($Result === COMBAT_ATK && (!isset($_Vars_Prices[$ID]['cantPillage']) || $_Vars_Prices[$ID]['cantPillage'] !== true))
-                        {
-                            $FleetStorage += $_Vars_Prices[$ID]['capacity'] * $Count;
-                        }
 
                         if($Count < $AttackingFleets[$User][$ID])
                         {
@@ -465,15 +458,16 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 
                     if($Result === COMBAT_ATK)
                     {
-                        $FleetStorage -= $AttackingFleetRes[$AttackingFleetID[$User]]['metal'];
-                        $FleetStorage -= $AttackingFleetRes[$AttackingFleetID[$User]]['crystal'];
-                        $FleetStorage -= $AttackingFleetRes[$AttackingFleetID[$User]]['deuterium'];
+                        $thisFleetID = $AttackingFleetID[$User];
+                        $fleetPillageStorage = Flights\Utils\Calculations\calculatePillageStorage([
+                            'fleetRow' => $attackingFleetRowsById[$thisFleetID],
+                            'ships' => $Ships,
+                        ]);
 
-                        if($FleetStorage > 0)
-                        {
+                        if ($fleetPillageStorage > 0) {
                             $resourcesPillage = Flights\Utils\Missions\calculateEvenResourcesPillage([
                                 'maxPillagePerResource' => $maxResourcesPillage,
-                                'fleetTotalStorage' => $FleetStorage,
+                                'fleetTotalStorage' => $fleetPillageStorage,
                             ]);
 
                             foreach ($resourcesPillage as $resourceKey => $resourcePillage) {
