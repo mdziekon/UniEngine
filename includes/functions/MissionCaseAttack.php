@@ -279,15 +279,15 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
         $ShotDown        = $Combat['ShotDown'];
 
         $QryUpdateFleets = [];
+        $UserDev_UpFl = [];
+
+        $UserDev_UpFl[$FleetRow['fleet_id']] = Flights\Utils\Factories\createFleetDevelopmentLogEntries([
+            'originalShips' => $AttackingFleets[0],
+            'postCombatShips' => $AtkShips[0],
+        ]);
 
         // Parse result data - attacker fleet
         if (!empty($AtkShips[0])) {
-            foreach($AtkShips[0] as $ID => $Count) {
-                if ($Count < $AttackingFleets[0][$ID]) {
-                    $UserDev_UpFl[$FleetRow['fleet_id']][] = $ID.','.($AttackingFleets[0][$ID] - $Count);
-                }
-            }
-
             $resourcesPillage = null;
 
             if ($Result === COMBAT_ATK) {
@@ -343,14 +343,8 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
                 'postCombatShips' => $AtkShips[0],
                 'resourcesPillage' => $resourcesPillage,
             ]);
-        }
-        else
-        {
+        } else {
             $DeleteFleet[] = $FleetRow['fleet_id'];
-            foreach($AttackingFleets[0] as $ShipID => $ShipCount)
-            {
-                $UserDev_UpFl[$FleetRow['fleet_id']][] = $ShipID.','.$ShipCount;
-            }
         }
 
         // Parse result data - Defenders
@@ -407,29 +401,13 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
                         'originalShips' => $Ships,
                         'postCombatShips' => $DefShips[$User],
                     ]);
+                    $UserDev_UpFl[$DefendingFleetID[$User]] = Flights\Utils\Factories\createFleetDevelopmentLogEntries([
+                        'originalShips' => $Ships,
+                        'postCombatShips' => $DefShips[$User],
+                    ]);
 
-                    if(!empty($DefShips[$User]))
-                    {
-                        foreach($Ships as $ID => $Count)
-                        {
-                            $ThisCount = 0;
-                            if (!empty($DefShips[$User][$ID])) {
-                                $ThisCount = $DefShips[$User][$ID];
-                            }
-
-                            if($ThisCount < $DefendingFleets[$User][$ID])
-                            {
-                                $UserDev_UpFl[$DefendingFleetID[$User]][] = $ID.','.($DefendingFleets[$User][$ID] - $ThisCount);
-                            }
-                        }
-                    }
-                    else
-                    {
+                    if (empty($DefShips[$User])) {
                         $DeleteFleet[] = $DefendingFleetID[$User];
-                        foreach($DefendingFleets[$User] as $ShipID => $ShipCount)
-                        {
-                            $UserDev_UpFl[$DefendingFleetID[$User]][] = "{$ShipID},{$ShipCount}";
-                        }
                     }
                 }
                 $i += 1;
@@ -523,6 +501,10 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
         {
             foreach($UserDev_UpFl as $FleetID => $DevArray)
             {
+                if (empty($DevArray)) {
+                    continue;
+                }
+
                 if($FleetID == $FleetRow['fleet_id'])
                 {
                     $SetCode = '2';
