@@ -7,9 +7,13 @@ use UniEngine\Engine\Includes\Helpers\World\Resources;
 /**
  * @param array $params
  * @param string $params['fleetID']
- * @param string $params['state'] (default: null)
- * @param array $params['originalShips'] Ships that have participated in the combat
- * @param array $params['postCombatShips'] Ships that have survived the combat
+ * @param string $params['state']
+ *               (default: `null`)
+ * @param array $params['originalShips']
+ *              Ships that have participated in the combat
+ * @param array $params['postCombatShips']
+ *              (default: `[]`)
+ *              Ships that have survived the combat
  * @param array $params['resourcesPillage']
  *              (default: `Record<PillagableResourceKey, 0>`)
  */
@@ -20,7 +24,11 @@ function createFleetUpdateEntry($params) {
             null
     );
     $originalShips = $params['originalShips'];
-    $postCombatShips = $params['postCombatShips'];
+    $postCombatShips = (
+        isset($params['postCombatShips']) ?
+            $params['postCombatShips'] :
+            []
+    );
 
     $updateEntry = [
         'fleet_id' => $params['fleetID'],
