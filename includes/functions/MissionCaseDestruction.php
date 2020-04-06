@@ -7,6 +7,8 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
     global    $_EnginePath, $_User, $_Vars_Prices, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories, $_GameConfig, $ChangeCoordinatesForFleets,
             $UserStatsData, $UserDev_Log, $IncludeCombatEngine, $HPQ_PlanetUpdatedFields, $GlobalParsedTasks;
 
+    $DEATHSTAR_ELEMENT_ID = 214;
+
     $Return = array();
     $FleetDestroyedByMoon = false;
     $FleetHasBeenDestroyed = false;
@@ -275,7 +277,7 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
         $DebrisCrystalDef = 0;
 
         $MoonHasBeenCreated = false;
-        $ThisDeathStarCount = 0;
+        $postCombatDeathstarsCount = 0;
 
         $RoundsData        = $Combat['rounds'];
         $Result            = $Combat['result'];
@@ -298,19 +300,13 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
         if (!empty($AtkShips[0])) {
             $resourcesPillage = null;
 
-            foreach($AtkShips[0] as $ID => $Count)
-            {
-                if($Count > 0)
-                {
-                    if($ID == 214)
-                    {
-                        $ThisDeathStarCount = $Count;
-                    }
-                }
-            }
+            $postCombatDeathstarsCount = (
+                isset($AtkShips[0][$DEATHSTAR_ELEMENT_ID]) ?
+                    $AtkShips[0][$DEATHSTAR_ELEMENT_ID] :
+                    0
+            );
 
-            if($Result === COMBAT_ATK)
-            {
+            if ($Result === COMBAT_ATK) {
                 $fleetPillageStorage = Flights\Utils\Calculations\calculatePillageStorage([
                     'fleetRow' => $FleetRow,
                     'ships' => $AtkShips[0],
@@ -356,11 +352,10 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
                 }
 
                 //The aggressor has won the battle, let's check his chances of destroying this moon
-                if($ThisDeathStarCount > 0)
-                {
+                if ($postCombatDeathstarsCount > 0) {
                     $DestructionDone = true;
 
-                    $ThisMoon_DestructionChance = (100 - sqrt($TargetPlanet['diameter'])) * sqrt($ThisDeathStarCount);
+                    $ThisMoon_DestructionChance = (100 - sqrt($TargetPlanet['diameter'])) * sqrt($postCombatDeathstarsCount);
                     if($ThisMoon_DestructionChance > 100)
                     {
                         $ThisMoon_DestructionChance = 100;
@@ -510,9 +505,7 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
                 'postCombatShips' => $AtkShips[0],
                 'resourcesPillage' => $resourcesPillage,
             ]);
-        }
-        else
-        {
+        } else {
             $DeleteFleet[] = $FleetRow['fleet_id'];
 
             $FleetHasBeenDestroyed = true;
