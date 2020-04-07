@@ -577,7 +577,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                         'postCombatShips' => $DefShips[$User],
                     ]);
 
-                    if (!empty($DefShips[$User])) {
+                    if (empty($DefShips[$User])) {
                         $DeleteFleet[] = $DefendingFleetID[$User];
                     }
                 }
