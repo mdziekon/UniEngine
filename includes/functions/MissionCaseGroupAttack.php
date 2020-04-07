@@ -395,6 +395,16 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
         ]);
 
         $QryUpdateFleets = [];
+        $UserDev_UpFl = [];
+
+        foreach ($AttackingFleets as $fleetIndex => $fleetShips) {
+            $thisFleetID = $AttackingFleetID[$fleetIndex];
+
+            $UserDev_UpFl[$thisFleetID] = Flights\Utils\Factories\createFleetDevelopmentLogEntries([
+                'originalShips' => $AttackingFleets[$fleetIndex],
+                'postCombatShips' => $AtkShips[$fleetIndex],
+            ]);
+        }
 
         if(!empty($AtkShips))
         {
@@ -421,14 +431,6 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 
                 if (!empty($Ships)) {
                     $resourcesPillage = null;
-
-                    foreach($Ships as $ID => $Count)
-                    {
-                        if($Count < $AttackingFleets[$User][$ID])
-                        {
-                            $UserDev_UpFl[$AttackingFleetID[$User]][] = $ID.','.($AttackingFleets[$User][$ID] - $Count);
-                        }
-                    }
 
                     if ($Result === COMBAT_ATK) {
                         $fleetPillageStorage = Flights\Utils\Calculations\calculatePillageStorage([
@@ -488,15 +490,10 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                         'postCombatShips' => $AtkShips[$User],
                         'resourcesPillage' => $resourcesPillage,
                     ]);
-                }
-                else
-                {
+                } else {
                     $DeleteFleet[] = $AttackingFleetID[$User];
-                    foreach($AttackingFleets[$User] as $ShipID => $ShipCount)
-                    {
-                        $UserDev_UpFl[$AttackingFleetID[$User]][] = "{$ShipID},{$ShipCount}";
-                    }
                 }
+
                 $i += 1;
             }
 
@@ -507,10 +504,6 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                     if(!in_array($ID, $CalculatedAtkFleets))
                     {
                         $DeleteFleet[] = $ID;
-                        foreach($AttackingFleets[$User] as $ShipID => $ShipCount)
-                        {
-                            $UserDev_UpFl[$ID][] = "{$ShipID},{$ShipCount}";
-                        }
                     }
                 }
             }
@@ -522,10 +515,6 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                 foreach($AttackingFleetID as $User => $ID)
                 {
                     $DeleteFleet[] = $ID;
-                    foreach($AttackingFleets[$User] as $ShipID => $ShipCount)
-                    {
-                        $UserDev_UpFl[$ID][] = "{$ShipID},{$ShipCount}";
-                    }
                 }
             }
         }
@@ -583,30 +572,13 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                         'originalShips' => $DefendingFleets[$User],
                         'postCombatShips' => $DefShips[$User],
                     ]);
+                    $UserDev_UpFl[$DefendingFleetID[$User]] = Flights\Utils\Factories\createFleetDevelopmentLogEntries([
+                        'originalShips' => $DefendingFleets[$User],
+                        'postCombatShips' => $DefShips[$User],
+                    ]);
 
-                    if(!empty($DefShips[$User]))
-                    {
-                        foreach($Ships as $ID => $Count)
-                        {
-                            $ThisCount = 0;
-                            if(!empty($DefShips[$User][$ID]))
-                            {
-                                $ThisCount = $DefShips[$User][$ID];
-                            }
-
-                            if($ThisCount < $DefendingFleets[$User][$ID])
-                            {
-                                $UserDev_UpFl[$DefendingFleetID[$User]][] = $ID.','.($DefendingFleets[$User][$ID] - $ThisCount);
-                            }
-                        }
-                    }
-                    else
-                    {
+                    if (!empty($DefShips[$User])) {
                         $DeleteFleet[] = $DefendingFleetID[$User];
-                        foreach($DefendingFleets[$User] as $ShipID => $ShipCount)
-                        {
-                            $UserDev_UpFl[$DefendingFleetID[$User]][] = "{$ShipID},{$ShipCount}";
-                        }
                     }
                 }
                 $i += 1;
@@ -741,6 +713,10 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
         {
             foreach($UserDev_UpFl as $FleetID => $DevArray)
             {
+                if (empty($DevArray)) {
+                    continue;
+                }
+
                 if($FleetID == $FleetRow['fleet_id'])
                 {
                     $SetCode = '2';
