@@ -280,16 +280,10 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 
         $QryUpdateFleets = [];
         $UserDev_UpFl = [];
-
-        $UserDev_UpFl[$FleetRow['fleet_id']] = Flights\Utils\Factories\createFleetDevelopmentLogEntries([
-            'originalShips' => $AttackingFleets[0],
-            'postCombatShips' => $AtkShips[0],
-        ]);
+        $resourcesPillage = null;
 
         // Parse result data - attacker fleet
         if (!empty($AtkShips[0])) {
-            $resourcesPillage = null;
-
             if ($Result === COMBAT_ATK) {
                 $fleetPillageStorage = Flights\Utils\Calculations\calculatePillageStorage([
                     'fleetRow' => $FleetRow,
@@ -318,15 +312,12 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
                     $StolenDeu = $resourcesPillage['deuterium'];
 
                     if ($StolenMet > 0) {
-                        $UserDev_UpFl[$FleetRow['fleet_id']][] = 'M,'.$StolenMet;
                         $TriggerTasksCheck['BATTLE_COLLECT_METAL'] = $StolenMet;
                     }
                     if ($StolenCry > 0) {
-                        $UserDev_UpFl[$FleetRow['fleet_id']][] = 'C,'.$StolenCry;
                         $TriggerTasksCheck['BATTLE_COLLECT_CRYSTAL'] = $StolenCry;
                     }
                     if ($StolenDeu > 0) {
-                        $UserDev_UpFl[$FleetRow['fleet_id']][] = 'D,'.$StolenDeu;
                         $TriggerTasksCheck['BATTLE_COLLECT_DEUTERIUM'] = $StolenDeu;
                     }
 
@@ -346,6 +337,12 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
         } else {
             $DeleteFleet[] = $FleetRow['fleet_id'];
         }
+
+        $UserDev_UpFl[$FleetRow['fleet_id']] = Flights\Utils\Factories\createFleetDevelopmentLogEntries([
+            'originalShips' => $AttackingFleets[0],
+            'postCombatShips' => $AtkShips[0],
+            'resourcesPillage' => $resourcesPillage,
+        ]);
 
         // Parse result data - Defenders
         $i = 1;

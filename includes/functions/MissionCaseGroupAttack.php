@@ -396,15 +396,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 
         $QryUpdateFleets = [];
         $UserDev_UpFl = [];
-
-        foreach ($AttackingFleets as $fleetIndex => $fleetShips) {
-            $thisFleetID = $AttackingFleetID[$fleetIndex];
-
-            $UserDev_UpFl[$thisFleetID] = Flights\Utils\Factories\createFleetDevelopmentLogEntries([
-                'originalShips' => $AttackingFleets[$fleetIndex],
-                'postCombatShips' => $AtkShips[$fleetIndex],
-            ]);
-        }
+        $resourcesPillageByFleetID = [];
 
         if(!empty($AtkShips))
         {
@@ -425,13 +417,13 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
             }
 
             foreach ($AtkShips as $User => $Ships) {
+                $resourcesPillage = null;
+
                 $thisFleetID = $AttackingFleetID[$User];
 
                 $CalculatedAtkFleets[] = $thisFleetID;
 
                 if (!empty($Ships)) {
-                    $resourcesPillage = null;
-
                     if ($Result === COMBAT_ATK) {
                         $fleetPillageStorage = Flights\Utils\Calculations\calculatePillageStorage([
                             'fleetRow' => $attackingFleetRowsById[$thisFleetID],
@@ -443,6 +435,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                                 'maxPillagePerResource' => $maxResourcesPillage,
                                 'fleetTotalStorage' => $fleetPillageStorage,
                             ]);
+                            $resourcesPillageByFleetID[$thisFleetID] = $resourcesPillage;
 
                             foreach ($resourcesPillage as $resourceKey => $resourcePillage) {
                                 $maxResourcesPillage[$resourceKey] -= $resourcePillage;
@@ -461,7 +454,6 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                                 {
                                     $TriggerTasksCheck[$AttackingFleetOwners[$AttackingFleetID[$User]]]['BATTLE_COLLECT_METAL'] = 0;
                                 }
-                                $UserDev_UpFl[$AttackingFleetID[$User]][] = 'M,'.$resourcesPillage['metal'];
                                 $TriggerTasksCheck[$AttackingFleetOwners[$AttackingFleetID[$User]]]['BATTLE_COLLECT_METAL'] += $resourcesPillage['metal'];
                             }
                             if ($resourcesPillage['crystal'] > 0) {
@@ -469,7 +461,6 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                                 {
                                     $TriggerTasksCheck[$AttackingFleetOwners[$AttackingFleetID[$User]]]['BATTLE_COLLECT_CRYSTAL'] = 0;
                                 }
-                                $UserDev_UpFl[$AttackingFleetID[$User]][] = 'C,'.$resourcesPillage['crystal'];
                                 $TriggerTasksCheck[$AttackingFleetOwners[$AttackingFleetID[$User]]]['BATTLE_COLLECT_CRYSTAL'] += $resourcesPillage['crystal'];
                             }
                             if ($resourcesPillage['deuterium'] > 0) {
@@ -477,7 +468,6 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                                 {
                                     $TriggerTasksCheck[$AttackingFleetOwners[$AttackingFleetID[$User]]]['BATTLE_COLLECT_DEUTERIUM'] = 0;
                                 }
-                                $UserDev_UpFl[$AttackingFleetID[$User]][] = 'D,'.$resourcesPillage['deuterium'];
                                 $TriggerTasksCheck[$AttackingFleetOwners[$AttackingFleetID[$User]]]['BATTLE_COLLECT_DEUTERIUM'] += $resourcesPillage['deuterium'];
                             }
                         }
@@ -517,6 +507,21 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                     $DeleteFleet[] = $ID;
                 }
             }
+        }
+
+        foreach ($AttackingFleets as $fleetIndex => $fleetShips) {
+            $thisFleetID = $AttackingFleetID[$fleetIndex];
+            $resourcesPillage = (
+                isset($resourcesPillageByFleetID[$thisFleetID]) ?
+                $resourcesPillageByFleetID[$thisFleetID] :
+                []
+            );
+
+            $UserDev_UpFl[$thisFleetID] = Flights\Utils\Factories\createFleetDevelopmentLogEntries([
+                'originalShips' => $AttackingFleets[$fleetIndex],
+                'postCombatShips' => $AtkShips[$fleetIndex],
+                'resourcesPillage' => $resourcesPillage,
+            ]);
         }
 
         // Parse result data - Defenders

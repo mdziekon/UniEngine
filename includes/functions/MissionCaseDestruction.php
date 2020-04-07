@@ -290,16 +290,10 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
 
         $QryUpdateFleets = [];
         $UserDev_UpFl = [];
-
-        $UserDev_UpFl[$FleetRow['fleet_id']] = Flights\Utils\Factories\createFleetDevelopmentLogEntries([
-            'originalShips' => $AttackingFleets[0],
-            'postCombatShips' => $AtkShips[0],
-        ]);
+        $resourcesPillage = null;
 
         // Parse result data - attacker fleet
         if (!empty($AtkShips[0])) {
-            $resourcesPillage = null;
-
             $postCombatDeathstarsCount = (
                 isset($AtkShips[0][$DEATHSTAR_ELEMENT_ID]) ?
                     $AtkShips[0][$DEATHSTAR_ELEMENT_ID] :
@@ -334,15 +328,12 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
                     $StolenDeu = $resourcesPillage['deuterium'];
 
                     if ($StolenMet > 0) {
-                        $UserDev_UpFl[$FleetRow['fleet_id']][] = 'M,'.$StolenMet;
                         $TriggerTasksCheck['atk']['BATTLE_COLLECT_METAL'] = $StolenMet;
                     }
                     if ($StolenCry > 0) {
-                        $UserDev_UpFl[$FleetRow['fleet_id']][] = 'C,'.$StolenCry;
                         $TriggerTasksCheck['atk']['BATTLE_COLLECT_CRYSTAL'] = $StolenCry;
                     }
                     if ($StolenDeu > 0) {
-                        $UserDev_UpFl[$FleetRow['fleet_id']][] = 'D,'.$StolenDeu;
                         $TriggerTasksCheck['atk']['BATTLE_COLLECT_DEUTERIUM'] = $StolenDeu;
                     }
 
@@ -466,11 +457,6 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
 
                         $DeleteFleet[] = $FleetRow['fleet_id'];
 
-                        $UserDev_UpFl[$FleetRow['fleet_id']] = Flights\Utils\Factories\createFleetDevelopmentLogEntries([
-                            'originalShips' => $AttackingFleets[0],
-                            'postCombatShips' => [],
-                        ]);
-
                         $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_End_Res_Metal'] = 0;
                         $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_End_Res_Crystal'] = 0;
                         $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_End_Res_Deuterium'] = 0;
@@ -510,6 +496,20 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
 
             $FleetHasBeenDestroyed = true;
         }
+
+        $UserDev_UpFl[$FleetRow['fleet_id']] = Flights\Utils\Factories\createFleetDevelopmentLogEntries([
+            'originalShips' => $AttackingFleets[0],
+            'postCombatShips' => (
+                !$FleetHasBeenDestroyed ?
+                $AtkShips[0] :
+                []
+            ),
+            'resourcesPillage' => (
+                !$FleetHasBeenDestroyed ?
+                $resourcesPillage :
+                []
+            ),
+        ]);
 
         // Parse result data - Defenders
         $i = 1;
