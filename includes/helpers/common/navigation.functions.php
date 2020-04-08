@@ -8,6 +8,13 @@ function getPageURL($pageType, $pageParams) {
             return "login.php";
         case "registration":
             return "reg_mainpage.php";
+        case "battleReportByHash":
+            return buildHref([
+                'path' => 'battlereport.php',
+                'query' => [
+                    'hash' => $pageParams['hash'],
+                ],
+            ]);
         default:
             throw new \Exception("UniEngine::getPageURL(): cannot navigate to '{$pageType}'");
     }
