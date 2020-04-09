@@ -9,6 +9,7 @@ use UniEngine\Engine\Includes\Helpers\Common\Navigation;
  * @param string $params['report']
  * @param string $params['combatResult']
  * @param string $params['fleetRow']
+ * @param string $params['hasMoonBeenDestroyed'] (default: null)
  */
 function createCombatResultForAlliedDefendersMessage($params) {
     global $_Lang;
@@ -16,6 +17,36 @@ function createCombatResultForAlliedDefendersMessage($params) {
     $report = $params['report'];
     $combatResult = $params['combatResult'];
     $fleetRow = $params['fleetRow'];
+    $hasMoonBeenDestroyed = (
+        isset($params['hasMoonBeenDestroyed']) ?
+            $params['hasMoonBeenDestroyed'] :
+            null
+    );
+
+    $hasMoonDestructionAttempt = (
+        $combatResult === COMBAT_ATK &&
+        $hasMoonBeenDestroyed !== null
+    );
+
+    $targetTypeLabelContent = $_Lang['BR_Target_'.$fleetRow['fleet_end_type']];
+
+    $targetTypeLabel = (
+        $hasMoonDestructionAttempt ?
+        buildDOMElementHTML([
+            'tagName' => 'span',
+            'attrs' => [
+                'style' => (
+                    "color: " .
+                    classNames([
+                        'green' => ($hasMoonBeenDestroyed === 1),
+                        'orange' => ($hasMoonBeenDestroyed !== 1),
+                    ])
+                )
+            ],
+            'contentHTML' => $targetTypeLabelContent,
+        ]) :
+        $targetTypeLabelContent
+    );
 
     $reportHashlinkRelative = Navigation\getPageURL(
         'battleReportByHash',
@@ -35,7 +66,7 @@ function createCombatResultForAlliedDefendersMessage($params) {
             $fleetRow['fleet_end_galaxy'],
             $fleetRow['fleet_end_system'],
             $fleetRow['fleet_end_planet'],
-            $_Lang['BR_Target_'.$fleetRow['fleet_end_type']],
+            $targetTypeLabel,
             $reportHashlinkRelative,
             $reportHashlinkAbsolute
         ],
