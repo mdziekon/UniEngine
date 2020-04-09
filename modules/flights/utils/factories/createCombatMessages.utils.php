@@ -3,6 +3,124 @@
 namespace UniEngine\Engine\Modules\Flights\Utils\Factories;
 
 use UniEngine\Engine\Includes\Helpers\Common\Navigation;
+use UniEngine\Engine\Includes\Helpers\World\Resources;
+
+/**
+ * @param array $params
+ * @param string $params['missionType]
+ * @param array $params['report']
+ * @param array $params['combatResult']
+ * @param array $params['totalAttackersResourcesLoss']
+ * @param array $params['totalDefendersResourcesLoss']
+ * @param array $params['totalResourcesPillage']
+ *              (default: `Record<PillagableResourceKey, 0>`)
+ * @param array $params['fleetRow']
+ * @param string $params['hasMoonBeenDestroyed'] (default: null)
+ * @param string $params['hasFleetBeenDestroyedByMoon'] (default: null)
+ */
+function createCombatResultForAttackersMessage($params) {
+    global $_Lang;
+
+    $missionType = $params['missionType'];
+    $report = $params['report'];
+    $combatResult = $params['combatResult'];
+    $totalAttackersResourcesLoss = $params['totalAttackersResourcesLoss'];
+    $totalDefendersResourcesLoss = $params['totalDefendersResourcesLoss'];
+    $totalResourcesPillage = (
+        isset($params['totalResourcesPillage']) ?
+        $params['totalResourcesPillage'] :
+        null
+    );
+    $fleetRow = $params['fleetRow'];
+    $hasMoonBeenDestroyed = (
+        isset($params['hasMoonBeenDestroyed']) ?
+            $params['hasMoonBeenDestroyed'] :
+            null
+    );
+    $hasFleetBeenDestroyedByMoon = (
+        isset($params['hasFleetBeenDestroyedByMoon']) ?
+            $params['hasFleetBeenDestroyedByMoon'] :
+            null
+    );
+
+    if ($totalResourcesPillage === null) {
+        $totalResourcesPillage = [];
+        $pillagableResourceKeys = Resources\getKnownPillagableResourceKeys();
+
+        foreach ($pillagableResourceKeys as $resourceKey) {
+            $totalResourcesPillage[$resourceKey] = 0;
+        }
+    }
+
+    $hasMoonDestructionAttempt = (
+        $combatResult === COMBAT_ATK &&
+        $hasMoonBeenDestroyed !== null
+    );
+
+    $targetTypeLabelContent = $_Lang['BR_Target_'.$fleetRow['fleet_end_type']];
+
+    $targetTypeLabel = (
+        $hasMoonDestructionAttempt ?
+        buildDOMElementHTML([
+            'tagName' => 'span',
+            'attrs' => [
+                'style' => (
+                    "color: " .
+                    classNames([
+                        'green' => ($hasMoonBeenDestroyed === 1),
+                        'orange' => ($hasMoonBeenDestroyed !== 1),
+                    ])
+                )
+            ],
+            'contentHTML' => $targetTypeLabelContent,
+        ]) :
+        $targetTypeLabelContent
+    );
+
+    $reportHashlinkRelative = Navigation\getPageURL(
+        'battleReportByHash',
+        [ 'hash' => $report['Hash'] ]
+    );
+    $reportHashlinkAbsolute = GAMEURL . $reportHashlinkRelative;
+
+    $message = [
+        'msg_id' => (
+            $missionType != 9 ?
+            '071' :
+            '072'
+        ),
+        'args' => [
+            $report['ID'],
+            classNames([
+                '#AD5CD6' => ($combatResult === COMBAT_ATK && $hasFleetBeenDestroyedByMoon),
+                'red' => ($combatResult === COMBAT_DEF),
+                'orange' => ($combatResult === COMBAT_DRAW),
+                'green' => ($combatResult === COMBAT_ATK && !$hasFleetBeenDestroyedByMoon),
+            ]),
+            $fleetRow['fleet_end_galaxy'],
+            $fleetRow['fleet_end_system'],
+            $fleetRow['fleet_end_planet'],
+            $targetTypeLabel,
+            prettyNumber(array_sum($totalAttackersResourcesLoss['realLoss'])),
+            prettyNumber(array_sum($totalDefendersResourcesLoss['realLoss'])),
+            prettyNumber($totalResourcesPillage['metal']),
+            prettyNumber($totalResourcesPillage['crystal']),
+            prettyNumber($totalResourcesPillage['deuterium']),
+            prettyNumber(
+                $totalAttackersResourcesLoss['recoverableLoss']['metal'] +
+                $totalDefendersResourcesLoss['recoverableLoss']['metal']
+            ),
+            prettyNumber(
+                $totalAttackersResourcesLoss['recoverableLoss']['crystal'] +
+                $totalDefendersResourcesLoss['recoverableLoss']['crystal']
+            ),
+            $reportHashlinkRelative,
+            $reportHashlinkAbsolute
+        ],
+    ];
+
+    return json_encode($message);
+}
 
 /**
  * @param array $params
