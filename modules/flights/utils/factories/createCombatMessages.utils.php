@@ -19,8 +19,6 @@ use UniEngine\Engine\Includes\Helpers\World\Resources;
  * @param string $params['hasFleetBeenDestroyedByMoon'] (default: null)
  */
 function createCombatResultForAttackersMessage($params) {
-    global $_Lang;
-
     $missionType = $params['missionType'];
     $report = $params['report'];
     $combatResult = $params['combatResult'];
@@ -57,26 +55,6 @@ function createCombatResultForAttackersMessage($params) {
         $hasMoonBeenDestroyed !== null
     );
 
-    $targetTypeLabelContent = $_Lang['BR_Target_'.$fleetRow['fleet_end_type']];
-
-    $targetTypeLabel = (
-        $hasMoonDestructionAttempt ?
-        buildDOMElementHTML([
-            'tagName' => 'span',
-            'attrs' => [
-                'style' => (
-                    "color: " .
-                    classNames([
-                        'green' => ($hasMoonBeenDestroyed === 1),
-                        'orange' => ($hasMoonBeenDestroyed !== 1),
-                    ])
-                )
-            ],
-            'contentHTML' => $targetTypeLabelContent,
-        ]) :
-        $targetTypeLabelContent
-    );
-
     $reportHashlinkRelative = Navigation\getPageURL(
         'battleReportByHash',
         [ 'hash' => $report['Hash'] ]
@@ -100,7 +78,11 @@ function createCombatResultForAttackersMessage($params) {
             $fleetRow['fleet_end_galaxy'],
             $fleetRow['fleet_end_system'],
             $fleetRow['fleet_end_planet'],
-            $targetTypeLabel,
+            _createTargetTypeLabel([
+                'hasMoonBeenDestroyed' => $hasMoonBeenDestroyed,
+                'hasMoonDestructionAttempt' => $hasMoonDestructionAttempt,
+                'fleetRow' => $fleetRow,
+            ]),
             prettyNumber(array_sum($totalAttackersResourcesLoss['realLoss'])),
             prettyNumber(array_sum($totalDefendersResourcesLoss['realLoss'])),
             prettyNumber($totalResourcesPillage['metal']),
@@ -130,8 +112,6 @@ function createCombatResultForAttackersMessage($params) {
  * @param string $params['hasMoonBeenDestroyed'] (default: null)
  */
 function createCombatResultForAlliedDefendersMessage($params) {
-    global $_Lang;
-
     $report = $params['report'];
     $combatResult = $params['combatResult'];
     $fleetRow = $params['fleetRow'];
@@ -144,26 +124,6 @@ function createCombatResultForAlliedDefendersMessage($params) {
     $hasMoonDestructionAttempt = (
         $combatResult === COMBAT_ATK &&
         $hasMoonBeenDestroyed !== null
-    );
-
-    $targetTypeLabelContent = $_Lang['BR_Target_'.$fleetRow['fleet_end_type']];
-
-    $targetTypeLabel = (
-        $hasMoonDestructionAttempt ?
-        buildDOMElementHTML([
-            'tagName' => 'span',
-            'attrs' => [
-                'style' => (
-                    "color: " .
-                    classNames([
-                        'green' => ($hasMoonBeenDestroyed === 1),
-                        'orange' => ($hasMoonBeenDestroyed !== 1),
-                    ])
-                )
-            ],
-            'contentHTML' => $targetTypeLabelContent,
-        ]) :
-        $targetTypeLabelContent
     );
 
     $reportHashlinkRelative = Navigation\getPageURL(
@@ -184,13 +144,51 @@ function createCombatResultForAlliedDefendersMessage($params) {
             $fleetRow['fleet_end_galaxy'],
             $fleetRow['fleet_end_system'],
             $fleetRow['fleet_end_planet'],
-            $targetTypeLabel,
+            _createTargetTypeLabel([
+                'hasMoonBeenDestroyed' => $hasMoonBeenDestroyed,
+                'hasMoonDestructionAttempt' => $hasMoonDestructionAttempt,
+                'fleetRow' => $fleetRow,
+            ]),
             $reportHashlinkRelative,
             $reportHashlinkAbsolute
         ],
     ];
 
     return json_encode($message);
+}
+
+/**
+ * @param array $params
+ * @param array $params['fleetRow']
+ * @param boolean $params['hasMoonBeenDestroyed']
+ * @param boolean $params['hasMoonDestructionAttempt']
+ */
+function _createTargetTypeLabel($params) {
+    global $_Lang;
+
+    $fleetEndType = $params['fleetRow']['fleet_end_type'];
+    $hasMoonBeenDestroyed = $params['hasMoonBeenDestroyed'];
+    $hasMoonDestructionAttempt = $params['hasMoonDestructionAttempt'];
+
+    $targetTypeLabelContent = $_Lang['BR_Target_'.$fleetEndType];
+
+    if (!$hasMoonDestructionAttempt) {
+        return $targetTypeLabelContent;
+    }
+
+    return buildDOMElementHTML([
+        'tagName' => 'span',
+        'attrs' => [
+            'style' => (
+                "color: " .
+                classNames([
+                    'green' => ($hasMoonBeenDestroyed === 1),
+                    'orange' => ($hasMoonBeenDestroyed !== 1),
+                ])
+            )
+        ],
+        'contentHTML' => $targetTypeLabelContent,
+    ]);
 }
 
 ?>
