@@ -4,6 +4,7 @@ namespace UniEngine\Engine\Modules\Flights\Utils\Factories;
 
 use UniEngine\Engine\Includes\Helpers\Common\Navigation;
 use UniEngine\Engine\Includes\Helpers\World\Resources;
+use UniEngine\Engine\Includes\Helpers\Common\Collections;
 
 /**
  * @param array $params
@@ -26,8 +27,13 @@ function createCombatResultForAttackersMessage($params) {
     $totalDefendersResourcesLoss = $params['totalDefendersResourcesLoss'];
     $totalResourcesPillage = (
         isset($params['totalResourcesPillage']) ?
-        $params['totalResourcesPillage'] :
-        null
+            $params['totalResourcesPillage'] :
+            Collections\mapEntries(
+                Resources\getKnownPillagableResourceKeys(),
+                function ($resourceKey) {
+                    return [ $resourceKey, 0 ];
+                }
+            )
     );
     $fleetRow = $params['fleetRow'];
     $hasMoonBeenDestroyed = (
@@ -40,15 +46,6 @@ function createCombatResultForAttackersMessage($params) {
             $params['hasFleetBeenDestroyedByMoon'] :
             null
     );
-
-    if ($totalResourcesPillage === null) {
-        $totalResourcesPillage = [];
-        $pillagableResourceKeys = Resources\getKnownPillagableResourceKeys();
-
-        foreach ($pillagableResourceKeys as $resourceKey) {
-            $totalResourcesPillage[$resourceKey] = 0;
-        }
-    }
 
     $hasMoonDestructionAttempt = (
         $combatResult === COMBAT_ATK &&
