@@ -52,11 +52,7 @@ function createCombatResultForAttackersMessage($params) {
         $hasMoonBeenDestroyed !== null
     );
 
-    $reportHashlinkRelative = Navigation\getPageURL(
-        'battleReportByHash',
-        [ 'hash' => $report['Hash'] ]
-    );
-    $reportHashlinkAbsolute = GAMEURL . $reportHashlinkRelative;
+    $reportHashlink = _createReportHashlink([ 'report' => $report ]);
 
     $message = [
         'msg_id' => (
@@ -93,8 +89,8 @@ function createCombatResultForAttackersMessage($params) {
                 $totalAttackersResourcesLoss['recoverableLoss']['crystal'] +
                 $totalDefendersResourcesLoss['recoverableLoss']['crystal']
             ),
-            $reportHashlinkRelative,
-            $reportHashlinkAbsolute
+            $reportHashlink['relative'],
+            $reportHashlink['absolute']
         ],
     ];
 
@@ -123,11 +119,7 @@ function createCombatResultForAlliedDefendersMessage($params) {
         $hasMoonBeenDestroyed !== null
     );
 
-    $reportHashlinkRelative = Navigation\getPageURL(
-        'battleReportByHash',
-        [ 'hash' => $report['Hash'] ]
-    );
-    $reportHashlinkAbsolute = GAMEURL . $reportHashlinkRelative;
+    $reportHashlink = _createReportHashlink([ 'report' => $report ]);
 
     $message = [
         'msg_id' => '075',
@@ -146,12 +138,28 @@ function createCombatResultForAlliedDefendersMessage($params) {
                 'hasMoonDestructionAttempt' => $hasMoonDestructionAttempt,
                 'fleetRow' => $fleetRow,
             ]),
-            $reportHashlinkRelative,
-            $reportHashlinkAbsolute
+            $reportHashlink['relative'],
+            $reportHashlink['absolute']
         ],
     ];
 
     return json_encode($message);
+}
+
+/**
+ * @param array $params
+ * @param array $params['report']
+ */
+function _createReportHashlink($params) {
+    $reportHashlinkRelative = Navigation\getPageURL(
+        'battleReportByHash',
+        [ 'hash' => $params['report']['Hash'] ]
+    );
+
+    return [
+        'relative' => $reportHashlinkRelative,
+        'absolute' => (GAMEURL . $reportHashlinkRelative),
+    ];
 }
 
 /**
