@@ -1336,14 +1336,16 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
             Cache_Message($TargetUserID, 0, $FleetRow['fleet_start_time'], 3, '003', '012', $Message);
         }
 
-        if(count($DefendersIDs) > 1)
-        {
-            $Message = false;
-            $Message['msg_id'] = '075';
-            $Message['args'] = array($ReportID, $ReportColor2, $FleetRow['fleet_end_galaxy'], $FleetRow['fleet_end_system'], $FleetRow['fleet_end_planet'], $TargetTypeMsg, $ReportHasHLinkRelative, $ReportHasHLinkReal);
-            $Message = json_encode($Message);
+        if (count($DefendersIDs) > 1) {
+            $messageJSON = Flights\Utils\Factories\createCombatResultForAlliedDefendersMessage([
+                'report' => $CreatedReport,
+                'combatResult' => $Result,
+                'fleetRow' => $FleetRow,
+            ]);
+
             unset($DefendersIDs[0]);
-            Cache_Message($DefendersIDs, 0, $FleetRow['fleet_start_time'], 3, '003', '017', $Message);
+
+            Cache_Message($DefendersIDs, 0, $FleetRow['fleet_start_time'], 3, '003', '017', $messageJSON);
         }
 
         $Message = false;
