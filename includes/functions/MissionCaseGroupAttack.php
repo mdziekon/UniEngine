@@ -1154,7 +1154,6 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                 {
                     $UserStatsData[$UserID]['raids_lost'] += 1;
                 }
-                $ReportColor = 'green';
                 $ReportColor2 = 'red';
             }
             else if($Result === COMBAT_DRAW)
@@ -1174,7 +1173,6 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                 {
                     $UserStatsData[$UserID]['raids_draw'] += 1;
                 }
-                $ReportColor = 'orange';
                 $ReportColor2 = 'orange';
             }
             else if($Result === COMBAT_DEF)
@@ -1185,7 +1183,6 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                 foreach($DefendersIDs as $UserID){
                     $UserStatsData[$UserID]['raids_won'] += 1;
                 }
-                $ReportColor = 'red';
                 $ReportColor2 = 'green';
             }
 
@@ -1280,17 +1277,14 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
             }
             if($Result === COMBAT_ATK)
             {
-                $ReportColor = 'green';
                 $ReportColor2 = 'red';
             }
             else if($Result === COMBAT_DRAW)
             {
-                $ReportColor = 'orange';
                 $ReportColor2 = 'orange';
             }
             else if($Result === COMBAT_DEF)
             {
-                $ReportColor = 'red';
                 $ReportColor2 = 'green';
             }
         }
@@ -1348,19 +1342,30 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
             Cache_Message($DefendersIDs, 0, $FleetRow['fleet_start_time'], 3, '003', '017', $messageJSON);
         }
 
-        $Message = false;
-        $Message['msg_id'] = '071';
-        $Message['args'] = array
-        (
-            $ReportID, $ReportColor, $FleetRow['fleet_end_galaxy'], $FleetRow['fleet_end_system'], $FleetRow['fleet_end_planet'], $TargetTypeMsg,
-            prettyNumber($RealDebrisMetalAtk + $RealDebrisCrystalAtk + $RealDebrisDeuteriumAtk),
-            prettyNumber($RealDebrisCrystalDef + $RealDebrisMetalDef + $RealDebrisDeuteriumDef),
-            prettyNumber($TotalMetStolen), prettyNumber($TotalCryStolen), prettyNumber($TotalDeuStolen),
-            prettyNumber($TotalLostMetal), prettyNumber($TotalLostCrystal),
-            $ReportHasHLinkRelative, $ReportHasHLinkReal
-        );
-        $Message = json_encode($Message);
-        Cache_Message($AttackersIDs, 0, $FleetRow['fleet_start_time'], 3, '003', '017', $Message);
+        $messageJSON = Flights\Utils\Factories\createCombatResultForAttackersMessage([
+            'missionType' => 2,
+            'report' => $CreatedReport,
+            'combatResult' => $Result,
+            'totalAttackersResourcesLoss' => $attackersResourceLosses,
+            'totalDefendersResourcesLoss' => $defendersResourceLosses,
+            'totalResourcesPillage' => array_reduce(
+                $resourcesPillageByFleetID,
+                function ($totalResourcesPillage, $resourcesPillage) {
+                    if ($totalResourcesPillage === null) {
+                        return $resourcesPillage;
+                    }
+
+                    foreach ($resourcesPillage as $resourceKey => $resourceValue) {
+                        $totalResourcesPillage[$resourceKey] += $resourceValue;
+                    }
+
+                    return $totalResourcesPillage;
+                }
+            ),
+            'fleetRow' => $FleetRow,
+        ]);
+
+        Cache_Message($AttackersIDs, 0, $FleetRow['fleet_start_time'], 3, '003', '017', $messageJSON);
 
         $Return['DeleteACS'] = $FleetRow['acs_id'];
 
