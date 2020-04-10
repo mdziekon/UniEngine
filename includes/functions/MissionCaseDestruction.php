@@ -511,6 +511,8 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
             ),
         ]);
 
+        $rebuiltDefenseSystems = [];
+
         // Parse result data - Defenders
         $i = 1;
         if(!empty($DefendingFleets))
@@ -535,8 +537,8 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
                                 {
                                     $Fluctuation = 0;
                                 }
-                                $Rebuilt[$ID] = round($DefSysLost[$ID] * (($Chance + $Fluctuation) / 100));
-                                $Count += $Rebuilt[$ID];
+                                $rebuiltDefenseSystems[$ID] = round($DefSysLost[$ID] * (($Chance + $Fluctuation) / 100));
+                                $Count += $rebuiltDefenseSystems[$ID];
                                 if($DefendingFleets[0][$ID] < $Count)
                                 {
                                     $Count = $DefendingFleets[0][$ID];
@@ -970,8 +972,6 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
 
         $CreatedReport = CreateBattleReport($ReportData, array('atk' => $AttackersIDs, 'def' => $DefendersIDs), $DisallowAttackers);
         $ReportID = $CreatedReport['ID'];
-        $ReportHasHLinkRelative = 'battlereport.php?hash='.$CreatedReport['Hash'];
-        $ReportHasHLinkReal = GAMEURL.$ReportHasHLinkRelative;
 
         $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_ReportID'] = $ReportID;
         if(!empty($DefendingFleetID))
@@ -995,23 +995,6 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
                 {
                     $UserStatsData[$UserID]['raids_lost'] += 1;
                 }
-                if($FleetDestroyedByMoon)
-                {
-                    $ReportColor = '#AD5CD6';
-                }
-                else
-                {
-                    $ReportColor = 'green';
-                }
-                if($MoonHasBeenDestroyed === 1)
-                {
-                    $ReportColor3 = 'green';
-                }
-                else
-                {
-                    $ReportColor3 = 'orange';
-                }
-                $ReportColor2 = 'red';
             }
             elseif($Result === COMBAT_DRAW)
             {
@@ -1023,8 +1006,6 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
                 {
                     $UserStatsData[$UserID]['raids_draw'] += 1;
                 }
-                $ReportColor = 'orange';
-                $ReportColor2 = 'orange';
             }
             elseif($Result === COMBAT_DEF)
             {
@@ -1036,8 +1017,6 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
                 {
                     $UserStatsData[$UserID]['raids_won'] += 1;
                 }
-                $ReportColor = 'red';
-                $ReportColor2 = 'green';
             }
 
             // Update User Destroyed & Lost Stats
@@ -1120,109 +1099,61 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
             {
                 $UserStatsData[$UserID]['raids_inAlly'] += 1;
             }
-            if($Result === COMBAT_ATK)
-            {
-                if($FleetDestroyedByMoon)
-                {
-                    $ReportColor = '#AD5CD6';
-                }
-                else
-                {
-                    $ReportColor = 'green';
-                }
-                if($MoonHasBeenDestroyed === 1)
-                {
-                    $ReportColor3 = 'green';
-                }
-                else
-                {
-                    $ReportColor3 = 'orange';
-                }
-                $ReportColor2 = 'red';
-            }
-            elseif($Result === COMBAT_DRAW)
-            {
-                $ReportColor = 'orange';
-                $ReportColor2 = 'orange';
-            }
-            elseif($Result === COMBAT_DEF)
-            {
-                $ReportColor = 'red';
-                $ReportColor2 = 'green';
-            }
         }
 
-        $TargetTypeMsg = $_Lang['BR_Target_'.$FleetRow['fleet_end_type']];
-        if(!empty($ReportColor3))
-        {
-            $TargetTypeMsg = "<span style=\"color: {$ReportColor3}\">{$TargetTypeMsg}</span>";
-        }
-        $Message['msg_id'] = '072';
-        $Message['args'] = array
-        (
-            $ReportID, $ReportColor, $FleetRow['fleet_end_galaxy'], $FleetRow['fleet_end_system'], $FleetRow['fleet_end_planet'], $TargetTypeMsg,
-            prettyNumber($RealDebrisMetalAtk + $RealDebrisCrystalAtk + $RealDebrisDeuteriumAtk),
-            prettyNumber($RealDebrisCrystalDef + $RealDebrisMetalDef + $RealDebrisDeuteriumDef),
-            ($FleetDestroyedByMoon != true ? prettyNumber($StolenMet) : 0),
-            ($FleetDestroyedByMoon != true ? prettyNumber($StolenCry) : 0),
-            ($FleetDestroyedByMoon != true ? prettyNumber($StolenDeu) : 0),
-            prettyNumber($TotalLostMetal), prettyNumber($TotalLostCrystal),
-            $ReportHasHLinkRelative, $ReportHasHLinkReal
-        );
-        $Message = json_encode($Message);
-        Cache_Message($CurrentUserID, 0, $FleetRow['fleet_start_time'], 3, '003', '012', $Message);
+        $messageJSON = Flights\Utils\Factories\createCombatResultForAttackersMessage([
+            'missionType' => 9,
+            'report' => $CreatedReport,
+            'combatResult' => $Result,
+            'totalAttackersResourcesLoss' => $attackersResourceLosses,
+            'totalDefendersResourcesLoss' => $defendersResourceLosses,
+            'totalResourcesPillage' => (
+                !$FleetHasBeenDestroyed ?
+                $resourcesPillage :
+                null
+            ),
+            'fleetRow' => $FleetRow,
+            'hasMoonBeenDestroyed' => $MoonHasBeenDestroyed,
+            'hasFleetBeenDestroyedByMoon' => $FleetDestroyedByMoon,
+        ]);
 
-        if(!$IsAbandoned)
-        {
-            $Message = false;
-            $Message['msg_id'] = '074';
-            if(!empty($Rebuilt) AND (array)$Rebuilt === $Rebuilt)
-            {
-                foreach($Rebuilt as $SysID => $Count)
-                {
-                    $RebuildReport[] = '<b>'.$_Lang['tech'][$SysID].'</b> - '.$Count;
-                }
-                $RebuildReport = implode('<br/>', $RebuildReport);
-            }
-            else
-            {
-                if($MoonHasBeenDestroyed !== 1)
-                {
-                    if(!isset($DefSysLostIDs) || count($DefSysLostIDs) == 1)
-                    {
-                        $RebuildReport = $_Lang['no_loses_in_defence'];
-                    }
-                    else
-                    {
-                        $RebuildReport = $_Lang['nothing_have_been_rebuilt'];
-                    }
-                }
-                else
-                {
-                    $RebuildReport = $_Lang['moon_has_been_destroyed'];
-                }
-            }
-            $Message['args'] = array
-            (
-                $ReportID, $ReportColor2, $FleetRow['fleet_end_galaxy'], $FleetRow['fleet_end_system'], $FleetRow['fleet_end_planet'],
-                $TargetTypeMsg, $RebuildReport, $ReportHasHLinkRelative, $ReportHasHLinkReal
-            );
-            $Message = json_encode($Message);
-            Cache_Message($TargetUserID, 0, $FleetRow['fleet_start_time'], 3, '003', '012', $Message);
+        Cache_Message($CurrentUserID, 0, $FleetRow['fleet_start_time'], 3, '003', '012', $messageJSON);
+
+        if(!$IsAbandoned) {
+            $messageJSON = Flights\Utils\Factories\createCombatResultForMainDefenderMessage([
+                'report' => $CreatedReport,
+                'combatResult' => $Result,
+                'fleetRow' => $FleetRow,
+                'rebuiltElements' => (
+                    !$MoonHasBeenDestroyed ?
+                    $rebuiltDefenseSystems :
+                    []
+                ),
+                'hasMoonBeenDestroyed' => $MoonHasBeenDestroyed,
+                'hasLostAnyDefenseSystems' => Flights\Utils\Helpers\hasLostAnyDefenseSystem([
+                    'originalShips' => $DefendingFleets,
+                    'postCombatShips' => (
+                        !$MoonHasBeenDestroyed ?
+                        $DefShips :
+                        []
+                    ),
+                ]),
+            ]);
+
+            Cache_Message($TargetUserID, 0, $FleetRow['fleet_start_time'], 3, '003', '012', $messageJSON);
         }
 
-        if(count($DefendersIDs) > 1)
-        {
-            $Message = false;
-            $Message['msg_id'] = '075';
-            $Message['args'] = array
-            (
-                $ReportID, $ReportColor2, $FleetRow['fleet_end_galaxy'], $FleetRow['fleet_end_system'], $FleetRow['fleet_end_planet'],
-                $TargetTypeMsg, $ReportHasHLinkRelative, $ReportHasHLinkReal
-            );
-            $Message = json_encode($Message);
+        if (count($DefendersIDs) > 1) {
+            $messageJSON = Flights\Utils\Factories\createCombatResultForAlliedDefendersMessage([
+                'report' => $CreatedReport,
+                'combatResult' => $Result,
+                'fleetRow' => $FleetRow,
+                'hasMoonBeenDestroyed' => $MoonHasBeenDestroyed,
+            ]);
+
             unset($DefendersIDs[0]);
-            Cache_Message($DefendersIDs, 0, $FleetRow['fleet_start_time'], 3, '003', '017', $Message);
+
+            Cache_Message($DefendersIDs, 0, $FleetRow['fleet_start_time'], 3, '003', '017', $messageJSON);
         }
 
         if(!empty($TriggerTasksCheck))
