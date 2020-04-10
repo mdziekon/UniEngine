@@ -99,6 +99,62 @@ function createCombatResultForAttackersMessage($params) {
 
 /**
  * @param array $params
+ * @param array $params['report']
+ * @param array $params['combatResult']
+ * @param array $params['fleetRow']
+ * @param array $params['rebuiltElements']
+ * @param boolean $params['hasMoonBeenDestroyed'] (default: null)
+ * @param boolean $params['hasLostAnyDefenseSystems']
+ */
+function createCombatResultForMainDefenderMessage($params) {
+    $report = $params['report'];
+    $combatResult = $params['combatResult'];
+    $fleetRow = $params['fleetRow'];
+    $hasMoonBeenDestroyed = (
+        isset($params['hasMoonBeenDestroyed']) ?
+            $params['hasMoonBeenDestroyed'] :
+            null
+    );
+
+    $hasMoonDestructionAttempt = (
+        $combatResult === COMBAT_ATK &&
+        $hasMoonBeenDestroyed !== null
+    );
+
+    $reportHashlink = _createReportHashlink([ 'report' => $report ]);
+
+    $message = [
+        'msg_id' => '074',
+        'args' => [
+            $report['ID'],
+            classNames([
+                'red' => ($combatResult === COMBAT_ATK),
+                'orange' => ($combatResult === COMBAT_DRAW),
+                'green' => ($combatResult === COMBAT_DEF),
+            ]),
+            $fleetRow['fleet_end_galaxy'],
+            $fleetRow['fleet_end_system'],
+            $fleetRow['fleet_end_planet'],
+            _createTargetTypeLabel([
+                'hasMoonBeenDestroyed' => $hasMoonBeenDestroyed,
+                'hasMoonDestructionAttempt' => $hasMoonDestructionAttempt,
+                'fleetRow' => $fleetRow,
+            ]),
+            _createDefensesRebuildList([
+                'rebuiltElements' => $params['rebuiltElements'],
+                'hasMoonBeenDestroyed' => $hasMoonBeenDestroyed,
+                'hasLostAnyDefenseSystems' => $params['hasLostAnyDefenseSystems'],
+            ]),
+            $reportHashlink['relative'],
+            $reportHashlink['absolute']
+        ],
+    ];
+
+    return json_encode($message);
+}
+
+/**
+ * @param array $params
  * @param string $params['report']
  * @param string $params['combatResult']
  * @param string $params['fleetRow']
@@ -194,6 +250,39 @@ function _createTargetTypeLabel($params) {
         ],
         'contentHTML' => $targetTypeLabelContent,
     ]);
+}
+
+/**
+ * @param array $params
+ * @param array $params['rebuiltElements']
+ * @param boolean $params['hasMoonBeenDestroyed']
+ * @param boolean $params['hasLostAnyDefenseSystems']
+ */
+function _createDefensesRebuildList($params) {
+    global $_Lang;
+
+    if (empty($params['rebuiltElements'])) {
+        if (
+            isset($params['hasMoonBeenDestroyed']) &&
+            $params['hasMoonBeenDestroyed']
+        ) {
+            return $_Lang['moon_has_been_destroyed'];
+        }
+
+        return (
+            $params['hasLostAnyDefenseSystems'] ?
+                $_Lang['nothing_have_been_rebuilt'] :
+                $_Lang['no_loses_in_defence']
+        );
+    }
+
+    $rebuildList = [];
+
+    foreach ($params['rebuiltElements'] as $elementID => $rebuildCount) {
+        $rebuildList[] = "<b>{$_Lang['tech'][$elementID]}</b> - {$rebuildCount}";
+    }
+
+    return implode('<br/>', $rebuildList);
 }
 
 ?>
