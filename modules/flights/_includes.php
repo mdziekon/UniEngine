@@ -14,6 +14,7 @@ call_user_func(function () {
     include($includePath . './utils/factories/createFleetUpdateEntry.utils.php');
     include($includePath . './utils/fleetCache/updateGalaxyDebris.utils.php');
     include($includePath . './utils/fleetCache/updateUserStats.utils.php');
+    include($includePath . './utils/helpers/hasLostAnyDefenseSystem.utils.php');
     include($includePath . './utils/initializers/technologies.utils.php');
     include($includePath . './utils/initializers/userStats.utils.php');
     include($includePath . './utils/modifiers/calculateMoraleModifiers.utils.php');
