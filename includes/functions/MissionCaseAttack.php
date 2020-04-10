@@ -345,6 +345,8 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
         ]);
 
         // Parse result data - Defenders
+        $rebuiltDefenseSystems = [];
+
         $i = 1;
         if(!empty($DefendingFleets))
         {
@@ -366,8 +368,8 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
                             {
                                 $Fluctuation = 0;
                             }
-                            $Rebuilt[$ID] = round($DefSysLost[$ID] * (($Chance + $Fluctuation) / 100));
-                            $Count += $Rebuilt[$ID];
+                            $rebuiltDefenseSystems[$ID] = round($DefSysLost[$ID] * (($Chance + $Fluctuation) / 100));
+                            $Count += $rebuiltDefenseSystems[$ID];
                             if($DefendingFleets[0][$ID] < $Count)
                             {
                                 $Count = $DefendingFleets[0][$ID];
@@ -793,8 +795,6 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 
         $CreatedReport = CreateBattleReport($ReportData, array('atk' => $AttackersIDs, 'def' => $DefendersIDs), $DisallowAttackers);
         $ReportID = $CreatedReport['ID'];
-        $ReportHasHLinkRelative = 'battlereport.php?hash='.$CreatedReport['Hash'];
-        $ReportHasHLinkReal = GAMEURL.$ReportHasHLinkRelative;
 
         $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_ReportID'] = $ReportID;
         if(!empty($DefendingFleetID))
@@ -818,7 +818,6 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
                 {
                     $UserStatsData[$UserID]['raids_lost'] += 1;
                 }
-                $ReportColor2 = 'red';
             }
             elseif($Result === COMBAT_DRAW)
             {
@@ -830,7 +829,6 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
                 {
                     $UserStatsData[$UserID]['raids_draw'] += 1;
                 }
-                $ReportColor2 = 'orange';
             }
             elseif($Result === COMBAT_DEF)
             {
@@ -842,7 +840,6 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
                 {
                     $UserStatsData[$UserID]['raids_won'] += 1;
                 }
-                $ReportColor2 = 'green';
             }
 
             // Update User Destroyed & Lost Stats
@@ -916,18 +913,6 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
             {
                 $UserStatsData[$UserID]['raids_inAlly'] += 1;
             }
-            if($Result === COMBAT_ATK)
-            {
-                $ReportColor2 = 'red';
-            }
-            elseif($Result === COMBAT_DRAW)
-            {
-                $ReportColor2 = 'orange';
-            }
-            elseif($Result === COMBAT_DEF)
-            {
-                $ReportColor2 = 'green';
-            }
         }
 
         $messageJSON = Flights\Utils\Factories\createCombatResultForAttackersMessage([
@@ -942,34 +927,19 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 
         Cache_Message($CurrentUserID, 0, $FleetRow['fleet_start_time'], 3, '003', '012', $messageJSON);
 
-        $TargetTypeMsg = $_Lang['BR_Target_'.$FleetRow['fleet_end_type']];
+        if (!$IsAbandoned) {
+            $messageJSON = Flights\Utils\Factories\createCombatResultForMainDefenderMessage([
+                'report' => $CreatedReport,
+                'combatResult' => $Result,
+                'fleetRow' => $FleetRow,
+                'rebuiltElements' => $rebuiltDefenseSystems,
+                'hasLostAnyDefenseSystems' => Flights\Utils\Helpers\hasLostAnyDefenseSystem([
+                    'originalShips' => $DefendingFleets,
+                    'postCombatShips' => $DefShips,
+                ]),
+            ]);
 
-        if(!$IsAbandoned)
-        {
-            $Message = false;
-            $Message['msg_id'] = '074';
-            if(!empty($Rebuilt) AND (array)$Rebuilt === $Rebuilt)
-            {
-                foreach($Rebuilt as $SysID => $Count)
-                {
-                    $RebuildReport[] = '<b>'.$_Lang['tech'][$SysID].'</b> - '.$Count;
-                }
-                $RebuildReport = implode('<br/>', $RebuildReport);
-            }
-            else
-            {
-                if(!isset($DefSysLostIDs) || count($DefSysLostIDs) == 1)
-                {
-                    $RebuildReport = $_Lang['no_loses_in_defence'];
-                }
-                else
-                {
-                    $RebuildReport = $_Lang['nothing_have_been_rebuilt'];
-                }
-            }
-            $Message['args'] = array($ReportID, $ReportColor2, $FleetRow['fleet_end_galaxy'], $FleetRow['fleet_end_system'], $FleetRow['fleet_end_planet'], $TargetTypeMsg, $RebuildReport, $ReportHasHLinkRelative, $ReportHasHLinkReal);
-            $Message = json_encode($Message);
-            Cache_Message($TargetUserID, 0, $FleetRow['fleet_start_time'], 3, '003', '012', $Message);
+            Cache_Message($TargetUserID, 0, $FleetRow['fleet_start_time'], 3, '003', '012', $messageJSON);
         }
 
         if (count($DefendersIDs) > 1) {
