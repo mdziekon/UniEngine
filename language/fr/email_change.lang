@@ -1,0 +1,19 @@
+<?php
+
+$_Lang['Page_Title']                            = 'Account\'s Email change';
+
+$_Lang['Info_havetobelogged']                   = 'You have to be logged in to activate a new Email address!';
+$_Lang['Info_noenoughtdata']                    = 'Link wydaje się być niepoprawny! Skontaktuj się z Administracją!';
+$_Lang['Info_baddata']                          = 'Link nie zawiera wszystkich wymaganych danych! Skontaktuj się z Administracją!';
+$_Lang['Info_badkey']                           = 'Activation key is invalid! Please contact Administration!';
+$_Lang['Info_noactivePrc']                      = 'Email change has not been requested on this account!';
+$_Lang['Info_some1hasthisemail']                = 'This email account is already in use!<br/>If you think this is Email address theft, please contact Administration!';
+$_Lang['Info_newmail_notconfirmed']             = 'You cannot complete the activation process until the ownership of the new Email address has been confirmed using the Activation Link sent to the new address!';
+$_Lang['Info_7daysnotpassed']                   = 'Old Email address validation is not available yet (you have to wait 7 days from the beginning of the change process)!';
+$_Lang['Info_Hashnotcorrect']                   = 'Activation key is invalid! Please contact Administration!';
+$_Lang['Info_HashalreadyConfirmed']             = 'This Activation key has already been confirmed!';
+$_Lang['Info_MailChangedCompletely']            = 'Email Address change process has been completed!<br/>Your account now uses the new address!';
+$_Lang['Info_MailChangePartComplete_OldHash']   = 'Your old Email address has been validated!<br/>To complete the Email address change process, please confirm your new Email address!';
+$_Lang['Info_MailChangePartComplete_NewHash']   = 'Your new Email address has been validated!<br/>To complete the Email address change process, please confirm your old Email address or wait for the next 7 days until a manual validation is available in the "Overview" section!';
+
+?>

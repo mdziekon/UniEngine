@@ -1,0 +1,35 @@
+<?php
+
+$_Lang['mail_text']             = 'Cet e-mail a été envoyé automatiquement par le système de génération de lien d\'activation de <a href="'.GAMEURL_STRICT.'">'.$_GameConfig['game_name'].'</a><br /><br /><b>Nouveau lien d\'activation :</b> {activationlink}<br/><br/>Si tu n\'as pas demandé à réinitialiser ton mot de passe, ignore simplement ce message.<br/>Bon jeu !';
+
+$_Lang['mail_template']         = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
+$_Lang['mail_template']         .= '<html>';
+$_Lang['mail_template']         .= '<head>';
+$_Lang['mail_template']         .= '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">';
+$_Lang['mail_template']         .= '</head>';
+$_Lang['mail_template']         .= '<body>';
+$_Lang['mail_template']         .= $_Lang['mail_text'];
+$_Lang['mail_template']         .= '</body>';
+$_Lang['mail_template']         .= '</html>';
+
+$_Lang['mail_title']            = 'Nouveau lien d\'activation';
+
+$_Lang['ResetCode']             = "Lien d'activation perdu";
+$_Lang['TextCode1']             = "Saisis ton adresse e-mail.";
+$_Lang['TextCode2']             = "Après avoir saisi ton adresse e-mail, clique sur le bouton \"Renvoyer le lien d'activation\". Un nouveau lien d'activation te sera envoyé par e-mail.";
+$_Lang['email']                 = "Adresse e-mail ";
+$_Lang['ButtonSendPass']        = "Renvoyer le lien d'activation";
+$_Lang['CodeForm']              = "Demande de renvoi du lien d'activation";
+$_Lang['Title']                 = 'Renvoyer le lien d\'activation';
+
+$_Lang['go_back']               = '<br/><br/><a href="lostcode.php">Retour</a>';
+
+$_Lang['new_code_sent']         = 'Un nouveau lien d\'activation t\'a été envoyé par e-mail !'.$_Lang['go_back'];
+$_Lang['smtp_error']            = 'Une erreur s\'est produite lors de l\'envoi de l\'e-mail :<br/>%s<br/>Veuille <a href="contact.php">contacter un administration</a> !'.$_Lang['go_back'];
+$_Lang['acc_already_activated'] = 'Ce compte est déjà activé !'.$_Lang['go_back'];
+$_Lang['no_email_in_db']        = 'Cette adresse e-mail n\'est associée à aucun compte !'.$_Lang['go_back'];
+$_Lang['bad_email_given']       = 'Adresse e-mail incorrecte !'.$_Lang['go_back'];
+$_Lang['no_mail_given']         = 'Adresse e-mail non renseignée !'.$_Lang['go_back'];
+$_Lang['prevent_spaming']       = 'Veuille attendre une heure minimum avant de faire une nouvelle demande.';
+
+?>

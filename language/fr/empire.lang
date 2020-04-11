@@ -1,0 +1,19 @@
+<?php
+
+$_Lang['empire_vision']     = "Empire Overview";
+$_Lang['name']              = "Name";
+$_Lang['coordinates']       = "Coordinates";
+$_Lang['fields']            = "Fields";
+$_Lang['resources']         = "Resources";
+$_Lang['metal']             = "Metal";
+$_Lang['crystal']           = "Crystal";
+$_Lang['deuterium']         = "Deuterium";
+$_Lang['energy']            = "Energy";
+$_Lang['buildings']         = "Buildings";
+$_Lang['ships']             = "Ships";
+$_Lang['defense']           = "Defenses";
+
+$_Lang['ShowPlanets']       = 'Planets';
+$_Lang['ShowMoons']         = 'Moons';
+
+?>

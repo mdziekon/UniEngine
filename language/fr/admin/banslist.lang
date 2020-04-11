@@ -1,0 +1,35 @@
+<?php
+
+$_Lang['Page_Title']                = 'Bans log';
+
+$_Lang['Form_Players']              = 'Players';
+$_Lang['Form_DateRange']            = 'Date range';
+$_Lang['Form_SearchBtn']            = 'Search';
+$_Lang['Form_ResetBtn']             = 'Reset';
+
+$_Lang['Header_ID']                 = 'ID';
+$_Lang['Header_User']               = 'Player';
+$_Lang['Header_StartTime']          = 'Banned on';
+$_Lang['Header_Duration']           = 'Duration';
+$_Lang['Header_EndTime']            = 'Ban end date';
+$_Lang['Header_Status']             = 'Status';
+$_Lang['Header_Reason']             = 'Reason';
+$_Lang['Header_Giver']              = 'Banned by';
+$_Lang['Header_Indicators']         = 'Details';
+
+$_Lang['Row_Active']                = '<b class="lime">Active</b>';
+$_Lang['Row_Expired']               = '<b class="orange">Expired</b>';
+$_Lang['Row_Removed']               = '<b class="red">Removed</b>';
+$_Lang['Row_ReasonEmpty']           = '<b class="orange">Not given</b>';
+$_Lang['Row_WithVacation']          = '<b class="skyblue">Vacation mode enabled</b>';
+$_Lang['Row_WithoutVacation']       = 'No Vacation mode';
+$_Lang['Row_AllFleetsRetreaded']    = '<b class="lime">Fleets retreated (#01)</b>';
+$_Lang['Row_OwnFleetsRetreaded']    = '<b class="orange">Fleets retreated (#02)</b>';
+$_Lang['Row_OthersFleetsRetreaded'] = '<b class="orange">Fleets retreated (#03)</b>';
+$_Lang['Row_NoFleetsRetreaded']     = '<b class="red">Fleets not retreated</b>';
+$_Lang['Row_BlockadeOnCookieStyle'] = '<b class="red">Cookies lock activated</b>';
+$_Lang['Row_UserDeleted']           = 'Deleted player';
+
+$_Lang['Error_NoRows']              = 'No entries';
+
+?>

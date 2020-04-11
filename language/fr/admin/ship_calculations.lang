@@ -1,0 +1,28 @@
+<?php
+
+$_Lang['Page_Title']                         = 'Ships comparison';
+
+$_Lang['Selector_Title']                     = 'Select ships from the list';
+$_Lang['Selector_MainShip']                  = 'Main ship';
+$_Lang['Selector_SecondShip']                = 'Targeted ship';
+$_Lang['Selector_Send']                      = 'Compare';
+$_Lang['Table_SelectShip']                   = 'Select a ship for comparison...';
+$_Lang['Table_BadShip']                      = 'Selected ship does not exist...';
+
+$_Lang['Headers_ID']                         = 'ID';
+$_Lang['Headers_Name']                       = 'Name';
+$_Lang['Headers_MetalRatio']                 = 'Metal';
+$_Lang['Headers_CrystalRatio']               = 'Crystal';
+$_Lang['Headers_DeuteriumRatio']             = 'Deuterium';
+$_Lang['Headers_TotalPriceRatio']            = 'Total Price';
+$_Lang['Headers_ForceRatio']                 = 'Force';
+$_Lang['Headers_ShieldRatio']                = 'Shields';
+$_Lang['Headers_HullRatio']                  = 'Hull';
+$_Lang['Headers_StorageRatio']               = 'Storage';
+$_Lang['Headers_SpeedRatio']                 = 'Load cap.';
+$_Lang['Headers_FuelRatio']                  = 'Fuel';
+$_Lang['Headers_DestroyInSingleShot']        = 'Targets destroyed in a round';
+$_Lang['Headers_RapidFireValue']             = 'Rapid fire';
+$_Lang['Headers_CompareProfitability']       = 'Total efficiency against target';
+
+?>

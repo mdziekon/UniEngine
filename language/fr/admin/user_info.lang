@@ -1,0 +1,125 @@
+<?php
+
+$_Lang['PageTitle']                 = 'Player Overview';
+
+// Menu
+$_Lang['GeneralOverview']           = 'General overview';
+$_Lang['Statistics']                = 'Statistics';
+$_Lang['PlanetsInfo']               = 'Planets Info';
+$_Lang['FleetControl']              = 'Fleets movement';
+
+// General Overview
+$_Lang['Nickname']                  = 'Username';
+$_Lang['EMail']                     = 'Email address';
+$_Lang['EMail2']                    = 'Secondary Email (?)';
+$_Lang['LastIP']                    = 'Last IP address';
+$_Lang['RegisterIP']                = 'Registration IP address';
+$_Lang['LastActivity']              = 'Last activity';
+$_Lang['Browser']                   = 'Browser UA';
+$_Lang['Screen']                    = 'Screen';
+$_Lang['RegisterInfo']              = 'Registration date';
+$_Lang['Vacations']                 = 'Vacation Mode';
+$_Lang['Ban']                       = 'Ban status';
+$_Lang['Delete']                    = 'Account termination status';
+$_Lang['OldNick']                   = 'Old username';
+$_Lang['InvitedBy']                 = 'Referred by';
+$_Lang['DarkEnergy']                = 'Dark Energy';
+$_Lang['ProTime']                   = 'Pro Account';
+$_Lang['GeoTime']                   = 'Geologist';
+$_Lang['EngTime']                   = 'Mechanic';
+$_Lang['AdmTime']                   = 'Admiral';
+$_Lang['TecTime']                   = 'Technocrat';
+$_Lang['JamTime']                   = 'Jamming systems';
+$_Lang['AdditionalPlanets']         = 'Additional planets';
+$_Lang['Ally']                      = 'Alliance';
+$_Lang['AccountActive']             = 'Account activated?';
+$_Lang['DisableIPCheck']            = 'Anti-IPChange activated?';
+$_Lang['MotherPlanet']              = 'Mother Planet';
+$_Lang['MotherPlanet_ID']           = 'ID';
+
+
+$_Lang['Active']                    = 'Active';
+$_Lang['Inactive']                  = 'Inactive';
+$_Lang['Delete_Time']               = 'Termination in';
+$_Lang['WillExpire']                = 'Expires in';
+$_Lang['Expired']                   = 'Expired';
+$_Lang['Expired2']                  = 'Expired on';
+$_Lang['NeverBought']               = 'Never bought';
+$_Lang['Request']                   = 'Application';
+$_Lang['Ally_owner']                = 'Leader';
+$_Lang['_yes']                      = 'Yes';
+$_Lang['_no']                       = 'No';
+$_Lang['Male']                      = 'Male';
+$_Lang['Famale']                    = 'Female';
+$_Lang['Undefined']                 = 'Undefined';
+$_Lang['NoLogin']                   = 'No logins!';
+$_Lang['ActivationCode']            = 'Code';
+$_Lang['CookieBanActive']           = 'Cookie ban active!';
+$_Lang['NotInvited']                = '-';
+$_Lang['InviterDeleted']            = '<b class="red">Account deleted</b>';
+
+$_Lang['ShowOnline']                = 'Show Online players';
+$_Lang['SearchByIP']                = 'Search for other players with this IP';
+$_Lang['SearchByAlly']              = 'Show Alliance members';
+$_Lang['InActivationProc']          = 'In activation process';
+$_Lang['GoToGalaxy']                = 'Go to Galaxy View';
+$_Lang['ShowLogs']                  = 'Show all action logs';
+
+$_Lang['Delete_Time_onNextRecalc']  = 'Account termination on next Stats recalculation...';
+
+// Statistics
+$_Lang['NoStatsAvailable']          = 'Statistics not available yet!';
+
+$_Lang['General']                   = 'Points';
+$_Lang['Fleet']                     = 'Fleet';
+$_Lang['Buildings']                 = 'Buildings';
+$_Lang['Defence']                   = 'Defenses';
+$_Lang['Research']                  = 'Research';
+
+$_Lang['Pos']                       = 'Position';
+$_Lang['Change']                    = 'Position change';
+$_Lang['DayChange']                 = 'Daily position change';
+$_Lang['Points']                    = 'Points';
+$_Lang['GeneralPointsPercent']      = 'Total points percentage';
+
+// Fleet Control
+$_Lang['NoFleetsInFlight']          = 'No fleets movements <u>from</u> or <u>towards</u> this player!';
+
+// FIXME: this should be shared with FleetControl.lang
+$_Lang['Fleet_ID']                  = 'ID';
+$_Lang['Fleet_Owner']               = 'Owner';
+$_Lang['Fleet_Mission']             = 'Mission';
+$_Lang['Fleet_Array']               = 'Ships';
+$_Lang['Fleet_Cargo']               = 'Cargo';
+$_Lang['Fleet_Start']               = 'Origin place & time';
+$_Lang['Fleet_End']                 = 'Destination place & time';
+$_Lang['Fleet_End_owner']           = 'Destination owner';
+$_Lang['Fleet_Back_time']           = 'Return';
+
+$_Lang['No_cargo']                  = 'No cargo';
+$_Lang['See_cargo']                 = 'Hover for details';
+
+$_Lang['Planet_sign']               = 'P';
+$_Lang['Debris_sign']               = 'D';
+$_Lang['Moon_sign']                 = 'M';
+$_Lang['Main_ACS_Fleet']            = 'Main fleet of the union';
+$_Lang['Coming_back']               = 'Coming back';
+$_Lang['TargetAchieved']            = 'Destination reached';
+$_Lang['FleetCameBack']             = 'Mission complete';
+$_Lang['Not_calculated']            = 'Not calculated yet!';
+
+$_Lang['Start_from_planet']         = 'Start from a Planet';
+$_Lang['Start_from_moon']           = 'Start from a moon';
+$_Lang['Target_is_planet']          = 'Destination is a Planet';
+$_Lang['Target_is_moon']            = 'Destination is a Moon';
+$_Lang['Target_is_debris']          = 'Destination is a Debris Field';
+
+// Errors
+$_Lang['Error_NoUID_NoName']        = 'You have to provide Player\'s ID or Username!';
+$_Lang['Error_BadUID']              = 'Invalid ID given!';
+$_Lang['Error_BadName']             = 'Invalid Username given!';
+$_Lang['Error_NotFound_UID']        = 'There is no player with such ID!';
+$_Lang['Error_NotFound_Name']       = 'There is no player with such Username!';
+$_Lang['Error_NoEnoughAccess']      = 'You do not have enough permissions to see this Player\'s overview!';
+
+?>

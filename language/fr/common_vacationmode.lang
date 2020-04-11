@@ -1,0 +1,14 @@
+<?php
+
+$_Lang['VacationMode_Title']                = 'Vacation mode';
+
+$_Lang['VacationMode_Labels_Deactivate']    = 'Deactivate';
+
+$_Lang['VacationMode_Btns_Confirm']         = 'Confirm';
+$_Lang['VacationMode_Btns_GotoSettings']    = 'Deactivate in Settings';
+$_Lang['VacationMode_Btns_Logout']          = 'Logout';
+
+$_Lang['VacationMode_EndTime_Anytime']      = '<b class="lime">Vacation mode can be deactivated</b>';
+$_Lang['VacationMode_EndTime_DefinedAs']    = 'Vacation mode cannot be deactivated until: <b class="%s">%s</b>';
+
+?>

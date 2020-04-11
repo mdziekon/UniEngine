@@ -1,0 +1,12 @@
+<?php
+
+$_Lang['Title']             = 'Missiles destruction';
+$_Lang['NoSilo']            = 'There\'s no Silo on this planet!';
+$_Lang['BadCountGiven']     = 'Invalid missiles amount provided!';
+$_Lang['NothingDestroyed']  = 'No missiles have been destroyed!';
+$_Lang['RocketsDestroyed']  = (
+    'Destroyed<br/>Anti-missiles (<b class="orange">%s</b>) and Interplanetary Missiles (<b class="orange">%s</b>)<br/>' .
+    'on planet "%s" [%s:%s:%s]!'
+);
+
+?>

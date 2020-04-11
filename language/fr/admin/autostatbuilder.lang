@@ -1,0 +1,11 @@
+<?php
+
+$_Lang['AutoStatBuilder_Title']     = "Statistics recalculation";
+$_Lang['AutoStatBuilder_BuildInfo'] = (
+    'Generation time: %s s.<br/>' .
+    'Last daily recalculation: %s ago<br/>' .
+    '(Difference: %s s.)<br/><br/>' .
+    'Time profiling table:<br/> %s<br/>'
+);
+
+?>

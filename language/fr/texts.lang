@@ -1,0 +1,10 @@
+<?php
+
+$_Lang['Texts']             = [];
+
+$_Lang['Error_TextNoExist'] = 'This article does not exist!';
+$_Lang['Error_BadID']       = 'Invalid article identifier!';
+$_Lang['PageTitle']         = 'Article: ';
+$_Lang['PageTitleError']    = 'Articles';
+
+?>

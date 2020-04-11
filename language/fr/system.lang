@@ -8,7 +8,7 @@ $_Lang['user_level'] = [
     '90'    => 'Game admin',
     '100'   => 'Game admin',
     '110'   => 'Game developer',
-    '120'   => 'Game owner',
+    '120'   => 'Administrateur',
 ];
 
 $_Lang['Pagination_Prev']                       = '&#171; Previous';
@@ -209,7 +209,7 @@ $_Lang['LanguagesAvailable']    = [
     'fr'                        => [
         'flag_emoji'            => '🇫🇷',
         'name'                  => 'French'
-    ] 
+    ]
 ];
 
 ?>

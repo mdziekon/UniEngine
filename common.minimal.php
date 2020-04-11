@@ -1,6 +1,6 @@
 <?php
 
-define('UNIENGINE_LANGS_AVAILABLE', [ 'en', 'pl' ]);
+define('UNIENGINE_LANGS_AVAILABLE', [ 'en', 'pl', 'fr' ]);
 
 define('UNIENGINE_DEFAULT_LANG', 'en');
 define('UNIENGINE_DEFAULT_SKINPATH', 'skins/epicblue/');

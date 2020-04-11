@@ -28,7 +28,8 @@ $UniData = [
         'mother'       => 1,
         'availableLangs' => [
             'en',
-            'pl'
+            'pl',
+            'fr'
         ]
     ],
 ];

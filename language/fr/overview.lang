@@ -1,0 +1,233 @@
+<?php
+
+// Header titles
+$_Lang['Overview']                   = 'Overview';
+$_Lang['ServerInfo']                 = 'Server\'s informations';
+$_Lang['StatsRecount']               = '<a href="stats.php">Statistics</a> recalculation';
+$_Lang['YourAccount']                = 'Your account';
+$_Lang['Statistics']                 = 'Statistics';
+$_Lang['YourBattles']                = 'Battle Statistics';
+$_Lang['RefLinksHeader']             = 'Signature image and Referral Link';
+$_Lang['SignatureTitle']             = 'Signature code (BBCode)';
+$_Lang['RefLinkTitle']               = 'Referral Link';
+$_Lang['SignatureInfo']              = 'Here you can find your signature\'s code and referral link of your account (you can paste them eg. in the footer section of all your posts on forums).<br/>Every Dark Energy purchase made by a referred player grants you a commission!';
+$_Lang['ResourcesTransport']         = 'Transport all resources from this planet';
+$_Lang['OtherPlanets_header']        = 'Other planets';
+$_Lang['MoreInfo']                   = 'Other informations';
+
+// InBox Titles & Data
+$_Lang['Box_online']                 = 'Online';
+$_Lang['Box_todayActive']            = 'Active today';
+$_Lang['Box_onlineRecord']           = 'Online record';
+$_Lang['Box_userCount']              = 'All players count';
+
+$_Lang['Box_Morale_Header']             = 'Morale';
+$_Lang['Box_Morale_InfoTitle']          = 'Informations about Morale System';
+$_Lang['Box_Morale_NoChanges']          = 'No changes';
+$_Lang['Box_Morale_DropStartIn_Pos']    = 'Decrease in <b id="bxxmorale">%s</b>';
+$_Lang['Box_Morale_DropStartIn_Neg']    = 'Increase in <b id="bxxmorale">%s</b>';
+$_Lang['Box_Morale_Dropping_Pos']       = '<b class="red">&dArr;</b> Decrease (2%%/h) [<b id="bxxmorale">%s</b>]';
+$_Lang['Box_Morale_Dropping_Neg']       = '<b class="lime">&uArr;</b> Increase (1%%/h) [<b id="bxxmorale">%s</b>]';
+$_Lang['Box_Morale_Points']             = 'Empire development level:<br/><b class="grey">%s pkt.</b>';
+
+$_Lang['Box_youPlaySince']           = 'Account\'s age';
+$_Lang['_youPlaySince_1day']         = 'day';
+$_Lang['_youPlaySince_2days']        = 'days';
+$_Lang['Box_proAccount']             = 'Pro Account';
+$_Lang['Box_refferedUsers']          = 'Referred players';
+
+$_Lang['Box_planetData']             = 'Details of the ';
+$_Lang['_planetData_planet']         = 'planet';
+$_Lang['_planetData_moon']           = 'moon';
+$_Lang['_overview_planet']           = 'of the planet';
+$_Lang['_overview_moon']             = 'of the moon';
+$_Lang['_planetData_changename']     = 'Change name';
+$_Lang['_planetData_leave']          = 'Abandon colony';
+$_Lang['Box_planetCoords']           = 'Coordinates';
+$_Lang['Box_planetDiameter']         = 'Diameter';
+$_Lang['diameter_unit']              = 'km.';
+$_Lang['Box_planetBuildFields']      = 'Fields';
+$_Lang['fields']                     = "fields";
+$_Lang['Box_planetTemps']            = 'Temperature';
+$_Lang['Box_planetOrbit']            = 'Orbit';
+$_Lang['_emptyOrbit']                = '-';
+$_Lang['TipTip_Switch2Moon']         = 'Switch to the Moon';
+$_Lang['TipTip_Switch2Planet']       = 'Switch to the Planet';
+$_Lang['Box_planetDebris']           = 'Debris field';
+$_Lang['_planetDebrisLink']          = 'Go to the Galaxy View';
+$_Lang['NoDebris']                   = 'N/A';
+
+$_Lang['Box_statGeneral']            = 'General';
+$_Lang['Box_statFleet']              = 'Fleets';
+$_Lang['Box_statDefense']            = 'Defenses';
+$_Lang['Box_statBuildings']          = 'Buildings';
+$_Lang['Box_statResearch']           = 'Research';
+$_Lang['_statUnit']                  = 'points';
+
+$_Lang['Box_battlesAll']             = 'Battles fought';
+$_Lang['Box_battlesWon']             = 'Wins';
+$_Lang['Box_battlesACSWon']          = 'United wins';
+$_Lang['Box_battlesDraw']            = 'Draws';
+$_Lang['Box_battlesLost']            = 'Loses';
+$_Lang['Box_battlesInAlly']          = 'United battles';
+$_Lang['Box_missileAttacks']         = 'Interplanetary Strikes';
+
+$_Lang['Box_transRequired']          = 'Needed';
+$_Lang['Box_transMissing_Stay']      = '<span style="color: red;">Missing</span> / <span style="color: lime;">Left</span>';
+$_Lang['QuickResSend_Button']        = 'Send all resources to planet %s [%s:%s:%s]';
+
+$_Lang['Box_fromAdmins']             = 'Administration note';
+$_Lang['Box_lastChanges']            = 'Latest changes';
+$_Lang['Box_buttons']                = 'Top Lists';
+
+// FIXME: this should use shared texts
+$_Lang['DelFirstQueue']                          = 'Cancel';
+$_Lang['CannotDeletePremiumBuilding_Warning']    = 'You cannot cancel construction which required Dark Energy!';
+$_Lang['completed']                              = 'Completed';
+$_Lang['BuildJS_Complete']                       = 'Completed';
+$_Lang['BuildJS_Continue']                       = 'Continue';
+
+// Free PremiumItems Box
+$_Lang['FreePremItem_Text']             = 'You\'ve received free Premium Items [%s] as a reward from the Game or Administration!<br/>Go to the Ship to check your items list!';
+
+// Vacation Mode Box
+$_Lang['VacationModeBox_Text']          = 'Your account is currently in <a class="orange" href="settings.php"><u>Vacation Mode</u></a>';
+
+// NewUser Protection Box
+$_Lang['NewUserProtection_Alert']       = 'Are you sure you want to disable your account\'s Protection?\nThis action is irreversible.';
+$_Lang['NewUserProtection_Text']        = 'Your account is under Newcomers\'s Protection (<span id="bxxnewprotect">%s</span> remaining)<br/>During this period no one can attack you.<br/><a href="?cancelprotection=1" onclick="return confirm(\''.$_Lang['NewUserProtection_Alert'].'\');">Disable your account\'s Protection</a>';
+$_Lang['NewUserProtection_Canceled']    = 'Newcomers\' Protection has been disabled on your account!';
+
+// Activation Info Box
+$_Lang['ActivationInfo_Text']           = 'Your account has not been activated yet with an activation link sent to you via Email!<br/>When your account remains inactive, you cannot send your fleets on any missions, and no one can attack you.<br/>If you won\'t activate your account in the next 12 hours, it will be locked down until its activation.';
+
+// NewMsgBox
+$_Lang['MsgBox_YouHave']             = 'You have';
+$_Lang['MsgBox_New']                 = 'new';
+$_Lang['MsgBox_New_1']               = '';
+$_Lang['MsgBox_New_2_4']             = '';
+$_Lang['MsgBox_New_5']               = '';
+$_Lang['MsgBox_Unreaden']            = 'unread';
+$_Lang['MsgBox_Unreaden_1']          = '';
+$_Lang['MsgBox_Unreaden_2_4']        = '';
+$_Lang['MsgBox_Unreaden_5']          = '';
+$_Lang['MsgBox_Msg']                 = 'message';
+$_Lang['MsgBox_Msgs']                = 'messages';
+
+// New Polls
+$_Lang['PollBox_You_can_vote_in_new_polls']  = 'There %s new poll%s which %s awaiting your vote%s!';
+$_Lang['PollBox_One']                        = array('is', '', 'is', '');
+$_Lang['PollBox_More']                       = array('are', 's', 'are', 's');
+
+// ServerInformations
+$_Lang['Info_CountedEvery']          = 'Recalculated every 15 minutes';
+$_Lang['RefferedList']               = 'Players list';
+
+// General
+$_Lang['Free']                    = "Idle";
+$_Lang['Error']                   = "Error";
+
+// --- Rename Planet ---
+$_Lang['Rename_Title']               = 'Change name';
+$_Lang['Rename_TitleMain']           = 'Overview - change name';
+$_Lang['Rename_GoBack']              = 'Go back to the Overview';
+$_Lang['Rename_CurrentName']         = 'Name and coordinates %s';
+$_Lang['Rename_NewName']             = 'New name<br/>(3-20 characters)';
+$_Lang['Rename_Submit']              = ' Change ';
+
+$_Lang['Rename_Planet']              = 'of the planet';
+$_Lang['Rename_Moon']                = 'of the moon';
+
+$_Lang['RenamePlanet_0Lenght']       = 'New name cannot be empty!';
+$_Lang['RenamePlanet_TooShort']      = 'New name is too short!';
+$_Lang['RenamePlanet_TooLong']       = 'New name is too long!';
+$_Lang['RenamePlanet_BadSigns']      = 'Invalid characters in the new name!<br/>You are allowed to use alphanumerical characters, spaces, dashes and underscores.';
+$_Lang['RenamePlanet_SameName']      = 'New and old names are identical!';
+$_Lang['RenamePlanet_NameSaved']     = 'Changes saved!';
+
+$_Lang['Rename_TipTip']              = 'Change name';
+// ---
+// --- Abandon Planet ---
+$_Lang['Abandon_Title']              = 'Abandon colony';
+$_Lang['Abandon_TitleMain']          = 'Overview - Abandon colony';
+$_Lang['Abandon_GoBack']             = &$_Lang['Rename_GoBack'];
+$_Lang['Abandon_Desc']               = 'To abandon this colony (<b class="orange">%s %s %s</b>), you have to verify this action with your password.';
+$_Lang['Abandon_GivePassword']       = 'Your password';
+$_Lang['Abandon_Submit']             = ' Abandon ';
+$_Lang['Abandon_Confirm']            = 'All resources, building, defenses and fleets will be irreversibly lost!';
+
+$_Lang['Abandon_Planet']             = 'planet';
+$_Lang['Abandon_Moon']               = 'moon';
+
+$_Lang['Abandon_TechHere']           = 'You cannot abandon a planet with an ongoing research!';
+$_Lang['Abandon_SQLError']           = 'Unexpected system error!<br/>Please report this to the Administration!';
+$_Lang['Abandon_FlyingFleetsHere']   = 'You cannot abandon a colony with fleets movement in progress!';
+$_Lang['Abandon_FlyingFleetsMoon']   = 'You cannot abandon this planet, because there is still fleets movement in progress on its moon!';
+$_Lang['Abandon_BadPlanetrowData']   = 'Unexpected system error!<br/>Please report this to the Administration!';
+$_Lang['Abandon_CantAbandonMother']  = 'You cannot abandon your Mother planet!';
+$_Lang['Abandon_BadPassword']        = 'Invalid password!';
+$_Lang['Abandon_NoPassword']         = 'You have to confirm this action with your password!';
+
+$_Lang['Abandon_ColonyAbandoned']    = 'The colony has been abandoned! Switching back to the Mother planet...';
+
+// ---
+
+$_Lang['ov_temp_from']            = "from";
+$_Lang['ov_temp_to']              = "to";
+$_Lang['ov_temp_unit']            = "&deg;C";
+
+// Planet's overview
+$_Lang['colony_abandon']          = "Abandon colony";
+$_Lang['functions']               = "Function";
+$_Lang['coords']                  = "Coordinates";
+$_Lang['name']                    = "Name";
+$_Lang['namer']                   = "Change name";
+$_Lang['password']                = "Your password";
+
+// Flying fleets
+// FIXME: this is shared with Phalanx lang pack,
+// should be moved to a shared lang file
+$_Lang['ov_fleet']              = 'fleets';
+$_Lang['ov_fleet2']             = 'fleet';
+$_Lang['ov_une']                = 'One of your own ';
+$_Lang['ov_une_phalanx']        = 'One of ';
+$_Lang['ov_une_hostile']        = 'Hostile ';
+$_Lang['ov_vennant']            = ' flying from ';
+$_Lang['ov_planet_to']          = 'planet ';
+$_Lang['ov_moon_to']            = 'moon ';
+$_Lang['ov_atteint']            = ' will reach ';
+$_Lang['ov_planet_to_target']   = 'planet ';
+$_Lang['ov_moon_to_target']     = 'moon ';
+$_Lang['ov_debris_to_target']   = 'debris field ';
+$_Lang['ov_explo_to_target']    = 'uncharted space ';
+$_Lang['ov_mission']            = '<br/>Mission: ';
+$_Lang['ov_explo_stay']         = ' explores ';
+$_Lang['ov_onorbit_stay']       = ' protects ';
+$_Lang['ov_explo_mission']      = '<br/>Mission: ';
+$_Lang['ov_rentrant']           = ' returns ';
+$_Lang['ov_planet_from']        = 'from planet ';
+$_Lang['ov_moon_from']          = 'from moon ';
+$_Lang['ov_debris_from']        = 'from debris field ';
+$_Lang['ov_explo_from']         = 'from an expedition ';
+$_Lang['ov_back_planet']        = ' to planet ';
+$_Lang['ov_back_moon']          = ' to moon ';
+$_Lang['ov_hostile']            = ' owned by player ';
+$_Lang['ov_message']            = 'Write a message';
+
+
+$_Lang['ProAccTill']          = 'Active until<br/>';
+$_Lang['NoProAccSince']       = 'Expired<br/>';
+$_Lang['NoProAccEver']        = '<span style="color: red;">No<br/>Pro Account</span>';
+$_Lang['ProAccBuyMore']       = 'Renew';
+$_Lang['ProAccBuyFirst']      = 'Purchase';
+$_Lang['ProAccBuyNext']       = 'Renew again';
+
+$_Lang['AdminAlertsBox']      = 'You have <a style="color: black;" href="admin/report_list.php">%s new Reports</a>, <a style="color: black;" href="admin/declare_list.php">%s new Declarations</a> and <a style="color: black;" href="admin/alerts_list.php">%s new System Alerts</a> to review!';
+
+$_Lang['MailChange_Title']    = 'Email address change in progress';
+$_Lang['MailChange_Text']     = '<b style="color: lime;">There\'s an ongoing process of Email address change on your account. To complete the process, you have to validate your new address and confirm that your old address should no longer be used.<br/>If you won\'t use the confirmation link which was sent to your old email address (eg. because you\'ve lost access to that mailbox), you\'ll be able to confirm that here after 7 days.</b>';
+$_Lang['MailChange_Inf1']     = 'Your new address has not been validated yet!';
+$_Lang['MailChange_Inf2']     = 'Email change confirmation will be available on %s from this place<br/>(or you can skip the transitional period by using the confirmation link sent to your old email address)';
+$_Lang['MailChange_Buto']     = 'Complete the Email address change';
+
+?>

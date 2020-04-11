@@ -1,0 +1,39 @@
+<?php
+
+$_Lang['DarkEnergyStatusIs']    = 'Dark Energy units on your account';
+$_Lang['BuyMoreDE']             = 'Purchase more Dark Energy!';
+
+$_Lang['aboutpro']              = 'Pro Account';
+
+$_Lang['Desc']                  = 'Pro Account extends the abilities of your regular account. You\'ll gain access to features locked from other players, which will allow you to manage your planets and fleets more efficiently. They will certainly help your empire to grow faster!';
+
+$_Lang['BenefitsTitle']         = 'Pro Account benefits';
+
+$_Lang['Benefits']              = [
+    'Construction Queue - extended to <b class="lime">10 slots</b>',
+    'Research Queue - <b class="lime">5 slots</b>',
+    '<b class="lime">Unlimited</b> access to the <b class="lime">Resources Merchant</b> (exchange your resources)',
+    'Access to <b class="lime">Empire Overview</b> (overview all of your planets and moons in one place)',
+    'Access to <b class="lime">Disassembler</b> (ability to turn your ships and defence systems into resources)',
+    'Shipyard\'s Queue limit raised to <b class="lime">10 millions</b>',
+    'Access to <b class="lime">Attack\'s history list</b> (counting towards Bash rule)',
+    'Resources transportation helper functionalities (<b class="lime">Auto-fill</b>)',
+];
+
+$_Lang['ProAccStatus']          = 'Pro Account Status';
+$_Lang['ProTill']               = 'Valid until';
+$_Lang['ProEnded']              = 'Expired';
+$_Lang['NeverHadPro']           = 'Never bought';
+
+$_Lang['RenewPro']              = 'Extend by %s %s!';
+$_Lang['BuyAgain']              = 'Purchase again for %s %s!';
+$_Lang['FirstBuy']              = 'Purchase for %s %s!';
+
+$_Lang['_day']                  = 'day';
+$_Lang['_days']                 = 'days';
+
+$_Lang['Cost']                  = 'Cost';
+$_Lang['CostUnits']             = 'Dark Energy units';
+$_Lang['AreYouSure']            = 'Are you sure?';
+
+?>

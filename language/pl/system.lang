@@ -201,6 +201,10 @@ $_Lang['LanguagesAvailable']    = [
         'flag_emoji'            => '🇵🇱',
         'name'                  => 'Polski'
     ],
+    'fr'                        => [
+        'flag_emoji'            => '🇫🇷',
+        'name'                  => 'French'
+    ] 
 ];
 
 ?>

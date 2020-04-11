@@ -1,0 +1,78 @@
+<?php
+
+// FIXME: this should be shared, since the bar is same everywhere
+$_Lang['DarkEnergyStatusIs']    = 'Dark Energy units on your account';
+$_Lang['BuyMoreDE']             = 'Purchase more Dark Energy!';
+
+$_Lang['officers']              = 'Officers';
+$_Lang['description']           = 'Officers are the Elite among galactic advisors. With their skills and experience, your Empire will grow and expand at much faster pace.<br/>You can hire them, on a condition that you reward them generously.';
+
+$_Lang['OfficersArr']           = [
+    'geologist'     => [
+        'name'      => 'Geologist',
+        'img'       => '601',
+        'desc'      => 'Geologist is an mining expert known in the entire galaxy. Thanks to their vast knowledge of rocks and mineral they are able to guide the excavation towards the most rich resources deposits.',
+        'benefits'  => [
+            'Resources production: +15%',
+        ]
+    ],
+    'engineer'      => [
+        'name'      => 'Mechanic',
+        'img'       => '603',
+        'desc'      => 'This commonly known expert is in demand by almost every emperor in the Universe. Thanks to their brilliant ideas, your power planets are more effective, and your defense systems are more likely to be rebuilt after each invasion.',
+        'benefits'  => [
+            'Energy production: +15%',
+            'Defenses rebuild chance: +20%'
+        ]
+    ],
+    'admiral'       => [
+        'name'      => 'Admiral',
+        'img'       => '602',
+        'desc'      => 'One of the best war commanders across the Universe. Their tactical thinking, speed and operation methods are second to none. Every emperor wants to have them by their side.',
+        'benefits'  => [
+            'Max. flying fleets: +2',
+            'Additional flight speed options: 120%, 110%, 5%, 2.5%'
+        ]
+    ],
+    'technocrat'    => [
+        'name'      => 'Technocrat',
+        'img'       => '604',
+        'desc'      => 'The Technocrat is the brightest mind of our times. Their inventions changed courses of many wars in the past. Their presence in your laboratories enhances the productivity of other scientists, who want to learn as much as they possibly can from this great person.',
+        'benefits'  => [
+            'Research time: -20%'
+        ]
+    ],
+    'salesman'      => [
+        'name'      => 'Merchant',
+        'img'       => '605',
+        'desc'      => 'The Imperial Merchant is a middleman between you and the Merchant Exchange. In exchange for a modest fee they will represent your resources exchange business.',
+        'benefits'  => [
+            'Use the Merchant Exchange without Pro Account and time limits'
+        ]
+    ],
+];
+
+$_Lang['Buy']                   = 'If you want to hire an officer, go to';
+$_Lang['BuyTitle']              = 'the Shop';
+
+$_Lang['RentState']             = 'Hire status';
+$_Lang['RentEnded']             = 'Ended on';
+$_Lang['RentTill']              = 'Hire until';
+$_Lang['NeverRented']           = 'Never hired';
+$_Lang['TransactionsLeft']      = 'Transactions left:';
+
+$_Lang['Benefits']              = 'Benefits';
+
+$_Lang['FirstRent']             = 'Hire for %s %s!';
+$_Lang['RentPlus']              = 'Hire for additional %s %s!';
+$_Lang['RentAgain']             = 'Hire again for %s %s!';
+$_Lang['RenewRent']             = 'Extend hire time by %s %s!';
+$_Lang['RentForTransactions']   = 'transactions';
+$_Lang['Cost']                  = 'Cost';
+$_Lang['DEUnits']               = 'Dark Energy units';
+$_Lang['AreYouSure']            = 'Are you sure?';
+
+$_Lang['_day']                  = 'day';
+$_Lang['_days']                 = 'days';
+
+?>

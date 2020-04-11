@@ -1,0 +1,10 @@
+<?php
+
+$_Lang['title']                 = 'Account activation';
+$_Lang['activation_completed']  = 'Account activation of player %s was successful!<br/>You can log in to this account right now!';
+$_Lang['no_code_in_db']         = 'This activation code does not appear in the system!<br/>If you are sure that this is a correct code, <a href="contact.php">please contact server\'s administration</a>';
+$_Lang['invalid_code_format']   = 'This activation code is invalid!<br/>If you are sure that this is a correct code, <a href="contact.php">please contact server\'s administration</a>';
+$_Lang['empty_code']            = 'You have to provide the activation code!';
+$_Lang['go_back']               = '<a href="index.php">Go back</a>';
+
+?>

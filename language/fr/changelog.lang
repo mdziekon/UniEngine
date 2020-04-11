@@ -1,0 +1,35 @@
+<?php
+
+$_Lang['infolabel_resourcesspeed']      = 'Resources production multiplier';
+$_Lang['infolabel_gamespeed']           = 'Game speed multiplier';
+$_Lang['infolabel_fleetspeed']          = 'Fleet speed multiplier';
+$_Lang['infolabel_shipyardqueue']       = 'Shipyard Queue size';
+$_Lang['infolabel_buildingsqueue']      = 'Buildings Queue size';
+$_Lang['infolabel_noobprotection']      = 'Weak players protection';
+$_Lang['infolabel_to']                  = 'Until';
+$_Lang['infolabel_points']              = 'points';
+$_Lang['infolabel_nonoobprotection']    = 'Weak players protection removal';
+$_Lang['infolabel_from']                = 'From';
+$_Lang['infotip_nonoobprotection']      = 'From this point, there won\'t be any artificial limits regarding aggression towards other players';
+$_Lang['infotip_noobprotection']        = (
+    'Until this point nobody can attack a player (works the other way as well). ' .
+    'From this point, a player can attack other players who have either up to %s-times more or less points in the Statistics'
+);
+
+$_Lang['TipTip_Add']                    = 'Added';
+$_Lang['TipTip_Fix']                    = 'Fixed';
+$_Lang['TipTip_Upd']                    = 'Upgraded';
+$_Lang['TipTip_Opt']                    = 'Optimized';
+$_Lang['TipTip_Chg']                    = 'Changed';
+
+$_Lang['ServerInfo']                    = 'Server Info';
+$_Lang['Title']                         = 'Changelog and Server Info';
+$_Lang['Version']                       = 'Version';
+$_Lang['Description']                   = 'Changes description';
+$_Lang['Changelog']                     = 'Changelog';
+$_Lang['changelog']                     = [
+    '<b class="lime">1.0.0<br/>by mdziekon</b>' =>
+    '<img src="images/chglog_add.png" class="img"> <b>UniEngine</b> - First public release (19th of July 2013)',
+];
+
+?>

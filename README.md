@@ -111,6 +111,7 @@ Visit [docs/index.md](./docs/index.md) to see project's documentation.
 
 - English 🇬🇧
 - Polish / Polski 🇵🇱
+- French / Français 🇫🇷
 
 ## Credits
 

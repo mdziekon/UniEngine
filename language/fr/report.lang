@@ -1,0 +1,39 @@
+<?php
+
+$_Lang['Title']                 = 'Reporting System';
+$_Lang['Table_title']           = 'Send a report to the Support Team';
+
+$_Lang['Report_type']           = 'Report type';
+$_Lang['Additional_info']       = 'Additional instructions<br/><span style="font-size: 70%">(When provided for a report type, please follow the instructions to help us solve the problem more quickly)</span>';
+$_Lang['Report_Username']       = 'Player\'s username<br/><span style="font-size: 70%">(When the report relates to another player)</span>';
+$_Lang['User_info']             = 'Additional details<br/><span style="font-size: 70%">(Provide as much details as possible)</span>';
+$_Lang['Send_report']           = 'Submit your report';
+
+$_Lang['Type_user_badmsg']      = 'Rules\' violation in player\'s message';
+$_Lang['Type_user_bash']        = 'Bash rule violation';
+$_Lang['Type_user_push']        = 'Push rule violation';
+$_Lang['Type_user_other']       = 'Other violation by another player';
+$_Lang['Type_sys_badmsg']       = 'Message system bug';
+$_Lang['Type_sys_error']        = 'Game system bug';
+$_Lang['Type_mail_smtp']        = 'Email change problem';
+$_Lang['Type_other']            = 'Other';
+$_Lang['Type_user_badmsg_chat'] = 'Rule\'s violation on the Server\'s chat';
+
+$_Lang['add_info_none']         = 'No additional details needed';
+$_Lang['add_info_bash']         = '1. Provide attacks timestamps<br/>2. Provide coordinates of the attacked planet(s)';
+$_Lang['add_info_push']         = '1. Provide timestamp of the fleet/resources arrival<br/>2. Provide coordinated of the receiving planet<br/>3. Provide transported resources amount<br/>4. Provide timestamp of when the resources have been returned back';
+$_Lang['add_info_user_other']   = '1. Provide type of the violation (violated rule number, if applies)<br/>2. Provide as much details about the violation as possible';
+$_Lang['add_info_sys_badmsg']   = '1. Provide message type<br/>2. Explain the circumstances of the message (eg. what action has been performed prior to the message arrival)<br/>3. Were there any other problems that might have been related to this message (eg. other seemingly related problems at the same time)';
+$_Lang['add_info_sys_error']    = '1.Provide details description of the problem and the circumstances of its appearance (eg. what actions have been performed prior to the error occurence)';
+$_Lang['add_info_user_badmsg']  = '(Opcjonalne)<br/>1. Is this the first message like this?<br/>2. If not, please tell us where (eg. chat, private message) and when have you received similar message(s) from that player';
+
+$_Lang['Error_badtype']          = 'Invalid report type!';
+$_Lang['Error_nousername']       = 'You have to provide player\'s username!';
+$_Lang['Error_username_signs']   = 'Invalid player\'s username!';
+$_Lang['Error_user_noexists']    = 'This player does not exist!';
+$_Lang['Error_no_info_given']    = 'You have to provide additional details!';
+$_Lang['Error_no_element_given'] = 'No reported element identifier provided!';
+
+$_Lang['Report_sent']            = 'Report has been submitted, please wait for its review!';
+
+?>

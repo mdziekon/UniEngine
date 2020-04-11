@@ -1,0 +1,41 @@
+<?php
+
+$_Lang['Title']              = 'Polls';
+
+$_Lang['no_polls']           = 'No polls';
+$_Lang['select']             = '---';
+
+$_Lang['State_IsObligatory']    = '<img src="./images/warning.png" />';
+$_Lang['State_IsClosed']        = '<img src="./images/lock.png" />';
+$_Lang['State_IsVoted']         = '<img src="./images/tick.green.png" />';
+
+$_Lang['Tip_LockedVoted']   = 'Closed, voted';
+$_Lang['Tip_Locked']        = 'Closed';
+$_Lang['Tip_Voted']         = 'Voted';
+$_Lang['Tip_Obligatory']    = 'Mandatory';
+
+$_Lang['Poll_system_info']   = 'Players\' in-game experience is really important for the Administration of this server. To better understand players\' needs and requests, from time to time we would like to know your opinion about changes and new features before we implement them. Please help us make the server better by voting in polls available below.';
+$_Lang['Select_poll']        = 'Select a poll';
+$_Lang['Select']             = 'Select';
+$_Lang['PollOption']         = 'Option';
+$_Lang['PollVotes']          = 'Other votes';
+$_Lang['Votes']              = 'Votes';
+$_Lang['GoBack']             = 'Go back';
+$_Lang['ResultsAreHidden']   = 'Poll\'s results are hidden.';
+$_Lang['ShowUsers']          = 'Voted by';
+
+$_Lang['Poll_doesnt_exist']         = 'This poll does not exist!';
+$_Lang['Poll_is_closed_for_view']   = 'This poll is already closed and cannot be viewed!';
+$_Lang['Poll_is_closed']            = 'this poll is already closed!';
+$_Lang['No_selected_answer']        = 'Invalid vote option selected!';
+$_Lang['Error_BadSelection_Multi']  = 'Invalid vote options selected!';
+$_Lang['Error_NoOptionSelected']    = 'No vote option selected!';
+$_Lang['Thx_for_voting']            = 'Thank you for voting!';
+$_Lang['Thx_for_chaning_vote']      = 'You vote has been changed!';
+$_Lang['Error_NoAnswers']           = 'We are sorry, but this poll cannot be displayed!';
+
+$_Lang['Vote_now']              = 'Vote now';
+$_Lang['Change_vote']           = 'Change your vote';
+$_Lang['Submit_PollLocked']     = 'This poll is already closed...';
+
+?>

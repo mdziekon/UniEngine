@@ -1,0 +1,10 @@
+<?php
+
+$_Lang['cookies']['Title']  = 'Cookie error';
+$_Lang['cookies']['Error1'] = 'Cookie error [Error #001]. Delete cookies and try again!<br/><br/><a href="login.php">Log in</a>!';
+$_Lang['cookies']['Error2'] = 'Cookie error [Error #002]. Delete cookies and try again!<br/><br/><a href="login.php">Log in</a>!';
+$_Lang['cookies']['Error3'] = 'Cookie error [Error #003]. Delete cookies and try again!<br/><br/><a href="login.php">Log in</a>!';
+$_Lang['cookies']['Error4'] = 'Cookie error [Error #004]. Delete cookies and try again!<br/><br/><a href="login.php">Log in</a>!';
+$_Lang['cookies']['Error5'] = 'Cookie error [Error #005]. Delete cookies and try again!<br/><br/><a href="login.php">Log in</a>!';
+
+?>

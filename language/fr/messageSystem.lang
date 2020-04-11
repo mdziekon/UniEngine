@@ -1,0 +1,339 @@
+<?php
+
+$_Lang['BattleReport_AttackerNormal']  = '';
+$_Lang['BattleReport_AttackerNormal'] .= "<center><a href=\"#\" onclick=\"f('battlereport.php?id=%s', ''); return false;\"><span style=\"color: %s\">{$_Lang['sys_mess_attack_report']} [%s:%s:%s] [%s]</span></a><br/><br/>";
+$_Lang['BattleReport_AttackerNormal'] .= "<span class=\"red\">{$_Lang['sys_perte_attaquant']}: %s</span> <b>|</b> <span class=\"lime\">{$_Lang['sys_perte_defenseur']}: %s</span><br/>";
+$_Lang['BattleReport_AttackerNormal'] .= "<b>[{$_Lang['sys_gain']}]</b> {$_Lang['Metal']}: <b style=\"color: #adaead;\">%s</b> <b>|</b> {$_Lang['Crystal']}: <b style=\"color: #ef51ef;\">%s</b> <b>|</b> {$_Lang['Deuterium']}: <b style=\"color: #f77542;\">%s</b><br/>";
+$_Lang['BattleReport_AttackerNormal'] .= "<b>[{$_Lang['sys_debris']}]</b> {$_Lang['Metal']}: <b style=\"color: #adaead;\">%s</b> <b>|</b> {$_Lang['Crystal']}: <b style=\"color: #ef51ef;\">%s</b><br/><br/><b class=\"skyblue\">Share link:</b> <a href=\"%s\" onclick=\"f(this.href, ''); return false;\">%s</a></center>";
+// Attacker Report - Destroy Moon
+$_Lang['BattleReport_AttackerDestroy'] = str_replace($_Lang['sys_mess_attack_report'], $_Lang['sys_mess_destruc_report'], $_Lang['BattleReport_AttackerNormal']);
+// Defender Report (Owner)- Without Defence rebuild stats
+$_Lang['BattleReport_Defender_NoRebuild'] = "<center><a href=\"#\" onclick=\"f('battlereport.php?id=%s', ''); return false;\"><span style=\"color: %s\">{$_Lang['sys_mess_attack_report']} [%s:%s:%s] [%s]</span></a><br/><br/><b class=\"skyblue\">Share link:</b> <a href=\"%s\" onclick=\"f(this.href, ''); return false;\">%s</a></center>";
+// Defender Report (Owner)- With Defence rebuild stats
+$_Lang['BattleReport_Defender_WithRebuild'] = "<center><a href=\"#\" onclick=\"f('battlereport.php?id=%s', ''); return false;\"><span style=\"color: %s\">{$_Lang['sys_mess_attack_report']} [%s:%s:%s] [%s]</span></a><br/><br/><b><u>{$_Lang['sys_mess_rebuilt_def']}</u></b><br/>%s<br/><br/><b class=\"skyblue\">Share link:</b> <a href=\"%s\" onclick=\"f(this.href, ''); return false;\">%s</a></center>";
+// Defender Report (Helper) - Report
+$_Lang['BattleReport_Helper_NoRebuild'] = "<center><a href=\"#\" onclick=\"f('battlereport.php?id=%s', ''); return false;\"><span style=\"color: %s\">{$_Lang['sys_mess_defense_report']} [%s:%s:%s] [%s]</span></a><br/><br/><b class=\"skyblue\">Share link:</b> <a href=\"%s\" onclick=\"f(this.href, ''); return false;\">%s</a></center>";
+
+//
+
+$_Lang['msg_const']['msgs'] = [
+    // Legacy messages
+    '005' => (
+        'You do not have enough resources to start the construction of <b>%s</b> (level %s)<br/>' .
+        'Owned resources: <b>%s</b> units of <b>metal</b>, <b>%s</b> units of <b>crystal</b> and <b>%s</b> units of <b>deuterium</b>.<br/>' .
+        'Required resources: <b class="red">%s</b> units of <b>metal</b>, <b class="red">%s</b> units of <b>crystal</b> and <b class="red">%s</b> units of <b>deuterium</b>.'
+    ),
+    '006' => 'One of your fleets has reached %s %s. It claimed %s units of %s, %s units of %s and %s units of %s.',
+    '007' => 'An allied fleet from %s %s has reached %s %s. It claimed %s units of %s, %s units of %s and %s units of %s.',
+    '008' => 'Your fleet returns to %s %s %s. It does not bring any resources.',
+    '012' => 'Your fleet has reached a Black hole and has been %s destroyed!',
+    '013' => 'EXPEDITION_RESULT_NEUTRAL %s',
+    '014' => 'EXPEDITION_RESULT_POSITIVE_RESOURCES<br/>Salvaged resources %s ; %s, %s ; %s and %s %s',
+    '015' => 'EXPEDITION_RESULT_NEUTRAL',
+    '016' => 'EXPEDITION_RESULT_POSITIVE_SHIPS!<br/>Salvaged ships:<br/> %s',
+    '017' => 'EXPEDITION_RETURN',
+    '029' => 'An enemy fleet from %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a> has been spotted near %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a><br/><br/>Spy probes interception chance: %s',
+    '039' => 'Congratulations!<br/>One of the referred players, <b>%s</b>, has reached one of the bonus thresholds (%s), therefore you\'ve received  <b>%s units of Dark Energy</b>!',
+    '041' => 'Player %s has invited you to an United attack on %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a><br/><br/>If you want to join the fight, attack %s, select <a class="orange" href="fleet.php?galaxy=%s&system=%s&planet=%s&planettype=%s&target_mission=2"><b>United attack</b></a> as the mission and then pick union called <b class="lime">"%s"</b>.',
+    '042' => (
+        'Your expedition has met a hostile group of pirates and got into a battle!<br/><br/>' .
+        'The following ships have been destroyed by the pirates:<br/>%s'
+    ),
+    '043' => (
+        'Your expedition has found itself in the neighborhood of a Black hole when performing research. Due to careless actions of your captains, some of your ships has been pulled into the singularity!<br/><br/>' .
+        'The following ships have been destroyed by the massive gravity forces:<br/>%s'
+    ),
+    '044' => (
+        'Your expedition has met a hostile fleet which immediatelly attacked your ships!<br/><br/>' .
+        'The following ships have been destroyed by the enemy:<br/>%s'
+    ),
+    '045' => (
+        'Your expedition has met an enemy Empire\'s fleet and got into a battle.<br/>' .
+        'Fortunately, the other fleet was not strong enough to penetrate your ships\' shields and hull, and ultimately ran away from the battlefield...'
+    ),
+    '046' => (
+        'Your expedition has found itself in a vast asteroid belt made of tiny (but extremelly dangerous) rock fragments.<br/>' .
+        'Thanks to the excellent performance of the navigation team, your fleet has managed to leave the belt with no harm...'
+    ),
+    '047' => (
+        'Your expedition has reached the event horizon of a block hole due to navigation error.<br/>' .
+        'Fortunately, thanks to your crew\'s quick reaction, they\'ve managed to escape the gravitational pull right before the point of no return...'
+    ),
+    '048' => (
+        'Your expedition has reached the event horizon of a black hole due to navigation error.<br/>' .
+        'None of your ships could escape the gravitational forces of the singularity...'
+    ),
+    '049' => (
+        'Your expedition has found a strange asteroid, which was emitting a weak electomagnetic field.<br/>' .
+        'Your researchers decided to explore its source, but unfortunately it turned out to be a trap set by the pirates.<br/>' .
+        'None of your ships survived the ambush...'
+    ),
+    '050' => (
+        'Your expedition has met a never met before race of aliens.<br/>' .
+        'When your crew attempted to contact the aliens, a communication system error has malformed the sent message to sound like a treat.<br/>' .
+        'Their vastly superior technology didn\'t give any chance to your ships. Contact with the expedition has been lost...'
+    ),
+    '051' => (
+        'Your expedition has found a small asteroid belt, which could provide salvageable resources.<br/>' .
+        'Salvaged resources:<br/>%s'
+    ),
+    '052' => (
+        'Your expedition has found an abandoned research station. In its stores, your crew has found resource reserves.<br/>' .
+        'Salvaged resources:<br/>%s'
+    ),
+    '053' => (
+        'Your expedition has pillaged pirates hideout on one of the asteroids, where the pirates have kept hidden their loot.<br/>' .
+        'Salvaged resources:<br/>%s'
+    ),
+    '054' => (
+        'Your expedition has found a small asteroid belt, which could provide salvageable resources.<br/>' .
+        'Unfortunately, your ships didn\'t have enough load capacity left to take the loot with them...'
+    ),
+    '055' => (
+        'Your expedition has found an abandoned research station. In its stores, your crew has found resource reserves.<br/>' .
+        'Unfortunately, your ships didn\'t have enough load capacity left to take the loot with them...'
+    ),
+    '056' => (
+        'Your expedition has pillaged pirates hideout on one of the asteroids, where the pirates have kept hidden their loot.<br/>' .
+        'Unfortunately, your ships didn\'t have enough load capacity left to take the loot with them...'
+    ),
+    '057' => (
+        'You expedition has found abandoned, damaged ships. Your engineeds and mechanicians have managed to jump start and bring back to life some of the found ships.<br/>' .
+        'Rescued ships:<br/>%s'
+    ),
+    '058' => (
+        'Your expedition has pillaged pirates hideout. They\'ve left a bunch of well preserved ships in their hangar.<br/>' .
+        'Intercepted ships:<br/>%s'
+    ),
+    '059' => (
+        'You expedition has found abandoned, damaged ships.<br/>' .
+        'Unfortunately, none of them could be rescued - the damage was too severe to haul and fix them later...'
+    ),
+    '060' => (
+        'Your expedition has pillaged pirates hideout. They\'ve left a bunch of ships in their hangar.<br/>' .
+        'Unfortunately, the state of those ships leave much to be desired and they couldn\'t join your fleet...'
+    ),
+    '061' => (
+        'Your expedition didn\'t find anything noteworthy on the outskirts of this solar system.<br/>' .
+        'Unfortunately, an error in the navigation calculations forced your fleet to take a longer route back home - your fleet will be back in:<br/>%s'
+    ),
+    '073' => $_Lang['BattleReport_Defender_NoRebuild'],
+
+    // ---
+
+    // MessageSystem Errors
+    'err'   => '<span class="red">An error occured in the Messages System! Please report this message by clicking the "Report" link (please provide the error code #ERR_MSGSYS_001 in the "Additional details" field) [Message identifier: %s]!</span>',
+    'err2'  => '<span class="red">An error occured in the Messages System! Please report this message by clicking the "Report" link (please provide the error code #ERR_MSGSYS_002 in the "Additional details" field) [Message identifier: %s]!</span>',
+    'err3'  => '<span class="red">An error occured in the Messages System! Please report this message by clicking the "Report" link (please provide the error code #ERR_MSGSYS_003 in the "Additional details" field) [Message identifier: %s]!</span>',
+    'err4'  => '<span class="red">An error occured in the Messages System! Please report this message by clicking the "Report" link (please provide the error code #ERR_MSGSYS_004 in the "Additional details" field) [Message identifier: %s]!</span>',
+
+    // Normal Messages
+    '000' => '%s',
+    '001' => 'The building <b>%s</b> cannot be torn down, because it has not been built yet!',
+    '002' => 'You\'ve reached the maximum level of building %s!',
+    '003' => 'You do not have enough Dark Energy to construct <b>%s</b>.<br/>You need <b>%s</b> units, but you have only <b>%s</b> units.',
+    '004' => 'You cannot tear down <b>%s</b>!',
+
+    '009' => (
+        'Your fleet has reached %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a>.<br/>' .
+        'The following ships will now hold and protect this position:<br/>%s<br/>' .
+        'The following resources have been delivered:<br/>%s: <b>%s</b>, %s: <b>%s</b>, %s: <b>%s</b>'
+    ),
+    '010' => 'Your fleet has returned back to %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a> and brings back the following resources:<br/>%s: <b>%s</b>, %s: <b>%s</b>, %s: <b>%s</b>',
+
+    '011' => (
+        'Your recyclers have reached the Debris field of <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a><br/>' .
+        'Salvaged resources: <b>%s</b> units of metal and <b>%s</b> units of crystal.'
+    ),
+
+    '018' => 'Your colonisation fleet has reached <b>[%s:%s:%s]</b>, however it was not able to start a new colony - you\'ve already reached a maximum number of colonised planets (%s)!',
+    '019' => 'Your colonisation fleet has reached <b>[%s:%s:%s]</b>, your pioneers have created a new settlement on this planet.',
+    '020' => (
+        'Your colonisation fleet has reached <b>[%s:%s:%s]</b>, however they didn\'t find any colonisable planet on these coordinates!<br/>' .
+        'The fleet turns back to the origin point.'
+    ),
+    '021' => (
+        'Your colonisation fleet has reached <b>[%s:%s:%s]</b>, however it turned out that this planet is already populated!<br/>' .
+        'The fleet turns back to the origin point.'
+    ),
+
+    '022' => (
+        '%s Welcome to the '.$_GameConfig['game_name'].' server!<br/>' .
+        'If you have any questions about the game, please visit our Forum or the Game Chat.<br/>' .
+        'All the game operators\' contact details can be found in the "Contact" section.<br/><br/>'
+    ),
+
+    '023' => 'The %s alliance has accepted your membership application!',
+    '024' => 'The %s alliance has rejected your memebership application!<br/>Reason: %s',
+
+    '030' => (
+        'One of your fleets has reached %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a>.<br/>' .
+        'It delivered <b>%s</b> units of metal, <b>%s</b> units of crystal and <b>%s</b> units of deuterium.'
+    ),
+    '031' => (
+        'An allied fleet from %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a> has reached %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a>.<br/>' .
+        'It delivered <b>%s</b> units of metal, <b>%s</b> units of crystal and <b>%s<b/> units of deuterium.'
+    ),
+
+    '032' => (
+        'One of your fleets has reached %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a>.<br/>' .
+        'It will stay on this position for %s hours.'
+    ),
+    '033' => (
+        'An allied fleet from %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a> has reached %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a>.<br/>' .
+        'It will stay on this position for %s hours.'
+    ),
+
+    '034' => (
+        'Your fleet returns to %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a>.<br/>' .
+        'It brings the following resources: <b>%s</b> units of metal, <b>%s</b> units of crystal and <b>%s</b> units of deuterium.'
+    ),
+    '035' => (
+        'Your fleet returns to %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a>.<br/>' .
+        'It doesn\'t bring any resources.'
+    ),
+
+    '037' => 'There are no fields left on %s %s to upgrade %s.',
+
+    '038' => (
+        '<b>Someone has used your referral link to register in the game!</b><br/><br/>' .
+        'If you want to find out who that was, go to the <a href="ref_table.php" class="orange"><u>Referred players</u></a> section.<br/>' .
+        'At that place you\'ve be able to find out your referral bonus as well!'
+    ),
+
+    '069' => (
+        'Player %s has invited you to an United attack on %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a><br/><br/>' .
+        'If you want to join them: attack %s, select <a class="orange" href="fleet.php?galaxy=%s&system=%s&planet=%s&planettype=%s&target_mission=2"><b>United attack</b></a> as the flight mission and then select a union called <a href="fleet.php?joinacs=%s" class="lime">"%s"</a> from the list (Alternatively, click the name here to automatically join this union).'
+    ),
+
+    '070' => 'You cannot start the construction of <b>%s</b> on %s %s, because you didn\'t fulfil its <a href="techtree.php#el%s">Requirements</a>!',
+
+    '071' => $_Lang['BattleReport_AttackerNormal'],
+    '072' => $_Lang['BattleReport_AttackerDestroy'],
+    '074' => $_Lang['BattleReport_Defender_WithRebuild'],
+    '075' => $_Lang['BattleReport_Helper_NoRebuild'],
+
+    '076' => 'An enemy fleet from %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a> (<a href="profile.php?uid=%s">%s</a>) has been spotted near %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a><br/><br/>Spy probes interception chance: %s',
+
+    // MultiAccount Declarations
+    '077' => 'The shared IP / computer declaration associated with you account has been <b class="lime">accepted</b> by the Administration!',
+    '078' => 'The shared IP / computer declaration associated with you account has been <b class="orange">rejected</b> by the Administration - please contact support to clarify this situation!',
+    '079' => 'The shared IP / computer declaration associated with you account has been <b class="red">deleted</b> (the last other player associated with this declaration has withdrawn their participation or removed their account)!',
+    '080' => 'The shared IP / computer declaration associated with you account has been <b class="red">deleted</b> by the Administration - please contact support to clarify this situation!',
+
+    // Buildings/Technology Queue Infos
+    '081' => 'You cannot start the constuction on %s %s of <b>%s</b>!',
+    '082' =>  (
+        'You do not have enough resources to start the construction of <b>%s</b> (level %s) on %s %s.<br/>' .
+        'Owned resources: <b>%s</b> units of <b>metal</b>, <b>%s</b> units of <b>crystal</b> and <b>%s</b> units of <b>deuterium</b>.<br/>' .
+        'Required resources: <b class="%s">%s</b> units of <b>metal</b>, <b class="%s">%s</b> units of <b>crystal</b> and <b class="%s">%s</b> units of <b>deuterium</b>.'
+    ),
+    '083' => 'On %s %s you have reached the maximum level of <b>%s</b>.',
+    '084' => 'You cannot start the construction of <b>%s</b> on %s %s, because a research is currently in progress.',
+    '085' => (
+        'You do not have enough resources to start research of <b>%s</b> (level %s) on %s %s.<br/>' .
+        'Owned resources: <b>%s</b> units of <b>metal</b>, <b>%s</b> units of <b>crystal</b> and <b>%s</b> units of <b>deuterium</b>.<br/>' .
+        'Required resources: <b class="%s">%s</b> units of <b>metal</b>, <b class="%s">%s</b> units of <b>crystal</b> and <b class="%s">%s</b> units of <b>deuterium</b>.'
+    ),
+    '086' => 'The maximum level of <b>%s</b> has been reached.',
+    '087' => 'You do not have enough Dark Energy to start research of <b>%s</b>.<br/>You need <b>%s</b> units, but you have only <b>%s</b> units.',
+    '088' => 'You cannot start research of <b>%s</b> on %s %s, because you didn\'t fulfil its <a href="techtree.php#el%s">Requirements</a>!',
+    '089' => 'You cannot start research of <b>%s</b> on %s %s!',
+
+    // Buddy Invites
+    '090' => 'Player <a href="profile.php?uid=%s">%s</a> <b>has accepted your friends invitation!</b>',
+    '091' => 'Player <a href="profile.php?uid=%s">%s</a> <b>has rejected your friends invitation!</b>',
+    '092' => 'Player <a href="profile.php?uid=%s">%s</a> <b>has removed you from their friends list!</b>',
+
+    // Retreat Info
+    '093' => (
+        'Your fleets in flight have been turned back by the Administration.<br/>' .
+        '<b>Fleets are currently returning to their origin coordinates with a regular flight speed.</b><br/><br/>' .
+        'Fleets turned back: %s / %s'
+    ),
+    '094' => (
+        'Your fleets in flight have been turned back by the Administration.<br/>' .
+        '<b>Fleets have been instantaneously teleported to their origin coordinates.</b><br/><br/>' .
+        'Fleets turned back: %s / %s'
+    ),
+
+    // Ally Invites
+    '095' => (
+        'You\'ve been invited to join the <a href="alliance.php?mode=ainfo&a=%s">%s [%s]</a> alliance by player <a href="profile.php?uid=%s">%s</a>.<br/>' .
+        'To <b class="lime">accept</b> or <b class="orange">reject</b> this invitation, go to the <a href="alliance.php">Alliance</a> page (invitation will expire in 14 days).<br/>' .
+        '<u>Invitation\'s content:</u><br/><br/>' .
+        '%s'
+    ),
+    // Ally Pacts
+    '096' => (
+        'The <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> alliance has sent a pact proposal for your alliance.<br/><br/>' .
+        '<a href="alliance.php?mode=pactslist">To read the proposal, go to the Pacts list in the "Alliance" page</a>'
+    ),
+    '097' => 'The <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> alliance has withdrawn their pact proposal for your alliance!',
+    '098' => 'The <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> alliance has accepted the pact proposal sent by your alliance!',
+    '099' => 'The <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> alliance has rejected the pact proposal sent by your alliance!',
+    '100' => 'The <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> alliance has accepted the pact type change proposal sent by your alliance!',
+    '101' => 'The <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> alliance has rejected the pact type change proposal sent by your alliance!',
+    '102' => 'The <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> alliance has terminated the pact with you alliance!',
+    '103' => 'The <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> alliance has withdrawn their pact type change proposal!',
+    '104' => (
+        'The <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> alliance has sent a pact type change proposal to your alliance.<br/><br/>' .
+        '<a href="alliance.php?mode=pactslist">To read the proposal, go to the Pacts list in the "Alliance" page</a>'
+    ),
+    '105' => 'The <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> alliance has changed the pact type to "<b>%s</b>"!',
+];
+
+$_Lang['msg_const']['senders']['system'] = [
+    '001' => 'Queues',
+    '002' => 'Flight control',
+    '003' => 'Headquarters',
+    '004' => 'Administration',
+    '005' => 'Alliance',
+    '006' => 'Defensive perimeter',
+    '007' => 'System',
+];
+
+$_Lang['msg_const']['senders']['rangs'] = [
+    0   => '<span style="color: #BFBFBF;">Player</span>',
+    20  => '<span class="lime">ForumTeam</span>',
+    50  => '<span class="lime">Operator (GO)</span>',
+    70  => '<span class="skyblue">Super Operator (SGO)</span>',
+    90  => '<span class="orange">Administrator</span>',
+    100 => '<span class="orange">Administrator</span>',
+    110 => '<span class="red">Developer</span>',
+    120 => '<span class="red">Server owner</span>',
+];
+
+$_Lang['msg_const']['subjects'] = [
+    '001' => 'Enqueued job has failed',
+    '002' => 'Transport',
+    '003' => 'Fleet\'s return',
+    '004' => 'Fleet\'s stationing',
+    '005' => 'Debris field report',
+    '006' => 'Interplanetary attack',
+    '007' => 'Expedition report',
+    '008' => 'Colonisation report',
+    '009' => 'Welcome!',
+    '010' => 'Alliance application accepted!',
+    '011' => 'Alliance application rejected!',
+    '012' => 'Battle report',
+    '013' => 'Destruction report',
+    '014' => 'Espionage report',
+    '015' => 'Counter-espionage',
+    '016' => 'Player referral',
+    '017' => 'Defense report',
+    '018' => 'United attack invitation',
+    '019' => 'Messaging system error',
+    '020' => 'Shared IP declaration',
+    '021' => 'Friend\'s list invitation',
+    '022' => 'Fleet\'s call back',
+    '023' => 'Alliance invitation',
+    '024' => 'Alliances\' pact proposal',
+];
+
+$_Lang['msg_const']['sim'] = [
+    'form'      => '<form id="sim_%s" action="simulator.php" method="post" class="hide"><textarea class="hide" name="spyreport">%s</textarea></form>',
+    'button'    => '<table class="sth" cellspacing="0"><tr><td class="c center"><a class="lime point spySim" id="spy_%s" href="#">Simulate</a></td></tr></table>',
+];
+
+?>

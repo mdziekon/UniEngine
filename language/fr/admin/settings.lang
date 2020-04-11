@@ -1,0 +1,47 @@
+<?php
+
+$_Lang['Body_Title']                            = 'General configuration';
+
+$_Lang['Body_Save']                             = 'Save';
+
+$_Lang['Headers_EnforceConfigReload']           = 'Cache management';
+$_Lang['Headers_EnforceConfigReload_Button']    = 'Force Cache reload';
+$_Lang['Headers_EngineVersion']                 = 'Engine version identifier';
+$_Lang['Headers_EngineBuild']                   = 'Engine build indentifier';
+$_Lang['Headers_CloseServer']                   = 'Close the Server';
+$_Lang['Headers_CloseServerReason']             = 'Close reason';
+$_Lang['Headers_EnforceRulesAccept']            = 'Enforce rules acceptance';
+$_Lang['Headers_EnforceRulesLastChange']        = 'Last rules change date';
+$_Lang['Headers_Telemetry']                     = 'Enable telemetry probes';
+$_Lang['Headers_BBCode']                        = 'Enable BBCode in messages';
+$_Lang['Headers_OverviewAdminInfoEnabled']      = 'Overview - Show Administration note';
+$_Lang['Headers_OverviewAdminInfoText']         = 'Overview - Administration note\'s content';
+$_Lang['Headers_OverviewBottomBannersEnabled']  = 'Overview - Show Top Lists';
+$_Lang['Headers_OverviewBottomBannersText']     = 'Overview - Top Lists\'s content';
+$_Lang['Headers_BannedIPs']                     = 'Banned IP Addresses';
+$_Lang['Headers_BannedMailDomains']             = 'Banned mail domains (eg. temporary mailboxes)';
+
+$_Lang['Headers_Game_GameSpeed']                = 'Game speed multiplier';
+$_Lang['Headers_Game_ResourceSpeed']            = 'Resources production multiplier';
+$_Lang['Headers_Game_FleetSpeed']               = 'Fleet speed multiplier';
+$_Lang['Headers_Game_DebrisFleet']              = 'Debris from Fleets';
+$_Lang['Headers_Game_DebrisDefence']            = 'Debris from Defenses (Orbital Attack)';
+$_Lang['Headers_Game_DebrisDefenceMissile']     = 'Debris from Defenses (Interplanetary Attack)';
+$_Lang['Headers_Game_ResearchOnLabBuild']       = 'Prevent Research during Lab upgrade';
+$_Lang['Headers_Game_StatPoints']               = 'Resources to Stat points ratio';
+$_Lang['Headers_Game_InitialFields']            = 'Mother planet initial size';
+$_Lang['Headers_Game_BasicIncome_Metal']        = 'Basic production of Metal';
+$_Lang['Headers_Game_BasicIncome_Crystal']      = 'Basic production of Crystal';
+$_Lang['Headers_Game_BasicIncome_Deuterium']    = 'Basic production of Deuterium';
+$_Lang['Headers_Game_BasicIncome_Energy']       = 'Basic production of Energy';
+
+$_Lang['Labels_DefaultOption']                  = 'Default';
+
+$_Lang['JS_ConfirmNeeded']                      = 'You\\\'ve made changes to important server properties, are you sure you want to change them?';
+
+$_Lang['Messages_NoUpdateMade']                 = 'Nothing has been changed!';
+$_Lang['Messages_UpdateSuccess']                = 'Updated properties: %s';
+$_Lang['Messages_NothingToUpdate']              = 'No need to update or invalid data provided!';
+$_Lang['Messages_ConfigCacheReloaded']          = 'Cache has been reloaded!';
+
+?>

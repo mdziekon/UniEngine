@@ -1,0 +1,25 @@
+<?php
+
+$_Lang['Ban_Header']                = 'System notification';
+$_Lang['Ban_AccBanned']             = 'Your account has been banned!';
+$_Lang['Ban_StartTime']             = 'Banned since';
+$_Lang['Ban_EndTime']               = 'Ban expiration date';
+$_Lang['Ban_Reason']                = 'Reason';
+$_Lang['Ban_Giver']                 = 'Banned by';
+$_Lang['Ban_AdditionalInfo']        = 'If you have any questions regarding this ban, please contact Administration (<a href="contact.php"><u>Contact</u></a>) or write an appeal on the <a href="redirect.php?id=3"><u>Forum</u></a>';
+$_Lang['Ban_Logout']                = 'Logout';
+$_Lang['ban_bysys']                 = 'System';
+$_Lang['Ban_WithVacation']          = '<b style="color: #87CEEB">Vacation mode has been enabled (manual deactivation possible right after the expiration date)</b>';
+$_Lang['Ban_WithoutVacation']       = '<b class="red">Vacation mode has not been enabled!</b>';
+$_Lang['Ban_RetreatedAll']          = 'All of your fleets and flights towards your coordinates have been turned around.';
+$_Lang['Ban_RetreatedOwn']          = 'All of your fleets (but none of the flights towards your coordinates) have been turned around.';
+$_Lang['Ban_RetreatedOthers']       = 'All flights towards your coordinates have been turned around. All of your fleets are still in flight.';
+$_Lang['Ban_RetreatedNone']         = '<b class="red">No fleets have been turned around!</b>';
+$_Lang['Ban_Reason_NotSpecified']   = '<b class="orange">Please contact Administration to find out about ban\'s reason</b>';
+
+$_Lang['_timer']                    = 'In';
+
+$_Lang['Chrono_Day1']               = 'day';
+$_Lang['Chrono_DayM']               = 'days';
+
+?>
