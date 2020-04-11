@@ -80,9 +80,12 @@ function _calculateRebuildPercentage($params) {
         )
     );
     $shipRebuildChanceFluctuation = min(mt_rand(-15, 15), 0);
-    $shipRebuildPercentage = min(
-        ($shipRebuildChance + $shipRebuildChanceFluctuation),
-        100
+    $shipRebuildPercentage = max(
+        min(
+            ($shipRebuildChance + $shipRebuildChanceFluctuation),
+            100
+        ),
+        0
     );
 
     return $shipRebuildPercentage;
