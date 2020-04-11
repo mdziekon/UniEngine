@@ -1,6 +1,6 @@
 <?php
 
-$_Lang['see_you']           = 'Zapraszamy ponownie.<br /><a href="login.php">Strona główna</a>';
+$_Lang['see_you']           = 'Zapraszamy ponownie.<br /><br /><a href="login.php">Strona główna</a>';
 $_Lang['session_closed']    = "Sesja zakończona pomyślnie.";
 
 ?>
