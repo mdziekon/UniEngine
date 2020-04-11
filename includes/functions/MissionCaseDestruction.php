@@ -5,8 +5,9 @@ use UniEngine\Engine\Modules\Flights;
 
 function MissionCaseDestruction($FleetRow, &$_FleetCache)
 {
-    global    $_EnginePath, $_User, $_Vars_Prices, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories, $_GameConfig, $ChangeCoordinatesForFleets,
-            $UserStatsData, $UserDev_Log, $IncludeCombatEngine, $HPQ_PlanetUpdatedFields, $GlobalParsedTasks;
+    global $_EnginePath, $_User, $_Vars_Prices, $_Vars_GameElements, $_Vars_ElementCategories,
+        $_GameConfig, $ChangeCoordinatesForFleets, $UserStatsData, $UserDev_Log,
+        $IncludeCombatEngine, $HPQ_PlanetUpdatedFields, $GlobalParsedTasks;
 
     $DEATHSTAR_ELEMENT_ID = 214;
 

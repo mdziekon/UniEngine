@@ -5,8 +5,8 @@ use UniEngine\Engine\Modules\Flights;
 
 function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 {
-    global    $_EnginePath, $_Vars_Prices, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories, $_GameConfig, $UserStatsData, $UserDev_Log, $IncludeCombatEngine,
-            $HPQ_PlanetUpdatedFields;
+    global $_EnginePath, $_Vars_Prices, $_Vars_GameElements, $_Vars_ElementCategories,
+        $_GameConfig, $UserStatsData, $UserDev_Log, $IncludeCombatEngine, $HPQ_PlanetUpdatedFields;
 
     $Return = array();
     $Now = time();
