@@ -1,0 +1,11 @@
+<?php
+
+include("{$_EnginePath}language/en/overview.lang");
+
+// Header titles
+$_Lang['Overview']                   = 'Vue d\'ensemble';
+
+// Activation Info Box
+$_Lang['ActivationInfo_Text']           = 'Ton compte n\'a pas encore été activé avec le lien d\'activation qui t\'a été envoyé par e-mail.<br/>Tant que ton compte n\'est pas activé, tu ne peux envoyer aucune flotte en mission, et personne ne peut t\'attaquer.<br/>Si tu n\'actives pas ton compte dans les 12 prochaines heures, il sera bloqué jusqu\'à son activation.';
+
+?>
