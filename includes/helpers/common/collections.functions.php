@@ -40,6 +40,16 @@ function without($collection, $excludedElement) {
     });
 }
 
+function map($collection, $iteratee) {
+    $mappedObject = [];
+
+    foreach ($collection as $key => $value) {
+        $mappedObject[$key] = $iteratee($value, $key);
+    }
+
+    return $mappedObject;
+}
+
 function mapEntries($collection, $iteratee) {
     $mappedObject = [];
 

@@ -1,11 +1,13 @@
 <?php
 
+use UniEngine\Engine\Includes\Helpers\Common\Collections;
 use UniEngine\Engine\Modules\Flights;
 
 function MissionCaseDestruction($FleetRow, &$_FleetCache)
 {
-    global    $_EnginePath, $_User, $_Vars_Prices, $_Lang, $_Vars_GameElements, $_Vars_ElementCategories, $_GameConfig, $ChangeCoordinatesForFleets,
-            $UserStatsData, $UserDev_Log, $IncludeCombatEngine, $HPQ_PlanetUpdatedFields, $GlobalParsedTasks;
+    global $_EnginePath, $_User, $_Vars_Prices, $_Vars_GameElements, $_Vars_ElementCategories,
+        $_GameConfig, $ChangeCoordinatesForFleets, $UserStatsData, $UserDev_Log,
+        $IncludeCombatEngine, $HPQ_PlanetUpdatedFields, $GlobalParsedTasks;
 
     $DEATHSTAR_ELEMENT_ID = 214;
 
@@ -285,7 +287,6 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
         $DefShips        = $Combat['DefenderShips'];
         $AtkLost        = $Combat['AtkLose'];
         $DefLost        = $Combat['DefLose'];
-        $DefSysLost        = $Combat['DefSysLost'];
         $ShotDown        = $Combat['ShotDown'];
 
         $QryUpdateFleets = [];
@@ -515,47 +516,25 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
 
         // Parse result data - Defenders
         $i = 1;
-        if(!empty($DefendingFleets))
-        {
-            foreach($DefendingFleets as $User => $Ships)
-            {
-                if($User == 0)
-                {
-                    if($MoonHasBeenDestroyed !== 1)
-                    {
-                        $DefSysLostIDs = array_keys($DefSysLost);
-                        $DefSysLostIDs[] = -1;
+        if (!empty($DefendingFleets)) {
+            foreach ($DefendingFleets as $User => $Ships) {
+                if ($User == 0) {
+                    if ($MoonHasBeenDestroyed !== 1) {
+                        $rebuiltDefenseSystems = Flights\Utils\Calculations\calculateUnitsRebuild([
+                            'originalShips' => $DefendingFleets[0],
+                            'postCombatShips' => $DefShips[0],
+                            'fleetRow' => $FleetRow,
+                            'targetUser' => $TargetUser,
+                        ]);
 
-                        foreach($Ships as $ID => $Count)
-                        {
-                            if(in_array($ID, $DefSysLostIDs))
-                            {
-                                $Count = $DefShips[0][$ID];
-                                $Chance = mt_rand(60, 80 + (($TargetUser['engineer_time'] >= $FleetRow['fleet_start_time']) ? 20 : 0));
-                                $Fluctuation = mt_rand(-11, 11);
-                                if($Fluctuation > 0)
-                                {
-                                    $Fluctuation = 0;
-                                }
-                                $rebuiltDefenseSystems[$ID] = round($DefSysLost[$ID] * (($Chance + $Fluctuation) / 100));
-                                $Count += $rebuiltDefenseSystems[$ID];
-                                if($DefendingFleets[0][$ID] < $Count)
-                                {
-                                    $Count = $DefendingFleets[0][$ID];
-                                }
-                                unset($DefSysLost[$ID]);
-                            }
-                            else
-                            {
-                                $Count = $DefShips[0][$ID];
-                            }
-                            if($Count == 0)
-                            {
+                        foreach ($Ships as $ID => $Count) {
+                            $Count = ($DefShips[0][$ID] + $rebuiltDefenseSystems[$ID]);
+
+                            if ($Count == 0) {
                                 $Count = '0';
                             }
                             $TargetPlanet[$_Vars_GameElements[$ID]] = $Count;
-                            if($Count < $DefendingFleets[0][$ID])
-                            {
+                            if ($Count < $DefendingFleets[0][$ID]) {
                                 $UserDev_UpPl[] = $ID.','.($DefendingFleets[0][$ID] - $Count);
                                 $_FleetCache['updatePlanets'][$TargetPlanet['id']] = true;
                                 $HPQ_PlanetUpdatedFields[] = $_Vars_GameElements[$ID];
@@ -1126,7 +1105,7 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
                 'fleetRow' => $FleetRow,
                 'rebuiltElements' => (
                     !$MoonHasBeenDestroyed ?
-                    $rebuiltDefenseSystems :
+                    Collections\compact($rebuiltDefenseSystems) :
                     []
                 ),
                 'hasMoonBeenDestroyed' => $MoonHasBeenDestroyed,
