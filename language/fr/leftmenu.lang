@@ -84,8 +84,8 @@ $_Lang['TasksTitle']            = 'Tâches en cours et déjà accomplies';
 
 // AdminPanel Menu
 $_Lang['Head_Overview']             = 'Vue générale';
-$_Lang['Head_Settings']             = 'Configuration';
-$_Lang['Head_Management']           = 'Gestion';
+$_Lang['Head_Settings']             = 'Serveur';
+$_Lang['Head_Management']           = 'Gestion des joueurs';
 $_Lang['Head_Analysis']             = 'Analyse';
 $_Lang['Head_ScriptNAutomatics']    = 'Tâches automatisées';
 $_Lang['ACP_QuickOverview']         = 'Vue générale';
@@ -98,10 +98,10 @@ $_Lang['ACP_Reports_MultiACC']      = 'Déclarations d\'IP partagées';
 $_Lang['ACP_Reports_User']          = 'Signalements';
 $_Lang['ACP_AlertsList']            = 'Alertes';
 $_Lang['ACP_SQLErrors']             = 'Erreurs SQL';
-$_Lang['ACP_GeneralSettings']       = 'Configuration générale';
+$_Lang['ACP_GeneralSettings']       = 'Configuration';
 $_Lang['ACP_SmartFleetBlockade']    = 'Flottes bloquées';
-$_Lang['ACP_UserManagement']        = 'Gestion des joueurs';
-$_Lang['ACP_Planets_ResManager']    = 'Gestion des planètes et lunes';
+$_Lang['ACP_UserManagement']        = 'Recherches';
+$_Lang['ACP_Planets_ResManager']    = 'Planètes et lunes';
 $_Lang['ACP_MassMessage']           = 'Message global';
 $_Lang['ACP_MoonAddition']          = 'Création de lune';
 $_Lang['ACP_AddProxy']              = 'IP Proxy';
