@@ -2,7 +2,7 @@
 
 // UserMenu Links
 $_Lang['Multiverse']        = 'Univers <b>'.(isset($_GameConfig) ? $_GameConfig['game_name'] : '').'</b>';
-$_Lang['Overview']          = 'Vue d\'ensemble';
+$_Lang['Overview']          = 'Vue générale';
 $_Lang['Buildings']         = 'Bâtiments';
 $_Lang['Research']          = 'Centre de recherche';
 $_Lang['Shipyard']          = 'Chantier spatial';
