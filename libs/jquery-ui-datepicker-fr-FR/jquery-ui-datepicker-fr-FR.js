@@ -82,7 +82,7 @@ jQuery(function ($) {
 
     $.timepicker.regional[langCode] = {
         // Strings
-        timeOnlyTitle: 'Select time',
+        timeOnlyTitle: 'Définir l\'heure',
         timeText: 'Heure',
         hourText: 'Heure',
         minuteText: 'Minute',
