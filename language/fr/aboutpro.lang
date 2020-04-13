@@ -1,0 +1,7 @@
+<?php
+
+include("{$_EnginePath}language/en/aboutpro.lang");
+
+$_Lang['DarkEnergyStatusIs']    = 'Énergie noire disponible sur ton compte ';
+
+?>

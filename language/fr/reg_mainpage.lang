@@ -1,0 +1,76 @@
+<?php
+
+if (!defined('INSIDE')) {
+    die('Accès refusé !');
+}
+
+$_Lang['Title']                     = 'Inscription';
+
+$_Lang['Description']               = 'Inscription à '.$_GameConfig['game_name'];
+
+$_Lang['Universe']                  = 'Serveur';
+$_Lang['UniSelector']               = 'Univers';
+
+// Registration form
+$_Lang['Input_Username']            = 'Nom d\'utilisateur';
+$_Lang['Input_Passoword']           = 'Mot de passe';
+$_Lang['Input_Email']               = 'Adresse e-mail';
+$_Lang['Input_Galaxy']              = 'Choix de la galaxie de départ';
+$_Lang['Input_Language']            = 'Langue';
+$_Lang['Input_Rules']               = 'Accepter les';
+$_Lang['Input_RulesLinkLabel']      = 'conditions d\'utilisation';
+$_Lang['signup']                    = 'Inscription';
+
+$_Lang['UniInfo_GameSpeed']         = 'Vitesse du jeu ';
+$_Lang['UniInfo_ResSpeed']          = 'Production des ressources ';
+$_Lang['UniInfo_FleetSpeed']        = 'Vitesse des flottes ';
+$_Lang['UniInfo_StartDate']         = 'Début de l\'univers ';
+$_Lang['UniInfo_WorldSize']         = 'Nombre de galaxies ';
+$_Lang['UniInfo_ACSOn']             = 'Attaques groupées ';
+$_Lang['UniInfo_RapidOn']           = 'Tir rapide ';
+$_Lang['UniInfo_FleetDeb']          = 'Flottes dans le CDR ';
+$_Lang['UniInfo_DefDeb']            = 'Défenses dans le CDR ';
+$_Lang['UniInfo_MotherSize']        = 'Taille de la planète mère ';
+
+$_Lang['UniOpt_Active']             = 'Activé';
+$_Lang['UniOpt_InActive']           = 'Désactivé';
+$_Lang['UniInfo_MotherFields']      = 'cases';
+
+$_Lang['JSLang'] = [
+    'Info_RequestSent'          => '<img src="./images/ajaxload.gif" style="margin-right: 10px;" /> Inscription en cours, veuille patienter...',
+
+    'Alert_UsernameShort'       => 'Le nom d\'utilisateur doit faire au moins 4 caractères !',
+    'Alert_UsernameLong'        => 'Le nom d\'utilisateur doit faire moins de 64 caractères !',
+    'Alert_PasswordShort'       => 'Le mot de passe doit faire au moins 4 caractères !',
+    'Alert_NoEmail'             => 'L\'adresse e-mail ne peut pas être vide !',
+    'Alert_NoGalaxy'            => 'Le numéro de la galaxie de départ ne peut pas être vide !',
+    'Alert_RulesNotAccepted'    => 'Il est obligatoire d\'accepter les conditions d\'utilisation !',
+    'Alert_CaptchaNotWriten'    => 'Erreur de validation du captcha !',
+    'Alert_RequestTimeout'      => 'Délai écoulé, veuille essayer à nouveau plus tard...',
+    'Alert_RequestError'        => 'Erreur de la demande, veuille contacter un administrateur...',
+    'Alert_JSONError'           => 'Erreur inconnue, veuille contacter un administrateur...',
+
+    'Alert_RequestCode_1'       => 'Le nom d\'utilisateur doit faire au moins 4 caractères !',
+    'Alert_RequestCode_2'       => 'Le nom d\'utilisateur doit faire moins de 64 caractères !',
+    'Alert_RequestCode_3'       => 'Nom d\'utilisateur incorrect (caractères non autorisés) !',
+    'Alert_RequestCode_4'       => 'Le mot de passe doit faire au moins 4 caractères !',
+    'Alert_RequestCode_5'       => 'L\'adresse e-mail ne peut pas être vide !',
+    'Alert_RequestCode_6'       => 'Adresse e-mail invalide (caractères non autorisés) !',
+    'Alert_RequestCode_7'       => 'Adresse e-mail invalide !',
+    'Alert_RequestCode_8'       => 'Ce fournisseur d\'adresse e-mail n\'est pas autorisé !',
+    'Alert_RequestCode_9'       => 'Il est obligatoire d\'accepter les conditions d\'utilisation !',
+    'Alert_RequestCode_10'      => 'Erreur de validation du captcha !',
+    'Alert_RequestCode_11'      => 'Le nom d\'utilisateur est déjà utilisé !',
+    'Alert_RequestCode_12'      => 'Cette adresse e-mail est déjà utilisée !',
+    'Alert_RequestCode_13'      => 'Le numéro de la galaxie de départ ne peut pas être vide !',
+    'Alert_RequestCode_14'      => 'Veuille indiquer un numéro de galaxie de départ valide !',
+    'Alert_RequestCode_15'      => 'La galaxie choisie est déjà trop remplie. Veuille en choisir une autre.',
+    'Alert_RequestCode_16'      => 'Langue choisie incorrecte !',
+
+    'Info_RequestCode_1'        => 'Ton compte a été créé. Tu vas maintenant être redirigé vers le jeu...',
+    'Info_RequestCode_2'        => 'Ton compte a été créé. Veuille maintenant attendre l\'ouverture de l\'univers à tous les joueurs...',
+
+    'LanguagesData'             => &$_Lang['LanguagesAvailable'],
+];
+
+?>

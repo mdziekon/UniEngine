@@ -1,0 +1,5 @@
+<?php
+
+include("{$_EnginePath}language/en/moon_sim.lang");
+
+?>

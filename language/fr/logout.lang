@@ -1,0 +1,6 @@
+<?php
+
+$_Lang['see_you']           = 'Tu es déconnecté.<br /><a href="login.php">Connexion</a>';
+$_Lang['session_closed']    = "Déconnexion";
+
+?>
