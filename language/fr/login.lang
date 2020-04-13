@@ -1,7 +1,5 @@
 <?php
 
-include("{$_EnginePath}language/en/login.lang");
-
 $_Lang['Page_Title']                = 'Connexion';
 $_Lang['Body_Username']             = 'Nom d\'utilisateur ';
 $_Lang['Body_Password']             = 'Mot de passe ';

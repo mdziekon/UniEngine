@@ -1,7 +1,5 @@
 <?php
 
-include("{$_EnginePath}language/en/firstlogin.lang");
-
 $_Lang['FirstLogin_Title']   = 'Bienvenue';
 $_Lang['LoginPage_Header']   = 'Bienvenue sur '.$_GameConfig['game_name'].' !';
 

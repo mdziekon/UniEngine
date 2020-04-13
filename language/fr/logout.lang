@@ -1,8 +1,6 @@
 <?php
 
-include("{$_EnginePath}language/en/logout.lang");
-
-$_Lang['see_you']           = 'Tu es déconnecté.<br /><br /><a href="login.php">Connexion</a>';
+$_Lang['see_you']           = 'Tu es déconnecté.<br /><a href="login.php">Connexion</a>';
 $_Lang['session_closed']    = "Déconnexion";
 
 ?>

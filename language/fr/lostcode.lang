@@ -1,7 +1,5 @@
 <?php
 
-include("{$_EnginePath}language/en/lostcode.lang");
-
 $_Lang['mail_text']             = 'Cet e-mail a été envoyé automatiquement par le système de génération de lien d\'activation de <a href="'.GAMEURL_STRICT.'">'.$_GameConfig['game_name'].'</a><br /><br /><b>Nouveau lien d\'activation :</b> {activationlink}<br/><br/>Si tu n\'as pas demandé à réinitialiser ton mot de passe, ignore simplement ce message.<br/>Bon jeu !';
 
 $_Lang['mail_template']         = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';

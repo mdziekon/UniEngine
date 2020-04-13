@@ -4,8 +4,6 @@ if (!defined('INSIDE')) {
     die('Accès refusé !');
 }
 
-include("{$_EnginePath}language/en/reg_mainpage.lang");
-
 $_Lang['Title']                     = 'Inscription';
 
 $_Lang['Description']               = 'Inscription à '.$_GameConfig['game_name'];
