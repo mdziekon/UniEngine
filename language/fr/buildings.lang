@@ -91,7 +91,7 @@ $_Lang['InfoBox_ResearchTime']                  = 'Durée ';
 
 $_Lang['Queue_ResearchOn']                      = 'Recherche en cours sur ';
 $_Lang['Queue_CantCancel_Premium_Lab']          = 'Tu ne peux pas annuler une construction lancée avec de l‘énergie noire !';
-$_Lang['Queue_LabInQueue']                      = 'Construction impossible.<br/>Le centre technique est en cours d\'amélioration sur la planète';
+$_Lang['Queue_LabInQueue']                      = 'Construction impossible.<br/>Le centre technique est en cours d\'amélioration sur ';
 
 // Shipyard
 $_Lang['Title_Shipyard']                        = 'Chantier spatial - Vaisseaux';
