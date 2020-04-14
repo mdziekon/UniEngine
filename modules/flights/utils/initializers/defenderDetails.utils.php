@@ -6,15 +6,17 @@ use UniEngine\Engine\Modules\Flights;
 
 /**
  * @param array $params
- * @param ref $params['fleetData']
+ * @param string $params['combatTimestamp']
+ * @param array $params['fleetData']
  * @param ref $params['fleetCache']
  * @param ref $params['localCache']
  */
 function initDefenderDetails($params) {
-    $fleetData = &$params['fleetData'];
+    $combatTimestamp = $params['combatTimestamp'];
+    $fleetData = $params['fleetData'];
     $fleetOwnerID = $fleetData['fleet_owner'];
-    $fleetCache = &$fleetData['fleetCache'];
-    $localCache = &$fleetData['localCache'];
+    $fleetCache = &$params['fleetCache'];
+    $localCache = &$params['localCache'];
 
     $combatTechnologies = Flights\Utils\Initializers\initCombatTechnologiesMap([
         'user' => $fleetData,
@@ -37,13 +39,13 @@ function initDefenderDetails($params) {
                 $fleetData['morale_droptime'] = $fleetCache['MoraleCache'][$fleetOwnerID]['droptime'];
                 $fleetData['morale_lastupdate'] = $fleetCache['MoraleCache'][$fleetOwnerID]['lastupdate'];
             }
-            Morale_ReCalculate($fleetData, $fleetData['fleet_start_time']);
+            Morale_ReCalculate($fleetData, $combatTimestamp);
             $userData['morale'] = $fleetData['morale_level'];
             $userData['moralePoints'] = $fleetData['morale_points'];
 
             $localCache['MoraleCache'][$fleetOwnerID] = [
-                'level' => $userData['morale_level'],
-                'points' => $userData['morale_points']
+                'level' => $fleetData['morale_level'],
+                'points' => $fleetData['morale_points']
             ];
         } else {
             $userData['morale'] = $localCache['MoraleCache'][$fleetOwnerID]['level'];
@@ -68,9 +70,7 @@ function initDefenderDetails($params) {
     ];
 }
 
-function _createFleetCoordinatesString($params) {
-    $fleetData = $params['fleetData'];
-
+function _createFleetCoordinatesString($fleetData) {
     return "{$fleetData['fleet_start_galaxy']}:{$fleetData['fleet_start_system']}:{$fleetData['fleet_start_planet']}";
 }
 
