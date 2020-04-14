@@ -5,7 +5,7 @@ $_Lang['OneTask']       = 'une mission';
 $_Lang['MoreTasks']     = 'des missions';
 $_Lang['TextSecond']    = 'de la catégorie';
 
-$_Lang['CatLink']       = '"<i><a href="tasks.php?%s">%s</a></i>"';
+$_Lang['CatLink']       = '"<i><a href="tasks.php?%s">%s</a></i>" ';
 
 $_Lang['Hide']          = 'Cacher les notifications';
 
