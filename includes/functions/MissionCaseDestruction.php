@@ -153,73 +153,38 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
         }
 
         // Select All Defending Fleets on the Orbit from $_FleetCache
-        if(!empty($_FleetCache['defFleets'][$FleetRow['fleet_end_id']]))
-        {
+        if (!empty($_FleetCache['defFleets'][$FleetRow['fleet_end_id']])) {
+            $_TempCache = [
+                'MoraleCache' => [],
+            ];
+
             $i = 1;
-            foreach($_FleetCache['defFleets'][$FleetRow['fleet_end_id']] as $FleetData)
-            {
-                if($_FleetCache['fleetRowStatus'][$FleetData['fleet_id']]['isDestroyed'] !== true)
-                {
-                    $DefendingFleets[$i] = String2Array($FleetData['fleet_array']);
-                    $DefendingFleetID[$i] = $FleetData['fleet_id'];
-                    $DefendingTechs[$i] = Flights\Utils\Initializers\initCombatTechnologiesMap([
-                        'user' => $FleetData,
-                    ]);
-                    $DefendersData[$i] = array
-                    (
-                        'id' => $FleetData['fleet_owner'],
-                        'username' => $FleetData['username'],
-                        'techs' => Array2String($DefendingTechs[$i]),
-                        'pos' => "{$FleetData['fleet_start_galaxy']}:{$FleetData['fleet_start_system']}:{$FleetData['fleet_start_planet']}"
-                    );
-                    if(!empty($FleetData['ally_tag']))
-                    {
-                        $DefendersData[$i]['ally'] = $FleetData['ally_tag'];
-                    }
-                    if(!in_array($FleetData['fleet_owner'], $DefendersIDs))
-                    {
-                        $DefendersIDs[] = $FleetData['fleet_owner'];
-                    }
-                    $DefendingFleetOwners[$FleetData['fleet_id']] = $FleetData['fleet_owner'];
 
-                    if(MORALE_ENABLED)
-                    {
-                        if(empty($_TempCache['MoraleCache'][$FleetData['fleet_owner']]))
-                        {
-                            if(!empty($_FleetCache['MoraleCache'][$FleetData['fleet_owner']]))
-                            {
-                                $FleetData['morale_level'] = $_FleetCache['MoraleCache'][$FleetData['fleet_owner']]['level'];
-                                $FleetData['morale_droptime'] = $_FleetCache['MoraleCache'][$FleetData['fleet_owner']]['droptime'];
-                                $FleetData['morale_lastupdate'] = $_FleetCache['MoraleCache'][$FleetData['fleet_owner']]['lastupdate'];
-                            }
-                            Morale_ReCalculate($FleetData, $FleetRow['fleet_start_time']);
-                            $DefendersData[$i]['morale'] = $FleetData['morale_level'];
-                            $DefendersData[$i]['moralePoints'] = $FleetData['morale_points'];
-
-                            $_TempCache['MoraleCache'][$FleetData['fleet_owner']] = array
-                            (
-                                'level' => $FleetData['morale_level'],
-                                'points' => $FleetData['morale_points']
-                            );
-                        }
-                        else
-                        {
-                            $DefendersData[$i]['morale'] = $_TempCache['MoraleCache'][$FleetData['fleet_owner']]['level'];
-                            $DefendersData[$i]['moralePoints'] = $_TempCache['MoraleCache'][$FleetData['fleet_owner']]['points'];
-                        }
-
-                        $moraleCombatModifiers = Flights\Utils\Modifiers\calculateMoraleCombatModifiers([
-                            'moraleLevel' => $DefendersData[$i]['morale'],
-                        ]);
-
-                        $DefendingTechs[$i] = array_merge(
-                            $DefendingTechs[$i],
-                            $moraleCombatModifiers
-                        );
-                    }
-
-                    $i += 1;
+            foreach ($_FleetCache['defFleets'][$FleetRow['fleet_end_id']] as $fleetData) {
+                if ($_FleetCache['fleetRowStatus'][$fleetData['fleet_id']]['isDestroyed']) {
+                    continue;
                 }
+
+                $defenderDetails = Flights\Utils\Initializers\initDefenderDetails([
+                    'combatTimestamp' => $FleetRow['fleet_start_time'],
+                    'fleetData' => $fleetData,
+                    'fleetCache' => &$_FleetCache,
+                    'localCache' => &$_TempCache,
+                ]);
+                $defenderUserID = $defenderDetails['userData']['id'];
+
+                $DefendingFleets[$i] = $defenderDetails['ships'];
+                $DefendingFleetID[$i] = $defenderDetails['fleetID'];
+                $DefendingTechs[$i] = $defenderDetails['combatTechnologies'];
+                $DefendersData[$i] = $defenderDetails['userData'];
+
+                $DefendingFleetOwners[$defenderDetails['fleetID']] = $defenderUserID;
+
+                if (!in_array($defenderUserID, $DefendersIDs)) {
+                    $DefendersIDs[] = $defenderUserID;
+                }
+
+                $i += 1;
             }
         }
 
