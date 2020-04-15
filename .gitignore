@@ -24,3 +24,4 @@ includes/constants.php
 # Ignore JavaScript / Node.js -related files & directories
 node_modules/
 .ftpconfig
+.ftpignore
