@@ -2,7 +2,7 @@
 name: Bug report
 about: Report a reproducible bug, regression, visual problem or security vulnerability.
 title: "[BUG] "
-labels: bug bug:unconfirmed
+labels: bug, bug:unconfirmed
 assignees: mdziekon
 
 ---
