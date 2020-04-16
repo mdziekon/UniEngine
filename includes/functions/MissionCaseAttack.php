@@ -750,41 +750,13 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
         }
 
         // Update battle stats & set Battle Report colors
-        if(!$IsAllyFight)
-        {
-            if($Result === COMBAT_ATK)
-            {
-                foreach($AttackersIDs as $UserID)
-                {
-                    $UserStatsData[$UserID]['raids_won'] += 1;
-                }
-                foreach($DefendersIDs as $UserID)
-                {
-                    $UserStatsData[$UserID]['raids_lost'] += 1;
-                }
-            }
-            elseif($Result === COMBAT_DRAW)
-            {
-                foreach($AttackersIDs as $UserID)
-                {
-                    $UserStatsData[$UserID]['raids_draw'] += 1;
-                }
-                foreach($DefendersIDs as $UserID)
-                {
-                    $UserStatsData[$UserID]['raids_draw'] += 1;
-                }
-            }
-            elseif($Result === COMBAT_DEF)
-            {
-                foreach($AttackersIDs as $UserID)
-                {
-                    $UserStatsData[$UserID]['raids_lost'] += 1;
-                }
-                foreach($DefendersIDs as $UserID)
-                {
-                    $UserStatsData[$UserID]['raids_won'] += 1;
-                }
-            }
+        if (!$IsAllyFight) {
+            Flights\Utils\FleetCache\applyCombatResultStats([
+                'userStats' => &$UserStatsData,
+                'combatResultType' => $Result,
+                'attackerIDs' => $AttackersIDs,
+                'defenderIDs' => $DefendersIDs,
+            ]);
 
             // Update User Destroyed & Lost Stats
             Flights\Utils\FleetCache\applyCombatUnitStats([
