@@ -1046,64 +1046,52 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
         }
 
         // Update battle stats & set Battle Report colors
-        if(!$IsAllyFight)
-        {
+        if (!$IsAllyFight) {
             $InACSBattle[$FleetRow['fleet_owner']] = $FleetRow['fleet_owner'];
-            if($Result === COMBAT_ATK OR $Result === COMBAT_DRAW)
-            {
-                if(!empty($ForceContribution['atk']))
-                {
-                    $AttackersCount = count($AttackersIDs);
-                    $ForceUsed_Total = array_sum($ForceContribution['atk']);
-                    $ForceUsed_Array = array();
-                    foreach($ForceContribution['atk'] as $UserID => $UsedForce)
-                    {
-                        if($UserID == 0)
-                        {
-                            $UserID = $FleetRow['fleet_owner'];
-                        }
-                        else
-                        {
-                            $UserID = $AttackingFleetOwners[$AttackingFleetID[$UserID]];
-                        }
-                        if(!isset($ForceUsed_Array[$UserID]))
-                        {
-                            $ForceUsed_Array[$UserID] = 0;
-                        }
-                        $ForceUsed_Array[$UserID] += $UsedForce;
+
+            $forceUsedPerAttacker = [];
+            $forceUsedTotal = 0;
+
+            if (
+                !empty($ForceContribution['atk']) &&
+                ($Result === COMBAT_ATK || $Result === COMBAT_DRAW)
+            ) {
+                $forceUsedTotal = array_sum($ForceContribution['atk']);
+
+                foreach ($ForceContribution['atk'] as $UserID => $UsedForce) {
+                    if ($UserID == 0) {
+                        $UserID = $FleetRow['fleet_owner'];
+                    } else {
+                        $UserID = $AttackingFleetOwners[$AttackingFleetID[$UserID]];
                     }
-                    $AttackersCount -= ($AttackersCount - count($ForceUsed_Array));
-                }
-                else
-                {
-                    $AttackersCount = 1;
+
+                    if (!isset($forceUsedPerAttacker[$UserID])) {
+                        $forceUsedPerAttacker[$UserID] = 0;
+                    }
+                    $forceUsedPerAttacker[$UserID] += $UsedForce;
                 }
             }
 
-            if($Result === COMBAT_ATK)
-            {
-                foreach($AttackersIDs as $UserID)
-                {
-                    if($AttackersCount > 1)
-                    {
-                        if(($ForceUsed_Array[$UserID] / $ForceUsed_Total) >= ACS_MINIMALFORCECONTRIBUTION)
-                        {
-                            $InACSBattle[$UserID] = $UserID;
-                            $UserStatsData[$UserID]['raids_acs_won'] += 1;
-                        }
+            $uniqueAttackersCount = count($forceUsedPerAttacker);
+
+            if (
+                $uniqueAttackersCount > 1 &&
+                ($Result === COMBAT_ATK || $Result === COMBAT_DRAW)
+            ) {
+                foreach ($AttackersIDs as $UserID) {
+                    $hasSignificantCombatForceContribution = (
+                        ($forceUsedPerAttacker[$UserID] / $forceUsedTotal) >=
+                        ACS_MINIMALFORCECONTRIBUTION
+                    );
+
+                    if (!$hasSignificantCombatForceContribution) {
+                        continue;
                     }
-                }
-            }
-            else if($Result === COMBAT_DRAW)
-            {
-                foreach($AttackersIDs as $UserID)
-                {
-                    if($AttackersCount > 1)
-                    {
-                        if(($ForceUsed_Array[$UserID] / $ForceUsed_Total) >= ACS_MINIMALFORCECONTRIBUTION)
-                        {
-                            $InACSBattle[$UserID] = $UserID;
-                        }
+
+                    $InACSBattle[$UserID] = $UserID;
+
+                    if ($Result === COMBAT_ATK) {
+                        $UserStatsData[$UserID]['raids_acs_won'] += 1;
                     }
                 }
             }
