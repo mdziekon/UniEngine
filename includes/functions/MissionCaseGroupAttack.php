@@ -1084,7 +1084,6 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
             {
                 foreach($AttackersIDs as $UserID)
                 {
-                    $UserStatsData[$UserID]['raids_won'] += 1;
                     if($AttackersCount > 1)
                     {
                         if(($ForceUsed_Array[$UserID] / $ForceUsed_Total) >= ACS_MINIMALFORCECONTRIBUTION)
@@ -1094,16 +1093,11 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                         }
                     }
                 }
-                foreach($DefendersIDs as $UserID)
-                {
-                    $UserStatsData[$UserID]['raids_lost'] += 1;
-                }
             }
             else if($Result === COMBAT_DRAW)
             {
                 foreach($AttackersIDs as $UserID)
                 {
-                    $UserStatsData[$UserID]['raids_draw'] += 1;
                     if($AttackersCount > 1)
                     {
                         if(($ForceUsed_Array[$UserID] / $ForceUsed_Total) >= ACS_MINIMALFORCECONTRIBUTION)
@@ -1112,20 +1106,14 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                         }
                     }
                 }
-                foreach($DefendersIDs as $UserID)
-                {
-                    $UserStatsData[$UserID]['raids_draw'] += 1;
-                }
             }
-            else if($Result === COMBAT_DEF)
-            {
-                foreach($AttackersIDs as $UserID){
-                    $UserStatsData[$UserID]['raids_lost'] += 1;
-                }
-                foreach($DefendersIDs as $UserID){
-                    $UserStatsData[$UserID]['raids_won'] += 1;
-                }
-            }
+
+            Flights\Utils\FleetCache\applyCombatResultStats([
+                'userStats' => &$UserStatsData,
+                'combatResultType' => $Result,
+                'attackerIDs' => $AttackersIDs,
+                'defenderIDs' => $DefendersIDs,
+            ]);
 
             // Update User Destroyed & Lost Stats
             Flights\Utils\FleetCache\applyCombatUnitStats([
