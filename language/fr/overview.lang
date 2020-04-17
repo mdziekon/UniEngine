@@ -91,7 +91,7 @@ $_Lang['BuildJS_Continue']                       = 'Continuer';
 $_Lang['FreePremItem_Text']             = 'Tu as reçu un cadeau Premium [%s] de la part du jeu ou des administrateurs !<br/>Regarde dans la Boutique ce que tu as reçu !';
 
 // Vacation Mode Box
-$_Lang['VacationModeBox_Text']          = 'Ton compte est actuellement en <a class="orange" href="settings.php"><u>mode vacances</u></a>';
+$_Lang['VacationModeBox_Text']          = 'Ton compte est actuellement en <a class="orange" href="settings.php"><u>mode vacances</u></a>.';
 
 // NewUser Protection Box
 $_Lang['NewUserProtection_Alert']       = 'Es-tu sûr de vouloir désactiver la protection des nouveaux joueurs dont tu bénéficies ?\nCette action est irréversible.';
