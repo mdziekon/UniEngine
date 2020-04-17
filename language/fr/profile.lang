@@ -18,7 +18,7 @@ $_Lang['Table_Ignore']           = 'Ignorer les messages de ce joueur';
 $_Lang['Table_UnIgnore']         = 'Ne plus ignorer les messages de ce joueur';
 $_Lang['Table_Report']           = 'Signaler ce joueur';
 $_Lang['Table_UserOnVacations']  = 'Joueur en vacances';
-$_Lang['Table_UserIsBanned']     = 'Joueur au piloris';
+$_Lang['Table_UserIsBanned']     = 'Compte sanctionné par une suspension';
 $_Lang['Table_AdminInfo']        = 'Informations de l\'administrateur';
 
 $_Lang['Table_WarStats']         = 'Statistiques de combat';
