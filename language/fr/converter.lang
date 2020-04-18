@@ -10,8 +10,8 @@ $_Lang['Conv_def_user']         = 'Défenseur [color=green][b]%s[/b][/color] %s 
 $_Lang['Conv_def_abandoned_1']  = 'de la planète abandonnée';
 $_Lang['Conv_def_abandoned_3']  = 'de la lune abandonnée';
 
-$_Lang['Conv_in_next_round']    = '[i][b]In the next round[/b]...[/i]';
-$_Lang['Conv_after_x_rounds']   = '[i][b]After %s rounds[/b]...[/i]';
+$_Lang['Conv_in_next_round']    = '[i][b]Au tour suivant[/b]...[/i]';
+$_Lang['Conv_after_x_rounds']   = '[i][b]Après %s tours[/b]...[/i]';
 
 $_Lang['Conv_atk_lostUnits']    = "Les pertes de l'attaquant s'élèvent à [b]%s[/b] (soit [b]%s%%[/b] de toutes les pertes dans ce combat)";
 $_Lang['Conv_def_lostUnits']    = "Les pertes du défenseur s'élèvent à [b]%s[/b] (soit [b]%s%%[/b] de toutes les pertes dans ce combat)";
