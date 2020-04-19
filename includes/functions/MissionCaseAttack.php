@@ -613,80 +613,22 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
         }
 
         // Morale System
-        if(MORALE_ENABLED AND !$IsAbandoned AND !$IsAllyFight AND $IdleHours < (7 * 24))
-        {
-            $Morale_Factor = $FleetRow['morale_points'] / $TargetUser['morale_points'];
-            if($Morale_Factor < 1)
-            {
-                $Morale_Factor = pow($Morale_Factor, -1);
-                $Morale_AttackerStronger = false;
-            }
-            else
-            {
-                $Morale_AttackerStronger = true;
-            }
+        $reportMoraleEntries = [];
 
-            if($Morale_Factor > MORALE_MINIMALFACTOR)
-            {
-                if($Morale_AttackerStronger)
-                {
-                    $Morale_Update_Attacker_Type = MORALE_NEGATIVE;
-                    if($Result === COMBAT_DEF OR $Result === COMBAT_DRAW)
-                    {
-                        $Morale_Update_Defender = true;
-                    }
-                }
-                else
-                {
-                    $Morale_Update_Attacker_Type = MORALE_POSITIVE;
-                }
+        if (MORALE_ENABLED AND !$IsAbandoned AND !$IsAllyFight AND $IdleHours < (7 * 24)) {
+            $moraleUpdate = Flights\Utils\Calculations\calculatePostCombatMoraleUpdates([
+                'combatResult' => $Result,
+                'fleetRow' => $FleetRow,
+                'attackersMorale' => [
+                    $FleetRow['fleet_owner'] => $FleetRow,
+                ],
+                'defendersMorale' => [
+                    $TargetUser['id'] => $TargetUser,
+                ],
+                'fleetCache' => &$_FleetCache,
+            ]);
 
-                $Morale_Updated = Morale_AddMorale($FleetRow, $Morale_Update_Attacker_Type, $Morale_Factor, 1, 1, $FleetRow['fleet_start_time']);
-                if($Morale_Updated)
-                {
-                    $_FleetCache['MoraleCache'][$FleetRow['fleet_owner']]['level'] = $FleetRow['morale_level'];
-                    $_FleetCache['MoraleCache'][$FleetRow['fleet_owner']]['droptime'] = $FleetRow['morale_droptime'];
-                    $_FleetCache['MoraleCache'][$FleetRow['fleet_owner']]['lastupdate'] = $FleetRow['morale_lastupdate'];
-
-                    $ReportData['morale'][$FleetRow['fleet_owner']] = array
-                    (
-                        'usertype' => 'atk',
-                        'type' => $Morale_Update_Attacker_Type,
-                        'factor' => $Morale_Factor,
-                        'level' => $FleetRow['morale_level']
-                    );
-                }
-
-                if($Morale_Update_Defender === true)
-                {
-                    if($Result === COMBAT_DRAW)
-                    {
-                        $Morale_LevelFactor = 1/2;
-                        $Morale_TimeFactor = 1/2;
-                    }
-                    else
-                    {
-                        $Morale_LevelFactor = 1;
-                        $Morale_TimeFactor = 1;
-                    }
-
-                    $Morale_Updated = Morale_AddMorale($TargetUser, MORALE_POSITIVE, $Morale_Factor, $Morale_LevelFactor, $Morale_TimeFactor, $FleetRow['fleet_start_time']);
-                    if($Morale_Updated)
-                    {
-                        $_FleetCache['MoraleCache'][$TargetUser['id']]['level'] = $TargetUser['morale_level'];
-                        $_FleetCache['MoraleCache'][$TargetUser['id']]['droptime'] = $TargetUser['morale_droptime'];
-                        $_FleetCache['MoraleCache'][$TargetUser['id']]['lastupdate'] = $TargetUser['morale_lastupdate'];
-
-                        $ReportData['morale'][$TargetUser['id']] = array
-                        (
-                            'usertype' => 'def',
-                            'type' => MORALE_POSITIVE,
-                            'factor' => $Morale_Factor,
-                            'level' => $TargetUser['morale_level']
-                        );
-                    }
-                }
-            }
+            $reportMoraleEntries = $moraleUpdate['reportMoraleEntries'];
         }
 
         // CREATE BATTLE REPORT
@@ -712,6 +654,10 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
         $ReportData['init']['onMoon'] = ($FleetRow['fleet_end_type'] == 3 ? true : false);
         $ReportData['init']['atk_lost'] = $RealDebrisMetalAtk + $RealDebrisCrystalAtk + $RealDebrisDeuteriumAtk;
         $ReportData['init']['def_lost'] = $RealDebrisMetalDef + $RealDebrisCrystalDef + $RealDebrisDeuteriumDef;
+
+        if (!empty($reportMoraleEntries)) {
+            $ReportData['morale'] = $reportMoraleEntries;
+        }
 
         foreach($RoundsData as $RoundKey => $RoundData)
         {
