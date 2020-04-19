@@ -98,14 +98,13 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
         }
 
         // MoraleSystem Init
-        if(MORALE_ENABLED)
-        {
-            if(!empty($_FleetCache['MoraleCache'][$FleetRow['fleet_owner']]))
-            {
-                $FleetRow['morale_level'] = $_FleetCache['MoraleCache'][$FleetRow['fleet_owner']]['level'];
-                $FleetRow['morale_droptime'] = $_FleetCache['MoraleCache'][$FleetRow['fleet_owner']]['droptime'];
-                $FleetRow['morale_lastupdate'] = $_FleetCache['MoraleCache'][$FleetRow['fleet_owner']]['lastupdate'];
-            }
+        if (MORALE_ENABLED) {
+            Flights\Utils\FleetCache\loadMoraleDataFromCache([
+                'destination' => &$FleetRow,
+                'fleetCache' => &$_FleetCache,
+                'userID' => $FleetRow['fleet_owner'],
+            ]);
+
             Morale_ReCalculate($FleetRow, $FleetRow['fleet_start_time']);
             $AttackersData[0]['morale'] = $FleetRow['morale_level'];
             $AttackersData[0]['moralePoints'] = $FleetRow['morale_points'];
@@ -119,14 +118,13 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
                 $moraleCombatModifiers
             );
 
-            if(!$IsAbandoned)
-            {
-                if(!empty($_FleetCache['MoraleCache'][$TargetUser['id']]))
-                {
-                    $TargetUser['morale_level'] = $_FleetCache['MoraleCache'][$TargetUser['id']]['level'];
-                    $TargetUser['morale_droptime'] = $_FleetCache['MoraleCache'][$TargetUser['id']]['droptime'];
-                    $TargetUser['morale_lastupdate'] = $_FleetCache['MoraleCache'][$TargetUser['id']]['lastupdate'];
-                }
+            if (!$IsAbandoned) {
+                Flights\Utils\FleetCache\loadMoraleDataFromCache([
+                    'destination' => &$TargetUser,
+                    'fleetCache' => &$_FleetCache,
+                    'userID' => $TargetUser['id'],
+                ]);
+
                 Morale_ReCalculate($TargetUser, $FleetRow['fleet_start_time']);
                 $DefendersData[0]['morale'] = $TargetUser['morale_level'];
                 $DefendersData[0]['moralePoints'] = $TargetUser['morale_points'];
