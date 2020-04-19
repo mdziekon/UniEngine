@@ -69,7 +69,7 @@ $_Lang['Box_battlesWon']             = 'Victoires';
 $_Lang['Box_battlesACSWon']          = 'Victoires groupées';
 $_Lang['Box_battlesDraw']            = 'Matchs nuls';
 $_Lang['Box_battlesLost']            = 'Défaites';
-$_Lang['Box_battlesInAlly']          = 'Combats groupés';
+$_Lang['Box_battlesInAlly']          = 'Attaques contre alliés';
 $_Lang['Box_missileAttacks']         = 'Attaques de missiles';
 
 $_Lang['Box_transRequired']          = 'Requis';
