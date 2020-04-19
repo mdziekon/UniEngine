@@ -6,14 +6,18 @@ call_user_func(function () {
 
     $includePath = $_EnginePath . 'modules/flights/';
 
+    include($includePath . './utils/calculations/calculatePostCombatMorale.utils.php');
+    include($includePath . './utils/calculations/calculatePostCombatMoraleUpdates.utils.php');
     include($includePath . './utils/calculations/calculatePillageFactor.utils.php');
     include($includePath . './utils/calculations/calculatePillageStorage.utils.php');
     include($includePath . './utils/calculations/calculateResourcesLoss.utils.php');
     include($includePath . './utils/calculations/calculateUnitsRebuild.utils.php');
     include($includePath . './utils/factories/createCombatMessages.utils.php');
+    include($includePath . './utils/factories/createCombatReportMoraleEntry.utils.php');
     include($includePath . './utils/factories/createFleetDevelopmentLogEntries.utils.php');
     include($includePath . './utils/factories/createFleetUpdateEntry.utils.php');
     include($includePath . './utils/fleetCache/updateGalaxyDebris.utils.php');
+    include($includePath . './utils/fleetCache/morale.utils.php');
     include($includePath . './utils/fleetCache/updateUserStats.utils.php');
     include($includePath . './utils/helpers/hasLostAnyDefenseSystem.utils.php');
     include($includePath . './utils/initializers/defenderDetails.utils.php');
