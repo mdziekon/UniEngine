@@ -879,105 +879,102 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
         }
 
         // Morale System
-        if(MORALE_ENABLED AND !$IsAbandoned AND !$IsAllyFight AND $IdleHours < (7 * 24))
-        {
-            foreach($AttackersMorale as $ThisUserID => $ThisData)
-            {
-                $Morale_TotalFactor += $ThisData['morale_points'];
-            }
-            $Morale_TotalFactor /= $TargetUser['morale_points'];
+        if (MORALE_ENABLED AND !$IsAbandoned AND !$IsAllyFight AND $IdleHours < (7 * 24)) {
+            $combatAttackersMoraleDetails = Flights\Utils\Calculations\calculateCombatAttackersMoraleDetails([
+                'attackersMorale' => $AttackersMorale,
+                'defendersMorale' => [
+                    $TargetUser['id'] => [
+                        'morale_points' => $TargetUser['morale_points'],
+                    ],
+                ]
+            ]);
 
-            if($Morale_TotalFactor > MORALE_MINIMALFACTOR)
-            {
-                $Morale_UsedTotalFactor = true;
-                $Morale_DefenderTotalFactor = $Morale_TotalFactor;
-                foreach($AttackersMorale as $ThisUserID => &$ThisData)
-                {
-                    $ThisData['factor'] = $Morale_TotalFactor;
-                }
-            }
-            else
-            {
-                foreach($AttackersMorale as $ThisUserID => &$ThisData)
-                {
-                    $ThisData['factor'] = $ThisData['morale_points'] / $TargetUser['morale_points'];
-                }
-            }
+            foreach ($AttackersMorale as $userID => $moraleRawData) {
+                $moraleDetails = $combatAttackersMoraleDetails['attackersFactors'][$userID];
+                $moraleFactor = $moraleDetails['factor'];
 
-            foreach($AttackersMorale as $ThisUserID => &$ThisData)
-            {
-                $Morale_Factor = $ThisData['factor'];
-                if($Morale_Factor < 1)
-                {
-                    $Morale_Factor = pow($Morale_Factor, -1);
-                    $Morale_AttackerStronger = false;
-                }
-                else
-                {
-                    $Morale_AttackerStronger = true;
+                if ($moraleFactor <= MORALE_MINIMALFACTOR) {
+                    continue;
                 }
 
-                if($Morale_Factor > MORALE_MINIMALFACTOR)
-                {
-                    if($Morale_AttackerStronger)
-                    {
-                        $Morale_Update_Attacker_Type = MORALE_NEGATIVE;
-                        if(($Result === COMBAT_DEF OR $Result === COMBAT_DRAW) AND !$Morale_UsedTotalFactor)
-                        {
-                            $Morale_DefenderTotalFactor += $Morale_Factor;
-                        }
-                    }
-                    else
-                    {
-                        $Morale_Update_Attacker_Type = MORALE_POSITIVE;
-                    }
+                $moraleUpdateType = (
+                    $moraleDetails['isAttackerStronger'] ?
+                        MORALE_NEGATIVE :
+                        MORALE_POSITIVE
+                );
 
-                    $Morale_Updated = Morale_AddMorale($ThisData, $Morale_Update_Attacker_Type, $Morale_Factor, 1, 1, $FleetRow['fleet_start_time']);
-                    if($Morale_Updated)
-                    {
-                        $_FleetCache['MoraleCache'][$ThisUserID]['level'] = $ThisData['morale_level'];
-                        $_FleetCache['MoraleCache'][$ThisUserID]['droptime'] = $ThisData['morale_droptime'];
-                        $_FleetCache['MoraleCache'][$ThisUserID]['lastupdate'] = $ThisData['morale_lastupdate'];
+                $hasUpdatedMoraleData = Morale_AddMorale(
+                    $moraleRawData,
+                    $moraleUpdateType,
+                    $moraleFactor,
+                    1,
+                    1,
+                    $FleetRow['fleet_start_time']
+                );
 
-                        $ReportData['morale'][$ThisUserID] = array
-                        (
-                            'usertype' => 'atk',
-                            'type' => $Morale_Update_Attacker_Type,
-                            'factor' => $Morale_Factor,
-                            'level' => $ThisData['morale_level']
-                        );
-                    }
+                if (!$hasUpdatedMoraleData) {
+                    continue;
                 }
+
+                $_FleetCache['MoraleCache'][$userID]['level'] = $moraleRawData['morale_level'];
+                $_FleetCache['MoraleCache'][$userID]['droptime'] = $moraleRawData['morale_droptime'];
+                $_FleetCache['MoraleCache'][$userID]['lastupdate'] = $moraleRawData['morale_lastupdate'];
+
+                $ReportData['morale'][$userID] = [
+                    'usertype' => 'atk',
+                    'type' => $moraleUpdateType,
+                    'factor' => $moraleFactor,
+                    'level' => $moraleRawData['morale_level']
+                ];
             }
 
-            if($Morale_DefenderTotalFactor > 0)
-            {
-                if($Result === COMBAT_DRAW)
-                {
-                    $Morale_LevelFactor = 1/2;
-                    $Morale_TimeFactor = 1/2;
-                }
-                else
-                {
-                    $Morale_LevelFactor = 1;
-                    $Morale_TimeFactor = 1;
+            $combatDefendersMoraleDetails = Flights\Utils\Calculations\calculateCombatDefendersMoraleDetails([
+                'combatResult' => $Result,
+                'attackersFactors' => $combatAttackersMoraleDetails['attackersFactors'],
+                'isAttackersUnionSignificantlyStronger' => $combatAttackersMoraleDetails['isAttackersUnionSignificantlyStronger'],
+            ]);
+            $totalDefendersMoraleFactor = $combatDefendersMoraleDetails['totalDefendersMoraleFactor'];
+
+            foreach ([ $TargetUser['id'] => $TargetUser ] as $userID => $moraleRawData) {
+                if ($totalDefendersMoraleFactor <= 0) {
+                    continue;
                 }
 
-                $Morale_Updated = Morale_AddMorale($TargetUser, MORALE_POSITIVE, $Morale_DefenderTotalFactor, $Morale_LevelFactor, $Morale_TimeFactor, $FleetRow['fleet_start_time']);
-                if($Morale_Updated)
-                {
-                    $_FleetCache['MoraleCache'][$TargetUser['id']]['level'] = $TargetUser['morale_level'];
-                    $_FleetCache['MoraleCache'][$TargetUser['id']]['droptime'] = $TargetUser['morale_droptime'];
-                    $_FleetCache['MoraleCache'][$TargetUser['id']]['lastupdate'] = $TargetUser['morale_lastupdate'];
+                $moraleLevelMultiplier = (
+                    $Result === COMBAT_DRAW ?
+                        1 / 2 :
+                        1
+                );
+                $moraleTimeMultiplier = (
+                    $Result === COMBAT_DRAW ?
+                        1 / 2 :
+                        1
+                );
+                $moraleUpdateType = MORALE_POSITIVE;
 
-                    $ReportData['morale'][$TargetUser['id']] = array
-                    (
-                        'usertype' => 'def',
-                        'type' => MORALE_POSITIVE,
-                        'factor' => $Morale_DefenderTotalFactor,
-                        'level' => $TargetUser['morale_level']
-                    );
+                $hasUpdatedMoraleData = Morale_AddMorale(
+                    $moraleRawData,
+                    $moraleUpdateType,
+                    $totalDefendersMoraleFactor,
+                    $moraleLevelMultiplier,
+                    $moraleTimeMultiplier,
+                    $FleetRow['fleet_start_time']
+                );
+
+                if (!$hasUpdatedMoraleData) {
+                    continue;
                 }
+
+                $_FleetCache['MoraleCache'][$userID]['level'] = $moraleRawData['morale_level'];
+                $_FleetCache['MoraleCache'][$userID]['droptime'] = $moraleRawData['morale_droptime'];
+                $_FleetCache['MoraleCache'][$userID]['lastupdate'] = $moraleRawData['morale_lastupdate'];
+
+                $ReportData['morale'][$userID] = [
+                    'usertype' => 'def',
+                    'type' => $moraleUpdateType,
+                    'factor' => $totalDefendersMoraleFactor,
+                    'level' => $moraleRawData['morale_level']
+                ];
             }
         }
 
