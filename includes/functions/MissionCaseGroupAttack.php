@@ -916,9 +916,11 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                     continue;
                 }
 
-                $_FleetCache['MoraleCache'][$userID]['level'] = $moraleRawData['morale_level'];
-                $_FleetCache['MoraleCache'][$userID]['droptime'] = $moraleRawData['morale_droptime'];
-                $_FleetCache['MoraleCache'][$userID]['lastupdate'] = $moraleRawData['morale_lastupdate'];
+                Flights\Utils\FleetCache\updateMoraleDataCache([
+                    'fleetCache' => &$_FleetCache,
+                    'userID' => $userID,
+                    'userMoraleData' => $moraleRawData,
+                ]);
 
                 $ReportData['morale'][$userID] = [
                     'usertype' => 'atk',
@@ -965,9 +967,11 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                     continue;
                 }
 
-                $_FleetCache['MoraleCache'][$userID]['level'] = $moraleRawData['morale_level'];
-                $_FleetCache['MoraleCache'][$userID]['droptime'] = $moraleRawData['morale_droptime'];
-                $_FleetCache['MoraleCache'][$userID]['lastupdate'] = $moraleRawData['morale_lastupdate'];
+                Flights\Utils\FleetCache\updateMoraleDataCache([
+                    'fleetCache' => &$_FleetCache,
+                    'userID' => $userID,
+                    'userMoraleData' => $moraleRawData,
+                ]);
 
                 $ReportData['morale'][$userID] = [
                     'usertype' => 'def',
