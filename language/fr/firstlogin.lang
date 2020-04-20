@@ -1,0 +1,20 @@
+<?php
+
+$_Lang['FirstLogin_Title']   = 'Bienvenue';
+$_Lang['LoginPage_Header']   = 'Bienvenue sur '.$_GameConfig['game_name'].' !';
+
+$_Lang['LoginPage_Text']     = '<center><b class="orange">Bienvenue sur '.$_GameConfig['game_name'].' !</b><br/><br/>';
+$_Lang['LoginPage_Text']    .= '<b>Pour ta première connexion, nous aimerions te présenter les paramètres de cet univers :</b></center><br/>';
+$_Lang['LoginPage_Text']    .= '<span style="line-height: 18px;"><b class="minw">Univers :</b> <b class="lime">1</b><br/>';
+$_Lang['LoginPage_Text']    .= '<b class="minw">Vitesse du jeu :</b> <b class="lime">{GameSpeed}x</b><br/><b class="minw">Production des ressources :</b> <b class="lime">{ResSpeed}x</b><br/><b class="minw">Vitesse des flottes :</b> <b class="lime">{FleetSpeed}x</b><br/>';
+$_Lang['LoginPage_Text']    .= '<b class="minw">Flottes dans le CDR :</b> <b class="lime">{FleetDebris}%</b><br/><b class="minw">Défenses dans le CDR :</b> <b class="help lime" title="Ruines causées par des attaques de flottes">{DefFlDebris}%</b> / <b class="help lime" title="Ruines causées par des attaques de missiles">{DefMiDebris}%</b><br/><b class="minw">Planète mère :</b> <b class="lime">{MotherSize} cases</b><br/>';
+$_Lang['LoginPage_Text']    .= '<b class="minw">Heure de début de l\'univers :</b> <b class="lime">{OpenTime}</b><br/>';
+$_Lang['LoginPage_Text']    .= '<b class="minw">Immunité des nouveaux joueurs :</b> <b class="lime">{Protection_NewPlayerTime} heures</b><br/>';
+$_Lang['LoginPage_Text']    .= '<b class="minw"><b class="help" title="Tant que le joueur est en dessous de ce nombre de points, personne ne peut l\'attaquer">Plafond de protection des nouveaux joueurs :</b></b> <b class="lime">{Protection_PointsLimit} points</b><br/>';
+$_Lang['LoginPage_Text']    .= '</span><br/><br/>';
+$_Lang['LoginPage_Text']    .= '<b>Si tu ne connais absolument pas le jeu</b>, commence par accomplir les <a class="orange" href="tasks.php?cat=1"><b>&#187; Missions du tutoriel</b></a>, qui t\'aideront à comprendre les règles de base du jeu.<br/>';
+$_Lang['LoginPage_Text']    .= '<center><b>Bon jeu !</b></center>';
+
+$_Lang['LoginPage_Input']    = 'Lancer le jeu !';
+
+?>

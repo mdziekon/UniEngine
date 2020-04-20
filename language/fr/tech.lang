@@ -1,0 +1,121 @@
+<?php
+
+$_Lang['Tech']                  = "Technologies";
+$_Lang['Requirements']          = "Prérequis";
+$_Lang['Metal']                 = "Métal";
+$_Lang['Crystal']               = "Cristal";
+$_Lang['Deuterium']             = "Deutérium";
+$_Lang['Energy']                = "Énergie";
+$_Lang['DarkEnergy']            = "Énergie noire";
+$_Lang['Message']               = "Messages";
+$_Lang['GoToShop']              = 'Boutique';
+$_Lang['level']                 = "Niveau";
+$_Lang['treeinfo']              = "[i]";
+
+$_Lang['Metal_rec']             = 'de métal';
+$_Lang['Crystal_rec']           = 'de cristal';
+$_Lang['Deuterium_rec']         = 'de deutérium';
+
+$_Lang['PrevPlanet']            = "Planète précédente";
+$_Lang['NextPlanet']            = "Planète suivante";
+
+$_Lang['type_mission'][1]       = "Attaquer";
+$_Lang['type_mission'][2]       = "Attaque groupée";
+$_Lang['type_mission'][3]       = "Transporter";
+$_Lang['type_mission'][4]       = "Stationner";
+$_Lang['type_mission'][5]       = "Défendre";
+$_Lang['type_mission'][6]       = "Espionner";
+$_Lang['type_mission'][7]       = "Coloniser";
+$_Lang['type_mission'][8]       = "Recycler";
+$_Lang['type_mission'][9]       = "Destruire";
+$_Lang['type_mission'][10]      = 'Attaque interplanétaire';
+$_Lang['type_mission'][11]      = 'Attaque groupée';
+$_Lang['type_mission'][15]      = "Expédition";
+$_Lang['type_mission_quickres'] = 'Transport de ressources';
+
+$_Lang['tech'] = array
+(
+    0 => "Bâtiments",
+    1 => "Mine de métal",
+    2 => "Mine de cristal",
+    3 => "Synthétiseur de deutérium",
+    4 => "Centrale électrique solaire",
+    12 => "Centre électrique de fusion",
+    14 => "Usine de robots",
+    15 => "Usine de nanites",
+    21 => "Chantier spatial",
+    22 => "Hangar de métal",
+    23 => "Hangar de cristal",
+    24 => "Réservoir de deutérium",
+    31 => "Centre de recherche",
+    33 => "Terraformeur",
+    34 => "Dépôt de ravitaillement",
+
+    40 => 'Bâtiments spéciaux',
+    41 => 'Base lunaire',
+    42 => 'Phalange de capteur',
+    43 => 'Porte de saut spatial',
+    44 => "Silo de missiles",
+    50 => "Porte quantique",
+
+    100 => 'Recherche',
+    106 => 'Technologie Espionnage',
+    108 => 'Technologie Ordinateur',
+    109 => 'Technologie Armes',
+    110 => 'Technologie Bouclier',
+    111 => 'Technologie Protection des vaisseaux spatiaux',
+    113 => 'Technologie énergétique',
+    114 => 'Technologie Hyperespace',
+    115 => 'Technologie Réacteur à combustion',
+    117 => 'Technologie Réacteur à impulsion',
+    118 => 'Technologie Propulsion hyperespace',
+    120 => 'Technologie Laser',
+    121 => 'Technologie à ions',
+    122 => 'Technologie Plasma',
+    123 => 'Réseau de centres de recherche',
+    124 => 'Technologie Expédition',
+    125 => 'Technologie Anti-matière',
+    126 => 'Technologie Flux de désintégration',
+    199 => 'Technologie Graviton',
+
+    200 => 'Vaisseaux',
+    202 => 'Petit transporteur',
+    203 => 'Grand transporteur',
+    204 => 'Chasseur léger',
+    205 => 'Chasseur lourd',
+    206 => 'Croiseur',
+    207 => 'Vaisseau de bataille',
+    208 => 'Colonisateur',
+    209 => 'Recycleur',
+    210 => 'Sonde d\'espionnage',
+    211 => 'Bombardier',
+    212 => 'Satellite solaire',
+    213 => 'Destructeur',
+    214 => 'Étoile de la mort',
+    215 => 'Traqueur',
+    216 => 'Station orbitale',
+    217 => 'Mega transporteur',
+    218 => 'Annihilateur',
+    219 => 'Navette spatiale',
+    220 => 'Porte-vaisseaux',
+    221 => 'Bombardier Hadron',
+    222 => 'Vaisseau plasma',
+    223 => 'Destructeur protonique',
+    224 => 'Vaisseau désintégrateur',
+
+    400 => 'Défenses',
+    401 => 'Lanceur de missiles',
+    402 => 'Artillerie laser légère',
+    403 => 'Artillerie laser lourde',
+    404 => 'Canon de Gauss',
+    405 => 'Artillerie à ions',
+    406 => 'Lanceur de plasma',
+    407 => 'Petit bouclier',
+    408 => 'Grand bouclier',
+    409 => 'Protection planétaire',
+
+    502 => 'Missile d\'interception',
+    503 => 'Missile interplanétaire',
+);
+
+?>

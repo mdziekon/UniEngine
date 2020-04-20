@@ -1,0 +1,24 @@
+<?php
+
+$_Lang['Bash_Title']                = 'Liste des attaques lancées aujourd\'hui';
+
+$_Lang['Bash_Desc']                 = 'Le tableau ci-dessous liste toutes les attaques que tu as lancées aujourd\'hui contre d\'autres joueurs, et t\'informe du respect des règles concernant la frénésie (Règles du jeu : <a href="rules.php#rule_3_6" target="_blank" class="orange">3.6. Frénésie</a>). Le compte des attaques est réinitialisé chaque jour à minuit 0h00 (heure du serveur).<br/>Si tu dépasses le nombre d\'attaques autorisées, le défenseur sera en droit de te signaler pour infraction aux règles.';
+
+$_Lang['Bash_Header']               = 'Liste des attaques';
+
+$_Lang['Bash_NoAttacksToday']       = 'Aucune attaque enregistrée.';
+
+$_Lang['Bash_Username']             = 'Joueur / Planète';
+$_Lang['Bash_BashCount']            = 'Attaques autorisées';
+$_Lang['Bash_Status']               = 'Statut';
+$_Lang['Bash_CordPlanet']           = 'Planète';
+$_Lang['Bash_CordMoon']             = 'Lune';
+
+$_Lang['Bash_StatusOKLeft']         = 'Attaques restantes : %s';
+$_Lang['Bash_Status0Left']          = 'Nombre d\'attaques autorisées atteint';
+$_Lang['Bash_StatusExceededUser']   = 'Nombre d\'attaques autorisées dépassé !';
+$_Lang['Bash_StatusExceededPlanet'] = 'Nombre d\'attaques autorisées par %s dépassé !';
+$_Lang['Bash_Exceeded_Planet']      = 'planète';
+$_Lang['Bash_Exceeded_Moon']        = 'lune';
+
+?>

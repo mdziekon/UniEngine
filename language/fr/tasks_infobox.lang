@@ -1,0 +1,22 @@
+<?php
+
+$_Lang['TextFirst']     = 'Tu as réalisé';
+$_Lang['OneTask']       = 'une mission';
+$_Lang['MoreTasks']     = 'des missions';
+$_Lang['TextSecond']    = 'de la catégorie';
+
+$_Lang['CatLink']       = '"<i><a href="tasks.php?%s">%s</a></i>" ';
+
+$_Lang['Hide']          = 'Cacher les notifications';
+
+// FIXME: this should be shared with "tasks.lang"
+$_Lang['Names']         = [
+    1 => 'Introduction',
+    2 => 'Militaire',
+    3 => 'Bâtiments',
+    4 => 'Technologies',
+    5 => 'Alliances',
+    6 => 'Jeu',
+];
+
+?>

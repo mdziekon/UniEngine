@@ -1,0 +1,26 @@
+<?php
+
+$_Lang['Page_Title']                = 'Connexion';
+$_Lang['Body_Username']             = 'Nom d\'utilisateur ';
+$_Lang['Body_Password']             = 'Mot de passe ';
+$_Lang['Body_Remember']             = 'Se souvenir de moi';
+$_Lang['Body_Submit']               = 'Connexion';
+$_Lang['Body_LostPass']             = 'Mot de passe perdu ?';
+$_Lang['Body_LostCode']             = 'Lien d\'activation perdu ?';
+$_Lang['Body_ServerOffline']        = 'Le jeu est hors ligne';
+
+$_Lang['Body_Contact']              = 'Contacts';
+$_Lang['Body_Register']             = 'Inscription';
+
+$_Lang['Err_Title']                 = 'Erreur de connexion';
+$_Lang['Login_FailPassword']        = 'Mot de passe incorrect !<br/><a href="login.php">Retour</a>';
+$_Lang['Login_FailUser']            = 'Nom d\'utilisateur incorrect !<br/><a href=login.php>Retour</a>';
+$_Lang['Login_FailCookiePassword']  = 'Cookie de session incorrect (mot de passe), veuille te reconnecter !<br /><a href="login.php">Retour</a>';
+$_Lang['Login_FailCookieUser']      = 'Cookie de session incorrect (nom d\'utilisateur), veuille te reconnecter !<br/><a href=login.php>Retour</a>';
+$_Lang['Login_BadSignsUser']        = 'Nom d\'utilisateur incorrect !<br/><a href=login.php>Retour</a>';
+$_Lang['Login_BadUniversum']        = 'Univers sélectionné incorrect !';
+$_Lang['Login_UniversumNotStarted'] = 'Cet univers démarre le <br/>%s à %s.<br/>Fais passer le mot en invitant d\'autres joueurs avec ton <u>lien de parrainage</u> personnel qui se trouve dans le message d\'activation.';
+$_Lang['Login_FailLoginProtection'] = 'Le nombre maximal de tentatives de connexion à ce compte a été atteint !<br/>Veuille attendre <b class="orange">5 minutes</b> avant d\'essayer à nouveau.';
+$_Lang['Login_UnknownError']        = 'Une erreur inconnue est survenue. Veuille contacter un administrateur.';
+
+?>

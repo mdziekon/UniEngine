@@ -1,0 +1,25 @@
+<?php
+
+$_Lang['Ban_Header']                = 'Notification système';
+$_Lang['Ban_AccBanned']             = 'Ton compte a fait l\'objet d\'une sanction et a été suspendu !';
+$_Lang['Ban_StartTime']             = 'Depuis';
+$_Lang['Ban_EndTime']               = 'Fin';
+$_Lang['Ban_Reason']                = 'Motif';
+$_Lang['Ban_Giver']                 = 'Par';
+$_Lang['Ban_AdditionalInfo']        = 'Si tu as une question à propos de cette suspension, veuille contacter un administrateur (<a href="contact.php"><u>Contact</u></a>) ou fais appel de la suspension sur le <a href="redirect.php?id=3"><u>forum du jeu</u></a>';
+$_Lang['Ban_Logout']                = 'Déconnexion';
+$_Lang['ban_bysys']                 = 'Système';
+$_Lang['Ban_WithVacation']          = '<b style="color: #87CEEB">Le mode Vacances a été activé (la désactivation sera possible après la fin de la suspension)</b>';
+$_Lang['Ban_WithoutVacation']       = '<b class="red">Le mode Vacances n\'a pas été activé !</b>';
+$_Lang['Ban_RetreatedAll']          = 'Toutes les flottes provenant ou à destination de tes planètes ont été annulées.';
+$_Lang['Ban_RetreatedOwn']          = 'Toutes tes flottes ont été annulées, mais pas celles d\'autres joueurs à destination de tes planètes.';
+$_Lang['Ban_RetreatedOthers']       = 'Toutes les flottes à destination de tes planètes ont été annulées, mais tes flottes n\'ont pas été annulées.';
+$_Lang['Ban_RetreatedNone']         = '<b class="red">Les flottes provenant ou à destination de tes planètes n\'ont pas été annulées !</b>';
+$_Lang['Ban_Reason_NotSpecified']   = '<b class="orange">Veuille contacter un administrateur pour en savoir plus sur le motif de la suspension</b>';
+
+$_Lang['_timer']                    = 'Dans';
+
+$_Lang['Chrono_Day1']               = 'jour';
+$_Lang['Chrono_DayM']               = 'jours';
+
+?>

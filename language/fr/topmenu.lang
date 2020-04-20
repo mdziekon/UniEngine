@@ -1,0 +1,45 @@
+<?php
+
+$_Lang['logout']         = 'Déconnexion';
+$_Lang['player']         = 'Joueur';
+$_Lang['friends']        = 'Amis';
+$_Lang['options']        = 'Options';
+$_Lang['stats']          = 'Classement';
+$_Lang['search']         = 'Chercher';
+$_Lang['notes']          = 'Notes';
+$_Lang['rules']          = 'Règles';
+$_Lang['contact']        = 'Contacts';
+$_Lang['chat']           = 'Discussions';
+$_Lang['admin_cp']       = '<b style="color: lime;">Menu Administrateur</b>';
+$_Lang['go_cp']          = '<b style="color: lime;">Menu Opérateur</b>';
+$_Lang['sgo_cp']         = '<b style="color: lime;">Menu Super Opérateur</b>';
+$_Lang['forum']          = 'Forum';
+$_Lang['banned']         = 'Joueurs suspendus';
+$_Lang['ReportLink']     = 'Signaler';
+$_Lang['Polls']          = 'Sondages';
+
+$_Lang['ServerTimeTxt']  = 'Heure du serveur';
+
+$_Lang['ChatTitle']      = 'Discussions en ligne avec les autres joueurs';
+$_Lang['FriendsTitle']   = 'Liste de tes amis';
+$_Lang['NotesTitle']     = 'Tes notes personnelles';
+$_Lang['StatsTitle']     = 'Classement des joueurs';
+$_Lang['SearchTitle']    = 'Moteur de recherche';
+$_Lang['RulesTitle']     = 'Règles du serveur et du jeu';
+$_Lang['ContactTitle']   = 'Contacter un administrateur';
+$_Lang['OptionsTitle']   = 'Options de ton compte';
+$_Lang['LogoutTitle']    = 'Déconnexion du jeu';
+$_Lang['AdminLinkTitle'] = 'Fonctions spécifiques à l\'administrateur';
+$_Lang['GOLinkTitle']    = 'Fonctions spécifiques aux opérateurs';
+$_Lang['SGOLinkTitle']   = 'Fonctions spécifiques aux super opérateurs';
+$_Lang['ForumTitle']     = 'Forum officiel du jeu';
+$_Lang['BannedTitle']    = 'Liste des suspensions de joueurs';
+$_Lang['PollsTitle']     = 'Exprime ton opinion pour nous aider à améliorer le jeu !';
+$_Lang['ReportTitle']    = 'Signale une infraction aux règles d\'un autre joueur ou un bug du jeu.';
+
+$_Lang['Pro']            = 'Compte Premium';
+$_Lang['ProTitle']       = 'Statut et avantages de ton compte Premium';
+$_Lang['Free']           = 'Compte gratuit';
+$_Lang['FreeTitle']      = 'Découvre les avantages d\'un compte Premium !';
+
+?>

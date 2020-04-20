@@ -1,0 +1,65 @@
+<?php
+
+$_Lang['Chat']                          = "Discussions en ligne";
+
+$_Lang['ChatTitle_String']              = 'Canal de discussion %s';
+$_Lang['ChatTitle_Main']                = 'principal';
+$_Lang['ChatTitle_Ally']                = 'Alliance (%s)';
+$_Lang['ChatTitle_GameTeam']            = 'Aide';
+
+$_Lang['chat_loading']                  = "Chargement...";
+$_Lang['chat_disc']                     = "Discussions en ligne";
+$_Lang['chat_message']                  = "Message<br/>(Maj + Entrée &#187; Nouvelle ligne)";
+$_Lang['chat_send']                     = "Envoyer";
+$_Lang['chat_save']                     = "Enregistrer";
+$_Lang['on_chat']                       = "Connecté :";
+
+$_Lang['Legend_BBCode']                 = 'BBCode';
+$_Lang['Legend_BBCode_B']               = 'Gras';
+$_Lang['Legend_BBCode_S']               = 'Barré';
+$_Lang['Legend_BBCode_I']               = 'Italique';
+$_Lang['Legend_BBCode_URL']             = 'Lien';
+$_Lang['Legend_BBCode_U']               = 'Souligné';
+$_Lang['Legend_BBCode_C']               = 'Couleur';
+$_Lang['Legend_BBCode_Text']            = 'Texte';
+$_Lang['Legend_BBCode_Adress']          = 'Adresse';
+$_Lang['Legend_BBCode_OR']              = 'ou';
+$_Lang['Legend_BBCode_Color']           = 'COULEUR';
+$_Lang['Legend_BBCode_ColorInfo']       = 'Couleur en anglais ou valeur HEX';
+
+$_Lang['Settings_Header']               = 'Options';
+$_Lang['Settings_GhostMode']            = 'Cacher ma présence';
+$_Lang['Settings_GhostMode_DontCount']  = 'Ne pas me compter parmi les connectés';
+
+$_Lang['Today']                         = 'Aujourd\\\'hui';
+$_Lang['Yesterday']                     = 'Hier';
+
+$_Lang['jQueryAjax_getError']           = 'Erreur de chargement - Nouvel essai dans 5 secondes... (essais restants : {x})';
+$_Lang['jQueryAjax_getErrorFatal']      = 'Erreur de chargement - Connexion perdue... (<a class="orange" id="chatReload" href="#">Nouvel essai</a>)';
+$_Lang['jQueryAjax_postError']          = 'Erreur lors de l\\\'envoi du message...';
+
+$_Lang['jsLang_Errors'] = [
+    'getErr_001' => 'Ce canal de discussion n\\\'existe pas !',
+    'getErr_002' => 'Vous n\\\'avez pas accès à ce canal de discussion !',
+    'getErr_003' => 'Le jeu est hors ligne !',
+];
+
+$_Lang['jQueryAjax_postErr_2']          = 'Erreur lors de l\\\'envoi du message - Erreur base de données...';
+$_Lang['jQueryAjax_postErr_3']          = 'Erreur lors de l\\\'envoi du message - Message vide...';
+$_Lang['jQueryAjax_postErr_5']          = 'Erreur lors de l\\\'envoi du message - Canal de discussion non autorisé...';
+$_Lang['jQueryAjax_postErr_6']          = 'Erreur lors de l\\\'envoi du message - Canal de discussion non trouvé...';
+
+$_Lang['jQueryAjax_delErr_2']           = 'Erreur lors de la suppression du message (#{$id}) - Message non trouvé !';
+$_Lang['jQueryAjax_delErr_3']           = 'Erreur lors de la suppression du message (#{$id}) - Erreur base de données !';
+$_Lang['jQueryAjax_delErr_4']           = 'Erreur - Accès refusé !';
+
+$_Lang['jQueryAjax_notLogged']          = 'Erreur - Tu n\\\'es pas connecté !';
+
+$_Lang['jsLang_usrRef']                 = 'Parler de ce joueur';
+$_Lang['jsLang_profile']                = 'Profil du joueur';
+$_Lang['jsLang_mentioned']              = 'On a parlé de toi !';
+$_Lang['jsLang_ToolTip_ReportMsg']      = 'Signaler ce message';
+
+$_Lang['UsersOnline']                   = 'Connectés';
+
+?>

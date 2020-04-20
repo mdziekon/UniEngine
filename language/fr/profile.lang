@@ -1,0 +1,58 @@
+<?php
+
+$_Lang['PageTitle']              = 'Profil de joueur';
+
+$_Lang['Table_NoAvatar']         = 'Aucune image';
+$_Lang['Table_Username']         = 'Nom d\'utilisateur';
+$_Lang['Table_Gamerank']         = 'Rang';
+$_Lang['Table_Allyname']         = 'Alliance';
+$_Lang['Table_Allyrank']         = 'Classement de l\'alliance';
+$_Lang['Table_MotherPlanet']     = 'Planète mère';
+$_Lang['Table_WritePM']          = 'Écrire un message à ce joueur';
+$_Lang['Table_Add2Buddy']        = 'Ajouter ce joueur à tes amis';
+$_Lang['Table_AllyInvite']       = 'Inviter ce joueur dans ton alliance';
+$_Lang['Table_Buddy']            = 'Ami / ';
+$_Lang['Table_Online']           = 'Connecté';
+$_Lang['Table_Offline']          = 'Non connecté';
+$_Lang['Table_Ignore']           = 'Ignorer les messages de ce joueur';
+$_Lang['Table_UnIgnore']         = 'Ne plus ignorer les messages de ce joueur';
+$_Lang['Table_Report']           = 'Signaler ce joueur';
+$_Lang['Table_UserOnVacations']  = 'Joueur en vacances';
+$_Lang['Table_UserIsBanned']     = 'Compte sanctionné par une suspension';
+$_Lang['Table_AdminInfo']        = 'Informations de l\'administrateur';
+
+$_Lang['Table_WarStats']         = 'Statistiques de combat';
+$_Lang['Table_FightsTotal']      = 'Combats';
+$_Lang['Table_FightsWon']        = 'Victoires';
+$_Lang['Table_FightsWonACS']     = '&raquo; Victoires groupées';
+$_Lang['Table_FightsDraw']       = 'Matchs nuls';
+$_Lang['Table_FightsLost']       = 'Défaites';
+$_Lang['Table_FightsInAlly']     = 'Attaques contre alliés';
+$_Lang['Table_MissileAttacks']   = 'Attaques de missiles';
+$_Lang['Table_MoonsCreated']     = 'Lunes créées';
+$_Lang['Table_MoonsDestroyed']   = 'Lunes détruites';
+$_Lang['Table_ShotDownUnits']    = 'Vaisseaux détruits';
+$_Lang['Table_LostUnits']        = 'Vaisseaux perdus';
+$_Lang['Table_WarBalancePt']     = 'points';
+$_Lang['Table_WarBalance']       = 'Équilibre de guerre';
+$_Lang['Table_WarBalanceTip']    = 'Somme totale des vaisseaux détruits et perdus en points';
+
+$_Lang['Table_NormalStats']      = 'Classements';
+$_Lang['Table_Position']         = 'Général';
+$_Lang['Table_Points']           = 'Points';
+$_Lang['Table_MoralePoints']     = 'Niveau de développement de l\'empire';
+$_Lang['Table_PositionFleets']   = 'Flottes';
+$_Lang['Table_PointsFleets']     = 'Points (flottes)';
+$_Lang['Table_PositionResearch'] = 'Recherche';
+$_Lang['Table_PointsResearch']   = 'Points (recherche)';
+$_Lang['Table_PositionBuildings']= 'Bâtiments';
+$_Lang['Table_PointsBuildings']  = 'Points (bâtiments)';
+$_Lang['Table_PositionDefense']  = 'Défenses';
+$_Lang['Table_PointsDefense']    = 'Points (défenses)';
+
+$_Lang['Table_PosZero']          = 'Aucun classement';
+
+$_Lang['Error_NoUIDGiven']       = 'Joueur non identifié !';
+$_Lang['Error_UserNoExists']     = 'Ce joueur n\'existe pas !';
+
+?>

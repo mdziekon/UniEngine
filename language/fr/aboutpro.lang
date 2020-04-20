@@ -1,0 +1,39 @@
+<?php
+
+$_Lang['DarkEnergyStatusIs']    = 'Énergie noire disponible ';
+$_Lang['BuyMoreDE']             = 'Acheter plus d\'énergie noire !';
+
+$_Lang['aboutpro']              = 'Compte Premium';
+
+$_Lang['Desc']                  = 'Le compte Premium étend les possibilités de ton compte gratuit. Tu auras accès à des fonctionnalités verrouillées pour d\'autres joueurs, qui te permettront de gérer tes planètes et tes flottes plus efficacement. Cela t\'aidera donc à développer ton empire plus rapidement !';
+
+$_Lang['BenefitsTitle']         = 'Avantages du compte Premium';
+
+$_Lang['Benefits']              = [
+    'Liste des constructions en cours : Étendue à <b class="lime">10 éléments</b>',
+    'Liste des recherches en cours : Étendue à <b class="lime">5 élements</b>',
+    'Accès <b class="lime">illimité</b> au <b class="lime">Marchand</b> (échange de ressources)',
+    'Accès à la vue <b class="lime">Empire</b> (vue d\'ensemble de toutes tes planètes et lunes sur une seule page)',
+    'Accès to <b class="lime">Disassembler</b> (ability to turn your ships and defence systems into resources)',
+    'Limite des constructions du chantier spatial élevée à <b class="lime">10 millions</b>',
+    'Accès à la <b class="lime">Liste des attaques</b> (permet d\'éviter la frénésie)',
+    'Fonctionnalités étendues de transport de ressources (<b class="lime">Transport de toutes les ressources</b>)',
+];
+
+$_Lang['ProAccStatus']          = 'Statut de ton compte Premium';
+$_Lang['ProTill']               = 'Actif jusqu\'au';
+$_Lang['ProEnded']              = 'Expiré';
+$_Lang['NeverHadPro']           = 'Jamais activé';
+
+$_Lang['RenewPro']              = 'Prolonger de %s %s !';
+$_Lang['BuyAgain']              = 'Prolonger de %s %s !';
+$_Lang['FirstBuy']              = 'Activer pendant %s %s !';
+
+$_Lang['_day']                  = 'jour';
+$_Lang['_days']                 = 'jours';
+
+$_Lang['Cost']                  = 'Coût :';
+$_Lang['CostUnits']             = 'Énergie noire';
+$_Lang['AreYouSure']            = 'Es-tu sûr ?';
+
+?>

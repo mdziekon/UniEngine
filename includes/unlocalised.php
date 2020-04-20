@@ -102,7 +102,8 @@ function getJSDatePickerTranslationLang() {
 
     $langMapping = [
         'en' => 'en-GB',
-        'pl' => 'pl'
+        'pl' => 'pl',
+        'fr' => 'fr-FR'
     ];
 
     return $langMapping[$lang];

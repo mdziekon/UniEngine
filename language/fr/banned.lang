@@ -1,0 +1,15 @@
+<?php
+
+$_Lang['ban_title']             = 'Joueurs suspendus';
+$_Lang['ban_name']              = 'Joueur';
+$_Lang['ban_reason']            = 'Motif';
+$_Lang['ban_from']              = 'Début';
+$_Lang['ban_to']                = 'Fin';
+$_Lang['ban_by']                = 'Par';
+$_Lang['NoBannedPPL']           = 'Aucun joueur n\'est suspendu !';
+$_Lang['CountOfBannedPPL']      = 'Nombre total de joueurs suspendus ';
+$_Lang['Reason_NotSpecified']   = '<b class="red">Non rendu public.</b>';
+
+$_Lang['ban_bysys']             = 'Système';
+
+?>

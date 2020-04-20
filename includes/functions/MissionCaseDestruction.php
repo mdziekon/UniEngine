@@ -108,14 +108,13 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
         }
 
         // MoraleSystem Init
-        if(MORALE_ENABLED)
-        {
-            if(!empty($_FleetCache['MoraleCache'][$FleetRow['fleet_owner']]))
-            {
-                $FleetRow['morale_level'] = $_FleetCache['MoraleCache'][$FleetRow['fleet_owner']]['level'];
-                $FleetRow['morale_droptime'] = $_FleetCache['MoraleCache'][$FleetRow['fleet_owner']]['droptime'];
-                $FleetRow['morale_lastupdate'] = $_FleetCache['MoraleCache'][$FleetRow['fleet_owner']]['lastupdate'];
-            }
+        if (MORALE_ENABLED) {
+            Flights\Utils\FleetCache\loadMoraleDataFromCache([
+                'destination' => &$FleetRow,
+                'fleetCache' => &$_FleetCache,
+                'userID' => $FleetRow['fleet_owner'],
+            ]);
+
             Morale_ReCalculate($FleetRow, $FleetRow['fleet_start_time']);
             $AttackersData[0]['morale'] = $FleetRow['morale_level'];
             $AttackersData[0]['moralePoints'] = $FleetRow['morale_points'];
@@ -129,14 +128,13 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
                 $moraleCombatModifiers
             );
 
-            if(!$IsAbandoned)
-            {
-                if(!empty($_FleetCache['MoraleCache'][$TargetUser['id']]))
-                {
-                    $TargetUser['morale_level'] = $_FleetCache['MoraleCache'][$TargetUser['id']]['level'];
-                    $TargetUser['morale_droptime'] = $_FleetCache['MoraleCache'][$TargetUser['id']]['droptime'];
-                    $TargetUser['morale_lastupdate'] = $_FleetCache['MoraleCache'][$TargetUser['id']]['lastupdate'];
-                }
+            if (!$IsAbandoned) {
+                Flights\Utils\FleetCache\loadMoraleDataFromCache([
+                    'destination' => &$TargetUser,
+                    'fleetCache' => &$_FleetCache,
+                    'userID' => $TargetUser['id'],
+                ]);
+
                 Morale_ReCalculate($TargetUser, $FleetRow['fleet_start_time']);
                 $DefendersData[0]['morale'] = $TargetUser['morale_level'];
                 $DefendersData[0]['moralePoints'] = $TargetUser['morale_points'];
@@ -153,73 +151,38 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
         }
 
         // Select All Defending Fleets on the Orbit from $_FleetCache
-        if(!empty($_FleetCache['defFleets'][$FleetRow['fleet_end_id']]))
-        {
+        if (!empty($_FleetCache['defFleets'][$FleetRow['fleet_end_id']])) {
+            $_TempCache = [
+                'MoraleCache' => [],
+            ];
+
             $i = 1;
-            foreach($_FleetCache['defFleets'][$FleetRow['fleet_end_id']] as $FleetData)
-            {
-                if($_FleetCache['fleetRowStatus'][$FleetData['fleet_id']]['isDestroyed'] !== true)
-                {
-                    $DefendingFleets[$i] = String2Array($FleetData['fleet_array']);
-                    $DefendingFleetID[$i] = $FleetData['fleet_id'];
-                    $DefendingTechs[$i] = Flights\Utils\Initializers\initCombatTechnologiesMap([
-                        'user' => $FleetData,
-                    ]);
-                    $DefendersData[$i] = array
-                    (
-                        'id' => $FleetData['fleet_owner'],
-                        'username' => $FleetData['username'],
-                        'techs' => Array2String($DefendingTechs[$i]),
-                        'pos' => "{$FleetData['fleet_start_galaxy']}:{$FleetData['fleet_start_system']}:{$FleetData['fleet_start_planet']}"
-                    );
-                    if(!empty($FleetData['ally_tag']))
-                    {
-                        $DefendersData[$i]['ally'] = $FleetData['ally_tag'];
-                    }
-                    if(!in_array($FleetData['fleet_owner'], $DefendersIDs))
-                    {
-                        $DefendersIDs[] = $FleetData['fleet_owner'];
-                    }
-                    $DefendingFleetOwners[$FleetData['fleet_id']] = $FleetData['fleet_owner'];
 
-                    if(MORALE_ENABLED)
-                    {
-                        if(empty($_TempCache['MoraleCache'][$FleetData['fleet_owner']]))
-                        {
-                            if(!empty($_FleetCache['MoraleCache'][$FleetData['fleet_owner']]))
-                            {
-                                $FleetData['morale_level'] = $_FleetCache['MoraleCache'][$FleetData['fleet_owner']]['level'];
-                                $FleetData['morale_droptime'] = $_FleetCache['MoraleCache'][$FleetData['fleet_owner']]['droptime'];
-                                $FleetData['morale_lastupdate'] = $_FleetCache['MoraleCache'][$FleetData['fleet_owner']]['lastupdate'];
-                            }
-                            Morale_ReCalculate($FleetData, $FleetRow['fleet_start_time']);
-                            $DefendersData[$i]['morale'] = $FleetData['morale_level'];
-                            $DefendersData[$i]['moralePoints'] = $FleetData['morale_points'];
-
-                            $_TempCache['MoraleCache'][$FleetData['fleet_owner']] = array
-                            (
-                                'level' => $FleetData['morale_level'],
-                                'points' => $FleetData['morale_points']
-                            );
-                        }
-                        else
-                        {
-                            $DefendersData[$i]['morale'] = $_TempCache['MoraleCache'][$FleetData['fleet_owner']]['level'];
-                            $DefendersData[$i]['moralePoints'] = $_TempCache['MoraleCache'][$FleetData['fleet_owner']]['points'];
-                        }
-
-                        $moraleCombatModifiers = Flights\Utils\Modifiers\calculateMoraleCombatModifiers([
-                            'moraleLevel' => $DefendersData[$i]['morale'],
-                        ]);
-
-                        $DefendingTechs[$i] = array_merge(
-                            $DefendingTechs[$i],
-                            $moraleCombatModifiers
-                        );
-                    }
-
-                    $i += 1;
+            foreach ($_FleetCache['defFleets'][$FleetRow['fleet_end_id']] as $fleetData) {
+                if ($_FleetCache['fleetRowStatus'][$fleetData['fleet_id']]['isDestroyed']) {
+                    continue;
                 }
+
+                $defenderDetails = Flights\Utils\Initializers\initDefenderDetails([
+                    'combatTimestamp' => $FleetRow['fleet_start_time'],
+                    'fleetData' => $fleetData,
+                    'fleetCache' => &$_FleetCache,
+                    'localCache' => &$_TempCache,
+                ]);
+                $defenderUserID = $defenderDetails['userData']['id'];
+
+                $DefendingFleets[$i] = $defenderDetails['ships'];
+                $DefendingFleetID[$i] = $defenderDetails['fleetID'];
+                $DefendingTechs[$i] = $defenderDetails['combatTechnologies'];
+                $DefendersData[$i] = $defenderDetails['userData'];
+
+                $DefendingFleetOwners[$defenderDetails['fleetID']] = $defenderUserID;
+
+                if (!in_array($defenderUserID, $DefendersIDs)) {
+                    $DefendersIDs[] = $defenderUserID;
+                }
+
+                $i += 1;
             }
         }
 
@@ -824,80 +787,22 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
         }
 
         // Morale System
-        if(MORALE_ENABLED AND !$IsAbandoned AND !$IsAllyFight AND $IdleHours < (7 * 24))
-        {
-            $Morale_Factor = $FleetRow['morale_points'] / $TargetUser['morale_points'];
-            if($Morale_Factor < 1)
-            {
-                $Morale_Factor = pow($Morale_Factor, -1);
-                $Morale_AttackerStronger = false;
-            }
-            else
-            {
-                $Morale_AttackerStronger = true;
-            }
+        $reportMoraleEntries = [];
 
-            if($Morale_Factor > MORALE_MINIMALFACTOR)
-            {
-                if($Morale_AttackerStronger)
-                {
-                    $Morale_Update_Attacker_Type = MORALE_NEGATIVE;
-                    if($Result === COMBAT_DEF OR $Result === COMBAT_DRAW)
-                    {
-                        $Morale_Update_Defender_Type = MORALE_POSITIVE;
-                    }
-                }
-                else
-                {
-                    $Morale_Update_Attacker_Type = MORALE_POSITIVE;
-                }
+        if (MORALE_ENABLED AND !$IsAbandoned AND !$IsAllyFight AND $IdleHours < (7 * 24)) {
+            $moraleUpdate = Flights\Utils\Calculations\calculatePostCombatMoraleUpdates([
+                'combatResult' => $Result,
+                'fleetRow' => $FleetRow,
+                'attackersMorale' => [
+                    $FleetRow['fleet_owner'] => $FleetRow,
+                ],
+                'defendersMorale' => [
+                    $TargetUser['id'] => $TargetUser,
+                ],
+                'fleetCache' => &$_FleetCache,
+            ]);
 
-                $Morale_Updated = Morale_AddMorale($FleetRow, $Morale_Update_Attacker_Type, $Morale_Factor, 1, 1, $FleetRow['fleet_start_time']);
-                if($Morale_Updated)
-                {
-                    $_FleetCache['MoraleCache'][$FleetRow['fleet_owner']]['level'] = $FleetRow['morale_level'];
-                    $_FleetCache['MoraleCache'][$FleetRow['fleet_owner']]['droptime'] = $FleetRow['morale_droptime'];
-                    $_FleetCache['MoraleCache'][$FleetRow['fleet_owner']]['lastupdate'] = $FleetRow['morale_lastupdate'];
-
-                    $ReportData['morale'][$FleetRow['fleet_owner']] = array
-                    (
-                        'usertype' => 'atk',
-                        'type' => $Morale_Update_Attacker_Type,
-                        'factor' => $Morale_Factor,
-                        'level' => $FleetRow['morale_level']
-                    );
-                }
-
-                if($Morale_Update_Defender_Type !== null)
-                {
-                    if($Result === COMBAT_DRAW)
-                    {
-                        $Morale_LevelFactor = 1/2;
-                        $Morale_TimeFactor = 1/2;
-                    }
-                    else
-                    {
-                        $Morale_LevelFactor = 1;
-                        $Morale_TimeFactor = 1;
-                    }
-
-                    $Morale_Updated = Morale_AddMorale($TargetUser, $Morale_Update_Defender_Type, $Morale_Factor, $Morale_LevelFactor, $Morale_TimeFactor, $FleetRow['fleet_start_time']);
-                    if($Morale_Updated)
-                    {
-                        $_FleetCache['MoraleCache'][$TargetUser['id']]['level'] = $TargetUser['morale_level'];
-                        $_FleetCache['MoraleCache'][$TargetUser['id']]['droptime'] = $TargetUser['morale_droptime'];
-                        $_FleetCache['MoraleCache'][$TargetUser['id']]['lastupdate'] = $TargetUser['morale_lastupdate'];
-
-                        $ReportData['morale'][$TargetUser['id']] = array
-                        (
-                            'usertype' => 'def',
-                            'type' => MORALE_POSITIVE,
-                            'factor' => $Morale_Factor,
-                            'level' => $TargetUser['morale_level']
-                        );
-                    }
-                }
-            }
+            $reportMoraleEntries = $moraleUpdate['reportMoraleEntries'];
         }
 
         // CREATE BATTLE REPORT
@@ -924,6 +829,10 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
         $ReportData['init']['onMoon'] = true;
         $ReportData['init']['atk_lost'] = $RealDebrisMetalAtk + $RealDebrisCrystalAtk + $RealDebrisDeuteriumAtk;
         $ReportData['init']['def_lost'] = $RealDebrisMetalDef + $RealDebrisCrystalDef + $RealDebrisDeuteriumDef;
+
+        if (!empty($reportMoraleEntries)) {
+            $ReportData['morale'] = $reportMoraleEntries;
+        }
 
         foreach($RoundsData as $RoundKey => $RoundData)
         {
@@ -962,41 +871,13 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
         }
 
         // Update battle stats & set Battle Report colors
-        if(!$IsAllyFight)
-        {
-            if($Result === COMBAT_ATK)
-            {
-                foreach($AttackersIDs as $UserID)
-                {
-                    $UserStatsData[$UserID]['raids_won'] += 1;
-                }
-                foreach($DefendersIDs as $UserID)
-                {
-                    $UserStatsData[$UserID]['raids_lost'] += 1;
-                }
-            }
-            elseif($Result === COMBAT_DRAW)
-            {
-                foreach($AttackersIDs as $UserID)
-                {
-                    $UserStatsData[$UserID]['raids_draw'] += 1;
-                }
-                foreach($DefendersIDs as $UserID)
-                {
-                    $UserStatsData[$UserID]['raids_draw'] += 1;
-                }
-            }
-            elseif($Result === COMBAT_DEF)
-            {
-                foreach($AttackersIDs as $UserID)
-                {
-                    $UserStatsData[$UserID]['raids_lost'] += 1;
-                }
-                foreach($DefendersIDs as $UserID)
-                {
-                    $UserStatsData[$UserID]['raids_won'] += 1;
-                }
-            }
+        if (!$IsAllyFight) {
+            Flights\Utils\FleetCache\applyCombatResultStats([
+                'userStats' => &$UserStatsData,
+                'combatResultType' => $Result,
+                'attackerIDs' => $AttackersIDs,
+                'defenderIDs' => $DefendersIDs,
+            ]);
 
             // Update User Destroyed & Lost Stats
             Flights\Utils\FleetCache\applyCombatUnitStats([

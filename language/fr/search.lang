@@ -1,0 +1,32 @@
+<?php
+
+$_Lang['Position']              = 'Classement';
+$_Lang['Player']                = 'Joueur';
+$_Lang['Name']                  = 'Joueur';
+$_Lang['Player_name']           = 'Joueur';
+$_Lang['Planet']                = 'Planète mère';
+$_Lang['Planet_name']           = 'Nom de la planète';
+$_Lang['Alliance']              = 'Alliance';
+$_Lang['Alliance_name']         = 'Nom de l\'alliance';
+$_Lang['Tag']                   = 'Tag';
+$_Lang['Alliance_tag']          = 'Tag d\'alliance';
+$_Lang['Members']               = 'Membres';
+$_Lang['Points']                = 'Points';
+$_Lang['PerMember']             = 'par membre';
+$_Lang['Coordinated']           = 'Position';
+$_Lang['Search']                = 'Chercher';
+$_Lang['Search_in_all_game']    = "Moteur de recherche";
+$_Lang['Back']                  = 'Retour';
+$_Lang['write_a_messege']       = 'Écrire un message';
+$_Lang['buddy_request']         = 'Ajouter aux amis';
+$_Lang['Ally_Invite_Title']     = 'Inviter dans l\'alliance';
+$_Lang['found_results']         = "Résultats : ";
+$_Lang['nothing_found']         = "Aucun résultat !";
+$_Lang['badsigns_given']        = '<b class="red">Données incorrectes !</b>';
+$_Lang['pagination_title']      = "Pages";
+$_Lang['prev_page']             = "Précédent";
+$_Lang['next_page']             = "Suivant";
+
+$_Lang['not_counted_yet']       = 'Le classement de ce joueur n\'a pas encore été calculé !';
+
+?>

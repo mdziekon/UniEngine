@@ -2,6 +2,7 @@
 
 namespace UniEngine\Engine\Modules\Flights\Utils\FleetCache;
 
+// use UniEngine\Engine\Common\Exceptions;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 
 abstract class WorldElementCounterType {
@@ -109,6 +110,63 @@ function applyCombatUnitStats($params) {
                 }
             }
         }
+    }
+}
+
+abstract class _CombatParticipantUserType {
+    const Attacker = 0;
+    const Defender = 1;
+}
+
+function _getCombatResultStatKey($combatResultType, $userType) {
+    switch ($combatResultType) {
+        case COMBAT_DRAW:
+            return 'raids_draw';
+        case COMBAT_ATK:
+            return (
+                $userType === _CombatParticipantUserType::Attacker ?
+                    'raids_won' :
+                    'raids_lost'
+            );
+        case COMBAT_DEF:
+            return (
+                $userType === _CombatParticipantUserType::Defender ?
+                    'raids_won' :
+                    'raids_lost'
+            );
+        default:
+            // throw new Exceptions\UniEngineException("Invalid combat result type '{$combatResultType}'");
+            return '';
+    }
+}
+
+/**
+ * @param array $params
+ * @param ref $params['userStats']
+ * @param string $params['combatResultType']
+ * @param array $params['attackerIDs']
+ * @param array $params['defenderIDs']
+ */
+function applyCombatResultStats($params) {
+    $userStats = &$params['userStats'];
+    $combatResultType = $params['combatResultType'];
+    $attackerIDs = $params['attackerIDs'];
+    $defenderIDs = $params['defenderIDs'];
+
+    $attackersCombatResultStatKey = _getCombatResultStatKey(
+        $combatResultType,
+        _CombatParticipantUserType::Attacker
+    );
+    $defendersCombatResultStatKey = _getCombatResultStatKey(
+        $combatResultType,
+        _CombatParticipantUserType::Defender
+    );
+
+    foreach ($attackerIDs as $userID) {
+        $userStats[$userID][$attackersCombatResultStatKey] += 1;
+    }
+    foreach ($defenderIDs as $userID) {
+        $userStats[$userID][$defendersCombatResultStatKey] += 1;
     }
 }
 

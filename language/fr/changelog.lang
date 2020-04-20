@@ -1,0 +1,35 @@
+<?php
+
+$_Lang['infolabel_resourcesspeed']      = 'Vitesse de production des ressources';
+$_Lang['infolabel_gamespeed']           = 'Vitesse du jeu';
+$_Lang['infolabel_fleetspeed']          = 'Vitesse des flottes';
+$_Lang['infolabel_shipyardqueue']       = 'Limite du chantier spatial';
+$_Lang['infolabel_buildingsqueue']      = 'Limite de constructions et recherches';
+$_Lang['infolabel_noobprotection']      = 'Protection des nouveaux joueurs';
+$_Lang['infolabel_to']                  = 'Jusqu\'à';
+$_Lang['infolabel_points']              = 'points';
+$_Lang['infolabel_nonoobprotection']    = 'Annulation de protection des nouveaux joueurs';
+$_Lang['infolabel_from']                = 'Au dessus de';
+$_Lang['infotip_nonoobprotection']      = 'Au dessus de ce nombre de points, plus aucune protection des nouveaux joueurs ne s\'applique.';
+$_Lang['infotip_noobprotection']        = (
+    'Un joueur qui a moins de points que ce nombre ne peut attaquer personne et il ne peut pas non plus être attaqué par d\'autres joueurs. ' .
+    'Au dessus de ce nombre de points, le joueur peut attaquer d\'autres joueurs et il peut aussi être attaqué par d\'autres joueurs à condition que ceux-ci aient moins de 5 fois son nombre de points.'
+);
+
+$_Lang['TipTip_Add']                    = 'Ajouté';
+$_Lang['TipTip_Fix']                    = 'Corrigé';
+$_Lang['TipTip_Upd']                    = 'Mis à jour';
+$_Lang['TipTip_Opt']                    = 'Optimisé';
+$_Lang['TipTip_Chg']                    = 'Modifié';
+
+$_Lang['ServerInfo']                    = 'Informations serveur';
+$_Lang['Title']                         = 'Notes de version et Informations serveur';
+$_Lang['Version']                       = 'Version';
+$_Lang['Description']                   = 'Description';
+$_Lang['Changelog']                     = 'Notes de version';
+$_Lang['changelog']                     = [
+    '<b class="lime">1.0.0<br/>par mdziekon</b>' =>
+    '<img src="images/chglog_add.png" class="img"> <b>UniEngine</b> - Première diffusion publique (19 juillet 2013)',
+];
+
+?>

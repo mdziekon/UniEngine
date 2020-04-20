@@ -1,0 +1,10 @@
+<?php
+
+$_Lang['Texts']             = [];
+
+$_Lang['Error_TextNoExist'] = 'Cet article n\'existe pas !';
+$_Lang['Error_BadID']       = 'Identifiant d\'article incorrect !';
+$_Lang['PageTitle']         = 'Article : ';
+$_Lang['PageTitleError']    = 'Articles';
+
+?>

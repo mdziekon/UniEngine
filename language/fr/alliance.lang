@@ -1,0 +1,575 @@
+<?php
+
+// Ally Information
+$_Lang['AInfo_Title']           = 'Profil de l\'alliance :';
+
+$_Lang['AInfo_NoSelector']      = 'Aucun nom ou tag d\'alliance n\'a été renseigné !';
+$_Lang['AInfo_BadID']           = 'Nom d\'alliance incorrect !';
+$_Lang['AInfo_BadTag']          = 'Tag d\'alliance incorrect !';
+$_Lang['AInfo_NoExist']         = 'Cette alliance n\'existe pas !';
+
+$_Lang['AInfo_MembersCount']    = 'Membres';
+$_Lang['AInfo_NoAllyDesc']      = 'Aucune description.';
+
+$_Lang['AInfo_WebPage']         = 'Site internet';
+$_Lang['AInfo_MakeRequest']     = 'Soumettre une candidature';
+$_Lang['AInfo_BelongToAlly']    = 'Tu es membre de cette alliance !';
+$_Lang['AInfo_RequestNotAllow'] = 'Cette alliance n\'accepte pas les candidatures !';
+
+// Ally Creation
+$_Lang['AMake_Title']           = 'Créer une nouvelle alliance';
+
+$_Lang['AMake_Tag']             = 'Tag d\'alliance (3 à 8 caractères)';
+$_Lang['AMake_Name']            = 'Nom d\'alliance (35 caractères maximum)';
+$_Lang['AMake_Submit']          = 'Créer l\'alliance';
+
+$_Lang['AMake_TagShort']        = 'Le tag d\'alliance doit faire au moins 3 caractères !';
+$_Lang['AMake_TagLong']         = 'Le tag d\'alliance doit faire moins de 8 caractères !';
+$_Lang['AMake_BadTag']          = 'Tag invalide !';
+$_Lang['AMake_NoName']          = 'Le nom d\'alliance n\'est pas renseigné !';
+$_Lang['AMake_NameLong']        = 'Le nom d\'alliance doit faire moins de 35 caractères !';
+$_Lang['AMake_BadName']         = 'Nom d\'alliance invalide !<br/>(Seuls les caractères alphanumériques, espaces, tirets et tirets bas sont autorisés)';
+$_Lang['AMake_TagExists']       = 'Le tag %s est déjà utilisé !';
+$_Lang['AMake_NameExists']      = 'Le nom %s est déjà utilisé !';
+
+$_Lang['AMake_Done']            = 'L\'alliance %s [%s] a été créée !';
+
+$_Lang['AMake_AllyLeader']      = 'Chef';
+$_Lang['AMake_AllyNewComer']    = 'Nouveau membre';
+
+// Ally Search Form
+
+$_Lang['AFind_Title']           = 'Recherche d\'alliance';
+
+$_Lang['AFind_Search']          = 'Rechercher';
+
+$_Lang['AFind_Tag']             = 'Tag';
+$_Lang['AFind_Name']            = 'Nom';
+$_Lang['AFind_Count']           = 'Membres';
+
+$_Lang['AFind_BadSigns']        = 'Des caractères invalides ont été utilisés pour faire cette recherche !';
+$_Lang['AFind_NothingFound']    = 'Aucun résultat.';
+
+// Ally Default Menu
+
+$_Lang['AMenu_MakeAlly']        = 'Créer une nouvelle alliance';
+$_Lang['AMenu_LookFor']         = 'Trouver une alliance existante';
+
+$_Lang['AMenu_Inv_Head']        = 'Invitations à rejoindre une alliance';
+$_Lang['AMenu_Inv_Sender']      = 'Alliance';
+$_Lang['AMenu_Inv_Date']        = 'Date';
+$_Lang['AMenu_Inv_State']       = 'Statut';
+$_Lang['AMenu_Inv_Actions']     = 'Actions';
+
+$_Lang['AMenu_Inv_Accept']      = 'Accepter l\'invitation';
+$_Lang['AMenu_Inv_Reject']      = 'Refuser l\'invitation';
+
+$_Lang['AMenu_Inv_NoRows']          = 'Aucune invitation.';
+$_Lang['AMenu_Inv_States']['1']     = '<b class="lime">En attente de ta décision</b>';
+$_Lang['AMenu_Inv_States']['-1']    = '<b class="orange">Refusée</b>';
+$_Lang['AMenu_Inv_States']['-2']    = '<b class="red">Annulée</b>';
+$_Lang['AMenu_Inv_States']['-3']    = '<b class="red">Annulée</b>';
+
+$_Lang['AMenu_Inv_MsgAcceptSuccess']    = 'Tu as accepté de rejoindre une alliance !';
+$_Lang['AMenu_Inv_MsgRejectSuccess']    = 'Tu as refusé une invitation !';
+$_Lang['AMenu_Inv_MsgNotFound']         = 'L\'invitation n\'existe pas !';
+$_Lang['AMenu_Inv_MsgBadID']            = 'Identifiant d\'invitation invalide !';
+
+// Ally Create Request
+$_Lang['AApp_Title']             = 'Candidature pour rejoindre une alliance';
+
+$_Lang['AApp_WriteRequest']      = 'Candidature pour rejoindre l\'alliance %s [%s]';
+
+$_Lang['AApp_Message']           = 'Message';
+$_Lang['AApp_Chars']             = 'caractères';
+$_Lang['AApp_Help']              = 'Aide';
+$_Lang['AApp_UseExample']        = 'Utiliser un modèle de message';
+$_Lang['AApp_Send']              = 'Envoyer la candidature';
+
+$_Lang['AApp_NoSample']          = 'L\'alliance n\'a pas d\'exemple de message de candidature.';
+
+$_Lang['AApp_BadID']             = 'Identifiant invalide !';
+$_Lang['AApp_AllyNoExists']      = 'Cette alliance n\'existe pas !';
+$_Lang['AApp_AllyBlockRequest']  = &$_Lang['AInfo_RequestNotAllow'];
+$_Lang['AApp_NoText']            = 'Le message n\'a pas été rempli !';
+$_Lang['AApp_Done']              = 'Ta candidature a été envoyée.<br/>Veuille attendre une réponse.<br/>(Tu recevras un message automatique t\'informant du résultat de ta candidature)';
+
+// Ally Waiting Request
+$_Lang['AReq_Title']             = 'Candidature pour rejoindre une alliance';
+
+$_Lang['AReq_Cancel']            = 'Annuler ma candidature';
+$_Lang['AReq_Sure']              = 'Es-tu sûr de vouloir annuler ta candidature ?';
+
+$_Lang['AReq_Canceled']          = 'Tu as annulé ta candidature pour rejoindre l\'alliance %s [%s] !';
+$_Lang['AReq_Waiting']           = 'Ta candidature pour rejoindre l\'alliance <a href="?mode=ainfo&amp;a=%s">%s</a> [%s] est toujours en attente.<br/>Tu peux patienter ou annuler ta candidature.';
+
+// ---------------------------------
+$_Lang['Ally_Title']             = 'Alliance';
+
+$_Lang['Ally_GetAllyError']      = 'Une erreur inconnue s\'est produite !<br/>Veuille contacter un administrateur !';
+
+// Leaving the Ally
+$_Lang['Ally_Leave_MAdminInfo']  = 'Le chef de l\'alliance ne peut pas partir !';
+$_Lang['Ally_Leave_Done']        = 'Tu as quitté l\'alliance %s !';
+
+// Showing Ally Members List (for User)
+$_Lang['Ally_ML_Title']          = 'Membres de l\'alliance';
+$_Lang['Ally_ML_WinTitle']       = 'Alliance - Membres';
+$_Lang['Ally_ML_Count']          = 'Effectif ';
+
+$_Lang['Ally_ML_Name']           = 'Joueur';
+$_Lang['Ally_ML_Rank']           = 'Rang';
+$_Lang['Ally_ML_Points']         = 'Points';
+$_Lang['Ally_ML_Planet']         = 'Planète mère';
+$_Lang['Ally_ML_RegTime']        = 'Membre depuis';
+$_Lang['Ally_ML_Online']         = 'Activité';
+$_Lang['Ally_ML_Action']         = 'Actions';
+
+$_Lang['Ally_ML_Write']          = 'Écrire un message à ce joueur';
+$_Lang['Ally_ML_isOnline']       = 'Connecté';
+$_Lang['Ally_ML_Mins']           = 'minutes (AFK)';
+$_Lang['Ally_ML_isOffline']      = 'Déconnecté';
+$_Lang['Ally_ML_Days']           = 'jours';
+
+// Showing Ally Wars & Pacts List
+$_Lang['Ally_Pacts_WinTitle']       = 'Alliance - Pactes';
+
+$_Lang['AWNP_Wars']                 = 'Guerres';
+$_Lang['AWNP_Pacts']                = 'Pactes';
+
+$_Lang['AWNP_DeclareWar']           = 'Déclarer la guerre';
+$_Lang['AWNP_NewPact']              = 'Envoyer une demande de pacte';
+
+$_Lang['AWNP_AllyName']             = 'Nom de l\'alliance';
+$_Lang['AWNP_Date']                 = 'Date';
+$_Lang['AWNP_Type']                 = 'Type de pacte';
+$_Lang['AWNP_Status']               = 'Statut';
+$_Lang['AWNP_Actions']              = 'Actions';
+
+$_Lang['AWNP_Types'][1]             = 'Non-agression';
+$_Lang['AWNP_Types'][2]             = 'Commercial';
+$_Lang['AWNP_Types'][3]             = 'Défensif';
+$_Lang['AWNP_Types'][4]             = 'Militaire';
+
+$_Lang['AWNP_States']['active']     = '<b class="lime">Actif</b>';
+$_Lang['AWNP_States']['my_2']       = '<b class="skyblue">Validation du changement de type en attente (%s)</b>';
+$_Lang['AWNP_States']['my_0']       = '<b class="skyblue">En attente de leur réponse</b>';
+$_Lang['AWNP_States']['their_2']    = '<b class="orange">Validation du changement de type en attente (%s)</b>';
+$_Lang['AWNP_States']['their_0']    = '<b class="orange">En attente de notre réponse</b>';
+
+$_Lang['AWNP_Actions_remove']       = 'Supprimer le pacte';
+$_Lang['AWNP_Actions_rollback']     = 'Annuler le pacte';
+$_Lang['AWNP_Actions_stopchange']   = 'Annuler la demande de changement de type de pacte';
+$_Lang['AWNP_Actions_accept']       = 'Accepter le pacte';
+$_Lang['AWNP_Actions_refuse']       = 'Refuser le pacte';
+$_Lang['AWNP_Actions_change']       = 'Demander un changement de type de pacte';
+
+$_Lang['AllyPacts_Msg_CantManage']                  = 'Tu n\'as pas les droits suffisants pour cela !';
+$_Lang['AllyPacts_Msg_BadAID']                      = 'Identifiant d\'alliance invalide !';
+$_Lang['AllyPacts_Msg_BadCMD']                      = 'Données invalides !';
+$_Lang['AllyPacts_Msg_PactDoesntExist']             = 'Ce pacte n\'existe pas !';
+$_Lang['AllyPacts_Msg_PactRollback_Active']         = 'Cette demande a déjà été acceptée !';
+$_Lang['AllyPacts_Msg_PactRollback_NotSender']      = 'Tu ne peux pas annuler cette demande !';
+$_Lang['AllyPacts_Msg_PactAccept_Sender']           = 'Tu ne peux pas accepter ta propre demande !';
+$_Lang['AllyPacts_Msg_PactAccept_NothingToAccept']  = 'Aucune demande à accepter !';
+$_Lang['AllyPacts_Msg_PactRefuse_Sender']           = 'Tu ne peux pas rejeter ta propre demande !';
+$_Lang['AllyPacts_Msg_PactRefuse_NothingToAccept']  = 'Aucune demande à refuser !';
+$_Lang['AllyPacts_Msg_PactRemove_NonActive']        = 'Ce pacte n\'a pas encore été accepté !';
+$_Lang['AllyPacts_Msg_PactChange_NothingToStop']    = 'Aucune demande à annuler !';
+
+$_Lang['AllyPacts_Msg_OK_Rollback']         = 'La demande de pacte a été annulée !';
+$_Lang['AllyPacts_Msg_OK_Accept_NewPact']   = 'La demande de pacte a été acceptée !';
+$_Lang['AllyPacts_Msg_OK_Accept_NewType']   = 'La demande de changement de type de pacte a été acceptée !';
+$_Lang['AllyPacts_Msg_OK_Refuse_NewPact']   = 'La demande de pacte a été rejetée!';
+$_Lang['AllyPacts_Msg_OK_Refuse_NewType']   = 'La demande de changement de type de pacte a été rejetée !';
+$_Lang['AllyPacts_Msg_OK_Remove']           = 'Le pacte a été supprimé !';
+$_Lang['AllyPacts_Msg_OK_StopChange']       = 'La demande de changement de type de pacte a été annulée !';
+
+$_Lang['AWNP_NoWars']            = 'Aucune guerre en cours';
+$_Lang['AWNP_NoPacts']           = 'Aucun pacte';
+
+// Creating a New Pact
+$_Lang['Ally_PactNew_Title']        = 'Alliance - Demande de pacte';
+
+$_Lang['Ally_PactNew_Body_Head']    = 'Envoyer une demande de pacte à une autre alliance';
+$_Lang['Ally_PactNew_Body_Ally']    = 'Nom de l\'alliance';
+$_Lang['Ally_PactNew_Body_Type']    = 'Type de pacte';
+$_Lang['Ally_PactNew_Body_Submit']  = 'Envoyer la demande';
+
+$_Lang['Ally_PactNew_Type_1']       = 'Pacte de non-agression';
+$_Lang['Ally_PactNew_Type_2']       = 'Pacte commercial';
+$_Lang['Ally_PactNew_Type_3']       = 'Pacte défensif';
+$_Lang['Ally_PactNew_Type_4']       = 'Pacte militaire';
+
+$_Lang['Ally_PactNew_TypeDesc_1']   = 'Relations neutres entre deux alliances.<br/>Quand un joueur attaque un membre de l\'autre alliance, il reçoit un avertissement.';
+$_Lang['Ally_PactNew_TypeDesc_2']   = 'Relations commerciales entre deux alliances.<br/>Permet d\'échanger des ressources plus facilement par l\'intermédiaire des portes quantiques (quand les membres des deux alliances en disposent).<br/><b>Les règles du pacte de non-agression s\'appliquent également.</b>';
+$_Lang['Ally_PactNew_TypeDesc_3']   = 'Relations amicales entre deux alliances.<br/>Permet d\'envoyer des flottes en protection des planètes et des lunes des membres de l\'autre alliance.<br/><b>Les règles du pacte de non-agression et du pacte commercial s\'appliquent également.</b>';
+$_Lang['Ally_PactNew_TypeDesc_4']   = 'Relations amicales entre deux alliances.<br/>Permet de faire des attaques groupées entre membres des deux alliances.<br/>Quand une alliance déclare la guerre à une autre alliance, toutes les alliances ayant des pactes militaires sont automatiquement incluses dans la guerre.<br/><b>Les règles du pacte de non-agression, du pacte commercial et du pacte défensif s\'appliquent également.</b>';
+
+$_Lang['Ally_PactNew_Error_EmptyName']          = 'Nom d\'alliance non renseigné !';
+$_Lang['Ally_PactNew_Error_AllyDoesntExist']    = 'Cette alliance n\'existe pas !';
+$_Lang['Ally_PactNew_Error_PactAlreadySent']    = 'Tu as déjà envoyé une demande de pacte à cette alliance !';
+$_Lang['Ally_PactNew_Error_AllyInWar']          = 'Tu es en guerre avec cette alliance !';
+$_Lang['Ally_PactNew_Error_BadType']            = 'Le type de pacte est invalide !';
+$_Lang['Ally_PactNew_Error_AllySame']           = 'Il est impossible de conclure un pacte avec soi-même !';
+$_Lang['Ally_PactNew_Error_BadName']            = 'Nom d\'alliance invalide !';
+
+$_Lang['Ally_PactNew_Success']  = 'Une demande de pacte a été envoyée à l\'alliance <a href="?mode=ainfo&amp;a=%s" target="_blank">%s</a> !';
+
+// Changing existing Pact
+$_Lang['Ally_PactChange_Title']             = 'Alliance - Changement de type de pacte';
+
+$_Lang['Ally_PactChange_Body_Head']         = 'Envoyer une demande de changement de type de pacte à une autre alliance';
+$_Lang['Ally_PactChange_Body_Ally']         = 'Alliance';
+$_Lang['Ally_PactChange_Body_CurrentType']  = 'Type de pacte actuel';
+$_Lang['Ally_PactChange_Body_Submit']       = 'Envoyer la demande';
+
+$_Lang['Ally_PactChange_BadAID']                = 'Identifiant d\'allaince invalide !';
+$_Lang['Ally_PactChange_PactDoesntExist']       = 'Ce pacte n\'existe pas !';
+$_Lang['Ally_PactChange_PactChangeAwaiting']    = 'Tu ne peux pas envoyer une autre demande de changement de type de pacte.<br/>Annule d\'abord ta demande précédente pour pouvoir en envoyer une nouvelle.';
+
+$_Lang['Ally_PactChange_Msg_Ok_Higher']             = '<b class="lime">La demande de changement de type de pacte a été envoyée !</b>';
+$_Lang['Ally_PactChange_Msg_Ok_Lower']              = '<b class="lime">Le type de pacte a été changé !</b>';
+$_Lang['Ally_PactChange_Msg_TypeSame']              = 'Le nouveau type de pacte doit être différent du type de pacte actuel !';
+$_Lang['Ally_PactChange_Msg_TypeBad']               = 'Type de pacte invalide !';
+$_Lang['Ally_PactChange_Msg_TypeAlreadyProposed']   = 'L\'autre alliance a déjà fait une demande de changement de type de pacte pour le même nouveau type de pacte.<br/>Accepte leur demande de changement de pacte...';
+
+// Sending MassMessage to Members
+$_Lang['Ally_WR_Title']          = 'Envoyer un message aux membres de l\'alliance';
+$_Lang['Ally_WR_WinTitle']       = 'Alliance - Envoyer un message aux membres de l\'alliance';
+
+$_Lang['Ally_WR_SendTo']         = 'Envoyer aux (Rank)';
+$_Lang['Ally_WR_Every1']         = 'Tous les membres';
+$_Lang['Ally_WR_Text']           = 'Message';
+$_Lang['Ally_WR_Chars']          = 'caractères';
+$_Lang['Ally_WR_Clear']          = 'Effacer';
+$_Lang['Ally_WR_Button']         = 'Envoyer';
+
+$_Lang['Ally_WR_Subject']        = 'Message de la part d\'un allié ';
+
+$_Lang['Ally_WR_Done']           = '<b class="lime">Le message a été envoyé aux membres suivants :</b><br/>';
+$_Lang['Ally_WR_RankHasNoUsers'] = 'Il n\'y a aucun membre avec ce rang !';
+$_Lang['Ally_WR_NoRankSelect']   = 'Aucun rang sélectionné';
+$_Lang['Ally_WR_MsgEmpty']       = 'Le message est vide !';
+
+// Inviting other Users
+
+$_Lang['Ally_INV_Title']        = 'Alliance - Envoi d\'une invitation';
+
+$_Lang['Ally_INV_Header']       = 'Envoi d\'une invitation';
+$_Lang['Ally_INV_Username']     = 'Joueur';
+$_Lang['Ally_INV_Text']         = 'Message';
+$_Lang['Ally_INV_Length']       = 'Limite';
+$_Lang['Ally_INV_Clear']        = 'Effacer';
+$_Lang['Ally_INV_Submit']       = 'Envoyer l\'invitation';
+
+$_Lang['Ally_INV_Msg_Success']          = 'L\'invitation a été envoyée au joueur <a href="profile.php?uid=%s" target="_blank">%s</a> !';
+$_Lang['Ally_INV_Msg_AlreadyInvited']   = 'Ce joueur a déjà reçu une invitation à rejoindre ton alliance !';
+$_Lang['Ally_INV_Msg_EmptyText']        = 'Message vide !';
+$_Lang['Ally_INV_Msg_UserInAlly']       = 'Impossible d\'inviter ce joueur !';
+$_Lang['Ally_INV_Msg_UserNoExists']     = 'Ce joueur n\'existe pas !';
+$_Lang['Ally_INV_Msg_BadInput']         = 'Nom du joueur incorrect !';
+
+// Invites List
+
+$_Lang['Ally_INVList_Title']            = 'Alliance - Invitations envoyées';
+
+$_Lang['Ally_INVList_Head']             = 'Invitations envoyées';
+$_Lang['Ally_INVList_UserOwner']        = 'Joueur invité';
+$_Lang['Ally_INVList_UserSender']       = 'Invité par';
+$_Lang['Ally_INVList_Date']             = 'Date';
+$_Lang['Ally_INVList_State']            = 'Statut';
+$_Lang['Ally_INVList_Actions']          = 'Actions';
+
+$_Lang['Ally_INVList_NoRows']           = 'Aucune invitation';
+
+$_Lang['Ally_INVList_States']['-3']     = '<b class="red">Annulée par un membre plus gradé</b>';
+$_Lang['Ally_INVList_States']['-2']     = '<b class="red">Annulée</b>';
+$_Lang['Ally_INVList_States']['-1']     = '<b class="red">Refusée</b>';
+$_Lang['Ally_INVList_States']['0']      = '<b class="lime">Acceptée</b>';
+$_Lang['Ally_INVList_States']['1']      = '<b class="orange">En attente de la réponse du joueur</b>';
+
+$_Lang['Ally_INVList_ActionDel']        = 'Annuler l\'invitation';
+$_Lang['Ally_INVList_MsgSuccess']       = 'Invitation annulée !';
+$_Lang['Ally_INVList_MsgCantDel']       = 'Tu ne peux pas annuler cette invitation !';
+$_Lang['Ally_INVList_MsgNotFound']      = 'Invitation introuvable !';
+$_Lang['Ally_INVList_MsgBadID']         = 'Identifiant d\'invitation incorrect !';
+
+// ---------------------------------
+
+// Front Page
+$_Lang['AFP_YouAlly']               = 'Ton alliance';
+
+$_Lang['AFP_Name']                  = 'Nom';
+$_Lang['AFP_Tag']                   = 'Tag';
+$_Lang['AFP_Members']               = 'Membres';
+$_Lang['AFP_YourRank']              = 'Ton rang';
+$_Lang['AFP_WebPage']               = 'Site internet';
+$_Lang['AFP_ExternalSec']           = 'Description publique';
+$_Lang['AFP_InnerSec']              = 'Description privée (réservée aux membres)';
+
+$_Lang['AFP_NoAllyDesc']            = &$_Lang['AInfo_NoAllyDesc'];
+$_Lang['AFP_NoAllyInner']           = 'Aucune description privée.';
+
+$_Lang['AFP_MemberOptions']         = 'Options disponibles';
+$_Lang['AFP_MembersList']           = 'Membres';
+$_Lang['AFP_InvitesList']           = 'Invitations';
+$_Lang['AFP_InviteUser']            = 'Inviter un joueur';
+$_Lang['AFP_PactsList']             = 'Pactes';
+$_Lang['AFP_SendMail']              = 'Envoyer un message aux membres';
+$_Lang['AFP_AllyChat']              = 'Discussion en ligne';
+$_Lang['AFP_AllyAdmin']             = 'Gestion';
+$_Lang['AFP_ReqList']               = 'Candidatures';
+
+$_Lang['AFP_LeaveAlly']             = 'Quitter l\'alliance';
+$_Lang['AFP_LeaveButton']           = 'Clique ici pour quitter l\'alliance';
+$_Lang['AFP_SureWantLeave']         = 'Es-tu sûr de vouloir quitter l\'alliance ?';
+
+$_Lang['AFP_CollExp']               = 'Déplier / Replier';
+
+// ---------------------------------
+
+// Ally Admin - Front Page
+
+$_Lang['ADM_Title']              = &$_Lang['AFP_AllyAdmin'];
+
+$_Lang['ADM_FrontPage']          = 'Paramètres généraux';
+$_Lang['ADM_AllyInfo']           = 'Modifier le profil de l\'alliance';
+$_Lang['ADM_MembersList']        = 'Gestion des membres';
+$_Lang['ADM_ChangeRanks']        = 'Gestion des rangs';
+$_Lang['ADM_ReqList']            = 'Gestion des candidatures';
+
+$_Lang['ADM_Texts']              = 'Gestion des textes';
+$_Lang['ADM_ExternalText']       = 'Description publique';
+$_Lang['ADM_InternalText']       = 'Description privée';
+$_Lang['ADM_RequestText']        = 'Exemple de candidature';
+
+$_Lang['ADM_Characters']         = &$_Lang['Ally_WR_Chars'];
+$_Lang['ADM_Clear']              = &$_Lang['Ally_WR_Clear'];
+$_Lang['ADM_SaveAll']            = 'Tout enregistrer';
+$_Lang['ADM_SaveOne']            = 'Enregistrer ';
+$_Lang['ADM_SaveMark1']          = $_Lang['ADM_SaveOne'].'la description publique';
+$_Lang['ADM_SaveMark2']          = $_Lang['ADM_SaveOne'].'la description publique';
+$_Lang['ADM_SaveMark3']          = $_Lang['ADM_SaveOne'].'l\'exemple de candidature';
+
+$_Lang['ADM_ReqSettings']        = 'Paramètres des candidatures';
+$_Lang['ADM_AllyOpen4Req']       = 'Accepter de nouvelles candidatures ?';
+$_Lang['ADM_NewComerRank']       = 'Rang par défaut des nouveaux membres';
+$_Lang['ADM_AllyOpen4ReqInfo']   = 'Quand cette option est définie à "Non", personne ne pourra soumettre de nouvelles candidatures.<br/><b>(Les candidatures déjà reçues ne seront pas automatiquement refusées !)</b>';
+$_Lang['ADM_AllyOpen_Accept']    = 'Oui';
+$_Lang['ADM_AllyOpen_Block']     = 'Non';
+
+$_Lang['ADM_ReqSetNoAccess']     = 'Tu n\'es pas autorisé à modifier ces paramètres !';
+$_Lang['ADM_ReqSetOpenBadOption']= 'Paramètres incorrects !';
+$_Lang['ADM_ReqSetBadRank']      = 'Rang sélectionné non valide !';
+$_Lang['ADM_RankNoExist']        = 'Ce rang n\'existe pas !';
+$_Lang['ADM_OnlyAdminCanSetThis']= 'Seul le chef de l\'alliance peut définir ce rang !';
+$_Lang['ADM_ReqSetRankChanged']  = 'Le rang par défaut des nouveaux membres a été changé !';
+$_Lang['ADM_ReqSetOpenChanged']  = 'Les conditions d\'approbation des candidatures ont été changées !';
+
+$_Lang['ADM_HandOver']           = 'Céder l\'alliance';
+$_Lang['ADM_SelectNewLeader']    = 'Choisir le nouveau chef';
+
+$_Lang['ADM_DeleteAlly']         = 'Dissoudre l\'alliance';
+$_Lang['ADM_Click2Delete']       = 'Clique ici pour dissoudre l\'alliance';
+$_Lang['ADM_SureWantDelete']     = 'Es-tu sûr de vouloir dissoudre l\'alliance ?';
+
+$_Lang['ADM_ExtTextCutted']      = 'Le texte de la description publique est limité à 5000 caractères !';
+$_Lang['ADM_ExtTextChanged']     = 'Le texte de la description publique a été changé !';
+$_Lang['ADM_ExtTextNotChanged']  = 'Le texte de la description publique n\'a pas été changé.';
+$_Lang['ADM_IntTextCutted']      = 'Le texte de la description privée est limité à 5000 caractères!';
+$_Lang['ADM_IntTextChanged']     = 'Le texte de la description privée a été changé !';
+$_Lang['ADM_IntTextNotChanged']  = 'Le texte de la description privée n\'a pas été changé.';
+$_Lang['ADM_ReqTextCutted']      = 'Le texte de l\'exemple de candidature est limité à 2000 caractères !';
+$_Lang['ADM_ReqTextChanged']     = 'Le texte de l\'exemple de candidature a été changé !';
+$_Lang['ADM_ReqTextNotChanged']  = 'Le texte de l\'exemple de candidature n\'a pas été changé.';
+$_Lang['ADM_NothingChanged']     = 'Aucune modification.';
+$_Lang['ADM_TextChgNoAccess']    = 'Tu n\'es pas autorisé à modifier les textes de l\'alliance !';
+
+// Ally Admin - Change AllyData
+$_Lang['ADM_ChangeName']         = 'Changer le nom de l\'alliance';
+$_Lang['ADM_NewName']            = 'Nouveau nom';
+$_Lang['ADM_NewNameLimits']      = '35 caractères maximum';
+$_Lang['ADM_ChangeNameButton']   = 'Enregistrer';
+
+$_Lang['ADM_ChangeTag']          = 'Changer le tag de l\'alliance';
+$_Lang['ADM_NewTag']             = 'Nouveau tag';
+$_Lang['ADM_NewTagLimits']       = '3 à 8 caractères';
+$_Lang['ADM_ChangeTagButton']    = 'Enregistrer';
+
+$_Lang['ADM_ChangeGeneral']      = 'Changer les paramètres généraux';
+$_Lang['ADM_WebSite']            = 'Site internet';
+$_Lang['ADM_WebSiteReveal']      = 'Afficher le site internet seulement aux membres';
+$_Lang['ADM_LogoURL']            = 'Logo de l\'alliance (URL)';
+$_Lang['ADM_ChangeGeneralButton']= 'Enregistrer';
+
+$_Lang['ADM_OnlyLeaderChangeName']  = 'Seul le chef de l\'alliance peut changer le nom !';
+$_Lang['ADM_NewNameEmpty']       = 'Le nouveau nom n\'est pas renseigné !';
+$_Lang['ADM_NewNameLong']        = 'Le nouveau nom doit faire 35 caractères maximum !';
+$_Lang['ADM_BadNewName']         = 'Le nouveau nom est invalide !';
+$_Lang['ADM_NewNameNotFree']     = 'Le nouveau nom est déjà utilisé !';
+$_Lang['ADM_SameName']           = 'Le nouveau nom doit être différent de l\'ancien !';
+$_Lang['ADM_AllyNameChanged']    = 'Le nom de l\'alliance a été changé !';
+
+$_Lang['ADM_OnlyLeaderChangeTag']= 'Seul le chef de l\'alliance peut changer le tag !';
+$_Lang['ADM_NewTagEmpty']        = 'Le nouveau tag n\'est pas renseigné !';
+$_Lang['ADM_NewTagLong']         = 'Le nouveau tag doit faire moins de 8 caractères !';
+$_Lang['ADM_NewTagShort']        = 'Le nouveau tag doit faire au moins 3 caractères !';
+$_Lang['ADM_BadNewTag']          = 'Le nouveau tag est invalide !';
+$_Lang['ADM_NewTagNotFree']      = 'Le nouveau tag est déjà utilisé !';
+$_Lang['ADM_SameTag']            = 'Le nouveau tag doit être différent de l\'ancien !';
+$_Lang['ADM_AllyTagChanged']     = 'Le tag de l\'alliance a été changé !';
+
+$_Lang['ADM_BadNewWebsite']      = 'Site internet invalide !';
+$_Lang['ADM_BadNewLogo']         = 'URL du logo de l\'alliance invalide !';
+$_Lang['ADM_AllyInfoChanged']    = 'Modifications sauvegardées !';
+$_Lang['ADM_AllyInfoNotChanged'] = 'Aucune modification.';
+
+// Ally Admin - HandOver Ally
+
+$_Lang['ADM_HandOverTitle']      = 'Alliance - Cession';
+
+$_Lang['ADM_OnlyOwnerInAlly']    = 'Tu ne peux céder cette alliance, car tu en es le seul membre !';
+$_Lang['ADM_SureHandOver']       = 'Es-tu sûr de vouloir céder cette alliance ?\nUne fois l\'alliance cédée, ton rang sera transféré à ton successeur !';
+$_Lang['ADM_NoUserSelect']       = 'Tu dois choisir ton successeur !';
+
+$_Lang['ADM_SelectNewOwner']     = 'Choisis ton successeur';
+$_Lang['ADM_SelectFirstOption']  = 'Choisir';
+$_Lang['ADM_DoHandOver']         = 'Confirmer la cession de l\'alliance !';
+$_Lang['ADM_FallBack']           = 'Annuler';
+
+$_Lang['ADM_HandOverDone']       = 'Tu as cédé l\'alliance !';
+$_Lang['ADM_BadUserIDHO']        = 'Choix invalides !';
+$_Lang['ADM_NoUserIDHO']         = 'Tu dois choisir ton successeur !';
+
+// Ally Admin - Delete Ally
+
+$_Lang['ADM_AllyDeleted']        = 'L\'alliance a été dissoute !';
+
+// Ally Admin - Members Management
+
+$_Lang['ADM_SaveRankChanges']    = 'Enregistre les modifications de rang';
+$_Lang['ADM_KickMember']         = 'Expulse ce membre';
+$_Lang['ADM_SureWantKick']       = 'Es-tu sûr de vouloir expulser ce membre ?';
+
+$_Lang['ADM_MemberXKicked']      = 'Le joueur %s a été expulsé de l\'alliance !';
+$_Lang['ADM_CantKickRank']       = 'Tu ne peux pas expulser ce membre !<br/>Son rang dans l\'alliance ou supérieur au tien !';
+$_Lang['ADM_CantKickBadAlly']    = 'Tu ne peux pas expulser ce membre !';
+$_Lang['ADM_CantKickBadUser']    = 'Tu ne peux pas expulser ce membre !';
+$_Lang['ADM_CantKickBadID']      = 'Identifiant de membre invalide !';
+$_Lang['ADM_CantKickYourself']   = 'Tu ne peux pas t\'expulser toi-même !';
+$_Lang['ADM_YouCantKick']        = 'Tu n\'as pas les droits suffisants pour expulser des membres !';
+
+$_Lang['ADM_YouCantMListMod']    = 'Tu n\'as pas les droits suffisants pour changer les rangs des membres !';
+$_Lang['ADM_MListModBadData']    = 'Données invalides !';
+$_Lang['ADM_MListModBadData2']   = 'Tu ne peux pas changer le rang de ces membres !';
+$_Lang['ADM_MListModAllDone']    = 'Toutes les modifications ont été enregistrées !';
+$_Lang['ADM_MListModNAllDone']   = 'Les modifications sur les rangs ont été sauvegardées !<br/><b class="orange">Toutefois, certains rangs n\'ont pas été modifiés...</b>';
+
+// Ally Admin - RequestList
+
+$_Lang['ADM_ReqList_Title']      = 'Alliance - Candidatures en attente';
+
+$_Lang['ADM_RequestsCount']      = &$_Lang['Ally_ML_Count'];
+
+$_Lang['ADM_RL_Username']        = 'Joueur';
+$_Lang['ADM_RL_StatPos']         = 'Classement';
+$_Lang['ADM_RL_SendDate']        = 'Date';
+$_Lang['ADM_RL_points']          = 'points';
+
+$_Lang['ADM_RL_Accept']          = 'Accepter la candidature';
+$_Lang['ADM_RL_Refuse']          = 'Rejeter la candidature';
+$_Lang['ADM_RL_RejectReason']    = 'Raison (facultatif)';
+$_Lang['ADM_RL_Save']            = 'Confirmer';
+
+$_Lang['ADM_RL_ReqAccepted']     = 'La candidature du joueur <u>%s</u> a été acceptée !';
+$_Lang['ADM_RL_ReqRejected']     = 'La candidature du joueur <u>%s</u> a été rejetée !';
+$_Lang['ADM_RL_UserNotInAlly']   = 'Données invalides !';
+$_Lang['ADM_RL_UserNoExist']     = 'Ce joueur n\'existe pas !';
+$_Lang['ADM_RL_BadOption']       = 'Choix incorrects !';
+$_Lang['ADM_RL_BadID']           = 'Données incorrectes !';
+$_Lang['ADM_RL_NoManageAccess']  = 'Tu n\'as pas les droits suffisants pour gérer les candidatures !';
+
+$_Lang['ADM_RL_NoReason']        = 'L\'alliance n\'a pas précisé la raison du refus.';
+
+$_Lang['ADM_RL_NoRequests']      = 'Aucune candidature en attente !';
+
+// Ally Admin - RankList
+$_Lang['ADM_RankList_Title']     = 'Alliance - Gestion des rangs';
+$_Lang['ADM_RanksCount']         = 'Nombre ';
+$_Lang['ADM_RankList_AddNew']    = 'Créer un nouveau rang';
+
+$_Lang['ADM_RkL_Name']           = 'Rang';
+$_Lang['ADM_RkL_Action']         = 'Actions';
+$_Lang['ADM_RkL_UsersCount']     = 'Nombre';
+$_Lang['ADM_RkL_MemCount']       = 'Nombre de joueurs avec ce rang';
+
+$_Lang['ADM_RkL_Info1']          = '<b class="dash">Administrateur</b><br/>Inclut tous les autres droits.<br/><br/><u>Autorisé à</u> :<br/>&#187; Gestion étendue des membres et des rangs (limitée seulement avec les membres ayant aussi ce droit)<br/>&#187; Gestion des candidatures';
+$_Lang['ADM_RkL_Info2']          = '<b class="dash">Voir la liste des membres</b><br/><br/><u>Autorisé à</u> :<br/>&#187; Voir la liste des membres';
+$_Lang['ADM_RkL_Info3']          = '<b class="dash">Voir l\\\'activité des membres</b><br/><br/><u>Autorisé à</u> :<br/>&#187; Voir l\\\'activité de chaque membre de l\\\'alliance';
+$_Lang['ADM_RkL_Info4']          = '<b class="dash">Envoi de messages de groupe</b><br/><br/><u>Autorisé à</u> :<br/>&#187; Envoyer un message de groupe à tous les membres de l\\\'alliance';
+$_Lang['ADM_RkL_Info5']          = '<b class="dash">Gestion des paramètres généraux</b><br/><br/><u>Autorisé à</u> :<br/>&#187; Modifier la description publique et privée de l\\\'alliance, ainsi que le site internet et le logo';
+$_Lang['ADM_RkL_Info6']          = '<b class="dash">Voir les candidatures et des invitations</b><br/><br/><u>Autorisé à</u> :<br/>&#187; Voir toutes les candidatures<br/>&#187; Voir toutes les invitations envoyées par l\\\'alliance';
+$_Lang['ADM_RkL_Info7']          = '<b class="dash">Gestion des candidatures et des invitations</b><br/><br/><u>Autorisé à</u> :<br/>&#187; Accepter ou refuser des candidatures<br/>&#187; Annuler les invitations envoyées par l\\\'alliance';
+$_Lang['ADM_RkL_Info8']          = '<b class="dash">Gestion des membres</b><br/><br/><u>Autorisé à</u> :<br/>&#187; Modifier le rang des autres membres de l\\\'alliance (à l\\\'exception de ceux ayant aussi ce droit)';
+$_Lang['ADM_RkL_Info9']          = '<b class="dash">Gestion des rangs</b><br/><br/><u>Autorisé à</u> :<br/>&#187; Ajouter de nouveaux rangs<br/>&#187; Modifier les rangs existants';
+$_Lang['ADM_RkL_Info10']         = '<b class="dash">Exclusion de membres</b><br/><br/><u>Autorisé à</u> :<br/>&#187; Exclure d\\\'autres membres de l\\\'alliance (à l\\\'exception de ceux ayant aussi ce droit)';
+$_Lang['ADM_RkL_Info11']         = '<b class="dash">Gestion des guerres et des pactes</b><br/><br/><u>Autorisé à</u> :<br/>&#187; Déclarer ou arrêter une guerre avec d\\\'autres alliances<br/>&#187; Conclure ou mettre fin aux pactes avec d\\\'autres alliances';
+$_Lang['ADM_RkL_Info12']         = '<b class="dash">Envoi d\\\'invitations</b><br/><br/><u>Autorisé à</u> :<br/>&#187; Envoyer des invitations à rejoindre l\\\'alliance à d\\\'autres joueurs<br/>&#187; Voir et annuler ses propres invitations';
+$_Lang['ADM_RkL_Info13']         = '<b class="dash">Discussions en ligne</b><br/><br/><u>Autorisé à</u> :<br/>&#187; Participer aux discussions en ligne de l\\\'alliance<br/>(si activé)';
+
+$_Lang['ADM_RkL_Delete']         = 'Supprimer';
+$_Lang['ADM_RkL_RUSure']         = 'Es-tu sûr de vouloir supprimer ce rang ?';
+$_Lang['ADM_RkL_RUSure2']        = 'Es-tu sûr de vouloir enregistrer toutes les modifications liées aux rangs ?';
+$_Lang['ADM_RkL_AddRank']        = 'Créer';
+
+$_Lang['ADM_RkL_ChangeAdminRk']  = 'Tu ne peux pas modifier les droits du chef de l\'alliance !';
+$_Lang['ADM_RkL_DeleteAdminRk']  = 'Tu ne peux supprimer le rang de chef de l\'alliance !';
+$_Lang['ADM_RkL_DeleteDefNewRk'] = 'Tu ne peux pas supprimer le rang par défaut de l\'alliance !';
+$_Lang['ADM_RkL_NoAccess2Chg']   = 'Tes droits ne te permettent pas de modifier cela !';
+$_Lang['ADM_RkL_NoAccess2ACh']   = 'Tu n\'as pas les droits suffisants pour accorder ce droit !';
+$_Lang['ADM_RkL_NoAccess2Del']   = 'Tu n\'as pas les droits suffisants pour supprimer ce rang !';
+$_Lang['ADM_RkL_NoAccess2Nam']   = 'Tu n\'as pas les droits suffisants pour renommer ce rang !';
+
+$_Lang['ADM_RkL_AddedRank']         = 'Un nouveau rang a été créé !';
+$_Lang['ADM_RkL_BadOptGiven']       = 'Configuration du rang incorrecte !';
+$_Lang['ADM_RkL_ForbiddenOptGiven'] = 'Un des droits que tu as essayé d\'affecter ne t\'est pas accordé !';
+$_Lang['ADM_RkL_RankExists']        = 'Le nom du rang est déjà utilisé !';
+$_Lang['ADM_RkL_ForbiddenSigns']    = 'Le nom du rang n\'est pas valide !';
+$_Lang['ADM_RkL_NameLong']          = 'Le nom du rang doit faire moins de 50 caractères !';
+$_Lang['ADM_RkL_NameShort']         = 'Le nom du rang doit faire au moins 3 caractères !';
+
+$_Lang['ADM_RkL_RankDeleted']           = 'Le rang a été supprimé !';
+$_Lang['ADM_RkL_RankDelete_na_nodel']   = 'Tu n\'as pas les droits suffisants pour supprimer ce rang !';
+$_Lang['ADM_RkL_RankDelete_adm_nodel']  = 'Tu ne peux pas supprimer le rang du chef de l\'alliance !';
+$_Lang['ADM_RkL_RankDelete_nc_nodel']   = 'Tu ne peux pas supprimer le rang par défaut de l\'alliance !';
+$_Lang['ADM_RkL_RankNoExists']          = 'Ce rang n\'existe pas !';
+$_Lang['ADM_RkL_BadRankIDGiven']        = 'Données incorrectes !';
+
+$_Lang['ADM_RkL_PosChgSaved']    = 'Modifications enregistrées !';
+$_Lang['ADM_RkL_AllChgSaved']    = 'Toutes les modifications ont été enregistrées !';
+$_Lang['ADM_RkL_NothingChanged'] = 'Aucune modification.';
+$_Lang['ADM_RkL_ChgErrors']      = 'Un problème est survenu durant l\'enregistrement. Il s\'agit peut-être d\'un problème de droits.';
+$_Lang['ADM_RkL_EmptyData']      = 'Aucune modification.';
+
+$_Lang['ADM_RkL_BadPostAction']  = 'Action incorrecte !';
+
+// Ally Admin - Others
+
+$_Lang['ADM_BadEditSelected']    = 'Données incorrectes !';
+
+// Global
+
+$_Lang['GoBack']                = 'Retour';
+$_Lang['Ally_AccessDenied']     = 'Tu n\'as pas les droits suffisants pour cette fonction !';
+$_Lang['Ally_Desc']             = 'Description de l\'alliance';
+$_Lang['Ally']                  = 'Alliance';
+
+$_Lang['Pages']                 = 'Pages';
+$_Lang['next']                  = 'Suivant';
+$_Lang['prev']                  = 'Précédent';
+
+$_Lang['Tag']                   = 'Tag';
+$_Lang['Name']                  = 'Nom';
+
+?>
