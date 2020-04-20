@@ -355,7 +355,7 @@ $_Lang['ADM_SaveMark3']          = $_Lang['ADM_SaveOne'].'l\'exemple de candidat
 $_Lang['ADM_ReqSettings']        = 'Paramètres des candidatures';
 $_Lang['ADM_AllyOpen4Req']       = 'Accepter de nouvelles candidatures ?';
 $_Lang['ADM_NewComerRank']       = 'Rang par défaut des nouveaux membres';
-$_Lang['ADM_AllyOpen4ReqInfo']   = 'Quand cette option est définie à "Non", personne ne pourra soumettre de nouvelles candidatures.<br/><b>(Toutes les candidatures déjà reçues seront automatiquement refusées !)</b>';
+$_Lang['ADM_AllyOpen4ReqInfo']   = 'Quand cette option est définie à "Non", personne ne pourra soumettre de nouvelles candidatures.<br/><b>(Les candidatures déjà reçues ne seront pas automatiquement refusées !)</b>';
 $_Lang['ADM_AllyOpen_Accept']    = 'Oui';
 $_Lang['ADM_AllyOpen_Block']     = 'Non';
 
