@@ -1,7 +1,5 @@
 <?php
 
-include("{$_EnginePath}language/en/contact.lang");
-
 $_Lang['Title']             = 'Support technique';
 $_Lang['Info']              = 'Équipe d\'administration du jeu';
 $_Lang['Label_username']    = 'Nom d\'utilisateur';

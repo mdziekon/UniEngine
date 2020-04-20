@@ -2,7 +2,7 @@
 
 // UserMenu Links
 $_Lang['Multiverse']        = 'Univers <b>'.(isset($_GameConfig) ? $_GameConfig['game_name'] : '').'</b>';
-$_Lang['Overview']          = 'Vue d\'ensemble';
+$_Lang['Overview']          = 'Vue générale';
 $_Lang['Buildings']         = 'Bâtiments';
 $_Lang['Research']          = 'Centre de recherche';
 $_Lang['Shipyard']          = 'Chantier spatial';
@@ -19,12 +19,12 @@ $_Lang['Merchant']          = 'Marchand';
 $_Lang['Technology']        = 'Technologies';
 $_Lang['Galaxy']            = 'Galaxie';
 $_Lang['Fleet']             = 'Flottes';
-$_Lang['Tasks']             = 'Tâches';
+$_Lang['Tasks']             = 'Missions';
 $_Lang['Alliance']          = 'Alliance';
 $_Lang['Chat']              = 'Discussions en ligne';
 $_Lang['Statistics']        = 'Classement';
 $_Lang['Search']            = 'Chercher';
-$_Lang['blocked']           = 'Piloris';
+$_Lang['blocked']           = 'Suspensions';
 $_Lang['Records']           = 'Records';
 $_Lang['Messages']          = 'Messages';
 $_Lang['Notes']             = 'Notes';
@@ -66,7 +66,7 @@ $_Lang['TechTitle']             = 'Liste des technologies';
 $_Lang['RecordsTitle']          = 'Records des joueurs';
 $_Lang['StatsTitle']            = 'Classement des joueurs';
 $_Lang['SearchTitle']           = 'Moteur de recherche';
-$_Lang['BannedTitle']           = 'Liste des joueurs au piloris';
+$_Lang['BannedTitle']           = 'Liste des joueurs dont le compte a été suspendu';
 $_Lang['BoardTitle']            = 'Forum du jeu';
 $_Lang['AddDeclareTitle']       = 'Déclarer une adresse IP utilisée par plusieurs joueurs';
 $_Lang['ChangeLogTitle']        = 'Informations serveur et notes de version';
@@ -84,8 +84,8 @@ $_Lang['TasksTitle']            = 'Tâches en cours et déjà accomplies';
 
 // AdminPanel Menu
 $_Lang['Head_Overview']             = 'Vue générale';
-$_Lang['Head_Settings']             = 'Configuration';
-$_Lang['Head_Management']           = 'Gestion';
+$_Lang['Head_Settings']             = 'Serveur';
+$_Lang['Head_Management']           = 'Gestion des joueurs';
 $_Lang['Head_Analysis']             = 'Analyse';
 $_Lang['Head_ScriptNAutomatics']    = 'Tâches automatisées';
 $_Lang['ACP_QuickOverview']         = 'Vue générale';
@@ -98,10 +98,10 @@ $_Lang['ACP_Reports_MultiACC']      = 'Déclarations d\'IP partagées';
 $_Lang['ACP_Reports_User']          = 'Signalements';
 $_Lang['ACP_AlertsList']            = 'Alertes';
 $_Lang['ACP_SQLErrors']             = 'Erreurs SQL';
-$_Lang['ACP_GeneralSettings']       = 'Configuration générale';
+$_Lang['ACP_GeneralSettings']       = 'Configuration';
 $_Lang['ACP_SmartFleetBlockade']    = 'Flottes bloquées';
-$_Lang['ACP_UserManagement']        = 'Gestion des joueurs';
-$_Lang['ACP_Planets_ResManager']    = 'Gestion des planètes et lunes';
+$_Lang['ACP_UserManagement']        = 'Recherches';
+$_Lang['ACP_Planets_ResManager']    = 'Planètes et lunes';
 $_Lang['ACP_MassMessage']           = 'Message global';
 $_Lang['ACP_MoonAddition']          = 'Création de lune';
 $_Lang['ACP_AddProxy']              = 'IP Proxy';
