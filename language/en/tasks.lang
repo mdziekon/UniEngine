@@ -576,8 +576,8 @@ $_Lang['TasksJobs'] = [
         'Build 5.000 [tech=401]Rocket launchers[/tech]'
     ],
     4 => [
-        'Improve [tech=22]Metal mine[/tech] to level 5',
-        'Improve [tech=23]Crystal mine[/tech] to level 5',
+        'Improve [tech=22]Metal storage[/tech] to level 5',
+        'Improve [tech=23]Crystal storage[/tech] to level 5',
         'Improve [tech=24]Deuterium tank[/tech] to level 5'
     ],
     5 => [
@@ -745,7 +745,7 @@ $_Lang['TasksJobs'] = [
         'Win or draw 50 any attacks, where debris of defenders\' units make up at least 1.000.000% chance of Moon creation'
     ],
     55 => [
-        'Win or draw 5 Walk z Związku, where debris of defenders\' units make up at least 5.000.000% chance of Moon creation'
+        'Win or draw 5 united attacks, where debris of defenders\' units make up at least 5.000.000% chance of Moon creation'
     ],
     56 => [
         'Prevent destruction of one of your Moons by an enemy fleet which consists of at least 1.000 Deathstars<br/>(Enemy\'s Deathstars cannot fire gravitons towards your Moon)'
