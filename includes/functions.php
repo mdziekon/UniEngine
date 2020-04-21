@@ -1289,13 +1289,13 @@ function Handler_UserTasksUpdate()
             // Protection against multiplied Tasks and Buggy-Unlock
             if(!empty($UserParsedTasks['locked']))
             {
-                foreach($UserParsedTasks['locked'] as $CatID => $_Vars_TasksData)
+                foreach($UserParsedTasks['locked'] as $CatID => $lockedTaskIDs)
                 {
                     if(strstr($CatID, 's'))
                     {
                         $CatID = str_replace('s', '', $CatID);
                     }
-                    foreach($_Vars_TasksData as $TaskID)
+                    foreach($lockedTaskIDs as $TaskID)
                     {
                         if(!empty($UserParsedTasks[$CatID]))
                         {
