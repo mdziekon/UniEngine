@@ -38,7 +38,7 @@ class Migrator {
     public function runMigration($options) {
         $migrations = $this->loadMigrationEntries();
 
-        $latestAppliedID;
+        $latestAppliedID = null;
 
         try {
             $latestAppliedID = $this->loadLastAppliedMigrationID();
@@ -59,6 +59,21 @@ class Migrator {
 
         if (count($migrations) === 0) {
             $this->printLog("> The latest migration script is already applied");
+            $this->printLog("> No migrations applied");
+
+            return;
+        }
+
+        $checkMigrationConstraints = $this->checkMigrationsConstraints($migrations, [
+            'lastAppliedMigrationID' => $latestAppliedID,
+        ]);
+
+        if (!$checkMigrationConstraints['canApplyMigrations']) {
+            foreach ($checkMigrationConstraints['reasons'] as $reason) {
+                $this->printLog($reason['message']);
+            }
+
+            $this->printLog("");
             $this->printLog("> No migrations applied");
 
             return;
@@ -226,6 +241,86 @@ class Migrator {
         });
 
         return $migrations;
+    }
+
+    /**
+     * @param array $migrationEntries
+     * @param array $options Array containing application options.
+     *      $options = [
+     *          'lastAppliedMigrationID' => (string)
+     *      ]
+     *
+     * @return array {
+     *      @var bool $canApplyMigrations
+     *          Do all migrations in question meet their constraints?
+     *      @var string[] $reasons
+     *          Reason why the migrations do not meet constraints
+     * }
+     */
+    private function checkMigrationsConstraints($migrationEntries, $options) {
+        if (empty($migrationEntries)) {
+            return [
+                "canApplyMigrations" => true,
+                "reasons" => [],
+            ];
+        }
+
+        $result = [
+            "canApplyMigrations" => true,
+            "reasons" => [],
+        ];
+
+        $lastAppliedMigrationDate = \DateTime::createFromFormat(
+            "Ymd_His",
+            $options['lastAppliedMigrationID']
+        );
+
+        $this->sortMigrations($migrationEntries);
+
+        $migrations = [];
+
+        foreach ($migrationEntries as $migrationEntry) {
+            $migrations[] = $this->instantiateMigration($migrationEntry);
+        }
+
+        foreach ($migrations as $migration) {
+            $minimumMigrationLevelRequired = $migration["instance"]->getMinimumMigrationLevelRequired();
+
+            if ($minimumMigrationLevelRequired === '') {
+                continue;
+            }
+
+            $minimumMigrationLevelRequiredDate = \DateTime::createFromFormat(
+                "Ymd_His",
+                $minimumMigrationLevelRequired
+            );
+
+            if (
+                $minimumMigrationLevelRequiredDate->getTimestamp() >
+                $lastAppliedMigrationDate->getTimestamp()
+            ) {
+                $previousVersion = $migration["instance"]->getPreviousProjectVersion();
+
+                $reasonMessage = (
+                    "> Migration \"{$migration["className"]}\" cannot be applied, " .
+                    "because it does not meet one of its constraints:\n" .
+                    "This instance is required to have one of the previous migrations already applied " .
+                    "(migrationId: \"{$minimumMigrationLevelRequired}\").\n" .
+                    "You most likely have to revert your instance's code back to version \"{$previousVersion}\", " .
+                    "apply its migrations and then try again with more recent code.\n" .
+
+                    "It is recommended to read release notes for both version \"{$previousVersion}\" " .
+                    "and the next one, succeeding it."
+                );
+
+                $result['canApplyMigrations'] = false;
+                $result['reasons'][] = [
+                    'message' => $reasonMessage,
+                ];
+            }
+        }
+
+        return $result;
     }
 
     /**
