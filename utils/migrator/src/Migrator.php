@@ -388,6 +388,10 @@ class Migrator {
                             "apply any required manual actions " .
                             "and then run migrations again with \"--confirm-manual-action\" flag."
                         );
+                        $this->printLog(
+                            "> Migration notes (more details in the release notes):\n" .
+                            $migration["instance"]->getPriorManualActionDescription()
+                        );
 
                         break;
                     }
