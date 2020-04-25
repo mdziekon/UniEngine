@@ -58,6 +58,7 @@ OGame-clone browser based game engine.
 1. Check [__Releases__ section](https://github.com/mdziekon/UniEngine/releases) to see if migration scripts have been provided between your current version and the latest version you want to upgrade to.
     - In case of missing migration scripts, **do not try to use the auto-migrate functionality!** It may completely break your game server.
     - In case of major breaking changes (which for some reason were not possible to auto-migrate), there should be a release note explaining why and what manual actions have to be performed to proceed with migration.
+    - In case of major breaking changes, it also might be required to apply migration scripts incrementally using older versions of the code first. In such cases, the migrator will check the constraints before applying any migrations, and will try to inform you what version's migrations should be applied first.
 1. Close your game server (prevent players from accessing the game).
 1. Perform a full backup of your game server's state (database, configuration, files, etc...).
 1. Make sure that your PHP server has write access to game server's files (in case if one of the migration scripts might need this).
@@ -66,6 +67,9 @@ OGame-clone browser based game engine.
     - ``composer install --no-dev``
 1. Run migration script from project's root directory:
     - ``composer run-script migrate:run``
+    - For more details go to [Available scripts](#available-scripts) section.
+1. (conditional) When needed, apply any one-off scripts required prior to migrations:
+    - ``composer run-script utils:oneoffs:run <SCRIPT_ID>``
     - For more details go to [Available scripts](#available-scripts) section.
 1. Restart PHP server.
 
