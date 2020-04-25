@@ -43,6 +43,10 @@ class Migration_20190219_024600 implements Migrations\Interfaces\Migration {
         return "1.0.0";
     }
 
+    public function getMinimumMigrationLevelRequired() {
+        return "";
+    }
+
     private function getDBDriver() {
         $self = $this;
         $db = new Migrations\DBDriver([

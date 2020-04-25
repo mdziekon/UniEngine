@@ -99,6 +99,10 @@ class Migration_20190629_200614 implements Migrations\Interfaces\Migration {
     public function getPreviousProjectVersion() {
         return "1.0.0";
     }
+
+    public function getMinimumMigrationLevelRequired() {
+        return "";
+    }
 }
 
 ?>

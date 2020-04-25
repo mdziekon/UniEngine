@@ -49,6 +49,21 @@ interface Migration {
      *      Semver compatible string
      */
     public function getPreviousProjectVersion();
+
+    /**
+     * A function returning the migration ID (date) that has to be already applied
+     * to allow this migration to be applied. When this constraint is not met,
+     * the migrator will prevent any migrations (even the unconstrained ones)
+     * from being applied, essentially requiring the users to roll-back their
+     * code version to one that is still compatible (enforcing incremental migration).
+     *
+     * Returning an empty string means there's no constraint, and the migration can
+     * be applied any time.
+     *
+     * @return string
+     *      Migration ID (date) string
+     */
+    public function getMinimumMigrationLevelRequired();
 }
 
 ?>
