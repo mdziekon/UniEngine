@@ -29,6 +29,12 @@ class Migration_{{MIGRATION_ID}} implements Migrations\Interfaces\Migration {
 
         throw new \Exception("Not implemented yet");
     }
+
+    public function getPriorManualActionDescription() {
+        // return "";
+
+        throw new \Exception("Not implemented yet");
+    }
 }
 
 ?>

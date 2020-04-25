@@ -67,6 +67,10 @@ class Migration_20130722_235900 implements Migrations\Interfaces\Migration {
         return "";
     }
 
+    public function getPriorManualActionDescription() {
+        return "";
+    }
+
     private function getDBDriver() {
         $self = $this;
         $db = new Migrations\DBDriver([

@@ -103,6 +103,10 @@ class Migration_20190629_200614 implements Migrations\Interfaces\Migration {
     public function getMinimumMigrationLevelRequired() {
         return "";
     }
+
+    public function getPriorManualActionDescription() {
+        return "";
+    }
 }
 
 ?>

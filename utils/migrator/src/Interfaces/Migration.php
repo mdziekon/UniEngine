@@ -34,11 +34,20 @@ interface Migration {
 
     /**
      * A function indicating whether it's needed to apply any manual work.
-     * Notes should be added to the release, with a description of all necessary steps.
+     * Notes should be displayed to the users in "getPriorManualActionDescription".
+     * Notes should also be added to the release, with a description of all necessary steps.
      *
      * @return bool
      */
     public function isPriorManualActionRequired();
+
+    /**
+     * A function returning description of the manual action required before applying this migration.
+     * Output of this function is ignored if no manual action is required.
+     *
+     * @return string[]
+     */
+    public function getPriorManualActionDescription();
 
     /**
      * A function returning the version prior to this migration being needed.

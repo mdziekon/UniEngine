@@ -109,6 +109,10 @@ class Migration_20190119_225700 implements Migrations\Interfaces\Migration {
         return "";
     }
 
+    public function getPriorManualActionDescription() {
+        return "";
+    }
+
     private function isLegacyMigrationAlreadyApplied($fileLines) {
         foreach ($fileLines as $lineIdx => $lineValue) {
             if (strpos($lineValue, "REGISTER_RECAPTCHA_SERVERIP_AS_HOSTNAME") !== false) {
