@@ -1,5 +1,38 @@
 <?php
 
-include("{$_EnginePath}language/en/declaration.lang");
+$_Lang['Title']                             = 'Déclaration de partage d\'IP';
+
+$_Lang['DeclarationInfo']                   = 'Entre les noms de tous les joueurs qui utilisent le même ordinateur, qui utilisent la même adresse IP que toi ou qui se connectent de temps en temps depuis le même endroit que toi (par exemple, des membres de la famille, des camarades de classe, ou des collègues).<br/>Sépare les noms des joueurs par des virgules. Il n\'est pas nécessaire d\'indiquer ton propre nom.';
+
+$_Lang['DeclarationType']                   = 'Raison';
+$_Lang['OnePC']                             = 'Ordinateur partagé';
+$_Lang['OneIP']                             = 'Adresse IP partagée';
+$_Lang['SamePlaces']                        = 'Même lieu de connexion (école, travail, etc.)';
+$_Lang['Others']                            = 'Autres (une explication est requise, à envoyer aux administrateurs)';
+$_Lang['OccasionalLogons']                  = 'Connexion occasionnelle depuis le même lieu (par exemple : visite d\'un voisin)';
+
+$_Lang['SubmitDeclaration']                 = 'Envoyer la déclaration de partage';
+
+$_Lang['Error_Empty_Userlist']              = 'Aucun nom de joueur n\'a été saisi !';
+$_Lang['Error_Type_NotSelected']            = 'Aucune raison n\'a été sélectionnée !';
+$_Lang['Error_Bad_DeclarationType']         = 'Raison incorrecte !';
+$_Lang['Error_BadUserlist_Sent']            = 'Noms de joueur incorrects !';
+$_Lang['Error_BadUsernames']                = 'Les noms de joueurs suivants sont soit incorrects soit déjà inclus dans une autre déclaration de partage :<br/>%s';
+$_Lang['Error_UsersNotFound']               = 'Aucun des joueurs indiqués n\'existe !<br/>Veuille vérifier ta liste !';
+$_Lang['Error_OnlyUFound']                  = 'Tu dois indiquer des joueurs autres que toi !';
+$_Lang['Error_DeclarationRejected']         = 'Ta dernière déclaration de partage a été rejetée par les administrateurs !';
+$_Lang['Error_DeclarationRejected_other']   = 'La dernière déclaration de partage te concernant a été rejetée par les administrateurs !';
+
+$_Lang['Msg_DeclarationRemoved']            = 'Déclaration de partage annulée !';
+$_Lang['Msg_DeclarationLeft']               = 'Tu as quitté la déclaration de partage !';
+
+$_Lang['Declaration_added']                 = 'La déclaration de partage a été envoyée ! Veuille attendre qu\'elle soit examinée !';
+$_Lang['Users_dont_exists']                 = 'Aucun des joueurs indiqués n\'existe !';
+$_Lang['Cannot_add_second_declare']         = 'Tu ne peux pas soumettre une deuxième déclaration de partage !<br/>Tu dois renvoyer ta déclaration précédente si tu désires ajouter ou supprimer un pseudo de la liste.<br/><br/><a href="?cmd=rmv">Annuler la déclaration précédente</a>';
+$_Lang['Cannot_add_second_declare_other']   = 'Tu ne peux pas soumettre une deuxième déclaration de partage !<br/>Tu dois quitter la déclaration en cours pour pouvoir en faire une autre.<br/><br/><a href="?cmd=rmv">Quitter la déclaration</a>';
+$_Lang['Multi_validated']                   = '<b class="lime">Ta déclaration de partage a été acceptée !</b><br/>Si tu désires la modifier (par exemple pour ajouter ou supprimer un joueur), tu dois annuler la déclaration de partage en cours et en faire une nouvelle.<br/><br/><a href="?cmd=rmv">Annuler la déclaration</a>';
+$_Lang['Multi_validated_other']             = '<b class="lime">La déclaration de partage envoyée par le joueur %s a été acceptée !</b><br/>Si tu désires faire ta propre déclaration, tu dois quitter la déclaration en cours en cliquant sur lien ci-dessous.<br/><br/><a href="?cmd=rmv">Quitter la déclaration</a>';
+$_Lang['Declaration_awaiting']              = '<b class="orange">Ta déclaration est en attente d\'examen.</b><br/>Si tu désires la modifier, tu dois annuler ta déclaration et en faire une nouvelle.<br/><br/><a href="?cmd=rmv">Annuler la déclaration</a>';
+$_Lang['Declaration_awaiting_other']        = '<b class="orange">La déclaration de partage faite par le joueur %s est en attente d\'examen.</b><br/>Si tu désires faire ta propre déclaration, tu dois quitter la déclaration en cours en cliquant sur le lien ci-dessous.<br/><br/><a href="?cmd=rmv">Quitter la déclaration</a>';
 
 ?>
