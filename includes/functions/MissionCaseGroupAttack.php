@@ -43,7 +43,6 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
         }
 
         $TargetUserID = $TargetPlanet['id_owner'];
-        $TargetPlanetGetName= $TargetPlanet['name'];
         $TargetPlanetID = $TargetPlanet['id'];
 
         if(!$IsAbandoned)
@@ -321,9 +320,6 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
         $EndTime = microtime(true);
         $totaltime = sprintf('%0.6f', $EndTime - $StartTime);
 
-        $RealDebrisMetalAtk = 0;
-        $RealDebrisCrystalAtk = 0;
-        $RealDebrisDeuteriumAtk = 0;
         $RealDebrisMetalDef = 0;
         $RealDebrisCrystalDef = 0;
         $RealDebrisDeuteriumDef = 0;
@@ -469,6 +465,21 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                 }
             }
         }
+
+        $totalResourcesPillage = array_reduce(
+            $resourcesPillageByFleetID,
+            function ($totalResourcesPillage, $resourcesPillage) {
+                if ($totalResourcesPillage === null) {
+                    return $resourcesPillage;
+                }
+
+                foreach ($resourcesPillage as $resourceKey => $resourceValue) {
+                    $totalResourcesPillage[$resourceKey] += $resourceValue;
+                }
+
+                return $totalResourcesPillage;
+            }
+        );
 
         foreach ($AttackingFleets as $fleetIndex => $fleetShips) {
             $thisFleetID = $AttackingFleetID[$fleetIndex];
@@ -697,9 +708,6 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
             'debrisRecoveryPercentages' => $debrisRecoveryPercentages,
         ]);
 
-        $RealDebrisMetalAtk += $attackersResourceLosses['realLoss']['metal'];
-        $RealDebrisCrystalAtk += $attackersResourceLosses['realLoss']['crystal'];
-        $RealDebrisDeuteriumAtk += $attackersResourceLosses['realLoss']['deuterium'];
         $TotalLostMetal += $attackersResourceLosses['recoverableLoss']['metal'];
         $TotalLostCrystal += $attackersResourceLosses['recoverableLoss']['crystal'];
 
@@ -891,60 +899,42 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
             $reportMoraleEntries = $moraleUpdate['reportMoraleEntries'];
         }
 
-        // CREATE BATTLE REPORT
-        $ReportData['init']['usr']['atk'] = $AttackersData;
-        $ReportData['init']['usr']['def'] = $DefendersData;
+        $combatReportData = Flights\Utils\Factories\createCombatReportData([
+            'fleetRow' => $FleetRow,
+            'targetPlanet' => $TargetPlanet,
+            'usersData' => [
+                'attackers' => $AttackersData,
+                'defenders' => $DefendersData,
+            ],
+            'combatData' => $Combat,
+            'combatCalculationTime' => $totaltime,
+            'moraleData' => $reportMoraleEntries,
+            'totalResourcesPillage' => $totalResourcesPillage,
+            'resourceLosses' => [
+                'attackers' => $attackersResourceLosses,
+                'defenders' => $defendersResourceLosses,
+            ],
+            'moonCreationData' => [
+                'hasBeenCreated' => $MoonHasBeenCreated,
+                'normalizedChance' => $MoonChance,
+                'totalChance' => $TotalMoonChance,
+            ],
+            'moonDestructionData' => null,
+        ]);
 
-        $ReportData['init']['time'] = $totaltime;
-        $ReportData['init']['date'] = $FleetRow['fleet_start_time'];
+        $haveAttackersBeenImmediatellyDestroyed = (
+            count($RoundsData) <= 2 &&
+            $Result === COMBAT_DEF
+        );
+        $areAttackersAllowedToReadReportDetails = (
+            !$haveAttackersBeenImmediatellyDestroyed
+        );
 
-        $ReportData['init']['result'] = $Result;
-        $ReportData['init']['met'] = $TotalMetStolen;
-        $ReportData['init']['cry'] = $TotalCryStolen;
-        $ReportData['init']['deu'] = $TotalDeuStolen;
-        $ReportData['init']['deb_met'] = $TotalLostMetal;
-        $ReportData['init']['deb_cry'] = $TotalLostCrystal;
-        $ReportData['init']['moon_chance'] = $MoonChance;
-        $ReportData['init']['total_moon_chance'] = $TotalMoonChance;
-        $ReportData['init']['moon_created'] = $MoonHasBeenCreated;
-        $ReportData['init']['moon_destroyed'] = false;
-        $ReportData['init']['moon_des_chance'] = 0;
-        $ReportData['init']['fleet_destroyed'] = false;
-        $ReportData['init']['fleet_des_chance'] = 0;
-        $ReportData['init']['planet_name'] = $TargetPlanetGetName;
-        $ReportData['init']['onMoon'] = ($FleetRow['fleet_end_type'] == 3 ? true : false);
-        $ReportData['init']['atk_lost'] = $RealDebrisMetalAtk + $RealDebrisCrystalAtk + $RealDebrisDeuteriumAtk;
-        $ReportData['init']['def_lost'] = $RealDebrisMetalDef + $RealDebrisCrystalDef + $RealDebrisDeuteriumDef;
-
-        if (!empty($reportMoraleEntries)) {
-            $ReportData['morale'] = $reportMoraleEntries;
-        }
-
-        foreach($RoundsData as $RoundKey => $RoundData)
-        {
-            foreach($RoundData as $MainKey => $RoundData2)
-            {
-                if(!empty($RoundData2['ships']))
-                {
-                    foreach($RoundData2['ships'] as $UserKey => $UserData)
-                    {
-                        $RoundsData[$RoundKey][$MainKey]['ships'][$UserKey] = Array2String($UserData);
-                    }
-                }
-            }
-        }
-        $ReportData['rounds'] = $RoundsData;
-
-        if(count($RoundsData) <= 2 AND $Result === COMBAT_DEF)
-        {
-            $DisallowAttackers = true;
-        }
-        else
-        {
-            $DisallowAttackers = false;
-        }
-
-        $CreatedReport = CreateBattleReport($ReportData, array('atk' => $AttackersIDs, 'def' => $DefendersIDs), $DisallowAttackers);
+        $CreatedReport = CreateBattleReport(
+            $combatReportData,
+            [ 'atk' => $AttackersIDs, 'def' => $DefendersIDs ],
+            !$areAttackersAllowedToReadReportDetails
+        );
         $ReportID = $CreatedReport['ID'];
 
         foreach($AttackingFleetID as $FleetID)
@@ -1152,20 +1142,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
             'combatResult' => $Result,
             'totalAttackersResourcesLoss' => $attackersResourceLosses,
             'totalDefendersResourcesLoss' => $defendersResourceLosses,
-            'totalResourcesPillage' => array_reduce(
-                $resourcesPillageByFleetID,
-                function ($totalResourcesPillage, $resourcesPillage) {
-                    if ($totalResourcesPillage === null) {
-                        return $resourcesPillage;
-                    }
-
-                    foreach ($resourcesPillage as $resourceKey => $resourceValue) {
-                        $totalResourcesPillage[$resourceKey] += $resourceValue;
-                    }
-
-                    return $totalResourcesPillage;
-                }
-            ),
+            'totalResourcesPillage' => $totalResourcesPillage,
             'fleetRow' => $FleetRow,
         ]);
 
