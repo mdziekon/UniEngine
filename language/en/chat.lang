@@ -46,7 +46,7 @@ $_Lang['jsLang_Errors'] = [
 
 $_Lang['jQueryAjax_postErr_2']          = 'An error occured while sending the message - Database error...';
 $_Lang['jQueryAjax_postErr_3']          = 'An error occured while sending the message - empty message...';
-$_Lang['jQueryAjax_postErr_5']          = 'An error occured while sending the message - no access to this chata room...';
+$_Lang['jQueryAjax_postErr_5']          = 'An error occured while sending the message - no access to this chat room...';
 $_Lang['jQueryAjax_postErr_6']          = 'An error occured while sending the message - chat room does not exist...';
 
 $_Lang['jQueryAjax_delErr_2']           = 'An error occured while deleting the message (#{$id}) - message does not exist!';

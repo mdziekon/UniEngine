@@ -69,7 +69,7 @@ $_Lang['Box_battlesWon']             = 'Wins';
 $_Lang['Box_battlesACSWon']          = 'United wins';
 $_Lang['Box_battlesDraw']            = 'Draws';
 $_Lang['Box_battlesLost']            = 'Loses';
-$_Lang['Box_battlesInAlly']          = 'United battles';
+$_Lang['Box_battlesInAlly']          = 'Allied battles';
 $_Lang['Box_missileAttacks']         = 'Interplanetary Strikes';
 
 $_Lang['Box_transRequired']          = 'Needed';
