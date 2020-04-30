@@ -1,5 +1,19 @@
 <?php
 
-include("{$_EnginePath}language/en/email_change.lang");
+$_Lang['Page_Title']                            = 'Changement de l\'adresse e-mail du compte';
+
+$_Lang['Info_havetobelogged']                   = 'Tu dois être connecté pour activer une nouvelle adresse e-mail !';
+$_Lang['Info_noenoughtdata']                    = 'Le lien semble être incorrect : veuille contacter un administrateur !';
+$_Lang['Info_baddata']                          = 'Le lien ne contient pas toutes les données requises : veuille contacter un administrateur !';
+$_Lang['Info_badkey']                           = 'La clé d\'activation est incorrecte : veuille contacter un administrateur !';
+$_Lang['Info_noactivePrc']                      = 'Le changement d\'adresse e-mail n\'a pas été demandé pour ce compte !';
+$_Lang['Info_some1hasthisemail']                = 'Cette adresse e-mail est déjà utilisée !<br/>Si tu penses qu\'il s\'agit d`\'une tentative de vol de compte, veuille contacter un administrateur !';
+$_Lang['Info_newmail_notconfirmed']             = 'Tu ne pourras terminer la procédure d\'activation qu\'après la confirmation de la nouvelle adresse e-mail par le lien d\'activation envoyé par e-mail !';
+$_Lang['Info_7daysnotpassed']                   = 'La confirmation manuelle de l\'ancienne adresse e-mail n\'est pas encore disponible (tu dois attendre 7 jours après la demande de changement d\'adresse e-mail) !';
+$_Lang['Info_Hashnotcorrect']                   = 'La clé d\'activation est invalide : veuille contacter un administrateur !';
+$_Lang['Info_HashalreadyConfirmed']             = 'La clé d\'activation a déjà été confirmée !';
+$_Lang['Info_MailChangedCompletely']            = 'Le changement d\'adresse e-mail a été fait !<br/>Ton compte utilise maintenant la nouvelle adresse e-mail !';
+$_Lang['Info_MailChangePartComplete_OldHash']   = 'Ton ancienne adresse e-mail a été confirmée !<br/>Pour terminer le changement d\'adresse e-mail, veuille confirmer la nouvelle adresse e-mail !';
+$_Lang['Info_MailChangePartComplete_NewHash']   = 'Ta nouvelle adresse e-mail a été confirmée !<br/>Pour terminer le changement d\'adresse e-mail, veuille confirmer l\'ancienne adresse e-mail ou attendre 7 jours avant que la confirmation manuelle soit possible dans la "Vue générale" !';
 
 ?>
