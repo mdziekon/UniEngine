@@ -1,5 +1,8 @@
 <?php
 
-include("{$_EnginePath}language/en/generate_sig.lang");
+$_Lang['Universum'] = 'Uni 1';
+$_Lang['Ally']      = 'Alliance';
+$_Lang['Points']    = 'points';
+$_Lang['Position']  = 'Statistiques';
 
 ?>
