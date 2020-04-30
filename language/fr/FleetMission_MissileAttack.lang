@@ -1,5 +1,17 @@
 <?php
 
-include("{$_EnginePath}language/en/FleetMission_MissileAttack.lang");
+$_Lang['MIP_A_M_Cap']   = 'Tes missiles interplanétaires <b>(%s)</b> ont été détruits par des missiles d\'interception !';
+$_Lang['MIP_D_M_Cap']   = 'Les missiles interplanétaires de l\'attaquant <b>(%s)</b> ont été détruits par tes missiles d\'interception !';
+$_Lang['MIP_Cap_M']     = 'Missiles interplanétaires détruits : <b>%s</b>';
+$_Lang['MIP_destroy']   = '<b>Dégâts causés par les missiles </b>:';
+$_Lang['MIP_A_rp_h']    = 'Tes missiles interplanétaires <b>(%s)</b> envoyés de %s %s %s ont frappé %s %s %s<br/>';
+$_Lang['MIP_D_rp_h']    = 'L\'attaque de missiles interplanétaires <b>(%s)</b> de %s %s %s a frappé %s %s %s<br/>';
+$_Lang['MIP_nodef']     = 'Il n\y avait aucun défense sur la planète, rien n\'a été détruit !';
+$_Lang['MIP_Debris']    = '<br/><b>Champ de ruines créé</b>';
+$_Lang['MIP_Units']     = 'unités';
+$_Lang['MIP_DebMet']    = 'de métal';
+$_Lang['MIP_DebCry']    = 'de cristal';
+
+$_Lang['RocketReport_Morale_Attacker_Negative'] = 'L\'écart disproportionné de puissance entre ton empire et celui du défenseur (ratio : <b class="skyblue">%s</b>) indique que cette attaque n\'est pas un acte honorable.<br/>Le moral de tes troupes diminue au niveau <b class="red">%s%%</b>.';
 
 ?>
