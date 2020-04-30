@@ -202,7 +202,7 @@ $_Lang['Ally_PactNew_Type_3']       = 'Pacte défensif';
 $_Lang['Ally_PactNew_Type_4']       = 'Pacte militaire';
 
 $_Lang['Ally_PactNew_TypeDesc_1']   = 'Relations neutres entre deux alliances.<br/>Quand un joueur attaque un membre de l\'autre alliance, il reçoit un avertissement.';
-$_Lang['Ally_PactNew_TypeDesc_2']   = 'Relations commerciales entre deux alliances.<br/>Permet d\'échanger des ressources plus facilement par l\'intermédiaire des portes quantiques (quand les membres des deux alliances en disposent).<br/><b>Les règles du pacte de non-agression s\'appliquent également.</b>';
+$_Lang['Ally_PactNew_TypeDesc_2']   = 'Relations commerciales entre deux alliances.<br/>Permet d\'échanger des ressources plus facilement par l\'intermédiaire des portails quantiques (quand les membres des deux alliances en disposent).<br/><b>Les règles du pacte de non-agression s\'appliquent également.</b>';
 $_Lang['Ally_PactNew_TypeDesc_3']   = 'Relations amicales entre deux alliances.<br/>Permet d\'envoyer des flottes en protection des planètes et des lunes des membres de l\'autre alliance.<br/><b>Les règles du pacte de non-agression et du pacte commercial s\'appliquent également.</b>';
 $_Lang['Ally_PactNew_TypeDesc_4']   = 'Relations amicales entre deux alliances.<br/>Permet de faire des attaques groupées entre membres des deux alliances.<br/>Quand une alliance déclare la guerre à une autre alliance, toutes les alliances ayant des pactes militaires sont automatiquement incluses dans la guerre.<br/><b>Les règles du pacte de non-agression, du pacte commercial et du pacte défensif s\'appliquent également.</b>';
 
