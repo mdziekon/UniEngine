@@ -1,5 +1,41 @@
 <?php
 
-include("{$_EnginePath}language/en/fleetshortcut.lang");
+$_Lang['Title']                         = 'Favoris';
+
+$_Lang['Your_shortcuts']                = 'Tes favoris';
+$_Lang['add_new_shortcut']              = 'Ajouter un nouveau favori';
+$_Lang['select_shortcut']               = 'Sélectionner le favori';
+$_Lang['edit_shortcut']                 = 'Modifier';
+$_Lang['delete_shortcut']               = 'Supprimer';
+$_Lang['are_you_sure']                  = 'Es-tu sûr de vouloir supprimer ce favori ?';
+$_Lang['goback']                        = 'Retour';
+$_Lang['no_shortcuts']                  = '- Aucun favori -';
+$_Lang['moon_sign']                     = 'L';
+$_Lang['debris_sign']                   = 'CDR';
+$_Lang['planet_sign']                   = 'P';
+
+$_Lang['NameTip']                       = 'Le titre du favori sera formé à partir du titre que tu auras saisi et de son vrai nom (s\'il existe)';
+$_Lang['Name']                          = 'Titre du favori <acronym title="'.$_Lang['NameTip'].'">(facultatif)</acronym>';
+$_Lang['Coordinates']                   = 'Coordonnées';
+$_Lang['Adding_shortcut']               = 'Ajouter un favori';
+$_Lang['Editing_shortcut']              = 'Modifier un favori';
+$_Lang['Deleting_shortcut']             = 'Supprimer un favori';
+$_Lang['Add']                           = 'Ajouter';
+$_Lang['Edit']                          = 'Enregistrer';
+
+$_Lang['list_planet']                   = 'Planète';
+$_Lang['list_debris']                   = 'Champ de ruines';
+$_Lang['list_moon']                     = 'Lune';
+
+$_Lang['Bad_coordinates']               = 'Coordonnées invalides !';
+$_Lang['Forbidden_signs_in_name']       = 'Le titre du favori ne peut contenir que des caractères alphanumériques, des espaces, des tirets bas et des tirets haut !';
+$_Lang['That_target_already_exists']    = 'Ce favori est déjà dans ta liste !';
+$_Lang['Bad_ID_given']                  = 'Favori sélectionné incorrect !';
+$_Lang['This_shortcut_is_not_yours']    = 'Ce favori n\'est pas le tien !';
+$_Lang['NothingChanged']                = 'Aucune modification...';
+
+$_Lang['Shortcut_hasbeen_added']        = 'Le favori a été ajouté !';
+$_Lang['Link_hasbeen_deleted']          = 'La favori a été supprimé !';
+$_Lang['Shortcut_hasbeen_saved']        = 'Modifications enregistrées !';
 
 ?>
