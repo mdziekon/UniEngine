@@ -23,6 +23,18 @@ class Migration_{{MIGRATION_ID}} implements Migrations\Interfaces\Migration {
     public function getPreviousProjectVersion() {
         throw new \Exception("Not implemented yet");
     }
+
+    public function getMinimumMigrationLevelRequired() {
+        // return "";
+
+        throw new \Exception("Not implemented yet");
+    }
+
+    public function getPriorManualActionDescription() {
+        // return "";
+
+        throw new \Exception("Not implemented yet");
+    }
 }
 
 ?>

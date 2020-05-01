@@ -34,11 +34,20 @@ interface Migration {
 
     /**
      * A function indicating whether it's needed to apply any manual work.
-     * Notes should be added to the release, with a description of all necessary steps.
+     * Notes should be displayed to the users in "getPriorManualActionDescription".
+     * Notes should also be added to the release, with a description of all necessary steps.
      *
      * @return bool
      */
     public function isPriorManualActionRequired();
+
+    /**
+     * A function returning description of the manual action required before applying this migration.
+     * Output of this function is ignored if no manual action is required.
+     *
+     * @return string[]
+     */
+    public function getPriorManualActionDescription();
 
     /**
      * A function returning the version prior to this migration being needed.
@@ -49,6 +58,21 @@ interface Migration {
      *      Semver compatible string
      */
     public function getPreviousProjectVersion();
+
+    /**
+     * A function returning the migration ID (date) that has to be already applied
+     * to allow this migration to be applied. When this constraint is not met,
+     * the migrator will prevent any migrations (even the unconstrained ones)
+     * from being applied, essentially requiring the users to roll-back their
+     * code version to one that is still compatible (enforcing incremental migration).
+     *
+     * Returning an empty string means there's no constraint, and the migration can
+     * be applied any time.
+     *
+     * @return string
+     *      Migration ID (date) string
+     */
+    public function getMinimumMigrationLevelRequired();
 }
 
 ?>

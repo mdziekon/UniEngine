@@ -109,6 +109,14 @@ class Migration_20190706_204558 implements Migrations\Interfaces\Migration {
         return "1.0.0";
     }
 
+    public function getMinimumMigrationLevelRequired() {
+        return "";
+    }
+
+    public function getPriorManualActionDescription() {
+        return "";
+    }
+
     private function extractCurrentValue($line) {
         $matches = [];
 
