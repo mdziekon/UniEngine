@@ -2,6 +2,7 @@
 
 namespace UniEngine\Engine\Modules\Flights\Utils\Factories;
 
+use UniEngine\Engine\Modules\Flights;
 use UniEngine\Engine\Includes\Helpers\Common\Collections;
 use UniEngine\Engine\Includes\Helpers\World\Resources;
 
@@ -11,7 +12,9 @@ use UniEngine\Engine\Includes\Helpers\World\Resources;
  * @param array $params['targetPlanet']
  * @param array $params['usersData']
  * @param array $params['usersData']['attackers']
+ *              See: _packUserData() @arg $params
  * @param array $params['usersData']['defenders']
+ *              See: _packUserData() @arg $params
  * @param array $params['combatData']
  * @param number $params['combatCalculationTime']
  * @param array | null $params['moraleData']
@@ -82,8 +85,8 @@ function createCombatReportData($params) {
     $reportData = [
         'init' => [
             'usr' => [
-                'atk' => $usersData['attackers'],
-                'def' => $usersData['defenders'],
+                'atk' => _packUsersReportData([ 'users' => $usersData['attackers'] ]),
+                'def' => _packUsersReportData([ 'users' => $usersData['defenders'] ]),
             ],
             'time' => $params['combatCalculationTime'],
             'date' => $fleetRow['fleet_start_time'],
@@ -134,6 +137,54 @@ function _packRoundsData($roundsData) {
     }
 
     return $packedRoundsData;
+}
+
+/**
+ * @param array $params
+ * @param array $params['users']
+ *              See: _packUserData() @arg $params
+ */
+function _packUsersReportData($params) {
+    return Collections\map(
+        $params['users'],
+        function ($userData) {
+            return _packUserData($userData);
+        }
+    );
+}
+
+/**
+ * @param array $params
+ * @param array $params['fleetRow']
+ * @param array $params['user']
+ * @param array $params['moraleData']
+ */
+function _packUserData($params) {
+    $fleetRow = $params['fleetRow'];
+    $user = $params['user'];
+    $moraleData = $params['moraleData'];
+
+    $userCombatTechs = Flights\Utils\Initializers\initCombatTechnologiesMap([
+        'user' => $user,
+    ]);
+
+    $packedUserData = [
+        'id' => $fleetRow['fleet_owner'],
+        'username' => $user['username'],
+        'techs' => Array2String($userCombatTechs),
+        'pos' => "{$fleetRow['fleet_start_galaxy']}:{$fleetRow['fleet_start_system']}:{$fleetRow['fleet_start_planet']}",
+    ];
+
+    if (!empty($user['ally_tag'])) {
+        $packedUserData['ally'] = $user['ally_tag'];
+    }
+
+    if (MORALE_ENABLED) {
+        $packedUserData['morale'] = $moraleData['morale_level'];
+        $packedUserData['moralePoints'] = $moraleData['morale_points'];
+    }
+
+    return $packedUserData;
 }
 
 ?>
