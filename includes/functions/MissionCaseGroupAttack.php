@@ -123,17 +123,15 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
             'user' => $FleetRow,
         ]);
 
-        if(!empty($FleetRow['ally_tag']))
-        {
+        if (!empty($FleetRow['ally_tag'])) {
             $AttackersAllys[$FleetRow['fleet_owner']] = $FleetRow['ally_id'];
         }
 
         // Select All Fleets from this ACS from $_FleetCache
-        if(!empty($_FleetCache['acsFleets'][$FleetRow['fleet_id']]))
-        {
+        if (!empty($_FleetCache['acsFleets'][$FleetRow['fleet_id']])) {
             $i = 1;
-            foreach($_FleetCache['acsFleets'][$FleetRow['fleet_id']] as $FleetData)
-            {
+
+            foreach ($_FleetCache['acsFleets'][$FleetRow['fleet_id']] as $FleetData) {
                 $attackerUserID = $FleetData['fleet_owner'];
 
                 $AttackingFleets[$i] = String2Array($FleetData['fleet_array']);
@@ -144,12 +142,10 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                     'user' => $FleetData,
                 ]);
 
-                if(!empty($FleetData['ally_tag']))
-                {
+                if (!empty($FleetData['ally_tag'])) {
                     $AttackersAllys[$attackerUserID] = $FleetData['ally_id'];
                 }
-                if(!in_array($attackerUserID, $AttackersIDs))
-                {
+                if (!in_array($attackerUserID, $AttackersIDs)) {
                     $AttackersIDs[] = $attackerUserID;
                 }
                 $AttackingFleetOwners[$FleetData['fleet_id']] = $attackerUserID;
@@ -164,19 +160,17 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 
                         Morale_ReCalculate($FleetData, $FleetRow['fleet_start_time']);
 
-                        $_TempCache['MoraleCache'][$attackerUserID] = array
-                        (
+                        $_TempCache['MoraleCache'][$attackerUserID] = [
                             'level' => $FleetData['morale_level'],
-                            'points' => $FleetData['morale_points']
-                        );
+                            'points' => $FleetData['morale_points'],
+                        ];
 
-                        $AttackersMorale[$attackerUserID] = array
-                        (
+                        $AttackersMorale[$attackerUserID] = [
                             'morale_level' => $FleetData['morale_level'],
                             'morale_droptime' => $FleetData['morale_droptime'],
                             'morale_lastupdate' => $FleetData['morale_lastupdate'],
-                            'morale_points' => $FleetData['morale_points']
-                        );
+                            'morale_points' => $FleetData['morale_points'],
+                        ];
                     }
 
                     $moraleCombatModifiers = Flights\Utils\Modifiers\calculateMoraleCombatModifiers([
@@ -212,15 +206,13 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 
             Morale_ReCalculate($FleetRow, $FleetRow['fleet_start_time']);
 
-            if(empty($AttackersMorale[$FleetRow['fleet_owner']]))
-            {
-                $AttackersMorale[$FleetRow['fleet_owner']] = array
-                (
+            if (empty($AttackersMorale[$FleetRow['fleet_owner']])) {
+                $AttackersMorale[$FleetRow['fleet_owner']] = [
                     'morale_level' => $FleetRow['morale_level'],
                     'morale_droptime' => $FleetRow['morale_droptime'],
                     'morale_lastupdate' => $FleetRow['morale_lastupdate'],
                     'morale_points' => $FleetRow['morale_points']
-                );
+                ];
             }
 
             $moraleCombatModifiers = Flights\Utils\Modifiers\calculateMoraleCombatModifiers([
