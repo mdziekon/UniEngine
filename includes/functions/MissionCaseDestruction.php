@@ -161,7 +161,7 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
                     'fleetCache' => &$_FleetCache,
                     'localCache' => &$_TempCache,
                 ]);
-                $defenderUserID = $defenderDetails['userData']['id'];
+                $defenderUserID = $defenderDetails['fleetOwnerID'];
 
                 $DefendingFleets[$i] = $defenderDetails['ships'];
                 $DefendingFleetID[$i] = $defenderDetails['fleetID'];

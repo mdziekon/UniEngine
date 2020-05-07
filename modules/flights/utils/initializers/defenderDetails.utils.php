@@ -64,6 +64,7 @@ function initDefenderDetails($params) {
 
     return [
         'fleetID' => $fleetData['fleet_id'],
+        'fleetOwnerID' => $fleetOwnerID,
         'ships' => String2Array($fleetData['fleet_array']),
         'combatTechnologies' => $combatTechnologies,
         'userData' => $userData,
