@@ -146,31 +146,31 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 
                 if(!empty($FleetData['ally_tag']))
                 {
-                    $AttackersAllys[$FleetData['fleet_owner']] = $FleetData['ally_id'];
+                    $AttackersAllys[$attackerUserID] = $FleetData['ally_id'];
                 }
-                if(!in_array($FleetData['fleet_owner'], $AttackersIDs))
+                if(!in_array($attackerUserID, $AttackersIDs))
                 {
-                    $AttackersIDs[] = $FleetData['fleet_owner'];
+                    $AttackersIDs[] = $attackerUserID;
                 }
-                $AttackingFleetOwners[$FleetData['fleet_id']] = $FleetData['fleet_owner'];
+                $AttackingFleetOwners[$FleetData['fleet_id']] = $attackerUserID;
 
                 if (MORALE_ENABLED) {
-                    if (empty($_TempCache['MoraleCache'][$FleetData['fleet_owner']])) {
+                    if (empty($_TempCache['MoraleCache'][$attackerUserID])) {
                         Flights\Utils\FleetCache\loadMoraleDataFromCache([
                             'destination' => &$FleetData,
                             'fleetCache' => &$_FleetCache,
-                            'userID' => $FleetData['fleet_owner'],
+                            'userID' => $attackerUserID,
                         ]);
 
                         Morale_ReCalculate($FleetData, $FleetRow['fleet_start_time']);
 
-                        $_TempCache['MoraleCache'][$FleetData['fleet_owner']] = array
+                        $_TempCache['MoraleCache'][$attackerUserID] = array
                         (
                             'level' => $FleetData['morale_level'],
                             'points' => $FleetData['morale_points']
                         );
 
-                        $AttackersMorale[$FleetData['fleet_owner']] = array
+                        $AttackersMorale[$attackerUserID] = array
                         (
                             'morale_level' => $FleetData['morale_level'],
                             'morale_droptime' => $FleetData['morale_droptime'],
@@ -180,7 +180,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                     }
 
                     $moraleCombatModifiers = Flights\Utils\Modifiers\calculateMoraleCombatModifiers([
-                        'moraleLevel' => $_TempCache['MoraleCache'][$FleetData['fleet_owner']]['level'],
+                        'moraleLevel' => $_TempCache['MoraleCache'][$attackerUserID]['level'],
                     ]);
 
                     $AttackingTechs[$i] = array_merge(
