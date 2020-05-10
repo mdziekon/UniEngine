@@ -45,7 +45,9 @@ function initDefenderDetails($params) {
 
             $localCache['MoraleCache'][$fleetOwnerID] = [
                 'level' => $fleetData['morale_level'],
-                'points' => $fleetData['morale_points']
+                'points' => $fleetData['morale_points'],
+                'droptime' => $fleetData['morale_droptime'],
+                'lastupdate' => $fleetData['morale_lastupdate'],
             ];
         } else {
             $userData['morale'] = $localCache['MoraleCache'][$fleetOwnerID]['level'];

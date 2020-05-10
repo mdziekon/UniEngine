@@ -163,6 +163,8 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                         $_TempCache['MoraleCache'][$attackerUserID] = [
                             'level' => $FleetData['morale_level'],
                             'points' => $FleetData['morale_points'],
+                            'droptime' => $FleetData['morale_droptime'],
+                            'lastupdate' => $FleetData['morale_lastupdate'],
                         ];
 
                         $AttackersMorale[$attackerUserID] = [
