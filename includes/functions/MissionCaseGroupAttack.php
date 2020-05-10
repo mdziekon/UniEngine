@@ -166,12 +166,16 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                             'droptime' => $FleetData['morale_droptime'],
                             'lastupdate' => $FleetData['morale_lastupdate'],
                         ];
+                    }
+
+                    if (empty($AttackersMorale[$attackerUserID])) {
+                        $thisMoraleData = $_TempCache['MoraleCache'][$attackerUserID];
 
                         $AttackersMorale[$attackerUserID] = [
-                            'morale_level' => $FleetData['morale_level'],
-                            'morale_droptime' => $FleetData['morale_droptime'],
-                            'morale_lastupdate' => $FleetData['morale_lastupdate'],
-                            'morale_points' => $FleetData['morale_points'],
+                            'morale_level' => $thisMoraleData['level'],
+                            'morale_droptime' => $thisMoraleData['droptime'],
+                            'morale_lastupdate' => $thisMoraleData['lastupdate'],
+                            'morale_points' => $thisMoraleData['points'],
                         ];
                     }
 
