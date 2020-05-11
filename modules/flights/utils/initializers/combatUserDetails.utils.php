@@ -11,7 +11,7 @@ use UniEngine\Engine\Modules\Flights;
  * @param ref $params['fleetCache']
  * @param ref $params['localCache']
  */
-function initDefenderDetails($params) {
+function initCombatUserDetails($params) {
     $combatTimestamp = $params['combatTimestamp'];
     $fleetData = $params['fleetData'];
     $fleetOwnerID = $fleetData['fleet_owner'];

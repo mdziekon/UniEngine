@@ -155,7 +155,7 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
                     continue;
                 }
 
-                $defenderDetails = Flights\Utils\Initializers\initDefenderDetails([
+                $defenderDetails = Flights\Utils\Initializers\initCombatUserDetails([
                     'combatTimestamp' => $FleetRow['fleet_start_time'],
                     'fleetData' => $fleetData,
                     'fleetCache' => &$_FleetCache,
