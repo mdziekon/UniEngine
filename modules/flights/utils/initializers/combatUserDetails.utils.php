@@ -24,11 +24,12 @@ function initCombatUserDetails($params) {
 
     if (MORALE_ENABLED) {
         if (empty($localCache['MoraleCache'][$fleetOwnerID])) {
-            if (!empty($fleetCache['MoraleCache'][$fleetOwnerID])) {
-                $fleetData['morale_level'] = $fleetCache['MoraleCache'][$fleetOwnerID]['level'];
-                $fleetData['morale_droptime'] = $fleetCache['MoraleCache'][$fleetOwnerID]['droptime'];
-                $fleetData['morale_lastupdate'] = $fleetCache['MoraleCache'][$fleetOwnerID]['lastupdate'];
-            }
+            Flights\Utils\FleetCache\loadMoraleDataFromCache([
+                'destination' => &$fleetData,
+                'fleetCache' => &$fleetCache,
+                'userID' => $fleetOwnerID,
+            ]);
+
             Morale_ReCalculate($fleetData, $combatTimestamp);
 
             $localCache['MoraleCache'][$fleetOwnerID] = [
