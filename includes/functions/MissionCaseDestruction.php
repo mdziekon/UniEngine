@@ -28,6 +28,13 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
             'attackers' => [],
             'defenders' => [],
         ];
+        $_TempCache = [
+            'MoraleCache' => [],
+        ];
+        $AttackersIDs = [];
+        $DefendersIDs = [];
+        $AttackingFleets = [];
+        $DefendingFleets = [];
 
         if($IncludeCombatEngine !== true)
         {
@@ -73,38 +80,41 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
 
         // Create data arrays for attacker and main defender
         $CurrentUserID = $FleetRow['fleet_owner'];
+
+        // Initialize main attacker's details
+        $mainAttackerDetails = Flights\Utils\Initializers\initCombatUserDetails([
+            'combatTimestamp' => $FleetRow['fleet_start_time'],
+            'fleetData' => $FleetRow,
+            'fleetCache' => &$_FleetCache,
+            'localCache' => &$_TempCache,
+        ]);
+        $mainAttackerUserID = $mainAttackerDetails['fleetOwnerID'];
+
+        $AttackingFleets[0] = $mainAttackerDetails['ships'];
+        $AttackingTechs[0] = $mainAttackerDetails['combatTechnologies'];
+
+        if (!in_array($mainAttackerUserID, $AttackersIDs)) {
+            $AttackersIDs[] = $mainAttackerUserID;
+        }
+
+        $reportUsersData['attackers'][0] = [
+            'fleetRow' => $FleetRow,
+            'user' => $FleetRow,
+            'moraleData' => [
+                'morale_points' => $_TempCache['MoraleCache'][$mainAttackerUserID]['points'],
+                'morale_level' => $_TempCache['MoraleCache'][$mainAttackerUserID]['level'],
+            ],
+        ];
+
+        // Initialize main defender's details
         $DefendersIDs[] = $TargetUser['id'];
-        $AttackersIDs[] = $FleetRow['fleet_owner'];
-        $AttackingFleets = array();
-        $DefendingFleets = array();
 
         $DefendingTechs[0] = Flights\Utils\Initializers\initCombatTechnologiesMap([
             'user' => $TargetUser,
         ]);
 
-        $AttackingTechs[0] = Flights\Utils\Initializers\initCombatTechnologiesMap([
-            'user' => $FleetRow,
-        ]);
-
         // MoraleSystem Init
         if (MORALE_ENABLED) {
-            Flights\Utils\FleetCache\loadMoraleDataFromCache([
-                'destination' => &$FleetRow,
-                'fleetCache' => &$_FleetCache,
-                'userID' => $FleetRow['fleet_owner'],
-            ]);
-
-            Morale_ReCalculate($FleetRow, $FleetRow['fleet_start_time']);
-
-            $moraleCombatModifiers = Flights\Utils\Modifiers\calculateMoraleCombatModifiers([
-                'moraleLevel' => $FleetRow['morale_level'],
-            ]);
-
-            $AttackingTechs[0] = array_merge(
-                $AttackingTechs[0],
-                $moraleCombatModifiers
-            );
-
             if (!$IsAbandoned) {
                 Flights\Utils\FleetCache\loadMoraleDataFromCache([
                     'destination' => &$TargetUser,
@@ -125,12 +135,6 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
             }
         }
 
-        $reportUsersData['attackers'][0] = [
-            'fleetRow' => $FleetRow,
-            'user' => $FleetRow,
-            'moraleData' => $FleetRow,
-        ];
-
         $reportUsersData['defenders'][0] = [
             'fleetRow' => [
                 'fleet_owner' => $TargetUser['id'],
@@ -144,10 +148,6 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
 
         // Select All Defending Fleets on the Orbit from $_FleetCache
         if (!empty($_FleetCache['defFleets'][$FleetRow['fleet_end_id']])) {
-            $_TempCache = [
-                'MoraleCache' => [],
-            ];
-
             $i = 1;
 
             foreach ($_FleetCache['defFleets'][$FleetRow['fleet_end_id']] as $fleetData) {
@@ -216,9 +216,6 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
                 $DefendingFleets[0][$ElementID] = $TargetPlanet[$_Vars_GameElements[$ElementID]];
             }
         }
-
-        // Create attacker fleet array
-        $AttackingFleets[0] = String2Array($FleetRow['fleet_array']);
 
         $StartTime = microtime(true);
 
