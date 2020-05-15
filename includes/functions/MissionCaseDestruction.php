@@ -84,7 +84,7 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
         // Initialize main attacker's details
         $mainAttackerDetails = Flights\Utils\Initializers\initCombatUserDetails([
             'combatTimestamp' => $FleetRow['fleet_start_time'],
-            'fleetData' => $FleetRow,
+            'fleetData' => &$FleetRow,
             'fleetCache' => &$_FleetCache,
             'localCache' => &$_TempCache,
         ]);
@@ -157,7 +157,7 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
 
                 $defenderDetails = Flights\Utils\Initializers\initCombatUserDetails([
                     'combatTimestamp' => $FleetRow['fleet_start_time'],
-                    'fleetData' => $fleetData,
+                    'fleetData' => &$fleetData,
                     'fleetCache' => &$_FleetCache,
                     'localCache' => &$_TempCache,
                 ]);

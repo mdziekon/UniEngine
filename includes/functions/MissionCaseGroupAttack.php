@@ -84,7 +84,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
 
                 $defenderDetails = Flights\Utils\Initializers\initCombatUserDetails([
                     'combatTimestamp' => $FleetRow['fleet_start_time'],
-                    'fleetData' => $fleetData,
+                    'fleetData' => &$fleetData,
                     'fleetCache' => &$_FleetCache,
                     'localCache' => &$_TempCache,
                 ]);
@@ -116,7 +116,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
         // Initialize main attacker's details
         $mainAttackerDetails = Flights\Utils\Initializers\initCombatUserDetails([
             'combatTimestamp' => $FleetRow['fleet_start_time'],
-            'fleetData' => $FleetRow,
+            'fleetData' => &$FleetRow,
             'fleetCache' => &$_FleetCache,
             'localCache' => &$_TempCache,
         ]);
@@ -164,7 +164,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
             foreach ($_FleetCache['acsFleets'][$FleetRow['fleet_id']] as $fleetData) {
                 $attackerDetails = Flights\Utils\Initializers\initCombatUserDetails([
                     'combatTimestamp' => $FleetRow['fleet_start_time'],
-                    'fleetData' => $fleetData,
+                    'fleetData' => &$fleetData,
                     'fleetCache' => &$_FleetCache,
                     'localCache' => &$_TempCache,
                 ]);

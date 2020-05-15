@@ -7,13 +7,13 @@ use UniEngine\Engine\Modules\Flights;
 /**
  * @param array $params
  * @param string $params['combatTimestamp']
- * @param array $params['fleetData']
+ * @param ref $params['fleetData']
  * @param ref $params['fleetCache']
  * @param ref $params['localCache']
  */
 function initCombatUserDetails($params) {
     $combatTimestamp = $params['combatTimestamp'];
-    $fleetData = $params['fleetData'];
+    $fleetData = &$params['fleetData'];
     $fleetOwnerID = $fleetData['fleet_owner'];
     $fleetCache = &$params['fleetCache'];
     $localCache = &$params['localCache'];
