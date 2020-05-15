@@ -123,7 +123,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
         $mainAttackerUserID = $mainAttackerDetails['fleetOwnerID'];
 
         $AttackingFleetID[0] = $FleetRow['fleet_id'];
-        // $AttackingFleets[0] = $mainAttackerDetails['ships'];
+        $AttackingFleets[0] = $mainAttackerDetails['ships'];
         $AttackingTechs[0] = $mainAttackerDetails['combatTechnologies'];
         $AttackingFleetOwners[$FleetRow['fleet_id']] = $mainAttackerUserID;
         $attackingFleetRowsById[$FleetRow['fleet_id']] = $FleetRow;
@@ -284,9 +284,6 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                 $DefendingFleets[0][$ElementID] = $TargetPlanet[$_Vars_GameElements[$ElementID]];
             }
         }
-
-        // Create attacker fleet array
-        $AttackingFleets[0] = $mainAttackerDetails['ships'];
 
         $StartTime = microtime(true);
 
