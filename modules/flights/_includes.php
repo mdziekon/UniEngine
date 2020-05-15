@@ -13,6 +13,7 @@ call_user_func(function () {
     include($includePath . './utils/calculations/calculateResourcesLoss.utils.php');
     include($includePath . './utils/calculations/calculateUnitsRebuild.utils.php');
     include($includePath . './utils/factories/createCombatMessages.utils.php');
+    include($includePath . './utils/factories/createCombatReportData.utils.php');
     include($includePath . './utils/factories/createCombatReportMoraleEntry.utils.php');
     include($includePath . './utils/factories/createFleetDevelopmentLogEntries.utils.php');
     include($includePath . './utils/factories/createFleetUpdateEntry.utils.php');
@@ -20,7 +21,7 @@ call_user_func(function () {
     include($includePath . './utils/fleetCache/morale.utils.php');
     include($includePath . './utils/fleetCache/updateUserStats.utils.php');
     include($includePath . './utils/helpers/hasLostAnyDefenseSystem.utils.php');
-    include($includePath . './utils/initializers/defenderDetails.utils.php');
+    include($includePath . './utils/initializers/combatUserDetails.utils.php');
     include($includePath . './utils/initializers/technologies.utils.php');
     include($includePath . './utils/initializers/userStats.utils.php');
     include($includePath . './utils/modifiers/calculateMoraleModifiers.utils.php');

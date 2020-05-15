@@ -14,6 +14,17 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
     if($FleetRow['calcType'] == 1)
     {
         $TriggerTasksCheck = array();
+        $reportUsersData = [
+            'attackers' => [],
+            'defenders' => [],
+        ];
+        $_TempCache = [
+            'MoraleCache' => [],
+        ];
+        $AttackersIDs = [];
+        $DefendersIDs = [];
+        $AttackingFleets = [];
+        $DefendingFleets = [];
 
         if($IncludeCombatEngine !== true)
         {
@@ -46,7 +57,6 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
         }
 
         $TargetUserID = $TargetPlanet['id_owner'];
-        $TargetPlanetGetName = $TargetPlanet['name'];
         $TargetPlanetID = $TargetPlanet['id'];
 
         if(!$IsAbandoned)
@@ -60,64 +70,41 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
 
         // Create data arrays for attacker and main defender
         $CurrentUserID = $FleetRow['fleet_owner'];
+
+        // Initialize main attacker's details
+        $mainAttackerDetails = Flights\Utils\Initializers\initCombatUserDetails([
+            'combatTimestamp' => $FleetRow['fleet_start_time'],
+            'fleetData' => &$FleetRow,
+            'fleetCache' => &$_FleetCache,
+            'localCache' => &$_TempCache,
+        ]);
+        $mainAttackerUserID = $mainAttackerDetails['fleetOwnerID'];
+
+        $AttackingFleets[0] = $mainAttackerDetails['ships'];
+        $AttackingTechs[0] = $mainAttackerDetails['combatTechnologies'];
+
+        if (!in_array($mainAttackerUserID, $AttackersIDs)) {
+            $AttackersIDs[] = $mainAttackerUserID;
+        }
+
+        $reportUsersData['attackers'][0] = [
+            'fleetRow' => $FleetRow,
+            'user' => $FleetRow,
+            'moraleData' => [
+                'morale_points' => $_TempCache['MoraleCache'][$mainAttackerUserID]['points'],
+                'morale_level' => $_TempCache['MoraleCache'][$mainAttackerUserID]['level'],
+            ],
+        ];
+
+        // Initialize main defender's details
         $DefendersIDs[] = $TargetUser['id'];
-        $AttackersIDs[] = $FleetRow['fleet_owner'];
-        $AttackingFleets = array();
-        $DefendingFleets = array();
 
         $DefendingTechs[0] = Flights\Utils\Initializers\initCombatTechnologiesMap([
             'user' => $TargetUser,
         ]);
 
-        $DefendersData[0] = array
-        (
-            'id' => $TargetUser['id'],
-            'username' => $TargetUser['username'],
-            'techs' => Array2String($DefendingTechs[0]),
-            'pos' => "{$FleetRow['fleet_end_galaxy']}:{$FleetRow['fleet_end_system']}:{$FleetRow['fleet_end_planet']}"
-        );
-        if(!empty($TargetUser['ally_tag']))
-        {
-            $DefendersData[0]['ally'] = $TargetUser['ally_tag'];
-        }
-
-        $AttackingTechs[0] = Flights\Utils\Initializers\initCombatTechnologiesMap([
-            'user' => $FleetRow,
-        ]);
-
-        $AttackersData[0] = array
-        (
-            'id' => $FleetRow['fleet_owner'],
-            'username' => $FleetRow['username'],
-            'techs' => Array2String($AttackingTechs[0]),
-            'pos' => "{$FleetRow['fleet_start_galaxy']}:{$FleetRow['fleet_start_system']}:{$FleetRow['fleet_start_planet']}"
-        );
-        if(!empty($FleetRow['ally_tag']))
-        {
-            $AttackersData[0]['ally'] = $FleetRow['ally_tag'];
-        }
-
         // MoraleSystem Init
         if (MORALE_ENABLED) {
-            Flights\Utils\FleetCache\loadMoraleDataFromCache([
-                'destination' => &$FleetRow,
-                'fleetCache' => &$_FleetCache,
-                'userID' => $FleetRow['fleet_owner'],
-            ]);
-
-            Morale_ReCalculate($FleetRow, $FleetRow['fleet_start_time']);
-            $AttackersData[0]['morale'] = $FleetRow['morale_level'];
-            $AttackersData[0]['moralePoints'] = $FleetRow['morale_points'];
-
-            $moraleCombatModifiers = Flights\Utils\Modifiers\calculateMoraleCombatModifiers([
-                'moraleLevel' => $FleetRow['morale_level'],
-            ]);
-
-            $AttackingTechs[0] = array_merge(
-                $AttackingTechs[0],
-                $moraleCombatModifiers
-            );
-
             if (!$IsAbandoned) {
                 Flights\Utils\FleetCache\loadMoraleDataFromCache([
                     'destination' => &$TargetUser,
@@ -126,8 +113,6 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
                 ]);
 
                 Morale_ReCalculate($TargetUser, $FleetRow['fleet_start_time']);
-                $DefendersData[0]['morale'] = $TargetUser['morale_level'];
-                $DefendersData[0]['moralePoints'] = $TargetUser['morale_points'];
 
                 $moraleCombatModifiers = Flights\Utils\Modifiers\calculateMoraleCombatModifiers([
                     'moraleLevel' => $TargetUser['morale_level'],
@@ -140,12 +125,19 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
             }
         }
 
+        $reportUsersData['defenders'][0] = [
+            'fleetRow' => [
+                'fleet_owner' => $TargetUser['id'],
+                'fleet_start_galaxy' => $TargetPlanet['galaxy'],
+                'fleet_start_system' => $TargetPlanet['system'],
+                'fleet_start_planet' => $TargetPlanet['planet'],
+            ],
+            'user' => $TargetUser,
+            'moraleData' => $TargetUser,
+        ];
+
         // Select All Defending Fleets on the Orbit from $_FleetCache
         if (!empty($_FleetCache['defFleets'][$FleetRow['fleet_end_id']])) {
-            $_TempCache = [
-                'MoraleCache' => [],
-            ];
-
             $i = 1;
 
             foreach ($_FleetCache['defFleets'][$FleetRow['fleet_end_id']] as $fleetData) {
@@ -153,24 +145,32 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
                     continue;
                 }
 
-                $defenderDetails = Flights\Utils\Initializers\initDefenderDetails([
+                $defenderDetails = Flights\Utils\Initializers\initCombatUserDetails([
                     'combatTimestamp' => $FleetRow['fleet_start_time'],
-                    'fleetData' => $fleetData,
+                    'fleetData' => &$fleetData,
                     'fleetCache' => &$_FleetCache,
                     'localCache' => &$_TempCache,
                 ]);
-                $defenderUserID = $defenderDetails['userData']['id'];
+                $defenderUserID = $defenderDetails['fleetOwnerID'];
 
                 $DefendingFleets[$i] = $defenderDetails['ships'];
                 $DefendingFleetID[$i] = $defenderDetails['fleetID'];
                 $DefendingTechs[$i] = $defenderDetails['combatTechnologies'];
-                $DefendersData[$i] = $defenderDetails['userData'];
 
                 $DefendingFleetOwners[$defenderDetails['fleetID']] = $defenderUserID;
 
                 if (!in_array($defenderUserID, $DefendersIDs)) {
                     $DefendersIDs[] = $defenderUserID;
                 }
+
+                $reportUsersData['defenders'][$i] = [
+                    'fleetRow' => $fleetData,
+                    'user' => $fleetData,
+                    'moraleData' => [
+                        'morale_points' => $_TempCache['MoraleCache'][$defenderUserID]['points'],
+                        'morale_level' => $_TempCache['MoraleCache'][$defenderUserID]['level'],
+                    ],
+                ];
 
                 $i += 1;
             }
@@ -207,9 +207,6 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
             }
         }
 
-        // Create attacker fleet array
-        $AttackingFleets[0] = String2Array($FleetRow['fleet_array']);
-
         $StartTime = microtime(true);
 
         // Now start Combat calculations
@@ -219,9 +216,6 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
         $EndTime = microtime(true);
         $totaltime = sprintf('%0.6f', $EndTime - $StartTime);
 
-        $RealDebrisMetalAtk = 0;
-        $RealDebrisCrystalAtk = 0;
-        $RealDebrisDeuteriumAtk = 0;
         $RealDebrisMetalDef = 0;
         $RealDebrisCrystalDef = 0;
         $RealDebrisDeuteriumDef = 0;
@@ -471,9 +465,6 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
             'debrisRecoveryPercentages' => $debrisRecoveryPercentages,
         ]);
 
-        $RealDebrisMetalAtk += $attackersResourceLosses['realLoss']['metal'];
-        $RealDebrisCrystalAtk += $attackersResourceLosses['realLoss']['crystal'];
-        $RealDebrisDeuteriumAtk += $attackersResourceLosses['realLoss']['deuterium'];
         $TotalLostMetal += $attackersResourceLosses['recoverableLoss']['metal'];
         $TotalLostCrystal += $attackersResourceLosses['recoverableLoss']['crystal'];
 
@@ -629,59 +620,42 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
             $reportMoraleEntries = $moraleUpdate['reportMoraleEntries'];
         }
 
-        // CREATE BATTLE REPORT
-        $ReportData['init']['usr']['atk'] = $AttackersData;
-        $ReportData['init']['usr']['def'] = $DefendersData;
-        $ReportData['init']['time'] = $totaltime;
-        $ReportData['init']['date'] = $FleetRow['fleet_start_time'];
+        $combatReportData = Flights\Utils\Factories\createCombatReportData([
+            'fleetRow' => $FleetRow,
+            'targetPlanet' => $TargetPlanet,
+            'usersData' => [
+                'attackers' => $reportUsersData['attackers'],
+                'defenders' => $reportUsersData['defenders'],
+            ],
+            'combatData' => $Combat,
+            'combatCalculationTime' => $totaltime,
+            'moraleData' => $reportMoraleEntries,
+            'totalResourcesPillage' => $resourcesPillage,
+            'resourceLosses' => [
+                'attackers' => $attackersResourceLosses,
+                'defenders' => $defendersResourceLosses,
+            ],
+            'moonCreationData' => [
+                'hasBeenCreated' => $MoonHasBeenCreated,
+                'normalizedChance' => $MoonChance,
+                'totalChance' => $TotalMoonChance,
+            ],
+            'moonDestructionData' => null,
+        ]);
 
-        $ReportData['init']['result'] = $Result;
-        $ReportData['init']['met'] = $StolenMet;
-        $ReportData['init']['cry'] = $StolenCry;
-        $ReportData['init']['deu'] = $StolenDeu;
-        $ReportData['init']['deb_met'] = $TotalLostMetal;
-        $ReportData['init']['deb_cry'] = $TotalLostCrystal;
-        $ReportData['init']['moon_chance'] = $MoonChance;
-        $ReportData['init']['moon_created'] = $MoonHasBeenCreated;
-        $ReportData['init']['total_moon_chance'] = $TotalMoonChance;
-        $ReportData['init']['moon_destroyed'] = false;
-        $ReportData['init']['moon_des_chance'] = 0;
-        $ReportData['init']['fleet_destroyed'] = false;
-        $ReportData['init']['fleet_des_chance'] = 0;
-        $ReportData['init']['planet_name'] = $TargetPlanetGetName;
-        $ReportData['init']['onMoon'] = ($FleetRow['fleet_end_type'] == 3 ? true : false);
-        $ReportData['init']['atk_lost'] = $RealDebrisMetalAtk + $RealDebrisCrystalAtk + $RealDebrisDeuteriumAtk;
-        $ReportData['init']['def_lost'] = $RealDebrisMetalDef + $RealDebrisCrystalDef + $RealDebrisDeuteriumDef;
+        $haveAttackersBeenImmediatellyDestroyed = (
+            count($RoundsData) <= 2 &&
+            $Result === COMBAT_DEF
+        );
+        $areAttackersAllowedToReadReportDetails = (
+            !$haveAttackersBeenImmediatellyDestroyed
+        );
 
-        if (!empty($reportMoraleEntries)) {
-            $ReportData['morale'] = $reportMoraleEntries;
-        }
-
-        foreach($RoundsData as $RoundKey => $RoundData)
-        {
-            foreach($RoundData as $MainKey => $RoundData2)
-            {
-                if(!empty($RoundData2['ships']))
-                {
-                    foreach($RoundData2['ships'] as $UserKey => $UserData)
-                    {
-                        $RoundsData[$RoundKey][$MainKey]['ships'][$UserKey] = Array2String($UserData);
-                    }
-                }
-            }
-        }
-        $ReportData['rounds'] = $RoundsData;
-
-        if(count($RoundsData) <= 2 AND $Result === COMBAT_DEF)
-        {
-            $DisallowAttackers = true;
-        }
-        else
-        {
-            $DisallowAttackers = false;
-        }
-
-        $CreatedReport = CreateBattleReport($ReportData, array('atk' => $AttackersIDs, 'def' => $DefendersIDs), $DisallowAttackers);
+        $CreatedReport = CreateBattleReport(
+            $combatReportData,
+            [ 'atk' => $AttackersIDs, 'def' => $DefendersIDs ],
+            !$areAttackersAllowedToReadReportDetails
+        );
         $ReportID = $CreatedReport['ID'];
 
         $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_ReportID'] = $ReportID;
