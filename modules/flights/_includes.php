@@ -6,6 +6,7 @@ call_user_func(function () {
 
     $includePath = $_EnginePath . 'modules/flights/';
 
+    include($includePath . './utils/calculations/calculateMoonCreationRoll.utils.php');
     include($includePath . './utils/calculations/calculatePostCombatMorale.utils.php');
     include($includePath . './utils/calculations/calculatePostCombatMoraleUpdates.utils.php');
     include($includePath . './utils/calculations/calculatePillageFactor.utils.php');
