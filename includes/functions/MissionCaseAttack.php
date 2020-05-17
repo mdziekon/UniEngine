@@ -568,7 +568,7 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
                 $TriggerTasksCheck['CREATE_MOON'] = true;
                 $moonHasBeenCreated = true;
 
-                $UserDev_UpPl[] = "L,{$CreatedMoonID}";
+                $UserDev_UpPl[] = "L,{$newMoonID}";
 
                 foreach ($AttackersIDs as $UserID) {
                     $UserStatsData[$UserID]['moons_created'] += 1;
