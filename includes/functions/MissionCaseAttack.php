@@ -561,7 +561,7 @@ function MissionCaseAttack($FleetRow, &$_FleetCache)
                 $FleetRow['fleet_end_planet'],
                 $TargetUserID,
                 '',
-                $MoonChance
+                $moonCreationRollResult['boundedMoonChance']
             );
 
             if ($newMoonID !== false) {
