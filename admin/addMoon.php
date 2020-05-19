@@ -30,7 +30,7 @@ if(isset($_POST['sent']) && $_POST['sent'] == '1')
 
     if($Set_Diameter <= 0)
     {
-        $Set_Diameter = false;
+        $Set_Diameter = null;
     }
 
     if($Set_PlanetID > 0)
@@ -44,7 +44,20 @@ if(isset($_POST['sent']) && $_POST['sent'] == '1')
             if($PlData['id_owner'] > 0)
             {
                 include($_EnginePath.'includes/functions/CreateOneMoonRecord.php');
-                if(CreateOneMoonRecord($PlData['galaxy'], $PlData['system'], $PlData['planet'], $PlData['id_owner'], $Set_MoonName, 20, $Set_Diameter) != false)
+
+                $moonCreationResult = CreateOneMoonRecord([
+                    'coordinates' => [
+                        'galaxy' => $PlData['galaxy'],
+                        'system' => $PlData['system'],
+                        'planet' => $PlData['planet'],
+                    ],
+                    'ownerID' => $PlData['id_owner'],
+                    'moonName' => $Set_MoonName,
+                    'moonCreationChance' => 20,
+                    'fixedDiameter' => $Set_Diameter,
+                ]);
+
+                if ($moonCreationResult != false)
                 {
                     $_Lang['PHP_InfoBox_Text'] = $_Lang['AddMoon_Success'];
                     $_Lang['PHP_InfoBox_Color'] = 'lime';

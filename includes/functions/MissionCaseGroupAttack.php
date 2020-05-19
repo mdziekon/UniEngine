@@ -804,14 +804,16 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
             $moonCreationRollResult['hasMoonBeenCreated'] &&
             $TargetPlanet['planet_type'] == 1
         ) {
-            $newMoonID = CreateOneMoonRecord(
-                $FleetRow['fleet_end_galaxy'],
-                $FleetRow['fleet_end_system'],
-                $FleetRow['fleet_end_planet'],
-                $TargetUserID,
-                '',
-                $moonCreationRollResult['boundedMoonChance']
-            );
+            $newMoonID = CreateOneMoonRecord([
+                'coordinates' => [
+                    'galaxy' => $FleetRow['fleet_end_galaxy'],
+                    'system' => $FleetRow['fleet_end_system'],
+                    'planet' => $FleetRow['fleet_end_planet'],
+                ],
+                'ownerID' => $TargetUserID,
+                'moonName' => null,
+                'moonCreationChance' => $moonCreationRollResult['boundedMoonChance'],
+            ]);
 
             if ($newMoonID !== false) {
                 foreach ($AttackersIDs as $UserID) {

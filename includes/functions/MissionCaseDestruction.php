@@ -742,14 +742,16 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
             // FIXME: CreateOneMoonRecord won't allow to create this moon
             // because the entry still exists. Add a parameter to allow to skip
             // that check and create the newly formed moon anyway.
-            $newMoonID = CreateOneMoonRecord(
-                $FleetRow['fleet_end_galaxy'],
-                $FleetRow['fleet_end_system'],
-                $FleetRow['fleet_end_planet'],
-                $TargetUserID,
-                '',
-                $moonCreationRollResult['boundedMoonChance']
-            );
+            $newMoonID = CreateOneMoonRecord([
+                'coordinates' => [
+                    'galaxy' => $FleetRow['fleet_end_galaxy'],
+                    'system' => $FleetRow['fleet_end_system'],
+                    'planet' => $FleetRow['fleet_end_planet'],
+                ],
+                'ownerID' => $TargetUserID,
+                'moonName' => null,
+                'moonCreationChance' => $moonCreationRollResult['boundedMoonChance'],
+            ]);
 
             if ($newMoonID !== false) {
                 $TriggerTasksCheck['atk']['CREATE_MOON'] = true;
