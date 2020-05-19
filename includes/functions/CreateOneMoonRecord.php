@@ -1,43 +1,53 @@
 <?php
 
-function CreateOneMoonRecord($Galaxy, $System, $Planet, $Owner, $MoonName, $Chance, $SetDiameter = false)
-{
+/**
+ * @param array $params
+ * @param array $params['coordinates']
+ * @param string $params['ownerID']
+ * @param string | null $params['moonName']
+ * @param number | null $params['moonCreationChance']
+ * @param number | null $params['fixedDiameter']
+ */
+function CreateOneMoonRecord($params) {
     global $_Lang;
 
-    $QryGetMoonGalaxyData = "SELECT `galaxy_id`, `id_moon` FROM {{table}} WHERE `galaxy` = '{$Galaxy}' AND `system` = '{$System}' AND `planet` = '{$Planet}';";
+    $coordinates = $params['coordinates'];
+
+    $QryGetMoonGalaxyData = "SELECT `galaxy_id`, `id_moon` FROM {{table}} WHERE `galaxy` = '{$coordinates['galaxy']}' AND `system` = '{$coordinates['system']}' AND `planet` = '{$coordinates['planet']}';";
     $MoonGalaxy = doquery($QryGetMoonGalaxyData, 'galaxy', true);
     if($MoonGalaxy['id_moon'] == 0)
     {
-        $QryGetMoonPlanetData = "SELECT `id`, `temp_min`, `temp_max` FROM {{table}} WHERE `galaxy` = '{$Galaxy}' AND `system` = '{$System}' AND `planet` = '{$Planet}';";
+        $QryGetMoonPlanetData = "SELECT `id`, `temp_min`, `temp_max` FROM {{table}} WHERE `galaxy` = '{$coordinates['galaxy']}' AND `system` = '{$coordinates['system']}' AND `planet` = '{$coordinates['planet']}';";
         $MoonPlanet = doquery($QryGetMoonPlanetData, 'planets', true);
 
         if($MoonPlanet['id'] != 0)
         {
-            if($SetDiameter === false || !($SetDiameter >= 2000 && $SetDiameter <= 10000))
+            if(!isset($params['fixedDiameter']) || !($params['fixedDiameter'] >= 2000 && $params['fixedDiameter'] <= 10000))
             {
-                $Diameter_Min = 2000 + ($Chance * 100);
-                $Diameter_Max = 6000 + ($Chance * 200);
+                $Diameter_Min = 2000 + ($params['moonCreationChance'] * 100);
+                $Diameter_Max = 6000 + ($params['moonCreationChance'] * 200);
                 $Diameter = rand($Diameter_Min, $Diameter_Max);
             }
             else
             {
-                $Diameter = $SetDiameter;
+                $Diameter = $params['fixedDiameter'];
             }
             $RandTemp = rand(10, 45);
             $mintemp = $MoonPlanet['temp_min'] - $RandTemp;
             $maxtemp = $MoonPlanet['temp_max'] - $RandTemp;
 
-            if(empty($MoonName))
-            {
-                $MoonName = $_Lang['sys_moon'];
-            }
+            $newMoonName = (
+                !empty($params['moonName']) ?
+                    $params['moonName'] :
+                    $_Lang['sys_moon']
+            );
 
             $QryInsertMoonInPlanet = "INSERT INTO {{table}} SET ";
-            $QryInsertMoonInPlanet .= "`name` = '$MoonName', ";
-            $QryInsertMoonInPlanet .= "`id_owner` = '{$Owner}', ";
-            $QryInsertMoonInPlanet .= "`galaxy` = '{$Galaxy}', ";
-            $QryInsertMoonInPlanet .= "`system` = '{$System}', ";
-            $QryInsertMoonInPlanet .= "`planet` = '{$Planet}', ";
+            $QryInsertMoonInPlanet .= "`name` = '{$newMoonName}', ";
+            $QryInsertMoonInPlanet .= "`id_owner` = '{$params['ownerID']}', ";
+            $QryInsertMoonInPlanet .= "`galaxy` = '{$coordinates['galaxy']}', ";
+            $QryInsertMoonInPlanet .= "`system` = '{$coordinates['system']}', ";
+            $QryInsertMoonInPlanet .= "`planet` = '{$coordinates['planet']}', ";
             $QryInsertMoonInPlanet .= "`last_update` = UNIX_TIMESTAMP(), ";
             $QryInsertMoonInPlanet .= "`planet_type` = 3, ";
             $QryInsertMoonInPlanet .= "`image` = 'mond', ";
@@ -57,7 +67,7 @@ function CreateOneMoonRecord($Galaxy, $System, $Planet, $Owner, $MoonName, $Chan
             doquery($QryInsertMoonInPlanet, 'planets');
 
             // Select CreatedMoon ID
-            $QrySelectPlanet = "SELECT `id` FROM {{table}} WHERE `galaxy` = '{$Galaxy}' AND `system` = '{$System}' AND `planet` = '{$Planet}' AND `planet_type` = 3;";
+            $QrySelectPlanet = "SELECT `id` FROM {{table}} WHERE `galaxy` = '{$coordinates['galaxy']}' AND `system` = '{$coordinates['system']}' AND `planet` = '{$coordinates['planet']}' AND `planet_type` = 3;";
             $GetPlanetID = doquery($QrySelectPlanet, 'planets', true);
 
             $QryUpdateMoonInGalaxy = "UPDATE {{table}} SET ";
