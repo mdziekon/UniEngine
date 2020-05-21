@@ -12,6 +12,11 @@ function CreateOneMoonRecord($params) {
     global $_Lang;
 
     $coordinates = $params['coordinates'];
+    $fixedDiameter = (
+        isset($params['fixedDiameter']) ?
+        $params['fixedDiameter'] :
+        null
+    );
 
     $query_GetMoonGalaxyRow = (
         "SELECT `galaxy_id`, `id_moon` " .
@@ -50,16 +55,20 @@ function CreateOneMoonRecord($params) {
 
     $coordinatesPlanetRow = $result_GetCoordinatesPlanetRow;
 
-    if(!isset($params['fixedDiameter']) || !($params['fixedDiameter'] >= 2000 && $params['fixedDiameter'] <= 10000))
-    {
+    if (
+        $fixedDiameter === null ||
+        !(
+            $fixedDiameter >= 2000 &&
+            $fixedDiameter <= 10000
+        )
+    ) {
         $Diameter_Min = 2000 + ($params['moonCreationChance'] * 100);
         $Diameter_Max = 6000 + ($params['moonCreationChance'] * 200);
         $Diameter = rand($Diameter_Min, $Diameter_Max);
-    }
-    else
-    {
+    } else {
         $Diameter = $params['fixedDiameter'];
     }
+
     $RandTemp = rand(10, 45);
     $mintemp = $coordinatesPlanetRow['temp_min'] - $RandTemp;
     $maxtemp = $coordinatesPlanetRow['temp_max'] - $RandTemp;
