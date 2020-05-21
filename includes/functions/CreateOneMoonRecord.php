@@ -24,7 +24,10 @@ function CreateOneMoonRecord($params) {
     );
     $result_GetMoonGalaxyRow = doquery($query_GetMoonGalaxyRow, 'galaxy', true);
 
-    if ($result_GetMoonGalaxyRow['id_moon'] != 0) {
+    if (
+        empty($result_GetMoonGalaxyRow) ||
+        $result_GetMoonGalaxyRow['id_moon'] != 0
+    ) {
         return false;
     }
 
