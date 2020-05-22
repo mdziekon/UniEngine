@@ -14,86 +14,14 @@ if(!CheckAuth('supportadmin'))
     AdminMessage($_Lang['sys_noalloaw'], $_Lang['sys_noaccess']);
 }
 
-includeLang('admin/addMoon');
+include($_EnginePath . 'modules/admin/_includes.php');
 
-$PageTpl = gettemplate('admin/addMoon');
+use UniEngine\Engine\Modules\Admin\Screens\MoonCreationView;
 
-if(isset($_POST['sent']) && $_POST['sent'] == '1')
-{
-    $_Lang['PHP_Ins_PlanetID'] = $_POST['planetID'];
-    $_Lang['PHP_Ins_Name'] = $_POST['name'];
-    $_Lang['PHP_Ins_Diameter'] = $_POST['diameter'];
+$pageView = MoonCreationView\render([
+    'input' => $_POST,
+]);
 
-    $Set_PlanetID = round(floatval($_POST['planetID']));
-    $Set_MoonName = $_POST['name'];
-    $Set_Diameter = round(floatval($_POST['diameter']));
-
-    if($Set_Diameter <= 0)
-    {
-        $Set_Diameter = null;
-    }
-
-    if($Set_PlanetID > 0)
-    {
-        if(empty($Set_MoonName) || preg_match(REGEXP_PLANETNAME_ABSOLUTE, $Set_MoonName))
-        {
-            $Query_GetPlanetData = "SELECT `galaxy`, `system`, `planet`, `id_owner` FROM {{table}} WHERE `id` = {$Set_PlanetID} LIMIT 1; -- admin/addMoon.php - Query #1";
-            $QResult_GetPlanetData = doquery($Query_GetPlanetData, 'planets', true);
-            $PlData = &$QResult_GetPlanetData;
-
-            if($PlData['id_owner'] > 0)
-            {
-                include($_EnginePath.'includes/functions/CreateOneMoonRecord.php');
-
-                $moonCreationResult = CreateOneMoonRecord([
-                    'coordinates' => [
-                        'galaxy' => $PlData['galaxy'],
-                        'system' => $PlData['system'],
-                        'planet' => $PlData['planet'],
-                    ],
-                    'ownerID' => $PlData['id_owner'],
-                    'moonName' => $Set_MoonName,
-                    'moonCreationChance' => 20,
-                    'fixedDiameter' => $Set_Diameter,
-                ]);
-
-                if ($moonCreationResult != false)
-                {
-                    $_Lang['PHP_InfoBox_Text'] = $_Lang['AddMoon_Success'];
-                    $_Lang['PHP_InfoBox_Color'] = 'lime';
-                }
-                else
-                {
-                    $_Lang['PHP_InfoBox_Text'] = $_Lang['AddMoon_Fail_MoonExists'];
-                    $_Lang['PHP_InfoBox_Color'] = 'red';
-                }
-            }
-            else
-            {
-                $_Lang['PHP_InfoBox_Text'] = $_Lang['AddMoon_Fail_NoPlanet'];
-                $_Lang['PHP_InfoBox_Color'] = 'red';
-            }
-        }
-        else
-        {
-            $_Lang['PHP_InfoBox_Text'] = $_Lang['AddMoon_Fail_NameBadSigns'];
-            $_Lang['PHP_InfoBox_Color'] = 'red';
-        }
-    }
-    else
-    {
-        $_Lang['PHP_InfoBox_Text'] = $_Lang['AddMoon_Fail_BadID'];
-        $_Lang['PHP_InfoBox_Color'] = 'red';
-    }
-}
-
-if(empty($_Lang['PHP_InfoBox_Text']))
-{
-    $_Lang['PHP_InfoBox_Hide'] = 'display: none;';
-}
-
-$Page = parsetemplate($PageTpl, $_Lang);
-
-display($Page, $_Lang['AddMoon_Title'], false, true);
+display($pageView['componentHTML'], $_Lang['AddMoon_Title'], false, true);
 
 ?>
