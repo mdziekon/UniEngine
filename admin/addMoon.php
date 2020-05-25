@@ -7,10 +7,9 @@ $_SetAccessLogPreFilename = 'admin/';
 $_SetAccessLogPath = '../';
 $_EnginePath = './../';
 
-include($_EnginePath.'common.php');
+include($_EnginePath . 'common.php');
 
-if(!CheckAuth('supportadmin'))
-{
+if (!CheckAuth('supportadmin')) {
     AdminMessage($_Lang['sys_noalloaw'], $_Lang['sys_noaccess']);
 }
 
