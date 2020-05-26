@@ -15,7 +15,6 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
     $FleetDestroyedByMoon = false;
     $FleetHasBeenDestroyed = false;
     $DestructionDone = false;
-    $MoonHasBeenCreated = false;
 
     $MoonHasBeenDestroyed = 0;
 
@@ -235,7 +234,7 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
         $DebrisMetalDef = 0;
         $DebrisCrystalDef = 0;
 
-        $MoonHasBeenCreated = false;
+        $moonHasBeenCreated = false;
         $postCombatDeathstarsCount = 0;
 
         $RoundsData        = $Combat['rounds'];
@@ -730,37 +729,38 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
         }
 
         // Check if Moon has been created
-        $FleetDebris = $TotalLostCrystal + $TotalLostMetal;
+        $moonCreationRollResult = Flights\Utils\Calculations\calculateMoonCreationRoll([
+            'totalDebris' => ($TotalLostCrystal + $TotalLostMetal),
+        ]);
 
-        $MoonChance = floor($FleetDebris / COMBAT_MOONPERCENT_RESOURCES);
-        if($MoonChance > 20)
-        {
-            $TotalMoonChance = $MoonChance;
-            $MoonChance = 20;
-        }
-        if($MoonChance < 1)
-        {
-            $UserChance = 0;
-        }
-        elseif($MoonChance >= 1)
-        {
-            $UserChance = mt_rand(1, 100);
-        }
+        $TotalMoonChance = $moonCreationRollResult['totalMoonChance'];
 
-        if($UserChance > 0 AND $UserChance <= $MoonChance AND $MoonHasBeenDestroyed === 1)
-        {
-            $CreatedMoonID = CreateOneMoonRecord($FleetRow['fleet_end_galaxy'], $FleetRow['fleet_end_system'], $FleetRow['fleet_end_planet'], $TargetUserID, '', $MoonChance);
-            if($CreatedMoonID !== false)
-            {
+        if (
+            $moonCreationRollResult['hasMoonBeenCreated'] &&
+            $MoonHasBeenDestroyed === 1
+        ) {
+            // FIXME: CreateOneMoonRecord won't allow to create this moon
+            // because the entry still exists. Add a parameter to allow to skip
+            // that check and create the newly formed moon anyway.
+            $newMoonID = CreateOneMoonRecord([
+                'coordinates' => [
+                    'galaxy' => $FleetRow['fleet_end_galaxy'],
+                    'system' => $FleetRow['fleet_end_system'],
+                    'planet' => $FleetRow['fleet_end_planet'],
+                ],
+                'ownerID' => $TargetUserID,
+                'moonName' => null,
+                'moonCreationChance' => $moonCreationRollResult['boundedMoonChance'],
+            ]);
+
+            if ($newMoonID !== false) {
                 $TriggerTasksCheck['atk']['CREATE_MOON'] = true;
                 $GalaxyMoonID_NeedsUpdate = false;
-                $MoonHasBeenCreated = true;
+                $moonHasBeenCreated = true;
 
-                $UserDev_UpPl[] = "L,{$CreatedMoonID}";
+                $UserDev_UpPl[] = "L,{$newMoonID}";
 
-                // Update User Stats
-                foreach($AttackersIDs as $UserID)
-                {
+                foreach ($AttackersIDs as $UserID) {
                     $UserStatsData[$UserID]['moons_created'] += 1;
                 }
             }
@@ -812,9 +812,9 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
                 'defenders' => $defendersResourceLosses,
             ],
             'moonCreationData' => [
-                'hasBeenCreated' => $MoonHasBeenCreated,
-                'normalizedChance' => $MoonChance,
-                'totalChance' => $TotalMoonChance,
+                'hasBeenCreated' => $moonHasBeenCreated,
+                'normalizedChance' => $moonCreationRollResult['boundedMoonChance'],
+                'totalChance' => $moonCreationRollResult['totalMoonChance'],
             ],
             'moonDestructionData' => [
                 'hasDestroyedMoon' => $MoonHasBeenDestroyed,
@@ -921,7 +921,7 @@ function MissionCaseDestruction($FleetRow, &$_FleetCache)
         }
         else
         {
-            if($MoonHasBeenCreated)
+            if($moonHasBeenCreated)
             {
                 $TriggerTasksCheck['atk']['CREATE_MOON_FRIENDLY'] = true;
             }
