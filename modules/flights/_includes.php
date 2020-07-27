@@ -20,6 +20,7 @@ call_user_func(function () {
     include($includePath . './utils/fleetCache/updateGalaxyDebris.utils.php');
     include($includePath . './utils/fleetCache/morale.utils.php');
     include($includePath . './utils/fleetCache/updateUserStats.utils.php');
+    include($includePath . './utils/helpers/getRandomExpeditionEvent.utils.php');
     include($includePath . './utils/helpers/hasLostAnyDefenseSystem.utils.php');
     include($includePath . './utils/initializers/combatUserDetails.utils.php');
     include($includePath . './utils/initializers/technologies.utils.php');
