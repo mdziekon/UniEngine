@@ -1,59 +1,246 @@
 <?php
 
-function MissionCaseExpeditionNew ($FleetRow, &$_FleetCache) {
-    $Return = [];
-    $Now = time();
+use UniEngine\Engine\Modules\Flights;
 
-    $thisFleetID = $FleetRow['fleet_id'];
+function MissionCaseExpeditionNew ($fleetRow, &$_FleetCache) {
+    global $UserDev_Log;
 
-    if ($FleetRow['calcType'] == 1) {
-        $Return['FleetArchive'][$thisFleetID]['Fleet_Calculated_Mission'] = true;
-        $Return['FleetArchive'][$thisFleetID]['Fleet_Calculated_Mission_Time'] = $Now;
+    $result = [
+        'FleetsToDelete' => [],
+        'FleetArchive' => [],
+    ];
+    $calculationTimestamp = time();
+
+    $thisFleetID = $fleetRow['fleet_id'];
+
+    if ($fleetRow['calcType'] == 1) {
+        // Exploration just started, nothing to do here except for a couple of updates
+
+        $result['FleetArchive'][$thisFleetID]['Fleet_Calculated_Mission'] = true;
+        $result['FleetArchive'][$thisFleetID]['Fleet_Calculated_Mission_Time'] = $calculationTimestamp;
 
         $_FleetCache['fleetRowUpdate'][$thisFleetID]['fleet_mess'] = 1;
         $_FleetCache['fleetRowStatus'][$thisFleetID]['calcCounter'] += 1;
         $_FleetCache['fleetRowStatus'][$thisFleetID]['needUpdate'] = true;
 
-        // TODO: Probably nothing else to do here, we just started exploring
+        // TODO: Send message
     }
 
-    if ($FleetRow['calcType'] == 2) {
+    if ($fleetRow['calcType'] == 2) {
+        // Exploration has finished, create outcome event and apply to the FleetRow
+
+        $fleetUpdateEntriesByID = [];
+        $fleetsToDeleteByID = [];
+        $fleetOwnerDevelopmentLogEntries = [];
+
         $_FleetCache['fleetRowUpdate'][$thisFleetID]['fleet_mess'] = 2;
         $_FleetCache['fleetRowStatus'][$thisFleetID]['calcCounter'] += 1;
         $_FleetCache['fleetRowStatus'][$thisFleetID]['needUpdate'] = true;
 
-        // TODO: Exploration has ended, calculate the outcome
-        // TODO: Check if the fleet has been destroyed, damaged, expanded, or found resources
+        $expeditionEvent = Flights\Utils\Helpers\getRandomExpeditionEvent([]);
+        $expeditionOutcome = Flights\Utils\Helpers\getExpeditionEventOutcome([
+            'event' => $expeditionEvent
+        ]);
+
+        $preExpeditionShips = String2Array($fleetRow['fleet_array']);
+        $postExpeditionShips = String2Array($fleetRow['fleet_array']);
+
+        $gainedResources = [];
+
+        if (!empty($expeditionOutcome['gains']['planetaryResources'])) {
+            $fleetPillageStorage = Flights\Utils\Calculations\calculatePillageStorage([
+                'fleetRow' => $fleetRow,
+                'ships' => $postExpeditionShips,
+            ]);
+
+            $resourcesPillage = Flights\Utils\Missions\calculateEvenResourcesPillage([
+                'maxPillagePerResource' => Flights\Utils\Missions\calculateMaxPlanetPillage([
+                    'planet' => $expeditionOutcome['gains']['planetaryResources'],
+                    'maxPillagePercentage' => 1,
+                ]),
+                'fleetTotalStorage' => $fleetPillageStorage,
+            ]);
+
+            $gainedResources = $resourcesPillage;
+        }
+
+        if (empty($postExpeditionShips)) {
+            $fleetsToDeleteByID[] = $thisFleetID;
+
+            $gainedResources = [];
+        } else {
+            $fleetUpdateEntriesByID[$thisFleetID] = Flights\Utils\Factories\createFleetUpdateEntry([
+                'fleetID' => $thisFleetID,
+                'state' => '2',
+                'originalShips' => $preExpeditionShips,
+                'postCombatShips' => $postExpeditionShips,
+                'resourcesPillage' => $gainedResources,
+            ]);
+        }
+
+        if (!empty($gainedResources)) {
+            $result['FleetArchive'][$thisFleetID]['Fleet_End_Res_Metal'] = $gainedResources['metal'];
+            $result['FleetArchive'][$thisFleetID]['Fleet_End_Res_Crystal'] = $gainedResources['crystal'];
+            $result['FleetArchive'][$thisFleetID]['Fleet_End_Res_Deuterium'] = $gainedResources['deuterium'];
+        }
+
+        $fleetOwnerDevelopmentLogEntries[] = Flights\Utils\Factories\createFleetDevelopmentLogEntries([
+            'originalShips' => $preExpeditionShips,
+            'postCombatShips' => $postExpeditionShips,
+            'resourcesPillage' => $gainedResources,
+        ]);
+
+
+        if (!empty($fleetOwnerDevelopmentLogEntries)) {
+            foreach ($fleetOwnerDevelopmentLogEntries as $logEntry) {
+                if (empty($logEntry)) {
+                    continue;
+                }
+
+                $UserDev_Log[] = [
+                    'UserID' => $fleetRow['fleet_owner'],
+                    'PlanetID' => '0',
+                    'Date' => $fleetRow['fleet_end_stay'],
+                    'Place' => 25,
+                    'Code' => '0',
+                    'ElementID' => $thisFleetID,
+                    'AdditionalData' => implode(';', $logEntry)
+                ];
+            }
+        }
+
+        foreach ($fleetUpdateEntriesByID as $fleetID => $fleetUpdateEntry) {
+            $serializedFleetArray = Array2String($fleetUpdateEntry['fleet_array']);
+            $serializedFleetArrayLost = Array2String($fleetUpdateEntry['fleet_array_lost']);
+
+            if (
+                !empty($fleetUpdateEntry['fleet_array']) &&
+                !empty($fleetUpdateEntry['fleet_array_lost'])
+            ) {
+                if (strlen($serializedFleetArray) > strlen($serializedFleetArrayLost)) {
+                    $result['FleetArchive'][$fleetID]['Fleet_Array_Changes'] = "\"+D;{$serializedFleetArrayLost}|\"";
+                } else {
+                    $result['FleetArchive'][$fleetID]['Fleet_Array_Changes'] = "\"+L;{$serializedFleetArray}|\"";
+                }
+
+                $result['FleetArchive'][$fleetID]['Fleet_Info_HasLostShips'] = '!true';
+            }
+
+            if (
+                $_FleetCache['fleetRowStatus'][$thisFleetID]['calcCount'] > $_FleetCache['fleetRowStatus'][$thisFleetID]['calcCounter']
+            ) {
+                // We know that we'll perform the "fleet returned to planet" event
+                // in the same Fleets Handling run, so stash the result in local cache,
+                // instead of sending entry to be persisted as fleet row update in DB.
+                // `fleetRowUpdate` operates on real values.
+
+                $CachePointer = &$_FleetCache['fleetRowUpdate'][$fleetID];
+                $CachePointer['fleet_array'] = $serializedFleetArray;
+                $CachePointer['fleet_amount'] = $fleetUpdateEntry['fleet_amount'];
+                $CachePointer['fleet_mess'] = $fleetUpdateEntry['fleet_mess'];
+                $CachePointer['fleet_resource_metal'] = (
+                    $fleetRow['fleet_resource_metal'] +
+                    $fleetUpdateEntry['fleet_resource_metal']
+                );
+                $CachePointer['fleet_resource_crystal'] = (
+                    $fleetRow['fleet_resource_crystal'] +
+                    $fleetUpdateEntry['fleet_resource_crystal']
+                );
+                $CachePointer['fleet_resource_deuterium'] = (
+                    $fleetRow['fleet_resource_deuterium'] +
+                    $fleetUpdateEntry['fleet_resource_deuterium']
+                );
+            } else {
+                // Create UpdateFleet record for $_FleetCache
+                // `updateFleets` operates on real values or on "offsets".
+
+                $CachePointer = &$_FleetCache['updateFleets'][$fleetID];
+                $CachePointer['fleet_array'] = $serializedFleetArray;
+                $CachePointer['fleet_amount'] = $fleetUpdateEntry['fleet_amount'];
+                $CachePointer['fleet_mess'] = $fleetUpdateEntry['fleet_mess'];
+                $CachePointer['fleet_resource_metal'] = (
+                    isset($CachePointer['fleet_resource_metal']) ?
+                    $CachePointer['fleet_resource_metal'] + $fleetUpdateEntry['fleet_resource_metal'] :
+                    $fleetUpdateEntry['fleet_resource_metal']
+                );
+                $CachePointer['fleet_resource_crystal'] = (
+                    isset($CachePointer['fleet_resource_crystal']) ?
+                    $CachePointer['fleet_resource_crystal'] + $fleetUpdateEntry['fleet_resource_crystal'] :
+                    $fleetUpdateEntry['fleet_resource_crystal']
+                );
+                $CachePointer['fleet_resource_deuterium'] = (
+                    isset($CachePointer['fleet_resource_deuterium']) ?
+                    $CachePointer['fleet_resource_deuterium'] + $fleetUpdateEntry['fleet_resource_deuterium'] :
+                    $fleetUpdateEntry['fleet_resource_deuterium']
+                );
+            }
+        }
+
+        foreach ($fleetsToDeleteByID as $fleetID) {
+            $_FleetCache['fleetRowStatus'][$fleetID]['isDestroyed'] = true;
+
+            if (!empty($_FleetCache['updateFleets'][$fleetID])) {
+                unset($_FleetCache['updateFleets'][$fleetID]);
+            }
+
+            $result['FleetsToDelete'][] = $fleetID;
+            $result['FleetArchive'][$fleetID]['Fleet_Destroyed'] = true;
+            $result['FleetArchive'][$fleetID]['Fleet_Info_HasLostShips'] = true;
+            $result['FleetArchive'][$fleetID]['Fleet_Destroyed_Reason'] = 13;
+        }
+
+        // TODO: Send message
     }
 
-    if ($FleetRow['calcType'] == 3) {
+    if (
+        $fleetRow['calcType'] == 3 &&
+        (
+            !isset($_FleetCache['fleetRowStatus'][$thisFleetID]['isDestroyed']) ||
+            $_FleetCache['fleetRowStatus'][$thisFleetID]['isDestroyed'] !== true
+        )
+    ) {
+        // Fleet has returned from exploration, restore to planet if not destroyed
+
         if (
             isset($_FleetCache['fleetRowStatus'][$thisFleetID]['needUpdate']) &&
             $_FleetCache['fleetRowStatus'][$thisFleetID]['needUpdate'] === true &&
             !empty($_FleetCache['fleetRowUpdate'][$thisFleetID])
         ) {
             foreach ($_FleetCache['fleetRowUpdate'][$thisFleetID] as $Key => $Value) {
-                $FleetRow[$Key] = $Value;
+                $fleetRow[$Key] = $Value;
             }
         }
 
-        $Return['FleetsToDelete'][] = $thisFleetID;
-        $Return['FleetArchive'][$thisFleetID]['Fleet_Calculated_ComeBack'] = true;
-        $Return['FleetArchive'][$thisFleetID]['Fleet_Calculated_ComeBack_Time'] = $Now;
+        $result['FleetsToDelete'][] = $thisFleetID;
+        $result['FleetArchive'][$thisFleetID]['Fleet_Calculated_ComeBack'] = true;
+        $result['FleetArchive'][$thisFleetID]['Fleet_Calculated_ComeBack_Time'] = $calculationTimestamp;
 
-        RestoreFleetToPlanet($FleetRow, true, $_FleetCache);
+        RestoreFleetToPlanet($fleetRow, true, $_FleetCache);
 
         $_FleetCache['fleetRowStatus'][$thisFleetID]['calcCounter'] += 1;
         $_FleetCache['fleetRowStatus'][$thisFleetID]['needUpdate'] = false;
+
+        // TODO: Send message
     }
 
     if ($_FleetCache['fleetRowStatus'][$thisFleetID]['calcCounter'] == $_FleetCache['fleetRowStatus'][$thisFleetID]['calcCount']) {
-        if ($FleetRow['calcType'] != 3) {
-            $_FleetCache['updateFleets'][$thisFleetID]['fleet_mess'] = $FleetRow['fleet_mess'];
+        if ($fleetRow['calcType'] != 3) {
+            // TODO: How about moving that to a helper function?
+            if (
+                isset($_FleetCache['fleetRowStatus'][$thisFleetID]['needUpdate']) &&
+                $_FleetCache['fleetRowStatus'][$thisFleetID]['needUpdate'] === true &&
+                !empty($_FleetCache['fleetRowUpdate'][$thisFleetID])
+            ) {
+                foreach ($_FleetCache['fleetRowUpdate'][$thisFleetID] as $Key => $Value) {
+                    $fleetRow[$Key] = $Value;
+                }
+            }
+
+            $_FleetCache['updateFleets'][$thisFleetID]['fleet_mess'] = $fleetRow['fleet_mess'];
         }
     }
 
-    return $Return;
+    return $result;
 }
 
 ?>
