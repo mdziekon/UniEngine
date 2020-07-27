@@ -24,7 +24,7 @@ function calculateMaxPlanetPillage ($props) {
 }
 
 /**
- * Calculated resources pillage from a specified planet, trying to evenly fill
+ * Calculates resources pillage from a specified planet, trying to evenly fill
  * the entire available ships' storage capacity.
  *
  * @param object $props
@@ -117,7 +117,7 @@ function calculateEvenResourcesPillage ($props) {
 }
 
 /**
- * Calculated resources pillage from a specified planet, trying to fill the entire
+ * Calculates resources pillage from a specified planet, trying to fill the entire
  * available ships' storage capacity by prioritizing most valuable resources first
  * (assuming that getKnownPillagableResourceKeys() returns them in order
  * from least to most valuable resource).
