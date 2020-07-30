@@ -186,7 +186,7 @@ function MissionCaseExpeditionNew ($fleetRow, &$_FleetCache) {
             $result['FleetsToDelete'][] = $fleetID;
             $result['FleetArchive'][$fleetID]['Fleet_Destroyed'] = true;
             $result['FleetArchive'][$fleetID]['Fleet_Info_HasLostShips'] = true;
-            $result['FleetArchive'][$fleetID]['Fleet_Destroyed_Reason'] = 13;
+            $result['FleetArchive'][$fleetID]['Fleet_Destroyed_Reason'] = Flights\Enums\FleetDestructionReason::ONEXPEDITION_UNKNOWN;
         }
 
         // TODO: Send message

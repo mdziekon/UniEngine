@@ -717,22 +717,22 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                     {
                         if(count($RoundsData) == 2)
                         {
-                            $Return['FleetArchive'][$FleetID]['Fleet_Destroyed_Reason'] = 1;
+                            $Return['FleetArchive'][$FleetID]['Fleet_Destroyed_Reason'] = Flights\Enums\FleetDestructionReason::INBATTLE_FIRSTROUND_NODAMAGE;
                         }
                         else
                         {
-                            $Return['FleetArchive'][$FleetID]['Fleet_Destroyed_Reason'] = 11;
+                            $Return['FleetArchive'][$FleetID]['Fleet_Destroyed_Reason'] = Flights\Enums\FleetDestructionReason::INBATTLE_OTHERROUND_NODAMAGE;
                         }
                     }
                     else
                     {
                         if(count($RoundsData) == 2)
                         {
-                            $Return['FleetArchive'][$FleetID]['Fleet_Destroyed_Reason'] = 12;
+                            $Return['FleetArchive'][$FleetID]['Fleet_Destroyed_Reason'] = Flights\Enums\FleetDestructionReason::INBATTLE_FIRSTROUND_MADEDAMAGE;
                         }
                         else
                         {
-                            $Return['FleetArchive'][$FleetID]['Fleet_Destroyed_Reason'] = 5;
+                            $Return['FleetArchive'][$FleetID]['Fleet_Destroyed_Reason'] = Flights\Enums\FleetDestructionReason::INBATTLE_ACSLEADER;
                         }
                     }
                 }
@@ -742,29 +742,29 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                     {
                         if(count($RoundsData) == 2)
                         {
-                            $Return['FleetArchive'][$FleetID]['Fleet_Destroyed_Reason'] = 1;
+                            $Return['FleetArchive'][$FleetID]['Fleet_Destroyed_Reason'] = Flights\Enums\FleetDestructionReason::INBATTLE_FIRSTROUND_NODAMAGE;
                         }
                         else
                         {
-                            $Return['FleetArchive'][$FleetID]['Fleet_Destroyed_Reason'] = 11;
+                            $Return['FleetArchive'][$FleetID]['Fleet_Destroyed_Reason'] = Flights\Enums\FleetDestructionReason::INBATTLE_OTHERROUND_NODAMAGE;
                         }
                     }
                     else
                     {
                         if(count($RoundsData) == 2)
                         {
-                            $Return['FleetArchive'][$FleetID]['Fleet_Destroyed_Reason'] = 12;
+                            $Return['FleetArchive'][$FleetID]['Fleet_Destroyed_Reason'] = Flights\Enums\FleetDestructionReason::INBATTLE_FIRSTROUND_MADEDAMAGE;
                         }
                         else
                         {
-                            $Return['FleetArchive'][$FleetID]['Fleet_Destroyed_Reason'] = 6;
+                            $Return['FleetArchive'][$FleetID]['Fleet_Destroyed_Reason'] = Flights\Enums\FleetDestructionReason::INBATTLE_ACSMEMBER;
                         }
                     }
                 }
                 else
                 {
                     unset($_FleetCache['defFleets'][$FleetRow['fleet_end_id']][$FleetID]);
-                    $Return['FleetArchive'][$FleetID]['Fleet_Destroyed_Reason'] = 3;
+                    $Return['FleetArchive'][$FleetID]['Fleet_Destroyed_Reason'] = Flights\Enums\FleetDestructionReason::FRIENDDEFENSE;
                 }
             }
         }
@@ -775,11 +775,11 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
             {
                 if(empty($DeleteFleet) OR !in_array($ThisFleetID, $DeleteFleet))
                 {
-                    $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_Destroyed_Reason'] = 4;
+                    $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_Destroyed_Reason'] = Flights\Enums\FleetDestructionReason::DRAW_NOBASH;
                 }
                 else
                 {
-                    $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_Destroyed_Reason'] = 1;
+                    $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_Destroyed_Reason'] = Flights\Enums\FleetDestructionReason::INBATTLE_FIRSTROUND_NODAMAGE;
                 }
             }
         }

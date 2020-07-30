@@ -380,7 +380,7 @@ function MissionCaseSpy($FleetRow, &$_FleetCache)
                 $UserDev_Log[] = array('UserID' => $FleetRow['fleet_owner'], 'PlanetID' => '0', 'Date' => $FleetRow['fleet_start_time'], 'Place' => 18, 'Code' => '1', 'ElementID' => '210', 'AdditionalData' => $ShipsCount);
                 $Return['FleetsToDelete'][] = $FleetRow['fleet_id'];
                 $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_Destroyed'] = true;
-                $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_Destroyed_Reason'] = 10;
+                $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_Destroyed_Reason'] = Flights\Enums\FleetDestructionReason::ESPIONAGE_SHOTDOWN;
                 $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_Info_HasLostShips'] = true;
 
                 $_FleetCache['fleetRowStatus'][$FleetRow['fleet_id']]['isDestroyed'] = true;
