@@ -3,7 +3,10 @@
 use UniEngine\Engine\Modules\Flights;
 
 function MissionCaseExpeditionNew ($fleetRow, &$_FleetCache) {
-    global $UserDev_Log;
+    global $UserDev_Log, $_Lang;
+
+    $CONST_MESSAGES_SENDERID = '003';
+    $CONST_MESSAGES_TITLEID = '007';
 
     $result = [
         'FleetsToDelete' => [],
@@ -23,7 +26,27 @@ function MissionCaseExpeditionNew ($fleetRow, &$_FleetCache) {
         $_FleetCache['fleetRowStatus'][$thisFleetID]['calcCounter'] += 1;
         $_FleetCache['fleetRowStatus'][$thisFleetID]['needUpdate'] = true;
 
-        // TODO: Send message
+        $message = [
+            'msg_id' => '106',
+            'args' => [
+                $fleetRow['fleet_start_galaxy'],
+                $fleetRow['fleet_start_system'],
+                $fleetRow['fleet_start_galaxy'],
+                $fleetRow['fleet_start_system'],
+                (($fleetRow['fleet_end_stay'] - $fleetRow['fleet_start_time']) / TIME_HOUR)
+            ],
+        ];
+        $messageJSON = json_encode($message);
+
+        Cache_Message(
+            $fleetRow['fleet_owner'],
+            0,
+            $fleetRow['fleet_start_time'],
+            15,
+            $CONST_MESSAGES_SENDERID,
+            $CONST_MESSAGES_TITLEID,
+            $messageJSON
+        );
     }
 
     if ($fleetRow['calcType'] == 2) {
@@ -220,7 +243,29 @@ function MissionCaseExpeditionNew ($fleetRow, &$_FleetCache) {
         $_FleetCache['fleetRowStatus'][$thisFleetID]['calcCounter'] += 1;
         $_FleetCache['fleetRowStatus'][$thisFleetID]['needUpdate'] = false;
 
-        // TODO: Send message
+        $message = [
+            'msg_id' => '107',
+            'args' => [
+                ($fleetRow['fleet_start_type'] == 1 ? $_Lang['to_planet'] : $_Lang['to_moon']),
+                $fleetRow['attacking_planet_name'],
+                $fleetRow['fleet_start_galaxy'],
+                $fleetRow['fleet_start_system'],
+                $fleetRow['fleet_start_galaxy'],
+                $fleetRow['fleet_start_system'],
+                $fleetRow['fleet_start_planet'],
+            ],
+        ];
+        $messageJSON = json_encode($message);
+
+        Cache_Message(
+            $fleetRow['fleet_owner'],
+            0,
+            $fleetRow['fleet_end_time'],
+            15,
+            $CONST_MESSAGES_SENDERID,
+            $CONST_MESSAGES_TITLEID,
+            $messageJSON
+        );
     }
 
     if ($_FleetCache['fleetRowStatus'][$thisFleetID]['calcCounter'] == $_FleetCache['fleetRowStatus'][$thisFleetID]['calcCount']) {

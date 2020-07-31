@@ -148,6 +148,13 @@ $_Lang['msg_const']['msgs'] = array
     '103' => 'Sojusz <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> wycofał swoją propozycję zmiany Typu Paktu!',
     '104' => 'Sojusz <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> wysłał propozycję zmiany Typu Paktu Sojuszowego.<br/><br/><a href="alliance.php?mode=pactslist">Aby sprawdzić tą propozycję, przejdź do Listy Paktów w zakładce "Sojusz"</a>',
     '105' => 'Sojusz <a href="alliance.php?mode=ainfo&amp;a=%s">%s</a> zmienił Typ Paktu Sojuszowego na "<b>%s</b>"!',
+
+    // Expeditions
+    '106' => (
+        'Jedna z twoich ekspedycji dotarła do obrzeży systemu słonecznego <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s]</a>.<br/>' .
+        'Będzie przeprowadzać eksplorację tych rejonów przez %s godz.'
+    ),
+    '107' => 'Twoja ekspedycja wraca na %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a>.',
 );
 
 $_Lang['msg_const']['senders']['system'] = [
