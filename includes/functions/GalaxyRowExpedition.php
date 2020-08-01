@@ -13,7 +13,7 @@ function GalaxyRowExpedition($Galaxy, $System) {
         'data_system' => $System,
         'data_planetpos' => (MAX_PLANET_IN_SYSTEM + 1),
         'data_missionid' => 15,
-        'lang_label' => $_Lang['type_mission'][15],
+        'lang_label' => $_Lang['Footer_Expedition'],
     ];
 
     return parsetemplate($TPL, $Parse);

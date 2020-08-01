@@ -1,9 +1,3 @@
-<tr style="display: none;">
-    <th width="30">16</th>
-    <th colspan="10">
-        <a href="fleet.php?galaxy={Galaxy}&amp;system={System}&amp;planet=16;planettype=1&amp;target_mission=15">{Footer_Expedition}</a>
-    </th>
-</tr>
 <tr>
     <td class="c" colspan="7">({Footer_ColonizedPlanets}: <span id="colonizedCount">{Input_ColonizedPlanets}</span>)</td>
     <td class="c" colspan="3">{Input_LegendPopup}</td>
