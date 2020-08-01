@@ -408,11 +408,11 @@ switch($_GET['mode'])
                     'untilTimestamp' => $TimeStamp,
                 ]);
 
-                $DelMsgs[] = (
-                    $cmdResult['deletedMessagesCount'] > 0 ?
-                    $_Lang['Delete_AllMsgsDeleted'] :
-                    $_Lang['Delete_NoMsgsToDelete']
-                );
+                if ($cmdResult['deletedMessagesCount'] > 0) {
+                    $DelMsgs[] = $_Lang['Delete_AllMsgsDeleted'];
+                } else {
+                    $DelNotifs[] = $_Lang['Delete_NoMsgsToDelete'];
+                }
             }
             elseif($DeleteWhat == 'deleteallcat')
             {
