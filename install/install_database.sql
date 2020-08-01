@@ -466,7 +466,7 @@ CREATE TABLE IF NOT EXISTS `{prefix}_fleet_archive` (
   `Fleet_Calculated_ComeBack` tinyint(1) NOT NULL DEFAULT '0',
   `Fleet_Calculated_ComeBack_Time` int(10) unsigned NOT NULL DEFAULT '0',
   `Fleet_Destroyed` tinyint(1) NOT NULL DEFAULT '0',
-  `Fleet_Destroyed_Reason` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT '1 - inBattle_FirstRound_NoDamage; 2 - inBattle_OtherRound_Damage; 3 - friendDefense; 4 - drawNoBash; 5 - inBattle_ACSLeader; 6 - inBattle_ACSJoined; 7 - byMoon; 8 - doColony; 9 - missile; 10 - antiSpy; 11 - inBattle_OtherRound_NoDamage; 12 - inBattle_FirstRound_Damage;',
+  `Fleet_Destroyed_Reason` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `Fleet_TurnedBack` tinyint(1) NOT NULL DEFAULT '0',
   `Fleet_TurnedBack_Time` int(10) unsigned NOT NULL DEFAULT '0',
   `Fleet_TurnedBack_EndTime` int(10) unsigned NOT NULL DEFAULT '0',

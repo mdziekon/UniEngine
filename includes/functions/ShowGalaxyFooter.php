@@ -9,7 +9,6 @@ function ShowGalaxyFooter($Galaxy, $System, $CurrentMIP, $CurrentRC, $CurrentSP,
     (
         'Galaxy'                    => $Galaxy,
         'System'                    => $System,
-        'Footer_Expedition'            => $_Lang['Footer_Expedition'],
         'Footer_ColonizedPlanets'    => $_Lang['Footer_ColonizedPlanets'],
         'Footer_Missiles'            => $_Lang['Footer_Missiles'],
         'Footer_MissilesTitle'        => $_Lang['Footer_MissilesTitle'],

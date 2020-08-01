@@ -5,6 +5,8 @@ define('INSIDE', true);
 $_EnginePath = './';
 include($_EnginePath.'common.php');
 
+use UniEngine\Engine\Modules\Flights;
+
 loggedCheck();
 
 if(!isPro())
@@ -29,8 +31,25 @@ if($TodayTimestamp <= 0)
 
 $SelectFields = '`Fleet_End_ID`, `Fleet_End_Owner`, `Fleet_End_ID_Changed`, `Fleet_End_Type_Changed`, `Fleet_End_Galaxy`, `Fleet_End_System`, `Fleet_End_Planet`, `Fleet_End_Type`, `Fleet_ACSID`';
 
+$excludedDestructionReasons = [
+    strval(Flights\Enums\FleetDestructionReason::INBATTLE_FIRSTROUND_NODAMAGE),
+    strval(Flights\Enums\FleetDestructionReason::DRAW_NOBASH),
+    strval(Flights\Enums\FleetDestructionReason::INBATTLE_OTHERROUND_NODAMAGE),
+];
+$excludedDestructionReasonsStr = implode(', ', $excludedDestructionReasons);
+
 $SQLResult_GetAttacks = doquery(
-    "SELECT {$SelectFields} FROM {{table}} WHERE (`Fleet_Time_Start` + `Fleet_Time_ACSAdd`) >= {$TodayTimestamp} AND `Fleet_Owner` = {$_User['id']} AND `Fleet_Mission` IN (1, 2, 9) AND `Fleet_End_Owner_IdleHours` < 168 AND `Fleet_ReportID` > 0 AND `Fleet_End_Owner` > 0 AND `Fleet_Destroyed_Reason` NOT IN (1, 4, 11);",
+    "SELECT {$SelectFields} " .
+    "FROM {{table}} " .
+    "WHERE " .
+    "(`Fleet_Time_Start` + `Fleet_Time_ACSAdd`) >= {$TodayTimestamp} AND " .
+    "`Fleet_Owner` = {$_User['id']} AND " .
+    "`Fleet_Mission` IN (1, 2, 9) AND " .
+    "`Fleet_End_Owner_IdleHours` < 168 AND " .
+    "`Fleet_ReportID` > 0 AND " .
+    "`Fleet_End_Owner` > 0 AND " .
+    "`Fleet_Destroyed_Reason` NOT IN ({$excludedDestructionReasonsStr}) " .
+    ";",
     'fleet_archive'
 );
 

@@ -6,6 +6,8 @@ $_EnginePath = './';
 
 include($_EnginePath.'common.php');
 
+use UniEngine\Engine\Modules\Flights;
+
 loggedCheck();
 
 if($_POST['sending_fleet'] != '1')
@@ -81,6 +83,13 @@ if($Fleet['Mission'] <= 0)
     messageRed($_Lang['fl3_NoMissionSelected'], $ErrorTitle);
 }
 
+if (
+    !isFeatureEnabled(FeatureType::Expeditions) &&
+    $Fleet['Mission'] == 15
+) {
+    messageRed($_Lang['fl3_ExpeditionsAreOff'], $ErrorTitle);
+}
+
 // --- Get FlyingFleets Count
 $FlyingFleetsCount = 0;
 $FlyingExpeditions = 0;
@@ -124,12 +133,6 @@ if($Slots['FlyingFleetsCount'] >= $Slots['MaxFleetSlots'])
 if($Slots['FlyingExpeditions'] >= $Slots['MaxExpedSlots'] AND $Fleet['Mission'] == 15)
 {
     messageRed($_Lang['fl3_NoMoreFreeExpedSlots'], $ErrorTitle);
-}
-
-// --- Switch Off Expeditions
-if($Fleet['Mission'] == 15)
-{
-    messageRed($_Lang['fl3_ExpeditionsAreOff'], $ErrorTitle);
 }
 
 // --- Check if all resources are correct (no negative numbers and enough on planet)
@@ -971,8 +974,24 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
                 sort($BashTimestamps, SORT_ASC);
                 $BashTimestampMinVal = $BashTimestamps[0]['stamp'];
 
+                $excludedDestructionReasons = [
+                    strval(Flights\Enums\FleetDestructionReason::INBATTLE_FIRSTROUND_NODAMAGE),
+                    strval(Flights\Enums\FleetDestructionReason::DRAW_NOBASH),
+                    strval(Flights\Enums\FleetDestructionReason::INBATTLE_OTHERROUND_NODAMAGE),
+                ];
+                $excludedDestructionReasonsStr = implode(', ', $excludedDestructionReasons);
+
                 $SQLResult_GetFleetArchiveRecords = doquery(
-                    "SELECT * FROM {{table}} WHERE (`Fleet_Time_Start` + `Fleet_Time_ACSAdd`) >= {$BashTimestampMinVal} AND `Fleet_Owner` = {$_User['id']} AND `Fleet_End_Owner` = {$TargetData['owner']} AND `Fleet_Mission` IN (1, 2, 9) AND `Fleet_ReportID` > 0 AND `Fleet_Destroyed_Reason` NOT IN (1, 4, 11);",
+                    "SELECT * " .
+                    "FROM {{table}} " .
+                    "WHERE " .
+                    "(`Fleet_Time_Start` + `Fleet_Time_ACSAdd`) >= {$BashTimestampMinVal} AND " .
+                    "`Fleet_Owner` = {$_User['id']} AND " .
+                    "`Fleet_End_Owner` = {$TargetData['owner']} AND " .
+                    "`Fleet_Mission` IN (1, 2, 9) AND " .
+                    "`Fleet_ReportID` > 0 AND " .
+                    "`Fleet_Destroyed_Reason` NOT IN ({$excludedDestructionReasonsStr}) " .
+                    ";",
                     'fleet_archive'
                 );
 

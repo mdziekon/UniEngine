@@ -1,470 +1,323 @@
 <?php
 
-// -------------------------------------------
-// WARNING - WARNING - WARNING
-// -------------------------------------------
-// This script is NOT COMPATIBLE with current implementation of FleetHandler function and it's supporting functions
-// Usage of this script without any changed can (and probably will) cause damage to your DataBase
-// Before using it, make sure that it's fully compatible with FleetHandler function
-// -------------------------------------------
-
 use UniEngine\Engine\Modules\Flights;
 
-function MissionCaseExpedition($FleetRow)
-{
-    global $_Lang, $_Vars_Prices, $enforceSQLUpdate, $FleetArchivePattern, $UserStatsData;
+function MissionCaseExpedition($fleetRow, &$_FleetCache) {
+    global $UserDev_Log, $_Lang, $UserStatsData;
 
-    $FleetOwner = $FleetRow['fleet_owner'];
-    $MessSender = '003';
-    $MessTitle = '007';
-    $fleetHasBeenDeleted = false;
-    $ChangingFleetData = false;
+    /**
+     * @param array $params
+     * @param array $params['messageData']
+     * @param EnumValue $params['fleetTimeMoment']
+     */
+    $sendExpeditionMessage = function ($params) use ($fleetRow) {
+        $CONST_MESSAGES_SENDERID = '003';
+        $CONST_MESSAGES_TITLEID = '007';
 
-    $AllowSendReturn = false;
-    $return = $FleetArchivePattern;
-    $return['fleet_id'] = $FleetRow['fleet_id'];
+        $timestamp = null;
 
-    if($FleetRow['fleet_mess'] == 0)
-    {
-        if($FleetRow['fleet_end_stay'] < time())
-        {
-            // Update user stats
-            if (empty($UserStatsData[$FleetOwner])) {
-                $UserStatsData[$FleetOwner] = Flights\Utils\Initializers\initUserStatsMap();
-            }
-            $UserStatsData[$FleetOwner]['other_expeditions_count'] += 1;
+        switch ($params['fleetTimeMoment']) {
+            case 'expeditionBeginning':
+                $timestamp = $fleetRow['fleet_start_time'];
+                break;
+            case 'expeditionFinished':
+                $timestamp = $fleetRow['fleet_end_stay'];
+                break;
+            case 'expeditionBackHome':
+                $timestamp = $fleetRow['fleet_end_time'];
+                break;
+        }
 
-            $AllowSendReturn = true;
-            $return['fleet_calculated'] = '1';
+        Cache_Message(
+            $fleetRow['fleet_owner'],
+            0,
+            $timestamp,
+            15,
+            $CONST_MESSAGES_SENDERID,
+            $CONST_MESSAGES_TITLEID,
+            json_encode($params['messageData'])
+        );
+    };
 
-            $ChangingFleetData = true;
+    $result = [
+        'FleetsToDelete' => [],
+        'FleetArchive' => [],
+    ];
+    $calculationTimestamp = time();
 
-            // How many points give u every ship
-            $PointsFlotte = array
-            (
-                202 => 1.0,// Small Cargo Ship
-                203 => 1.5,// Big Cargo Ship
-                204 => 0.5,// Light Hunter
-                205 => 1.5,// Heavy Hunter
-                206 => 2.0,// cruiser
-                207 => 2.5,// Battle Ship
-                208 => 0.5,// Colonisator
-                209 => 1.0,// Recycler
-                210 => 0.01, // Spy Probe
-                211 => 3.0,// Bomber
-                212 => 0.0,// Solar Satelite
-                213 => 3.5,// Destroyer
-                214 => 5.0,// Death Star
-                215 => 3.2,// BattleShip
-                216 => 0.0,// Orbital Station
-                217 => 2.0,// Mega Cargo
-                218 => 7.5,// Annihilator
-                219 => 0.02// Space Shuttle
-            );
+    $thisFleetID = $fleetRow['fleet_id'];
+    $thisFleetOwnerID = $fleetRow['fleet_owner'];
 
-            $RatioGain = array
-            (
-                202 => 0.25, // Small Cargo Ship
-                203 => 0.2, // Big Cargo Ship
-                204 => 0.25, // Light Hunter
-                205 => 0.2, // Heavy Hunter
-                206 => 0.155,// cruiser
-                207 => 0.085, // Battle Ship
-                208 => 0.1, // Colonisator
-                209 => 0.2, // Recycler
-                210 => 0.2, // Spy Probe
-                211 => 0.0625,// Bomber
-                //212 => 0.0, // Solar Satelite
-                213 => 0.04,// Destroyer
-                //214 => 0.0, // Death Star
-                215 => 0.05,// BattleShip
-                //216 => 0.0, // Orbital Station
-                217 => 0.0625,// Mega Cargo
-                //218 => 0.0, // Annihilator
-                219 => 0.05// Space Shuttle
-            );
+    if ($fleetRow['calcType'] == 1) {
+        // Exploration just started, nothing to do here except for a couple of updates
 
-            $FleetCapacity = -($FleetRow['fleet_resource_metal'] + $FleetRow['fleet_resource_crystal'] + $FleetRow['fleet_resource_deuterium']);
+        $result['FleetArchive'][$thisFleetID]['Fleet_Calculated_Mission'] = true;
+        $result['FleetArchive'][$thisFleetID]['Fleet_Calculated_Mission_Time'] = $calculationTimestamp;
 
-            $FleetPoints = 0;
-            $FleetMetalCost = 0;
-            $FleetCrystCost = 0;
-            $FleetDeuteCost = 0;
+        $_FleetCache['fleetRowUpdate'][$thisFleetID]['fleet_mess'] = 1;
+        $_FleetCache['fleetRowStatus'][$thisFleetID]['calcCounter'] += 1;
+        $_FleetCache['fleetRowStatus'][$thisFleetID]['needUpdate'] = true;
 
-            $FleetArrTemp = explode(';', $FleetRow['fleet_array']);
-            foreach($FleetArrTemp as $Ships)
-            {
-                if(!empty($Ships))
-                {
-                    $ShipsTemp = explode(',', $Ships);
-                    $FleetArray[$ShipsTemp[0]] = $ShipsTemp[1];
+        $sendExpeditionMessage([
+            'messageData' => [
+                'msg_id' => '106',
+                'args' => [
+                    $fleetRow['fleet_start_galaxy'],
+                    $fleetRow['fleet_start_system'],
+                    $fleetRow['fleet_start_galaxy'],
+                    $fleetRow['fleet_start_system'],
+                    (($fleetRow['fleet_end_stay'] - $fleetRow['fleet_start_time']) / TIME_HOUR)
+                ],
+            ],
+            'fleetTimeMoment' => 'expeditionBeginning'
+        ]);
+    }
 
-                    $FleetCapacity += $_Vars_Prices[$ShipsTemp[0]]['capacity'] * $ShipsTemp[1];
-                    $FleetPoints += ($PointsFlotte[$ShipsTemp[0]] / 10) * $ShipsTemp[1];
-                    $FleetMetalCost += $_Vars_Prices[$ShipsTemp[0]]['metal'] * $ShipsTemp[1];
-                    $FleetCrystCost += $_Vars_Prices[$ShipsTemp[0]]['crystal'] * $ShipsTemp[1];
-                    $FleetDeuteCost += $_Vars_Prices[$ShipsTemp[0]]['deuterium'] * $ShipsTemp[1];
+    if ($fleetRow['calcType'] == 2) {
+        // Exploration has finished, create outcome event and apply to the FleetRow
+
+        $fleetUpdateEntriesByID = [];
+        $fleetsToDeleteByID = [];
+        $fleetOwnerDevelopmentLogEntries = [];
+
+        $_FleetCache['fleetRowUpdate'][$thisFleetID]['fleet_mess'] = 2;
+        $_FleetCache['fleetRowStatus'][$thisFleetID]['calcCounter'] += 1;
+        $_FleetCache['fleetRowStatus'][$thisFleetID]['needUpdate'] = true;
+
+        if (empty($UserStatsData[$thisFleetOwnerID])) {
+            $UserStatsData[$thisFleetOwnerID] = Flights\Utils\Initializers\initUserStatsMap();
+        }
+        $UserStatsData[$thisFleetOwnerID]['other_expeditions_count'] += 1;
+
+
+
+        $expeditionEvent = Flights\Utils\Helpers\getRandomExpeditionEvent([]);
+        $expeditionOutcome = Flights\Utils\Helpers\getExpeditionEventOutcome([
+            'event' => $expeditionEvent
+        ]);
+        $expeditionFinalOutcome = $expeditionOutcome;
+
+        $preExpeditionShips = String2Array($fleetRow['fleet_array']);
+        $postExpeditionShips = String2Array($fleetRow['fleet_array']);
+
+        $gainedResources = [];
+
+        if (!empty($expeditionOutcome['gains']['planetaryResources'])) {
+            $fleetPillageStorage = Flights\Utils\Calculations\calculatePillageStorage([
+                'fleetRow' => $fleetRow,
+                'ships' => $postExpeditionShips,
+            ]);
+
+            $resourcesPillage = Flights\Utils\Missions\calculateEvenResourcesPillage([
+                'maxPillagePerResource' => Flights\Utils\Missions\calculateMaxPlanetPillage([
+                    'planet' => $expeditionOutcome['gains']['planetaryResources'],
+                    'maxPillagePercentage' => 1,
+                ]),
+                'fleetTotalStorage' => $fleetPillageStorage,
+            ]);
+
+            $gainedResources = $resourcesPillage;
+            $expeditionFinalOutcome['gains']['planetaryResources'] = $resourcesPillage;
+        }
+
+        if (empty($postExpeditionShips)) {
+            $fleetsToDeleteByID[] = $thisFleetID;
+
+            $gainedResources = [];
+            $expeditionFinalOutcome['gains']['planetaryResources'] = [];
+        } else {
+            $fleetUpdateEntriesByID[$thisFleetID] = Flights\Utils\Factories\createFleetUpdateEntry([
+                'fleetID' => $thisFleetID,
+                'state' => '2',
+                'originalShips' => $preExpeditionShips,
+                'postCombatShips' => $postExpeditionShips,
+                'resourcesPillage' => $gainedResources,
+            ]);
+        }
+
+        if (!empty($gainedResources)) {
+            $result['FleetArchive'][$thisFleetID]['Fleet_End_Res_Metal'] = $gainedResources['metal'];
+            $result['FleetArchive'][$thisFleetID]['Fleet_End_Res_Crystal'] = $gainedResources['crystal'];
+            $result['FleetArchive'][$thisFleetID]['Fleet_End_Res_Deuterium'] = $gainedResources['deuterium'];
+        }
+
+        $fleetOwnerDevelopmentLogEntries[] = Flights\Utils\Factories\createFleetDevelopmentLogEntries([
+            'originalShips' => $preExpeditionShips,
+            'postCombatShips' => $postExpeditionShips,
+            'resourcesPillage' => $gainedResources,
+        ]);
+
+
+        if (!empty($fleetOwnerDevelopmentLogEntries)) {
+            foreach ($fleetOwnerDevelopmentLogEntries as $logEntry) {
+                if (empty($logEntry)) {
+                    continue;
                 }
-            }
-            $FleetCount = $FleetRow['fleet_amount'];
-            $FleetStayDuration = ($FleetRow['fleet_end_stay'] - $FleetRow['fleet_start_time']) / 3600;
 
-            $WhatHappened = rand(1,100);
-
-            if($WhatHappened >= 1 AND $WhatHappened <= 15)
-            {
-                // Partial/Complete Destruction
-                $NewFleetCount = 0;
-
-                $DestructionPercent = rand(1,100);
-                foreach($FleetArray as $Ship => $Count)
-                {
-                    $NewCount = floor($Count * ((100 - $DestructionPercent) / 100));
-                    $NewFleetArray[$Ship] = $NewCount;
-                    $NewFleetCount += $NewCount;
-                    if($NewCount < $FleetArray[$Ship])
-                    {
-                        $DestroyedArray[$Ship] = $FleetArray[$Ship] - $NewCount;
-                    }
-                }
-
-                if($NewFleetCount < $FleetCount AND $NewFleetCount > 0)
-                {
-                    foreach($NewFleetArray as $Ship => $Count)
-                    {
-                        $NewFleetArrayString[] = $Ship.','.$Count;
-                    }
-                    $NewFleetArray = implode(';', $NewFleetArrayString);
-
-                    $QryUpdateFleet = "UPDATE {{table}} SET ";
-                    $QryUpdateFleet .= "`fleet_array` = '{$NewFleetArray}', ";
-                    $QryUpdateFleet .= "`fleet_amount` = {$NewFleetCount}, ";
-                    $QryUpdateFleet .= "`fleet_mess` = '1'";
-                    $QryUpdateFleet .= "WHERE ";
-                    $QryUpdateFleet .= "`fleet_id` = '". $FleetRow['fleet_id'] ."'; -- EXPEDITION QUERY 1";
-                    doquery($QryUpdateFleet, 'fleets');
-
-                    $return['fleet_end_amount'] = $NewFleetCount;
-                    $return['fleet_end_array'] = '"'.$NewFleetArray.'"';
-
-                    $Message = false;
-                    $Message['msg_id'] = '0'.rand(42,44);
-                    foreach($DestroyedArray as $Ship => $Count)
-                    {
-                        $Message['args'] .= '<br/>'.$_Lang['tech'][$Ship].' - '.$Count;
-                    }
-
-                    $Message = json_encode($Message);
-
-                    Cache_Message($FleetOwner, 0, $FleetRow['fleet_end_stay'], 15, $MessSender, $MessTitle, $Message);
-
-                    $FleetRow['fleet_array'] = $NewFleetArray;
-                    $FleetRow['fleet_amount']= $NewFleetCount;
-                }
-                else if($NewFleetCount == $FleetCount)
-                {
-                    $Message = false;
-                    $Message['msg_id'] = '0'.rand(45,47);
-                    $Message['args'] = array('');
-
-                    $Message = json_encode($Message);
-
-                    Cache_Message($FleetOwner, 0, $FleetRow['fleet_end_stay'], 15, $MessSender, $MessTitle, $Message);
-                }
-                else
-                {
-                    $Message = false;
-                    $Message['msg_id'] = '0'.rand(48,50);
-                    $Message['args']= array('');
-
-                    $Message = json_encode($Message);
-
-                    Cache_Message($FleetOwner, 0, $FleetRow['fleet_end_stay'], 15, $MessSender, $MessTitle, $Message);
-
-                    doquery("DELETE FROM {{table}} WHERE `fleet_id` = {$FleetRow['fleet_id']}; -- EXPEDITION QUERY 2", 'fleets');
-                    $fleetHasBeenDeleted = TRUE;
-
-                    $return['fleet_destroyed'] = '1';
-                    $return['fleet_destroy_reason'] = '"expedition"';
-                }
-            }
-            else if($WhatHappened >= 16 AND $WhatHappened <= 55)
-            {
-                // Resources found
-                $anyResourceMaxIncome = 10000000;
-
-                $resourceTypesList = [
-                    'Metal',
-                    'Crystal',
-                    'Deuterium'
+                $UserDev_Log[] = [
+                    'UserID' => $thisFleetOwnerID,
+                    'PlanetID' => '0',
+                    'Date' => $fleetRow['fleet_end_stay'],
+                    'Place' => 31,
+                    'Code' => '0',
+                    'ElementID' => $thisFleetID,
+                    'AdditionalData' => implode(';', $logEntry)
                 ];
-
-                $maxResourcesIncome = [
-                    'Metal' => ($FleetMetalCost * 0.2),
-                    'Crystal' => ($FleetCrystCost * 0.2),
-                    'Deuterium' => ($FleetDeuteCost * 0.2),
-                ];
-
-                foreach ($resourceTypesList as $resourceKey) {
-                    if ($maxResourcesIncome[$resourceKey] <= $anyResourceMaxIncome) {
-                        continue;
-                    }
-
-                    $maxResourcesIncome[$resourceKey] = $anyResourceMaxIncome;
-                }
-
-                $foundResources = [
-                    'Metal' => rand(
-                        round((($maxResourcesIncome['Metal'] * 0.001) + 1) * (pow(1.2, $FleetStayDuration) - 0.2)),
-                        $maxResourcesIncome['Metal']
-                    ),
-                    'Crystal' => rand(
-                        round((($maxResourcesIncome['Crystal'] * 0.001) + 1) * (pow(1.2, $FleetStayDuration) - 0.2)),
-                        $maxResourcesIncome['Crystal']
-                    ),
-                    'Deuterium' => rand(
-                        round((($maxResourcesIncome['Deuterium'] * 0.001) + 1) * (pow(1.2, $FleetStayDuration) - 0.2)),
-                        $maxResourcesIncome['Deuterium']
-                    ),
-                ];
-
-                $resourceOrderRolls = [
-                    rand(0, 2),
-                    rand(0, 1),
-                    0
-                ];
-
-                $FleetInitCapacity = $FleetCapacity;
-
-                $resourceTypesCount = count($resourceTypesList);
-
-                for ($i = 0; $i < $resourceTypesCount; $i++) {
-                    $resourceKeyRoll = $resourceOrderRolls[$i];
-                    $resourceKey = $resourceTypesList[$resourceKeyRoll];
-                    $thisResourceFound = $foundResources[$resourceKey];
-
-                    if ($FleetCapacity < $thisResourceFound) {
-                        $thisResourceFound = $FleetCapacity;
-                        $foundResources[$resourceKey] = $FleetCapacity;
-                    }
-
-                    $FleetCapacity -= $thisResourceFound;
-
-                    array_splice($resourceTypesList, $resourceKeyRoll, 1);
-                }
-
-                $Message = false;
-
-                if($FleetCapacity < $FleetInitCapacity)
-                {
-                    if($foundResources['Metal'] > 0)
-                    {
-                        $QryUpdateResources[] = "`fleet_resource_metal` = `fleet_resource_metal` + {$foundResources['Metal']}";
-                        $MsgGottenArray[] = $_Lang['Metal'].': '.prettyNumber($foundResources['Metal']);
-                        $FleetRow['fleet_resource_metal'] += $foundResources['Metal'];
-                    }
-                    else
-                    {
-                        $foundResources['Metal'] = '0';
-                    }
-                    if($foundResources['Crystal'] > 0)
-                    {
-                        $QryUpdateResources[] = "`fleet_resource_crystal` = `fleet_resource_crystal` + {$foundResources['Crystal']}";
-                        $MsgGottenArray[] = $_Lang['Crystal'].': '.prettyNumber($foundResources['Crystal']);
-                        $FleetRow['fleet_resource_crystal'] += $foundResources['Crystal'];
-                    }
-                    else
-                    {
-                        $foundResources['Crystal'] = '0';
-                    }
-                    if($foundResources['Deuterium'] > 0)
-                    {
-                        $QryUpdateResources[] = "`fleet_resource_deuterium` = `fleet_resource_deuterium` + {$foundResources['Deuterium']}";
-                        $MsgGottenArray[] = $_Lang['Deuterium'].': '.prettyNumber($foundResources['Deuterium']);
-                        $FleetRow['fleet_resource_deuterium'] += $foundResources['Deuterium'];
-                    }
-                    else
-                    {
-                        $foundResources['Deuterium'] = '0';
-                    }
-
-                    $return['fleet_end_resource_metal'] = $foundResources['Metal'];
-                    $return['fleet_end_resource_crystal'] = $foundResources['Crystal'];
-                    $return['fleet_end_resource_deuterium'] = $foundResources['Deuterium'];
-
-                    $QryUpdateFleet = "UPDATE {{table}} SET ";
-                    $QryUpdateFleet .= implode(", ", $QryUpdateResources);
-                    $QryUpdateFleet .= ", `fleet_mess` = 1 ";
-                    $QryUpdateFleet .= "WHERE `fleet_id` = {$FleetRow['fleet_id']};";
-                    doquery($QryUpdateFleet, 'fleets');
-
-                    $Message['msg_id'] = '0'.rand(51, 53);
-                    $Message['args'] = implode('<br/>', $MsgGottenArray);
-                }
-                else
-                {
-                    $Message['msg_id'] = '0'.rand(54, 56);
-                    $Message['args'] = array('');
-                }
-
-                $Message = json_encode($Message);
-
-                Cache_Message($FleetOwner, 0, $FleetRow['fleet_end_stay'], 15, $MessSender, $MessTitle, $Message);
             }
-            else if($WhatHappened >= 56 AND $WhatHappened <= 65)
-            {
-                // Found Ships
-                $FoundShipsTotal = 0;
+        }
 
-                $MaxShipsPoints = 20000;
-                if($FleetPoints > $MaxShipsPoints)
-                {
-                    $FleetPoints = $MaxShipsPoints;
+        foreach ($fleetUpdateEntriesByID as $fleetID => $fleetUpdateEntry) {
+            $serializedFleetArray = Array2String($fleetUpdateEntry['fleet_array']);
+            $serializedFleetArrayLost = Array2String($fleetUpdateEntry['fleet_array_lost']);
+
+            if (
+                !empty($fleetUpdateEntry['fleet_array']) &&
+                !empty($fleetUpdateEntry['fleet_array_lost'])
+            ) {
+                if (strlen($serializedFleetArray) > strlen($serializedFleetArrayLost)) {
+                    $result['FleetArchive'][$fleetID]['Fleet_Array_Changes'] = "\"+D;{$serializedFleetArrayLost}|\"";
+                } else {
+                    $result['FleetArchive'][$fleetID]['Fleet_Array_Changes'] = "\"+L;{$serializedFleetArray}|\"";
                 }
 
-                $HowManyShipsToRandom = rand(1,5);
-                $RandomizedShips = array_rand($RatioGain, $HowManyShipsToRandom);
-                $NewFleetArray = $FleetArray;
-                if((array)$RandomizedShips === $RandomizedShips)
-                {
-                    foreach($RandomizedShips as $Ship)
-                    {
-                        $FoundShips[$Ship] = round((($FleetPoints * 5) * $RatioGain[$Ship] * (5 / $HowManyShipsToRandom)) * (pow(1.1, $FleetStayDuration) - 0.1));
-                        if($FleetArray[$Ship] > 0)
-                        {
-                            $ThisShipMaxCount = ($FleetPoints / ($PointsFlotte[$Ship] / 10)) * $RatioGain[$Ship] * 0.8;
-                        }
-                        else
-                        {
-                            $ThisShipMaxCount = ($FleetArray[$Ship] * 0.3 * 0.25 * 0.75 * (mt_rand(75,130) / 100)) + ((($FleetPoints - (($PointsFlotte[$Ship] / 10) * $FleetArray[$Ship])) / ($PointsFlotte[$Ship] / 10)) * $RatioGain[$Ship] * 0.8);
-                        }
-                        $ThisShipMaxCount = floor($ThisShipMaxCount);
-                        if($FoundShips[$Ship] > $ThisShipMaxCount)
-                        {
-                            $FoundShips[$Ship] = $ThisShipMaxCount;
-                        }
-                        $FoundShipsTotal += $FoundShips[$Ship];
-                        $NewFleetArray[$Ship] += $FoundShips[$Ship];
-                    }
-                }
-                else
-                {
-                    $FoundShips[$RandomizedShips] = round((($FleetPoints * 5) * $RatioGain[$RandomizedShips] * (5 / $HowManyShipsToRandom)) * (pow(1.1, $FleetStayDuration) - 0.1));
-                    $FoundShipsTotal += $FoundShips[$RandomizedShips];
-                    $NewFleetArray[$RandomizedShips] += $FoundShips[$RandomizedShips];
-                }
-
-                if($FoundShipsTotal > 0)
-                {
-                    foreach($NewFleetArray as $Ship => $Count)
-                    {
-                        $NewFleetArrayString[] = $Ship.','.$Count;
-                    }
-                    $NewFleetArray = implode(';', $NewFleetArrayString);
-
-                    $QryUpdateFleet = "UPDATE {{table}} SET ";
-                    $QryUpdateFleet .= "`fleet_array` = '{$NewFleetArray}', ";
-                    $QryUpdateFleet .= "`fleet_amount` = `fleet_amount` + {$FoundShipsTotal}, ";
-                    $QryUpdateFleet .= "`fleet_mess` = '1'";
-                    $QryUpdateFleet .= "WHERE ";
-                    $QryUpdateFleet .= "`fleet_id` = {$FleetRow['fleet_id']}; -- EXPEDITION QUERY 1";
-                    doquery($QryUpdateFleet, 'fleets');
-
-                    $return['fleet_end_amount'] = $FleetRow['fleet_amount'] + $FoundShipsTotal;
-                    $return['fleet_end_array'] = '"'.$NewFleetArray.'"';
-
-                    $Message = false;
-                    $Message['msg_id'] = '0'.rand(57,58);
-                    foreach($FoundShips as $Ship => $Count)
-                    {
-                        $Message['args'] .= '<br/>'.$_Lang['tech'][$Ship].' - '.$Count;
-                    }
-
-                    $FleetRow['fleet_array'] = $NewFleetArray;
-                    $FleetRow['fleet_amount']+= $FoundShipsTotal;
-                }
-                else
-                {
-                    $Message = false;
-                    $Message['msg_id'] = '0'.rand(59,60);
-                    $Message['args'] = array('');
-                }
-
-                $Message = json_encode($Message);
-
-                Cache_Message($FleetOwner, 0, $FleetRow['fleet_end_stay'], 15, $MessSender, $MessTitle, $Message);
+                $result['FleetArchive'][$fleetID]['Fleet_Info_HasLostShips'] = '!true';
             }
-            else if($WhatHappened >= 66 AND $WhatHappened <= 85)
-            {
-                // Nothing happened
 
-                doquery("UPDATE {{table}} SET `fleet_mess` = '1' WHERE `fleet_id` = {$FleetRow['fleet_id']};", 'fleets');
+            if (
+                $_FleetCache['fleetRowStatus'][$thisFleetID]['calcCount'] > $_FleetCache['fleetRowStatus'][$thisFleetID]['calcCounter']
+            ) {
+                // We know that we'll perform the "fleet returned to planet" event
+                // in the same Fleets Handling run, so stash the result in local cache,
+                // instead of sending entry to be persisted as fleet row update in DB.
+                // `fleetRowUpdate` operates on real values.
 
-                $Message = false;
-                $Message['msg_id'] = '015';
-                $Message['args'] = array('');
+                $CachePointer = &$_FleetCache['fleetRowUpdate'][$fleetID];
+                $CachePointer['fleet_array'] = $serializedFleetArray;
+                $CachePointer['fleet_amount'] = $fleetUpdateEntry['fleet_amount'];
+                $CachePointer['fleet_mess'] = $fleetUpdateEntry['fleet_mess'];
+                $CachePointer['fleet_resource_metal'] = (
+                    $fleetRow['fleet_resource_metal'] +
+                    $fleetUpdateEntry['fleet_resource_metal']
+                );
+                $CachePointer['fleet_resource_crystal'] = (
+                    $fleetRow['fleet_resource_crystal'] +
+                    $fleetUpdateEntry['fleet_resource_crystal']
+                );
+                $CachePointer['fleet_resource_deuterium'] = (
+                    $fleetRow['fleet_resource_deuterium'] +
+                    $fleetUpdateEntry['fleet_resource_deuterium']
+                );
+            } else {
+                // Create UpdateFleet record for $_FleetCache
+                // `updateFleets` operates on real values or on "offsets".
 
-                $Message = json_encode($Message);
-
-                Cache_Message($FleetOwner, 0, $FleetRow['fleet_end_stay'], 15, $MessSender, $MessTitle, $Message);
+                $CachePointer = &$_FleetCache['updateFleets'][$fleetID];
+                $CachePointer['fleet_array'] = $serializedFleetArray;
+                $CachePointer['fleet_amount'] = $fleetUpdateEntry['fleet_amount'];
+                $CachePointer['fleet_mess'] = $fleetUpdateEntry['fleet_mess'];
+                $CachePointer['fleet_resource_metal'] = (
+                    isset($CachePointer['fleet_resource_metal']) ?
+                    $CachePointer['fleet_resource_metal'] + $fleetUpdateEntry['fleet_resource_metal'] :
+                    $fleetUpdateEntry['fleet_resource_metal']
+                );
+                $CachePointer['fleet_resource_crystal'] = (
+                    isset($CachePointer['fleet_resource_crystal']) ?
+                    $CachePointer['fleet_resource_crystal'] + $fleetUpdateEntry['fleet_resource_crystal'] :
+                    $fleetUpdateEntry['fleet_resource_crystal']
+                );
+                $CachePointer['fleet_resource_deuterium'] = (
+                    isset($CachePointer['fleet_resource_deuterium']) ?
+                    $CachePointer['fleet_resource_deuterium'] + $fleetUpdateEntry['fleet_resource_deuterium'] :
+                    $fleetUpdateEntry['fleet_resource_deuterium']
+                );
             }
-            else if($WhatHappened >= 86 AND $WhatHappened <= 100)
-            {
-                // Error in Navigation System
+        }
 
-                $RandomTimeError = rand(900, TIME_DAY);
-                doquery("UPDATE {{table}} SET `fleet_mess` = '1', `fleet_end_time` = `fleet_end_time` + {$RandomTimeError} WHERE `fleet_id` = {$FleetRow['fleet_id']};", 'fleets');
+        foreach ($fleetsToDeleteByID as $fleetID) {
+            $_FleetCache['fleetRowStatus'][$fleetID]['isDestroyed'] = true;
 
-                $Message = false;
-                $Message['msg_id'] = '061';
-                $Message['args'] = array(pretty_time($RandomTimeError));
-
-                $Message = json_encode($Message);
-
-                Cache_Message($FleetOwner, 0, $FleetRow['fleet_end_stay'], 15, $MessSender, $MessTitle, $Message);
-
-                $FleetRow['fleet_end_time'] += $RandomTimeError;
+            if (!empty($_FleetCache['updateFleets'][$fleetID])) {
+                unset($_FleetCache['updateFleets'][$fleetID]);
             }
-            else
-            {
-                // Nothing (yet)
 
-                doquery("UPDATE {{table}} SET `fleet_mess` = '1' WHERE `fleet_id` = {$FleetRow['fleet_id']};", 'fleets');
+            $result['FleetsToDelete'][] = $fleetID;
+            $result['FleetArchive'][$fleetID]['Fleet_Destroyed'] = true;
+            $result['FleetArchive'][$fleetID]['Fleet_Info_HasLostShips'] = true;
+            $result['FleetArchive'][$fleetID]['Fleet_Destroyed_Reason'] = Flights\Enums\FleetDestructionReason::ONEXPEDITION_UNKNOWN;
+        }
 
-                $Message = false;
-                $Message['msg_id'] = '015';
-                $Message['args'] = array('');
+        $sendExpeditionMessage([
+            'messageData' => Flights\Utils\Missions\Expeditions\createEventMessage([
+                'eventType' => $expeditionEvent,
+                'eventFinalOutcome' => $expeditionFinalOutcome,
+            ]),
+            'fleetTimeMoment' => 'expeditionFinished'
+        ]);
+    }
 
-                $Message = json_encode($Message);
+    if (
+        $fleetRow['calcType'] == 3 &&
+        (
+            !isset($_FleetCache['fleetRowStatus'][$thisFleetID]['isDestroyed']) ||
+            $_FleetCache['fleetRowStatus'][$thisFleetID]['isDestroyed'] !== true
+        )
+    ) {
+        // Fleet has returned from exploration, restore to planet if not destroyed
 
-                Cache_Message($FleetOwner, 0, $FleetRow['fleet_end_stay'], 15, $MessSender, $MessTitle, $Message);
+        if (
+            isset($_FleetCache['fleetRowStatus'][$thisFleetID]['needUpdate']) &&
+            $_FleetCache['fleetRowStatus'][$thisFleetID]['needUpdate'] === true &&
+            !empty($_FleetCache['fleetRowUpdate'][$thisFleetID])
+        ) {
+            foreach ($_FleetCache['fleetRowUpdate'][$thisFleetID] as $Key => $Value) {
+                $fleetRow[$Key] = $Value;
             }
+        }
+
+        $result['FleetsToDelete'][] = $thisFleetID;
+        $result['FleetArchive'][$thisFleetID]['Fleet_Calculated_ComeBack'] = true;
+        $result['FleetArchive'][$thisFleetID]['Fleet_Calculated_ComeBack_Time'] = $calculationTimestamp;
+
+        RestoreFleetToPlanet($fleetRow, true, $_FleetCache);
+
+        $_FleetCache['fleetRowStatus'][$thisFleetID]['calcCounter'] += 1;
+        $_FleetCache['fleetRowStatus'][$thisFleetID]['needUpdate'] = false;
+
+        $sendExpeditionMessage([
+            'messageData' => [
+                'msg_id' => '107',
+                'args' => [
+                    ($fleetRow['fleet_start_type'] == 1 ? $_Lang['to_planet'] : $_Lang['to_moon']),
+                    $fleetRow['attacking_planet_name'],
+                    $fleetRow['fleet_start_galaxy'],
+                    $fleetRow['fleet_start_system'],
+                    $fleetRow['fleet_start_galaxy'],
+                    $fleetRow['fleet_start_system'],
+                    $fleetRow['fleet_start_planet'],
+                ],
+            ],
+            'fleetTimeMoment' => 'expeditionBackHome'
+        ]);
+    }
+
+    if ($_FleetCache['fleetRowStatus'][$thisFleetID]['calcCounter'] == $_FleetCache['fleetRowStatus'][$thisFleetID]['calcCount']) {
+        if ($fleetRow['calcType'] != 3) {
+            // TODO: How about moving that to a helper function?
+            if (
+                isset($_FleetCache['fleetRowStatus'][$thisFleetID]['needUpdate']) &&
+                $_FleetCache['fleetRowStatus'][$thisFleetID]['needUpdate'] === true &&
+                !empty($_FleetCache['fleetRowUpdate'][$thisFleetID])
+            ) {
+                foreach ($_FleetCache['fleetRowUpdate'][$thisFleetID] as $Key => $Value) {
+                    $fleetRow[$Key] = $Value;
+                }
+            }
+
+            $_FleetCache['updateFleets'][$thisFleetID]['fleet_mess'] = $fleetRow['fleet_mess'];
         }
     }
 
-    if($FleetRow['fleet_end_time'] < time() AND $fleetHasBeenDeleted === false)
-    {
-
-        $AllowSendReturn = true;
-        $return['fleet_came_back'] = '1';
-        RestoreFleetToPlanet($FleetRow, true);
-        doquery("DELETE FROM {{table}} WHERE `fleet_id` = {$FleetRow['fleet_id']}; -- EXPEDITION QUERY 2", 'fleets');
-
-        $enforceSQLUpdate = 1;
-
-        $Message = false;
-        $Message['msg_id'] = '017';
-        $Message['args'] = array('');
-
-        $Message = json_encode($Message);
-
-        Cache_Message($FleetOwner, 0, $FleetRow['fleet_end_time'], 15, $MessSender, $MessTitle, $Message);
-    }
-
-    if($AllowSendReturn)
-    {
-        return $return;
-    }
+    return $result;
 }
 
 ?>

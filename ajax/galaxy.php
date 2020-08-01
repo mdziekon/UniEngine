@@ -23,6 +23,7 @@ if(!isLogged())
 }
 
 include($_EnginePath.'includes/functions/ShowGalaxyRows.php');
+include($_EnginePath.'includes/functions/GalaxyRowExpedition.php');
 include($_EnginePath.'includes/functions/GalaxyRowPos.php');
 include($_EnginePath.'includes/functions/GalaxyRowPlanet.php');
 include($_EnginePath.'includes/functions/GalaxyRowPlanetName.php');

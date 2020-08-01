@@ -56,42 +56,42 @@ if($SQLResult_GetUsers->num_rows > 0)
             $Point['planets'][$PlanetData['id']]['lu'] = $PlanetData['last_update'];
             $Point['planets'][$PlanetData['id']]['res'] = floor($PlanetData['metal']).','.floor($PlanetData['crystal']).','.floor($PlanetData['deuterium']);
 
+            $planetEntryRef = &$Point['planets'][$PlanetData['id']];
 
-            foreach($_Vars_ElementCategories as $Key => $Array)
-            {
-                if(in_array($Key, array('tech', 'buildOn', 'units')))
-                {
+            foreach ($_Vars_ElementCategories as $categoryKey => $categoryElementIDs) {
+                if (!in_array($categoryKey, [ 'build', 'prod', 'fleet', 'defense', 'rockets' ])) {
                     continue;
                 }
-                if($Key != 'build')
-                {
-                    if($Key != 'prod')
-                    {
-                        foreach($Array as $ElementID)
-                        {
-                            if(isset($PlanetData[$_Vars_GameElements[$ElementID]]) && $PlanetData[$_Vars_GameElements[$ElementID]] > 0)
-                            {
-                                $Point['planets'][$PlanetData['id']]['f'][] = "{$ElementID},{$PlanetData[$_Vars_GameElements[$ElementID]]}";
-                            }
-                        }
+
+                if ($categoryKey == 'prod') {
+                    foreach ($categoryElementIDs as $elementID) {
+                        $planetEntryRef['p'][] = $elementID.','.$PlanetData[$_Vars_GameElements[$elementID].'_workpercent'];
                     }
-                    else
-                    {
-                        foreach($Array as $ElementID)
-                        {
-                            $Point['planets'][$PlanetData['id']]['p'][] = $ElementID.','.$PlanetData[$_Vars_GameElements[$ElementID].'_workpercent'];
-                        }
-                    }
+
+                    continue;
                 }
-                else
-                {
-                    foreach($Array as $BuildID)
-                    {
-                        if(isset($PlanetData[$_Vars_GameElements[$BuildID]]) && $PlanetData[$_Vars_GameElements[$BuildID]] > 0)
-                        {
-                            $Point['planets'][$PlanetData['id']]['b'][] = "{$BuildID},{$PlanetData[$_Vars_GameElements[$BuildID]]}";
-                        }
+
+                $inserter = function () {};
+
+                if ($categoryKey == 'build') {
+                    $inserter = function ($value) use (&$planetEntryRef) {
+                        $planetEntryRef['b'][] = $value;
+                    };
+                } else {
+                    $inserter = function ($value) use (&$planetEntryRef) {
+                        $planetEntryRef['f'][] = $value;
+                    };
+                }
+
+                foreach ($categoryElementIDs as $elementID) {
+                    if (
+                        !isset($PlanetData[$_Vars_GameElements[$elementID]]) ||
+                        $PlanetData[$_Vars_GameElements[$elementID]] <= 0
+                    ) {
+                        continue;
                     }
+
+                    $inserter("{$elementID},{$PlanetData[$_Vars_GameElements[$elementID]]}");
                 }
             }
         }

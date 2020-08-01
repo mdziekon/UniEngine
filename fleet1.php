@@ -240,7 +240,7 @@ if($SetPosNotEmpty !== true)
     {
         $SetPos['s'] = $_Planet['system'];
     }
-    if($SetPos['p'] < 1 OR $SetPos['p'] > MAX_PLANET_IN_SYSTEM)
+    if($SetPos['p'] < 1 OR $SetPos['p'] > (MAX_PLANET_IN_SYSTEM + 1))
     {
         $SetPos['p'] = $_Planet['planet'];
     }

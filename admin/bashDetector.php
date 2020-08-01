@@ -9,6 +9,8 @@ $_EnginePath = '../';
 
 include($_EnginePath.'common.php');
 
+use UniEngine\Engine\Modules\Flights;
+
 if(!CheckAuth('go'))
 {
     message($_Lang['sys_noalloaw'], $_Lang['sys_noaccess']);
@@ -140,10 +142,17 @@ if(isset($_POST['send']) && $_POST['send'] == 1)
         $ThisArray = array($Usernames[$Set['SenderID']], $Set['SenderID'], $Set['SenderID'], $Usernames[$Set['OwnerID']], $Set['OwnerID'], $Set['OwnerID'], prettyDate('d m Y', $Set['Date'], 1));
         $_Lang['Insert_BashOverallResult'][] = vsprintf($_Lang['Analysis_Info'], $ThisArray);
 
+        $excludedDestructionReasons = [
+            strval(Flights\Enums\FleetDestructionReason::INBATTLE_FIRSTROUND_NODAMAGE),
+            strval(Flights\Enums\FleetDestructionReason::DRAW_NOBASH),
+            strval(Flights\Enums\FleetDestructionReason::INBATTLE_OTHERROUND_NODAMAGE),
+        ];
+        $excludedDestructionReasonsStr = implode(', ', $excludedDestructionReasons);
+
         $Query_Where[] = "`Fleet_Mission` IN (1, 2, 9)";
         $Query_Where[] = "`Fleet_End_Owner_IdleHours` < 168";
         $Query_Where[] = "`Fleet_ReportID` > 0";
-        $Query_Where[] = "`Fleet_Destroyed_Reason` NOT IN (1, 4, 11)";
+        $Query_Where[] = "`Fleet_Destroyed_Reason` NOT IN ({$excludedDestructionReasonsStr})";
 
         $Query_GetFleets = '';
         $Query_GetFleets .= "SELECT `Fleet_ID`, `Fleet_Mission`, `Fleet_Time_Start`, `Fleet_End_ID`, `Fleet_ReportID` ";

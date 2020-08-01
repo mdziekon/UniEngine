@@ -360,7 +360,7 @@ function MissionCaseMIP($FleetRow, &$_FleetCache)
         $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_Calculated_Mission'] = true;
         $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_Calculated_Mission_Time'] = $Now;
         $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_Destroyed'] = true;
-        $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_Destroyed_Reason'] = 9;
+        $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_Destroyed_Reason'] = Flights\Enums\FleetDestructionReason::MISSILEATTACK;
     }
 
     return $Return;

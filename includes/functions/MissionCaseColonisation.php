@@ -1,5 +1,7 @@
 <?php
 
+use UniEngine\Engine\Modules\Flights;
+
 function MissionCaseColonisation($FleetRow, &$_FleetCache)
 {
     global $_Lang, $UserDev_Log, $_User, $GlobalParsedTasks, $UserTasksUpdate, $_Vars_TasksData;
@@ -89,7 +91,7 @@ function MissionCaseColonisation($FleetRow, &$_FleetCache)
                         $fleetHasBeenDeleted = true;
                         $Return['FleetsToDelete'][] = $FleetRow['fleet_id'];
                         $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_Destroyed'] = true;
-                        $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_Destroyed_Reason'] = 8;
+                        $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_Destroyed_Reason'] = Flights\Enums\FleetDestructionReason::COLONIZATION;
                         $Return['FleetArchive'][$FleetRow['fleet_id']]['Fleet_Info_HasLostShips'] = true;
                         $SetCode = '1';
                     }

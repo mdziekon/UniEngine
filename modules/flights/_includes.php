@@ -6,6 +6,7 @@ call_user_func(function () {
 
     $includePath = $_EnginePath . 'modules/flights/';
 
+    include($includePath . './enums/FleetDestructionReason.enum.php');
     include($includePath . './utils/calculations/calculateMoonCreationRoll.utils.php');
     include($includePath . './utils/calculations/calculatePostCombatMorale.utils.php');
     include($includePath . './utils/calculations/calculatePostCombatMoraleUpdates.utils.php');
@@ -21,10 +22,12 @@ call_user_func(function () {
     include($includePath . './utils/fleetCache/updateGalaxyDebris.utils.php');
     include($includePath . './utils/fleetCache/morale.utils.php');
     include($includePath . './utils/fleetCache/updateUserStats.utils.php');
+    include($includePath . './utils/helpers/getRandomExpeditionEvent.utils.php');
     include($includePath . './utils/helpers/hasLostAnyDefenseSystem.utils.php');
     include($includePath . './utils/initializers/combatUserDetails.utils.php');
     include($includePath . './utils/initializers/technologies.utils.php');
     include($includePath . './utils/initializers/userStats.utils.php');
+    include($includePath . './utils/missions/expeditions/createEventMessage.utils.php');
     include($includePath . './utils/modifiers/calculateMoraleModifiers.utils.php');
     include($includePath . './utils/missions.utils.php');
 

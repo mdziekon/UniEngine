@@ -256,10 +256,10 @@ if($AllowScan)
                 $PlanetsDumpData[$PlanetID]['id'] = $PlanetID;
                 foreach($_Vars_ElementCategories as $reskey => $resvals)
                 {
-                    if(in_array($reskey, array('tech', 'buildOn', 'units')))
-                    {
+                    if (!in_array($reskey, [ 'build', 'fleet', 'defense', 'rockets', 'prod' ])) {
                         continue;
                     }
+
                     foreach($resvals as $resID)
                     {
                         if($reskey != 'prod')
@@ -1089,6 +1089,12 @@ if($AllowScan)
 
                     $PreventResourceUpdate = true;
                 }
+                else if($Place == 31)
+                {
+                    // MissionCaseExpedition.php
+
+                    $PreventResourceUpdate = true;
+                }
                 else
                 {
                     $ScanLog['Fatal'][] = array('ID' => '001', 'LogNo' => $ScaningNo, 'LogID' => $Log['ID'], 'Data' => array($Place));
@@ -1198,10 +1204,10 @@ if($AllowScan)
 
                 foreach($_Vars_ElementCategories as $Key => $Values)
                 {
-                    if(in_array($Key, array('build', 'tech', 'prod', 'buildOn', 'units')))
-                    {
+                    if (!in_array($Key, [ 'fleet', 'defense', 'rockets' ])) {
                         continue;
                     }
+
                     foreach($Values as $ItemID)
                     {
                         $PlanetNew[$_Vars_GameElements[$ItemID]] += 0;
@@ -1404,10 +1410,10 @@ if($AllowScan)
 
                 foreach($_Vars_ElementCategories as $Key => $Values)
                 {
-                    if(in_array($Key, array('tech', 'prod', 'buildOn', 'units')))
-                    {
+                    if (!in_array($Key, [ 'build', 'fleet', 'defense', 'rockets' ])) {
                         continue;
                     }
+
                     foreach($Values as $ItemID)
                     {
                         if($Key != 'build')

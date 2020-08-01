@@ -169,6 +169,16 @@ function ShowGalaxyRows($Galaxy, $System, $HighlightPlanet = false)
         }
     }
 
+    if (isFeatureEnabled(FeatureType::Expeditions)) {
+        $Result .= parsetemplate(
+            $RowTPL,
+            [
+                'Data' => GalaxyRowExpedition($Galaxy, $System),
+                'SetHighlight' => ''
+            ]
+        );
+    }
+
     return $Result;
 }
 
