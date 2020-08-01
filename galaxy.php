@@ -13,6 +13,7 @@ include($_EnginePath.'includes/functions/ShowGalaxySelector.php');
 include($_EnginePath.'includes/functions/ShowGalaxyMISelector.php');
 include($_EnginePath.'includes/functions/ShowGalaxyTitles.php');
 include($_EnginePath.'includes/functions/ShowGalaxyFooter.php');
+include($_EnginePath.'includes/functions/GalaxyRowExpedition.php');
 include($_EnginePath.'includes/functions/GalaxyRowPos.php');
 include($_EnginePath.'includes/functions/GalaxyRowPlanet.php');
 include($_EnginePath.'includes/functions/GalaxyRowPlanetName.php');
