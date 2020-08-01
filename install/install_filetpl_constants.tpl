@@ -37,6 +37,9 @@ define('MAILER_SMTP_PASSWORD'                       , 'SMTPPASSWORD');
 define('MAILER_MSGFIELDS_FROM'                      , 'noreply@{Domain}');
 define('MAILER_MSGFIELDS_FROM_NAME'                 , '{GameName}');
 
+// --- Feature flags ---
+define('FEATURES__EXPEDITIONS__ISENABLED', true);
+
 // --- Morale System ---
 define('MORALE_ENABLED'                             , false);
 define('MORALE_MINIMALFACTOR'                       , 5);
