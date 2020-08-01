@@ -64,6 +64,7 @@ function MissionCaseExpeditionNew ($fleetRow, &$_FleetCache) {
         $expeditionOutcome = Flights\Utils\Helpers\getExpeditionEventOutcome([
             'event' => $expeditionEvent
         ]);
+        $expeditionFinalOutcome = $expeditionOutcome;
 
         $preExpeditionShips = String2Array($fleetRow['fleet_array']);
         $postExpeditionShips = String2Array($fleetRow['fleet_array']);
@@ -85,12 +86,14 @@ function MissionCaseExpeditionNew ($fleetRow, &$_FleetCache) {
             ]);
 
             $gainedResources = $resourcesPillage;
+            $expeditionFinalOutcome['gains']['planetaryResources'] = $resourcesPillage;
         }
 
         if (empty($postExpeditionShips)) {
             $fleetsToDeleteByID[] = $thisFleetID;
 
             $gainedResources = [];
+            $expeditionFinalOutcome['gains']['planetaryResources'] = [];
         } else {
             $fleetUpdateEntriesByID[$thisFleetID] = Flights\Utils\Factories\createFleetUpdateEntry([
                 'fleetID' => $thisFleetID,
@@ -212,7 +215,21 @@ function MissionCaseExpeditionNew ($fleetRow, &$_FleetCache) {
             $result['FleetArchive'][$fleetID]['Fleet_Destroyed_Reason'] = Flights\Enums\FleetDestructionReason::ONEXPEDITION_UNKNOWN;
         }
 
-        // TODO: Send message
+        $message = Flights\Utils\Missions\Expeditions\createEventMessage([
+            'eventType' => $expeditionEvent,
+            'eventFinalOutcome' => $expeditionFinalOutcome,
+        ]);
+        $messageJSON = json_encode($message);
+
+        Cache_Message(
+            $fleetRow['fleet_owner'],
+            0,
+            $fleetRow['fleet_end_stay'],
+            15,
+            $CONST_MESSAGES_SENDERID,
+            $CONST_MESSAGES_TITLEID,
+            $messageJSON
+        );
     }
 
     if (
