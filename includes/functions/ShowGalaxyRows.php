@@ -169,13 +169,15 @@ function ShowGalaxyRows($Galaxy, $System, $HighlightPlanet = false)
         }
     }
 
-    $Result .= parsetemplate(
-        $RowTPL,
-        [
-            'Data' => GalaxyRowExpedition($Galaxy, $System),
-            'SetHighlight' => ''
-        ]
-    );
+    if (isFeatureEnabled(FeatureType::Expeditions)) {
+        $Result .= parsetemplate(
+            $RowTPL,
+            [
+                'Data' => GalaxyRowExpedition($Galaxy, $System),
+                'SetHighlight' => ''
+            ]
+        );
+    }
 
     return $Result;
 }

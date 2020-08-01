@@ -330,7 +330,9 @@ else
     {
         if($Target['planet'] == (MAX_PLANET_IN_SYSTEM + 1))
         {
-            $AvailableMissions[] = 15;
+            if (isFeatureEnabled(FeatureType::Expeditions)) {
+                $AvailableMissions[] = 15;
+            }
         }
         else
         {

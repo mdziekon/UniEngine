@@ -156,6 +156,11 @@ $_Lang['P_MaxFleetSlots']        = 1 + $_User[$_Vars_GameElements[108]] + (($_Us
 $_Lang['P_MaxExpedSlots']        = 1 + floor($_User[$_Vars_GameElements[124]] / 3);
 $_Lang['P_FlyingFleetsCount']    = (string)($FlyingFleetsCount + 0);
 $_Lang['P_FlyingExpeditions']    = (string)($FlyingExpeditions + 0);
+$_Lang['P_Expeditions_isHidden_style'] = (
+    isFeatureEnabled(FeatureType::Expeditions) ?
+    '' :
+    'display: none;'
+);
 
 // Get own fleets
 $FL = 'fleet_';

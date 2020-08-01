@@ -83,6 +83,13 @@ if($Fleet['Mission'] <= 0)
     messageRed($_Lang['fl3_NoMissionSelected'], $ErrorTitle);
 }
 
+if (
+    !isFeatureEnabled(FeatureType::Expeditions) &&
+    $Fleet['Mission'] == 15
+) {
+    messageRed($_Lang['fl3_ExpeditionsAreOff'], $ErrorTitle);
+}
+
 // --- Get FlyingFleets Count
 $FlyingFleetsCount = 0;
 $FlyingExpeditions = 0;

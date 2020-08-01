@@ -25,7 +25,11 @@ var ShipsData = {Insert_ShipsData};
     <tr>
         <td colspan="8" class="c">
             <b class="flLe">{fl_title} {P_FlyingFleetsCount} / {P_MaxFleetSlots}</b>
-            <b class="flRi">{P_FlyingExpeditions} / {P_MaxExpedSlots} {fl_expttl}</b>
+            <b class="flRi">
+                <span style="{P_Expeditions_isHidden_style}">
+                    {P_FlyingExpeditions} / {P_MaxExpedSlots} {fl_expttl}
+                </span>
+            </b>
         </td>
     </tr>
     <tr>
