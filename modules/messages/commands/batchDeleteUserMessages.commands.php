@@ -9,6 +9,8 @@ namespace UniEngine\Engine\Modules\Messages\Commands;
  * @param array $params
  * @param number $params['userID']
  *               The ID of a user whose messages should be deleted.
+ * @param number|null $params['messageTypeID']
+ *               (Optional) Narrows the messages to be deleted to the specified type.
  * @param number $params['untilTimestamp']
  *               Determines the cut-off point for deletion, meaning that all messages
  *               prior to this point in time (inclusive) will be deleted.
@@ -16,6 +18,11 @@ namespace UniEngine\Engine\Modules\Messages\Commands;
 function batchDeleteUserMessages($params) {
     $ownerID = $params['userID'];
     $utilTimestamp = $params['untilTimestamp'];
+    $messageTypeID = (
+        isset($params['messageTypeID']) ?
+        $params['messageTypeID'] :
+        null
+    );
 
     $excludedMessageTypesString = _getBatchDeletionExcludedMessageTypesQueryString();
 
@@ -24,9 +31,13 @@ function batchDeleteUserMessages($params) {
         "SET " .
         "`deleted` = true " .
         "WHERE " .
+        (
+            $messageTypeID !== null ?
+            "`type` = {$messageTypeID} AND " :
+            "`type` NOT IN ({$excludedMessageTypesString}) AND "
+        ) .
         "`time` <= {$utilTimestamp} AND" .
-        "`id_owner` = {$ownerID} AND " .
-        "`type` NOT IN ({$excludedMessageTypesString}) " .
+        "`id_owner` = {$ownerID} " .
         ";"
     );
 
@@ -61,15 +72,24 @@ function _getBatchDeletionExcludedMessageTypesQueryString() {
 function _updateMessageThreadsAffectedByBatchDeletion($params) {
     $ownerID = $params['userID'];
     $utilTimestamp = $params['untilTimestamp'];
+    $messageTypeID = (
+        isset($params['messageTypeID']) ?
+        $params['messageTypeID'] :
+        null
+    );
 
     $excludedMessageTypesString = _getBatchDeletionExcludedMessageTypesQueryString();
 
     $fetchThreadedMessagesQuery = (
         "SELECT `Thread_ID` FROM {{table}} " .
         "WHERE " .
+        (
+            $messageTypeID !== null ?
+            "`type` = {$messageTypeID} AND " :
+            "`type` NOT IN ({$excludedMessageTypesString}) AND "
+        ) .
         "`time` <= {$utilTimestamp} AND " .
         "`id_owner` = {$ownerID} AND " .
-        "`type` NOT IN ({$excludedMessageTypesString}) AND " .
         "`Thread_ID` > 0 " .
         ";"
     );
