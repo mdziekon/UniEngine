@@ -403,7 +403,7 @@ switch($_GET['mode'])
         if($ActionBreak !== true)
         {
             if ($DeleteWhat == 'deleteall') {
-                $cmdResult = Messages\Commands\batchDeleteUserMessages([
+                $cmdResult = Messages\Commands\batchDeleteMessagesOlderThan([
                     'userID' => $_User['id'],
                     'untilTimestamp' => $TimeStamp,
                 ]);
@@ -419,7 +419,7 @@ switch($_GET['mode'])
                     $_ThisCategory != 100 &&
                     $_ThisCategory != 80
                 ) {
-                    $cmdResult = Messages\Commands\batchDeleteUserMessages([
+                    $cmdResult = Messages\Commands\batchDeleteMessagesOlderThan([
                         'userID' => $_User['id'],
                         'messageTypeID' => $_ThisCategory,
                         'untilTimestamp' => $TimeStamp,

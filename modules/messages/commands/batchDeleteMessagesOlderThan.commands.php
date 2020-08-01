@@ -15,9 +15,9 @@ namespace UniEngine\Engine\Modules\Messages\Commands;
  *               Determines the cut-off point for deletion, meaning that all messages
  *               prior to this point in time (inclusive) will be deleted.
  */
-function batchDeleteUserMessages($params) {
+function batchDeleteMessagesOlderThan($params) {
     $ownerID = $params['userID'];
-    $utilTimestamp = $params['untilTimestamp'];
+    $untilTimestamp = $params['untilTimestamp'];
     $messageTypeID = (
         isset($params['messageTypeID']) ?
         $params['messageTypeID'] :
@@ -36,7 +36,7 @@ function batchDeleteUserMessages($params) {
             "`type` = {$messageTypeID} AND " :
             "`type` NOT IN ({$excludedMessageTypesString}) AND "
         ) .
-        "`time` <= {$utilTimestamp} AND" .
+        "`time` <= {$untilTimestamp} AND" .
         "`id_owner` = {$ownerID} " .
         ";"
     );
@@ -71,7 +71,7 @@ function _getBatchDeletionExcludedMessageTypesQueryString() {
  */
 function _updateMessageThreadsAffectedByBatchDeletion($params) {
     $ownerID = $params['userID'];
-    $utilTimestamp = $params['untilTimestamp'];
+    $untilTimestamp = $params['untilTimestamp'];
     $messageTypeID = (
         isset($params['messageTypeID']) ?
         $params['messageTypeID'] :
@@ -88,7 +88,7 @@ function _updateMessageThreadsAffectedByBatchDeletion($params) {
             "`type` = {$messageTypeID} AND " :
             "`type` NOT IN ({$excludedMessageTypesString}) AND "
         ) .
-        "`time` <= {$utilTimestamp} AND " .
+        "`time` <= {$untilTimestamp} AND " .
         "`id_owner` = {$ownerID} AND " .
         "`Thread_ID` > 0 " .
         ";"
