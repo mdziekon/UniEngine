@@ -297,13 +297,12 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
         $RealDebrisMetalDef = 0;
         $RealDebrisCrystalDef = 0;
         $RealDebrisDeuteriumDef = 0;
-        $TotalMoonChance = 0;
         $TotalLostMetal = 0;
         $TotalLostCrystal = 0;
         $DebrisMetalDef = 0;
         $DebrisCrystalDef = 0;
 
-        $MoonHasBeenCreated = false;
+        $moonHasBeenCreated = false;
 
         $RoundsData            = $Combat['rounds'];
         $Result                = $Combat['result'];
@@ -797,57 +796,38 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
         }
 
         // Check if Moon has been created
-        $FleetDebris = $TotalLostCrystal + $TotalLostMetal;
+        $moonCreationRollResult = Flights\Utils\Calculations\calculateMoonCreationRoll([
+            'totalDebris' => ($TotalLostCrystal + $TotalLostMetal),
+        ]);
 
-        $MoonChance = floor($FleetDebris / COMBAT_MOONPERCENT_RESOURCES);
-        if($MoonChance > 20)
-        {
-            $TotalMoonChance = $MoonChance;
-            $MoonChance = 20;
-        }
-        if($MoonChance < 1)
-        {
-            $UserChance = 0;
-        }
-        elseif($MoonChance >= 1)
-        {
-            $UserChance = mt_rand(1, 100);
-        }
+        if (
+            $moonCreationRollResult['hasMoonBeenCreated'] &&
+            $TargetPlanet['planet_type'] == 1
+        ) {
+            $newMoonID = CreateOneMoonRecord([
+                'coordinates' => [
+                    'galaxy' => $FleetRow['fleet_end_galaxy'],
+                    'system' => $FleetRow['fleet_end_system'],
+                    'planet' => $FleetRow['fleet_end_planet'],
+                ],
+                'ownerID' => $TargetUserID,
+                'moonName' => null,
+                'moonCreationChance' => $moonCreationRollResult['boundedMoonChance'],
+            ]);
 
-        if(($UserChance > 0) AND ($UserChance <= $MoonChance))
-        {
-            if($TargetPlanet['planet_type'] == 1)
-            {
-                $CreatedMoonID = CreateOneMoonRecord($FleetRow['fleet_end_galaxy'], $FleetRow['fleet_end_system'], $FleetRow['fleet_end_planet'], $TargetUserID, '', $MoonChance);
-                if($CreatedMoonID !== false)
-                {
-                    foreach($AttackersIDs as $ThisID)
-                    {
-                        $TriggerTasksCheck[$ThisID]['CREATE_MOON'] = true;
-                    }
-                    $MoonHasBeenCreated = true;
-
-                    $UserDev_UpPl[] = "L,{$CreatedMoonID}";
-
-                    // Update User Stats
-                    foreach($AttackersIDs as $UserID)
-                    {
-                        $UserStatsData[$UserID]['moons_created'] += 1;
-                    }
+            if ($newMoonID !== false) {
+                foreach ($AttackersIDs as $UserID) {
+                    $TriggerTasksCheck[$UserID]['CREATE_MOON'] = true;
                 }
-                else
-                {
-                    $MoonHasBeenCreated = false;
+
+                $moonHasBeenCreated = true;
+
+                $UserDev_UpPl[] = "L,{$newMoonID}";
+
+                foreach ($AttackersIDs as $UserID) {
+                    $UserStatsData[$UserID]['moons_created'] += 1;
                 }
             }
-            else
-            {
-                $MoonHasBeenCreated = false;
-            }
-        }
-        elseif($UserChance = 0 or $UserChance > $MoonChance)
-        {
-            $MoonHasBeenCreated = false;
         }
 
         // Create DevLog Record (PlanetDefender's)
@@ -889,9 +869,9 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
                 'defenders' => $defendersResourceLosses,
             ],
             'moonCreationData' => [
-                'hasBeenCreated' => $MoonHasBeenCreated,
-                'normalizedChance' => $MoonChance,
-                'totalChance' => $TotalMoonChance,
+                'hasBeenCreated' => $moonHasBeenCreated,
+                'normalizedChance' => $moonCreationRollResult['boundedMoonChance'],
+                'totalChance' => $moonCreationRollResult['totalMoonChance'],
             ],
             'moonDestructionData' => null,
         ]);
@@ -1072,7 +1052,7 @@ function MissionCaseGroupAttack($FleetRow, &$_FleetCache)
             }
         }
 
-        if($MoonHasBeenCreated AND $TargetUser['ally_id'] > 0)
+        if($moonHasBeenCreated AND $TargetUser['ally_id'] > 0)
         {
             foreach($AttackersIDs as $ThisID)
             {

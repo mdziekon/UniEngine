@@ -2,6 +2,23 @@
 
 namespace UniEngine\Engine\Includes\Helpers\Common\Collections;
 
+function get($collection, $path) {
+    $key = $path[0];
+
+    if (!isset($collection[$key])) {
+        return null;
+    }
+
+    if (count($path) === 1) {
+        return $collection[$key];
+    }
+
+    $nestedPath = $path;
+    array_shift($nestedPath);
+
+    return get($collection[$key], $nestedPath);
+}
+
 function firstN ($collection, $elementsCount) {
     return array_slice($collection, 0, $elementsCount);
 }
