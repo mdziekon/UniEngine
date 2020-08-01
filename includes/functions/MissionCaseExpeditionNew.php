@@ -150,7 +150,7 @@ function MissionCaseExpeditionNew ($fleetRow, &$_FleetCache) {
                     'UserID' => $fleetRow['fleet_owner'],
                     'PlanetID' => '0',
                     'Date' => $fleetRow['fleet_end_stay'],
-                    'Place' => 25,
+                    'Place' => 31,
                     'Code' => '0',
                     'ElementID' => $thisFleetID,
                     'AdditionalData' => implode(';', $logEntry)

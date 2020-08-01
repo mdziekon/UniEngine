@@ -1089,6 +1089,12 @@ if($AllowScan)
 
                     $PreventResourceUpdate = true;
                 }
+                else if($Place == 31)
+                {
+                    // MissionCaseExpedition.php
+
+                    $PreventResourceUpdate = true;
+                }
                 else
                 {
                     $ScanLog['Fatal'][] = array('ID' => '001', 'LogNo' => $ScaningNo, 'LogID' => $Log['ID'], 'Data' => array($Place));
