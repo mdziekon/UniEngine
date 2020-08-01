@@ -705,7 +705,7 @@ function FlyingFleetHandler(&$planet, $IncludeFleetsFromEndIDs = array())
                             $Inc_MissionExpedition = true;
                             include('MissionCaseExpedition.php');
                         }
-                        $MissionReturn = MissionCaseExpedition($CurrentFleet);
+                        $MissionReturn = MissionCaseExpedition($CurrentFleet, $_FleetCache);
                         break;
                     }
                     default:

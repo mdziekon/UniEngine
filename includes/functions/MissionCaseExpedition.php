@@ -2,7 +2,7 @@
 
 use UniEngine\Engine\Modules\Flights;
 
-function MissionCaseExpeditionNew ($fleetRow, &$_FleetCache) {
+function MissionCaseExpedition($fleetRow, &$_FleetCache) {
     global $UserDev_Log, $_Lang, $UserStatsData;
 
     /**
