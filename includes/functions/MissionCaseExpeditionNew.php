@@ -5,8 +5,39 @@ use UniEngine\Engine\Modules\Flights;
 function MissionCaseExpeditionNew ($fleetRow, &$_FleetCache) {
     global $UserDev_Log, $_Lang;
 
-    $CONST_MESSAGES_SENDERID = '003';
-    $CONST_MESSAGES_TITLEID = '007';
+    /**
+     * @param array $params
+     * @param array $params['messageData']
+     * @param EnumValue $params['fleetTimeMoment']
+     */
+    $sendExpeditionMessage = function ($params) use ($fleetRow) {
+        $CONST_MESSAGES_SENDERID = '003';
+        $CONST_MESSAGES_TITLEID = '007';
+
+        $timestamp = null;
+
+        switch ($params['fleetTimeMoment']) {
+            case 'expeditionBeginning':
+                $timestamp = $fleetRow['fleet_start_time'];
+                break;
+            case 'expeditionFinished':
+                $timestamp = $fleetRow['fleet_end_stay'];
+                break;
+            case 'expeditionBackHome':
+                $timestamp = $fleetRow['fleet_end_time'];
+                break;
+        }
+
+        Cache_Message(
+            $fleetRow['fleet_owner'],
+            0,
+            $timestamp,
+            15,
+            $CONST_MESSAGES_SENDERID,
+            $CONST_MESSAGES_TITLEID,
+            json_encode($params['messageData'])
+        );
+    };
 
     $result = [
         'FleetsToDelete' => [],
@@ -26,27 +57,19 @@ function MissionCaseExpeditionNew ($fleetRow, &$_FleetCache) {
         $_FleetCache['fleetRowStatus'][$thisFleetID]['calcCounter'] += 1;
         $_FleetCache['fleetRowStatus'][$thisFleetID]['needUpdate'] = true;
 
-        $message = [
-            'msg_id' => '106',
-            'args' => [
-                $fleetRow['fleet_start_galaxy'],
-                $fleetRow['fleet_start_system'],
-                $fleetRow['fleet_start_galaxy'],
-                $fleetRow['fleet_start_system'],
-                (($fleetRow['fleet_end_stay'] - $fleetRow['fleet_start_time']) / TIME_HOUR)
+        $sendExpeditionMessage([
+            'messageData' => [
+                'msg_id' => '106',
+                'args' => [
+                    $fleetRow['fleet_start_galaxy'],
+                    $fleetRow['fleet_start_system'],
+                    $fleetRow['fleet_start_galaxy'],
+                    $fleetRow['fleet_start_system'],
+                    (($fleetRow['fleet_end_stay'] - $fleetRow['fleet_start_time']) / TIME_HOUR)
+                ],
             ],
-        ];
-        $messageJSON = json_encode($message);
-
-        Cache_Message(
-            $fleetRow['fleet_owner'],
-            0,
-            $fleetRow['fleet_start_time'],
-            15,
-            $CONST_MESSAGES_SENDERID,
-            $CONST_MESSAGES_TITLEID,
-            $messageJSON
-        );
+            'fleetTimeMoment' => 'expeditionBeginning'
+        ]);
     }
 
     if ($fleetRow['calcType'] == 2) {
@@ -215,21 +238,13 @@ function MissionCaseExpeditionNew ($fleetRow, &$_FleetCache) {
             $result['FleetArchive'][$fleetID]['Fleet_Destroyed_Reason'] = Flights\Enums\FleetDestructionReason::ONEXPEDITION_UNKNOWN;
         }
 
-        $message = Flights\Utils\Missions\Expeditions\createEventMessage([
-            'eventType' => $expeditionEvent,
-            'eventFinalOutcome' => $expeditionFinalOutcome,
+        $sendExpeditionMessage([
+            'messageData' => Flights\Utils\Missions\Expeditions\createEventMessage([
+                'eventType' => $expeditionEvent,
+                'eventFinalOutcome' => $expeditionFinalOutcome,
+            ]),
+            'fleetTimeMoment' => 'expeditionFinished'
         ]);
-        $messageJSON = json_encode($message);
-
-        Cache_Message(
-            $fleetRow['fleet_owner'],
-            0,
-            $fleetRow['fleet_end_stay'],
-            15,
-            $CONST_MESSAGES_SENDERID,
-            $CONST_MESSAGES_TITLEID,
-            $messageJSON
-        );
     }
 
     if (
@@ -260,29 +275,21 @@ function MissionCaseExpeditionNew ($fleetRow, &$_FleetCache) {
         $_FleetCache['fleetRowStatus'][$thisFleetID]['calcCounter'] += 1;
         $_FleetCache['fleetRowStatus'][$thisFleetID]['needUpdate'] = false;
 
-        $message = [
-            'msg_id' => '107',
-            'args' => [
-                ($fleetRow['fleet_start_type'] == 1 ? $_Lang['to_planet'] : $_Lang['to_moon']),
-                $fleetRow['attacking_planet_name'],
-                $fleetRow['fleet_start_galaxy'],
-                $fleetRow['fleet_start_system'],
-                $fleetRow['fleet_start_galaxy'],
-                $fleetRow['fleet_start_system'],
-                $fleetRow['fleet_start_planet'],
+        $sendExpeditionMessage([
+            'messageData' => [
+                'msg_id' => '107',
+                'args' => [
+                    ($fleetRow['fleet_start_type'] == 1 ? $_Lang['to_planet'] : $_Lang['to_moon']),
+                    $fleetRow['attacking_planet_name'],
+                    $fleetRow['fleet_start_galaxy'],
+                    $fleetRow['fleet_start_system'],
+                    $fleetRow['fleet_start_galaxy'],
+                    $fleetRow['fleet_start_system'],
+                    $fleetRow['fleet_start_planet'],
+                ],
             ],
-        ];
-        $messageJSON = json_encode($message);
-
-        Cache_Message(
-            $fleetRow['fleet_owner'],
-            0,
-            $fleetRow['fleet_end_time'],
-            15,
-            $CONST_MESSAGES_SENDERID,
-            $CONST_MESSAGES_TITLEID,
-            $messageJSON
-        );
+            'fleetTimeMoment' => 'expeditionBackHome'
+        ]);
     }
 
     if ($_FleetCache['fleetRowStatus'][$thisFleetID]['calcCounter'] == $_FleetCache['fleetRowStatus'][$thisFleetID]['calcCount']) {
