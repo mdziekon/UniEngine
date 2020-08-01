@@ -3,7 +3,7 @@
 use UniEngine\Engine\Modules\Flights;
 
 function MissionCaseExpeditionNew ($fleetRow, &$_FleetCache) {
-    global $UserDev_Log, $_Lang;
+    global $UserDev_Log, $_Lang, $UserStatsData;
 
     /**
      * @param array $params
@@ -46,6 +46,7 @@ function MissionCaseExpeditionNew ($fleetRow, &$_FleetCache) {
     $calculationTimestamp = time();
 
     $thisFleetID = $fleetRow['fleet_id'];
+    $thisFleetOwnerID = $fleetRow['fleet_owner'];
 
     if ($fleetRow['calcType'] == 1) {
         // Exploration just started, nothing to do here except for a couple of updates
@@ -82,6 +83,13 @@ function MissionCaseExpeditionNew ($fleetRow, &$_FleetCache) {
         $_FleetCache['fleetRowUpdate'][$thisFleetID]['fleet_mess'] = 2;
         $_FleetCache['fleetRowStatus'][$thisFleetID]['calcCounter'] += 1;
         $_FleetCache['fleetRowStatus'][$thisFleetID]['needUpdate'] = true;
+
+        if (empty($UserStatsData[$thisFleetOwnerID])) {
+            $UserStatsData[$thisFleetOwnerID] = Flights\Utils\Initializers\initUserStatsMap();
+        }
+        $UserStatsData[$thisFleetOwnerID]['other_expeditions_count'] += 1;
+
+
 
         $expeditionEvent = Flights\Utils\Helpers\getRandomExpeditionEvent([]);
         $expeditionOutcome = Flights\Utils\Helpers\getExpeditionEventOutcome([
@@ -147,7 +155,7 @@ function MissionCaseExpeditionNew ($fleetRow, &$_FleetCache) {
                 }
 
                 $UserDev_Log[] = [
-                    'UserID' => $fleetRow['fleet_owner'],
+                    'UserID' => $thisFleetOwnerID,
                     'PlanetID' => '0',
                     'Date' => $fleetRow['fleet_end_stay'],
                     'Place' => 31,
