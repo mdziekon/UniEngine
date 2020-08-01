@@ -413,12 +413,12 @@ switch($_GET['mode'])
                 } else {
                     $DelNotifs[] = $_Lang['Delete_NoMsgsToDelete'];
                 }
-            }
-            elseif($DeleteWhat == 'deleteallcat')
-            {
-                // User is Deleting all messages in this category at once
-                if(in_array($_ThisCategory, $MessageType) AND $_ThisCategory != 100 AND $_ThisCategory != 80)
-                {
+            } elseif ($DeleteWhat == 'deleteallcat') {
+                if (
+                    in_array($_ThisCategory, $MessageType) &&
+                    $_ThisCategory != 100 &&
+                    $_ThisCategory != 80
+                ) {
                     $cmdResult = Messages\Commands\batchDeleteUserMessages([
                         'userID' => $_User['id'],
                         'messageTypeID' => $_ThisCategory,
@@ -430,18 +430,12 @@ switch($_GET['mode'])
                     } else {
                         $DelNotifs[] = $_Lang['Delete_NoMsgsToDelete'];
                     }
-                }
-                else
-                {
-                    if($_ThisCategory == 80)
-                    {
-                        // Don't let to delete all AdminMessages
-                        $DelNotifs[] = $_Lang['Delete_CannotDeleteAdminMsgsAtOnce'];
-                    }
-                    else
-                    {
-                        $DelNotifs[] = $_Lang['Delete_BadCatSelected'];
-                    }
+                } else {
+                    $DelNotifs[] = (
+                        $_ThisCategory == 80 ?
+                        $_Lang['Delete_CannotDeleteAdminMsgsAtOnce'] :
+                        $_Lang['Delete_BadCatSelected']
+                    );
                 }
             }
             else if($DeleteWhat == 'deletemarked')
