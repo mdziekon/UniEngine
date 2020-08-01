@@ -419,56 +419,15 @@ switch($_GET['mode'])
                 // User is Deleting all messages in this category at once
                 if(in_array($_ThisCategory, $MessageType) AND $_ThisCategory != 100 AND $_ThisCategory != 80)
                 {
-                    $SelectMsgs = doquery(
-                        "SELECT `Thread_ID` FROM {{table}} WHERE `type` = {$_ThisCategory} AND `time` <= {$TimeStamp} AND `id_owner` = {$_User['id']} AND `Thread_ID` > 0;",
-                        'messages'
-                    );
+                    $cmdResult = Messages\Commands\batchDeleteUserMessages([
+                        'userID' => $_User['id'],
+                        'messageTypeID' => $_ThisCategory,
+                        'untilTimestamp' => $TimeStamp,
+                    ]);
 
-                    doquery(
-                        "UPDATE {{table}} SET `deleted` = true WHERE `id_owner` = {$_User['id']} AND `type` = {$_ThisCategory} AND `time` <= {$TimeStamp};",
-                        'messages'
-                    );
-
-                    $DeletedCount = getDBLink()->affected_rows;
-
-                    if($SelectMsgs->num_rows > 0)
-                    {
-                        $UpdateThreads = array();
-                        while($SelectData = $SelectMsgs->fetch_assoc())
-                        {
-                            if(!in_array($SelectData['Thread_ID'], $UpdateThreads))
-                            {
-                                $UpdateThreads[] = $SelectData['Thread_ID'];
-                            }
-                        }
-                        $IDs = implode(',', $UpdateThreads);
-
-                        $SelectIDs = doquery(
-                            "SELECT MAX(`id`) AS `id` FROM {{table}} WHERE `Thread_ID` IN ({$IDs}) AND `id_owner` = {$_User['id']} AND `deleted` = false GROUP BY `Thread_ID`;",
-                            'messages'
-                        );
-
-                        if($SelectIDs->num_rows > 0)
-                        {
-                            while($SelectData = $SelectIDs->fetch_assoc())
-                            {
-                                $UpdateIDs[] = $SelectData['id'];
-                            }
-
-                            $IDs = implode(',', $UpdateIDs);
-
-                            doquery(
-                                "UPDATE {{table}} SET `Thread_IsLast` = 1 WHERE `id` IN ({$IDs});",
-                                'messages'
-                            );
-                        }
-                    }
-                    if($DeletedCount > 0)
-                    {
+                    if ($cmdResult['deletedMessagesCount'] > 0) {
                         $DelMsgs[] = $_Lang['Delete_AllCatMsgsDeleted'];
-                    }
-                    else
-                    {
+                    } else {
                         $DelNotifs[] = $_Lang['Delete_NoMsgsToDelete'];
                     }
                 }
