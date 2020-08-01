@@ -26,6 +26,7 @@ call_user_func(function () {
     include($includePath . './utils/initializers/combatUserDetails.utils.php');
     include($includePath . './utils/initializers/technologies.utils.php');
     include($includePath . './utils/initializers/userStats.utils.php');
+    include($includePath . './utils/missions/expeditions/createEventMessage.utils.php');
     include($includePath . './utils/modifiers/calculateMoraleModifiers.utils.php');
     include($includePath . './utils/missions.utils.php');
 

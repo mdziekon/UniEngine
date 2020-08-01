@@ -288,6 +288,13 @@ $_Lang['msg_const']['msgs'] = [
         'It will explore these regions for %s hours.'
     ),
     '107' => 'Your expedition returns to %s %s <a href="galaxy.php?mode=3&galaxy=%s&system=%s">[%s:%s:%s]</a>.',
+    '110' => 'Your expedition found nothing of interest in the explored region of space.',
+    '111' => 'A failure in the navigation systems has lead your expedition way off its original course. The expedition turned out to be a failure.',
+    '112' => 'Your expedition met an enemy fleet during exploration, however the crew was able to escape the fight. The expedition has ended up a failure.',
+    '120' => (
+        'Your expedition discovered an asteroid belt rich in useful resources.<br/><br/>' .
+        'The following resources have been harvested: <b>%s</b> units of metal, <b>%s</b> units of crystal and <b>%s</b> units of deuterium.'
+    ),
 ];
 
 $_Lang['msg_const']['senders']['system'] = [
