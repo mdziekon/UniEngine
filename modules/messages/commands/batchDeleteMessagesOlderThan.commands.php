@@ -36,7 +36,7 @@ function batchDeleteMessagesOlderThan($params) {
             "`type` = {$messageTypeID} AND " :
             "`type` NOT IN ({$excludedMessageTypesString}) AND "
         ) .
-        "`time` <= {$untilTimestamp} AND" .
+        "`time` <= {$untilTimestamp} AND " .
         "`id_owner` = {$ownerID} " .
         ";"
     );
