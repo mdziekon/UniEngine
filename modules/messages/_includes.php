@@ -6,6 +6,7 @@ call_user_func(function () {
 
     $includePath = $_EnginePath . 'modules/messages/';
 
+    include($includePath . './commands/batchDeleteMessagesByID.commands.php');
     include($includePath . './commands/batchDeleteMessagesOlderThan.commands.php');
 
 });
