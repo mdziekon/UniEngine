@@ -502,54 +502,40 @@ switch($_GET['mode'])
                 } else {
                     $DelNotifs[] = $_Lang['Delete_NoMsgsUnselected'];
                 }
-            }
-            else if($DeleteWhat == 'setallread')
-            {
-                // User wants to set All messages as "read"
-                doquery(
-                    "UPDATE {{table}} SET `read` = true WHERE `id_owner` = {$_User['id']} AND `type` != 80 AND `time` <= {$TimeStamp};",
-                    'messages'
-                );
+            } else if($DeleteWhat == 'setallread') {
+                $cmdResult = Messages\Commands\batchMarkMessagesAsRead([
+                    'userID' => $_User['id'],
+                    'untilTimestamp' => $TimeStamp,
+                ]);
 
-                if(getDBLink()->affected_rows > 0)
-                {
+                if ($cmdResult['markedMessagesCount'] > 0) {
                     $DelMsgs[] = $_Lang['Delete_AllMsgsRead'];
-                }
-                else
-                {
+                } else {
                     $DelNotifs[] = $_Lang['Delete_NoMsgsToRead'];
                 }
-            }
-            else if($DeleteWhat == 'setcatread')
-            {
-                // User is setting All messages in this Cat as "read"
-                if(in_array($_ThisCategory, $MessageType) AND $_ThisCategory != 100 AND $_ThisCategory != 80)
-                {
-                    doquery(
-                        "UPDATE {{table}} SET `read` = true WHERE `id_owner` = {$_User['id']} AND `type` = {$_ThisCategory} AND `time` <= {$TimeStamp};",
-                        'messages'
-                    );
+            } else if($DeleteWhat == 'setcatread') {
+                if (
+                    in_array($_ThisCategory, $MessageType) &&
+                    $_ThisCategory != 100 &&
+                    $_ThisCategory != 80
+                ) {
+                    $cmdResult = Messages\Commands\batchMarkMessagesAsRead([
+                        'userID' => $_User['id'],
+                        'messageTypeID' => $_ThisCategory,
+                        'untilTimestamp' => $TimeStamp,
+                    ]);
 
-                    if(getDBLink()->affected_rows > 0)
-                    {
+                    if ($cmdResult['markedMessagesCount'] > 0) {
                         $DelMsgs[] = $_Lang['Delete_CatMsgsRead'];
-                    }
-                    else
-                    {
+                    } else {
                         $DelNotifs[] = $_Lang['Delete_NoMsgsToRead'];
                     }
-                }
-                else
-                {
-                    if($_ThisCategory == 80)
-                    {
-                        // Don't let to "read" all AdminMessages
-                        $DelNotifs[] = $_Lang['Delete_CannotReadAdminMsgsAtOnce'];
-                    }
-                    else
-                    {
-                        $DelNotifs[] = $_Lang['Delete_BadCatSelected'];
-                    }
+                } else {
+                    $DelNotifs[] = (
+                        $_ThisCategory == 80 ?
+                        $_Lang['Delete_CannotReadAdminMsgsAtOnce'] :
+                        $_Lang['Delete_BadCatSelected']
+                    );
                 }
             }
             else
