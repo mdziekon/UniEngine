@@ -437,18 +437,13 @@ switch($_GET['mode'])
                         $_Lang['Delete_BadCatSelected']
                     );
                 }
-            }
-            else if($DeleteWhat == 'deletemarked')
-            {
+            } else if($DeleteWhat == 'deletemarked') {
                 // User is Deleting all Marked messages
                 $DeleteIDs = false;
-                if(!empty($_POST['del_all']))
-                {
+                if (!empty($_POST['del_all'])) {
                     preg_match_all('#([0-9]{1,})#si', $_POST['del_all'], $DeleteIDs);
                     $DeleteIDs = $DeleteIDs[0];
-                }
-                else
-                {
+                } else {
                     foreach($_POST as $Message => $Answer)
                     {
                         if(preg_match("/^del([0-9]{1,})$/D", $Message, $MsgMatch) AND $Answer == 'on')
@@ -457,71 +452,19 @@ switch($_GET['mode'])
                         }
                     }
                 }
-                if($DeleteIDs !== FALSE)
-                {
-                    $IDs = implode(',', $DeleteIDs);
 
-                    $SelectMsgs = doquery(
-                        "SELECT `id`, `Thread_ID` FROM {{table}} WHERE `id` IN ({$IDs}) AND `id_owner` = {$_User['id']} AND `type` != 80;",
-                        'messages'
-                    );
+                if ($DeleteIDs !== FALSE) {
+                    $cmdResult = Messages\Commands\batchDeleteMessagesByID([
+                        'messageIDs' => $DeleteIDs,
+                        'userID' => $_User['id'],
+                    ]);
 
-                    if($SelectMsgs->num_rows > 0)
-                    {
+                    if ($cmdResult['deletedMessagesCount'] > 0) {
                         $DelMsgs[] = $_Lang['Delete_SelectedDeleted'];
-
-                        $UpdateThreads = array();
-                        while($SelectData = $SelectMsgs->fetch_assoc())
-                        {
-                            $UpdateIDs[] = $SelectData['id'];
-                            if($SelectData['Thread_ID'] > 0)
-                            {
-                                if(!in_array($SelectData['Thread_ID'], $UpdateThreads))
-                                {
-                                    $UpdateThreads[] = $SelectData['Thread_ID'];
-                                }
-                            }
-                        }
-                        $IDs = implode(',', $UpdateIDs);
-                        $UpdateIDs = array();
-
-                        doquery(
-                            "UPDATE {{table}} SET `deleted` = true, `Thread_IsLast` = 0 WHERE `id` IN ({$IDs});",
-                            'messages'
-                        );
-
-                        if(!empty($UpdateThreads))
-                        {
-                            $IDs = implode(',', $UpdateThreads);
-
-                            $SelectIDs = doquery(
-                                "SELECT MAX(`id`) AS `id` FROM {{table}} WHERE `Thread_ID` IN ({$IDs}) AND `id_owner` = {$_User['id']} AND `deleted` = false GROUP BY `Thread_ID`;",
-                                'messages'
-                            );
-
-                            if($SelectIDs->num_rows > 0)
-                            {
-                                while($SelectData = $SelectIDs->fetch_assoc())
-                                {
-                                    $UpdateIDs[] = $SelectData['id'];
-                                }
-
-                                $IDs = implode(',', $UpdateIDs);
-
-                                doquery(
-                                    "UPDATE {{table}} SET `Thread_IsLast` = 1 WHERE `id` IN ({$IDs});",
-                                    'messages'
-                                );
-                            }
-                        }
-                    }
-                    else
-                    {
+                    } else {
                         $DelNotifs[] = $_Lang['Delete_BadSelections'];
                     }
-                }
-                else
-                {
+                } else {
                     $DelNotifs[] = $_Lang['Delete_NoMsgsSelected'];
                 }
             }
