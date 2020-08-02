@@ -2,6 +2,8 @@
 
 namespace UniEngine\Engine\Modules\Messages\Commands;
 
+use UniEngine\Engine\Modules\Messages;
+
 /**
  * Marks as read all messages of a specified user by message IDs.
  * Admin messages are excluded from being batch marked.
@@ -24,7 +26,7 @@ function batchMarkMessagesAsRead($params) {
         null
     );
 
-    $excludedMessageTypesString = _getBatchDeletionExcludedMessageTypesQueryString();
+    $excludedMessageTypesString = Messages\Utils\getBatchActionsExcludedMessageTypesQueryString();
 
     $updateMessagesQuery = (
         "UPDATE {{table}} " .

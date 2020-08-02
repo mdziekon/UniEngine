@@ -2,6 +2,8 @@
 
 namespace UniEngine\Engine\Modules\Messages\Commands;
 
+use UniEngine\Engine\Modules\Messages;
+
 /**
  * Soft deletes all messages of a specified user which were received up until the specified point in time.
  * Admin messages are excluded from being batch deleted.
@@ -24,7 +26,7 @@ function batchDeleteMessagesOlderThan($params) {
         null
     );
 
-    $excludedMessageTypesString = _getBatchDeletionExcludedMessageTypesQueryString();
+    $excludedMessageTypesString = Messages\Utils\getBatchActionsExcludedMessageTypesQueryString();
 
     $softDeleteMessagesQuery = (
         "UPDATE {{table}} " .
@@ -52,19 +54,6 @@ function batchDeleteMessagesOlderThan($params) {
     ];
 }
 
-function _getBatchDeletionExcludedMessageTypes() {
-    return [ 80 ];
-}
-
-function _getBatchDeletionExcludedMessageTypesQueryString() {
-    $messageTypes = array_map(
-        function ($value) { return strval($value); },
-        _getBatchDeletionExcludedMessageTypes()
-    );
-
-    return implode(', ', $messageTypes);
-}
-
 /**
  * @param array $params
  *              See batchDeleteUserMessages().
@@ -78,7 +67,7 @@ function _updateMessageThreadsAffectedByBatchDeletion($params) {
         null
     );
 
-    $excludedMessageTypesString = _getBatchDeletionExcludedMessageTypesQueryString();
+    $excludedMessageTypesString = Messages\Utils\getBatchActionsExcludedMessageTypesQueryString();
 
     $fetchThreadedMessagesQuery = (
         "SELECT `Thread_ID` FROM {{table}} " .

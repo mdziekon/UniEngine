@@ -9,6 +9,7 @@ call_user_func(function () {
     include($includePath . './commands/batchDeleteMessagesByID.commands.php');
     include($includePath . './commands/batchDeleteMessagesOlderThan.commands.php');
     include($includePath . './commands/batchMarkMessagesAsRead.commands.php');
+    include($includePath . './utils/batchMessageUpdates.utils.php');
 
 });
 

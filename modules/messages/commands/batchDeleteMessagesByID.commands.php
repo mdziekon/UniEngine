@@ -2,6 +2,8 @@
 
 namespace UniEngine\Engine\Modules\Messages\Commands;
 
+use UniEngine\Engine\Modules\Messages;
+
 /**
  * Soft deletes all messages of a specified user by message IDs.
  * Admin messages are excluded from being batch deleted.
@@ -16,7 +18,7 @@ function batchDeleteMessagesByID($params) {
     $messageIDs = $params['messageIDs'];
     $ownerID = $params['userID'];
 
-    $excludedMessageTypesString = _getBatchDeletionExcludedMessageTypesQueryString();
+    $excludedMessageTypesString = Messages\Utils\getBatchActionsExcludedMessageTypesQueryString();
     $messageIDsString = implode(', ', $messageIDs);
 
     $softDeleteMessagesQuery = (
@@ -50,7 +52,7 @@ function _updateMessageThreadsAffectedByBatchDeletionByID($params) {
     $messageIDs = $params['messageIDs'];
     $ownerID = $params['userID'];
 
-    $excludedMessageTypesString = _getBatchDeletionExcludedMessageTypesQueryString();
+    $excludedMessageTypesString = Messages\Utils\getBatchActionsExcludedMessageTypesQueryString();
     $messageIDsString = implode(', ', $messageIDs);
 
     $fetchThreadedMessagesQuery = (
