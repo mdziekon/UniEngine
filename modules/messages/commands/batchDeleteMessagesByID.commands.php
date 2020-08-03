@@ -13,13 +13,22 @@ use UniEngine\Engine\Modules\Messages;
  *               Messages to be deleted.
  * @param number $params['userID']
  *               The ID of a user whose messages should be deleted.
+ * @param boolean|null $params['ignoreExcludedMessageTypesRestriction']
+ *               (Optional) Lifts the prevention of excluded message types removal.
  */
 function batchDeleteMessagesByID($params) {
     return Messages\Utils\batchDeleteMessages([
         'criteria' => [
             'userID' => $params['userID'],
             'messageIDs' => $params['messageIDs'],
-            'excludeTypeIDs' => Messages\Utils\getBatchActionsExcludedMessageTypes(),
+            'excludeTypeIDs' => (
+                (
+                    !isset($params['ignoreExcludedMessageTypesRestriction']) ||
+                    !$params['ignoreExcludedMessageTypesRestriction']
+                ) ?
+                Messages\Utils\getBatchActionsExcludedMessageTypes() :
+                []
+            ),
         ],
     ]);
 }
