@@ -537,26 +537,19 @@ switch($_GET['mode'])
                         $_Lang['Delete_BadCatSelected']
                     );
                 }
-            }
-            else
-            {
-                // User is Deleting single message
-                if(!empty($_POST['delid']))
-                {
+            } else {
+                if (!empty($_POST['delid'])) {
                     $DeleteID = round(floatval($_POST['delid']));
-                    $SelectMsg = doquery("SELECT `id`, `Thread_ID` FROM {{table}} WHERE `id` = {$DeleteID} AND `id_owner` = {$_User['id']} LIMIT 1;", 'messages', true);
-                    if($SelectMsg['id'] == $DeleteID)
-                    {
-                        $DelMsgs[] = $_Lang['Delete_MsgDeleted'];
 
-                        doquery("UPDATE {{table}} SET `deleted` = true, `Thread_IsLast` = 0 WHERE `id` = {$DeleteID};", 'messages');
-                        if($SelectMsg['Thread_ID'] > 0)
-                        {
-                            doquery("UPDATE {{table}} SET `Thread_IsLast` = 1 WHERE `Thread_ID` = {$SelectMsg['Thread_ID']} AND `id_owner` = {$_User['id']} AND `deleted` = false ORDER BY `id` DESC LIMIT 1;", 'messages');
-                        }
-                    }
-                    else
-                    {
+                    $cmdResult = Messages\Commands\batchDeleteMessagesByID([
+                        'messageIDs' => [ $DeleteID ],
+                        'userID' => $_User['id'],
+                        'ignoreExcludedMessageTypesRestriction' => true,
+                    ]);
+
+                    if ($cmdResult['deletedMessagesCount'] > 0) {
+                        $DelMsgs[] = $_Lang['Delete_MsgDeleted'];
+                    } else {
                         $DelNotifs[] = $_Lang['Delete_MsgNoExist'];
                     }
                 }
