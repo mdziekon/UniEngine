@@ -387,187 +387,244 @@ switch($_GET['mode'])
     case 'delete':
         // Delete or do other things with Selected/Nonselected/Add Messages
 
-        $_ThisCategory = intval($_POST['category']);
-        $DeleteWhat = $_POST['deletemessages'];
-        $ActionBreak = false;
-        if(in_array($DeleteWhat, array('deleteall', 'deleteallcat', 'setallread', 'setcatread')))
-        {
-            $TimeStamp = round($_POST['time']);
-            if($TimeStamp <= 0 OR $TimeStamp > $Now)
-            {
-                $DelNotifs[] = $_Lang['Delete_BadTimestamp'];
-                $ActionBreak = true;
+        /**
+         * @param array $params
+         * @param array<number> $params['knownMessageTypes']
+         */
+        $handler = function ($params) use ($_Lang, $Now, $_User) {
+            $createSuccess = function ($payload) {
+                return [
+                    'isSuccess' => true,
+                    'messages' => $payload,
+                ];
+            };
+            $createFailure = function ($payload) {
+                return [
+                    'isSuccess' => false,
+                    'errors' => $payload,
+                ];
+            };
+
+            $currentTimestamp = $Now;
+            $knownMessageTypes = $params['knownMessageTypes'];
+
+            $input = [
+                'command' => $_POST['deletemessages'],
+                'categoryID' => intval($_POST['category']),
+                'timeLimit' => round($_POST['time']),
+            ];
+
+            $timeBasedCmds = [
+                'deleteall',
+                'deleteallcat',
+                'setallread',
+                'setcatread',
+            ];
+
+            if (
+                in_array($input['command'], $timeBasedCmds) &&
+                (
+                    $input['timeLimit'] <= 0 ||
+                    $input['timeLimit'] > $currentTimestamp
+                )
+            ) {
+                return $createFailure([ $_Lang['Delete_BadTimestamp'] ]);
             }
-        }
 
-        if($ActionBreak !== true)
-        {
-            if ($DeleteWhat == 'deleteall') {
-                $cmdResult = Messages\Commands\batchDeleteMessagesOlderThan([
-                    'userID' => $_User['id'],
-                    'untilTimestamp' => $TimeStamp,
-                ]);
-
-                if ($cmdResult['deletedMessagesCount'] > 0) {
-                    $DelMsgs[] = $_Lang['Delete_AllMsgsDeleted'];
-                } else {
-                    $DelNotifs[] = $_Lang['Delete_NoMsgsToDelete'];
-                }
-            } elseif ($DeleteWhat == 'deleteallcat') {
-                if (
-                    in_array($_ThisCategory, $MessageType) &&
-                    $_ThisCategory != 100 &&
-                    $_ThisCategory != 80
-                ) {
+            switch ($input['command']) {
+                case 'deleteall':
                     $cmdResult = Messages\Commands\batchDeleteMessagesOlderThan([
                         'userID' => $_User['id'],
-                        'messageTypeID' => $_ThisCategory,
-                        'untilTimestamp' => $TimeStamp,
+                        'untilTimestamp' => $input['timeLimit'],
                     ]);
 
-                    if ($cmdResult['deletedMessagesCount'] > 0) {
-                        $DelMsgs[] = $_Lang['Delete_AllCatMsgsDeleted'];
-                    } else {
-                        $DelNotifs[] = $_Lang['Delete_NoMsgsToDelete'];
+                    if ($cmdResult['deletedMessagesCount'] <= 0) {
+                        return $createFailure([ $_Lang['Delete_NoMsgsToDelete'] ]);
                     }
-                } else {
-                    $DelNotifs[] = (
-                        $_ThisCategory == 80 ?
-                        $_Lang['Delete_CannotDeleteAdminMsgsAtOnce'] :
-                        $_Lang['Delete_BadCatSelected']
-                    );
-                }
-            } else if($DeleteWhat == 'deletemarked') {
-                // User is Deleting all Marked messages
-                $DeleteIDs = false;
-                if (!empty($_POST['del_all'])) {
-                    preg_match_all('#([0-9]{1,})#si', $_POST['del_all'], $DeleteIDs);
-                    $DeleteIDs = $DeleteIDs[0];
-                } else {
-                    foreach($_POST as $Message => $Answer)
-                    {
-                        if(preg_match("/^del([0-9]{1,})$/D", $Message, $MsgMatch) AND $Answer == 'on')
-                        {
-                            $DeleteIDs[] = $MsgMatch[1];
-                        }
-                    }
-                }
 
-                if ($DeleteIDs !== FALSE) {
-                    $cmdResult = Messages\Commands\batchDeleteMessagesByID([
-                        'messageIDs' => $DeleteIDs,
+                    return $createSuccess([ $_Lang['Delete_AllMsgsDeleted'] ]);
+                break;
+
+                case 'deleteallcat':
+                    if ($input['categoryID'] == 80) {
+                        return $createFailure([ $_Lang['Delete_CannotDeleteAdminMsgsAtOnce'] ]);
+                    }
+
+                    if (
+                        !in_array($input['categoryID'], $knownMessageTypes) ||
+                        $input['categoryID'] == 100
+                    ) {
+                        return $createFailure([ $_Lang['Delete_BadCatSelected'] ]);
+                    }
+
+                    $cmdResult = Messages\Commands\batchDeleteMessagesOlderThan([
                         'userID' => $_User['id'],
+                        'messageTypeID' => $input['categoryID'],
+                        'untilTimestamp' => $input['timeLimit'],
                     ]);
 
-                    if ($cmdResult['deletedMessagesCount'] > 0) {
-                        $DelMsgs[] = $_Lang['Delete_SelectedDeleted'];
-                    } else {
-                        $DelNotifs[] = $_Lang['Delete_BadSelections'];
+                    if ($cmdResult['deletedMessagesCount'] <= 0) {
+                        return $createFailure([ $_Lang['Delete_NoMsgsToDelete'] ]);
                     }
-                } else {
-                    $DelNotifs[] = $_Lang['Delete_NoMsgsSelected'];
-                }
-            }
-            else if($DeleteWhat == 'deleteunmarked')
-            {
-                // User is deleting all Unmarked messages
-                $DeleteIDs = false;
-                if (!empty($_POST['sm_all'])) {
-                    preg_match_all('#([0-9]{1,})#si', $_POST['sm_all'], $DeleteIDs);
-                    $DeleteIDs = $DeleteIDs[0];
-                } else {
-                    foreach($_POST as $Message => $Answer)
-                    {
-                        if(preg_match("/^sm([0-9]{1,})$/D", $Message, $MsgMatch))
-                        {
-                            if($_POST[('del'.$MsgMatch[1])] != 'on')
-                            {
-                                $DeleteIDs[] = $MsgMatch[1];
+
+                    return $createSuccess([ $_Lang['Delete_AllCatMsgsDeleted'] ]);
+                break;
+
+                case 'deletemarked':
+                    $messagesIDs = [];
+
+                    if (!empty($_POST['del_all'])) {
+                        $matches = [];
+
+                        preg_match_all('#([0-9]{1,})#si', $_POST['del_all'], $matches);
+
+                        $messagesIDs = $matches[0];
+                    } else {
+                        foreach ($_POST as $key => $value) {
+                            $matches = [];
+                            $matchResult = preg_match("/^del([0-9]{1,})$/D", $key, $matches);
+
+                            if (!$matchResult || $value != 'on') {
+                                continue;
                             }
+
+                            $messagesIDs[] = $matches[1];
                         }
                     }
-                }
 
-                if ($DeleteIDs !== FALSE) {
+                    if (empty($messagesIDs)) {
+                        return $createFailure([ $_Lang['Delete_NoMsgsSelected'] ]);
+                    }
+
                     $cmdResult = Messages\Commands\batchDeleteMessagesByID([
-                        'messageIDs' => $DeleteIDs,
+                        'messageIDs' => $messagesIDs,
                         'userID' => $_User['id'],
                     ]);
 
-                    if ($cmdResult['deletedMessagesCount'] > 0) {
-                        $DelMsgs[] = $_Lang['Delete_UnselectedDeleted'];
-                    } else {
-                        $DelNotifs[] = $_Lang['Delete_BadSelections'];
+                    if ($cmdResult['deletedMessagesCount'] <= 0) {
+                        return $createFailure([ $_Lang['Delete_BadSelections'] ]);
                     }
-                } else {
-                    $DelNotifs[] = $_Lang['Delete_NoMsgsUnselected'];
-                }
-            } else if($DeleteWhat == 'setallread') {
-                $cmdResult = Messages\Commands\batchMarkMessagesAsRead([
-                    'userID' => $_User['id'],
-                    'untilTimestamp' => $TimeStamp,
-                ]);
 
-                if ($cmdResult['markedMessagesCount'] > 0) {
-                    $DelMsgs[] = $_Lang['Delete_AllMsgsRead'];
-                } else {
-                    $DelNotifs[] = $_Lang['Delete_NoMsgsToRead'];
-                }
-            } else if($DeleteWhat == 'setcatread') {
-                if (
-                    in_array($_ThisCategory, $MessageType) &&
-                    $_ThisCategory != 100 &&
-                    $_ThisCategory != 80
-                ) {
+                    return $createSuccess([ $_Lang['Delete_SelectedDeleted'] ]);
+                break;
+
+                case 'deleteunmarked':
+                    $messagesIDs = [];
+
+                    if (!empty($_POST['sm_all'])) {
+                        $matches = [];
+
+                        preg_match_all('#([0-9]{1,})#si', $_POST['sm_all'], $matches);
+
+                        $messagesIDs = $matches[0];
+                    } else {
+                        foreach ($_POST as $key => $value) {
+                            $matches = [];
+                            $matchResult = preg_match("/^sm([0-9]{1,})$/D", $key, $matches);
+
+                            if (!$matchResult) {
+                                continue;
+                            }
+
+                            $deleteKey = ('del' . $matches[1]);
+
+                            if ($_POST[$deleteKey] == 'on') {
+                                continue;
+                            }
+
+                            $messagesIDs[] = $matches[1];
+                        }
+                    }
+
+                    if (empty($messagesIDs)) {
+                        return $createFailure([ $_Lang['Delete_NoMsgsUnselected'] ]);
+                    }
+
+                    $cmdResult = Messages\Commands\batchDeleteMessagesByID([
+                        'messageIDs' => $messagesIDs,
+                        'userID' => $_User['id'],
+                    ]);
+
+                    if ($cmdResult['deletedMessagesCount'] <= 0) {
+                        return $createFailure([ $_Lang['Delete_BadSelections'] ]);
+                    }
+
+                    return $createSuccess([ $_Lang['Delete_UnselectedDeleted'] ]);
+                break;
+
+                case 'setallread':
                     $cmdResult = Messages\Commands\batchMarkMessagesAsRead([
                         'userID' => $_User['id'],
-                        'messageTypeID' => $_ThisCategory,
-                        'untilTimestamp' => $TimeStamp,
+                        'untilTimestamp' => $input['timeLimit'],
                     ]);
 
-                    if ($cmdResult['markedMessagesCount'] > 0) {
-                        $DelMsgs[] = $_Lang['Delete_CatMsgsRead'];
-                    } else {
-                        $DelNotifs[] = $_Lang['Delete_NoMsgsToRead'];
+                    if ($cmdResult['markedMessagesCount'] <= 0) {
+                        return $createFailure([ $_Lang['Delete_NoMsgsToRead'] ]);
                     }
-                } else {
-                    $DelNotifs[] = (
-                        $_ThisCategory == 80 ?
-                        $_Lang['Delete_CannotReadAdminMsgsAtOnce'] :
-                        $_Lang['Delete_BadCatSelected']
-                    );
-                }
-            } else {
-                if (!empty($_POST['delid'])) {
-                    $DeleteID = round(floatval($_POST['delid']));
+
+                    return $createSuccess([ $_Lang['Delete_AllMsgsRead'] ]);
+                break;
+
+                case 'setcatread':
+                    if ($input['categoryID'] == 80) {
+                        return $createFailure([ $_Lang['Delete_CannotReadAdminMsgsAtOnce'] ]);
+                    }
+
+                    if (
+                        !in_array($input['categoryID'], $knownMessageTypes) ||
+                        $input['categoryID'] == 100
+                    ) {
+                        return $createFailure([ $_Lang['Delete_BadCatSelected'] ]);
+                    }
+
+                    $cmdResult = Messages\Commands\batchMarkMessagesAsRead([
+                        'userID' => $_User['id'],
+                        'messageTypeID' => $input['categoryID'],
+                        'untilTimestamp' => $input['timeLimit'],
+                    ]);
+
+                    if ($cmdResult['markedMessagesCount'] <= 0) {
+                        return $createFailure([ $_Lang['Delete_NoMsgsToRead'] ]);
+                    }
+
+                    return $createSuccess([ $_Lang['Delete_CatMsgsRead'] ]);
+                break;
+
+                default:
+                    if (empty($_POST['delid'])) {
+                        return $createFailure([]);
+                    }
+
+                    $messageID = round(floatval($_POST['delid']));
 
                     $cmdResult = Messages\Commands\batchDeleteMessagesByID([
-                        'messageIDs' => [ $DeleteID ],
+                        'messageIDs' => [ $messageID ],
                         'userID' => $_User['id'],
                         'ignoreExcludedMessageTypesRestriction' => true,
                     ]);
 
-                    if ($cmdResult['deletedMessagesCount'] > 0) {
-                        $DelMsgs[] = $_Lang['Delete_MsgDeleted'];
-                    } else {
-                        $DelNotifs[] = $_Lang['Delete_MsgNoExist'];
+                    if ($cmdResult['deletedMessagesCount'] <= 0) {
+                        return $createFailure([ $_Lang['Delete_MsgNoExist'] ]);
                     }
-                }
-            }
-        }
 
-        if(!empty($DelMsgs))
-        {
-            foreach($DelMsgs as $Data)
-            {
-                $MsgBoxData[] = "<span class=\"lime\">{$Data}</span>";
+                    return $createSuccess([ $_Lang['Delete_MsgDeleted'] ]);
+            }
+        };
+
+        $_ThisCategory = intval($_POST['category']);
+
+        $result = $handler([
+            'knownMessageTypes' => $MessageType,
+        ]);
+
+        if ($result['isSuccess'] && !empty($result['messages'])) {
+            foreach ($result['messages'] as $messageContent) {
+                $MsgBoxData[] = "<span class=\"lime\">{$messageContent}</span>";
             }
         }
-        if(!empty($DelNotifs))
-        {
-            foreach($DelNotifs as $Data)
-            {
-                $MsgBoxData[] = "<span class=\"red\">{$Data}</span>";
+        if (!$result['isSuccess'] && !empty($result['errors'])) {
+            foreach ($result['errors'] as $messageContent) {
+                $MsgBoxData[] = "<span class=\"red\">{$messageContent}</span>";
             }
         }
         // Don't break here to allow deleting while showing...
