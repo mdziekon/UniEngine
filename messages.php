@@ -280,29 +280,29 @@ switch($_GET['mode'])
                 }
             }
 
-            if($FormData['uid'] > 0 && !CheckAuth('user', AUTHCHECK_HIGHER) AND !CheckAuth('user', AUTHCHECK_HIGHER, $FormData))
-            {
-                $Query_IgnoreSystem = '';
-                $Query_IgnoreSystem .= "SELECT `OwnerID` FROM {{table}} WHERE ";
-                $Query_IgnoreSystem .= "(`OwnerID` = {$_User['id']} AND `IgnoredID` = {$FormData['uid']}) OR ";
-                $Query_IgnoreSystem .= "(`OwnerID` = {$FormData['uid']} AND `IgnoredID` = {$_User['id']}) ";
-                $Query_IgnoreSystem .= "LIMIT 2; -- messages.php|IgnoreSystem";
+            if ($FormData['uid'] > 0) {
+                $ignoreSystemValidationResult = Messages\Validators\validateWithIgnoreSystem([
+                    'senderUser' => &$_User,
+                    'recipientUser' => [
+                        'id' => $FormData['uid'],
+                        'authlevel' => $FormData['authlevel'],
+                    ],
+                ]);
 
-                $Result_IgnoreSystem = doquery($Query_IgnoreSystem, 'ignoresystem');
-
-                if($Result_IgnoreSystem->num_rows > 0)
-                {
+                if (!$ignoreSystemValidationResult['isValid']) {
                     $AllowSend = false;
-                    while($IgnoreData = $Result_IgnoreSystem->fetch_assoc())
-                    {
-                        if($IgnoreData['OwnerID'] == $_User['id'])
-                        {
-                            $MsgBox[] = array('color' => 'red', 'text' => $_Lang['Errors_IgnoreYour']);
-                        }
-                        else
-                        {
-                            $MsgBox[] = array('color' => 'red', 'text' => $_Lang['Errors_IgnoreHis']);
-                        }
+
+                    if ($ignoreSystemValidationResult['errors']['isRecipientIgnored']) {
+                        $MsgBox[] = [
+                            'color' => 'red',
+                            'text' => $_Lang['Errors_IgnoreYour'],
+                        ];
+                    }
+                    if ($ignoreSystemValidationResult['errors']['isSenderIgnored']) {
+                        $MsgBox[] = [
+                            'color' => 'red',
+                            'text' => $_Lang['Errors_IgnoreHis'],
+                        ];
                     }
                 }
             }
