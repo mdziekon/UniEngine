@@ -88,61 +88,30 @@ switch($_GET['mode'])
             $_POST['text'] = $_GET['insert'];
         }
 
-        if(!empty($_GET['replyto']) OR !empty($_POST['replyto']))
-        {
-            if(!empty($_POST['replyto']))
-            {
+        if (!empty($_GET['replyto']) OR !empty($_POST['replyto'])) {
+            if (!empty($_POST['replyto'])) {
                 $ReplyID = round($_POST['replyto']);
-            }
-            else
-            {
+            } else {
                 $ReplyID = round($_GET['replyto']);
             }
-            if($ReplyID > 0)
-            {
-                $GetReplyMsg = '';
-                $GetReplyMsg .= "SELECT `m`.`id`, `m`.`Thread_ID`, `m`.`subject`, `m`.`text`, `u`.`id` AS `user_id`, `u`.`username`, `u`.`authlevel` FROM {{table}} AS `m` ";
-                $GetReplyMsg .= "LEFT JOIN `{{prefix}}users` AS `u` ON `u`.`id` = IF(`m`.`id_owner` != {$_User['id']}, `m`.`id_owner`, `m`.`id_sender`) ";
-                $GetReplyMsg .= "WHERE (`m`.`id` = {$ReplyID} OR `m`.`Thread_ID` = {$ReplyID}) AND (`m`.`id_owner` = {$_User['id']} OR `m`.`id_sender` = {$_User['id']}) AND `deleted` = false LIMIT 1;";
 
-                $ReplyMsg = doquery($GetReplyMsg, 'messages', true);
-                if($ReplyMsg['id'] > 0)
-                {
-                    if(preg_match('/^\{COPY\_MSG\_\#([0-9]{1,}){1}\}$/D', $ReplyMsg['text'], $ThisMatch))
-                    {
-                        $GetCopyMsg = doquery("SELECT `subject` FROM {{table}} WHERE `id` = {$ThisMatch[1]} LIMIT 1;", 'messages', true);
-                        $ReplyMsg['subject'] = $GetCopyMsg['subject'];
-                    }
+            if ($ReplyID > 0) {
+                $replyFormData = Messages\Utils\fetchFormDataForReply([
+                    'replyToMessageId' => $ReplyID,
+                    'senderUser' => &$_User,
+                ]);
 
-                    $FormData['username'] = $ReplyMsg['username'];
-                    $FormData['uid'] = $ReplyMsg['user_id'];
-                    $FormData['authlevel'] = $ReplyMsg['authlevel'];
-                    $FormData['subject'] = $ReplyMsg['subject'];
-                    $FormData['replyto'] = $ReplyID;
-                    $FormData['Thread_Started'] = ($ReplyMsg['Thread_ID'] > 0 ? true : false);
-                    if($FormData['Thread_Started'] === false)
-                    {
-                        $CreateReCounter = 1;
-                    }
-                    else
-                    {
-                        $GetThreadCount = doquery("SELECT COUNT(*) AS `Count` FROM {{table}} WHERE `Thread_ID` = {$ReplyID};", 'messages', true);
-                        $CreateReCounter = $GetThreadCount['Count'];
-                    }
-                    $FormData['lock_username'] = true;
-                    $FormData['lock_subject'] = true;
+                if ($replyFormData['isSuccess']) {
                     $AllowSend = true;
 
-                    $FormData['subject'] = preg_replace('#'.$_Lang['mess_answer_prefix'].'\[[0-9]{1,}\]\: #si', '', $FormData['subject']);
-                    $FormData['subject'] = $_Lang['mess_answer_prefix'].'['.$CreateReCounter.']: '.$FormData['subject'];
-                }
-                else
-                {
+                    $FormData = array_merge(
+                        $FormData,
+                        $replyFormData['payload']
+                    );
+                } else {
                     $MsgBox[] = array('color' => 'red', 'text' => $_Lang['Errors_CantReply']);
                 }
-            }
-            else
-            {
+            } else {
                 $MsgBox[] = array('color' => 'red', 'text' => $_Lang['Errors_CantReply']);
             }
         }
