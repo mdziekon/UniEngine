@@ -12,6 +12,7 @@ call_user_func(function () {
     include($includePath . './input/batchActions.userCommands.php');
     include($includePath . './utils/batchDeleteMessages.utils.php');
     include($includePath . './utils/batchMessageUpdates.utils.php');
+    include($includePath . './utils/sendMessage.utils.php');
     include($includePath . './validators/validateWithIgnoreSystem.validators.php');
 
 });

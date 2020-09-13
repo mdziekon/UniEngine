@@ -307,28 +307,21 @@ switch($_GET['mode'])
                 }
             }
 
-            if($AllowSend === true)
-            {
-                $FormSend['type'] = $FormData['type'];
-                $FormSend['subject'] = $FormData['subject'];
-                $FormSend['text'] = $FormData['text'];
-                $FormSend['uid'] = $FormData['uid'];
-                $FormSend['Thread_ID'] = $FormData['replyto'];
-                $FormSend['Thread_IsLast'] = ($FormSend['Thread_ID'] > 0 ? 1 : 0);
-
-                if($FormSend['Thread_ID'] > 0)
-                {
-                    if($FormData['Thread_Started'] === false)
-                    {
-                        doquery("UPDATE {{table}} SET `Thread_ID` = `id`, `Thread_IsLast` = 1 WHERE `id` = {$FormSend['Thread_ID']} LIMIT 1;", 'messages');
-                    }
-                    else
-                    {
-                        doquery("UPDATE {{table}} SET `Thread_IsLast` = 0 WHERE `Thread_ID` = {$FormSend['Thread_ID']} AND `id_owner` = {$FormSend['uid']};", 'messages');
-                    }
-                }
-
-                Cache_Message($FormSend['uid'], $_User['id'], $Now, $FormSend['type'], '', $FormSend['subject'], $FormSend['text'], $FormSend['Thread_ID'], $FormSend['Thread_IsLast']);
+            if ($AllowSend === true) {
+                Messages\Utils\sendMessage([
+                    'senderUser' => &$_User,
+                    'recipientUser' => [
+                        'id' => $FormData['uid'],
+                    ],
+                    'messageData' => [
+                        'timestamp' => $Now,
+                        'type' => $FormData['type'],
+                        'subject' => $FormData['subject'],
+                        'content' => $FormData['text'],
+                        'threadId' => $FormData['replyto'],
+                        'threadHasStarted' => $FormData['Thread_Started'],
+                    ],
+                ]);
 
                 if(preg_match('#'.$_Lang['mess_answer_prefix'].'\[([0-9]{1,})\]\: #si', $FormData['subject'], $ThisMatch))
                 {
