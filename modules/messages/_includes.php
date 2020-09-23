@@ -14,6 +14,8 @@ call_user_func(function () {
     include($includePath . './utils/batchMessageUpdates.utils.php');
     include($includePath . './utils/createReplyMessageSubject.utils.php');
     include($includePath . './utils/fetchFormDataForReply.utils.php');
+    include($includePath . './utils/fetchRecipientDataByUserId.utils.php');
+    include($includePath . './utils/fetchRecipientDataByUsername.utils.php');
     include($includePath . './utils/getMessageCopyId.utils.php');
     include($includePath . './utils/sendMessage.utils.php');
     include($includePath . './validators/validateWithIgnoreSystem.validators.php');
