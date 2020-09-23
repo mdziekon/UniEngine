@@ -69,198 +69,113 @@ switch($_GET['mode'])
     case 'write':
         // Message Sending System
         $SetTitle = $_Lang['mess_pagetitle_send'];
-        $AllowSend = false;
+        $MsgBox = [];
 
-        $FormData['username'] = null;
-        $FormData['uid'] = null;
-        $FormData['replyto'] = 0;
-        $FormData['subject'] = null;
-        $FormData['text'] = null;
-        $FormData['lock_username'] = false;
-        $FormData['lock_subject'] = false;
+        if (isset($_POST['send_msg'])) {
+            $handleSendMessage = function () use ($_User, $_Lang, $_EnginePath, &$parse, &$MsgBox) {
+                $formDataNormalizationResult = Messages\Utils\normalizeFormData(
+                    $_POST,
+                    [
+                        'senderUser' => &$_User,
+                    ]
+                );
 
-        if(empty($_POST['subject']) AND !empty($_GET['subject']))
-        {
-            $_POST['subject'] = $_GET['subject'];
-        }
-        if(empty($_POST['text']) AND !empty($_GET['insert']))
-        {
-            $_POST['text'] = $_GET['insert'];
-        }
+                $formData = $formDataNormalizationResult['formData'];
 
-        if (!empty($_GET['replyto']) OR !empty($_POST['replyto'])) {
-            if (!empty($_POST['replyto'])) {
-                $ReplyID = round($_POST['replyto']);
-            } else {
-                $ReplyID = round($_GET['replyto']);
-            }
+                // Modify template data
+                $parse['FormInsert_username'] = $formData['recipient']['username'];
+                $parse['FormInsert_replyto'] = $formData['replyToId'];
+                $parse['FormInsert_subject'] = $formData['message']['subject'];
+                $parse['FormInsert_text'] = $formData['message']['content'];
+                $parse['FormInsert_checkSendAsAdmin'] = (
+                    $formData['meta']['isSendingAsAdmin'] ?
+                    'checked' :
+                    ''
+                );
 
-            if ($ReplyID > 0) {
-                $replyFormData = Messages\Utils\fetchFormDataForReply([
-                    'replyToMessageId' => $ReplyID,
-                    'senderUser' => &$_User,
-                ]);
+                if (!$formDataNormalizationResult['isSuccess']) {
+                    $normalizationErrors = $formDataNormalizationResult['errors'];
 
-                if ($replyFormData['isSuccess']) {
-                    $AllowSend = true;
+                    if ($normalizationErrors['isReplyToInvalid']) {
+                        $MsgBox[] = [
+                            'color' => 'red',
+                            'text' => $_Lang['Errors_CantReply'],
+                        ];
 
-                    $FormData = array_merge(
-                        $FormData,
-                        $replyFormData['payload']
-                    );
-                } else {
-                    $MsgBox[] = array('color' => 'red', 'text' => $_Lang['Errors_CantReply']);
-                }
-            } else {
-                $MsgBox[] = array('color' => 'red', 'text' => $_Lang['Errors_CantReply']);
-            }
-        }
-        else
-        {
-            if(!empty($_GET['uid']) OR !empty($_POST['uid']))
-            {
-                if(!empty($_POST['uid']))
-                {
-                    $UserID = intval($_POST['uid']);
-                    $UIDFromPost = true;
-                }
-                else
-                {
-                    $UserID = intval($_GET['uid']);
-                    $UIDFromPost = false;
-                }
-                if($UserID > 0)
-                {
-                    $CheckUser = doquery("SELECT `id`, `username`, `authlevel` FROM {{table}} WHERE `id` = {$UserID} LIMIT 1;", 'users', true);
-                    if($CheckUser['id'] == $UserID)
-                    {
-                        $FormData['username'] = $CheckUser['username'];
-                        $FormData['uid'] = $UserID;
-                        $FormData['authlevel'] = $CheckUser['authlevel'];
-                        if($UIDFromPost === false)
-                        {
-                            $FormData['lock_username'] = true;
-                        }
-                        $AllowSend = true;
+                        return;
                     }
-                    else
-                    {
-                        $MsgBox[] = array('color' => 'red', 'text' => $_Lang['Errors_UserNoExist']);
+                    if ($normalizationErrors['isRecipientUsernameInvalid']) {
+                        $MsgBox[] = [
+                            'color' => 'red',
+                            'text' => $_Lang['Errors_BadUserName'],
+                        ];
+
+                        return;
                     }
-                }
-                else
-                {
-                    $MsgBox[] = array('color' => 'red', 'text' => $_Lang['Errors_BadUserID']);
-                }
-            }
+                    if ($normalizationErrors['recipientNotFound']) {
+                        $MsgBox[] = [
+                            'color' => 'red',
+                            'text' => $_Lang['Errors_UserNoExist'],
+                        ];
 
-            if(!empty($_POST['uname']) && $_POST['uname'] != $FormData['username'])
-            {
-                $FormData['username'] = '';
-                $FormData['uid'] = '';
-                $FormData['authlevel'] = '';
-                $AllowSend = false;
-
-                $UserName = trim($_POST['uname']);
-                if(preg_match(REGEXP_USERNAME_ABSOLUTE, $UserName))
-                {
-                    $CheckUser = doquery("SELECT `id`, `authlevel` FROM {{table}} WHERE `username` = '{$UserName}' LIMIT 1;", 'users', true);
-                    if($CheckUser['id'] > 0)
-                    {
-                        $FormData['username'] = $UserName;
-                        $FormData['uid'] = $CheckUser['id'];
-                        $FormData['authlevel'] = $CheckUser['authlevel'];
-                        $AllowSend = true;
+                        return;
                     }
-                    else
-                    {
-                        $MsgBox[] = array('color' => 'red', 'text' => $_Lang['Errors_UserNoExist']);
+                    if ($normalizationErrors['hasNoPermissionToChangeType']) {
+                        $MsgBox[] = [
+                            'color' => 'red',
+                            'text' => $_Lang['Errors_CantUseAdminMsg'],
+                        ];
+
+                        return;
                     }
+
+                    return;
                 }
-                else
-                {
-                    $MsgBox[] = array('color' => 'red', 'text' => $_Lang['Errors_BadUserName']);
+
+                // Validation
+                if ($formData['recipient']['id'] == $_User['id']) {
+                    $MsgBox[] = [
+                        'color' => 'red',
+                        'text' => $_Lang['Errors_CantWriteToYourself'],
+                    ];
+
+                    return;
                 }
-            }
-        }
 
-        if($FormData['uid'] > 0 && $FormData['uid'] == $_User['id'])
-        {
-            $FormData['username'] = '';
-            $FormData['uid'] = '';
-            $FormData['lock_username'] = false;
-            $MsgBox[] = array('color' => 'red', 'text' => $_Lang['Errors_CantWriteToYourself']);
-            $AllowSend = false;
-        }
-        $FormData['type'] = 1;
-        if(isset($_POST['send_as_admin_msg']) && $_POST['send_as_admin_msg'] == 'on')
-        {
-            if(!CheckAuth('supportadmin'))
-            {
-                $MsgBox[] = array('color' => 'red', 'text' => $_Lang['Errors_CantUseAdminMsg']);
-                $AllowSend = false;
-            }
-            else
-            {
-                $FormData['type'] = 80;
-                $parse['FormInsert_checkSendAsAdmin'] = 'checked';
-            }
-        }
+                if (empty($formData['message']['subject'])) {
+                    $MsgBox[] = [
+                        'color' => 'red',
+                        'text' => $_Lang['Errors_SubjectEmpty'],
+                    ];
 
-        $_POST['text'] = (isset($_POST['text']) ? stripslashes(trim($_POST['text'])) : '');
-        $_POST['subject'] = (isset($_POST['subject']) ? stripslashes(trim($_POST['subject'])) : '');
-        if(get_magic_quotes_gpc())
-        {
-            $_POST['text'] = stripslashes($_POST['text']);
-            $_POST['subject'] = stripslashes($_POST['subject']);
-        }
-
-        if(empty($FormData['subject']))
-        {
-            $FormData['subject'] = substr(strip_tags($_POST['subject']), 0, $_MaxLength_Subject);
-        }
-        $FormData['text'] = substr(strip_tags($_POST['text']), 0, $_MaxLength_Text);
-
-        if(isset($_POST['send_msg']))
-        {
-            if($FormData['uid'] == 0 && empty($MsgBox))
-            {
-                $MsgBox[] = array('color' => 'red', 'text' => $_Lang['Errors_NoUserID']);
-                $AllowSend = false;
-            }
-
-            if(empty($FormData['subject']))
-            {
-                $MsgBox[] = array('color' => 'red', 'text' => $_Lang['Errors_SubjectEmpty']);
-                $AllowSend = false;
-            }
-            if(empty($FormData['text']))
-            {
-                $MsgBox[] = array('color' => 'red', 'text' => $_Lang['Errors_TextEmpty']);
-                $AllowSend = false;
-            }
-            else
-            {
-                include($_EnginePath.'includes/functions/FilterMessages.php');
-                if(FilterMessages($_POST['text'], 1))
-                {
-                    $MsgBox[] = array('color' => 'red', 'text' => $_Lang['Errors_TextSPAM']);
-                    $AllowSend = false;
+                    return;
                 }
-            }
+                if (empty($formData['message']['content'])) {
+                    $MsgBox[] = [
+                        'color' => 'red',
+                        'text' => $_Lang['Errors_TextEmpty'],
+                    ];
 
-            if ($FormData['uid'] > 0) {
+                    return;
+                }
+
+                include($_EnginePath . 'includes/functions/FilterMessages.php');
+
+                if (FilterMessages($formData['message']['content'], 1)) {
+                    $MsgBox[] = [
+                        'color' => 'red',
+                        'text' => $_Lang['Errors_TextSPAM'],
+                    ];
+
+                    return;
+                }
+
                 $ignoreSystemValidationResult = Messages\Validators\validateWithIgnoreSystem([
                     'senderUser' => &$_User,
-                    'recipientUser' => [
-                        'id' => $FormData['uid'],
-                        'authlevel' => $FormData['authlevel'],
-                    ],
+                    'recipientUser' => $formData['recipient'],
                 ]);
 
                 if (!$ignoreSystemValidationResult['isValid']) {
-                    $AllowSend = false;
-
                     if ($ignoreSystemValidationResult['errors']['isRecipientIgnored']) {
                         $MsgBox[] = [
                             'color' => 'red',
@@ -273,76 +188,145 @@ switch($_GET['mode'])
                             'text' => $_Lang['Errors_IgnoreHis'],
                         ];
                     }
-                }
-            }
 
-            if ($AllowSend === true) {
+                    return;
+                }
+
                 Messages\Utils\sendMessage([
                     'senderUser' => &$_User,
-                    'recipientUser' => [
-                        'id' => $FormData['uid'],
-                    ],
+                    'recipientUser' => $formData['recipient'],
                     'messageData' => [
                         'timestamp' => $Now,
-                        'type' => $FormData['type'],
-                        'subject' => $FormData['subject'],
-                        'content' => $FormData['text'],
-                        'threadId' => $FormData['replyto'],
-                        'threadHasStarted' => $FormData['Thread_Started'],
+                        'type' => $formData['message']['type'],
+                        'subject' => $formData['message']['subject'],
+                        'content' => $formData['message']['content'],
+                        'threadId' => $formData['replyToId'],
+                        'threadHasStarted' => $formData['meta']['isReplyingToOngoingThread'],
                     ],
                 ]);
 
-                if(preg_match('#'.$_Lang['mess_answer_prefix'].'\[([0-9]{1,})\]\: #si', $FormData['subject'], $ThisMatch))
-                {
-                    $FormData['subject'] = preg_replace('#'.$_Lang['mess_answer_prefix'].'\[[0-9]{1,}\]\: #si', $_Lang['mess_answer_prefix'].'['.($ThisMatch[1] + 1).']: ', $FormData['subject']);
+                if ($formData['meta']['nextSubject'] !== null) {
+                    $parse['FormInsert_subject'] = $formData['meta']['nextSubject'];
                 }
-                $MsgBox[] = array('color' => 'lime', 'text' => $_Lang['Info_MsgSend']);
-            }
-        }
 
-        $parse['FormInsert_username'] = $FormData['username'];
-        $parse['FormInsert_uid'] = $FormData['uid'];
-        $parse['FormInsert_replyto'] = $FormData['replyto'];
-        $parse['FormInsert_subject'] = $FormData['subject'];
-        $parse['FormInsert_text'] = $FormData['text'];
-        if($FormData['lock_username'] === true)
-        {
-            $parse['FormInsert_LockUsername'] = 'disabled';
-        }
-        if($FormData['lock_subject'] === true)
-        {
-            $parse['FormInsert_LockSubject'] = 'disabled';
+                $MsgBox[] = [
+                    'color' => 'lime',
+                    'text' => $_Lang['Info_MsgSend'],
+                ];
+            };
+
+            $handleSendMessage();
+        } else {
+            $isReplying = !empty($_GET['replyto']);
+
+            if ($isReplying) {
+                // TODO: Reuse similar code from normalizeFormData
+                $handleReplyTo = function () use ($_Lang, $_User, &$parse, &$MsgBox) {
+                    $replyId = round($_GET['replyto']);
+
+                    if (!($replyId > 0)) {
+                        $MsgBox[] = [
+                            'color' => 'red',
+                            'text' => $_Lang['Errors_CantReply'],
+                        ];
+
+                        return;
+                    }
+
+                    $replyFormData = Messages\Utils\fetchFormDataForReply([
+                        'replyToMessageId' => $replyId,
+                        'senderUser' => &$_User,
+                    ]);
+
+                    if (!$replyFormData['isSuccess']) {
+                        $MsgBox[] = [
+                            'color' => 'red',
+                            'text' => $_Lang['Errors_CantReply'],
+                        ];
+
+                        return;
+                    }
+
+                    // Modify template data
+                    $parse['FormInsert_replyto'] = $replyId;
+                    $parse['FormInsert_username'] = $replyFormData['payload']['username'];
+                    $parse['FormInsert_subject'] = $replyFormData['payload']['subject'];
+                    $parse['FormInsert_LockUsername'] = 'disabled';
+                    $parse['FormInsert_LockSubject'] = 'disabled';
+                };
+
+                $handleReplyTo();
+            }
+
+            if (!$isReplying) {
+                $handleQueryParamUserId = function () use ($_Lang, &$parse, &$MsgBox) {
+                    if (empty($_GET['uid'])) {
+                        return;
+                    }
+
+                    $fetchResult = Messages\Utils\fetchRecipientDataByUserId([
+                        'userId' => $_GET['uid'],
+                    ]);
+
+                    if (!($fetchResult['isSuccess'])) {
+                        if ($fetchResult['errors']['isUserIdInvalid']) {
+                            $MsgBox[] = [
+                                'color' => 'red',
+                                'text' => $_Lang['Errors_BadUserID'],
+                            ];
+                        }
+                        if ($fetchResult['errors']['notFound']) {
+                            $MsgBox[] = [
+                                'color' => 'red',
+                                'text' => $_Lang['Errors_UserNoExist'],
+                            ];
+                        }
+
+                        return;
+                    }
+
+                    // Modify template data
+                    $parse['FormInsert_username'] = $fetchResult['payload']['username'];
+                    $parse['FormInsert_uid'] = $fetchResult['payload']['id'];
+                    $parse['FormInsert_LockUsername'] = 'disabled';
+                };
+
+                $handleQueryParamUserId();
+            }
+
+            if (!empty($_GET['subject']) && empty($parse['FormInsert_subject'])) {
+                $parse['FormInsert_subject'] = $_GET['subject'];
+            }
+            if (!empty($_GET['insert'])) {
+                $parse['FormInsert_text'] = $_GET['insert'];
+            }
         }
 
         // Let's handle System Messages
-        if(!empty($MsgBox))
-        {
-            foreach($MsgBox as $MsgData)
-            {
+        if (!empty($MsgBox)) {
+            foreach ($MsgBox as $MsgData) {
                 $MsgBoxData[] = "<span class=\"{$MsgData['color']}\">{$MsgData['text']}</span>";
             }
             $parse['Insert_MsgBoxText'] = implode('<br/>', $MsgBoxData);
-        }
-        else
-        {
+        } else {
             $parse['Insert_HideMsgBox'] = 'inv';
             $parse['Insert_MsgBoxText'] = '&nbsp;';
         }
 
         // Now let's show Form to User
-        if(!CheckAuth('user', AUTHCHECK_HIGHER))
-        {
+        if (!CheckAuth('user', AUTHCHECK_HIGHER)) {
             $parse['FormInsert_displaySendAsAdmin'] = 'display: none;';
         }
         $_Lang['FormInsert_MaxSigns'] = $_MaxLength_Text;
-        if($_GameConfig['enable_bbcode'] == 1)
-        {
-            $page = parsetemplate(gettemplate('messages_pm_form_bb'), $parse);
-        }
-        else
-        {
-            $page = parsetemplate(gettemplate('messages_pm_form'), $parse);
-        }
+
+        $tplName = (
+            $_GameConfig['enable_bbcode'] == 1 ?
+                'messages_pm_form_bb' :
+                'messages_pm_form'
+        );
+        $tplBody = gettemplate($tplName);
+
+        $page = parsetemplate($tplBody, $parse);
         // It's done!
     break;
 
