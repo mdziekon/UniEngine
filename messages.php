@@ -222,7 +222,6 @@ switch($_GET['mode'])
             $isReplying = !empty($_GET['replyto']);
 
             if ($isReplying) {
-                // TODO: Reuse similar code from normalizeFormData
                 $handleReplyTo = function () use ($_Lang, $_User, &$parse, &$MsgBox) {
                     $replyId = round($_GET['replyto']);
 
