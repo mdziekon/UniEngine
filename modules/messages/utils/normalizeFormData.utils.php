@@ -15,6 +15,8 @@ use UniEngine\Engine\Modules\Messages;
  * @param string $input['text']
  * @param array $params
  * @param &array $params['senderUser']
+ * @param number $params['subjectMaxLength']
+ * @param number $params['contentMaxLength']
  */
 function normalizeFormData($input, $params) {
     $senderUser = &$params['senderUser'];
@@ -155,13 +157,13 @@ function normalizeFormData($input, $params) {
     if (empty($formData['message']['subject'])) {
         $formData['message']['subject'] = $normalizeUserContent(
             $input['subject'],
-            [ 'maxLength' => 100, ]
+            [ 'maxLength' => $params['subjectMaxLength'], ]
         );
     }
 
     $formData['message']['content'] = $normalizeUserContent(
         $input['text'],
-        [ 'maxLength' => 5000, ]
+        [ 'maxLength' => $params['contentMaxLength'], ]
     );
 
     $hasNormalizationErrors = (

@@ -72,11 +72,13 @@ switch($_GET['mode'])
         $MsgBox = [];
 
         if (isset($_POST['send_msg'])) {
-            $handleSendMessage = function () use ($_User, $_Lang, $_EnginePath, &$parse, &$MsgBox) {
+            $handleSendMessage = function () use ($_User, $_Lang, $_EnginePath, &$parse, &$MsgBox, $_MaxLength_Subject, $_MaxLength_Text) {
                 $formDataNormalizationResult = Messages\Utils\normalizeFormData(
                     $_POST,
                     [
                         'senderUser' => &$_User,
+                        'subjectMaxLength' => $_MaxLength_Subject,
+                        'contentMaxLength' => $_MaxLength_Text,
                     ]
                 );
 
