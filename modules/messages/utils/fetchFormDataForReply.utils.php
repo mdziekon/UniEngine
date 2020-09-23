@@ -58,6 +58,7 @@ function fetchFormDataForReply($params) {
         'uid' => $referencedMessage['user_id'],
         'authlevel' => $referencedMessage['authlevel'],
         'subject' => null,
+        'nextSubject' => null,
         'replyto' => $replyToMessageId,
         'Thread_Started' => $isInOngoingThread,
         'lock_username' => true,
@@ -100,6 +101,10 @@ function fetchFormDataForReply($params) {
     $formData['subject'] = Messages\Utils\createReplyMessageSubject([
         'previousSubject' => $previousSubject,
         'replyCounter' => $replyCounter,
+    ]);
+    $formData['nextSubject'] = Messages\Utils\createReplyMessageSubject([
+        'previousSubject' => $previousSubject,
+        'replyCounter' => ($replyCounter + 1),
     ]);
 
     return [
