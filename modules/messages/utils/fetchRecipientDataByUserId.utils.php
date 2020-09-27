@@ -36,8 +36,6 @@ function fetchRecipientDataByUserId($params) {
                 'notFound' => true,
             ],
         ];
-
-        return;
     }
 
     $recipientData = [
