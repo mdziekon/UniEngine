@@ -60,12 +60,11 @@ if(!empty($DeleteWhat) || (isset($_POST['delid']) && $_POST['delid'] > 0))
 }
 $CreatedForms = 0;
 
-if(!isset($_GET['mode']))
-{
+if (!isset($_GET['mode'])) {
     $_GET['mode'] = '';
 }
-switch($_GET['mode'])
-{
+
+switch($_GET['mode']) {
     case 'write':
         // Message Sending System
         $SetTitle = $_Lang['mess_pagetitle_send'];
@@ -165,14 +164,11 @@ switch($_GET['mode'])
             $isReplying = !empty($_GET['replyto']);
 
             if ($isReplying) {
-                $handleReplyTo = function () use ($_Lang, $_User, &$parse, &$MsgBox) {
+                $handleReplyTo = function () use ($_Lang, $_User, &$parse, $addErrorToMsgBox) {
                     $replyId = round($_GET['replyto']);
 
                     if (!($replyId > 0)) {
-                        $MsgBox[] = [
-                            'color' => 'red',
-                            'text' => $_Lang['Errors_CantReply'],
-                        ];
+                        $addErrorToMsgBox($_Lang['Errors_CantReply']);
 
                         return;
                     }
@@ -183,10 +179,7 @@ switch($_GET['mode'])
                     ]);
 
                     if (!$replyFormData['isSuccess']) {
-                        $MsgBox[] = [
-                            'color' => 'red',
-                            'text' => $_Lang['Errors_CantReply'],
-                        ];
+                        $addErrorToMsgBox($_Lang['Errors_CantReply']);
 
                         return;
                     }
@@ -203,7 +196,7 @@ switch($_GET['mode'])
             }
 
             if (!$isReplying) {
-                $handleQueryParamUserId = function () use ($_Lang, &$parse, &$MsgBox) {
+                $handleQueryParamUserId = function () use ($_Lang, &$parse, $addErrorToMsgBox) {
                     if (empty($_GET['uid'])) {
                         return;
                     }
@@ -214,16 +207,10 @@ switch($_GET['mode'])
 
                     if (!($fetchResult['isSuccess'])) {
                         if ($fetchResult['errors']['isUserIdInvalid']) {
-                            $MsgBox[] = [
-                                'color' => 'red',
-                                'text' => $_Lang['Errors_BadUserID'],
-                            ];
+                            $addErrorToMsgBox($_Lang['Errors_BadUserID']);
                         }
                         if ($fetchResult['errors']['notFound']) {
-                            $MsgBox[] = [
-                                'color' => 'red',
-                                'text' => $_Lang['Errors_UserNoExist'],
-                            ];
+                            $addErrorToMsgBox($_Lang['Errors_UserNoExist']);
                         }
 
                         return;
@@ -246,18 +233,26 @@ switch($_GET['mode'])
             }
         }
 
-        // Let's handle System Messages
+        // Handle feedback messages
         if (!empty($MsgBox)) {
+            $messagesListElements = [];
+
             foreach ($MsgBox as $MsgData) {
-                $MsgBoxData[] = "<span class=\"{$MsgData['color']}\">{$MsgData['text']}</span>";
+                $messagesListElements[] = buildDOMElementHTML([
+                    'tagName' => 'span',
+                    'contentHTML' => $MsgData['text'],
+                    'attrs' => [
+                        'class' => $MsgData['color'],
+                    ]
+                ]);
             }
-            $parse['Insert_MsgBoxText'] = implode('<br/>', $MsgBoxData);
+            $parse['Insert_MsgBoxText'] = implode('<br/>', $messagesListElements);
         } else {
             $parse['Insert_HideMsgBox'] = 'inv';
             $parse['Insert_MsgBoxText'] = '&nbsp;';
         }
 
-        // Now let's show Form to User
+        // Handle form rendering
         if (!CheckAuth('user', AUTHCHECK_HIGHER)) {
             $parse['FormInsert_displaySendAsAdmin'] = 'display: none;';
         }
@@ -271,7 +266,6 @@ switch($_GET['mode'])
         $tplBody = gettemplate($tplName);
 
         $page = parsetemplate($tplBody, $parse);
-        // It's done!
     break;
 
     case 'delete':
