@@ -101,7 +101,10 @@ switch($_GET['mode'])
                     ''
             );
             $parse['FormInsert_subject'] = (
-                $formData['meta']['nextSubject'] !== null ?
+                (
+                    $formData['meta']['nextSubject'] !== null &&
+                    $result['isSuccess']
+                ) ?
                     $formData['meta']['nextSubject'] :
                     $formData['message']['subject']
             );
