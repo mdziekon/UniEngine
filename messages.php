@@ -109,6 +109,17 @@ switch($_GET['mode'])
                     $formData['message']['subject']
             );
 
+            if (
+                $formData['replyToId'] !== null &&
+                (
+                    $result['isSuccess'] ||
+                    !$errors['isReplyToInvalid']
+                )
+            ) {
+                $parse['FormInsert_LockUsername'] = 'disabled';
+                $parse['FormInsert_LockSubject'] = 'disabled';
+            }
+
             if (!$result['isSuccess']) {
                 $errors = $result['errors'];
 
