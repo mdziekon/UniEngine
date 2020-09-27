@@ -71,153 +71,82 @@ switch($_GET['mode'])
         $SetTitle = $_Lang['mess_pagetitle_send'];
         $MsgBox = [];
 
+        $addErrorToMsgBox = function ($errorMessage) use (&$MsgBox) {
+            $MsgBox[] = [
+                'color' => 'red',
+                'text' => $errorMessage,
+            ];
+        };
+
         if (isset($_POST['send_msg'])) {
-            $handleSendMessage = function () use ($_User, $_Lang, $_EnginePath, &$parse, &$MsgBox, $_MaxLength_Subject, $_MaxLength_Text) {
-                $formDataNormalizationResult = Messages\Utils\normalizeFormData(
-                    $_POST,
-                    [
-                        'senderUser' => &$_User,
-                        'subjectMaxLength' => $_MaxLength_Subject,
-                        'contentMaxLength' => $_MaxLength_Text,
-                    ]
-                );
+            $result = Messages\Input\UserCommands\handleSendMessage(
+                $_POST,
+                [
+                    'senderUser' => &$_User,
+                    'subjectMaxLength' => $_MaxLength_Subject,
+                    'contentMaxLength' => $_MaxLength_Text,
+                    'timestamp' => $Now,
+                ]
+            );
 
-                $formData = $formDataNormalizationResult['formData'];
+            $formData = $result['payload']['formData'];
 
-                // Modify template data
-                $parse['FormInsert_username'] = $formData['recipient']['username'];
-                $parse['FormInsert_replyto'] = $formData['replyToId'];
-                $parse['FormInsert_subject'] = $formData['message']['subject'];
-                $parse['FormInsert_text'] = $formData['message']['content'];
-                $parse['FormInsert_checkSendAsAdmin'] = (
-                    $formData['meta']['isSendingAsAdmin'] ?
+            // Modify template data (regardless of the result)
+            $parse['FormInsert_username'] = $formData['recipient']['username'];
+            $parse['FormInsert_replyto'] = $formData['replyToId'];
+            $parse['FormInsert_text'] = $formData['message']['content'];
+            $parse['FormInsert_checkSendAsAdmin'] = (
+                $formData['meta']['isSendingAsAdmin'] ?
                     'checked' :
                     ''
-                );
+            );
+            $parse['FormInsert_subject'] = (
+                $formData['meta']['nextSubject'] !== null ?
+                    $formData['meta']['nextSubject'] :
+                    $formData['message']['subject']
+            );
 
-                if (!$formDataNormalizationResult['isSuccess']) {
-                    $normalizationErrors = $formDataNormalizationResult['errors'];
+            if (!$result['isSuccess']) {
+                $errors = $result['errors'];
 
-                    if ($normalizationErrors['isReplyToInvalid']) {
-                        $MsgBox[] = [
-                            'color' => 'red',
-                            'text' => $_Lang['Errors_CantReply'],
-                        ];
-
-                        return;
-                    }
-                    if ($normalizationErrors['isRecipientUsernameInvalid']) {
-                        $MsgBox[] = [
-                            'color' => 'red',
-                            'text' => $_Lang['Errors_BadUserName'],
-                        ];
-
-                        return;
-                    }
-                    if ($normalizationErrors['recipientNotFound']) {
-                        $MsgBox[] = [
-                            'color' => 'red',
-                            'text' => $_Lang['Errors_UserNoExist'],
-                        ];
-
-                        return;
-                    }
-                    if ($normalizationErrors['hasNoPermissionToChangeType']) {
-                        $MsgBox[] = [
-                            'color' => 'red',
-                            'text' => $_Lang['Errors_CantUseAdminMsg'],
-                        ];
-
-                        return;
-                    }
-
-                    return;
+                if ($errors['isReplyToInvalid']) {
+                    $addErrorToMsgBox($_Lang['Errors_CantReply']);
                 }
-
-                // Validation
-                if ($formData['recipient']['id'] == $_User['id']) {
-                    $MsgBox[] = [
-                        'color' => 'red',
-                        'text' => $_Lang['Errors_CantWriteToYourself'],
-                    ];
-
-                    return;
+                if ($errors['isRecipientUsernameInvalid']) {
+                    $addErrorToMsgBox($_Lang['Errors_BadUserName']);
                 }
-
-                if (empty($formData['message']['subject'])) {
-                    $MsgBox[] = [
-                        'color' => 'red',
-                        'text' => $_Lang['Errors_SubjectEmpty'],
-                    ];
-
-                    return;
+                if ($errors['recipientNotFound']) {
+                    $addErrorToMsgBox($_Lang['Errors_UserNoExist']);
                 }
-                if (empty($formData['message']['content'])) {
-                    $MsgBox[] = [
-                        'color' => 'red',
-                        'text' => $_Lang['Errors_TextEmpty'],
-                    ];
-
-                    return;
+                if ($errors['hasNoPermissionToChangeType']) {
+                    $addErrorToMsgBox($_Lang['Errors_CantUseAdminMsg']);
                 }
-
-                include($_EnginePath . 'includes/functions/FilterMessages.php');
-
-                if (FilterMessages($formData['message']['content'], 1)) {
-                    $MsgBox[] = [
-                        'color' => 'red',
-                        'text' => $_Lang['Errors_TextSPAM'],
-                    ];
-
-                    return;
+                if ($errors['isWritingToYourself']) {
+                    $addErrorToMsgBox($_Lang['Errors_CantWriteToYourself']);
                 }
-
-                $ignoreSystemValidationResult = Messages\Validators\validateWithIgnoreSystem([
-                    'senderUser' => &$_User,
-                    'recipientUser' => $formData['recipient'],
-                ]);
-
-                if (!$ignoreSystemValidationResult['isValid']) {
-                    if ($ignoreSystemValidationResult['errors']['isRecipientIgnored']) {
-                        $MsgBox[] = [
-                            'color' => 'red',
-                            'text' => $_Lang['Errors_IgnoreYour'],
-                        ];
-                    }
-                    if ($ignoreSystemValidationResult['errors']['isSenderIgnored']) {
-                        $MsgBox[] = [
-                            'color' => 'red',
-                            'text' => $_Lang['Errors_IgnoreHis'],
-                        ];
-                    }
-
-                    return;
+                if ($errors['isMessageSubjectEmpty']) {
+                    $addErrorToMsgBox($_Lang['Errors_SubjectEmpty']);
                 }
-
-                Messages\Utils\sendMessage([
-                    'senderUser' => &$_User,
-                    'recipientUser' => $formData['recipient'],
-                    'messageData' => [
-                        'timestamp' => $Now,
-                        'type' => $formData['message']['type'],
-                        'subject' => $formData['message']['subject'],
-                        'content' => $formData['message']['content'],
-                        'threadId' => $formData['replyToId'],
-                        'threadHasStarted' => $formData['meta']['isReplyingToOngoingThread'],
-                    ],
-                ]);
-
-                if ($formData['meta']['nextSubject'] !== null) {
-                    $parse['FormInsert_subject'] = $formData['meta']['nextSubject'];
+                if ($errors['isMessageContentEmpty']) {
+                    $addErrorToMsgBox($_Lang['Errors_TextEmpty']);
                 }
+                if ($errors['isMessageContentSpam']) {
+                    $addErrorToMsgBox($_Lang['Errors_TextSPAM']);
+                }
+                if ($errors['isRecipientIgnored']) {
+                    $addErrorToMsgBox($_Lang['Errors_IgnoreYour']);
+                }
+                if ($errors['isSenderIgnored']) {
+                    $addErrorToMsgBox($_Lang['Errors_IgnoreHis']);
+                }
+            }
 
+            if ($result['isSuccess']) {
                 $MsgBox[] = [
                     'color' => 'lime',
                     'text' => $_Lang['Info_MsgSend'],
                 ];
-            };
-
-            $handleSendMessage();
+            }
         } else {
             $isReplying = !empty($_GET['replyto']);
 
