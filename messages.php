@@ -512,13 +512,14 @@ switch($_GET['mode']) {
                         else
                         {
                             // NonConstant Message (eg. SpyReport)
-                            if((array)$MsgArray['msg_text'] === $MsgArray['msg_text']) {
-                                if(!empty($MsgArray['sim'])) {
+                            if (is_array($MsgArray['msg_text'])) {
+                                if (!empty($MsgArray['sim'])) {
                                     $simData = Messages\Utils\_buildBattleSimulationDetails($MsgArray['sim']);
 
                                     $CreateSimForms .= $simData['simulationForm'];
                                     $_Lang['GoToSimButton'] = $simData['simulationCTAButton'];
                                 }
+
                                 $CurMess['text'] = implode('', innerReplace(multidim2onedim($MsgArray['msg_text']), $_Lang));
                             } else {
                                 $CurMess['text'] = sprintf($_Lang['msg_const']['msgs']['err'], $CurMess['id']);
