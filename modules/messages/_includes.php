@@ -13,6 +13,7 @@ call_user_func(function () {
     include($includePath . './input/sendMessage.userCommands.php');
     include($includePath . './utils/batchDeleteMessages.utils.php');
     include($includePath . './utils/batchMessageUpdates.utils.php');
+    include($includePath . './utils/buildMessageDetails.utils.php');
     include($includePath . './utils/createReplyMessageSubject.utils.php');
     include($includePath . './utils/fetchFormDataForReply.utils.php');
     include($includePath . './utils/fetchRecipientDataByUserId.utils.php');

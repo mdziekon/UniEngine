@@ -58,7 +58,6 @@ if(!empty($DeleteWhat) || (isset($_POST['delid']) && $_POST['delid'] > 0))
         $_POST['deletemessages'] = '';
     }
 }
-$CreatedForms = 0;
 
 if (!isset($_GET['mode'])) {
     $_GET['mode'] = '';
@@ -513,35 +512,15 @@ switch($_GET['mode']) {
                         else
                         {
                             // NonConstant Message (eg. SpyReport)
-                            if((array)$MsgArray['msg_text'] === $MsgArray['msg_text'])
-                            {
-                                if(!empty($MsgArray['sim']))
-                                {
-                                    $CreatedForms += 1;
-                                    $Temp = explode(';', $MsgArray['sim']);
-                                    foreach($Temp as $Data)
-                                    {
-                                        $Data = explode(',', $Data);
-                                        if(!empty($Data[0]))
-                                        {
-                                            if(in_array($Data[0], $SimTechs))
-                                            {
-                                                $MsgArray['simData']['tech'][$SimTechsRep[$Data[0]]] = $Data[1];
-                                            }
-                                            else
-                                            {
-                                                $MsgArray['simData']['ships'][$Data[0]] = $Data[1];
-                                            }
-                                        }
-                                    }
-                                    $CreateSimForms .= sprintf($_Lang['msg_const']['sim']['form'], $CreatedForms, json_encode($MsgArray['simData']));
+                            if((array)$MsgArray['msg_text'] === $MsgArray['msg_text']) {
+                                if(!empty($MsgArray['sim'])) {
+                                    $simData = Messages\Utils\_buildBattleSimulationDetails($MsgArray['sim']);
 
-                                    $_Lang['GoToSimButton'] = sprintf($_Lang['msg_const']['sim']['button'], 'sim_'.$CreatedForms);
+                                    $CreateSimForms .= $simData['simulationForm'];
+                                    $_Lang['GoToSimButton'] = $simData['simulationCTAButton'];
                                 }
                                 $CurMess['text'] = implode('', innerReplace(multidim2onedim($MsgArray['msg_text']), $_Lang));
-                            }
-                            else
-                            {
+                            } else {
                                 $CurMess['text'] = sprintf($_Lang['msg_const']['msgs']['err'], $CurMess['id']);
                             }
                         }
