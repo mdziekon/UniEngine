@@ -525,36 +525,18 @@ switch($_GET['mode']) {
                                 $CurMess['text'] = sprintf($_Lang['msg_const']['msgs']['err'], $CurMess['id']);
                             }
                         }
-                    }
-                    else
-                    {
-                        // Message sent by User
-                        $AddFrom = '';
-                        if(!empty($CurMess['from']))
-                        {
-                            $AddFrom = ' '.$CurMess['from'];
-                        }
-                        $CurMess['from'] = "{$_Lang['msg_const']['senders']['rangs'][GetAuthLabel($CurMess)]} <a href=\"profile.php?uid={$CurMess['id_sender']}\">{$CurMess['username']}</a>{$AddFrom}";
+                    } else {
+                        $messageDetails = Messages\Utils\_buildTypedUserMessageDetails($CurMess, []);
 
-                        if(in_array($CurMess['type'], array(2, 80)) AND preg_match('/^\{COPY\_MSG\_\#([0-9]{1,}){1}\}$/D', $CurMess['text'], $ThisMatch))
-                        {
-                            $GetMassMsgs[] = $ThisMatch[1];
-                            $CopyMsgMap[$ThisMatch[1]][] = $CurMess['id'];
-                            $CurMess['text'] = sprintf($_Lang['msg_const']['msgs']['err4'], $CurMess['id']);
-                        }
-                        else
-                        {
-                            if($_GameConfig['enable_bbcode'] == 1)
-                            {
-                                $CurMess['text'] = bbcode(image($CurMess['text']));
-                            }
-                            $CurMess['text'] = nl2br($CurMess['text']);
-                        }
+                        $CurMess['from'] = $messageDetails['from'];
+                        $CurMess['text'] = $messageDetails['text'];
+                        $parseMSG['Thread_ID'] = $messageDetails['Thread_ID'];
 
-                        if($CurMess['Thread_ID'] > 0)
-                        {
-                            $parseMSG['isThreaded'] = true;
-                            $parseMSG['Thread_ID'] = $CurMess['Thread_ID'];
+                        if ($messageDetails['isCarbonCopy']) {
+                            $carbonCopyOriginalId = $messageDetails['carbonCopyOriginalId'];
+
+                            $GetMassMsgs[] = $carbonCopyOriginalId;
+                            $CopyMsgMap[$carbonCopyOriginalId][] = $CurMess['id'];
                         }
                     }
 
