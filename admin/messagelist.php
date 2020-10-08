@@ -380,36 +380,16 @@ while($row = $SQLResult_GetMessages->fetch_assoc())
         }
     }
 
-    if($row['id_sender'] == 0)
-    {
-        $MsgArray = json_decode($row['text'], true);
-        $row['from'] = (!empty($row['from']) ? $_Lang['msg_const']['senders']['system'][$row['from']] : '&nbsp;');
-        $row['subject'] = (!empty($row['subject']) ? $_Lang['msg_const']['subjects'][$row['subject']] : '&nbsp;');
-        if(empty($MsgArray['msg_text']))
-        {
-            if(!empty($MsgArray['msg_id']))
-            {
-                $row['text'] = vsprintf($_Lang['msg_const']['msgs'][$MsgArray['msg_id']], $MsgArray['args']);
-            }
-            else
-            {
-                $row['text'] = sprintf($_Lang['msg_const']['msgs']['err2'], $row['id']);
-            }
-        }
-        else
-        {
-            if((array)$MsgArray['msg_text'] === $MsgArray['msg_text'])
-            {
-                $row['text'] = implode('', innerReplace(multidim2onedim($MsgArray['msg_text']), $_Lang));
-            }
-            else
-            {
-                $row['text'] = sprintf($_Lang['msg_const']['msgs']['err'], $row['id']);
-            }
-        }
-    }
-    else
-    {
+    if ($row['id_sender'] == 0) {
+        $messageDetails = Messages\Utils\_buildTypedSystemMessageDetails(
+            $row,
+            [ 'shouldIncludeSimulationForm' => false, ]
+        );
+
+        $row['from'] = $messageDetails['from'];
+        $row['subject'] = $messageDetails['subject'];
+        $row['text'] = $messageDetails['text'];
+    } else {
         $messageDetails = Messages\Utils\_buildTypedUserMessageDetails($row, []);
 
         $row['from'] = (
@@ -432,6 +412,7 @@ while($row = $SQLResult_GetMessages->fetch_assoc())
             $bloc['mlst_copyID'] = "<br/>[{$carbonCopyOriginalId}]";
         }
     }
+
     if($row['read'] != 0)
     {
         $bloc['mlst_status'][] = '<img src="../images/eye.png" class="tipEye"/>';
