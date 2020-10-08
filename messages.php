@@ -499,7 +499,7 @@ switch($_GET['mode']) {
 
                         $CurMess['from'] = $messageDetails['from'];
                         $CurMess['subject'] = $messageDetails['subject'];
-                        $CurMess['text'] = $messageDetails['text'];
+                        $parseMSG['CurrMSG_text'] = $messageDetails['text'];
 
                         if (isset($messageDetails['addons']['battleSimulation'])) {
                             $battleSimulationDetails = $messageDetails['addons']['battleSimulation'];
@@ -510,7 +510,7 @@ switch($_GET['mode']) {
                         $messageDetails = Messages\Utils\_buildTypedUserMessageDetails($CurMess, []);
 
                         $CurMess['from'] = $messageDetails['from'];
-                        $CurMess['text'] = $messageDetails['text'];
+                        $parseMSG['CurrMSG_text'] = $messageDetails['text'];
                         $parseMSG['Thread_ID'] = $messageDetails['Thread_ID'];
 
                         if ($messageDetails['isCarbonCopy']) {
@@ -530,7 +530,7 @@ switch($_GET['mode']) {
                     $parseMSG['CurrMSG_time'] = date('H:i:s', $CurMess['time']);
                     $parseMSG['CurrMSG_from'] = $CurMess['from'];
                     $parseMSG['CurrMSG_subject'] = $CurMess['subject'];
-                    $parseMSG['CurrMSG_text'] = $CurMess['text'];
+
                     if($_ThisCategory == 100)
                     {
                         $parseMSG['CurrMSG_color'] = $MsgColors[$CurMess['type']];
