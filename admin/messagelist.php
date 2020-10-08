@@ -14,6 +14,10 @@ if(!CheckAuth('sgo'))
     message($_Lang['sys_noalloaw'], $_Lang['sys_noaccess']);
 }
 
+include($_EnginePath . 'modules/messages/_includes.php');
+
+use UniEngine\Engine\Modules\Messages;
+
 $_PerPage = 25;
 includeLang('messageSystem');
 includeLang('spyReport');
@@ -406,36 +410,26 @@ while($row = $SQLResult_GetMessages->fetch_assoc())
     }
     else
     {
-        $AddFrom = '';
-        if(!empty($row['from']))
-        {
-            $AddFrom = ' '.$row['from'];
-        }
-        if(CheckAuth('user', AUTHCHECK_HIGHER, $row))
-        {
-            $row['from'] = $_Lang['msg_const']['senders']['rangs'][GetAuthLabel($row)].' '.$row['username'].$AddFrom;
-            $row['subject'] = stripslashes($row['subject']);
-        }
-        else
-        {
-            $row['from'] = $row['username'].$AddFrom;
-            $row['subject'] = stripslashes($row['subject']);
-        }
-        $row['from'] .= '<br/>[<a href="?uid='.$row['id_sender'].'">ID: '.$row['id_sender'].'</a>]';
+        $messageDetails = Messages\Utils\_buildTypedUserMessageDetails($row, []);
 
-        if(preg_match('/^\{COPY\_MSG\_\#([0-9]{1,})\}$/D', $row['text'], $row['matched']))
-        {
-            $GetMsgCopies[$row['matched'][1]][] = $row['id'];
+        $row['from'] = (
+            $messageDetails['from'] .
+            '<br/>[<a href="?uid=' . $row['id_sender'] . '">ID: ' . $row['id_sender'] . '</a>]'
+        );
+        $row['text'] = (
+            !$messageDetails['isCarbonCopy'] ?
+                $messageDetails['text'] :
+                $row['text']
+        );
+        $row['subject'] = stripslashes($row['subject']);
+
+        if ($messageDetails['isCarbonCopy']) {
+            $carbonCopyOriginalId = $messageDetails['carbonCopyOriginalId'];
+
+            $GetMsgCopies[$carbonCopyOriginalId][] = $row['id'];
+
             $bloc['mlst_status'][] = '<img src="../images/reply.png" class="tipCopy"/>';
-            $bloc['mlst_copyID'] = "<br/>[{$row['matched'][1]}]";
-        }
-        else
-        {
-            if($_GameConfig['enable_bbcode'] == 1)
-            {
-                $row['text'] = bbcode(image($row['text']));
-            }
-            $row['text'] = nl2br($row['text']);
+            $bloc['mlst_copyID'] = "<br/>[{$carbonCopyOriginalId}]";
         }
     }
     if($row['read'] != 0)
