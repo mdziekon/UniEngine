@@ -239,4 +239,72 @@ function _buildTypedUserMessageDetails($dbMessageData, $params) {
     return $messageDetails;
 }
 
+function _buildMessageButtons($dbMessageData, $params) {
+    $buttons = [];
+
+    $buttons = (
+        ($dbMessageData['id_sender'] == 0) ?
+            _buildSystemMessageButtons($dbMessageData, $params) :
+            _buildUserMessageButtons($dbMessageData, $params)
+    );
+
+    return implode('<span class="lnBr"></span>', $buttons);
+}
+
+function _buildSystemMessageButtons($dbMessageData, $params) {
+    global $_Lang;
+
+    $buttons = [];
+
+    if ($dbMessageData['type'] == 3) {
+        $msgPayload = json_decode($dbMessageData['text'], true);
+
+        $buttons[] = "<span class=\"hov\"><a class=\"convert\" id=\"cv_{$msgPayload['args'][0]}\">{$_Lang['mess_convert']}</a></span>";
+    }
+
+    $buttons[] = "<span class=\"hov\"><a class=\"report\" href=\"report.php?type=5&amp;eid={$dbMessageData['id']}\">{$_Lang['mess_report']}</a></span>";
+    $buttons[] = "<span class=\"hov\"><a class=\"delete\">{$_Lang['mess_delete_single']}</a></span>";
+
+    return $buttons;
+}
+
+function _buildUserMessageButtons($dbMessageData, $params) {
+    global $_Lang;
+
+    $readerUserData = &$params['readerUserData'];
+
+    $buttons = [];
+
+    $senderId = $dbMessageData['id_sender'];
+
+    if ($senderId != $readerUserData['id']) {
+        $replyId = (
+            ($dbMessageData['Thread_ID'] > 0) ?
+                $dbMessageData['Thread_ID'] :
+                $dbMessageData['id']
+        );
+
+        $buttons[] = "<span class=\"hov\"><a class=\"reply\" href=\"messages.php?mode=write&amp;replyto={$replyId}\">{$_Lang['mess_reply']}</a></span>";
+    }
+    if (
+        $dbMessageData['type'] == 2 &&
+        $readerUserData['ally_id'] > 0
+    ) {
+        $buttons[] = "<span class=\"hov\"><a class=\"reply2\" href=\"alliance.php?mode=sendmsg\">{$_Lang['mess_reply_toally']}</a></span>";
+    }
+
+    if (
+        $dbMessageData['type'] != 80 &&
+        $dbMessageData['type'] != 2 &&
+        !CheckAuth('user', AUTHCHECK_HIGHER, $dbMessageData)
+    ) {
+        $buttons[] = "<span class=\"hov\"><a class=\"ignore\" href=\"settings.php?ignoreadd={$senderId}\">{$_Lang['mess_ignore']}</a></span>";
+    }
+
+    $buttons[] = "<span class=\"hov\"><a class=\"report2\" href=\"report.php?type=1&amp;uid={$senderId}&amp;eid={$dbMessageData['id']}\">{$_Lang['mess_report']}</a></span>";
+    $buttons[] = "<span class=\"hov\"><a class=\"delete\">{$_Lang['mess_delete_single']}</a></span>";
+
+    return $buttons;
+}
+
 ?>

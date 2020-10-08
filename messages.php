@@ -544,37 +544,12 @@ switch($_GET['mode']) {
                         $parseMSG['CurrMSG_HideCheckbox'] = 'class="inv"';
                     }
                     $parseMSG['CurrMSG_send'] = sprintf($_Lang['mess_send_date'], $parseMSG['CurrMSG_date'], $parseMSG['CurrMSG_time']);
-                    if($CurMess['id_sender'] == 0)
-                    {
-                        if($CurMess['type'] == 3)
-                        {
-                            $parseMSG['CurrMSG_buttons'][] = "<span class=\"hov\"><a class=\"convert\" id=\"cv_{$MsgArray['args'][0]}\">{$_Lang['mess_convert']}</a></span>";
-                        }
-                        $parseMSG['CurrMSG_buttons'][] = "<span class=\"hov\"><a class=\"report\" href=\"report.php?type=5&amp;eid={$CurMess['id']}\">{$_Lang['mess_report']}</a></span>";
-                        $parseMSG['CurrMSG_buttons'][] = "<span class=\"hov\"><a class=\"delete\">{$_Lang['mess_delete_single']}</a></span>";
-                    }
-                    else
-                    {
-                        if($CurMess['id_sender'] != $_User['id'])
-                        {
-                            $parseMSG['CurrMSG_buttons'][] = "<span class=\"hov\"><a class=\"reply\" href=\"messages.php?mode=write&amp;replyto=".($CurMess['Thread_ID'] > 0 ? $CurMess['Thread_ID'] : $CurMess['id'])."\">{$_Lang['mess_reply']}</a></span>";
-                        }
-                        if($CurMess['type'] == 2 AND $_User['ally_id'] > 0)
-                        {
-                            $parseMSG['CurrMSG_buttons'][] = "<span class=\"hov\"><a class=\"reply2\" href=\"alliance.php?mode=sendmsg\">{$_Lang['mess_reply_toally']}</a></span>";
-                        }
-
-                        if($CurMess['type'] != 80 AND $CurMess['type'] != 2 AND !CheckAuth('user', AUTHCHECK_HIGHER, $CurMess))
-                        {
-                            $parseMSG['CurrMSG_buttons'][] = "<span class=\"hov\"><a class=\"ignore\" href=\"settings.php?ignoreadd={$CurMess['id_sender']}\">{$_Lang['mess_ignore']}</a></span>";
-                        }
-                        $parseMSG['CurrMSG_buttons'][] = "<span class=\"hov\"><a class=\"report2\" href=\"report.php?type=1&amp;uid={$CurMess['id_sender']}&amp;eid={$CurMess['id']}\">{$_Lang['mess_report']}</a></span>";
-                        $parseMSG['CurrMSG_buttons'][] = "<span class=\"hov\"><a class=\"delete\">{$_Lang['mess_delete_single']}</a></span>";
-                    }
-                    if(!empty($parseMSG['CurrMSG_buttons']))
-                    {
-                        $parseMSG['CurrMSG_buttons'] = implode('<span class="lnBr"></span>', $parseMSG['CurrMSG_buttons']);
-                    }
+                    $parseMSG['CurrMSG_buttons'] = Messages\Utils\_buildMessageButtons(
+                        $CurMess,
+                        [
+                            'readerUserData' => &$_User,
+                        ]
+                    );
 
                     if(isset($CurMess['isAdditional']) && $CurMess['isAdditional'] === true)
                     {
