@@ -491,39 +491,20 @@ switch($_GET['mode']) {
                         $ReadIDs[] = $CurMess['id'];
                     }
 
-                    if($CurMess['id_sender'] == 0)
-                    {
-                        // Message sent by System
-                        $MsgArray = json_decode($CurMess['text'], true);
-                        $CurMess['from'] = $_Lang['msg_const']['senders']['system'][$CurMess['from']];
-                        $CurMess['subject'] = $_Lang['msg_const']['subjects'][$CurMess['subject']];
-                        if(empty($MsgArray['msg_text']))
-                        {
-                            // Constant-formated Message
-                            if(!empty($MsgArray['msg_id']))
-                            {
-                                $CurMess['text'] = vsprintf($_Lang['msg_const']['msgs'][$MsgArray['msg_id']], $MsgArray['args']);
-                            }
-                            else
-                            {
-                                $CurMess['text'] = sprintf($_Lang['msg_const']['msgs']['err2'], $CurMess['id']);
-                            }
-                        }
-                        else
-                        {
-                            // NonConstant Message (eg. SpyReport)
-                            if (is_array($MsgArray['msg_text'])) {
-                                if (!empty($MsgArray['sim'])) {
-                                    $simData = Messages\Utils\_buildBattleSimulationDetails($MsgArray['sim']);
+                    if ($CurMess['id_sender'] == 0) {
+                        $messageDetails = Messages\Utils\_buildTypedSystemMessageDetails(
+                            $CurMess,
+                            [ 'shouldIncludeSimulationForm' => true, ]
+                        );
 
-                                    $CreateSimForms .= $simData['simulationForm'];
-                                    $_Lang['GoToSimButton'] = $simData['simulationCTAButton'];
-                                }
+                        $CurMess['from'] = $messageDetails['from'];
+                        $CurMess['subject'] = $messageDetails['subject'];
+                        $CurMess['text'] = $messageDetails['text'];
 
-                                $CurMess['text'] = implode('', innerReplace(multidim2onedim($MsgArray['msg_text']), $_Lang));
-                            } else {
-                                $CurMess['text'] = sprintf($_Lang['msg_const']['msgs']['err'], $CurMess['id']);
-                            }
+                        if (isset($messageDetails['addons']['battleSimulation'])) {
+                            $battleSimulationDetails = $messageDetails['addons']['battleSimulation'];
+
+                            $CreateSimForms .= $battleSimulationDetails['simulationForm'];
                         }
                     } else {
                         $messageDetails = Messages\Utils\_buildTypedUserMessageDetails($CurMess, []);

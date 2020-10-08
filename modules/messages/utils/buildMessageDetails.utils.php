@@ -5,6 +5,100 @@ namespace UniEngine\Engine\Modules\Messages\Utils;
 use UniEngine\Engine\Includes\Helpers\Common\Collections;
 use UniEngine\Engine\Modules\Messages;
 
+function _buildTypedSystemMessageDetails($dbMessageData, $params) {
+    global $_Lang;
+
+    $messageDetails = [
+        'from' => null,
+        'subject' => null,
+        'text' => null,
+        'addons' => null,
+    ];
+
+    $senderSystemId = $dbMessageData['from'];
+
+    $messageContent = _buildTypedSystemMessageContent($dbMessageData, $params);
+
+    $messageDetails['from'] = $_Lang['msg_const']['senders']['system'][$senderSystemId];
+    $messageDetails['subject'] = $_Lang['msg_const']['subjects'][$dbMessageData['subject']];
+    $messageDetails['text'] = $messageContent['content'];
+    $messageDetails['addons'] = $messageContent['addons'];
+
+    return $messageDetails;
+}
+
+function _buildTypedSystemMessageContent($dbMessageData, $params = []) {
+    global $_Lang;
+
+    $msgPayload = json_decode($dbMessageData['text'], true);
+    $shouldIncludeSimulationForm = (
+        isset($params['shouldIncludeSimulationForm']) ?
+            $params['shouldIncludeSimulationForm'] :
+            false
+    );
+
+    if (!empty($msgPayload['msg_text'])) {
+        // NonConstant Message (eg. SpyReport)
+        // TODO: Determine whether this format should be replaced as well by JSON's with raw data.
+
+        if (!is_array($msgPayload['msg_text'])) {
+            return [
+                'content' => sprintf(
+                    $_Lang['msg_const']['msgs']['err'],
+                    $dbMessageData['id']
+                ),
+            ];
+        }
+
+        $battleSimulationDetails = (
+            (
+                !empty($msgPayload['sim']) &&
+                $shouldIncludeSimulationForm
+            ) ?
+                _buildBattleSimulationDetails($msgPayload['sim']) :
+                null
+        );
+
+        if ($battleSimulationDetails) {
+            $_Lang['GoToSimButton'] = $battleSimulationDetails['simulationCTAButton'];
+        }
+
+        $content = implode(
+            '',
+            innerReplace(multidim2onedim($msgPayload['msg_text']), $_Lang)
+        );
+
+        return [
+            'content' => $content,
+            'addons' => [
+                'battleSimulation' => $battleSimulationDetails,
+            ],
+        ];
+    }
+
+    // Interpolated message format
+    // TODO: Deprecate this format and use JSON's with raw data instead of pre-formatted strings,
+    // to prevent problems with messages sent from different-than-destination language selection.
+
+    if (empty($msgPayload['msg_id'])) {
+        return [
+            'content' => sprintf(
+                $_Lang['msg_const']['msgs']['err2'],
+                $dbMessageData['id']
+            ),
+        ];
+    }
+
+    $content = vsprintf(
+        $_Lang['msg_const']['msgs'][$msgPayload['msg_id']],
+        $msgPayload['args']
+    );
+
+    return [
+        'content' => $content,
+    ];
+}
+
 function _buildBattleSimulationDetails($simulationDataString) {
     global $_Lang;
 
