@@ -19,8 +19,17 @@ function _buildTypedSystemMessageDetails($dbMessageData, $params) {
 
     $messageContent = _buildTypedSystemMessageContent($dbMessageData, $params);
 
-    $messageDetails['from'] = $_Lang['msg_const']['senders']['system'][$senderSystemId];
-    $messageDetails['subject'] = $_Lang['msg_const']['subjects'][$dbMessageData['subject']];
+    $messageDetails['from'] = (
+        !empty($senderSystemId) ?
+            $_Lang['msg_const']['senders']['system'][$senderSystemId] :
+            '&nbsp;'
+    );
+    $messageDetails['subject'] = (
+        !empty($dbMessageData['subject']) ?
+            $_Lang['msg_const']['subjects'][$dbMessageData['subject']] :
+            '&nbsp;'
+    );
+
     $messageDetails['text'] = $messageContent['content'];
     $messageDetails['addons'] = $messageContent['addons'];
 
