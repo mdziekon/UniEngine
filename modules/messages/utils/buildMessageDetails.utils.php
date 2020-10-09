@@ -251,6 +251,31 @@ function _buildMessageButtons($dbMessageData, $params) {
     return implode('<span class="lnBr"></span>', $buttons);
 }
 
+function _buildMessageButtonElementHTML($params) {
+    $buttonElementHTML = (
+        isset($params['href']) ?
+            buildLinkHTML([
+                'text' => $params['label'],
+                'href' => $params['href'],
+                'query' => $params['query'],
+                'attrs' => $params['attributes'],
+            ]) :
+            buildDOMElementHTML([
+                'tagName' => 'a',
+                'contentHTML' => $params['label'],
+                'attrs' => $params['attributes'],
+            ])
+    );
+
+    return buildDOMElementHTML([
+        'tagName' => 'span',
+        'contentHTML' => $buttonElementHTML,
+        'attrs' => [
+            'class' => 'hov',
+        ]
+    ]);
+}
+
 function _buildSystemMessageButtons($dbMessageData, $params) {
     global $_Lang;
 
@@ -258,12 +283,34 @@ function _buildSystemMessageButtons($dbMessageData, $params) {
 
     if ($dbMessageData['type'] == 3) {
         $msgPayload = json_decode($dbMessageData['text'], true);
+        $reportId = $msgPayload['args'][0];
 
-        $buttons[] = "<span class=\"hov\"><a class=\"convert\" id=\"cv_{$msgPayload['args'][0]}\">{$_Lang['mess_convert']}</a></span>";
+        $buttons[] = _buildMessageButtonElementHTML([
+            'label' => $_Lang['mess_convert'],
+            'attributes' => [
+                'id' => "cv_{$reportId}",
+                'class' => 'convert',
+            ],
+        ]);
     }
 
-    $buttons[] = "<span class=\"hov\"><a class=\"report\" href=\"report.php?type=5&amp;eid={$dbMessageData['id']}\">{$_Lang['mess_report']}</a></span>";
-    $buttons[] = "<span class=\"hov\"><a class=\"delete\">{$_Lang['mess_delete_single']}</a></span>";
+    $buttons[] = _buildMessageButtonElementHTML([
+        'label' => $_Lang['mess_report'],
+        'href' => 'report.php',
+        'query' => [
+            'type' => '5',
+            'eid' => $dbMessageData['id'],
+        ],
+        'attributes' => [
+            'class' => 'report',
+        ],
+    ]);
+    $buttons[] = _buildMessageButtonElementHTML([
+        'label' => $_Lang['mess_delete_single'],
+        'attributes' => [
+            'class' => 'delete',
+        ],
+    ]);
 
     return $buttons;
 }
@@ -284,13 +331,32 @@ function _buildUserMessageButtons($dbMessageData, $params) {
                 $dbMessageData['id']
         );
 
-        $buttons[] = "<span class=\"hov\"><a class=\"reply\" href=\"messages.php?mode=write&amp;replyto={$replyId}\">{$_Lang['mess_reply']}</a></span>";
+        $buttons[] = _buildMessageButtonElementHTML([
+            'label' => $_Lang['mess_reply'],
+            'href' => 'messages.php',
+            'query' => [
+                'mode' => 'write',
+                'replyto' => $replyId,
+            ],
+            'attributes' => [
+                'class' => 'reply',
+            ],
+        ]);
     }
     if (
         $dbMessageData['type'] == 2 &&
         $readerUserData['ally_id'] > 0
     ) {
-        $buttons[] = "<span class=\"hov\"><a class=\"reply2\" href=\"alliance.php?mode=sendmsg\">{$_Lang['mess_reply_toally']}</a></span>";
+        $buttons[] = _buildMessageButtonElementHTML([
+            'label' => $_Lang['mess_reply_toally'],
+            'href' => 'alliance.php',
+            'query' => [
+                'mode' => 'sendmsg',
+            ],
+            'attributes' => [
+                'class' => 'reply2',
+            ],
+        ]);
     }
 
     if (
@@ -298,11 +364,36 @@ function _buildUserMessageButtons($dbMessageData, $params) {
         $dbMessageData['type'] != 2 &&
         !CheckAuth('user', AUTHCHECK_HIGHER, $dbMessageData)
     ) {
-        $buttons[] = "<span class=\"hov\"><a class=\"ignore\" href=\"settings.php?ignoreadd={$senderId}\">{$_Lang['mess_ignore']}</a></span>";
+        $buttons[] = _buildMessageButtonElementHTML([
+            'label' => $_Lang['mess_ignore'],
+            'href' => 'settings.php',
+            'query' => [
+                'ignoreadd' => $senderId,
+            ],
+            'attributes' => [
+                'class' => 'ignore',
+            ],
+        ]);
     }
 
-    $buttons[] = "<span class=\"hov\"><a class=\"report2\" href=\"report.php?type=1&amp;uid={$senderId}&amp;eid={$dbMessageData['id']}\">{$_Lang['mess_report']}</a></span>";
-    $buttons[] = "<span class=\"hov\"><a class=\"delete\">{$_Lang['mess_delete_single']}</a></span>";
+    $buttons[] = _buildMessageButtonElementHTML([
+        'label' => $_Lang['mess_report'],
+        'href' => 'report.php',
+        'query' => [
+            'type' => '1',
+            'uid' => $senderId,
+            'eid' => $dbMessageData['id'],
+        ],
+        'attributes' => [
+            'class' => 'report2',
+        ],
+    ]);
+    $buttons[] = _buildMessageButtonElementHTML([
+        'label' => $_Lang['mess_delete_single'],
+        'attributes' => [
+            'class' => 'delete',
+        ],
+    ]);
 
     return $buttons;
 }
