@@ -77,11 +77,6 @@ else
 
     $MsgColors = array(0 => 'c0', 1 => 'c1', 2 => 'c2', 3 => 'c3', 4 => 'c4', 5 => 'c5', 15 => 'c15', 80 => 'c80', 50 => 'c50', 70 => 'c70', 100 => 'c100');
 
-    if($_GameConfig['enable_bbcode'] == 1)
-    {
-        include($_EnginePath.'includes/functions/BBcodeFunction.php');
-    }
-
     $Messages = array();
     while($CurMess = $SQLResult_GetMessages->fetch_assoc())
     {

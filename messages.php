@@ -421,13 +421,7 @@ switch($_GET['mode']) {
 
             $SQLResult_GetMessages = doquery($Query_GetMessages, 'messages');
 
-            if($SQLResult_GetMessages->num_rows > 0)
-            {
-                if($_GameConfig['enable_bbcode'] == 1)
-                {
-                    include($_EnginePath.'includes/functions/BBcodeFunction.php');
-                }
-
+            if ($SQLResult_GetMessages->num_rows > 0) {
                 $ReadIDs = false;
                 $Messages = array();
                 $CheckThreads = array();

@@ -362,11 +362,6 @@ $GetMessages .= "LIMIT {$StartRec}, {$_PerPage};";
 
 $SQLResult_GetMessages = doquery($GetMessages, 'messages');
 
-if($_GameConfig['enable_bbcode'] == 1)
-{
-    include($_EnginePath.'includes/functions/BBcodeFunction.php');
-}
-
 while($row = $SQLResult_GetMessages->fetch_assoc())
 {
     $bloc = array();
