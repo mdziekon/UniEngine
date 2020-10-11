@@ -75,8 +75,6 @@ else
     includeLang('spyReport');
     includeLang('FleetMission_MissileAttack');
 
-    $MsgColors = array(0 => 'c0', 1 => 'c1', 2 => 'c2', 3 => 'c3', 4 => 'c4', 5 => 'c5', 15 => 'c15', 80 => 'c80', 50 => 'c50', 70 => 'c70', 100 => 'c100');
-
     $Messages = array();
     while($CurMess = $SQLResult_GetMessages->fetch_assoc())
     {
@@ -108,14 +106,13 @@ else
         $parseMSG['CurrMSG_from'] = Messages\Utils\formatUserMessageSenderLabel($CurMess);
         $parseMSG['CurrMSG_subject'] = $CurMess['subject'];
         $parseMSG['CurrMSG_text'] = stripslashes(nl2br($CurMess['text']));
-        if($_ThisCategory == 100)
-        {
-            $parseMSG['CurrMSG_color'] = $MsgColors[$CurMess['type']];
-        }
-        else
-        {
-            $parseMSG['CurrMSG_color'] = '';
-        }
+
+        $parseMSG['CurrMSG_color'] = (
+            ($_ThisCategory == 100) ?
+                Messages\Utils\formatMessageTypeColorClass($CurMess) :
+                ''
+        );
+
         if($CurMess['type'] == 80 OR $CurMess['id_sender'] == $_User['id'])
         {
             $parseMSG['CurrMSG_HideCheckbox'] = 'class="inv"';

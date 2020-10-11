@@ -4,6 +4,13 @@ namespace UniEngine\Engine\Modules\Messages\Utils;
 
 use UniEngine\Engine\Includes\Helpers\Common\Collections;
 
+function formatMessageTypeColorClass($dbMessageData) {
+    $messageType = $dbMessageData['type'];
+    $messageTypeLabel = str_pad($messageType, 1, '0');
+
+    return "c{$messageTypeLabel}";
+}
+
 function formatUserMessageSenderLabel($dbMessageData) {
     global $_Lang;
 

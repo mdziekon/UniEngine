@@ -40,7 +40,6 @@ $TitleColor = array
     0 => '#FFFF00', 1 => '#FF6699', 2 => '#FF3300', 3 => '#FF9900', 4 => '#9540BF', 5 => '#009933',
     15 => '#6661FF', 80 => 'white', 50 => 'skyblue', 70 => '#75F121', 100 => '#ABABAB'
 );
-$MsgColors = array(0 => 'c0', 1 => 'c1', 2 => 'c2', 3 => 'c3', 4 => 'c4', 5 => 'c5', 15 => 'c15', 80 => 'c80', 50 => 'c50', 70 => 'c70', 100 => 'c100');
 
 $_MaxLength_Subject = 100;
 $_MaxLength_Text = 5000;
@@ -524,14 +523,12 @@ switch($_GET['mode']) {
                     $parseMSG['CurrMSG_from'] = $CurMess['from'];
                     $parseMSG['CurrMSG_subject'] = $CurMess['subject'];
 
-                    if($_ThisCategory == 100)
-                    {
-                        $parseMSG['CurrMSG_color'] = $MsgColors[$CurMess['type']];
-                    }
-                    else
-                    {
-                        $parseMSG['CurrMSG_color'] = '';
-                    }
+                    $parseMSG['CurrMSG_color'] = (
+                        ($_ThisCategory == 100) ?
+                            Messages\Utils\formatMessageTypeColorClass($CurMess) :
+                            ''
+                    );
+
                     if($CurMess['type'] == 80)
                     {
                         $parseMSG['CurrMSG_HideCheckbox'] = 'class="inv"';
