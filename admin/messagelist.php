@@ -466,11 +466,8 @@ else
         {
             if(!empty($GetMsgCopiesData[$CopyID]))
             {
-                if($_GameConfig['enable_bbcode'] == 1)
-                {
-                    $GetMsgCopiesData[$CopyID]['text'] = bbcode(image($GetMsgCopiesData[$CopyID]['text']));
-                }
-                $GetMsgCopiesData[$CopyID]['text'] = nl2br($GetMsgCopiesData[$CopyID]['text']);
+                $GetMsgCopiesData[$CopyID]['text'] = Messages\Utils\formatUserMessageContent($GetMsgCopiesData[$CopyID]);
+
                 foreach($ReplaceIDs as $ReplaceID)
                 {
                     $parse['mlst_data_rows'][$ReplaceID]['mlst_text'] = $GetMsgCopiesData[$CopyID]['text'];

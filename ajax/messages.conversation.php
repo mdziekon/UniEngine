@@ -10,7 +10,10 @@ $_SetAccessLogPreFilename = 'ajax/';
 $_SetAccessLogPath = '../';
 $_EnginePath = '../';
 
-include($_EnginePath.'common.php');
+include($_EnginePath . 'common.php');
+include($_EnginePath . 'modules/messages/_includes.php');
+
+use UniEngine\Engine\Modules\Messages;
 
 function ajaxReturn($Array)
 {
@@ -104,11 +107,7 @@ else
         }
         else
         {
-            if($_GameConfig['enable_bbcode'] == 1)
-            {
-                $CurMess['text'] = bbcode(image($CurMess['text']));
-            }
-            $CurMess['text'] = nl2br($CurMess['text']);
+            $CurMess['text'] = Messages\Utils\formatUserMessageContent($CurMess);
         }
 
         $parseMSG['CurrMSG_ID'] = $CurMess['id'];

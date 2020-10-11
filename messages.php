@@ -587,11 +587,8 @@ switch($_GET['mode']) {
                     {
                         if($CopyData['type'] == 80 OR $CopyData['type'] == 2)
                         {
-                            if($_GameConfig['enable_bbcode'] == 1)
-                            {
-                                $CopyData['text'] = bbcode(image($CopyData['text']));
-                            }
-                            $CopyData['text'] = nl2br($CopyData['text']);
+                            $CopyData['text'] = Messages\Utils\formatUserMessageContent($CopyData);
+
                             foreach($CopyMsgMap[$CopyData['id']] as $MsgKey)
                             {
                                 $Messages[$MsgKey]['CurrMSG_subject'] = $CopyData['subject'];
