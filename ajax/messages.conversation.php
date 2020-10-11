@@ -86,13 +86,6 @@ else
     foreach($MsgCache as $MsgIndex => $CurMess)
     {
         $parseMSG = array();
-        // Message sent by User
-        $AddFrom = '';
-        if(!empty($CurMess['from']))
-        {
-            $AddFrom = ' '.$CurMess['from'];
-        }
-        $CurMess['from'] = "{$_Lang['msg_const']['senders']['rangs'][GetAuthLabel($CurMess)]} <a href=\"profile.php?uid={$CurMess['id_sender']}\">{$CurMess['username']}</a>{$AddFrom}";
 
         if(in_array($CurMess['type'], array(2, 80)) AND preg_match('/^\{COPY\_MSG\_\#([0-9]{1,}){1}\}$/D', $CurMess['text'], $ThisMatch))
         {
@@ -112,7 +105,7 @@ else
         }
         $parseMSG['CurrMSG_date'] = date('d.m.Y', $CurMess['time']);
         $parseMSG['CurrMSG_time'] = date('H:i:s', $CurMess['time']);
-        $parseMSG['CurrMSG_from'] = $CurMess['from'];
+        $parseMSG['CurrMSG_from'] = Messages\Utils\formatUserMessageSenderLabel($CurMess);
         $parseMSG['CurrMSG_subject'] = $CurMess['subject'];
         $parseMSG['CurrMSG_text'] = stripslashes(nl2br($CurMess['text']));
         if($_ThisCategory == 100)
