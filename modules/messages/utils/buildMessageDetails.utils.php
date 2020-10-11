@@ -187,21 +187,6 @@ function _buildTypedUserMessageDetails($dbMessageData, $params) {
         'carbonCopyOriginalId' => null,
     ];
 
-    $senderUserId = $dbMessageData['id_sender'];
-    $senderUsername = $dbMessageData['username'];
-    $senderAuthLabelKey = GetAuthLabel($dbMessageData);
-    $senderAuthLabel = $_Lang['msg_const']['senders']['rangs'][$senderAuthLabelKey];
-
-    $senderDetailsPieces = Collections\compact([
-        $senderAuthLabel,
-        "<a href=\"profile.php?uid={$senderUserId}\">{$senderUsername}</a>",
-        (
-            !empty($dbMessageData['from']) ?
-                $dbMessageData['from'] :
-                null
-        ),
-    ]);
-
     $messageParsedContent = null;
     $checkIsMessageCopy = Messages\Utils\getMessageCopyId([
         'messageData' => &$dbMessageData,
@@ -222,7 +207,7 @@ function _buildTypedUserMessageDetails($dbMessageData, $params) {
         $messageParsedContent = Messages\Utils\formatUserMessageContent($dbMessageData);
     }
 
-    $messageDetails['from'] = implode(' ', $senderDetailsPieces);
+    $messageDetails['from'] = Messages\Utils\formatUserMessageSenderLabel($dbMessageData);
     $messageDetails['text'] = $messageParsedContent;
     $messageDetails['Thread_ID'] = (
         ($dbMessageData['Thread_ID'] > 0) ?
