@@ -219,13 +219,7 @@ function _buildTypedUserMessageDetails($dbMessageData, $params) {
             $dbMessageData['id']
         );
     } else {
-        $messageParsedContent = $dbMessageData['text'];
-
-        if ($_GameConfig['enable_bbcode'] == 1) {
-            $messageParsedContent = bbcode(image($messageParsedContent));
-        }
-
-        $messageParsedContent = nl2br($messageParsedContent);
+        $messageParsedContent = Messages\Utils\formatUserMessageContent($dbMessageData);
     }
 
     $messageDetails['from'] = implode(' ', $senderDetailsPieces);
