@@ -344,12 +344,10 @@ switch($_GET['mode']) {
         if($_ThisCategory == 100)
         {
             $parse['show_delete_all_cat'] = 'style="display: none;"';
-            $GetMsgCountType = "`type` != 80";
             $parse['Hide_NoActions'] = ' style="display: none"';
         }
         else
         {
-            $GetMsgCountType = "`type` = {$_ThisCategory}";
             if($_ThisCategory == 80)
             {
                 $parse['Hide_AdminMsg'] = ' style="display: none"';
@@ -359,15 +357,15 @@ switch($_GET['mode']) {
                 $parse['Hide_NoActions'] = ' style="display: none"';
             }
         }
-        if($_UseThreads)
-        {
-            $GetMsgCount = doquery("SELECT COUNT(`id`) as `count` FROM {{table}} WHERE `deleted` = false AND `id_owner` = {$_User['id']} AND (`type` NOT IN (".implode(', ', $_CanBeThreaded).") OR `Thread_ID` = 0 OR `Thread_IsLast` = 1) AND {$GetMsgCountType};", 'messages', true);
-        }
-        else
-        {
-            $GetMsgCount = doquery("SELECT COUNT(`id`) as `count` FROM {{table}} WHERE `deleted` = false AND `id_owner` = {$_User['id']} AND {$GetMsgCountType};", 'messages', true);
-        }
-        $MsgCount = $GetMsgCount['count'];
+
+        $MsgCount = Messages\Utils\fetchUserMessagesCount([
+            'user' => &$_User,
+            'filterMessageType' => (
+                $_ThisCategory != 100 ?
+                    $_ThisCategory :
+                    null
+            ),
+        ]);
 
         if($Start >= $MsgCount)
         {
