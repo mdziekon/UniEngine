@@ -15,19 +15,8 @@ function fetchUserMessages($params) {
 
     $threadableMessageTypes = _getThreadableMessageTypes();
 
-    $page = $params['page'];
+    $page = _normalizeCurrentPageNo($params);
     $pageSize = $params['pageSize'];
-    $messagesCount = $params['messagesCount'];
-
-    $maxPages = (
-        $messagesCount > 0 ?
-            ceil($messagesCount / $pageSize) :
-            1
-    );
-
-    if ($page > $maxPages) {
-        $page = $maxPages;
-    }
 
     $queryTypeFilter = (
         isset($params['filterMessageType']) ?
@@ -39,11 +28,7 @@ function fetchUserMessages($params) {
             "(`m`.`type` NOT IN (" . implode(', ', $threadableMessageTypes) . ") OR `m`.`Thread_ID` = 0 OR `m`.`Thread_IsLast` = 1)" :
             "(1 == 1)"
     );
-    $queryLimitStart = (
-        ($page > 1) ?
-            (($page - 1) * $pageSize) :
-            0
-    );
+    $queryLimitStart = (($page - 1) * $pageSize);
 
     $query_GetMessages = (
         "SELECT " .
@@ -63,6 +48,33 @@ function fetchUserMessages($params) {
     );
 
     return doquery($query_GetMessages, 'messages');
+}
+
+/**
+ * @param array $params
+ * @param number $params['page']
+ * @param number $params['pageSize']
+ * @param number $params['messagesCount']
+ */
+function _normalizeCurrentPageNo($params) {
+    $page = $params['page'];
+    $pageSize = $params['pageSize'];
+    $messagesCount = $params['messagesCount'];
+
+    $maxPages = (
+        $messagesCount > 0 ?
+            ceil($messagesCount / $pageSize) :
+            1
+    );
+
+    if ($page > $maxPages) {
+        $page = $maxPages;
+    }
+    if ($page < 1) {
+        $page = 1;
+    }
+
+    return $page;
 }
 
 ?>
