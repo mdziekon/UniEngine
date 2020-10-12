@@ -310,6 +310,7 @@ switch($_GET['mode']) {
         {
             $_ThisPage = isset($_GET['page']) ? intval($_GET['page']) : 0;
         }
+        $userInputPageNo = $_ThisPage;
 
         $PageTPL = gettemplate('message_list');
         $parse['InsertTimestamp'] = $Now;
@@ -392,30 +393,18 @@ switch($_GET['mode']) {
         $page = '';
 
         // Let's show Messages!
-        if($MsgCount > 0)
-        {
-            if($_ThisCategory == 100)
-            {
-                $GetMsgsType = '!= 80';
-            }
-            else
-            {
-                $GetMsgsType = "= {$_ThisCategory}";
-            }
-            $Query_GetMessages = '';
-            $Query_GetMessages .= "SELECT `m`.*, `u`.`username`, `u`.`authlevel` FROM {{table}} AS `m` ";
-            $Query_GetMessages .= "LEFT JOIN `{{prefix}}users` AS `u` ON `u`.`id` = `m`.`id_sender` ";
-            if($_UseThreads)
-            {
-                $Query_GetMessages .= "WHERE `m`.`deleted` = false AND `m`.`id_owner` = {$_User['id']} AND (`type` NOT IN (".implode(', ', $_CanBeThreaded).") OR `m`.`Thread_ID` = 0 OR `m`.`Thread_IsLast` = 1) AND `m`.`type` {$GetMsgsType} ";
-            }
-            else
-            {
-                $Query_GetMessages .= "WHERE `m`.`deleted` = false AND `m`.`id_owner` = {$_User['id']} AND `m`.`type` {$GetMsgsType} ";
-            }
-            $Query_GetMessages .= "ORDER BY `m`.`time` DESC, `m`.`id` DESC LIMIT {$Start}, {$_PerPage};";
-
-            $SQLResult_GetMessages = doquery($Query_GetMessages, 'messages');
+        if ($MsgCount > 0) {
+            $SQLResult_GetMessages = Messages\Utils\fetchUserMessages([
+                'user' => &$_User,
+                'filterMessageType' => (
+                    $_ThisCategory != 100 ?
+                        $_ThisCategory :
+                        null
+                ),
+                'page' => $userInputPageNo,
+                'pageSize' => $_PerPage,
+                'messagesCount' => $MsgCount,
+            ]);
 
             if ($SQLResult_GetMessages->num_rows > 0) {
                 $ReadIDs = false;
