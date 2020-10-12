@@ -293,6 +293,9 @@ switch($_GET['mode']) {
 
     case 'show':
         // Show Messages
+        $userInput = [
+            'pageNo' => 0,
+        ];
 
         if($_User['settings_msgperpage'] <= 0)
         {
@@ -302,15 +305,12 @@ switch($_GET['mode']) {
         {
             $_PerPage = $_User['settings_msgperpage'];
         }
-        if(isset($_POST['page']) && !empty($_POST['page']))
-        {
-            $_ThisPage = intval($_POST['page']);
+
+        if (!empty($_POST['page'])) {
+            $userInput['pageNo'] = intval($_POST['page']);
+        } else if (!empty($_GET['page'])) {
+            $userInput['pageNo'] = intval($_GET['page']);
         }
-        else
-        {
-            $_ThisPage = isset($_GET['page']) ? intval($_GET['page']) : 0;
-        }
-        $userInputPageNo = $_ThisPage;
 
         $PageTPL = gettemplate('message_list');
         $parse['InsertTimestamp'] = $Now;
@@ -324,16 +324,6 @@ switch($_GET['mode']) {
         {
             $parse['SpyExpanded'] = 'false';
             $parse['SpyDisplay'] = 'display: none;';
-        }
-
-        if($_ThisPage > 1)
-        {
-            $Start = ($_ThisPage - 1) * $_PerPage;
-        }
-        else
-        {
-            $_ThisPage = 1;
-            $Start = 0;
         }
 
         if(!in_array($_ThisCategory, $MessageType))
@@ -368,11 +358,11 @@ switch($_GET['mode']) {
             ),
         ]);
 
-        if($Start >= $MsgCount)
-        {
-            $_ThisPage = ceil($MsgCount/$_PerPage);
-            $Start = ($_ThisPage - 1) * $_PerPage;
-        }
+        $_ThisPage = Messages\Utils\_normalizeCurrentPageNo([
+            'page' => $userInput['pageNo'],
+            'pageSize' => $_PerPage,
+            'messagesCount' => $MsgCount,
+        ]);
 
         $Pagination = '';
         if($MsgCount > $_PerPage)
@@ -401,7 +391,7 @@ switch($_GET['mode']) {
                         $_ThisCategory :
                         null
                 ),
-                'page' => $userInputPageNo,
+                'page' => $_ThisPage,
                 'pageSize' => $_PerPage,
                 'messagesCount' => $MsgCount,
             ]);
