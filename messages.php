@@ -397,9 +397,11 @@ switch($_GET['mode']) {
             ]);
 
             if ($SQLResult_GetMessages->num_rows > 0) {
-                $ReadIDs = false;
-                $Messages = array();
-                $CheckThreads = array();
+                $ReadIDs = [];
+                $Messages = [];
+                $CheckThreads = [];
+                $CheckThreadsExclude = [];
+                $ThreadMap = [];
 
                 while($CurMess = $SQLResult_GetMessages->fetch_assoc())
                 {
@@ -527,8 +529,7 @@ switch($_GET['mode']) {
                 }
                 $MsgCache = null;
 
-                if($ReadIDs !== FALSE)
-                {
+                if (!empty($ReadIDs)) {
                     $ReadIDs = implode(', ', $ReadIDs);
                     doquery("UPDATE {{table}} SET `read` = true WHERE `id` IN ({$ReadIDs}) AND `deleted` = false;", 'messages');
                 }
