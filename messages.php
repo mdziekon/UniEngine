@@ -399,20 +399,18 @@ switch($_GET['mode']) {
             if ($SQLResult_GetMessages->num_rows > 0) {
                 $ReadIDs = [];
                 $Messages = [];
-                $CheckThreads = [];
-                $CheckThreadsExclude = [];
-                $ThreadMap = [];
 
-                while($CurMess = $SQLResult_GetMessages->fetch_assoc())
-                {
-                    $MsgCache[] = $CurMess;
-                    if($_UseThreads AND $CurMess['Thread_ID'] > 0 AND in_array($CurMess['type'], $_CanBeThreaded))
-                    {
-                        $CheckThreads[] = $CurMess['Thread_ID'];
-                        $CheckThreadsExclude[] = $CurMess['id'];
-                        $ThreadMap[$CurMess['Thread_ID']] = $CurMess['id'];
-                    }
-                }
+                $unpackedMessages = Messages\Utils\_unpackFetchedMessages([
+                    'getMessagesDbResult' => &$SQLResult_GetMessages,
+                    'shouldGatherThreadInfo' => Messages\Utils\_isMessagesThreadViewEnabled([
+                        'user' => &$_User,
+                    ]),
+                ]);
+
+                $MsgCache = $unpackedMessages['messages'];
+                $CheckThreads = $unpackedMessages['threads']['ids'];
+                $CheckThreadsExclude = $unpackedMessages['threads']['alreadyFetchedMessageIds'];
+                $ThreadMap = $unpackedMessages['threads']['oldestMessageIdByThreadId'];
 
                 if(!empty($CheckThreads))
                 {
