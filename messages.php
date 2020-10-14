@@ -423,22 +423,13 @@ switch($_GET['mode']) {
                         $MsgCache[] = $CurMess;
                     }
 
-                    foreach($CheckThreads as $ThreadID)
-                    {
-                        $Query_ThreadsLengthWhere[] = "(`Thread_ID` = {$ThreadID} AND `id` <= {$ThreadMap[$ThreadID]})";
-                    }
+                    $SQLResult_GetThreadLengths = Messages\Utils\_fetchThreadLengths([
+                        'oldestMessageIdByThreadId' => $unpackedMessages['threads']['oldestMessageIdByThreadId'],
+                        'user' => &$_User,
+                    ]);
 
-                    $Query_ThreadsLengthWhere = implode(' OR ', $Query_ThreadsLengthWhere);
-                    $Query_ThreadsLength = "SELECT `Thread_ID`, COUNT(*) AS `Count` FROM {{table}} WHERE {$Query_ThreadsLengthWhere} AND (`id_sender` = {$_User['id']} OR `deleted` = false) GROUP BY `Thread_ID`;";
-
-                    $GetThreadsLength = doquery($Query_ThreadsLength, 'messages');
-
-                    if($GetThreadsLength->num_rows > 0)
-                    {
-                        while($ThisThread = $GetThreadsLength->fetch_assoc())
-                        {
-                            $ThreadsLength[$ThisThread['Thread_ID']] = $ThisThread['Count'];
-                        }
+                    while ($ThisThread = $SQLResult_GetThreadLengths->fetch_assoc()) {
+                        $ThreadsLength[$ThisThread['Thread_ID']] = $ThisThread['Count'];
                     }
                 }
 
