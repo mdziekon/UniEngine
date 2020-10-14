@@ -409,28 +409,18 @@ switch($_GET['mode']) {
 
                 $MsgCache = $unpackedMessages['messages'];
                 $CheckThreads = $unpackedMessages['threads']['ids'];
-                $CheckThreadsExclude = $unpackedMessages['threads']['alreadyFetchedMessageIds'];
                 $ThreadMap = $unpackedMessages['threads']['oldestMessageIdByThreadId'];
 
-                if(!empty($CheckThreads))
-                {
-                    $ThreadsIDs = implode(', ', $CheckThreads);
-                    $ExcludeIDs = implode(', ', $CheckThreadsExclude);
-                    $Query_GetThreaded = '';
-                    $Query_GetThreaded .= "SELECT `m`.*, `u`.`username`, `u`.`authlevel` FROM {{table}} AS `m` ";
-                    $Query_GetThreaded .= "LEFT JOIN `{{prefix}}users` AS `u` ON `u`.`id` = `m`.`id_sender` ";
-                    $Query_GetThreaded .= "WHERE `m`.`deleted` = false AND `m`.`id_owner` = {$_User['id']} AND `read` = false AND `m`.`Thread_ID` IN ({$ThreadsIDs}) AND `m`.`id` NOT IN ({$ExcludeIDs}) ";
-                    $Query_GetThreaded .= "ORDER BY `m`.`id` DESC;";
+                if (!empty($CheckThreads)) {
+                    $SQLResult_GetThreadedMessages = Messages\Utils\_fetchThreadMessages([
+                        'threadIds' => $CheckThreads,
+                        'alreadyFetchedMessageIds' => $unpackedMessages['threads']['alreadyFetchedMessageIds'],
+                        'user' => &$_User,
+                    ]);
 
-                    $SQLResult_GetThreadedMessages = doquery($Query_GetThreaded, 'messages');
-
-                    if($SQLResult_GetThreadedMessages->num_rows > 0)
-                    {
-                        while($CurMess = $SQLResult_GetThreadedMessages->fetch_assoc())
-                        {
-                            $CurMess['isAdditional'] = true;
-                            $MsgCache[] = $CurMess;
-                        }
+                    while ($CurMess = $SQLResult_GetThreadedMessages->fetch_assoc()) {
+                        $CurMess['isAdditional'] = true;
+                        $MsgCache[] = $CurMess;
                     }
 
                     foreach($CheckThreads as $ThreadID)
