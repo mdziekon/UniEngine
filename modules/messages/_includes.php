@@ -20,6 +20,7 @@ call_user_func(function () {
     include($includePath . './utils/fetchRecipientDataByUsername.utils.php');
     include($includePath . './utils/fetchUserMessages.utils.php');
     include($includePath . './utils/fetchUserMessagesCount.utils.php');
+    include($includePath . './utils/fetchUserThreads.utils.php');
     include($includePath . './utils/formatUserMessageDetails.utils.php');
     include($includePath . './utils/getMessageCopyId.utils.php');
     include($includePath . './utils/normalizeFormData.utils.php');
