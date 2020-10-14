@@ -77,4 +77,43 @@ function _normalizeCurrentPageNo($params) {
     return $page;
 }
 
+/**
+ * @param array $params
+ * @param queryResultRef $params['getMessagesDbResult']
+ * @param boolean $params['shouldGatherThreadInfo']
+ */
+function _unpackFetchedMessages($params) {
+    $getMessagesDbResult = &$params['getMessagesDbResult'];
+    $shouldGatherThreadInfo = $params['shouldGatherThreadInfo'];
+
+    $result = [
+        'messages' => [],
+        'threads' => [
+            'ids' => [],
+            'alreadyFetchedMessageIds' => [],
+            'oldestMessageIdByThreadId' => [],
+        ],
+    ];
+
+    while ($messageRow = $getMessagesDbResult->fetch_assoc()) {
+        $result['messages'][] = $messageRow;
+
+        if (
+            !$shouldGatherThreadInfo ||
+            !($messageRow['Thread_ID'] > 0) ||
+            !_isMessageThreadable($messageRow)
+        ) {
+            continue;
+        }
+
+        $threadId = $messageRow['Thread_ID'];
+
+        $result['threads']['ids'][] = $threadId;
+        $result['threads']['alreadyFetchedMessageIds'][] = $messageRow['id'];
+        $result['threads']['oldestMessageIdByThreadId'][$threadId] = $messageRow['id'];
+    }
+
+    return $result;
+}
+
 ?>
