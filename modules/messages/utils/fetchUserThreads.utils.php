@@ -36,4 +36,37 @@ function _fetchThreadMessages($params) {
     return doquery($query_GetMessages, 'messages');
 }
 
+/**
+ * @param array $params
+ * @param map $params['oldestMessageIdByThreadId']
+ * @param arrayRef $params['user']
+ */
+function _fetchThreadLengths($params) {
+    $oldestMessageIdByThreadId = $params['oldestMessageIdByThreadId'];
+    $user = &$params['user'];
+
+    $threadFilters = [];
+
+    foreach ($oldestMessageIdByThreadId as $threadId => $oldestMessageId) {
+        $threadFilters[] = (
+            "(`Thread_ID` = {$threadId} AND `id` <= {$oldestMessageId})"
+        );
+    }
+
+    $threadFilterValue = implode(' OR ', $threadFilters);
+
+    $query_GetThreadLengths = (
+        "SELECT " .
+        "`Thread_ID`, COUNT(*) AS `Count` " .
+        "FROM {{table}} " .
+        "WHERE " .
+        "({$threadFilterValue}) AND " .
+        "(`id_sender` = {$user['id']} OR `deleted` = false) " .
+        "GROUP BY `Thread_ID` " .
+        ";"
+    );
+
+    return doquery($query_GetThreadLengths, 'messages');
+}
+
 ?>
