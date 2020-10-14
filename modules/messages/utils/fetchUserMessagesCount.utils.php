@@ -58,4 +58,12 @@ function _getThreadableMessageTypes() {
     ];
 }
 
+function _isMessageThreadable($messageData) {
+    return _isMessageTypeThreadable($messageData['type']);
+}
+
+function _isMessageTypeThreadable($messageType) {
+    return in_array($messageType, _getThreadableMessageTypes());
+}
+
 ?>
