@@ -513,22 +513,11 @@ switch($_GET['mode']) {
                     doquery("UPDATE {{table}} SET `read` = true WHERE `id` IN ({$ReadIDs}) AND `deleted` = false;", 'messages');
                 }
 
-                if(!empty($GetMassMsgs))
-                {
-                    if($_ThisCategory == 100)
-                    {
-                        $SQLResult_GetMassMessages = doquery(
-                            "SELECT `id`, `type`, `subject`, `text` FROM {{table}} WHERE `id` IN (".implode(', ', $GetMassMsgs).");",
-                            'messages'
-                        );
-                    }
-                    else
-                    {
-                        $SQLResult_GetMassMessages = doquery(
-                            "SELECT `id`, `type`, `subject`, `text`, `from` FROM {{table}} WHERE `id` IN (".implode(', ', $GetMassMsgs).");",
-                            'messages'
-                        );
-                    }
+                if (!empty($GetMassMsgs)) {
+                    $SQLResult_GetMassMessages = doquery(
+                        "SELECT `id`, `type`, `subject`, `text`, `from` FROM {{table}} WHERE `id` IN (".implode(', ', $GetMassMsgs).");",
+                        'messages'
+                    );
 
                     while($CopyData = $SQLResult_GetMassMessages->fetch_assoc())
                     {
