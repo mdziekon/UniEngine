@@ -510,14 +510,11 @@ switch($_GET['mode']) {
                         'messages'
                     );
 
-                    while($CopyData = $SQLResult_GetMassMessages->fetch_assoc())
-                    {
-                        if($CopyData['type'] == 80 OR $CopyData['type'] == 2)
-                        {
+                    while ($CopyData = $SQLResult_GetMassMessages->fetch_assoc()) {
+                        if (Messages\Utils\isUserSentMessage($CurMess)) {
                             $CopyData['text'] = Messages\Utils\formatUserMessageContent($CopyData);
 
-                            foreach($CopyMsgMap[$CopyData['id']] as $MsgKey)
-                            {
+                            foreach ($CopyMsgMap[$CopyData['id']] as $MsgKey) {
                                 $Messages[$MsgKey]['CurrMSG_subject'] = $CopyData['subject'];
                                 $Messages[$MsgKey]['CurrMSG_text'] = $CopyData['text'];
                                 if($CopyData['type'] == 2)
@@ -525,11 +522,12 @@ switch($_GET['mode']) {
                                     $Messages[$MsgKey]['CurrMSG_from'] .= ' '.$CopyData['from'];
                                 }
                             }
-                        }
-                        else
-                        {
-                            foreach($CopyMsgMap[$CopyData['id']] as $MsgKey)
-                            {
+                        } else {
+                            // System-sent messages should not appear
+                            // when using messages copy-referencing system,
+                            // report as an error.
+
+                            foreach ($CopyMsgMap[$CopyData['id']] as $MsgKey) {
                                 $Messages[$MsgKey]['CurrMSG_subject'] = $_Lang['msg_const']['subjects']['019'];
                                 $Messages[$MsgKey]['CurrMSG_text'] = sprintf($_Lang['msg_const']['msgs']['err3'], $CopyData['id']);
                             }

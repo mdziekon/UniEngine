@@ -199,6 +199,7 @@ function _buildTypedUserMessageDetails($dbMessageData, $params) {
         $messageDetails['isCarbonCopy'] = true;
         $messageDetails['carbonCopyOriginalId'] = $originalMessageId;
 
+        // Temporarily set content as error, later to be replaced by copy injector
         $messageParsedContent = sprintf(
             $_Lang['msg_const']['msgs']['err4'],
             $dbMessageData['id']
