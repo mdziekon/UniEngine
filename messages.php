@@ -438,8 +438,8 @@ switch($_GET['mode']) {
                             [ 'shouldIncludeSimulationForm' => true, ]
                         );
 
-                        $CurMess['from'] = $messageDetails['from'];
-                        $CurMess['subject'] = $messageDetails['subject'];
+                        $parseMSG['CurrMSG_subject'] = $messageDetails['subject'];
+                        $parseMSG['CurrMSG_from'] = $messageDetails['from'];
                         $parseMSG['CurrMSG_text'] = $messageDetails['text'];
 
                         if (isset($messageDetails['addons']['battleSimulation'])) {
@@ -450,7 +450,8 @@ switch($_GET['mode']) {
                     } else {
                         $messageDetails = Messages\Utils\_buildTypedUserMessageDetails($CurMess, []);
 
-                        $CurMess['from'] = $messageDetails['from'];
+                        $parseMSG['CurrMSG_subject'] = $CurMess['subject'];
+                        $parseMSG['CurrMSG_from'] = $messageDetails['from'];
                         $parseMSG['CurrMSG_text'] = $messageDetails['text'];
                         $parseMSG['Thread_ID'] = $messageDetails['Thread_ID'];
 
@@ -469,8 +470,6 @@ switch($_GET['mode']) {
                     }
                     $parseMSG['CurrMSG_date'] = date('d.m.Y', $CurMess['time']);
                     $parseMSG['CurrMSG_time'] = date('H:i:s', $CurMess['time']);
-                    $parseMSG['CurrMSG_from'] = $CurMess['from'];
-                    $parseMSG['CurrMSG_subject'] = $CurMess['subject'];
 
                     $parseMSG['CurrMSG_color'] = (
                         $isViewingAllMessageCategories ?
