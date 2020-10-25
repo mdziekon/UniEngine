@@ -397,7 +397,6 @@ switch($_GET['mode']) {
             ]);
 
             if ($SQLResult_GetMessages->num_rows > 0) {
-                $ReadIDs = [];
                 $Messages = [];
 
                 $unpackedMessages = Messages\Utils\_unpackFetchedMessages([
@@ -436,10 +435,6 @@ switch($_GET['mode']) {
                 foreach($MsgCache as $MsgIndex => $CurMess)
                 {
                     $parseMSG = array();
-                    if($CurMess['read'] == false)
-                    {
-                        $ReadIDs[] = $CurMess['id'];
-                    }
 
                     if ($CurMess['id_sender'] == 0) {
                         $messageDetails = Messages\Utils\_buildTypedSystemMessageDetails(
@@ -506,11 +501,15 @@ switch($_GET['mode']) {
 
                     $Messages[$CurMess['id']] = $parseMSG;
                 }
+
+                $unreadMessageIds = Messages\Utils\getUnreadMessageIds($MsgCache);
+
                 $MsgCache = null;
 
-                if (!empty($ReadIDs)) {
-                    $ReadIDs = implode(', ', $ReadIDs);
-                    doquery("UPDATE {{table}} SET `read` = true WHERE `id` IN ({$ReadIDs}) AND `deleted` = false;", 'messages');
+                if (!empty($unreadMessageIds)) {
+                    $unreadMessageIdsFilterValue = implode(', ', $unreadMessageIds);
+
+                    doquery("UPDATE {{table}} SET `read` = true WHERE `id` IN ({$unreadMessageIdsFilterValue}) AND `deleted` = false;", 'messages');
                 }
 
                 if (!empty($GetMassMsgs)) {
