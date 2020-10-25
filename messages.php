@@ -326,25 +326,21 @@ switch($_GET['mode']) {
             $parse['SpyDisplay'] = 'display: none;';
         }
 
-        if(!in_array($_ThisCategory, $MessageType))
-        {
+        if (!in_array($_ThisCategory, $MessageType)) {
             $_ThisCategory = 100;
         }
 
         $parse['SelectedCat'] = $_Lang['type'][$_ThisCategory];
-        if($_ThisCategory == 100)
-        {
+
+        $isViewingAllMessageCategories = ($_ThisCategory == 100);
+
+        if ($isViewingAllMessageCategories) {
             $parse['show_delete_all_cat'] = 'style="display: none;"';
             $parse['Hide_NoActions'] = ' style="display: none"';
-        }
-        else
-        {
-            if($_ThisCategory == 80)
-            {
+        } else {
+            if ($_ThisCategory == 80) {
                 $parse['Hide_AdminMsg'] = ' style="display: none"';
-            }
-            else
-            {
+            } else {
                 $parse['Hide_NoActions'] = ' style="display: none"';
             }
         }
@@ -352,7 +348,7 @@ switch($_GET['mode']) {
         $MsgCount = Messages\Utils\fetchUserMessagesCount([
             'user' => &$_User,
             'filterMessageType' => (
-                $_ThisCategory != 100 ?
+                !$isViewingAllMessageCategories ?
                     $_ThisCategory :
                     null
             ),
@@ -387,7 +383,7 @@ switch($_GET['mode']) {
             $SQLResult_GetMessages = Messages\Utils\fetchUserMessages([
                 'user' => &$_User,
                 'filterMessageType' => (
-                    $_ThisCategory != 100 ?
+                    !$isViewingAllMessageCategories ?
                         $_ThisCategory :
                         null
                 ),
@@ -477,7 +473,7 @@ switch($_GET['mode']) {
                     $parseMSG['CurrMSG_subject'] = $CurMess['subject'];
 
                     $parseMSG['CurrMSG_color'] = (
-                        ($_ThisCategory == 100) ?
+                        $isViewingAllMessageCategories ?
                             Messages\Utils\formatMessageTypeColorClass($CurMess) :
                             ''
                     );
