@@ -502,15 +502,12 @@ switch($_GET['mode']) {
                     $Messages[$CurMess['id']] = $parseMSG;
                 }
 
-                $unreadMessageIds = Messages\Utils\getUnreadMessageIds($MsgCache);
+                Messages\Utils\updateMessagesReadStatus(
+                    Messages\Utils\getUnreadMessageIds($MsgCache),
+                    Messages\Utils\MessageReadStatus::Read
+                );
 
                 $MsgCache = null;
-
-                if (!empty($unreadMessageIds)) {
-                    $unreadMessageIdsFilterValue = implode(', ', $unreadMessageIds);
-
-                    doquery("UPDATE {{table}} SET `read` = true WHERE `id` IN ({$unreadMessageIdsFilterValue}) AND `deleted` = false;", 'messages');
-                }
 
                 if (!empty($GetMassMsgs)) {
                     $SQLResult_GetMassMessages = doquery(
