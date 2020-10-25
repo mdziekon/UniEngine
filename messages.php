@@ -432,7 +432,7 @@ switch($_GET['mode']) {
                 {
                     $parseMSG = array();
 
-                    if ($CurMess['id_sender'] == 0) {
+                    if (Messages\Utils\isSystemSentMessage($CurMess)) {
                         $messageDetails = Messages\Utils\_buildTypedSystemMessageDetails(
                             $CurMess,
                             [ 'shouldIncludeSimulationForm' => true, ]
