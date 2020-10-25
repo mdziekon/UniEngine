@@ -428,9 +428,45 @@ switch($_GET['mode']) {
                     }
                 }
 
-                foreach($MsgCache as $MsgIndex => $CurMess)
-                {
-                    $parseMSG = array();
+                foreach ($MsgCache as $CurMess) {
+                    $parseMSG = [
+                        'CurrMSG_ID' => $CurMess['id'],
+                        'CurrMSG_send' => sprintf(
+                            $_Lang['mess_send_date'],
+                            date('d.m.Y', $CurMess['time']),
+                            date('H:i:s', $CurMess['time'])
+                        ),
+                        'CurrMSG_color' => (
+                            $isViewingAllMessageCategories ?
+                                Messages\Utils\formatMessageTypeColorClass($CurMess) :
+                                ''
+                        ),
+                        'CurrMSG_IsUnread' => (
+                            !($CurMess['read']) ?
+                                ' class="isNew"' :
+                                ''
+                        ),
+                        'CurrMSG_HideCheckbox' => (
+                            ($CurMess['type'] == 80) ?
+                                'class="inv"' :
+                                ''
+                        ),
+                        'CurrMSG_buttons' => Messages\Utils\_buildMessageButtons(
+                            $CurMess,
+                            [
+                                'readerUserData' => &$_User,
+                            ]
+                        ),
+                        'isAdditional' => (
+                            isset($CurMess['isAdditional']) &&
+                            $CurMess['isAdditional'] === true
+                        ),
+                        // Properties set later
+                        'CurrMSG_subject' => null,
+                        'CurrMSG_from' => null,
+                        'CurrMSG_text' => null,
+                        'Thread_ID' => null,
+                    ];
 
                     if (Messages\Utils\isSystemSentMessage($CurMess)) {
                         $messageDetails = Messages\Utils\_buildTypedSystemMessageDetails(
@@ -461,37 +497,6 @@ switch($_GET['mode']) {
                             $GetMassMsgs[] = $carbonCopyOriginalId;
                             $CopyMsgMap[$carbonCopyOriginalId][] = $CurMess['id'];
                         }
-                    }
-
-                    $parseMSG['CurrMSG_ID'] = $CurMess['id'];
-                    if($CurMess['read'] == false)
-                    {
-                        $parseMSG['CurrMSG_IsUnread'] = ' class="isNew"';
-                    }
-                    $parseMSG['CurrMSG_date'] = date('d.m.Y', $CurMess['time']);
-                    $parseMSG['CurrMSG_time'] = date('H:i:s', $CurMess['time']);
-
-                    $parseMSG['CurrMSG_color'] = (
-                        $isViewingAllMessageCategories ?
-                            Messages\Utils\formatMessageTypeColorClass($CurMess) :
-                            ''
-                    );
-
-                    if($CurMess['type'] == 80)
-                    {
-                        $parseMSG['CurrMSG_HideCheckbox'] = 'class="inv"';
-                    }
-                    $parseMSG['CurrMSG_send'] = sprintf($_Lang['mess_send_date'], $parseMSG['CurrMSG_date'], $parseMSG['CurrMSG_time']);
-                    $parseMSG['CurrMSG_buttons'] = Messages\Utils\_buildMessageButtons(
-                        $CurMess,
-                        [
-                            'readerUserData' => &$_User,
-                        ]
-                    );
-
-                    if(isset($CurMess['isAdditional']) && $CurMess['isAdditional'] === true)
-                    {
-                        $parseMSG['isAdditional'] = true;
                     }
 
                     $Messages[$CurMess['id']] = $parseMSG;
