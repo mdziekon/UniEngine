@@ -76,25 +76,29 @@ else
     includeLang('FleetMission_MissileAttack');
 
     $Messages = array();
-    while($CurMess = $SQLResult_GetMessages->fetch_assoc())
-    {
+    while ($CurMess = $SQLResult_GetMessages->fetch_assoc()) {
         $MsgCache[] = $CurMess;
     }
 
-    foreach($MsgCache as $MsgIndex => $CurMess)
-    {
-        $parseMSG = array();
+    $messagesCopyIds = Messages\Utils\getMessagesCopyIds($MsgCache);
+    $copyOriginalMessages = Messages\Utils\fetchOriginalMessagesForRefSystem([
+        'originalMessageIds' => $messagesCopyIds,
+    ]);
 
-        if(in_array($CurMess['type'], array(2, 80)) AND preg_match('/^\{COPY\_MSG\_\#([0-9]{1,}){1}\}$/D', $CurMess['text'], $ThisMatch))
-        {
-            $GetMassMsgs[] = $ThisMatch[1];
-            $CopyMsgMap[$ThisMatch[1]][] = $CurMess['id'];
-            $CurMess['text'] = sprintf($_Lang['msg_const']['msgs']['err4'], $CopyData['id']);
-        }
-        else
-        {
-            $CurMess['text'] = Messages\Utils\formatUserMessageContent($CurMess);
-        }
+    foreach ($MsgCache as $MsgIndex => $CurMess) {
+        $parseMSG = [];
+
+        // The assumption here is that we'll never encounter "non user created messages"
+        $messageDetails = Messages\Utils\_buildTypedUserMessageDetails(
+            $CurMess,
+            [
+                'copyOriginalMessagesStorage' => &$copyOriginalMessages,
+            ]
+        );
+
+        $parseMSG['CurrMSG_subject'] = $messageDetails['subject'];
+        $parseMSG['CurrMSG_from'] = $messageDetails['from'];
+        $parseMSG['CurrMSG_text'] = $messageDetails['text'];
 
         $parseMSG['CurrMSG_ID'] = $CurMess['id'];
         if($CurMess['read'] == false)
@@ -103,9 +107,6 @@ else
         }
         $parseMSG['CurrMSG_date'] = date('d.m.Y', $CurMess['time']);
         $parseMSG['CurrMSG_time'] = date('H:i:s', $CurMess['time']);
-        $parseMSG['CurrMSG_from'] = Messages\Utils\formatUserMessageSenderLabel($CurMess);
-        $parseMSG['CurrMSG_subject'] = $CurMess['subject'];
-        $parseMSG['CurrMSG_text'] = stripslashes(nl2br($CurMess['text']));
 
         $parseMSG['CurrMSG_color'] = (
             ($_ThisCategory == 100) ?
@@ -132,46 +133,9 @@ else
 
         $Messages[$CurMess['id']] = $parseMSG;
     }
-    $MsgCache = null;
-
-    if(!empty($GetMassMsgs))
-    {
-        if($_ThisCategory == 100)
-        {
-            $QryGetMassMsg = doquery("SELECT `id`, `type`, `subject`, `text` FROM {{table}} WHERE `id` IN (".implode(', ', $GetMassMsgs).");", 'messages');
-        }
-        else
-        {
-            $QryGetMassMsg = doquery("SELECT `id`, `type`, `subject`, `text`, `from` FROM {{table}} WHERE `id` IN (".implode(', ', $GetMassMsgs).");", 'messages');
-        }
-        while($CopyData = $QryGetMassMsg->fetch_assoc())
-        {
-            if($CopyData['type'] == 80 OR $CopyData['type'] == 2)
-            {
-                foreach($CopyMsgMap[$CopyData['id']] as $MsgKey)
-                {
-                    $Messages[$MsgKey]['CurrMSG_subject'] = $CopyData['subject'];
-                    $Messages[$MsgKey]['CurrMSG_text'] = $CopyData['text'];
-                    if($CopyData['type'] == 2)
-                    {
-                        $Messages[$MsgKey]['CurrMSG_from'] .= ' '.$CopyData['from'];
-                    }
-                }
-            }
-            else
-            {
-                foreach($CopyMsgMap[$CopyData['id']] as $MsgKey)
-                {
-                    $Messages[$MsgKey]['CurrMSG_subject'] = $_Lang['msg_const']['subjects']['019'];
-                    $Messages[$MsgKey]['CurrMSG_text'] = sprintf($_Lang['msg_const']['msgs']['err3'], $CopyData['id']);
-                }
-            }
-        }
-    }
 
     $MsgTPL = gettemplate('message_mailbox_body');
-    foreach($Messages as $MessageData)
-    {
+    foreach ($Messages as $MessageData) {
         $AllMessages[] = parsetemplate($MsgTPL, $MessageData);
     }
 
