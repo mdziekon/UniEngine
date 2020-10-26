@@ -85,7 +85,7 @@ else
         'originalMessageIds' => $messagesCopyIds,
     ]);
 
-    foreach ($MsgCache as $MsgIndex => $CurMess) {
+    foreach ($MsgCache as $CurMess) {
         $parseMSG = [];
 
         // The assumption here is that we'll never encounter "non user created messages"
