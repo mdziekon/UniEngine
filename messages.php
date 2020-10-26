@@ -486,7 +486,7 @@ switch($_GET['mode']) {
                     } else {
                         $messageDetails = Messages\Utils\_buildTypedUserMessageDetails($CurMess, []);
 
-                        $parseMSG['CurrMSG_subject'] = $CurMess['subject'];
+                        $parseMSG['CurrMSG_subject'] = $messageDetails['subject'];
                         $parseMSG['CurrMSG_from'] = $messageDetails['from'];
                         $parseMSG['CurrMSG_text'] = $messageDetails['text'];
                         $parseMSG['Thread_ID'] = $messageDetails['Thread_ID'];

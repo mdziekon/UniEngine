@@ -181,13 +181,16 @@ function _buildTypedUserMessageDetails($dbMessageData, $params) {
 
     $messageDetails = [
         'from' => null,
+        'subject' => null,
         'text' => null,
         'Thread_ID' => null,
         'isCarbonCopy' => null,
         'carbonCopyOriginalId' => null,
     ];
 
+    $messageParsedSubject = $dbMessageData['subject'];
     $messageParsedContent = null;
+
     $checkIsMessageCopy = Messages\Utils\getMessageCopyId([
         'messageData' => &$dbMessageData,
     ]);
@@ -209,6 +212,7 @@ function _buildTypedUserMessageDetails($dbMessageData, $params) {
     }
 
     $messageDetails['from'] = Messages\Utils\formatUserMessageSenderLabel($dbMessageData);
+    $messageDetails['subject'] = $messageParsedSubject;
     $messageDetails['text'] = $messageParsedContent;
     $messageDetails['Thread_ID'] = (
         ($dbMessageData['Thread_ID'] > 0) ?
