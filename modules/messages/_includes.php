@@ -16,6 +16,7 @@ call_user_func(function () {
     include($includePath . './utils/buildMessageDetails.utils.php');
     include($includePath . './utils/createReplyMessageSubject.utils.php');
     include($includePath . './utils/fetchFormDataForReply.utils.php');
+    include($includePath . './utils/fetchOriginalMessagesForRefSystem.utils.php');
     include($includePath . './utils/fetchRecipientDataByUserId.utils.php');
     include($includePath . './utils/fetchRecipientDataByUsername.utils.php');
     include($includePath . './utils/fetchUserMessages.utils.php');
