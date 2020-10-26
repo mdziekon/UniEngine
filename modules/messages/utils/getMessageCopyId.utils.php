@@ -2,6 +2,9 @@
 
 namespace UniEngine\Engine\Modules\Messages\Utils;
 
+use UniEngine\Engine\Includes\Helpers\Common\Collections;
+use UniEngine\Engine\Modules\Messages;
+
 /**
  * Extracts message's carbon copy reference ID, as long as the message is indeed
  * a copy of another message. Otherwise, returns an error.
@@ -32,6 +35,30 @@ function getMessageCopyId($params) {
             'originalMessageId' => $extractedMatches[1],
         ],
     ];
+}
+
+function getMessagesCopyIds($messages) {
+    $messageCopyIds = array_map(
+        function ($messageDetails) {
+            if (Messages\Utils\isSystemSentMessage($messageDetails)) {
+                return null;
+            }
+
+            $checkIsMessageCopy = Messages\Utils\getMessageCopyId([
+                'messageData' => &$messageDetails,
+            ]);
+
+            if (!($checkIsMessageCopy['isSuccess'])) {
+                return null;
+            }
+
+            return $checkIsMessageCopy['payload']['originalMessageId'];
+        },
+        $messages
+    );
+    $messageCopyIds = Collections\compact($messageCopyIds);
+
+    return $messageCopyIds;
 }
 
 ?>
