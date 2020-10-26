@@ -428,6 +428,49 @@ switch($_GET['mode']) {
                     }
                 }
 
+                $messagesCopyIds = Messages\Utils\getMessagesCopyIds($MsgCache);
+                $copyOriginalMessages = [];
+
+                if (!empty($messagesCopyIds)) {
+                    $getMassMessagesQuery = (
+                        "SELECT " .
+                        "`m`.*, `u`.`username`, `u`.`authlevel` " .
+                        "FROM {{table}} as `m` " .
+                        "LEFT JOIN " .
+                        "`{{prefix}}users` AS `u` " .
+                        "ON `u`.`id` = `m`.`id_sender` " .
+                        "WHERE " .
+                        "`m`.`id` IN (" . implode(', ', $messagesCopyIds) . ") " .
+                        ";"
+                    );
+
+                    $getMassMessagesResult = doquery($getMassMessagesQuery, 'messages');
+
+                    while ($copyOriginalMessage = $getMassMessagesResult->fetch_assoc()) {
+                        $messageId = $copyOriginalMessage['id'];
+
+                        $copyOriginalMessages[$messageId] = [];
+                        $messageRef = &$copyOriginalMessages[$messageId];
+
+                        if (Messages\Utils\isSystemSentMessage($copyOriginalMessage)) {
+                            $messageRef = [
+                                'from' => $copyOriginalMessage['from'],
+                                'subject' => $_Lang['msg_const']['subjects']['019'],
+                                'text' => sprintf($_Lang['msg_const']['msgs']['err3'], $messageId),
+                            ];
+
+                            continue;
+                        }
+
+                        $messageRef = Messages\Utils\_buildTypedUserMessageDetails(
+                            $copyOriginalMessage,
+                            [
+                                'copyOriginalMessagesStorage' => [],
+                            ]
+                        );
+                    }
+                }
+
                 foreach ($MsgCache as $CurMess) {
                     $parseMSG = [
                         'CurrMSG_ID' => $CurMess['id'],
@@ -484,19 +527,17 @@ switch($_GET['mode']) {
                             $CreateSimForms .= $battleSimulationDetails['simulationForm'];
                         }
                     } else {
-                        $messageDetails = Messages\Utils\_buildTypedUserMessageDetails($CurMess, []);
+                        $messageDetails = Messages\Utils\_buildTypedUserMessageDetails(
+                            $CurMess,
+                            [
+                                'copyOriginalMessagesStorage' => &$copyOriginalMessages,
+                            ]
+                        );
 
                         $parseMSG['CurrMSG_subject'] = $messageDetails['subject'];
                         $parseMSG['CurrMSG_from'] = $messageDetails['from'];
                         $parseMSG['CurrMSG_text'] = $messageDetails['text'];
                         $parseMSG['Thread_ID'] = $messageDetails['Thread_ID'];
-
-                        if ($messageDetails['isCarbonCopy']) {
-                            $carbonCopyOriginalId = $messageDetails['carbonCopyOriginalId'];
-
-                            $GetMassMsgs[] = $carbonCopyOriginalId;
-                            $CopyMsgMap[$carbonCopyOriginalId][] = $CurMess['id'];
-                        }
                     }
 
                     $Messages[$CurMess['id']] = $parseMSG;
@@ -508,37 +549,6 @@ switch($_GET['mode']) {
                 );
 
                 $MsgCache = null;
-
-                if (!empty($GetMassMsgs)) {
-                    $SQLResult_GetMassMessages = doquery(
-                        "SELECT `id`, `type`, `subject`, `text`, `from` FROM {{table}} WHERE `id` IN (".implode(', ', $GetMassMsgs).");",
-                        'messages'
-                    );
-
-                    while ($CopyData = $SQLResult_GetMassMessages->fetch_assoc()) {
-                        if (Messages\Utils\isUserSentMessage($CurMess)) {
-                            $CopyData['text'] = Messages\Utils\formatUserMessageContent($CopyData);
-
-                            foreach ($CopyMsgMap[$CopyData['id']] as $MsgKey) {
-                                $Messages[$MsgKey]['CurrMSG_subject'] = $CopyData['subject'];
-                                $Messages[$MsgKey]['CurrMSG_text'] = $CopyData['text'];
-                                if($CopyData['type'] == 2)
-                                {
-                                    $Messages[$MsgKey]['CurrMSG_from'] .= ' '.$CopyData['from'];
-                                }
-                            }
-                        } else {
-                            // System-sent messages should not appear
-                            // when using messages copy-referencing system,
-                            // report as an error.
-
-                            foreach ($CopyMsgMap[$CopyData['id']] as $MsgKey) {
-                                $Messages[$MsgKey]['CurrMSG_subject'] = $_Lang['msg_const']['subjects']['019'];
-                                $Messages[$MsgKey]['CurrMSG_text'] = sprintf($_Lang['msg_const']['msgs']['err3'], $CopyData['id']);
-                            }
-                        }
-                    }
-                }
 
                 $MsgTPL = gettemplate('message_mailbox_body');
                 $ThreadMsgTPL = gettemplate('message_mailbox_threaded');

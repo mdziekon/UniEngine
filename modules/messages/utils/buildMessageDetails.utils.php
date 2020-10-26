@@ -188,6 +188,9 @@ function _buildTypedUserMessageDetails($dbMessageData, $params) {
         'carbonCopyOriginalId' => null,
     ];
 
+    $copyOriginalMessagesStorage = &$params['copyOriginalMessagesStorage'];
+
+    $messageParsedFrom = Messages\Utils\formatUserMessageSenderLabel($dbMessageData);
     $messageParsedSubject = $dbMessageData['subject'];
     $messageParsedContent = null;
 
@@ -202,16 +205,24 @@ function _buildTypedUserMessageDetails($dbMessageData, $params) {
         $messageDetails['isCarbonCopy'] = true;
         $messageDetails['carbonCopyOriginalId'] = $originalMessageId;
 
-        // Temporarily set content as error, later to be replaced by copy injector
-        $messageParsedContent = sprintf(
-            $_Lang['msg_const']['msgs']['err4'],
-            $dbMessageData['id']
-        );
+        if (!isset($copyOriginalMessagesStorage[$originalMessageId])) {
+            $messageParsedSubject = $_Lang['msg_const']['subjects']['019'];
+            $messageParsedContent = sprintf(
+                $_Lang['msg_const']['msgs']['err3'],
+                $originalMessageId
+            );
+        } else {
+            $originalMessage = $copyOriginalMessagesStorage[$originalMessageId];
+
+            $messageParsedSubject = $originalMessage['subject'];
+            $messageParsedFrom = $originalMessage['from'];
+            $messageParsedContent = $originalMessage['text'];
+        }
     } else {
         $messageParsedContent = Messages\Utils\formatUserMessageContent($dbMessageData);
     }
 
-    $messageDetails['from'] = Messages\Utils\formatUserMessageSenderLabel($dbMessageData);
+    $messageDetails['from'] = $messageParsedFrom;
     $messageDetails['subject'] = $messageParsedSubject;
     $messageDetails['text'] = $messageParsedContent;
     $messageDetails['Thread_ID'] = (
