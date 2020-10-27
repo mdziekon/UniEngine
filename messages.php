@@ -507,60 +507,15 @@ switch($_GET['mode']) {
                         isset($MessageData['Thread_ID']) &&
                         $MessageData['Thread_ID'] > 0
                     ) {
-                        $threadId = $MessageData['Thread_ID'];
+                        $threadedMessagesParsingResult = Messages\Utils\parseThreadedMessages([
+                            'displayedCategoryId' => $_ThisCategory,
+                            'messageDetails' => &$MessageData,
+                            'threadLengthsByThreadId' => $ThreadsLength,
+                        ]);
 
-                        $fetchedMessagesInThread = (
-                            1 +
-                            count($MessageData['inThreadMessages'])
-                        );
-
-                        $hasFetchedMessagesToShow = ($fetchedMessagesInThread > 1);
-                        $hasMessagesYetToShow = ($fetchedMessagesInThread < $ThreadsLength[$threadId]);
-
-                        if (
-                            !$hasFetchedMessagesToShow &&
-                            !$hasMessagesYetToShow
-                        ) {
-                            $MessageData['AddMSG_parsed'] = '';
-                        } else {
-                            $fetchedThreadMessagesIds = array_map(
-                                function ($additionaMessageData) {
-                                    return $additionaMessageData['id'];
-                                },
-                                $MessageData['inThreadMessages']
-                            );
-                            $fetchedThreadMessagesRows = array_map(
-                                function ($additionaMessageData) use ($MsgTPL) {
-                                    return parsetemplate($MsgTPL, $additionaMessageData);
-                                },
-                                $MessageData['inThreadMessages']
-                            );
-
-                            $threadContainerTplData = [
-                                'Lang_Expand' => $_Lang['Action_Expand'],
-                                'Lang_Collapse' => $_Lang['Action_Collapse'],
-                                'Lang_Loading' => $_Lang['Action_ThreadLoading'],
-                                'Insert_ThreadID' => $threadId,
-                                'Insert_MaxMsgID' => $MessageData['CurrMSG_ID'],
-                                'Insert_CatID' => $_ThisCategory,
-                                'Insert_ExcludeIDs' => implode('_', $fetchedThreadMessagesIds),
-                                'Insert_Msgs' => implode('', $fetchedThreadMessagesRows),
-                                'Insert_HideParsed' => (
-                                    !$hasFetchedMessagesToShow ?
-                                        'hide' :
-                                        ''
-                                ),
-                                'Insert_HideExpand' => (
-                                    !$hasMessagesYetToShow ?
-                                        'hide' :
-                                        ''
-                                ),
-                                'Insert_Count' => prettyNumber($ThreadsLength[$threadId]),
-                            ];
-
-                            $MessageData['AddMSG_parsed'] = parsetemplate($ThreadMsgTPL, $threadContainerTplData);
-                        }
+                        $MessageData['AddMSG_parsed'] = $threadedMessagesParsingResult['contentHTML'];
                     }
+
                     $AllMessages[] = parsetemplate($MsgTPL, $MessageData);
                 }
                 $page .= implode('<tr><td class="invBR"></td></tr>', $AllMessages);
