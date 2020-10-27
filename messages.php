@@ -484,15 +484,23 @@ switch($_GET['mode']) {
 
                 $MsgTPL = gettemplate('message_mailbox_body');
                 $ThreadMsgTPL = gettemplate('message_mailbox_threaded');
-                foreach($Messages as $ThisKey => $MessageData)
-                {
-                    if(isset($MessageData['isAdditional']) && $MessageData['isAdditional'] === true)
-                    {
-                        $ExcludeThreadIDs[$MessageData['Thread_ID']][] = $MessageData['CurrMSG_ID'];
-                        $Messages[$ThreadMap[$MessageData['Thread_ID']]]['AddMSG_parsed'][] = parsetemplate($MsgTPL, $MessageData);
-                        unset($Messages[$ThisKey]);
+
+                foreach ($Messages as $ThisKey => $MessageData) {
+                    if (
+                        !isset($MessageData['isAdditional']) ||
+                        $MessageData['isAdditional'] !== true
+                    ) {
+                        continue;
                     }
+
+                    $threadId = $MessageData['Thread_ID'];
+                    $threadMainMessage = &$Messages[$ThreadMap[$threadId]];
+
+                    $threadMainMessage['inThreadMessages'][] = $MessageData;
+
+                    unset($Messages[$ThisKey]);
                 }
+
                 foreach ($Messages as $MessageData) {
                     if (
                         $_UseThreads &&
@@ -503,14 +511,10 @@ switch($_GET['mode']) {
 
                         $fetchedMessagesInThread = (
                             1 +
-                            (
-                                !empty($MessageData['AddMSG_parsed']) ?
-                                count($MessageData['AddMSG_parsed']) :
-                                0
-                            )
+                            count($MessageData['inThreadMessages'])
                         );
 
-                        $hasFetchedMessagesToShow = !empty($MessageData['AddMSG_parsed']);
+                        $hasFetchedMessagesToShow = ($fetchedMessagesInThread > 1);
                         $hasMessagesYetToShow = ($fetchedMessagesInThread < $ThreadsLength[$threadId]);
 
                         if (
@@ -519,6 +523,19 @@ switch($_GET['mode']) {
                         ) {
                             $MessageData['AddMSG_parsed'] = '';
                         } else {
+                            $fetchedThreadMessagesIds = array_map(
+                                function ($additionaMessageData) {
+                                    return $additionaMessageData['id'];
+                                },
+                                $MessageData['inThreadMessages']
+                            );
+                            $fetchedThreadMessagesRows = array_map(
+                                function ($additionaMessageData) use ($MsgTPL) {
+                                    return parsetemplate($MsgTPL, $additionaMessageData);
+                                },
+                                $MessageData['inThreadMessages']
+                            );
+
                             $threadContainerTplData = [
                                 'Lang_Expand' => $_Lang['Action_Expand'],
                                 'Lang_Collapse' => $_Lang['Action_Collapse'],
@@ -526,16 +543,8 @@ switch($_GET['mode']) {
                                 'Insert_ThreadID' => $threadId,
                                 'Insert_MaxMsgID' => $MessageData['CurrMSG_ID'],
                                 'Insert_CatID' => $_ThisCategory,
-                                'Insert_ExcludeIDs' => (
-                                    !empty($ExcludeThreadIDs[$threadId]) ?
-                                        implode('_', $ExcludeThreadIDs[$threadId]) :
-                                        ''
-                                ),
-                                'Insert_Msgs' => (
-                                    $hasFetchedMessagesToShow ?
-                                        implode('', $MessageData['AddMSG_parsed']) :
-                                        ''
-                                ),
+                                'Insert_ExcludeIDs' => implode('_', $fetchedThreadMessagesIds),
+                                'Insert_Msgs' => implode('', $fetchedThreadMessagesRows),
                                 'Insert_HideParsed' => (
                                     !$hasFetchedMessagesToShow ?
                                         'hide' :

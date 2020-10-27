@@ -66,6 +66,8 @@ function _buildBasicMessageDetails($dbMessageData, $params) {
         ),
 
         // Placeholders required by the template
+        'inThreadMessages' => [],
+        'AddMSG_parsed' => '',
         'CurrMSG_subject' => null,
         'CurrMSG_from' => null,
         'CurrMSG_text' => null,
