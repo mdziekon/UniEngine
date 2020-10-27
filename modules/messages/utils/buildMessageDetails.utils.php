@@ -2,7 +2,6 @@
 
 namespace UniEngine\Engine\Modules\Messages\Utils;
 
-use UniEngine\Engine\Includes\Helpers\Common\Collections;
 use UniEngine\Engine\Modules\Messages;
 
 function _buildBasicMessageDetails($dbMessageData, $params) {
