@@ -493,50 +493,63 @@ switch($_GET['mode']) {
                         unset($Messages[$ThisKey]);
                     }
                 }
-                foreach($Messages as $MessageData)
-                {
-                    if($_UseThreads && isset($MessageData['Thread_ID']) && $MessageData['Thread_ID'] > 0)
-                    {
-                        if(!empty($MessageData['AddMSG_parsed']))
-                        {
-                            $NeededLength = 1 + count($MessageData['AddMSG_parsed']);
-                        }
-                        else
-                        {
-                            $NeededLength = 1;
-                        }
-                        $ThreadParse = array
-                        (
-                            'Hidden' => 0,
-                            'Lang_Expand' => $_Lang['Action_Expand'],
-                            'Lang_Collapse' => $_Lang['Action_Collapse'],
-                            'Lang_Loading' => $_Lang['Action_ThreadLoading'],
-                            'Insert_ThreadID' => $MessageData['Thread_ID'],
-                            'Insert_MaxMsgID' => $MessageData['CurrMSG_ID'],
-                            'Insert_CatID' => $_ThisCategory,
-                            'Insert_ExcludeIDs' => (!empty($ExcludeThreadIDs[$MessageData['Thread_ID']]) ? implode('_', $ExcludeThreadIDs[$MessageData['Thread_ID']]) : ''),
+                foreach ($Messages as $MessageData) {
+                    if (
+                        $_UseThreads &&
+                        isset($MessageData['Thread_ID']) &&
+                        $MessageData['Thread_ID'] > 0
+                    ) {
+                        $threadId = $MessageData['Thread_ID'];
+
+                        $fetchedMessagesInThread = (
+                            1 +
+                            (
+                                !empty($MessageData['AddMSG_parsed']) ?
+                                count($MessageData['AddMSG_parsed']) :
+                                0
+                            )
                         );
-                        if(!empty($MessageData['AddMSG_parsed']))
-                        {
-                            $ThreadParse['Insert_Msgs'] = implode('', $MessageData['AddMSG_parsed']);
-                        }
-                        else
-                        {
-                            $ThreadParse['Insert_HideParsed'] = 'hide';
-                            $ThreadParse['Hidden'] += 1;
-                        }
-                        if($ThreadsLength[$MessageData['Thread_ID']] <= $NeededLength)
-                        {
-                            $ThreadParse['Insert_HideExpand'] = 'hide';
-                            $ThreadParse['Hidden'] += 1;
-                        }
-                        else
-                        {
-                            $ThreadParse['Insert_Count'] = prettyNumber($ThreadsLength[$MessageData['Thread_ID']]);
-                        }
-                        if($ThreadParse['Hidden'] < 2)
-                        {
-                            $MessageData['AddMSG_parsed'] = parsetemplate($ThreadMsgTPL, $ThreadParse);
+
+                        $hasFetchedMessagesToShow = !empty($MessageData['AddMSG_parsed']);
+                        $hasMessagesYetToShow = ($fetchedMessagesInThread < $ThreadsLength[$threadId]);
+
+                        if (
+                            !$hasFetchedMessagesToShow &&
+                            !$hasMessagesYetToShow
+                        ) {
+                            $MessageData['AddMSG_parsed'] = '';
+                        } else {
+                            $threadContainerTplData = [
+                                'Lang_Expand' => $_Lang['Action_Expand'],
+                                'Lang_Collapse' => $_Lang['Action_Collapse'],
+                                'Lang_Loading' => $_Lang['Action_ThreadLoading'],
+                                'Insert_ThreadID' => $threadId,
+                                'Insert_MaxMsgID' => $MessageData['CurrMSG_ID'],
+                                'Insert_CatID' => $_ThisCategory,
+                                'Insert_ExcludeIDs' => (
+                                    !empty($ExcludeThreadIDs[$threadId]) ?
+                                        implode('_', $ExcludeThreadIDs[$threadId]) :
+                                        ''
+                                ),
+                                'Insert_Msgs' => (
+                                    $hasFetchedMessagesToShow ?
+                                        implode('', $MessageData['AddMSG_parsed']) :
+                                        ''
+                                ),
+                                'Insert_HideParsed' => (
+                                    !$hasFetchedMessagesToShow ?
+                                        'hide' :
+                                        ''
+                                ),
+                                'Insert_HideExpand' => (
+                                    !$hasMessagesYetToShow ?
+                                        'hide' :
+                                        ''
+                                ),
+                                'Insert_Count' => prettyNumber($ThreadsLength[$threadId]),
+                            ];
+
+                            $MessageData['AddMSG_parsed'] = parsetemplate($ThreadMsgTPL, $threadContainerTplData);
                         }
                     }
                     $AllMessages[] = parsetemplate($MsgTPL, $MessageData);
@@ -544,14 +557,10 @@ switch($_GET['mode']) {
                 $page .= implode('<tr><td class="invBR"></td></tr>', $AllMessages);
                 $Messages = null;
                 $AllMessages = null;
-            }
-            else
-            {
+            } else {
                 $page .= "<tr><th colspan=\"3\">{$_Lang['NoMessages']}</th></tr>";
             }
-        }
-        else
-        {
+        } else {
             $parse['Hide_headers'] = ' class="hide"';
             $page .= "<tr><th colspan=\"3\" class=\"eFrom\">{$_Lang['NoMessages']}</th></tr>";
             $parse['Hide_NoActions'] = ' style="display: none"';
