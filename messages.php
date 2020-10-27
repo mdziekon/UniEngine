@@ -434,44 +434,14 @@ switch($_GET['mode']) {
                 ]);
 
                 foreach ($MsgCache as $CurMess) {
-                    $parseMSG = [
-                        'CurrMSG_ID' => $CurMess['id'],
-                        'CurrMSG_send' => sprintf(
-                            $_Lang['mess_send_date'],
-                            date('d.m.Y', $CurMess['time']),
-                            date('H:i:s', $CurMess['time'])
-                        ),
-                        'CurrMSG_color' => (
-                            $isViewingAllMessageCategories ?
-                                Messages\Utils\formatMessageTypeColorClass($CurMess) :
-                                ''
-                        ),
-                        'CurrMSG_IsUnread' => (
-                            !($CurMess['read']) ?
-                                ' class="isNew"' :
-                                ''
-                        ),
-                        'CurrMSG_HideCheckbox' => (
-                            ($CurMess['type'] == 80) ?
-                                'class="inv"' :
-                                ''
-                        ),
-                        'CurrMSG_buttons' => Messages\Utils\_buildMessageButtons(
-                            $CurMess,
-                            [
-                                'readerUserData' => &$_User,
-                            ]
-                        ),
-                        'isAdditional' => (
-                            isset($CurMess['isAdditional']) &&
-                            $CurMess['isAdditional'] === true
-                        ),
-                        // Properties set later
-                        'CurrMSG_subject' => null,
-                        'CurrMSG_from' => null,
-                        'CurrMSG_text' => null,
-                        'Thread_ID' => null,
-                    ];
+                    $parseMSG = Messages\Utils\_buildBasicMessageDetails(
+                        $CurMess,
+                        [
+                            'isReadingThread' => false,
+                            'displayedCategoryId' => $_ThisCategory,
+                            'readerUserData' => &$_User,
+                        ]
+                    );
 
                     if (Messages\Utils\isSystemSentMessage($CurMess)) {
                         $messageDetails = Messages\Utils\_buildTypedSystemMessageDetails(

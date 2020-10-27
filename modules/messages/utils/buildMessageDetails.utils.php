@@ -5,6 +5,74 @@ namespace UniEngine\Engine\Modules\Messages\Utils;
 use UniEngine\Engine\Includes\Helpers\Common\Collections;
 use UniEngine\Engine\Modules\Messages;
 
+function _buildBasicMessageDetails($dbMessageData, $params) {
+    global $_Lang;
+
+    $isReadingThread = $params['isReadingThread'];
+    $displayedCategoryId = $params['displayedCategoryId'];
+    $readerUserData = &$params['readerUserData'];
+
+    $isViewingAllMessageCategories = ($displayedCategoryId == 100);
+    $isOwnMessageInThread = (
+        $isReadingThread &&
+        $dbMessageData['id_sender'] == $readerUserData['id']
+    );
+
+    return [
+        'CurrMSG_ID' => $dbMessageData['id'],
+        'CurrMSG_send' => sprintf(
+            (
+                (
+                    $dbMessageData['id_owner'] == $readerUserData['id'] ||
+                    !$isOwnMessageInThread
+                ) ?
+                $_Lang['mess_send_date'] :
+                $_Lang['mess_sendbyyou_date']
+            ),
+            date('d.m.Y', $dbMessageData['time']),
+            date('H:i:s', $dbMessageData['time'])
+        ),
+        'CurrMSG_color' => (
+            $isViewingAllMessageCategories ?
+                Messages\Utils\formatMessageTypeColorClass($dbMessageData) :
+                ''
+        ),
+        'CurrMSG_IsUnread' => (
+            !($dbMessageData['read']) ?
+                ' class="isNew"' :
+                ''
+        ),
+        'CurrMSG_HideCheckbox' => (
+            (
+                $dbMessageData['type'] == 80 ||
+                $isOwnMessageInThread
+            ) ?
+                'class="inv"' :
+                ''
+        ),
+        'CurrMSG_buttons' => (
+            !$isOwnMessageInThread ?
+                Messages\Utils\_buildMessageButtons(
+                    $dbMessageData,
+                    [
+                        'readerUserData' => &$readerUserData,
+                    ]
+                ) :
+                null
+        ),
+        'isAdditional' => (
+            isset($dbMessageData['isAdditional']) &&
+            $dbMessageData['isAdditional'] === true
+        ),
+
+        // Placeholders required by the template
+        'CurrMSG_subject' => null,
+        'CurrMSG_from' => null,
+        'CurrMSG_text' => null,
+        'Thread_ID' => null,
+    ];
+}
+
 function _buildTypedSystemMessageDetails($dbMessageData, $params) {
     global $_Lang;
 

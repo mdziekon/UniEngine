@@ -86,7 +86,14 @@ else
     ]);
 
     foreach ($MsgCache as $CurMess) {
-        $parseMSG = [];
+        $parseMSG = Messages\Utils\_buildBasicMessageDetails(
+            $CurMess,
+            [
+                'isReadingThread' => true,
+                'displayedCategoryId' => $_ThisCategory,
+                'readerUserData' => &$_User,
+            ]
+        );
 
         // The assumption here is that we'll never encounter "non user created messages"
         $messageDetails = Messages\Utils\_buildTypedUserMessageDetails(
@@ -99,37 +106,6 @@ else
         $parseMSG['CurrMSG_subject'] = $messageDetails['subject'];
         $parseMSG['CurrMSG_from'] = $messageDetails['from'];
         $parseMSG['CurrMSG_text'] = $messageDetails['text'];
-
-        $parseMSG['CurrMSG_ID'] = $CurMess['id'];
-        if($CurMess['read'] == false)
-        {
-            $parseMSG['CurrMSG_IsUnread'] = ' class="isNew"';
-        }
-        $parseMSG['CurrMSG_date'] = date('d.m.Y', $CurMess['time']);
-        $parseMSG['CurrMSG_time'] = date('H:i:s', $CurMess['time']);
-
-        $parseMSG['CurrMSG_color'] = (
-            ($_ThisCategory == 100) ?
-                Messages\Utils\formatMessageTypeColorClass($CurMess) :
-                ''
-        );
-
-        if($CurMess['type'] == 80 OR $CurMess['id_sender'] == $_User['id'])
-        {
-            $parseMSG['CurrMSG_HideCheckbox'] = 'class="inv"';
-        }
-        $parseMSG['CurrMSG_send'] = sprintf(($CurMess['id_owner'] == $_User['id'] ? $_Lang['mess_send_date'] : $_Lang['mess_sendbyyou_date']), $parseMSG['CurrMSG_date'], $parseMSG['CurrMSG_time']);
-
-        $parseMSG['CurrMSG_buttons'] = (
-            ($CurMess['id_owner'] == $_User['id']) ?
-                Messages\Utils\_buildMessageButtons(
-                $CurMess,
-                [
-                    'readerUserData' => &$_User,
-                ]
-            ) :
-            null
-        );
 
         $Messages[$CurMess['id']] = $parseMSG;
     }
