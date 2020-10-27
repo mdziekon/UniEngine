@@ -38,7 +38,10 @@ function _buildBasicMessageDetails($dbMessageData, $params) {
                 ''
         ),
         'CurrMSG_IsUnread' => (
-            !($dbMessageData['read']) ?
+            (
+                !$dbMessageData['read'] &&
+                !$isOwnMessageInThread
+            ) ?
                 ' class="isNew"' :
                 ''
         ),
