@@ -40,9 +40,7 @@ $TitleColor = array
     0 => '#FFFF00', 1 => '#FF6699', 2 => '#FF3300', 3 => '#FF9900', 4 => '#9540BF', 5 => '#009933',
     15 => '#6661FF', 80 => 'white', 50 => 'skyblue', 70 => '#75F121', 100 => '#ABABAB'
 );
-$MsgColors = array(0 => 'c0', 1 => 'c1', 2 => 'c2', 3 => 'c3', 4 => 'c4', 5 => 'c5', 15 => 'c15', 80 => 'c80', 50 => 'c50', 70 => 'c70', 100 => 'c100');
-$SimTechs = array(109, 110, 111, 120, 121, 122, 125, 126, 199);
-$SimTechsRep = array(109 => 1, 110 => 2, 111 => 3, 120 => 4, 121 => 5, 122 => 6, 125 => 7, 126 => 8, 199 => 9);
+
 $_MaxLength_Subject = 100;
 $_MaxLength_Text = 5000;
 
@@ -58,7 +56,6 @@ if(!empty($DeleteWhat) || (isset($_POST['delid']) && $_POST['delid'] > 0))
         $_POST['deletemessages'] = '';
     }
 }
-$CreatedForms = 0;
 
 if (!isset($_GET['mode'])) {
     $_GET['mode'] = '';
@@ -296,6 +293,9 @@ switch($_GET['mode']) {
 
     case 'show':
         // Show Messages
+        $userInput = [
+            'pageNo' => 0,
+        ];
 
         if($_User['settings_msgperpage'] <= 0)
         {
@@ -305,13 +305,11 @@ switch($_GET['mode']) {
         {
             $_PerPage = $_User['settings_msgperpage'];
         }
-        if(isset($_POST['page']) && !empty($_POST['page']))
-        {
-            $_ThisPage = intval($_POST['page']);
-        }
-        else
-        {
-            $_ThisPage = isset($_GET['page']) ? intval($_GET['page']) : 0;
+
+        if (!empty($_POST['page'])) {
+            $userInput['pageNo'] = intval($_POST['page']);
+        } else if (!empty($_GET['page'])) {
+            $userInput['pageNo'] = intval($_GET['page']);
         }
 
         $PageTPL = gettemplate('message_list');
@@ -328,55 +326,39 @@ switch($_GET['mode']) {
             $parse['SpyDisplay'] = 'display: none;';
         }
 
-        if($_ThisPage > 1)
-        {
-            $Start = ($_ThisPage - 1) * $_PerPage;
-        }
-        else
-        {
-            $_ThisPage = 1;
-            $Start = 0;
-        }
-
-        if(!in_array($_ThisCategory, $MessageType))
-        {
+        if (!in_array($_ThisCategory, $MessageType)) {
             $_ThisCategory = 100;
         }
 
         $parse['SelectedCat'] = $_Lang['type'][$_ThisCategory];
-        if($_ThisCategory == 100)
-        {
+
+        $isViewingAllMessageCategories = ($_ThisCategory == 100);
+
+        if ($isViewingAllMessageCategories) {
             $parse['show_delete_all_cat'] = 'style="display: none;"';
-            $GetMsgCountType = "`type` != 80";
             $parse['Hide_NoActions'] = ' style="display: none"';
-        }
-        else
-        {
-            $GetMsgCountType = "`type` = {$_ThisCategory}";
-            if($_ThisCategory == 80)
-            {
+        } else {
+            if ($_ThisCategory == 80) {
                 $parse['Hide_AdminMsg'] = ' style="display: none"';
-            }
-            else
-            {
+            } else {
                 $parse['Hide_NoActions'] = ' style="display: none"';
             }
         }
-        if($_UseThreads)
-        {
-            $GetMsgCount = doquery("SELECT COUNT(`id`) as `count` FROM {{table}} WHERE `deleted` = false AND `id_owner` = {$_User['id']} AND (`type` NOT IN (".implode(', ', $_CanBeThreaded).") OR `Thread_ID` = 0 OR `Thread_IsLast` = 1) AND {$GetMsgCountType};", 'messages', true);
-        }
-        else
-        {
-            $GetMsgCount = doquery("SELECT COUNT(`id`) as `count` FROM {{table}} WHERE `deleted` = false AND `id_owner` = {$_User['id']} AND {$GetMsgCountType};", 'messages', true);
-        }
-        $MsgCount = $GetMsgCount['count'];
 
-        if($Start >= $MsgCount)
-        {
-            $_ThisPage = ceil($MsgCount/$_PerPage);
-            $Start = ($_ThisPage - 1) * $_PerPage;
-        }
+        $MsgCount = Messages\Utils\fetchUserMessagesCount([
+            'user' => &$_User,
+            'filterMessageType' => (
+                !$isViewingAllMessageCategories ?
+                    $_ThisCategory :
+                    null
+            ),
+        ]);
+
+        $_ThisPage = Messages\Utils\_normalizeCurrentPageNo([
+            'page' => $userInput['pageNo'],
+            'pageSize' => $_PerPage,
+            'messagesCount' => $MsgCount,
+        ]);
 
         $Pagination = '';
         if($MsgCount > $_PerPage)
@@ -397,374 +379,152 @@ switch($_GET['mode']) {
         $page = '';
 
         // Let's show Messages!
-        if($MsgCount > 0)
-        {
-            if($_ThisCategory == 100)
-            {
-                $GetMsgsType = '!= 80';
-            }
-            else
-            {
-                $GetMsgsType = "= {$_ThisCategory}";
-            }
-            $Query_GetMessages = '';
-            $Query_GetMessages .= "SELECT `m`.*, `u`.`username`, `u`.`authlevel` FROM {{table}} AS `m` ";
-            $Query_GetMessages .= "LEFT JOIN `{{prefix}}users` AS `u` ON `u`.`id` = `m`.`id_sender` ";
-            if($_UseThreads)
-            {
-                $Query_GetMessages .= "WHERE `m`.`deleted` = false AND `m`.`id_owner` = {$_User['id']} AND (`type` NOT IN (".implode(', ', $_CanBeThreaded).") OR `m`.`Thread_ID` = 0 OR `m`.`Thread_IsLast` = 1) AND `m`.`type` {$GetMsgsType} ";
-            }
-            else
-            {
-                $Query_GetMessages .= "WHERE `m`.`deleted` = false AND `m`.`id_owner` = {$_User['id']} AND `m`.`type` {$GetMsgsType} ";
-            }
-            $Query_GetMessages .= "ORDER BY `m`.`time` DESC, `m`.`id` DESC LIMIT {$Start}, {$_PerPage};";
+        if ($MsgCount > 0) {
+            $SQLResult_GetMessages = Messages\Utils\fetchUserMessages([
+                'user' => &$_User,
+                'filterMessageType' => (
+                    !$isViewingAllMessageCategories ?
+                        $_ThisCategory :
+                        null
+                ),
+                'page' => $_ThisPage,
+                'pageSize' => $_PerPage,
+                'messagesCount' => $MsgCount,
+            ]);
 
-            $SQLResult_GetMessages = doquery($Query_GetMessages, 'messages');
+            if ($SQLResult_GetMessages->num_rows > 0) {
+                $Messages = [];
 
-            if($SQLResult_GetMessages->num_rows > 0)
-            {
-                if($_GameConfig['enable_bbcode'] == 1)
-                {
-                    include($_EnginePath.'includes/functions/BBcodeFunction.php');
-                }
+                $unpackedMessages = Messages\Utils\_unpackFetchedMessages([
+                    'getMessagesDbResult' => &$SQLResult_GetMessages,
+                    'shouldGatherThreadInfo' => Messages\Utils\_isMessagesThreadViewEnabled([
+                        'user' => &$_User,
+                    ]),
+                ]);
 
-                $ReadIDs = false;
-                $Messages = array();
-                $CheckThreads = array();
+                $MsgCache = $unpackedMessages['messages'];
+                $CheckThreads = $unpackedMessages['threads']['ids'];
+                $ThreadMap = $unpackedMessages['threads']['oldestMessageIdByThreadId'];
 
-                while($CurMess = $SQLResult_GetMessages->fetch_assoc())
-                {
-                    $MsgCache[] = $CurMess;
-                    if($_UseThreads AND $CurMess['Thread_ID'] > 0 AND in_array($CurMess['type'], $_CanBeThreaded))
-                    {
-                        $CheckThreads[] = $CurMess['Thread_ID'];
-                        $CheckThreadsExclude[] = $CurMess['id'];
-                        $ThreadMap[$CurMess['Thread_ID']] = $CurMess['id'];
+                if (!empty($CheckThreads)) {
+                    $SQLResult_GetThreadedMessages = Messages\Utils\_fetchThreadMessages([
+                        'threadIds' => $CheckThreads,
+                        'alreadyFetchedMessageIds' => $unpackedMessages['threads']['alreadyFetchedMessageIds'],
+                        'user' => &$_User,
+                    ]);
+
+                    while ($CurMess = $SQLResult_GetThreadedMessages->fetch_assoc()) {
+                        $CurMess['isAdditional'] = true;
+                        $MsgCache[] = $CurMess;
+                    }
+
+                    $SQLResult_GetThreadLengths = Messages\Utils\_fetchThreadLengths([
+                        'oldestMessageIdByThreadId' => $unpackedMessages['threads']['oldestMessageIdByThreadId'],
+                        'user' => &$_User,
+                    ]);
+
+                    while ($ThisThread = $SQLResult_GetThreadLengths->fetch_assoc()) {
+                        $ThreadsLength[$ThisThread['Thread_ID']] = $ThisThread['Count'];
                     }
                 }
 
-                if(!empty($CheckThreads))
-                {
-                    $ThreadsIDs = implode(', ', $CheckThreads);
-                    $ExcludeIDs = implode(', ', $CheckThreadsExclude);
-                    $Query_GetThreaded = '';
-                    $Query_GetThreaded .= "SELECT `m`.*, `u`.`username`, `u`.`authlevel` FROM {{table}} AS `m` ";
-                    $Query_GetThreaded .= "LEFT JOIN `{{prefix}}users` AS `u` ON `u`.`id` = `m`.`id_sender` ";
-                    $Query_GetThreaded .= "WHERE `m`.`deleted` = false AND `m`.`id_owner` = {$_User['id']} AND `read` = false AND `m`.`Thread_ID` IN ({$ThreadsIDs}) AND `m`.`id` NOT IN ({$ExcludeIDs}) ";
-                    $Query_GetThreaded .= "ORDER BY `m`.`id` DESC;";
+                $messagesCopyIds = Messages\Utils\getMessagesCopyIds($MsgCache);
+                $copyOriginalMessages = Messages\Utils\fetchOriginalMessagesForRefSystem([
+                    'originalMessageIds' => $messagesCopyIds,
+                ]);
 
-                    $SQLResult_GetThreadedMessages = doquery($Query_GetThreaded, 'messages');
+                foreach ($MsgCache as $CurMess) {
+                    $parseMSG = Messages\Utils\_buildBasicMessageDetails(
+                        $CurMess,
+                        [
+                            'isReadingThread' => false,
+                            'displayedCategoryId' => $_ThisCategory,
+                            'readerUserData' => &$_User,
+                        ]
+                    );
 
-                    if($SQLResult_GetThreadedMessages->num_rows > 0)
-                    {
-                        while($CurMess = $SQLResult_GetThreadedMessages->fetch_assoc())
-                        {
-                            $CurMess['isAdditional'] = true;
-                            $MsgCache[] = $CurMess;
+                    if (Messages\Utils\isSystemSentMessage($CurMess)) {
+                        $messageDetails = Messages\Utils\_buildTypedSystemMessageDetails(
+                            $CurMess,
+                            [ 'shouldIncludeSimulationForm' => true, ]
+                        );
+
+                        $parseMSG['CurrMSG_subject'] = $messageDetails['subject'];
+                        $parseMSG['CurrMSG_from'] = $messageDetails['from'];
+                        $parseMSG['CurrMSG_text'] = $messageDetails['text'];
+
+                        if (isset($messageDetails['addons']['battleSimulation'])) {
+                            $battleSimulationDetails = $messageDetails['addons']['battleSimulation'];
+
+                            $CreateSimForms .= $battleSimulationDetails['simulationForm'];
                         }
-                    }
+                    } else {
+                        $messageDetails = Messages\Utils\_buildTypedUserMessageDetails(
+                            $CurMess,
+                            [
+                                'copyOriginalMessagesStorage' => &$copyOriginalMessages,
+                            ]
+                        );
 
-                    foreach($CheckThreads as $ThreadID)
-                    {
-                        $Query_ThreadsLengthWhere[] = "(`Thread_ID` = {$ThreadID} AND `id` <= {$ThreadMap[$ThreadID]})";
-                    }
-
-                    $Query_ThreadsLengthWhere = implode(' OR ', $Query_ThreadsLengthWhere);
-                    $Query_ThreadsLength = "SELECT `Thread_ID`, COUNT(*) AS `Count` FROM {{table}} WHERE {$Query_ThreadsLengthWhere} AND (`id_sender` = {$_User['id']} OR `deleted` = false) GROUP BY `Thread_ID`;";
-
-                    $GetThreadsLength = doquery($Query_ThreadsLength, 'messages');
-
-                    if($GetThreadsLength->num_rows > 0)
-                    {
-                        while($ThisThread = $GetThreadsLength->fetch_assoc())
-                        {
-                            $ThreadsLength[$ThisThread['Thread_ID']] = $ThisThread['Count'];
-                        }
-                    }
-                }
-
-                foreach($MsgCache as $MsgIndex => $CurMess)
-                {
-                    $parseMSG = array();
-                    if($CurMess['read'] == false)
-                    {
-                        $ReadIDs[] = $CurMess['id'];
-                    }
-
-                    if($CurMess['id_sender'] == 0)
-                    {
-                        // Message sent by System
-                        $MsgArray = json_decode($CurMess['text'], true);
-                        $CurMess['from'] = $_Lang['msg_const']['senders']['system'][$CurMess['from']];
-                        $CurMess['subject'] = $_Lang['msg_const']['subjects'][$CurMess['subject']];
-                        if(empty($MsgArray['msg_text']))
-                        {
-                            // Constant-formated Message
-                            if(!empty($MsgArray['msg_id']))
-                            {
-                                $CurMess['text'] = vsprintf($_Lang['msg_const']['msgs'][$MsgArray['msg_id']], $MsgArray['args']);
-                            }
-                            else
-                            {
-                                $CurMess['text'] = sprintf($_Lang['msg_const']['msgs']['err2'], $CurMess['id']);
-                            }
-                        }
-                        else
-                        {
-                            // NonConstant Message (eg. SpyReport)
-                            if((array)$MsgArray['msg_text'] === $MsgArray['msg_text'])
-                            {
-                                if(!empty($MsgArray['sim']))
-                                {
-                                    $CreatedForms += 1;
-                                    $Temp = explode(';', $MsgArray['sim']);
-                                    foreach($Temp as $Data)
-                                    {
-                                        $Data = explode(',', $Data);
-                                        if(!empty($Data[0]))
-                                        {
-                                            if(in_array($Data[0], $SimTechs))
-                                            {
-                                                $MsgArray['simData']['tech'][$SimTechsRep[$Data[0]]] = $Data[1];
-                                            }
-                                            else
-                                            {
-                                                $MsgArray['simData']['ships'][$Data[0]] = $Data[1];
-                                            }
-                                        }
-                                    }
-                                    $CreateSimForms .= sprintf($_Lang['msg_const']['sim']['form'], $CreatedForms, json_encode($MsgArray['simData']));
-
-                                    $_Lang['GoToSimButton'] = sprintf($_Lang['msg_const']['sim']['button'], 'sim_'.$CreatedForms);
-                                }
-                                $CurMess['text'] = implode('', innerReplace(multidim2onedim($MsgArray['msg_text']), $_Lang));
-                            }
-                            else
-                            {
-                                $CurMess['text'] = sprintf($_Lang['msg_const']['msgs']['err'], $CurMess['id']);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Message sent by User
-                        $AddFrom = '';
-                        if(!empty($CurMess['from']))
-                        {
-                            $AddFrom = ' '.$CurMess['from'];
-                        }
-                        $CurMess['from'] = "{$_Lang['msg_const']['senders']['rangs'][GetAuthLabel($CurMess)]} <a href=\"profile.php?uid={$CurMess['id_sender']}\">{$CurMess['username']}</a>{$AddFrom}";
-
-                        if(in_array($CurMess['type'], array(2, 80)) AND preg_match('/^\{COPY\_MSG\_\#([0-9]{1,}){1}\}$/D', $CurMess['text'], $ThisMatch))
-                        {
-                            $GetMassMsgs[] = $ThisMatch[1];
-                            $CopyMsgMap[$ThisMatch[1]][] = $CurMess['id'];
-                            $CurMess['text'] = sprintf($_Lang['msg_const']['msgs']['err4'], $CurMess['id']);
-                        }
-                        else
-                        {
-                            if($_GameConfig['enable_bbcode'] == 1)
-                            {
-                                $CurMess['text'] = bbcode(image($CurMess['text']));
-                            }
-                            $CurMess['text'] = nl2br($CurMess['text']);
-                        }
-
-                        if($CurMess['Thread_ID'] > 0)
-                        {
-                            $parseMSG['isThreaded'] = true;
-                            $parseMSG['Thread_ID'] = $CurMess['Thread_ID'];
-                        }
-                    }
-
-                    $parseMSG['CurrMSG_ID'] = $CurMess['id'];
-                    if($CurMess['read'] == false)
-                    {
-                        $parseMSG['CurrMSG_IsUnread'] = ' class="isNew"';
-                    }
-                    $parseMSG['CurrMSG_date'] = date('d.m.Y', $CurMess['time']);
-                    $parseMSG['CurrMSG_time'] = date('H:i:s', $CurMess['time']);
-                    $parseMSG['CurrMSG_from'] = $CurMess['from'];
-                    $parseMSG['CurrMSG_subject'] = $CurMess['subject'];
-                    $parseMSG['CurrMSG_text'] = $CurMess['text'];
-                    if($_ThisCategory == 100)
-                    {
-                        $parseMSG['CurrMSG_color'] = $MsgColors[$CurMess['type']];
-                    }
-                    else
-                    {
-                        $parseMSG['CurrMSG_color'] = '';
-                    }
-                    if($CurMess['type'] == 80)
-                    {
-                        $parseMSG['CurrMSG_HideCheckbox'] = 'class="inv"';
-                    }
-                    $parseMSG['CurrMSG_send'] = sprintf($_Lang['mess_send_date'], $parseMSG['CurrMSG_date'], $parseMSG['CurrMSG_time']);
-                    if($CurMess['id_sender'] == 0)
-                    {
-                        if($CurMess['type'] == 3)
-                        {
-                            $parseMSG['CurrMSG_buttons'][] = "<span class=\"hov\"><a class=\"convert\" id=\"cv_{$MsgArray['args'][0]}\">{$_Lang['mess_convert']}</a></span>";
-                        }
-                        $parseMSG['CurrMSG_buttons'][] = "<span class=\"hov\"><a class=\"report\" href=\"report.php?type=5&amp;eid={$CurMess['id']}\">{$_Lang['mess_report']}</a></span>";
-                        $parseMSG['CurrMSG_buttons'][] = "<span class=\"hov\"><a class=\"delete\">{$_Lang['mess_delete_single']}</a></span>";
-                    }
-                    else
-                    {
-                        if($CurMess['id_sender'] != $_User['id'])
-                        {
-                            $parseMSG['CurrMSG_buttons'][] = "<span class=\"hov\"><a class=\"reply\" href=\"messages.php?mode=write&amp;replyto=".($CurMess['Thread_ID'] > 0 ? $CurMess['Thread_ID'] : $CurMess['id'])."\">{$_Lang['mess_reply']}</a></span>";
-                        }
-                        if($CurMess['type'] == 2 AND $_User['ally_id'] > 0)
-                        {
-                            $parseMSG['CurrMSG_buttons'][] = "<span class=\"hov\"><a class=\"reply2\" href=\"alliance.php?mode=sendmsg\">{$_Lang['mess_reply_toally']}</a></span>";
-                        }
-
-                        if($CurMess['type'] != 80 AND $CurMess['type'] != 2 AND !CheckAuth('user', AUTHCHECK_HIGHER, $CurMess))
-                        {
-                            $parseMSG['CurrMSG_buttons'][] = "<span class=\"hov\"><a class=\"ignore\" href=\"settings.php?ignoreadd={$CurMess['id_sender']}\">{$_Lang['mess_ignore']}</a></span>";
-                        }
-                        $parseMSG['CurrMSG_buttons'][] = "<span class=\"hov\"><a class=\"report2\" href=\"report.php?type=1&amp;uid={$CurMess['id_sender']}&amp;eid={$CurMess['id']}\">{$_Lang['mess_report']}</a></span>";
-                        $parseMSG['CurrMSG_buttons'][] = "<span class=\"hov\"><a class=\"delete\">{$_Lang['mess_delete_single']}</a></span>";
-                    }
-                    if(!empty($parseMSG['CurrMSG_buttons']))
-                    {
-                        $parseMSG['CurrMSG_buttons'] = implode('<span class="lnBr"></span>', $parseMSG['CurrMSG_buttons']);
-                    }
-
-                    if(isset($CurMess['isAdditional']) && $CurMess['isAdditional'] === true)
-                    {
-                        $parseMSG['isAdditional'] = true;
+                        $parseMSG['CurrMSG_subject'] = $messageDetails['subject'];
+                        $parseMSG['CurrMSG_from'] = $messageDetails['from'];
+                        $parseMSG['CurrMSG_text'] = $messageDetails['text'];
+                        $parseMSG['Thread_ID'] = $messageDetails['Thread_ID'];
                     }
 
                     $Messages[$CurMess['id']] = $parseMSG;
                 }
+
+                Messages\Utils\updateMessagesReadStatus(
+                    Messages\Utils\getUnreadMessageIds($MsgCache),
+                    Messages\Utils\MessageReadStatus::Read
+                );
+
                 $MsgCache = null;
-
-                if($ReadIDs !== FALSE)
-                {
-                    $ReadIDs = implode(', ', $ReadIDs);
-                    doquery("UPDATE {{table}} SET `read` = true WHERE `id` IN ({$ReadIDs}) AND `deleted` = false;", 'messages');
-                }
-
-                if(!empty($GetMassMsgs))
-                {
-                    if($_ThisCategory == 100)
-                    {
-                        $SQLResult_GetMassMessages = doquery(
-                            "SELECT `id`, `type`, `subject`, `text` FROM {{table}} WHERE `id` IN (".implode(', ', $GetMassMsgs).");",
-                            'messages'
-                        );
-                    }
-                    else
-                    {
-                        $SQLResult_GetMassMessages = doquery(
-                            "SELECT `id`, `type`, `subject`, `text`, `from` FROM {{table}} WHERE `id` IN (".implode(', ', $GetMassMsgs).");",
-                            'messages'
-                        );
-                    }
-
-                    while($CopyData = $SQLResult_GetMassMessages->fetch_assoc())
-                    {
-                        if($CopyData['type'] == 80 OR $CopyData['type'] == 2)
-                        {
-                            if($_GameConfig['enable_bbcode'] == 1)
-                            {
-                                $CopyData['text'] = bbcode(image($CopyData['text']));
-                            }
-                            $CopyData['text'] = nl2br($CopyData['text']);
-                            foreach($CopyMsgMap[$CopyData['id']] as $MsgKey)
-                            {
-                                $Messages[$MsgKey]['CurrMSG_subject'] = $CopyData['subject'];
-                                $Messages[$MsgKey]['CurrMSG_text'] = $CopyData['text'];
-                                if($CopyData['type'] == 2)
-                                {
-                                    $Messages[$MsgKey]['CurrMSG_from'] .= ' '.$CopyData['from'];
-                                }
-                            }
-                        }
-                        else
-                        {
-                            foreach($CopyMsgMap[$CopyData['id']] as $MsgKey)
-                            {
-                                $Messages[$MsgKey]['CurrMSG_subject'] = $_Lang['msg_const']['subjects']['019'];
-                                $Messages[$MsgKey]['CurrMSG_text'] = sprintf($_Lang['msg_const']['msgs']['err3'], $CopyData['id']);
-                            }
-                        }
-                    }
-                }
 
                 $MsgTPL = gettemplate('message_mailbox_body');
                 $ThreadMsgTPL = gettemplate('message_mailbox_threaded');
-                foreach($Messages as $ThisKey => $MessageData)
-                {
-                    if(isset($MessageData['isAdditional']) && $MessageData['isAdditional'] === true)
-                    {
-                        $ExcludeThreadIDs[$MessageData['Thread_ID']][] = $MessageData['CurrMSG_ID'];
-                        $Messages[$ThreadMap[$MessageData['Thread_ID']]]['AddMSG_parsed'][] = parsetemplate($MsgTPL, $MessageData);
-                        unset($Messages[$ThisKey]);
+
+                foreach ($Messages as $ThisKey => $MessageData) {
+                    if (
+                        !isset($MessageData['isAdditional']) ||
+                        $MessageData['isAdditional'] !== true
+                    ) {
+                        continue;
                     }
+
+                    $threadId = $MessageData['Thread_ID'];
+                    $threadMainMessage = &$Messages[$ThreadMap[$threadId]];
+
+                    $threadMainMessage['inThreadMessages'][] = $MessageData;
+
+                    unset($Messages[$ThisKey]);
                 }
-                foreach($Messages as $MessageData)
-                {
-                    if($_UseThreads && isset($MessageData['Thread_ID']) && $MessageData['Thread_ID'] > 0)
-                    {
-                        if(!empty($MessageData['AddMSG_parsed']))
-                        {
-                            $NeededLength = 1 + count($MessageData['AddMSG_parsed']);
-                        }
-                        else
-                        {
-                            $NeededLength = 1;
-                        }
-                        $ThreadParse = array
-                        (
-                            'Hidden' => 0,
-                            'Lang_Expand' => $_Lang['Action_Expand'],
-                            'Lang_Collapse' => $_Lang['Action_Collapse'],
-                            'Lang_Loading' => $_Lang['Action_ThreadLoading'],
-                            'Insert_ThreadID' => $MessageData['Thread_ID'],
-                            'Insert_MaxMsgID' => $MessageData['CurrMSG_ID'],
-                            'Insert_CatID' => $_ThisCategory,
-                            'Insert_ExcludeIDs' => (!empty($ExcludeThreadIDs[$MessageData['Thread_ID']]) ? implode('_', $ExcludeThreadIDs[$MessageData['Thread_ID']]) : ''),
-                        );
-                        if(!empty($MessageData['AddMSG_parsed']))
-                        {
-                            $ThreadParse['Insert_Msgs'] = implode('', $MessageData['AddMSG_parsed']);
-                        }
-                        else
-                        {
-                            $ThreadParse['Insert_HideParsed'] = 'hide';
-                            $ThreadParse['Hidden'] += 1;
-                        }
-                        if($ThreadsLength[$MessageData['Thread_ID']] <= $NeededLength)
-                        {
-                            $ThreadParse['Insert_HideExpand'] = 'hide';
-                            $ThreadParse['Hidden'] += 1;
-                        }
-                        else
-                        {
-                            $ThreadParse['Insert_Count'] = prettyNumber($ThreadsLength[$MessageData['Thread_ID']]);
-                        }
-                        if($ThreadParse['Hidden'] < 2)
-                        {
-                            $MessageData['AddMSG_parsed'] = parsetemplate($ThreadMsgTPL, $ThreadParse);
-                        }
+
+                foreach ($Messages as $MessageData) {
+                    if (
+                        $_UseThreads &&
+                        isset($MessageData['Thread_ID']) &&
+                        $MessageData['Thread_ID'] > 0
+                    ) {
+                        $threadedMessagesParsingResult = Messages\Utils\parseThreadedMessages([
+                            'displayedCategoryId' => $_ThisCategory,
+                            'messageDetails' => &$MessageData,
+                            'threadLengthsByThreadId' => $ThreadsLength,
+                        ]);
+
+                        $MessageData['AddMSG_parsed'] = $threadedMessagesParsingResult['contentHTML'];
                     }
+
                     $AllMessages[] = parsetemplate($MsgTPL, $MessageData);
                 }
                 $page .= implode('<tr><td class="invBR"></td></tr>', $AllMessages);
                 $Messages = null;
                 $AllMessages = null;
-            }
-            else
-            {
+            } else {
                 $page .= "<tr><th colspan=\"3\">{$_Lang['NoMessages']}</th></tr>";
             }
-        }
-        else
-        {
+        } else {
             $parse['Hide_headers'] = ' class="hide"';
             $page .= "<tr><th colspan=\"3\" class=\"eFrom\">{$_Lang['NoMessages']}</th></tr>";
             $parse['Hide_NoActions'] = ' style="display: none"';

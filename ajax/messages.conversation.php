@@ -10,7 +10,10 @@ $_SetAccessLogPreFilename = 'ajax/';
 $_SetAccessLogPath = '../';
 $_EnginePath = '../';
 
-include($_EnginePath.'common.php');
+include($_EnginePath . 'common.php');
+include($_EnginePath . 'modules/messages/_includes.php');
+
+use UniEngine\Engine\Modules\Messages;
 
 function ajaxReturn($Array)
 {
@@ -72,133 +75,43 @@ else
     includeLang('spyReport');
     includeLang('FleetMission_MissileAttack');
 
-    $MsgColors = array(0 => 'c0', 1 => 'c1', 2 => 'c2', 3 => 'c3', 4 => 'c4', 5 => 'c5', 15 => 'c15', 80 => 'c80', 50 => 'c50', 70 => 'c70', 100 => 'c100');
-
-    if($_GameConfig['enable_bbcode'] == 1)
-    {
-        include($_EnginePath.'includes/functions/BBcodeFunction.php');
-    }
-
     $Messages = array();
-    while($CurMess = $SQLResult_GetMessages->fetch_assoc())
-    {
+    while ($CurMess = $SQLResult_GetMessages->fetch_assoc()) {
         $MsgCache[] = $CurMess;
     }
 
-    foreach($MsgCache as $MsgIndex => $CurMess)
-    {
-        $parseMSG = array();
-        // Message sent by User
-        $AddFrom = '';
-        if(!empty($CurMess['from']))
-        {
-            $AddFrom = ' '.$CurMess['from'];
-        }
-        $CurMess['from'] = "{$_Lang['msg_const']['senders']['rangs'][GetAuthLabel($CurMess)]} <a href=\"profile.php?uid={$CurMess['id_sender']}\">{$CurMess['username']}</a>{$AddFrom}";
+    $messagesCopyIds = Messages\Utils\getMessagesCopyIds($MsgCache);
+    $copyOriginalMessages = Messages\Utils\fetchOriginalMessagesForRefSystem([
+        'originalMessageIds' => $messagesCopyIds,
+    ]);
 
-        if(in_array($CurMess['type'], array(2, 80)) AND preg_match('/^\{COPY\_MSG\_\#([0-9]{1,}){1}\}$/D', $CurMess['text'], $ThisMatch))
-        {
-            $GetMassMsgs[] = $ThisMatch[1];
-            $CopyMsgMap[$ThisMatch[1]][] = $CurMess['id'];
-            $CurMess['text'] = sprintf($_Lang['msg_const']['msgs']['err4'], $CopyData['id']);
-        }
-        else
-        {
-            if($_GameConfig['enable_bbcode'] == 1)
-            {
-                $CurMess['text'] = bbcode(image($CurMess['text']));
-            }
-            $CurMess['text'] = nl2br($CurMess['text']);
-        }
+    foreach ($MsgCache as $CurMess) {
+        $parseMSG = Messages\Utils\_buildBasicMessageDetails(
+            $CurMess,
+            [
+                'isReadingThread' => true,
+                'displayedCategoryId' => $_ThisCategory,
+                'readerUserData' => &$_User,
+            ]
+        );
 
-        $parseMSG['CurrMSG_ID'] = $CurMess['id'];
-        if($CurMess['read'] == false)
-        {
-            $parseMSG['CurrMSG_IsUnread'] = ' class="isNew"';
-        }
-        $parseMSG['CurrMSG_date'] = date('d.m.Y', $CurMess['time']);
-        $parseMSG['CurrMSG_time'] = date('H:i:s', $CurMess['time']);
-        $parseMSG['CurrMSG_from'] = $CurMess['from'];
-        $parseMSG['CurrMSG_subject'] = $CurMess['subject'];
-        $parseMSG['CurrMSG_text'] = stripslashes(nl2br($CurMess['text']));
-        if($_ThisCategory == 100)
-        {
-            $parseMSG['CurrMSG_color'] = $MsgColors[$CurMess['type']];
-        }
-        else
-        {
-            $parseMSG['CurrMSG_color'] = '';
-        }
-        if($CurMess['type'] == 80 OR $CurMess['id_sender'] == $_User['id'])
-        {
-            $parseMSG['CurrMSG_HideCheckbox'] = 'class="inv"';
-        }
-        $parseMSG['CurrMSG_send'] = sprintf(($CurMess['id_owner'] == $_User['id'] ? $_Lang['mess_send_date'] : $_Lang['mess_sendbyyou_date']), $parseMSG['CurrMSG_date'], $parseMSG['CurrMSG_time']);
-        if($CurMess['id_owner'] == $_User['id'])
-        {
-            if($CurMess['id_sender'] != $_User['id'])
-            {
-                $parseMSG['CurrMSG_buttons'][] = "<span class=\"hov\"><a class=\"reply\" href=\"messages.php?mode=write&amp;replyto=".($CurMess['Thread_ID'] > 0 ? $CurMess['Thread_ID'] : $CurMess['id'])."\">{$_Lang['mess_reply']}</a></span>";
-            }
-            if($CurMess['type'] == 2 AND $_User['ally_id'] > 0)
-            {
-                $parseMSG['CurrMSG_buttons'][] = "<span class=\"hov\"><a class=\"reply2\" href=\"alliance.php?mode=sendmsg\">{$_Lang['mess_reply_toally']}</a></span>";
-            }
+        // The assumption here is that we'll never encounter "non user created messages"
+        $messageDetails = Messages\Utils\_buildTypedUserMessageDetails(
+            $CurMess,
+            [
+                'copyOriginalMessagesStorage' => &$copyOriginalMessages,
+            ]
+        );
 
-            if($CurMess['type'] != 80 AND $CurMess['type'] != 2 AND !CheckAuth('supportadmin', AUTHCHECK_HIGHER, $CurMess))
-            {
-                $parseMSG['CurrMSG_buttons'][] = "<span class=\"hov\"><a class=\"ignore\" href=\"settings.php?ignoreadd={$CurMess['id_sender']}\">{$_Lang['mess_ignore']}</a></span>";
-            }
-            $parseMSG['CurrMSG_buttons'][] = "<span class=\"hov\"><a class=\"report2\" href=\"report.php?type=1&amp;uid={$CurMess['id_sender']}&amp;eid={$CurMess['id']}\">{$_Lang['mess_report']}</a></span>";
-            $parseMSG['CurrMSG_buttons'][] = "<span class=\"hov\"><a class=\"delete\">{$_Lang['mess_delete_single']}</a></span>";
-        }
-        if(!empty($parseMSG['CurrMSG_buttons']))
-        {
-            $parseMSG['CurrMSG_buttons'] = implode('<span class="lnBr"></span>', $parseMSG['CurrMSG_buttons']);
-        }
+        $parseMSG['CurrMSG_subject'] = $messageDetails['subject'];
+        $parseMSG['CurrMSG_from'] = $messageDetails['from'];
+        $parseMSG['CurrMSG_text'] = $messageDetails['text'];
 
         $Messages[$CurMess['id']] = $parseMSG;
     }
-    $MsgCache = null;
-
-    if(!empty($GetMassMsgs))
-    {
-        if($_ThisCategory == 100)
-        {
-            $QryGetMassMsg = doquery("SELECT `id`, `type`, `subject`, `text` FROM {{table}} WHERE `id` IN (".implode(', ', $GetMassMsgs).");", 'messages');
-        }
-        else
-        {
-            $QryGetMassMsg = doquery("SELECT `id`, `type`, `subject`, `text`, `from` FROM {{table}} WHERE `id` IN (".implode(', ', $GetMassMsgs).");", 'messages');
-        }
-        while($CopyData = $QryGetMassMsg->fetch_assoc())
-        {
-            if($CopyData['type'] == 80 OR $CopyData['type'] == 2)
-            {
-                foreach($CopyMsgMap[$CopyData['id']] as $MsgKey)
-                {
-                    $Messages[$MsgKey]['CurrMSG_subject'] = $CopyData['subject'];
-                    $Messages[$MsgKey]['CurrMSG_text'] = $CopyData['text'];
-                    if($CopyData['type'] == 2)
-                    {
-                        $Messages[$MsgKey]['CurrMSG_from'] .= ' '.$CopyData['from'];
-                    }
-                }
-            }
-            else
-            {
-                foreach($CopyMsgMap[$CopyData['id']] as $MsgKey)
-                {
-                    $Messages[$MsgKey]['CurrMSG_subject'] = $_Lang['msg_const']['subjects']['019'];
-                    $Messages[$MsgKey]['CurrMSG_text'] = sprintf($_Lang['msg_const']['msgs']['err3'], $CopyData['id']);
-                }
-            }
-        }
-    }
 
     $MsgTPL = gettemplate('message_mailbox_body');
-    foreach($Messages as $MessageData)
-    {
+    foreach ($Messages as $MessageData) {
         $AllMessages[] = parsetemplate($MsgTPL, $MessageData);
     }
 

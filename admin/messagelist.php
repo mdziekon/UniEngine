@@ -14,6 +14,10 @@ if(!CheckAuth('sgo'))
     message($_Lang['sys_noalloaw'], $_Lang['sys_noaccess']);
 }
 
+include($_EnginePath . 'modules/messages/_includes.php');
+
+use UniEngine\Engine\Modules\Messages;
+
 $_PerPage = 25;
 includeLang('messageSystem');
 includeLang('spyReport');
@@ -358,11 +362,6 @@ $GetMessages .= "LIMIT {$StartRec}, {$_PerPage};";
 
 $SQLResult_GetMessages = doquery($GetMessages, 'messages');
 
-if($_GameConfig['enable_bbcode'] == 1)
-{
-    include($_EnginePath.'includes/functions/BBcodeFunction.php');
-}
-
 while($row = $SQLResult_GetMessages->fetch_assoc())
 {
     $bloc = array();
@@ -376,68 +375,39 @@ while($row = $SQLResult_GetMessages->fetch_assoc())
         }
     }
 
-    if($row['id_sender'] == 0)
-    {
-        $MsgArray = json_decode($row['text'], true);
-        $row['from'] = (!empty($row['from']) ? $_Lang['msg_const']['senders']['system'][$row['from']] : '&nbsp;');
-        $row['subject'] = (!empty($row['subject']) ? $_Lang['msg_const']['subjects'][$row['subject']] : '&nbsp;');
-        if(empty($MsgArray['msg_text']))
-        {
-            if(!empty($MsgArray['msg_id']))
-            {
-                $row['text'] = vsprintf($_Lang['msg_const']['msgs'][$MsgArray['msg_id']], $MsgArray['args']);
-            }
-            else
-            {
-                $row['text'] = sprintf($_Lang['msg_const']['msgs']['err2'], $row['id']);
-            }
-        }
-        else
-        {
-            if((array)$MsgArray['msg_text'] === $MsgArray['msg_text'])
-            {
-                $row['text'] = implode('', innerReplace(multidim2onedim($MsgArray['msg_text']), $_Lang));
-            }
-            else
-            {
-                $row['text'] = sprintf($_Lang['msg_const']['msgs']['err'], $row['id']);
-            }
-        }
-    }
-    else
-    {
-        $AddFrom = '';
-        if(!empty($row['from']))
-        {
-            $AddFrom = ' '.$row['from'];
-        }
-        if(CheckAuth('user', AUTHCHECK_HIGHER, $row))
-        {
-            $row['from'] = $_Lang['msg_const']['senders']['rangs'][GetAuthLabel($row)].' '.$row['username'].$AddFrom;
-            $row['subject'] = stripslashes($row['subject']);
-        }
-        else
-        {
-            $row['from'] = $row['username'].$AddFrom;
-            $row['subject'] = stripslashes($row['subject']);
-        }
-        $row['from'] .= '<br/>[<a href="?uid='.$row['id_sender'].'">ID: '.$row['id_sender'].'</a>]';
+    if ($row['id_sender'] == 0) {
+        $messageDetails = Messages\Utils\_buildTypedSystemMessageDetails(
+            $row,
+            [ 'shouldIncludeSimulationForm' => false, ]
+        );
 
-        if(preg_match('/^\{COPY\_MSG\_\#([0-9]{1,})\}$/D', $row['text'], $row['matched']))
-        {
-            $GetMsgCopies[$row['matched'][1]][] = $row['id'];
+        $row['from'] = $messageDetails['from'];
+        $row['subject'] = $messageDetails['subject'];
+        $row['text'] = $messageDetails['text'];
+    } else {
+        $messageDetails = Messages\Utils\_buildTypedUserMessageDetails($row, []);
+
+        $row['from'] = (
+            $messageDetails['from'] .
+            '<br/>[<a href="?uid=' . $row['id_sender'] . '">ID: ' . $row['id_sender'] . '</a>]'
+        );
+        $row['text'] = (
+            !$messageDetails['isCarbonCopy'] ?
+                $messageDetails['text'] :
+                $row['text']
+        );
+        $row['subject'] = stripslashes($row['subject']);
+
+        if ($messageDetails['isCarbonCopy']) {
+            $carbonCopyOriginalId = $messageDetails['carbonCopyOriginalId'];
+
+            $GetMsgCopies[$carbonCopyOriginalId][] = $row['id'];
+
             $bloc['mlst_status'][] = '<img src="../images/reply.png" class="tipCopy"/>';
-            $bloc['mlst_copyID'] = "<br/>[{$row['matched'][1]}]";
-        }
-        else
-        {
-            if($_GameConfig['enable_bbcode'] == 1)
-            {
-                $row['text'] = bbcode(image($row['text']));
-            }
-            $row['text'] = nl2br($row['text']);
+            $bloc['mlst_copyID'] = "<br/>[{$carbonCopyOriginalId}]";
         }
     }
+
     if($row['read'] != 0)
     {
         $bloc['mlst_status'][] = '<img src="../images/eye.png" class="tipEye"/>';
@@ -491,11 +461,8 @@ else
         {
             if(!empty($GetMsgCopiesData[$CopyID]))
             {
-                if($_GameConfig['enable_bbcode'] == 1)
-                {
-                    $GetMsgCopiesData[$CopyID]['text'] = bbcode(image($GetMsgCopiesData[$CopyID]['text']));
-                }
-                $GetMsgCopiesData[$CopyID]['text'] = nl2br($GetMsgCopiesData[$CopyID]['text']);
+                $GetMsgCopiesData[$CopyID]['text'] = Messages\Utils\formatUserMessageContent($GetMsgCopiesData[$CopyID]);
+
                 foreach($ReplaceIDs as $ReplaceID)
                 {
                     $parse['mlst_data_rows'][$ReplaceID]['mlst_text'] = $GetMsgCopiesData[$CopyID]['text'];

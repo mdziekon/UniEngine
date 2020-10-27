@@ -95,7 +95,8 @@ function bbcode($string)
         },
         '<span style="color: \1;">\2</span>',
         function ($matches) {
-            return sQuote($matches[1]);
+            // TODO: implement proper styling
+            return $matches[1];
         },
         function ($matches) {
             return sCode($matches[1]);

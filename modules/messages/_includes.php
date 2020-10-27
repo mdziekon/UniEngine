@@ -13,13 +13,23 @@ call_user_func(function () {
     include($includePath . './input/sendMessage.userCommands.php');
     include($includePath . './utils/batchDeleteMessages.utils.php');
     include($includePath . './utils/batchMessageUpdates.utils.php');
+    include($includePath . './utils/buildMessageDetails.utils.php');
     include($includePath . './utils/createReplyMessageSubject.utils.php');
     include($includePath . './utils/fetchFormDataForReply.utils.php');
+    include($includePath . './utils/fetchOriginalMessagesForRefSystem.utils.php');
     include($includePath . './utils/fetchRecipientDataByUserId.utils.php');
     include($includePath . './utils/fetchRecipientDataByUsername.utils.php');
+    include($includePath . './utils/fetchUserMessages.utils.php');
+    include($includePath . './utils/fetchUserMessagesCount.utils.php');
+    include($includePath . './utils/fetchUserThreads.utils.php');
+    include($includePath . './utils/formatUserMessageDetails.utils.php');
     include($includePath . './utils/getMessageCopyId.utils.php');
+    include($includePath . './utils/getUnreadMessageIds.utils.php');
+    include($includePath . './utils/messageObject.utils.php');
     include($includePath . './utils/normalizeFormData.utils.php');
+    include($includePath . './utils/parseThreadedMessages.utils.php');
     include($includePath . './utils/sendMessage.utils.php');
+    include($includePath . './utils/updateMessagesReadStatus.utils.php');
     include($includePath . './validators/validateWithIgnoreSystem.validators.php');
 
 });
