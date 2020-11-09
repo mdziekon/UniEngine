@@ -20,21 +20,13 @@ includeLang('spyReport');
 includeLang('FleetMission_MissileAttack');
 
 $parse = &$_Lang;
-$parse['Insert_Styles'] = '';
-$parse['Insert_CategoryList'] = '';
+
 $CreateSimForms = '';
 $SetTitle = $_Lang['mess_pagetitle_read'];
 
 $Now = time();
 
 $MessageType = array(100, 0, 1, 2, 3, 4, 5, 15, 50, 70, 80);
-foreach($MessageType as $TypeID)
-{
-    $MsgCounter['total'][$TypeID] = 0;
-    $MsgCounter['threaded'][$TypeID] = 0;
-    $MsgCounter['unread'][$TypeID] = 0;
-}
-$_CanBeThreaded = array(1, 80, 100);
 $TitleColor = array
 (
     0 => '#FFFF00', 1 => '#FF6699', 2 => '#FF3300', 3 => '#FF9900', 4 => '#9540BF', 5 => '#009933',
