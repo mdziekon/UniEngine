@@ -3,6 +3,7 @@
 namespace UniEngine\Engine\Modules\Messages\Screens\CategoriesListView;
 
 use UniEngine\Engine\Modules\Messages\Screens\CategoriesListView;
+use UniEngine\Engine\Modules\Messages;
 
 //  Arguments
 //      - $props (Object)
@@ -51,11 +52,6 @@ function render ($props) {
         50 => 'skyblue',
         70 => '#75F121',
         100 => '#ABABAB',
-    ];
-    $threadableMessageTypes = [
-        1,
-        80,
-        100,
     ];
 
     $counters = [
@@ -159,7 +155,7 @@ function render ($props) {
             'Insert_CatTotal' => (
                 (
                     $isReaderUsingThreads &&
-                    in_array($typeId, $threadableMessageTypes) &&
+                    Messages\Utils\_isMessageTypeThreadable($typeId) &&
                     $counters['threaded'][$typeId] < $counters['total'][$typeId]
                 ) ?
                     prettyNumber($counters['threaded'][$typeId]) . '/' :
