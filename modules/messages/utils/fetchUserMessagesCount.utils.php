@@ -20,7 +20,7 @@ function fetchUserMessagesCount($params) {
     $queryThreadingFilter = (
         _isMessagesThreadViewEnabled($params) ?
             "(`type` NOT IN (" . implode(', ', $threadableMessageTypes) . ") OR `Thread_ID` = 0 OR `Thread_IsLast` = 1)" :
-            "(1 == 1)"
+            "(1 = 1)"
     );
 
     $query_GetMessagesCount = (
