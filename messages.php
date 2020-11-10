@@ -29,8 +29,6 @@ $Now = time();
 $_MaxLength_Subject = 100;
 $_MaxLength_Text = 5000;
 
-$_UseThreads = ($_User['settings_UseMsgThreads'] == 1 ? true : false);
-
 $_ThisCategory = (isset($_GET['messcat']) ? intval($_GET['messcat']) : 0);
 $DeleteWhat = (isset($_POST['deletemessages']) ? $_POST['deletemessages'] : '');
 if(!empty($DeleteWhat) || (isset($_POST['delid']) && $_POST['delid'] > 0))
@@ -485,9 +483,13 @@ switch($_GET['mode']) {
                     unset($Messages[$ThisKey]);
                 }
 
+                $isThreadViewEnabled = Messages\Utils\_isMessagesThreadViewEnabled([
+                    'user' => &$_User,
+                ]);
+
                 foreach ($Messages as $MessageData) {
                     if (
-                        $_UseThreads &&
+                        $isThreadViewEnabled &&
                         isset($MessageData['Thread_ID']) &&
                         $MessageData['Thread_ID'] > 0
                     ) {

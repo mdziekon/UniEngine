@@ -17,8 +17,7 @@ function render ($props) {
 
     $readerUser = &$props['readerUser'];
 
-    // TODO: use _isMessagesThreadViewEnabled
-    $isReaderUsingThreads = ($readerUser['settings_UseMsgThreads'] == 1);
+    $isReaderUsingThreads = Messages\Utils\_isMessagesThreadViewEnabled([ 'user' => &$readerUser ]);
 
     $localTemplateLoader = createLocalTemplateLoader(__DIR__);
 
