@@ -40,19 +40,6 @@ function render ($props) {
         70,
         80,
     ];
-    $messageTypesColors = [
-        0 => '#FFFF00',
-        1 => '#FF6699',
-        2 => '#FF3300',
-        3 => '#FF9900',
-        4 => '#9540BF',
-        5 => '#009933',
-        15 => '#6661FF',
-        80 => 'white',
-        50 => 'skyblue',
-        70 => '#75F121',
-        100 => '#ABABAB',
-    ];
 
     $counters = [
         'total' => [],
@@ -144,8 +131,9 @@ function render ($props) {
 
     foreach ($messageTypes as $typeId) {
         $typeCSSClass = 'c' . (string)($typeId + 0);
+        $typeColor = Messages\Utils\getMessageTypeColor($typeId);
 
-        $componentTPLData['Insert_Styles'][] = ".{$typeCSSClass} { color: {$messageTypesColors[$typeId]}; } ";
+        $componentTPLData['Insert_Styles'][] = ".{$typeCSSClass} { color: {$typeColor}; } ";
 
         $categoryEntryRowTPLData = [
             'Insert_CatID' => $typeId,

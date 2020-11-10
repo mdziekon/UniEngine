@@ -25,6 +25,7 @@ call_user_func(function () {
     include($includePath . './utils/fetchUserMessagesCount.utils.php');
     include($includePath . './utils/fetchUserThreads.utils.php');
     include($includePath . './utils/formatUserMessageDetails.utils.php');
+    include($includePath . './utils/getConstants.utils.php');
     include($includePath . './utils/getMessageCopyId.utils.php');
     include($includePath . './utils/getUnreadMessageIds.utils.php');
     include($includePath . './utils/messageObject.utils.php');
