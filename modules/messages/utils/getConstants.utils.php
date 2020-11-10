@@ -2,6 +2,32 @@
 
 namespace UniEngine\Engine\Modules\Messages\Utils;
 
+function getMessageTypes() {
+    return [
+        // Special types
+        100,
+
+        // Regular types
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        15,
+        50,
+        70,
+        80,
+    ];
+}
+
+function isValidMessageType($typeId) {
+    return in_array(
+        $typeId,
+        getMessageTypes()
+    );
+}
+
 function _getMessageTypeColors() {
     return [
         0 => '#FFFF00',

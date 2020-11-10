@@ -26,8 +26,6 @@ $SetTitle = $_Lang['mess_pagetitle_read'];
 
 $Now = time();
 
-$MessageType = array(100, 0, 1, 2, 3, 4, 5, 15, 50, 70, 80);
-
 $_MaxLength_Subject = 100;
 $_MaxLength_Text = 5000;
 
@@ -262,7 +260,6 @@ switch($_GET['mode']) {
             [
                 'user' => &$_User,
                 'timestamp' => $Now,
-                'knownMessageTypes' => $MessageType,
             ]
         );
 
@@ -313,7 +310,7 @@ switch($_GET['mode']) {
             $parse['SpyDisplay'] = 'display: none;';
         }
 
-        if (!in_array($_ThisCategory, $MessageType)) {
+        if (!Messages\Utils\isValidMessageType($_ThisCategory)) {
             $_ThisCategory = 100;
         }
 

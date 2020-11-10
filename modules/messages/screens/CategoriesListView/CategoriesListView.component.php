@@ -27,19 +27,7 @@ function render ($props) {
         'categoryEntryRow' => $localTemplateLoader('categoryEntryRow'),
     ];
 
-    $messageTypes = [
-        100,
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        15,
-        50,
-        70,
-        80,
-    ];
+    $messageTypes = Messages\Utils\getMessageTypes();
 
     $counters = [
         'total' => [],
