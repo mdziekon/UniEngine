@@ -27,11 +27,6 @@ $SetTitle = $_Lang['mess_pagetitle_read'];
 $Now = time();
 
 $MessageType = array(100, 0, 1, 2, 3, 4, 5, 15, 50, 70, 80);
-$TitleColor = array
-(
-    0 => '#FFFF00', 1 => '#FF6699', 2 => '#FF3300', 3 => '#FF9900', 4 => '#9540BF', 5 => '#009933',
-    15 => '#6661FF', 80 => 'white', 50 => 'skyblue', 70 => '#75F121', 100 => '#ABABAB'
-);
 
 $_MaxLength_Subject = 100;
 $_MaxLength_Text = 5000;
@@ -366,7 +361,7 @@ switch($_GET['mode']) {
 
         $parse['ThisPage'] = $_ThisPage;
         $parse['MessCategory'] = $_ThisCategory;
-        $parse['MessCategoryColor'] = $TitleColor[$_ThisCategory];
+        $parse['MessCategoryColor'] = Messages\Utils\getMessageTypeColor($_ThisCategory);
         $parse['Pagination'] = $Pagination;
         $page = '';
 
