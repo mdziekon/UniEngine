@@ -11,6 +11,19 @@
  *
  */
 
+function initializeUserTechs(&$userTechs) {
+    $userTechs[109] = 1 + (0.1 * $userTechs[109]);
+    $userTechs[110] = 1 + (0.1 * $userTechs[110]);
+    $userTechs[111] = 1 + (0.1 * $userTechs[111]);
+
+    if (empty($userTechs['TotalForceFactor'])) {
+        $userTechs['TotalForceFactor'] = 1;
+    }
+    if (empty($userTechs['TotalShieldFactor'])) {
+        $userTechs['TotalShieldFactor'] = 1;
+    }
+}
+
 function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFire = true)
 {
     global $_Vars_Prices, $_Vars_CombatData, $_Vars_CombatUpgrades;
@@ -22,21 +35,10 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 
     if(!empty($Defender))
     {
-        foreach($DefenderTech as $User => &$Techs)
-        {
-            $Techs[109] = 1 + (0.1 * $Techs[109]);
-            $Techs[110] = 1 + (0.1 * $Techs[110]);
-            $Techs[111] = 1 + (0.1 * $Techs[111]);
-
-            if(empty($Techs['TotalForceFactor']))
-            {
-                $Techs['TotalForceFactor'] = 1;
-            }
-            if(empty($Techs['TotalShieldFactor']))
-            {
-                $Techs['TotalShieldFactor'] = 1;
-            }
+        foreach ($DefenderTech as $User => &$Techs) {
+            initializeUserTechs($Techs);
         }
+
         foreach($Defender as $User => $Ships)
         {
             $UserKey = "|{$User}";
@@ -109,21 +111,10 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 
     if(!empty($Attacker))
     {
-        foreach($AttackerTech as $User => &$Techs)
-        {
-            $Techs[109] = 1 + (0.1 * $Techs[109]);
-            $Techs[110] = 1 + (0.1 * $Techs[110]);
-            $Techs[111] = 1 + (0.1 * $Techs[111]);
-
-            if(empty($Techs['TotalForceFactor']))
-            {
-                $Techs['TotalForceFactor'] = 1;
-            }
-            if(empty($Techs['TotalShieldFactor']))
-            {
-                $Techs['TotalShieldFactor'] = 1;
-            }
+        foreach ($AttackerTech as $User => &$Techs) {
+            initializeUserTechs($Techs);
         }
+
         foreach($Attacker as $User => $Ships)
         {
             $UserKey = "|{$User}";
