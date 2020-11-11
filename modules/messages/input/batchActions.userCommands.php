@@ -18,7 +18,6 @@ use UniEngine\Engine\Modules\Messages;
  * @param array $params
  * @param objectRef $params['user']
  * @param number $params['timestamp']
- * @param array<number> $params['knownMessageTypes']
  */
 function handleBatchAction(&$input, $params) {
     global $_Lang;
@@ -38,7 +37,7 @@ function handleBatchAction(&$input, $params) {
 
     $user = &$params['user'];
     $currentTimestamp = $params['timestamp'];
-    $knownMessageTypes = $params['knownMessageTypes'];
+    $knownMessageTypes = Messages\Utils\getMessageTypes();
 
     $parsedInput = [
         'command' => (

@@ -20,31 +20,14 @@ includeLang('spyReport');
 includeLang('FleetMission_MissileAttack');
 
 $parse = &$_Lang;
-$parse['Insert_Styles'] = '';
-$parse['Insert_CategoryList'] = '';
+
 $CreateSimForms = '';
 $SetTitle = $_Lang['mess_pagetitle_read'];
 
 $Now = time();
 
-$MessageType = array(100, 0, 1, 2, 3, 4, 5, 15, 50, 70, 80);
-foreach($MessageType as $TypeID)
-{
-    $MsgCounter['total'][$TypeID] = 0;
-    $MsgCounter['threaded'][$TypeID] = 0;
-    $MsgCounter['unread'][$TypeID] = 0;
-}
-$_CanBeThreaded = array(1, 80, 100);
-$TitleColor = array
-(
-    0 => '#FFFF00', 1 => '#FF6699', 2 => '#FF3300', 3 => '#FF9900', 4 => '#9540BF', 5 => '#009933',
-    15 => '#6661FF', 80 => 'white', 50 => 'skyblue', 70 => '#75F121', 100 => '#ABABAB'
-);
-
 $_MaxLength_Subject = 100;
 $_MaxLength_Text = 5000;
-
-$_UseThreads = ($_User['settings_UseMsgThreads'] == 1 ? true : false);
 
 $_ThisCategory = (isset($_GET['messcat']) ? intval($_GET['messcat']) : 0);
 $DeleteWhat = (isset($_POST['deletemessages']) ? $_POST['deletemessages'] : '');
@@ -275,7 +258,6 @@ switch($_GET['mode']) {
             [
                 'user' => &$_User,
                 'timestamp' => $Now,
-                'knownMessageTypes' => $MessageType,
             ]
         );
 
@@ -326,7 +308,7 @@ switch($_GET['mode']) {
             $parse['SpyDisplay'] = 'display: none;';
         }
 
-        if (!in_array($_ThisCategory, $MessageType)) {
+        if (!Messages\Utils\isValidMessageType($_ThisCategory)) {
             $_ThisCategory = 100;
         }
 
@@ -374,7 +356,7 @@ switch($_GET['mode']) {
 
         $parse['ThisPage'] = $_ThisPage;
         $parse['MessCategory'] = $_ThisCategory;
-        $parse['MessCategoryColor'] = $TitleColor[$_ThisCategory];
+        $parse['MessCategoryColor'] = Messages\Utils\getMessageTypeColor($_ThisCategory);
         $parse['Pagination'] = $Pagination;
         $page = '';
 
@@ -501,9 +483,13 @@ switch($_GET['mode']) {
                     unset($Messages[$ThisKey]);
                 }
 
+                $isThreadViewEnabled = Messages\Utils\_isMessagesThreadViewEnabled([
+                    'user' => &$_User,
+                ]);
+
                 foreach ($Messages as $MessageData) {
                     if (
-                        $_UseThreads &&
+                        $isThreadViewEnabled &&
                         isset($MessageData['Thread_ID']) &&
                         $MessageData['Thread_ID'] > 0
                     ) {
@@ -551,103 +537,10 @@ switch($_GET['mode']) {
     break;
 
     default:
-        // Show Message Categories
-        $SQLResult_GetMessageCategoriesCounters = doquery(
-            "SELECT `type`, `read`, `Thread_ID`, `Thread_IsLast`, COUNT(*) AS `Count` FROM {{table}} WHERE `id_owner` = {$_User['id']} AND `deleted` = false GROUP BY `type`, `read`, `Thread_ID`, `Thread_IsLast` ORDER BY `Thread_IsLast` DESC;",
-            'messages'
-        );
-
-        if($SQLResult_GetMessageCategoriesCounters->num_rows > 0)
-        {
-            $SeenThreads = array();
-            $ThreadMainTypes = array();
-            while($Counter = $SQLResult_GetMessageCategoriesCounters->fetch_assoc())
-            {
-                // Handler TypeCount
-                if($_UseThreads AND $Counter['Thread_ID'] > 0)
-                {
-                    if($Counter['Thread_IsLast'] == 1)
-                    {
-                        $ThreadMainTypes[$Counter['Thread_ID']] = $Counter['type'];
-                    }
-                    else
-                    {
-                        $Counter['type'] = $ThreadMainTypes[$Counter['Thread_ID']];
-                    }
-                    if(!in_array($Counter['Thread_ID'], $SeenThreads))
-                    {
-                        $MsgCounter['threaded'][$Counter['type']] += 1;
-                    }
-                }
-                else
-                {
-
-                    $MsgCounter['threaded'][$Counter['type']] += $Counter['Count'];
-                }
-                $MsgCounter['total'][$Counter['type']] += $Counter['Count'];
-                if($Counter['read'] == 0)
-                {
-                    $MsgCounter['unread'][$Counter['type']] += $Counter['Count'];
-                }
-                // Handle TotalCount
-                if($Counter['type'] != 80)
-                {
-                    $MsgCounter['total'][100] += $Counter['Count'];
-                    if($Counter['read'] == 0)
-                    {
-                        $MsgCounter['unread'][100] += $Counter['Count'];
-                    }
-                    if($_UseThreads AND $Counter['Thread_ID'] > 0)
-                    {
-                        if(!in_array($Counter['Thread_ID'], $SeenThreads))
-                        {
-                            $MsgCounter['threaded'][100] += 1;
-                        }
-                    }
-                    else
-                    {
-                        $MsgCounter['threaded'][100] += $Counter['Count'];
-                    }
-                }
-
-                if($_UseThreads AND $Counter['Thread_ID'] > 0)
-                {
-                    if(!in_array($Counter['Thread_ID'], $SeenThreads))
-                    {
-                        $SeenThreads[] = $Counter['Thread_ID'];
-                    }
-                }
-            }
-        }
-
-        $TPL_CatList_Body = gettemplate('messages_catlist_body');
-        $TPL_CatList_Row = gettemplate('messages_catlist_row');
-
-        foreach($MessageType as $TypeID)
-        {
-            $ThisClass = 'c'.(string)($TypeID + 0);
-            $parse['Insert_Styles'] .= ".{$ThisClass} { color: {$TitleColor[$TypeID]}; } ";
-            $ThisArray = array
-            (
-                'Insert_CatID' => $TypeID,
-                'Insert_CatClass' => $ThisClass,
-                'Insert_CatName' => $_Lang['type'][$TypeID],
-                'Insert_CatUnread' => prettyNumber($MsgCounter['unread'][$TypeID]),
-                'Insert_CatTotal' => (($_UseThreads AND in_array($TypeID, $_CanBeThreaded) AND $MsgCounter['threaded'][$TypeID] < $MsgCounter['total'][$TypeID]) ? prettyNumber($MsgCounter['threaded'][$TypeID]).'/' : '').prettyNumber($MsgCounter['total'][$TypeID]),
-            );
-            $parse['Insert_CategoryList'] .= parsetemplate($TPL_CatList_Row, $ThisArray);
-        }
-
-        if($_UseThreads)
-        {
-            $parse['Insert_Hide_ThreadEnabled'] = 'display: none;';
-        }
-        else
-        {
-            $parse['Insert_Hide_ThreadDisabled'] = 'display: none;';
-        }
-
-        $page = parsetemplate($TPL_CatList_Body, $parse);
+        $renderResult = Messages\Screens\CategoriesListView\render([
+            'readerUser' => &$_User,
+        ]);
+        $page = $renderResult['componentHTML'];
 
         break;
 }

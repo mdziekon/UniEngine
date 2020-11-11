@@ -26,7 +26,7 @@ function fetchUserMessages($params) {
     $queryThreadingFilter = (
         _isMessagesThreadViewEnabled($params) ?
             "(`m`.`type` NOT IN (" . implode(', ', $threadableMessageTypes) . ") OR `m`.`Thread_ID` = 0 OR `m`.`Thread_IsLast` = 1)" :
-            "(1 == 1)"
+            "(1 = 1)"
     );
     $queryLimitStart = (($page - 1) * $pageSize);
 

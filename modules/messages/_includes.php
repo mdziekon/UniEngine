@@ -11,6 +11,8 @@ call_user_func(function () {
     include($includePath . './commands/batchMarkMessagesAsRead.commands.php');
     include($includePath . './input/batchActions.userCommands.php');
     include($includePath . './input/sendMessage.userCommands.php');
+    include($includePath . './screens/CategoriesListView/CategoriesListView.component.php');
+    include($includePath . './screens/CategoriesListView/utils/fetchMessagesCounters.utils.php');
     include($includePath . './utils/batchDeleteMessages.utils.php');
     include($includePath . './utils/batchMessageUpdates.utils.php');
     include($includePath . './utils/buildMessageDetails.utils.php');
@@ -23,6 +25,7 @@ call_user_func(function () {
     include($includePath . './utils/fetchUserMessagesCount.utils.php');
     include($includePath . './utils/fetchUserThreads.utils.php');
     include($includePath . './utils/formatUserMessageDetails.utils.php');
+    include($includePath . './utils/getConstants.utils.php');
     include($includePath . './utils/getMessageCopyId.utils.php');
     include($includePath . './utils/getUnreadMessageIds.utils.php');
     include($includePath . './utils/messageObject.utils.php');
