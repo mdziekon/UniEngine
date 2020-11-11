@@ -143,9 +143,9 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                             }
                         }
                     }
-                    if(!empty($ShipsSD['d'][$User][$ID]))
+                    if(!empty($ShipsSD['a'][$User][$ID]))
                     {
-                        arsort($ShipsSD['d'][$User][$ID]);
+                        arsort($ShipsSD['a'][$User][$ID]);
                     }
                 }
                 $AttackerShips[$User][$ID] = $Count;
