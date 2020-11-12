@@ -88,6 +88,19 @@ function calculateShipForce($params) {
     );
 }
 
+function calculateShipShield($params) {
+    global $_Vars_CombatData;
+
+    $shipId = $params['shipId'];
+    $userTechs = &$params['userTechs'];
+
+    return floor(
+        $_Vars_CombatData[$shipId]['shield'] *
+        $userTechs[110] *
+        $userTechs['TotalShieldFactor']
+    );
+}
+
 function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFire = true)
 {
     global $_Vars_Prices, $_Vars_CombatData, $_Vars_CombatUpgrades;
@@ -140,8 +153,11 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                     'shipId' => $ID,
                     'userTechs' => &$DefenderTech[$User],
                 ]);
+                $DefShipsShield[$UserShipKey] = calculateShipShield([
+                    'shipId' => $ID,
+                    'userTechs' => &$DefenderTech[$User],
+                ]);
 
-                $DefShipsShield[$UserShipKey] = floor($_Vars_CombatData[$ID]['shield'] * $DefenderTech[$User][110] * $DefenderTech[$User]['TotalShieldFactor']);
                 if(empty($ShipsHullValues[$ID]))
                 {
                     $ShipsHullValues[$ID] = ($_Vars_Prices[$ID]['metal'] + $_Vars_Prices[$ID]['crystal']) / 10;
@@ -194,8 +210,11 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                     'shipId' => $ID,
                     'userTechs' => &$AttackerTech[$User],
                 ]);
+                $AtkShipsShield[$UserShipKey] = calculateShipShield([
+                    'shipId' => $ID,
+                    'userTechs' => &$AttackerTech[$User],
+                ]);
 
-                $AtkShipsShield[$UserShipKey] = floor($_Vars_CombatData[$ID]['shield'] * $AttackerTech[$User][110] * $AttackerTech[$User]['TotalShieldFactor']);
                 if(empty($ShipsHullValues[$ID]))
                 {
                     $ShipsHullValues[$ID] = ($_Vars_Prices[$ID]['metal'] + $_Vars_Prices[$ID]['crystal']) / 10;
