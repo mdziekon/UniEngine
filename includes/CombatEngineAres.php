@@ -121,10 +121,7 @@ function calculateShipHull($params) {
     );
 }
 
-function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFire = true)
-{
-    global $_Vars_Prices, $_Vars_CombatData, $_Vars_CombatUpgrades;
-
+function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFire = true) {
     $Rounds = array();
     $AtkLoseCount = array();
     $DefLoseCount = array();
