@@ -61,6 +61,33 @@ function initializeShipRapidFire($params) {
     }
 }
 
+function calculateShipForce($params) {
+    global $_Vars_CombatUpgrades, $_Vars_CombatData;
+
+    $shipId = $params['shipId'];
+    $userTechs = &$params['userTechs'];
+
+    $weaponTechUpgradePercent = 0;
+
+    if (!empty($_Vars_CombatUpgrades[$shipId])) {
+        foreach ($_Vars_CombatUpgrades[$shipId] as $upgradeTechId => $upgradeTechLevelRequirement) {
+            $upgradeTechUserLevel = $userTechs[$upgradeTechId];
+
+            if ($upgradeTechUserLevel <= $upgradeTechLevelRequirement) {
+                continue;
+            }
+
+            $weaponTechUpgradePercent += ($upgradeTechUserLevel - $upgradeTechLevelRequirement) * 0.05;
+        }
+    }
+
+    return floor(
+        $_Vars_CombatData[$shipId]['attack'] *
+        ($userTechs[109] + $weaponTechUpgradePercent) *
+        $userTechs['TotalForceFactor']
+    );
+}
+
 function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFire = true)
 {
     global $_Vars_Prices, $_Vars_CombatData, $_Vars_CombatUpgrades;
@@ -87,7 +114,6 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
             foreach($Ships as $ID => $Count)
             {
                 $UserShipKey = "{$ID}{$UserKey}";
-                $ForceUpgrade = 0;
 
                 if ($UseRapidFire) {
                     if (empty($ShipsSD['d'][$User])) {
@@ -110,19 +136,11 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 $DefShipsTypesOwners[$ID][$User] = 1;
                 $DefShipsTypesCount[$ID][$User] = $Count;
 
-                // Calculate Ships Force, Shield and Hull values
-                if(!empty($_Vars_CombatUpgrades[$ID]))
-                {
-                    foreach($_Vars_CombatUpgrades[$ID] as $UpTech => $ReqLevel)
-                    {
-                        $TechAvailable = $DefenderTech[$User][$UpTech];
-                        if($TechAvailable > $ReqLevel)
-                        {
-                            $ForceUpgrade += ($TechAvailable - $ReqLevel) * 0.05;
-                        }
-                    }
-                }
-                $DefShipsForce[$UserShipKey] = floor($_Vars_CombatData[$ID]['attack'] * ($DefenderTech[$User][109] + $ForceUpgrade) * $DefenderTech[$User]['TotalForceFactor']);
+                $DefShipsForce[$UserShipKey] = calculateShipForce([
+                    'shipId' => $ID,
+                    'userTechs' => &$DefenderTech[$User],
+                ]);
+
                 $DefShipsShield[$UserShipKey] = floor($_Vars_CombatData[$ID]['shield'] * $DefenderTech[$User][110] * $DefenderTech[$User]['TotalShieldFactor']);
                 if(empty($ShipsHullValues[$ID]))
                 {
@@ -150,7 +168,6 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
             foreach($Ships as $ID => $Count)
             {
                 $UserShipKey = "{$ID}{$UserKey}";
-                $ForceUpgrade = 0;
 
                 if ($UseRapidFire) {
                     if (empty($ShipsSD['a'][$User])) {
@@ -173,19 +190,11 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 $AtkShipsTypesOwners[$ID][$User] = 1;
                 $AtkShipsTypesCount[$ID][$User] = $Count;
 
-                // Calculate Ships Force, Shield and Hull values
-                if(!empty($_Vars_CombatUpgrades[$ID]))
-                {
-                    foreach($_Vars_CombatUpgrades[$ID] as $UpTech => $ReqLevel)
-                    {
-                        $TechAvailable = $AttackerTech[$User][$UpTech];
-                        if($TechAvailable > $ReqLevel)
-                        {
-                            $ForceUpgrade += ($TechAvailable - $ReqLevel) * 0.05;
-                        }
-                    }
-                }
-                $AtkShipsForce[$UserShipKey] = floor($_Vars_CombatData[$ID]['attack'] * ($AttackerTech[$User][109] + $ForceUpgrade) * $AttackerTech[$User]['TotalForceFactor']);
+                $AtkShipsForce[$UserShipKey] = calculateShipForce([
+                    'shipId' => $ID,
+                    'userTechs' => &$AttackerTech[$User],
+                ]);
+
                 $AtkShipsShield[$UserShipKey] = floor($_Vars_CombatData[$ID]['shield'] * $AttackerTech[$User][110] * $AttackerTech[$User]['TotalShieldFactor']);
                 if(empty($ShipsHullValues[$ID]))
                 {
