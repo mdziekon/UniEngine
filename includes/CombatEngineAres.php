@@ -24,6 +24,43 @@ function initializeUserTechs(&$userTechs) {
     }
 }
 
+function initializeShipRapidFire($params) {
+    global $_Vars_CombatData;
+
+    $rapidFireTableRef = &$params['rapidFireTableRef'];
+    $userTechs = &$params['userTechs'];
+    $shipId = $params['shipId'];
+
+    foreach ($_Vars_CombatData[$shipId]['sd'] as $targetId => $rapidFireShots) {
+        if ($rapidFireShots <= 1) {
+            continue;
+        }
+
+        if (!empty($userTechs['SDAdd'])) {
+            $rapidFireShots += $userTechs['SDAdd'];
+        } else if (!empty($userTechs['SDFactor'])) {
+            $rapidFireShots = round(
+                $rapidFireShots *
+                $userTechs['SDFactor']
+            );
+        }
+
+        if ($rapidFireShots <= 1) {
+            continue;
+        }
+
+        if (empty($rapidFireTableRef[$shipId])) {
+            $rapidFireTableRef[$shipId] = [];
+        }
+
+        $rapidFireTableRef[$shipId][$targetId] = $rapidFireShots - 1;
+    }
+
+    if (!empty($rapidFireTableRef[$shipId])) {
+        arsort($rapidFireTableRef[$shipId]);
+    }
+}
+
 function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFire = true)
 {
     global $_Vars_Prices, $_Vars_CombatData, $_Vars_CombatUpgrades;
@@ -32,6 +69,11 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
     $AtkLoseCount = array();
     $DefLoseCount = array();
     $PlanetDefSysLost = array();
+
+    $ShipsSD = [
+        'a' => [],
+        'd' => [],
+    ];
 
     if(!empty($Defender))
     {
@@ -47,31 +89,18 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 $UserShipKey = "{$ID}{$UserKey}";
                 $ForceUpgrade = 0;
 
-                if($UseRapidFire)
-                {
-                    foreach($_Vars_CombatData[$ID]['sd'] as $TID => $SDVal)
-                    {
-                        if($SDVal > 1)
-                        {
-                            if(!empty($DefenderTech[$User]['SDAdd']))
-                            {
-                                $SDVal += $DefenderTech[$User]['SDAdd'];
-                            }
-                            else if(!empty($DefenderTech[$User]['SDFactor']))
-                            {
-                                $SDVal = round($SDVal * $DefenderTech[$User]['SDFactor']);
-                            }
-                            if($SDVal > 1)
-                            {
-                                $ShipsSD['d'][$User][$ID][$TID] = $SDVal - 1;
-                            }
-                        }
+                if ($UseRapidFire) {
+                    if (empty($ShipsSD['d'][$User])) {
+                        $ShipsSD['d'][$User] = [];
                     }
-                    if(!empty($ShipsSD['d'][$User][$ID]))
-                    {
-                        arsort($ShipsSD['d'][$User][$ID]);
-                    }
+
+                    initializeShipRapidFire([
+                        'rapidFireTableRef' => &$ShipsSD['d'][$User],
+                        'userTechs' => &$DefenderTech[$User],
+                        'shipId' => $ID,
+                    ]);
                 }
+
                 $DefenderShips[$User][$ID] = $Count;
                 if(!isset($DefShipsTypes[$ID]))
                 {
@@ -123,31 +152,18 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 $UserShipKey = "{$ID}{$UserKey}";
                 $ForceUpgrade = 0;
 
-                if($UseRapidFire)
-                {
-                    foreach($_Vars_CombatData[$ID]['sd'] as $TID => $SDVal)
-                    {
-                        if($SDVal > 1)
-                        {
-                            if(!empty($AttackerTech[$User]['SDAdd']))
-                            {
-                                $SDVal += $AttackerTech[$User]['SDAdd'];
-                            }
-                            else if(!empty($AttackerTech[$User]['SDFactor']))
-                            {
-                                $SDVal = round($SDVal * $AttackerTech[$User]['SDFactor']);
-                            }
-                            if($SDVal > 1)
-                            {
-                                $ShipsSD['a'][$User][$ID][$TID] = $SDVal - 1;
-                            }
-                        }
+                if ($UseRapidFire) {
+                    if (empty($ShipsSD['a'][$User])) {
+                        $ShipsSD['a'][$User] = [];
                     }
-                    if(!empty($ShipsSD['a'][$User][$ID]))
-                    {
-                        arsort($ShipsSD['a'][$User][$ID]);
-                    }
+
+                    initializeShipRapidFire([
+                        'rapidFireTableRef' => &$ShipsSD['a'][$User],
+                        'userTechs' => &$AttackerTech[$User],
+                        'shipId' => $ID,
+                    ]);
                 }
+
                 $AttackerShips[$User][$ID] = $Count;
                 if(!isset($AtkShipsTypes[$ID]))
                 {
