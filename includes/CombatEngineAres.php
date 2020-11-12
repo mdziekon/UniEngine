@@ -101,6 +101,26 @@ function calculateShipShield($params) {
     );
 }
 
+function calculateShipHull($params) {
+    global $_Vars_Prices;
+    static $baseHullValuesCache = [];
+
+    $shipId = $params['shipId'];
+    $userTechs = &$params['userTechs'];
+
+    if (empty($baseHullValuesCache[$shipId])) {
+        $baseHullValuesCache[$shipId] = (
+            ($_Vars_Prices[$shipId]['metal'] + $_Vars_Prices[$shipId]['crystal']) /
+            10
+        );
+    }
+
+    return floor(
+        $baseHullValuesCache[$shipId] *
+        $userTechs[111]
+    );
+}
+
 function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFire = true)
 {
     global $_Vars_Prices, $_Vars_CombatData, $_Vars_CombatUpgrades;
@@ -157,12 +177,10 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                     'shipId' => $ID,
                     'userTechs' => &$DefenderTech[$User],
                 ]);
-
-                if(empty($ShipsHullValues[$ID]))
-                {
-                    $ShipsHullValues[$ID] = ($_Vars_Prices[$ID]['metal'] + $_Vars_Prices[$ID]['crystal']) / 10;
-                }
-                $DefShipsHull[$UserShipKey] = floor($ShipsHullValues[$ID]* $DefenderTech[$User][111]);
+                $DefShipsHull[$UserShipKey] = calculateShipHull([
+                    'shipId' => $ID,
+                    'userTechs' => &$DefenderTech[$User],
+                ]);
             }
         }
         asort($DefShipsForce);
@@ -214,12 +232,10 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                     'shipId' => $ID,
                     'userTechs' => &$AttackerTech[$User],
                 ]);
-
-                if(empty($ShipsHullValues[$ID]))
-                {
-                    $ShipsHullValues[$ID] = ($_Vars_Prices[$ID]['metal'] + $_Vars_Prices[$ID]['crystal']) / 10;
-                }
-                $AtkShipsHull[$UserShipKey] = floor($ShipsHullValues[$ID]* $AttackerTech[$User][111]);
+                $AtkShipsShield[$UserShipKey] = calculateShipHull([
+                    'shipId' => $ID,
+                    'userTechs' => &$AttackerTech[$User],
+                ]);
             }
         }
         $AtkShipsForce_Copy = $AtkShipsForce;
