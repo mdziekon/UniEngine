@@ -11,115 +11,10 @@
  *
  */
 
-function initializeUserTechs(&$userTechs) {
-    $userTechs[109] = 1 + (0.1 * $userTechs[109]);
-    $userTechs[110] = 1 + (0.1 * $userTechs[110]);
-    $userTechs[111] = 1 + (0.1 * $userTechs[111]);
+include($_EnginePath . 'includes/ares/initializers.php');
+include($_EnginePath . 'includes/ares/calculations.php');
 
-    if (empty($userTechs['TotalForceFactor'])) {
-        $userTechs['TotalForceFactor'] = 1;
-    }
-    if (empty($userTechs['TotalShieldFactor'])) {
-        $userTechs['TotalShieldFactor'] = 1;
-    }
-}
-
-function initializeShipRapidFire($params) {
-    global $_Vars_CombatData;
-
-    $rapidFireTableRef = &$params['rapidFireTableRef'];
-    $userTechs = &$params['userTechs'];
-    $shipId = $params['shipId'];
-
-    foreach ($_Vars_CombatData[$shipId]['sd'] as $targetId => $rapidFireShots) {
-        if ($rapidFireShots <= 1) {
-            continue;
-        }
-
-        if (!empty($userTechs['SDAdd'])) {
-            $rapidFireShots += $userTechs['SDAdd'];
-        } else if (!empty($userTechs['SDFactor'])) {
-            $rapidFireShots = round(
-                $rapidFireShots *
-                $userTechs['SDFactor']
-            );
-        }
-
-        if ($rapidFireShots <= 1) {
-            continue;
-        }
-
-        if (empty($rapidFireTableRef[$shipId])) {
-            $rapidFireTableRef[$shipId] = [];
-        }
-
-        $rapidFireTableRef[$shipId][$targetId] = $rapidFireShots - 1;
-    }
-
-    if (!empty($rapidFireTableRef[$shipId])) {
-        arsort($rapidFireTableRef[$shipId]);
-    }
-}
-
-function calculateShipForce($params) {
-    global $_Vars_CombatUpgrades, $_Vars_CombatData;
-
-    $shipId = $params['shipId'];
-    $userTechs = &$params['userTechs'];
-
-    $weaponTechUpgradePercent = 0;
-
-    if (!empty($_Vars_CombatUpgrades[$shipId])) {
-        foreach ($_Vars_CombatUpgrades[$shipId] as $upgradeTechId => $upgradeTechLevelRequirement) {
-            $upgradeTechUserLevel = $userTechs[$upgradeTechId];
-
-            if ($upgradeTechUserLevel <= $upgradeTechLevelRequirement) {
-                continue;
-            }
-
-            $weaponTechUpgradePercent += ($upgradeTechUserLevel - $upgradeTechLevelRequirement) * 0.05;
-        }
-    }
-
-    return floor(
-        $_Vars_CombatData[$shipId]['attack'] *
-        ($userTechs[109] + $weaponTechUpgradePercent) *
-        $userTechs['TotalForceFactor']
-    );
-}
-
-function calculateShipShield($params) {
-    global $_Vars_CombatData;
-
-    $shipId = $params['shipId'];
-    $userTechs = &$params['userTechs'];
-
-    return floor(
-        $_Vars_CombatData[$shipId]['shield'] *
-        $userTechs[110] *
-        $userTechs['TotalShieldFactor']
-    );
-}
-
-function calculateShipHull($params) {
-    global $_Vars_Prices;
-    static $baseHullValuesCache = [];
-
-    $shipId = $params['shipId'];
-    $userTechs = &$params['userTechs'];
-
-    if (empty($baseHullValuesCache[$shipId])) {
-        $baseHullValuesCache[$shipId] = (
-            ($_Vars_Prices[$shipId]['metal'] + $_Vars_Prices[$shipId]['crystal']) /
-            10
-        );
-    }
-
-    return floor(
-        $baseHullValuesCache[$shipId] *
-        $userTechs[111]
-    );
-}
+use UniEngine\Engine\Includes\Ares;
 
 function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFire = true) {
     $Rounds = array();
@@ -135,7 +30,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
     if(!empty($Defender))
     {
         foreach ($DefenderTech as $User => &$Techs) {
-            initializeUserTechs($Techs);
+            Ares\Initializers\initializeUserTechs($Techs);
         }
 
         foreach($Defender as $User => $Ships)
@@ -150,7 +45,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                         $ShipsSD['d'][$User] = [];
                     }
 
-                    initializeShipRapidFire([
+                    Ares\Initializers\initializeShipRapidFire([
                         'rapidFireTableRef' => &$ShipsSD['d'][$User],
                         'userTechs' => &$DefenderTech[$User],
                         'shipId' => $ID,
@@ -166,15 +61,15 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 $DefShipsTypesOwners[$ID][$User] = 1;
                 $DefShipsTypesCount[$ID][$User] = $Count;
 
-                $DefShipsForce[$UserShipKey] = calculateShipForce([
+                $DefShipsForce[$UserShipKey] = Ares\Calculations\calculateShipForce([
                     'shipId' => $ID,
                     'userTechs' => &$DefenderTech[$User],
                 ]);
-                $DefShipsShield[$UserShipKey] = calculateShipShield([
+                $DefShipsShield[$UserShipKey] = Ares\Calculations\calculateShipShield([
                     'shipId' => $ID,
                     'userTechs' => &$DefenderTech[$User],
                 ]);
-                $DefShipsHull[$UserShipKey] = calculateShipHull([
+                $DefShipsHull[$UserShipKey] = Ares\Calculations\calculateShipHull([
                     'shipId' => $ID,
                     'userTechs' => &$DefenderTech[$User],
                 ]);
@@ -190,7 +85,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
     if(!empty($Attacker))
     {
         foreach ($AttackerTech as $User => &$Techs) {
-            initializeUserTechs($Techs);
+            Ares\Initializers\initializeUserTechs($Techs);
         }
 
         foreach($Attacker as $User => $Ships)
@@ -205,7 +100,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                         $ShipsSD['a'][$User] = [];
                     }
 
-                    initializeShipRapidFire([
+                    Ares\Initializers\initializeShipRapidFire([
                         'rapidFireTableRef' => &$ShipsSD['a'][$User],
                         'userTechs' => &$AttackerTech[$User],
                         'shipId' => $ID,
@@ -221,15 +116,15 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 $AtkShipsTypesOwners[$ID][$User] = 1;
                 $AtkShipsTypesCount[$ID][$User] = $Count;
 
-                $AtkShipsForce[$UserShipKey] = calculateShipForce([
+                $AtkShipsForce[$UserShipKey] = Ares\Calculations\calculateShipForce([
                     'shipId' => $ID,
                     'userTechs' => &$AttackerTech[$User],
                 ]);
-                $AtkShipsShield[$UserShipKey] = calculateShipShield([
+                $AtkShipsShield[$UserShipKey] = Ares\Calculations\calculateShipShield([
                     'shipId' => $ID,
                     'userTechs' => &$AttackerTech[$User],
                 ]);
-                $AtkShipsShield[$UserShipKey] = calculateShipHull([
+                $AtkShipsShield[$UserShipKey] = Ares\Calculations\calculateShipHull([
                     'shipId' => $ID,
                     'userTechs' => &$AttackerTech[$User],
                 ]);
