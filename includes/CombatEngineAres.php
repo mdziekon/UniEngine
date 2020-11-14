@@ -441,6 +441,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                         }
                         if(isset($DefShipsTypes[$TShip]) && $DefShipsTypes[$TShip] > 0)
                         {
+                            $TShipTotalCount = 0;
                             $TotalForceNeed = 0;
                             $TotalShootsNeed = 0;
                             $GainedForce = 0;
@@ -908,6 +909,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                         }
                         if(isset($AtkShipsTypes[$TShip]) && $AtkShipsTypes[$TShip] > 0)
                         {
+                            $TShipTotalCount = 0;
                             $TotalForceNeed = 0;
                             $TotalShootsNeed = 0;
                             $GainedForce = 0;
