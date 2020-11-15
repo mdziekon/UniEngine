@@ -13,6 +13,7 @@
 
 include($_EnginePath . 'includes/ares/initializers.php');
 include($_EnginePath . 'includes/ares/calculations.php');
+include($_EnginePath . 'includes/ares/distributions.php');
 
 use UniEngine\Engine\Includes\Ares;
 
@@ -239,8 +240,11 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
             $AUser = $Temp[1];
             $AShip = $Temp[0];
             $ACount_Copy = $AtkShipsTypesCount[$AShip][$AUser];
-            $AssignmentCalc = false;
-            $AShipsAssign = false;
+
+            $shotsDistribution = [
+                'calculatedForTypeId' => [],
+                'distributionByTargetFullKey' => [],
+            ];
 
             // -----------------------
             // Calculate Regular Fire!
@@ -250,47 +254,35 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 $TShip = $Temp[0];
                 $TUser = $Temp[1];
 
-                // Here calculating, if it's ACS and more than one user have this ShipType
-                if($DefShipsTypes[$TShip] > 1 && !isset($AssignmentCalc[$TShip]))
-                {
-                    $TShipTotalCount = 0;
-                    $TShipKeys = false;
-                    foreach($DefShipsTypesOwners[$TShip] as $Owner => $NotImportant)
-                    {
-                        $ThisKey = "{$TShip}|{$Owner}";
-                        $CalcCount = ($DefShipsTypesCount[$TShip][$Owner] - (isset($AlreadyDestroyedDef[$ThisKey]) ? $AlreadyDestroyedDef[$ThisKey] : 0));
-                        $TShipKeys[$ThisKey] = $CalcCount;
-                        $TShipTotalCount += $CalcCount;
-                    }
-                    $ACount_Temp = $ACount_Copy;
-                    foreach($TShipKeys as $Key => $Count)
-                    {
-                        $Count = floor(($Count/$TShipTotalCount) * $ACount_Copy);
-                        $ACount_Temp -= $Count;
-                        $AShipsAssign[$Key] = $Count;
-                    }
-                    if($ACount_Temp > 0)
-                    {
-                        arsort($AShipsAssign);
-                        foreach($AShipsAssign as $Key => &$Data)
-                        {
-                            $Data += $ACount_Temp;
-                            break;
-                        }
-                    }
-                    $AssignmentCalc[$TShip] = true;
+                // When there is more than one defender with the same type of ship,
+                // try to distribute the shots proportionally.
+                if (
+                    $DefShipsTypes[$TShip] > 1 &&
+                    !isset($shotsDistribution['calculatedForTypeId'][$TShip])
+                ) {
+                    $thisTargetShotsDistribution = Ares\Distributions\distributeShots([
+                        'targetShipId' => $TShip,
+                        'targetShipsOwners' => $DefShipsTypesOwners,
+                        'targetInitialShipsTable' => $DefShipsTypesCount,
+                        'targetAlreadyDestroyedShipsTable' => $AlreadyDestroyedDef,
+                        'shotsCount' => $ACount_Copy,
+                    ]);
+
+                    $shotsDistribution['distributionByTargetFullKey'] = array_merge(
+                        $shotsDistribution['distributionByTargetFullKey'],
+                        $thisTargetShotsDistribution
+                    );
+
+                    $shotsDistribution['calculatedForTypeId'][$TShip] = true;
                 }
 
-                if($DefShipsTypes[$TShip] > 1)
-                {
-                    $ACount = $AShipsAssign[$TKey];
-                }
-                else
-                {
+                if ($DefShipsTypes[$TShip] > 1) {
+                    $ACount = $shotsDistribution['distributionByTargetFullKey'][$TKey];
+                } else {
                     $ACount = $ACount_Copy;
                 }
-                if($ACount == 0)
-                {
+
+                if ($ACount == 0) {
                     continue;
                 }
 
@@ -441,25 +433,24 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                         }
                         if(isset($DefShipsTypes[$TShip]) && $DefShipsTypes[$TShip] > 0)
                         {
-                            $TShipTotalCount = 0;
                             $TotalForceNeed = 0;
                             $TotalShootsNeed = 0;
                             $GainedForce = 0;
                             $GainedShoots = 0;
-                            $AShipsAssign = false;
                             $RapidForce4Shield = false;
                             $RapidForce4Hull = false;
                             $RapidForceMinShoots = false;
+
+                            $shotsDistribution = [
+                                'calculatedForTypeId' => [],
+                                'distributionByTargetFullKey' => [],
+                            ];
 
                             foreach($DefShipsTypesOwners[$TShip] as $Owner => $NotImportant)
                             {
                                 $ThisKey = "{$TShip}|{$Owner}";
                                 $CalcCount = ($DefShipsTypesCount[$TShip][$Owner] - (isset($AlreadyDestroyedDef[$ThisKey]) ? $AlreadyDestroyedDef[$ThisKey] : 0));
-                                if($DefShipsTypes[$TShip] > 1)
-                                {
-                                    $TShipKeys[$ThisKey] = $CalcCount;
-                                    $TShipTotalCount += $CalcCount;
-                                }
+
                                 if(isset($DefShields[$ThisKey]['left']) && $DefShields[$ThisKey]['left'] === true)
                                 {
                                     $Force2TDShield = $DefShields[$ThisKey]['shield'];
@@ -520,24 +511,19 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 
                             if($GainedShoots > 0)
                             {
-                                if($DefShipsTypes[$TShip] > 1)
-                                {
-                                    $ACount_Temp = $GainedShoots;
-                                    foreach($TShipKeys as $Key => $Count)
-                                    {
-                                        $Count = floor(($Count/$TShipTotalCount) * $GainedShoots);
-                                        $ACount_Temp -= $Count;
-                                        $AShipsAssign[$Key] = $Count;
-                                    }
-                                    if($ACount_Temp > 0)
-                                    {
-                                        arsort($AShipsAssign);
-                                        foreach($AShipsAssign as $Key => &$Data)
-                                        {
-                                            $Data += $ACount_Temp;
-                                            break;
-                                        }
-                                    }
+                                if ($DefShipsTypes[$TShip] > 1) {
+                                    $thisTargetShotsDistribution = Ares\Distributions\distributeShots([
+                                        'targetShipId' => $TShip,
+                                        'targetShipsOwners' => $DefShipsTypesOwners,
+                                        'targetInitialShipsTable' => $DefShipsTypesCount,
+                                        'targetAlreadyDestroyedShipsTable' => $AlreadyDestroyedDef,
+                                        'shotsCount' => $GainedShoots,
+                                    ]);
+
+                                    $shotsDistribution['distributionByTargetFullKey'] = array_merge(
+                                        $shotsDistribution['distributionByTargetFullKey'],
+                                        $thisTargetShotsDistribution
+                                    );
                                 }
 
                                 foreach($DefShipsTypesOwners[$TShip] as $Owner => $NotImportant)
@@ -547,7 +533,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 
                                     if($DefShipsTypes[$TShip] > 1)
                                     {
-                                        $ACount = $AShipsAssign[$TKey];
+                                        $ACount = $shotsDistribution['distributionByTargetFullKey'][$TKey];
                                     }
                                     else
                                     {
@@ -707,8 +693,11 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
             $AUser = $Temp[1];
             $AShip = $Temp[0];
             $ACount_Copy = $DefShipsTypesCount[$AShip][$AUser];
-            $AssignmentCalc = false;
-            $AShipsAssign = false;
+
+            $shotsDistribution = [
+                'calculatedForTypeId' => [],
+                'distributionByTargetFullKey' => [],
+            ];
 
             // -----------------------
             // Calculate Regular Fire!
@@ -718,47 +707,35 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 $TShip = $Temp[0];
                 $TUser = $Temp[1];
 
-                // Here calculating, if it's ACS and more than one user have this ShipType
-                if($AtkShipsTypes[$TShip] > 1 && !isset($AssignmentCalc[$TShip]))
-                {
-                    $TShipTotalCount = 0;
-                    $TShipKeys = false;
-                    foreach($AtkShipsTypesOwners[$TShip] as $Owner => $NotImportant)
-                    {
-                        $ThisKey = "{$TShip}|{$Owner}";
-                        $CalcCount = ($AtkShipsTypesCount[$TShip][$Owner] - (isset($AlreadyDestroyedAtk[$ThisKey]) ? $AlreadyDestroyedAtk[$ThisKey] : 0));
-                        $TShipKeys[$ThisKey] = $CalcCount;
-                        $TShipTotalCount += $CalcCount;
-                    }
-                    $ACount_Temp = $ACount_Copy;
-                    foreach($TShipKeys as $Key => $Count)
-                    {
-                        $Count = floor(($Count/$TShipTotalCount) * $ACount_Copy);
-                        $ACount_Temp -= $Count;
-                        $AShipsAssign[$Key] = $Count;
-                    }
-                    if($ACount_Temp > 0)
-                    {
-                        arsort($AShipsAssign);
-                        foreach($AShipsAssign as $Key => &$Data)
-                        {
-                            $Data += $ACount_Temp;
-                            break;
-                        }
-                    }
-                    $AssignmentCalc[$TShip] = true;
+                // When there is more than one defender with the same type of ship,
+                // try to distribute the shots proportionally.
+                if (
+                    $AtkShipsTypes[$TShip] > 1 &&
+                    !isset($shotsDistribution['calculatedForTypeId'][$TShip])
+                ) {
+                    $thisTargetShotsDistribution = Ares\Distributions\distributeShots([
+                        'targetShipId' => $TShip,
+                        'targetShipsOwners' => $AtkShipsTypesOwners,
+                        'targetInitialShipsTable' => $AtkShipsTypesCount,
+                        'targetAlreadyDestroyedShipsTable' => $AlreadyDestroyedAtk,
+                        'shotsCount' => $ACount_Copy,
+                    ]);
+
+                    $shotsDistribution['distributionByTargetFullKey'] = array_merge(
+                        $shotsDistribution['distributionByTargetFullKey'],
+                        $thisTargetShotsDistribution
+                    );
+
+                    $shotsDistribution['calculatedForTypeId'][$TShip] = true;
                 }
 
-                if($AtkShipsTypes[$TShip] > 1)
-                {
-                    $ACount = $AShipsAssign[$TKey];
-                }
-                else
-                {
+                if ($AtkShipsTypes[$TShip] > 1) {
+                    $ACount = $shotsDistribution['distributionByTargetFullKey'][$TKey];
+                } else {
                     $ACount = $ACount_Copy;
                 }
-                if($ACount == 0)
-                {
+
+                if ($ACount == 0) {
                     continue;
                 }
 
@@ -909,25 +886,24 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                         }
                         if(isset($AtkShipsTypes[$TShip]) && $AtkShipsTypes[$TShip] > 0)
                         {
-                            $TShipTotalCount = 0;
                             $TotalForceNeed = 0;
                             $TotalShootsNeed = 0;
                             $GainedForce = 0;
                             $GainedShoots = 0;
-                            $AShipsAssign = false;
                             $RapidForce4Shield = false;
                             $RapidForce4Hull = false;
                             $RapidForceMinShoots = false;
+
+                            $shotsDistribution = [
+                                'calculatedForTypeId' => [],
+                                'distributionByTargetFullKey' => [],
+                            ];
 
                             foreach($AtkShipsTypesOwners[$TShip] as $Owner => $NotImportant)
                             {
                                 $ThisKey = "{$TShip}|{$Owner}";
                                 $CalcCount = ($AtkShipsTypesCount[$TShip][$Owner] - (isset($AlreadyDestroyedAtk[$ThisKey]) ? $AlreadyDestroyedAtk[$ThisKey] : 0));
-                                if($AtkShipsTypes[$TShip] > 1)
-                                {
-                                    $TShipKeys[$ThisKey] = $CalcCount;
-                                    $TShipTotalCount += $CalcCount;
-                                }
+
                                 if(isset($AtkShields[$ThisKey]['left']) && $AtkShields[$ThisKey]['left'] === true)
                                 {
                                     $Force2TDShield = $AtkShields[$ThisKey]['shield'];
@@ -988,24 +964,19 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 
                             if($GainedShoots > 0)
                             {
-                                if($AtkShipsTypes[$TShip] > 1)
-                                {
-                                    $ACount_Temp = $GainedShoots;
-                                    foreach($TShipKeys as $Key => $Count)
-                                    {
-                                        $Count = floor(($Count/$TShipTotalCount) * $GainedShoots);
-                                        $ACount_Temp -= $Count;
-                                        $AShipsAssign[$Key] = $Count;
-                                    }
-                                    if($ACount_Temp > 0)
-                                    {
-                                        arsort($AShipsAssign);
-                                        foreach($AShipsAssign as $Key => &$Data)
-                                        {
-                                            $Data += $ACount_Temp;
-                                            break;
-                                        }
-                                    }
+                                if ($AtkShipsTypes[$TShip] > 1) {
+                                    $thisTargetShotsDistribution = Ares\Distributions\distributeShots([
+                                        'targetShipId' => $TShip,
+                                        'targetShipsOwners' => $AtkShipsTypesOwners,
+                                        'targetInitialShipsTable' => $AtkShipsTypesCount,
+                                        'targetAlreadyDestroyedShipsTable' => $AlreadyDestroyedAtk,
+                                        'shotsCount' => $GainedShoots,
+                                    ]);
+
+                                    $shotsDistribution['distributionByTargetFullKey'] = array_merge(
+                                        $shotsDistribution['distributionByTargetFullKey'],
+                                        $thisTargetShotsDistribution
+                                    );
                                 }
 
                                 foreach($AtkShipsTypesOwners[$TShip] as $Owner => $NotImportant)
@@ -1015,7 +986,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 
                                     if($AtkShipsTypes[$TShip] > 1)
                                     {
-                                        $ACount = $AShipsAssign[$TKey];
+                                        $ACount = $shotsDistribution['distributionByTargetFullKey'][$TKey];
                                     }
                                     else
                                     {
