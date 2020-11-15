@@ -14,6 +14,7 @@
 include($_EnginePath . 'includes/ares/initializers.php');
 include($_EnginePath . 'includes/ares/calculations.php');
 include($_EnginePath . 'includes/ares/distributions.php');
+include($_EnginePath . 'includes/ares/evaluators.php');
 
 use UniEngine\Engine\Includes\Ares;
 
@@ -287,8 +288,12 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 }
 
                 // Here calculating firing
-                if($AForce >= ($DefShipsShield[$TKey] * 0.01))
-                {
+                if (
+                    !Ares\Evaluators\isShieldImpenetrable([
+                        'shotForce' => $AForce,
+                        'targetShipShield' => $DefShipsShield[$TKey],
+                    ])
+                ) {
                     $AvailableForce = $AForce * $ACount;
                     $Force2TDShield = 0;
                     if(($AForce * 0.01) < $DefShipsShield[$TKey])
@@ -545,8 +550,12 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                                     }
 
                                     // Here calculating firing
-                                    if($AForce >= ($DefShipsShield[$TKey] * 0.01))
-                                    {
+                                    if (
+                                        !Ares\Evaluators\isShieldImpenetrable([
+                                            'shotForce' => $AForce,
+                                            'targetShipShield' => $DefShipsShield[$TKey],
+                                        ])
+                                    ) {
                                         $AvailableForce = $AForce * $ACount;
                                         $Force2TDShield = 0;
                                         if(($AForce * 0.01) < $DefShipsShield[$TKey])
@@ -740,8 +749,12 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 }
 
                 // Here calculating firing
-                if($AForce >= ($AtkShipsShield[$TKey] * 0.01))
-                {
+                if (
+                    !Ares\Evaluators\isShieldImpenetrable([
+                        'shotForce' => $AForce,
+                        'targetShipShield' => $AtkShipsShield[$TKey],
+                    ])
+                ) {
                     $AvailableForce = $AForce * $ACount;
                     $Force2TDShield = 0;
                     if(($AForce * 0.01) < $AtkShipsShield[$TKey])
@@ -998,8 +1011,12 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                                     }
 
                                     // Here calculating firing
-                                    if($AForce >= ($AtkShipsShield[$TKey] * 0.01))
-                                    {
+                                    if (
+                                        !Ares\Evaluators\isShieldImpenetrable([
+                                            'shotForce' => $AForce,
+                                            'targetShipShield' => $AtkShipsShield[$TKey],
+                                        ])
+                                    ) {
                                         $AvailableForce = $AForce * $ACount;
                                         $Force2TDShield = 0;
                                         if(($AForce * 0.01) < $AtkShipsShield[$TKey])
