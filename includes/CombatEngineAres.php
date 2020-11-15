@@ -535,16 +535,13 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                                     $TKey = "{$TShip}|{$Owner}";
                                     $TUser = $Owner;
 
-                                    if($DefShipsTypes[$TShip] > 1)
-                                    {
+                                    if ($DefShipsTypes[$TShip] > 1) {
                                         $ACount = $shotsDistribution['distributionByTargetFullKey'][$TKey];
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         $ACount = $GainedShoots;
                                     }
-                                    if($ACount == 0)
-                                    {
+
+                                    if ($ACount == 0) {
                                         continue;
                                     }
 
@@ -994,16 +991,13 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                                     $TKey = "{$TShip}|{$Owner}";
                                     $TUser = $Owner;
 
-                                    if($AtkShipsTypes[$TShip] > 1)
-                                    {
+                                    if ($AtkShipsTypes[$TShip] > 1) {
                                         $ACount = $shotsDistribution['distributionByTargetFullKey'][$TKey];
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         $ACount = $GainedShoots;
                                     }
-                                    if($ACount == 0)
-                                    {
+
+                                    if ($ACount == 0) {
                                         continue;
                                     }
 
