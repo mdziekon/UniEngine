@@ -124,7 +124,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                     'shipId' => $ID,
                     'userTechs' => &$AttackerTech[$User],
                 ]);
-                $AtkShipsShield[$UserShipKey] = Ares\Calculations\calculateShipHull([
+                $AtkShipsHull[$UserShipKey] = Ares\Calculations\calculateShipHull([
                     'shipId' => $ID,
                     'userTechs' => &$AttackerTech[$User],
                 ]);
