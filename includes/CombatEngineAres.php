@@ -304,23 +304,28 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 
                 $AvailableForce = $AForce * $ACount;
                 $Force2TDShield = 0;
-                if(($AForce * 0.01) < $DefShipsShield[$TKey])
-                {
-                    if(isset($DefShields[$TKey]['left']) && $DefShields[$TKey]['left'] === true)
-                    {
+
+                $isShotBypassingShield = Ares\Evaluators\isShotBypassingShield([
+                    'shotForce' => $AForce,
+                    'targetShipShield' => $DefShipsShield[$TKey],
+                ]);
+
+                if (!$isShotBypassingShield) {
+                    if (
+                        isset($DefShields[$TKey]['left']) &&
+                        $DefShields[$TKey]['left'] === true
+                    ) {
                         $Force2TDShield = $DefShields[$TKey]['shield'];
-                    }
-                    else
-                    {
+                    } else {
                         $Force2TDShield = $DefShipsShield[$TKey] * $DefShipsTypesCount[$TShip][$TUser];
                     }
                 }
-                if($AvailableForce > $Force2TDShield)
-                {
-                    if(($AForce * 0.01) < $DefShipsShield[$TKey])
-                    {
+
+                if ($AvailableForce > $Force2TDShield) {
+                    if (!$isShotBypassingShield) {
                         $DefShields[$TKey] = array('left' => true, 'shield' => 0);
                     }
+
                     $LeftForce = $AvailableForce - $Force2TDShield;
                     if($ACount < ($DefShipsTypesCount[$TShip][$TUser] - (isset($AlreadyDestroyedDef[$TKey]) ? $AlreadyDestroyedDef[$TKey] : 0)))
                     {
@@ -561,23 +566,28 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 
                                     $AvailableForce = $AForce * $ACount;
                                     $Force2TDShield = 0;
-                                    if(($AForce * 0.01) < $DefShipsShield[$TKey])
-                                    {
-                                        if(isset($DefShields[$TKey]['left']) && $DefShields[$TKey]['left'] === true)
-                                        {
+
+                                    $isShotBypassingShield = Ares\Evaluators\isShotBypassingShield([
+                                        'shotForce' => $AForce,
+                                        'targetShipShield' => $DefShipsShield[$TKey],
+                                    ]);
+
+                                    if (!$isShotBypassingShield) {
+                                        if (
+                                            isset($DefShields[$TKey]['left']) &&
+                                            $DefShields[$TKey]['left'] === true
+                                        ) {
                                             $Force2TDShield = $DefShields[$TKey]['shield'];
-                                        }
-                                        else
-                                        {
+                                        } else {
                                             $Force2TDShield = $DefShipsShield[$TKey] * $DefShipsTypesCount[$TShip][$TUser];
                                         }
                                     }
-                                    if($AvailableForce > $Force2TDShield)
-                                    {
-                                        if(($AForce * 0.01) < $DefShipsShield[$TKey])
-                                        {
+
+                                    if ($AvailableForce > $Force2TDShield) {
+                                        if (!$isShotBypassingShield) {
                                             $DefShields[$TKey] = array('left' => true, 'shield' => 0);
                                         }
+
                                         $LeftForce = $AvailableForce - $Force2TDShield;
                                         if($ACount < ($DefShipsTypesCount[$TShip][$TUser] - (isset($AlreadyDestroyedDef[$TKey]) ? $AlreadyDestroyedDef[$TKey] : 0)))
                                         {
@@ -760,23 +770,28 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 
                 $AvailableForce = $AForce * $ACount;
                 $Force2TDShield = 0;
-                if(($AForce * 0.01) < $AtkShipsShield[$TKey])
-                {
-                    if(isset($AtkShields[$TKey]['left']) && $AtkShields[$TKey]['left'] === true)
-                    {
+
+                $isShotBypassingShield = Ares\Evaluators\isShotBypassingShield([
+                    'shotForce' => $AForce,
+                    'targetShipShield' => $AtkShipsShield[$TKey],
+                ]);
+
+                if (!$isShotBypassingShield) {
+                    if (
+                        isset($AtkShields[$TKey]['left']) &&
+                        $AtkShields[$TKey]['left'] === true
+                    ) {
                         $Force2TDShield = $AtkShields[$TKey]['shield'];
-                    }
-                    else
-                    {
+                    } else {
                         $Force2TDShield = $AtkShipsShield[$TKey] * $AtkShipsTypesCount[$TShip][$TUser];
                     }
                 }
-                if($AvailableForce > $Force2TDShield)
-                {
-                    if(($AForce * 0.01) < $AtkShipsShield[$TKey])
-                    {
+
+                if ($AvailableForce > $Force2TDShield) {
+                    if (!$isShotBypassingShield) {
                         $AtkShields[$TKey] = array('left' => true, 'shield' => 0);
                     }
+
                     $LeftForce = $AvailableForce - $Force2TDShield;
                     if($ACount < ($AtkShipsTypesCount[$TShip][$TUser] - (isset($AlreadyDestroyedAtk[$TKey]) ? $AlreadyDestroyedAtk[$TKey] : 0)))
                     {
@@ -1017,23 +1032,28 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 
                                     $AvailableForce = $AForce * $ACount;
                                     $Force2TDShield = 0;
-                                    if(($AForce * 0.01) < $AtkShipsShield[$TKey])
-                                    {
-                                        if(isset($AtkShields[$TKey]['left']) && $AtkShields[$TKey]['left'] === true)
-                                        {
+
+                                    $isShotBypassingShield = Ares\Evaluators\isShotBypassingShield([
+                                        'shotForce' => $AForce,
+                                        'targetShipShield' => $AtkShipsShield[$TKey],
+                                    ]);
+
+                                    if (!$isShotBypassingShield) {
+                                        if (
+                                            isset($AtkShields[$TKey]['left']) &&
+                                            $AtkShields[$TKey]['left'] === true
+                                        ) {
                                             $Force2TDShield = $AtkShields[$TKey]['shield'];
-                                        }
-                                        else
-                                        {
+                                        } else {
                                             $Force2TDShield = $AtkShipsShield[$TKey] * $AtkShipsTypesCount[$TShip][$TUser];
                                         }
                                     }
-                                    if($AvailableForce > $Force2TDShield)
-                                    {
-                                        if(($AForce * 0.01) < $AtkShipsShield[$TKey])
-                                        {
+
+                                    if ($AvailableForce > $Force2TDShield) {
+                                        if (!$isShotBypassingShield) {
                                             $AtkShields[$TKey] = array('left' => true, 'shield' => 0);
                                         }
+
                                         $LeftForce = $AvailableForce - $Force2TDShield;
                                         if($ACount < ($AtkShipsTypesCount[$TShip][$TUser] - (isset($AlreadyDestroyedAtk[$TKey]) ? $AlreadyDestroyedAtk[$TKey] : 0)))
                                         {
