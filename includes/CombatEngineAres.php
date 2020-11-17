@@ -453,7 +453,6 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 
                 $TotalForceNeed = 0;
                 $TotalShootsNeed = 0;
-                $GainedForce = 0;
                 $GainedShoots = 0;
                 $RapidForce4Shield = false;
                 $RapidForce4Hull = false;
@@ -927,7 +926,6 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 
                 $TotalForceNeed = 0;
                 $TotalShootsNeed = 0;
-                $GainedForce = 0;
                 $GainedShoots = 0;
                 $RapidForce4Shield = false;
                 $RapidForce4Hull = false;
