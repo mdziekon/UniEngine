@@ -320,14 +320,20 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                     $Rounds[$i]['atk']['force'] += $AvailableForce;
                     $Rounds[$i]['atk']['count'] += $ACount;
                     $Rounds[$i]['def']['shield'] += $AvailableForce;
-                    $DefShields[$TKey] = array('left' => true, 'shield' => $Force2TDShield - $AvailableForce);
+                    $DefShields[$TKey] = [
+                        'left' => true,
+                        'shield' => ($Force2TDShield - $AvailableForce),
+                    ];
                     $ACount_Copy -= $ACount;
 
                     continue;
                 }
 
                 if (!$isShotBypassingShield) {
-                    $DefShields[$TKey] = array('left' => true, 'shield' => 0);
+                    $DefShields[$TKey] = [
+                        'left' => true,
+                        'shield' => 0,
+                    ];
                 }
 
                 $LeftForce = $AvailableForce - $Force2TDShield;
@@ -587,13 +593,19 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                         $Rounds[$i]['atk']['force'] += $AvailableForce;
                         $Rounds[$i]['atk']['count'] += $ACount;
                         $Rounds[$i]['def']['shield'] += $AvailableForce;
-                        $DefShields[$TKey] = array('left' => true, 'shield' => $Force2TDShield - $AvailableForce);
+                        $DefShields[$TKey] = [
+                            'left' => true,
+                            'shield' => ($Force2TDShield - $AvailableForce),
+                        ];
 
                         continue;
                     }
 
                     if (!$isShotBypassingShield) {
-                        $DefShields[$TKey] = array('left' => true, 'shield' => 0);
+                        $DefShields[$TKey] = [
+                            'left' => true,
+                            'shield' => 0,
+                        ];
                     }
 
                     $LeftForce = $AvailableForce - $Force2TDShield;
@@ -784,14 +796,20 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                     $Rounds[$i]['def']['force'] += $AvailableForce;
                     $Rounds[$i]['def']['count'] += $ACount;
                     $Rounds[$i]['atk']['shield'] += $AvailableForce;
-                    $AtkShields[$TKey] = array('left' => true, 'shield' => $Force2TDShield - $AvailableForce);
+                    $AtkShields[$TKey] = [
+                        'left' => true,
+                        'shield' => ($Force2TDShield - $AvailableForce),
+                    ];
                     $ACount_Copy -= $ACount;
 
                     continue;
                 }
 
                 if (!$isShotBypassingShield) {
-                    $AtkShields[$TKey] = array('left' => true, 'shield' => 0);
+                    $AtkShields[$TKey] = [
+                        'left' => true,
+                        'shield' => 0,
+                    ];
                 }
 
                 $LeftForce = $AvailableForce - $Force2TDShield;
@@ -1051,13 +1069,19 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                         $Rounds[$i]['def']['force'] += $AvailableForce;
                         $Rounds[$i]['def']['count'] += $ACount;
                         $Rounds[$i]['atk']['shield'] += $AvailableForce;
-                        $AtkShields[$TKey] = array('left' => true, 'shield' => $Force2TDShield - $AvailableForce);
+                        $AtkShields[$TKey] = [
+                            'left' => true,
+                            'shield' => ($Force2TDShield - $AvailableForce),
+                        ];
 
                         continue;
                     }
 
                     if (!$isShotBypassingShield) {
-                        $AtkShields[$TKey] = array('left' => true, 'shield' => 0);
+                        $AtkShields[$TKey] = [
+                            'left' => true,
+                            'shield' => 0,
+                        ];
                     }
 
                     $LeftForce = $AvailableForce - $Force2TDShield;
