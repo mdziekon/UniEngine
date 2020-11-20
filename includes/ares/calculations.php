@@ -2,6 +2,8 @@
 
 namespace UniEngine\Engine\Includes\Ares\Calculations;
 
+use UniEngine\Engine\Includes\Ares;
+
 function calculateShipForce($params) {
     global $_Vars_CombatUpgrades, $_Vars_CombatData;
 
@@ -60,6 +62,45 @@ function calculateShipHull($params) {
         $baseHullValuesCache[$shipId] *
         $userTechs[111]
     );
+}
+
+function calculateShieldsTakeDownStats($params) {
+    $shotForce = $params['shotForce'];
+    $targetUserId = $params['targetUserId'];
+    $targetShipId = $params['targetShipId'];
+    $targetShipShield = $params['targetShipShield'];
+    $targetShipCount = $params['targetShipCount'];
+    $roundShieldStateCache = $params['roundShieldStateCacheByTargetKey'];
+
+    $targetKey = "{$targetShipId}|{$targetUserId}";
+
+    $isShotBypassingShield = Ares\Evaluators\isShotBypassingShield([
+        'shotForce' => $shotForce,
+        'targetShipShield' => $targetShipShield,
+    ]);
+
+    if ($isShotBypassingShield) {
+        return [
+            'forceNeeded' => 0,
+            'isShotBypassingShield' => true,
+        ];
+    }
+
+    $isTargetsShieldDamaged = (
+        isset($roundShieldStateCache[$targetKey]['left']) &&
+        $roundShieldStateCache[$targetKey]['left'] === true
+    );
+
+    $forceNeeded = (
+        $isTargetsShieldDamaged ?
+            $roundShieldStateCache[$targetKey]['shield'] :
+            ($targetShipShield * $targetShipCount)
+    );
+
+    return [
+        'forceNeeded' => $forceNeeded,
+        'isShotBypassingShield' => false,
+    ];
 }
 
 ?>
