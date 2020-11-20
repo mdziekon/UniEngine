@@ -303,23 +303,18 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 }
 
                 $AvailableForce = $AForce * $ACount;
-                $Force2TDShield = 0;
 
-                $isShotBypassingShield = Ares\Evaluators\isShotBypassingShield([
+                $shieldsTakeDownStats = Ares\Calculations\calculateShieldsTakeDownStats([
                     'shotForce' => $AForce,
+                    'targetUserId' => $TUser,
+                    'targetShipId' => $TShip,
                     'targetShipShield' => $DefShipsShield[$TKey],
+                    'targetShipCount' => $DefShipsTypesCount[$TShip][$TUser],
+                    'roundShieldStateCacheByTargetKey' => $DefShields,
                 ]);
 
-                if (!$isShotBypassingShield) {
-                    if (
-                        isset($DefShields[$TKey]['left']) &&
-                        $DefShields[$TKey]['left'] === true
-                    ) {
-                        $Force2TDShield = $DefShields[$TKey]['shield'];
-                    } else {
-                        $Force2TDShield = $DefShipsShield[$TKey] * $DefShipsTypesCount[$TShip][$TUser];
-                    }
-                }
+                $Force2TDShield = $shieldsTakeDownStats['forceNeeded'];
+                $isShotBypassingShield = $shieldsTakeDownStats['isShotBypassingShield'];
 
                 if ($AvailableForce <= $Force2TDShield) {
                     $Rounds[$i]['atk']['force'] += $AvailableForce;
@@ -575,23 +570,18 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                     }
 
                     $AvailableForce = $AForce * $ACount;
-                    $Force2TDShield = 0;
 
-                    $isShotBypassingShield = Ares\Evaluators\isShotBypassingShield([
+                    $shieldsTakeDownStats = Ares\Calculations\calculateShieldsTakeDownStats([
                         'shotForce' => $AForce,
+                        'targetUserId' => $TUser,
+                        'targetShipId' => $TShip,
                         'targetShipShield' => $DefShipsShield[$TKey],
+                        'targetShipCount' => $DefShipsTypesCount[$TShip][$TUser],
+                        'roundShieldStateCacheByTargetKey' => $DefShields,
                     ]);
 
-                    if (!$isShotBypassingShield) {
-                        if (
-                            isset($DefShields[$TKey]['left']) &&
-                            $DefShields[$TKey]['left'] === true
-                        ) {
-                            $Force2TDShield = $DefShields[$TKey]['shield'];
-                        } else {
-                            $Force2TDShield = $DefShipsShield[$TKey] * $DefShipsTypesCount[$TShip][$TUser];
-                        }
-                    }
+                    $Force2TDShield = $shieldsTakeDownStats['forceNeeded'];
+                    $isShotBypassingShield = $shieldsTakeDownStats['isShotBypassingShield'];
 
                     if ($AvailableForce <= $Force2TDShield) {
                         $Rounds[$i]['atk']['force'] += $AvailableForce;
@@ -777,23 +767,18 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 }
 
                 $AvailableForce = $AForce * $ACount;
-                $Force2TDShield = 0;
 
-                $isShotBypassingShield = Ares\Evaluators\isShotBypassingShield([
+                $shieldsTakeDownStats = Ares\Calculations\calculateShieldsTakeDownStats([
                     'shotForce' => $AForce,
+                    'targetUserId' => $TUser,
+                    'targetShipId' => $TShip,
                     'targetShipShield' => $AtkShipsShield[$TKey],
+                    'targetShipCount' => $AtkShipsTypesCount[$TShip][$TUser],
+                    'roundShieldStateCacheByTargetKey' => $AtkShields,
                 ]);
 
-                if (!$isShotBypassingShield) {
-                    if (
-                        isset($AtkShields[$TKey]['left']) &&
-                        $AtkShields[$TKey]['left'] === true
-                    ) {
-                        $Force2TDShield = $AtkShields[$TKey]['shield'];
-                    } else {
-                        $Force2TDShield = $AtkShipsShield[$TKey] * $AtkShipsTypesCount[$TShip][$TUser];
-                    }
-                }
+                $Force2TDShield = $shieldsTakeDownStats['forceNeeded'];
+                $isShotBypassingShield = $shieldsTakeDownStats['isShotBypassingShield'];
 
                 if ($AvailableForce <= $Force2TDShield) {
                     $Rounds[$i]['def']['force'] += $AvailableForce;
@@ -1049,23 +1034,18 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                     }
 
                     $AvailableForce = $AForce * $ACount;
-                    $Force2TDShield = 0;
 
-                    $isShotBypassingShield = Ares\Evaluators\isShotBypassingShield([
+                    $shieldsTakeDownStats = Ares\Calculations\calculateShieldsTakeDownStats([
                         'shotForce' => $AForce,
+                        'targetUserId' => $TUser,
+                        'targetShipId' => $TShip,
                         'targetShipShield' => $AtkShipsShield[$TKey],
+                        'targetShipCount' => $AtkShipsTypesCount[$TShip][$TUser],
+                        'roundShieldStateCacheByTargetKey' => $AtkShields,
                     ]);
 
-                    if (!$isShotBypassingShield) {
-                        if (
-                            isset($AtkShields[$TKey]['left']) &&
-                            $AtkShields[$TKey]['left'] === true
-                        ) {
-                            $Force2TDShield = $AtkShields[$TKey]['shield'];
-                        } else {
-                            $Force2TDShield = $AtkShipsShield[$TKey] * $AtkShipsTypesCount[$TShip][$TUser];
-                        }
-                    }
+                    $Force2TDShield = $shieldsTakeDownStats['forceNeeded'];
+                    $isShotBypassingShield = $shieldsTakeDownStats['isShotBypassingShield'];
 
                     if ($AvailableForce <= $Force2TDShield) {
                         $Rounds[$i]['def']['force'] += $AvailableForce;
