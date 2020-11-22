@@ -454,7 +454,6 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 $TotalForceNeed = 0;
                 $TotalShootsNeed = 0;
                 $GainedShoots = 0;
-                $RapidForce4Hull = false;
                 $RapidForceMinShoots = false;
 
                 $shotsDistribution = [
@@ -475,14 +474,17 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                         'roundShieldStateCacheByTargetKey' => $DefShields,
                     ])['forceNeeded'];
 
-                    $RapidForce4Hull[$Owner] = $CalcCount * $DefShipsHull[$ThisKey];
-                    if(isset($DefHullDmg[$ThisKey]))
-                    {
-                        $RapidForce4Hull[$Owner] -= $DefHullDmg[$ThisKey] * $DefShipsHull[$ThisKey];
-                    }
+                    $currentHullDamage = (
+                        isset($DefHullDmg[$ThisKey]) ?
+                            ($DefHullDmg[$ThisKey] * $DefShipsHull[$ThisKey]) :
+                            0
+                    );
+                    $currentTotalHull = ($CalcCount * $DefShipsHull[$ThisKey]);
+                    $forceToDestroyHull = ($currentTotalHull - $currentHullDamage);
+
                     $RapidForceMinShoots[$Owner] = $CalcCount;
 
-                    $TotalForceNeed += ($Force2TDShield + $RapidForce4Hull[$Owner]);
+                    $TotalForceNeed += ($Force2TDShield + $forceToDestroyHull);
                     $TotalShootsNeed += $RapidForceMinShoots[$Owner];
                 }
 
@@ -926,7 +928,6 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 $TotalForceNeed = 0;
                 $TotalShootsNeed = 0;
                 $GainedShoots = 0;
-                $RapidForce4Hull = false;
                 $RapidForceMinShoots = false;
 
                 $shotsDistribution = [
@@ -947,14 +948,17 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                         'roundShieldStateCacheByTargetKey' => $AtkShields,
                     ])['forceNeeded'];
 
-                    $RapidForce4Hull[$Owner] = $CalcCount * $AtkShipsHull[$ThisKey];
-                    if(isset($AtkHullDmg[$ThisKey]))
-                    {
-                        $RapidForce4Hull[$Owner] -= $AtkHullDmg[$ThisKey] * $AtkShipsHull[$ThisKey];
-                    }
+                    $currentHullDamage = (
+                        isset($AtkHullDmg[$ThisKey]) ?
+                            ($AtkHullDmg[$ThisKey] * $AtkShipsHull[$ThisKey]) :
+                            0
+                    );
+                    $currentTotalHull = ($CalcCount * $AtkShipsHull[$ThisKey]);
+                    $forceToDestroyHull = ($currentTotalHull - $currentHullDamage);
+
                     $RapidForceMinShoots[$Owner] = $CalcCount;
 
-                    $TotalForceNeed += ($Force2TDShield + $RapidForce4Hull[$Owner]);
+                    $TotalForceNeed += ($Force2TDShield + $forceToDestroyHull);
                     $TotalShootsNeed += $RapidForceMinShoots[$Owner];
                 }
 
