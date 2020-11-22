@@ -454,7 +454,6 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 $TotalForceNeed = 0;
                 $TotalShootsNeed = 0;
                 $GainedShoots = 0;
-                $RapidForce4Shield = false;
                 $RapidForce4Hull = false;
                 $RapidForceMinShoots = false;
 
@@ -476,7 +475,6 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                         'roundShieldStateCacheByTargetKey' => $DefShields,
                     ])['forceNeeded'];
 
-                    $RapidForce4Shield[$Owner] = $Force2TDShield;
                     $RapidForce4Hull[$Owner] = $CalcCount * $DefShipsHull[$ThisKey];
                     if(isset($DefHullDmg[$ThisKey]))
                     {
@@ -484,7 +482,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                     }
                     $RapidForceMinShoots[$Owner] = $CalcCount;
 
-                    $TotalForceNeed += ($RapidForce4Shield[$Owner] + $RapidForce4Hull[$Owner]);
+                    $TotalForceNeed += ($Force2TDShield + $RapidForce4Hull[$Owner]);
                     $TotalShootsNeed += $RapidForceMinShoots[$Owner];
                 }
 
@@ -928,7 +926,6 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 $TotalForceNeed = 0;
                 $TotalShootsNeed = 0;
                 $GainedShoots = 0;
-                $RapidForce4Shield = false;
                 $RapidForce4Hull = false;
                 $RapidForceMinShoots = false;
 
@@ -950,7 +947,6 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                         'roundShieldStateCacheByTargetKey' => $AtkShields,
                     ])['forceNeeded'];
 
-                    $RapidForce4Shield[$Owner] = $Force2TDShield;
                     $RapidForce4Hull[$Owner] = $CalcCount * $AtkShipsHull[$ThisKey];
                     if(isset($AtkHullDmg[$ThisKey]))
                     {
@@ -958,7 +954,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                     }
                     $RapidForceMinShoots[$Owner] = $CalcCount;
 
-                    $TotalForceNeed += ($RapidForce4Shield[$Owner] + $RapidForce4Hull[$Owner]);
+                    $TotalForceNeed += ($Force2TDShield + $RapidForce4Hull[$Owner]);
                     $TotalShootsNeed += $RapidForceMinShoots[$Owner];
                 }
 
