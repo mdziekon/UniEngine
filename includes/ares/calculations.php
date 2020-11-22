@@ -66,13 +66,10 @@ function calculateShipHull($params) {
 
 function calculateShieldsTakeDownStats($params) {
     $shotForce = $params['shotForce'];
-    $targetUserId = $params['targetUserId'];
-    $targetShipId = $params['targetShipId'];
+    $targetFullKey = $params['targetFullKey'];
     $targetShipShield = $params['targetShipShield'];
     $targetShipCount = $params['targetShipCount'];
     $roundShieldStateCache = $params['roundShieldStateCacheByTargetKey'];
-
-    $targetKey = "{$targetShipId}|{$targetUserId}";
 
     $isShotBypassingShield = Ares\Evaluators\isShotBypassingShield([
         'shotForce' => $shotForce,
@@ -87,13 +84,13 @@ function calculateShieldsTakeDownStats($params) {
     }
 
     $isTargetsShieldDamaged = (
-        isset($roundShieldStateCache[$targetKey]['left']) &&
-        $roundShieldStateCache[$targetKey]['left'] === true
+        isset($roundShieldStateCache[$targetFullKey]['left']) &&
+        $roundShieldStateCache[$targetFullKey]['left'] === true
     );
 
     $forceNeeded = (
         $isTargetsShieldDamaged ?
-            $roundShieldStateCache[$targetKey]['shield'] :
+            $roundShieldStateCache[$targetFullKey]['shield'] :
             ($targetShipShield * $targetShipCount)
     );
 

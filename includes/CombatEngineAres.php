@@ -306,8 +306,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 
                 $shieldsTakeDownStats = Ares\Calculations\calculateShieldsTakeDownStats([
                     'shotForce' => $AForce,
-                    'targetUserId' => $TUser,
-                    'targetShipId' => $TShip,
+                    'targetFullKey' => $TKey,
                     'targetShipShield' => $DefShipsShield[$TKey],
                     'targetShipCount' => $DefShipsTypesCount[$TShip][$TUser],
                     'roundShieldStateCacheByTargetKey' => $DefShields,
@@ -579,8 +578,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 
                     $shieldsTakeDownStats = Ares\Calculations\calculateShieldsTakeDownStats([
                         'shotForce' => $AForce,
-                        'targetUserId' => $TUser,
-                        'targetShipId' => $TShip,
+                        'targetFullKey' => $TKey,
                         'targetShipShield' => $DefShipsShield[$TKey],
                         'targetShipCount' => $DefShipsTypesCount[$TShip][$TUser],
                         'roundShieldStateCacheByTargetKey' => $DefShields,
@@ -782,8 +780,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 
                 $shieldsTakeDownStats = Ares\Calculations\calculateShieldsTakeDownStats([
                     'shotForce' => $AForce,
-                    'targetUserId' => $TUser,
-                    'targetShipId' => $TShip,
+                    'targetFullKey' => $TKey,
                     'targetShipShield' => $AtkShipsShield[$TKey],
                     'targetShipCount' => $AtkShipsTypesCount[$TShip][$TUser],
                     'roundShieldStateCacheByTargetKey' => $AtkShields,
@@ -1055,8 +1052,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
 
                     $shieldsTakeDownStats = Ares\Calculations\calculateShieldsTakeDownStats([
                         'shotForce' => $AForce,
-                        'targetUserId' => $TUser,
-                        'targetShipId' => $TShip,
+                        'targetFullKey' => $TKey,
                         'targetShipShield' => $AtkShipsShield[$TKey],
                         'targetShipCount' => $AtkShipsTypesCount[$TShip][$TUser],
                         'roundShieldStateCacheByTargetKey' => $AtkShields,
