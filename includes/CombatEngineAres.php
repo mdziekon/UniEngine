@@ -454,7 +454,6 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 $TotalForceNeed = 0;
                 $TotalShootsNeed = 0;
                 $GainedShoots = 0;
-                $RapidForceMinShoots = false;
 
                 $shotsDistribution = [
                     'calculatedForTypeId' => [],
@@ -482,10 +481,10 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                     $currentTotalHull = ($CalcCount * $DefShipsHull[$ThisKey]);
                     $forceToDestroyHull = ($currentTotalHull - $currentHullDamage);
 
-                    $RapidForceMinShoots[$Owner] = $CalcCount;
+                    $minimalShotsNeeded = $CalcCount;
 
                     $TotalForceNeed += ($Force2TDShield + $forceToDestroyHull);
-                    $TotalShootsNeed += $RapidForceMinShoots[$Owner];
+                    $TotalShootsNeed += $minimalShotsNeeded;
                 }
 
                 $TotalAvailableShoots = floor(($AtkShipsTypesCount[$AShip][$AUser] * $ShipsSD['a'][$AUser][$AShip][$TShip]) * (1 - (isset($AtkDontShootRF[$AKey]) ? $AtkDontShootRF[$AKey] : 0)));
@@ -928,7 +927,6 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                 $TotalForceNeed = 0;
                 $TotalShootsNeed = 0;
                 $GainedShoots = 0;
-                $RapidForceMinShoots = false;
 
                 $shotsDistribution = [
                     'calculatedForTypeId' => [],
@@ -956,10 +954,10 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                     $currentTotalHull = ($CalcCount * $AtkShipsHull[$ThisKey]);
                     $forceToDestroyHull = ($currentTotalHull - $currentHullDamage);
 
-                    $RapidForceMinShoots[$Owner] = $CalcCount;
+                    $minimalShotsNeeded = $CalcCount;
 
                     $TotalForceNeed += ($Force2TDShield + $forceToDestroyHull);
-                    $TotalShootsNeed += $RapidForceMinShoots[$Owner];
+                    $TotalShootsNeed += $minimalShotsNeeded;
                 }
 
                 $TotalAvailableShoots = floor(($DefShipsTypesCount[$AShip][$AUser] * $ShipsSD['d'][$AUser][$AShip][$TShip]) * (1 - (isset($DefDontShootRF[$AKey]) ? $DefDontShootRF[$AKey] : 0)));
