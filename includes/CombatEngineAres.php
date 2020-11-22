@@ -468,14 +468,14 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                     $ThisKey = "{$TShip}|{$Owner}";
                     $CalcCount = ($DefShipsTypesCount[$TShip][$Owner] - (isset($AlreadyDestroyedDef[$ThisKey]) ? $AlreadyDestroyedDef[$ThisKey] : 0));
 
-                    if(isset($DefShields[$ThisKey]['left']) && $DefShields[$ThisKey]['left'] === true)
-                    {
-                        $Force2TDShield = $DefShields[$ThisKey]['shield'];
-                    }
-                    else
-                    {
-                        $Force2TDShield = $DefShipsShield[$ThisKey] * $CalcCount;
-                    }
+                    $Force2TDShield = Ares\Calculations\calculateShieldsTakeDownStats([
+                        'shotForce' => 0,
+                        'targetFullKey' => $ThisKey,
+                        'targetShipShield' => $DefShipsShield[$ThisKey],
+                        'targetShipCount' => $CalcCount,
+                        'roundShieldStateCacheByTargetKey' => $DefShields,
+                    ])['forceNeeded'];
+
                     $RapidForce4Shield[$Owner] = $Force2TDShield;
                     $RapidForce4Hull[$Owner] = $CalcCount * $DefShipsHull[$ThisKey];
                     if(isset($DefHullDmg[$ThisKey]))
@@ -942,14 +942,14 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                     $ThisKey = "{$TShip}|{$Owner}";
                     $CalcCount = ($AtkShipsTypesCount[$TShip][$Owner] - (isset($AlreadyDestroyedAtk[$ThisKey]) ? $AlreadyDestroyedAtk[$ThisKey] : 0));
 
-                    if(isset($AtkShields[$ThisKey]['left']) && $AtkShields[$ThisKey]['left'] === true)
-                    {
-                        $Force2TDShield = $AtkShields[$ThisKey]['shield'];
-                    }
-                    else
-                    {
-                        $Force2TDShield = $AtkShipsShield[$ThisKey] * $CalcCount;
-                    }
+                    $Force2TDShield = Ares\Calculations\calculateShieldsTakeDownStats([
+                        'shotForce' => 0,
+                        'targetFullKey' => $ThisKey,
+                        'targetShipShield' => $AtkShipsShield[$ThisKey],
+                        'targetShipCount' => $CalcCount,
+                        'roundShieldStateCacheByTargetKey' => $AtkShields,
+                    ])['forceNeeded'];
+
                     $RapidForce4Shield[$Owner] = $Force2TDShield;
                     $RapidForce4Hull[$Owner] = $CalcCount * $AtkShipsHull[$ThisKey];
                     if(isset($AtkHullDmg[$ThisKey]))
