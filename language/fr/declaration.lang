@@ -1,5 +1,38 @@
 <?php
 
-include("{$_EnginePath}language/en/declaration.lang");
+$_Lang['Title']                             = 'Déclaration IP partagée';
+
+$_Lang['DeclarationInfo']                   = 'Saisissez les surnoms de tous les joueurs qui partagent un ordinateur, une adresse IP ou qui se connectent occasionnellement au jeu aux mêmes endroits que vous (par exemple, le réseau de votre domicile, la même école, le même lieu de travail). <br/> Séparé tous les surnoms utilisant des virgules. Vous n\'avez pas besoin d\' ajouter votre propre surnom.';
+
+$_Lang['DeclarationType']                   = 'Raison';
+$_Lang['OnePC']                             = 'Ordinateur Partagé';
+$_Lang['OneIP']                             = 'Connexion Réseau Partagée';
+$_Lang['SamePlaces']                        = 'MCOnnexion dans un même lieux (école, lieu de travail, etc.)';
+$_Lang['Others']                            = 'Autre (une explication est requise, envoyée directement à l\'Administration)';
+$_Lang['OccasionalLogons']                  = 'Connexions occasionnelles aux mêmes endroits (par exemple, visites du voisin)';
+
+$_Lang['SubmitDeclaration']                 = 'Soumettre la déclaration';
+
+$_Lang['Error_Empty_Userlist']              = 'La liste des surnoms est vide!';
+$_Lang['Error_Type_NotSelected']            = 'La raison n\'a pas été sélectionnée!';
+$_Lang['Error_Bad_DeclarationType']         = 'Raison invalide!';
+$_Lang['Error_BadUserlist_Sent']            = 'Liste de surnoms invalide!';
+$_Lang['Error_BadUsernames']                = 'À condition que les pseudonymes ne soient pas valides, ou que ces joueurs soient déjà répertoriés dans d\'autres déclarations:<br/>%s';
+$_Lang['Error_UsersNotFound']               = 'Les surnoms fournis n\'existent pas dans la base de données! <br/> Veuillez vérifier votre liste!';
+$_Lang['Error_OnlyUFound']                  = 'Vous devez fournir les surnoms des autres joueurs!';
+$_Lang['Error_DeclarationRejected']         = 'Votre dernière déclaration a été rejetée par l\'administration!';
+$_Lang['Error_DeclarationRejected_other']   = 'La dernière déclaration dont vous faisiez partie a été rejetée par l\'administration!';
+
+$_Lang['Msg_DeclarationRemoved']            = 'Déclaration révoquée!';
+$_Lang['Msg_DeclarationLeft']               = 'Vous avez laissé la déclaration!';
+
+$_Lang['Declaration_added']                 = 'La déclaration a été soumise! Veuillez attendre que quelqu\'un l\'examine!';
+$_Lang['Users_dont_exists']                 = 'Aucun des surnoms fournis n\'existe!';
+$_Lang['Cannot_add_second_declare']         = 'Vous ne pouvez pas ajouter une deuxième déclaration! <br/> Vous devez soumettre à nouveau votre déclaration précédente pour y ajouter ou en retirer quelqu\'un.<br/><br/><a href="?cmd=rmv">Révoquer la déclaration précédente</a>';
+$_Lang['Cannot_add_second_declare_other']   = 'Vous ne pouvez pas ajouter une deuxième déclaration! <br/> Vous devez quitter la déclaration actuelle pour soumettre la vôtre.<br/><br/><a href="?cmd=rmv">Quitter la déclaration</a>';
+$_Lang['Multi_validated']                   = '<b class="lime">Votre déclaration a été acceptée!</b><br/>Si vous souhaitez modifier quelque chose dans votre déclaration (ajouter ou supprimer un joueur), vous devez révoquer votre déclaration actuelle et en soumettre une nouvelle.<br/><br/><a href="?cmd=rmv">Révoquer la déclaration</a>';
+$_Lang['Multi_validated_other']             = '<b class="lime">La déclaration soumise par le joueur %s a été acceptée!</b><br/>Si vous souhaitez soumettre votre propre déclaration, vous pouvez laisser la déclaration actuelle en cliquant sur le lien ci-dessous.<br/><br/><a href="?cmd=rmv">Quitter la déclaration</a>';
+$_Lang['Declaration_awaiting']              = '<b class="orange">Votre déclaration attend toujours un examen!</b><br/>Si vous souhaitez apporter une correction, révoquez votre déclaration et soumettez-en une autre.<br/><br/><a href="?cmd=rmv">Révoquer la déclaration</a>';
+$_Lang['Declaration_awaiting_other']        = '<b class="orange">La déclaration soumise par le joueur %s est toujours en attente d\'examen!</b><br/>Si vous souhaitez soumettre votre propre déclaration, vous pouvez laisser la déclaration actuelle en cliquant sur le lien ci-dessous.<br/><br/><a href="?cmd=rmv">Quitter la déclaration</a>';
 
 ?>

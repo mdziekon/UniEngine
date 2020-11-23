@@ -1,5 +1,19 @@
 <?php
 
-include("{$_EnginePath}language/en/email_change.lang");
+$_Lang['Page_Title']                            = 'Mail du compte modifié';
+
+$_Lang['Info_havetobelogged']                   = 'Vous devez être connecté pour activer une nouvelle adresse e-mail!';
+$_Lang['Info_noenoughtdata']                    = 'Le lien semble invalide! Contactez l\'administration!';
+$_Lang['Info_baddata']                          = 'Le lien ne contient pas toutes les données requises! Contactez l\'administration!';
+$_Lang['Info_badkey']                           = 'La clé d\'activation n\'est pas valide! Veuillez contacter l\'administration!';
+$_Lang['Info_noactivePrc']                      = 'Le changement d\'e-mail n\'a pas été demandé sur ce compte!';
+$_Lang['Info_some1hasthisemail']                = 'Ce compte de messagerie est déjà utilisé! <br/> Si vous pensez qu\'il s\'agit d\'un vol d\'adresse e-mail, veuillez contacter l\'administration!';
+$_Lang['Info_newmail_notconfirmed']             = 'Vous ne pouvez pas terminer le processus d\'activation tant que la propriété de la nouvelle adresse e-mail n\'a pas été confirmée à l\'aide du lien d\'activation envoyé à la nouvelle adresse!';
+$_Lang['Info_7daysnotpassed']                   = 'La validation de l\'ancienne adresse e-mail n\'est pas encore disponible (vous devez attendre 7 jours à compter du début du processus de changement)!';
+$_Lang['Info_Hashnotcorrect']                   = 'La clé d\'activation n\'est pas valide! Veuillez contacter l\'administration!';
+$_Lang['Info_HashalreadyConfirmed']             = 'Cette clé d\'activation a déjà été confirmée!';
+$_Lang['Info_MailChangedCompletely']            = 'Le processus de changement d\'adresse e-mail est terminé!<br/>Votre compte utilise désormais la nouvelle adresse!';
+$_Lang['Info_MailChangePartComplete_OldHash']   = 'Votre ancienne adresse e-mail a été validée! <br/> Pour terminer le processus de changement d\'adresse e-mail, veuillez confirmer votre nouvelle adresse e-mail!';
+$_Lang['Info_MailChangePartComplete_NewHash']   = 'Votre nouvelle adresse e-mail a été validée! <br/> Pour terminer le processus de changement d\'adresse e-mail, veuillez confirmer votre ancienne adresse e-mail ou attendez les 7 prochains jours jusqu\'à ce qu\'une validation manuelle soit disponible dans la section "Aperçu"!';
 
 ?>

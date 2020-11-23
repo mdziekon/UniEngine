@@ -1,5 +1,12 @@
 <?php
 
-include("{$_EnginePath}language/en/destroy_rockets.lang");
+$_Lang['Title']             = 'Destruction de missiles';
+$_Lang['NoSilo']            = 'Il n\'y a pas de silo sur cette planète!';
+$_Lang['BadCountGiven']     = 'Quantité de missiles non valide fournie!';
+$_Lang['NothingDestroyed']  = 'Aucun missile n\'a été détruit!';
+$_Lang['RocketsDestroyed']  = (
+    'Détruit<br/>Anti-missiles (<b class="orange">%s</b>) et missiles interplanétaires (<b class="orange">%s</b>)<br/>' .
+    'sur la planète "%s" [%s:%s:%s]!'
+);
 
 ?>
