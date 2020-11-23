@@ -1,5 +1,21 @@
 <?php
 
-include("{$_EnginePath}language/en/reftable.lang");
+$_Lang['Table_Title']            = 'Parrainage';
+$_Lang['reftable']               = 'Parrainage';
+
+$_Lang['reftable_desc']          = 'Cette page représente l\'état actuel de vos parrainage.';
+
+$_Lang['referring_info']         = 'Lorsque vous parrainez notre jeu vers un nouveau joueur en utilisant votre lien de parrainage, il sera ajouté à la liste ci-dessous. <br/> Dès que le joueur achètera Dark Energy, vous recevrez une commission sur cette transaction. <Br/> <br/> Actuellement, le taux de commission est égal à <b class = "lime">%s%%</b> de chaque Dark Energy achetée.';
+
+$_Lang['your_referral_link_is']  = 'Votre lien de parrainage:';
+
+$_Lang['Who']                    = 'Nom d\'utilisateur du joueur';
+$_Lang['Date']                   = 'Date de création du compte';
+$_Lang['Provisions_Granted']     = 'Somme de toutes les commissions';
+
+$_Lang['DEUnits']                = 'Unités d\'énergie noire';
+$_Lang['UserDeleted']            = 'Joueur supprimé';
+
+$_Lang['referred_noone']         = 'Vous n\'avez pas encore invité d\' amis!';
 
 ?>

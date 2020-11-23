@@ -1,5 +1,18 @@
 <?php
 
-include("{$_EnginePath}language/en/records.lang");
+$_Lang['rec_title']      = 'Statistiques du serveur';
+
+$_Lang['rec_build']      = 'Bâtiments';
+$_Lang['rec_specb']      = 'Bâtiments Spéciaux';
+$_Lang['rec_techn']      = 'Technologies';
+$_Lang['rec_fleet']      = 'Flottes';
+$_Lang['rec_defes']      = 'Défenses';
+
+$_Lang['rec_playe']      = 'Joueur';
+$_Lang['rec_level']      = 'Niveau';
+$_Lang['rec_nbre']       = 'Montant';
+$_Lang['rec_rien']       = '-';
+
+$_Lang['last_count_was'] = 'Dernier calcul';
 
 ?>

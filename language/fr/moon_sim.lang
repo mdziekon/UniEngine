@@ -1,5 +1,17 @@
 <?php
 
-include("{$_EnginePath}language/en/moon_sim.lang");
+$_Lang['Title']                  = 'Simulateur de destruction lunaire';
+
+$_Lang['Table1_Diameter']        = 'Diamètre de la lune (km)';
+$_Lang['Table1_ShipCount']       = 'Nombres d\'Etoile de la Mort';
+$_Lang['Table1_Simulate']        = 'Simuler';
+$_Lang['Table2_Result']          = 'Résultats de la simulation';
+$_Lang['Table2_Diameter']        = 'Diamètre de la lune';
+$_Lang['Table2_MoonChance']      = 'Chance de destruction de la lune';
+$_Lang['Table2_FleetChance']     = 'Chance de destruction de la flotte';
+$_Lang['Table2_Km']              = 'km';
+
+$_Lang['Error_BadDataGiven']     = 'Données non valides fournies!';
+$_Lang['Error_DiameterTooBig']   = 'Le diamètre de la lune ne peut pas dépasser 10000 km';
 
 ?>

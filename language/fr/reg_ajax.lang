@@ -1,5 +1,30 @@
 <?php
 
-include("{$_EnginePath}language/en/reg_ajax.lang");
+// FIXME: make this configurable
+$_Lang['RegMail_UniName'] = 'Uni 1';
+
+$_Lang['mail_title'] = $_GameConfig['game_name'].' - Inscription';
+
+$_Lang['mail_text'] = '';
+$_Lang['mail_text'] .= 'Bienvenue {login},<br/>merci pour vous être inscrit <a href="'.GAMEURL_STRICT.'">'.$_GameConfig['game_name'].'</a><br /><br />';
+$_Lang['mail_text'] .= '<b>Votre lien d\'activation:</b> {activationlink}<br/><br/>';
+$_Lang['mail_text'] .= '<b>Détails de votre compte</b><br/>';
+$_Lang['mail_text'] .= '<ul>';
+$_Lang['mail_text'] .= '<li><b>Univers</b>: {Universe}</li>';
+$_Lang['mail_text'] .= '<li><b>Nom d\'utilisateur</b>: {login}</li>';
+$_Lang['mail_text'] .= '<li><b>Mot de passe:</b> {password}</li>';
+$_Lang['mail_text'] .= '<li><b>Lien de parrainage:</b> {UserRefLink}</li>';
+$_Lang['mail_text'] .= '</ul><br/><br/>';
+$_Lang['mail_text'] .= 'L\'équipe de '.$_GameConfig['game_name'].' vous souhaite le meilleur pour votre voyage!';
+
+$_Lang['mail_template'] = '';
+$_Lang['mail_template'] .= '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
+$_Lang['mail_template'] .= '<html><head>';
+$_Lang['mail_template'] .= '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">';
+$_Lang['mail_template'] .= '</head><body>';
+$_Lang['mail_template'] .= $_Lang['mail_text'];
+$_Lang['mail_template'] .= '</body></html>';
+
+$_Lang['MotherPlanet'] = 'Planète Mère';
 
 ?>

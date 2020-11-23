@@ -1,5 +1,29 @@
 <?php
 
-include("{$_EnginePath}language/en/resources.lang");
+$_Lang['Resources']                                  = 'Ressources';
+$_Lang['Production_of_resources_in_the_planet']      = 'Production de ressources sur %s';
+$_Lang['Production_level_t']                         = 'Facteur d\'efficacité';
+$_Lang['Basic_income']                               = 'Revenu de base';
+$_Lang['quantity']                                   = 'Compter';
+$_Lang['level']                                      = 'Niveau';
+$_Lang['Stores_capacity']                            = 'Capacité de stockage';
+$_Lang['Widespread_production']                      = 'Production à long terme';
+$_Lang['Daily']                                      = 'Journalier';
+$_Lang['Weekly']                                     = 'Hebdomadaire';
+$_Lang['Monthly']                                    = 'Mensuel';
+$_Lang['Storage_state']                              = 'Charge de stockage';
+$_Lang['Calcule']                                    = 'Recalculer';
+$_Lang['k']                                          = 'k';
+$_Lang['Total']                                      = 'Total';
+$_Lang['MineUsage']                                  = 'Production';
+
+$_Lang['NeedenTransporters']                         = 'Les navires de charge nécessaires pour transporter toutes les ressources de';
+$_Lang['Needen']                                     = 'Nécessaire';
+$_Lang['YouHave']                                    = 'Disponible';
+$_Lang['Missing']                                    = 'Manquant';
+$_Lang['no_need_more_transporters']                  = '0';
+
+$_Lang['Res_SetThisUsage2All']                       = 'Définissez les mêmes facteurs de production sur toutes les planètes';
+$_Lang['Res_GeologistBonus']                         = 'Bonus de production de <a href="officers.php" class="skyblue">Géologiste</a>';
 
 ?>

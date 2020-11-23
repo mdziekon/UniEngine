@@ -1,5 +1,26 @@
 <?php
 
-include("{$_EnginePath}language/en/sfbInfos.lang");
+$_Lang['sfb_Title']                          = 'Blocus des flottes intelligentes';
+$_Lang['sfb_GlobalText']                     = 'Actuellement, cet univers a un <b class = "red"> blocus de la flotte </b> activé, qui restera actif jusqu\'à <b class = "orange">%s</b>, <b class = " orange ">%s</b>. <br/> Ce blocus couvre %s. Plus d\'informations peuvent être trouvées ici<a href="redirect.php?id=5" target="_blank"><u>Liens</u></a><br/>Raison du blocus: %s';
+$_Lang['sfb_Mission_All']                    = '<b class="skyblue">toutes les missions de la flotte</b>';
+$_Lang['sfb_Mission_Aggresive']              = '<b class="skyblue">toutes les missions de flotte agressive</b>';
+$_Lang['sfb_Mission_Civil']                  = '<b class="skyblue">toutes les missions de la flotte civile</b>';
+$_Lang['sfb_Mission_Other']                  = 'les missions de flotte suivantes:<b class="skyblue">%s</b>';
+$_Lang['sfb_Mission_DontBlockIdle']          = ' (ce blocus ne protège pas<b class="skyblue"> les joueurs inactifs</b>)';
+$_Lang['sfb_Mission_AggresiveDontBlockIdle'] = ' (vols agressifs vers<b class="skyblue">les joueurs inactifs</b> ne sont pas bloqués)';
+$_Lang['sfb_NoReason']                       = '- aucune raison fournie -';
+
+// FIXME: get this from a shared lang file
+$_Lang['sfb_Mission__1']     = 'Attaque';
+$_Lang['sfb_Mission__2']     = 'Attaque unie';
+$_Lang['sfb_Mission__3']     = 'Transport';
+$_Lang['sfb_Mission__4']     = 'Rester';
+$_Lang['sfb_Mission__5']     = 'Tenir';
+$_Lang['sfb_Mission__6']     = 'Espion';
+$_Lang['sfb_Mission__7']     = 'Coloniser';
+$_Lang['sfb_Mission__8']     = 'Récolte';
+$_Lang['sfb_Mission__9']     = 'Détruire';
+$_Lang['sfb_Mission__10']    = 'Frappe interplanétaire';
+$_Lang['sfb_Mission__15']    = 'Expédition';
 
 ?>

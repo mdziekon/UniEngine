@@ -1,5 +1,38 @@
 <?php
 
-include("{$_EnginePath}language/en/stat.lang");
+$_Lang['stat_title']             = "Statistiques du serveur";
+$_Lang['stat_header_txt']        = 'Statistiques calculées sur';
+$_Lang['stat_show']              = "Montrer";
+$_Lang['stat_by']                = "which have";
+$_Lang['stat_range']             = "au rang";
+
+$_Lang['stat_player']            = "joueurs";
+$_Lang['stat_allys']             = "alliances";
+$_Lang['stat_main']              = "points";
+$_Lang['stat_fleet']             = "points de flottes";
+$_Lang['stat_research']          = "points de recherches";
+$_Lang['stat_building']          = "points de bâtiments";
+$_Lang['stat_defenses']          = "points de défenses";
+
+$_Lang['Position']               = "Non.";
+$_Lang['Difference']             = "+/-";
+$_Lang['Player']                 = "Joueur";
+$_Lang['Alliance']               = "Alliance";
+$_Lang['Points']                 = "Points";
+$_Lang['Members']                = "Membres";
+$_Lang['PerMember']              = "Par membre";
+$_Lang['Ecrire']                 = "Ecrire un message";
+
+$_Lang['Fight_Won']              = 'Gagné';
+$_Lang['Fight_Lost']             = 'Perdu';
+$_Lang['Fight_Draw']             = 'Egalité';
+
+$_Lang['User_is_banned']         = 'Le joueur est banni!';
+$_Lang['User_is_on_vacations']   = 'Le joueur est en vacances';
+
+$_Lang['QuickChangeInfo']        = 'Changement de position depuis <b> le dernier recalcul des statistiques</b>';
+$_Lang['DailyChangeInfo']        = 'Changement de position depuis <b> hier</b>';
+
+$_Lang['No_Rows_Found']          = 'Les statistiques du serveur ne sont pas encore calculées!';
 
 ?>
