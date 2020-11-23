@@ -415,16 +415,14 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                     }
                     unset($DefShipsTypesOwners[$TShip][$TUser]);
                     $DefShipsTypes[$TShip] -= 1;
-                } else {
-                    if($Destroyed > 0)
-                    {
-                        if(!isset($AlreadyDestroyedDef[$TKey]))
-                        {
-                            $AlreadyDestroyedDef[$TKey] = 0;
-                        }
-                        $AlreadyDestroyedDef[$TKey] += $Destroyed;
+                } else if ($Destroyed > 0) {
+                    if (!isset($AlreadyDestroyedDef[$TKey])) {
+                        $AlreadyDestroyedDef[$TKey] = 0;
                     }
+
+                    $AlreadyDestroyedDef[$TKey] += $Destroyed;
                 }
+
                 $ACount_Copy -= $Shoots;
             }
 
@@ -685,15 +683,12 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                         }
                         unset($DefShipsTypesOwners[$TShip][$TUser]);
                         $DefShipsTypes[$TShip] -= 1;
-                    } else {
-                        if($Destroyed > 0)
-                        {
-                            if(!isset($AlreadyDestroyedDef[$TKey]))
-                            {
-                                $AlreadyDestroyedDef[$TKey] = 0;
-                            }
-                            $AlreadyDestroyedDef[$TKey] += $Destroyed;
+                    } else if ($Destroyed > 0) {
+                        if (!isset($AlreadyDestroyedDef[$TKey])) {
+                            $AlreadyDestroyedDef[$TKey] = 0;
                         }
+
+                        $AlreadyDestroyedDef[$TKey] += $Destroyed;
                     }
                 }
             }
@@ -888,16 +883,14 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                     }
                     unset($AtkShipsTypesOwners[$TShip][$TUser]);
                     $AtkShipsTypes[$TShip] -= 1;
-                } else {
-                    if($Destroyed > 0)
-                    {
-                        if(!isset($AlreadyDestroyedAtk[$TKey]))
-                        {
-                            $AlreadyDestroyedAtk[$TKey] = 0;
-                        }
-                        $AlreadyDestroyedAtk[$TKey] += $Destroyed;
+                } else if ($Destroyed > 0) {
+                    if (!isset($AlreadyDestroyedAtk[$TKey])) {
+                        $AlreadyDestroyedAtk[$TKey] = 0;
                     }
+
+                    $AlreadyDestroyedAtk[$TKey] += $Destroyed;
                 }
+
                 $ACount_Copy -= $Shoots;
             }
 
@@ -1158,15 +1151,12 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                         }
                         unset($AtkShipsTypesOwners[$TShip][$TUser]);
                         $AtkShipsTypes[$TShip] -= 1;
-                    } else {
-                        if($Destroyed > 0)
-                        {
-                            if(!isset($AlreadyDestroyedAtk[$TKey]))
-                            {
-                                $AlreadyDestroyedAtk[$TKey] = 0;
-                            }
-                            $AlreadyDestroyedAtk[$TKey] += $Destroyed;
+                    } else if ($Destroyed > 0) {
+                        if (!isset($AlreadyDestroyedAtk[$TKey])) {
+                            $AlreadyDestroyedAtk[$TKey] = 0;
                         }
+
+                        $AlreadyDestroyedAtk[$TKey] += $Destroyed;
                     }
                 }
             }
