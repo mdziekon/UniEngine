@@ -1147,7 +1147,7 @@ function Combat($Attacker, $Defender, $AttackerTech, $DefenderTech, $UseRapidFir
                     $ForceContribution['def'][$AUser] += $UsedForce;
                     $ShotDown['def']['d'][$AUser][$TShip] += $Destroyed;
                     $ShotDown['atk']['l'][$TUser][$TShip] += $Destroyed;
-                    if($Destroyed == ($AtkShipsTypesCount[$TShip][$TUser] - (isset($AlreadyDestroyedAtk[$TKey]) ? $AlreadyDestroyedAtk[$ThisKey] : 0)))
+                    if($Destroyed == ($AtkShipsTypesCount[$TShip][$TUser] - (isset($AlreadyDestroyedAtk[$TKey]) ? $AlreadyDestroyedAtk[$TKey] : 0)))
                     {
                         unset($AtkShipsForce_Copy[$TKey]);
                         if(isset($AtkHullDmg[$TKey]))
