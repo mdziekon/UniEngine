@@ -4,7 +4,7 @@
 $_Lang['fl_title']                               = 'Flottes';
 $_Lang['fl_expttl']                              = 'Expéditions';
 $_Lang['fl_acs_title']                           = 'Vols alliés';
-$_Lang['fl_id']                                  = 'Non.';
+$_Lang['fl_id']                                  = 'No.';
 $_Lang['fl_mission']                             = 'Mission';
 $_Lang['fl_count']                               = 'Composition de la flotte';
 $_Lang['fl_from']                                = 'Origine';

@@ -14,7 +14,7 @@ $_Lang['stat_research']          = "points de recherches";
 $_Lang['stat_building']          = "points de bâtiments";
 $_Lang['stat_defenses']          = "points de défenses";
 
-$_Lang['Position']               = "Non.";
+$_Lang['Position']               = "No.";
 $_Lang['Difference']             = "+/-";
 $_Lang['Player']                 = "Joueur";
 $_Lang['Alliance']               = "Alliance";
