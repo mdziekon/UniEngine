@@ -1,7 +1,7 @@
 <?php
 
 $_Lang['sfb_Title']                          = 'Smart Fleets\' Blockade';
-$_Lang['sfb_GlobalText']                     = 'Currently, this Universe has an enabled <b class="red">Fleet\'s Blockade</b>, which will remain active until <b class="orange">%s</b>, <b class="orange">%s</b>.<br/>This blockade covers %s. More informations can be found here <a href="redirect.php?id=5" target="_blank"><u>Link</u></a><br/>Reason of the Blockade: %s';
+$_Lang['sfb_GlobalText']                     = 'Currently, this Universe has an enabled <b class="red">Fleet\'s Blockade</b>, which will remain active until <b class="orange">%s</b>, <b class="orange">%s</b>.<br/>This blockade covers %s. More information can be found here <a href="redirect.php?id=5" target="_blank"><u>Link</u></a><br/>Reason of the Blockade: %s';
 $_Lang['sfb_Mission_All']                    = '<b class="skyblue">all fleet missions</b>';
 $_Lang['sfb_Mission_Aggresive']              = '<b class="skyblue">all aggressive fleet missions</b>';
 $_Lang['sfb_Mission_Civil']                  = '<b class="skyblue">all civil fleet missions</b>';
