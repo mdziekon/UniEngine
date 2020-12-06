@@ -256,7 +256,7 @@ if($SQLResult->num_rows > 0)
             $parse['Fig_Won'] = prettyNumber($StatRow['ustat_raids_won']);
             $parse['Fig_Lost'] = prettyNumber($StatRow['ustat_raids_lost']);
             $parse['Fig_Draw'] = prettyNumber($StatRow['ustat_raids_draw']);
-            $parse['player_mes'] = '<a href="messages.php?mode=write&amp;uid='.$StatRow['id_owner'].'"><img src="'.$_SkinPath.'img/m.gif" border="0" alt="'.$_Lang['Ecrire'].'"/></a>';
+            $parse['player_mes'] = '<a href="messages.php?mode=write&amp;uid='.$StatRow['id_owner'].'"><img src="'.$_SkinPath.'img/m.gif" border="0" alt="'.$_Lang['action_writemessage'].'"/></a>';
             if($StatRow['ally_id'] == $_User['ally_id'] AND $_User['ally_id'] > 0)
             {
                 $parse['player_alliance'] = '<span class="ally">'.$StatRow['ally_name'].'</span>';

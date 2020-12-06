@@ -21,7 +21,7 @@ $_Lang['Alliance']               = "Alliance";
 $_Lang['Points']                 = "Points";
 $_Lang['Members']                = "Members";
 $_Lang['PerMember']              = "Per member";
-$_Lang['Ecrire']                 = "Write a message";
+$_Lang['action_writemessage']    = "Write a message";
 
 $_Lang['Fight_Won']              = 'Won';
 $_Lang['Fight_Lost']             = 'Lost';

@@ -11,7 +11,7 @@ $_Lang['InterceptMiss']         = 'Przeciwrakiety';
 $_Lang['InterplanetMiss']       = 'Rakiety międzyplanetarne';
 
 $_Lang['MainTarget']            = 'Główny cel ataku';
-$_Lang['Everythink']            = 'Wszystko';
+$_Lang['Everything']            = 'Wszystko';
 
 $_Lang['Submit']                = 'Przeprowadź Symulację!';
 
