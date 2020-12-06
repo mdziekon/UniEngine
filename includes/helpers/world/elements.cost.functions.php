@@ -45,16 +45,16 @@ function getElementUserCostBase($elementID) {
         switch ($costResource) {
             case 'darkEnergy':
                 if (!isset($_Vars_PremiumBuildingPrices[$elementID])) {
-                    continue;
+                    break;
                 }
 
                 if ($_Vars_PremiumBuildingPrices[$elementID] <= 0) {
-                    continue;
+                    break;
                 }
 
                 $baseCost[$costResource] = $_Vars_PremiumBuildingPrices[$elementID];
 
-                continue;
+                break;
         }
     }
 
