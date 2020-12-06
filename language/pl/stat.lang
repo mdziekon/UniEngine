@@ -21,7 +21,7 @@ $_Lang['Alliance']               = "Sojusz";
 $_Lang['Points']                 = "Punkty";
 $_Lang['Members']                = "Członkowie";
 $_Lang['PerMember']              = "Na gracza";
-$_Lang['Ecrire']                 = "Napisz wiadomość";
+$_Lang['action_writemessage']    = "Napisz wiadomość";
 
 $_Lang['Fight_Won']              = 'Wygrane';
 $_Lang['Fight_Lost']             = 'Przegrane';

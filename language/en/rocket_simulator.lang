@@ -11,7 +11,7 @@ $_Lang['InterceptMiss']      = 'Anti-ballistic Missiles';
 $_Lang['InterplanetMiss']    = 'Interplanetary Missiles';
 
 $_Lang['MainTarget']         = 'Primary target';
-$_Lang['Everythink']         = 'Everything';
+$_Lang['Everything']         = 'Everything';
 
 $_Lang['Submit']             = 'Simulate';
 

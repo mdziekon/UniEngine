@@ -24,6 +24,6 @@ $_Lang['Missing']                                    = 'Missing';
 $_Lang['no_need_more_transporters']                  = '0';
 
 $_Lang['Res_SetThisUsage2All']                       = 'Set the same production factors on all planets';
-$_Lang['Res_GeologistBonus']                         = 'Production bonus of <a href="officers.php" class="skyblue">Geologist</a>';
+$_Lang['Res_GeologistBonus']                         = 'Production bonus provided by <a href="officers.php" class="skyblue">Geologist</a>';
 
 ?>

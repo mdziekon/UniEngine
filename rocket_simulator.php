@@ -210,7 +210,7 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
 $_Lang['DefTech']= $_Lang['tech'][111];
 $_Lang['AtkTech']= $_Lang['tech'][109];
 
-$PrepareTargetList = '<option value="0">'.$_Lang['Everythink'].'</option>';
+$PrepareTargetList = '<option value="0">'.$_Lang['Everything'].'</option>';
 
 if($DefTech > 0)
 {
