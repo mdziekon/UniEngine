@@ -441,7 +441,7 @@ if(!empty($Fleet['array']) AND (array)$Fleet['array'] === $Fleet['array'])
                 }
                 else
                 {
-                    messageRed($_Lang['fl2_ShipCountCantBe0'], $ErrorTitle);
+                    messageRed($_Lang['fleet_generic_errors_invalidshipcount'], $ErrorTitle);
                 }
             }
             else
