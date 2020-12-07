@@ -458,7 +458,8 @@ if (
             $Fleet['FuelStorage'] += $ThisStorage;
         }
 
-        $FleetRemover[] = "`{$_Vars_GameElements[$ShipID]}` = `{$_Vars_GameElements[$ShipID]}` - {$ShipCount}";
+        $planetElementKey = _getElementPlanetKey($ShipID);
+        $FleetRemover[] = "`{$planetElementKey}` = `{$planetElementKey}` - {$ShipCount}";
     }
 } else {
     messageRed($_Lang['fl2_FleetArrayPostEmpty'], $ErrorTitle);
