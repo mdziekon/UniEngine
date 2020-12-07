@@ -6,6 +6,9 @@ $_EnginePath = './';
 
 include($_EnginePath.'common.php');
 
+include($_EnginePath . 'modules/flightControl/_includes.php');
+
+use UniEngine\Engine\Modules\FlightControl;
 use UniEngine\Engine\Modules\Flights;
 
 loggedCheck();
@@ -411,55 +414,56 @@ if (
     !empty($Fleet['array']) &&
     is_array($Fleet['array'])
 ) {
+    $fleetArrayValidationResult = FlightControl\Utils\Validators\validateFleetArray([
+        'fleet' => $Fleet['array'],
+        'planet' => &$_Planet,
+        'isFromDirectUserInput' => false,
+    ]);
+
+    if (!$fleetArrayValidationResult['isValid']) {
+        $firstValidationError = $fleetArrayValidationResult['errors'][0];
+
+        $errorMessage = null;
+        switch ($firstValidationError['errorCode']) {
+            case 'INVALID_SHIP_ID':
+                $errorMessage = $_Lang['fl1_BadShipGiven'];
+                break;
+            case 'SHIP_WITH_NO_ENGINE':
+                $errorMessage = $_Lang['fl1_CantSendUnflyable'];
+                break;
+            case 'INVALID_SHIP_COUNT':
+                $errorMessage = $_Lang['fleet_generic_errors_invalidshipcount'];
+                break;
+            case 'SHIP_COUNT_EXCEEDS_AVAILABLE':
+                $errorMessage = $_Lang['fl1_NoEnoughShips'];
+                break;
+            default:
+                $errorMessage = $_Lang['fleet_generic_errors_unknown'];
+                break;
+        }
+
+        messageRed($errorMessage, $ErrorTitle);
+    }
+
     foreach ($Fleet['array'] as $ShipID => $ShipCount) {
         $ShipID = intval($ShipID);
-        if(in_array($ShipID, $_Vars_ElementCategories['fleet']))
-        {
-            if(!empty($_Vars_Prices[$ShipID]['engine']))
-            {
-                $ShipCount = floor($ShipCount);
-                if($ShipCount > 0)
-                {
-                    if($_Planet[$_Vars_GameElements[$ShipID]] >= $ShipCount)
-                    {
-                        $FleetArray[$ShipID] = $ShipCount;
-                        $Fleet['count'] += $ShipCount;
-                        $ThisStorage = $_Vars_Prices[$ShipID]['capacity'] * $ShipCount;
-                        if($ShipID != 210)
-                        {
-                            $Fleet['storage'] += $ThisStorage;
-                        }
-                        else
-                        {
-                            $Fleet['FuelStorage'] += $ThisStorage;
-                        }
-                        $FleetRemover[] = "`{$_Vars_GameElements[$ShipID]}` = `{$_Vars_GameElements[$ShipID]}` - {$ShipCount}";
-                    }
-                    else
-                    {
-                        messageRed($_Lang['fl1_NoEnoughShips'], $ErrorTitle);
-                    }
-                }
-                else
-                {
-                    messageRed($_Lang['fleet_generic_errors_invalidshipcount'], $ErrorTitle);
-                }
-            }
-            else
-            {
-                messageRed($_Lang['fl1_CantSendUnflyable'], $ErrorTitle);
-            }
+        $ShipCount = floor($ShipCount);
+        $FleetArray[$ShipID] = $ShipCount;
+        $Fleet['count'] += $ShipCount;
+        $ThisStorage = $_Vars_Prices[$ShipID]['capacity'] * $ShipCount;
+
+        if ($ShipID != 210) {
+            $Fleet['storage'] += $ThisStorage;
+        } else {
+            $Fleet['FuelStorage'] += $ThisStorage;
         }
-        else
-        {
-            messageRed($_Lang['fl1_BadShipGiven'], $ErrorTitle);
-        }
+
+        $FleetRemover[] = "`{$_Vars_GameElements[$ShipID]}` = `{$_Vars_GameElements[$ShipID]}` - {$ShipCount}";
     }
-}
-else
-{
+} else {
     messageRed($_Lang['fl2_FleetArrayPostEmpty'], $ErrorTitle);
 }
+
 if($Fleet['count'] <= 0)
 {
     messageRed($_Lang['fl2_ZeroShips'], $ErrorTitle);
