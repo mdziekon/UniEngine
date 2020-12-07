@@ -227,19 +227,21 @@ $Fleet['count'] = 0;
 $Fleet['storage'] = 0;
 $Fleet['FuelStorage'] = 0;
 
-$Fleet['array'] = explode(';', $_POST['FleetArray']);
+$Fleet['array'] = String2Array($_POST['FleetArray']);
 $FleetArray = array();
-if(!empty($Fleet['array']) AND (array)$Fleet['array'] === $Fleet['array'])
-{
-    foreach($Fleet['array'] as $ShipData)
+
+if (
+    !empty($Fleet['array']) &&
+    is_array($Fleet['array'])
+) {
+    foreach($Fleet['array'] as $ShipID => $ShipCount)
     {
-        $ShipData = explode(',', $ShipData);
-        $ShipID = intval($ShipData[0]);
+        $ShipID = intval($ShipID);
         if(in_array($ShipID, $_Vars_ElementCategories['fleet']))
         {
             if(!empty($_Vars_Prices[$ShipID]['engine']))
             {
-                $ShipCount = floor($ShipData[1]);
+                $ShipCount = floor($ShipCount);
                 if($ShipCount > 0)
                 {
                     if($_Planet[$_Vars_GameElements[$ShipID]] >= $ShipCount)
