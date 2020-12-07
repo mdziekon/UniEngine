@@ -137,7 +137,8 @@ if (!empty($_POST['ship'])) {
 
         $Fleet['array'][$ShipID] = $ShipCount;
         $Fleet['count'] += $ShipCount;
-        $ThisStorage = $_Vars_Prices[$ShipID]['capacity'] * $ShipCount;
+
+        $ThisStorage = getShipsStorageCapacity($ShipID) * $ShipCount;
 
         if ($ShipID != 210) {
             $Fleet['storage'] += $ThisStorage;
