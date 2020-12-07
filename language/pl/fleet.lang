@@ -265,4 +265,8 @@ $_Lang['CannotUseQuantumGateTill']               = 'Nie możesz teraz wykonać S
 $_Lang['GateReadyToUse']                         = 'Brama Kwantowa gotowa do skoku';
 $_Lang['GateReadyToUseIn']                       = 'Brama Kwantowa gotowa do skoku za';
 
+// Generic translation strings
+$_Lang['fleet_generic_errors_unknown']           = 'Nieznany błąd';
+$_Lang['fleet_generic_errors_invalidshipcount']  = 'Podano niepoprawną liczbę statków!';
+
 ?>
