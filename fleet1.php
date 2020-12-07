@@ -6,6 +6,10 @@ $_EnginePath = './';
 
 include($_EnginePath.'common.php');
 
+include($_EnginePath . 'modules/flightControl/_includes.php');
+
+use UniEngine\Engine\Modules\FlightControl;
+
 loggedCheck();
 
 if((!isset($_POST['sending_fleet']) || $_POST['sending_fleet'] != '1') && (!isset($_POST['gobackUsed']) || $_POST['gobackUsed'] != '1'))
@@ -91,54 +95,64 @@ if(!empty($_POST['gobackVars']))
 }
 
 // Management of ShipsList
-if(!empty($_POST['ship']))
-{
-    foreach($_POST['ship'] as $ShipID => $ShipCount)
-    {
-        $ShipID = intval($ShipID);
-        if(in_array($ShipID, $_Vars_ElementCategories['fleet']))
-        {
-            if(!empty($_Vars_Prices[$ShipID]['engine']))
-            {
-                $ShipCount = floor(str_replace('.', '', $ShipCount));
-                if($ShipCount > 0)
-                {
-                    if($_Planet[$_Vars_GameElements[$ShipID]] >= $ShipCount)
-                    {
-                        $Fleet['array'][$ShipID] = $ShipCount;
-                        $Fleet['count'] += $ShipCount;
-                        $ThisStorage = $_Vars_Prices[$ShipID]['capacity'] * $ShipCount;
-                        if($ShipID != 210)
-                        {
-                            $Fleet['storage'] += $ThisStorage;
-                        }
-                        else
-                        {
-                            $Fleet['FuelStorage'] += $ThisStorage;
-                        }
-                        $speedalls[$ShipID] = getShipsCurrentSpeed($ShipID, $_User);
-                        $shipConsumption = getShipsCurrentConsumption($ShipID, $_User);
-                        $allShipsConsumption = ($shipConsumption * $ShipCount);
+if (!empty($_POST['ship'])) {
+    $fleetArrayValidationResult = FlightControl\Utils\Validators\validateFleetArray([
+        'fleet' => $_POST['ship'],
+        'planet' => &$_Planet,
+        'isFromDirectUserInput' => true,
+    ]);
 
-                        // TODO: Check if that "+1" is correct
-                        $FleetHiddenBlock .= "<input type=\"hidden\" id=\"consumption{$ShipID}\" value=\"".((string)($allShipsConsumption + 1))."\" />";
-                        $FleetHiddenBlock .= "<input type=\"hidden\" id=\"speed{$ShipID}\" value=\"{$speedalls[$ShipID]}\" />";
-                    }
-                    else
-                    {
-                        message($_Lang['fl1_NoEnoughShips'], $ErrorTitle, 'fleet.php', 3);
-                    }
-                }
-            }
-            else
-            {
-                message($_Lang['fl1_CantSendUnflyable'], $ErrorTitle, 'fleet.php', 3);
-            }
+    if (!$fleetArrayValidationResult['isValid']) {
+        $firstValidationError = $fleetArrayValidationResult['errors'][0];
+
+        $errorMessage = null;
+        switch ($firstValidationError['errorCode']) {
+            case 'INVALID_SHIP_ID':
+                $errorMessage = $_Lang['fl1_BadShipGiven'];
+                break;
+            case 'SHIP_WITH_NO_ENGINE':
+                $errorMessage = $_Lang['fl1_CantSendUnflyable'];
+                break;
+            case 'INVALID_SHIP_COUNT':
+                $errorMessage = $_Lang['fleet_generic_errors_invalidshipcount'];
+                break;
+            case 'SHIP_COUNT_EXCEEDS_AVAILABLE':
+                $errorMessage = $_Lang['fl1_NoEnoughShips'];
+                break;
+            default:
+                $errorMessage = $_Lang['fleet_generic_errors_unknown'];
+                break;
         }
-        else
-        {
-            message($_Lang['fl1_BadShipGiven'], $ErrorTitle, 'fleet.php', 3);
+
+        message($errorMessage, $ErrorTitle, 'fleet.php', 3);
+    }
+
+    foreach ($_POST['ship'] as $ShipID => $ShipCount) {
+        $ShipID = intval($ShipID);
+        $ShipCount = floor(str_replace('.', '', $ShipCount));
+
+        if ($ShipCount <= 0) {
+            continue;
         }
+
+        $Fleet['array'][$ShipID] = $ShipCount;
+        $Fleet['count'] += $ShipCount;
+
+        $ThisStorage = getShipsStorageCapacity($ShipID) * $ShipCount;
+
+        if ($ShipID != 210) {
+            $Fleet['storage'] += $ThisStorage;
+        } else {
+            $Fleet['FuelStorage'] += $ThisStorage;
+        }
+
+        $speedalls[$ShipID] = getShipsCurrentSpeed($ShipID, $_User);
+        $shipConsumption = getShipsCurrentConsumption($ShipID, $_User);
+        $allShipsConsumption = ($shipConsumption * $ShipCount);
+
+        // TODO: Check if that "+1" is correct
+        $FleetHiddenBlock .= "<input type=\"hidden\" id=\"consumption{$ShipID}\" value=\"".((string)($allShipsConsumption + 1))."\" />";
+        $FleetHiddenBlock .= "<input type=\"hidden\" id=\"speed{$ShipID}\" value=\"{$speedalls[$ShipID]}\" />";
     }
 }
 

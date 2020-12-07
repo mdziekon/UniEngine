@@ -272,4 +272,8 @@ $_Lang['CannotUseQuantumGateTill']               = 'You cannot perform a space j
 $_Lang['GateReadyToUse']                         = 'Quantum Gate is ready for space jump';
 $_Lang['GateReadyToUseIn']                       = 'Quantum Gate will be ready for space jump in';
 
+// Generic translation strings
+$_Lang['fleet_generic_errors_unknown']           = 'Unknown error';
+$_Lang['fleet_generic_errors_invalidshipcount']  = 'Invalid ship count provided!';
+
 ?>
