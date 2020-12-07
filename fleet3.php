@@ -45,7 +45,6 @@ $Target['system'] = intval($_POST['system']);
 $Target['planet'] = intval($_POST['planet']);
 $Target['type'] = intval($_POST['planettype']);
 $Fleet['Speed'] = floatval($_POST['speed']);
-$Fleet['array'] = explode(';', $_POST['FleetArray']);
 $Fleet['UseQuantum'] = (isset($_POST['usequantumgate']) && $_POST['usequantumgate'] == 'on' ? true : false);
 $Fleet['resources'] = array('metal' => $_POST['resource1'], 'crystal' => $_POST['resource2'], 'deuterium' => $_POST['resource3']);
 $Fleet['ExpeTime'] = intval($_POST['expeditiontime']);
@@ -405,18 +404,20 @@ $Fleet['storage'] = 0;
 $Fleet['FuelStorage'] = 0;
 $Fleet['TotalResStorage'] = 0;
 
+$Fleet['array'] = String2Array($_POST['FleetArray']);
 $FleetArray = array();
-if(!empty($Fleet['array']) AND (array)$Fleet['array'] === $Fleet['array'])
-{
-    foreach($Fleet['array'] as $ShipData)
-    {
-        $ShipData = explode(',', $ShipData);
-        $ShipID = intval($ShipData[0]);
+
+if (
+    !empty($Fleet['array']) &&
+    is_array($Fleet['array'])
+) {
+    foreach ($Fleet['array'] as $ShipID => $ShipCount) {
+        $ShipID = intval($ShipID);
         if(in_array($ShipID, $_Vars_ElementCategories['fleet']))
         {
             if(!empty($_Vars_Prices[$ShipID]['engine']))
             {
-                $ShipCount = floor($ShipData[1]);
+                $ShipCount = floor($ShipCount);
                 if($ShipCount > 0)
                 {
                     if($_Planet[$_Vars_GameElements[$ShipID]] >= $ShipCount)
