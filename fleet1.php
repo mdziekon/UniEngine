@@ -162,46 +162,12 @@ if($Fleet['count'] <= 0)
 }
 $speedallsmin = min($speedalls);
 
-// Create SpeedsArray
-$SpeedsAvailable = array
-(
-    10 => 100,
-    9 => 90,
-    8 => 80,
-    7 => 70,
-    6 => 60,
-    5 => 50,
-    4 => 40,
-    3 => 30,
-    2 => 20,
-    1 => 10
-);
-
-if($_User['admiral_time'] > $Now)
-{
-    $SpeedsAvailable[12] = 120;
-    $SpeedsAvailable[11] = 110;
-    $SpeedsAvailable['0.5'] = 5;
-    $SpeedsAvailable['0.25'] = 2.5;
-}
-if(MORALE_ENABLED)
-{
-    $MaxAvailableSpeed = max($SpeedsAvailable);
-    if($_User['morale_level'] >= MORALE_BONUS_FLEETSPEEDUP1)
-    {
-        $SpeedsAvailable[(string)(($MaxAvailableSpeed + MORALE_BONUS_FLEETSPEEDUP1_VALUE) / 10)] = $MaxAvailableSpeed + MORALE_BONUS_FLEETSPEEDUP1_VALUE;
-    }
-    if($_User['morale_level'] >= MORALE_BONUS_FLEETSPEEDUP2)
-    {
-        $SpeedsAvailable[(string)(($MaxAvailableSpeed + MORALE_BONUS_FLEETSPEEDUP2_VALUE) / 10)] = $MaxAvailableSpeed + MORALE_BONUS_FLEETSPEEDUP2_VALUE;
-    }
-
-    if($_User['morale_level'] <= MORALE_PENALTY_FLEETSLOWDOWN)
-    {
+// Speed modifier
+if (MORALE_ENABLED) {
+    if ($_User['morale_level'] <= MORALE_PENALTY_FLEETSLOWDOWN) {
         $speedallsmin *= MORALE_PENALTY_FLEETSLOWDOWN_VALUE;
     }
 }
-arsort($SpeedsAvailable);
 
 $_Lang['P_HideACSJoining'] = $Hide;
 $GetACSData = intval($_POST['getacsdata']);
@@ -321,15 +287,24 @@ foreach($SetPos as $Key => $Value)
     $_Lang['SetPos_'.$Key] = $Value;
 }
 
-if(empty($_Set_DefaultSpeed) OR !in_array($_Set_DefaultSpeed, array_keys($SpeedsAvailable)))
-{
-    $_Set_DefaultSpeed = max(array_keys($SpeedsAvailable));
+$SpeedsAvailable = FlightControl\Utils\Helpers\getAvailableSpeeds([
+    'user' => &$_User,
+    'timestamp' => $Now,
+]);
+
+if (
+    empty($_Set_DefaultSpeed) OR
+    !in_array($_Set_DefaultSpeed, $SpeedsAvailable)
+) {
+    $_Set_DefaultSpeed = max($SpeedsAvailable);
 }
 $_Lang['Insert_SpeedInput'] = $_Set_DefaultSpeed;
 
-foreach($SpeedsAvailable as $Selector => $Text)
-{
-    $_Lang['Insert_Speeds'][] = "<a href=\"#\" class=\"setSpeed ".(($_Set_DefaultSpeed == $Selector) ? 'setSpeed_Selected setSpeed_Current' : '')."\" data-speed=\"{$Selector}\">{$Text}</a>";
+foreach ($SpeedsAvailable as $Selector) {
+    $Text = $Selector * 10;
+    $isSpeedSelected = ($_Set_DefaultSpeed == $Selector);
+
+    $_Lang['Insert_Speeds'][] = "<a href=\"#\" class=\"setSpeed ".($isSpeedSelected ? 'setSpeed_Selected setSpeed_Current' : '')."\" data-speed=\"{$Selector}\">{$Text}</a>";
 }
 $_Lang['Insert_Speeds'] = implode('<span class="speedBreak">|</span>', $_Lang['Insert_Speeds']);
 
