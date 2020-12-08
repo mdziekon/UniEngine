@@ -6,6 +6,7 @@ call_user_func(function () {
 
     $includePath = $_EnginePath . 'modules/flightControl/';
 
+    include($includePath . './utils/helpers/getAvailableSpeeds.helper.php');
     include($includePath . './utils/validators/fleetArray.validator.php');
 
 });
