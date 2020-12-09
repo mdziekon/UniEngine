@@ -138,30 +138,12 @@ if(isset($TargetError))
     message($_Lang['fl2_targeterror'], $ErrorTitle, 'fleet.php', 3);
 }
 
-// Create SpeedsArray
-$SpeedsAvailable = array(10, 9, 8, 7, 6, 5, 4, 3, 2, 1);
+$availableSpeeds = FlightControl\Utils\Helpers\getAvailableSpeeds([
+    'user' => &$_User,
+    'timestamp' => $Now,
+]);
 
-if($_User['admiral_time'] > $Now)
-{
-    $SpeedsAvailable[] = 12;
-    $SpeedsAvailable[] = 11;
-    $SpeedsAvailable[] = 0.5;
-    $SpeedsAvailable[] = 0.25;
-}
-if(MORALE_ENABLED)
-{
-    $MaxAvailableSpeed = max($SpeedsAvailable);
-    if($_User['morale_level'] >= MORALE_BONUS_FLEETSPEEDUP1)
-    {
-        $SpeedsAvailable[] = $MaxAvailableSpeed + (MORALE_BONUS_FLEETSPEEDUP1_VALUE / 10);
-    }
-    if($_User['morale_level'] >= MORALE_BONUS_FLEETSPEEDUP2)
-    {
-        $SpeedsAvailable[] = $MaxAvailableSpeed + (MORALE_BONUS_FLEETSPEEDUP2_VALUE / 10);
-    }
-}
-if(!in_array($_POST['speed'], $SpeedsAvailable))
-{
+if (!in_array($_POST['speed'], $availableSpeeds)) {
     message($_Lang['fl_bad_fleet_speed'], $ErrorTitle, 'fleet.php', 3);
 }
 
