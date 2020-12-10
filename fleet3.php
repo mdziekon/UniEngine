@@ -511,58 +511,54 @@ else
 }
 
 // --- Check if everything is OK with ACS
-$Throw = false;
-if($Fleet['Mission'] == 2 AND in_array(2, $AvailableMissions))
-{
-    if($Fleet['ACS_ID'] > 0)
-    {
-        $CheckACS = doquery("SELECT {{table}}.*, `fleets`.`fleet_send_time` AS `mf_start_time` FROM {{table}} LEFT JOIN {{prefix}}fleets AS `fleets` ON `fleets`.`fleet_id` = {{table}}.`main_fleet_id` WHERE {{table}}.`id` = {$Fleet['ACS_ID']} LIMIT 1;", 'acs', true);
-        if($CheckACS)
-        {
-            if($CheckACS['owner_id'] == $_User['id'] OR strstr($CheckACS['users'], '|'.$_User['id'].'|') !== FALSE)
-            {
-                if($CheckACS['end_target_id'] == $CheckPlanetOwner['id'])
-                {
-                    if($CheckACS['fleets_count'] < ACS_MAX_JOINED_FLEETS)
-                    {
-                        if($CheckACS['start_time'] > $Now)
-                        {
-                            $UpdateACS = true;
-                        }
-                        else
-                        {
-                            $Throw = $_Lang['fl_acs_cannot_join_time_extended'];
-                        }
-                    }
-                    else
-                    {
-                        $Throw = $_Lang['fl_acs_fleetcount_extended'];
-                    }
-                }
-                else
-                {
-                    $Throw = $_Lang['fl_acs_badcoordinates'];
-                }
-            }
-            else
-            {
-                $Throw = $_Lang['fl_acs_cannot_join_this_group'];
-            }
+if ($Fleet['Mission'] == 2 AND in_array(2, $AvailableMissions)) {
+    $joinUnionValidationResult = FlightControl\Utils\Validators\validateJoinUnion([
+        'newFleet' => $Fleet,
+        'timestamp' => $Now,
+        'user' => &$_User,
+        'destinationEntry' => &$CheckPlanetOwner,
+    ]);
+
+    if (!$joinUnionValidationResult['isValid']) {
+        $firstValidationError = $joinUnionValidationResult['errors'][0];
+
+        $errorMessage = null;
+        switch ($firstValidationError['errorCode']) {
+            case 'INVALID_UNION_ID':
+                $errorMessage = $_Lang['fl_acs_bad_group_id'];
+                break;
+            case 'UNION_NOT_FOUND':
+                $errorMessage = $_Lang['fl_acs_bad_group_id'];
+                break;
+            case 'USER_CANT_JOIN':
+                $errorMessage = $_Lang['fl_acs_cannot_join_this_group'];
+                break;
+            case 'INVALID_DESTINATION_COORDINATES':
+                $errorMessage = $_Lang['fl_acs_badcoordinates'];
+                break;
+            case 'UNION_JOINED_FLEETS_COUNT_EXCEEDED':
+                $errorMessage = $_Lang['fl_acs_fleetcount_extended'];
+                break;
+            case 'UNION_JOIN_TIME_EXCEEDED':
+                $errorMessage = $_Lang['fl_acs_cannot_join_time_extended'];
+                break;
+            default:
+                $errorMessage = $_Lang['fleet_generic_errors_unknown'];
+                break;
         }
-        else
-        {
-            $Throw = $_Lang['fl_acs_bad_group_id'];
-        }
+
+        messageRed($errorMessage, $ErrorTitle);
     }
-    else
-    {
-        $Throw = $_Lang['fl_acs_bad_group_id'];
-    }
-    if($Throw)
-    {
-        messageRed($Throw, $ErrorTitle);
-    }
+
+    $UpdateACS = true;
+
+    // TODO: Optimize by not fetching this again
+    $CheckACS = FlightControl\Utils\Helpers\getFleetUnionJoinData([
+        'newFleet' => $Fleet,
+    ]);
 }
+
+$Throw = false;
 
 // --- If Mission is not correct, show Error
 if(!in_array($Fleet['Mission'], $AvailableMissions))
