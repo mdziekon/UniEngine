@@ -19,6 +19,11 @@ if((!isset($_POST['sending_fleet']) || $_POST['sending_fleet'] != '1') && (!isse
 
 $_Lang['SelectResources'] = 'false';
 $_Lang['SelectQuantumGate'] = 'false';
+
+$setFormValues = [
+    'holdingtime' => null,
+];
+
 if(!empty($_POST['gobackVars']))
 {
     $_POST['gobackVars'] = json_decode(base64_decode($_POST['gobackVars']), true);
@@ -36,7 +41,7 @@ if(!empty($_POST['gobackVars']))
     }
     if(isset($_POST['gobackVars']['holdingtime']))
     {
-        $_Lang['SelectHolding_'.$_POST['gobackVars']['holdingtime']] = 'selected';
+        $setFormValues['holdingtime'] = $_POST['gobackVars']['holdingtime'];
     }
     if(isset($_POST['gobackVars']['expeditiontime']))
     {
@@ -667,6 +672,28 @@ else
 {
     $_Lang['Insert_AllyPact_AttackWarn'] = 'false';
 }
+
+$availableHoldTimes = FlightControl\Utils\Helpers\getAvailableHoldTimes([]);
+
+$missionHoldTimeOptions = array_map(
+    function ($holdTimeValue) use ($setFormValues) {
+        return buildDOMElementHTML([
+            'tagName' => 'option',
+            'contentHTML' => $holdTimeValue,
+            'attrs' => [
+                'value' => $holdTimeValue,
+                'selected' => (
+                    $holdTimeValue == $setFormValues['holdingtime'] ?
+                        '' :
+                        null
+                ),
+            ],
+        ]);
+    },
+    $availableHoldTimes
+);
+
+$_Lang['P_HTMLBuilder_MissionHold_AvailableTimes'] = implode('', $missionHoldTimeOptions);
 
 display(parsetemplate(gettemplate('fleet2_body'), $_Lang), $_Lang['fl_title']);
 
