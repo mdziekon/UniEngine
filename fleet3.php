@@ -765,6 +765,28 @@ if($Fleet['Mission'] == 8)
     }
 }
 
+if ($Fleet['Mission'] == 5) {
+    $missionHoldValidationResult = FlightControl\Utils\Validators\validateMissionHold([
+        'newFleet' => $Fleet,
+    ]);
+
+    if (!$missionHoldValidationResult['isValid']) {
+        $firstValidationError = $missionHoldValidationResult['errors'][0];
+
+        $errorMessage = null;
+        switch ($firstValidationError['errorCode']) {
+            case 'INVALID_HOLD_TIME':
+                $errorMessage = $_Lang['fl3_Holding_BadTime'];
+                break;
+            default:
+                $errorMessage = $_Lang['fleet_generic_errors_unknown'];
+                break;
+        }
+
+        messageRed($errorMessage, $ErrorTitle);
+    }
+}
+
 // --- Check if Expeditions and HoldingTimes are Correct
 $Throw = false;
 $Fleet['StayTime'] = 0;
@@ -782,10 +804,6 @@ if($Fleet['Mission'] == 15)
 }
 elseif($Fleet['Mission'] == 5)
 {
-    if(!in_array($Fleet['HoldTime'], array(1, 2, 4, 8, 16, 32)))
-    {
-        $Throw = $_Lang['fl3_Holding_BadTime'];
-    }
     $Fleet['StayTime'] = $Fleet['HoldTime'] * 3600;
 }
 if($Throw)
