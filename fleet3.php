@@ -73,9 +73,7 @@ $Protections['bashLimit_interval'] = $_GameConfig['Protection_BashLimitInterval'
 $Protections['bashLimit_counttotal'] = $_GameConfig['Protection_BashLimitCountTotal'];
 $Protections['bashLimit_countplanet'] = $_GameConfig['Protection_BashLimitCountPlanet'];
 
-// --- Check if User's account is activated
-if(!empty($_User['activation_code']))
-{
+if (!isUserAccountActivated($_User)) {
     messageRed($_Lang['fl3_BlockAccNotActivated'], $ErrorTitle);
 }
 
