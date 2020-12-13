@@ -397,8 +397,7 @@ switch($mode)
         }
 
         // --- Activation Box
-        if(!empty($_User['activation_code']))
-        {
+        if (!isUserAccountActivated($_User)) {
             $parse['ActivationInfoBox'] = '<tr><th class="c pad5 orange" colspan="3">'.$_Lang['ActivationInfo_Text'].'</th></tr><tr><th style="visibility: hidden;">&nbsp;</th></tr>';
         }
 

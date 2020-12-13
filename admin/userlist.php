@@ -859,8 +859,7 @@ if(!empty($Users))
             $Bloc['UserMoreInfo'] .= "<br/><span class=\"fl\"><b class=\"red\">{$_Lang['UserIsBanned']}:</b> <b class=\"{$BanColor}\">".date('d.m.Y, H:i:s', $Data['ban_endtime'])."</b></span><span class=\"fr\">({$BanTime})</span>";
         }
         // MoreInfo - Activation Link
-        if(!empty($Data['activation_code']))
-        {
+        if (!isUserAccountActivated($Data)) {
             $Bloc['UserMoreInfo'] .= "<br/><span class=\"fl\"><b class=\"orange\">{$_Lang['UserNotActivated']}</b></span><span class=\"fr\">[{$_Lang['UserActivationLink']}: <a href=\"".(GAMEURL)."activate.php?code={$Data['activation_code']}\" target=\"_blank\">".(GAMEURL)."activate.php?code=<b class=\"orange\">{$Data['activation_code']}</b></a>]</span>";
         }
         // MoreInfo - is On Deletion

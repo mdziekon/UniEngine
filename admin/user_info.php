@@ -320,7 +320,11 @@ if(CheckAuth('go'))
         $Data['ally_name'] = $Data['ally_request_name'];
     }
     $Player['Ally'] = ($Data['ally_id'] > 0 ? '<a class="help" title="'.$_Lang['SearchByAlly'].'" href="userlist.php?search_user='.$Data['ally_id'].'&search_by=aid">'.$Data['ally_name'].' ('.$Data['ally_id'].')</a>'.($Data['ally_request'] != 0 ? ' ['.$_Lang['Request'].']' : ($Data['ally_owner'] == $UID ? ' ['.$_Lang['Ally_owner'].']' : '')) : '&nbsp;-&nbsp;');
-    $Player['AccountActive'] = (!empty($Data['activation_code']) ? "<b class=\"orange\">{$_Lang['_no']}</b><br/>{$_Lang['ActivationCode']}: {$Data['activation_code']}" : "<b class=\"lime\">{$_Lang['_yes']}</b>");
+    $Player['AccountActive'] = (
+        !isUserAccountActivated($Data) ?
+        "<b class=\"orange\">{$_Lang['_no']}</b><br/>{$_Lang['ActivationCode']}: {$Data['activation_code']}" :
+        "<b class=\"lime\">{$_Lang['_yes']}</b>"
+    );
     $Player['DisableIPCheck'] = (($Data['noipcheck'] == 1) ? $_Lang['_no'] : $_Lang['_yes']);
     $Player['MotherPlanet'] = "{$Data['mothername']} ({$_Lang['MotherPlanet_ID']}: {$Data['id_planet']}) [<a class=\"help\" title=\"{$_Lang['GoToGalaxy']}\" href=\"../galaxy.php?mode=3&amp;galaxy={$Data['galaxy']}&amp;system={$Data['system']}&amp;planet={$Data['planet']}\">{$Data['galaxy']}:{$Data['system']}:{$Data['planet']}</a>]";
 
