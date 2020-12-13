@@ -42,10 +42,11 @@ if(!isLogged())
 {
     CreateReturn('601');
 }
-if(!empty($_User['activation_code']))
-{
+
+if (!isUserAccountActivated($_User)) {
     CreateReturn('661');
 }
+
 $Galaxy        = (isset($_POST['galaxy']) ? intval($_POST['galaxy']) : 0);
 $System        = (isset($_POST['system']) ? intval($_POST['system']) : 0);
 $Planet        = (isset($_POST['planet']) ? intval($_POST['planet']) : 0);

@@ -23,8 +23,8 @@ if(!isLogged())
 {
     CreateReturn('601');
 }
-if(!empty($_User['activation_code']))
-{
+
+if (!isUserAccountActivated($_User)) {
     CreateReturn('661');
 }
 
