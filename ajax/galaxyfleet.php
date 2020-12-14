@@ -8,6 +8,10 @@ $_EnginePath = '../';
 
 include($_EnginePath.'common.php');
 
+include($_EnginePath . 'modules/flightControl/_includes.php');
+
+use UniEngine\Engine\Modules\FlightControl;
+
 function CreateReturn($ReturnCode)
 {
     global $Update, $ShipCount, $Galaxy, $System, $Planet, $Type, $ActualFleets, $Spy_Probes, $Recyclers, $Colonizers;
@@ -431,32 +435,14 @@ if($CurrentPlanet[$_Vars_GameElements[$ShipID]] < $ShipCount)
     $ShipCount = $CurrentPlanet[$_Vars_GameElements[$ShipID]];
 }
 
-// Create SpeedsArray
-$SpeedsAvailable = array(10, 9, 8, 7, 6, 5, 4, 3, 2, 1);
+$availableSpeeds = FlightControl\Utils\Helpers\getAvailableSpeeds([
+    'user' => &$_User,
+    'timestamp' => $Time,
+]);
 
-if($_User['admiral_time'] > $Time)
-{
-    $SpeedsAvailable[] = 12;
-    $SpeedsAvailable[] = 11;
-    $SpeedsAvailable[] = 0.5;
-    $SpeedsAvailable[] = 0.25;
-}
-if(MORALE_ENABLED)
-{
-    $MaxAvailableSpeed = max($SpeedsAvailable);
-    if($_User['morale_level'] >= MORALE_BONUS_FLEETSPEEDUP1)
-    {
-        $SpeedsAvailable[] = $MaxAvailableSpeed + (MORALE_BONUS_FLEETSPEEDUP1_VALUE / 10);
-    }
-    if($_User['morale_level'] >= MORALE_BONUS_FLEETSPEEDUP2)
-    {
-        $SpeedsAvailable[] = $MaxAvailableSpeed + (MORALE_BONUS_FLEETSPEEDUP2_VALUE / 10);
-    }
-}
-arsort($SpeedsAvailable);
-reset($SpeedsAvailable);
+reset($availableSpeeds);
 
-$GenFleetSpeed = current($SpeedsAvailable);
+$GenFleetSpeed = current($availableSpeeds);
 $SpeedFactor = getUniFleetsSpeedFactor();
 $MaxFleetSpeed = getShipsCurrentSpeed($ShipID, $_User);
 
@@ -503,7 +489,7 @@ if($CurrentPlanet['deuterium'] >= $consumption)
         // Try to SlowDown fleet only if it's Espionage Mission
         while($FleetStorage < $consumption)
         {
-            $GenFleetSpeed = next($SpeedsAvailable);
+            $GenFleetSpeed = next($availableSpeeds);
             if($GenFleetSpeed !== false)
             {
                 $duration = getFlightDuration([
