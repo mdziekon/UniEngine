@@ -481,66 +481,63 @@ $consumption = getFlightTotalConsumption(
 $fleet['start_time'] = $duration + $Time;
 $fleet['end_time'] = (2 * $duration) + $Time;
 
-if($CurrentPlanet['deuterium'] >= $consumption)
+if ($CurrentPlanet['deuterium'] < $consumption) {
+    CreateReturn('607');
+}
+
+$FleetStorage = $_Vars_Prices[$ShipID]['capacity'] * $ShipCount;
+if($Mission == 6)
 {
-    $FleetStorage = $_Vars_Prices[$ShipID]['capacity'] * $ShipCount;
-    if($Mission == 6)
+    // Try to SlowDown fleet only if it's Espionage Mission
+    while($FleetStorage < $consumption)
     {
-        // Try to SlowDown fleet only if it's Espionage Mission
-        while($FleetStorage < $consumption)
+        $GenFleetSpeed = next($availableSpeeds);
+        if($GenFleetSpeed !== false)
         {
-            $GenFleetSpeed = next($availableSpeeds);
-            if($GenFleetSpeed !== false)
-            {
-                $duration = getFlightDuration([
-                    'speedFactor' => $GenFleetSpeed,
-                    'distance' => $distance,
-                    'maxShipsSpeed' => $MaxFleetSpeed
-                ]);
-                $consumption = getFlightTotalConsumption(
-                    [
-                        'ships' => [
-                            $ShipID => $ShipCount
-                        ],
-                        'distance' => $distance,
-                        'duration' => $duration,
+            $duration = getFlightDuration([
+                'speedFactor' => $GenFleetSpeed,
+                'distance' => $distance,
+                'maxShipsSpeed' => $MaxFleetSpeed
+            ]);
+            $consumption = getFlightTotalConsumption(
+                [
+                    'ships' => [
+                        $ShipID => $ShipCount
                     ],
-                    $_User
-                );
+                    'distance' => $distance,
+                    'duration' => $duration,
+                ],
+                $_User
+            );
 
-                $fleet['start_time'] = $duration + $Time;
-                $fleet['end_time'] = (2 * $duration) + $Time;
-            }
-            else
-            {
-                break;
-            }
+            $fleet['start_time'] = $duration + $Time;
+            $fleet['end_time'] = (2 * $duration) + $Time;
         }
-    }
-
-    if($FleetStorage >= $consumption)
-    {
-        switch($Mission)
+        else
         {
-            case 6: //Spy
-                $TargetOwner = $TargetUser;
-                break;
-            case 8: //Recycling
-                $TargetOwner = 0;
-                break;
-            case 7: //Colonization
-                $TargetOwner = 0;
-                break;
+            break;
         }
     }
-    else
+}
+
+if($FleetStorage >= $consumption)
+{
+    switch($Mission)
     {
-        CreateReturn('608');
+        case 6: //Spy
+            $TargetOwner = $TargetUser;
+            break;
+        case 8: //Recycling
+            $TargetOwner = 0;
+            break;
+        case 7: //Colonization
+            $TargetOwner = 0;
+            break;
     }
 }
 else
 {
-    CreateReturn('607');
+    CreateReturn('608');
 }
 
 if(!isset($TargetID) || $TargetID <= 0)
