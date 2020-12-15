@@ -16,8 +16,6 @@ function getUserFleetSlotsCount ($props) {
     $computerTechLevel = Users\getUsersTechLevel(108, $user);
     $isAdmiralActive = ($user['admiral_time'] > $timestamp);
 
-    // return 0;
-
     return (
         1 +
         $computerTechLevel +

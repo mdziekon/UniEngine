@@ -5,6 +5,9 @@ define('INSIDE', true);
 $_EnginePath = './';
 
 include($_EnginePath.'common.php');
+include($_EnginePath . 'modules/flightControl/_includes.php');
+
+use UniEngine\Engine\Modules\FlightControl;
 
 loggedCheck();
 
@@ -150,9 +153,11 @@ while($FleetData = $SQLResult_GetFlyingFleets->fetch_assoc())
     }
 }
 
-// Get Available Slots for Fleets (1 + ComputerTech + 2 on Admiral)
 // Get Available Slots for Expeditions (1 + floor(ExpeditionTech / 3))
-$_Lang['P_MaxFleetSlots']        = 1 + $_User[$_Vars_GameElements[108]] + (($_User['admiral_time'] > $Now) ? 2 : 0);
+$_Lang['P_MaxFleetSlots'] = FlightControl\Utils\Helpers\getUserFleetSlotsCount([
+    'user' => $_User,
+    'timestamp' => $Now,
+]);
 $_Lang['P_MaxExpedSlots']        = 1 + floor($_User[$_Vars_GameElements[124]] / 3);
 $_Lang['P_FlyingFleetsCount']    = (string)($FlyingFleetsCount + 0);
 $_Lang['P_FlyingExpeditions']    = (string)($FlyingExpeditions + 0);

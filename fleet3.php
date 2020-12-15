@@ -120,9 +120,11 @@ while($FleetData = $Result_GetFleets->fetch_assoc())
     }
 }
 
-// Get Available Slots for Fleets (1 + ComputerTech + 2 on Admiral)
 // Get Available Slots for Expeditions (1 + floor(ExpeditionTech / 3))
-$Slots['MaxFleetSlots'] = 1 + $_User[$_Vars_GameElements[108]] + (($_User['admiral_time'] > $Now) ? 2 : 0);
+$Slots['MaxFleetSlots'] = FlightControl\Utils\Helpers\getUserFleetSlotsCount([
+    'user' => $_User,
+    'timestamp' => $Now,
+]);
 $Slots['MaxExpedSlots'] = 1 + floor($_User[$_Vars_GameElements[124]] / 3);
 $Slots['FlyingFleetsCount'] = $FlyingFleetsCount;
 $Slots['FlyingExpeditions'] = $FlyingExpeditions;
