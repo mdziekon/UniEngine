@@ -83,7 +83,7 @@ if(MORALE_ENABLED)
     Morale_ReCalculate($_User, $Time);
 }
 
-if(($_User[$_Vars_GameElements[108]] + 1 + (($_User['admiral_time'] > 0) ? 2 : 0)) <= $ActualFleets)
+if(($_User[$_Vars_GameElements[108]] + 1 + (($_User['admiral_time'] > $Time) ? 2 : 0)) <= $ActualFleets)
 {
     $Update = '1';
     CreateReturn('609');

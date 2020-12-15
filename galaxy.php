@@ -31,7 +31,7 @@ includeLang('galaxy');
 $Time = time();
 $CurrentPlanet = &$_Planet;
 
-$fleetmax = $_User['tech_computer'] + 1 + (($_User['admiral_time'] > 0) ? 2 : 0);
+$fleetmax = $_User['tech_computer'] + 1 + (($_User['admiral_time'] > $Time) ? 2 : 0);
 $CurrentMIP = $CurrentPlanet['interplanetary_missile'];
 $CurrentRC = $CurrentPlanet['recycler'];
 $CurrentSP = $CurrentPlanet['espionage_probe'];
