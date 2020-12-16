@@ -3,7 +3,10 @@
 define('INSIDE', true);
 
 $_EnginePath = './';
-include($_EnginePath.'common.php');
+include($_EnginePath . 'common.php');
+include($_EnginePath . 'modules/flightControl/_includes.php');
+
+use UniEngine\Engine\Modules\FlightControl;
 
 loggedCheck();
 
@@ -31,7 +34,10 @@ includeLang('galaxy');
 $Time = time();
 $CurrentPlanet = &$_Planet;
 
-$fleetmax = $_User['tech_computer'] + 1 + (($_User['admiral_time'] > $Time) ? 2 : 0);
+$fleetmax = FlightControl\Utils\Helpers\getUserFleetSlotsCount([
+    'user' => $_User,
+    'timestamp' => $Time,
+]);
 $CurrentMIP = $CurrentPlanet['interplanetary_missile'];
 $CurrentRC = $CurrentPlanet['recycler'];
 $CurrentSP = $CurrentPlanet['espionage_probe'];

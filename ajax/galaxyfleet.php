@@ -83,8 +83,12 @@ if(MORALE_ENABLED)
     Morale_ReCalculate($_User, $Time);
 }
 
-if(($_User[$_Vars_GameElements[108]] + 1 + (($_User['admiral_time'] > $Time) ? 2 : 0)) <= $ActualFleets)
-{
+$fleetSlotsCount = FlightControl\Utils\Helpers\getUserFleetSlotsCount([
+    'user' => $_User,
+    'timestamp' => $Time,
+]);
+
+if ($ActualFleets >= $fleetSlotsCount) {
     $Update = '1';
     CreateReturn('609');
 }
