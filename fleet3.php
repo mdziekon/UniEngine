@@ -455,63 +455,17 @@ if($Fleet['count'] <= 0)
 $Fleet['array'] = $FleetArray;
 unset($FleetArray);
 
-// --- Create Array of Available Missions
-$AvailableMissions = array();
-if($Target['type'] == 2)
-{
-    if($Fleet['array'][209] > 0)
-    {
-        $AvailableMissions[] = 8;
-    }
-}
-else
-{
-    if($UsedPlanet)
-    {
-        if(!isset($Fleet['array'][210]) || $Fleet['count'] > $Fleet['array'][210])
-        {
-            $AvailableMissions[] = 3;
-        }
-        if(!$YourPlanet)
-        {
-            $AvailableMissions[] = 1;
-            $AvailableMissions[] = 2;
-            if($OwnerFriend)
-            {
-                $AvailableMissions[] = 5;
-            }
-            if(isset($Fleet['array'][210]) && $Fleet['count'] == $Fleet['array'][210])
-            {
-                $AvailableMissions[] = 6;
-            }
-            if($Target['type'] == 3 && isset($Fleet['array'][214]) && $Fleet['array'][214] > 0)
-            {
-                $AvailableMissions[] = 9;
-            }
-        }
-        else
-        {
-            $AvailableMissions[] = 4;
-        }
-    }
-    else
-    {
-        if($Target['planet'] == (MAX_PLANET_IN_SYSTEM + 1))
-        {
-            $AvailableMissions[] = 15;
-        }
-        else
-        {
-            if($Fleet['array'][208] > 0 AND $Target['type'] == 1)
-            {
-                $AvailableMissions[] = 7;
-            }
-        }
-    }
-}
+$validMissionTypes = FlightControl\Utils\Helpers\getValidMissionTypes([
+    'targetCoordinates' => $Target,
+    'fleetShips' => $Fleet['array'],
+    'fleetShipsCount' => $Fleet['count'],
+    'isPlanetOccupied' => $UsedPlanet,
+    'isPlanetOwnedByUser' => $YourPlanet,
+    'isPlanetOwnedByUsersFriend' => $OwnerFriend,
+]);
 
 // --- Check if everything is OK with ACS
-if ($Fleet['Mission'] == 2 AND in_array(2, $AvailableMissions)) {
+if ($Fleet['Mission'] == 2 AND in_array(2, $validMissionTypes)) {
     $joinUnionValidationResult = FlightControl\Utils\Validators\validateJoinUnion([
         'newFleet' => $Fleet,
         'timestamp' => $Now,
@@ -561,7 +515,7 @@ if ($Fleet['Mission'] == 2 AND in_array(2, $AvailableMissions)) {
 $Throw = false;
 
 // --- If Mission is not correct, show Error
-if(!in_array($Fleet['Mission'], $AvailableMissions))
+if(!in_array($Fleet['Mission'], $validMissionTypes))
 {
     switch($Fleet['Mission'])
     {
