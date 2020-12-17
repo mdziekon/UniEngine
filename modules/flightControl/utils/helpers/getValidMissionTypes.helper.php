@@ -72,7 +72,10 @@ function getValidMissionTypes ($props) {
     if (!$isPlanetOccupied) {
         $expeditionPlanetCoordinate = (MAX_PLANET_IN_SYSTEM + 1);
 
-        if ($targetCoordinates['planet'] == $expeditionPlanetCoordinate) {
+        if (
+            isFeatureEnabled(\FeatureType::Expeditions) &&
+            $targetCoordinates['planet'] == $expeditionPlanetCoordinate
+        ) {
             $validMissionTypes[] = 15;
         }
 
