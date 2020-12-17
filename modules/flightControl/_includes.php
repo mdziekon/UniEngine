@@ -10,6 +10,7 @@ call_user_func(function () {
     include($includePath . './utils/helpers/getAvailableSpeeds.helper.php');
     include($includePath . './utils/helpers/getFleetUnionJoinData.helper.php');
     include($includePath . './utils/helpers/getUserFleetSlotsCount.helper.php');
+    include($includePath . './utils/helpers/getValidMissionTypes.helper.php');
     include($includePath . './utils/validators/fleetArray.validator.php');
     include($includePath . './utils/validators/joinUnion.validator.php');
     include($includePath . './utils/validators/missionHold.validator.php');
