@@ -10,6 +10,7 @@ namespace UniEngine\Engine\Modules\FlightControl\Utils\Helpers;
  * @param boolean $props['isPlanetOccupied']
  * @param boolean $props['isPlanetOwnedByUser']
  * @param boolean $props['isPlanetOwnedByUsersFriend']
+ * @param boolean $props['isUnionMissionAllowed']
  */
 function getValidMissionTypes ($props) {
     $targetCoordinates = $props['targetCoordinates'];
@@ -18,6 +19,7 @@ function getValidMissionTypes ($props) {
     $isPlanetOccupied = $props['isPlanetOccupied'];
     $isPlanetOwnedByUser = $props['isPlanetOwnedByUser'];
     $isPlanetOwnedByUsersFriend = $props['isPlanetOwnedByUsersFriend'];
+    $isUnionMissionAllowed = $props['isUnionMissionAllowed'];
 
     $validMissionTypes = [];
 
@@ -46,7 +48,10 @@ function getValidMissionTypes ($props) {
 
         if (!$isPlanetOwnedByUser) {
             $validMissionTypes[] = 1;
-            $validMissionTypes[] = 2;
+
+            if ($isUnionMissionAllowed) {
+                $validMissionTypes[] = 2;
+            }
 
             if (
                 $targetCoordinates['type'] == 3 &&

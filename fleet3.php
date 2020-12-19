@@ -455,6 +455,8 @@ $validMissionTypes = FlightControl\Utils\Helpers\getValidMissionTypes([
     'isPlanetOccupied' => $UsedPlanet,
     'isPlanetOwnedByUser' => $YourPlanet,
     'isPlanetOwnedByUsersFriend' => $OwnerFriend,
+    // TODO: additional pre-validation might be needed
+    'isUnionMissionAllowed' => true,
 ]);
 
 // --- Check if everything is OK with ACS
