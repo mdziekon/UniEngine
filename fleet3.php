@@ -118,7 +118,9 @@ $Slots['MaxFleetSlots'] = FlightControl\Utils\Helpers\getUserFleetSlotsCount([
     'user' => $_User,
     'timestamp' => $Now,
 ]);
-$Slots['MaxExpedSlots'] = 1 + floor($_User[$_Vars_GameElements[124]] / 3);
+$Slots['MaxExpedSlots'] = FlightControl\Utils\Helpers\getUserExpeditionSlotsCount([
+    'user' => $_User,
+]);
 $Slots['FlyingFleetsCount'] = $FlyingFleetsCount;
 $Slots['FlyingExpeditions'] = $FlyingExpeditions;
 if($Slots['FlyingFleetsCount'] >= $Slots['MaxFleetSlots'])
