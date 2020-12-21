@@ -209,38 +209,19 @@ $PlanetAbandoned            = false;
 
 if($Fleet['Mission'] != 8)
 {
-    // This is not a Recycling Mission, so check Planet Data
-    $Query_CheckPlanetOwner = '';
-    $Query_CheckPlanetOwner .= "SELECT `pl`.`id` AS `id`, `pl`.`id_owner` AS `owner`, `pl`.`name` AS `name`, `pl`.`quantumgate`, ";
-    $Query_CheckPlanetOwner .= "`users`.`ally_id`, `users`.`onlinetime`, `users`.`username` as `username`, `users`.`user_lastip` as `lastip`, `users`.`is_onvacation`, `users`.`is_banned`, `users`.`authlevel`, `users`.`first_login`, `users`.`NoobProtection_EndTime`, `users`.`multiIP_DeclarationID`, ";
-    $Query_CheckPlanetOwner .= "`stats`.`total_rank`, `stats`.`total_points`, `buddy1`.`active` AS `active1`, `buddy2`.`active` AS `active2` ";
-    if($_User['ally_id'] > 0)
-    {
-        $Query_CheckPlanetOwner .= ", `apact1`.`Type` AS `AllyPact1`, `apact2`.`Type` AS `AllyPact2` ";
-    }
-    $Query_CheckPlanetOwner .= "FROM {{table}} as `pl` ";
-    $Query_CheckPlanetOwner .= "LEFT JOIN {{prefix}}buddy as `buddy1` ON (`pl`.`id_owner` = `buddy1`.`sender` AND `buddy1`.`owner` = {$_User['id']}) ";
-    $Query_CheckPlanetOwner .= "LEFT JOIN {{prefix}}buddy as `buddy2` ON (`pl`.`id_owner` = `buddy2`.`owner` AND `buddy2`.`sender` = {$_User['id']}) ";
-    $Query_CheckPlanetOwner .= "LEFT JOIN {{prefix}}users as `users` ON `pl`.`id_owner` = `users`.`id` ";
-    $Query_CheckPlanetOwner .= "LEFT JOIN {{prefix}}statpoints AS `stats` ON `pl`.`id_owner` = `stats`.`id_owner` AND `stat_type` = '1' ";
-    if($_User['ally_id'] > 0)
-    {
-        $Query_CheckPlanetOwner .= "LEFT JOIN `{{prefix}}ally_pacts` AS `apact1` ON (`apact1`.`AllyID_Sender` = {$_User['ally_id']} AND `apact1`.`AllyID_Owner` = `users`.`ally_id` AND `apact1`.`Active` = 1) ";
-        $Query_CheckPlanetOwner .= "LEFT JOIN `{{prefix}}ally_pacts` AS `apact2` ON (`apact2`.`AllyID_Sender` = `users`.`ally_id` AND `apact2`.`AllyID_Owner` = {$_User['ally_id']} AND `apact2`.`Active` = 1) ";
-    }
-    $Query_CheckPlanetOwner .= "WHERE `pl`.`galaxy` = {$Target['galaxy']} AND `pl`.`system` = {$Target['system']} AND `pl`.`planet` = {$Target['planet']} AND `pl`.`planet_type` = {$Target['type']} ";
-    $Query_CheckPlanetOwner .= "LIMIT 1;";
+    $planetOwnerDetails = FlightControl\Utils\Fetchers\fetchPlanetOwnerDetails([
+        'targetCoordinates' => $Target,
+        'user' => &$_User,
+        'isExtendedUserDetailsEnabled' => true,
+    ]);
 
-    $SQLResult_GetPlanetData = doquery($Query_CheckPlanetOwner, 'planets');
-
-    if($SQLResult_GetPlanetData->num_rows == 1)
-    {
+    if ($planetOwnerDetails) {
         $CheckGalaxyRow = doquery(
             "SELECT `galaxy_id` FROM {{table}} WHERE `galaxy` = {$Target['galaxy']} AND `system` = {$Target['system']} AND `planet` = {$Target['planet']} LIMIT 1;", 'galaxy',
             true
         );
 
-        $CheckPlanetOwner = $SQLResult_GetPlanetData->fetch_assoc();
+        $CheckPlanetOwner = $planetOwnerDetails;
 
         $CheckPlanetOwner['galaxy_id'] = $CheckGalaxyRow['galaxy_id'];
         $UsedPlanet = true;
@@ -277,7 +258,7 @@ if($Fleet['Mission'] != 8)
     }
     else
     {
-        $CheckPlanetOwner = array();
+        $CheckPlanetOwner = [];
     }
 }
 else
