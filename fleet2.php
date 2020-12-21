@@ -153,28 +153,25 @@ if (!in_array($_POST['speed'], $availableSpeeds)) {
 }
 
 // Check PlanetOwner
-$YourPlanet                    = false;
-$UsedPlanet                    = false;
-$OwnerFriend                = false;
-$OwnerHasMarcantilePact        = false;
-$AllyPactWarning            = false;
-
 $planetOwnerDetails = FlightControl\Utils\Fetchers\fetchPlanetOwnerDetails([
     'targetCoordinates' => $Target,
     'user' => &$_User,
     'isExtendedUserDetailsEnabled' => false,
 ]);
 
+$isPlanetOccupied = !empty($planetOwnerDetails);
+
+$YourPlanet = false;
+$OwnerFriend = false;
+$OwnerHasMarcantilePact = false;
+$AllyPactWarning = false;
+
 if ($planetOwnerDetails) {
     $CheckPlanetOwner = $planetOwnerDetails;
 
-    $UsedPlanet = true;
-    if($CheckPlanetOwner['owner'] == $_User['id'])
-    {
+    if ($CheckPlanetOwner['owner'] == $_User['id']) {
         $YourPlanet = true;
-    }
-    else
-    {
+    } else {
         if(!empty($_GameConfig['TestUsersIDs']))
         {
             $TestUsersArray = explode(',', $_GameConfig['TestUsersIDs']);
@@ -272,7 +269,7 @@ $AvailableMissions = FlightControl\Utils\Helpers\getValidMissionTypes([
     'targetCoordinates' => $Target,
     'fleetShips' => $Fleet['array'],
     'fleetShipsCount' => $Fleet['count'],
-    'isPlanetOccupied' => $UsedPlanet,
+    'isPlanetOccupied' => $isPlanetOccupied,
     'isPlanetOwnedByUser' => $YourPlanet,
     'isPlanetOwnedByUsersFriend' => $OwnerFriend,
     'isUnionMissionAllowed' => false,

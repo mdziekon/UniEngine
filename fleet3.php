@@ -199,13 +199,13 @@ if (!in_array($Fleet['Speed'], $availableSpeeds)) {
 }
 
 // --- Check PlanetOwner
-$YourPlanet                    = false;
-$UsedPlanet                    = false;
-$OwnerFriend                = false;
-$OwnerIsBuddyFriend            = false;
-$OwnerIsAlliedUser            = false;
-$OwnerHasMarcantilePact        = false;
-$PlanetAbandoned            = false;
+$YourPlanet = false;
+$UsedPlanet = false;
+$OwnerFriend = false;
+$OwnerIsBuddyFriend = false;
+$OwnerIsAlliedUser = false;
+$OwnerHasMarcantilePact = false;
+$PlanetAbandoned = false;
 
 if($Fleet['Mission'] != 8)
 {
