@@ -158,29 +158,16 @@ $UsedPlanet                    = false;
 $OwnerFriend                = false;
 $OwnerHasMarcantilePact        = false;
 $AllyPactWarning            = false;
-$CheckPlanetOwnerQuery = '';
-$CheckPlanetOwnerQuery .= "SELECT `planets`.`id`, `planets`.`id_owner` AS `owner`, `planets`.`name` AS `name`, `quantumgate`, ";
-$CheckPlanetOwnerQuery .= "`users`.`ally_id`, `users`.`username` as `username`, `buddy1`.`active` AS `active1`, `buddy2`.`active` AS `active2` ";
-if($_User['ally_id'] > 0)
-{
-    $CheckPlanetOwnerQuery .= ", `apact1`.`Type` AS `AllyPact1`, `apact2`.`Type` AS `AllyPact2` ";
-}
-$CheckPlanetOwnerQuery .= "FROM {{table}} AS `planets` ";
-$CheckPlanetOwnerQuery .= "LEFT JOIN `{{prefix}}buddy` AS `buddy1` ON (`planets`.`id_owner` = `buddy1`.`sender` AND `buddy1`.`owner` = {$_User['id']}) ";
-$CheckPlanetOwnerQuery .= "LEFT JOIN `{{prefix}}buddy` AS `buddy2` ON (`planets`.`id_owner` = `buddy2`.`owner` AND `buddy2`.`sender` = {$_User['id']}) ";
-$CheckPlanetOwnerQuery .= "LEFT JOIN `{{prefix}}users` AS `users` ON `planets`.`id_owner` = `users`.`id` ";
-if($_User['ally_id'] > 0)
-{
-    $CheckPlanetOwnerQuery .= "LEFT JOIN `{{prefix}}ally_pacts` AS `apact1` ON (`apact1`.`AllyID_Sender` = {$_User['ally_id']} AND `apact1`.`AllyID_Owner` = `users`.`ally_id` AND `apact1`.`Active` = 1) ";
-    $CheckPlanetOwnerQuery .= "LEFT JOIN `{{prefix}}ally_pacts` AS `apact2` ON (`apact2`.`AllyID_Sender` = `users`.`ally_id` AND `apact2`.`AllyID_Owner` = {$_User['ally_id']} AND `apact2`.`Active` = 1) ";
-}
-$CheckPlanetOwnerQuery .= "WHERE `planets`.`galaxy` = {$Target['galaxy']} AND `planets`.`system` = {$Target['system']} AND `planets`.`planet` = {$Target['planet']} AND `planets`.`planet_type` = {$Target['type']} ";
-$CheckPlanetOwnerQuery .= "LIMIT 1;";
-$CheckPlanetOwner = doquery($CheckPlanetOwnerQuery, 'planets');
 
-if($CheckPlanetOwner->num_rows == 1)
-{
-    $CheckPlanetOwner = $CheckPlanetOwner->fetch_assoc();
+$planetOwnerDetails = FlightControl\Utils\Fetchers\fetchPlanetOwnerDetails([
+    'targetCoordinates' => $Target,
+    'user' => &$_User,
+    'isExtendedUserDetailsEnabled' => false,
+]);
+
+if ($planetOwnerDetails) {
+    $CheckPlanetOwner = $planetOwnerDetails;
+
     $UsedPlanet = true;
     if($CheckPlanetOwner['owner'] == $_User['id'])
     {
