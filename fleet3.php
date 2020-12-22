@@ -83,35 +83,9 @@ if($Fleet['Mission'] <= 0)
     messageRed($_Lang['fl3_NoMissionSelected'], $ErrorTitle);
 }
 
-// --- Get FlyingFleets Count
-$FlyingFleetsCount = 0;
-$FlyingExpeditions = 0;
-
-$Query_GetFleets = '';
-$Query_GetFleets .= "SELECT `fleet_mission`, `fleet_target_owner`, `fleet_end_id`, `fleet_mess` FROM {{table}} ";
-$Query_GetFleets .= "WHERE `fleet_owner` = {$_User['id']};";
-$Result_GetFleets = doquery($Query_GetFleets, 'fleets');
-while($FleetData = $Result_GetFleets->fetch_assoc())
-{
-    $FlyingFleetsCount += 1;
-    if($FleetData['fleet_mission'] == 15)
-    {
-        $FlyingExpeditions += 1;
-    }
-    if(in_array($FleetData['fleet_mission'], array(1, 2, 9)) AND $FleetData['fleet_mess'] == 0)
-    {
-        if(!isset($FlyingFleetsData[$FleetData['fleet_target_owner']]['count']))
-        {
-            $FlyingFleetsData[$FleetData['fleet_target_owner']]['count'] = 0;
-        }
-        if(!isset($FlyingFleetsData[$FleetData['fleet_target_owner']][$FleetData['fleet_end_id']]))
-        {
-            $FlyingFleetsData[$FleetData['fleet_target_owner']][$FleetData['fleet_end_id']] = 0;
-        }
-        $FlyingFleetsData[$FleetData['fleet_target_owner']]['count'] += 1;
-        $FlyingFleetsData[$FleetData['fleet_target_owner']][$FleetData['fleet_end_id']] += 1;
-    }
-}
+$fleetsInFlightCounters = FlightControl\Utils\Helpers\getFleetsInFlightCounters([
+    'userId' => $_User['id'],
+]);
 
 // Get Available Slots for Expeditions (1 + floor(ExpeditionTech / 3))
 $Slots['MaxFleetSlots'] = FlightControl\Utils\Helpers\getUserFleetSlotsCount([
@@ -121,8 +95,8 @@ $Slots['MaxFleetSlots'] = FlightControl\Utils\Helpers\getUserFleetSlotsCount([
 $Slots['MaxExpedSlots'] = FlightControl\Utils\Helpers\getUserExpeditionSlotsCount([
     'user' => $_User,
 ]);
-$Slots['FlyingFleetsCount'] = $FlyingFleetsCount;
-$Slots['FlyingExpeditions'] = $FlyingExpeditions;
+$Slots['FlyingFleetsCount'] = $fleetsInFlightCounters['allFleetsInFlight'];
+$Slots['FlyingExpeditions'] = $fleetsInFlightCounters['expeditionsInFlight'];
 if($Slots['FlyingFleetsCount'] >= $Slots['MaxFleetSlots'])
 {
     messageRed($_Lang['fl3_NoMoreFreeSlots'], $ErrorTitle);
@@ -965,7 +939,7 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
                         $Throw = sprintf($_Lang['fl3_Protect_AttackLimitTotal'], $_Lang['fl3_Protect_AttackLimit_'.$Values['key']]);
                         break;
                     }
-                    elseif(($FleetArchiveRecordsCount + $FlyingFleetsData[$TargetData['owner']]['count']) >= $Protections[$Values['key'].'_counttotal'])
+                    elseif(($FleetArchiveRecordsCount + $fleetsInFlightCounters['aggressiveFleetsInFlight']['byTargetOwnerId'][$TargetData['owner']]) >= $Protections[$Values['key'].'_counttotal'])
                     {
                         $Throw = sprintf($_Lang['fl3_Protect_AttackLimitTotalFly'], $_Lang['fl3_Protect_AttackLimit_'.$Values['key']]);
                         break;
@@ -975,7 +949,7 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
                         $Throw = sprintf($_Lang['fl3_Protect_AttackLimitSingle'], $_Lang['fl3_Protect_AttackLimit_'.$Values['key']]);
                         break;
                     }
-                    elseif(($SaveArchiveData[$Values['type']][$TargetData['id']] + $FlyingFleetsData[$TargetData['owner']][$TargetData['id']]) >= $Protections[$Values['key'].'_countplanet'])
+                    elseif(($SaveArchiveData[$Values['type']][$TargetData['id']] + $fleetsInFlightCounters['aggressiveFleetsInFlight']['byTargetId'][$TargetData['id']]) >= $Protections[$Values['key'].'_countplanet'])
                     {
                         $Throw = sprintf($_Lang['fl3_Protect_AttackLimitSingleFly'], $_Lang['fl3_Protect_AttackLimit_'.$Values['key']]);
                         break;
