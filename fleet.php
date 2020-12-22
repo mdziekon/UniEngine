@@ -146,7 +146,6 @@ $fleetsInFlightCounters = FlightControl\Utils\Helpers\getFleetsInFlightCounters(
 $FlyingFleetsCount = $fleetsInFlightCounters['allFleetsInFlight'];
 $FlyingExpeditions = $fleetsInFlightCounters['expeditionsInFlight'];
 
-// Get Available Slots for Expeditions (1 + floor(ExpeditionTech / 3))
 $_Lang['P_MaxFleetSlots'] = FlightControl\Utils\Helpers\getUserFleetSlotsCount([
     'user' => $_User,
     'timestamp' => $Now,
