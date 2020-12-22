@@ -154,8 +154,8 @@ $_Lang['P_MaxFleetSlots'] = FlightControl\Utils\Helpers\getUserFleetSlotsCount([
 $_Lang['P_MaxExpedSlots'] = FlightControl\Utils\Helpers\getUserExpeditionSlotsCount([
     'user' => $_User,
 ]);
-$_Lang['P_FlyingFleetsCount']    = (string)($FlyingFleetsCount + 0);
-$_Lang['P_FlyingExpeditions']    = (string)($FlyingExpeditions + 0);
+$_Lang['P_FlyingFleetsCount']    = (string)($FlyingFleetsCount);
+$_Lang['P_FlyingExpeditions']    = (string)($FlyingExpeditions);
 $_Lang['P_Expeditions_isHidden_style'] = (
     isFeatureEnabled(FeatureType::Expeditions) ?
     '' :
