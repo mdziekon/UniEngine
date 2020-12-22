@@ -52,9 +52,6 @@ $InsertChronoApplets = '';
 
 $Hide = ' class="hide"';
 
-$FlyingFleetsCount = 0;
-$FlyingExpeditions = 0;
-
 $missiontype = array
 (
     1 => $_Lang['type_mission'][1],
@@ -142,16 +139,12 @@ else
     $_Lang['P_HideRetreatBox'] = $Hide;
 }
 
-// Get FlyingFleets Count
-$SQLResult_GetFlyingFleets = doquery("SELECT `fleet_mission` FROM {{table}} WHERE `fleet_owner` = {$_User['id']};", 'fleets');
-while($FleetData = $SQLResult_GetFlyingFleets->fetch_assoc())
-{
-    $FlyingFleetsCount += 1;
-    if($FleetData['fleet_mission'] == 15)
-    {
-        $FlyingExpeditions += 1;
-    }
-}
+$fleetsInFlightCounters = FlightControl\Utils\Helpers\getFleetsInFlightCounters([
+    'userId' => $_User['id'],
+]);
+
+$FlyingFleetsCount = $fleetsInFlightCounters['allFleetsInFlight'];
+$FlyingExpeditions = $fleetsInFlightCounters['expeditionsInFlight'];
 
 // Get Available Slots for Expeditions (1 + floor(ExpeditionTech / 3))
 $_Lang['P_MaxFleetSlots'] = FlightControl\Utils\Helpers\getUserFleetSlotsCount([
