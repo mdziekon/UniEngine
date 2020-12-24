@@ -977,44 +977,33 @@ if(!isPro())
 if(isset($_GET['quickres']) && $_GET['quickres'] == 1)
 {
     $_Lang['P_SetQuickRes'] = '1';
-    $TotalResStorage = floor($_Planet['metal']) + floor($_Planet['crystal']) + floor($_Planet['deuterium']);
-    $TotalShipsStorage[217] = $_Planet[$_Vars_GameElements[217]] * $_Vars_Prices[217]['capacity'];
-    $TotalShipsStorage[203] = $_Planet[$_Vars_GameElements[203]] * $_Vars_Prices[203]['capacity'];
-    $TotalShipsStorage[202] = $_Planet[$_Vars_GameElements[202]] * $_Vars_Prices[202]['capacity'];
-    $TotalShipsStorage['all'] = array_sum($TotalShipsStorage);
-    if($TotalResStorage >= $TotalShipsStorage['all'])
-    {
-        $JSSetShipsCount[217] = 'max';
-        $JSSetShipsCount[203] = 'max';
-        $JSSetShipsCount[202] = 'max';
-    }
-    else
-    {
-        if($TotalResStorage >= $TotalShipsStorage[217])
-        {
-            $JSSetShipsCount[217] = 'max';
-            $TotalResStorage -= $TotalShipsStorage[217];
-            if($TotalResStorage >= $TotalShipsStorage[203])
-            {
-                $JSSetShipsCount[203] = 'max';
-                $TotalResStorage -= $TotalShipsStorage[203];
-                if($TotalResStorage >= $TotalShipsStorage[202])
-                {
-                    $JSSetShipsCount[202] = 'max';
-                }
-                else
-                {
-                    $JSSetShipsCount[202] = $TotalResStorage / $_Vars_Prices[202]['capacity'];
-                }
-            }
-            else
-            {
-                $JSSetShipsCount[203] = $TotalResStorage / $_Vars_Prices[203]['capacity'];
-            }
-        }
-        else
-        {
-            $JSSetShipsCount[217] = $TotalResStorage / $_Vars_Prices[217]['capacity'];
+
+    $resourcesToLoad = (
+        floor($_Planet['metal']) +
+        floor($_Planet['crystal']) +
+        floor($_Planet['deuterium'])
+    );
+
+    $transportShipIds = [ 217, 203, 202 ];
+
+    $JSSetShipsCount = [];
+
+    foreach ($transportShipIds as $shipId) {
+        $shipCapacity = $_Vars_Prices[$shipId]['capacity'];
+
+        $shipsNeeded = ceil($resourcesToLoad / $shipCapacity);
+        $shipsToUse = (
+            $shipsNeeded > $_Planet[$_Vars_GameElements[$shipId]] ?
+            $_Planet[$_Vars_GameElements[$shipId]] :
+            $shipsNeeded
+        );
+
+        $JSSetShipsCount[$shipId] = $shipsToUse;
+
+        $resourcesToLoad -= ($shipsToUse * $shipCapacity);
+
+        if ($resourcesToLoad <= 0) {
+            break;
         }
     }
 
