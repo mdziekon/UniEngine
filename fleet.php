@@ -974,8 +974,11 @@ if(!isPro())
     // Don't Allow to use this function to NonPro Players
     $_GET['quickres'] = 0;
 }
-if(isset($_GET['quickres']) && $_GET['quickres'] == 1)
-{
+
+if (
+    isset($_GET['quickres']) &&
+    $_GET['quickres'] == 1
+) {
     $_Lang['P_SetQuickRes'] = '1';
 
     $resourcesToLoad = (
@@ -1012,9 +1015,7 @@ if(isset($_GET['quickres']) && $_GET['quickres'] == 1)
 
         $_Lang['InsertJSShipSet'] = "var JSShipSet = {$jsShipsObject};\n";
     }
-}
-else
-{
+} else {
     $_Lang['P_SetQuickRes'] = '0';
 }
 
