@@ -992,13 +992,14 @@ if (
     $JSSetShipsCount = [];
 
     foreach ($transportShipIds as $shipId) {
-        $shipCapacity = $_Vars_Prices[$shipId]['capacity'];
+        $shipPlanetKey = _getElementPlanetKey($shipId);
+        $shipCapacity = getShipsStorageCapacity($shipId);
 
         $shipsNeeded = ceil($resourcesToLoad / $shipCapacity);
         $shipsToUse = (
-            $shipsNeeded > $_Planet[$_Vars_GameElements[$shipId]] ?
-            $_Planet[$_Vars_GameElements[$shipId]] :
-            $shipsNeeded
+            $shipsNeeded <= $_Planet[$shipPlanetKey] ?
+            $shipsNeeded :
+            $_Planet[$shipPlanetKey]
         );
 
         $JSSetShipsCount[$shipId] = ((string) $shipsToUse);
