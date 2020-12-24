@@ -1007,24 +1007,13 @@ if(isset($_GET['quickres']) && $_GET['quickres'] == 1)
         }
     }
 
-    if(!empty($JSSetShipsCount))
-    {
+    if (!empty($JSSetShipsCount)) {
         $_Lang['InsertJSShipSet'] = "var JSShipSet = new Object;\n";
-        foreach($JSSetShipsCount as $ShipID => $ShipCount)
-        {
-            $ShipCount = ceil($ShipCount);
-            if($_Planet[$_Vars_GameElements[$ShipID]] > 0)
-            {
-                if($ShipCount == 'max')
-                {
-                    $ShipCount = $_Planet[$_Vars_GameElements[$ShipID]];
-                }
-                else if($ShipCount > $_Planet[$_Vars_GameElements[$ShipID]])
-                {
-                    $ShipCount = $_Planet[$_Vars_GameElements[$ShipID]];
-                }
-                $_Lang['InsertJSShipSet'] .= "JSShipSet['{$ShipID}'] = {$ShipCount};\n";
-            }
+
+        foreach ($JSSetShipsCount as $shipId => $shipsCount) {
+            $shipsCount = ((string) $shipsCount);
+
+            $_Lang['InsertJSShipSet'] .= "JSShipSet['{$shipId}'] = {$shipsCount};\n";
         }
     }
 }
