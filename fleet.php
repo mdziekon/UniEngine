@@ -998,7 +998,7 @@ if(isset($_GET['quickres']) && $_GET['quickres'] == 1)
             $shipsNeeded
         );
 
-        $JSSetShipsCount[$shipId] = $shipsToUse;
+        $JSSetShipsCount[$shipId] = ((string) $shipsToUse);
 
         $resourcesToLoad -= ($shipsToUse * $shipCapacity);
 
@@ -1008,13 +1008,9 @@ if(isset($_GET['quickres']) && $_GET['quickres'] == 1)
     }
 
     if (!empty($JSSetShipsCount)) {
-        $_Lang['InsertJSShipSet'] = "var JSShipSet = new Object;\n";
+        $jsShipsObject = json_encode($JSSetShipsCount);
 
-        foreach ($JSSetShipsCount as $shipId => $shipsCount) {
-            $shipsCount = ((string) $shipsCount);
-
-            $_Lang['InsertJSShipSet'] .= "JSShipSet['{$shipId}'] = {$shipsCount};\n";
-        }
+        $_Lang['InsertJSShipSet'] = "var JSShipSet = {$jsShipsObject};\n";
     }
 }
 else
