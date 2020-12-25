@@ -469,201 +469,120 @@ $Throw = false;
 // --- If Mission is not correct, show Error
 if(!in_array($Fleet['Mission'], $validMissionTypes))
 {
-    switch($Fleet['Mission'])
-    {
-        case 1:
-            if($Target['type'] == 2)
-            {
-                $Throw = $_Lang['fl3_CantAttackDebris'];
-            }
-            else
-            {
-                if(!$UsedPlanet)
-                {
-                    $Throw = $_Lang['fl3_CantAttackNonUsed'];
-                }
-                else
-                {
-                    if($YourPlanet)
-                    {
-                        $Throw = $_Lang['fl3_CantAttackYourself'];
-                    }
-                }
-            }
-            break;
-        case 2:
-            if($Target['type'] == 2)
-            {
-                $Throw = $_Lang['fl3_CantACSDebris'];
-            }
-            else
-            {
-                if(!$UsedPlanet)
-                {
-                    $Throw = $_Lang['fl3_CantACSNonUsed'];
-                }
-                else
-                {
-                    if($YourPlanet)
-                    {
-                        $Throw = $_Lang['fl3_CantACSYourself'];
-                    }
-                }
-            }
-            break;
-        case 3:
-            if($Target['type'] == 2)
-            {
-                $Throw = $_Lang['fl3_CantTransportDebris'];
-            }
-            else
-            {
-                if(!$UsedPlanet)
-                {
-                    $Throw = $_Lang['fl3_CantTransportNonUsed'];
-                }
-                else
-                {
-                    $Throw = $_Lang['fl3_CantTransportSpyProbes'];
-                }
-            }
-            break;
-        case 4:
-            if($Target['type'] == 2)
-            {
-                $Throw = $_Lang['fl3_CantStayDebris'];
-            }
-            else
-            {
-                if(!$UsedPlanet)
-                {
-                    $Throw = $_Lang['fl3_CantStayNonUsed'];
-                }
-                else
-                {
-                    if(!$YourPlanet)
-                    {
-                        $Throw = $_Lang['fl3_CantStayNonYourself'];
-                    }
-                }
-            }
-            break;
-        case 5:
-            if($Target['type'] == 2)
-            {
-                $Throw = $_Lang['fl3_CantProtectDebris'];
-            }
-            else
-            {
-                if(!$UsedPlanet)
-                {
-                    $Throw = $_Lang['fl3_CantProtectNonUsed'];
-                }
-                else
-                {
-                    if($YourPlanet)
-                    {
-                        $Throw = $_Lang['fl3_CantProtectYourself'];
-                    }
-                    else
-                    {
-                        $Throw = $_Lang['fl3_CantProtectNonFriend'];
-                    }
-                }
-            }
-            break;
-        case 6:
-            if($Target['type'] == 2)
-            {
-                $Throw = $_Lang['fl3_CantSpyDebris'];
-            }
-            else
-            {
-                if(!$UsedPlanet)
-                {
-                    $Throw = $_Lang['fl3_CantSpyNonUsed'];
-                }
-                else
-                {
-                    if($YourPlanet)
-                    {
-                        $Throw = $_Lang['fl3_CantSpyYourself'];
-                    }
-                    else
-                    {
-                        $Throw = $_Lang['fl3_CantSpyProbesCount'];
-                    }
-                }
-            }
-            break;
-        case 7:
-            if($UsedPlanet)
-            {
-                $Throw = $_Lang['fl3_CantSettleOnUsed'];
-            }
-            else
-            {
-                if($Target['type'] != 1)
-                {
-                    $Throw = $_Lang['fl3_CantSettleNonPlanet'];
-                }
-                else
-                {
-                    $Throw = $_Lang['fl3_CantSettleNoShips'];
-                }
-            }
-            break;
-        case 8:
-            if($Target['type'] != 2)
-            {
-                $Throw = $_Lang['fl3_CantRecycleNonDebris'];
-            }
-            else
-            {
-                $Throw = $_Lang['fl3_CantRecycleNoShip'];
-            }
-            break;
-        case 9:
-            if($Target['type'] == 2)
-            {
-                $Throw = $_Lang['fl3_CantDestroyDebris'];
-            }
-            else
-            {
-                if(!$UsedPlanet)
-                {
-                    $Throw = $_Lang['fl3_CantDestroyNonUsed'];
-                }
-                else
-                {
-                    if($YourPlanet)
-                    {
-                        $Throw = $_Lang['fl3_CantDestroyYourself'];
-                    }
-                    else
-                    {
-                        if($Target['type'] != 3)
-                        {
-                            $Throw = $_Lang['fl3_CantDestroyNonMoon'];
-                        }
-                        else
-                        {
-                            $Throw = $_Lang['fl3_CantDestroyNoShip'];
-                        }
-                    }
-                }
-            }
-            break;
-        case 15:
-            if (!isFeatureEnabled(\FeatureType::Expeditions)) {
-                $Throw = $_Lang['fl3_ExpeditionsAreOff'];
-            }
-            break;
+    if ($Fleet['Mission'] == 1) {
+        if ($Target['type'] == 2) {
+            messageRed($_Lang['fl3_CantAttackDebris'], $ErrorTitle);
+        }
+        if (!$UsedPlanet) {
+            messageRed($_Lang['fl3_CantAttackNonUsed'], $ErrorTitle);
+        }
+        if ($YourPlanet) {
+            messageRed($_Lang['fl3_CantAttackYourself'], $ErrorTitle);
+        }
     }
-    if($Throw)
-    {
-        messageRed($Throw, $ErrorTitle);
+    if ($Fleet['Mission'] == 2) {
+        if ($Target['type'] == 2) {
+            messageRed($_Lang['fl3_CantACSDebris'], $ErrorTitle);
+        }
+        if (!$UsedPlanet) {
+            messageRed($_Lang['fl3_CantACSNonUsed'], $ErrorTitle);
+        }
+        if ($YourPlanet) {
+            messageRed($_Lang['fl3_CantACSYourself'], $ErrorTitle);
+        }
     }
+    if ($Fleet['Mission'] == 3) {
+        if ($Target['type'] == 2) {
+            messageRed($_Lang['fl3_CantTransportDebris'], $ErrorTitle);
+        }
+        if (!$UsedPlanet) {
+            messageRed($_Lang['fl3_CantTransportNonUsed'], $ErrorTitle);
+        }
+        // TODO: This should be checked,
+        // to prevent from other error states from being caught by this
+        messageRed($_Lang['fl3_CantTransportSpyProbes'], $ErrorTitle);
+    }
+    if ($Fleet['Mission'] == 4) {
+        if ($Target['type'] == 2) {
+            messageRed($_Lang['fl3_CantStayDebris'], $ErrorTitle);
+        }
+        if (!$UsedPlanet) {
+            messageRed($_Lang['fl3_CantStayNonUsed'], $ErrorTitle);
+        }
+        if (!$YourPlanet) {
+            messageRed($_Lang['fl3_CantStayNonYourself'], $ErrorTitle);
+        }
+    }
+    if ($Fleet['Mission'] == 5) {
+        if ($Target['type'] == 2) {
+            messageRed($_Lang['fl3_CantProtectDebris'], $ErrorTitle);
+        }
+        if (!$UsedPlanet) {
+            messageRed($_Lang['fl3_CantProtectNonUsed'], $ErrorTitle);
+        }
+        if ($YourPlanet) {
+            messageRed($_Lang['fl3_CantProtectYourself'], $ErrorTitle);
+        }
+        // TODO: This should be checked,
+        // to prevent from other error states from being caught by this
+        messageRed($_Lang['fl3_CantProtectNonFriend'], $ErrorTitle);
+    }
+    if ($Fleet['Mission'] == 6) {
+        if ($Target['type'] == 2) {
+            messageRed($_Lang['fl3_CantSpyDebris'], $ErrorTitle);
+        }
+        if (!$UsedPlanet) {
+            messageRed($_Lang['fl3_CantSpyNonUsed'], $ErrorTitle);
+        }
+        if ($YourPlanet) {
+            messageRed($_Lang['fl3_CantSpyYourself'], $ErrorTitle);
+        }
+        // TODO: This should be checked,
+        // to prevent from other error states from being caught by this
+        messageRed($_Lang['fl3_CantSpyProbesCount'], $ErrorTitle);
+    }
+    if ($Fleet['Mission'] == 7) {
+        if ($Target['type'] != 1) {
+            messageRed($_Lang['fl3_CantSettleNonPlanet'], $ErrorTitle);
+        }
+        if ($UsedPlanet) {
+            messageRed($_Lang['fl3_CantSettleOnUsed'], $ErrorTitle);
+        }
+        // TODO: This should be checked,
+        // to prevent from other error states from being caught by this
+        messageRed($_Lang['fl3_CantSettleNoShips'], $ErrorTitle);
+    }
+    if ($Fleet['Mission'] == 8) {
+        if ($Target['type'] != 2) {
+            messageRed($_Lang['fl3_CantRecycleNonDebris'], $ErrorTitle);
+        }
+        // TODO: This should be checked,
+        // to prevent from other error states from being caught by this
+        messageRed($_Lang['fl3_CantRecycleNoShip'], $ErrorTitle);
+    }
+    if ($Fleet['Mission'] == 9) {
+        if ($Target['type'] == 2) {
+            messageRed($_Lang['fl3_CantDestroyDebris'], $ErrorTitle);
+        }
+        if ($Target['type'] != 3) {
+            messageRed($_Lang['fl3_CantDestroyNonMoon'], $ErrorTitle);
+        }
+        if (!$UsedPlanet) {
+            messageRed($_Lang['fl3_CantDestroyNonUsed'], $ErrorTitle);
+        }
+        if ($YourPlanet) {
+            messageRed($_Lang['fl3_CantDestroyYourself'], $ErrorTitle);
+        }
+        // TODO: This should be checked,
+        // to prevent from other error states from being caught by this
+        messageRed($_Lang['fl3_CantDestroyNoShip'], $ErrorTitle);
+    }
+    if ($Fleet['Mission'] == 15) {
+        if (!isFeatureEnabled(\FeatureType::Expeditions)) {
+            messageRed($_Lang['fl3_ExpeditionsAreOff'], $ErrorTitle);
+        }
+    }
+
     messageRed($_Lang['fl3_BadMissionSelected'], $ErrorTitle);
 }
 
