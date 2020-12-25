@@ -561,9 +561,6 @@ if(!in_array($Fleet['Mission'], $validMissionTypes))
         messageRed($_Lang['fl3_CantRecycleNoShip'], $ErrorTitle);
     }
     if ($Fleet['Mission'] == 9) {
-        if ($Target['type'] == 2) {
-            messageRed($_Lang['fl3_CantDestroyDebris'], $ErrorTitle);
-        }
         if ($Target['type'] != 3) {
             messageRed($_Lang['fl3_CantDestroyNonMoon'], $ErrorTitle);
         }

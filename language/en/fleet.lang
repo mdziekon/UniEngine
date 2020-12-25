@@ -213,10 +213,9 @@ $_Lang['fl3_CantSettleNonPlanet']                = 'You cannot colonise a moon n
 $_Lang['fl3_CantSettleNoShips']                  = 'To colonise a planet your have to send at least one Colony ship!';
 $_Lang['fl3_CantRecycleNonDebris']               = 'You cannot recycle debris from a planet or a moon!';
 $_Lang['fl3_CantRecycleNoShip']                  = 'To recycle a debris field you have to send at least one Recycler!';
-$_Lang['fl3_CantDestroyDebris']                  = 'You cannot destroy a debris field!';
 $_Lang['fl3_CantDestroyNonUsed']                 = 'There is no moon to destroy on that coordinates!';
 $_Lang['fl3_CantDestroyYourself']                = 'You cannot destroy your own moon!';
-$_Lang['fl3_CantDestroyNonMoon']                 = 'You cannot destroy a planet!';
+$_Lang['fl3_CantDestroyNonMoon']                 = 'Only moons can be destroyed!';
 $_Lang['fl3_CantDestroyNoShip']                  = 'To destroy a moon you have to send at least one Deathstar!';
 $_Lang['fl3_BadMissionSelected']                 = 'Invalid mission selected!';
 
