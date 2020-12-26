@@ -1451,29 +1451,14 @@ doquery('LOCK TABLE {{table}} WRITE', 'planets');
 doquery($QryUpdatePlanet, 'planets');
 doquery('UNLOCK TABLES', '');
 
-// User Development Log
-if($Fleet['resources']['metal'] > 0)
-{
-    $Add2UserDev_Log[] = 'M,'.$Fleet['resources']['metal'];
-}
-if($Fleet['resources']['crystal'] > 0)
-{
-    $Add2UserDev_Log[] = 'C,'.$Fleet['resources']['crystal'];
-}
-if($Fleet['resources']['deuterium'] > 0)
-{
-    $Add2UserDev_Log[] = 'D,'.$Fleet['resources']['deuterium'];
-}
-if($Consumption > 0)
-{
-    $Add2UserDev_Log[] = 'F,'.$Consumption;
-}
-$RTrim = rtrim($Fleet['array'], ';');
-if(!empty($Add2UserDev_Log))
-{
-    $Add2UserDev_Log = ';'.implode(';', $Add2UserDev_Log);
-}
-$UserDev_Log[] = array('PlanetID' => $_Planet['id'], 'Date' => $Now, 'Place' => 10, 'Code' => $Fleet['Mission'], 'ElementID' => $LastFleetID, 'AdditionalData' => $RTrim.$Add2UserDev_Log);
+$UserDev_Log[] = FlightControl\Utils\Factories\createFleetDevLogEntry([
+    'currentPlanet' => &$_Planet,
+    'newFleetId' => $LastFleetID,
+    'timestamp' => $Now,
+    'fleetData' => $Fleet,
+    'fuelUsage' => $Consumption,
+]);
+
 // ---
 
 $_Lang['FleetMission'] = $_Lang['type_mission'][$Fleet['Mission']];
