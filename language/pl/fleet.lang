@@ -212,10 +212,9 @@ $_Lang['fl3_CantSettleNonPlanet']                = 'Nie możesz kolonizować Ksi
 $_Lang['fl3_CantSettleNoShips']                  = 'Aby skolonizować Planetę musisz wysłać Statki Kolonizacyjne!';
 $_Lang['fl3_CantRecycleNonDebris']               = 'Nie możesz zbierać szczątków z Planet ani Księżyców!';
 $_Lang['fl3_CantRecycleNoShip']                  = 'Aby zebrać Pole Zniszczeń musisz wysłać Recyklery!';
-$_Lang['fl3_CantDestroyDebris']                  = 'Nie możesz niszczyć Pola Zniszczeń!';
 $_Lang['fl3_CantDestroyNonUsed']                 = 'Na tej pozycji nie ma Księżyca!';
 $_Lang['fl3_CantDestroyYourself']                = 'Nie możesz niszczyć swojego Księżyca!';
-$_Lang['fl3_CantDestroyNonMoon']                 = 'Nie możesz niszczyć Planet!';
+$_Lang['fl3_CantDestroyNonMoon']                 = 'Nie możesz niszczyć niczego innego prócz księżyców!';
 $_Lang['fl3_CantDestroyNoShip']                  = 'Aby móc zniszczyć Księżyc, musisz wysłać co najmniej jedną Gwiazdę Śmierci!';
 $_Lang['fl3_BadMissionSelected']                 = 'Wybrano niepoprawną Misję!';
 

@@ -5,6 +5,9 @@ define('INSIDE', true);
 $_EnginePath = './';
 
 include($_EnginePath.'common.php');
+include($_EnginePath . 'modules/flightControl/_includes.php');
+
+use UniEngine\Engine\Modules\FlightControl;
 
 loggedCheck();
 
@@ -48,9 +51,6 @@ $_Lang['FlyingFleetsRows'] = '';
 $InsertChronoApplets = '';
 
 $Hide = ' class="hide"';
-
-$FlyingFleetsCount = 0;
-$FlyingExpeditions = 0;
 
 $missiontype = array
 (
@@ -139,23 +139,22 @@ else
     $_Lang['P_HideRetreatBox'] = $Hide;
 }
 
-// Get FlyingFleets Count
-$SQLResult_GetFlyingFleets = doquery("SELECT `fleet_mission` FROM {{table}} WHERE `fleet_owner` = {$_User['id']};", 'fleets');
-while($FleetData = $SQLResult_GetFlyingFleets->fetch_assoc())
-{
-    $FlyingFleetsCount += 1;
-    if($FleetData['fleet_mission'] == 15)
-    {
-        $FlyingExpeditions += 1;
-    }
-}
+$fleetsInFlightCounters = FlightControl\Utils\Helpers\getFleetsInFlightCounters([
+    'userId' => $_User['id'],
+]);
 
-// Get Available Slots for Fleets (1 + ComputerTech + 2 on Admiral)
-// Get Available Slots for Expeditions (1 + floor(ExpeditionTech / 3))
-$_Lang['P_MaxFleetSlots']        = 1 + $_User[$_Vars_GameElements[108]] + (($_User['admiral_time'] > $Now) ? 2 : 0);
-$_Lang['P_MaxExpedSlots']        = 1 + floor($_User[$_Vars_GameElements[124]] / 3);
-$_Lang['P_FlyingFleetsCount']    = (string)($FlyingFleetsCount + 0);
-$_Lang['P_FlyingExpeditions']    = (string)($FlyingExpeditions + 0);
+$FlyingFleetsCount = $fleetsInFlightCounters['allFleetsInFlight'];
+$FlyingExpeditions = $fleetsInFlightCounters['expeditionsInFlight'];
+
+$_Lang['P_MaxFleetSlots'] = FlightControl\Utils\Helpers\getUserFleetSlotsCount([
+    'user' => $_User,
+    'timestamp' => $Now,
+]);
+$_Lang['P_MaxExpedSlots'] = FlightControl\Utils\Helpers\getUserExpeditionSlotsCount([
+    'user' => $_User,
+]);
+$_Lang['P_FlyingFleetsCount']    = (string)($FlyingFleetsCount);
+$_Lang['P_FlyingExpeditions']    = (string)($FlyingExpeditions);
 $_Lang['P_Expeditions_isHidden_style'] = (
     isFeatureEnabled(FeatureType::Expeditions) ?
     '' :
@@ -975,73 +974,49 @@ if(!isPro())
     // Don't Allow to use this function to NonPro Players
     $_GET['quickres'] = 0;
 }
-if(isset($_GET['quickres']) && $_GET['quickres'] == 1)
-{
+
+if (
+    isset($_GET['quickres']) &&
+    $_GET['quickres'] == 1
+) {
     $_Lang['P_SetQuickRes'] = '1';
-    $TotalResStorage = floor($_Planet['metal']) + floor($_Planet['crystal']) + floor($_Planet['deuterium']);
-    $TotalShipsStorage[217] = $_Planet[$_Vars_GameElements[217]] * $_Vars_Prices[217]['capacity'];
-    $TotalShipsStorage[203] = $_Planet[$_Vars_GameElements[203]] * $_Vars_Prices[203]['capacity'];
-    $TotalShipsStorage[202] = $_Planet[$_Vars_GameElements[202]] * $_Vars_Prices[202]['capacity'];
-    $TotalShipsStorage['all'] = array_sum($TotalShipsStorage);
-    if($TotalResStorage >= $TotalShipsStorage['all'])
-    {
-        $JSSetShipsCount[217] = 'max';
-        $JSSetShipsCount[203] = 'max';
-        $JSSetShipsCount[202] = 'max';
-    }
-    else
-    {
-        if($TotalResStorage >= $TotalShipsStorage[217])
-        {
-            $JSSetShipsCount[217] = 'max';
-            $TotalResStorage -= $TotalShipsStorage[217];
-            if($TotalResStorage >= $TotalShipsStorage[203])
-            {
-                $JSSetShipsCount[203] = 'max';
-                $TotalResStorage -= $TotalShipsStorage[203];
-                if($TotalResStorage >= $TotalShipsStorage[202])
-                {
-                    $JSSetShipsCount[202] = 'max';
-                }
-                else
-                {
-                    $JSSetShipsCount[202] = $TotalResStorage / $_Vars_Prices[202]['capacity'];
-                }
-            }
-            else
-            {
-                $JSSetShipsCount[203] = $TotalResStorage / $_Vars_Prices[203]['capacity'];
-            }
-        }
-        else
-        {
-            $JSSetShipsCount[217] = $TotalResStorage / $_Vars_Prices[217]['capacity'];
+
+    $resourcesToLoad = (
+        floor($_Planet['metal']) +
+        floor($_Planet['crystal']) +
+        floor($_Planet['deuterium'])
+    );
+
+    $transportShipIds = [ 217, 203, 202 ];
+
+    $JSSetShipsCount = [];
+
+    foreach ($transportShipIds as $shipId) {
+        $shipPlanetKey = _getElementPlanetKey($shipId);
+        $shipCapacity = getShipsStorageCapacity($shipId);
+
+        $shipsNeeded = ceil($resourcesToLoad / $shipCapacity);
+        $shipsToUse = (
+            $shipsNeeded <= $_Planet[$shipPlanetKey] ?
+            $shipsNeeded :
+            $_Planet[$shipPlanetKey]
+        );
+
+        $JSSetShipsCount[$shipId] = ((string) $shipsToUse);
+
+        $resourcesToLoad -= ($shipsToUse * $shipCapacity);
+
+        if ($resourcesToLoad <= 0) {
+            break;
         }
     }
 
-    if(!empty($JSSetShipsCount))
-    {
-        $_Lang['InsertJSShipSet'] = "var JSShipSet = new Object;\n";
-        foreach($JSSetShipsCount as $ShipID => $ShipCount)
-        {
-            $ShipCount = ceil($ShipCount);
-            if($_Planet[$_Vars_GameElements[$ShipID]] > 0)
-            {
-                if($ShipCount == 'max')
-                {
-                    $ShipCount = $_Planet[$_Vars_GameElements[$ShipID]];
-                }
-                else if($ShipCount > $_Planet[$_Vars_GameElements[$ShipID]])
-                {
-                    $ShipCount = $_Planet[$_Vars_GameElements[$ShipID]];
-                }
-                $_Lang['InsertJSShipSet'] .= "JSShipSet['{$ShipID}'] = {$ShipCount};\n";
-            }
-        }
+    if (!empty($JSSetShipsCount)) {
+        $jsShipsObject = json_encode($JSSetShipsCount);
+
+        $_Lang['InsertJSShipSet'] = "var JSShipSet = {$jsShipsObject};\n";
     }
-}
-else
-{
+} else {
     $_Lang['P_SetQuickRes'] = '0';
 }
 

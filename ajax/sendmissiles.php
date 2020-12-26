@@ -9,7 +9,10 @@ $_SetAccessLogPreFilename = 'ajax/';
 $_SetAccessLogPath = '../';
 $_EnginePath = '../';
 
-include($_EnginePath.'common.php');
+include($_EnginePath . 'common.php');
+include($_EnginePath . 'modules/flightControl/_includes.php');
+
+use UniEngine\Engine\Modules\FlightControl;
 
 function CreateReturn($ReturnCode, $Update = '0')
 {
@@ -23,8 +26,8 @@ if(!isLogged())
 {
     CreateReturn('601');
 }
-if(!empty($_User['activation_code']))
-{
+
+if (!isUserAccountActivated($_User)) {
     CreateReturn('661');
 }
 
@@ -32,9 +35,13 @@ $Now = time();
 
 $FlyingFleets = doquery("SELECT COUNT(`fleet_id`) as `Number` FROM {{table}} WHERE `fleet_owner` = '{$_User['id']}';", 'fleets', true);
 $FlyingFleets = $FlyingFleets['Number'];
-$MaxFleets = 1 + $_User[$_Vars_GameElements[108]] + (($_User['admiral_time'] > $Now) ? 2 : 0);
-if($FlyingFleets >= $MaxFleets)
-{
+
+$MaxFleets = FlightControl\Utils\Helpers\getUserFleetSlotsCount([
+    'user' => $_User,
+    'timestamp' => $Now,
+]);
+
+if ($FlyingFleets >= $MaxFleets) {
     CreateReturn('609');
 }
 

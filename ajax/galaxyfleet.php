@@ -8,6 +8,10 @@ $_EnginePath = '../';
 
 include($_EnginePath.'common.php');
 
+include($_EnginePath . 'modules/flightControl/_includes.php');
+
+use UniEngine\Engine\Modules\FlightControl;
+
 function CreateReturn($ReturnCode)
 {
     global $Update, $ShipCount, $Galaxy, $System, $Planet, $Type, $ActualFleets, $Spy_Probes, $Recyclers, $Colonizers;
@@ -42,10 +46,11 @@ if(!isLogged())
 {
     CreateReturn('601');
 }
-if(!empty($_User['activation_code']))
-{
+
+if (!isUserAccountActivated($_User)) {
     CreateReturn('661');
 }
+
 $Galaxy        = (isset($_POST['galaxy']) ? intval($_POST['galaxy']) : 0);
 $System        = (isset($_POST['system']) ? intval($_POST['system']) : 0);
 $Planet        = (isset($_POST['planet']) ? intval($_POST['planet']) : 0);
@@ -78,8 +83,12 @@ if(MORALE_ENABLED)
     Morale_ReCalculate($_User, $Time);
 }
 
-if(($_User[$_Vars_GameElements[108]] + 1 + (($_User['admiral_time'] > 0) ? 2 : 0)) <= $ActualFleets)
-{
+$fleetSlotsCount = FlightControl\Utils\Helpers\getUserFleetSlotsCount([
+    'user' => $_User,
+    'timestamp' => $Time,
+]);
+
+if ($ActualFleets >= $fleetSlotsCount) {
     $Update = '1';
     CreateReturn('609');
 }
@@ -430,32 +439,14 @@ if($CurrentPlanet[$_Vars_GameElements[$ShipID]] < $ShipCount)
     $ShipCount = $CurrentPlanet[$_Vars_GameElements[$ShipID]];
 }
 
-// Create SpeedsArray
-$SpeedsAvailable = array(10, 9, 8, 7, 6, 5, 4, 3, 2, 1);
+$availableSpeeds = FlightControl\Utils\Helpers\getAvailableSpeeds([
+    'user' => &$_User,
+    'timestamp' => $Time,
+]);
 
-if($_User['admiral_time'] > $Time)
-{
-    $SpeedsAvailable[] = 12;
-    $SpeedsAvailable[] = 11;
-    $SpeedsAvailable[] = 0.5;
-    $SpeedsAvailable[] = 0.25;
-}
-if(MORALE_ENABLED)
-{
-    $MaxAvailableSpeed = max($SpeedsAvailable);
-    if($_User['morale_level'] >= MORALE_BONUS_FLEETSPEEDUP1)
-    {
-        $SpeedsAvailable[] = $MaxAvailableSpeed + (MORALE_BONUS_FLEETSPEEDUP1_VALUE / 10);
-    }
-    if($_User['morale_level'] >= MORALE_BONUS_FLEETSPEEDUP2)
-    {
-        $SpeedsAvailable[] = $MaxAvailableSpeed + (MORALE_BONUS_FLEETSPEEDUP2_VALUE / 10);
-    }
-}
-arsort($SpeedsAvailable);
-reset($SpeedsAvailable);
+reset($availableSpeeds);
 
-$GenFleetSpeed = current($SpeedsAvailable);
+$GenFleetSpeed = current($availableSpeeds);
 $SpeedFactor = getUniFleetsSpeedFactor();
 $MaxFleetSpeed = getShipsCurrentSpeed($ShipID, $_User);
 
@@ -494,66 +485,63 @@ $consumption = getFlightTotalConsumption(
 $fleet['start_time'] = $duration + $Time;
 $fleet['end_time'] = (2 * $duration) + $Time;
 
-if($CurrentPlanet['deuterium'] >= $consumption)
+if ($CurrentPlanet['deuterium'] < $consumption) {
+    CreateReturn('607');
+}
+
+$FleetStorage = $_Vars_Prices[$ShipID]['capacity'] * $ShipCount;
+if($Mission == 6)
 {
-    $FleetStorage = $_Vars_Prices[$ShipID]['capacity'] * $ShipCount;
-    if($Mission == 6)
+    // Try to SlowDown fleet only if it's Espionage Mission
+    while($FleetStorage < $consumption)
     {
-        // Try to SlowDown fleet only if it's Espionage Mission
-        while($FleetStorage < $consumption)
+        $GenFleetSpeed = next($availableSpeeds);
+        if($GenFleetSpeed !== false)
         {
-            $GenFleetSpeed = next($SpeedsAvailable);
-            if($GenFleetSpeed !== false)
-            {
-                $duration = getFlightDuration([
-                    'speedFactor' => $GenFleetSpeed,
-                    'distance' => $distance,
-                    'maxShipsSpeed' => $MaxFleetSpeed
-                ]);
-                $consumption = getFlightTotalConsumption(
-                    [
-                        'ships' => [
-                            $ShipID => $ShipCount
-                        ],
-                        'distance' => $distance,
-                        'duration' => $duration,
+            $duration = getFlightDuration([
+                'speedFactor' => $GenFleetSpeed,
+                'distance' => $distance,
+                'maxShipsSpeed' => $MaxFleetSpeed
+            ]);
+            $consumption = getFlightTotalConsumption(
+                [
+                    'ships' => [
+                        $ShipID => $ShipCount
                     ],
-                    $_User
-                );
+                    'distance' => $distance,
+                    'duration' => $duration,
+                ],
+                $_User
+            );
 
-                $fleet['start_time'] = $duration + $Time;
-                $fleet['end_time'] = (2 * $duration) + $Time;
-            }
-            else
-            {
-                break;
-            }
+            $fleet['start_time'] = $duration + $Time;
+            $fleet['end_time'] = (2 * $duration) + $Time;
         }
-    }
-
-    if($FleetStorage >= $consumption)
-    {
-        switch($Mission)
+        else
         {
-            case 6: //Spy
-                $TargetOwner = $TargetUser;
-                break;
-            case 8: //Recycling
-                $TargetOwner = 0;
-                break;
-            case 7: //Colonization
-                $TargetOwner = 0;
-                break;
+            break;
         }
     }
-    else
+}
+
+if($FleetStorage >= $consumption)
+{
+    switch($Mission)
     {
-        CreateReturn('608');
+        case 6: //Spy
+            $TargetOwner = $TargetUser;
+            break;
+        case 8: //Recycling
+            $TargetOwner = 0;
+            break;
+        case 7: //Colonization
+            $TargetOwner = 0;
+            break;
     }
 }
 else
 {
-    CreateReturn('607');
+    CreateReturn('608');
 }
 
 if(!isset($TargetID) || $TargetID <= 0)

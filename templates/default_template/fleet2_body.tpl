@@ -151,12 +151,7 @@ var AllyPact_AttackWarn = {Insert_AllyPact_AttackWarn};
                         <tr>
                             <th colspan="3">
                             <select name="holdingtime">
-                                <option value="1" {SelectHolding_1}>1</option>
-                                <option value="2" {SelectHolding_2}>2</option>
-                                <option value="4" {SelectHolding_4}>4</option>
-                                <option value="8" {SelectHolding_8}>8</option>
-                                <option value="16" {SelectHolding_16}>16</option>
-                                <option value="32" {SelectHolding_32}>32</option>
+                                {P_HTMLBuilder_MissionHold_AvailableTimes}
                             </select>
                             {fl_expe_hours}
                             </th>

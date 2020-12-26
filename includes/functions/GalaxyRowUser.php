@@ -47,7 +47,7 @@ function GalaxyRowUser($GalaxyRowPlanet, $GalaxyRowUser, $MyBuddies, $SFBStatus)
                 $NameClasses[] = array('class' => 'red', 'importance' => 100);
             }
         }
-        else if(!empty($GalaxyRowUser['activation_code']))
+        else if(!isUserAccountActivated($GalaxyRowUser))
         {
             $Status[] = array('class' => 'nonactivated', 'sign' => $_Lang['User_NonActivated']);
             $NameClasses[] = array('class' => 'nonactivated', 'importance' => 50);

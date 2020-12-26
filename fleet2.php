@@ -19,6 +19,11 @@ if((!isset($_POST['sending_fleet']) || $_POST['sending_fleet'] != '1') && (!isse
 
 $_Lang['SelectResources'] = 'false';
 $_Lang['SelectQuantumGate'] = 'false';
+
+$setFormValues = [
+    'holdingtime' => null,
+];
+
 if(!empty($_POST['gobackVars']))
 {
     $_POST['gobackVars'] = json_decode(base64_decode($_POST['gobackVars']), true);
@@ -36,7 +41,7 @@ if(!empty($_POST['gobackVars']))
     }
     if(isset($_POST['gobackVars']['holdingtime']))
     {
-        $_Lang['SelectHolding_'.$_POST['gobackVars']['holdingtime']] = 'selected';
+        $setFormValues['holdingtime'] = $_POST['gobackVars']['holdingtime'];
     }
     if(isset($_POST['gobackVars']['expeditiontime']))
     {
@@ -138,69 +143,35 @@ if(isset($TargetError))
     message($_Lang['fl2_targeterror'], $ErrorTitle, 'fleet.php', 3);
 }
 
-// Create SpeedsArray
-$SpeedsAvailable = array(10, 9, 8, 7, 6, 5, 4, 3, 2, 1);
+$availableSpeeds = FlightControl\Utils\Helpers\getAvailableSpeeds([
+    'user' => &$_User,
+    'timestamp' => $Now,
+]);
 
-if($_User['admiral_time'] > $Now)
-{
-    $SpeedsAvailable[] = 12;
-    $SpeedsAvailable[] = 11;
-    $SpeedsAvailable[] = 0.5;
-    $SpeedsAvailable[] = 0.25;
-}
-if(MORALE_ENABLED)
-{
-    $MaxAvailableSpeed = max($SpeedsAvailable);
-    if($_User['morale_level'] >= MORALE_BONUS_FLEETSPEEDUP1)
-    {
-        $SpeedsAvailable[] = $MaxAvailableSpeed + (MORALE_BONUS_FLEETSPEEDUP1_VALUE / 10);
-    }
-    if($_User['morale_level'] >= MORALE_BONUS_FLEETSPEEDUP2)
-    {
-        $SpeedsAvailable[] = $MaxAvailableSpeed + (MORALE_BONUS_FLEETSPEEDUP2_VALUE / 10);
-    }
-}
-if(!in_array($_POST['speed'], $SpeedsAvailable))
-{
+if (!in_array($_POST['speed'], $availableSpeeds)) {
     message($_Lang['fl_bad_fleet_speed'], $ErrorTitle, 'fleet.php', 3);
 }
 
 // Check PlanetOwner
-$YourPlanet                    = false;
-$UsedPlanet                    = false;
-$OwnerFriend                = false;
-$OwnerHasMarcantilePact        = false;
-$AllyPactWarning            = false;
-$CheckPlanetOwnerQuery = '';
-$CheckPlanetOwnerQuery .= "SELECT `planets`.`id`, `planets`.`id_owner` AS `owner`, `planets`.`name` AS `name`, `quantumgate`, ";
-$CheckPlanetOwnerQuery .= "`users`.`ally_id`, `users`.`username` as `username`, `buddy1`.`active` AS `active1`, `buddy2`.`active` AS `active2` ";
-if($_User['ally_id'] > 0)
-{
-    $CheckPlanetOwnerQuery .= ", `apact1`.`Type` AS `AllyPact1`, `apact2`.`Type` AS `AllyPact2` ";
-}
-$CheckPlanetOwnerQuery .= "FROM {{table}} AS `planets` ";
-$CheckPlanetOwnerQuery .= "LEFT JOIN `{{prefix}}buddy` AS `buddy1` ON (`planets`.`id_owner` = `buddy1`.`sender` AND `buddy1`.`owner` = {$_User['id']}) ";
-$CheckPlanetOwnerQuery .= "LEFT JOIN `{{prefix}}buddy` AS `buddy2` ON (`planets`.`id_owner` = `buddy2`.`owner` AND `buddy2`.`sender` = {$_User['id']}) ";
-$CheckPlanetOwnerQuery .= "LEFT JOIN `{{prefix}}users` AS `users` ON `planets`.`id_owner` = `users`.`id` ";
-if($_User['ally_id'] > 0)
-{
-    $CheckPlanetOwnerQuery .= "LEFT JOIN `{{prefix}}ally_pacts` AS `apact1` ON (`apact1`.`AllyID_Sender` = {$_User['ally_id']} AND `apact1`.`AllyID_Owner` = `users`.`ally_id` AND `apact1`.`Active` = 1) ";
-    $CheckPlanetOwnerQuery .= "LEFT JOIN `{{prefix}}ally_pacts` AS `apact2` ON (`apact2`.`AllyID_Sender` = `users`.`ally_id` AND `apact2`.`AllyID_Owner` = {$_User['ally_id']} AND `apact2`.`Active` = 1) ";
-}
-$CheckPlanetOwnerQuery .= "WHERE `planets`.`galaxy` = {$Target['galaxy']} AND `planets`.`system` = {$Target['system']} AND `planets`.`planet` = {$Target['planet']} AND `planets`.`planet_type` = {$Target['type']} ";
-$CheckPlanetOwnerQuery .= "LIMIT 1;";
-$CheckPlanetOwner = doquery($CheckPlanetOwnerQuery, 'planets');
+$planetOwnerDetails = FlightControl\Utils\Fetchers\fetchPlanetOwnerDetails([
+    'targetCoordinates' => $Target,
+    'user' => &$_User,
+    'isExtendedUserDetailsEnabled' => false,
+]);
 
-if($CheckPlanetOwner->num_rows == 1)
-{
-    $CheckPlanetOwner = $CheckPlanetOwner->fetch_assoc();
-    $UsedPlanet = true;
-    if($CheckPlanetOwner['owner'] == $_User['id'])
-    {
+$isPlanetOccupied = !empty($planetOwnerDetails);
+
+$YourPlanet = false;
+$OwnerFriend = false;
+$OwnerHasMarcantilePact = false;
+$AllyPactWarning = false;
+
+if ($planetOwnerDetails) {
+    $CheckPlanetOwner = $planetOwnerDetails;
+
+    if ($CheckPlanetOwner['owner'] == $_User['id']) {
         $YourPlanet = true;
-    }
-    else
-    {
+    } else {
         if(!empty($_GameConfig['TestUsersIDs']))
         {
             $TestUsersArray = explode(',', $_GameConfig['TestUsersIDs']);
@@ -294,61 +265,15 @@ if($Fleet['count'] <= 0)
 $Fleet['array'] = $FleetArray;
 unset($FleetArray);
 
-// Create Array of Available Missions
-$AvailableMissions = array();
-if($Target['type'] == 2)
-{
-    if($Fleet['array'][209] > 0)
-    {
-        $AvailableMissions[] = 8;
-    }
-}
-else
-{
-    if($UsedPlanet)
-    {
-        if(!isset($Fleet['array'][210]) || $Fleet['count'] > $Fleet['array'][210])
-        {
-            $AvailableMissions[] = 3;
-        }
-        if(!$YourPlanet)
-        {
-            $AvailableMissions[] = 1;
-            if($OwnerFriend)
-            {
-                $AvailableMissions[] = 5;
-            }
-            if(isset($Fleet['array'][210]) && $Fleet['count'] == $Fleet['array'][210])
-            {
-                $AvailableMissions[] = 6;
-            }
-            if($Target['type'] == 3 && isset($Fleet['array'][214]) && $Fleet['array'][214] > 0)
-            {
-                $AvailableMissions[] = 9;
-            }
-        }
-        else
-        {
-            $AvailableMissions[] = 4;
-        }
-    }
-    else
-    {
-        if($Target['planet'] == (MAX_PLANET_IN_SYSTEM + 1))
-        {
-            if (isFeatureEnabled(FeatureType::Expeditions)) {
-                $AvailableMissions[] = 15;
-            }
-        }
-        else
-        {
-            if($Fleet['array'][208] > 0 AND $Target['type'] == 1)
-            {
-                $AvailableMissions[] = 7;
-            }
-        }
-    }
-}
+$AvailableMissions = FlightControl\Utils\Helpers\getValidMissionTypes([
+    'targetCoordinates' => $Target,
+    'fleetShips' => $Fleet['array'],
+    'fleetShipsCount' => $Fleet['count'],
+    'isPlanetOccupied' => $isPlanetOccupied,
+    'isPlanetOwnedByUser' => $YourPlanet,
+    'isPlanetOwnedByUsersFriend' => $OwnerFriend,
+    'isUnionMissionAllowed' => false,
+]);
 
 if(in_array(1, $AvailableMissions) && $CheckPlanetOwner['id'] > 0)
 {
@@ -685,6 +610,28 @@ else
 {
     $_Lang['Insert_AllyPact_AttackWarn'] = 'false';
 }
+
+$availableHoldTimes = FlightControl\Utils\Helpers\getAvailableHoldTimes([]);
+
+$missionHoldTimeOptions = array_map(
+    function ($holdTimeValue) use ($setFormValues) {
+        return buildDOMElementHTML([
+            'tagName' => 'option',
+            'contentHTML' => $holdTimeValue,
+            'attrs' => [
+                'value' => $holdTimeValue,
+                'selected' => (
+                    $holdTimeValue == $setFormValues['holdingtime'] ?
+                        '' :
+                        null
+                ),
+            ],
+        ]);
+    },
+    $availableHoldTimes
+);
+
+$_Lang['P_HTMLBuilder_MissionHold_AvailableTimes'] = implode('', $missionHoldTimeOptions);
 
 display(parsetemplate(gettemplate('fleet2_body'), $_Lang), $_Lang['fl_title']);
 

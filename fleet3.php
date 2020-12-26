@@ -73,9 +73,7 @@ $Protections['bashLimit_interval'] = $_GameConfig['Protection_BashLimitInterval'
 $Protections['bashLimit_counttotal'] = $_GameConfig['Protection_BashLimitCountTotal'];
 $Protections['bashLimit_countplanet'] = $_GameConfig['Protection_BashLimitCountPlanet'];
 
-// --- Check if User's account is activated
-if(!empty($_User['activation_code']))
-{
+if (!isUserAccountActivated($_User)) {
     messageRed($_Lang['fl3_BlockAccNotActivated'], $ErrorTitle);
 }
 
@@ -85,49 +83,20 @@ if($Fleet['Mission'] <= 0)
     messageRed($_Lang['fl3_NoMissionSelected'], $ErrorTitle);
 }
 
-if (
-    !isFeatureEnabled(FeatureType::Expeditions) &&
-    $Fleet['Mission'] == 15
-) {
-    messageRed($_Lang['fl3_ExpeditionsAreOff'], $ErrorTitle);
-}
+$fleetsInFlightCounters = FlightControl\Utils\Helpers\getFleetsInFlightCounters([
+    'userId' => $_User['id'],
+]);
 
-// --- Get FlyingFleets Count
-$FlyingFleetsCount = 0;
-$FlyingExpeditions = 0;
-
-$Query_GetFleets = '';
-$Query_GetFleets .= "SELECT `fleet_mission`, `fleet_target_owner`, `fleet_end_id`, `fleet_mess` FROM {{table}} ";
-$Query_GetFleets .= "WHERE `fleet_owner` = {$_User['id']};";
-$Result_GetFleets = doquery($Query_GetFleets, 'fleets');
-while($FleetData = $Result_GetFleets->fetch_assoc())
-{
-    $FlyingFleetsCount += 1;
-    if($FleetData['fleet_mission'] == 15)
-    {
-        $FlyingExpeditions += 1;
-    }
-    if(in_array($FleetData['fleet_mission'], array(1, 2, 9)) AND $FleetData['fleet_mess'] == 0)
-    {
-        if(!isset($FlyingFleetsData[$FleetData['fleet_target_owner']]['count']))
-        {
-            $FlyingFleetsData[$FleetData['fleet_target_owner']]['count'] = 0;
-        }
-        if(!isset($FlyingFleetsData[$FleetData['fleet_target_owner']][$FleetData['fleet_end_id']]))
-        {
-            $FlyingFleetsData[$FleetData['fleet_target_owner']][$FleetData['fleet_end_id']] = 0;
-        }
-        $FlyingFleetsData[$FleetData['fleet_target_owner']]['count'] += 1;
-        $FlyingFleetsData[$FleetData['fleet_target_owner']][$FleetData['fleet_end_id']] += 1;
-    }
-}
-
-// Get Available Slots for Fleets (1 + ComputerTech + 2 on Admiral)
 // Get Available Slots for Expeditions (1 + floor(ExpeditionTech / 3))
-$Slots['MaxFleetSlots'] = 1 + $_User[$_Vars_GameElements[108]] + (($_User['admiral_time'] > $Now) ? 2 : 0);
-$Slots['MaxExpedSlots'] = 1 + floor($_User[$_Vars_GameElements[124]] / 3);
-$Slots['FlyingFleetsCount'] = $FlyingFleetsCount;
-$Slots['FlyingExpeditions'] = $FlyingExpeditions;
+$Slots['MaxFleetSlots'] = FlightControl\Utils\Helpers\getUserFleetSlotsCount([
+    'user' => $_User,
+    'timestamp' => $Now,
+]);
+$Slots['MaxExpedSlots'] = FlightControl\Utils\Helpers\getUserExpeditionSlotsCount([
+    'user' => $_User,
+]);
+$Slots['FlyingFleetsCount'] = $fleetsInFlightCounters['allFleetsInFlight'];
+$Slots['FlyingExpeditions'] = $fleetsInFlightCounters['expeditionsInFlight'];
 if($Slots['FlyingFleetsCount'] >= $Slots['MaxFleetSlots'])
 {
     messageRed($_Lang['fl3_NoMoreFreeSlots'], $ErrorTitle);
@@ -194,76 +163,39 @@ if(isset($TargetError))
     messageRed($_Lang['fl2_targeterror'], $ErrorTitle);
 }
 
-// Create SpeedsArray
-$SpeedsAvailable = array(10, 9, 8, 7, 6, 5, 4, 3, 2, 1);
+$availableSpeeds = FlightControl\Utils\Helpers\getAvailableSpeeds([
+    'user' => &$_User,
+    'timestamp' => $Now,
+]);
 
-if($_User['admiral_time'] > $Now)
-{
-    $SpeedsAvailable[] = 12;
-    $SpeedsAvailable[] = 11;
-    $SpeedsAvailable[] = 0.5;
-    $SpeedsAvailable[] = 0.25;
-}
-if(MORALE_ENABLED)
-{
-    $MaxAvailableSpeed = max($SpeedsAvailable);
-    if($_User['morale_level'] >= MORALE_BONUS_FLEETSPEEDUP1)
-    {
-        $SpeedsAvailable[] = $MaxAvailableSpeed + (MORALE_BONUS_FLEETSPEEDUP1_VALUE / 10);
-    }
-    if($_User['morale_level'] >= MORALE_BONUS_FLEETSPEEDUP2)
-    {
-        $SpeedsAvailable[] = $MaxAvailableSpeed + (MORALE_BONUS_FLEETSPEEDUP2_VALUE / 10);
-    }
-}
-if(!in_array($Fleet['Speed'], $SpeedsAvailable))
-{
+if (!in_array($Fleet['Speed'], $availableSpeeds)) {
     messageRed($_Lang['fl_bad_fleet_speed'], $ErrorTitle);
 }
 
 // --- Check PlanetOwner
-$YourPlanet                    = false;
-$UsedPlanet                    = false;
-$OwnerFriend                = false;
-$OwnerIsBuddyFriend            = false;
-$OwnerIsAlliedUser            = false;
-$OwnerHasMarcantilePact        = false;
-$PlanetAbandoned            = false;
+$YourPlanet = false;
+$UsedPlanet = false;
+$OwnerFriend = false;
+$OwnerIsBuddyFriend = false;
+$OwnerIsAlliedUser = false;
+$OwnerHasMarcantilePact = false;
+$PlanetAbandoned = false;
 
 if($Fleet['Mission'] != 8)
 {
-    // This is not a Recycling Mission, so check Planet Data
-    $Query_CheckPlanetOwner = '';
-    $Query_CheckPlanetOwner .= "SELECT `pl`.`id` AS `id`, `pl`.`id_owner` AS `owner`, `pl`.`name` AS `name`, `pl`.`quantumgate`, ";
-    $Query_CheckPlanetOwner .= "`users`.`ally_id`, `users`.`onlinetime`, `users`.`username` as `username`, `users`.`user_lastip` as `lastip`, `users`.`is_onvacation`, `users`.`is_banned`, `users`.`authlevel`, `users`.`first_login`, `users`.`NoobProtection_EndTime`, `users`.`multiIP_DeclarationID`, ";
-    $Query_CheckPlanetOwner .= "`stats`.`total_rank`, `stats`.`total_points`, `buddy1`.`active` AS `active1`, `buddy2`.`active` AS `active2` ";
-    if($_User['ally_id'] > 0)
-    {
-        $Query_CheckPlanetOwner .= ", `apact1`.`Type` AS `AllyPact1`, `apact2`.`Type` AS `AllyPact2` ";
-    }
-    $Query_CheckPlanetOwner .= "FROM {{table}} as `pl` ";
-    $Query_CheckPlanetOwner .= "LEFT JOIN {{prefix}}buddy as `buddy1` ON (`pl`.`id_owner` = `buddy1`.`sender` AND `buddy1`.`owner` = {$_User['id']}) ";
-    $Query_CheckPlanetOwner .= "LEFT JOIN {{prefix}}buddy as `buddy2` ON (`pl`.`id_owner` = `buddy2`.`owner` AND `buddy2`.`sender` = {$_User['id']}) ";
-    $Query_CheckPlanetOwner .= "LEFT JOIN {{prefix}}users as `users` ON `pl`.`id_owner` = `users`.`id` ";
-    $Query_CheckPlanetOwner .= "LEFT JOIN {{prefix}}statpoints AS `stats` ON `pl`.`id_owner` = `stats`.`id_owner` AND `stat_type` = '1' ";
-    if($_User['ally_id'] > 0)
-    {
-        $Query_CheckPlanetOwner .= "LEFT JOIN `{{prefix}}ally_pacts` AS `apact1` ON (`apact1`.`AllyID_Sender` = {$_User['ally_id']} AND `apact1`.`AllyID_Owner` = `users`.`ally_id` AND `apact1`.`Active` = 1) ";
-        $Query_CheckPlanetOwner .= "LEFT JOIN `{{prefix}}ally_pacts` AS `apact2` ON (`apact2`.`AllyID_Sender` = `users`.`ally_id` AND `apact2`.`AllyID_Owner` = {$_User['ally_id']} AND `apact2`.`Active` = 1) ";
-    }
-    $Query_CheckPlanetOwner .= "WHERE `pl`.`galaxy` = {$Target['galaxy']} AND `pl`.`system` = {$Target['system']} AND `pl`.`planet` = {$Target['planet']} AND `pl`.`planet_type` = {$Target['type']} ";
-    $Query_CheckPlanetOwner .= "LIMIT 1;";
+    $planetOwnerDetails = FlightControl\Utils\Fetchers\fetchPlanetOwnerDetails([
+        'targetCoordinates' => $Target,
+        'user' => &$_User,
+        'isExtendedUserDetailsEnabled' => true,
+    ]);
 
-    $SQLResult_GetPlanetData = doquery($Query_CheckPlanetOwner, 'planets');
-
-    if($SQLResult_GetPlanetData->num_rows == 1)
-    {
+    if ($planetOwnerDetails) {
         $CheckGalaxyRow = doquery(
             "SELECT `galaxy_id` FROM {{table}} WHERE `galaxy` = {$Target['galaxy']} AND `system` = {$Target['system']} AND `planet` = {$Target['planet']} LIMIT 1;", 'galaxy',
             true
         );
 
-        $CheckPlanetOwner = $SQLResult_GetPlanetData->fetch_assoc();
+        $CheckPlanetOwner = $planetOwnerDetails;
 
         $CheckPlanetOwner['galaxy_id'] = $CheckGalaxyRow['galaxy_id'];
         $UsedPlanet = true;
@@ -300,7 +232,7 @@ if($Fleet['Mission'] != 8)
     }
     else
     {
-        $CheckPlanetOwner = array();
+        $CheckPlanetOwner = [];
     }
 }
 else
@@ -473,308 +405,181 @@ if($Fleet['count'] <= 0)
 $Fleet['array'] = $FleetArray;
 unset($FleetArray);
 
-// --- Create Array of Available Missions
-$AvailableMissions = array();
-if($Target['type'] == 2)
-{
-    if($Fleet['array'][209] > 0)
-    {
-        $AvailableMissions[] = 8;
-    }
-}
-else
-{
-    if($UsedPlanet)
-    {
-        if(!isset($Fleet['array'][210]) || $Fleet['count'] > $Fleet['array'][210])
-        {
-            $AvailableMissions[] = 3;
-        }
-        if(!$YourPlanet)
-        {
-            $AvailableMissions[] = 1;
-            $AvailableMissions[] = 2;
-            if($OwnerFriend)
-            {
-                $AvailableMissions[] = 5;
-            }
-            if(isset($Fleet['array'][210]) && $Fleet['count'] == $Fleet['array'][210])
-            {
-                $AvailableMissions[] = 6;
-            }
-            if($Target['type'] == 3 && isset($Fleet['array'][214]) && $Fleet['array'][214] > 0)
-            {
-                $AvailableMissions[] = 9;
-            }
-        }
-        else
-        {
-            $AvailableMissions[] = 4;
-        }
-    }
-    else
-    {
-        if($Target['planet'] == (MAX_PLANET_IN_SYSTEM + 1))
-        {
-            $AvailableMissions[] = 15;
-        }
-        else
-        {
-            if($Fleet['array'][208] > 0 AND $Target['type'] == 1)
-            {
-                $AvailableMissions[] = 7;
-            }
-        }
-    }
-}
+$validMissionTypes = FlightControl\Utils\Helpers\getValidMissionTypes([
+    'targetCoordinates' => $Target,
+    'fleetShips' => $Fleet['array'],
+    'fleetShipsCount' => $Fleet['count'],
+    'isPlanetOccupied' => $UsedPlanet,
+    'isPlanetOwnedByUser' => $YourPlanet,
+    'isPlanetOwnedByUsersFriend' => $OwnerFriend,
+    // TODO: additional pre-validation might be needed
+    'isUnionMissionAllowed' => true,
+]);
 
 // --- Check if everything is OK with ACS
-$Throw = false;
-if($Fleet['Mission'] == 2 AND in_array(2, $AvailableMissions))
-{
-    if($Fleet['ACS_ID'] > 0)
-    {
-        $CheckACS = doquery("SELECT {{table}}.*, `fleets`.`fleet_send_time` AS `mf_start_time` FROM {{table}} LEFT JOIN {{prefix}}fleets AS `fleets` ON `fleets`.`fleet_id` = {{table}}.`main_fleet_id` WHERE {{table}}.`id` = {$Fleet['ACS_ID']} LIMIT 1;", 'acs', true);
-        if($CheckACS)
-        {
-            if($CheckACS['owner_id'] == $_User['id'] OR strstr($CheckACS['users'], '|'.$_User['id'].'|') !== FALSE)
-            {
-                if($CheckACS['end_target_id'] == $CheckPlanetOwner['id'])
-                {
-                    if($CheckACS['fleets_count'] < ACS_MAX_JOINED_FLEETS)
-                    {
-                        if($CheckACS['start_time'] > $Now)
-                        {
-                            $UpdateACS = true;
-                        }
-                        else
-                        {
-                            $Throw = $_Lang['fl_acs_cannot_join_time_extended'];
-                        }
-                    }
-                    else
-                    {
-                        $Throw = $_Lang['fl_acs_fleetcount_extended'];
-                    }
-                }
-                else
-                {
-                    $Throw = $_Lang['fl_acs_badcoordinates'];
-                }
-            }
-            else
-            {
-                $Throw = $_Lang['fl_acs_cannot_join_this_group'];
-            }
+if ($Fleet['Mission'] == 2 AND in_array(2, $validMissionTypes)) {
+    $joinUnionValidationResult = FlightControl\Utils\Validators\validateJoinUnion([
+        'newFleet' => $Fleet,
+        'timestamp' => $Now,
+        'user' => &$_User,
+        'destinationEntry' => &$CheckPlanetOwner,
+    ]);
+
+    if (!$joinUnionValidationResult['isValid']) {
+        $firstValidationError = $joinUnionValidationResult['errors'][0];
+
+        $errorMessage = null;
+        switch ($firstValidationError['errorCode']) {
+            case 'INVALID_UNION_ID':
+                $errorMessage = $_Lang['fl_acs_bad_group_id'];
+                break;
+            case 'UNION_NOT_FOUND':
+                $errorMessage = $_Lang['fl_acs_bad_group_id'];
+                break;
+            case 'USER_CANT_JOIN':
+                $errorMessage = $_Lang['fl_acs_cannot_join_this_group'];
+                break;
+            case 'INVALID_DESTINATION_COORDINATES':
+                $errorMessage = $_Lang['fl_acs_badcoordinates'];
+                break;
+            case 'UNION_JOINED_FLEETS_COUNT_EXCEEDED':
+                $errorMessage = $_Lang['fl_acs_fleetcount_extended'];
+                break;
+            case 'UNION_JOIN_TIME_EXCEEDED':
+                $errorMessage = $_Lang['fl_acs_cannot_join_time_extended'];
+                break;
+            default:
+                $errorMessage = $_Lang['fleet_generic_errors_unknown'];
+                break;
         }
-        else
-        {
-            $Throw = $_Lang['fl_acs_bad_group_id'];
-        }
+
+        messageRed($errorMessage, $ErrorTitle);
     }
-    else
-    {
-        $Throw = $_Lang['fl_acs_bad_group_id'];
-    }
-    if($Throw)
-    {
-        messageRed($Throw, $ErrorTitle);
-    }
+
+    $UpdateACS = true;
+
+    // TODO: Optimize by not fetching this again
+    $CheckACS = FlightControl\Utils\Helpers\getFleetUnionJoinData([
+        'newFleet' => $Fleet,
+    ]);
 }
 
+$Throw = false;
+
 // --- If Mission is not correct, show Error
-if(!in_array($Fleet['Mission'], $AvailableMissions))
+if(!in_array($Fleet['Mission'], $validMissionTypes))
 {
-    switch($Fleet['Mission'])
-    {
-        case 1:
-            if($Target['type'] == 2)
-            {
-                $Throw = $_Lang['fl3_CantAttackDebris'];
-            }
-            else
-            {
-                if(!$UsedPlanet)
-                {
-                    $Throw = $_Lang['fl3_CantAttackNonUsed'];
-                }
-                else
-                {
-                    if($YourPlanet)
-                    {
-                        $Throw = $_Lang['fl3_CantAttackYourself'];
-                    }
-                }
-            }
-            break;
-        case 2:
-            if($Target['type'] == 2)
-            {
-                $Throw = $_Lang['fl3_CantACSDebris'];
-            }
-            else
-            {
-                if(!$UsedPlanet)
-                {
-                    $Throw = $_Lang['fl3_CantACSNonUsed'];
-                }
-                else
-                {
-                    if($YourPlanet)
-                    {
-                        $Throw = $_Lang['fl3_CantACSYourself'];
-                    }
-                }
-            }
-            break;
-        case 3:
-            if($Target['type'] == 2)
-            {
-                $Throw = $_Lang['fl3_CantTransportDebris'];
-            }
-            else
-            {
-                if(!$UsedPlanet)
-                {
-                    $Throw = $_Lang['fl3_CantTransportNonUsed'];
-                }
-                else
-                {
-                    $Throw = $_Lang['fl3_CantTransportSpyProbes'];
-                }
-            }
-            break;
-        case 4:
-            if($Target['type'] == 2)
-            {
-                $Throw = $_Lang['fl3_CantStayDebris'];
-            }
-            else
-            {
-                if(!$UsedPlanet)
-                {
-                    $Throw = $_Lang['fl3_CantStayNonUsed'];
-                }
-                else
-                {
-                    if(!$YourPlanet)
-                    {
-                        $Throw = $_Lang['fl3_CantStayNonYourself'];
-                    }
-                }
-            }
-            break;
-        case 5:
-            if($Target['type'] == 2)
-            {
-                $Throw = $_Lang['fl3_CantProtectDebris'];
-            }
-            else
-            {
-                if(!$UsedPlanet)
-                {
-                    $Throw = $_Lang['fl3_CantProtectNonUsed'];
-                }
-                else
-                {
-                    if($YourPlanet)
-                    {
-                        $Throw = $_Lang['fl3_CantProtectYourself'];
-                    }
-                    else
-                    {
-                        $Throw = $_Lang['fl3_CantProtectNonFriend'];
-                    }
-                }
-            }
-            break;
-        case 6:
-            if($Target['type'] == 2)
-            {
-                $Throw = $_Lang['fl3_CantSpyDebris'];
-            }
-            else
-            {
-                if(!$UsedPlanet)
-                {
-                    $Throw = $_Lang['fl3_CantSpyNonUsed'];
-                }
-                else
-                {
-                    if($YourPlanet)
-                    {
-                        $Throw = $_Lang['fl3_CantSpyYourself'];
-                    }
-                    else
-                    {
-                        $Throw = $_Lang['fl3_CantSpyProbesCount'];
-                    }
-                }
-            }
-            break;
-        case 7:
-            if($UsedPlanet)
-            {
-                $Throw = $_Lang['fl3_CantSettleOnUsed'];
-            }
-            else
-            {
-                if($Target['type'] != 1)
-                {
-                    $Throw = $_Lang['fl3_CantSettleNonPlanet'];
-                }
-                else
-                {
-                    $Throw = $_Lang['fl3_CantSettleNoShips'];
-                }
-            }
-            break;
-        case 8:
-            if($Target['type'] != 2)
-            {
-                $Throw = $_Lang['fl3_CantRecycleNonDebris'];
-            }
-            else
-            {
-                $Throw = $_Lang['fl3_CantRecycleNoShip'];
-            }
-            break;
-        case 9:
-            if($Target['type'] == 2)
-            {
-                $Throw = $_Lang['fl3_CantDestroyDebris'];
-            }
-            else
-            {
-                if(!$UsedPlanet)
-                {
-                    $Throw = $_Lang['fl3_CantDestroyNonUsed'];
-                }
-                else
-                {
-                    if($YourPlanet)
-                    {
-                        $Throw = $_Lang['fl3_CantDestroyYourself'];
-                    }
-                    else
-                    {
-                        if($Target['type'] != 3)
-                        {
-                            $Throw = $_Lang['fl3_CantDestroyNonMoon'];
-                        }
-                        else
-                        {
-                            $Throw = $_Lang['fl3_CantDestroyNoShip'];
-                        }
-                    }
-                }
-            }
-            break;
+    if ($Fleet['Mission'] == 1) {
+        if ($Target['type'] == 2) {
+            messageRed($_Lang['fl3_CantAttackDebris'], $ErrorTitle);
+        }
+        if (!$UsedPlanet) {
+            messageRed($_Lang['fl3_CantAttackNonUsed'], $ErrorTitle);
+        }
+        if ($YourPlanet) {
+            messageRed($_Lang['fl3_CantAttackYourself'], $ErrorTitle);
+        }
     }
-    if($Throw)
-    {
-        messageRed($Throw, $ErrorTitle);
+    if ($Fleet['Mission'] == 2) {
+        if ($Target['type'] == 2) {
+            messageRed($_Lang['fl3_CantACSDebris'], $ErrorTitle);
+        }
+        if (!$UsedPlanet) {
+            messageRed($_Lang['fl3_CantACSNonUsed'], $ErrorTitle);
+        }
+        if ($YourPlanet) {
+            messageRed($_Lang['fl3_CantACSYourself'], $ErrorTitle);
+        }
     }
+    if ($Fleet['Mission'] == 3) {
+        if ($Target['type'] == 2) {
+            messageRed($_Lang['fl3_CantTransportDebris'], $ErrorTitle);
+        }
+        if (!$UsedPlanet) {
+            messageRed($_Lang['fl3_CantTransportNonUsed'], $ErrorTitle);
+        }
+        // TODO: This should be checked,
+        // to prevent from other error states from being caught by this
+        messageRed($_Lang['fl3_CantTransportSpyProbes'], $ErrorTitle);
+    }
+    if ($Fleet['Mission'] == 4) {
+        if ($Target['type'] == 2) {
+            messageRed($_Lang['fl3_CantStayDebris'], $ErrorTitle);
+        }
+        if (!$UsedPlanet) {
+            messageRed($_Lang['fl3_CantStayNonUsed'], $ErrorTitle);
+        }
+        if (!$YourPlanet) {
+            messageRed($_Lang['fl3_CantStayNonYourself'], $ErrorTitle);
+        }
+    }
+    if ($Fleet['Mission'] == 5) {
+        if ($Target['type'] == 2) {
+            messageRed($_Lang['fl3_CantProtectDebris'], $ErrorTitle);
+        }
+        if (!$UsedPlanet) {
+            messageRed($_Lang['fl3_CantProtectNonUsed'], $ErrorTitle);
+        }
+        if ($YourPlanet) {
+            messageRed($_Lang['fl3_CantProtectYourself'], $ErrorTitle);
+        }
+        // TODO: This should be checked,
+        // to prevent from other error states from being caught by this
+        messageRed($_Lang['fl3_CantProtectNonFriend'], $ErrorTitle);
+    }
+    if ($Fleet['Mission'] == 6) {
+        if ($Target['type'] == 2) {
+            messageRed($_Lang['fl3_CantSpyDebris'], $ErrorTitle);
+        }
+        if (!$UsedPlanet) {
+            messageRed($_Lang['fl3_CantSpyNonUsed'], $ErrorTitle);
+        }
+        if ($YourPlanet) {
+            messageRed($_Lang['fl3_CantSpyYourself'], $ErrorTitle);
+        }
+        // TODO: This should be checked,
+        // to prevent from other error states from being caught by this
+        messageRed($_Lang['fl3_CantSpyProbesCount'], $ErrorTitle);
+    }
+    if ($Fleet['Mission'] == 7) {
+        if ($Target['type'] != 1) {
+            messageRed($_Lang['fl3_CantSettleNonPlanet'], $ErrorTitle);
+        }
+        if ($UsedPlanet) {
+            messageRed($_Lang['fl3_CantSettleOnUsed'], $ErrorTitle);
+        }
+        // TODO: This should be checked,
+        // to prevent from other error states from being caught by this
+        messageRed($_Lang['fl3_CantSettleNoShips'], $ErrorTitle);
+    }
+    if ($Fleet['Mission'] == 8) {
+        if ($Target['type'] != 2) {
+            messageRed($_Lang['fl3_CantRecycleNonDebris'], $ErrorTitle);
+        }
+        // TODO: This should be checked,
+        // to prevent from other error states from being caught by this
+        messageRed($_Lang['fl3_CantRecycleNoShip'], $ErrorTitle);
+    }
+    if ($Fleet['Mission'] == 9) {
+        if ($Target['type'] != 3) {
+            messageRed($_Lang['fl3_CantDestroyNonMoon'], $ErrorTitle);
+        }
+        if (!$UsedPlanet) {
+            messageRed($_Lang['fl3_CantDestroyNonUsed'], $ErrorTitle);
+        }
+        if ($YourPlanet) {
+            messageRed($_Lang['fl3_CantDestroyYourself'], $ErrorTitle);
+        }
+        // TODO: This should be checked,
+        // to prevent from other error states from being caught by this
+        messageRed($_Lang['fl3_CantDestroyNoShip'], $ErrorTitle);
+    }
+    if ($Fleet['Mission'] == 15) {
+        if (!isFeatureEnabled(\FeatureType::Expeditions)) {
+            messageRed($_Lang['fl3_ExpeditionsAreOff'], $ErrorTitle);
+        }
+    }
+
     messageRed($_Lang['fl3_BadMissionSelected'], $ErrorTitle);
 }
 
@@ -784,6 +589,28 @@ if($Fleet['Mission'] == 8)
     if($CheckDebrisField['metal'] <= 0 AND $CheckDebrisField['crystal'] <= 0)
     {
         messageRed($_Lang['fl3_NoDebrisFieldHere'], $ErrorTitle);
+    }
+}
+
+if ($Fleet['Mission'] == 5) {
+    $missionHoldValidationResult = FlightControl\Utils\Validators\validateMissionHold([
+        'newFleet' => $Fleet,
+    ]);
+
+    if (!$missionHoldValidationResult['isValid']) {
+        $firstValidationError = $missionHoldValidationResult['errors'][0];
+
+        $errorMessage = null;
+        switch ($firstValidationError['errorCode']) {
+            case 'INVALID_HOLD_TIME':
+                $errorMessage = $_Lang['fl3_Holding_BadTime'];
+                break;
+            default:
+                $errorMessage = $_Lang['fleet_generic_errors_unknown'];
+                break;
+        }
+
+        messageRed($errorMessage, $ErrorTitle);
     }
 }
 
@@ -804,10 +631,6 @@ if($Fleet['Mission'] == 15)
 }
 elseif($Fleet['Mission'] == 5)
 {
-    if(!in_array($Fleet['HoldTime'], array(1, 2, 4, 8, 16, 32)))
-    {
-        $Throw = $_Lang['fl3_Holding_BadTime'];
-    }
     $Fleet['StayTime'] = $Fleet['HoldTime'] * 3600;
 }
 if($Throw)
@@ -1032,7 +855,7 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
                         $Throw = sprintf($_Lang['fl3_Protect_AttackLimitTotal'], $_Lang['fl3_Protect_AttackLimit_'.$Values['key']]);
                         break;
                     }
-                    elseif(($FleetArchiveRecordsCount + $FlyingFleetsData[$TargetData['owner']]['count']) >= $Protections[$Values['key'].'_counttotal'])
+                    elseif(($FleetArchiveRecordsCount + $fleetsInFlightCounters['aggressiveFleetsInFlight']['byTargetOwnerId'][$TargetData['owner']]) >= $Protections[$Values['key'].'_counttotal'])
                     {
                         $Throw = sprintf($_Lang['fl3_Protect_AttackLimitTotalFly'], $_Lang['fl3_Protect_AttackLimit_'.$Values['key']]);
                         break;
@@ -1042,7 +865,7 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
                         $Throw = sprintf($_Lang['fl3_Protect_AttackLimitSingle'], $_Lang['fl3_Protect_AttackLimit_'.$Values['key']]);
                         break;
                     }
-                    elseif(($SaveArchiveData[$Values['type']][$TargetData['id']] + $FlyingFleetsData[$TargetData['owner']][$TargetData['id']]) >= $Protections[$Values['key'].'_countplanet'])
+                    elseif(($SaveArchiveData[$Values['type']][$TargetData['id']] + $fleetsInFlightCounters['aggressiveFleetsInFlight']['byTargetId'][$TargetData['id']]) >= $Protections[$Values['key'].'_countplanet'])
                     {
                         $Throw = sprintf($_Lang['fl3_Protect_AttackLimitSingleFly'], $_Lang['fl3_Protect_AttackLimit_'.$Values['key']]);
                         break;
@@ -1628,29 +1451,14 @@ doquery('LOCK TABLE {{table}} WRITE', 'planets');
 doquery($QryUpdatePlanet, 'planets');
 doquery('UNLOCK TABLES', '');
 
-// User Development Log
-if($Fleet['resources']['metal'] > 0)
-{
-    $Add2UserDev_Log[] = 'M,'.$Fleet['resources']['metal'];
-}
-if($Fleet['resources']['crystal'] > 0)
-{
-    $Add2UserDev_Log[] = 'C,'.$Fleet['resources']['crystal'];
-}
-if($Fleet['resources']['deuterium'] > 0)
-{
-    $Add2UserDev_Log[] = 'D,'.$Fleet['resources']['deuterium'];
-}
-if($Consumption > 0)
-{
-    $Add2UserDev_Log[] = 'F,'.$Consumption;
-}
-$RTrim = rtrim($Fleet['array'], ';');
-if(!empty($Add2UserDev_Log))
-{
-    $Add2UserDev_Log = ';'.implode(';', $Add2UserDev_Log);
-}
-$UserDev_Log[] = array('PlanetID' => $_Planet['id'], 'Date' => $Now, 'Place' => 10, 'Code' => $Fleet['Mission'], 'ElementID' => $LastFleetID, 'AdditionalData' => $RTrim.$Add2UserDev_Log);
+$UserDev_Log[] = FlightControl\Utils\Factories\createFleetDevLogEntry([
+    'currentPlanet' => &$_Planet,
+    'newFleetId' => $LastFleetID,
+    'timestamp' => $Now,
+    'fleetData' => $Fleet,
+    'fuelUsage' => $Consumption,
+]);
+
 // ---
 
 $_Lang['FleetMission'] = $_Lang['type_mission'][$Fleet['Mission']];
