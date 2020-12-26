@@ -6,6 +6,7 @@ call_user_func(function () {
 
     $includePath = $_EnginePath . 'modules/flightControl/';
 
+    include($includePath . './utils/factories/createFleetDevLogEntry.factory.php');
     include($includePath . './utils/fetchers/fetchPlanetOwnerDetails.fetcher.php');
     include($includePath . './utils/helpers/getAvailableHoldTimes.helper.php');
     include($includePath . './utils/helpers/getAvailableSpeeds.helper.php');
