@@ -1239,15 +1239,19 @@ if(!isset($LockFleetSending))
                         }
                     }
                 }
-                if($_Alert['PushAlert']['HasResources'] === true)
-                {
-                    $FiltersData = array();
-                    $FiltersData['place'] = 1;
-                    $FiltersData['alertsender'] = 1;
-                    $FiltersData['users'] = array($_User['id'], $TargetData['owner']);
-                    $FiltersData['sender'] = $_User['id'];
-                    $FiltersData['target'] = $TargetData['owner'];
-                    $FilterResult = AlertUtils_CheckFilters($FiltersData, array('DontLoad' => true, 'DontLoad_OnlyIfCacheEmpty' => true));
+                if ($_Alert['PushAlert']['HasResources'] === true) {
+                    $alertFiltersSearchParams = FlightControl\Utils\Factories\createAlertFiltersSearchParams([
+                        'fleetOwner' => &$_User,
+                        'targetOwner' => $TargetData,
+                        'ipsIntersectionsCheckResult' => null,
+                    ]);
+                    $FilterResult = AlertUtils_CheckFilters(
+                        $alertFiltersSearchParams,
+                        [
+                            'DontLoad' => true,
+                            'DontLoad_OnlyIfCacheEmpty' => true,
+                        ]
+                    );
 
                     if($FilterResult['SendAlert'])
                     {
