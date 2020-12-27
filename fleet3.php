@@ -1120,18 +1120,6 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
             $IPIntersectionNow = 'true';
         }
 
-        $FiltersData['place'] = 1;
-        $FiltersData['alertsender'] = 1;
-        $FiltersData['users'] = array($_User['id'], $TargetData['owner']);
-        $FiltersData['ips'] = $CheckIntersection['Intersect'];
-        $FiltersData['sender'] = $_User['id'];
-        $FiltersData['target'] = $TargetData['owner'];
-        foreach($CheckIntersection['Intersect'] as $IP)
-        {
-            $FiltersData['logcount'][$IP][$_User['id']] = $CheckIntersection['IPLogData'][$_User['id']][$IP]['Count'];
-            $FiltersData['logcount'][$IP][$TargetData['owner']] = $CheckIntersection['IPLogData'][$TargetData['owner']][$IP]['Count'];
-        }
-
         if($_User['multiIP_DeclarationID'] > 0 AND $_User['multiIP_DeclarationID'] == $TargetData['multiIP_DeclarationID'])
         {
             $Query_CheckDeclaration = '';
@@ -1146,7 +1134,13 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
             $DeclarationID = 0;
         }
 
-        $FilterResult = AlertUtils_CheckFilters($FiltersData);
+        $alertFiltersSearchParams = FlightControl\Utils\Factories\createAlertFiltersSearchParams([
+            'fleetOwner' => &$_User,
+            'targetOwner' => $TargetData,
+            'ipsIntersectionsCheckResult' => $CheckIntersection,
+        ]);
+        $FilterResult = AlertUtils_CheckFilters($alertFiltersSearchParams);
+
         if($FilterResult['FilterUsed'])
         {
             $IPIntersectionFiltred = 'true';
