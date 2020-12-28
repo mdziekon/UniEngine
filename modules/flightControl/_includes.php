@@ -20,6 +20,7 @@ call_user_func(function () {
     include($includePath . './utils/validators/fleetArray.validator.php');
     include($includePath . './utils/validators/joinUnion.validator.php');
     include($includePath . './utils/validators/missionHold.validator.php');
+    include($includePath . './utils/validators/smartFleetsBlockadeState.validator.php');
 
 });
 
