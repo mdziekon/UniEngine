@@ -290,110 +290,73 @@ switch($Mission)
     }
 }
 
-// Fleet Blockade System
-$BlockFleet = false;
-$SFBSelectWhere[] = "(`Type` = 1 AND (`EndTime` > UNIX_TIMESTAMP() OR `PostEndTime` > UNIX_TIMESTAMP()))";
-if($Mission == 6)
-{
-    if($TargetUser > 0)
-    {
-        $SFBSelectWhere[] = "(`Type` = 2 AND `ElementID` = {$TargetUser} AND `EndTime` > UNIX_TIMESTAMP())";
-    }
-    $SFBSelectWhere[] = "(`Type` = 3 AND `ElementID` = {$TargetID} AND `EndTime` > UNIX_TIMESTAMP())";
-}
-$SFBSelectWhere[] = "(`Type` = 2 AND `ElementID` = {$_User['id']} AND `EndTime` > UNIX_TIMESTAMP())";
-$SFBSelectWhere[] = "(`Type` = 3 AND `ElementID` = {$CurrentPlanet['id']} AND `EndTime` > UNIX_TIMESTAMP())";
+$smartFleetsBlockadeStateValidationResult = FlightControl\Utils\Validators\validateSmartFleetsBlockadeState([
+    'timestamp' => $Time,
+    'fleetData' => [
+        'Mission' => $Mission,
+    ],
+    'fleetOwnerDetails' => [
+        'userId' => $_User['id'],
+        'planetId' => $CurrentPlanet['id'],
+    ],
+    'targetOwnerDetails' => (
+        $TargetUser > 0 ?
+        [
+            'userId' => $TargetUser,
+            'planetId' => $TargetID,
+            'onlinetime' => $HeDBRec['onlinetime'],
+        ] :
+        null
+    ),
+    'settings' => [
+        'idleTime' => $Protections['idleTime'],
+    ],
+]);
 
-$SFBSelect = '';
-$SFBSelect .= "SELECT `Type`, `BlockMissions`, `Reason`, `StartTime`, `EndTime`, `PostEndTime`, `ElementID`, `DontBlockIfIdle` FROM {{table}} WHERE `StartTime` <= UNIX_TIMESTAMP() AND ";
-$SFBSelect .= implode(' OR ', $SFBSelectWhere);
-$SFBSelect .= " ORDER BY `Type` ASC, `EndTime` DESC;";
+if (!$smartFleetsBlockadeStateValidationResult['isValid']) {
+    $firstValidationError = $smartFleetsBlockadeStateValidationResult['errors'];
 
-$SQLResult_SmartFleetBlockadeData = doquery($SFBSelect, 'smart_fleet_blockade');
+    $errorMessage = null;
+    switch ($firstValidationError['blockType']) {
+        case 'GLOBAL_ENDTIME':
+            CreateReturn('628');
 
-if($SQLResult_SmartFleetBlockadeData->num_rows > 0)
-{
-    while($GetSFBData = $SQLResult_SmartFleetBlockadeData->fetch_assoc())
-    {
-        $BlockedMissions = false;
-        if($GetSFBData['BlockMissions'] == '0')
-        {
-            $BlockedMissions = true;
-            $AllMissionsBlocked = true;
-        }
-        else
-        {
-            $BlockedMissions = explode(',', $GetSFBData['BlockMissions']);
-        }
+            break;
+        case 'GLOBAL_POSTENDTIME':
+            CreateReturn('635');
 
-        if($BlockedMissions === true OR in_array($Mission, $BlockedMissions))
-        {
-            if($GetSFBData['Type'] == 1)
-            {
-                // Global Blockade
-                if($GetSFBData['EndTime'] > $Time)
-                {
-                    // Normal Blockade
-                    if(!($GetSFBData['DontBlockIfIdle'] == 1 AND in_array($Mission, $_Vars_FleetMissions['military']) AND $TargetUser > 0 AND $HeDBRec['onlinetime'] <= ($Time - $Protections['idleTime'])))
-                    {
-                        CreateReturn('628');
-                    }
-                }
-                else if($GetSFBData['PostEndTime'] > $Time)
-                {
-                    // Post Blockade
-                    if(in_array($Mission, $_Vars_FleetMissions['military']) AND $TargetUser > 0 AND
-                    (
-                        ($AllMissionsBlocked !== true AND $HeDBRec['onlinetime'] > ($Time - $Protections['idleTime']) AND $HeDBRec['onlinetime'] < $GetSFBData['StartTime'])
-                        OR
-                        ($AllMissionsBlocked === true AND $HeDBRec['onlinetime'] > ($Time - $Protections['idleTime']) AND $HeDBRec['onlinetime'] < $GetSFBData['EndTime'])
-                    ))
-                    {
-                        CreateReturn('635');
-                    }
-                }
+            break;
+        case 'USER':
+            $errorDetails = $firstValidationError['details'];
+
+            if ($errorDetails['userId'] == $_User['id']) {
+                CreateReturn('636');
             }
-            else if($GetSFBData['Type'] == 2)
-            {
-                // Per User Blockade
-                if($GetSFBData['ElementID'] == $_User['id'])
-                {
-                    CreateReturn('636');
-                }
-                else
-                {
-                    CreateReturn('637');
-                }
+
+            CreateReturn('637');
+
+            break;
+        case 'PLANET':
+            $errorDetails = $firstValidationError['details'];
+
+            if ($errorDetails['planetId'] == $CurrentPlanet['id']) {
+                CreateReturn(
+                    ($CurrentPlanet['planet_type'] == 1) ?
+                        '638' :
+                        '639'
+                );
             }
-            else if($GetSFBData['Type'] == 3)
-            {
-                // Per Planet Blockade
-                if($GetSFBData['ElementID'] == $CurrentPlanet['id'])
-                {
-                    // SFB per Planet (your) is Active
-                    if($CurrentPlanet['planet_type'] == 1)
-                    {
-                        CreateReturn('638');
-                    }
-                    else
-                    {
-                        CreateReturn('639');
-                    }
-                }
-                else
-                {
-                    // SFB per Planet (target) is Active
-                    if($TargetPlanetType == 1)
-                    {
-                        CreateReturn('640');
-                    }
-                    else
-                    {
-                        CreateReturn('641');
-                    }
-                }
-            }
-        }
+
+            CreateReturn(
+                ($TargetPlanetType == 1) ?
+                    '640' :
+                    '641'
+            );
+
+            break;
+        default:
+            CreateReturn('694');
+            break;
     }
 }
 
