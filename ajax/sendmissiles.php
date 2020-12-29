@@ -219,96 +219,31 @@ if($PlanetData['id_owner'] > 0)
     }
 }
 
-// Fleet Blockade System
-$SFBSelectWhere[] = "(`Type` = 1 AND (`EndTime` > UNIX_TIMESTAMP() OR `PostEndTime` > UNIX_TIMESTAMP()))";
-if($PlanetData['id_owner'] > 0)
-{
-    $SFBSelectWhere[] = "(`Type` = 2 AND `ElementID` = {$PlanetData['id_owner']} AND `EndTime` > UNIX_TIMESTAMP())";
-}
-$SFBSelectWhere[] = "(`Type` = 3 AND `ElementID` = {$PlanetData['id']} AND `EndTime` > UNIX_TIMESTAMP())";
-$SFBSelectWhere[] = "(`Type` = 2 AND `ElementID` = {$_User['id']} AND `EndTime` > UNIX_TIMESTAMP())";
-$SFBSelectWhere[] = "(`Type` = 3 AND `ElementID` = {$_Planet['id']} AND `EndTime` > UNIX_TIMESTAMP())";
+$smartFleetsBlockadeStateValidationResult = FlightControl\Utils\Validators\validateSmartFleetsBlockadeState([
+    'timestamp' => $Now,
+    'fleetData' => [
+        'Mission' => $Mission,
+    ],
+    'fleetOwnerDetails' => [
+        'userId' => $_User['id'],
+        'planetId' => $_Planet['id'],
+    ],
+    'targetOwnerDetails' => (
+        $PlanetData['id_owner'] > 0 ?
+        [
+            'userId' => $PlanetData['id_owner'],
+            'planetId' => $PlanetData['id'],
+            'onlinetime' => $HeDBRec['onlinetime'],
+        ] :
+        null
+    ),
+    'settings' => [
+        'idleTime' => $Protections['idleTime'],
+    ],
+]);
 
-$SFBSelect = '';
-$SFBSelect .= "SELECT `Type`, `BlockMissions`, `Reason`, `StartTime`, `EndTime`, `PostEndTime`, `ElementID`, `DontBlockIfIdle` FROM {{table}} WHERE `StartTime` <= UNIX_TIMESTAMP() AND ";
-$SFBSelect .= implode(' OR ', $SFBSelectWhere);
-$SFBSelect .= " ORDER BY `Type` ASC, `EndTime` DESC;";
-
-$SQLResult_GetSmartFleetBlockadeData = doquery($SFBSelect, 'smart_fleet_blockade');
-
-if($SQLResult_GetSmartFleetBlockadeData->num_rows > 0)
-{
-    while($GetSFBData = $SQLResult_GetSmartFleetBlockadeData->fetch_assoc())
-    {
-        $BlockedMissions = false;
-        if($GetSFBData['BlockMissions'] == '0')
-        {
-            $BlockedMissions = true;
-            $AllMissionsBlocked = true;
-        }
-        else
-        {
-            $BlockedMissions = explode(',', $GetSFBData['BlockMissions']);
-        }
-
-        if($BlockedMissions === true OR in_array($Mission, $BlockedMissions))
-        {
-            if($GetSFBData['Type'] == 1)
-            {
-                // Global Blockade
-                if($GetSFBData['EndTime'] > $Now)
-                {
-                    // Normal Blockade
-                    if(!($GetSFBData['DontBlockIfIdle'] == 1 AND in_array($Mission, $_Vars_FleetMissions['military']) AND $PlanetData['id_owner'] > 0 AND $HeDBRec['onlinetime'] <= ($Now - $Protections['idleTime'])))
-                    {
-                        $BlockFleet = true;
-                        $BlockReason = $_Lang['SFB_Stop_GlobalBlockade'];
-                    }
-                }
-                else if($GetSFBData['PostEndTime'] > $Now)
-                {
-                    // Post Blockade
-                    if(in_array($Mission, $_Vars_FleetMissions['military']) AND $PlanetData['id_owner'] > 0 AND
-                    (
-                        ($AllMissionsBlocked !== true AND $HeDBRec['onlinetime'] > ($Now - $Protections['idleTime']) AND $HeDBRec['onlinetime'] < $GetSFBData['StartTime'])
-                        OR
-                        ($AllMissionsBlocked === true AND $HeDBRec['onlinetime'] > ($Now - $Protections['idleTime']) AND $HeDBRec['onlinetime'] < $GetSFBData['EndTime'])
-                    ))
-                    {
-                        $BlockFleet = true;
-                        $BlockReason = sprintf($_Lang['SFB_Stop_GlobalPostBlockade'], prettyDate('d m Y, H:i:s', $GetSFBData['PostEndTime'], 1));
-                    }
-                }
-            }
-            else if($GetSFBData['Type'] == 2)
-            {
-                // Per User Blockade
-                $BlockFleet = true;
-                $BlockGivenReason = (empty($GetSFBData['Reason']) ? $_Lang['SFB_Stop_ReasonNotGiven'] : "\"{$GetSFBData['Reason']}\"");
-                $BlockReason = sprintf(($GetSFBData['ElementID'] == $_User['id'] ? $_Lang['SFB_Stop_UserBlockadeOwn'] : $_Lang['SFB_Stop_UserBlockade']), prettyDate('d m Y', $GetSFBData['EndTime'], 1), date('H:i:s', $GetSFBData['EndTime']), $BlockGivenReason);
-            }
-            else if($GetSFBData['Type'] == 3)
-            {
-                // Per Planet Blockade
-                $BlockFleet = true;
-                $BlockGivenReason = (empty($GetSFBData['Reason']) ? $_Lang['SFB_Stop_ReasonNotGiven'] : "\"{$GetSFBData['Reason']}\"");
-                if($GetSFBData['ElementID'] == $_Planet['id'])
-                {
-                    $UseLangVar = ($_Planet['planet_type'] == 1 ? $_Lang['SFB_Stop_PlanetBlockadeOwn_Planet'] : $_Lang['SFB_Stop_PlanetBlockadeOwn_Moon']);
-                }
-                else
-                {
-                    $UseLangVar = ($Type == 1 ? $_Lang['SFB_Stop_PlanetBlockade_Planet'] : $_Lang['SFB_Stop_PlanetBlockade_Moon']);
-                }
-                $BlockReason = sprintf($UseLangVar, prettyDate('d m Y', $GetSFBData['EndTime'], 1), date('H:i:s', $GetSFBData['EndTime']), $BlockGivenReason);
-            }
-        }
-
-        if($BlockFleet === true)
-        {
-            CreateReturn('626');
-        }
-    }
+if (!$smartFleetsBlockadeStateValidationResult['isValid']) {
+    CreateReturn('626');
 }
 
 $CreateMIPAttack = '';
