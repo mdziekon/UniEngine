@@ -46,7 +46,7 @@ function fetchActiveSmartFleetsBlockadeEntries ($props) {
         "( " .
             "(`Type` = 1 AND (`EndTime` > {$timestamp} OR `PostEndTime` > {$timestamp})) OR " .
             "(`Type` = 2 AND `ElementID` IN ({$userIdsToCheckString}) AND `EndTime` > {$timestamp}) OR " .
-            "(`Type` = 3 AND `ElementID` IN ({$planetIdsToCheckString}) AND `EndTime` > {$timestamp}) OR " .
+            "(`Type` = 3 AND `ElementID` IN ({$planetIdsToCheckString}) AND `EndTime` > {$timestamp}) " .
         ") " .
         "ORDER BY `Type` ASC, `EndTime` DESC " .
         ";"
