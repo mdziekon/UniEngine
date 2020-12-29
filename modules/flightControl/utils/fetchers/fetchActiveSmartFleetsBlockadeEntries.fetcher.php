@@ -34,6 +34,8 @@ function fetchActiveSmartFleetsBlockadeEntries ($props) {
             null
         ),
     ]);
+    $userIdsToCheckString = implode(', ', $userIdsToCheck);
+    $planetIdsToCheckString = implode(', ', $planetIdsToCheck);
 
     $query = (
         "SELECT " .
@@ -43,8 +45,8 @@ function fetchActiveSmartFleetsBlockadeEntries ($props) {
         "`StartTime` <= {$timestamp} AND " .
         "( " .
             "(`Type` = 1 AND (`EndTime` > {$timestamp} OR `PostEndTime` > {$timestamp})) OR " .
-            "(`Type` = 2 AND `ElementID` IN ({$userIdsToCheck}) AND `EndTime` > {$timestamp}) OR " .
-            "(`Type` = 3 AND `ElementID` IN ({$planetIdsToCheck}) AND `EndTime` > {$timestamp}) OR " .
+            "(`Type` = 2 AND `ElementID` IN ({$userIdsToCheckString}) AND `EndTime` > {$timestamp}) OR " .
+            "(`Type` = 3 AND `ElementID` IN ({$planetIdsToCheckString}) AND `EndTime` > {$timestamp}) OR " .
         ") " .
         "ORDER BY `Type` ASC, `EndTime` DESC " .
         ";"
