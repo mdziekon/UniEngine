@@ -242,7 +242,7 @@ else
 }
 
 $smartFleetsBlockadeStateValidationResult = FlightControl\Utils\Validators\validateSmartFleetsBlockadeState([
-    'timestamp' => $$Now,
+    'timestamp' => $Now,
     'fleetData' => $Fleet,
     'fleetOwnerDetails' => [
         'userId' => $_User['id'],
