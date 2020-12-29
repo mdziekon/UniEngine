@@ -263,7 +263,7 @@ $smartFleetsBlockadeStateValidationResult = FlightControl\Utils\Validators\valid
 ]);
 
 if (!$smartFleetsBlockadeStateValidationResult['isValid']) {
-    $firstValidationError = $smartFleetsBlockadeStateValidationResult['errors'][0];
+    $firstValidationError = $smartFleetsBlockadeStateValidationResult['errors'];
 
     $errorMessage = null;
     switch ($firstValidationError['blockType']) {
