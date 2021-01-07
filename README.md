@@ -180,4 +180,4 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 ### Other licenses
 
-See [``license``] for the licenses of included external resources.
+See [`licenses/OTHERLICENSES`](./licenses/OTHERLICENSES) for the licenses of included external resources.
