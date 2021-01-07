@@ -131,12 +131,53 @@ Visit [docs/index.md](./docs/index.md) to see project's documentation.
 
 ### Contributors
 
-- Alessio <nicoales@live.it> (https://github.com/XxidroxX)
+For the contributors list, see [Github's contributors graph](https://github.com/mdziekon/UniEngine/graphs/contributors) or use any Git client to extract that list.
 
 ## License
 
-GPL-2.0
+### Current license
 
-See ``LICENSE`` file for this project's license details.
+```
+UniEngine - OGame-like Game Engine
+Copyright (C) 2021  Michał Dziekoński
 
-See ``OTHERLICENSES`` for the licenses of included external resources.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published
+by the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+```
+
+See [`LICENSE`](./LICENSE) or [`licenses/AGPL-3.license`](./licenses/AGPL-3.license) files for this project's current license copy.
+
+### Until commit [591eba4](https://github.com/mdziekon/UniEngine/commit/591eba40476d42781f33eeaf10acf5859b464f33)
+
+```
+UniEngine - OGame-like Game Engine
+Copyright (C) 2013-2021  Michał Dziekoński
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+```
+
+### Other licenses
+
+See [`licenses/OTHERLICENSES`](./licenses/OTHERLICENSES) for the licenses of included external resources.
