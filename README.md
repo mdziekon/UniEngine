@@ -131,7 +131,7 @@ Visit [docs/index.md](./docs/index.md) to see project's documentation.
 
 ### Contributors
 
-- Alessio <nicoales@live.it> (https://github.com/XxidroxX)
+For the contributors list, see [Github's contributors graph](https://github.com/mdziekon/UniEngine/graphs/contributors) or use any Git client to extract that list.
 
 ## License
 
