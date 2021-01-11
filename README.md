@@ -20,7 +20,6 @@ OGame-clone browser based game engine.
 
 - PHP
     - ``>= 7.0 && < 7.3``
-    - ``>= 5.4`` (deprecated)
 - Composer
     - ``>= 1.6``
 - MySQL
