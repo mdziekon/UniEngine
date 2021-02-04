@@ -215,30 +215,12 @@ if (isset($input_changelang) && in_array($input_changelang, UNIENGINE_LANGS_AVAI
     includeLang('login');
 }
 
-$_Lang['PHP_InsertUniCode'] = LOGINPAGE_UNIVERSUMCODE;
-$_Lang['PHP_Insert_LangSelectors'] = [];
+include($_EnginePath . 'modules/session/_includes.php');
 
-foreach (UNIENGINE_LANGS_AVAILABLE as $langKey) {
-    $langData = $_Lang['LanguagesAvailable'][$langKey];
+use UniEngine\Engine\Modules\Session;
 
-    $_Lang['PHP_Insert_LangSelectors'][] = (
-        "<a href='?lang={$langKey}' title='{$langData['name']}'>" .
-        "{$langData['flag_emoji']}" .
-        "</a>"
-    );
-}
-$_Lang['PHP_Insert_LangSelectors'] = implode('&nbsp;&nbsp;', $_Lang['PHP_Insert_LangSelectors']);
+$pageView = Session\Screens\LoginView\render([]);
 
-if($_GameConfig['game_disable'])
-{
-    $_Lang['type'] = 'button" onclick="alert(\''.str_replace('<br/>', "\n", $_GameConfig['close_reason']).'\')';
-    $_Lang['LoginButton'] = $_Lang['Body_ServerOffline'];
-}
-else
-{
-    $_Lang['type'] = 'submit';
-    $_Lang['LoginButton'] = $_Lang['Body_Submit'];
-}
-display(parsetemplate(gettemplate('login_body'), $_Lang), $_Lang['Page_Title']);
+display($pageView['componentHTML'], $_Lang['Page_Title']);
 
 ?>
