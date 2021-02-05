@@ -9,6 +9,8 @@ call_user_func(function () {
     include($includePath . './screens/LoginView/LoginView.component.php');
     include($includePath . './screens/LoginView/components/LoginForm/LoginForm.component.php');
 
+    include($includePath . './utils/cookie.utils.php');
+
 });
 
 ?>
