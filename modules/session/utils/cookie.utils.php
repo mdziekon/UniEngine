@@ -50,4 +50,60 @@ function normalizeSessionCookie($unpackedCookie) {
     ];
 }
 
+function verifySessionCookie($params) {
+    $createSuccess = function ($payload) {
+        return [
+            'isSuccess' => true,
+            'payload' => $payload,
+        ];
+    };
+    $createFailure = function ($error) {
+        return [
+            'isSuccess' => false,
+            'error' => $error,
+        ];
+    };
+
+    $userEntityFetcher = $params['userEntityFetcher'];
+
+    $cookieValue = getSessionCookieValue();
+
+    $unpackedCookie = unpackSessionCookie($cookieValue);
+    $sessionData = normalizeSessionCookie($unpackedCookie);
+
+    if ($sessionData['userId'] <= 0) {
+        return $createFailure([
+            'code' => 'INVALID_USER_ID',
+        ]);
+    }
+
+    $userEntityFetcherResult = $userEntityFetcher([
+        'userId' => $sessionData['userId'],
+    ]);
+
+    if ($userEntityFetcherResult->num_rows != 1) {
+        return $createFailure([
+            'code' => 'USER_NOT_FOUND',
+        ]);
+    }
+
+    $userEntity = $userEntityFetcherResult->fetch_assoc();
+    $userPassword = $userEntity['password'];
+    $serverSecretWord = getServerSecretWord();
+
+    $obscuredUserPasswordHash = md5("{$userPassword}--{$serverSecretWord}");
+
+    if ($obscuredUserPasswordHash !== $sessionData['obscuredPasswordHash']) {
+        return $createFailure([
+            'code' => 'INVALID_PASSWORD',
+        ]);
+    }
+
+    return $createSuccess([
+        'rawCookieValue' => $cookieValue,
+        'sessionData' => $sessionData,
+        'userEntity' => $userEntity,
+    ]);
+}
+
 ?>
