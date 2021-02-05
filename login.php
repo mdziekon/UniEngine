@@ -194,7 +194,7 @@ if (isset($input_changelang) && in_array($input_changelang, UNIENGINE_LANGS_AVAI
     includeLang('login');
 }
 
-include($_EnginePath . 'modules/session/_includes.php');
+include_once($_EnginePath . 'modules/session/_includes.php');
 
 use UniEngine\Engine\Modules\Session;
 
