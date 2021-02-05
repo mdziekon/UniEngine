@@ -27,7 +27,10 @@ function CheckUserSessionCookie() {
         return false;
     }
 
-    $Init['$_DontShowMenus'] = $_DontShowMenus;
+    $preserveVars = [
+        '$_DontShowMenus' => $_DontShowMenus,
+    ];
+
     $_DontShowMenus = true;
 
     $sessionCookieKey = getSessionCookieKey();
@@ -102,7 +105,7 @@ function CheckUserSessionCookie() {
     setcookie($sessionCookieKey, FALSE, 0, '/', '.' . GAMEURL_DOMAIN);
     setcookie($sessionCookieKey, $rawCookieValue, $ExpireTime, '/', '', false, true);
 
-    $_DontShowMenus = $Init['$_DontShowMenus'];
+    $_DontShowMenus = $preserveVars['$_DontShowMenus'];
 
     return $userRow;
 }
