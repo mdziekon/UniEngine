@@ -7,8 +7,10 @@ $_DontShowMenus = true;
 
 $_EnginePath = './';
 include($_EnginePath.'common.php');
+include_once($_EnginePath . 'modules/session/_includes.php');
 
 use UniEngine\Engine\Includes\Helpers\Users;
+use UniEngine\Engine\Modules\Session;
 
 includeLang('login');
 
@@ -121,14 +123,13 @@ if(!empty($Search['where']))
 }
 if(!empty($Search['error']))
 {
-    if($Search['mode'] == 1 AND !empty($Search['IPHash']))
-    {
-        $Query_UpdateLoginProtection = '';
-        $Query_UpdateLoginProtection .= "INSERT INTO {{table}} (`IP`, `Date`, `FailCount`) VALUES ('{$Search['IPHash']}', UNIX_TIMESTAMP(), 1) ";
-        $Query_UpdateLoginProtection .= "ON DUPLICATE KEY UPDATE ";
-        $Query_UpdateLoginProtection .= "`FailCount` = IF(`Date` < (UNIX_TIMESTAMP() - ".LOGINPROTECTION_LOCKTIME."), 1, IF(`FailCount` < ".LOGINPROTECTION_MAXATTEMPTS.", `FailCount` + 1, `FailCount`)), ";
-        $Query_UpdateLoginProtection .= "`Date` = IF(`FailCount` < ".LOGINPROTECTION_MAXATTEMPTS." OR `Date` < (UNIX_TIMESTAMP() - ".LOGINPROTECTION_LOCKTIME."), UNIX_TIMESTAMP(), `Date`);";
-        doquery($Query_UpdateLoginProtection, 'login_protection');
+    if (
+        $Search['mode'] == 1 &&
+        !empty($Search['IPHash'])
+    ) {
+        Session\Utils\RateLimiter\updateLoginRateLimiterEntry([
+            'ipHash' => $Search['IPHash'],
+        ]);
     }
 
     if($UserData['id'] > 0)
@@ -193,10 +194,6 @@ if (isset($input_changelang) && in_array($input_changelang, UNIENGINE_LANGS_AVAI
     $_COOKIE[UNIENGINE_VARNAMES_COOKIE_LANG] = $input_changelang;
     includeLang('login');
 }
-
-include_once($_EnginePath . 'modules/session/_includes.php');
-
-use UniEngine\Engine\Modules\Session;
 
 $pageView = Session\Screens\LoginView\render([]);
 
