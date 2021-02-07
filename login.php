@@ -33,23 +33,21 @@ if($_POST)
     }
 
     $Username = trim($_POST['username']);
-    if(preg_match(REGEXP_USERNAME_ABSOLUTE, $Username))
-    {
+    if (preg_match(REGEXP_USERNAME_ABSOLUTE, $Username)) {
         $Search['mode'] = 1;
         $Search['where'] = "`username` = '{$Username}'";
         $Search['password'] = md5($_POST['password']);
         $Search['IPHash'] = md5(Users\Session\getCurrentIP());
 
-        $Query_LoginProtection = "SELECT `FailCount` FROM {{table}} WHERE `IP` = '{$Search['IPHash']}' AND `Date` >= (UNIX_TIMESTAMP() - ".LOGINPROTECTION_LOCKTIME.") LIMIT 1;";
-        $Result_LoginProtection = doquery($Query_LoginProtection, 'login_protection', true);
-        if($Result_LoginProtection['FailCount'] >= LOGINPROTECTION_MAXATTEMPTS)
-        {
+        $rateLimitVerificationResult = Session\Utils\RateLimiter\verifyLoginRateLimit([
+            'ipHash' => $Search['IPHash'],
+        ]);
+
+        if ($rateLimitVerificationResult['isIpRateLimited']) {
             $Search['error'] = 5;
             $Search['where'] = '';
         }
-    }
-    else
-    {
+    } else {
         $Search['error'] = 1;
     }
 }

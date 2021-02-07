@@ -34,4 +34,39 @@ function updateLoginRateLimiterEntry($params) {
     doquery($query, 'login_protection');
 }
 
+function _fetchLoginRateLimitEntry($params) {
+    $ipHash = $params['ipHash'];
+
+    $lockTime = LOGINPROTECTION_LOCKTIME;
+
+    $query = (
+        "SELECT " .
+        "`FailCount` " .
+        "FROM {{table}} " .
+        "WHERE " .
+        "`IP` = '{$ipHash}' AND " .
+        "`Date` >= (UNIX_TIMESTAMP() - {$lockTime}) " .
+        "LIMIT 1 " .
+        ";"
+    );
+
+    return doquery($query, 'login_protection', true);
+}
+
+function verifyLoginRateLimit($params) {
+    $ipHash = $params['ipHash'];
+
+    $maxAttempts = LOGINPROTECTION_MAXATTEMPTS;
+
+    $rateLimitEntry = _fetchLoginRateLimitEntry([
+        'ipHash' => $ipHash,
+    ]);
+
+    $isIpRateLimited = ($rateLimitEntry['FailCount'] >= $maxAttempts);
+
+    return [
+        'isIpRateLimited' => $isIpRateLimited,
+    ];
+}
+
 ?>
