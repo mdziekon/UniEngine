@@ -38,6 +38,17 @@ function createCookiePasswordHash($params) {
     return md5("{$passwordHash}--{$serverSecretWord}");
 }
 
+function packSessionCookie($cookieParams) {
+    $cookieParts = [
+        strval($cookieParams['userId']),
+        $cookieParams['__unknown_1'],
+        $cookieParams['obscuredPasswordHash'],
+        ($cookieParams['isRememberMeActive'] ? '1' : '0'),
+    ];
+
+    return implode('/%/', $cookieParts);
+}
+
 function unpackSessionCookie($cookieValue) {
     $cookieParts = explode('/%/', $cookieValue);
 
