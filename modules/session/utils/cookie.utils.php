@@ -15,7 +15,7 @@ function getSessionCookieValue() {
 }
 
 function getServerSecretWord() {
-    global $__ServerConnectionSettings;
+    global $_EnginePath, $__ServerConnectionSettings;
 
     require($_EnginePath . 'config.php');
 
