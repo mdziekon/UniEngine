@@ -50,20 +50,45 @@ if($_POST)
     } else {
         $Search['error'] = 1;
     }
-}
-elseif(!empty($_COOKIE[$sessionCookieKey]))
-{
-    $explodeCookie = explode('/%/', $_COOKIE[$sessionCookieKey]);
-    $UserID = intval($explodeCookie[0]);
-    if($UserID > 0)
-    {
-        $Search['mode'] = 2;
-        $Search['where'] = "`id` = {$UserID}";
-        $Search['password'] = $explodeCookie[2];
-    }
-    else
-    {
-        $Search['error'] = 2;
+} else if (!empty($_COOKIE[$sessionCookieKey])) {
+    $Search['mode'] = 2;
+
+    $verificationResult = Session\Utils\Cookie\verifySessionCookie([
+        'userEntityFetcher' => function ($fetcherParams) {
+            $userId = $fetcherParams['userId'];
+
+            $Query_GetUser  = '';
+            $Query_GetUser .= "SELECT `id`, `username`, `password`, `isAI` ";
+            $Query_GetUser .= "FROM {{table}} ";
+            $Query_GetUser .= "WHERE `id` = {$userId} LIMIT 1;";
+
+            return doquery($Query_GetUser, 'users');
+        },
+    ]);
+
+    if (!$verificationResult['isSuccess']) {
+        switch ($verificationResult['error']['code']) {
+            case 'INVALID_USER_ID':
+                $Search['error'] = 2;
+                break;
+            case 'USER_NOT_FOUND':
+                $Search['error'] = 3;
+                break;
+            case 'INVALID_PASSWORD':
+                $Search['error'] = 4;
+                break;
+        }
+
+        setcookie($sessionCookieKey, false, 0, '/', '');
+    } else {
+        include_once($_EnginePath . '/includes/functions/IPandUA_Logger.php');
+
+        $UserData = $verificationResult['payload']['userEntity'];
+
+        IPandUA_Logger($UserData);
+
+        header("Location: ./overview.php");
+        die();
     }
 }
 
@@ -79,10 +104,6 @@ if(!empty($Search['where']))
 
         $PasswordOK = false;
         if($Search['mode'] == 1 AND $UserData['password'] == $Search['password'])
-        {
-            $PasswordOK = true;
-        }
-        elseif($Search['mode'] == 2 AND md5($UserData['password'].'--'.$__ServerConnectionSettings['secretword']) == $Search['password'])
         {
             $PasswordOK = true;
         }
