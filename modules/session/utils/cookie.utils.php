@@ -30,6 +30,10 @@ function getServerSecretWord() {
     return $secretWord;
 }
 
+function getCookiePartsSeparator() {
+    return '/%/';
+}
+
 function createCookiePasswordHash($params) {
     $passwordHash = $params['passwordHash'];
 
@@ -45,12 +49,14 @@ function packSessionCookie($cookieParams) {
         $cookieParams['obscuredPasswordHash'],
         ($cookieParams['isRememberMeActive'] ? '1' : '0'),
     ];
+    $partsSeparator = getCookiePartsSeparator();
 
-    return implode('/%/', $cookieParts);
+    return implode($partsSeparator, $cookieParts);
 }
 
 function unpackSessionCookie($cookieValue) {
-    $cookieParts = explode('/%/', $cookieValue);
+    $partsSeparator = getCookiePartsSeparator();
+    $cookieParts = explode($partsSeparator, $cookieValue);
 
     return [
         'userId' => $cookieParts[0],
