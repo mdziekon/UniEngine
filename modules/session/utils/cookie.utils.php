@@ -30,6 +30,14 @@ function getServerSecretWord() {
     return $secretWord;
 }
 
+function createCookiePasswordHash($params) {
+    $password = $params['password'];
+
+    $serverSecretWord = getServerSecretWord();
+
+    return md5("{$password}--{$serverSecretWord}");
+}
+
 function unpackSessionCookie($cookieValue) {
     $cookieParts = explode('/%/', $cookieValue);
 
@@ -89,9 +97,8 @@ function verifySessionCookie($params) {
 
     $userEntity = $userEntityFetcherResult->fetch_assoc();
     $userPassword = $userEntity['password'];
-    $serverSecretWord = getServerSecretWord();
 
-    $obscuredUserPasswordHash = md5("{$userPassword}--{$serverSecretWord}");
+    $obscuredUserPasswordHash = createCookiePasswordHash([ 'password' => $userPassword ]);
 
     if ($obscuredUserPasswordHash !== $sessionData['obscuredPasswordHash']) {
         return $createFailure([
