@@ -45,7 +45,7 @@ function createCookiePasswordHash($params) {
 function packSessionCookie($cookieParams) {
     $cookieParts = [
         strval($cookieParams['userId']),
-        $cookieParams['__unknown_1'],
+        $cookieParams['username'],
         $cookieParams['obscuredPasswordHash'],
         ($cookieParams['isRememberMeActive'] ? '1' : '0'),
     ];
@@ -60,7 +60,7 @@ function unpackSessionCookie($cookieValue) {
 
     return [
         'userId' => $cookieParts[0],
-        '__unknown_1' => $cookieParts[1],
+        'username' => $cookieParts[1],
         'obscuredPasswordHash' => $cookieParts[2],
         'isRememberMeActive' => $cookieParts[3],
     ];
@@ -69,7 +69,7 @@ function unpackSessionCookie($cookieValue) {
 function normalizeSessionCookie($unpackedCookie) {
     return [
         'userId' => intval($unpackedCookie['userId']),
-        '__unknown_1' => $unpackedCookie['__unknown_1'],
+        'username' => $unpackedCookie['username'],
         'obscuredPasswordHash' => $unpackedCookie['obscuredPasswordHash'],
         'isRememberMeActive' => ($unpackedCookie['isRememberMeActive'] == 1),
     ];

@@ -124,7 +124,7 @@ if(!empty($Search['where']))
 
                 $Cookie_Set = Session\Utils\Cookie\packSessionCookie([
                     'userId' => $UserData['id'],
-                    '__unknown_1' => $UserData['username'],
+                    'username' => $UserData['username'],
                     'obscuredPasswordHash' => Session\Utils\Cookie\createCookiePasswordHash([
                         'passwordHash' => $UserData['password'],
                     ]),
