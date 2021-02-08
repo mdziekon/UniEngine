@@ -100,7 +100,6 @@ if(!empty($Search['where']))
     if($UserData['id'] > 0)
     {
         include_once($_EnginePath.'/includes/functions/IPandUA_Logger.php');
-        require($_EnginePath.'config.php');
 
         $PasswordOK = false;
         if($Search['mode'] == 1 AND $UserData['password'] == $Search['password'])
@@ -122,11 +121,20 @@ if(!empty($Search['where']))
                     $Cookie_Expire = 0;
                     $Cookie_Remember = 0;
                 }
-                $Cookie_Set = $UserData['id'].'/%/'.$UserData['username'].'/%/'.md5($UserData['password'].'--'.$__ServerConnectionSettings['secretword']).'/%/'.$Cookie_Remember;
+
+                $Cookie_Set = Session\Utils\Cookie\packSessionCookie([
+                    'userId' => $UserData['id'],
+                    '__unknown_1' => $UserData['username'],
+                    'obscuredPasswordHash' => Session\Utils\Cookie\createCookiePasswordHash([
+                        'passwordHash' => $UserData['password'],
+                    ]),
+                    'isRememberMeActive' => $Cookie_Remember,
+                ]);
+
                 setcookie($sessionCookieKey, $Cookie_Set, $Cookie_Expire, '/', '', false, true);
             }
+
             IPandUA_Logger($UserData);
-            unset($__ServerConnectionSettings);
             header("Location: ./overview.php");
             die();
         }
