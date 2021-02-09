@@ -43,10 +43,8 @@ function handleCookieLogin($params) {
     ]);
 
     if (!$verificationResult['isSuccess']) {
-        $sessionCookieKey = getSessionCookieKey();
-
         // TODO: Side effect, move elsewhere (?)
-        setcookie($sessionCookieKey, false, 0, '/', '');
+        Session\Utils\Cookie\clearSessionCookie();
 
         return $createFailure([
             'code' => $verificationResult['error']['code'],

@@ -14,6 +14,12 @@ function getSessionCookieValue() {
     return $_COOKIE[$cookieName];
 }
 
+function clearSessionCookie() {
+    $cookieName = getSessionCookieKey();
+
+    setcookie($cookieName, false, 0, '/', '');
+}
+
 function getServerSecretWord() {
     global $_EnginePath, $__ServerConnectionSettings;
 
