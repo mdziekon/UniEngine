@@ -42,16 +42,23 @@ function handleCookieLogin($params) {
         },
     ]);
 
+    include_once($_EnginePath . '/includes/functions/IPandUA_Logger.php');
+
     if (!$verificationResult['isSuccess']) {
         // TODO: Side effect, move elsewhere (?)
         Session\Utils\Cookie\clearSessionCookie();
+
+        if (isset($verificationResult['error']['userEntity'])) {
+            IPandUA_Logger(
+                $verificationResult['error']['userEntity'],
+                true
+            );
+        }
 
         return $createFailure([
             'code' => $verificationResult['error']['code'],
         ]);
     }
-
-    include_once($_EnginePath . '/includes/functions/IPandUA_Logger.php');
 
     $UserData = $verificationResult['payload']['userEntity'];
 

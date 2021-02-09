@@ -126,6 +126,7 @@ function verifySessionCookie($params) {
     if ($obscuredUserPasswordHash !== $sessionData['obscuredPasswordHash']) {
         return $createFailure([
             'code' => 'INVALID_PASSWORD',
+            'userEntity' => $userEntity,
         ]);
     }
 
