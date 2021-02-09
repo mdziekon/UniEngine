@@ -148,10 +148,6 @@ if(!empty($Search['error']))
     {
         IPandUA_Logger($UserData, true);
     }
-    if($Search['mode'] == 2)
-    {
-        setcookie($sessionCookieKey, false, 0, '/', '');
-    }
     if($Search['error'] == 1)
     {
         message($_Lang['Login_BadSignsUser'], $_Lang['Err_Title']);
