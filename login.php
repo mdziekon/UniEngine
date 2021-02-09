@@ -50,7 +50,7 @@ if($_POST)
     } else {
         $Search['error'] = 1;
     }
-} else if (!empty($_COOKIE[$sessionCookieKey])) {
+} else if (Session\Utils\Cookie\hasSessionCookie()) {
     $loginAttemptResult = Session\Input\CookieLogin\handleCookieLogin([]);
 
     if ($loginAttemptResult['isSuccess']) {
