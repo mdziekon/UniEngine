@@ -51,44 +51,29 @@ if($_POST)
         $Search['error'] = 1;
     }
 } else if (!empty($_COOKIE[$sessionCookieKey])) {
+    $loginAttemptResult = Session\Input\CookieLogin\handleCookieLogin([]);
+
+    if ($loginAttemptResult['isSuccess']) {
+        Session\Utils\Redirects\redirectToOverview();
+
+        die();
+    }
+
     $Search['mode'] = 2;
 
-    $verificationResult = Session\Utils\Cookie\verifySessionCookie([
-        'userEntityFetcher' => function ($fetcherParams) {
-            $userId = $fetcherParams['userId'];
-
-            $Query_GetUser  = '';
-            $Query_GetUser .= "SELECT `id`, `username`, `password`, `isAI` ";
-            $Query_GetUser .= "FROM {{table}} ";
-            $Query_GetUser .= "WHERE `id` = {$userId} LIMIT 1;";
-
-            return doquery($Query_GetUser, 'users');
-        },
-    ]);
-
-    if (!$verificationResult['isSuccess']) {
-        switch ($verificationResult['error']['code']) {
-            case 'INVALID_USER_ID':
-                $Search['error'] = 2;
-                break;
-            case 'USER_NOT_FOUND':
-                $Search['error'] = 3;
-                break;
-            case 'INVALID_PASSWORD':
-                $Search['error'] = 4;
-                break;
-        }
-
-        setcookie($sessionCookieKey, false, 0, '/', '');
-    } else {
-        include_once($_EnginePath . '/includes/functions/IPandUA_Logger.php');
-
-        $UserData = $verificationResult['payload']['userEntity'];
-
-        IPandUA_Logger($UserData);
-
-        header("Location: ./overview.php");
-        die();
+    switch ($loginAttemptResult['error']['code']) {
+        case 'NO_COOKIE':
+            $Search['error'] = 2;
+            break;
+        case 'INVALID_USER_ID':
+            $Search['error'] = 2;
+            break;
+        case 'USER_NOT_FOUND':
+            $Search['error'] = 3;
+            break;
+        case 'INVALID_PASSWORD':
+            $Search['error'] = 4;
+            break;
     }
 }
 
