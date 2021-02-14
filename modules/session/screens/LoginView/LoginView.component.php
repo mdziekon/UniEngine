@@ -35,7 +35,7 @@ function render ($props) {
             includeLang('login');
         }
     } else if ($_POST) {
-        $ipHash = md5(Users\Session\getCurrentIP());
+        $ipHash = Users\Session\getCurrentIPHash();
 
         $loginAttemptResult = Session\Input\LocalIdentityLogin\handleLocalIdentityLogin([
             'input' => &$_POST,
