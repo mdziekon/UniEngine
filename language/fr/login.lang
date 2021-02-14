@@ -15,7 +15,6 @@ $_Lang['Body_Register']             = 'Inscription';
 $_Lang['Err_Title']                 = 'Erreur de connexion';
 $_Lang['Login_FailPassword']        = 'Mot de passe incorrect !<br/><a href="login.php">Retour</a>';
 $_Lang['Login_FailUser']            = 'Nom d\'utilisateur incorrect !<br/><a href=login.php>Retour</a>';
-$_Lang['Login_FailCookiePassword']  = 'Cookie de session incorrect (mot de passe), veuille te reconnecter !<br /><a href="login.php">Retour</a>';
 $_Lang['Login_FailCookieUser']      = 'Cookie de session incorrect (nom d\'utilisateur), veuille te reconnecter !<br/><a href=login.php>Retour</a>';
 $_Lang['Login_BadSignsUser']        = 'Nom d\'utilisateur incorrect !<br/><a href=login.php>Retour</a>';
 $_Lang['Login_BadUniversum']        = 'Univers sélectionné incorrect !';

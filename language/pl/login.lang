@@ -15,7 +15,6 @@ $_Lang['Body_Register']                 = 'Rejestracja';
 $_Lang['Err_Title']                     = 'Błąd Logowania';
 $_Lang['Login_FailPassword']            = 'Podano niepoprawne hasło!<br/><a href="login.php">Powrót</a>';
 $_Lang['Login_FailUser']                = 'Taki gracz nie istnieje!<br/><a href=login.php>Powrót</a>';
-$_Lang['Login_FailCookiePassword']      = 'Błędnie zapisane hasło Gracza, proszę zalogować się ponownie!<br /><a href="login.php">Powrót</a>';
 $_Lang['Login_FailCookieUser']          = 'Błędnie zapisane dane Gracza, proszę zalogować się ponownie!<br/><a href=login.php>Powrót</a>';
 $_Lang['Login_BadSignsUser']            = 'Podano niepoprawny Login!<br/><a href=login.php>Powrót</a>';
 $_Lang['Login_BadUniversum']            = 'Próba logowania na niepoprawne Universum!';

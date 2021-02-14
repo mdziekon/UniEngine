@@ -14,6 +14,8 @@ use UniEngine\Engine\Modules\Session;
 
 includeLang('login');
 
+$loginAttemptResult = null;
+
 if ($_POST) {
     // TODO: Remove this useless block
 } else if (Session\Utils\Cookie\hasSessionCookie()) {
@@ -23,23 +25,6 @@ if ($_POST) {
         Session\Utils\Redirects\redirectToOverview();
 
         die();
-    }
-
-    $Search['mode'] = 2;
-
-    switch ($loginAttemptResult['error']['code']) {
-        case 'NO_COOKIE':
-            $Search['error'] = 2;
-            break;
-        case 'INVALID_USER_ID':
-            $Search['error'] = 2;
-            break;
-        case 'USER_NOT_FOUND':
-            $Search['error'] = 3;
-            break;
-        case 'INVALID_PASSWORD':
-            $Search['error'] = 4;
-            break;
     }
 }
 
@@ -64,8 +49,6 @@ if ($_POST) {
         die();
     }
 
-    $Search['mode'] = 1;
-
     Session\Utils\RateLimiter\updateLoginRateLimiterEntry([
         'ipHash' => $ipHash,
     ]);
@@ -75,76 +58,49 @@ if ($_POST) {
 
         IPandUA_Logger($userEntity, true);
     }
-
-    switch ($loginAttemptResult['error']['code']) {
-        case 'INVALID_UNIVERSUM_CODE':
-            $Search['error'] = 6;
-            break;
-        case 'UNIVERSUM_NOT_OPEN_YET':
-            $Search['error'] = 7;
-            break;
-        case 'INVALID_USERNAME':
-            $Search['error'] = 1;
-            break;
-        case 'LOGIN_ATTEMPTS_RATE_LIMITED':
-            $Search['error'] = 5;
-            break;
-        case 'USER_NOT_FOUND':
-            $Search['error'] = 3;
-            break;
-        case 'INVALID_PASSWORD':
-            $Search['error'] = 4;
-            break;
-    }
 }
 
-if(!empty($Search['error']))
-{
-    if($Search['error'] == 1)
-    {
-        message($_Lang['Login_BadSignsUser'], $_Lang['Err_Title']);
-    }
-    elseif($Search['error'] == 2)
-    {
-        message($_Lang['Login_FailCookieUser'], $_Lang['Err_Title']);
-    }
-    elseif($Search['error'] == 3 AND $Search['mode'] == 1)
-    {
-        message($_Lang['Login_FailUser'], $_Lang['Err_Title']);
-    }
-    elseif($Search['error'] == 3 AND $Search['mode'] == 2)
-    {
-        message($_Lang['Login_FailCookieUser'], $_Lang['Err_Title']);
-    }
-    elseif($Search['error'] == 4 AND $Search['mode'] == 1)
-    {
-        message($_Lang['Login_FailPassword'], $_Lang['Err_Title']);
-    }
-    elseif($Search['error'] == 4 AND $Search['mode'] == 2)
-    {
-        message($_Lang['Login_FailCookiePassword'], $_Lang['Err_Title']);
-    }
-    elseif($Search['error'] == 5)
-    {
-        message($_Lang['Login_FailLoginProtection'], $_Lang['Err_Title']);
-    }
-    elseif($Search['error'] == 6) {
-        message($_Lang['Login_BadUniversum'], $_Lang['Err_Title']);
-    }
-    elseif($Search['error'] == 7)
-    {
-        $errorMessage = $serverStartMessage = sprintf(
-            $_Lang['Login_UniversumNotStarted'],
-            prettyDate('d m Y', SERVER_MAINOPEN_TSTAMP, 1),
-            date('H:i:s', SERVER_MAINOPEN_TSTAMP)
-        );
+if (
+    $loginAttemptResult &&
+    !$loginAttemptResult['isSuccess']
+) {
+    $errorCode = $loginAttemptResult['error']['code'];
 
-        message($errorMessage, $_Lang['Err_Title']);
+    switch ($errorCode) {
+        case 'NO_COOKIE':
+        case 'INVALID_USER_ID':
+            $errorMessage = $_Lang['Login_FailCookieUser'];
+            break;
+        case 'USER_NOT_FOUND':
+            // TODO: Merge with invalid password to reveal less info
+            $errorMessage = $_Lang['Login_FailUser'];
+            break;
+        case 'INVALID_PASSWORD':
+            // TODO: Merge with invalid username to reveal less info
+            $errorMessage = $_Lang['Login_FailPassword'];
+            break;
+        case 'INVALID_UNIVERSUM_CODE':
+            $errorMessage = $_Lang['Login_BadUniversum'];
+            break;
+        case 'UNIVERSUM_NOT_OPEN_YET':
+            $errorMessage = sprintf(
+                $_Lang['Login_UniversumNotStarted'],
+                prettyDate('d m Y', SERVER_MAINOPEN_TSTAMP, 1),
+                date('H:i:s', SERVER_MAINOPEN_TSTAMP)
+            );
+            break;
+        case 'INVALID_USERNAME':
+            $errorMessage = $_Lang['Login_BadSignsUser'];
+            break;
+        case 'LOGIN_ATTEMPTS_RATE_LIMITED':
+            $errorMessage = $_Lang['Login_FailLoginProtection'];
+            break;
+        default:
+            $errorMessage = $_Lang['Login_UnknownError'];
+            break;
     }
-    else
-    {
-        message($_Lang['Login_UnknownError'], $_Lang['Err_Title']);
-    }
+
+    message($errorMessage, $_Lang['Err_Title']);
 }
 
 if (!LOGINPAGE_ALLOW_LOGINPHP) {
