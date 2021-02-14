@@ -44,7 +44,7 @@ function handleLocalIdentityLogin($params) {
 
     if (!preg_match(REGEXP_USERNAME_ABSOLUTE, $inputUsername)) {
         return $createFailure([
-            'code' => 'INVALID_USERNAME',
+            'code' => 'INVALID_USERNAME_CHARACTERS',
         ]);
     }
 

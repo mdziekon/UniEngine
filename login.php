@@ -76,6 +76,9 @@ if (
         case 'INVALID_UNIVERSUM_CODE':
             $errorMessage = $_Lang['Login_BadUniversum'];
             break;
+        case 'INVALID_USERNAME_CHARACTERS':
+            $errorMessage = $_Lang['Login_BadSignsUser'];
+            break;
         case 'UNIVERSUM_NOT_OPEN_YET':
             $serverOpeningTimestamp = $loginAttemptResult['error']['openingTimestamp'];
 
@@ -84,9 +87,6 @@ if (
                 prettyDate('d m Y', $serverOpeningTimestamp, 1),
                 date('H:i:s', $serverOpeningTimestamp)
             );
-            break;
-        case 'INVALID_USERNAME':
-            $errorMessage = $_Lang['Login_BadSignsUser'];
             break;
         case 'LOGIN_ATTEMPTS_RATE_LIMITED':
             $errorMessage = $_Lang['Login_FailLoginProtection'];
