@@ -147,10 +147,9 @@ if(!empty($Search['error']))
     }
 }
 
-if(!LOGINPAGE_ALLOW_LOGINPHP)
-{
-    header("HTTP/1.1 301 Moved Permanently");
-    header('Location: '.GAMEURL_STRICT);
+if (!LOGINPAGE_ALLOW_LOGINPHP) {
+    Session\Utils\Redirects\permaRedirectToMainDomain();
+
     die();
 }
 
