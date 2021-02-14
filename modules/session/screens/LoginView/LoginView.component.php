@@ -42,12 +42,6 @@ function render ($props) {
             'ipHash' => $ipHash,
             'currentTimestamp' => $currentTimestamp,
         ]);
-
-        if (!$loginAttemptResult['isSuccess']) {
-            Session\Utils\RateLimiter\updateLoginRateLimiterEntry([
-                'ipHash' => $ipHash,
-            ]);
-        }
     } else if (Session\Utils\Cookie\hasSessionCookie()) {
         $loginAttemptResult = Session\Input\CookieLogin\handleCookieLogin([]);
     }
@@ -55,14 +49,21 @@ function render ($props) {
     // Internal errors handling
     if (
         $loginAttemptResult &&
-        !$loginAttemptResult['isSuccess'] &&
-        isset($loginAttemptResult['error']['userEntity'])
+        !$loginAttemptResult['isSuccess']
     ) {
-        include_once($_EnginePath . '/includes/functions/IPandUA_Logger.php');
+        $ipHash = Users\Session\getCurrentIPHash();
 
-        $userEntity = $loginAttemptResult['error']['userEntity'];
+        Session\Utils\RateLimiter\updateLoginRateLimiterEntry([
+            'ipHash' => $ipHash,
+        ]);
 
-        IPandUA_Logger($userEntity, true);
+        if (isset($loginAttemptResult['error']['userEntity'])) {
+            include_once($_EnginePath . '/includes/functions/IPandUA_Logger.php');
+
+            $userEntity = $loginAttemptResult['error']['userEntity'];
+
+            IPandUA_Logger($userEntity, true);
+        }
     }
 
     // Successful login attempt handling
