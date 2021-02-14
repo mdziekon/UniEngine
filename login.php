@@ -83,10 +83,12 @@ if (
             $errorMessage = $_Lang['Login_BadUniversum'];
             break;
         case 'UNIVERSUM_NOT_OPEN_YET':
+            $serverOpeningTimestamp = $loginAttemptResult['error']['openingTimestamp'];
+
             $errorMessage = sprintf(
                 $_Lang['Login_UniversumNotStarted'],
-                prettyDate('d m Y', SERVER_MAINOPEN_TSTAMP, 1),
-                date('H:i:s', SERVER_MAINOPEN_TSTAMP)
+                prettyDate('d m Y', $serverOpeningTimestamp, 1),
+                date('H:i:s', $serverOpeningTimestamp)
             );
             break;
         case 'INVALID_USERNAME':
