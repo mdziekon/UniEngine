@@ -2,7 +2,6 @@
 
 namespace UniEngine\Engine\Modules\Session\Input\LocalIdentityLogin;
 
-use UniEngine\Engine\Includes\Helpers\Users;
 use UniEngine\Engine\Modules\Session;
 
 //  Arguments:
