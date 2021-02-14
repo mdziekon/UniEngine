@@ -153,18 +153,18 @@ if (!LOGINPAGE_ALLOW_LOGINPHP) {
     die();
 }
 
-$input_changelang = $_GET['lang'];
-if (isset($input_changelang) && in_array($input_changelang, UNIENGINE_LANGS_AVAILABLE)) {
-    setcookie(
-        UNIENGINE_VARNAMES_COOKIE_LANG,
-        $input_changelang,
-        time() + (30 * TIME_DAY),
-        '',
-        GAMEURL_DOMAIN
-    );
+if ($_GET && !$_POST) {
+    $langChangeAttemptResult = Session\Input\Language\handleLanguageChange([
+        'input' => &$_GET,
+        'currentTimestamp' => time(),
+    ]);
 
-    $_COOKIE[UNIENGINE_VARNAMES_COOKIE_LANG] = $input_changelang;
-    includeLang('login');
+    if (
+        $langChangeAttemptResult['isSuccess'] &&
+        $langChangeAttemptResult['payload']['hasLangChanged']
+    ) {
+        includeLang('login');
+    }
 }
 
 $pageView = Session\Screens\LoginView\render([]);

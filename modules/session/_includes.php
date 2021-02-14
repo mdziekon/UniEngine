@@ -7,6 +7,7 @@ call_user_func(function () {
     $includePath = $_EnginePath . 'modules/session/';
 
     include($includePath . './input/cookieLogin.inputHandler.php');
+    include($includePath . './input/language.inputHandler.php');
     include($includePath . './input/localIdentityLogin.inputHandler.php');
 
     include($includePath . './screens/LoginView/LoginView.component.php');
