@@ -478,13 +478,19 @@ if(isset($_GET['register']))
 
             if(SERVER_MAINOPEN_TSTAMP <= $Now)
             {
-                require($_EnginePath.'config.php');
+                $sessionTokenValue = Session\Utils\Cookie\packSessionCookie([
+                    'userId' => $UserID,
+                    'username' => $Username,
+                    'obscuredPasswordHash' => Session\Utils\Cookie\createCookiePasswordHash([
+                        'passwordHash' => $passwordHash,
+                    ]),
+                    'isRememberMeActive' => 0,
+                ]);
 
-                $cookie = $UserID.'/%/'.$Username.'/%/'.md5($passwordHash . '--' . $__ServerConnectionSettings['secretword']).'/%/0';
                 $JSONResponse['Code'] = 1;
                 $JSONResponse['Cookie'][] = [
                     'Name' => getSessionCookieKey(),
-                    'Value' => $cookie
+                    'Value' => $sessionTokenValue
                 ];
                 $JSONResponse['Redirect'] = GAMEURL_UNISTRICT.'/overview.php';
             }
