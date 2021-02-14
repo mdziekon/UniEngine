@@ -21,9 +21,21 @@ function handleCookieLogin($params) {
         ];
     };
 
+    $ipHash = $params['ipHash'];
+
     if (!(Session\Utils\Cookie\hasSessionCookie())) {
         return $createFailure([
             'code' => 'NO_COOKIE',
+        ]);
+    }
+
+    $rateLimitVerificationResult = Session\Utils\RateLimiter\verifyLoginRateLimit([
+        'ipHash' => $ipHash,
+    ]);
+
+    if ($rateLimitVerificationResult['isIpRateLimited']) {
+        return $createFailure([
+            'code' => 'LOGIN_ATTEMPTS_RATE_LIMITED',
         ]);
     }
 

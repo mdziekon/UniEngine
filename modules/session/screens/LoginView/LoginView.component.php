@@ -21,6 +21,7 @@ function render ($props) {
 
     // Handle user input
     $loginAttemptResult = null;
+    $ipHash = Users\Session\getCurrentIPHash();
 
     if ($_GET && !$_POST) {
         $langChangeAttemptResult = Session\Input\Language\handleLanguageChange([
@@ -35,15 +36,15 @@ function render ($props) {
             includeLang('login');
         }
     } else if ($_POST) {
-        $ipHash = Users\Session\getCurrentIPHash();
-
         $loginAttemptResult = Session\Input\LocalIdentityLogin\handleLocalIdentityLogin([
             'input' => &$_POST,
             'ipHash' => $ipHash,
             'currentTimestamp' => $currentTimestamp,
         ]);
     } else if (Session\Utils\Cookie\hasSessionCookie()) {
-        $loginAttemptResult = Session\Input\CookieLogin\handleCookieLogin([]);
+        $loginAttemptResult = Session\Input\CookieLogin\handleCookieLogin([
+            'ipHash' => $ipHash,
+        ]);
     }
 
     // Internal errors handling
@@ -51,8 +52,6 @@ function render ($props) {
         $loginAttemptResult &&
         !$loginAttemptResult['isSuccess']
     ) {
-        $ipHash = Users\Session\getCurrentIPHash();
-
         Session\Utils\RateLimiter\updateLoginRateLimiterEntry([
             'ipHash' => $ipHash,
         ]);
