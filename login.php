@@ -14,42 +14,8 @@ use UniEngine\Engine\Modules\Session;
 
 includeLang('login');
 
-$sessionCookieKey = getSessionCookieKey();
-
-if($_POST)
-{
-    if ($_POST['uniSelect'] != LOGINPAGE_UNIVERSUMCODE) {
-        message($_Lang['Login_BadUniversum'], $_Lang['Err_Title']);
-    }
-
-    if (time() < SERVER_MAINOPEN_TSTAMP) {
-        $serverStartMessage = sprintf(
-            $_Lang['Login_UniversumNotStarted'],
-            prettyDate('d m Y', SERVER_MAINOPEN_TSTAMP, 1),
-            date('H:i:s', SERVER_MAINOPEN_TSTAMP)
-        );
-
-        message($serverStartMessage, $_Lang['Page_Title']);
-    }
-
-    $Username = trim($_POST['username']);
-    if (preg_match(REGEXP_USERNAME_ABSOLUTE, $Username)) {
-        $Search['mode'] = 1;
-        $Search['where'] = "`username` = '{$Username}'";
-        $Search['password'] = md5($_POST['password']);
-        $Search['IPHash'] = md5(Users\Session\getCurrentIP());
-
-        $rateLimitVerificationResult = Session\Utils\RateLimiter\verifyLoginRateLimit([
-            'ipHash' => $Search['IPHash'],
-        ]);
-
-        if ($rateLimitVerificationResult['isIpRateLimited']) {
-            $Search['error'] = 5;
-            $Search['where'] = '';
-        }
-    } else {
-        $Search['error'] = 1;
-    }
+if ($_POST) {
+    // TODO: Remove this useless block
 } else if (Session\Utils\Cookie\hasSessionCookie()) {
     $loginAttemptResult = Session\Input\CookieLogin\handleCookieLogin([]);
 
@@ -77,77 +43,63 @@ if($_POST)
     }
 }
 
-if(!empty($Search['where']))
-{
-    $Query_User_Fields = "`id`, `username`, `password`, `isAI`";
-    $Query_User_GetData = "SELECT {$Query_User_Fields} FROM {{table}} WHERE {$Search['where']} LIMIT 1;";
-    $UserData = doquery($Query_User_GetData, 'users', true);
-    if($UserData['id'] > 0)
-    {
-        include_once($_EnginePath.'/includes/functions/IPandUA_Logger.php');
+if ($_POST) {
+    include_once($_EnginePath . '/includes/functions/IPandUA_Logger.php');
 
-        $PasswordOK = false;
-        if($Search['mode'] == 1 AND $UserData['password'] == $Search['password'])
-        {
-            $PasswordOK = true;
-        }
-        if($PasswordOK === true)
-        {
-            // User is ready to Login
-            if($Search['mode'] == 1)
-            {
-                if($_POST['rememberme'] == 'on')
-                {
-                    $Cookie_Expire = time() + TIME_YEAR;
-                    $Cookie_Remember = 1;
-                }
-                else
-                {
-                    $Cookie_Expire = 0;
-                    $Cookie_Remember = 0;
-                }
+    $ipHash = md5(Users\Session\getCurrentIP());
 
-                $Cookie_Set = Session\Utils\Cookie\packSessionCookie([
-                    'userId' => $UserData['id'],
-                    'username' => $UserData['username'],
-                    'obscuredPasswordHash' => Session\Utils\Cookie\createCookiePasswordHash([
-                        'passwordHash' => $UserData['password'],
-                    ]),
-                    'isRememberMeActive' => $Cookie_Remember,
-                ]);
+    $loginAttemptResult = Session\Input\LocalIdentityLogin\handleLocalIdentityLogin([
+        'input' => &$_POST,
+        'ipHash' => $ipHash,
+        'currentTimestamp' => time(),
+    ]);
 
-                setcookie($sessionCookieKey, $Cookie_Set, $Cookie_Expire, '/', '', false, true);
-            }
+    if ($loginAttemptResult['isSuccess']) {
+        $userEntity = $loginAttemptResult['payload']['userEntity'];
 
-            IPandUA_Logger($UserData);
-            header("Location: ./overview.php");
-            die();
-        }
-        else
-        {
-            $Search['error'] = 4;
-        }
+        IPandUA_Logger($userEntity, false);
+
+        Session\Utils\Redirects\redirectToOverview();
+
+        die();
     }
-    else
-    {
-        $Search['error'] = 3;
+
+    $Search['mode'] = 1;
+
+    Session\Utils\RateLimiter\updateLoginRateLimiterEntry([
+        'ipHash' => $ipHash,
+    ]);
+
+    if (isset($loginAttemptResult['error']['userEntity'])) {
+        $userEntity = $loginAttemptResult['error']['userEntity'];
+
+        IPandUA_Logger($userEntity, true);
+    }
+
+    switch ($loginAttemptResult['error']['code']) {
+        case 'INVALID_UNIVERSUM_CODE':
+            $Search['error'] = 6;
+            break;
+        case 'UNIVERSUM_NOT_OPEN_YET':
+            $Search['error'] = 7;
+            break;
+        case 'INVALID_USERNAME':
+            $Search['error'] = 1;
+            break;
+        case 'LOGIN_ATTEMPTS_RATE_LIMITED':
+            $Search['error'] = 5;
+            break;
+        case 'USER_NOT_FOUND':
+            $Search['error'] = 3;
+            break;
+        case 'INVALID_PASSWORD':
+            $Search['error'] = 4;
+            break;
     }
 }
+
 if(!empty($Search['error']))
 {
-    if (
-        $Search['mode'] == 1 &&
-        !empty($Search['IPHash'])
-    ) {
-        Session\Utils\RateLimiter\updateLoginRateLimiterEntry([
-            'ipHash' => $Search['IPHash'],
-        ]);
-    }
-
-    if($UserData['id'] > 0)
-    {
-        IPandUA_Logger($UserData, true);
-    }
     if($Search['error'] == 1)
     {
         message($_Lang['Login_BadSignsUser'], $_Lang['Err_Title']);
@@ -175,6 +127,19 @@ if(!empty($Search['error']))
     elseif($Search['error'] == 5)
     {
         message($_Lang['Login_FailLoginProtection'], $_Lang['Err_Title']);
+    }
+    elseif($Search['error'] == 6) {
+        message($_Lang['Login_BadUniversum'], $_Lang['Err_Title']);
+    }
+    elseif($Search['error'] == 7)
+    {
+        $errorMessage = $serverStartMessage = sprintf(
+            $_Lang['Login_UniversumNotStarted'],
+            prettyDate('d m Y', SERVER_MAINOPEN_TSTAMP, 1),
+            date('H:i:s', SERVER_MAINOPEN_TSTAMP)
+        );
+
+        message($errorMessage, $_Lang['Err_Title']);
     }
     else
     {
