@@ -55,7 +55,7 @@ function render ($props) {
     // Internal errors handling
     if (
         $loginAttemptResult &&
-        isset($loginAttemptResult['error']) &&
+        !$loginAttemptResult['isSuccess'] &&
         isset($loginAttemptResult['error']['userEntity'])
     ) {
         include_once($_EnginePath . '/includes/functions/IPandUA_Logger.php');
