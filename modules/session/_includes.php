@@ -14,6 +14,7 @@ call_user_func(function () {
     include($includePath . './screens/LoginView/components/LoginForm/LoginForm.component.php');
 
     include($includePath . './utils/cookie.utils.php');
+    include($includePath . './utils/localIdentityV1.utils.php');
     include($includePath . './utils/rateLimiter.utils.php');
     include($includePath . './utils/redirects.utils.php');
 

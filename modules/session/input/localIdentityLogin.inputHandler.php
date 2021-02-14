@@ -72,7 +72,9 @@ function handleLocalIdentityLogin($params) {
     }
 
     $inputPassword = $input['password'];
-    $inputPasswordHash = md5($inputPassword);
+    $inputPasswordHash = Session\Utils\LocalIdentityV1\hashPassword([
+        'password' => $inputPassword,
+    ]);
     $dbPasswordHash = $userEntity['password'];
 
     if ($inputPasswordHash !== $dbPasswordHash) {
