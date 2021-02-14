@@ -13,9 +13,7 @@ $_Lang['Body_Contact']              = 'Contact';
 $_Lang['Body_Register']             = 'Registration';
 
 $_Lang['Err_Title']                 = 'Login error';
-$_Lang['Login_FailPassword']        = 'Invalid password!<br/><a href="login.php">Go back</a>';
-$_Lang['Login_FailUser']            = 'Username does not exist!<br/><a href=login.php>Go back</a>';
-$_Lang['Login_FailCookieUser']      = 'Invalid session cookie (username), please log in again!<br/><a href=login.php>Go back</a>';
+$_Lang['Login_InvalidCredentials']  = 'Invalid credentials, please try again!<br/><a href=login.php>Go back</a>';
 $_Lang['Login_BadSignsUser']        = 'Invalid username provided!<br/><a href=login.php>Go back</a>';
 $_Lang['Login_BadUniversum']        = 'Invalid Universe selected!';
 $_Lang['Login_UniversumNotStarted'] = 'This Universe starts on <br/>%s at %s.<br/>Spread the word by inviting other people to join on that day by using your personal <u>Referral Link</u> provided to you in the Activation Message.';

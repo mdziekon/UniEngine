@@ -69,15 +69,9 @@ if (
     switch ($errorCode) {
         case 'NO_COOKIE':
         case 'INVALID_USER_ID':
-            $errorMessage = $_Lang['Login_FailCookieUser'];
-            break;
         case 'USER_NOT_FOUND':
-            // TODO: Merge with invalid password to reveal less info
-            $errorMessage = $_Lang['Login_FailUser'];
-            break;
         case 'INVALID_PASSWORD':
-            // TODO: Merge with invalid username to reveal less info
-            $errorMessage = $_Lang['Login_FailPassword'];
+            $errorMessage = $_Lang['Login_InvalidCredentials'];
             break;
         case 'INVALID_UNIVERSUM_CODE':
             $errorMessage = $_Lang['Login_BadUniversum'];

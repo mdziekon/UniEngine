@@ -13,9 +13,7 @@ $_Lang['Body_Contact']                  = 'Kontakt';
 $_Lang['Body_Register']                 = 'Rejestracja';
 
 $_Lang['Err_Title']                     = 'Błąd Logowania';
-$_Lang['Login_FailPassword']            = 'Podano niepoprawne hasło!<br/><a href="login.php">Powrót</a>';
-$_Lang['Login_FailUser']                = 'Taki gracz nie istnieje!<br/><a href=login.php>Powrót</a>';
-$_Lang['Login_FailCookieUser']          = 'Błędnie zapisane dane Gracza, proszę zalogować się ponownie!<br/><a href=login.php>Powrót</a>';
+$_Lang['Login_InvalidCredentials']      = 'Niepoprawne dane logowania, próbuj jeszcze raz!<br/><a href=login.php>Powrót</a>';
 $_Lang['Login_BadSignsUser']            = 'Podano niepoprawny Login!<br/><a href=login.php>Powrót</a>';
 $_Lang['Login_BadUniversum']            = 'Próba logowania na niepoprawne Universum!';
 $_Lang['Login_UniversumNotStarted']     = 'To Universum startuje w dniu<br/>%s o godzinie %s.<br/>W oczekiwaniu na otwarcie Serwera, polecamy zapraszać swoich znajomych do wspólnej rozgrywki poprzez otrzymany w Wiadomości Aktywacyjnej <u>Link Polecający</u>.';
