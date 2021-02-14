@@ -20,6 +20,40 @@ function clearSessionCookie() {
     setcookie($cookieName, false, 0, '/', '');
 }
 
+function setNewSessionCookie($params) {
+    $cookieName = getSessionCookieKey();
+
+    $userId = $params['userId'];
+    $username = $params['username'];
+    $passwordHash = $params['passwordHash'];
+    $isRememberMeEnabled = $params['isRememberMeActive'];
+    $currentTimestamp = $params['currentTimestamp'];
+
+    $sessionTokenValue = packSessionCookie([
+        'userId' => $userId,
+        'username' => $username,
+        'obscuredPasswordHash' => createCookiePasswordHash([
+            'passwordHash' => $passwordHash,
+        ]),
+        'isRememberMeActive' => ($isRememberMeEnabled ? 1 : 0),
+    ]);
+    $expirationTimestamp = (
+        $isRememberMeEnabled ?
+            ($currentTimestamp + TIME_YEAR) :
+            0
+    );
+
+    setcookie(
+        $cookieName,
+        $sessionTokenValue,
+        $expirationTimestamp,
+        '/',
+        '',
+        false,
+        true
+    );
+}
+
 function getServerSecretWord() {
     global $_EnginePath, $__ServerConnectionSettings;
 

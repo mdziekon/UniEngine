@@ -84,30 +84,13 @@ function handleLocalIdentityLogin($params) {
 
     $isRememberMeEnabled = ($input['rememberme'] == 'on');
 
-    $sessionCookieKey = getSessionCookieKey();
-    $sessionCookieValue = Session\Utils\Cookie\packSessionCookie([
+    Session\Utils\Cookie\setNewSessionCookie([
         'userId' => $userEntity['id'],
         'username' => $userEntity['username'],
-        'obscuredPasswordHash' => Session\Utils\Cookie\createCookiePasswordHash([
-            'passwordHash' => $dbPasswordHash,
-        ]),
-        'isRememberMeActive' => ($isRememberMeEnabled ? 1 : 0),
+        'passwordHash' => $dbPasswordHash,
+        'isRememberMeActive' => $isRememberMeEnabled,
+        'currentTimestamp' => $currentTimestamp,
     ]);
-    $sessionCookieExpirationTimestamp = (
-        $isRememberMeEnabled ?
-            ($currentTimestamp + TIME_YEAR) :
-            0
-    );
-
-    setcookie(
-        $sessionCookieKey,
-        $sessionCookieValue,
-        $sessionCookieExpirationTimestamp,
-        '/',
-        '',
-        false,
-        true
-    );
 
     return $createSuccess([
         'userEntity' => $userEntity,
