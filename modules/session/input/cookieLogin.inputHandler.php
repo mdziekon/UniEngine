@@ -48,15 +48,13 @@ function handleCookieLogin($params) {
         // TODO: Side effect, move elsewhere (?)
         Session\Utils\Cookie\clearSessionCookie();
 
-        if (isset($verificationResult['error']['userEntity'])) {
-            IPandUA_Logger(
-                $verificationResult['error']['userEntity'],
-                true
-            );
-        }
-
         return $createFailure([
             'code' => $verificationResult['error']['code'],
+            'userEntity' => (
+                isset($verificationResult['error']['userEntity']) ?
+                    $verificationResult['error']['userEntity'] :
+                    null
+            ),
         ]);
     }
 
