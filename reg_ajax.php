@@ -5,8 +5,10 @@ define('INSIDE', true);
 $_EnginePath = './';
 
 include($_EnginePath.'common.php');
+include_once($_EnginePath . 'modules/session/_includes.php');
 
 use UniEngine\Engine\Includes\Helpers\Users;
+use UniEngine\Engine\Modules\Session;
 
 includeLang('reg_ajax');
 $Now = time();
@@ -319,6 +321,10 @@ if(isset($_GET['register']))
 
         if($PosFound)
         {
+            $passwordHash = Session\Utils\LocalIdentityV1\hashPassword([
+                'password' => $Password,
+            ]);
+
             $Query_InsertUser = '';
             $Query_InsertUser .= "INSERT INTO {{table}} SET ";
             $Query_InsertUser .= "`username` = '{$Username}', ";
@@ -330,7 +336,7 @@ if(isset($_GET['register']))
             $Query_InsertUser .= "`register_time` = {$Now}, ";
             $Query_InsertUser .= "`onlinetime` = {$Now} - (24*60*60), ";
             $Query_InsertUser .= "`rules_accept_stamp` = {$Now}, ";
-            $Query_InsertUser .= "`password` = MD5('{$Password}');";
+            $Query_InsertUser .= "`password` = '{$passwordHash}';";
             doquery($Query_InsertUser, 'users');
 
             // Get UserID
@@ -474,7 +480,7 @@ if(isset($_GET['register']))
             {
                 require($_EnginePath.'config.php');
 
-                $cookie = $UserID.'/%/'.$Username.'/%/'.md5(md5($Password).'--'.$__ServerConnectionSettings['secretword']).'/%/0';
+                $cookie = $UserID.'/%/'.$Username.'/%/'.md5($passwordHash . '--' . $__ServerConnectionSettings['secretword']).'/%/0';
                 $JSONResponse['Code'] = 1;
                 $JSONResponse['Cookie'][] = [
                     'Name' => getSessionCookieKey(),
