@@ -8,8 +8,6 @@ use UniEngine\Engine\Modules\Session;
 //      - $params
 //
 function handleCookieLogin($params) {
-    global $_EnginePath;
-
     $createSuccess = function ($payload) {
         return [
             'isSuccess' => true,
@@ -42,8 +40,6 @@ function handleCookieLogin($params) {
         },
     ]);
 
-    include_once($_EnginePath . '/includes/functions/IPandUA_Logger.php');
-
     if (!$verificationResult['isSuccess']) {
         // TODO: Side effect, move elsewhere (?)
         Session\Utils\Cookie\clearSessionCookie();
@@ -58,11 +54,9 @@ function handleCookieLogin($params) {
         ]);
     }
 
-    $UserData = $verificationResult['payload']['userEntity'];
-
-    IPandUA_Logger($UserData);
-
-    return $createSuccess([]);
+    return $createSuccess([
+        'userEntity' => $verificationResult['payload']['userEntity'],
+    ]);
 }
 
 ?>

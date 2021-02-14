@@ -35,8 +35,6 @@ function render ($props) {
             includeLang('login');
         }
     } else if ($_POST) {
-        include_once($_EnginePath . '/includes/functions/IPandUA_Logger.php');
-
         $ipHash = md5(Users\Session\getCurrentIP());
 
         $loginAttemptResult = Session\Input\LocalIdentityLogin\handleLocalIdentityLogin([
@@ -45,27 +43,13 @@ function render ($props) {
             'currentTimestamp' => $currentTimestamp,
         ]);
 
-        if ($loginAttemptResult['isSuccess']) {
-            $userEntity = $loginAttemptResult['payload']['userEntity'];
-
-            IPandUA_Logger($userEntity, false);
-
-            Session\Utils\Redirects\redirectToOverview();
-
-            die();
+        if (!$loginAttemptResult['isSuccess']) {
+            Session\Utils\RateLimiter\updateLoginRateLimiterEntry([
+                'ipHash' => $ipHash,
+            ]);
         }
-
-        Session\Utils\RateLimiter\updateLoginRateLimiterEntry([
-            'ipHash' => $ipHash,
-        ]);
     } else if (Session\Utils\Cookie\hasSessionCookie()) {
         $loginAttemptResult = Session\Input\CookieLogin\handleCookieLogin([]);
-
-        if ($loginAttemptResult['isSuccess']) {
-            Session\Utils\Redirects\redirectToOverview();
-
-            die();
-        }
     }
 
     // Internal errors handling
@@ -79,6 +63,22 @@ function render ($props) {
         $userEntity = $loginAttemptResult['error']['userEntity'];
 
         IPandUA_Logger($userEntity, true);
+    }
+
+    // Successful login attempt handling
+    if (
+        $loginAttemptResult &&
+        $loginAttemptResult['isSuccess']
+    ) {
+        include_once($_EnginePath . '/includes/functions/IPandUA_Logger.php');
+
+        $userEntity = $loginAttemptResult['payload']['userEntity'];
+
+        IPandUA_Logger($userEntity, false);
+
+        Session\Utils\Redirects\redirectToOverview();
+
+        die();
     }
 
     // Handle input errors
