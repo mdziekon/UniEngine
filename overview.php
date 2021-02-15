@@ -6,8 +6,10 @@ $_AllowInVacationMode = true;
 
 $_EnginePath = './';
 include($_EnginePath.'common.php');
+include_once($_EnginePath . 'modules/session/_includes.php');
 
 use UniEngine\Engine\Includes\Helpers\Users;
+use UniEngine\Engine\Modules\Session;
 
 loggedCheck();
 
@@ -293,7 +295,11 @@ switch($mode)
             // Check if given password is good
             if(!empty($_POST['give_passwd']))
             {
-                if(md5($_POST['give_passwd']) == $_User['password'])
+                $inputPasswordHash = Session\Utils\LocalIdentityV1\hashPassword([
+                    'password' => $_POST['give_passwd'],
+                ]);
+
+                if($inputPasswordHash == $_User['password'])
                 {
                     if($_User['id_planet'] != $_User['current_planet'])
                     {
