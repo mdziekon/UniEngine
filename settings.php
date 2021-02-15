@@ -8,6 +8,9 @@ $_DontForceRulesAcceptance = true;
 
 $_EnginePath = './';
 include($_EnginePath.'common.php');
+include_once($_EnginePath . 'modules/session/_includes.php');
+
+use UniEngine\Engine\Modules\Session;
 
 loggedCheck();
 
@@ -115,15 +118,23 @@ if(!isOnVacation())
                 if(isset($_POST['change_pass']) && $_POST['change_pass'] == 'on')
                 {
                     $_POST['give_newpass'] = trim($_POST['give_newpass']);
-                    if(md5($_POST['give_oldpass']) == $_User['password'])
+
+                    $inputOldPasswordHash = Session\Utils\LocalIdentityV1\hashPassword([
+                        'password' => $_POST['give_oldpass'],
+                    ]);
+                    $inputNewPasswordHash = Session\Utils\LocalIdentityV1\hashPassword([
+                        'password' => $_POST['give_newpass'],
+                    ]);
+
+                    if($inputOldPasswordHash == $_User['password'])
                     {
                         if(strlen($_POST['give_newpass']) >= 4)
                         {
-                            if(md5($_POST['give_newpass']) != $_User['password'])
+                            if($inputNewPasswordHash != $_User['password'])
                             {
                                 if($_POST['give_newpass'] == $_POST['give_confirmpass'])
                                 {
-                                    $ChangeSet['password'] = md5($_POST['give_newpass']);
+                                    $ChangeSet['password'] = $inputNewPasswordHash;
                                     $ChangeSetTypes['password'] = 's';
                                     $InfoMsgs[] = $_Lang['Pass_Changed_plzlogout'];
                                     setcookie(getSessionCookieKey(), '', $Now - 3600, '/', '');
@@ -762,7 +773,11 @@ if(!isOnVacation())
                     {
                         if($_User['is_ondeletion'] == 0)
                         {
-                            if(md5($_POST['delete_confirm']) == $_User['password'])
+                            $inputPasswordHash = Session\Utils\LocalIdentityV1\hashPassword([
+                                'password' => $_POST['delete_confirm'],
+                            ]);
+
+                            if($inputPasswordHash == $_User['password'])
                             {
                                 $ChangeSet['is_ondeletion'] = '1';
                                 $ChangeSet['deletion_endtime'] = $Now + (ACCOUNT_DELETION_TIME * TIME_DAY);

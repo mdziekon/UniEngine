@@ -4,6 +4,9 @@ define('INSIDE', true);
 
 $_EnginePath = './';
 include($_EnginePath.'common.php');
+include_once($_EnginePath . 'modules/session/_includes.php');
+
+use UniEngine\Engine\Modules\Session;
 
 includeLang('lostpassword');
 
@@ -62,7 +65,11 @@ if(isset($_POST['email']))
                     $Result = SendPassEmail($email, $NewPass, $PassActivateLink);
                     if($Result === true)
                     {
-                        doquery("UPDATE {{table}} SET `new_pass` = MD5('{$NewPass}'), `new_pass_code` = '{$PassActivateLink}', `last_send_newpass` = UNIX_TIMESTAMP() WHERE `id` = {$Id}", 'users');
+                        $passwordHash = Session\Utils\LocalIdentityV1\hashPassword([
+                            'password' => $NewPass,
+                        ]);
+
+                        doquery("UPDATE {{table}} SET `new_pass` = '{$passwordHash}', `new_pass_code` = '{$PassActivateLink}', `last_send_newpass` = UNIX_TIMESTAMP() WHERE `id` = {$Id}", 'users');
                         $Msg = $_Lang['new_pass_sent'];
                     }
                     else
