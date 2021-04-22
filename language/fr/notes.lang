@@ -1,5 +1,44 @@
 <?php
 
-include("{$_EnginePath}language/en/notes.lang");
+$_Lang['Title']                     = 'Votre notes';
+$_Lang['Title_EditRow']             = 'Modifier la note';
+$_Lang['Title_AddRow']              = 'Ajouter une note';
+
+$_Lang['Link_AddNote']              = 'Ajouter une nouvelle note';
+
+$_Lang['Headers_Title']             = 'Titre';
+$_Lang['Headers_Date']              = 'Date d\'ajout';
+$_Lang['Headers_Priority']          = 'Priorité';
+$_Lang['Headers_Text']              = 'Contenu';
+$_Lang['Headers_Limit']             = 'Limite';
+
+$_Lang['Info_NoRows']               = 'Pas de notes';
+$_Lang['Info_SelectAll']            = 'Sélectionner / Désélectionner tout';
+
+$_Lang['Priority_1']                = 'Bas';
+$_Lang['Priority_2']                = 'Moyen';
+$_Lang['Priority_3']                = 'Haut';
+
+$_Lang['Action_DeleteSelected']     = 'Supprimer la sélection';
+$_Lang['Action_DeleteAll']          = 'Supprimer tout';
+$_Lang['Action_Cancel']             = 'Annuler';
+$_Lang['Action_Save']               = 'Sauvegarder';
+$_Lang['Action_Submit']             = 'Soumettre l\'action';
+
+$_Lang['JS_Confirm']                = 'Voulez-vous vraiment supprimer toutes les notes?';
+
+$_Lang['Errors_BadIDGiven']         = 'Identifiant de note non valide donné!';
+$_Lang['Errors_IDNoExist']          = 'Cette note n\'existe pas!';
+$_Lang['Errors_NoteNotYour']        = 'Vous ne pouvez pas voir cette note!';
+$_Lang['Errors_TitleEmpty']         = 'Le titre ne peut pas être vide!';
+$_Lang['Errors_BadPriority']        = 'Priorité invalide!';
+$_Lang['Errors_TextEmpty']          = 'Le contenu ne peut pas être vide!';
+$_Lang['Errors_NothingToDelete']    = 'Aucune note à supprimer!';
+$_Lang['Errors_NothingDeleted']     = 'Rien de supprimé!';
+
+$_Lang['Msg_EditSuccess']           = 'Changements sauvegardés!';
+$_Lang['Msg_AddSuccess']            = 'Une note a été ajoutée!';
+$_Lang['Msg_DeleteAllSuccess']      = 'Toutes les notes supprimées!';
+$_Lang['Msg_DeleteSelectedSuccess'] = 'Les notes sélectionnées ont été supprimées!';
 
 ?>

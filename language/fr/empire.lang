@@ -1,5 +1,19 @@
 <?php
 
-include("{$_EnginePath}language/en/empire.lang");
+$_Lang['empire_vision']     = "Aperçu de l'Empire";
+$_Lang['name']              = "Nom";
+$_Lang['coordinates']       = "Coordonnées";
+$_Lang['fields']            = "Champs";
+$_Lang['resources']         = "Ressources";
+$_Lang['metal']             = "Métal";
+$_Lang['crystal']           = "Cristal";
+$_Lang['deuterium']         = "Deuterium";
+$_Lang['energy']            = "Energie";
+$_Lang['buildings']         = "Bâtiments";
+$_Lang['ships']             = "Vaisseaux";
+$_Lang['defense']           = "Défenses";
+
+$_Lang['ShowPlanets']       = 'Planetes';
+$_Lang['ShowMoons']         = 'Lune';
 
 ?>

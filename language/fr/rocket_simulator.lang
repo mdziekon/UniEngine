@@ -1,5 +1,36 @@
 <?php
 
-include("{$_EnginePath}language/en/rocket_simulator.lang");
+$_Lang['Title']              = 'Simulateur de frappes interplanétaires';
+
+$_Lang['Sim_Result']         = 'Résultat de la simulation';
+
+$_Lang['Defender']           = 'Défenseur';
+$_Lang['Attacker']           = 'Agresseur';
+
+$_Lang['InterceptMiss']      = 'Missiles anti-balistiques';
+$_Lang['InterplanetMiss']    = 'Missiles interplanétaires';
+
+$_Lang['MainTarget']         = 'Cible principale';
+$_Lang['Everythink']         = 'Tout';
+
+$_Lang['Submit']             = 'Simuler';
+
+$_Lang['No_IPM_Given']       = 'Aucun missile interplanétaire sélectionné!';
+$_Lang['No_Defs_Given']      = 'Aucune défense sélectionnée!';
+
+$_Lang['IPMissiles_Destroyed']   = 'Tous les missiles interplanétaires ont été interceptés!';
+$_Lang['IPMissiles_CapturedX']   = 'Missiles interplanétaires interceptés: %s';
+
+$_Lang['Destroyed_Sys']          = '<u>Défenses détruites</u>';
+$_Lang['Nothing_destroyed']      = '<u style="color: orange;">Rien n\'a été détruit!</u>';
+$_Lang['Destroyed_Sys_Count']    = '<u>Défenses perdus</u>:';
+$_Lang['Lost_units_ICM']         = '<u>Ressources perdues (missiles anti-balistiques)</u>';
+$_Lang['Lost_units_Sys']         = '<u>Ressources perdues (systèmes de défense)</u>';
+$_Lang['Range']                  = '<u>Zone de frappe de missile</u>';
+$_Lang['DefDebris']              = '<u>Champ de débris créé</u>';
+$_Lang['SquareMeters']           = 'mètres carrés';
+$_Lang['Lost_units_IPM']         = '<u>Ressources utilisées (missiles interplanétaires)</u>';
+
+$_Lang['units']                  = 'unités de';
 
 ?>

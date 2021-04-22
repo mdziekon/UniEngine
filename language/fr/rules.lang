@@ -1,5 +1,18 @@
 <?php
 
-include("{$_EnginePath}language/en/rules.lang");
+$_Lang['Page_Title']             = 'Conditions d\'utilisation';
+
+$_Lang['Table_Header']           = 'Conditions d\'utilisation de  '.$_GameConfig['game_name'];
+$_Lang['Table_GeneralInfo']      = 'Ces termes sont en vigueur depuis le<b class="red">22 Janvier 2012</b>.<br/>';
+$_Lang['Table_GeneralInfo']     .= 'Toutes les modifications apportées à ces conditions seront annoncées via le jeu<b class="red">Message de diffusion</b>, ou, en de rares occasions(eg. substantial rewrites), via <b class="red">email</b>.';
+$_Lang['Table_Index']            = 'Table des matières';
+
+$_Lang['AcceptBox_Info']             = 'Avant de continuer votre jeu, <b> vous devez confirmer votre acceptation des modifications des conditions </b> (dernière modification:%s). <br/> Si vous n’acceptez pas les règles nouvelles ou modifiées, vous pouvez refuser le changements, ce qui signifie que votre compte sera automatiquement <b class = "red"> supprimé après une période de 7 jours </b> (pendant cette période, vous êtes libre de changer d\'avis), ou vous pouvez<b class="orange">laissez votre compte sans surveillanced</b> (tant que vous ne choisissez aucune des options).';
+$_Lang['AcceptBox_Option_Accept0']   = 'J\'accepte les conditions d\'utilisation modifiées';
+$_Lang['AcceptBox_Option_Accept1']   = 'J\'accepte les conditions d\'utilisation modifiées et j\'annule la suppression de mon compte';
+$_Lang['AcceptBox_Option_Decline0']  = 'Je refuse les conditions d\'utilisation modifiées et je mets mon compte en mode de suppression';
+$_Lang['AcceptBox_Option_Decline1']  = 'Je refuse les conditions d\'utilisation modifiées et je maintiens ma décision de suppression';
+$_Lang['AcceptBox_DeleteTime']       = '<br/><br/>Votre compte sera supprimé le %s';
+$_Lang['AcceptBox_Sure']             = 'Etes-vous sûr ?';
 
 ?>
