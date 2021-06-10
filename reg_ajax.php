@@ -25,6 +25,155 @@ if (!isset($_GET['register'])) {
     die('regCallback({});');
 }
 
+function normalizeInput($input, $params) {
+    return [
+        'username' => (
+            isset($input['username']) ?
+                trim($input['username']) :
+                null
+        ),
+        'password' => (
+            isset($input['password']) ?
+                $input['password'] :
+                null
+        ),
+        'email' => (
+            isset($input['email']) ?
+                trim($input['email']) :
+                null
+        ),
+        'hasAcceptedTos' => (
+            isset($input['rules']) ?
+                $input['rules'] :
+                null
+        ),
+        'galaxyNo' => (
+            isset($input['galaxy']) ?
+                intval($input['galaxy']) :
+                null
+        ),
+        'langCode' => (
+            (
+                isset($input['lang']) &&
+                in_array($input['lang'], UNIENGINE_LANGS_AVAILABLE)
+            ) ?
+                $input['lang'] :
+                null
+        ),
+    ];
+}
+
+function createFunctionReturningResultType($func) {
+    return function ($arguments) use ($func) {
+        $createSuccess = function ($payload) {
+            return [
+                'isSuccess' => true,
+                'messages' => $payload,
+            ];
+        };
+        $createFailure = function ($payload) {
+            return [
+                'isSuccess' => false,
+                'errors' => $payload,
+            ];
+        };
+
+        return $func($arguments, [
+            'createSuccess' => $createSuccess,
+            'createFailure' => $createFailure,
+        ]);
+    };
+}
+
+function validateUsername($input, $params) {
+    $validator = function ($args, $helpers) use ($input, $params) {
+        $value = $input['username'];
+
+        $minLength = 4;
+        $maxLenght = 64;
+
+        if (strlen($value) < $minLength) {
+            return $helpers['createFailure']([
+                'code' => 'USERNAME_TOO_SHORT',
+                'minLength' => $minLength,
+            ]);
+        }
+        if (strlen($value) > $maxLenght) {
+            return $helpers['createFailure']([
+                'code' => 'USERNAME_TOO_LONG',
+                'maxLength' => $maxLenght,
+            ])
+        }
+        if (!preg_match(REGEXP_USERNAME_ABSOLUTE, $value)) {
+            return $helpers['createFailure']([
+                'code' => 'USERNAME_INVALID',
+            ]);
+        }
+
+        return $helpers['createSuccess']([]);
+    };
+
+    return createFunctionReturningResultType($validator)();
+}
+
+function validatePassword($input, $params) {
+    $validator = function ($args, $helpers) use ($input, $params) {
+        $value = $input['password'];
+
+        $minLength = 4;
+
+        if (strlen($value) < $minLength) {
+            return $helpers['createFailure']([
+                'code' => 'PASSWORD_TOO_SHORT',
+                'minLength' => $minLength,
+            ]);
+        }
+
+        return $helpers['createSuccess']([]);
+    };
+
+    return createFunctionReturningResultType($validator)();
+}
+
+function validateEmail($input, $params) {
+    $validator = function ($args, $helpers) use ($input, $params) {
+        $value = $input['email'];
+
+        if (empty($value)) {
+            return $helpers['createFailure']([
+                'code' => 'EMAIL_EMPTY',
+            ]);
+        }
+        if (!is_email($Email)) {
+            return $helpers['createFailure']([
+                'code' => 'EMAIL_INVALID_FORMAT',
+            ]);
+        }
+
+        $escapeValue = getDBLink()->escape_string($value);
+
+        if ($value !== $escapeValue) {
+            return $helpers['createFailure']([
+                'code' => 'EMAIL_INVALID_UNSAFE_VALUE',
+            ]);
+        }
+
+        $BannedDomains = str_replace('.', '\.', $_GameConfig['BannedMailDomains']);
+
+else if(!empty($BannedDomains) && preg_match('#('.$BannedDomains.')+#si', $Email))
+{
+    // EMail is on banned domains list
+    $JSONResponse['Errors'][] = 8;
+    $JSONResponse['BadFields'][] = 'email';
+}
+
+
+        return $helpers['createSuccess']([]);
+    };
+
+    return createFunctionReturningResultType($validator)();
+}
+
 $JSONResponse = null;
 $JSONResponse['Errors'] = array();
 
@@ -47,59 +196,61 @@ $LangCode = (
 $userSessionIP = Users\Session\getCurrentIP();
 
 // Check if Username is correct
-$UsernameGood = false;
-if(strlen($Username) < 4)
-{
-    // Username is too short
-    $JSONResponse['Errors'][] = 1;
-    $JSONResponse['BadFields'][] = 'username';
-}
-else if(strlen($Username) > 64)
-{
-    // Username is too long
-    $JSONResponse['Errors'][] = 2;
-    $JSONResponse['BadFields'][] = 'username';
-}
-else if(!preg_match(REGEXP_USERNAME_ABSOLUTE, $Username))
-{
-    // Username has illegal signs
-    $JSONResponse['Errors'][] = 3;
-    $JSONResponse['BadFields'][] = 'username';
-}
-else
-{
-    $UsernameGood = true;
-}
+// $UsernameGood = false;
+// if(strlen($Username) < 4)
+// {
+//     // Username is too short
+//     $JSONResponse['Errors'][] = 1;
+//     $JSONResponse['BadFields'][] = 'username';
+// }
+// else if(strlen($Username) > 64)
+// {
+//     // Username is too long
+//     $JSONResponse['Errors'][] = 2;
+//     $JSONResponse['BadFields'][] = 'username';
+// }
+// else if(!preg_match(REGEXP_USERNAME_ABSOLUTE, $Username))
+// {
+//     // Username has illegal signs
+//     $JSONResponse['Errors'][] = 3;
+//     $JSONResponse['BadFields'][] = 'username';
+// }
+// else
+// {
+//     $UsernameGood = true;
+// }
 
 // Check if Password is correct
-if(strlen($Password) < 4)
-{
-    // Password is too short
-    $JSONResponse['Errors'][] = 4;
-    $JSONResponse['BadFields'][] = 'password';
-}
+// if(strlen($Password) < 4)
+// {
+//     // Password is too short
+//     $JSONResponse['Errors'][] = 4;
+//     $JSONResponse['BadFields'][] = 'password';
+// }
 
 // Check if EMail is correct
 $EmailGood = false;
 $BannedDomains = str_replace('.', '\.', $_GameConfig['BannedMailDomains']);
-if(empty($Email))
-{
-    // EMail is empty
-    $JSONResponse['Errors'][] = 5;
-    $JSONResponse['BadFields'][] = 'email';
-}
-else if($Email != $CheckEmail)
-{
-    // EMail has illegal signs
-    $JSONResponse['Errors'][] = 6;
-    $JSONResponse['BadFields'][] = 'email';
-}
-else if(!is_email($Email))
-{
-    // EMail is incorrect
-    $JSONResponse['Errors'][] = 7;
-    $JSONResponse['BadFields'][] = 'email';
-}
+// if(empty($Email))
+// {
+//     // EMail is empty
+//     $JSONResponse['Errors'][] = 5;
+//     $JSONResponse['BadFields'][] = 'email';
+// }
+// else if($Email != $CheckEmail)
+// {
+//     // EMail has illegal signs
+//     $JSONResponse['Errors'][] = 6;
+//     $JSONResponse['BadFields'][] = 'email';
+// }
+// else if(!is_email($Email))
+// {
+//     // EMail is incorrect
+//     $JSONResponse['Errors'][] = 7;
+//     $JSONResponse['BadFields'][] = 'email';
+// }
+$BannedDomains = str_replace('.', '\.', $_GameConfig['BannedMailDomains']);
+
 else if(!empty($BannedDomains) && preg_match('#('.$BannedDomains.')+#si', $Email))
 {
     // EMail is on banned domains list
