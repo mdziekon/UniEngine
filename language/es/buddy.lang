@@ -1,0 +1,50 @@
+<?php
+
+$_Lang['Title']                     = 'Amigos';
+
+$_Lang['Headers_Nick']              = 'Jugador';
+$_Lang['Headers_StatPoints']        = 'Puntos';
+$_Lang['Headers_StatPosition']      = 'Rango';
+$_Lang['Headers_Ally']              = 'Alianza';
+$_Lang['Headers_GalaxyPosition']    = 'Coordenadas';
+$_Lang['Headers_Date']              = 'Fecha';
+$_Lang['Headers_State']             = 'Estado';
+$_Lang['Headers_Actions']           = 'Acciones';
+$_Lang['Headers_BuddyForm']         = 'Pedir Amigo';
+$_Lang['Headers_Text']              = 'Texto';
+$_Lang['Headers_Cancel']            = 'Cancelar';
+$_Lang['Headers_Send']              = 'Enviar';
+$_Lang['Headers_Limit']             = 'Limite';
+
+$_Lang['qTip_Edit']                 = 'Editar solicitud';
+$_Lang['qTip_Delete']               = 'Borrar solicitud';
+$_Lang['qTip_Remove']               = 'Eliminar de la lista de amigos';
+$_Lang['qTip_Accept']               = 'Aceptar solicitud';
+$_Lang['qTip_Refuse']               = 'Declinar solicitud';
+
+$_Lang['Info_NoBuddy']              = 'Sin amigos...';
+
+$_Lang['Row_State_Online']          = 'Online';
+$_Lang['Row_State_Offline']         = 'Offline';
+$_Lang['Row_State_Minutes']         = 'min';
+$_Lang['Row_State_Days']            = 'd';
+$_Lang['Row_State_Awaiting']        = 'Esperando';
+
+$_Lang['Success_Accepted']          = 'Se ha aceptado la solicitud de amistad';
+$_Lang['Success_Refused']           = 'Se ha declinado la solicitud de amistad';
+$_Lang['Success_Removed']           = 'Player has been removed from your Friends list';
+$_Lang['Success_Deleted']           = 'La solicitud ha sido eliminada';
+$_Lang['Success_Edited']            = 'La solicitud ha sido editada';
+$_Lang['Success_Sent']              = 'La solicitud ha sido enviada';
+
+$_Lang['Error_BadElement']          = 'Accion invalida!';
+$_Lang['Error_ElementIDBad']        = 'Se proporciono un identificador no valido!';
+$_Lang['Error_EmptyText']           = 'La solicitud no puede estar vacia!';
+$_Lang['Error_BadUID']              = 'Se proporciono un identificador de jugador no valido!';
+$_Lang['Error_BadUser']             = 'Este jugador no existe!';
+$_Lang['Error_LinkExists']          = 'Este jugador ya esta en tu lista de amigos o tu solicitud esta pendiente de aceptacion.!';
+$_Lang['Error_RowNoExists']         = 'Esta solicitud no existe!';
+$_Lang['Error_CantEdit']            = 'Accion invalida!';
+$_Lang['Error_AlreadyActive']       = 'Esta solicitud ya esta activa!';
+
+?>

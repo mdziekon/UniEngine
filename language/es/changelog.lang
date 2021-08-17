@@ -1,0 +1,35 @@
+<?php
+
+$_Lang['infolabel_resourcesspeed']      = 'Multiplicador de produccion de recursos';
+$_Lang['infolabel_gamespeed']           = 'Multiplicador de velocidad de juego';
+$_Lang['infolabel_fleetspeed']          = 'Multiplicador de velocidad de flota';
+$_Lang['infolabel_shipyardqueue']       = 'Tamaño de la cola del astillero';
+$_Lang['infolabel_buildingsqueue']      = 'Tamaño de la cola de edificios';
+$_Lang['infolabel_noobprotection']      = 'Proteccion de jugadores debiles';
+$_Lang['infolabel_to']                  = 'Hasta';
+$_Lang['infolabel_points']              = 'puntos';
+$_Lang['infolabel_nonoobprotection']    = 'Eliminacion de proteccion de jugadores debiles';
+$_Lang['infolabel_from']                = 'Desde';
+$_Lang['infotip_nonoobprotection']      = 'Desde este punto, no habra limites artificiales con respecto a la agresion hacia otros jugadores.';
+$_Lang['infotip_noobprotection']        = (
+    'Hasta este punto, nadie puede atacar a un jugador (tambien funciona al reves). ' .
+    'A partir de este punto, un jugador puede atacar a otros jugadores que tengan hasta% s veces mas o menos puntos en las estadisticas.'
+);
+
+$_Lang['TipTip_Add']                    = 'Agregado';
+$_Lang['TipTip_Fix']                    = 'Reparado';
+$_Lang['TipTip_Upd']                    = 'Actualizado';
+$_Lang['TipTip_Opt']                    = 'Optimizado';
+$_Lang['TipTip_Chg']                    = 'Cambiado';
+
+$_Lang['ServerInfo']                    = 'Informacion del servidor';
+$_Lang['Title']                         = 'Registro de cambios e informacion del servidor';
+$_Lang['Version']                       = 'Version';
+$_Lang['Description']                   = 'Descripcion de cambios';
+$_Lang['Changelog']                     = 'Registro de cambios';
+$_Lang['changelog']                     = [
+    '<b class="lime">1.0.0<br/>by mdziekon</b>' =>
+    '<img src="images/chglog_add.png" class="img"> <b>UniEngine</b> - First public release (19th of July 2013)',
+];
+
+?>
