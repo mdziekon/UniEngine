@@ -1,0 +1,39 @@
+<?php
+
+$_Lang['DarkEnergyStatusIs']    = 'Dark Energy en tu cuenta';
+$_Lang['BuyMoreDE']             = 'Compra mas Dark Energy!';
+
+$_Lang['aboutpro']              = 'Cuenta PRO';
+
+$_Lang['Desc']                  = 'Cuenta PRO amplia las capacidades de su cuenta habitual. Obtendra acceso a funciones bloqueadas para otros jugadores, lo que le permitira administrar sus planetas y flotas de manera mas eficiente. Sin duda ayudaran a que tu imperio crezca mas rapido.!';
+
+$_Lang['BenefitsTitle']         = 'Beneficios Cuenta PRO';
+
+$_Lang['Benefits']              = [
+    'Cola de contruccion extendida hasta <b class="lime">10 slots</b>',
+    'Cola de investigacion - <b class="lime">5 slots</b>',
+    '<b class="lime">Acceso</b> ilimitado a <b class="lime">comerciante</b> (Comercia tus recursos)',
+    'Acceso a <b class="lime">vision general del imperio</b> (Vista general de todos tus planetas y lunas en un solo lugar)',
+    'Acceso a <b class="lime">desensablador</b> (capacidad de convertir sus barcos y sistemas de defensa en recursos)',
+    'Astillero: Limite de cola elevado a <b class="lime">10 millions</b>',
+    'Acceso a <b class="lime">historial de ataques</b> (Contando para Bash rule)',
+    'Funcionalidad del ayudante de transporte de recursos (<b class="lime">Auto-fill</b>)',
+];
+
+$_Lang['ProAccStatus']          = 'Estado Cuenta PRO';
+$_Lang['ProTill']               = 'Valido hasta';
+$_Lang['ProEnded']              = 'Expirado';
+$_Lang['NeverHadPro']           = 'Nunca comprado';
+
+$_Lang['RenewPro']              = 'Extendido por %s %s!';
+$_Lang['BuyAgain']              = 'Comprar otra vez por %s %s!';
+$_Lang['FirstBuy']              = 'Comprar por %s %s!';
+
+$_Lang['_day']                  = 'dia';
+$_Lang['_days']                 = 'dias';
+
+$_Lang['Cost']                  = 'Coste';
+$_Lang['CostUnits']             = 'Dark Energy unidades';
+$_Lang['AreYouSure']            = 'Estas seguro?';
+
+?>
