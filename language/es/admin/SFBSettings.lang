@@ -1,0 +1,95 @@
+<?php
+
+$_Lang['SFB_Title']                         = 'Fleet Blockade System';
+
+$_Lang['SFB_Header_Active']                 = 'Active and Upcoming Fleet Blockades';
+$_Lang['SFB_Header_Log']                    = 'Blockades log';
+$_Lang['SFB_Header_Adding']                 = 'Add new Blockade';
+
+$_Lang['SFB_Action_AddBlockade']            = 'Add new Blockade';
+$_Lang['SFB_Action_Edit']                   = 'Edit';
+$_Lang['SFB_Action_Cancel']                 = 'Cancel';
+
+$_Lang['SFB_ActiveList_NoElements']         = 'No active Blockades';
+$_Lang['SFB_InActiveList_NoElements']       = 'No log entries';
+
+$_Lang['SFB_Headers_ID']                    = 'ID';
+$_Lang['SFB_Headers_Admin']                 = 'Creator';
+$_Lang['SFB_Headers_Type']                  = 'Type';
+$_Lang['SFB_Headers_Missions']              = 'Missions';
+$_Lang['SFB_Headers_StartTime']             = 'Start date';
+$_Lang['SFB_Headers_EndTime']               = 'End date';
+$_Lang['SFB_Headers_AdditionalData']        = 'Additional details';
+$_Lang['SFB_Headers_Reason']                = 'Reason';
+$_Lang['SFB_Headers_Actions']               = 'Actions';
+
+$_Lang['SFB_Labels_Type']                   = 'Blockade Type';
+$_Lang['SFB_Labels_Missions']               = 'Fleet missions to block';
+$_Lang['SFB_Labels_StartTime']              = 'Start date';
+$_Lang['SFB_Labels_EndTime']                = 'End date';
+$_Lang['SFB_Labels_PostEndTime']            = 'Post-blockade protection end date';
+$_Lang['SFB_Labels_ElementID']              = 'Specific ID to block';
+$_Lang['SFB_Labels_DontBlockIfIdle']        = 'Do not protect inactive players';
+$_Lang['SFB_Labels_Reason']                 = 'Reason (optional)';
+$_Lang['SFB_Labels_SubmitAdd']              = 'Add Blockade';
+$_Lang['SFB_Labels_SubmitEdit']             = 'Save changes';
+$_Lang['SFB_Labels_CancelChanges']          = 'Cancel changes';
+
+$_Lang['SFB_LabelsData_Type_1']             = 'Global';
+$_Lang['SFB_LabelsData_Type_2']             = 'Specified player';
+$_Lang['SFB_LabelsData_Type_3']             = 'Specified planet / moon';
+$_Lang['SFB_LabelsData_Mission_All']        = 'All';
+$_Lang['SFB_LabelsData_Mission_Military']   = 'Aggressive';
+$_Lang['SFB_LabelsData_Mission_Civil']      = 'Civil';
+$_Lang['SFB_LabelsData_PostEndTime_Zero']   = 'None';
+$_Lang['SFB_LabelsData_PostEndTime_1Day']   = '24 hours';
+
+$_Lang['SFB_Types_1']                       = '<b class="red">Global</b>';
+$_Lang['SFB_Types_2']                       = '<b class="orange">Specified player</b>';
+$_Lang['SFB_Types_3']                       = '<b class="orange">Specified planet / moon</b>';
+
+$_Lang['SFB_Mission__1']                    = 'Attack';
+$_Lang['SFB_Mission__2']                    = 'United Attack';
+$_Lang['SFB_Mission__3']                    = 'Transport';
+$_Lang['SFB_Mission__4']                    = 'Stay';
+$_Lang['SFB_Mission__5']                    = 'Hold';
+$_Lang['SFB_Mission__6']                    = 'Spy';
+$_Lang['SFB_Mission__7']                    = 'Colonise';
+$_Lang['SFB_Mission__8']                    = 'Harvest';
+$_Lang['SFB_Mission__9']                    = 'Destroy';
+$_Lang['SFB_Mission__10']                   = 'Interplanetary Strike';
+$_Lang['SFB_Mission__15']                   = 'Expedition';
+$_Lang['SFB_Mission_Aggresive']             = '<b class="orange">Aggressive</b>';
+$_Lang['SFB_Mission_Civil']                 = '<b class="lightblue">Civil</b>';
+$_Lang['SFB_Mission_All']                   = '<b class="red">All</b>';
+
+$_Lang['SFB_Additional_DontBlockIfIdle']    = 'Do not protect inactive players';
+
+$_Lang['SFB_EndIn']                         = 'In';
+
+$_Lang['SFB_Help_PostEndTime']              = 'Post-blockade protection end date';
+$_Lang['SFB_Help_EndTime']                  = 'Blockade end date';
+$_Lang['SFB_Confirm_Cancel']                = 'Are you sure you want to cancel this Blockade?';
+
+$_Lang['SFB_Response_CancelOK']             = 'Blockade has been cancelled!';
+$_Lang['SFB_Response_CancelInactive']       = 'This blockade has already ended!';
+$_Lang['SFB_Response_CancelNoExist']        = 'This blockade does not exist!';
+$_Lang['SFB_Response_CancelBadID']          = 'Invalid blockade ID given!';
+
+$_Lang['SFB_Response_AddOK']                = 'New Blockade has been added!';
+$_Lang['SFB_Response_AddEndTimeBad']        = 'Blockade\'s end date must be in the future!';
+$_Lang['SFB_Response_AddNoMissions']        = 'You have to provide valid mission types to block!';
+$_Lang['SFB_Response_AddBadStart']          = 'Blockade\'s start date has to be set before the end date!';
+$_Lang['SFB_Response_AddBadType']           = 'Invalid blockade type given!';
+$_Lang['SFB_Response_AddElementIDNoExists'] = 'The element to block does not exist!';
+$_Lang['SFB_Response_AddBadElementID']      = 'Invalid blockade element ID given!';
+
+$_Lang['SFB_Response_EditOK']               = 'Changes have been saved!';
+$_Lang['SFB_Response_EditPostEndTimeBad']   = 'Blockade\'s post-blockade protection end date cannot be earlier than the previous value!';
+$_Lang['SFB_Response_EditEndTimeBad']       = 'Blockade\'s end date cannot be earlier than the previous value!';
+$_Lang['SFB_Response_EditNoMissions']       = 'You have to provide valid mission types to block!';
+$_Lang['SFB_Response_EditOldRow']           = 'You cannot edit this blockade entry anymore!';
+$_Lang['SFB_Response_EditRowNoExists']      = 'This blockade does not exist!';
+$_Lang['SFB_Response_EditBadID']            = 'Invalid blockade ID given!';
+
+?>

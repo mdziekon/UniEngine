@@ -1,0 +1,52 @@
+<?php
+
+$_Lang['mlst_title']            = "Messages List";
+$_Lang['mlst_hdr_page']         = "Page";
+$_Lang['mlst_hdr_userID']       = 'Player / Alliance ID';
+$_Lang['mlst_hdr_msgID']        = 'Message ID';
+$_Lang['mlst_hdr_filter']       = 'Filter';
+$_Lang['mlst_hdr_id']           = "ID";
+$_Lang['mlst_hdr_type']         = "Type";
+$_Lang['mlst_hdr_time']         = "Date";
+$_Lang['mlst_hdr_from']         = "From";
+$_Lang['mlst_hdr_to']           = "To";
+$_Lang['mlst_hdr_status']       = 'Status';
+$_Lang['mlst_hdr_text']         = "Content";
+$_Lang['mlst_hdr_action']       = "Select";
+$_Lang['mlst_del_mess']         = "Delete";
+$_Lang['mlst_bt_setread']       = 'Mark as read';
+$_Lang['mlst_bt_setnotread']    = 'Mark as unread';
+$_Lang['mlst_bt_delselsoft']    = 'Delete selected (Soft-delete)';
+$_Lang['mlst_bt_delsel']        = "Delete selected (Hard-delete)";
+$_Lang['Pages_of']              = 'of';
+
+// FIXME: This should be shared with /messages.lang
+$_Lang['mlst_mess_typ__0']      = "Espionage reports";
+$_Lang['mlst_mess_typ__1']      = "Messages from players";
+$_Lang['mlst_mess_typ__2']      = "Messages from alliance";
+$_Lang['mlst_mess_typ__3']      = "Battle reports";
+$_Lang['mlst_mess_typ__4']      = "Exploitation reports";
+$_Lang['mlst_mess_typ__5']      = "Flight reports";
+$_Lang['mlst_mess_typ_15']      = "Expedition reports";
+$_Lang['mlst_mess_typ_50']      = "Queued actions reports";
+$_Lang['mlst_mess_typ_70']      = "System messages";
+$_Lang['mlst_mess_typ_80']      = "Messages from Administration";
+$_Lang['mlst_mess_typ_100']     = "All messages";
+
+$_Lang['Status_Unread']         = 'Unread';
+$_Lang['Status_Read']           = 'Read';
+$_Lang['Status_Undeleted']      = 'Non-deleted';
+$_Lang['Status_Deleted']        = 'Deleted';
+
+$_Lang['tip_Deleted']           = 'Deleted';
+$_Lang['tip_Read']              = 'Read';
+$_Lang['tip_Copy']              = 'Copy';
+
+$_Lang['Err_CopyNotFound']      = '<b class="red">Base-source of this message does not exist!</b>';
+
+$_Lang['YouCannotSeeThisMsg']   = '<b class="red">Not enough permissions to see this message!</b>';
+$_Lang['Error_NoMsgFound']      = 'No messages found!';
+$_Lang['Form_ResetFilters']     = 'Reset filters';
+
+
+?>

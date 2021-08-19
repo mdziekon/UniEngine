@@ -1,0 +1,37 @@
+<?php
+
+$_Lang['PageTitle']                 = 'IP addresses log';
+
+$_Lang['Search_Title']              = 'Search for IPs';
+$_Lang['Search_Opt_uname']          = 'Player name';
+$_Lang['Search_Opt_uid']            = 'Player ID';
+$_Lang['Search_Opt_ipstr']          = 'IP address';
+$_Lang['Search_Opt_ipid']           = 'IP internal ID';
+$_Lang['Search_Submit']             = 'Search';
+
+$_Lang['Header_No']                 = '#';
+$_Lang['Header_User']               = 'Player';
+$_Lang['Header_IPs']                = 'IP addresses';
+$_Lang['Header_Count']              = 'Logins count';
+$_Lang['Header_LastLog']            = 'Last login';
+$_Lang['Header_Actions']            = 'Actions';
+$_Lang['Header_IP']                 = 'IP address';
+$_Lang['Header_Users']              = 'Players';
+$_Lang['SubRow_User_NoData']        = 'No data';
+$_Lang['SubRow_IP_NoData']          = 'Account deleted';
+$_Lang['BreakLine_Intersection']    = 'IP intersection: <a class="orange" href="?ipid=%s">%s</a> <a class="orange" href="?ipid=%s">[#%s]</a>';
+$_Lang['BreakLine_NormalLogs']      = '<b class="lime">Other, non-intersecting entries</b>';
+
+$_Lang['Error_Search_NoRowsFound']  = 'No matching entries found!';
+$_Lang['Error_Search_BadType']      = 'Invalid search type!';
+$_Lang['Error_Where_NoData']        = 'No matching entries found!';
+$_Lang['Info_InsertData']           = 'Provide search details...';
+$_Lang['Info_ProxySet_OK_Set']      = 'IP marked as "Proxy"';
+$_Lang['Info_ProxySet_OK_Unset']    = '"Proxy" status has been removed';
+$_Lang['Info_ProxySet_NoIP']        = 'This IP record does not exist!';
+$_Lang['Info_ProxySet_BadID']       = 'Invalid IP identifier provided!';
+
+$_Lang['info_SetAsProxy']           = 'Mark as Proxy';
+$_Lang['info_SetAsNonProxy']        = 'Remove Proxy status';
+
+?>

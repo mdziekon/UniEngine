@@ -1,0 +1,313 @@
+<?php
+
+$_Lang['UserDevScanner_Title']               = 'Player\'s development scanner';
+
+$_Lang['Table_Header']                       = 'Scan player (EXPERIMENTAL)';
+$_Lang['Table_Form_UID']                     = 'Player\'s ID';
+$_Lang['Table_Form_Username']                = '(or) Player\'s Name';
+$_Lang['Table_Form_Submit']                  = 'Scan!';
+
+$_Lang['Error_UserNoExist']                  = 'This player does not exist!';
+$_Lang['Error_BadPost']                      = 'No player\'s ID nor Username provided!';
+
+$_Lang['Table2_Header']                      = 'Scan\'s result';
+$_Lang['Table2_GoBack']                      = 'Go back';
+$_Lang['Table2_CollExp']                     = 'Expand / Collapse';
+$_Lang['Table2_Username']                    = 'Username';
+$_Lang['Table2_UID']                         = 'Player ID';
+
+$_Lang['Table2_ScanedLogs']                  = 'Scanned logs';
+$_Lang['Table2_ScanTime']                    = 'Scanning time';
+$_Lang['Table2_DumpDate']                    = 'Full snapshot date';
+$_Lang['Table2_DateDifference']              = 'Time difference';
+
+$_Lang['Table2_SummaryResult']               = 'Summary';
+$_Lang['Table2_FoundFatals']                 = 'Fatal problems';
+$_Lang['Table2_FoundWarnings']               = 'Warnings';
+$_Lang['Table2_FoundNotices']                = 'Notices';
+
+$_Lang['Table2_OccurrenceIndex']             = 'Index';
+$_Lang['Table2_OccurrenceText']              = 'Type';
+$_Lang['Table2_LogID']                       = 'LogID';
+$_Lang['Table2_OccurrenceData']              = 'Data';
+
+$_Lang['Scripts'] = [
+    1 => 'SetNextQueueElementOnTop',
+    2 => 'CancelBuildingFromQueue',
+    3 => 'CheckPlanetBuildingQueue',
+    4 => 'HandlePlanetQueue_TechnologySetNext / TechQueue_Remove',
+    5 => 'HandlePlanetQueue_OnTechnologyEnd',
+    6 => 'FleetBuildingPage',
+    7 => 'DefensesBuildingPage',
+    8 => 'PlanetResourceUpdate',
+    9 => 'galaxyfleet',
+    10 => 'fleet3',
+    11 => 'sendmissiles',
+    12 => 'MissionCaseAttack',
+    13 => 'MissionCaseGroupAttack',
+    14 => 'MissionCaseColonisation',
+    15 => 'MissionCaseDestruction',
+    16 => 'MissionCaseMIP',
+    17 => 'MissionCaseRecycling',
+    18 => 'MissionCaseSpy',
+    19 => 'MissionCaseTransport',
+    20 => '-',
+    21 => 'RestoreFleetToPlanet',
+    22 => 'resources',
+    23 => 'merchant',
+    24 => 'disassembler',
+    31 => 'MissionCaseExpedition'
+];
+
+$_Lang['FoundSummarys'] = [
+    '000' => [
+        'ok' => 'No inconsistencies detected...',
+        'found_problems' => 'Following inconsistencies detected:'
+    ],
+    '001' => [
+        'label' => 'Element deficit',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Planet: {$params['PlanetID']}",
+                "Element name: {$_Lang['tech'][$params['ElementID']]}",
+                ("Expected result: " . prettyNumber($params['Data'][0])),
+                ("Actual result: " . prettyNumber($params['Data'][1])),
+                ("Difference: " . sprintf('%0.2f', $params['Data'][2] * 100) . "%")
+            ];
+
+            return implode('<br/>', $lines);
+        },
+    ],
+    '002' => [
+        'label' => 'Element excess',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Planet: {$params['PlanetID']}",
+                "Element name: {$_Lang['tech'][$params['ElementID']]}",
+                ("Expected result: " . prettyNumber($params['Data'][0])),
+                ("Actual result: " . prettyNumber($params['Data'][1])),
+                ("Difference: " . sprintf('%0.2f', $params['Data'][2] * 100) . "%")
+            ];
+
+            return implode('<br/>', $lines);
+        },
+    ],
+    '003' => [
+        'label' => 'Resource deficit',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Planet: {$params['PlanetID']}",
+                "Resource: {$params['ElementID']}",
+                ("Expected result: " . prettyNumber($params['Data'][0])),
+                ("Actual result: " . prettyNumber($params['Data'][1])),
+                ("Difference: " . sprintf('%0.2f', $params['Data'][2] * 100) . "%")
+            ];
+
+            return implode('<br/>', $lines);
+        },
+    ],
+    '004' => [
+        'label' => 'Resource excess',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Planet: {$params['PlanetID']}",
+                "Resource: {$params['ElementID']}",
+                ("Expected result: " . prettyNumber($params['Data'][0])),
+                ("Actual result: " . prettyNumber($params['Data'][1])),
+                ("Difference: " . sprintf('%0.2f', $params['Data'][2] * 100) . "%")
+            ];
+
+            return implode('<br/>', $lines);
+        },
+    ],
+    '005' => [
+        'label' => 'Total resource deficit',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Resource: {$params['ElementID']}",
+                ("Expected result: " . prettyNumber($params['Data'][0])),
+                ("Actual result: " . prettyNumber($params['Data'][1])),
+                ("Difference: " . sprintf('%0.2f', $params['Data'][2] * 100) . "%")
+            ];
+
+            return implode('<br/>', $lines);
+        },
+    ],
+    '006' => [
+        'label' => 'Total resource excess',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Resource: {$params['ElementID']}",
+                ("Expected result: " . prettyNumber($params['Data'][0])),
+                ("Actual result: " . prettyNumber($params['Data'][1])),
+                ("Difference: " . sprintf('%0.2f', $params['Data'][2] * 100) . "%")
+            ];
+
+            return implode('<br/>', $lines);
+        },
+    ],
+    '007' => [
+        'label' => 'Total element deficit',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Element name: {$_Lang['tech'][$params['ElementID']]}",
+                ("Expected result: " . prettyNumber($params['Data'][0])),
+                ("Actual result: " . prettyNumber($params['Data'][1])),
+                ("Difference: " . sprintf('%0.2f', $params['Data'][2] * 100) . "%")
+            ];
+
+            return implode('<br/>', $lines);
+        },
+    ],
+    '008' => [
+        'label' => 'Total element excess',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Element name: {$_Lang['tech'][$params['ElementID']]}",
+                ("Expected result: " . prettyNumber($params['Data'][0])),
+                ("Actual result: " . prettyNumber($params['Data'][1])),
+                ("Difference: " . sprintf('%0.2f', $params['Data'][2] * 100) . "%")
+            ];
+
+            return implode('<br/>', $lines);
+        },
+    ],
+    '009' => [
+        'label' => 'Technology level too low',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Technology name: {$_Lang['tech'][$params['ElementID']]}",
+                ("Expected result: " . prettyNumber($params['Data'][0])),
+                ("Actual result: " . prettyNumber($params['Data'][1])),
+            ];
+
+            return implode('<br/>', $lines);
+        },
+    ],
+    '010' => [
+        'label' => 'Technology level too high',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Technology name: {$_Lang['tech'][$params['ElementID']]}",
+                ("Expected result: " . prettyNumber($params['Data'][0])),
+                ("Actual result: " . prettyNumber($params['Data'][1])),
+            ];
+
+            return implode('<br/>', $lines);
+        },
+    ],
+];
+
+$_Lang['FoundFatals'] = [
+    '001' => [
+        'label' => 'Unrecognised section',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Stored section ID: <u>{$params['Data'][0]}</u>",
+            ];
+
+            return implode('<br/>', $lines);
+        },
+    ],
+];
+$_Lang['FoundWarnings'] = [
+    '001' => [
+        'label' => 'Negative resource amount',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                ("Log date: " . prettyDate("d m Y - H:i:s", $params['Date'], 1)),
+                "Planet (Script): {$params['PlanetID']} ({$_Lang['Scripts'][$params['Place']]})",
+                "Element and code: {$params['ElementID']} / {$params['Code']}",
+                ("Metal: " . prettyNumber($params['Data'][0])),
+                ("Crystal: " . prettyNumber($params['Data'][1])),
+                ("Deuterium: " . prettyNumber($params['Data'][2]))
+            ];
+
+            return implode('<br/>', $lines);
+        },
+    ],
+    '002' => [
+        'label' => 'No planet ID',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Script: {$_Lang['Scripts'][$params['Place']]}"
+            ];
+
+            return implode('<br/>', $lines);
+        },
+    ],
+    '003' => [
+        'label' => 'Negative ships or defenses amount',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                ("Log date: " . prettyDate("d m Y - H:i:s", $params['Date'], 1)),
+                "Planet (Script): {$params['PlanetID']} ({$_Lang['Scripts'][$params['Place']]})",
+                "Element and code: {$params['ElementID']} / {$params['Code']}",
+                "<u>Ships and defenses with negative amount:</u>",
+            ];
+
+            if (!empty($params['Data'])) {
+                foreach ($params['Data'] as $elementID => $elementCount) {
+                    $lines[] = "{$_Lang['tech'][$elementID]}: " . prettyNumber($elementCount);
+                }
+            }
+
+            return implode('<br/>', $lines);
+        },
+    ],
+];
+$_Lang['FoundNotices'] = [
+    '001' => [
+        'label' => 'Minor metal deviation',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Planet: {$params['PlanetID']}",
+                ("Difference (percent): " . sprintf('%0.2f', $params['Data'][0] * 100) . "%"),
+                ("Difference (value): " . sprintf('%0.2f', $params['Data'][1])),
+            ];
+
+            return implode('<br/>', $lines);
+        },
+    ],
+    '002' => [
+        'label' => 'Minor crystal deviation',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Planet: {$params['PlanetID']}",
+                ("Difference (percent): " . sprintf('%0.2f', $params['Data'][0] * 100) . "%"),
+                ("Difference (value): " . sprintf('%0.2f', $params['Data'][1])),
+            ];
+
+            return implode('<br/>', $lines);
+        },
+    ],
+    '003' => [
+        'label' => 'Minor deuterium deviation',
+        'msgGenerator' => function ($params, $_Lang) {
+            $lines = [
+                "Planet: {$params['PlanetID']}",
+                ("Difference (percent): " . sprintf('%0.2f', $params['Data'][0] * 100) . "%"),
+                ("Difference (value): " . sprintf('%0.2f', $params['Data'][1])),
+            ];
+
+            return implode('<br/>', $lines);
+        },
+    ],
+    '004' => [
+        'label' => 'Total minor metal deviation',
+    ],
+    '005' => [
+        'label' => 'Total minor crystal deviation',
+    ],
+    '006' => [
+        'label' => 'Total minor deuterium deviation',
+    ],
+];
+
+$_Lang['Critical_NoDump']                    = 'No snapshot available for this player!';
+$_Lang['Critical_EmptyScanLog']              = 'Scan log is empty!';
+$_Lang['Critical_EmptyBreakErrorVar']        = 'No scan break error provided!';
+
+$_Lang['Notice_NoLogs']                      = 'This player has no logs recorded (no activity)';
+
+?>
