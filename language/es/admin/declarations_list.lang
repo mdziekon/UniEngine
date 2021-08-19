@@ -1,0 +1,48 @@
+<?php
+
+$_Lang['declaration_title']             = 'Shared IP declarations';
+$_Lang['declaration_noexist']           = 'This declaration does not exist!';
+$_Lang['declaration_refused']           = '<b class="orange">Declaration rejected!</b>';
+$_Lang['declaration_accepted']          = '<b class="lime">Declaration accepted!</b>';
+$_Lang['declaration_deleted']           = '<b class="red">Declaration deleted!</b>';
+$_Lang['declaration_noaffect']          = 'No changes applied';
+$_Lang['declaration_deletedalready']    = 'This declaration has been already deleted!';
+
+// FIXME: this should be shared with "/declaration.lang"
+$_Lang['DeclarationReasons_'][1]        = 'Shared computer';
+$_Lang['DeclarationReasons_'][2]        = 'Shared network connection';
+$_Lang['DeclarationReasons_'][3]        = 'Same log in places';
+$_Lang['DeclarationReasons_'][4]        = 'Other';
+$_Lang['DeclarationReasons_'][5]        = 'Occasional log ins in same places';
+
+$_Lang['DeclarationStatuses_']['-2']    = '<b class="red">Soft deleted</b>';
+$_Lang['DeclarationStatuses_']['-1']    = '<b class="orange">Rejected</b>';
+$_Lang['DeclarationStatuses_']['0']     = '<b class="skyblue">Awaiting</b>';
+$_Lang['DeclarationStatuses_']['1']     = '<b class="lime">Accepted</b>';
+
+$_Lang['Declarations_Header_Title']     = 'Shared IP declarations list';
+$_Lang['Declarations_Header_Confirm']   = 'Are you sure?';
+$_Lang['Declarations_Header_Clear']     = 'Clear';
+$_Lang['Declarations_Header_ShowAll']   = 'Show all';
+$_Lang['Declarations_Header_HideDel']   = 'Hide soft deleted';
+$_Lang['Declarations_Header_Owner']     = 'Declared by';
+$_Lang['Declarations_Header_Others']    = 'Other players';
+$_Lang['Declarations_Header_Date']      = 'Declaration date';
+$_Lang['Declarations_Header_Reason']    = 'Reason';
+$_Lang['Declarations_Header_Status']    = 'Status';
+$_Lang['Declarations_Header_Actions']   = 'Actions';
+
+$_Lang['DeclarationRow_Actions_BtnSearch_tooltip']                  = 'Players lookup';
+$_Lang['DeclarationRow_Actions_BtnSearch_alt']                      = 'Players lookup';
+$_Lang['DeclarationRow_Actions_BtnSoftDeleteDeclaration_tooltip']   = 'Soft delete this declaration';
+$_Lang['DeclarationRow_Actions_BtnSoftDeleteDeclaration_alt']       = 'Soft delete';
+$_Lang['DeclarationRow_Actions_BtnRejectDeclaration_tooltip']       = 'Reject this declaration';
+$_Lang['DeclarationRow_Actions_BtnRejectDeclaration_alt']           = 'Reject';
+$_Lang['DeclarationRow_Actions_BtnAcceptDeclaration_tooltip']       = 'Accept this declaration';
+$_Lang['DeclarationRow_Actions_BtnAcceptDeclaration_alt']           = 'Accept';
+
+$_Lang['Declarations_NoUser']           = '<b class="red">None</b>';
+$_Lang['Declarations_EmptyUser']        = '<b class="red">Deleted account</b>';
+$_Lang['Declarations_NothingFound']     = 'No declarations';
+
+?>

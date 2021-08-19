@@ -1,0 +1,52 @@
+<?php
+
+$_Lang['Page_Title']            = 'Sensor Phalanx';
+
+$_Lang['Table_Title1']          = 'Scanning';
+$_Lang['Table_Title2']          = 'planet';
+$_Lang['Table_Title3']          = 'from moon';
+$_Lang['Table_Refresh']         = 'Scan again';
+$_Lang['Table_Close']           = 'Close';
+$_Lang['Table_DeuteriumState']  = 'Available deuterium';
+$_Lang['Abandoned_planet']      = 'an abandoned planet';
+
+$_Lang['ov_fleet']              = 'fleets';
+$_Lang['ov_fleet2']             = 'fleet';
+$_Lang['ov_une']                = 'One of your own ';
+$_Lang['ov_une_phalanx']        = 'One of ';
+$_Lang['ov_une_hostile']        = 'Hostile ';
+$_Lang['ov_vennant']            = ' flying from ';
+$_Lang['ov_planet_to']          = 'planet ';
+$_Lang['ov_moon_to']            = 'moon ';
+$_Lang['ov_atteint']            = ' will reach ';
+$_Lang['ov_planet_to_target']   = 'planet ';
+$_Lang['ov_moon_to_target']     = 'moon ';
+$_Lang['ov_debris_to_target']   = 'debris field ';
+$_Lang['ov_explo_to_target']    = 'uncharted space ';
+$_Lang['ov_mission']            = '<br/>Mission: ';
+$_Lang['ov_explo_stay']         = ' explores ';
+$_Lang['ov_onorbit_stay']       = ' protects ';
+$_Lang['ov_explo_mission']      = '<br/>Mission: ';
+$_Lang['ov_rentrant']           = ' returns ';
+$_Lang['ov_planet_from']        = 'from planet ';
+$_Lang['ov_moon_from']          = 'from moon ';
+$_Lang['ov_debris_from']        = 'from debris field ';
+$_Lang['ov_explo_from']         = 'from an expedition ';
+$_Lang['ov_back_planet']        = ' to planet ';
+$_Lang['ov_back_moon']          = ' to moon ';
+$_Lang['ov_hostile']            = ' owned by player ';
+$_Lang['ov_message']            = 'Write a message';
+
+$_Lang['PhalanxError_BadCoordinates']   = 'Invalid coordinates given!';
+$_Lang['PhalanxError_GalaxyOutOfRange'] = 'Sensor\'s Phalanx range is limited to the same galaxy!';
+$_Lang['PhalanxError_TargetOutOfRange'] = 'Target is out of range!';
+$_Lang['PhalanxError_NoEnoughFuel']     = 'Not enough deuterium to perform a scan (%s)!';
+$_Lang['PhalanxError_MoonDestroyed']    = 'Your moon has been destroyed!';
+$_Lang['PhalanxError_CoordsEmpty']      = 'There is no planet on given coordinates!';
+$_Lang['PhalanxError_NoPhalanxHere']    = 'Your moon does not have a Sensor Phalanx!';
+$_Lang['PhalanxError_ScanOnlyFromMoon'] = 'Sensor Phalanx can be used only from a moon!';
+
+$_Lang['PhalanxInfo_NoMovements_Text']  = 'No fleets\' movement detected...';
+$_Lang['PhalanxInfo_NoMovements']       = "<tr><th class=\"orange pad8\">{$_Lang['PhalanxInfo_NoMovements_Text']}</th></tr>";
+
+?>

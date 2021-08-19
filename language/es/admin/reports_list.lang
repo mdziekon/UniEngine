@@ -1,0 +1,67 @@
+<?php
+
+$_Lang['Report_list_title']         = 'Reports System';
+$_Lang['Report_list_list']          = 'Reports list';
+$_Lang['Report_list_clear']         = 'Clear all';
+$_Lang['Report_show_all']           = 'Show all';
+$_Lang['Report_show_no_made']       = 'Show only awaiting';
+$_Lang['Report_noreports']          = 'No reports!';
+$_Lang['Report_ID']                 = 'ID';
+$_Lang['Report_Date']               = 'Date sent';
+$_Lang['Report_Sender']             = 'From';
+$_Lang['Report_Type']               = 'Type';
+$_Lang['Report_Element']            = 'Element';
+$_Lang['Report_User']               = 'Player';
+$_Lang['Report_Info']               = 'Additional info';
+$_Lang['Report_Status']             = 'Status';
+$_Lang['Report_Actions']            = 'Actions';
+
+$_Lang['Report_reply_subject']      = 'Reply to Report no. %s';
+$_Lang['Report_reply_input']        = 'This message is a reply to your Report:' . "\n\n";
+
+$_Lang['Report_deleted']            = 'Report deleted';
+$_Lang['Report_no_status_given']    = 'Invalid status given';
+$_Lang['Report_status_changed']     = 'Status changed';
+$_Lang['Report_noexist']            = 'This report does not exist';
+
+$_Lang['Report_types']              = [
+    'Player - Message',
+    'Player - Bash',
+    'Player - Push',
+    'Player - Other violation',
+    'System - message bug',
+    'System - game bug',
+    'System - SMTP bug',
+    'Other',
+    'Player - Chat message'
+];
+$_Lang['Report_statuslist']         = [
+    'Awaiting',
+    // FIXME: reserved statuses, should be predefined by ID rather than
+    // leave it to PHP's array indices
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    '',
+    'Reviewed<br/><b>Rejected</b>',
+    'Reviewed<br/><b>Accepted</b>'
+];
+
+$_Lang['ReportRow_Actions_BtnSendMessage_tooltip']          = 'Send a reply';
+$_Lang['ReportRow_Actions_BtnSendMessage_alt']              = '[PM]';
+$_Lang['ReportRow_Actions_BtnDeleteReport_tooltip']         = 'Delete report';
+$_Lang['ReportRow_Actions_BtnDeleteReport_alt']             = 'Delete report';
+$_Lang['ReportRow_Actions_BtnReviewAndReject_tooltip']      = 'Review and reject';
+$_Lang['ReportRow_Actions_BtnReviewAndReject_alt']          = 'Reject';
+$_Lang['ReportRow_Actions_BtnReviewAndAccept_tooltip']      = 'Review and accept';
+$_Lang['ReportRow_Actions_BtnReviewAndAccept_alt']          = 'Accept';
+$_Lang['ReportRow_Actions_BtnCheckAttacks_tooltip']         = 'Attacks analysis';
+$_Lang['ReportRow_Actions_BtnCheckAttacks_alt']             = 'Attacks analysis';
+$_Lang['ReportRow_Actions_BtnBanReportedPlayer_tooltip']    = 'Ban reported player';
+$_Lang['ReportRow_Actions_BtnBanReportedPlayer_alt']        = 'Ban reported player';
+
+?>

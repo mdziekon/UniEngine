@@ -1,0 +1,96 @@
+﻿<?php
+
+$_Lang['planet_is_hidden']   = 'This planet is hidden!';
+
+$_Lang['PageTitle']     = 'Galaxy view';
+$_Lang['Galaxy']        = 'Galaxy';
+$_Lang['Solar_system']  = 'Solar system';
+$_Lang['Afficher']      = "Show";
+$_Lang['Show']          = 'Show';
+
+$_Lang['vacation_shortcut']          = "V";
+$_Lang['banned_shortcut']            = "B";
+$_Lang['inactif_7_shortcut']         = "i";
+$_Lang['inactif_28_shortcut']        = "I";
+$_Lang['strong_player_shortcut']     = "S";
+$_Lang['weak_player_shortcut']       = "W";
+$_Lang['Fleet_Blockade_Protected']   = 'FB';
+$_Lang['User_NonActivated']          = 'N';
+$_Lang['new_player_shortcut']        = 'Nw';
+$_Lang['User_isAdmin']               = 'A';
+
+$_Lang['Legend']                     = 'Legend';
+$_Lang['Strong_player']              = 'Strong player';
+$_Lang['Weak_player']                = 'Weak player';
+$_Lang['Way_vacation']               = 'Vacation';
+$_Lang['Pendent_user']               = 'Banned';
+$_Lang['Inactive_7_days']            = 'Inactive +7';
+$_Lang['Inactive_28_days']           = 'Inactive +28';
+$_Lang['FleetBlockadeUser']          = "Protected by Fleet\'s Blockade";
+$_Lang['User_NonActivatedText']      = 'Account not activated';
+$_Lang['New_player']                 = '<b>Newcomer protection</b> (%sh)';
+
+$_Lang['Pos']               = 'No.';
+$_Lang['Planet']            = 'Planet';
+$_Lang['Name']              = 'Name (Activity)';
+$_Lang['Moon']              = 'Moon';
+$_Lang['gl_debris']         = 'Debris';
+$_Lang['diameter']          = "Diameter";
+$_Lang['diameter_units']    = 'km.';
+$_Lang['temperature']       = "Temperature";
+$_Lang['Player']            = 'Player (Status)';
+$_Lang['PlayerPos']         = '#';
+$_Lang['PlayerPosTitle']    = 'Position in Statistics';
+$_Lang['Place']             = 'Position in Stats';
+$_Lang['State']             = 'Status';
+$_Lang['Alliance']          = 'Alliance';
+$_Lang['Actions']           = 'Actions';
+
+$_Lang['Debris']            = 'Debris field';
+
+// Missiles Selector
+$_Lang['MSelector_Title']           = 'Interplanetary Strike';
+$_Lang['MSelector_MCount']          = 'Missiles count';
+$_Lang['MSelector_AvailableM']      = 'Available missiles';
+$_Lang['MSelector_Target']          = 'Primary target';
+$_Lang['MSelector_TargetAll']       = 'Everything';
+$_Lang['MSelector_Submit']          = 'Send the Strike';
+$_Lang['MSelector_Close']           = 'Close';
+
+// Footer
+$_Lang['Footer_ColonizedPlanets']    = 'Colonised planets';
+$_Lang['Footer_Expedition']          = 'Uncharted space';
+$_Lang['Footer_Missiles']            = 'Interplanetary Missiles';
+$_Lang['Footer_MissilesDestroy']     = 'Destroy Missiles';
+$_Lang['Footer_MissilesTitle']       = 'Destroy selected Missiles on this planet';
+$_Lang['Footer_Ships']               = 'Available ships';
+// FIXME: replace with references from main tech file
+$_Lang['Footer_Ship_Recyclers']      = 'Recyclers';
+$_Lang['Footer_Ship_SpyProbes']      = 'Spy probes';
+$_Lang['Footer_Ship_Colonizators']   = 'Colony ships';
+$_Lang['Footer_FlyingFleets']        = 'Fleets in flight';
+
+$_Lang['gl_allymembers']        = 'Members';
+$_Lang['gl_ally_internal']      = "Alliance profile";
+$_Lang['gl_ally_web']           = "Alliance webpage";
+
+$_Lang['gl_username']           = 'Player';
+$_Lang['gl_showprofile']        = 'Show profile';
+$_Lang['gl_sendmess']           = "Send a message";
+$_Lang['gl_buddyreq']           = "Add to friends";
+$_Lang['gl_allyinvite']         = 'Invite to alliance';
+$_Lang['gl_stats']              = "Statistics";
+
+$_Lang['gl_planet']             = "Planet";
+$_Lang['gl_destroyedplanet']    = 'Abandoned planet';
+// FIXME: replace with references from main tech file
+$_Lang['gl_attack']             = 'Attack';
+$_Lang['gl_transport']          = 'Transport';
+$_Lang['gl_phalanx']            = 'Sensor Phalanx scan';
+
+$_Lang['gl_ressource']          = "Resources";
+
+$_Lang['gl_moralepoints']       = 'Empire development level';
+$_Lang['gl_moralepoints_units'] = 'points';
+
+?>

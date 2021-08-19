@@ -1,0 +1,263 @@
+<?php
+
+$_Lang['WorldElements_Detailed'] = [
+    // Template
+    // 0 => [
+    //     // - required
+    //     'description_short' => '',
+    //     // - optional
+    //     'description_extra' => '',
+    //     'description_alt' => '',
+    // ],
+
+    // Buildings
+    1 => [
+        'description_short' => 'Supplier of the main resource to produce structures and space ships.',
+    ],
+    2 => [
+        'description_short' => 'Supplier of the main resource used to produce electronic circuits and form certain alloy compounds.',
+    ],
+    3 => [
+        'description_short' => 'Separates atoms of deuterium (heavy hydrogen isotopes) from the light water particles located on a planet.',
+    ],
+    4 => [
+        'description_short' => 'The Solar plant generates energy from solar radiation.',
+    ],
+    12 => [
+        'description_short' => 'The Fusion reactor generates energy from the fusion reaction of deuterium atoms.',
+    ],
+    14 => [
+        'description_short' => 'The Robotics factory provides cheap work force used to expand the planetary infrastructure. Each factory level increases the speed of structures construction.',
+    ],
+    15 => [
+        'description_short' => 'The Nanite factory produces nano-sized robots, which are considered the ultimate form of the Robotics technology. Each factory level halves the time to finish structures, ships nad defence systems construction.',
+    ],
+    21 => [
+        'description_short' => 'The Shipyard is responsible for constructing all ships and defensive structures.',
+    ],
+    22 => [
+        'description_short' => 'Metal Storage structures provide storage containment for unprocessed metal from metal mines.',
+    ],
+    23 => [
+        'description_short' => 'Crystal Storage is a facitily that stores unprocessed crystals from your mines.',
+    ],
+    24 => [
+        'description_short' => 'The Deuterium Tank is a huge containment facility which stores unused Deuterium.',
+    ],
+    31 => [
+        'description_short' => 'The Research Lab allows you to conduct research.',
+    ],
+    33 => [
+        'description_short' => 'The Terraformer is a building that increases the fields on your planet, increasing your planet\'s utilisable space.',
+        'description_alt' => 'The problem of increasing need of extended space for planetary structures is an unavoidable issue of every expanding empire. Traditional construction and engineering provided insufficient after certain point in planetary development.',
+    ],
+    34 => [
+        'description_short' => 'An Alliance Depot is where a allied fleet can be re-fueled with your deuterium, allowing them to remain at your planet for longer time.',
+    ],
+
+    // Special buildings
+    41 => [
+        'description_short' => 'Since moons do not have their own atmosphere, it\'s needed to construct a Lunar base first to provide safe environment for further development.',
+    ],
+    42 => [
+        'description_short' => 'The Sensory Phalanx allows to easily scan fleets in flight. The higher its level, the higher its range is.',
+    ],
+    43 => [
+        'description_short' => 'The Jump gate is a huge relay, allowing to instantaneously send fleets between galaxies.',
+        'description_extra' => 'With each level of the gate, the time between jumps decreases.<br/><br/>The upgraded version of the Jump gate is called <a class="orange" href="?gid=50">Quantum gate</a>',
+    ],
+    44 => [
+        'description_short' => 'A Missile Silo is a building that launches and stores missiles.',
+    ],
+    50 => [
+        'description_short' => 'The Quantum gate is a massive device capable of instantaneous transfer of any matter using a stable spatiotemporal tunnel.',
+        'description_extra' => 'Thanks to the usage of Dark Energy as a power source, it was possible to construct such an advanced device.<br/><br/>When owning two Quantum gates, it is possible to instantly transport fleets from one place to another without any delay and deuterium usage.<br/>It is also possible to send a fleet to any point in space of the same galaxy, however such jump requires a cooldown period of 6 hours to accumulate enough energy for further usage.<br/><br/>The Quantum gate, compared to the Jump gate, allows to transport resources.',
+    ],
+
+    // Research
+    106 => [
+        'description_short' => 'Thanks to this technology, it is possible to obtain intel about enemies\' planets.',
+    ],
+    108 => [
+        'description_short' => 'Computer technology involves expanding existing computer capacities.',
+        'description_extra' => 'Each level of computer technology increases the maximum number of fleets by one.'
+    ],
+    109 => [
+        'description_short' => 'Weapons technology involves further development of existing weapons systems.',
+        'description_extra' => 'Each level of weapons technology increases the weapon strength of both ships and defense by 10% of the base value.'
+    ],
+    110 => [
+        'description_short' => 'Shielding technology involves researching new ways of providing shield with energy and thus making them more efficient and tougher.',
+        'description_extra' => 'Each developed level increases the efficiency of shields by 10% of the base value.'
+    ],
+    111 => [
+        'description_short' => 'Developing special alloys of metals increases their structural integrity.',
+        'description_extra' => 'Each developed level increases the efficiency of ships\' and defences\' hulls by 10% of the base value.'
+    ],
+    113 => [
+        'description_short' => 'Energy technology allows research into forms of energy distribution which is a necessity for other research and technologies, defensive structures, and some buildings.',
+    ],
+    114 => [
+        'description_short' => 'Hyperspace technology allows research into propulsion systems that power much larger ships and also allows for much faster travel with better fuel efficiency.',
+    ],
+    115 => [
+        'description_short' => 'The Combustion Drive is a technology that allows the construction of the most basic ships.',
+        'description_extra' => 'Some ships that use the Combustion Drive will have their Base Speed increased by 10% for every developed level of this tech.'
+    ],
+    117 => [
+        'description_short' => 'The Impulse Drive is a technology that allows the construction of more advanced ships.',
+        'description_extra' => 'Some ships that use the Impulse Drive will have their Base Speed increased by 20% for every developed level of this tech. Further development of this technology increases the range of Interplanetary missiles as well.'
+    ],
+    118 => [
+        'description_short' => 'Warps space around a ship, allowing it to cross huge distances in seconds.',
+        'description_extra' => 'Some ships that use the Hyperspace Drive will have their Base Speed increased by 30% for every developed level of this tech.'
+    ],
+    120 => [
+        'description_short' => 'Laser technology allows research into the laser based weapon systems used by a number of defensive structures and ships.',
+        'description_extra' => 'Each developed level increases the efficiency of all ships\' and defence systems\' weapons using this technology by 5%.',
+    ],
+    121 => [
+        'description_short' => 'Ion Technology is a technology that deals with the study of concentrated ions. When ions are concentrated, it forms a deadly ion beam.',
+        'description_extra' => 'Each developed level increases the efficiency of all ships\' and defence systems\' weapons using this technology by 5%.',
+    ],
+    122 => [
+        'description_short' => 'Plasma Technology is a Technology that expands on the concepts from Laser Technology and Ion Technology for the purpose of creating the more advanced weaponry. ',
+        'description_extra' => 'Each developed level increases the efficiency of all ships\' and defence systems\' weapons using this technology by 5%.',
+    ],
+    123 => [
+        'description_short' => 'This technology allows Research Labs from different planets to work together simultaneously',
+        'description_extra' => 'Each developed level of this technology connects another lab to the network. The more advanced labs are connected first.',
+    ],
+    124 => [
+        'description_short' => 'Ships can be upgraded with a special research module, which can be used during long expeditions into unknown sectors.',
+    ],
+    125 => [
+        'description_short' => 'Antimatter is an incredibly unstable type of particles, which releases incredible amount of Gamma radiation upon contact with regular matter.',
+        'description_extra' => 'Each developed level increases the efficiency of all ships\' and defence systems\' weapons using this technology by 5%.',
+    ],
+    126 => [
+        'description_short' => 'The Distintegration stream technology is the pinnacle of advanced weaponry research branch. A deadly beam of energy destroys every material structure it encounters on its path.',
+        'description_extra' => 'Each developed level increases the efficiency of all ships\' and defence systems\' weapons using this technology by 5%.',
+    ],
+    199 => [
+        'description_short' => 'By firing a concentrated beam of gravitons, an artificial gravitational field can be constructed, which can easily destroy space ships and even entire moons.',
+        'description_extra' => 'Each developed level increases the efficiency of all ships\' and defence systems\' weapons using this technology by 5%.',
+    ],
+
+    // Ships
+    202 => [
+        'description_short' => 'Small cargo ships is a very agile ship used to transport resources from one planet to another.',
+        'description_extra' => 'After reaching level 5 of the Impulse drive technology, this ship type will be upgraded to use the Impulse engines.',
+    ],
+    203 => [
+        'description_short' => 'The large cargo ship is an advanced version of the smaller cargo ship allowing for a bigger cargo space and faster movement speeds.',
+    ],
+    204 => [
+        'description_short' => 'The light fighter is a maneuverable ship you can find on nearly every planet. Their costs are rather low, however their weaponry power is low as well.',
+    ],
+    205 => [
+        'description_short' => 'The heavy fighter is an improved version of the light fighter, with hull and weaponry improvements applied.',
+    ],
+    206 => [
+        'description_short' => 'Combat cruisers have armor almost three times as strong as heavy fighters and support more than twice their firing power.',
+    ],
+    207 => [
+        'description_short' => 'Battleships provide the backbone of any military fleet. Heavy armour, strong weapons systems and high cruising speed, as well as a large cargo bay, make this ship a tough opponent to fight against.',
+    ],
+    208 => [
+        'description_short' => 'This ship provides the means necessary to colonise uninhabited planets.',
+    ],
+    209 => [
+        'description_short' => 'Recycler ships are used to harvest debris from planets\' orbits to recycle valuable resources',
+    ],
+    210 => [
+        'description_short' => 'Espionage probes are small unmanned vesels with extremely fast propulsion systems used to spy on enemy worlds. ',
+    ],
+    211 => [
+        'description_short' => 'The bomber is used primarily to destroy any planetary defence systems.',
+        'description_extra' => 'After reaching level 8 of the Hyperspace drive technology, this ship type will be upgraded to use the Hyperspace engine.',
+    ],
+    212 => [
+        'description_short' => 'Solar satellites are simple orbiting satellites equipped with photo voltaic cells as a means of generating energy. The energy is transmitted to the planet via a special laser beam.',
+    ],
+    213 => [
+        'description_short' => 'The Destroyed is the king among the battle ships. It is equiped with multiple ion, plasma and Gauss cannons.',
+    ],
+    214 => [
+        'description_short' => 'The Deathstar is a moon sized ship known for its destructive power. It is equiped with a gigantic graviton cannon, which is capable of destroying entire fleets and even moons.',
+    ],
+    215 => [
+        'description_short' => 'Battlecruiser is a vessel specialised in enemy fleets interception, thanks to its advanced laser cannons.',
+    ],
+    216 => [
+        'description_short' => 'The Orbital station is the next step of the planetary defense technology.',
+        'description_extra' => 'The station is composed of numerous automated plasma and laser cannons placed on the planet\'s orbit. Avoiding the penalty of the planet\'s atmosphere energy absorption, their unsuppressed raw power can easily shot down enemy ships.',
+    ],
+    217 => [
+        'description_short' => 'The advancements in miniaturisation and nano technologies allowed to create this spatious transportation vessel.',
+    ],
+    218 => [
+        'description_short' => 'The discovery of efficient antimatter production techniques enabled the engineers to construct this special type of short range missiles, capable of destroying many ships at once.',
+    ],
+    219 => [
+        'description_short' => 'The abandoned design of a spacecraft capable of taking people and heavy loads into orbit, now has found its new purpose. Its outdated propulsion systems do not allow it to reach great speeds.',
+        'description_extra' => '<b style="color: orange;">Due to the usage of outdated combusion engines, this type of ship does not take advantage of the Combusion drive technology improvements.</b>'
+    ],
+    220 => [
+        'description_short' => 'The Fighter Carrier is used to quickly transport smaller, but more versatile spacecrafts.',
+        'description_extra' => 'Its internal hangars can carry hundreds of fighters. Thanks to its advanced engines, it can easily transport these fighters to the battlefield in no time.',
+    ],
+    221 => [
+        'description_short' => 'The Hadron bomber uses Hadron decay effect in its deadly missiles against planetary defence systems.',
+    ],
+    222 => [
+        'description_short' => 'Thanks to the usage of high energy plasma cannons, this vessel can efficiently deal with heavily armoured ships.',
+    ],
+    223 => [
+        'description_short' => 'Efficient usage of the annihilation phenomenon led to creation of this incredible spacecraft.',
+        'description_extra' => 'A discharge of concentrated antiproton beam in the enemy\'s ships direction leads to a cascade destabilisation reaction in ships\' hulls, eventually causing a breakdown due to rapid decompression.',
+    ],
+    224 => [
+        'description_short' => 'The final weapon against heavily armoured spacecrafts, capable of tearing apart atomic bonds in split seconds.',
+        'description_extra' => 'One of the deadlies vessels ever developed. The usage of lethal disintegration beams tears apart enemies\' ships into pieces.',
+    ],
+
+    // Defense systems
+    401 => [
+        'description_short' => 'The Rocket launcher is a cheap and simplistic mean of planetary defense.',
+    ],
+    402 => [
+        'description_short' => 'By emitting a concentrated photonic beam, this defensive structure is able to cause more damage than a regular ballistic weaponry.',
+    ],
+    403 => [
+        'description_short' => 'The heavy laser cannon is the advancement of the design of the light laser cannon.',
+    ],
+    404 => [
+        'description_short' => 'Gauss Cannons fire high-density metal projectiles at extremely high velocity using powerful electromagnets.',
+    ],
+    405 => [
+        'description_short' => 'The Ion cannon sends a high velocity beam on ions in its target\'s direction. The ions destabilise shields and damage any electronics.',
+    ],
+    406 => [
+        'description_short' => 'One of the most advanced defense weapons systems ever developed, fires pulses of superheated plasma.',
+    ],
+    407 => [
+        'description_short' => 'The Small shield dome is a protective layer covering an entire planet, which absorbs substantial amounts of energy during the attack.',
+    ],
+    408 => [
+        'description_short' => 'The large shield dome is the advancement of the design of the small shield dome and can absorb more damage.',
+    ],
+    409 => [
+        'description_short' => 'The best defence system ever created.',
+    ],
+
+    // Missiles
+    502 => [
+        'description_short' => 'Anti-Ballistic Missiles are launched automatically to intercept approaching Interplanetary Missiles.',
+    ],
+    503 => [
+        'description_short' => 'Interplanetary missiles are launched for planets to destroy enemy defense across the galaxy.',
+    ],
+];
+
+?>

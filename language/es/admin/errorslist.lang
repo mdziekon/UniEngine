@@ -1,0 +1,10 @@
+<?php
+
+$_Lang['ErrorsList_Title']          = "SQL errors log";
+$_Lang['ErrorsList_Clear']          = "Clear all";
+$_Lang['ErrorsList_ID']             = "ID";
+$_Lang['ErrorsList_Date']           = "Date";
+$_Lang['ErrorsList_Count']          = "Number of logged errors";
+$_Lang['ErrorsList_TooManyErrors']  = "Too many errors to display (displaying first 100)!";
+
+?>

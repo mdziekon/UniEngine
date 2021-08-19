@@ -1,0 +1,121 @@
+<?php
+
+$_Lang['Tech']                  = "Technology";
+$_Lang['Requirements']          = "Requirements";
+$_Lang['Metal']                 = "Metal";
+$_Lang['Crystal']               = "Crystal";
+$_Lang['Deuterium']             = "Deuterium";
+$_Lang['Energy']                = "Energy";
+$_Lang['DarkEnergy']            = "Dark Energy";
+$_Lang['Message']               = "Messages";
+$_Lang['GoToShop']              = 'Shop';
+$_Lang['level']                 = "Level";
+$_Lang['treeinfo']              = "[i]";
+
+$_Lang['Metal_rec']             = 'of metal';
+$_Lang['Crystal_rec']           = 'of crystal';
+$_Lang['Deuterium_rec']         = 'of deuterium';
+
+$_Lang['PrevPlanet']            = "Previous planet";
+$_Lang['NextPlanet']            = "Next planet";
+
+$_Lang['type_mission'][1]       = "Attack";
+$_Lang['type_mission'][2]       = "United Attack";
+$_Lang['type_mission'][3]       = "Transport";
+$_Lang['type_mission'][4]       = "Stay";
+$_Lang['type_mission'][5]       = "Hold";
+$_Lang['type_mission'][6]       = "Spy";
+$_Lang['type_mission'][7]       = "Colonise";
+$_Lang['type_mission'][8]       = "Harvest";
+$_Lang['type_mission'][9]       = "Destroy";
+$_Lang['type_mission'][10]      = 'Interplanetary Strike';
+$_Lang['type_mission'][11]      = 'United Attack';
+$_Lang['type_mission'][15]      = "Expedition";
+$_Lang['type_mission_quickres'] = 'Transport resources';
+
+$_Lang['tech'] = array
+(
+    0 => "Buildings",
+    1 => "Metal mine",
+    2 => "Crystal mine",
+    3 => "Deuterium synthesiser",
+    4 => "Solar plant",
+    12 => "Fusion reactor",
+    14 => "Robotics factory",
+    15 => "Nanite factory",
+    21 => "Shipyard",
+    22 => "Metal storage",
+    23 => "Crystal storage",
+    24 => "Deuterium tank",
+    31 => "Research lab",
+    33 => "Terraformer",
+    34 => "Alliance depot",
+
+    40 => 'Special buildings',
+    41 => 'Lunar base',
+    42 => 'Sensor phalanx',
+    43 => 'Jump gate',
+    44 => "Missile silo",
+    50 => "Quantum gate",
+
+    100 => 'Research',
+    106 => 'Espionage technology',
+    108 => 'Computer technology',
+    109 => 'Weapons technology',
+    110 => 'Shielding technology',
+    111 => 'Armour technology',
+    113 => 'Energy technology',
+    114 => 'Hyperspace technology',
+    115 => 'Combustion drive',
+    117 => 'Impulse drive',
+    118 => 'Hyperspace drive',
+    120 => 'Laser technology',
+    121 => 'Ion technology',
+    122 => 'Plasma technology',
+    123 => 'Intergalactic research network',
+    124 => 'Expedition technology',
+    125 => 'Anti-matter technology',
+    126 => 'Disintegration stream technology',
+    199 => 'Graviton technology',
+
+    200 => 'Space ships',
+    202 => 'Small cargoship',
+    203 => 'Large cargoship',
+    204 => 'Light fighter',
+    205 => 'Heavy fighter',
+    206 => 'Cruiser',
+    207 => 'Battleship',
+    208 => 'Colony ship',
+    209 => 'Recycler',
+    210 => 'Spy probe',
+    211 => 'Bomber',
+    212 => 'Solar satellite',
+    213 => 'Destroyer',
+    214 => 'Deathstar',
+    215 => 'Battlecruiser',
+    216 => 'Orbital station',
+    217 => 'Mega cargoship',
+    218 => 'Annihilator',
+    219 => 'Space shuttle',
+    220 => 'Fighter carrier',
+    221 => 'Hadron bomber',
+    222 => 'Plasmaship',
+    223 => 'Protonic destroyer',
+    224 => 'Disintegrating spaceship',
+
+    400 => 'Defense systems',
+    401 => 'Rocket launcher',
+    402 => 'Light laser cannon',
+    403 => 'Heavy laser cannon',
+    404 => 'Gauss cannon',
+    405 => 'Ion cannon',
+    406 => 'Plasma turret',
+    407 => 'Small shield dome',
+    408 => 'Large shield dome',
+    409 => 'Planetary protector',
+
+    502 => 'Anti-ballistic missile',
+    503 => 'Interplanetary missile',
+);
+
+?>

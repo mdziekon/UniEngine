@@ -1,0 +1,414 @@
+<?php
+
+$_Lang['RulesDefinitions'] = [
+    1 => [
+        'title' => 'Introduction',
+        'elements' => [
+            // [MODIFIABLE]
+            0 => 'The following Terms of Service document is an example provided by the UniEngine developers, and should be reviewed by the Game owners or Administration first before publishing the game instnace to the production servers. The UniEngine developers do not guarantee that this list of rules is compliant with any law system.',
+
+            1 => 'All players <b>must</b> accept the Terms of Service before completeing the account registration process. Any in-game actions are forbidden when the Terms have not been accepted. Accepting the Terms means that the user acknowledges, understands and accepts all of the terms & conditions.',
+
+            2 => 'An extension to these Terms is provided in a form of <a href="redirect.php?id=4"><b>List of violations</b></a>, which contains a predefined set of violations and their respective punishments. However, the list is only a guideline for the game operators and may not exactly reflect the punishment imposed on the user\'s account.',
+
+            3 => 'Each user accepts the fact that unfamiliarity with the <b>Terms of Service</b> does not release them from responsibilities for their in-game actions, and all appeals with evident ignorance of the Terms will be rejected.',
+
+            4 => [
+                'elements' => [
+                    1 => 'The owners of the game are defined as all people who have the full ownership rights to the game servers, domains, files and content presented in the game (with the exception of user-provided content), including all subpages and subservices (such as a Forum or a social media account). A game owner can act as an Administrator or Game operator at any time.',
+
+                    2 => 'The administrators of the game are defined as all people who have been granted the full access to the administrative tools and privileges for the purpose of preserving order and resolving all in-game disputes (such as players\' appeals). A game administrator acts as a representative of the game owners.',
+
+                    3 => 'The support team members are defined as all people fulfilling the role of Game operators or Super Game operators, who have been granted limited access to the administrative tools and privileges for the purpose of preserving order and resolving some of the in-game disputes. A support team member acts as a mediator between game users and administrators.',
+
+                    4 => [
+                        'maintext' => 'The decision hierarchy is as follows (first position - highest decision rank; last position - lowest decision rank):',
+                        'ul' => [
+                            'Game owners',
+
+                            'Administrators',
+
+                            'Super Game operators (Support team)',
+
+                            'Game operators (Support team)'
+                        ]
+                    ],
+
+                    5 => 'The Forum\'s management team (if a game forum exists) do not participate in any in-game decision making, unless they act as one of the roles stated above.',
+
+                    6 => 'The Game Developers team do not act as any of the in-game decision making role stated above, even though they do have similar access rights to the Administrators or even Game owners. Their role is to manage the game\'s engine development, by adding new features, fixing bugs and improving the overall experience of the players. They do not interact with the players (as in, they do not handle complaints, appeals, decisions related to rules violations), however they may contact players in certain cases (eg. when a bug has been reported by a player).',
+                ]
+            ],
+
+            5 => 'The Game owners reserve the right to any modification of the Terms of Service and the List of violations at any moment. The modified regulations become effective in the moment of their publication, however the changes have to be accepted by each player.',
+
+            6 => 'The player who does not agree with the modified Terms of Service and does not want to accept it is obligated to delete their in-game account as soon as possible. Further game play without activating the deletion process is possible only once the modified regulations have been accepted. In certain cases, the Game owners or the Administration can activate a special automated system, which will prevent further game play without accepting the changes.',
+
+            7 => 'When player notices any deficiencies or vagueness in the Terms of Service, they should report this to the Administration and wait for their response. If the Administration agrees with the player, they might add or modify the regulations.',
+
+            // [MODIFIABLE]
+            8 => 'If a certain case examined by the Administration or the Support team members goes beyond the game, the main form of applicable law is the law system appropriate for the country of the Game owners\' origin - [GAME OWNERS\' COUNTRY OR JURISTICTION HERE].',
+
+            9 => 'The Game owners and Administration reserves the right to partially or fully restrict the access to the game server for selected people, groups of people or organisations.',
+
+            10 => 'The Game owners and Administration do not take responsibility for any malfunctions or game servers\' outages and players are not eligible to any compensations for these problems.',
+
+            11 => [
+                'title' => 'Personal details',
+                'elements' => [
+                    1 => 'The Game owners reserve the right to store personal details (such as IP addresses or Email addresses), even after player\'s account deletion.',
+
+                    2 => 'The player has right to review, modify or demand of their personal details deletion at any point in time (however, this might make it impossible to continue the game play, since some of the details might be required to allow the game play itself).',
+
+                    // [MODIFIABLE]
+                    3 => 'More details on the subject of personal details storage, retention and processing will be provided here if the law appropriate for the country of the Game owner\'s origin requires them to do so. [EG. GDPR-REQUIRED DETAILS]'
+                ]
+            ],
+        ]
+    ],
+    2 => [
+        'title' => 'Accounts',
+        'elements' => [
+            1 => [
+                'title' => 'Account sharing and multiaccounts',
+                'elements' => [
+                    1 => 'Each player can own only one account on each Universe.',
+
+                    2 => 'A player who\'s account has been banned cannot create a new account in order to continue the game.',
+
+                    3 => 'On each account there can be only one person using that account to play the game, unless one of the special cases (specified below) occurs, or the Administration has given a special permission.',
+
+                    4 => 'Sharing one account between two or more people is strictly forbidden.',
+
+                    5 => [
+                        'maintext' => 'A player can authorise another person to log in into their account in order to activate vacation mode in cases when the original account owner is unable to do so on their own:',
+
+                        'ul' => [
+                            'The fact of such situation should be reported to the Administration in the next 24 hours since logging in.',
+
+                            'The authorised person has a limited set of permitted actions: activating vacation mode and (if the vacation mode activation requires to do that as well) cancelling all in progress actions on the account (eg. buildings\' constructions, technologies research) or turning back flying fleets.',
+
+                            'Other actions, such as starting other constructions, sending fleets, are strictly forbidden.',
+
+                            'In cases when activating vacation mode is not possible (eg. when there\'s another fleet flying towards owner\'s planet), the authorised person should log out of the account and attemp to activate the vacation mode later.'
+                        ]
+                    ],
+
+                    6 => 'A singular computer or other Internet-browsing capable device can be used to access only one game account at a time. If the device is shared between multiple people, each person has to wait for their turn.',
+
+                    7 => [
+                        'maintext' => 'The fact of sharing a device or network connection by multiple players has to be reported to the Administration via a special in-game function ("Shared IP declaration"), no later than the first 24 hours after registration of the next player. It should also be noted that:',
+
+                        'ul' => [
+                            'There can be no connection between accounts played on the shared device / network, except for the affiliation to the same alliance, being on eachothers\' friends list or communicating using in-game messaging systems.',
+
+                            'Any contact between accounts\' fleets is forbidden. United attacks are permitted only in special cases and have to be reported to the Administration first.',
+
+                            'An exception to the above sharing rules is when the shared device or network connection is used ocasionally (eg. when visiting a friend and using their network connection). In these cases, the fleets\' contact is forbidden only at the time when the sharing occurs and doesn\'t have to be reported. Bear in mind that these situations can still be analysed by the Administration and the players have to answer all inquiries of the Administration in that regard.'
+                        ]
+                    ]
+                ]
+            ],
+
+            2 => [
+                'title' => 'Accounts\' swapping',
+                'elements' => [
+                    1 => 'Accounts\' swapping is permitted, however it should be reported to the Administration. In that case, the Administration can swap accounts\' passwords automatically. In case of a non-reported exchange, the Administration won\'t cooperate in any actions when one player scams another one.'
+                ]
+            ]
+        ]
+    ],
+
+    3 => [
+        'title' => 'Gameplay',
+        'elements' => [
+            1 => [
+                'title' => 'In-game trading',
+                'elements' => [
+                    1 => 'In-game trading does not have to be reported.',
+
+                    2 => 'A minimal trade ratio for each resource is 1 to 1. Trading resoures using nonrational ratios (highly understated or inflated) can be treated as a Push case as described by rule <b>3.2.</b>.',
+
+                    3 => 'Each trade has to be finished in 24 hours since the moment of sending the transportation fleet by the first player. Each case of resources not being sent back by the second player will be treated as a Push case or robbery.',
+
+                    4 => 'There is no limitation to how many trades can be conducted in one day.',
+
+                    5 => 'Resource loans should be reported to the Administration. Otherwise, they can be treated as a Push case as described by rule <b>3.2.</b>',
+
+                    6 => 'A maximum period of resources loan can be 14 days.'
+                ]
+            ],
+
+            2 => [
+                'title' => 'Push',
+                'elements' => [
+                    1 => 'The Push is considered to be any sign of material support coming from a weaker player to a much more powerful player.',
+
+                    2 => [
+                        'maintext' => 'The manifestations of the Push are:',
+                        'ul' => [
+                            'Loan-free resources transport to planets or moons of the more powerful player.',
+
+                            'Intentional fleets destruction of the weaker player by attacking much more powerful player\'s planets or moon, so that the more powerful player can easily collect the debris.',
+
+                            'Intentional resources hoarding with no or little defences, so that the more powerful player can easily collect them without much resistance.',
+
+                            'Not reporting hiring of another person for certain actions (eg. Moon making, Recyclers rental, Intentional scrappage of ships), if the report is required by the rules of that action.',
+
+                            'Breaking one of the rules under the <b>3.1. point</b> of this Terms of Service document.',
+
+                            'Any other ways of intentional material support, as determined by the Administration.'
+                        ]
+                    ],
+
+                    3 => [
+                        'maintext' => 'Additional notes:',
+                        'ul' => [
+                            'It is forbidden to hold and use any unwanted resources coming from a weaker player. Such resources should be immediately sent back and the fact of such incident should be reported to the Administration.',
+
+                            'Blackmailing weaker players is strictly forbidden and will be punished as an instance of Push (however, the blackmailed player won\'t be punished).',
+
+                            'When the Administration detects a push instance, both the more powerful and the weaker players can be punished (depending on the case).',
+                        ]
+                    ],
+
+                    4 => 'Material support for the more powerful player is permitted in alliances in form of loans, however such cases should be reported to the Administration.'
+                ]
+            ],
+
+            3 => [
+                'title' => 'Moon making',
+                'elements' => [
+                    1 => [
+                        'maintext' => 'Moon making, a situation when one player intentionally sends their fleet only to be destroyed on an orbit of another player, so that the debris creates a new moon, is permitted under certain conditions:',
+                        'ul' => [
+                            'All resources lost by the attacking player (the one who destroyed their fleet) should be paid in full by the player asking for help (the one who\'s planet was attacked).',
+
+                            'The loses on both sides of the attack should be as minimal as possible. In certain cases, wasting too much resources can be seen as a case of Push.'
+                        ]
+                    ],
+
+                    2 => 'There is no need to report moon making tries.',
+
+                    3 => 'Moon making is considered to be hiring of another person for help.'
+                ]
+            ],
+
+            4 => [
+                'title' => 'Intentional scrappage of ships',
+                'elements' => [
+                    1 => [
+                        'maintext' => 'Intentional scrappage of ships is permitted on certain conditions:',
+                        'ul' => [
+                            'The scrappage <b>has to be</b> reported to the Administration and cannot be executed before their official reply with permission.',
+
+                            'The players who are about to participate in the scrappage should provide a good reason for the action and should all confirm their participation.',
+
+                            'The debris created after the scrappage should be equally shared between the players according to the loses in the process. It is permitted to exchange all unwanted resources to another one (eg. metal to crystal) using a reasonable exchange ratio.'
+                        ]
+                    ],
+
+                    2 => 'Intentional scrappage of ships is considered to be hiring of another person for help.'
+                ]
+            ],
+
+            5 => [
+                'title' => 'Recyclers rental',
+                'elements' => [
+                    1 => 'Recyclers rental (for the purpose of extraneous debris collection) is permitted, however should be reported to the Administration or to the Support team.',
+
+                    2 => 'Resources division is unrestricted by any ratios, however it should not break Push rules.',
+
+                    3 => 'Collected resources should be sent back to the help requestor in 24 hours since they\'ve arrival to the recyclers origin point.',
+
+                    4 => 'Recyclers rental is considered to be hiring of another person for help.'
+                ]
+            ],
+
+            6 => [
+                'title' => 'Bash',
+                'elements' => [
+                    // [MODIFIABLE]
+                    1 => 'Bash is considered to be more than 5 attacks on <b>one planet or moon</b> in 24 hours (counted from 00:00 to 23:59 of a given day, server\' time), or more than 15 attacks on <b>one player</b> (all planets and moons summed up) in 24 hours (again, counted from 00:00 to 23:59 of a given day, server\'s time).',
+
+                    2 => 'Fleets with a "Destroy" mission are treated as regular attacks.',
+
+                    3 => 'Each player participating in a United attack is treated separately when analysing Bash rules violations (there is no collective responsibility).',
+
+                    4 => [
+                        'maintext' => 'The following cases do not count towards Bash rules violations:',
+                        'ul' => [
+                            'Interplanetary missile strikes',
+
+                            'Intercepted (shot down) spy probes',
+
+                            'Attacks, which end up with either a draw or defender\'s victory <b>and</b> when there are no loses on the side of the defenders (no loses of the fleet, defence systems or resources).',
+
+                            'Attacks, which are a part of a war between the alliances. The Bash rules are lifted 12 hours after the war has been officially declared (which means, reported to the Administration or the Support team). The Administration and/or the Support team can reject the declaration, in which case the Bash rules will still be in effect.',
+
+                            'In addition to the previous rule - if one of the sides of the war is much weaker than the other (determined by the Administration), the declaration has to be officially confirmed by the weaker side in the first 12 hours to lift the Bash rules.',
+
+                            'Attacks on inactive players, where the inactivity period lasts for at least 7 days (as determined by the corresponding label in the Galaxy View).'
+                        ]
+                    ],
+
+                    5 => [
+                        'maintext' => 'Additional notes:',
+                        'ul' => [
+                            'In case of an unreported hiring of another person, when an abuse occurs (eg. an extraneous number of attacks happens despite the unofficially agreed number), the harmed person (the Defender) has a right to report the incident as a violation of the Bash rules.'
+                        ]
+                    ]
+                ]
+            ],
+
+            7 => [
+                'title' => 'Bug using',
+                'elements' => [
+                    1 => 'Bug using is considered to be any instance of intentional usage or conscious witholding of informations about bugs, holes or security vulnerabilities in the game\'s engine, either for own or other players\' benefits. This also includes using game engine\'s imperfections to destabilise or slow down the game as a whole, or impede access to the game for other people.',
+
+                    2 => 'Unintentional bug usage is not punishable by default, however the found bug has to be immediatelly reported to the Administration (without disclosing the infomation about the bug to other people).',
+
+                    3 => 'Each player who either has been punished for bug using, or has unknowingly used a bug, is obligated to help the Administration or Game Developers with localising the cause of the problem once the assistance is requested by the said teams. Refusing to help can lead to account\'s ban, irreversible account\'s deletion or even complete access lock to all game servers.',
+
+                    4 => 'Each player has a responsibility to report every found bug, regardless of its harmfulness and impact on the game.'
+                ]
+            ],
+
+            8 => [
+                'title' => 'Vacation mode',
+                'elements' => [
+                    1 => 'The vacation mode\'s purpose is to protect player\'s account for the time of their absence in the game against other players\' future attacks. Therefore, it is forbidden to intentionally block the vacation mode\'s activation of other players, regardless of the block technique (eg. by sending an extremely slow fleet on other player\'s planet).',
+
+                    2 => 'The vacation mode has to last for at least 3 days, and cannot last for more than 30 days at a time (unless allowed by the Administration). After the 30 days period, the vacation mode will be automatically deactivated by the system (at Statistics recalculation).',
+
+                    3 => 'After vacation mode\'s deactivation (regardless whether it was a manual, or automatic action), system locks the ability to activate the vacation mode again for 24 hours.'
+                ]
+            ],
+
+            9 => [
+                'title' => 'Miscellaneous',
+                'elements' => [
+                    1 => 'Usage of any game automation, such as bots, auto-clickers, auto-refreshers, macros, or any other similar applications or scripts, is strictly forbidden (unless a specific script or application is officially permitted by the Administration).',
+
+                    2 => 'Usage of the game using applications other than web browsers is strictly forbidden.',
+
+                    3 => 'The game\'s engine development team officially supports modern web browsers such as Mozilla Firefox and Google Chrome, which are accessible on all leading platforms (Windows, Linux, MacOS and Android). In each case, the development team will make every effort to support both the latest and the long term support versions of said browsers.',
+
+                    4 => 'In special cases of game engine\'s or game server\'s malfunction, the Administration can (but is not obligated to do so) grant resources and/or fleets return in case of accidental loses caused by the malfunction. However, the Administration\'s ability to recover lost resources and/or fleets is limited to the details about the accident they are able to collect, therefore it is important to provide as much information as possible about the circumstances of the encountered problem.'
+                ]
+            ]
+        ]
+    ],
+
+    4 => [
+        'title' => 'Communication',
+        'elements' => [
+            1 => [
+                'title' => 'In-game content',
+                'elements' => [
+                    // [MODIFIABLE]
+                    1 => 'Unless not specified, the official language used to contact with the Game owners, Administration, Development team and/or the Support team is English language.',
+
+                    2 => [
+                        'maintext' => 'In in-game messaging systems (both private messaging or public and semi-public chats), it is forbidden to:',
+                        'ul' => [
+                            'Impersonate the Game owners, Administration, Development team members and Support team members.',
+
+                            'Advertise any other products, services and items not strictly related to the game.',
+
+                            'Send SPAM messages.',
+
+                            'Send harmful and malicious links or code fragments, especially for the purpose of gaining access to the private details of other players (such as their personal details or access credentials).',
+
+                            'In certain cases, it is also forbidden to publicly offend and slander other people in general. Pseudo censorship of any curse words in such cases will still be punishable.'
+                        ]
+                    ],
+
+                    3 => [
+                        'maintext' => 'When creating or modifying in-game names (eg. names of accounts, planets, moons, alliances) it is forbidden to:',
+                        'ul' => [
+                            'Use names reserved for and by the Game owners, Administration, Development team members and Support team members (eg. Admin, GameMaster, Game Operator, Admin planet).',
+
+                            'Impersonate the Game owners, Administration, Development team members and Support team members.',
+
+                            'Use curse words, offensive and slanderous statements, or generally distasteful and racist names.'
+                        ]
+                    ],
+
+                    4 => 'The Game owners and Administration reserves the right to browse all in-game messages send by the players, especially in cases where an investigation to determine rules violations is in place.'
+                ]
+            ],
+
+            2 => [
+                'title' => 'Contact with other players and Support team',
+                'elements' => [
+                    1 => 'It is forbidden to blackmail other players and/or Game owners, Administration, Development team members or Support team members in order to gain any profits in-game (such as additional resources or favours in certain cases).',
+
+                    2 => 'In-game threats (eg. threatening somebody with attacks on their planets) is not punishable within the limits of common sense.',
+
+                    3 => 'Extortions and blackmails related to the outside world are strictly forbidden and may be reported to the law enforcement authorities appropriate for the country of the Game owners\' origin.',
+
+                    4 => 'In-game frauds leading to resources extortions are strictly forbidden.',
+
+                    5 => 'Any attempts to scam or deceive Game owners, Administration, Development team members or Support team members will be punished accordingly.',
+
+                    6 => 'Each player is obligated to read the in-game broadcast messages, which are one of the official channels of communication with the Game owners and Administration. Similar to the Term of Service, unfamiliarity with the messages\' contents does not release the players from the responsibility of following of any guidelines forwarded via broadcast messages.',
+
+                    7 => 'Every report, opinion or suggestion related to the game should be reported via official channels, such as the Reporting System or directly to the Administration or Support team members. Casual conversations may not be permamently recorded, therefore they are not considered to be the official way of communication.'
+                ]
+            ],
+
+            3 => [
+                'title' => 'SPAM and advertisement',
+                'elements' => [
+                    1 => 'Any SPAM or Advertisements without the permission of Game owners or Administration are strictly forbidden.',
+
+                    2 => 'Each person taking part in the spamming or advertising campaign will be punished, regardless of their contribution.',
+
+                    3 => 'Any player messages which contents advertises their own games, web pages, blogs, forums, containing referral links, etc. are also considered to be SPAM.',
+
+                    4 => 'Sending multiple empty messages or messages containing random, meaningless characters or words, is also considered to be a SPAM.',
+
+                    5 => 'Sending multiple Espionage missions or other fleets to fill other players\' in-game mailboxes, is also considered to be a SPAM.'
+                ]
+            ]
+        ]
+    ],
+
+    5 => [
+        'title' => 'Paid functionalities and account additions',
+        'elements' => [
+            // [MODIFIABLE]
+            1 => 'Rules written in this point of the Terms of Service apply if and only if the said paid functionalities are actually available in the game. The Game owners have a responsibility to determine whether the points below are compatible with the law applicable to their country of origin.',
+
+            2 => 'All paid functionalities purchased by the player are granted per-account and are not transferrable between accounts (unless the Administration agrees to do that manually).',
+
+            3 => 'Any paid functionalities are not refundable in cases where due to rules violation, the player has lost said functionalities due to account\'s lockdown, deletion, or complete access restriction.',
+
+            4 => 'Manual account deletion (started by the player at their request) does not grant players any rights to demand returns. By deleting their account, players are aware that they irrevocably waive their right to access and use the functionalities they\'ve purchased.',
+
+            5 => 'Any consumer complaints related to the paid functionalities should be reported directly to the Administration, unless a dedicated contact channel has been established.',
+
+            6 => 'In any other case not covered by this Terms of Service document, the law rules appropriate to the country of origin of the Game owners should be applied.',
+        ]
+    ],
+
+    6 => [
+        'title' => 'End notes',
+        'elements' => [
+            1 => 'Any content posted in-game should not break any law applicable to the country of origin of the Game owners. It also shouldn\'t break any rules of ethics and principles of personal culture.',
+
+            2 => 'Every punishment applied to player\'s account can be imposed without disclosing the reason of the punishment by the Game owners or the Administration.',
+
+            3 => 'The Game owners, Administration and Support team members are the only people allowed to make any decisions to determine whether or not a player has violated any rule of this Terms of Service document.',
+
+            4 => 'The punishment decision of the Support team member can be called into question by the Administration. The Administration\'s decision can be called into question by the Game owners. Only a person who applied a punishment, or a person with higher position in the decision hierarchy can lift or ease the punishment.',
+
+            5 => 'If a player deems their punishment unjust, they can send their appeal via official communication channels to the appropriate people in the decision hierarchy.',
+
+            6 => 'In any case not covered by this Terms of Service document, the case is settled by the Game owners or the Administration.'
+        ]
+    ]
+];
+
+?>

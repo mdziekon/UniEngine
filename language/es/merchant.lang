@@ -1,0 +1,48 @@
+<?php
+
+$_Lang['Trader_Title']               = 'Merchant';
+
+$_Lang['Trader_DoSell']              = 'Sell';
+$_Lang['Trader_DoBuy']               = 'Buy';
+$_Lang['Trader_UsesLeft']            = 'Merchant transactions left';
+
+$_Lang['Trader_Uses_Infinite']       = 'Infinite';
+$_Lang['Trader_Uses_InStandBy']      = 'Saved for later';
+$_Lang['Trader_Uses_BuyMore']        = 'Purchase more merchant transactions';
+$_Lang['Trader_Uses_BlockedBuy']     = 'To unlock Merchant, purchase Pro Account or Merchant transactions!';
+
+$_Lang['Trader_BadResType']          = 'Invalid resource type!';
+$_Lang['Trader_BadResMode']          = 'Invalid transaction type!';
+$_Lang['Trader_ResMinus']            = 'Negative resources given!';
+$_Lang['Trader_ResZero']             = 'No resources to exchange!';
+$_Lang['Trader_ResZero2']            = 'Not enough resources given for the exchange!';
+$_Lang['Trader_NoEnoughMetal']       = 'Not enough metal!';
+$_Lang['Trader_NoEnoughCrystal']     = 'Not enough crystal!';
+$_Lang['Trader_NoEnoughDeuterium']   = 'Not enough deuterium!';
+$_Lang['Trader_Done']                = 'Exchange completed!';
+
+$_Lang['Trader_SellMet']             = 'Sell: Metal';
+$_Lang['Trader_SellCry']             = 'Sell: Crystal';
+$_Lang['Trader_SellDeu']             = 'Sell: Deuterium';
+$_Lang['Trader_BuyMet']              = 'Buy: Metal';
+$_Lang['Trader_BuyCry']              = 'Buy: Crystal';
+$_Lang['Trader_BuyDeu']              = 'Buy: Deuterium';
+
+$_Lang['Trader_PercentMode']         = 'Exchange proportion';
+$_Lang['MainResource_Mode1']         = 'Resources to <b class="orange">sell</b>';
+$_Lang['MainResource_Mode2']         = 'Resources to <b class="orange">buy</b>';
+$_Lang['OtherResources_Mode1']       = 'Change into';
+$_Lang['OtherResources_Mode2']       = 'Change from';
+
+$_Lang['Trader_Needen']              = 'Required';
+$_Lang['Trader_Receiving']           = 'Receive';
+$_Lang['Trader_GoBack']              = 'Go back';
+$_Lang['Trader_Max']                 = 'Max';
+$_Lang['Trader_Zero']                = 'Zero';
+
+$_Lang['Trader_CantUseTrader']       = '<b class="red">To unlock Merchant Exchange, you either need to have Merchant transactions or Pro Account bought!</b>';
+
+$_Lang['mod_ma_excha'] = "Exchange";
+$_Lang['mod_ma_cours'] = "Exchange rate";
+
+?>

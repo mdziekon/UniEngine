@@ -1,0 +1,12 @@
+<?php
+
+$_Lang['AutoGZipLogs_Title']    = 'Access Logs compression';
+$_Lang['AutoGZipLogs_Success']  = (
+    'All old Access logs have been compressed!<br/>' .
+    'Compressed files: %s<br/>' .
+    'Compression time: %s s.<br/><br/>' .
+    'Scanned directories:<br/>%s'
+);
+$_Lang['AutoGZipLogs_NoDirs']   = 'none';
+
+?>

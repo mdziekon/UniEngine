@@ -1,0 +1,76 @@
+<?php
+
+if (!defined('INSIDE')) {
+    die('Access Denied!');
+}
+
+$_Lang['Title']                     = 'Registration';
+
+$_Lang['Description']               = 'Register to '.$_GameConfig['game_name'];
+
+$_Lang['Universe']                  = 'Server';
+$_Lang['UniSelector']               = 'Universe';
+
+// Registration form
+$_Lang['Input_Username']            = 'Username';
+$_Lang['Input_Passoword']           = 'Password';
+$_Lang['Input_Email']               = 'Email';
+$_Lang['Input_Galaxy']              = 'Starting Galaxy';
+$_Lang['Input_Language']            = 'Language';
+$_Lang['Input_Rules']               = 'Accept';
+$_Lang['Input_RulesLinkLabel']      = 'Terms of Service';
+$_Lang['signup']                    = ' Complete registration ';
+
+$_Lang['UniInfo_GameSpeed']         = 'Game speed';
+$_Lang['UniInfo_ResSpeed']          = 'Resources production';
+$_Lang['UniInfo_FleetSpeed']        = 'Fleet speed';
+$_Lang['UniInfo_StartDate']         = 'Server\'s start date';
+$_Lang['UniInfo_WorldSize']         = 'Galaxies';
+$_Lang['UniInfo_ACSOn']             = 'Fleet unions';
+$_Lang['UniInfo_RapidOn']           = 'Rapid Fire';
+$_Lang['UniInfo_FleetDeb']          = 'Fleet\'s debris';
+$_Lang['UniInfo_DefDeb']            = 'Defenses\' debris';
+$_Lang['UniInfo_MotherSize']        = 'Mother planet\'s size';
+
+$_Lang['UniOpt_Active']             = 'Enabled';
+$_Lang['UniOpt_InActive']           = 'Disabled';
+$_Lang['UniInfo_MotherFields']      = 'fields';
+
+$_Lang['JSLang'] = [
+    'Info_RequestSent'          => '<img src="./images/ajaxload.gif" style="margin-right: 10px;" /> Creating your account, please wait...',
+
+    'Alert_UsernameShort'       => 'Username cannot be shorter than 4 characters!',
+    'Alert_UsernameLong'        => 'Username cannot be longer than 64 characters!',
+    'Alert_PasswordShort'       => 'Password cannot be shorter than 4 characters!',
+    'Alert_NoEmail'             => 'Email address cannot be empty!',
+    'Alert_NoGalaxy'            => 'Starting Galaxy cannot be empty!',
+    'Alert_RulesNotAccepted'    => 'You have to accept the Rules!',
+    'Alert_CaptchaNotWriten'    => 'You have to complete ReCaptcha challenge!',
+    'Alert_RequestTimeout'      => 'Request timeout, please try again later...',
+    'Alert_RequestError'        => 'Request error, please contact support...',
+    'Alert_JSONError'           => 'An unexpected error occured, please contact support...',
+
+    'Alert_RequestCode_1'       => 'Username cannot be shorter than 4 characters!',
+    'Alert_RequestCode_2'       => 'Username cannot be longer than 64 characters!',
+    'Alert_RequestCode_3'       => 'Username contained illegal characters!',
+    'Alert_RequestCode_4'       => 'Password cannot be shorter than 4 characters!',
+    'Alert_RequestCode_5'       => 'Email address cannot be empty!',
+    'Alert_RequestCode_6'       => 'Email address contained illegal characters!',
+    'Alert_RequestCode_7'       => 'Email address is invalid!',
+    'Alert_RequestCode_8'       => 'This email service has been banned!',
+    'Alert_RequestCode_9'       => 'You have to accept the Rules!',
+    'Alert_RequestCode_10'      => 'You did not complete the ReCaptcha challenge correctly!',
+    'Alert_RequestCode_11'      => 'This username is already taken!',
+    'Alert_RequestCode_12'      => 'This email address is already taken!',
+    'Alert_RequestCode_13'      => 'Starting Galaxy cannot by empty!',
+    'Alert_RequestCode_14'      => 'Please select a valid Galaxy number!',
+    'Alert_RequestCode_15'      => 'We are sorry, but this Galaxy is already too crowded, please select another one!',
+    'Alert_RequestCode_16'      => 'Unavailable language selected!',
+
+    'Info_RequestCode_1'        => 'Your account has been created, we will redirect you to the game in a moment...',
+    'Info_RequestCode_2'        => 'Your account has been created. Now you have to wait until the game server opens up for all players...',
+
+    'LanguagesData'             => &$_Lang['LanguagesAvailable'],
+];
+
+?>

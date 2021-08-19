@@ -1,0 +1,45 @@
+<?php
+
+$_Lang['logout']         = 'Logout';
+$_Lang['player']         = 'Jugador';
+$_Lang['friends']        = 'Amigos';
+$_Lang['options']        = 'Ajustes';
+$_Lang['stats']          = 'Estadisticas';
+$_Lang['search']         = 'Buscar';
+$_Lang['notes']          = 'Notas';
+$_Lang['rules']          = 'Normas';
+$_Lang['contact']        = 'Contacto';
+$_Lang['chat']           = 'Chat';
+$_Lang['admin_cp']       = '<b style="color: lime;">Admin Panel</b>';
+$_Lang['go_cp']          = '<b style="color: lime;">Operator Panel</b>';
+$_Lang['sgo_cp']         = '<b style="color: lime;">Super Operator Panel</b>';
+$_Lang['forum']          = 'Foro';
+$_Lang['banned']         = 'Baneado';
+$_Lang['ReportLink']     = 'Reporting System';
+$_Lang['Polls']          = 'Centro';
+
+$_Lang['ServerTimeTxt']  = 'Hora Actual del Servidor';
+
+$_Lang['ChatTitle']      = 'Global players\' chat';
+$_Lang['FriendsTitle']   = 'List of your friends';
+$_Lang['NotesTitle']     = 'Tus notas';
+$_Lang['StatsTitle']     = 'Table of players\' Statistics';
+$_Lang['SearchTitle']    = 'Buscador';
+$_Lang['RulesTitle']     = 'Reglas del servidor y juego';
+$_Lang['ContactTitle']   = 'Contact server\' Administration';
+$_Lang['OptionsTitle']   = 'Configuracion de tu cuenta';
+$_Lang['LogoutTitle']    = 'Salir del juego';
+$_Lang['AdminLinkTitle'] = 'Server administration\'s panel';
+$_Lang['GOLinkTitle']    = 'Game operator\'s panel';
+$_Lang['SGOLinkTitle']   = 'Super game operator\'s panel';
+$_Lang['ForumTitle']     = 'The official game Forums';
+$_Lang['BannedTitle']    = 'Lista de jugadores baneados';
+$_Lang['PollsTitle']     = 'Ayúdanos a mejorar la experiencia en el juego expresando tus opiniones!';
+$_Lang['ReportTitle']    = 'Informa la transgresión de otro jugador o un error encontrado en el juego!';
+
+$_Lang['Pro']            = 'Cuenta PRO';
+$_Lang['ProTitle']       = 'Verifique el estado de su cuenta PRO y descubra más sobre sus beneficios';
+$_Lang['Free']           = 'Cuenta Gratis';
+$_Lang['FreeTitle']      = 'Consulte los beneficios de la cuenta PRO!';
+
+?>

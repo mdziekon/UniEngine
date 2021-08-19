@@ -1,0 +1,125 @@
+<?php
+
+$_Lang['month_names'] = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+];
+
+$_Lang['months_variant0'] = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+];
+$_Lang['months_variant1'] = [
+    'of January',
+    'of February',
+    'of March',
+    'of April',
+    'of May',
+    'of June',
+    'of July',
+    'of August',
+    'of September',
+    'of October',
+    'of November',
+    'of December'
+];
+
+// FIXME: not the best solution to define functions here, but for now will do
+$_Lang['__helpers'] = [
+    'get_ordinal_suffix' => function ($number) {
+        // Note: supports positive numbers only
+
+        // Get tens of the number
+        $tens = floor($number / 10) % 10;
+
+        if ($tens === 1) {
+            return "th";
+        }
+
+        $units = $number % 10;
+
+        if ($units === 1) {
+            return "st";
+        }
+        if ($units === 2) {
+            return "nd";
+        }
+        if ($units === 3) {
+            return "rd";
+        }
+        return "th";
+    },
+
+    'date_formatters' => [
+        '0' => function ($format, $timestamp) {
+            return date($format, $timestamp);
+        },
+        '1' => function ($format, $timestamp) use (&$_Lang) {
+            $hasMonth = false;
+            $hasDayAndMonth = false;
+
+            if (strstr($format, 'd m') !== false) {
+                $hasDayAndMonth = true;
+            }
+            if (strstr($format, 'm') !== false) {
+                $hasMonth = true;
+            }
+
+            $useFormat = $format;
+
+            if ($hasDayAndMonth) {
+                $useFormat = str_replace('d m', '{|_|}', $format);
+            } else if ($hasMonth) {
+                $useFormat = str_replace('m', '{|_|}', $format);
+            }
+
+            $dateString = date($useFormat, $timestamp);
+
+            if ($hasDayAndMonth) {
+                $thisDay = date('d', $timestamp);
+                $thisMonth = date('m', $timestamp);
+
+                $getOrdinalSuffix = $_Lang['__helpers']['get_ordinal_suffix'];
+
+                $substitution = (
+                    $thisDay .
+                    $getOrdinalSuffix($thisDay) .
+                    ' of ' .
+                    $_Lang['month_names'][$thisMonth - 1]
+                );
+
+                $dateString = str_replace('{|_|}', $substitution, $dateString);
+            } else if ($hasMonth) {
+                $thisMonth = date('m', $timestamp);
+
+                $substitution = $_Lang['month_names'][$thisMonth - 1];
+
+                $dateString = str_replace('{|_|}', $substitution, $dateString);
+            }
+
+            return $dateString;
+        }
+    ]
+];
+
+?>

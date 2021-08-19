@@ -1,0 +1,65 @@
+<?php
+
+$_Lang['Chat']                          = "Chat";
+
+$_Lang['ChatTitle_String']              = '%s chat';
+$_Lang['ChatTitle_Main']                = 'Principal';
+$_Lang['ChatTitle_Ally']                = 'Alianza (%s)';
+$_Lang['ChatTitle_GameTeam']            = 'Soporte de juego';
+
+$_Lang['chat_loading']                  = "Cargando ...";
+$_Lang['chat_disc']                     = "Live chat";
+$_Lang['chat_message']                  = "Mensaje<br/>(Shift + Intro &#187; Nueva linea)";
+$_Lang['chat_send']                     = "Enviar";
+$_Lang['chat_save']                     = "Guardar cambios";
+$_Lang['on_chat']                       = "Online:";
+
+$_Lang['Legend_BBCode']                 = 'BBCode';
+$_Lang['Legend_BBCode_B']               = 'Bold';
+$_Lang['Legend_BBCode_S']               = 'Strikethrough';
+$_Lang['Legend_BBCode_I']               = 'Italic';
+$_Lang['Legend_BBCode_URL']             = 'Link';
+$_Lang['Legend_BBCode_U']               = 'Underline';
+$_Lang['Legend_BBCode_C']               = 'Color';
+$_Lang['Legend_BBCode_Text']            = 'Text';
+$_Lang['Legend_BBCode_Adress']          = 'Address';
+$_Lang['Legend_BBCode_OR']              = 'or';
+$_Lang['Legend_BBCode_Color']           = 'COLOR';
+$_Lang['Legend_BBCode_ColorInfo']       = 'English or HEX value';
+
+$_Lang['Settings_Header']               = 'Ajustes';
+$_Lang['Settings_GhostMode']            = 'Esconde mi presencia';
+$_Lang['Settings_GhostMode_DontCount']  = 'No me incluyas en el contador online';
+
+$_Lang['Today']                         = 'Hoy';
+$_Lang['Yesterday']                     = 'Ayer';
+
+$_Lang['jQueryAjax_getError']           = 'Error de carga de datos: reconexion en 5 segundos (reintentos restantes: {x})...';
+$_Lang['jQueryAjax_getErrorFatal']      = 'Error de carga de datos: conexion perdida... (<a class="orange" id="chatReload" href="#">Try again</a>)';
+$_Lang['jQueryAjax_postError']          = 'Ocurrio un error al enviar el mensaje...';
+
+$_Lang['jsLang_Errors'] = [
+    'getErr_001' => 'Esta sala de chat no existe!',
+    'getErr_002' => 'No tienes acceso a esta sala de chat!',
+    'getErr_003' => 'El servidor de juegos esta desconectado!',
+];
+
+$_Lang['jQueryAjax_postErr_2']          = 'Ocurrio un error al enviar el mensaje - Error de base de datos...';
+$_Lang['jQueryAjax_postErr_3']          = 'Ocurrio un error al enviar el mensaje - mensaje vacio...';
+$_Lang['jQueryAjax_postErr_5']          = 'Se produjo un error al enviar el mensaje: no hay acceso a esta sala de chat...';
+$_Lang['jQueryAjax_postErr_6']          = 'Se produjo un error al enviar el mensaje: la sala de chat no existe...';
+
+$_Lang['jQueryAjax_delErr_2']           = 'Ocurrio un error al eliminar el mensaje (#{$id}) - el mensaje no existe!';
+$_Lang['jQueryAjax_delErr_3']           = 'Ocurrio un error al eliminar el mensaje (#{$id}) - Error de la base de datos!';
+$_Lang['jQueryAjax_delErr_4']           = 'Ocurrio un error: acceso denegado!';
+
+$_Lang['jQueryAjax_notLogged']          = 'Ocurrio un error: no iniciaste sesion!';
+
+$_Lang['jsLang_usrRef']                 = 'Menciona a este jugador';
+$_Lang['jsLang_profile']                = 'Perfil del jugador';
+$_Lang['jsLang_mentioned']              = 'Has sido mencionado!';
+$_Lang['jsLang_ToolTip_ReportMsg']      = 'Reportar mensaje';
+
+$_Lang['UsersOnline']                   = 'Online';
+
+?>

@@ -1,0 +1,6 @@
+<?php
+
+$_Lang['see_you']           = 'Deslogeado.<br /><a href="login.php">Logear de nuevo</a>';
+$_Lang['session_closed']    = "Sesion terminada satisfactoriamente.";
+
+?>

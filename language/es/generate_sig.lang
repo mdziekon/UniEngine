@@ -1,0 +1,8 @@
+<?php
+
+$_Lang['Universum'] = 'Uni 1';
+$_Lang['Ally']      = 'Alliance';
+$_Lang['Points']    = 'points';
+$_Lang['Position']  = 'Stats place';
+
+?>
