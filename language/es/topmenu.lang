@@ -1,0 +1,45 @@
+<?php
+
+$_Lang['logout']         = 'Logout';
+$_Lang['player']         = 'Jugador';
+$_Lang['friends']        = 'Amigos';
+$_Lang['options']        = 'Ajustes';
+$_Lang['stats']          = 'Estadisticas';
+$_Lang['search']         = 'Buscar';
+$_Lang['notes']          = 'Notas';
+$_Lang['rules']          = 'Normas';
+$_Lang['contact']        = 'Contacto';
+$_Lang['chat']           = 'Chat';
+$_Lang['admin_cp']       = '<b style="color: lime;">Panel de Administrador</b>';
+$_Lang['go_cp']          = '<b style="color: lime;">Panel de Operador</b>';
+$_Lang['sgo_cp']         = '<b style="color: lime;">Panel de Super Operador</b>';
+$_Lang['forum']          = 'Foro';
+$_Lang['banned']         = 'Baneado';
+$_Lang['ReportLink']     = 'Sistema de reportes';
+$_Lang['Polls']          = 'Centro';
+
+$_Lang['ServerTimeTxt']  = 'Hora Actual del Servidor';
+
+$_Lang['ChatTitle']      = 'Chat General';
+$_Lang['FriendsTitle']   = 'Lista de tus amigos';
+$_Lang['NotesTitle']     = 'Tus notas';
+$_Lang['StatsTitle']     = 'Tabla de estadisticas de los jugadores';
+$_Lang['SearchTitle']    = 'Buscador';
+$_Lang['RulesTitle']     = 'Reglas del servidor y juego';
+$_Lang['ContactTitle']   = 'Comuniquese con el Administrador del servidor';
+$_Lang['OptionsTitle']   = 'Configuracion de tu cuenta';
+$_Lang['LogoutTitle']    = 'Salir del juego';
+$_Lang['AdminLinkTitle'] = 'Panel de administracion del servidor';
+$_Lang['GOLinkTitle']    = 'Panel del operador del juego';
+$_Lang['SGOLinkTitle']   = 'Panel del operador del super juego';
+$_Lang['ForumTitle']     = 'Los foros oficiales del juego';
+$_Lang['BannedTitle']    = 'Lista de jugadores baneados';
+$_Lang['PollsTitle']     = 'Ayudanos a mejorar la experiencia en el juego expresando tus opiniones!';
+$_Lang['ReportTitle']    = 'Informa la transgresion de otro jugador o un error encontrado en el juego!';
+
+$_Lang['Pro']            = 'Cuenta PRO';
+$_Lang['ProTitle']       = 'Verifique el estado de su cuenta PRO y descubra mas sobre sus beneficios';
+$_Lang['Free']           = 'Cuenta Gratis';
+$_Lang['FreeTitle']      = 'Consulte los beneficios de la cuenta PRO!';
+
+?>
