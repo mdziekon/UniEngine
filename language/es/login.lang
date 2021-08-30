@@ -1,0 +1,23 @@
+<?php
+
+$_Lang['Page_Title']                = 'Login';
+$_Lang['Body_Username']             = 'Usuario';
+$_Lang['Body_Password']             = 'Contraseña';
+$_Lang['Body_Remember']             = 'Recuerdame';
+$_Lang['Body_Submit']               = 'Login';
+$_Lang['Body_LostPass']             = 'Has olvidado la contraseña?';
+$_Lang['Body_LostCode']             = 'Has perdido el link de activacion?';
+$_Lang['Body_ServerOffline']        = 'Game server esta Offline';
+
+$_Lang['Body_Contact']              = 'Contacto';
+$_Lang['Body_Register']             = 'Registro';
+
+$_Lang['Err_Title']                 = 'Login error';
+$_Lang['Login_InvalidCredentials']  = 'Credenciales invalidas, porfavor vuelve a intentarlo!<br/><a href=login.php>Volver</a>';
+$_Lang['Login_BadSignsUser']        = 'Se proporciono un nombre de usuario no valido!<br/><a href=login.php>Volver</a>';
+$_Lang['Login_BadUniversum']        = 'Universo no valido seleccionado!';
+$_Lang['Login_UniversumNotStarted'] = 'Este Universo comienza en<br/>%s at %s.<br/>Haga correr la voz invitando a otras personas a unirse ese dia utilizando su <u>Enlace de referido</u> proporcionado a usted en el mensaje de activacion.';
+$_Lang['Login_FailLoginProtection'] = 'Demasiados intentos no validos para iniciar sesion en esta cuenta!<br/>Espere por favor <b class="orange">5 minutos</b> e intenta de nuevo.';
+$_Lang['Login_UnknownError']        = 'Ocurrio un error desconocido, comuniquese con la Administracion!';
+
+?>

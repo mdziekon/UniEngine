@@ -1,0 +1,41 @@
+<?php
+
+$_Lang['Title']                         = 'Objetivos personalizados';
+
+$_Lang['Your_shortcuts']                = 'Tus objetivos personalizados';
+$_Lang['add_new_shortcut']              = 'Agregar nuevo objetivo';
+$_Lang['select_shortcut']               = 'Select target';
+$_Lang['edit_shortcut']                 = 'Editar';
+$_Lang['delete_shortcut']               = 'Eliminar';
+$_Lang['are_you_sure']                  = '¿Estas seguro de que quieres eliminar este objetivo??';
+$_Lang['goback']                        = 'Volver';
+$_Lang['no_shortcuts']                  = '- No hay objetivos disponibles -';
+$_Lang['moon_sign']                     = 'M';
+$_Lang['debris_sign']                   = 'DF';
+$_Lang['planet_sign']                   = 'P';
+
+$_Lang['NameTip']                       = 'El titulo del objetivo siempre consta de su nombre personalizado y el nombre real del objetivo (si existe)';
+$_Lang['Name']                          = 'Nombre personalizado <acronym title="'.$_Lang['NameTip'].'">(optional)</acronym>';
+$_Lang['Coordinates']                   = 'Coordenadas';
+$_Lang['Adding_shortcut']               = 'Agregar objetivo personalizado';
+$_Lang['Editing_shortcut']              = 'Editar objetivo personalizado';
+$_Lang['Deleting_shortcut']             = 'Quitar orientacion personalizada';
+$_Lang['Add']                           = 'Agregar';
+$_Lang['Edit']                          = 'Guardar cambios';
+
+$_Lang['list_planet']                   = 'Planeta';
+$_Lang['list_debris']                   = 'Campo de escombros';
+$_Lang['list_moon']                     = 'Luna';
+
+$_Lang['Bad_coordinates']               = 'Coordenadas invalidas!';
+$_Lang['Forbidden_signs_in_name']       = 'El nombre personalizado de objetivo puede constar de caracteres alfanumericos, espacios, guiones y guiones bajos.!';
+$_Lang['That_target_already_exists']    = 'Este objetivo personalizado ya existe!';
+$_Lang['Bad_ID_given']                  = 'Se ha proporcionado un objetivo no valido!';
+$_Lang['This_shortcut_is_not_yours']    = 'No es propietario de este objetivo personalizado!';
+$_Lang['NothingChanged']                = 'No hay cambios para guardar...';
+
+$_Lang['Shortcut_hasbeen_added']        = 'Se ha agregado un objetivo personalizado!';
+$_Lang['Link_hasbeen_deleted']          = 'Se ha eliminado la segmentacion personalizada!';
+$_Lang['Shortcut_hasbeen_saved']        = 'Cambios guardados!';
+
+?>

@@ -1,0 +1,38 @@
+<?php
+
+$_Lang['stat_title']             = "Estadisticas del servidor";
+$_Lang['stat_header_txt']        = 'Estadisticas calculadas en';
+$_Lang['stat_show']              = "Ver";
+$_Lang['stat_by']                = "cual tiene";
+$_Lang['stat_range']             = "en posicion de rango";
+
+$_Lang['stat_player']            = "jugadores";
+$_Lang['stat_allys']             = "alianzas";
+$_Lang['stat_main']              = "puntos";
+$_Lang['stat_fleet']             = "puntos de flotas";
+$_Lang['stat_research']          = "puntos de investigacion";
+$_Lang['stat_building']          = "puntos de edificios";
+$_Lang['stat_defenses']          = "puntos de defensa";
+
+$_Lang['Position']               = "No.";
+$_Lang['Difference']             = "+/-";
+$_Lang['Player']                 = "Jugador";
+$_Lang['Alliance']               = "Alianza";
+$_Lang['Points']                 = "Puntos";
+$_Lang['Members']                = "Miembros";
+$_Lang['PerMember']              = "Por miembro";
+$_Lang['action_writemessage']    = "Escribe un mensaje";
+
+$_Lang['Fight_Won']              = 'Ganado';
+$_Lang['Fight_Lost']             = 'Perdido';
+$_Lang['Fight_Draw']             = 'Tablas';
+
+$_Lang['User_is_banned']         = 'El jugador esta prohibido!';
+$_Lang['User_is_on_vacations']   = 'El jugador esta de vacaciones';
+
+$_Lang['QuickChangeInfo']        = 'Cambio de posicion desde<b>el ultimo recalculo de estadisticas</b>';
+$_Lang['DailyChangeInfo']        = 'Cambio de posicion desde<b>ayer</b>';
+
+$_Lang['No_Rows_Found']          = 'Estadisticas del servidor aun no calculadas!';
+
+?>

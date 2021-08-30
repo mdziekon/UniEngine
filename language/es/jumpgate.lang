@@ -1,0 +1,14 @@
+<?php
+
+$_Lang['GateJump_NotDoing']             = 'El salto no se esta realizando!';
+$_Lang['GateJump_NotOnMoon']            = 'Tu no estas en la luna!';
+$_Lang['GateJump_NoTeleportOnMoon1']    = 'No hay puerta de salto en esta luna!';
+$_Lang['GateJump_Moon1NotReach']        = 'Salta de esta luna disponible en:';
+$_Lang['GateJump_BadIDGiven']           = 'Luna seleccionada no valida!';
+$_Lang['GateJump_Moon2NotYours']        = 'Esta luna no existe!';
+$_Lang['GateJump_NoTeleportOnMoon2']    = 'No hay puerta de salto en la luna de destino!';
+$_Lang['GateJump_Moon2NotReach']        = 'Ir a la luna seleccionada disponible en:';
+$_Lang['GateJump_BadPOSTFound']         = 'Se proporcionaron datos de flota no validos!';
+$_Lang['GateJump_Done']                 = 'El salto se ha completado!<br/>Proximo salto disponible en:';
+
+?>
