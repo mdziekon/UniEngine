@@ -1,0 +1,18 @@
+<?php
+
+$_Lang['Page_Title']             = 'Terminos de servicio';
+
+$_Lang['Table_Header']           = 'Condiciones de servicio de  '.$_GameConfig['game_name'];
+$_Lang['Table_GeneralInfo']      = 'Estos terminos son efectivos desde <b class="red">22 de enero de 2012</b>.<br/>';
+$_Lang['Table_GeneralInfo']     .= 'Todos los cambios introducidos en estos terminos se anunciaran a traves del juego. <b class="red">Mensaje de difusion</b>, o, en raras ocasiones(p.ej. reescrituras sustanciales), a traves de<b class="red">email</b>.';
+$_Lang['Table_Index']            = 'Tabla de contenidos';
+
+$_Lang['AcceptBox_Info']             = 'Antes de continuar con el juego,<b>debe confirmar su aceptacion de los cambios en los Terminos </b> (ultima modificacion: %s).<br/>Si no esta de acuerdo con las reglas nuevas o modificadas, puede rechazar los cambios, lo que significa que su cuenta sera automaticamente<b class="red">eliminado despues de un periodo de 7 dias</b>(durante ese periodo, puede cambiar de opinion), o puede <b class="orange">dejar tu cuenta desatendida</b> (siempre que no elija ninguna de las opciones).';
+$_Lang['AcceptBox_Option_Accept0']   = 'Acepto los Terminos de servicio modificados';
+$_Lang['AcceptBox_Option_Accept1']   = 'Acepto los Terminos de servicio modificados y cancelo la eliminacion de mi cuenta';
+$_Lang['AcceptBox_Option_Decline0']  = 'Rechazo los Terminos de servicio modificados y configuro mi cuenta en modo de eliminacion';
+$_Lang['AcceptBox_Option_Decline1']  = 'Rechazo los Terminos de servicio modificados y mantengo mi decision sobre la eliminacion';
+$_Lang['AcceptBox_DeleteTime']       = '<br/><br/>Su cuenta sera eliminada el %s';
+$_Lang['AcceptBox_Sure']             = 'Estas seguro?';
+
+?>

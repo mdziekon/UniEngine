@@ -1,0 +1,14 @@
+<?php
+
+$_Lang['AddMoon_Title']             = 'Creacion de la luna';
+$_Lang['AddMoon_PlanetID']          = 'Planeta ID';
+$_Lang['AddMoon_Name']              = 'Nombre de la luna (vacio - predeterminado)';
+$_Lang['AddMoon_Diameter']          = 'Diametro (vacio - valor aleatorio)';
+$_Lang['AddMoon_Submit']            = 'Crear';
+$_Lang['AddMoon_Success']           = 'La luna ha sido creada';
+$_Lang['AddMoon_Fail_NoPlanet']     = 'Este planeta no existe!';
+$_Lang['AddMoon_Fail_MoonExists']   = 'Este planeta ya tiene luna!';
+$_Lang['AddMoon_Fail_NameBadSigns'] = 'Caracteres ilegales en el nombre de la luna!';
+$_Lang['AddMoon_Fail_BadID']        = 'ID de planeta no valido!';
+
+?>

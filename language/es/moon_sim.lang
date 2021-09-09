@@ -1,0 +1,17 @@
+<?php
+
+$_Lang['Title']                  = 'Simulador de destruccion lunar';
+
+$_Lang['Table1_Diameter']        = 'Diametro de la luna (km)';
+$_Lang['Table1_ShipCount']       = 'Cantidad de Deathstars';
+$_Lang['Table1_Simulate']        = 'Simular';
+$_Lang['Table2_Result']          = 'Resultado de la simulacion';
+$_Lang['Table2_Diameter']        = 'Diametro de la luna';
+$_Lang['Table2_MoonChance']      = 'Posibilidad de destruccion de la luna';
+$_Lang['Table2_FleetChance']     = 'Posibilidad de destruccion de flota';
+$_Lang['Table2_Km']              = 'km';
+
+$_Lang['Error_BadDataGiven']     = 'Se proporcionaron datos no validos!';
+$_Lang['Error_DiameterTooBig']   = 'El diametro de la luna no puede exceder 10 000 km';
+
+?>

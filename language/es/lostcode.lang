@@ -1,0 +1,35 @@
+<?php
+
+$_Lang['mail_text']             = 'Este correo electronico ha sido generado por el sistema de recuperacion del enlace de activacion de <a href="'.GAMEURL_STRICT.'">'.$_GameConfig['game_name'].'</a><br /><br /><b>Tu nuevo enlace de activacion:</b> {activationlink}<br/><br/>Ignore este mensaje si no lo solicito<br/>Buena suerte y diviertete!';
+
+$_Lang['mail_template']         = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">';
+$_Lang['mail_template']         .= '<html>';
+$_Lang['mail_template']         .= '<head>';
+$_Lang['mail_template']         .= '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">';
+$_Lang['mail_template']         .= '</head>';
+$_Lang['mail_template']         .= '<body>';
+$_Lang['mail_template']         .= $_Lang['mail_text'];
+$_Lang['mail_template']         .= '</body>';
+$_Lang['mail_template']         .= '</html>';
+
+$_Lang['mail_title']            = 'Reactivacion de la cuenta';
+
+$_Lang['ResetCode']             = "Reenviar enlace de activacion";
+$_Lang['TextCode1']             = "Ingrese su direccion de correo electronico.";
+$_Lang['TextCode2']             = "Ingrese su direccion de correo electronico y luego presione el boton \"Reenviar\". Su nuevo enlace de activacion se enviara a su direccion de correo electronico.";
+$_Lang['email']                 = "Email";
+$_Lang['ButtonSendPass']        = "Reenviar";
+$_Lang['CodeForm']              = "Formulario";
+$_Lang['Title']                 = 'Reenviar enlace de activacion';
+
+$_Lang['go_back']               = '<br/><br/><a href="lostcode.php">Go back</a>';
+
+$_Lang['new_code_sent']         = 'Se ha enviado un nuevo enlace de activacion a la direccion de correo electronico indicada.!'.$_Lang['go_back'];
+$_Lang['smtp_error']            = 'Se produjo un error inesperado al enviar un mensaje de correo electronico:<br/>%s<br/>Por favor <a href="contact.php">contactA con la administracion</a>!'.$_Lang['go_back'];
+$_Lang['acc_already_activated'] = 'Esta cuenta ya ha sido activada!'.$_Lang['go_back'];
+$_Lang['no_email_in_db']        = 'Esta direccion de correo electronico no corresponde a ninguna cuenta en nuestro sistema.!'.$_Lang['go_back'];
+$_Lang['bad_email_given']       = 'Se proporciono una direccion de correo electronico no valida!'.$_Lang['go_back'];
+$_Lang['no_mail_given']         = 'La direccion de correo electronico no puede estar vacia!'.$_Lang['go_back'];
+$_Lang['prevent_spaming']       = 'Espere otra hora para volver a enviar el enlace de activacion.';
+
+?>

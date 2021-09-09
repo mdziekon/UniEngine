@@ -1,0 +1,32 @@
+<?php
+
+$_Lang['Position']              = 'Posicion de rango';
+$_Lang['Player']                = 'Jugador';
+$_Lang['Name']                  = 'Jugador';
+$_Lang['Player_name']           = 'Nombre de usuario del jugador';
+$_Lang['Planet']                = 'Planeta madre';
+$_Lang['Planet_name']           = 'Nombre del planeta';
+$_Lang['Alliance']              = 'Alianza';
+$_Lang['Alliance_name']         = 'Nombre Alianza';
+$_Lang['Tag']                   = 'Etiqueta';
+$_Lang['Alliance_tag']          = 'Etiqueta Alianza';
+$_Lang['Members']               = 'Miembros';
+$_Lang['Points']                = 'Puntos';
+$_Lang['PerMember']             = 'por miembro';
+$_Lang['Coordinated']           = 'Coordenadas';
+$_Lang['Search']                = 'Buscar';
+$_Lang['Search_in_all_game']    = "Buscador";
+$_Lang['Back']                  = 'Volver';
+$_Lang['write_a_messege']       = 'Escribe un mensaje';
+$_Lang['buddy_request']         = 'Agregar a la lista de amigos';
+$_Lang['Ally_Invite_Title']     = 'Invitar a la alianza';
+$_Lang['found_results']         = "Entradas encontradas: ";
+$_Lang['nothing_found']         = "Nada encontrado!";
+$_Lang['badsigns_given']        = '<b class="red">Se proporcionaron datos no validos!</b>';
+$_Lang['pagination_title']      = "Paginas";
+$_Lang['prev_page']             = "Previo";
+$_Lang['next_page']             = "Siguiente";
+
+$_Lang['not_counted_yet']       = 'Aun no se han calculado las estadisticas de este jugador!';
+
+?>
