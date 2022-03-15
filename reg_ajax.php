@@ -373,19 +373,18 @@ if(isset($_GET['register']))
                 {
                     $Query_SelectReferrer = "SELECT `id` FROM {{table}} WHERE `id` = {$RefID} LIMIT 1;";
                     $Result_SelectReferrer = doquery($Query_SelectReferrer, 'users', true);
-                    if($Result_SelectReferrer['id'] > 0)
-                    {
-                        $registrationIPs = [];
-                        $existingMatchingEnterLogIds = [];
+                    if ($Result_SelectReferrer['id'] > 0) {
+                        $registrationIPs = [
+                            'r' => trim($userSessionIP),
+                            'p' => preg_replace(
+                                '#[^a-zA-Z0-9\.\,\:\ ]{1,}#si',
+                                '',
+                                trim($_SERVER['HTTP_X_FORWARDED_FOR'])
+                            )
+                        ];
 
-                        $UserIPs['r'] = trim($userSessionIP);
-                        $UserIPs['p'] = preg_replace('#[^a-zA-Z0-9\.\,\:\ ]{1,}#si', '', trim($_SERVER['HTTP_X_FORWARDED_FOR']));
-
-                        if (empty($UserIPs['p'])) {
-                            unset($UserIPs['p']);
-                        }
-                        foreach ($UserIPs as $Key => $Data) {
-                            $registrationIPs[$Key] = $Data;
+                        if (empty($registrationIPs['p'])) {
+                            unset($registrationIPs['p']);
                         }
 
                         $existingMatchingEnterLogIds = Registration\Utils\Queries\findEnterLogIPsWithMatchingIPValue([
