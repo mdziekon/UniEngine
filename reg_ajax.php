@@ -363,6 +363,8 @@ if(isset($_GET['register']))
             doquery($Query_UpdateConfig, 'config');
             $_MemCache->GameConfig = $_GameConfig;
 
+            $setReferrerId = null;
+
             // Update User with new data
             if(isset($_COOKIE[REFERING_COOKIENAME]) && $_COOKIE[REFERING_COOKIENAME] > 0)
             {
@@ -430,33 +432,26 @@ if(isset($_GET['register']))
 
                         SendSimpleMessage($RefID, 0, $Now, 70, '007', '016', $Message);
 
-                        $Query_UpdateUser_Fields[] = "`referred` = {$RefID}";
+                        $setReferrerId = $RefID;
                     }
                 }
             }
 
             $ActivationCode = md5(mt_rand(0, 99999999999));
 
-            $Query_UpdateUser_Fields[] = "`id_planet` = {$PlanetID}";
-            $Query_UpdateUser_Fields[] = "`settings_mainPlanetID` = {$PlanetID}";
-            $Query_UpdateUser_Fields[] = "`current_planet` = {$PlanetID}";
-            $Query_UpdateUser_Fields[] = "`galaxy` = {$Galaxy}";
-            $Query_UpdateUser_Fields[] = "`system` = {$System}";
-            $Query_UpdateUser_Fields[] = "`planet` = {$Planet}";
-            if(REGISTER_REQUIRE_EMAILCONFIRM)
-            {
-                $Query_UpdateUser_Fields[] = "`activation_code` = '{$ActivationCode}'";
-            }
-            else
-            {
-                $Query_UpdateUser_Fields[] = "`activation_code` = ''";
-            }
-
-            $Query_UpdateUser = '';
-            $Query_UpdateUser .= "UPDATE {{table}} SET ";
-            $Query_UpdateUser .= implode(', ', $Query_UpdateUser_Fields);
-            $Query_UpdateUser .= " WHERE `id` = {$UserID} LIMIT 1;";
-            doquery($Query_UpdateUser, 'users');
+            Registration\Utils\Queries\updateUserFinalDetails([
+                'userId' => $UserID,
+                'motherPlanetId' => $PlanetID,
+                'motherPlanetGalaxy' => $Galaxy,
+                'motherPlanetSystem' => $System,
+                'motherPlanetPlanetPos' => $Planet,
+                'referrerId' => $setReferrerId,
+                'activationCode' => (
+                    REGISTER_REQUIRE_EMAILCONFIRM ?
+                        $ActivationCode :
+                        null
+                )
+            ]);
 
             // Send a invitation private msg
             $Message = false;
