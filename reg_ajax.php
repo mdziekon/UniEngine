@@ -376,11 +376,7 @@ if(isset($_GET['register']))
                     if ($Result_SelectReferrer['id'] > 0) {
                         $registrationIPs = [
                             'r' => trim($userSessionIP),
-                            'p' => preg_replace(
-                                '#[^a-zA-Z0-9\.\,\:\ ]{1,}#si',
-                                '',
-                                trim($_SERVER['HTTP_X_FORWARDED_FOR'])
-                            )
+                            'p' => trim(Users\Session\getCurrentOriginatingIP())
                         ];
 
                         if (empty($registrationIPs['p'])) {
