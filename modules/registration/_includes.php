@@ -8,6 +8,7 @@ call_user_func(function () {
 
     include($includePath . './components/RegistrationConfirmationMail/RegistrationConfirmationMail.component.php');
 
+    include($includePath . './utils/cookies.utils.php');
     include($includePath . './utils/queries.utils.php');
 
 });

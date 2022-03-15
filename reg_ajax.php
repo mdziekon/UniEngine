@@ -364,51 +364,47 @@ if(isset($_GET['register']))
             $_MemCache->GameConfig = $_GameConfig;
 
             $setReferrerId = null;
+            $referrerUserId = Registration\Utils\Cookies\getStoredReferrerId();
 
-            // Update User with new data
-            if(isset($_COOKIE[REFERING_COOKIENAME]) && $_COOKIE[REFERING_COOKIENAME] > 0)
-            {
-                $RefID = round($_COOKIE[REFERING_COOKIENAME]);
-                if($RefID > 0)
-                {
-                    $Query_SelectReferrer = "SELECT `id` FROM {{table}} WHERE `id` = {$RefID} LIMIT 1;";
-                    $Result_SelectReferrer = doquery($Query_SelectReferrer, 'users', true);
-                    if ($Result_SelectReferrer['id'] > 0) {
-                        $registrationIPs = [
-                            'r' => trim($userSessionIP),
-                            'p' => trim(Users\Session\getCurrentOriginatingIP())
-                        ];
+            if ($referrerUserId !== null) {
+                $Query_SelectReferrer = "SELECT `id` FROM {{table}} WHERE `id` = {$referrerUserId} LIMIT 1;";
+                $Result_SelectReferrer = doquery($Query_SelectReferrer, 'users', true);
+                if ($Result_SelectReferrer['id'] > 0) {
+                    $registrationIPs = [
+                        'r' => trim($userSessionIP),
+                        'p' => trim(Users\Session\getCurrentOriginatingIP())
+                    ];
 
-                        if (empty($registrationIPs['p'])) {
-                            unset($registrationIPs['p']);
-                        }
-
-                        $existingMatchingEnterLogIds = Registration\Utils\Queries\findEnterLogIPsWithMatchingIPValue([
-                            'ips' => $registrationIPs,
-                        ]);
-
-                        Registration\Utils\Queries\insertReferralsTableEntry([
-                            'referrerUserId' => $RefID,
-                            'referredUserId' => $UserID,
-                            'timestamp' => $Now,
-                            'registrationIPs' => $registrationIPs,
-                            'existingMatchingEnterLogIds' => $existingMatchingEnterLogIds,
-                        ]);
-
-                        $Message = false;
-                        $Message['msg_id'] = '038';
-                        $Message['args'] = array('');
-                        $Message = json_encode($Message);
-
-                        SendSimpleMessage($RefID, 0, $Now, 70, '007', '016', $Message);
-
-                        $setReferrerId = $RefID;
+                    if (empty($registrationIPs['p'])) {
+                        unset($registrationIPs['p']);
                     }
+
+                    $existingMatchingEnterLogIds = Registration\Utils\Queries\findEnterLogIPsWithMatchingIPValue([
+                        'ips' => $registrationIPs,
+                    ]);
+
+                    Registration\Utils\Queries\insertReferralsTableEntry([
+                        'referrerUserId' => $referrerUserId,
+                        'referredUserId' => $UserID,
+                        'timestamp' => $Now,
+                        'registrationIPs' => $registrationIPs,
+                        'existingMatchingEnterLogIds' => $existingMatchingEnterLogIds,
+                    ]);
+
+                    $Message = false;
+                    $Message['msg_id'] = '038';
+                    $Message['args'] = array('');
+                    $Message = json_encode($Message);
+
+                    SendSimpleMessage($referrerUserId, 0, $Now, 70, '007', '016', $Message);
+
+                    $setReferrerId = $referrerUserId;
                 }
             }
 
             $ActivationCode = md5(mt_rand(0, 99999999999));
 
+            // Update User with new data
             Registration\Utils\Queries\updateUserFinalDetails([
                 'userId' => $UserID,
                 'motherPlanetId' => $PlanetID,
