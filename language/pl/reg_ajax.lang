@@ -2,7 +2,7 @@
 
 $_Lang['RegMail_UniName'] = 'Universum 1';
 
-$_Lang['mail_title'] = $_GameConfig['game_name'].' - Rejestracja';
+$_Lang['mail_title'] = '{gameName} - Rejestracja';
 
 $_Lang['mail_text'] = '';
 $_Lang['mail_text'] .= 'Witaj {login},<br/>dziękujemy za rejestrację w grze {gameLink}<br /><br />';

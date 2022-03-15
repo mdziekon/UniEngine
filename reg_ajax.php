@@ -439,7 +439,14 @@ if(isset($_GET['register']))
                     'activationCode' => $ActivationCode,
                 ])['componentHTML'];
 
-                SendMail($Email, $_Lang['mail_title'], $mailContent);
+                $mailTitle = parsetemplate(
+                    $_Lang['mail_title'],
+                    [
+                        'gameName' => $_GameConfig['game_name']
+                    ]
+                );
+
+                SendMail($Email, $mailTitle, $mailContent);
             }
 
             if(SERVER_MAINOPEN_TSTAMP <= $Now)

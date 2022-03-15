@@ -3,7 +3,7 @@
 // FIXME: make this configurable
 $_Lang['RegMail_UniName'] = 'Uni 1';
 
-$_Lang['mail_title'] = $_GameConfig['game_name'].' - Registration';
+$_Lang['mail_title'] = '{gameName} - Registration';
 
 $_Lang['mail_text'] = '';
 $_Lang['mail_text'] .= 'Welcome {login},<br/>thank you for registering to {gameLink}<br /><br />';
