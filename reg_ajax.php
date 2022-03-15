@@ -6,9 +6,11 @@ $_EnginePath = './';
 
 include($_EnginePath.'common.php');
 include_once($_EnginePath . 'modules/session/_includes.php');
+include_once($_EnginePath . 'modules/registration/_includes.php');
 
 use UniEngine\Engine\Includes\Helpers\Users;
 use UniEngine\Engine\Modules\Session;
+use UniEngine\Engine\Modules\Registration;
 
 includeLang('reg_ajax');
 $Now = time();
@@ -361,100 +363,61 @@ if(isset($_GET['register']))
             doquery($Query_UpdateConfig, 'config');
             $_MemCache->GameConfig = $_GameConfig;
 
-            // Update User with new data
-            if(isset($_COOKIE[REFERING_COOKIENAME]) && $_COOKIE[REFERING_COOKIENAME] > 0)
-            {
-                $RefID = round($_COOKIE[REFERING_COOKIENAME]);
-                if($RefID > 0)
-                {
-                    $Query_SelectReferrer = "SELECT `id` FROM {{table}} WHERE `id` = {$RefID} LIMIT 1;";
-                    $Result_SelectReferrer = doquery($Query_SelectReferrer, 'users', true);
-                    if($Result_SelectReferrer['id'] > 0)
-                    {
-                        $UserIPs['r'] = trim($userSessionIP);
-                        $UserIPs['p'] = preg_replace('#[^a-zA-Z0-9\.\,\:\ ]{1,}#si', '', trim($_SERVER['HTTP_X_FORWARDED_FOR']));
-                        if(empty($UserIPs['p']))
-                        {
-                            unset($UserIPs['p']);
-                        }
-                        foreach($UserIPs as $Key => $Data)
-                        {
-                            $CreateRegIP[] = "{$Key},{$Data}";
-                            $UserIPs[$Key] = "'{$Data}'";
-                        }
-                        $CreateRegIP = implode(';', $CreateRegIP);
+            $setReferrerId = null;
+            $referrerUserId = Registration\Utils\Cookies\getStoredReferrerId();
 
-                        $Query_InsertRefData_Matches = 'null';
+            if ($referrerUserId !== null) {
+                $Query_SelectReferrer = "SELECT `id` FROM {{table}} WHERE `id` = {$referrerUserId} LIMIT 1;";
+                $Result_SelectReferrer = doquery($Query_SelectReferrer, 'users', true);
+                if ($Result_SelectReferrer['id'] > 0) {
+                    $registrationIPs = [
+                        'r' => trim($userSessionIP),
+                        'p' => trim(Users\Session\getCurrentOriginatingIP())
+                    ];
 
-                        $Query_SelectIPMatches = "SELECT `ID` FROM {{table}} WHERE `Type` = 'ip' AND `Value` IN (".implode(',', $UserIPs).");";
-
-                        $Result_SelectIPMatches = doquery($Query_SelectIPMatches, 'used_ip_and_ua');
-
-                        if($Result_SelectIPMatches->num_rows > 0)
-                        {
-                            while($FetchData = $Result_SelectIPMatches->fetch_assoc())
-                            {
-                                $MatchedIPIDs[] = $FetchData['ID'];
-                            }
-
-                            $Query_SelectEnterLogMatches = "SELECT `ID` FROM {{table}} WHERE `IP_ID` IN (".implode(',', $MatchedIPIDs).");";
-
-                            $Result_SelectEnterLogMatches = doquery($Query_SelectEnterLogMatches, 'user_enterlog');
-
-                            if($Result_SelectEnterLogMatches->num_rows > 0)
-                            {
-                                while($FetchData = $Result_SelectEnterLogMatches->fetch_assoc())
-                                {
-                                    $MatchedEnterLogIDs[] = $FetchData['ID'];
-                                }
-
-                                $Query_InsertRefData_Matches = '\''.implode(',', $MatchedEnterLogIDs).'\'';
-                            }
-                        }
-
-                        $Query_InsertRefData = '';
-                        $Query_InsertRefData .= "INSERT INTO {{table}} SET ";
-                        $Query_InsertRefData .= "`referrer_id` = {$RefID}, ";
-                        $Query_InsertRefData .= "`newuser_id` = {$UserID}, ";
-                        $Query_InsertRefData .= "`time` = {$Now}, ";
-                        $Query_InsertRefData .= "`reg_ip` = '{$CreateRegIP}', ";
-                        $Query_InsertRefData .= "`matches_found` = {$Query_InsertRefData_Matches};";
-                        doquery($Query_InsertRefData, 'referring_table');
-
-                        $Message = false;
-                        $Message['msg_id'] = '038';
-                        $Message['args'] = array('');
-                        $Message = json_encode($Message);
-
-                        SendSimpleMessage($RefID, 0, $Now, 70, '007', '016', $Message);
-
-                        $Query_UpdateUser_Fields[] = "`referred` = {$RefID}";
+                    if (empty($registrationIPs['p'])) {
+                        unset($registrationIPs['p']);
                     }
+
+                    $existingMatchingEnterLogIds = Registration\Utils\Queries\findEnterLogIPsWithMatchingIPValue([
+                        'ips' => $registrationIPs,
+                    ]);
+
+                    Registration\Utils\Queries\insertReferralsTableEntry([
+                        'referrerUserId' => $referrerUserId,
+                        'referredUserId' => $UserID,
+                        'timestamp' => $Now,
+                        'registrationIPs' => $registrationIPs,
+                        'existingMatchingEnterLogIds' => $existingMatchingEnterLogIds,
+                    ]);
+
+                    $Message = false;
+                    $Message['msg_id'] = '038';
+                    $Message['args'] = array('');
+                    $Message = json_encode($Message);
+
+                    SendSimpleMessage($referrerUserId, 0, $Now, 70, '007', '016', $Message);
+
+                    $setReferrerId = $referrerUserId;
                 }
             }
 
             $ActivationCode = md5(mt_rand(0, 99999999999));
 
-            $Query_UpdateUser_Fields[] = "`id_planet` = {$PlanetID}";
-            $Query_UpdateUser_Fields[] = "`settings_mainPlanetID` = {$PlanetID}";
-            $Query_UpdateUser_Fields[] = "`current_planet` = {$PlanetID}";
-            $Query_UpdateUser_Fields[] = "`galaxy` = {$Galaxy}";
-            $Query_UpdateUser_Fields[] = "`system` = {$System}";
-            $Query_UpdateUser_Fields[] = "`planet` = {$Planet}";
-            if(REGISTER_REQUIRE_EMAILCONFIRM)
-            {
-                $Query_UpdateUser_Fields[] = "`activation_code` = '{$ActivationCode}'";
-            }
-            else
-            {
-                $Query_UpdateUser_Fields[] = "`activation_code` = ''";
-            }
-
-            $Query_UpdateUser = '';
-            $Query_UpdateUser .= "UPDATE {{table}} SET ";
-            $Query_UpdateUser .= implode(', ', $Query_UpdateUser_Fields);
-            $Query_UpdateUser .= " WHERE `id` = {$UserID} LIMIT 1;";
-            doquery($Query_UpdateUser, 'users');
+            // Update User with new data
+            Registration\Utils\Queries\updateUserFinalDetails([
+                'userId' => $UserID,
+                'motherPlanetId' => $PlanetID,
+                'motherPlanetGalaxy' => $Galaxy,
+                'motherPlanetSystem' => $System,
+                'motherPlanetPlanetPos' => $Planet,
+                'referrerId' => $setReferrerId,
+                'activationCode' => (
+                    REGISTER_REQUIRE_EMAILCONFIRM ?
+                        $ActivationCode :
+                        null
+                )
+            ]);
 
             // Send a invitation private msg
             $Message = false;
@@ -464,16 +427,26 @@ if(isset($_GET['register']))
 
             SendSimpleMessage($UserID, 0, $Now, 70, '004', '009', $Message);
 
-            if(REGISTER_REQUIRE_EMAILCONFIRM)
-            {
+            if (REGISTER_REQUIRE_EMAILCONFIRM) {
                 include($_EnginePath.'includes/functions/SendMail.php');
-                $MailParse['login'] = $Username;
-                $MailParse['password'] = $Password;
-                $MailParse['Universe'] = $_Lang['RegMail_UniName'];
-                $MailParse['activationlink'] = '<a href="'.GAMEURL.'activate.php?code='.$ActivationCode.'">'.GAMEURL.'activate.php?code='.$ActivationCode.'</a>';
-                $MailParse['UserRefLink'] = '<a href="'.GAMEURL.'index.php?r='.$UserID.'">'.GAMEURL.'index.php?r='.$UserID.'</a>';
-                $MailParsed = parsetemplate($_Lang['mail_template'], $MailParse);
-                SendMail($Email, $_Lang['mail_title'], $MailParsed);
+
+                $mailContent = Registration\Components\RegistrationConfirmationMail\render([
+                    'userId' => $UserID,
+                    'login' => $Username,
+                    'password' => $Password,
+                    'gameName' => $_GameConfig['game_name'],
+                    'universe' => $_Lang['RegMail_UniName'],
+                    'activationCode' => $ActivationCode,
+                ])['componentHTML'];
+
+                $mailTitle = parsetemplate(
+                    $_Lang['mail_title'],
+                    [
+                        'gameName' => $_GameConfig['game_name']
+                    ]
+                );
+
+                SendMail($Email, $mailTitle, $mailContent);
             }
 
             if(SERVER_MAINOPEN_TSTAMP <= $Now)

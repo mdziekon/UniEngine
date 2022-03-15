@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Maps an array, allowing to access the key of each value
+ */
+function array_map_withkeys(array $inputArray, callable $callback) {
+    return array_map($callback, $inputArray, array_keys($inputArray));
+}
+
 // Important functions
 function ReadFromFile($filename)
 {
