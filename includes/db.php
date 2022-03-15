@@ -88,4 +88,18 @@ function closeDBLink() {
     $_DBLink->close();
 }
 
+function mapQueryResults ($results, callable $callback) {
+    if ($results->num_rows <= 0) {
+        return [];
+    }
+
+    $mappedResults = [];
+
+    while ($resultEntry = $results->fetch_assoc()) {
+        $mappedResults[] = $callback($resultEntry);
+    }
+
+    return $mappedResults;
+}
+
 ?>
