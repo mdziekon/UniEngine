@@ -6,9 +6,11 @@ $_EnginePath = './';
 
 include($_EnginePath.'common.php');
 include_once($_EnginePath . 'modules/session/_includes.php');
+include_once($_EnginePath . 'modules/registration/_includes.php');
 
 use UniEngine\Engine\Includes\Helpers\Users;
 use UniEngine\Engine\Modules\Session;
+use UniEngine\Engine\Modules\Registration;
 
 includeLang('reg_ajax');
 $Now = time();
@@ -464,16 +466,19 @@ if(isset($_GET['register']))
 
             SendSimpleMessage($UserID, 0, $Now, 70, '004', '009', $Message);
 
-            if(REGISTER_REQUIRE_EMAILCONFIRM)
-            {
+            if (REGISTER_REQUIRE_EMAILCONFIRM) {
                 include($_EnginePath.'includes/functions/SendMail.php');
-                $MailParse['login'] = $Username;
-                $MailParse['password'] = $Password;
-                $MailParse['Universe'] = $_Lang['RegMail_UniName'];
-                $MailParse['activationlink'] = '<a href="'.GAMEURL.'activate.php?code='.$ActivationCode.'">'.GAMEURL.'activate.php?code='.$ActivationCode.'</a>';
-                $MailParse['UserRefLink'] = '<a href="'.GAMEURL.'index.php?r='.$UserID.'">'.GAMEURL.'index.php?r='.$UserID.'</a>';
-                $MailParsed = parsetemplate($_Lang['mail_template'], $MailParse);
-                SendMail($Email, $_Lang['mail_title'], $MailParsed);
+
+                $mailContent = Registration\Components\RegistrationConfirmationMail\render([
+                    'userId' => $UserID,
+                    'login' => $Username,
+                    'password' => $Password,
+                    'gameName' => $_GameConfig['game_name'],
+                    'universe' => $_Lang['RegMail_UniName'],
+                    'activationCode' => $ActivationCode,
+                ])['componentHTML'];
+
+                SendMail($Email, $_Lang['mail_title'], $mailContent);
             }
 
             if(SERVER_MAINOPEN_TSTAMP <= $Now)
