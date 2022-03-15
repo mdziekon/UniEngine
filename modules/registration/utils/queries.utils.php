@@ -4,6 +4,47 @@ namespace UniEngine\Engine\Modules\Registration\Utils\Queries;
 
 //  Arguments
 //      - $params (Object)
+//          - ips (string[])
+//
+function findEnterLogIPsWithMatchingIPValue ($params) {
+    $ips = array_map(function ($ip) {
+        return "'{$ip}'";
+    }, $params['ips']);
+
+    $selectIPsIdsQuery = (
+        "SELECT `ID` " .
+        "FROM {{table}} " .
+        "WHERE " .
+        "`Type` = 'ip' AND " .
+        "`Value` IN (".implode(',', $ips).") " .
+        ";"
+    );
+
+    $selectIPsIdsResult = doquery($selectIPsIdsQuery, 'used_ip_and_ua');
+
+    $ipIds = mapQueryResults($selectIPsIdsResult, function ($ipRow) {
+        return $ipRow['ID'];
+    });
+
+    $selectEnterLogMatchesQuery = (
+        "SELECT `ID` " .
+        "FROM {{table}} " .
+        "WHERE " .
+        "`IP_ID` IN (".implode(',', $ipIds).") " .
+        ";"
+    );
+
+    $selectEnterLogMatchesResult = doquery($selectEnterLogMatchesQuery, 'user_enterlog');
+
+    $enterLogIds = mapQueryResults($selectEnterLogMatchesResult, function ($enterLogRow) {
+        return $enterLogRow['ID'];
+    });
+
+    return $enterLogIds;
+}
+
+//  Arguments
+//      - $params (Object)
 //          - referrerUserId (string)
 //          - referredUserId (string)
 //          - timestamp (number)

@@ -380,39 +380,17 @@ if(isset($_GET['register']))
 
                         $UserIPs['r'] = trim($userSessionIP);
                         $UserIPs['p'] = preg_replace('#[^a-zA-Z0-9\.\,\:\ ]{1,}#si', '', trim($_SERVER['HTTP_X_FORWARDED_FOR']));
-                        if(empty($UserIPs['p']))
-                        {
+
+                        if (empty($UserIPs['p'])) {
                             unset($UserIPs['p']);
                         }
-                        foreach($UserIPs as $Key => $Data)
-                        {
+                        foreach ($UserIPs as $Key => $Data) {
                             $registrationIPs[$Key] = $Data;
-                            $UserIPs[$Key] = "'{$Data}'";
                         }
 
-                        $Query_SelectIPMatches = "SELECT `ID` FROM {{table}} WHERE `Type` = 'ip' AND `Value` IN (".implode(',', $UserIPs).");";
-
-                        $Result_SelectIPMatches = doquery($Query_SelectIPMatches, 'used_ip_and_ua');
-
-                        if($Result_SelectIPMatches->num_rows > 0)
-                        {
-                            while($FetchData = $Result_SelectIPMatches->fetch_assoc())
-                            {
-                                $MatchedIPIDs[] = $FetchData['ID'];
-                            }
-
-                            $Query_SelectEnterLogMatches = "SELECT `ID` FROM {{table}} WHERE `IP_ID` IN (".implode(',', $MatchedIPIDs).");";
-
-                            $Result_SelectEnterLogMatches = doquery($Query_SelectEnterLogMatches, 'user_enterlog');
-
-                            if($Result_SelectEnterLogMatches->num_rows > 0)
-                            {
-                                while($FetchData = $Result_SelectEnterLogMatches->fetch_assoc())
-                                {
-                                    $existingMatchingEnterLogIds[] = $FetchData['ID'];
-                                }
-                            }
-                        }
+                        $existingMatchingEnterLogIds = Registration\Utils\Queries\findEnterLogIPsWithMatchingIPValue([
+                            'ips' => $registrationIPs,
+                        ]);
 
                         Registration\Utils\Queries\insertReferralsTableEntry([
                             'referrerUserId' => $RefID,
