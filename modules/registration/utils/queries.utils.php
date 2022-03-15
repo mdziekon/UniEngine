@@ -4,6 +4,41 @@ namespace UniEngine\Engine\Modules\Registration\Utils\Queries;
 
 //  Arguments
 //      - $params (Object)
+//          - referrerUserId (string)
+//          - referredUserId (string)
+//          - timestamp (number)
+//          - registrationIPs (Record<ipType: string, ipValue: string>)
+//          - existingMatchingEnterLogIds (string[])
+//
+function insertReferralsTableEntry ($params) {
+    $registrationIPs = array_map_withkeys($params['registrationIPs'], function ($value, $key) {
+        return "{$key},{$value}";
+    });
+    $registrationIPs = implode(';', $registrationIPs);
+
+    $existingMatchingEnterLogIds = "null";
+
+    if (!empty($params['existingMatchingEnterLogIds'])) {
+        $existingMatchingEnterLogIds = implode(',', $params['existingMatchingEnterLogIds']);
+        $existingMatchingEnterLogIds = "'{$existingMatchingEnterLogIds}'";
+    }
+
+    $insertEntryQuery = (
+        "INSERT INTO {{table}} " .
+        "SET " .
+        "`referrer_id` = {$params['referrerUserId']}, " .
+        "`newuser_id` = {$params['referredUserId']}, " .
+        "`time` = {$params['timestamp']}, " .
+        "`reg_ip` = '{$registrationIPs}', " .
+        "`matches_found` = {$existingMatchingEnterLogIds} " .
+        ";"
+    );
+
+    doquery($insertEntryQuery, 'referring_table');
+}
+
+//  Arguments
+//      - $params (Object)
 //          - userId (String)
 //          - motherPlanetId (String)
 //          - motherPlanetGalaxy (String)

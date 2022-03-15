@@ -375,6 +375,9 @@ if(isset($_GET['register']))
                     $Result_SelectReferrer = doquery($Query_SelectReferrer, 'users', true);
                     if($Result_SelectReferrer['id'] > 0)
                     {
+                        $registrationIPs = [];
+                        $existingMatchingEnterLogIds = [];
+
                         $UserIPs['r'] = trim($userSessionIP);
                         $UserIPs['p'] = preg_replace('#[^a-zA-Z0-9\.\,\:\ ]{1,}#si', '', trim($_SERVER['HTTP_X_FORWARDED_FOR']));
                         if(empty($UserIPs['p']))
@@ -383,12 +386,9 @@ if(isset($_GET['register']))
                         }
                         foreach($UserIPs as $Key => $Data)
                         {
-                            $CreateRegIP[] = "{$Key},{$Data}";
+                            $registrationIPs[$Key] = $Data;
                             $UserIPs[$Key] = "'{$Data}'";
                         }
-                        $CreateRegIP = implode(';', $CreateRegIP);
-
-                        $Query_InsertRefData_Matches = 'null';
 
                         $Query_SelectIPMatches = "SELECT `ID` FROM {{table}} WHERE `Type` = 'ip' AND `Value` IN (".implode(',', $UserIPs).");";
 
@@ -409,21 +409,18 @@ if(isset($_GET['register']))
                             {
                                 while($FetchData = $Result_SelectEnterLogMatches->fetch_assoc())
                                 {
-                                    $MatchedEnterLogIDs[] = $FetchData['ID'];
+                                    $existingMatchingEnterLogIds[] = $FetchData['ID'];
                                 }
-
-                                $Query_InsertRefData_Matches = '\''.implode(',', $MatchedEnterLogIDs).'\'';
                             }
                         }
 
-                        $Query_InsertRefData = '';
-                        $Query_InsertRefData .= "INSERT INTO {{table}} SET ";
-                        $Query_InsertRefData .= "`referrer_id` = {$RefID}, ";
-                        $Query_InsertRefData .= "`newuser_id` = {$UserID}, ";
-                        $Query_InsertRefData .= "`time` = {$Now}, ";
-                        $Query_InsertRefData .= "`reg_ip` = '{$CreateRegIP}', ";
-                        $Query_InsertRefData .= "`matches_found` = {$Query_InsertRefData_Matches};";
-                        doquery($Query_InsertRefData, 'referring_table');
+                        Registration\Utils\Queries\insertReferralsTableEntry([
+                            'referrerUserId' => $RefID,
+                            'referredUserId' => $UserID,
+                            'timestamp' => $Now,
+                            'registrationIPs' => $registrationIPs,
+                            'existingMatchingEnterLogIds' => $existingMatchingEnterLogIds,
+                        ]);
 
                         $Message = false;
                         $Message['msg_id'] = '038';
