@@ -80,6 +80,39 @@ function insertReferralsTableEntry ($params) {
 
 //  Arguments
 //      - $params (Object)
+//          - username (String)
+//          - passwordHash (String)
+//          - langCode (String)
+//          - email (String)
+//          - registrationIP (String)
+//          - currentTimestamp (String)
+//
+function insertNewUser ($params) {
+    $insertUserQuery = (
+        "INSERT INTO {{table}} " .
+        "SET " .
+        "`username` = '{$params['username']}', " .
+        "`password` = '{$params['passwordHash']}', " .
+        "`lang` = '{$params['langCode']}', " .
+        "`email` = '{$params['email']}', " .
+        "`email_2` = '{$params['email']}', " .
+        "`ip_at_reg` = '{$params['registrationIP']}', " .
+        "`id_planet` = 0, " .
+        "`register_time` = {$params['currentTimestamp']}, " .
+        "`onlinetime` = {$params['currentTimestamp']} - (24*60*60), " .
+        "`rules_accept_stamp` = {$params['currentTimestamp']} " .
+        ";"
+    );
+
+    doquery($insertUserQuery, 'users');
+
+    return [
+        'userId' => getLastInsertId()
+    ];
+}
+
+//  Arguments
+//      - $params (Object)
 //          - userId (String)
 //          - motherPlanetId (String)
 //          - motherPlanetGalaxy (String)

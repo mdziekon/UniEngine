@@ -321,30 +321,20 @@ if(isset($_GET['register']))
             }
         }
 
-        if($PosFound)
-        {
+        if ($PosFound) {
             $passwordHash = Session\Utils\LocalIdentityV1\hashPassword([
                 'password' => $Password,
             ]);
 
-            $Query_InsertUser = '';
-            $Query_InsertUser .= "INSERT INTO {{table}} SET ";
-            $Query_InsertUser .= "`username` = '{$Username}', ";
-            $Query_InsertUser .= "`lang` = '{$LangCode}', ";
-            $Query_InsertUser .= "`email` = '{$Email}', ";
-            $Query_InsertUser .= "`email_2` = '{$Email}', ";
-            $Query_InsertUser .= "`ip_at_reg` = '" . $userSessionIP . "', ";
-            $Query_InsertUser .= "`id_planet` = 0, ";
-            $Query_InsertUser .= "`register_time` = {$Now}, ";
-            $Query_InsertUser .= "`onlinetime` = {$Now} - (24*60*60), ";
-            $Query_InsertUser .= "`rules_accept_stamp` = {$Now}, ";
-            $Query_InsertUser .= "`password` = '{$passwordHash}';";
-            doquery($Query_InsertUser, 'users');
-
-            // Get UserID
-            $Query_GetUserID = "SELECT LAST_INSERT_ID() AS `ID`;";
-            $Result_GetUserID = doquery($Query_GetUserID, '', true);
-            $UserID = $Result_GetUserID['ID'];
+            $insertNewUserResult = Registration\Utils\Queries\insertNewUser([
+                'username' => $Username,
+                'passwordHash' => $passwordHash,
+                'langCode' => $LangCode,
+                'email' => $Email,
+                'registrationIP' => $userSessionIP,
+                'currentTimestamp' => $Now,
+            ]);
+            $UserID = $insertNewUserResult['userId'];
 
             // Update all MailChanges
             doquery("UPDATE {{table}} SET `ConfirmType` = 4 WHERE `NewMail` = '{$Email}' AND `ConfirmType` = 0;", 'mailchange');
