@@ -354,14 +354,7 @@ if(isset($_GET['register']))
             $Galaxy = $GalaxyNo;
             $PlanetID = CreateOnePlanetRecord($Galaxy, $System, $Planet, $UserID, $_Lang['MotherPlanet'], true);
 
-            // Update Config
-            $_GameConfig['users_amount'] += 1;
-            $Query_UpdateConfig = '';
-            $Query_UpdateConfig .= "UPDATE {{table}} ";
-            $Query_UpdateConfig .= "SET `config_value` = {$_GameConfig['users_amount']} ";
-            $Query_UpdateConfig .= "WHERE `config_name` = 'users_amount';";
-            doquery($Query_UpdateConfig, 'config');
-            $_MemCache->GameConfig = $_GameConfig;
+            Registration\Utils\Queries\incrementUsersCounterInGameConfig();
 
             $setReferrerId = null;
             $referrerUserId = Registration\Utils\Cookies\getStoredReferrerId();

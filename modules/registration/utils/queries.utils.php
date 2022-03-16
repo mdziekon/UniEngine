@@ -121,4 +121,23 @@ function updateUserFinalDetails ($params) {
     doquery($updateUserQuery, 'users');
 }
 
+function incrementUsersCounterInGameConfig () {
+    global $_GameConfig, $_MemCache;
+
+    $_GameConfig['users_amount'] += 1;
+
+    $updateUserConfigQuery = (
+        "UPDATE {{table}} " .
+        "SET " .
+        "`config_value` = {$_GameConfig['users_amount']} " .
+        "WHERE " .
+        "`config_name` = 'users_amount' " .
+        ";"
+    );
+
+    doquery($updateUserConfigQuery, 'config');
+
+    $_MemCache->GameConfig = $_GameConfig;
+}
+
 ?>
