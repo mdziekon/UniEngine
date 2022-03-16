@@ -10,8 +10,8 @@
         }
     ],
     "require": {
-        "smarty/smarty": "~3.1",
-        "phpmailer/phpmailer": "~6.0",
+        "smarty/smarty": "3.1.43",
+        "phpmailer/phpmailer": "6.6.0",
         "google/recaptcha": "~1.2"
     },
     "require-dev": {
