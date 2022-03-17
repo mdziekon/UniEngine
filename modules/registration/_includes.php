@@ -10,6 +10,7 @@ call_user_func(function () {
 
     include($includePath . './utils/cookies.utils.php');
     include($includePath . './utils/galaxy.utils.php');
+    include($includePath . './utils/general.utils.php');
     include($includePath . './utils/queries.utils.php');
 
 });

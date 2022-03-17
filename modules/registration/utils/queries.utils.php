@@ -4,6 +4,27 @@ namespace UniEngine\Engine\Modules\Registration\Utils\Queries;
 
 //  Arguments
 //      - $params (Object)
+//          - userId (string | null)
+//
+function checkIfUserExists ($params) {
+    $selectUserQuery = (
+        "SELECT " .
+        "`id` " .
+        "FROM {{table}}  " .
+        "WHERE " .
+        "`id` = {$params['userId']} " .
+        "LIMIT 1 " .
+        ";"
+    );
+
+    $selectUserResult = doquery($selectUserQuery, 'users');
+    $doesUserExist = $selectUserResult->num_rows == 1;
+
+    return $doesUserExist;
+}
+
+//  Arguments
+//      - $params (Object)
 //          - ips (string[])
 //
 function findEnterLogIPsWithMatchingIPValue ($params) {
