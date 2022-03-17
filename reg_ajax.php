@@ -194,134 +194,18 @@ if(isset($_GET['register']))
         }
     }
 
-    if(empty($JSONResponse['Errors']))
-    {
+    if (empty($JSONResponse['Errors'])) {
         unset($JSONResponse['Errors']);
 
-        // Check Galaxy
-        $SystemsRange = 25;
-        $SystemRandom = mt_rand(1, MAX_SYSTEM_IN_GALAXY);
-        if(($SystemRandom + $SystemsRange) >= MAX_SYSTEM_IN_GALAXY)
-        {
-            $System_Lower = $SystemRandom - $SystemsRange;
-        }
-        else
-        {
-            $System_Lower = $SystemRandom;
-        }
-        $System_Higher = $System_Lower + $SystemsRange;
-        $Planet_Lower = 4;
-        $Planet_Higher = 12;
+        $newPlanetCoordinates = Registration\Utils\Galaxy\findNewPlanetPosition([
+            'preferredGalaxy' => $GalaxyNo
+        ]);
 
-        // - Step 1: check random range of solar systems
-        $PosFound = false;
-        $Position_NonFree = [];
-        $Position_NonFreeCount = 0;
-        $Position_TotalCount = (($System_Higher - $System_Lower) + 1) * (($Planet_Higher - $Planet_Lower) + 1);
+        if ($newPlanetCoordinates !== null) {
+            $Galaxy = $newPlanetCoordinates['galaxy'];
+            $System = $newPlanetCoordinates['system'];
+            $Planet = $newPlanetCoordinates['planet'];
 
-        $Query_CheckGalaxy1 = '';
-        $Query_CheckGalaxy1 .= "SELECT `system`, `planet` FROM {{table}} ";
-        $Query_CheckGalaxy1 .= "WHERE `galaxy` = {$GalaxyNo} AND ";
-        $Query_CheckGalaxy1 .= "`system` BETWEEN {$System_Lower} AND {$System_Higher} AND ";
-        $Query_CheckGalaxy1 .= "`planet` BETWEEN {$Planet_Lower} AND {$Planet_Higher};";
-        $Result_CheckGalaxy1 = doquery($Query_CheckGalaxy1, 'galaxy');
-        if($Result_CheckGalaxy1->num_rows > 0)
-        {
-            while($FetchData = $Result_CheckGalaxy1->fetch_assoc())
-            {
-                $Position_NonFree["{$FetchData['system']}:{$FetchData['planet']}"] = true;
-            }
-            $Position_NonFreeCount = count($Position_NonFree);
-        }
-        if($Position_NonFreeCount < $Position_TotalCount)
-        {
-            while(!$PosFound)
-            {
-                $System = mt_rand($System_Lower, $System_Higher);
-                $Planet = mt_rand($Planet_Lower, $Planet_Higher);
-                if(!isset($Position_NonFree["{$System}:{$Planet}"]))
-                {
-                    $PosFound = true;
-                }
-            }
-        }
-        else
-        {
-            // - Step 2: check whole galaxy, if space not found earlier
-            $Position_NonFree = [];
-            $Position_NonFreeCount = 0;
-            $Position_TotalCount = MAX_SYSTEM_IN_GALAXY * (($Planet_Higher - $Planet_Lower) + 1);
-
-            $Query_CheckGalaxy2 = '';
-            $Query_CheckGalaxy2 .= "SELECT `system`, `planet` FROM {{table}} ";
-            $Query_CheckGalaxy2 .= "WHERE `galaxy` = {$GalaxyNo} AND ";
-            $Query_CheckGalaxy2 .= "`planet` BETWEEN {$Planet_Lower} AND {$Planet_Higher};";
-            $Result_CheckGalaxy2 = doquery($Query_CheckGalaxy2, 'galaxy');
-            if($Result_CheckGalaxy2->num_rows > 0)
-            {
-                while($FetchData = $Result_CheckGalaxy2->fetch_assoc())
-                {
-                    $Position_NonFree["{$FetchData['system']}:{$FetchData['planet']}"] = true;
-                }
-                $Position_NonFreeCount = count($Position_NonFree);
-            }
-            if($Position_NonFreeCount < $Position_TotalCount)
-            {
-                while(!$PosFound)
-                {
-                    $System = mt_rand(1, MAX_SYSTEM_IN_GALAXY);
-                    $Planet = mt_rand($Planet_Lower, $Planet_Higher);
-                    if(!isset($Position_NonFree["{$System}:{$Planet}"]))
-                    {
-                        $PosFound = true;
-                    }
-                }
-            }
-            else
-            {
-                // - Step 3: check whole galaxy and all slots which has not been checked
-                $Position_NonFree = [];
-                $Position_NonFreeCount = 0;
-                $Planet_PosArray = [];
-                for($i = 1; $i < $Planet_Lower; $i += 1)
-                {
-                    $Planet_PosArray[] = $i;
-                }
-                for($i = $Planet_Higher; $i < MAX_PLANET_IN_SYSTEM; $i += 1)
-                {
-                    $Planet_PosArray[] = $i;
-                }
-                $Position_TotalCount = MAX_SYSTEM_IN_GALAXY * count($Planet_PosArray);
-
-                $Query_CheckGalaxy3 = '';
-                $Query_CheckGalaxy3 .= "SELECT `system`, `planet` FROM {{table}} ";
-                $Query_CheckGalaxy3 .= "WHERE `galaxy` = {$GalaxyNo} AND ";
-                $Query_CheckGalaxy3 .= "`planet` NOT BETWEEN {$Planet_Lower} AND {$Planet_Higher};";
-                $Result_CheckGalaxy3 = doquery($Query_CheckGalaxy3, 'galaxy');
-                if($Result_CheckGalaxy3->num_rows > 0)
-                {
-                    while($FetchData = $Result_CheckGalaxy3->fetch_assoc())
-                    {
-                        $Position_NonFree["{$FetchData['system']}:{$FetchData['planet']}"] = true;
-                    }
-                    $Position_NonFreeCount = count($Position_NonFree);
-                }
-                if($Position_NonFreeCount < $Position_TotalCount)
-                {
-                    while(!$PosFound)
-                    {
-                        $System = mt_rand(1, MAX_SYSTEM_IN_GALAXY);
-                        $Planet = $Planet_PosArray[array_rand($Planet_PosArray)];
-                        if(!isset($Position_NonFree["{$System}:{$Planet}"]))
-                        {
-                            $PosFound = true;
-                        }
-                    }
-                }
-            }
-        }
-
-        if ($PosFound) {
             $passwordHash = Session\Utils\LocalIdentityV1\hashPassword([
                 'password' => $Password,
             ]);
@@ -341,7 +225,7 @@ if(isset($_GET['register']))
 
             // Create a Planet for User
             include($_EnginePath.'includes/functions/CreateOnePlanetRecord.php');
-            $Galaxy = $GalaxyNo;
+
             $PlanetID = CreateOnePlanetRecord($Galaxy, $System, $Planet, $UserID, $_Lang['MotherPlanet'], true);
 
             Registration\Utils\Queries\incrementUsersCounterInGameConfig();
