@@ -316,8 +316,7 @@ if(isset($_GET['register']))
                 SendMail($Email, $mailTitle, $mailContent);
             }
 
-            if(SERVER_MAINOPEN_TSTAMP <= $Now)
-            {
+            if (isGameStartTimeReached($Now)) {
                 $sessionTokenValue = Session\Utils\Cookie\packSessionCookie([
                     'userId' => $UserID,
                     'username' => $Username,
@@ -333,14 +332,10 @@ if(isset($_GET['register']))
                     'Value' => $sessionTokenValue
                 ];
                 $JSONResponse['Redirect'] = GAMEURL_UNISTRICT.'/overview.php';
-            }
-            else
-            {
+            } else {
                 $JSONResponse['Code'] = 2;
             }
-        }
-        else
-        {
+        } else {
             $JSONResponse['Errors'][] = 15;
             $JSONResponse['BadFields'][] = 'email';
         }
