@@ -7,6 +7,17 @@ function array_map_withkeys(array $inputArray, callable $callback) {
     return array_map($callback, $inputArray, array_keys($inputArray));
 }
 
+/**
+ * Maps an object, allowing to access the key of each value, and change both key & value
+ */
+function object_map(array $inputObject, callable $callback) {
+    return array_column(
+        array_map($callback, $inputObject, array_keys($inputObject)),
+        0,
+        1
+    );
+}
+
 // Important functions
 function ReadFromFile($filename)
 {
