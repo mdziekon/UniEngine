@@ -138,29 +138,19 @@ if(isset($_GET['register']))
         $JSONResponse['Errors'][] = 9;
     }
 
-    if(REGISTER_RECAPTCHA_ENABLE)
-    {
-        $CaptchaResponse = null;
-        $RecaptchaServerIdentification = $_SERVER['SERVER_NAME'];
+    if (REGISTER_RECAPTCHA_ENABLE) {
+        // TODO: Verify whether this needs sanitization
+        $captchaUserValue = (
+            isset($_GET['captcha_response']) ?
+                $_GET['captcha_response'] :
+                null
+        );
+        $reCaptchaValidationResult = Registration\Validators\validateReCaptcha([
+            'responseValue' => $captchaUserValue,
+            'currentSessionIp' => $userSessionIP
+        ]);
 
-        if (
-            defined("REGISTER_RECAPTCHA_SERVERIP_AS_HOSTNAME") &&
-            REGISTER_RECAPTCHA_SERVERIP_AS_HOSTNAME
-        ) {
-            $RecaptchaServerIdentification = $_SERVER['SERVER_ADDR'];
-        }
-
-        if (isset($_GET['captcha_response'])) {
-            $CaptchaResponse = $_GET['captcha_response'];
-        }
-
-        $recaptcha = new \ReCaptcha\ReCaptcha(REGISTER_RECAPTCHA_PRIVATEKEY);
-
-        $recaptchaResponse = $recaptcha
-            ->setExpectedHostname($RecaptchaServerIdentification)
-            ->verify($CaptchaResponse, $userSessionIP);
-
-        if (!($recaptchaResponse->isSuccess())) {
+        if (!($reCaptchaValidationResult['isValid'])) {
             // ReCaptcha validation failed
             $JSONResponse['Errors'][] = 10;
         }
