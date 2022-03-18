@@ -7,8 +7,6 @@ namespace UniEngine\Engine\Modules\Registration\Validators;
 //          - username (String)
 //          - email (String)
 //
-// TODO: Verify comparisons
-//
 function validateTakenParams($params) {
     $selectExistingParamsQuery = (
         "SELECT " .
@@ -34,7 +32,8 @@ function validateTakenParams($params) {
     while ($searchRow = $selectExistingParamsResult->fetch_assoc()) {
         if (strtolower($searchRow['username']) == strtolower($params['username'])) {
             $validationResults['isUsernameTaken'] = true;
-        } else {
+        }
+        if (strtolower($searchRow['email']) == strtolower($params['email'])) {
             $validationResults['isEmailTaken'] = true;
         }
     }
