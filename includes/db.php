@@ -88,6 +88,10 @@ function closeDBLink() {
     $_DBLink->close();
 }
 
+function getLastInsertId () {
+    return getDBLink()->insert_id;
+}
+
 function mapQueryResults ($results, callable $callback) {
     if ($results->num_rows <= 0) {
         return [];

@@ -15,11 +15,6 @@ use UniEngine\Engine\Modules\Registration;
 includeLang('reg_ajax');
 $Now = time();
 
-if(REGISTER_RECAPTCHA_ENABLE)
-{
-    require($_EnginePath.'vendor/google/recaptcha/src/autoload.php');
-}
-
 header('access-control-allow-origin: *');
 
 if(isset($_GET['register']))
@@ -138,268 +133,109 @@ if(isset($_GET['register']))
         $JSONResponse['Errors'][] = 9;
     }
 
-    if(REGISTER_RECAPTCHA_ENABLE)
-    {
-        $CaptchaResponse = null;
-        $RecaptchaServerIdentification = $_SERVER['SERVER_NAME'];
+    if (REGISTER_RECAPTCHA_ENABLE) {
+        // TODO: Verify whether this needs sanitization
+        $captchaUserValue = (
+            isset($_GET['captcha_response']) ?
+                $_GET['captcha_response'] :
+                null
+        );
+        $reCaptchaValidationResult = Registration\Validators\validateReCaptcha([
+            'responseValue' => $captchaUserValue,
+            'currentSessionIp' => $userSessionIP
+        ]);
 
-        if (
-            defined("REGISTER_RECAPTCHA_SERVERIP_AS_HOSTNAME") &&
-            REGISTER_RECAPTCHA_SERVERIP_AS_HOSTNAME
-        ) {
-            $RecaptchaServerIdentification = $_SERVER['SERVER_ADDR'];
-        }
-
-        if (isset($_GET['captcha_response'])) {
-            $CaptchaResponse = $_GET['captcha_response'];
-        }
-
-        $recaptcha = new \ReCaptcha\ReCaptcha(REGISTER_RECAPTCHA_PRIVATEKEY);
-
-        $recaptchaResponse = $recaptcha
-            ->setExpectedHostname($RecaptchaServerIdentification)
-            ->verify($CaptchaResponse, $userSessionIP);
-
-        if (!($recaptchaResponse->isSuccess())) {
+        if (!($reCaptchaValidationResult['isValid'])) {
             // ReCaptcha validation failed
             $JSONResponse['Errors'][] = 10;
         }
     }
 
-    if($EmailGood === true AND $UsernameGood === true)
-    {
-        $Query_CheckExistence = '';
-        $Query_CheckExistence .= "SELECT `username`, `email` FROM {{table}} ";
-        $Query_CheckExistence .= "WHERE `username` = '{$Username}' OR `email` = '{$Email}' LIMIT 2;";
+    if (
+        $EmailGood === true &&
+        $UsernameGood === true
+    ) {
+        $takenParamsValidationResult = Registration\Validators\validateTakenParams([
+            'username' => $Username,
+            'email' => $Email,
+        ]);
 
-        $Result_CheckExistence = doquery($Query_CheckExistence, 'users');
-
-        if($Result_CheckExistence->num_rows > 0)
-        {
-            while($FetchData = $Result_CheckExistence->fetch_assoc())
-            {
-                if(strtolower($FetchData['username']) == strtolower($Username))
-                {
-                    // Username is used
-                    $JSONResponse['Errors'][] = 11;
-                    $JSONResponse['BadFields'][] = 'username';
-                }
-                else
-                {
-                    // EMail is used
-                    $JSONResponse['Errors'][] = 12;
-                    $JSONResponse['BadFields'][] = 'email';
-                }
-            }
+        if ($takenParamsValidationResult['isUsernameTaken']) {
+            $JSONResponse['Errors'][] = 11;
+            $JSONResponse['BadFields'][] = 'username';
+        }
+        if ($takenParamsValidationResult['isEmailTaken']) {
+            $JSONResponse['Errors'][] = 12;
+            $JSONResponse['BadFields'][] = 'email';
         }
     }
 
-    if(empty($JSONResponse['Errors']))
-    {
+    if (empty($JSONResponse['Errors'])) {
         unset($JSONResponse['Errors']);
 
-        // Check Galaxy
-        $SystemsRange = 25;
-        $SystemRandom = mt_rand(1, MAX_SYSTEM_IN_GALAXY);
-        if(($SystemRandom + $SystemsRange) >= MAX_SYSTEM_IN_GALAXY)
-        {
-            $System_Lower = $SystemRandom - $SystemsRange;
-        }
-        else
-        {
-            $System_Lower = $SystemRandom;
-        }
-        $System_Higher = $System_Lower + $SystemsRange;
-        $Planet_Lower = 4;
-        $Planet_Higher = 12;
+        $newPlanetCoordinates = Registration\Utils\Galaxy\findNewPlanetPosition([
+            'preferredGalaxy' => $GalaxyNo
+        ]);
 
-        // - Step 1: check random range of solar systems
-        $PosFound = false;
-        $Position_NonFree = [];
-        $Position_NonFreeCount = 0;
-        $Position_TotalCount = (($System_Higher - $System_Lower) + 1) * (($Planet_Higher - $Planet_Lower) + 1);
+        if ($newPlanetCoordinates !== null) {
+            $Galaxy = $newPlanetCoordinates['galaxy'];
+            $System = $newPlanetCoordinates['system'];
+            $Planet = $newPlanetCoordinates['planet'];
 
-        $Query_CheckGalaxy1 = '';
-        $Query_CheckGalaxy1 .= "SELECT `system`, `planet` FROM {{table}} ";
-        $Query_CheckGalaxy1 .= "WHERE `galaxy` = {$GalaxyNo} AND ";
-        $Query_CheckGalaxy1 .= "`system` BETWEEN {$System_Lower} AND {$System_Higher} AND ";
-        $Query_CheckGalaxy1 .= "`planet` BETWEEN {$Planet_Lower} AND {$Planet_Higher};";
-        $Result_CheckGalaxy1 = doquery($Query_CheckGalaxy1, 'galaxy');
-        if($Result_CheckGalaxy1->num_rows > 0)
-        {
-            while($FetchData = $Result_CheckGalaxy1->fetch_assoc())
-            {
-                $Position_NonFree["{$FetchData['system']}:{$FetchData['planet']}"] = true;
-            }
-            $Position_NonFreeCount = count($Position_NonFree);
-        }
-        if($Position_NonFreeCount < $Position_TotalCount)
-        {
-            while(!$PosFound)
-            {
-                $System = mt_rand($System_Lower, $System_Higher);
-                $Planet = mt_rand($Planet_Lower, $Planet_Higher);
-                if(!isset($Position_NonFree["{$System}:{$Planet}"]))
-                {
-                    $PosFound = true;
-                }
-            }
-        }
-        else
-        {
-            // - Step 2: check whole galaxy, if space not found earlier
-            $Position_NonFree = [];
-            $Position_NonFreeCount = 0;
-            $Position_TotalCount = MAX_SYSTEM_IN_GALAXY * (($Planet_Higher - $Planet_Lower) + 1);
-
-            $Query_CheckGalaxy2 = '';
-            $Query_CheckGalaxy2 .= "SELECT `system`, `planet` FROM {{table}} ";
-            $Query_CheckGalaxy2 .= "WHERE `galaxy` = {$GalaxyNo} AND ";
-            $Query_CheckGalaxy2 .= "`planet` BETWEEN {$Planet_Lower} AND {$Planet_Higher};";
-            $Result_CheckGalaxy2 = doquery($Query_CheckGalaxy2, 'galaxy');
-            if($Result_CheckGalaxy2->num_rows > 0)
-            {
-                while($FetchData = $Result_CheckGalaxy2->fetch_assoc())
-                {
-                    $Position_NonFree["{$FetchData['system']}:{$FetchData['planet']}"] = true;
-                }
-                $Position_NonFreeCount = count($Position_NonFree);
-            }
-            if($Position_NonFreeCount < $Position_TotalCount)
-            {
-                while(!$PosFound)
-                {
-                    $System = mt_rand(1, MAX_SYSTEM_IN_GALAXY);
-                    $Planet = mt_rand($Planet_Lower, $Planet_Higher);
-                    if(!isset($Position_NonFree["{$System}:{$Planet}"]))
-                    {
-                        $PosFound = true;
-                    }
-                }
-            }
-            else
-            {
-                // - Step 3: check whole galaxy and all slots which has not been checked
-                $Position_NonFree = [];
-                $Position_NonFreeCount = 0;
-                $Planet_PosArray = [];
-                for($i = 1; $i < $Planet_Lower; $i += 1)
-                {
-                    $Planet_PosArray[] = $i;
-                }
-                for($i = $Planet_Higher; $i < MAX_PLANET_IN_SYSTEM; $i += 1)
-                {
-                    $Planet_PosArray[] = $i;
-                }
-                $Position_TotalCount = MAX_SYSTEM_IN_GALAXY * count($Planet_PosArray);
-
-                $Query_CheckGalaxy3 = '';
-                $Query_CheckGalaxy3 .= "SELECT `system`, `planet` FROM {{table}} ";
-                $Query_CheckGalaxy3 .= "WHERE `galaxy` = {$GalaxyNo} AND ";
-                $Query_CheckGalaxy3 .= "`planet` NOT BETWEEN {$Planet_Lower} AND {$Planet_Higher};";
-                $Result_CheckGalaxy3 = doquery($Query_CheckGalaxy3, 'galaxy');
-                if($Result_CheckGalaxy3->num_rows > 0)
-                {
-                    while($FetchData = $Result_CheckGalaxy3->fetch_assoc())
-                    {
-                        $Position_NonFree["{$FetchData['system']}:{$FetchData['planet']}"] = true;
-                    }
-                    $Position_NonFreeCount = count($Position_NonFree);
-                }
-                if($Position_NonFreeCount < $Position_TotalCount)
-                {
-                    while(!$PosFound)
-                    {
-                        $System = mt_rand(1, MAX_SYSTEM_IN_GALAXY);
-                        $Planet = $Planet_PosArray[array_rand($Planet_PosArray)];
-                        if(!isset($Position_NonFree["{$System}:{$Planet}"]))
-                        {
-                            $PosFound = true;
-                        }
-                    }
-                }
-            }
-        }
-
-        if($PosFound)
-        {
             $passwordHash = Session\Utils\LocalIdentityV1\hashPassword([
                 'password' => $Password,
             ]);
 
-            $Query_InsertUser = '';
-            $Query_InsertUser .= "INSERT INTO {{table}} SET ";
-            $Query_InsertUser .= "`username` = '{$Username}', ";
-            $Query_InsertUser .= "`lang` = '{$LangCode}', ";
-            $Query_InsertUser .= "`email` = '{$Email}', ";
-            $Query_InsertUser .= "`email_2` = '{$Email}', ";
-            $Query_InsertUser .= "`ip_at_reg` = '" . $userSessionIP . "', ";
-            $Query_InsertUser .= "`id_planet` = 0, ";
-            $Query_InsertUser .= "`register_time` = {$Now}, ";
-            $Query_InsertUser .= "`onlinetime` = {$Now} - (24*60*60), ";
-            $Query_InsertUser .= "`rules_accept_stamp` = {$Now}, ";
-            $Query_InsertUser .= "`password` = '{$passwordHash}';";
-            doquery($Query_InsertUser, 'users');
-
-            // Get UserID
-            $Query_GetUserID = "SELECT LAST_INSERT_ID() AS `ID`;";
-            $Result_GetUserID = doquery($Query_GetUserID, '', true);
-            $UserID = $Result_GetUserID['ID'];
+            $insertNewUserResult = Registration\Utils\Queries\insertNewUser([
+                'username' => $Username,
+                'passwordHash' => $passwordHash,
+                'langCode' => $LangCode,
+                'email' => $Email,
+                'registrationIP' => $userSessionIP,
+                'currentTimestamp' => $Now,
+            ]);
+            $UserID = $insertNewUserResult['userId'];
 
             // Update all MailChanges
             doquery("UPDATE {{table}} SET `ConfirmType` = 4 WHERE `NewMail` = '{$Email}' AND `ConfirmType` = 0;", 'mailchange');
 
             // Create a Planet for User
             include($_EnginePath.'includes/functions/CreateOnePlanetRecord.php');
-            $Galaxy = $GalaxyNo;
+
             $PlanetID = CreateOnePlanetRecord($Galaxy, $System, $Planet, $UserID, $_Lang['MotherPlanet'], true);
 
-            // Update Config
-            $_GameConfig['users_amount'] += 1;
-            $Query_UpdateConfig = '';
-            $Query_UpdateConfig .= "UPDATE {{table}} ";
-            $Query_UpdateConfig .= "SET `config_value` = {$_GameConfig['users_amount']} ";
-            $Query_UpdateConfig .= "WHERE `config_name` = 'users_amount';";
-            doquery($Query_UpdateConfig, 'config');
-            $_MemCache->GameConfig = $_GameConfig;
+            Registration\Utils\Queries\incrementUsersCounterInGameConfig();
 
-            $setReferrerId = null;
-            $referrerUserId = Registration\Utils\Cookies\getStoredReferrerId();
+            $referrerUserId = Registration\Utils\General\getRegistrationReferrerId();
 
             if ($referrerUserId !== null) {
-                $Query_SelectReferrer = "SELECT `id` FROM {{table}} WHERE `id` = {$referrerUserId} LIMIT 1;";
-                $Result_SelectReferrer = doquery($Query_SelectReferrer, 'users', true);
-                if ($Result_SelectReferrer['id'] > 0) {
-                    $registrationIPs = [
-                        'r' => trim($userSessionIP),
-                        'p' => trim(Users\Session\getCurrentOriginatingIP())
-                    ];
+                $registrationIPs = [
+                    'r' => trim($userSessionIP),
+                    'p' => trim(Users\Session\getCurrentOriginatingIP())
+                ];
 
-                    if (empty($registrationIPs['p'])) {
-                        unset($registrationIPs['p']);
-                    }
-
-                    $existingMatchingEnterLogIds = Registration\Utils\Queries\findEnterLogIPsWithMatchingIPValue([
-                        'ips' => $registrationIPs,
-                    ]);
-
-                    Registration\Utils\Queries\insertReferralsTableEntry([
-                        'referrerUserId' => $referrerUserId,
-                        'referredUserId' => $UserID,
-                        'timestamp' => $Now,
-                        'registrationIPs' => $registrationIPs,
-                        'existingMatchingEnterLogIds' => $existingMatchingEnterLogIds,
-                    ]);
-
-                    $Message = false;
-                    $Message['msg_id'] = '038';
-                    $Message['args'] = array('');
-                    $Message = json_encode($Message);
-
-                    SendSimpleMessage($referrerUserId, 0, $Now, 70, '007', '016', $Message);
-
-                    $setReferrerId = $referrerUserId;
+                if (empty($registrationIPs['p'])) {
+                    unset($registrationIPs['p']);
                 }
+
+                $existingMatchingEnterLogIds = Registration\Utils\Queries\findEnterLogIPsWithMatchingIPValue([
+                    'ips' => $registrationIPs,
+                ]);
+
+                Registration\Utils\Queries\insertReferralsTableEntry([
+                    'referrerUserId' => $referrerUserId,
+                    'referredUserId' => $UserID,
+                    'timestamp' => $Now,
+                    'registrationIPs' => $registrationIPs,
+                    'existingMatchingEnterLogIds' => $existingMatchingEnterLogIds,
+                ]);
+
+                $Message = false;
+                $Message['msg_id'] = '038';
+                $Message['args'] = array('');
+                $Message = json_encode($Message);
+
+                SendSimpleMessage($referrerUserId, 0, $Now, 70, '007', '016', $Message);
             }
 
             $ActivationCode = md5(mt_rand(0, 99999999999));
@@ -411,7 +247,7 @@ if(isset($_GET['register']))
                 'motherPlanetGalaxy' => $Galaxy,
                 'motherPlanetSystem' => $System,
                 'motherPlanetPlanetPos' => $Planet,
-                'referrerId' => $setReferrerId,
+                'referrerId' => $referrerUserId,
                 'activationCode' => (
                     REGISTER_REQUIRE_EMAILCONFIRM ?
                         $ActivationCode :
@@ -449,8 +285,7 @@ if(isset($_GET['register']))
                 SendMail($Email, $mailTitle, $mailContent);
             }
 
-            if(SERVER_MAINOPEN_TSTAMP <= $Now)
-            {
+            if (isGameStartTimeReached($Now)) {
                 $sessionTokenValue = Session\Utils\Cookie\packSessionCookie([
                     'userId' => $UserID,
                     'username' => $Username,
@@ -466,14 +301,10 @@ if(isset($_GET['register']))
                     'Value' => $sessionTokenValue
                 ];
                 $JSONResponse['Redirect'] = GAMEURL_UNISTRICT.'/overview.php';
-            }
-            else
-            {
+            } else {
                 $JSONResponse['Code'] = 2;
             }
-        }
-        else
-        {
+        } else {
             $JSONResponse['Errors'][] = 15;
             $JSONResponse['BadFields'][] = 'email';
         }

@@ -4,6 +4,27 @@ namespace UniEngine\Engine\Modules\Registration\Utils\Queries;
 
 //  Arguments
 //      - $params (Object)
+//          - userId (string | null)
+//
+function checkIfUserExists ($params) {
+    $selectUserQuery = (
+        "SELECT " .
+        "`id` " .
+        "FROM {{table}}  " .
+        "WHERE " .
+        "`id` = {$params['userId']} " .
+        "LIMIT 1 " .
+        ";"
+    );
+
+    $selectUserResult = doquery($selectUserQuery, 'users');
+    $doesUserExist = $selectUserResult->num_rows == 1;
+
+    return $doesUserExist;
+}
+
+//  Arguments
+//      - $params (Object)
 //          - ips (string[])
 //
 function findEnterLogIPsWithMatchingIPValue ($params) {
@@ -80,6 +101,39 @@ function insertReferralsTableEntry ($params) {
 
 //  Arguments
 //      - $params (Object)
+//          - username (String)
+//          - passwordHash (String)
+//          - langCode (String)
+//          - email (String)
+//          - registrationIP (String)
+//          - currentTimestamp (String)
+//
+function insertNewUser ($params) {
+    $insertUserQuery = (
+        "INSERT INTO {{table}} " .
+        "SET " .
+        "`username` = '{$params['username']}', " .
+        "`password` = '{$params['passwordHash']}', " .
+        "`lang` = '{$params['langCode']}', " .
+        "`email` = '{$params['email']}', " .
+        "`email_2` = '{$params['email']}', " .
+        "`ip_at_reg` = '{$params['registrationIP']}', " .
+        "`id_planet` = 0, " .
+        "`register_time` = {$params['currentTimestamp']}, " .
+        "`onlinetime` = {$params['currentTimestamp']} - (24*60*60), " .
+        "`rules_accept_stamp` = {$params['currentTimestamp']} " .
+        ";"
+    );
+
+    doquery($insertUserQuery, 'users');
+
+    return [
+        'userId' => getLastInsertId()
+    ];
+}
+
+//  Arguments
+//      - $params (Object)
 //          - userId (String)
 //          - motherPlanetId (String)
 //          - motherPlanetGalaxy (String)
@@ -119,6 +173,25 @@ function updateUserFinalDetails ($params) {
     );
 
     doquery($updateUserQuery, 'users');
+}
+
+function incrementUsersCounterInGameConfig () {
+    global $_GameConfig, $_MemCache;
+
+    $_GameConfig['users_amount'] += 1;
+
+    $updateUserConfigQuery = (
+        "UPDATE {{table}} " .
+        "SET " .
+        "`config_value` = {$_GameConfig['users_amount']} " .
+        "WHERE " .
+        "`config_name` = 'users_amount' " .
+        ";"
+    );
+
+    doquery($updateUserConfigQuery, 'config');
+
+    $_MemCache->GameConfig = $_GameConfig;
 }
 
 ?>
