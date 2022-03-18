@@ -15,11 +15,6 @@ use UniEngine\Engine\Modules\Registration;
 includeLang('reg_ajax');
 $Now = time();
 
-if(REGISTER_RECAPTCHA_ENABLE)
-{
-    require($_EnginePath.'vendor/google/recaptcha/src/autoload.php');
-}
-
 header('access-control-allow-origin: *');
 
 if(isset($_GET['register']))

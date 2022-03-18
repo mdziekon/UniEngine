@@ -8,6 +8,10 @@ namespace UniEngine\Engine\Modules\Registration\Validators;
 //          - currentSessionIp (String)
 //
 function validateReCaptcha($params) {
+    global $_EnginePath;
+
+    require("{$_EnginePath}vendor/google/recaptcha/src/autoload.php");
+
     $serverIdentificator = $_SERVER['SERVER_NAME'];
 
     if (
