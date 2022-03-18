@@ -13,6 +13,7 @@ call_user_func(function () {
     include($includePath . './utils/general.utils.php');
     include($includePath . './utils/queries.utils.php');
 
+    include($includePath . './validators/validateTakenParams.validators.php');
     include($includePath . './validators/validateReCaptcha.validators.php');
 
 });

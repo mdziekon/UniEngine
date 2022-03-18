@@ -151,31 +151,22 @@ if(isset($_GET['register']))
         }
     }
 
-    if($EmailGood === true AND $UsernameGood === true)
-    {
-        $Query_CheckExistence = '';
-        $Query_CheckExistence .= "SELECT `username`, `email` FROM {{table}} ";
-        $Query_CheckExistence .= "WHERE `username` = '{$Username}' OR `email` = '{$Email}' LIMIT 2;";
+    if (
+        $EmailGood === true &&
+        $UsernameGood === true
+    ) {
+        $takenParamsValidationResult = Registration\Validators\validateTakenParams([
+            'username' => $Username,
+            'email' => $Email,
+        ]);
 
-        $Result_CheckExistence = doquery($Query_CheckExistence, 'users');
-
-        if($Result_CheckExistence->num_rows > 0)
-        {
-            while($FetchData = $Result_CheckExistence->fetch_assoc())
-            {
-                if(strtolower($FetchData['username']) == strtolower($Username))
-                {
-                    // Username is used
-                    $JSONResponse['Errors'][] = 11;
-                    $JSONResponse['BadFields'][] = 'username';
-                }
-                else
-                {
-                    // EMail is used
-                    $JSONResponse['Errors'][] = 12;
-                    $JSONResponse['BadFields'][] = 'email';
-                }
-            }
+        if ($takenParamsValidationResult['isUsernameTaken']) {
+            $JSONResponse['Errors'][] = 11;
+            $JSONResponse['BadFields'][] = 'username';
+        }
+        if ($takenParamsValidationResult['isEmailTaken']) {
+            $JSONResponse['Errors'][] = 12;
+            $JSONResponse['BadFields'][] = 'email';
         }
     }
 
