@@ -33,7 +33,12 @@ if(isset($_GET['register']))
 
     $userSessionIP = Users\Session\getCurrentIP();
 
-    $validationResults = Registration\Validators\validateInputs($normalizedInput);
+    $validationResults = Registration\Validators\validateInputs(
+        $normalizedInput,
+        [
+            'userSessionIp' => $userSessionIP
+        ]
+    );
 
     foreach ($validationResults as $fieldName => $fieldValidationResult) {
         if ($fieldValidationResult['isSuccess']) {
@@ -87,24 +92,9 @@ if(isset($_GET['register']))
             case 'RULES_NOT_ACCEPTED':
                 $JSONResponse['Errors'][] = 9;
                 break;
-        }
-    }
-
-    if (REGISTER_RECAPTCHA_ENABLE) {
-        // TODO: Verify whether this needs sanitization
-        $captchaUserValue = (
-            isset($_GET['captcha_response']) ?
-                $_GET['captcha_response'] :
-                null
-        );
-        $reCaptchaValidationResult = Registration\Validators\validateReCaptcha([
-            'responseValue' => $captchaUserValue,
-            'currentSessionIp' => $userSessionIP
-        ]);
-
-        if (!($reCaptchaValidationResult['isValid'])) {
-            // ReCaptcha validation failed
-            $JSONResponse['Errors'][] = 10;
+            case 'RECAPTCHA_VALIDATION_FAILED':
+                $JSONResponse['Errors'][] = 10;
+                break;
         }
     }
 

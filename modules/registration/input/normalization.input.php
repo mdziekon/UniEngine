@@ -46,6 +46,11 @@ function normalizeUserInput(&$input) {
         $input['lang'] :
         null
     );
+    $normalizedCaptchaResponse = (
+        isset($input['captcha_response']) ?
+        $input['captcha_response'] :
+        null
+    );
 
     return [
         'username' => $normalizedUsername,
@@ -57,6 +62,7 @@ function normalizeUserInput(&$input) {
         'hasAcceptedRules' => $normalizedHasAcceptedRules,
         'galaxyNo' => $normalizedGalaxyNo,
         'langCode' => $normalizedLangCode,
+        'captchaResponse' => $normalizedCaptchaResponse,
     ];
 }
 

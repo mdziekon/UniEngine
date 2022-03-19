@@ -167,10 +167,35 @@ function _validateHasAcceptedRules($normalizedInput) {
     return _createFuncWithResultHelpers($validator)($normalizedInput);
 }
 
+function _validateAntiBot($normalizedInput, $params) {
+    $validator = function ($input, $resultHelpers) use ($params) {
+        if (!REGISTER_RECAPTCHA_ENABLE) {
+            return $resultHelpers['createSuccess']([]);
+        }
+
+        $value = $input['captchaResponse'];
+
+        $reCaptchaValidationResult = validateReCaptcha([
+            'responseValue' => $value,
+            'currentSessionIp' => $params['userSessionIp']
+        ]);
+
+        if (!($reCaptchaValidationResult['isValid'])) {
+            return $resultHelpers['createFailure']([
+                'code' => 'RECAPTCHA_VALIDATION_FAILED',
+            ]);
+        }
+
+        return $resultHelpers['createSuccess']([]);
+    };
+
+    return _createFuncWithResultHelpers($validator)($normalizedInput);
+}
+
 //  Arguments
 //      - $normalizedInput (Object)
 //
-function validateInputs($normalizedInput) {
+function validateInputs($normalizedInput, $params) {
     return [
         'username' => _validateUsername($normalizedInput),
         'password' => _validatePassword($normalizedInput),
@@ -178,6 +203,7 @@ function validateInputs($normalizedInput) {
         'galaxyNo' => _validateGalaxyNo($normalizedInput),
         'langCode' => _validateLangCode($normalizedInput),
         'hasAcceptedRules' => _validateHasAcceptedRules($normalizedInput),
+        'antiBot' => _validateAntiBot($normalizedInput, $params),
     ];
 }
 
