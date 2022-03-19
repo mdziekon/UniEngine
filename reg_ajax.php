@@ -22,41 +22,35 @@ if(isset($_GET['register']))
     $JSONResponse = null;
     $JSONResponse['Errors'] = array();
 
-    $userInput = Registration\Input\normalizeUserInput($_GET);
+    $normalizedInput = Registration\Input\normalizeUserInput($_GET);
 
-    $Username = $userInput['username'];
-    $Password = $userInput['password'];
-    $CheckEmail = $userInput['email']['original'];
-    $Email = $userInput['email']['escaped'];
-    $Rules = $userInput['hasAcceptedRules'];
-    $GalaxyNo = $userInput['galaxyNo'];
-    $LangCode = $userInput['langCode'];
+    $Username = $normalizedInput['username'];
+    $Password = $normalizedInput['password'];
+    $CheckEmail = $normalizedInput['email']['original'];
+    $Email = $normalizedInput['email']['escaped'];
+    $Rules = $normalizedInput['hasAcceptedRules'];
+    $GalaxyNo = $normalizedInput['galaxyNo'];
+    $LangCode = $normalizedInput['langCode'];
 
     $userSessionIP = Users\Session\getCurrentIP();
 
-    // Check if Username is correct
-    $UsernameGood = false;
-    if(strlen($Username) < 4)
-    {
-        // Username is too short
-        $JSONResponse['Errors'][] = 1;
-        $JSONResponse['BadFields'][] = 'username';
-    }
-    else if(strlen($Username) > 64)
-    {
-        // Username is too long
-        $JSONResponse['Errors'][] = 2;
-        $JSONResponse['BadFields'][] = 'username';
-    }
-    else if(!preg_match(REGEXP_USERNAME_ABSOLUTE, $Username))
-    {
-        // Username has illegal signs
-        $JSONResponse['Errors'][] = 3;
-        $JSONResponse['BadFields'][] = 'username';
-    }
-    else
-    {
-        $UsernameGood = true;
+    $validationResult = Registration\Validators\validateInputs($normalizedInput);
+
+    if (!$validationResult['username']['isSuccess']) {
+        switch ($validationResult['username']['error']['code']) {
+            case 'USERNAME_TOO_SHORT':
+                $JSONResponse['Errors'][] = 1;
+                $JSONResponse['BadFields'][] = 'username';
+                break;
+            case 'USERNAME_TOO_LONG':
+                $JSONResponse['Errors'][] = 2;
+                $JSONResponse['BadFields'][] = 'username';
+                break;
+            case 'USERNAME_INVALID':
+                $JSONResponse['Errors'][] = 3;
+                $JSONResponse['BadFields'][] = 'username';
+                break;
+        }
     }
 
     // Check if Password is correct
@@ -146,7 +140,7 @@ if(isset($_GET['register']))
 
     if (
         $EmailGood === true &&
-        $UsernameGood === true
+        $validationResult['username']['isSuccess'] === true
     ) {
         $takenParamsValidationResult = Registration\Validators\validateTakenParams([
             'username' => $Username,
