@@ -54,15 +54,11 @@ if(isset($_GET['register']))
                 $JSONResponse['Errors'][] = 3;
                 $JSONResponse['BadFields'][] = 'username';
                 break;
+            case 'PASSWORD_TOO_SHORT':
+                $JSONResponse['Errors'][] = 4;
+                $JSONResponse['BadFields'][] = 'password';
+                break;
         }
-    }
-
-    // Check if Password is correct
-    if(strlen($Password) < 4)
-    {
-        // Password is too short
-        $JSONResponse['Errors'][] = 4;
-        $JSONResponse['BadFields'][] = 'password';
     }
 
     // Check if EMail is correct

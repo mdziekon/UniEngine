@@ -55,12 +55,32 @@ function _validateUsername($normalizedInput) {
     return _createFuncWithResultHelpers($validator)($normalizedInput);
 }
 
+function _validatePassword($normalizedInput) {
+    $validator = function ($input, $resultHelpers) {
+        $value = $input['password'];
+
+        $minLength = 4;
+
+        if (strlen($value) < $minLength) {
+            return $resultHelpers['createFailure']([
+                'code' => 'PASSWORD_TOO_SHORT',
+                'minLength' => $minLength,
+            ]);
+        }
+
+        return $resultHelpers['createSuccess']([]);
+    };
+
+    return _createFuncWithResultHelpers($validator)($normalizedInput);
+}
+
 //  Arguments
 //      - $normalizedInput (Object)
 //
 function validateInputs($normalizedInput) {
     return [
         'username' => _validateUsername($normalizedInput),
+        'password' => _validatePassword($normalizedInput),
     ];
 }
 
