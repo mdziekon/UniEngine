@@ -24,14 +24,6 @@ if (isset($_GET['register'])) {
     ];
 
     $normalizedInput = Registration\Input\normalizeUserInput($_GET);
-
-    $Username = $normalizedInput['username'];
-    $Password = $normalizedInput['password'];
-    $Email = $normalizedInput['email']['escaped'];
-    $Rules = $normalizedInput['hasAcceptedRules'];
-    $GalaxyNo = $normalizedInput['galaxyNo'];
-    $LangCode = $normalizedInput['langCode'];
-
     $userSessionIP = Users\Session\getCurrentIP();
 
     $validationResults = Registration\Validators\validateInputs(
@@ -104,8 +96,8 @@ if (isset($_GET['register'])) {
         $validationResults['username']['isSuccess'] === true
     ) {
         $takenParamsValidationResult = Registration\Validators\validateTakenParams([
-            'username' => $Username,
-            'email' => $Email,
+            'username' => $normalizedInput['username'],
+            'email' => $normalizedInput['email']['escaped'],
         ]);
 
         if ($takenParamsValidationResult['isUsernameTaken']) {
@@ -122,35 +114,38 @@ if (isset($_GET['register'])) {
         unset($JSONResponse['Errors']);
 
         $newPlanetCoordinates = Registration\Utils\Galaxy\findNewPlanetPosition([
-            'preferredGalaxy' => $GalaxyNo
+            'preferredGalaxy' => $normalizedInput['galaxyNo']
         ]);
 
         if ($newPlanetCoordinates !== null) {
-            $Galaxy = $newPlanetCoordinates['galaxy'];
-            $System = $newPlanetCoordinates['system'];
-            $Planet = $newPlanetCoordinates['planet'];
-
             $passwordHash = Session\Utils\LocalIdentityV1\hashPassword([
-                'password' => $Password,
+                'password' => $normalizedInput['password'],
             ]);
 
             $insertNewUserResult = Registration\Utils\Queries\insertNewUser([
-                'username' => $Username,
+                'username' => $normalizedInput['username'],
                 'passwordHash' => $passwordHash,
-                'langCode' => $LangCode,
-                'email' => $Email,
+                'langCode' => $normalizedInput['langCode'],
+                'email' => $normalizedInput['email']['escaped'],
                 'registrationIP' => $userSessionIP,
                 'currentTimestamp' => $Now,
             ]);
             $UserID = $insertNewUserResult['userId'];
 
             // Update all MailChanges
-            doquery("UPDATE {{table}} SET `ConfirmType` = 4 WHERE `NewMail` = '{$Email}' AND `ConfirmType` = 0;", 'mailchange');
+            doquery("UPDATE {{table}} SET `ConfirmType` = 4 WHERE `NewMail` = '{$normalizedInput['email']['escaped']}' AND `ConfirmType` = 0;", 'mailchange');
 
             // Create a Planet for User
             include($_EnginePath.'includes/functions/CreateOnePlanetRecord.php');
 
-            $PlanetID = CreateOnePlanetRecord($Galaxy, $System, $Planet, $UserID, $_Lang['MotherPlanet'], true);
+            $PlanetID = CreateOnePlanetRecord(
+                $newPlanetCoordinates['galaxy'],
+                $newPlanetCoordinates['system'],
+                $newPlanetCoordinates['planet'],
+                $UserID,
+                $_Lang['MotherPlanet'],
+                true
+            );
 
             Registration\Utils\Queries\incrementUsersCounterInGameConfig();
 
@@ -192,9 +187,9 @@ if (isset($_GET['register'])) {
             Registration\Utils\Queries\updateUserFinalDetails([
                 'userId' => $UserID,
                 'motherPlanetId' => $PlanetID,
-                'motherPlanetGalaxy' => $Galaxy,
-                'motherPlanetSystem' => $System,
-                'motherPlanetPlanetPos' => $Planet,
+                'motherPlanetGalaxy' => $newPlanetCoordinates['galaxy'],
+                'motherPlanetSystem' => $newPlanetCoordinates['system'],
+                'motherPlanetPlanetPos' => $newPlanetCoordinates['planet'],
                 'referrerId' => $referrerUserId,
                 'activationCode' => (
                     REGISTER_REQUIRE_EMAILCONFIRM ?
@@ -216,8 +211,8 @@ if (isset($_GET['register'])) {
 
                 $mailContent = Registration\Components\RegistrationConfirmationMail\render([
                     'userId' => $UserID,
-                    'login' => $Username,
-                    'password' => $Password,
+                    'login' => $normalizedInput['username'],
+                    'password' => $normalizedInput['password'],
                     'gameName' => $_GameConfig['game_name'],
                     'universe' => $_Lang['RegMail_UniName'],
                     'activationCode' => $ActivationCode,
@@ -230,13 +225,13 @@ if (isset($_GET['register'])) {
                     ]
                 );
 
-                SendMail($Email, $mailTitle, $mailContent);
+                SendMail($normalizedInput['email']['escaped'], $mailTitle, $mailContent);
             }
 
             if (isGameStartTimeReached($Now)) {
                 $sessionTokenValue = Session\Utils\Cookie\packSessionCookie([
                     'userId' => $UserID,
-                    'username' => $Username,
+                    'username' => $normalizedInput['username'],
                     'obscuredPasswordHash' => Session\Utils\Cookie\createCookiePasswordHash([
                         'passwordHash' => $passwordHash,
                     ]),
