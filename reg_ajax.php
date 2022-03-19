@@ -26,7 +26,6 @@ if(isset($_GET['register']))
 
     $Username = $normalizedInput['username'];
     $Password = $normalizedInput['password'];
-    $CheckEmail = $normalizedInput['email']['original'];
     $Email = $normalizedInput['email']['escaped'];
     $Rules = $normalizedInput['hasAcceptedRules'];
     $GalaxyNo = $normalizedInput['galaxyNo'];
@@ -58,39 +57,23 @@ if(isset($_GET['register']))
                 $JSONResponse['Errors'][] = 4;
                 $JSONResponse['BadFields'][] = 'password';
                 break;
+            case 'EMAIL_EMPTY':
+                $JSONResponse['Errors'][] = 5;
+                $JSONResponse['BadFields'][] = 'email';
+                break;
+            case 'EMAIL_HAS_ILLEGAL_CHARACTERS':
+                $JSONResponse['Errors'][] = 6;
+                $JSONResponse['BadFields'][] = 'email';
+                break;
+            case 'EMAIL_INVALID':
+                $JSONResponse['Errors'][] = 7;
+                $JSONResponse['BadFields'][] = 'email';
+                break;
+            case 'EMAIL_ON_BANNED_DOMAIN':
+                $JSONResponse['Errors'][] = 8;
+                $JSONResponse['BadFields'][] = 'email';
+                break;
         }
-    }
-
-    // Check if EMail is correct
-    $EmailGood = false;
-    $BannedDomains = str_replace('.', '\.', $_GameConfig['BannedMailDomains']);
-    if(empty($Email))
-    {
-        // EMail is empty
-        $JSONResponse['Errors'][] = 5;
-        $JSONResponse['BadFields'][] = 'email';
-    }
-    else if($Email != $CheckEmail)
-    {
-        // EMail has illegal signs
-        $JSONResponse['Errors'][] = 6;
-        $JSONResponse['BadFields'][] = 'email';
-    }
-    else if(!is_email($Email))
-    {
-        // EMail is incorrect
-        $JSONResponse['Errors'][] = 7;
-        $JSONResponse['BadFields'][] = 'email';
-    }
-    else if(!empty($BannedDomains) && preg_match('#('.$BannedDomains.')+#si', $Email))
-    {
-        // EMail is on banned domains list
-        $JSONResponse['Errors'][] = 8;
-        $JSONResponse['BadFields'][] = 'email';
-    }
-    else
-    {
-        $EmailGood = true;
     }
 
     // PreCheck Galaxy
@@ -139,7 +122,7 @@ if(isset($_GET['register']))
     }
 
     if (
-        $EmailGood === true &&
+        $validationResult['email']['isSuccess'] === true &&
         $validationResult['username']['isSuccess'] === true
     ) {
         $takenParamsValidationResult = Registration\Validators\validateTakenParams([

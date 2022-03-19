@@ -74,6 +74,41 @@ function _validatePassword($normalizedInput) {
     return _createFuncWithResultHelpers($validator)($normalizedInput);
 }
 
+function _validateEmail($normalizedInput) {
+    $validator = function ($input, $resultHelpers) {
+        global $_GameConfig;
+
+        $value = $input['email'];
+
+        $bannedDomains = str_replace('.', '\.', $_GameConfig['BannedMailDomains']);
+
+        if (empty($value['escaped'])) {
+            return $resultHelpers['createFailure']([
+                'code' => 'EMAIL_EMPTY',
+            ]);
+        }
+        if ($value['escaped'] != $value['original']) {
+            return $resultHelpers['createFailure']([
+                'code' => 'EMAIL_HAS_ILLEGAL_CHARACTERS',
+            ]);
+        }
+        if (!is_email($value['escaped'])) {
+            return $resultHelpers['createFailure']([
+                'code' => 'EMAIL_INVALID',
+            ]);
+        }
+        if (!empty($bannedDomains) && preg_match('#('.$bannedDomains.')+#si', $value['escaped'])) {
+            return $resultHelpers['createFailure']([
+                'code' => 'EMAIL_ON_BANNED_DOMAIN',
+            ]);
+        }
+
+        return $resultHelpers['createSuccess']([]);
+    };
+
+    return _createFuncWithResultHelpers($validator)($normalizedInput);
+}
+
 //  Arguments
 //      - $normalizedInput (Object)
 //
@@ -81,6 +116,7 @@ function validateInputs($normalizedInput) {
     return [
         'username' => _validateUsername($normalizedInput),
         'password' => _validatePassword($normalizedInput),
+        'email' => _validateEmail($normalizedInput),
     ];
 }
 
