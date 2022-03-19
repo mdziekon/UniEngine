@@ -109,6 +109,32 @@ function _validateEmail($normalizedInput) {
     return _createFuncWithResultHelpers($validator)($normalizedInput);
 }
 
+function _validateGalaxyNo($normalizedInput) {
+    $validator = function ($input, $resultHelpers) {
+        $value = $input['galaxyNo'];
+
+        $minGalaxyNo = 1;
+        $maxGalaxyNo = MAX_GALAXY_IN_WORLD;
+
+        if ($value < $minGalaxyNo) {
+            return $resultHelpers['createFailure']([
+                'code' => 'GALAXY_NO_TOO_LOW',
+                'minLength' => $minGalaxyNo,
+            ]);
+        }
+        if ($value > $maxGalaxyNo) {
+            return $resultHelpers['createFailure']([
+                'code' => 'GALAXY_NO_TOO_HIGH',
+                'maxLength' => $maxGalaxyNo,
+            ]);
+        }
+
+        return $resultHelpers['createSuccess']([]);
+    };
+
+    return _createFuncWithResultHelpers($validator)($normalizedInput);
+}
+
 //  Arguments
 //      - $normalizedInput (Object)
 //
@@ -117,6 +143,7 @@ function validateInputs($normalizedInput) {
         'username' => _validateUsername($normalizedInput),
         'password' => _validatePassword($normalizedInput),
         'email' => _validateEmail($normalizedInput),
+        'galaxyNo' => _validateGalaxyNo($normalizedInput),
     ];
 }
 

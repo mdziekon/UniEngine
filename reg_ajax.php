@@ -73,21 +73,15 @@ if(isset($_GET['register']))
                 $JSONResponse['Errors'][] = 8;
                 $JSONResponse['BadFields'][] = 'email';
                 break;
+            case 'GALAXY_NO_TOO_LOW':
+                $JSONResponse['Errors'][] = 13;
+                $JSONResponse['BadFields'][] = 'galaxy';
+                break;
+            case 'GALAXY_NO_TOO_HIGH':
+                $JSONResponse['Errors'][] = 14;
+                $JSONResponse['BadFields'][] = 'galaxy';
+                break;
         }
-    }
-
-    // PreCheck Galaxy
-    if($GalaxyNo < 1)
-    {
-        // Galaxy not given
-        $JSONResponse['Errors'][] = 13;
-        $JSONResponse['BadFields'][] = 'galaxy';
-    }
-    else if($GalaxyNo > MAX_GALAXY_IN_WORLD)
-    {
-        // GalaxyNo is too high
-        $JSONResponse['Errors'][] = 14;
-        $JSONResponse['BadFields'][] = 'galaxy';
     }
 
     // Check if valid language has been selected
