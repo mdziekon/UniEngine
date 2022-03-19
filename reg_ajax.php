@@ -100,8 +100,8 @@ if (isset($_GET['register'])) {
     }
 
     if (
-        $validationResult['email']['isSuccess'] === true &&
-        $validationResult['username']['isSuccess'] === true
+        $validationResults['email']['isSuccess'] === true &&
+        $validationResults['username']['isSuccess'] === true
     ) {
         $takenParamsValidationResult = Registration\Validators\validateTakenParams([
             'username' => $Username,
