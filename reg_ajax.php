@@ -132,9 +132,6 @@ if (isset($_GET['register'])) {
             ]);
             $UserID = $insertNewUserResult['userId'];
 
-            // Update all MailChanges
-            doquery("UPDATE {{table}} SET `ConfirmType` = 4 WHERE `NewMail` = '{$normalizedInput['email']['escaped']}' AND `ConfirmType` = 0;", 'mailchange');
-
             // Create a Planet for User
             include($_EnginePath.'includes/functions/CreateOnePlanetRecord.php');
 
@@ -148,6 +145,9 @@ if (isset($_GET['register'])) {
             );
 
             Registration\Utils\Queries\incrementUsersCounterInGameConfig();
+            Registration\Utils\Queries\updateAllMailChanges([
+                'email' => $normalizedInput['email']['escaped']
+            ]);
 
             $referrerUserId = Registration\Utils\General\getRegistrationReferrerId();
 
