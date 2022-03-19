@@ -151,6 +151,22 @@ function _validateLangCode($normalizedInput) {
     return _createFuncWithResultHelpers($validator)($normalizedInput);
 }
 
+function _validateHasAcceptedRules($normalizedInput) {
+    $validator = function ($input, $resultHelpers) {
+        $value = $input['hasAcceptedRules'];
+
+        if ($value !== true) {
+            return $resultHelpers['createFailure']([
+                'code' => 'RULES_NOT_ACCEPTED',
+            ]);
+        }
+
+        return $resultHelpers['createSuccess']([]);
+    };
+
+    return _createFuncWithResultHelpers($validator)($normalizedInput);
+}
+
 //  Arguments
 //      - $normalizedInput (Object)
 //
@@ -161,6 +177,7 @@ function validateInputs($normalizedInput) {
         'email' => _validateEmail($normalizedInput),
         'galaxyNo' => _validateGalaxyNo($normalizedInput),
         'langCode' => _validateLangCode($normalizedInput),
+        'hasAcceptedRules' => _validateHasAcceptedRules($normalizedInput),
     ];
 }
 

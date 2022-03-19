@@ -84,13 +84,10 @@ if(isset($_GET['register']))
             case 'LANG_CODE_EMPTY':
                 $JSONResponse['Errors'][] = 16;
                 break;
+            case 'RULES_NOT_ACCEPTED':
+                $JSONResponse['Errors'][] = 9;
+                break;
         }
-    }
-
-    // Check if Rules has been accepted
-    if (!$Rules) {
-        // Rules are not accepted
-        $JSONResponse['Errors'][] = 9;
     }
 
     if (REGISTER_RECAPTCHA_ENABLE) {
