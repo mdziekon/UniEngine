@@ -34,10 +34,14 @@ if(isset($_GET['register']))
 
     $userSessionIP = Users\Session\getCurrentIP();
 
-    $validationResult = Registration\Validators\validateInputs($normalizedInput);
+    $validationResults = Registration\Validators\validateInputs($normalizedInput);
 
-    if (!$validationResult['username']['isSuccess']) {
-        switch ($validationResult['username']['error']['code']) {
+    foreach ($validationResults as $fieldName => $fieldValidationResult) {
+        if ($fieldValidationResult['isSuccess']) {
+            continue;
+        }
+
+        switch ($fieldValidationResult['error']['code']) {
             case 'USERNAME_TOO_SHORT':
                 $JSONResponse['Errors'][] = 1;
                 $JSONResponse['BadFields'][] = 'username';
