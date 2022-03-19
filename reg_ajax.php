@@ -22,22 +22,16 @@ if(isset($_GET['register']))
     $JSONResponse = null;
     $JSONResponse['Errors'] = array();
 
-    // User is trying to register
-    $Username = (isset($_GET['username']) ? trim($_GET['username']) : null);
-    $Password = (isset($_GET['password']) ? trim($_GET['password']) : null);
-    $Email = (isset($_GET['email']) ? trim($_GET['email']) : null);
-    $CheckEmail = $Email;
-    $Email = getDBLink()->escape_string($Email);
-    $Rules = (isset($_GET['rules']) ? $_GET['rules'] : null);
-    $GalaxyNo = (isset($_GET['galaxy']) ? intval($_GET['galaxy']) : null);
-    $LangCode = (
-        (
-            isset($_GET['lang']) &&
-            in_array($_GET['lang'], UNIENGINE_LANGS_AVAILABLE)
-        ) ?
-        $_GET['lang'] :
-        null
-    );
+    $userInput = Registration\Input\normalizeUserInput($_GET);
+
+    $Username = $userInput['username'];
+    $Password = $userInput['password'];
+    $CheckEmail = $userInput['email']['original'];
+    $Email = $userInput['email']['escaped'];
+    $Rules = $userInput['hasAcceptedRules'];
+    $GalaxyNo = $userInput['galaxyNo'];
+    $LangCode = $userInput['langCode'];
+
     $userSessionIP = Users\Session\getCurrentIP();
 
     // Check if Username is correct
@@ -127,8 +121,7 @@ if(isset($_GET['register']))
     }
 
     // Check if Rules has been accepted
-    if($Rules != 'on')
-    {
+    if (!$Rules) {
         // Rules are not accepted
         $JSONResponse['Errors'][] = 9;
     }
