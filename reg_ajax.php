@@ -17,10 +17,11 @@ $Now = time();
 
 header('access-control-allow-origin: *');
 
-if(isset($_GET['register']))
-{
-    $JSONResponse = null;
-    $JSONResponse['Errors'] = array();
+if (isset($_GET['register'])) {
+    $JSONResponse = [
+        'Errors' => [],
+        'BadFields' => [],
+    ];
 
     $normalizedInput = Registration\Input\normalizeUserInput($_GET);
 
