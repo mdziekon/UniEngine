@@ -135,6 +135,22 @@ function _validateGalaxyNo($normalizedInput) {
     return _createFuncWithResultHelpers($validator)($normalizedInput);
 }
 
+function _validateLangCode($normalizedInput) {
+    $validator = function ($input, $resultHelpers) {
+        $value = $input['langCode'];
+
+        if (empty($value)) {
+            return $resultHelpers['createFailure']([
+                'code' => 'LANG_CODE_EMPTY',
+            ]);
+        }
+
+        return $resultHelpers['createSuccess']([]);
+    };
+
+    return _createFuncWithResultHelpers($validator)($normalizedInput);
+}
+
 //  Arguments
 //      - $normalizedInput (Object)
 //
@@ -144,6 +160,7 @@ function validateInputs($normalizedInput) {
         'password' => _validatePassword($normalizedInput),
         'email' => _validateEmail($normalizedInput),
         'galaxyNo' => _validateGalaxyNo($normalizedInput),
+        'langCode' => _validateLangCode($normalizedInput),
     ];
 }
 

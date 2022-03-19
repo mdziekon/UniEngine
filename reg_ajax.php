@@ -81,14 +81,10 @@ if(isset($_GET['register']))
                 $JSONResponse['Errors'][] = 14;
                 $JSONResponse['BadFields'][] = 'galaxy';
                 break;
+            case 'LANG_CODE_EMPTY':
+                $JSONResponse['Errors'][] = 16;
+                break;
         }
-    }
-
-    // Check if valid language has been selected
-    if(empty($LangCode))
-    {
-        // Invalid language selected
-        $JSONResponse['Errors'][] = 16;
     }
 
     // Check if Rules has been accepted
