@@ -17,147 +17,87 @@ $Now = time();
 
 header('access-control-allow-origin: *');
 
-if(isset($_GET['register']))
-{
-    $JSONResponse = null;
-    $JSONResponse['Errors'] = array();
+if (isset($_GET['register'])) {
+    $JSONResponse = [
+        'Errors' => [],
+        'BadFields' => [],
+    ];
 
-    // User is trying to register
-    $Username = (isset($_GET['username']) ? trim($_GET['username']) : null);
-    $Password = (isset($_GET['password']) ? trim($_GET['password']) : null);
-    $Email = (isset($_GET['email']) ? trim($_GET['email']) : null);
-    $CheckEmail = $Email;
-    $Email = getDBLink()->escape_string($Email);
-    $Rules = (isset($_GET['rules']) ? $_GET['rules'] : null);
-    $GalaxyNo = (isset($_GET['galaxy']) ? intval($_GET['galaxy']) : null);
-    $LangCode = (
-        (
-            isset($_GET['lang']) &&
-            in_array($_GET['lang'], UNIENGINE_LANGS_AVAILABLE)
-        ) ?
-        $_GET['lang'] :
-        null
-    );
+    $normalizedInput = Registration\Input\normalizeUserInput($_GET);
     $userSessionIP = Users\Session\getCurrentIP();
 
-    // Check if Username is correct
-    $UsernameGood = false;
-    if(strlen($Username) < 4)
-    {
-        // Username is too short
-        $JSONResponse['Errors'][] = 1;
-        $JSONResponse['BadFields'][] = 'username';
-    }
-    else if(strlen($Username) > 64)
-    {
-        // Username is too long
-        $JSONResponse['Errors'][] = 2;
-        $JSONResponse['BadFields'][] = 'username';
-    }
-    else if(!preg_match(REGEXP_USERNAME_ABSOLUTE, $Username))
-    {
-        // Username has illegal signs
-        $JSONResponse['Errors'][] = 3;
-        $JSONResponse['BadFields'][] = 'username';
-    }
-    else
-    {
-        $UsernameGood = true;
-    }
+    $validationResults = Registration\Validators\validateInputs(
+        $normalizedInput,
+        [
+            'userSessionIp' => $userSessionIP
+        ]
+    );
 
-    // Check if Password is correct
-    if(strlen($Password) < 4)
-    {
-        // Password is too short
-        $JSONResponse['Errors'][] = 4;
-        $JSONResponse['BadFields'][] = 'password';
-    }
+    foreach ($validationResults as $fieldName => $fieldValidationResult) {
+        if ($fieldValidationResult['isSuccess']) {
+            continue;
+        }
 
-    // Check if EMail is correct
-    $EmailGood = false;
-    $BannedDomains = str_replace('.', '\.', $_GameConfig['BannedMailDomains']);
-    if(empty($Email))
-    {
-        // EMail is empty
-        $JSONResponse['Errors'][] = 5;
-        $JSONResponse['BadFields'][] = 'email';
-    }
-    else if($Email != $CheckEmail)
-    {
-        // EMail has illegal signs
-        $JSONResponse['Errors'][] = 6;
-        $JSONResponse['BadFields'][] = 'email';
-    }
-    else if(!is_email($Email))
-    {
-        // EMail is incorrect
-        $JSONResponse['Errors'][] = 7;
-        $JSONResponse['BadFields'][] = 'email';
-    }
-    else if(!empty($BannedDomains) && preg_match('#('.$BannedDomains.')+#si', $Email))
-    {
-        // EMail is on banned domains list
-        $JSONResponse['Errors'][] = 8;
-        $JSONResponse['BadFields'][] = 'email';
-    }
-    else
-    {
-        $EmailGood = true;
-    }
-
-    // PreCheck Galaxy
-    if($GalaxyNo < 1)
-    {
-        // Galaxy not given
-        $JSONResponse['Errors'][] = 13;
-        $JSONResponse['BadFields'][] = 'galaxy';
-    }
-    else if($GalaxyNo > MAX_GALAXY_IN_WORLD)
-    {
-        // GalaxyNo is too high
-        $JSONResponse['Errors'][] = 14;
-        $JSONResponse['BadFields'][] = 'galaxy';
-    }
-
-    // Check if valid language has been selected
-    if(empty($LangCode))
-    {
-        // Invalid language selected
-        $JSONResponse['Errors'][] = 16;
-    }
-
-    // Check if Rules has been accepted
-    if($Rules != 'on')
-    {
-        // Rules are not accepted
-        $JSONResponse['Errors'][] = 9;
-    }
-
-    if (REGISTER_RECAPTCHA_ENABLE) {
-        // TODO: Verify whether this needs sanitization
-        $captchaUserValue = (
-            isset($_GET['captcha_response']) ?
-                $_GET['captcha_response'] :
-                null
-        );
-        $reCaptchaValidationResult = Registration\Validators\validateReCaptcha([
-            'responseValue' => $captchaUserValue,
-            'currentSessionIp' => $userSessionIP
-        ]);
-
-        if (!($reCaptchaValidationResult['isValid'])) {
-            // ReCaptcha validation failed
-            $JSONResponse['Errors'][] = 10;
+        switch ($fieldValidationResult['error']['code']) {
+            case 'USERNAME_TOO_SHORT':
+                $JSONResponse['Errors'][] = 1;
+                $JSONResponse['BadFields'][] = 'username';
+                break;
+            case 'USERNAME_TOO_LONG':
+                $JSONResponse['Errors'][] = 2;
+                $JSONResponse['BadFields'][] = 'username';
+                break;
+            case 'USERNAME_INVALID':
+                $JSONResponse['Errors'][] = 3;
+                $JSONResponse['BadFields'][] = 'username';
+                break;
+            case 'PASSWORD_TOO_SHORT':
+                $JSONResponse['Errors'][] = 4;
+                $JSONResponse['BadFields'][] = 'password';
+                break;
+            case 'EMAIL_EMPTY':
+                $JSONResponse['Errors'][] = 5;
+                $JSONResponse['BadFields'][] = 'email';
+                break;
+            case 'EMAIL_HAS_ILLEGAL_CHARACTERS':
+                $JSONResponse['Errors'][] = 6;
+                $JSONResponse['BadFields'][] = 'email';
+                break;
+            case 'EMAIL_INVALID':
+                $JSONResponse['Errors'][] = 7;
+                $JSONResponse['BadFields'][] = 'email';
+                break;
+            case 'EMAIL_ON_BANNED_DOMAIN':
+                $JSONResponse['Errors'][] = 8;
+                $JSONResponse['BadFields'][] = 'email';
+                break;
+            case 'GALAXY_NO_TOO_LOW':
+                $JSONResponse['Errors'][] = 13;
+                $JSONResponse['BadFields'][] = 'galaxy';
+                break;
+            case 'GALAXY_NO_TOO_HIGH':
+                $JSONResponse['Errors'][] = 14;
+                $JSONResponse['BadFields'][] = 'galaxy';
+                break;
+            case 'LANG_CODE_EMPTY':
+                $JSONResponse['Errors'][] = 16;
+                break;
+            case 'RULES_NOT_ACCEPTED':
+                $JSONResponse['Errors'][] = 9;
+                break;
+            case 'RECAPTCHA_VALIDATION_FAILED':
+                $JSONResponse['Errors'][] = 10;
+                break;
         }
     }
 
     if (
-        $EmailGood === true &&
-        $UsernameGood === true
+        $validationResults['email']['isSuccess'] === true &&
+        $validationResults['username']['isSuccess'] === true
     ) {
         $takenParamsValidationResult = Registration\Validators\validateTakenParams([
-            'username' => $Username,
-            'email' => $Email,
+            'username' => $normalizedInput['username'],
+            'email' => $normalizedInput['email']['escaped'],
         ]);
 
         if ($takenParamsValidationResult['isUsernameTaken']) {
@@ -174,37 +114,40 @@ if(isset($_GET['register']))
         unset($JSONResponse['Errors']);
 
         $newPlanetCoordinates = Registration\Utils\Galaxy\findNewPlanetPosition([
-            'preferredGalaxy' => $GalaxyNo
+            'preferredGalaxy' => $normalizedInput['galaxyNo']
         ]);
 
         if ($newPlanetCoordinates !== null) {
-            $Galaxy = $newPlanetCoordinates['galaxy'];
-            $System = $newPlanetCoordinates['system'];
-            $Planet = $newPlanetCoordinates['planet'];
-
             $passwordHash = Session\Utils\LocalIdentityV1\hashPassword([
-                'password' => $Password,
+                'password' => $normalizedInput['password'],
             ]);
 
             $insertNewUserResult = Registration\Utils\Queries\insertNewUser([
-                'username' => $Username,
+                'username' => $normalizedInput['username'],
                 'passwordHash' => $passwordHash,
-                'langCode' => $LangCode,
-                'email' => $Email,
+                'langCode' => $normalizedInput['langCode'],
+                'email' => $normalizedInput['email']['escaped'],
                 'registrationIP' => $userSessionIP,
                 'currentTimestamp' => $Now,
             ]);
             $UserID = $insertNewUserResult['userId'];
 
-            // Update all MailChanges
-            doquery("UPDATE {{table}} SET `ConfirmType` = 4 WHERE `NewMail` = '{$Email}' AND `ConfirmType` = 0;", 'mailchange');
-
             // Create a Planet for User
             include($_EnginePath.'includes/functions/CreateOnePlanetRecord.php');
 
-            $PlanetID = CreateOnePlanetRecord($Galaxy, $System, $Planet, $UserID, $_Lang['MotherPlanet'], true);
+            $PlanetID = CreateOnePlanetRecord(
+                $newPlanetCoordinates['galaxy'],
+                $newPlanetCoordinates['system'],
+                $newPlanetCoordinates['planet'],
+                $UserID,
+                $_Lang['MotherPlanet'],
+                true
+            );
 
             Registration\Utils\Queries\incrementUsersCounterInGameConfig();
+            Registration\Utils\Queries\updateAllMailChanges([
+                'email' => $normalizedInput['email']['escaped']
+            ]);
 
             $referrerUserId = Registration\Utils\General\getRegistrationReferrerId();
 
@@ -244,9 +187,9 @@ if(isset($_GET['register']))
             Registration\Utils\Queries\updateUserFinalDetails([
                 'userId' => $UserID,
                 'motherPlanetId' => $PlanetID,
-                'motherPlanetGalaxy' => $Galaxy,
-                'motherPlanetSystem' => $System,
-                'motherPlanetPlanetPos' => $Planet,
+                'motherPlanetGalaxy' => $newPlanetCoordinates['galaxy'],
+                'motherPlanetSystem' => $newPlanetCoordinates['system'],
+                'motherPlanetPlanetPos' => $newPlanetCoordinates['planet'],
                 'referrerId' => $referrerUserId,
                 'activationCode' => (
                     REGISTER_REQUIRE_EMAILCONFIRM ?
@@ -268,8 +211,8 @@ if(isset($_GET['register']))
 
                 $mailContent = Registration\Components\RegistrationConfirmationMail\render([
                     'userId' => $UserID,
-                    'login' => $Username,
-                    'password' => $Password,
+                    'login' => $normalizedInput['username'],
+                    'password' => $normalizedInput['password'],
                     'gameName' => $_GameConfig['game_name'],
                     'universe' => $_Lang['RegMail_UniName'],
                     'activationCode' => $ActivationCode,
@@ -282,13 +225,13 @@ if(isset($_GET['register']))
                     ]
                 );
 
-                SendMail($Email, $mailTitle, $mailContent);
+                SendMail($normalizedInput['email']['escaped'], $mailTitle, $mailContent);
             }
 
             if (isGameStartTimeReached($Now)) {
                 $sessionTokenValue = Session\Utils\Cookie\packSessionCookie([
                     'userId' => $UserID,
-                    'username' => $Username,
+                    'username' => $normalizedInput['username'],
                     'obscuredPasswordHash' => Session\Utils\Cookie\createCookiePasswordHash([
                         'passwordHash' => $passwordHash,
                     ]),

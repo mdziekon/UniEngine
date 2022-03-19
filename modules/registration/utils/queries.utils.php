@@ -194,4 +194,25 @@ function incrementUsersCounterInGameConfig () {
     $_MemCache->GameConfig = $_GameConfig;
 }
 
+//  Arguments
+//      - $params (Object)
+//          - email (String)
+//
+function updateAllMailChanges ($params) {
+    // This confirmation type means that the process has been interrupted externally
+    $confirmType = "4";
+
+    $updateMailChangesQuery = (
+        "UPDATE {{table}} " .
+        "SET " .
+        "`ConfirmType` = {$confirmType} " .
+        "WHERE " .
+        "`NewMail` = '{$params['email']}' AND " .
+        "`ConfirmType` = 0 " .
+        ";"
+    );
+
+    doquery($updateMailChangesQuery, 'mailchange');
+}
+
 ?>
