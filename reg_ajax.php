@@ -12,18 +12,24 @@ use UniEngine\Engine\Includes\Helpers\Users;
 use UniEngine\Engine\Modules\Session;
 use UniEngine\Engine\Modules\Registration;
 
-includeLang('reg_ajax');
-$Now = time();
+function handleRegistration(&$input) {
+    global $_EnginePath, $_Lang, $_GameConfig;
 
-header('access-control-allow-origin: *');
+    if (!isset($input['register'])) {
+        return [
+            'params' => [
+                'headers' => [
+                    'Location: index.php'
+                ]
+            ],
+            'payload' => [],
+        ];
+    }
 
-if (isset($_GET['register'])) {
-    $JSONResponse = [
-        'Errors' => [],
-        'BadFields' => [],
-    ];
+    includeLang('reg_ajax');
+    $Now = time();
 
-    $normalizedInput = Registration\Input\normalizeUserInput($_GET);
+    $normalizedInput = Registration\Input\normalizeUserInput($input);
     $userSessionIP = Users\Session\getCurrentIP();
 
     $validationResults = Registration\Validators\validateInputs(
@@ -33,61 +39,23 @@ if (isset($_GET['register'])) {
         ]
     );
 
+    $errorsJSONPayload = [
+        'Errors' => [],
+        'BadFields' => [],
+    ];
+
     foreach ($validationResults as $fieldName => $fieldValidationResult) {
         if ($fieldValidationResult['isSuccess']) {
             continue;
         }
 
-        switch ($fieldValidationResult['error']['code']) {
-            case 'USERNAME_TOO_SHORT':
-                $JSONResponse['Errors'][] = 1;
-                $JSONResponse['BadFields'][] = 'username';
-                break;
-            case 'USERNAME_TOO_LONG':
-                $JSONResponse['Errors'][] = 2;
-                $JSONResponse['BadFields'][] = 'username';
-                break;
-            case 'USERNAME_INVALID':
-                $JSONResponse['Errors'][] = 3;
-                $JSONResponse['BadFields'][] = 'username';
-                break;
-            case 'PASSWORD_TOO_SHORT':
-                $JSONResponse['Errors'][] = 4;
-                $JSONResponse['BadFields'][] = 'password';
-                break;
-            case 'EMAIL_EMPTY':
-                $JSONResponse['Errors'][] = 5;
-                $JSONResponse['BadFields'][] = 'email';
-                break;
-            case 'EMAIL_HAS_ILLEGAL_CHARACTERS':
-                $JSONResponse['Errors'][] = 6;
-                $JSONResponse['BadFields'][] = 'email';
-                break;
-            case 'EMAIL_INVALID':
-                $JSONResponse['Errors'][] = 7;
-                $JSONResponse['BadFields'][] = 'email';
-                break;
-            case 'EMAIL_ON_BANNED_DOMAIN':
-                $JSONResponse['Errors'][] = 8;
-                $JSONResponse['BadFields'][] = 'email';
-                break;
-            case 'GALAXY_NO_TOO_LOW':
-                $JSONResponse['Errors'][] = 13;
-                $JSONResponse['BadFields'][] = 'galaxy';
-                break;
-            case 'GALAXY_NO_TOO_HIGH':
-                $JSONResponse['Errors'][] = 14;
-                $JSONResponse['BadFields'][] = 'galaxy';
-                break;
-            case 'LANG_CODE_EMPTY':
-                $JSONResponse['Errors'][] = 16;
-                break;
-            case 'RULES_NOT_ACCEPTED':
-                $JSONResponse['Errors'][] = 9;
-                break;
-            case 'RECAPTCHA_VALIDATION_FAILED':
-                $JSONResponse['Errors'][] = 10;
-                break;
+        $mappedError = Registration\Utils\Errors\mapErrorToAjaxResponse($fieldValidationResult['error']);
+
+        if (!empty($mappedError['jsonCode'])) {
+            $errorsJSONPayload['Errors'][] = $mappedError['jsonCode'];
+        }
+        if (!empty($mappedError['fieldName'])) {
+            $errorsJSONPayload['BadFields'][] = $mappedError['fieldName'];
         }
     }
 
@@ -101,163 +69,215 @@ if (isset($_GET['register'])) {
         ]);
 
         if ($takenParamsValidationResult['isUsernameTaken']) {
-            $JSONResponse['Errors'][] = 11;
-            $JSONResponse['BadFields'][] = 'username';
+            $mappedError = Registration\Utils\Errors\mapErrorToAjaxResponse([
+                'code' => 'USERNAME_TAKEN'
+            ]);
+
+            $errorsJSONPayload['Errors'][] = $mappedError['jsonCode'];
+            $errorsJSONPayload['BadFields'][] = $mappedError['fieldName'];
         }
         if ($takenParamsValidationResult['isEmailTaken']) {
-            $JSONResponse['Errors'][] = 12;
-            $JSONResponse['BadFields'][] = 'email';
+            $mappedError = Registration\Utils\Errors\mapErrorToAjaxResponse([
+                'code' => 'EMAIL_TAKEN'
+            ]);
+
+            $errorsJSONPayload['Errors'][] = $mappedError['jsonCode'];
+            $errorsJSONPayload['BadFields'][] = $mappedError['fieldName'];
         }
     }
 
-    if (empty($JSONResponse['Errors'])) {
-        unset($JSONResponse['Errors']);
+    if (!empty($errorsJSONPayload['Errors'])) {
+        return [
+            'params' => null,
+            'payload' => $errorsJSONPayload,
+        ];
+    }
 
-        $newPlanetCoordinates = Registration\Utils\Galaxy\findNewPlanetPosition([
-            'preferredGalaxy' => $normalizedInput['galaxyNo']
+    $newPlanetCoordinates = Registration\Utils\Galaxy\findNewPlanetPosition([
+        'preferredGalaxy' => $normalizedInput['galaxyNo']
+    ]);
+
+    if ($newPlanetCoordinates === null) {
+        $mappedError = Registration\Utils\Errors\mapErrorToAjaxResponse([
+            'code' => 'GALAXY_TOO_CROWDED'
         ]);
 
-        if ($newPlanetCoordinates !== null) {
-            $passwordHash = Session\Utils\LocalIdentityV1\hashPassword([
-                'password' => $normalizedInput['password'],
-            ]);
+        $errorsJSONPayload['Errors'][] = $mappedError['jsonCode'];
+        $errorsJSONPayload['BadFields'][] = $mappedError['fieldName'];
 
-            $insertNewUserResult = Registration\Utils\Queries\insertNewUser([
-                'username' => $normalizedInput['username'],
-                'passwordHash' => $passwordHash,
-                'langCode' => $normalizedInput['langCode'],
-                'email' => $normalizedInput['email']['escaped'],
-                'registrationIP' => $userSessionIP,
-                'currentTimestamp' => $Now,
-            ]);
-            $UserID = $insertNewUserResult['userId'];
+        return [
+            'params' => null,
+            'payload' => $errorsJSONPayload,
+        ];
+    }
 
-            // Create a Planet for User
-            include($_EnginePath.'includes/functions/CreateOnePlanetRecord.php');
+    $passwordHash = Session\Utils\LocalIdentityV1\hashPassword([
+        'password' => $normalizedInput['password'],
+    ]);
 
-            $PlanetID = CreateOnePlanetRecord(
-                $newPlanetCoordinates['galaxy'],
-                $newPlanetCoordinates['system'],
-                $newPlanetCoordinates['planet'],
-                $UserID,
-                $_Lang['MotherPlanet'],
-                true
-            );
+    $insertNewUserResult = Registration\Utils\Queries\insertNewUser([
+        'username' => $normalizedInput['username'],
+        'passwordHash' => $passwordHash,
+        'langCode' => $normalizedInput['langCode'],
+        'email' => $normalizedInput['email']['escaped'],
+        'registrationIP' => $userSessionIP,
+        'currentTimestamp' => $Now,
+    ]);
+    $UserID = $insertNewUserResult['userId'];
 
-            Registration\Utils\Queries\incrementUsersCounterInGameConfig();
-            Registration\Utils\Queries\updateAllMailChanges([
-                'email' => $normalizedInput['email']['escaped']
-            ]);
+    // Create a Planet for User
+    include($_EnginePath.'includes/functions/CreateOnePlanetRecord.php');
 
-            $referrerUserId = Registration\Utils\General\getRegistrationReferrerId();
+    $PlanetID = CreateOnePlanetRecord(
+        $newPlanetCoordinates['galaxy'],
+        $newPlanetCoordinates['system'],
+        $newPlanetCoordinates['planet'],
+        $UserID,
+        $_Lang['MotherPlanet'],
+        true
+    );
 
-            if ($referrerUserId !== null) {
-                $registrationIPs = [
-                    'r' => trim($userSessionIP),
-                    'p' => trim(Users\Session\getCurrentOriginatingIP())
-                ];
+    Registration\Utils\Queries\incrementUsersCounterInGameConfig();
+    Registration\Utils\Queries\updateAllMailChanges([
+        'email' => $normalizedInput['email']['escaped']
+    ]);
 
-                if (empty($registrationIPs['p'])) {
-                    unset($registrationIPs['p']);
-                }
+    $referrerUserId = Registration\Utils\General\getRegistrationReferrerId();
 
-                $existingMatchingEnterLogIds = Registration\Utils\Queries\findEnterLogIPsWithMatchingIPValue([
-                    'ips' => $registrationIPs,
-                ]);
+    if ($referrerUserId !== null) {
+        $registrationIPs = [
+            'r' => trim($userSessionIP),
+            'p' => trim(Users\Session\getCurrentOriginatingIP())
+        ];
 
-                Registration\Utils\Queries\insertReferralsTableEntry([
-                    'referrerUserId' => $referrerUserId,
-                    'referredUserId' => $UserID,
-                    'timestamp' => $Now,
-                    'registrationIPs' => $registrationIPs,
-                    'existingMatchingEnterLogIds' => $existingMatchingEnterLogIds,
-                ]);
+        if (empty($registrationIPs['p'])) {
+            unset($registrationIPs['p']);
+        }
 
-                $Message = false;
-                $Message['msg_id'] = '038';
-                $Message['args'] = array('');
-                $Message = json_encode($Message);
+        $existingMatchingEnterLogIds = Registration\Utils\Queries\findEnterLogIPsWithMatchingIPValue([
+            'ips' => $registrationIPs,
+        ]);
 
-                SendSimpleMessage($referrerUserId, 0, $Now, 70, '007', '016', $Message);
-            }
+        Registration\Utils\Queries\insertReferralsTableEntry([
+            'referrerUserId' => $referrerUserId,
+            'referredUserId' => $UserID,
+            'timestamp' => $Now,
+            'registrationIPs' => $registrationIPs,
+            'existingMatchingEnterLogIds' => $existingMatchingEnterLogIds,
+        ]);
 
-            $ActivationCode = md5(mt_rand(0, 99999999999));
+        // Send a message to the referring player
+        $referringPlayerNotificationMsg = [
+            'msg_id' => '038',
+            'args' => [],
+        ];
 
-            // Update User with new data
-            Registration\Utils\Queries\updateUserFinalDetails([
-                'userId' => $UserID,
-                'motherPlanetId' => $PlanetID,
-                'motherPlanetGalaxy' => $newPlanetCoordinates['galaxy'],
-                'motherPlanetSystem' => $newPlanetCoordinates['system'],
-                'motherPlanetPlanetPos' => $newPlanetCoordinates['planet'],
-                'referrerId' => $referrerUserId,
-                'activationCode' => (
-                    REGISTER_REQUIRE_EMAILCONFIRM ?
-                        $ActivationCode :
-                        null
-                )
-            ]);
+        SendSimpleMessage($referrerUserId, 0, $Now, 70, '007', '016', json_encode($referringPlayerNotificationMsg));
+    }
 
-            // Send a invitation private msg
-            $Message = false;
-            $Message['msg_id'] = '022';
-            $Message['args'] = array('');
-            $Message = json_encode($Message);
+    $ActivationCode = md5(mt_rand(0, 99999999999));
 
-            SendSimpleMessage($UserID, 0, $Now, 70, '004', '009', $Message);
+    // Update User with new data
+    Registration\Utils\Queries\updateUserFinalDetails([
+        'userId' => $UserID,
+        'motherPlanetId' => $PlanetID,
+        'motherPlanetGalaxy' => $newPlanetCoordinates['galaxy'],
+        'motherPlanetSystem' => $newPlanetCoordinates['system'],
+        'motherPlanetPlanetPos' => $newPlanetCoordinates['planet'],
+        'referrerId' => $referrerUserId,
+        'activationCode' => (
+            REGISTER_REQUIRE_EMAILCONFIRM ?
+                $ActivationCode :
+                null
+        )
+    ]);
 
-            if (REGISTER_REQUIRE_EMAILCONFIRM) {
-                include($_EnginePath.'includes/functions/SendMail.php');
+    // Send welcome private msg to the new player
+    $newPlayerWelcomeMessage = [
+        'msg_id' => '022',
+        'args' => [
+            ''
+        ],
+    ];
 
-                $mailContent = Registration\Components\RegistrationConfirmationMail\render([
-                    'userId' => $UserID,
-                    'login' => $normalizedInput['username'],
-                    'password' => $normalizedInput['password'],
-                    'gameName' => $_GameConfig['game_name'],
-                    'universe' => $_Lang['RegMail_UniName'],
-                    'activationCode' => $ActivationCode,
-                ])['componentHTML'];
+    SendSimpleMessage($UserID, 0, $Now, 70, '004', '009', json_encode($newPlayerWelcomeMessage));
 
-                $mailTitle = parsetemplate(
-                    $_Lang['mail_title'],
-                    [
-                        'gameName' => $_GameConfig['game_name']
-                    ]
-                );
+    if (REGISTER_REQUIRE_EMAILCONFIRM) {
+        include($_EnginePath.'includes/functions/SendMail.php');
 
-                SendMail($normalizedInput['email']['escaped'], $mailTitle, $mailContent);
-            }
+        $mailContent = Registration\Components\RegistrationConfirmationMail\render([
+            'userId' => $UserID,
+            'login' => $normalizedInput['username'],
+            'password' => $normalizedInput['password'],
+            'gameName' => $_GameConfig['game_name'],
+            'universe' => $_Lang['RegMail_UniName'],
+            'activationCode' => $ActivationCode,
+        ])['componentHTML'];
 
-            if (isGameStartTimeReached($Now)) {
-                $sessionTokenValue = Session\Utils\Cookie\packSessionCookie([
-                    'userId' => $UserID,
-                    'username' => $normalizedInput['username'],
-                    'obscuredPasswordHash' => Session\Utils\Cookie\createCookiePasswordHash([
-                        'passwordHash' => $passwordHash,
-                    ]),
-                    'isRememberMeActive' => 0,
-                ]);
+        $mailTitle = parsetemplate(
+            $_Lang['mail_title'],
+            [
+                'gameName' => $_GameConfig['game_name']
+            ]
+        );
 
-                $JSONResponse['Code'] = 1;
-                $JSONResponse['Cookie'][] = [
+        SendMail($normalizedInput['email']['escaped'], $mailTitle, $mailContent);
+    }
+
+    if (!isGameStartTimeReached($Now)) {
+        return [
+            'params' => null,
+            'payload' => [
+                'Code' => 2
+            ],
+        ];
+    }
+
+    $sessionTokenValue = Session\Utils\Cookie\packSessionCookie([
+        'userId' => $UserID,
+        'username' => $normalizedInput['username'],
+        'obscuredPasswordHash' => Session\Utils\Cookie\createCookiePasswordHash([
+            'passwordHash' => $passwordHash,
+        ]),
+        'isRememberMeActive' => 0,
+    ]);
+
+    return [
+        'params' => null,
+        'payload' => [
+            'Code' => 1,
+            'Cookie' => [
+                [
                     'Name' => getSessionCookieKey(),
                     'Value' => $sessionTokenValue
-                ];
-                $JSONResponse['Redirect'] = GAMEURL_UNISTRICT.'/overview.php';
-            } else {
-                $JSONResponse['Code'] = 2;
+                ]
+            ],
+            'Redirect' => GAMEURL_UNISTRICT.'/overview.php'
+        ],
+    ];
+}
+
+function sendResponse($payload, $params) {
+    header('access-control-allow-origin: *');
+
+    if (!empty($params)) {
+        if (!empty($params['headers'])) {
+            foreach ($params['headers'] as $header) {
+                header($header);
             }
-        } else {
-            $JSONResponse['Errors'][] = 15;
-            $JSONResponse['BadFields'][] = 'email';
         }
     }
-    die('regCallback('.json_encode($JSONResponse).');');
+
+    $jsonContent = json_encode((object) $payload);
+
+    die("regCallback({$jsonContent});");
 }
-else
-{
-    header('Location: index.php');
-    die('regCallback({});');
-}
+
+$registrationResult = handleRegistration($_GET);
+
+sendResponse(
+    $registrationResult['payload'],
+    $registrationResult['params']
+);
 
 ?>
