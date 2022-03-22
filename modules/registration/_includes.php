@@ -11,6 +11,7 @@ call_user_func(function () {
     include($includePath . './input/normalization.input.php');
 
     include($includePath . './utils/cookies.utils.php');
+    include($includePath . './utils/errors.utils.php');
     include($includePath . './utils/galaxy.utils.php');
     include($includePath . './utils/general.utils.php');
     include($includePath . './utils/queries.utils.php');

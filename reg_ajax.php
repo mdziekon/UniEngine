@@ -49,56 +49,13 @@ function handleRegistration(&$input) {
             continue;
         }
 
-        switch ($fieldValidationResult['error']['code']) {
-            case 'USERNAME_TOO_SHORT':
-                $errorsJSONPayload['Errors'][] = 1;
-                $errorsJSONPayload['BadFields'][] = 'username';
-                break;
-            case 'USERNAME_TOO_LONG':
-                $errorsJSONPayload['Errors'][] = 2;
-                $errorsJSONPayload['BadFields'][] = 'username';
-                break;
-            case 'USERNAME_INVALID':
-                $errorsJSONPayload['Errors'][] = 3;
-                $errorsJSONPayload['BadFields'][] = 'username';
-                break;
-            case 'PASSWORD_TOO_SHORT':
-                $errorsJSONPayload['Errors'][] = 4;
-                $errorsJSONPayload['BadFields'][] = 'password';
-                break;
-            case 'EMAIL_EMPTY':
-                $errorsJSONPayload['Errors'][] = 5;
-                $errorsJSONPayload['BadFields'][] = 'email';
-                break;
-            case 'EMAIL_HAS_ILLEGAL_CHARACTERS':
-                $errorsJSONPayload['Errors'][] = 6;
-                $errorsJSONPayload['BadFields'][] = 'email';
-                break;
-            case 'EMAIL_INVALID':
-                $errorsJSONPayload['Errors'][] = 7;
-                $errorsJSONPayload['BadFields'][] = 'email';
-                break;
-            case 'EMAIL_ON_BANNED_DOMAIN':
-                $errorsJSONPayload['Errors'][] = 8;
-                $errorsJSONPayload['BadFields'][] = 'email';
-                break;
-            case 'GALAXY_NO_TOO_LOW':
-                $errorsJSONPayload['Errors'][] = 13;
-                $errorsJSONPayload['BadFields'][] = 'galaxy';
-                break;
-            case 'GALAXY_NO_TOO_HIGH':
-                $errorsJSONPayload['Errors'][] = 14;
-                $errorsJSONPayload['BadFields'][] = 'galaxy';
-                break;
-            case 'LANG_CODE_EMPTY':
-                $errorsJSONPayload['Errors'][] = 16;
-                break;
-            case 'RULES_NOT_ACCEPTED':
-                $errorsJSONPayload['Errors'][] = 9;
-                break;
-            case 'RECAPTCHA_VALIDATION_FAILED':
-                $errorsJSONPayload['Errors'][] = 10;
-                break;
+        $mappedError = Registration\Utils\Errors\mapErrorToAjaxResponse($fieldValidationResult['error']);
+
+        if (!empty($mappedError['jsonCode'])) {
+            $errorsJSONPayload['Errors'][] = $mappedError['jsonCode'];
+        }
+        if (!empty($mappedError['fieldName'])) {
+            $errorsJSONPayload['BadFields'][] = $mappedError['fieldName'];
         }
     }
 
@@ -112,12 +69,20 @@ function handleRegistration(&$input) {
         ]);
 
         if ($takenParamsValidationResult['isUsernameTaken']) {
-            $errorsJSONPayload['Errors'][] = 11;
-            $errorsJSONPayload['BadFields'][] = 'username';
+            $mappedError = Registration\Utils\Errors\mapErrorToAjaxResponse([
+                'code' => 'USERNAME_TAKEN'
+            ]);
+
+            $errorsJSONPayload['Errors'][] = $mappedError['jsonCode'];
+            $errorsJSONPayload['BadFields'][] = $mappedError['fieldName'];
         }
         if ($takenParamsValidationResult['isEmailTaken']) {
-            $errorsJSONPayload['Errors'][] = 12;
-            $errorsJSONPayload['BadFields'][] = 'email';
+            $mappedError = Registration\Utils\Errors\mapErrorToAjaxResponse([
+                'code' => 'EMAIL_TAKEN'
+            ]);
+
+            $errorsJSONPayload['Errors'][] = $mappedError['jsonCode'];
+            $errorsJSONPayload['BadFields'][] = $mappedError['fieldName'];
         }
     }
 
@@ -133,8 +98,12 @@ function handleRegistration(&$input) {
     ]);
 
     if ($newPlanetCoordinates === null) {
-        $errorsJSONPayload['Errors'][] = 15;
-        $errorsJSONPayload['BadFields'][] = 'email';
+        $mappedError = Registration\Utils\Errors\mapErrorToAjaxResponse([
+            'code' => 'GALAXY_TOO_CROWDED'
+        ]);
+
+        $errorsJSONPayload['Errors'][] = $mappedError['jsonCode'];
+        $errorsJSONPayload['BadFields'][] = $mappedError['fieldName'];
 
         return [
             'params' => null,
