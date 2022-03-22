@@ -247,25 +247,27 @@ function handleRegistration() {
         SendMail($normalizedInput['email']['escaped'], $mailTitle, $mailContent);
     }
 
-    if (isGameStartTimeReached($Now)) {
-        $sessionTokenValue = Session\Utils\Cookie\packSessionCookie([
-            'userId' => $UserID,
-            'username' => $normalizedInput['username'],
-            'obscuredPasswordHash' => Session\Utils\Cookie\createCookiePasswordHash([
-                'passwordHash' => $passwordHash,
-            ]),
-            'isRememberMeActive' => 0,
-        ]);
-
-        $JSONResponse['Code'] = 1;
-        $JSONResponse['Cookie'][] = [
-            'Name' => getSessionCookieKey(),
-            'Value' => $sessionTokenValue
-        ];
-        $JSONResponse['Redirect'] = GAMEURL_UNISTRICT.'/overview.php';
-    } else {
+    if (!isGameStartTimeReached($Now)) {
         $JSONResponse['Code'] = 2;
+
+        die('regCallback('.json_encode($JSONResponse).');');
     }
+
+    $sessionTokenValue = Session\Utils\Cookie\packSessionCookie([
+        'userId' => $UserID,
+        'username' => $normalizedInput['username'],
+        'obscuredPasswordHash' => Session\Utils\Cookie\createCookiePasswordHash([
+            'passwordHash' => $passwordHash,
+        ]),
+        'isRememberMeActive' => 0,
+    ]);
+
+    $JSONResponse['Code'] = 1;
+    $JSONResponse['Cookie'][] = [
+        'Name' => getSessionCookieKey(),
+        'Value' => $sessionTokenValue
+    ];
+    $JSONResponse['Redirect'] = GAMEURL_UNISTRICT.'/overview.php';
 
     die('regCallback('.json_encode($JSONResponse).');');
 }
