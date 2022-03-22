@@ -12,12 +12,12 @@ use UniEngine\Engine\Includes\Helpers\Users;
 use UniEngine\Engine\Modules\Session;
 use UniEngine\Engine\Modules\Registration;
 
-function handleRegistration() {
+function handleRegistration(&$input) {
     global $_EnginePath, $_Lang, $_GameConfig;
 
     header('access-control-allow-origin: *');
 
-    if (!isset($_GET['register'])) {
+    if (!isset($input['register'])) {
         header('Location: index.php');
         die('regCallback({});');
 
@@ -32,7 +32,7 @@ function handleRegistration() {
         'BadFields' => [],
     ];
 
-    $normalizedInput = Registration\Input\normalizeUserInput($_GET);
+    $normalizedInput = Registration\Input\normalizeUserInput($input);
     $userSessionIP = Users\Session\getCurrentIP();
 
     $validationResults = Registration\Validators\validateInputs(
@@ -272,6 +272,6 @@ function handleRegistration() {
     die('regCallback('.json_encode($JSONResponse).');');
 }
 
-handleRegistration();
+handleRegistration($_GET);
 
 ?>
