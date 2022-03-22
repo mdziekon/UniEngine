@@ -197,12 +197,13 @@ function handleRegistration(&$input) {
             'existingMatchingEnterLogIds' => $existingMatchingEnterLogIds,
         ]);
 
-        $Message = false;
-        $Message['msg_id'] = '038';
-        $Message['args'] = array('');
-        $Message = json_encode($Message);
+        // Send a message to the referring player
+        $referringPlayerNotificationMsg = [
+            'msg_id' => '038',
+            'args' => [],
+        ];
 
-        SendSimpleMessage($referrerUserId, 0, $Now, 70, '007', '016', $Message);
+        SendSimpleMessage($referrerUserId, 0, $Now, 70, '007', '016', json_encode($referringPlayerNotificationMsg));
     }
 
     $ActivationCode = md5(mt_rand(0, 99999999999));
@@ -222,13 +223,15 @@ function handleRegistration(&$input) {
         )
     ]);
 
-    // Send a invitation private msg
-    $Message = false;
-    $Message['msg_id'] = '022';
-    $Message['args'] = array('');
-    $Message = json_encode($Message);
+    // Send welcome private msg to the new player
+    $newPlayerWelcomeMessage = [
+        'msg_id' => '022',
+        'args' => [
+            ''
+        ],
+    ];
 
-    SendSimpleMessage($UserID, 0, $Now, 70, '004', '009', $Message);
+    SendSimpleMessage($UserID, 0, $Now, 70, '004', '009', json_encode($newPlayerWelcomeMessage));
 
     if (REGISTER_REQUIRE_EMAILCONFIRM) {
         include($_EnginePath.'includes/functions/SendMail.php');
