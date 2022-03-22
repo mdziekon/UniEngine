@@ -12,12 +12,21 @@ use UniEngine\Engine\Includes\Helpers\Users;
 use UniEngine\Engine\Modules\Session;
 use UniEngine\Engine\Modules\Registration;
 
-includeLang('reg_ajax');
-$Now = time();
+function handleRegistration() {
+    global $_EnginePath;
 
-header('access-control-allow-origin: *');
+    header('access-control-allow-origin: *');
 
-if (isset($_GET['register'])) {
+    if (!isset($_GET['register'])) {
+        header('Location: index.php');
+        die('regCallback({});');
+
+        return;
+    }
+
+    includeLang('reg_ajax');
+    $Now = time();
+
     $JSONResponse = [
         'Errors' => [],
         'BadFields' => [],
@@ -252,12 +261,10 @@ if (isset($_GET['register'])) {
             $JSONResponse['BadFields'][] = 'email';
         }
     }
+
     die('regCallback('.json_encode($JSONResponse).');');
 }
-else
-{
-    header('Location: index.php');
-    die('regCallback({});');
-}
+
+handleRegistration();
 
 ?>
