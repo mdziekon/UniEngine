@@ -66,7 +66,7 @@ function mapErrorToAjaxResponse($error) {
         ],
         'GALAXY_TOO_CROWDED' => [
             'jsonCode' => 15,
-            'fieldName' => 'email',
+            'fieldName' => 'galaxy',
         ],
     ];
 
