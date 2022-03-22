@@ -29,11 +29,6 @@ function handleRegistration(&$input) {
     includeLang('reg_ajax');
     $Now = time();
 
-    $JSONResponse = [
-        'Errors' => [],
-        'BadFields' => [],
-    ];
-
     $normalizedInput = Registration\Input\normalizeUserInput($input);
     $userSessionIP = Users\Session\getCurrentIP();
 
@@ -44,6 +39,11 @@ function handleRegistration(&$input) {
         ]
     );
 
+    $errorsJSONPayload = [
+        'Errors' => [],
+        'BadFields' => [],
+    ];
+
     foreach ($validationResults as $fieldName => $fieldValidationResult) {
         if ($fieldValidationResult['isSuccess']) {
             continue;
@@ -51,53 +51,53 @@ function handleRegistration(&$input) {
 
         switch ($fieldValidationResult['error']['code']) {
             case 'USERNAME_TOO_SHORT':
-                $JSONResponse['Errors'][] = 1;
-                $JSONResponse['BadFields'][] = 'username';
+                $errorsJSONPayload['Errors'][] = 1;
+                $errorsJSONPayload['BadFields'][] = 'username';
                 break;
             case 'USERNAME_TOO_LONG':
-                $JSONResponse['Errors'][] = 2;
-                $JSONResponse['BadFields'][] = 'username';
+                $errorsJSONPayload['Errors'][] = 2;
+                $errorsJSONPayload['BadFields'][] = 'username';
                 break;
             case 'USERNAME_INVALID':
-                $JSONResponse['Errors'][] = 3;
-                $JSONResponse['BadFields'][] = 'username';
+                $errorsJSONPayload['Errors'][] = 3;
+                $errorsJSONPayload['BadFields'][] = 'username';
                 break;
             case 'PASSWORD_TOO_SHORT':
-                $JSONResponse['Errors'][] = 4;
-                $JSONResponse['BadFields'][] = 'password';
+                $errorsJSONPayload['Errors'][] = 4;
+                $errorsJSONPayload['BadFields'][] = 'password';
                 break;
             case 'EMAIL_EMPTY':
-                $JSONResponse['Errors'][] = 5;
-                $JSONResponse['BadFields'][] = 'email';
+                $errorsJSONPayload['Errors'][] = 5;
+                $errorsJSONPayload['BadFields'][] = 'email';
                 break;
             case 'EMAIL_HAS_ILLEGAL_CHARACTERS':
-                $JSONResponse['Errors'][] = 6;
-                $JSONResponse['BadFields'][] = 'email';
+                $errorsJSONPayload['Errors'][] = 6;
+                $errorsJSONPayload['BadFields'][] = 'email';
                 break;
             case 'EMAIL_INVALID':
-                $JSONResponse['Errors'][] = 7;
-                $JSONResponse['BadFields'][] = 'email';
+                $errorsJSONPayload['Errors'][] = 7;
+                $errorsJSONPayload['BadFields'][] = 'email';
                 break;
             case 'EMAIL_ON_BANNED_DOMAIN':
-                $JSONResponse['Errors'][] = 8;
-                $JSONResponse['BadFields'][] = 'email';
+                $errorsJSONPayload['Errors'][] = 8;
+                $errorsJSONPayload['BadFields'][] = 'email';
                 break;
             case 'GALAXY_NO_TOO_LOW':
-                $JSONResponse['Errors'][] = 13;
-                $JSONResponse['BadFields'][] = 'galaxy';
+                $errorsJSONPayload['Errors'][] = 13;
+                $errorsJSONPayload['BadFields'][] = 'galaxy';
                 break;
             case 'GALAXY_NO_TOO_HIGH':
-                $JSONResponse['Errors'][] = 14;
-                $JSONResponse['BadFields'][] = 'galaxy';
+                $errorsJSONPayload['Errors'][] = 14;
+                $errorsJSONPayload['BadFields'][] = 'galaxy';
                 break;
             case 'LANG_CODE_EMPTY':
-                $JSONResponse['Errors'][] = 16;
+                $errorsJSONPayload['Errors'][] = 16;
                 break;
             case 'RULES_NOT_ACCEPTED':
-                $JSONResponse['Errors'][] = 9;
+                $errorsJSONPayload['Errors'][] = 9;
                 break;
             case 'RECAPTCHA_VALIDATION_FAILED':
-                $JSONResponse['Errors'][] = 10;
+                $errorsJSONPayload['Errors'][] = 10;
                 break;
         }
     }
@@ -112,36 +112,33 @@ function handleRegistration(&$input) {
         ]);
 
         if ($takenParamsValidationResult['isUsernameTaken']) {
-            $JSONResponse['Errors'][] = 11;
-            $JSONResponse['BadFields'][] = 'username';
+            $errorsJSONPayload['Errors'][] = 11;
+            $errorsJSONPayload['BadFields'][] = 'username';
         }
         if ($takenParamsValidationResult['isEmailTaken']) {
-            $JSONResponse['Errors'][] = 12;
-            $JSONResponse['BadFields'][] = 'email';
+            $errorsJSONPayload['Errors'][] = 12;
+            $errorsJSONPayload['BadFields'][] = 'email';
         }
     }
 
-    if (!empty($JSONResponse['Errors'])) {
+    if (!empty($errorsJSONPayload['Errors'])) {
         return [
             'params' => null,
-            'payload' => $JSONResponse,
+            'payload' => $errorsJSONPayload,
         ];
     }
-
-    unset($JSONResponse['Errors']);
 
     $newPlanetCoordinates = Registration\Utils\Galaxy\findNewPlanetPosition([
         'preferredGalaxy' => $normalizedInput['galaxyNo']
     ]);
 
     if ($newPlanetCoordinates === null) {
-        $JSONResponse['Errors'] = [];
-        $JSONResponse['Errors'][] = 15;
-        $JSONResponse['BadFields'][] = 'email';
+        $errorsJSONPayload['Errors'][] = 15;
+        $errorsJSONPayload['BadFields'][] = 'email';
 
         return [
             'params' => null,
-            'payload' => $JSONResponse,
+            'payload' => $errorsJSONPayload,
         ];
     }
 
@@ -256,11 +253,11 @@ function handleRegistration(&$input) {
     }
 
     if (!isGameStartTimeReached($Now)) {
-        $JSONResponse['Code'] = 2;
-
         return [
             'params' => null,
-            'payload' => $JSONResponse,
+            'payload' => [
+                'Code' => 2
+            ],
         ];
     }
 
@@ -273,16 +270,18 @@ function handleRegistration(&$input) {
         'isRememberMeActive' => 0,
     ]);
 
-    $JSONResponse['Code'] = 1;
-    $JSONResponse['Cookie'][] = [
-        'Name' => getSessionCookieKey(),
-        'Value' => $sessionTokenValue
-    ];
-    $JSONResponse['Redirect'] = GAMEURL_UNISTRICT.'/overview.php';
-
     return [
         'params' => null,
-        'payload' => $JSONResponse,
+        'payload' => [
+            'Code' => 1,
+            'Cookie' => [
+                [
+                    'Name' => getSessionCookieKey(),
+                    'Value' => $sessionTokenValue
+                ]
+            ],
+            'Redirect' => GAMEURL_UNISTRICT.'/overview.php'
+        ],
     ];
 }
 
