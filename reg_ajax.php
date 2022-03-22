@@ -15,13 +15,15 @@ use UniEngine\Engine\Modules\Registration;
 function handleRegistration(&$input) {
     global $_EnginePath, $_Lang, $_GameConfig;
 
-    header('access-control-allow-origin: *');
-
     if (!isset($input['register'])) {
-        header('Location: index.php');
-        die('regCallback({});');
-
-        return;
+        return [
+            'params' => [
+                'headers' => [
+                    'Location: index.php'
+                ]
+            ],
+            'payload' => [],
+        ];
     }
 
     includeLang('reg_ajax');
@@ -120,7 +122,10 @@ function handleRegistration(&$input) {
     }
 
     if (!empty($JSONResponse['Errors'])) {
-        die('regCallback('.json_encode($JSONResponse).');');
+        return [
+            'params' => null,
+            'payload' => $JSONResponse,
+        ];
     }
 
     unset($JSONResponse['Errors']);
@@ -134,7 +139,10 @@ function handleRegistration(&$input) {
         $JSONResponse['Errors'][] = 15;
         $JSONResponse['BadFields'][] = 'email';
 
-        die('regCallback('.json_encode($JSONResponse).');');
+        return [
+            'params' => null,
+            'payload' => $JSONResponse,
+        ];
     }
 
     $passwordHash = Session\Utils\LocalIdentityV1\hashPassword([
@@ -250,7 +258,10 @@ function handleRegistration(&$input) {
     if (!isGameStartTimeReached($Now)) {
         $JSONResponse['Code'] = 2;
 
-        die('regCallback('.json_encode($JSONResponse).');');
+        return [
+            'params' => null,
+            'payload' => $JSONResponse,
+        ];
     }
 
     $sessionTokenValue = Session\Utils\Cookie\packSessionCookie([
@@ -269,9 +280,33 @@ function handleRegistration(&$input) {
     ];
     $JSONResponse['Redirect'] = GAMEURL_UNISTRICT.'/overview.php';
 
-    die('regCallback('.json_encode($JSONResponse).');');
+    return [
+        'params' => null,
+        'payload' => $JSONResponse,
+    ];
 }
 
-handleRegistration($_GET);
+function sendResponse($payload, $params) {
+    header('access-control-allow-origin: *');
+
+    if (!empty($params)) {
+        if (!empty($params['headers'])) {
+            foreach ($params['headers'] as $header) {
+                header($header);
+            }
+        }
+    }
+
+    $jsonContent = json_encode((object) $payload);
+
+    die("regCallback({$jsonContent});");
+}
+
+$registrationResult = handleRegistration($_GET);
+
+sendResponse(
+    $registrationResult['payload'],
+    $registrationResult['params']
+);
 
 ?>
