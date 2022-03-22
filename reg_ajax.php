@@ -13,7 +13,7 @@ use UniEngine\Engine\Modules\Session;
 use UniEngine\Engine\Modules\Registration;
 
 function handleRegistration() {
-    global $_EnginePath;
+    global $_EnginePath, $_Lang, $_GameConfig;
 
     header('access-control-allow-origin: *');
 
