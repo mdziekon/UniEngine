@@ -2,6 +2,7 @@
 
 define('INSIDE', true);
 
+$_UseMinimalCommon = true;
 $_AllowInVacationMode = true;
 $_DontCheckPolls = true;
 $_DontShowMenus = true;
