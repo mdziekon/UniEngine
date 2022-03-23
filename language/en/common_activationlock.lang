@@ -1,0 +1,8 @@
+<?php
+
+$_Lang['ActivationLock_Message_General']    = 'You have to activate your account to continue your game play. Checkout your email account to find your account\'s activation link in the mail we\'ve sent to you upon registration.';
+$_Lang['ActivationLock_Message_Warning']    = 'If your account will remain inactive for 7 days past the registration date, it will be automatically removed!';
+
+$_Lang['ActivationLock_Btns_Logout']        = 'Logout';
+
+?>

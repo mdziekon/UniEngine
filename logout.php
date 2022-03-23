@@ -2,10 +2,12 @@
 
 define('INSIDE', true);
 
+$_UseMinimalCommon = true;
 $_AllowInVacationMode = true;
 $_DontCheckPolls = true;
 $_DontShowMenus = true;
 $_DontForceRulesAcceptance = true;
+$_DontCheckAccountActivation = true;
 
 $_EnginePath = './';
 include($_EnginePath.'common.php');
