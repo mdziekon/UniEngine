@@ -275,4 +275,14 @@ function prepareVacationModeMessageHTML (&$user, $params) {
     return parsetemplate($tpl, $tplData);
 }
 
+/**
+ * @return String HTML of the message
+ */
+function prepareActivationLockMessageHTML () {
+    $tplData = includeLang('common_activationlock', true);
+    $tpl = gettemplate('common_activationlock');
+
+    return parsetemplate($tpl, $tplData);
+}
+
 ?>

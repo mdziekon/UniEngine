@@ -130,7 +130,11 @@ if(isLogged()) {
         $isUserBlockedByActivationRequirement
     ) {
         $_DontShowMenus = true;
-        message($_Lang['NonActiveBlock'], $_GameConfig['game_name']);
+
+        message(
+            prepareActivationLockMessageHTML(),
+            $_GameConfig['game_name']
+        );
     }
 
     $userCookieBlockadeResult = handleUserBlockadeByCookie(
