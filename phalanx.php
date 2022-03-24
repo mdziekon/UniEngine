@@ -137,62 +137,13 @@ if($ThisMoon['planet_type'] == 3)
                         $Result_GetFleets = Flights\Fetchers\fetchCurrentFlights([ 'targetId' => $TargetID ]);
 
                         $parse['phl_fleets_table'] = $_Lang['PhalanxInfo_NoMovements'];
-                        if($Result_GetFleets->num_rows > 0)
-                        {
-                            include($_EnginePath.'includes/functions/BuildFleetEventTable.php');
-                            $Record = 0;
-                            while($FleetRow = $Result_GetFleets->fetch_assoc())
-                            {
-                                $Record += 1;
+                        $parse['phl_fleets_table'] = Flights\Components\FlightsList\render([
+                            'flights' => $Result_GetFleets,
+                            'targetOwnerId' => $Result_GetTarget['id_owner'],
+                            'isPhalanxView' => true,
+                            'currentTimestamp' => $Now,
+                        ])['componentHTML'];
 
-                                $StartTime = $FleetRow['fleet_start_time'];
-                                $StayTime = $FleetRow['fleet_end_stay'];
-                                $EndTime = $FleetRow['fleet_end_time'];
-
-                                if($FleetRow['fleet_owner'] == $Result_GetTarget['id_owner'])
-                                {
-                                    $FleetType = true;
-                                }
-                                else
-                                {
-                                    $FleetType = false;
-                                }
-
-                                $FleetRow['fleet_resource_metal'] = 0;
-                                $FleetRow['fleet_resource_crystal'] = 0;
-                                $FleetRow['fleet_resource_deuterium'] = 0;
-                                if(!empty($FleetRow['fleets_id']))
-                                {
-                                    $FleetRow['fleet_mission'] = 2;
-                                }
-                                if($StartTime > $Now)
-                                {
-                                    $Label = 'fs';
-                                    $fpage[$StartTime.str_pad($FleetRow['fleet_id'], 20, '0', STR_PAD_LEFT)] = BuildFleetEventTable($FleetRow, 0, $FleetType, $Label, $Record, true);
-                                }
-                                if($FleetRow['fleet_mission'] != 4)
-                                {
-                                    $Label = 'ft';
-                                    if($StayTime > $Now)
-                                    {
-                                        $fpage[$StayTime.str_pad($FleetRow['fleet_id'], 20, '0', STR_PAD_LEFT)] = BuildFleetEventTable($FleetRow, 1, $FleetType, $Label, $Record, true);
-                                    }
-                                    if($FleetType == true)
-                                    {
-                                        $Label = 'fe';
-                                        if($EndTime > $Now)
-                                        {
-                                            $fpage[$EndTime.str_pad($FleetRow['fleet_id'], 20, '0', STR_PAD_LEFT)] = BuildFleetEventTable($FleetRow, 2, $FleetType, $Label, $Record, true);
-                                        }
-                                    }
-                                }
-                            }
-                            if(!empty($fpage))
-                            {
-                                ksort($fpage, SORT_STRING);
-                                $parse['phl_fleets_table'] = implode('', $fpage);
-                            }
-                        }
                         $page = parsetemplate($PageTPL, $parse);
                     }
                     else
