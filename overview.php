@@ -7,9 +7,11 @@ $_AllowInVacationMode = true;
 $_EnginePath = './';
 include($_EnginePath.'common.php');
 include_once($_EnginePath . 'modules/session/_includes.php');
+include_once($_EnginePath . 'modules/flights/_includes.php');
 
 use UniEngine\Engine\Includes\Helpers\Users;
 use UniEngine\Engine\Modules\Session;
+use UniEngine\Engine\Modules\Flights;
 
 loggedCheck();
 
@@ -909,15 +911,7 @@ switch($mode)
         }
 
         // --- Flying Fleets Table ---
-        $Query_GetFleets = '';
-        $Query_GetFleets .= "SELECT `fl`.*, `pl1`.`name` AS `start_name`, `pl2`.`name` AS `end_name`, `acs`.`fleets_id`, `usr`.`username` AS `owner_name` ";
-        $Query_GetFleets .= "FROM {{table}} AS `fl`";
-        $Query_GetFleets .= "LEFT JOIN `{{prefix}}planets` AS `pl1` ON `pl1`.`id` = `fl`.`fleet_start_id` ";
-        $Query_GetFleets .= "LEFT JOIN `{{prefix}}planets` AS `pl2` ON `pl2`.`id` = `fl`.`fleet_end_id` ";
-        $Query_GetFleets .= "LEFT JOIN `{{prefix}}users` AS `usr` ON `usr`.`id` = `fl`.`fleet_owner` ";
-        $Query_GetFleets .= "LEFT JOIN `{{prefix}}acs` AS `acs` ON `acs`.`main_fleet_id` = `fl`.`fleet_id` ";
-        $Query_GetFleets .= "WHERE `fl`.`fleet_owner` = '{$_User['id']}' OR `fl`.`fleet_target_owner` = '{$_User['id']}';";
-        $Result_GetFleets = doquery($Query_GetFleets, 'fleets');
+        $Result_GetFleets = Flights\Fetchers\fetchCurrentFlights([ 'userId' => $_User['id'] ]);
 
         $FleetIndex1 = 0;
         $FleetIndex2 = 2000;

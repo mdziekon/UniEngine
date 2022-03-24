@@ -9,6 +9,9 @@ $_BlockFleetHandler = true;
 
 $_EnginePath = './';
 include($_EnginePath.'common.php');
+include($_EnginePath . 'modules/flights/_includes.php');
+
+use UniEngine\Engine\Modules\Flights;
 
 loggedCheck();
 
@@ -131,19 +134,7 @@ if($ThisMoon['planet_type'] == 3)
                         }
                         $parse['skinpath'] = $_SkinPath;
 
-                        $JoinStartNames = "LEFT JOIN {{prefix}}planets AS `planet1` ON `planet1`.`id` = {{table}}.`fleet_start_id` ";
-                        $JoinEndNames = "LEFT JOIN {{prefix}}planets AS `planet2` ON `planet2`.`id` = {{table}}.`fleet_end_id` ";
-                        $JoinOwnerName = "LEFT JOIN {{prefix}}users AS `usr` ON `usr`.`id` = {{table}}.`fleet_owner`";
-                        $JoinACS = "LEFT JOIN {{prefix}}acs AS `get_acs` ON `main_fleet_id` = `fleet_id`";
-
-                        $Query_GetFleets = '';
-                        $Query_GetFleets .= "SELECT {{table}}.*, `planet1`.`name` as `start_name`, `planet2`.`name` as `end_name`, `get_acs`.`fleets_id`, `usr`.`username` AS `owner_name` ";
-                        $Query_GetFleets .= "FROM {{table}} ";
-                        $Query_GetFleets .= "{$JoinStartNames} {$JoinEndNames} {$JoinOwnerName} {$JoinACS} ";
-                        $Query_GetFleets .= "WHERE ";
-                        $Query_GetFleets .= "`fleet_start_id` = {$TargetID} OR `fleet_end_id` = {$TargetID} ";
-                        $Query_GetFleets .= "; -- Phalanx|GetFleets";
-                        $Result_GetFleets = doquery($Query_GetFleets, 'fleets');
+                        $Result_GetFleets = Flights\Fetchers\fetchCurrentFlights([ 'targetId' => $TargetID ]);
 
                         $parse['phl_fleets_table'] = $_Lang['PhalanxInfo_NoMovements'];
                         if($Result_GetFleets->num_rows > 0)
