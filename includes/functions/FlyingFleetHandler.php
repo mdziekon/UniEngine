@@ -4,7 +4,7 @@ function FlyingFleetHandler(&$planet, $IncludeFleetsFromEndIDs = array())
 {
     global $_EnginePath, $UserStatsData, $ChangeCoordinatesForFleets, $_Vars_ElementCategories, $_BenchTool, $_Cache, $_GalaxyRow;;
 
-    include($_EnginePath . 'modules/flights/_includes.php');
+    include_once($_EnginePath . 'modules/flights/_includes.php');
 
     if(!empty($_BenchTool)){ $_BenchTool->simpleCountStart(false, 'telemetry__f0'); }
 
