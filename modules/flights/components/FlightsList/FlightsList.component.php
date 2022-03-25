@@ -17,7 +17,7 @@ function createFleetSortKey($params) {
 //  Arguments
 //      - $props (Object)
 //          - flights
-//          - targetOwnerId (String)
+//          - fleetOwnerId (String)
 //          - isPhalanxView (Boolean)
 //          - currentTimestamp (Number)
 //
@@ -32,7 +32,7 @@ function render ($props) {
     ];
 
     $flights = $props['flights'];
-    $targetOwnerId = $props['targetOwnerId'];
+    $fleetOwnerId = $props['fleetOwnerId'];
     $isPhalanxView = $props['isPhalanxView'];
     $currentTimestamp = $props['currentTimestamp'];
 
@@ -55,7 +55,7 @@ function render ($props) {
         $fleetHoldTime = $flight['fleet_end_stay'];
         $fleetEndTime = $flight['fleet_end_time'];
 
-        $isFleetOwnedByTargetOwner = $flight['fleet_owner'] == $targetOwnerId;
+        $isOwnersFleet = $flight['fleet_owner'] == $fleetOwnerId;
         $isPartOfACSFlight = !empty($flight['fleets_id']);
 
         if ($isPhalanxView) {
@@ -78,7 +78,7 @@ function render ($props) {
             $flightsListEntries[$entryKey] = BuildFleetEventTable(
                 $flight,
                 0,
-                $isFleetOwnedByTargetOwner,
+                $isOwnersFleet,
                 $Label,
                 $entryIdx,
                 $isPhalanxView
@@ -100,14 +100,14 @@ function render ($props) {
             $flightsListEntries[$entryKey] = BuildFleetEventTable(
                 $flight,
                 1,
-                $isFleetOwnedByTargetOwner,
+                $isOwnersFleet,
                 $Label,
                 $entryIdx,
                 $isPhalanxView
             );
         }
         if (
-            $isFleetOwnedByTargetOwner &&
+            $isOwnersFleet &&
             $fleetEndTime > $currentTimestamp
         ) {
             $entryKey = createFleetSortKey([
@@ -119,7 +119,7 @@ function render ($props) {
             $flightsListEntries[$entryKey] = BuildFleetEventTable(
                 $flight,
                 2,
-                $isFleetOwnedByTargetOwner,
+                $isOwnersFleet,
                 $Label,
                 $entryIdx,
                 $isPhalanxView

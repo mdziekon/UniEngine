@@ -139,7 +139,7 @@ if($ThisMoon['planet_type'] == 3)
                         $parse['phl_fleets_table'] = $_Lang['PhalanxInfo_NoMovements'];
                         $parse['phl_fleets_table'] = Flights\Components\FlightsList\render([
                             'flights' => $Result_GetFleets,
-                            'targetOwnerId' => $Result_GetTarget['id_owner'],
+                            'fleetOwnerId' => $Result_GetTarget['id_owner'],
                             'isPhalanxView' => true,
                             'currentTimestamp' => $Now,
                         ])['componentHTML'];
