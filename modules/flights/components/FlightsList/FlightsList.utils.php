@@ -4,8 +4,10 @@ namespace UniEngine\Engine\Modules\Flights\Components\FlightsList\Utils;
 
 abstract class ViewMode {
     const Phalanx = 'ViewMode::Phalanx';
+    const Overview = 'ViewMode::Overview';
 }
 
+// --- Phalanx mode ---
 function _isFleetStartPhalanxEntryVisible($params) {
     return true;
 }
@@ -24,16 +26,65 @@ function _isFleetEndPhalanxEntryVisible($params) {
     return $params['isTargetOwnersFleet'];
 }
 
+// --- Overview mode ---
+function _isFleetStartOverviewEntryVisible($params) {
+    if ($params['isViewingUserFleetOwner']) {
+        return true;
+    }
+
+    // TODO: Verify this, enemy "harvest" missions probably won't be even fetched
+    return $params['flight']['fleet_mission'] != 8;
+}
+function _isFleetHoldOverviewEntryVisible($params) {
+    if ($params['isViewingUserFleetOwner']) {
+        // TODO: Verify this, most likely this is redundant as no "stay" mission has hold time
+        if ($params['flight']['fleet_mission'] == 4) {
+            return false;
+        }
+
+        return true;
+    }
+
+    return $params['flight']['fleet_mission'] == 5;
+}
+function _isFleetEndOverviewEntryVisible($params) {
+    if (!$params['isViewingUserFleetOwner']) {
+        return false;
+    }
+
+    if ($params['flight']['fleet_mission'] == 4) {
+        // "stay" mission has been turned back
+        return (
+            $params['flight']['fleet_start_time'] < $params['currentTimestamp'] &&
+            $params['flight']['fleet_end_time'] > $params['currentTimestamp']
+        );
+    }
+
+    if ($params['flight']['fleet_mission'] == 7) {
+        // "colonize" mission has not been calculated or is not a single ship
+        return !(
+            $params['flight']['fleet_mess'] == 0 &&
+            $params['flight']['fleet_amount'] == 1
+        );
+    }
+
+    return true;
+}
+
 /**
  * @param object $params
  * @param ViewMode $params['viewMode']
  * @param string $params['flight']
+ * @param boolean $params['isViewingUserFleetOwner']
  * @param boolean $params['isTargetOwnersFleet']
+ * @param number $params['currentTimestamp']
  */
 function isFleetStartEntryVisible($params) {
     switch ($params['viewMode']) {
         case ViewMode::Phalanx:
             return _isFleetStartPhalanxEntryVisible($params);
+        case ViewMode::Overview:
+            return _isFleetStartOverviewEntryVisible($params);
     }
 }
 
@@ -41,12 +92,16 @@ function isFleetStartEntryVisible($params) {
  * @param object $params
  * @param ViewMode $params['viewMode']
  * @param string $params['flight']
+ * @param boolean $params['isViewingUserFleetOwner']
  * @param boolean $params['isTargetOwnersFleet']
+ * @param number $params['currentTimestamp']
  */
 function isFleetHoldEntryVisible($params) {
     switch ($params['viewMode']) {
         case ViewMode::Phalanx:
             return _isFleetHoldPhalanxEntryVisible($params);
+        case ViewMode::Overview:
+            return _isFleetHoldOverviewEntryVisible($params);
     }
 }
 
@@ -54,12 +109,16 @@ function isFleetHoldEntryVisible($params) {
  * @param object $params
  * @param ViewMode $params['viewMode']
  * @param string $params['flight']
+ * @param boolean $params['isViewingUserFleetOwner']
  * @param boolean $params['isTargetOwnersFleet']
+ * @param number $params['currentTimestamp']
  */
 function isFleetEndEntryVisible($params) {
     switch ($params['viewMode']) {
         case ViewMode::Phalanx:
             return _isFleetEndPhalanxEntryVisible($params);
+        case ViewMode::Overview:
+            return _isFleetEndOverviewEntryVisible($params);
     }
 }
 

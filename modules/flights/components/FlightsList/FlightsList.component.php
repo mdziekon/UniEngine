@@ -8,6 +8,7 @@ use UniEngine\Engine\Modules\Flights\Components\FlightsList\Utils;
 //      - $props (Object)
 //          - viewMode (Utils\ViewMode)
 //          - flights
+//          - viewingUserId (String)
 //          - targetOwnerId (String)
 //          - isPhalanxView (Boolean)
 //          - currentTimestamp (Number)
@@ -24,6 +25,7 @@ function render ($props) {
 
     $viewMode = $props['viewMode'];
     $flights = $props['flights'];
+    $viewingUserId = $props['viewingUserId'];
     $targetOwnerId = $props['targetOwnerId'];
     $isPhalanxView = $props['isPhalanxView'];
     $currentTimestamp = $props['currentTimestamp'];
@@ -44,6 +46,7 @@ function render ($props) {
         $fleetHoldTime = $flight['fleet_end_stay'];
         $fleetEndTime = $flight['fleet_end_time'];
 
+        $isViewingUserFleetOwner = $flight['fleet_owner'] == $viewingUserId;
         $isTargetOwnersFleet = $flight['fleet_owner'] == $targetOwnerId;
         $isPartOfACSFlight = !empty($flight['fleets_id']);
 
@@ -62,7 +65,9 @@ function render ($props) {
             Utils\isFleetStartEntryVisible([
                 'viewMode' => $viewMode,
                 'flight' => $flight,
-                'isTargetOwnersFleet' => $isTargetOwnersFleet
+                'isViewingUserFleetOwner' => $isViewingUserFleetOwner,
+                'isTargetOwnersFleet' => $isTargetOwnersFleet,
+                'currentTimestamp' => $currentTimestamp
             ])
         ) {
             $entryKey = Utils\createFleetSortKey([
@@ -83,7 +88,9 @@ function render ($props) {
             Utils\isFleetHoldEntryVisible([
                 'viewMode' => $viewMode,
                 'flight' => $flight,
-                'isTargetOwnersFleet' => $isTargetOwnersFleet
+                'isViewingUserFleetOwner' => $isViewingUserFleetOwner,
+                'isTargetOwnersFleet' => $isTargetOwnersFleet,
+                'currentTimestamp' => $currentTimestamp
             ])
         ) {
             $entryKey = Utils\createFleetSortKey([
@@ -104,7 +111,9 @@ function render ($props) {
             Utils\isFleetEndEntryVisible([
                 'viewMode' => $viewMode,
                 'flight' => $flight,
-                'isTargetOwnersFleet' => $isTargetOwnersFleet
+                'isViewingUserFleetOwner' => $isViewingUserFleetOwner,
+                'isTargetOwnersFleet' => $isTargetOwnersFleet,
+                'currentTimestamp' => $currentTimestamp
             ])
         ) {
             $entryKey = Utils\createFleetSortKey([

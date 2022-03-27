@@ -140,6 +140,7 @@ if($ThisMoon['planet_type'] == 3)
                         $parse['phl_fleets_table'] = Flights\Components\FlightsList\render([
                             'viewMode' => Flights\Components\FlightsList\Utils\ViewMode::Phalanx,
                             'flights' => $Result_GetFleets,
+                            'viewingUserId' => $_User['id'],
                             'targetOwnerId' => $Result_GetTarget['id_owner'],
                             'isPhalanxView' => true,
                             'currentTimestamp' => $Now,
