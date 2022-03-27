@@ -2,6 +2,7 @@
 
 namespace UniEngine\Engine\Modules\Flights\Components\FlightsList;
 
+use UniEngine\Engine\Modules\Flights;
 use UniEngine\Engine\Modules\Flights\Components\FlightsList\Utils;
 
 //  Arguments
@@ -16,8 +17,6 @@ use UniEngine\Engine\Modules\Flights\Components\FlightsList\Utils;
 //      - componentHTML (String)
 //
 function render ($props) {
-    global $_EnginePath;
-
     $tplParams = [
         'flightsList' => null,
     ];
@@ -34,8 +33,6 @@ function render ($props) {
             'componentHTML' => ''
         ];
     }
-
-    include_once("{$_EnginePath}includes/functions/BuildFleetEventTable.php");
 
     $flightsListEntries = [];
 
@@ -79,12 +76,12 @@ function render ($props) {
                 'eventTimestamp' => $fleetStartTime
             ]);
 
-            $flightsListEntries[$entryKey] = BuildFleetEventTable(
-                $flight,
-                0,
-                $shouldDisplayFleetAsOwn,
-                $isPhalanxView
-            );
+            $flightsListEntries[$entryKey] = Flights\Components\FlightListElement\render([
+                'flight' => $flight,
+                'fleetStatus' => 0,
+                'isDisplayedAsOwn' => $shouldDisplayFleetAsOwn,
+                'isPhalanxViewMode' => $isPhalanxView,
+            ])['componentHTML'];
         }
 
         if (
@@ -102,12 +99,12 @@ function render ($props) {
                 'eventTimestamp' => $fleetHoldTime
             ]);
 
-            $flightsListEntries[$entryKey] = BuildFleetEventTable(
-                $flight,
-                1,
-                $shouldDisplayFleetAsOwn,
-                $isPhalanxView
-            );
+            $flightsListEntries[$entryKey] = Flights\Components\FlightListElement\render([
+                'flight' => $flight,
+                'fleetStatus' => 1,
+                'isDisplayedAsOwn' => $shouldDisplayFleetAsOwn,
+                'isPhalanxViewMode' => $isPhalanxView,
+            ])['componentHTML'];
         }
 
         if (
@@ -125,12 +122,12 @@ function render ($props) {
                 'eventTimestamp' => $fleetEndTime
             ]);
 
-            $flightsListEntries[$entryKey] = BuildFleetEventTable(
-                $flight,
-                2,
-                $shouldDisplayFleetAsOwn,
-                $isPhalanxView
-            );
+            $flightsListEntries[$entryKey] = Flights\Components\FlightListElement\render([
+                'flight' => $flight,
+                'fleetStatus' => 2,
+                'isDisplayedAsOwn' => $shouldDisplayFleetAsOwn,
+                'isPhalanxViewMode' => $isPhalanxView,
+            ])['componentHTML'];
         }
     }
 
