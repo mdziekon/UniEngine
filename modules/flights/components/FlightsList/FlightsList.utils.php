@@ -63,4 +63,16 @@ function isFleetEndEntryVisible($params) {
     }
 }
 
+/**
+ * @param object $params
+ * @param string $params['fleetId']
+ * @param number $params['eventTimestamp']
+ */
+function createFleetSortKey($params) {
+    return implode('', [
+        $params['eventTimestamp'],
+        str_pad($params['fleetId'], 20, '0', STR_PAD_LEFT)
+    ]);
+}
+
 ?>

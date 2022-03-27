@@ -4,18 +4,6 @@ namespace UniEngine\Engine\Modules\Flights\Components\FlightsList;
 
 use UniEngine\Engine\Modules\Flights\Components\FlightsList\Utils;
 
-/**
- * @param object $params
- * @param string $params['fleetId']
- * @param number $params['eventTimestamp']
- */
-function _createFleetSortKey($params) {
-    return implode('', [
-        $params['eventTimestamp'],
-        str_pad($params['fleetId'], 20, '0', STR_PAD_LEFT)
-    ]);
-}
-
 //  Arguments
 //      - $props (Object)
 //          - flights
@@ -79,7 +67,7 @@ function render ($props) {
                 'isTargetOwnersFleet' => $isTargetOwnersFleet
             ])
         ) {
-            $entryKey = _createFleetSortKey([
+            $entryKey = Utils\createFleetSortKey([
                 'fleetId' => $fleetId,
                 'eventTimestamp' => $fleetStartTime
             ]);
@@ -103,7 +91,7 @@ function render ($props) {
                 'isTargetOwnersFleet' => $isTargetOwnersFleet
             ])
         ) {
-            $entryKey = _createFleetSortKey([
+            $entryKey = Utils\createFleetSortKey([
                 'fleetId' => $fleetId,
                 'eventTimestamp' => $fleetHoldTime
             ]);
@@ -127,7 +115,7 @@ function render ($props) {
                 'isTargetOwnersFleet' => $isTargetOwnersFleet
             ])
         ) {
-            $entryKey = _createFleetSortKey([
+            $entryKey = Utils\createFleetSortKey([
                 'fleetId' => $fleetId,
                 'eventTimestamp' => $fleetEndTime
             ]);
