@@ -136,7 +136,6 @@ if($ThisMoon['planet_type'] == 3)
 
                         $Result_GetFleets = Flights\Fetchers\fetchCurrentFlights([ 'targetId' => $TargetID ]);
 
-                        $parse['phl_fleets_table'] = $_Lang['PhalanxInfo_NoMovements'];
                         $parse['phl_fleets_table'] = Flights\Components\FlightsList\render([
                             'viewMode' => Flights\Components\FlightsList\Utils\ViewMode::Phalanx,
                             'flights' => $Result_GetFleets,
@@ -144,6 +143,10 @@ if($ThisMoon['planet_type'] == 3)
                             'targetOwnerId' => $Result_GetTarget['id_owner'],
                             'currentTimestamp' => $Now,
                         ])['componentHTML'];
+
+                        if (empty($parse['phl_fleets_table'])) {
+                            $parse['phl_fleets_table'] = $_Lang['PhalanxInfo_NoMovements'];
+                        }
 
                         $page = parsetemplate($PageTPL, $parse);
                     }
