@@ -142,7 +142,6 @@ if($ThisMoon['planet_type'] == 3)
                             'flights' => $Result_GetFleets,
                             'viewingUserId' => $_User['id'],
                             'targetOwnerId' => $Result_GetTarget['id_owner'],
-                            'isPhalanxView' => true,
                             'currentTimestamp' => $Now,
                         ])['componentHTML'];
 

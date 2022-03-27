@@ -10,7 +10,6 @@ use UniEngine\Engine\Modules\Flights\Components\FlightsList\Utils;
 //          - flights
 //          - viewingUserId (String)
 //          - targetOwnerId (String)
-//          - isPhalanxView (Boolean)
 //          - currentTimestamp (Number)
 //
 //  Returns: Object
@@ -27,8 +26,8 @@ function render ($props) {
     $flights = $props['flights'];
     $viewingUserId = $props['viewingUserId'];
     $targetOwnerId = $props['targetOwnerId'];
-    $isPhalanxView = $props['isPhalanxView'];
     $currentTimestamp = $props['currentTimestamp'];
+    $isPhalanxView = $viewMode === Utils\ViewMode::Phalanx;
 
     if ($flights->num_rows === 0) {
         return [
