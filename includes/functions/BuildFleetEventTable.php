@@ -177,14 +177,17 @@ function BuildFleetEventTable($FleetRow, $Status, $Owner, $Label, $Record, $Phal
     }
     $EventString .= $FleetMission;
 
-    $bloc['fleet_status']        = _getFleetStatus($Status);
+    $fleetStatusName = _getFleetStatus($Status);
+    $entryCounterId = "_fleet_{$FleetRow['fleet_id']}_{$fleetStatusName}";
+
+    $bloc['fleet_status']        = $fleetStatusName;
     $bloc['fleet_prefix']        = $FleetPrefix;
     $bloc['fleet_style']        = _getMissionStyle($MissionType);
-    $bloc['fleet_order']        = $Label.$Record;
+    $bloc['fleet_order']        = $entryCounterId;
     $bloc['fleet_countdown']    = pretty_time($Rest, true);
     $bloc['fleet_time']            = str_replace($ThisDate, '', date('d/m | H:i:s', $Time));
     $bloc['fleet_descr']        = $EventString;
-    GlobalTemplate_AppendToAfterBody(InsertJavaScriptChronoApplet($Label, $Record, $Rest));
+    GlobalTemplate_AppendToAfterBody(InsertJavaScriptChronoApplet("", $entryCounterId, $Rest));
 
     return parsetemplate($Template, $bloc);
 }
