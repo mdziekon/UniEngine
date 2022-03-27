@@ -35,12 +35,9 @@ function render ($props) {
 
     include_once("{$_EnginePath}includes/functions/BuildFleetEventTable.php");
 
-    $entryIdx = 0;
     $flightsListEntries = [];
 
     while ($flight = $flights->fetch_assoc()) {
-        $entryIdx += 1;
-
         $fleetId = $flight['fleet_id'];
         $fleetStartTime = $flight['fleet_start_time'];
         $fleetHoldTime = $flight['fleet_end_stay'];
@@ -71,14 +68,11 @@ function render ($props) {
                 'fleetId' => $fleetId,
                 'eventTimestamp' => $fleetStartTime
             ]);
-            $Label = 'fs';
 
             $flightsListEntries[$entryKey] = BuildFleetEventTable(
                 $flight,
                 0,
                 $isTargetOwnersFleet,
-                $Label,
-                $entryIdx,
                 $isPhalanxView
             );
         }
@@ -95,14 +89,11 @@ function render ($props) {
                 'fleetId' => $fleetId,
                 'eventTimestamp' => $fleetHoldTime
             ]);
-            $Label = 'ft';
 
             $flightsListEntries[$entryKey] = BuildFleetEventTable(
                 $flight,
                 1,
                 $isTargetOwnersFleet,
-                $Label,
-                $entryIdx,
                 $isPhalanxView
             );
         }
@@ -119,14 +110,11 @@ function render ($props) {
                 'fleetId' => $fleetId,
                 'eventTimestamp' => $fleetEndTime
             ]);
-            $Label = 'fe';
 
             $flightsListEntries[$entryKey] = BuildFleetEventTable(
                 $flight,
                 2,
                 $isTargetOwnersFleet,
-                $Label,
-                $entryIdx,
                 $isPhalanxView
             );
         }

@@ -1,6 +1,6 @@
 <?php
 
-function BuildFleetEventTable($FleetRow, $Status, $Owner, $Label, $Record, $Phalanx = false)
+function BuildFleetEventTable($FleetRow, $Status, $Owner, $Phalanx = false)
 {
     global $_Lang, $InsertJSChronoApplet_GlobalIncluded;
     static $InsertJSChronoApplet_Included = false, $Template = false, $ThisDate = false;

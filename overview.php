@@ -913,8 +913,6 @@ switch($mode)
         // --- Flying Fleets Table ---
         $Result_GetFleets = Flights\Fetchers\fetchCurrentFlights([ 'userId' => $_User['id'] ]);
 
-        $FleetIndex1 = 0;
-        $FleetIndex2 = 2000;
         if($Result_GetFleets->num_rows > 0)
         {
             include($_EnginePath.'includes/functions/BuildFleetEventTable.php');
@@ -922,8 +920,6 @@ switch($mode)
             {
                 if($FleetRow['fleet_owner'] == $_User['id'])
                 {
-                    $FleetIndex1 += 1;
-
                     $StartTime = $FleetRow['fleet_start_time'];
                     $StayTime = $FleetRow['fleet_end_stay'];
                     $EndTime = $FleetRow['fleet_end_time'];
@@ -935,7 +931,7 @@ switch($mode)
 
                     if($StartTime > $Now)
                     {
-                        $Fleets[$StartTime.'_'.$FleetRow['fleet_id']] = BuildFleetEventTable($FleetRow, 0, true, 'fs', $FleetIndex1);
+                        $Fleets[$StartTime.'_'.$FleetRow['fleet_id']] = BuildFleetEventTable($FleetRow, 0, true);
                     }
 
                     if($FleetRow['fleet_mission'] != 4 OR ($StartTime < $Now AND $FleetRow['fleet_mission'] == 4 AND $EndTime > $Now))
@@ -944,7 +940,7 @@ switch($mode)
                         {
                             if($StayTime > $Now)
                             {
-                                $Fleets[$StayTime.'_'.$FleetRow['fleet_id']] = BuildFleetEventTable($FleetRow, 1, true, 'ft', $FleetIndex1);
+                                $Fleets[$StayTime.'_'.$FleetRow['fleet_id']] = BuildFleetEventTable($FleetRow, 1, true);
                             }
                         }
                         if($FleetRow['fleet_mission'] == 7 AND $FleetRow['fleet_mess'] == 0 AND $FleetRow['fleet_amount'] == 1)
@@ -955,7 +951,7 @@ switch($mode)
                         {
                             if($EndTime > $Now)
                             {
-                                $Fleets[$EndTime.'_'.$FleetRow['fleet_id']] = BuildFleetEventTable($FleetRow, 2, true, 'fe', $FleetIndex1);
+                                $Fleets[$EndTime.'_'.$FleetRow['fleet_id']] = BuildFleetEventTable($FleetRow, 2, true);
                             }
                         }
                     }
@@ -964,7 +960,6 @@ switch($mode)
                 {
                     if($FleetRow['fleet_mission'] != 8)
                     {
-                        $FleetIndex2 += 1;
                         $StartTime = $FleetRow['fleet_start_time'];
                         $StayTime = $FleetRow['fleet_end_stay'];
                         if(!empty($FleetRow['fleets_id']))
@@ -974,13 +969,13 @@ switch($mode)
 
                         if($StartTime > $Now)
                         {
-                            $Fleets[$StartTime.'_'.$FleetRow['fleet_id']] = BuildFleetEventTable($FleetRow, 0, false, 'ofs', $FleetIndex2);
+                            $Fleets[$StartTime.'_'.$FleetRow['fleet_id']] = BuildFleetEventTable($FleetRow, 0, false);
                         }
                         if($FleetRow['fleet_mission'] == 5)
                         {
                             if($StayTime > $Now)
                             {
-                                $Fleets[$StayTime.'_'.$FleetRow['fleet_id']] = BuildFleetEventTable($FleetRow, 1, false, 'oft', $FleetIndex2);
+                                $Fleets[$StayTime.'_'.$FleetRow['fleet_id']] = BuildFleetEventTable($FleetRow, 1, false);
                             }
                         }
                     }
