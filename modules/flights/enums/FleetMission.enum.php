@@ -13,6 +13,7 @@ abstract class FleetMission {
     const Harvest = 8;
     const DestroyMoon = 9;
     const MissileAttack = 10;
+    const Expedition = 15;
 }
 
 ?>

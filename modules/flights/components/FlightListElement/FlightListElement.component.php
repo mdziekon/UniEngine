@@ -2,6 +2,8 @@
 
 namespace UniEngine\Engine\Modules\Flights\Components\FlightListElement;
 
+use UniEngine\Engine\Modules\Flights\Enums;
+
 //  Arguments
 //      - $props (Object)
 //          - flight (FleetRow)
@@ -72,8 +74,7 @@ function render ($props) {
         $StartID .= $FleetRow['start_name'].' ';
         $StartID .= _getStartAdressLinkHTML($FleetRow, $Phalanx);
 
-        // TODO: use enum
-        if ($MissionType != 15) {
+        if ($MissionType != Enums\FleetMission::Expedition) {
             if ($TargetType == 1) {
                 $TargetID = $_Lang['ov_planet_to_target'];
             } else if ($TargetType == 2) {
@@ -97,8 +98,7 @@ function render ($props) {
         $StartID .= $FleetRow['start_name'].' ';
         $StartID .= _getStartAdressLinkHTML($FleetRow, $Phalanx);
 
-        // TODO: use enum
-        if ($MissionType != 15) {
+        if ($MissionType != Enums\FleetMission::Expedition) {
             if ($TargetType == 1) {
                 $TargetID = $_Lang['ov_planet_from'];
             } else if($TargetType == 2) {
@@ -144,8 +144,7 @@ function render ($props) {
         $EventString .= $_Lang['ov_vennant'];
         $EventString .= $StartID;
 
-        // TODO: use enum
-        if ($FleetRow['fleet_mission'] == 5) {
+        if ($FleetRow['fleet_mission'] == Enums\FleetMission::Hold) {
             $EventString .= $_Lang['ov_onorbit_stay'];
         } else {
             $EventString .= $_Lang['ov_explo_stay'];
