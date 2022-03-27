@@ -2,6 +2,8 @@
 
 namespace UniEngine\Engine\Modules\Flights\Components\FlightsList\Utils;
 
+use UniEngine\Engine\Modules\Flights\Enums;
+
 abstract class ViewMode {
     const Phalanx = 'ViewMode::Phalanx';
     const Overview = 'ViewMode::Overview';
@@ -16,10 +18,10 @@ function _isFleetHoldPhalanxEntryVisible($params) {
      * No other conditions, because the assumption is that only "holding" missions
      * have "fleet_end_stay" set to something other than 0.
      */
-    return $params['flight']['fleet_mission'] != 4;
+    return $params['flight']['fleet_mission'] != Enums\FleetMission::Station;
 }
 function _isFleetEndPhalanxEntryVisible($params) {
-    if ($params['flight']['fleet_mission'] == 4) {
+    if ($params['flight']['fleet_mission'] == Enums\FleetMission::Station) {
         return false;
     }
 
@@ -33,26 +35,26 @@ function _isFleetStartOverviewEntryVisible($params) {
     }
 
     // TODO: Verify this, enemy "harvest" missions probably won't be even fetched
-    return $params['flight']['fleet_mission'] != 8;
+    return $params['flight']['fleet_mission'] != Enums\FleetMission::Harvest;
 }
 function _isFleetHoldOverviewEntryVisible($params) {
     if ($params['isViewingUserFleetOwner']) {
         // TODO: Verify this, most likely this is redundant as no "stay" mission has hold time
-        if ($params['flight']['fleet_mission'] == 4) {
+        if ($params['flight']['fleet_mission'] == Enums\FleetMission::Station) {
             return false;
         }
 
         return true;
     }
 
-    return $params['flight']['fleet_mission'] == 5;
+    return $params['flight']['fleet_mission'] == Enums\FleetMission::Hold;
 }
 function _isFleetEndOverviewEntryVisible($params) {
     if (!$params['isViewingUserFleetOwner']) {
         return false;
     }
 
-    if ($params['flight']['fleet_mission'] == 4) {
+    if ($params['flight']['fleet_mission'] == Enums\FleetMission::Station) {
         // "stay" mission has been turned back
         return (
             $params['flight']['fleet_start_time'] < $params['currentTimestamp'] &&
@@ -60,7 +62,7 @@ function _isFleetEndOverviewEntryVisible($params) {
         );
     }
 
-    if ($params['flight']['fleet_mission'] == 7) {
+    if ($params['flight']['fleet_mission'] == Enums\FleetMission::Colonize) {
         // "colonize" mission has not been calculated or is not a single ship
         return !(
             $params['flight']['fleet_mess'] == 0 &&
