@@ -6,6 +6,7 @@ use UniEngine\Engine\Modules\Flights\Components\FlightsList\Utils;
 
 //  Arguments
 //      - $props (Object)
+//          - viewMode (Utils\ViewMode)
 //          - flights
 //          - targetOwnerId (String)
 //          - isPhalanxView (Boolean)
@@ -21,7 +22,7 @@ function render ($props) {
         'flightsList' => null,
     ];
 
-    $viewMode = Utils\ViewMode::Phalanx;
+    $viewMode = $props['viewMode'];
     $flights = $props['flights'];
     $targetOwnerId = $props['targetOwnerId'];
     $isPhalanxView = $props['isPhalanxView'];
