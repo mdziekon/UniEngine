@@ -2,6 +2,8 @@
 
 namespace UniEngine\Engine\Modules\Flights\Components\FlightsList;
 
+use UniEngine\Engine\Modules\Flights\Components\FlightsList\Utils;
+
 /**
  * @param object $params
  * @param string $params['fleetId']
@@ -17,7 +19,7 @@ function _createFleetSortKey($params) {
 //  Arguments
 //      - $props (Object)
 //          - flights
-//          - fleetOwnerId (String)
+//          - targetOwnerId (String)
 //          - isPhalanxView (Boolean)
 //          - currentTimestamp (Number)
 //
@@ -31,8 +33,9 @@ function render ($props) {
         'flightsList' => null,
     ];
 
+    $viewMode = Utils\ViewMode::Phalanx;
     $flights = $props['flights'];
-    $fleetOwnerId = $props['fleetOwnerId'];
+    $targetOwnerId = $props['targetOwnerId'];
     $isPhalanxView = $props['isPhalanxView'];
     $currentTimestamp = $props['currentTimestamp'];
 
@@ -55,7 +58,7 @@ function render ($props) {
         $fleetHoldTime = $flight['fleet_end_stay'];
         $fleetEndTime = $flight['fleet_end_time'];
 
-        $isOwnersFleet = $flight['fleet_owner'] == $fleetOwnerId;
+        $isTargetOwnersFleet = $flight['fleet_owner'] == $targetOwnerId;
         $isPartOfACSFlight = !empty($flight['fleets_id']);
 
         if ($isPhalanxView) {
@@ -68,7 +71,14 @@ function render ($props) {
             $flight['fleet_mission'] = 2;
         }
 
-        if ($fleetStartTime > $currentTimestamp) {
+        if (
+            $fleetStartTime > $currentTimestamp &&
+            Utils\isFleetStartEntryVisible([
+                'viewMode' => $viewMode,
+                'flight' => $flight,
+                'isTargetOwnersFleet' => $isTargetOwnersFleet
+            ])
+        ) {
             $entryKey = _createFleetSortKey([
                 'fleetId' => $fleetId,
                 'eventTimestamp' => $fleetStartTime
@@ -78,19 +88,21 @@ function render ($props) {
             $flightsListEntries[$entryKey] = BuildFleetEventTable(
                 $flight,
                 0,
-                $isOwnersFleet,
+                $isTargetOwnersFleet,
                 $Label,
                 $entryIdx,
                 $isPhalanxView
             );
         }
 
-        // If the mission will eventually return to the origin place (not "stay")
-        if ($flight['fleet_mission'] == 4) {
-            continue;
-        }
-
-        if ($fleetHoldTime > $currentTimestamp) {
+        if (
+            $fleetHoldTime > $currentTimestamp &&
+            Utils\isFleetHoldEntryVisible([
+                'viewMode' => $viewMode,
+                'flight' => $flight,
+                'isTargetOwnersFleet' => $isTargetOwnersFleet
+            ])
+        ) {
             $entryKey = _createFleetSortKey([
                 'fleetId' => $fleetId,
                 'eventTimestamp' => $fleetHoldTime
@@ -100,15 +112,20 @@ function render ($props) {
             $flightsListEntries[$entryKey] = BuildFleetEventTable(
                 $flight,
                 1,
-                $isOwnersFleet,
+                $isTargetOwnersFleet,
                 $Label,
                 $entryIdx,
                 $isPhalanxView
             );
         }
+
         if (
-            $isOwnersFleet &&
-            $fleetEndTime > $currentTimestamp
+            $fleetEndTime > $currentTimestamp &&
+            Utils\isFleetEndEntryVisible([
+                'viewMode' => $viewMode,
+                'flight' => $flight,
+                'isTargetOwnersFleet' => $isTargetOwnersFleet
+            ])
         ) {
             $entryKey = _createFleetSortKey([
                 'fleetId' => $fleetId,
@@ -119,7 +136,7 @@ function render ($props) {
             $flightsListEntries[$entryKey] = BuildFleetEventTable(
                 $flight,
                 2,
-                $isOwnersFleet,
+                $isTargetOwnersFleet,
                 $Label,
                 $entryIdx,
                 $isPhalanxView
