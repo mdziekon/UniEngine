@@ -47,6 +47,11 @@ function render ($props) {
 
         $isViewingUserFleetOwner = $flight['fleet_owner'] == $viewingUserId;
         $isTargetOwnersFleet = $flight['fleet_owner'] == $targetOwnerId;
+        $shouldDisplayFleetAsOwn = (
+            $viewMode === Utils\ViewMode::Overview ?
+            $isViewingUserFleetOwner :
+            $isTargetOwnersFleet
+        );
         $isPartOfACSFlight = !empty($flight['fleets_id']);
 
         if ($isPhalanxView) {
@@ -77,7 +82,7 @@ function render ($props) {
             $flightsListEntries[$entryKey] = BuildFleetEventTable(
                 $flight,
                 0,
-                $isTargetOwnersFleet,
+                $shouldDisplayFleetAsOwn,
                 $isPhalanxView
             );
         }
@@ -100,7 +105,7 @@ function render ($props) {
             $flightsListEntries[$entryKey] = BuildFleetEventTable(
                 $flight,
                 1,
-                $isTargetOwnersFleet,
+                $shouldDisplayFleetAsOwn,
                 $isPhalanxView
             );
         }
@@ -123,7 +128,7 @@ function render ($props) {
             $flightsListEntries[$entryKey] = BuildFleetEventTable(
                 $flight,
                 2,
-                $isTargetOwnersFleet,
+                $shouldDisplayFleetAsOwn,
                 $isPhalanxView
             );
         }
