@@ -13,10 +13,11 @@ namespace UniEngine\Engine\Modules\Flights\Components\FlightListElement;
 //      - componentHTML (String)
 //
 function render ($props) {
-    global $_EnginePath, $_Lang, $InsertJSChronoApplet_GlobalIncluded;
-    static $InsertJSChronoApplet_Included = false, $tplBodyCache = null, $ThisDate = null;
+    global $_EnginePath, $_Lang;
+    static $tplBodyCache = null, $ThisDate = null;
 
     include_once("{$_EnginePath}includes/functions/BuildFleetEventTable.php");
+    include_once("{$_EnginePath}includes/functions/InsertJavaScriptChronoApplet.php");
 
     if (!$tplBodyCache) {
         global $_User;
@@ -36,14 +37,6 @@ function render ($props) {
     }
     if (!$ThisDate) {
         $ThisDate = date('d/m | ');
-    }
-
-    if (
-        $InsertJSChronoApplet_GlobalIncluded !== true &&
-        $InsertJSChronoApplet_Included === false
-    ) {
-        include('InsertJavaScriptChronoApplet.php');
-        $InsertJSChronoApplet_Included = true;
     }
 
     $FleetRow = $props['flight'];
