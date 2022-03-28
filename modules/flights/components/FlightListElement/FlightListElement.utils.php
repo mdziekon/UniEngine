@@ -43,8 +43,8 @@ function getUserCustomFleetColorsStylesHTML(&$user) {
         $isOwnComeback = ($fleetType === 'owncb');
         $missionType = (
             $isOwnComeback ?
-            "flight" :
-            "return"
+            "return" :
+            "flight"
         );
 
         foreach ($perMissionColors as $missionID => $missionColor) {
