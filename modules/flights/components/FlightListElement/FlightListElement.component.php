@@ -18,6 +18,9 @@ function render ($props) {
     global $_EnginePath, $_Lang;
     static $tplBodyCache = null, $currentDatePrefix = null;
 
+    $currentDateFormat = 'd/m | ';
+    $currentTimeFormat = 'H:i:s';
+
     include_once("{$_EnginePath}includes/functions/BuildFleetEventTable.php");
     include_once("{$_EnginePath}includes/functions/InsertJavaScriptChronoApplet.php");
 
@@ -38,7 +41,7 @@ function render ($props) {
         }
     }
     if (!$currentDatePrefix) {
-        $currentDatePrefix = date('d/m | ');
+        $currentDatePrefix = date($currentDateFormat);
     }
 
     $flight = $props['flight'];
@@ -159,6 +162,10 @@ function render ($props) {
     $fleetStatusName = _getFleetStatus($fleetStatus);
     $entryCounterId = "_fleet_{$flight['fleet_id']}_{$fleetStatusName}";
 
+    $currentFullDate = date(
+        "{$currentDateFormat}{$currentTimeFormat}",
+        $eventTimestamp
+    );
 
     $componentTPLData = [
         'fleet_status'      => $fleetStatusName,
@@ -170,7 +177,7 @@ function render ($props) {
         'fleet_style'       => _getMissionStyle($fleetMissionType),
         'fleet_order'       => $entryCounterId,
         'fleet_countdown'   => pretty_time($eventTimeRemaining, true),
-        'fleet_time'        => str_replace($currentDatePrefix, '', date('d/m | H:i:s', $eventTimestamp)),
+        'fleet_time'        => str_replace($currentDatePrefix, '', $currentFullDate),
         'fleet_descr'       => $eventDescription,
     ];
 
