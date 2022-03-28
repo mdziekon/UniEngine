@@ -29,7 +29,6 @@ $_Lang['type_mission'][7]       = "Colonise";
 $_Lang['type_mission'][8]       = "Harvest";
 $_Lang['type_mission'][9]       = "Destroy";
 $_Lang['type_mission'][10]      = 'Interplanetary Strike';
-$_Lang['type_mission'][11]      = 'United Attack';
 $_Lang['type_mission'][15]      = "Expedition";
 $_Lang['type_mission_quickres'] = 'Transport resources';
 

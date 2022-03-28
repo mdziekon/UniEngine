@@ -7,9 +7,11 @@ $_AllowInVacationMode = true;
 $_EnginePath = './';
 include($_EnginePath.'common.php');
 include_once($_EnginePath . 'modules/session/_includes.php');
+include_once($_EnginePath . 'modules/flights/_includes.php');
 
 use UniEngine\Engine\Includes\Helpers\Users;
 use UniEngine\Engine\Modules\Session;
+use UniEngine\Engine\Modules\Flights;
 
 loggedCheck();
 
@@ -909,95 +911,15 @@ switch($mode)
         }
 
         // --- Flying Fleets Table ---
-        $Query_GetFleets = '';
-        $Query_GetFleets .= "SELECT `fl`.*, `pl1`.`name` AS `start_name`, `pl2`.`name` AS `end_name`, `acs`.`fleets_id`, `usr`.`username` AS `owner_name` ";
-        $Query_GetFleets .= "FROM {{table}} AS `fl`";
-        $Query_GetFleets .= "LEFT JOIN `{{prefix}}planets` AS `pl1` ON `pl1`.`id` = `fl`.`fleet_start_id` ";
-        $Query_GetFleets .= "LEFT JOIN `{{prefix}}planets` AS `pl2` ON `pl2`.`id` = `fl`.`fleet_end_id` ";
-        $Query_GetFleets .= "LEFT JOIN `{{prefix}}users` AS `usr` ON `usr`.`id` = `fl`.`fleet_owner` ";
-        $Query_GetFleets .= "LEFT JOIN `{{prefix}}acs` AS `acs` ON `acs`.`main_fleet_id` = `fl`.`fleet_id` ";
-        $Query_GetFleets .= "WHERE `fl`.`fleet_owner` = '{$_User['id']}' OR `fl`.`fleet_target_owner` = '{$_User['id']}';";
-        $Result_GetFleets = doquery($Query_GetFleets, 'fleets');
+        $Result_GetFleets = Flights\Fetchers\fetchCurrentFlights([ 'userId' => $_User['id'] ]);
 
-        $FleetIndex1 = 0;
-        $FleetIndex2 = 2000;
-        if($Result_GetFleets->num_rows > 0)
-        {
-            include($_EnginePath.'includes/functions/BuildFleetEventTable.php');
-            while($FleetRow = $Result_GetFleets->fetch_assoc())
-            {
-                if($FleetRow['fleet_owner'] == $_User['id'])
-                {
-                    $FleetIndex1 += 1;
-
-                    $StartTime = $FleetRow['fleet_start_time'];
-                    $StayTime = $FleetRow['fleet_end_stay'];
-                    $EndTime = $FleetRow['fleet_end_time'];
-                    // If this is ACS Fleet, change Mission (for AttackLeader Fleet)
-                    if(!empty($FleetRow['fleets_id']))
-                    {
-                        $FleetRow['fleet_mission'] = 2;
-                    }
-
-                    if($StartTime > $Now)
-                    {
-                        $Fleets[$StartTime.'_'.$FleetRow['fleet_id']] = BuildFleetEventTable($FleetRow, 0, true, 'fs', $FleetIndex1);
-                    }
-
-                    if($FleetRow['fleet_mission'] != 4 OR ($StartTime < $Now AND $FleetRow['fleet_mission'] == 4 AND $EndTime > $Now))
-                    {
-                        if($FleetRow['fleet_mission'] != 4)
-                        {
-                            if($StayTime > $Now)
-                            {
-                                $Fleets[$StayTime.'_'.$FleetRow['fleet_id']] = BuildFleetEventTable($FleetRow, 1, true, 'ft', $FleetIndex1);
-                            }
-                        }
-                        if($FleetRow['fleet_mission'] == 7 AND $FleetRow['fleet_mess'] == 0 AND $FleetRow['fleet_amount'] == 1)
-                        {
-                            // Dont show ComeBack when this is a colonization mission
-                        }
-                        else
-                        {
-                            if($EndTime > $Now)
-                            {
-                                $Fleets[$EndTime.'_'.$FleetRow['fleet_id']] = BuildFleetEventTable($FleetRow, 2, true, 'fe', $FleetIndex1);
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    if($FleetRow['fleet_mission'] != 8)
-                    {
-                        $FleetIndex2 += 1;
-                        $StartTime = $FleetRow['fleet_start_time'];
-                        $StayTime = $FleetRow['fleet_end_stay'];
-                        if(!empty($FleetRow['fleets_id']))
-                        {
-                            $FleetRow['fleet_mission'] = 2;
-                        }
-
-                        if($StartTime > $Now)
-                        {
-                            $Fleets[$StartTime.'_'.$FleetRow['fleet_id']] = BuildFleetEventTable($FleetRow, 0, false, 'ofs', $FleetIndex2);
-                        }
-                        if($FleetRow['fleet_mission'] == 5)
-                        {
-                            if($StayTime > $Now)
-                            {
-                                $Fleets[$StayTime.'_'.$FleetRow['fleet_id']] = BuildFleetEventTable($FleetRow, 1, false, 'oft', $FleetIndex2);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        if(!empty($Fleets))
-        {
-            ksort($Fleets);
-            $parse['fleet_list'] = implode('', $Fleets);
-        }
+        $parse['fleet_list'] = Flights\Components\FlightsList\render([
+            'viewMode' => Flights\Components\FlightsList\Utils\ViewMode::Overview,
+            'flights' => $Result_GetFleets,
+            'viewingUserId' => $_User['id'],
+            'targetOwnerId' => null,
+            'currentTimestamp' => $Now,
+        ])['componentHTML'];
 
         // --- Create other planets thumbnails ---
         $Results['planets'] = array();

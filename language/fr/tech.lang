@@ -29,7 +29,6 @@ $_Lang['type_mission'][7]       = "Coloniser";
 $_Lang['type_mission'][8]       = "Recycler";
 $_Lang['type_mission'][9]       = "Destruire";
 $_Lang['type_mission'][10]      = 'Attaque interplanétaire';
-$_Lang['type_mission'][11]      = 'Attaque groupée';
 $_Lang['type_mission'][15]      = "Expédition";
 $_Lang['type_mission_quickres'] = 'Transport de ressources';
 

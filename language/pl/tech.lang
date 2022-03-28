@@ -29,7 +29,6 @@ $_Lang['type_mission'][7]       = "Kolonizuj";
 $_Lang['type_mission'][8]       = "Zbieraj";
 $_Lang['type_mission'][9]       = "Niszcz";
 $_Lang['type_mission'][10]      = 'Atak rakietowy';
-$_Lang['type_mission'][11]      = 'Atak związku';
 $_Lang['type_mission'][15]      = "Ekspedycja";
 $_Lang['type_mission_quickres'] = 'Transportuj Surowce';
 

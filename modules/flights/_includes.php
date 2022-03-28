@@ -6,7 +6,13 @@ call_user_func(function () {
 
     $includePath = $_EnginePath . 'modules/flights/';
 
+    include($includePath . './components/FlightListElement/FlightListElement.component.php');
+    include($includePath . './components/FlightListElement/FlightListElement.utils.php');
+    include($includePath . './components/FlightsList/FlightsList.component.php');
+    include($includePath . './components/FlightsList/FlightsList.utils.php');
     include($includePath . './enums/FleetDestructionReason.enum.php');
+    include($includePath . './enums/FleetMission.enum.php');
+    include($includePath . './fetchers/fetchCurrentFlights.fetcher.php');
     include($includePath . './utils/calculations/calculateMoonCreationRoll.utils.php');
     include($includePath . './utils/calculations/calculatePostCombatMorale.utils.php');
     include($includePath . './utils/calculations/calculatePostCombatMoraleUpdates.utils.php');
