@@ -599,7 +599,7 @@ if(CheckAuth('go'))
             }
             else
             {
-                if(in_array($FleetData['fleet_mission'], array(1, 2, 6, 9, 10, 11)))
+                if(in_array($FleetData['fleet_mission'], array(1, 2, 6, 9, 10)))
                 {
                     $FleetParse['Fleet_Owner_color'] = 'red';
                 }
@@ -679,7 +679,7 @@ if(CheckAuth('go'))
             }
             else
             {
-                if(in_array($FleetData['fleet_mission'], array(1, 2, 6, 9, 10, 11)))
+                if(in_array($FleetData['fleet_mission'], array(1, 2, 6, 9, 10)))
                 {
                     $FleetParse['Fleet_End_owner_color'] = 'red';
                 }

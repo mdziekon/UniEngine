@@ -288,7 +288,7 @@ if(CheckAuth('sgo'))
                 }
                 else
                 {
-                    if(in_array($FleetData['fleet_mission'], array(1, 2, 6, 9, 10, 11)))
+                    if(in_array($FleetData['fleet_mission'], array(1, 2, 6, 9, 10)))
                     {
                         $FleetParse['Fleet_End_owner_color'] = 'red';
                     }
