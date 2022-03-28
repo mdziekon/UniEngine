@@ -16,7 +16,7 @@ use UniEngine\Engine\Modules\Flights\Enums;
 //
 function render ($props) {
     global $_EnginePath, $_Lang;
-    static $tplBodyCache = null, $ThisDate = null;
+    static $tplBodyCache = null, $currentDatePrefix = null;
 
     include_once("{$_EnginePath}includes/functions/BuildFleetEventTable.php");
     include_once("{$_EnginePath}includes/functions/InsertJavaScriptChronoApplet.php");
@@ -37,149 +37,146 @@ function render ($props) {
             GlobalTemplate_AppendToAfterBody($userCustomFleetColorsStylesHTML);
         }
     }
-    if (!$ThisDate) {
-        $ThisDate = date('d/m | ');
+    if (!$currentDatePrefix) {
+        $currentDatePrefix = date('d/m | ');
     }
 
-    $FleetRow = $props['flight'];
-    $Status = $props['fleetStatus'];
-    $Owner = $props['isDisplayedAsOwn'];
-    $Phalanx = (
+    $flight = $props['flight'];
+    $fleetStatus = $props['fleetStatus'];
+    $isDisplayedAsOwn = $props['isDisplayedAsOwn'];
+    $isPhalanxViewMode = (
         isset($props['isPhalanxViewMode']) ?
             $props['isPhalanxViewMode'] :
             false
     );
 
-    $FleetPrefix = (
-        $Owner ?
-            'own' :
-            ''
+    $fleetMissionType = $flight['fleet_mission'];
+    $originType = $flight['fleet_start_type'];
+    $targetType = $flight['fleet_end_type'];
+    $fleetComposition = _getFleetPopupedFleetLinkHTML(
+        $flight,
+        ($isDisplayedAsOwn ? $_Lang['ov_fleet'] : $_Lang['ov_fleet2'])
     );
 
-    $MissionType = $FleetRow['fleet_mission'];
-    $FleetContent = _getFleetPopupedFleetLinkHTML(
-        $FleetRow,
-        ($Owner ? $_Lang['ov_fleet'] : $_Lang['ov_fleet2'])
-    );
-    $FleetMission = $_Lang['type_mission'][$MissionType];
-    $StartType = $FleetRow['fleet_start_type'];
-    $TargetType = $FleetRow['fleet_end_type'];
-
-    if ($Status != 2) {
-        if ($StartType == 1) {
-            $StartID = $_Lang['ov_planet_to'];
-        } else if ($StartType == 3) {
-            $StartID = $_Lang['ov_moon_to'];
+    if ($fleetStatus != 2) {
+        if ($originType == 1) {
+            $originLabel = $_Lang['ov_planet_to'];
+        } else if ($originType == 3) {
+            $originLabel = $_Lang['ov_moon_to'];
         }
-        $StartID .= $FleetRow['start_name'].' ';
-        $StartID .= _getStartAdressLinkHTML($FleetRow, $Phalanx);
+        $originLabel .= $flight['start_name'].' ';
+        $originLabel .= _getStartAdressLinkHTML($flight, $isPhalanxViewMode);
 
-        if ($MissionType != Enums\FleetMission::Expedition) {
-            if ($TargetType == 1) {
-                $TargetID = $_Lang['ov_planet_to_target'];
-            } else if ($TargetType == 2) {
-                $TargetID = $_Lang['ov_debris_to_target'];
-            } else if($TargetType == 3) {
-                $TargetID = $_Lang['ov_moon_to_target'];
+        if ($fleetMissionType != Enums\FleetMission::Expedition) {
+            if ($targetType == 1) {
+                $targetLabel = $_Lang['ov_planet_to_target'];
+            } else if ($targetType == 2) {
+                $targetLabel = $_Lang['ov_debris_to_target'];
+            } else if($targetType == 3) {
+                $targetLabel = $_Lang['ov_moon_to_target'];
             }
         } else {
-            $TargetID = $_Lang['ov_explo_to_target'];
+            $targetLabel = $_Lang['ov_explo_to_target'];
         }
 
-        $TargetID .= $FleetRow['end_name'].' ';
-        $TargetID .= _getTargetAdressLinkHTML($FleetRow, $Phalanx);
+        $targetLabel .= $flight['end_name'].' ';
+        $targetLabel .= _getTargetAdressLinkHTML($flight, $isPhalanxViewMode);
     } else {
-        if ($StartType == 1) {
-            $StartID = $_Lang['ov_back_planet'];
-        } else if ($StartType == 3) {
-            $StartID = $_Lang['ov_back_moon'];
+        if ($originType == 1) {
+            $originLabel = $_Lang['ov_back_planet'];
+        } else if ($originType == 3) {
+            $originLabel = $_Lang['ov_back_moon'];
         }
 
-        $StartID .= $FleetRow['start_name'].' ';
-        $StartID .= _getStartAdressLinkHTML($FleetRow, $Phalanx);
+        $originLabel .= $flight['start_name'].' ';
+        $originLabel .= _getStartAdressLinkHTML($flight, $isPhalanxViewMode);
 
-        if ($MissionType != Enums\FleetMission::Expedition) {
-            if ($TargetType == 1) {
-                $TargetID = $_Lang['ov_planet_from'];
-            } else if($TargetType == 2) {
-                $TargetID = $_Lang['ov_debris_from'];
-            } else if($TargetType == 3) {
-                $TargetID = $_Lang['ov_moon_from'];
+        if ($fleetMissionType != Enums\FleetMission::Expedition) {
+            if ($targetType == 1) {
+                $targetLabel = $_Lang['ov_planet_from'];
+            } else if($targetType == 2) {
+                $targetLabel = $_Lang['ov_debris_from'];
+            } else if($targetType == 3) {
+                $targetLabel = $_Lang['ov_moon_from'];
             }
         } else {
-            $TargetID = $_Lang['ov_explo_from'];
+            $targetLabel = $_Lang['ov_explo_from'];
         }
 
-        $TargetID .= $FleetRow['end_name'].' ';
-        $TargetID .= _getTargetAdressLinkHTML($FleetRow, $Phalanx);
+        $targetLabel .= $flight['end_name'].' ';
+        $targetLabel .= _getTargetAdressLinkHTML($flight, $isPhalanxViewMode);
     }
 
-    if ($Owner) {
-        $EventString = (
-            $Phalanx ?
+    if ($isDisplayedAsOwn) {
+        $eventDescription = (
+            $isPhalanxViewMode ?
                 $_Lang['ov_une_phalanx'] :
                 $_Lang['ov_une']
         );
-        $EventString .= $FleetContent;
+        $eventDescription .= $fleetComposition;
     } else {
-        $EventString = $_Lang['ov_une_hostile'];
-        $EventString .= $FleetContent;
-        $EventString .= $_Lang['ov_hostile'];
-        $EventString .= _getHostileFleetPlayerLinkHTML($FleetRow, $Phalanx);
+        $eventDescription = $_Lang['ov_une_hostile'];
+        $eventDescription .= $fleetComposition;
+        $eventDescription .= $_Lang['ov_hostile'];
+        $eventDescription .= _getHostileFleetPlayerLinkHTML($flight, $isPhalanxViewMode);
     }
 
-    if ($Status == 0) {
-        $Time = $FleetRow['fleet_start_time'];
-        $Rest = $Time - time();
+    if ($fleetStatus == 0) {
+        $eventTimestamp = $flight['fleet_start_time'];
+        $eventTimeRemaining = $eventTimestamp - time();
 
-        $EventString .= $_Lang['ov_vennant'];
-        $EventString .= $StartID;
-        $EventString .= $_Lang['ov_atteint'];
-        $EventString .= $TargetID;
-        $EventString .= $_Lang['ov_mission'];
-    } else if ($Status == 1) {
-        $Time = $FleetRow['fleet_end_stay'];
-        $Rest = $Time - time();
+        $eventDescription .= $_Lang['ov_vennant'];
+        $eventDescription .= $originLabel;
+        $eventDescription .= $_Lang['ov_atteint'];
+        $eventDescription .= $targetLabel;
+        $eventDescription .= $_Lang['ov_mission'];
+    } else if ($fleetStatus == 1) {
+        $eventTimestamp = $flight['fleet_end_stay'];
+        $eventTimeRemaining = $eventTimestamp - time();
 
-        $EventString .= $_Lang['ov_vennant'];
-        $EventString .= $StartID;
+        $eventDescription .= $_Lang['ov_vennant'];
+        $eventDescription .= $originLabel;
 
-        if ($FleetRow['fleet_mission'] == Enums\FleetMission::Hold) {
-            $EventString .= $_Lang['ov_onorbit_stay'];
+        if ($flight['fleet_mission'] == Enums\FleetMission::Hold) {
+            $eventDescription .= $_Lang['ov_onorbit_stay'];
         } else {
-            $EventString .= $_Lang['ov_explo_stay'];
+            $eventDescription .= $_Lang['ov_explo_stay'];
         }
 
-        $EventString .= $TargetID;
-        $EventString .= $_Lang['ov_explo_mission'];
-    } else if ($Status == 2) {
-        $Time = $FleetRow['fleet_end_time'];
-        $Rest = $Time - time();
+        $eventDescription .= $targetLabel;
+        $eventDescription .= $_Lang['ov_explo_mission'];
+    } else if ($fleetStatus == 2) {
+        $eventTimestamp = $flight['fleet_end_time'];
+        $eventTimeRemaining = $eventTimestamp - time();
 
-        $EventString .= $_Lang['ov_rentrant'];
-        $EventString .= $TargetID;
-        $EventString .= $StartID;
-        $EventString .= $_Lang['ov_mission'];
+        $eventDescription .= $_Lang['ov_rentrant'];
+        $eventDescription .= $targetLabel;
+        $eventDescription .= $originLabel;
+        $eventDescription .= $_Lang['ov_mission'];
     }
-    $EventString .= $FleetMission;
+    $eventDescription .= $_Lang['type_mission'][$fleetMissionType];
 
-    $fleetStatusName = _getFleetStatus($Status);
-    $entryCounterId = "_fleet_{$FleetRow['fleet_id']}_{$fleetStatusName}";
+    $fleetStatusName = _getFleetStatus($fleetStatus);
+    $entryCounterId = "_fleet_{$flight['fleet_id']}_{$fleetStatusName}";
 
 
     $componentTPLData = [
         'fleet_status'      => $fleetStatusName,
-        'fleet_prefix'      => $FleetPrefix,
-        'fleet_style'       => _getMissionStyle($MissionType),
+        'fleet_prefix'      => (
+            $isDisplayedAsOwn ?
+                'own' :
+                ''
+        ),
+        'fleet_style'       => _getMissionStyle($fleetMissionType),
         'fleet_order'       => $entryCounterId,
-        'fleet_countdown'   => pretty_time($Rest, true),
-        'fleet_time'        => str_replace($ThisDate, '', date('d/m | H:i:s', $Time)),
-        'fleet_descr'       => $EventString,
+        'fleet_countdown'   => pretty_time($eventTimeRemaining, true),
+        'fleet_time'        => str_replace($currentDatePrefix, '', date('d/m | H:i:s', $eventTimestamp)),
+        'fleet_descr'       => $eventDescription,
     ];
 
     $componentHTML = parsetemplate($tplBodyCache['body'], $componentTPLData);
 
-    GlobalTemplate_AppendToAfterBody(InsertJavaScriptChronoApplet("", $entryCounterId, $Rest));
+    GlobalTemplate_AppendToAfterBody(InsertJavaScriptChronoApplet("", $entryCounterId, $eventTimeRemaining));
 
     return [
         'componentHTML' => $componentHTML
