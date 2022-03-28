@@ -1,6 +1,8 @@
 <?php
 
-function _getFleetStatus($statusID) {
+namespace UniEngine\Engine\Modules\Flights\Components\FlightListElement\Utils;
+
+function getFleetStatus($statusID) {
     $fleetStatuses = [
         0 => 'flight',
         1 => 'holding',
@@ -10,7 +12,7 @@ function _getFleetStatus($statusID) {
     return $fleetStatuses[$statusID];
 }
 
-function _getMissionStyle($missionID) {
+function getMissionStyle($missionID) {
     $missionStyles = [
         1 => 'attack',
         2 => 'federation',
@@ -27,7 +29,7 @@ function _getMissionStyle($missionID) {
     return $missionStyles[$missionID];
 }
 
-function _getUserCustomFleetColorsStylesHTML(&$user) {
+function getUserCustomFleetColorsStylesHTML(&$user) {
     if (empty($user['settings_FleetColors'])) {
         return null;
     }
@@ -54,7 +56,7 @@ function _getUserCustomFleetColorsStylesHTML(&$user) {
                 'MissionType' => $missionType,
                 'MissionName' => (
                     ($isOwnFleet ? 'own' : '') .
-                    _getMissionStyle($missionID)
+                    getMissionStyle($missionID)
                 ),
                 'MissionColor' => $missionColor
             ];
@@ -67,7 +69,7 @@ function _getUserCustomFleetColorsStylesHTML(&$user) {
                     'MissionType' => 'holding',
                     'MissionName' => (
                         ($isOwnFleet ? 'own' : '') .
-                        _getMissionStyle($missionID)
+                        getMissionStyle($missionID)
                     ),
                     'MissionColor' => $missionColor
                 ];
@@ -79,8 +81,9 @@ function _getUserCustomFleetColorsStylesHTML(&$user) {
         return null;
     }
 
-    $tplColorRow = gettemplate('_FleetTable_fleetColors_row');
-    $tplColorsStyles = gettemplate('_FleetTable_fleetColors');
+    $localTemplateLoader = createLocalTemplateLoader(__DIR__);
+    $tplColorRow = $localTemplateLoader('fleetColorsRow');
+    $tplColorsStyles = $localTemplateLoader('fleetColorsStylingBody');
 
     $missionStyles = array_map(
         function ($styleData) use ($tplColorRow) {
@@ -144,15 +147,15 @@ function _getFleetsGalaxyPositionHyperlinkHTML($fleetRow, $isStartLink, $options
     return buildLinkHTML($linkParams);
 }
 
-function _getStartAdressLinkHTML($fleetRow, $FromWindow = false) {
+function getStartAdressLinkHTML($fleetRow, $FromWindow = false) {
     return _getFleetsGalaxyPositionHyperlinkHTML($fleetRow, true, [ 'isOpenedInPopup' => $FromWindow ]);
 }
 
-function _getTargetAdressLinkHTML($fleetRow, $FromWindow = false) {
+function getTargetAdressLinkHTML($fleetRow, $FromWindow = false) {
     return _getFleetsGalaxyPositionHyperlinkHTML($fleetRow, false, [ 'isOpenedInPopup' => $FromWindow ]);
 }
 
-function _getHostileFleetPlayerLinkHTML($fleetRow, $FromWindow = false) {
+function getHostileFleetPlayerLinkHTML($fleetRow, $FromWindow = false) {
     global $_Lang, $_SkinPath;
 
     $isOpenedInPopup = $FromWindow;
@@ -187,7 +190,7 @@ function _getHostileFleetPlayerLinkHTML($fleetRow, $FromWindow = false) {
     return buildLinkHTML($linkParams);
 }
 
-function _getFleetPopupedFleetLinkHTML($fleetRow, $popupLabel) {
+function getFleetPopupedFleetLinkHTML($fleetRow, $popupLabel) {
     global $_Lang;
 
     $popupElements = [];

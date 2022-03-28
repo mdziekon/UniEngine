@@ -3,6 +3,7 @@
 namespace UniEngine\Engine\Modules\Flights\Components\FlightListElement;
 
 use UniEngine\Engine\Modules\Flights\Enums;
+use UniEngine\Engine\Modules\Flights\Components\FlightListElement\Utils;
 
 //  Arguments
 //      - $props (Object)
@@ -21,7 +22,6 @@ function render ($props) {
     $currentDateFormat = 'd/m | ';
     $currentTimeFormat = 'H:i:s';
 
-    include_once("{$_EnginePath}includes/functions/BuildFleetEventTable.php");
     include_once("{$_EnginePath}includes/functions/InsertJavaScriptChronoApplet.php");
 
     if (!$tplBodyCache) {
@@ -34,7 +34,7 @@ function render ($props) {
 
         GlobalTemplate_AppendToAfterBody($localTemplateLoader('globalFiles'));
 
-        $userCustomFleetColorsStylesHTML = _getUserCustomFleetColorsStylesHTML($_User);
+        $userCustomFleetColorsStylesHTML = Utils\getUserCustomFleetColorsStylesHTML($_User);
 
         if ($userCustomFleetColorsStylesHTML) {
             GlobalTemplate_AppendToAfterBody($userCustomFleetColorsStylesHTML);
@@ -56,7 +56,7 @@ function render ($props) {
     $fleetMissionType = $flight['fleet_mission'];
     $originType = $flight['fleet_start_type'];
     $targetType = $flight['fleet_end_type'];
-    $fleetComposition = _getFleetPopupedFleetLinkHTML(
+    $fleetComposition = Utils\getFleetPopupedFleetLinkHTML(
         $flight,
         ($isDisplayedAsOwn ? $_Lang['ov_fleet'] : $_Lang['ov_fleet2'])
     );
@@ -68,7 +68,7 @@ function render ($props) {
             $originLabel = $_Lang['ov_moon_to'];
         }
         $originLabel .= $flight['start_name'].' ';
-        $originLabel .= _getStartAdressLinkHTML($flight, $isPhalanxViewMode);
+        $originLabel .= Utils\getStartAdressLinkHTML($flight, $isPhalanxViewMode);
 
         if ($fleetMissionType != Enums\FleetMission::Expedition) {
             if ($targetType == 1) {
@@ -83,7 +83,7 @@ function render ($props) {
         }
 
         $targetLabel .= $flight['end_name'].' ';
-        $targetLabel .= _getTargetAdressLinkHTML($flight, $isPhalanxViewMode);
+        $targetLabel .= Utils\getTargetAdressLinkHTML($flight, $isPhalanxViewMode);
     } else {
         if ($originType == 1) {
             $originLabel = $_Lang['ov_back_planet'];
@@ -92,7 +92,7 @@ function render ($props) {
         }
 
         $originLabel .= $flight['start_name'].' ';
-        $originLabel .= _getStartAdressLinkHTML($flight, $isPhalanxViewMode);
+        $originLabel .= Utils\getStartAdressLinkHTML($flight, $isPhalanxViewMode);
 
         if ($fleetMissionType != Enums\FleetMission::Expedition) {
             if ($targetType == 1) {
@@ -107,7 +107,7 @@ function render ($props) {
         }
 
         $targetLabel .= $flight['end_name'].' ';
-        $targetLabel .= _getTargetAdressLinkHTML($flight, $isPhalanxViewMode);
+        $targetLabel .= Utils\getTargetAdressLinkHTML($flight, $isPhalanxViewMode);
     }
 
     if ($isDisplayedAsOwn) {
@@ -121,7 +121,7 @@ function render ($props) {
         $eventDescription = $_Lang['ov_une_hostile'];
         $eventDescription .= $fleetComposition;
         $eventDescription .= $_Lang['ov_hostile'];
-        $eventDescription .= _getHostileFleetPlayerLinkHTML($flight, $isPhalanxViewMode);
+        $eventDescription .= Utils\getHostileFleetPlayerLinkHTML($flight, $isPhalanxViewMode);
     }
 
     if ($fleetStatus == 0) {
@@ -159,7 +159,7 @@ function render ($props) {
     }
     $eventDescription .= $_Lang['type_mission'][$fleetMissionType];
 
-    $fleetStatusName = _getFleetStatus($fleetStatus);
+    $fleetStatusName = Utils\getFleetStatus($fleetStatus);
     $entryCounterId = "_fleet_{$flight['fleet_id']}_{$fleetStatusName}";
 
     $currentFullDate = date(
@@ -174,7 +174,7 @@ function render ($props) {
                 'own' :
                 ''
         ),
-        'fleet_style'       => _getMissionStyle($fleetMissionType),
+        'fleet_style'       => Utils\getMissionStyle($fleetMissionType),
         'fleet_order'       => $entryCounterId,
         'fleet_countdown'   => pretty_time($eventTimeRemaining, true),
         'fleet_time'        => str_replace($currentDatePrefix, '', $currentFullDate),
