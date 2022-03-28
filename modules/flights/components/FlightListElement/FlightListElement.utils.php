@@ -2,6 +2,8 @@
 
 namespace UniEngine\Engine\Modules\Flights\Components\FlightListElement\Utils;
 
+use UniEngine\Engine\Modules\Flights\Enums;
+
 function getFleetStatus($statusID) {
     $fleetStatuses = [
         0 => 'flight',
@@ -62,7 +64,7 @@ function getUserCustomFleetColorsStylesHTML(&$user) {
             ];
 
             if (
-                $missionID == 5 &&
+                $missionID == Enums\FleetMission::Hold &&
                 !$isOwnComeback
             ) {
                 $stylesData[] = [
