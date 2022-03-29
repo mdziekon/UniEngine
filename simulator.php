@@ -5,6 +5,8 @@ define('INSIDE', true);
 $_EnginePath = './';
 include($_EnginePath.'common.php');
 
+use UniEngine\Engine\Modules\Flights;
+
 loggedCheck();
 
 includeLang('simulator');
@@ -236,108 +238,39 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
         $Calculate = false;
     }
 
-    if(MORALE_ENABLED)
-    {
-        if(!empty($AttackingFleets))
-        {
-            foreach($AttackingFleets as $ThisUser => $ThisData)
-            {
+    if (MORALE_ENABLED) {
+        if (!empty($AttackingFleets)) {
+            foreach ($AttackingFleets as $ThisUser => $ThisData) {
                 $ThisMoraleLevel = intval($_POST['atk_morale'][($ThisUser + 1)]);
-                if($ThisMoraleLevel > 100)
-                {
-                    $ThisMoraleLevel = 100;
-                }
-                else if($ThisMoraleLevel < -100)
-                {
-                    $ThisMoraleLevel = -100;
-                }
+                $ThisMoraleLevel = keepInRange($ThisMoraleLevel, -100, 100);
+
                 $AttackersData[$ThisUser]['morale'] = $ThisMoraleLevel;
 
-                // Bonuses
-                if($ThisMoraleLevel >= MORALE_BONUS_FLEETPOWERUP1)
-                {
-                    $AttackingTechs[$ThisUser]['TotalForceFactor'] = MORALE_BONUS_FLEETPOWERUP1_FACTOR;
-                }
-                if($ThisMoraleLevel >= MORALE_BONUS_FLEETSHIELDUP1)
-                {
-                    $AttackingTechs[$ThisUser]['TotalShieldFactor'] = MORALE_BONUS_FLEETSHIELDUP1_FACTOR;
-                }
-                if($ThisMoraleLevel >= MORALE_BONUS_FLEETSDADDITION)
-                {
-                    $AttackingTechs[$ThisUser]['SDAdd'] = MORALE_BONUS_FLEETSDADDITION_VALUE;
-                }
-                // Penalties
-                if($ThisMoraleLevel <= MORALE_PENALTY_FLEETPOWERDOWN1)
-                {
-                    $AttackingTechs[$ThisUser]['TotalForceFactor'] = MORALE_PENALTY_FLEETPOWERDOWN1_FACTOR;
-                }
-                if($ThisMoraleLevel <= MORALE_PENALTY_FLEETPOWERDOWN2)
-                {
-                    $AttackingTechs[$ThisUser]['TotalForceFactor'] = MORALE_PENALTY_FLEETPOWERDOWN2_FACTOR;
-                }
-                if($ThisMoraleLevel <= MORALE_PENALTY_FLEETSHIELDDOWN1)
-                {
-                    $AttackingTechs[$ThisUser]['TotalShieldFactor'] = MORALE_PENALTY_FLEETSHIELDDOWN1_FACTOR;
-                }
-                if($ThisMoraleLevel <= MORALE_PENALTY_FLEETSHIELDDOWN2)
-                {
-                    $AttackingTechs[$ThisUser]['TotalShieldFactor'] = MORALE_PENALTY_FLEETSHIELDDOWN2_FACTOR;
-                }
-                if($ThisMoraleLevel <= MORALE_PENALTY_FLEETSDDOWN)
-                {
-                    $AttackingTechs[$ThisUser]['SDFactor'] = MORALE_PENALTY_FLEETSDDOWN_FACTOR;
-                }
+                $moraleCombatModifiers = Flights\Utils\Modifiers\calculateMoraleCombatModifiers([
+                    'moraleLevel' => $ThisMoraleLevel,
+                ]);
+
+                $AttackingTechs[$ThisUser] = array_merge(
+                    $AttackingTechs[$ThisUser],
+                    $moraleCombatModifiers
+                );
             }
         }
-        if(!empty($DefendingFleets))
-        {
-            foreach($DefendingFleets as $ThisUser => $ThisData)
-            {
+        if (!empty($DefendingFleets)) {
+            foreach ($DefendingFleets as $ThisUser => $ThisData) {
                 $ThisMoraleLevel = intval($_POST['def_morale'][($ThisUser + 1)]);
-                if($ThisMoraleLevel > 100)
-                {
-                    $ThisMoraleLevel = 100;
-                }
-                else if($ThisMoraleLevel < -100)
-                {
-                    $ThisMoraleLevel = -100;
-                }
+                $ThisMoraleLevel = keepInRange($ThisMoraleLevel, -100, 100);
+
                 $DefendersData[$ThisUser]['morale'] = $ThisMoraleLevel;
 
-                // Bonuses
-                if($ThisMoraleLevel >= MORALE_BONUS_FLEETPOWERUP1)
-                {
-                    $DefendingTechs[$ThisUser]['TotalForceFactor'] = MORALE_BONUS_FLEETPOWERUP1_FACTOR;
-                }
-                if($ThisMoraleLevel >= MORALE_BONUS_FLEETSHIELDUP1)
-                {
-                    $DefendingTechs[$ThisUser]['TotalShieldFactor'] = MORALE_BONUS_FLEETSHIELDUP1_FACTOR;
-                }
-                if($ThisMoraleLevel >= MORALE_BONUS_FLEETSDADDITION)
-                {
-                    $DefendingTechs[$ThisUser]['SDAdd'] = MORALE_BONUS_FLEETSDADDITION_VALUE;
-                }
-                // Penalties
-                if($ThisMoraleLevel <= MORALE_PENALTY_FLEETPOWERDOWN1)
-                {
-                    $DefendingTechs[$ThisUser]['TotalForceFactor'] = MORALE_PENALTY_FLEETPOWERDOWN1_FACTOR;
-                }
-                if($ThisMoraleLevel <= MORALE_PENALTY_FLEETPOWERDOWN2)
-                {
-                    $DefendingTechs[$ThisUser]['TotalForceFactor'] = MORALE_PENALTY_FLEETPOWERDOWN2_FACTOR;
-                }
-                if($ThisMoraleLevel <= MORALE_PENALTY_FLEETSHIELDDOWN1)
-                {
-                    $DefendingTechs[$ThisUser]['TotalShieldFactor'] = MORALE_PENALTY_FLEETSHIELDDOWN1_FACTOR;
-                }
-                if($ThisMoraleLevel <= MORALE_PENALTY_FLEETSHIELDDOWN2)
-                {
-                    $DefendingTechs[$ThisUser]['TotalShieldFactor'] = MORALE_PENALTY_FLEETSHIELDDOWN2_FACTOR;
-                }
-                if($ThisMoraleLevel <= MORALE_PENALTY_FLEETSDDOWN)
-                {
-                    $DefendingTechs[$ThisUser]['SDFactor'] = MORALE_PENALTY_FLEETSDDOWN_FACTOR;
-                }
+                $moraleCombatModifiers = Flights\Utils\Modifiers\calculateMoraleCombatModifiers([
+                    'moraleLevel' => $ThisMoraleLevel,
+                ]);
+
+                $DefendingTechs[$ThisUser] = array_merge(
+                    $DefendingTechs[$ThisUser],
+                    $moraleCombatModifiers
+                );
             }
         }
     }
@@ -372,10 +305,7 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
         $TotalTime = 0;
         for($i = 1; $i <= $Loop; $i += 1)
         {
-            $MoonHasBeenCreated = false;
-            $MoonHasBeenDestroyed = false;
             $chance = 0;
-            $RIPDestroyedByMoon = false;
             $chance2 = 0;
             $Temp['ship_lost_atk'] = 0;
             $Temp['ship_lost_def'] = 0;
@@ -404,44 +334,34 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
             $SimData['rounds'] += $RoundCount;
 
             $Result = $Combat['result'];
-
-            $DebrisMetalAtk = 0;
-            $DebrisCrystalAtk = 0;
-            $RealDebrisMetalAtk = 0;
-            $RealDebrisCrystalAtk = 0;
-            $RealDebrisDeuteriumAtk = 0;
-            $DebrisMetalDef = 0;
-            $DebrisCrystalDef = 0;
-            $RealDebrisMetalDef = 0;
-            $RealDebrisCrystalDef = 0;
-            $RealDebrisDeuteriumDef = 0;
-
-            $TotalLostMetal = 0;
-            $TotalLostCrystal = 0;
-
             $AtkShips = $Combat['AttackerShips'];
             $DefShips = $Combat['DefenderShips'];
             $AtkLost = $Combat['AtkLose'];
             $DefLost = $Combat['DefLose'];
             $DefSysLost = $Combat['DefSysLost'];
 
-            if(!empty($AtkLost))
-            {
-                foreach($AtkLost as $ID => $Count)
-                {
-                    if($ID > 200 AND $ID < 300 AND $_GameConfig['Fleet_Cdr'] > 0)
-                    {
-                        $DebrisMetalAtk += floor($_Vars_Prices[$ID]['metal'] * $Count * ($_GameConfig['Fleet_Cdr'] / 100));
-                        $DebrisCrystalAtk += floor($_Vars_Prices[$ID]['crystal'] * $Count * ($_GameConfig['Fleet_Cdr'] / 100));
-                        $RealDebrisMetalAtk += floor($_Vars_Prices[$ID]['metal'] * $Count);
-                        $RealDebrisCrystalAtk += floor($_Vars_Prices[$ID]['crystal'] * $Count);
-                        $RealDebrisDeuteriumAtk += floor($_Vars_Prices[$ID]['deuterium'] * $Count);
+            $debrisRecoveryPercentages = [
+                'ships' => ($_GameConfig['Fleet_Cdr'] / 100),
+                'defenses' => ($_GameConfig['Defs_Cdr'] / 100),
+            ];
+
+            // Calculate looses - attacker
+            $attackersResourceLosses = Flights\Utils\Calculations\calculateResourcesLoss([
+                'unitsLost' => $AtkLost,
+                'debrisRecoveryPercentages' => $debrisRecoveryPercentages,
+            ]);
+
+            $RealDebrisMetalAtk = $attackersResourceLosses['realLoss']['metal'];
+            $RealDebrisCrystalAtk = $attackersResourceLosses['realLoss']['crystal'];
+            $RealDebrisDeuteriumAtk = $attackersResourceLosses['realLoss']['deuterium'];
+
+            if (!empty($AtkLost)) {
+                foreach ($AtkLost as $ID => $Count) {
+                    if ($ID > 200 && $ID < 300) {
                         $SimData['ship_lost_atk'] += $Count;
                         $Temp['ship_lost_atk'] += $Count;
                     }
                 }
-                $TotalLostMetal = $DebrisMetalAtk;
-                $TotalLostCrystal = $DebrisCrystalAtk;
             }
 
             $SimData['total_lost_atk']['met'] += $RealDebrisMetalAtk;
@@ -449,33 +369,35 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
             $SimData['total_lost_atk']['deu'] += $RealDebrisDeuteriumAtk;
 
             // Calculate looses - defender
-            if(!empty($DefLost))
-            {
-                foreach($DefLost as $ID => $Count)
-                {
-                    if($ID > 200 AND $ID < 300 AND $_GameConfig['Fleet_Cdr'] > 0)
-                    {
-                        $DebrisMetalDef += floor($_Vars_Prices[$ID]['metal'] * $Count * ($_GameConfig['Fleet_Cdr'] / 100));
-                        $DebrisCrystalDef += floor($_Vars_Prices[$ID]['crystal'] * $Count * ($_GameConfig['Fleet_Cdr'] / 100));
-                    }
-                    else if($ID > 400 AND $_GameConfig['Defs_Cdr'] > 0)
-                    {
-                        $DebrisMetalDef += floor($_Vars_Prices[$ID]['metal'] * $Count * ($_GameConfig['Defs_Cdr'] / 100));
-                        $DebrisCrystalDef += floor($_Vars_Prices[$ID]['crystal'] * $Count * ($_GameConfig['Defs_Cdr'] / 100));
-                    }
-                    $RealDebrisMetalDef += floor($_Vars_Prices[$ID]['metal'] * $Count);
-                    $RealDebrisCrystalDef += floor($_Vars_Prices[$ID]['crystal'] * $Count);
-                    $RealDebrisDeuteriumDef += floor($_Vars_Prices[$ID]['deuterium'] * $Count);
+            $defendersResourceLosses = Flights\Utils\Calculations\calculateResourcesLoss([
+                'unitsLost' => $DefLost,
+                'debrisRecoveryPercentages' => $debrisRecoveryPercentages,
+            ]);
+
+            $RealDebrisMetalDef = $defendersResourceLosses['realLoss']['metal'];
+            $RealDebrisCrystalDef = $defendersResourceLosses['realLoss']['crystal'];
+            $RealDebrisDeuteriumDef = $defendersResourceLosses['realLoss']['deuterium'];
+
+            if (!empty($DefLost)) {
+                foreach ($DefLost as $ID => $Count) {
                     $SimData['ship_lost_def'] += $Count;
                     $Temp['ship_lost_def'] += $Count;
                 }
-                $TotalLostMetal += $DebrisMetalDef;
-                $TotalLostCrystal += $DebrisCrystalDef;
             }
 
             $SimData['total_lost_def']['met'] += $RealDebrisMetalDef;
             $SimData['total_lost_def']['cry'] += $RealDebrisCrystalDef;
             $SimData['total_lost_def']['deu'] += $RealDebrisDeuteriumDef;
+
+            // Calculate looses - total
+            $TotalLostMetal = (
+                $attackersResourceLosses['recoverableLoss']['metal'] +
+                $defendersResourceLosses['recoverableLoss']['metal']
+            );
+            $TotalLostCrystal = (
+                $attackersResourceLosses['recoverableLoss']['crystal'] +
+                $defendersResourceLosses['recoverableLoss']['crystal']
+            );
 
             switch($Result)
             {
@@ -506,13 +428,9 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
                     break;
             }
 
-            $FleetDebris = $TotalLostCrystal + $TotalLostMetal;
-            $MoonChance = floor($FleetDebris / COMBAT_MOONPERCENT_RESOURCES);
-            $TotalMoonChance = $MoonChance;
-            if($MoonChance > 20)
-            {
-                $MoonChance = 20;
-            }
+            $moonCreationRollResult = Flights\Utils\Calculations\calculateMoonCreationRoll([
+                'totalDebris' => ($TotalLostMetal + $TotalLostCrystal),
+            ]);
 
             $ReportData = array();
 
@@ -528,13 +446,13 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
             $ReportData['init']['deu'] = 0;
             $ReportData['init']['deb_met'] = $TotalLostMetal;
             $ReportData['init']['deb_cry'] = $TotalLostCrystal;
-            $ReportData['init']['moon_chance'] = $MoonChance;
-            $ReportData['init']['total_moon_chance'] = $TotalMoonChance;
-            $ReportData['init']['moon_created'] = $MoonHasBeenCreated;
-            $ReportData['init']['moon_destroyed'] = $MoonHasBeenDestroyed;
-            $ReportData['init']['moon_des_chance'] = ($chance >= 0 ? (($chance == 0) ? '0' : $chance) : false);
-            $ReportData['init']['fleet_destroyed'] = $RIPDestroyedByMoon;
-            $ReportData['init']['fleet_des_chance'] = ($chance2 >= 0 ? (($chance2 == 0) ? '0' : $chance2) : false);
+            $ReportData['init']['moon_chance'] = $moonCreationRollResult['boundedMoonChance'];
+            $ReportData['init']['total_moon_chance'] = $moonCreationRollResult['totalMoonChance'];
+            $ReportData['init']['moon_created'] = false;
+            $ReportData['init']['moon_destroyed'] = false;
+            $ReportData['init']['moon_des_chance'] = '0';
+            $ReportData['init']['fleet_destroyed'] = false;
+            $ReportData['init']['fleet_des_chance'] = '0';
             $ReportData['init']['planet_name'] = 'Planeta';
             $ReportData['init']['onMoon'] = false;
             $ReportData['init']['atk_lost'] = $RealDebrisMetalAtk + $RealDebrisCrystalAtk + $RealDebrisDeuteriumAtk;
