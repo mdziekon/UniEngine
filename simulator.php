@@ -337,44 +337,34 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
             $SimData['rounds'] += $RoundCount;
 
             $Result = $Combat['result'];
-
-            $DebrisMetalAtk = 0;
-            $DebrisCrystalAtk = 0;
-            $RealDebrisMetalAtk = 0;
-            $RealDebrisCrystalAtk = 0;
-            $RealDebrisDeuteriumAtk = 0;
-            $DebrisMetalDef = 0;
-            $DebrisCrystalDef = 0;
-            $RealDebrisMetalDef = 0;
-            $RealDebrisCrystalDef = 0;
-            $RealDebrisDeuteriumDef = 0;
-
-            $TotalLostMetal = 0;
-            $TotalLostCrystal = 0;
-
             $AtkShips = $Combat['AttackerShips'];
             $DefShips = $Combat['DefenderShips'];
             $AtkLost = $Combat['AtkLose'];
             $DefLost = $Combat['DefLose'];
             $DefSysLost = $Combat['DefSysLost'];
 
-            if(!empty($AtkLost))
-            {
-                foreach($AtkLost as $ID => $Count)
-                {
-                    if($ID > 200 AND $ID < 300 AND $_GameConfig['Fleet_Cdr'] > 0)
-                    {
-                        $DebrisMetalAtk += floor($_Vars_Prices[$ID]['metal'] * $Count * ($_GameConfig['Fleet_Cdr'] / 100));
-                        $DebrisCrystalAtk += floor($_Vars_Prices[$ID]['crystal'] * $Count * ($_GameConfig['Fleet_Cdr'] / 100));
-                        $RealDebrisMetalAtk += floor($_Vars_Prices[$ID]['metal'] * $Count);
-                        $RealDebrisCrystalAtk += floor($_Vars_Prices[$ID]['crystal'] * $Count);
-                        $RealDebrisDeuteriumAtk += floor($_Vars_Prices[$ID]['deuterium'] * $Count);
+            $debrisRecoveryPercentages = [
+                'ships' => ($_GameConfig['Fleet_Cdr'] / 100),
+                'defenses' => ($_GameConfig['Defs_Cdr'] / 100),
+            ];
+
+            // Calculate looses - attacker
+            $attackersResourceLosses = Flights\Utils\Calculations\calculateResourcesLoss([
+                'unitsLost' => $AtkLost,
+                'debrisRecoveryPercentages' => $debrisRecoveryPercentages,
+            ]);
+
+            $RealDebrisMetalAtk = $attackersResourceLosses['realLoss']['metal'];
+            $RealDebrisCrystalAtk = $attackersResourceLosses['realLoss']['crystal'];
+            $RealDebrisDeuteriumAtk = $attackersResourceLosses['realLoss']['deuterium'];
+
+            if (!empty($AtkLost)) {
+                foreach ($AtkLost as $ID => $Count) {
+                    if ($ID > 200 && $ID < 300) {
                         $SimData['ship_lost_atk'] += $Count;
                         $Temp['ship_lost_atk'] += $Count;
                     }
                 }
-                $TotalLostMetal = $DebrisMetalAtk;
-                $TotalLostCrystal = $DebrisCrystalAtk;
             }
 
             $SimData['total_lost_atk']['met'] += $RealDebrisMetalAtk;
@@ -382,33 +372,35 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
             $SimData['total_lost_atk']['deu'] += $RealDebrisDeuteriumAtk;
 
             // Calculate looses - defender
-            if(!empty($DefLost))
-            {
-                foreach($DefLost as $ID => $Count)
-                {
-                    if($ID > 200 AND $ID < 300 AND $_GameConfig['Fleet_Cdr'] > 0)
-                    {
-                        $DebrisMetalDef += floor($_Vars_Prices[$ID]['metal'] * $Count * ($_GameConfig['Fleet_Cdr'] / 100));
-                        $DebrisCrystalDef += floor($_Vars_Prices[$ID]['crystal'] * $Count * ($_GameConfig['Fleet_Cdr'] / 100));
-                    }
-                    else if($ID > 400 AND $_GameConfig['Defs_Cdr'] > 0)
-                    {
-                        $DebrisMetalDef += floor($_Vars_Prices[$ID]['metal'] * $Count * ($_GameConfig['Defs_Cdr'] / 100));
-                        $DebrisCrystalDef += floor($_Vars_Prices[$ID]['crystal'] * $Count * ($_GameConfig['Defs_Cdr'] / 100));
-                    }
-                    $RealDebrisMetalDef += floor($_Vars_Prices[$ID]['metal'] * $Count);
-                    $RealDebrisCrystalDef += floor($_Vars_Prices[$ID]['crystal'] * $Count);
-                    $RealDebrisDeuteriumDef += floor($_Vars_Prices[$ID]['deuterium'] * $Count);
+            $defendersResourceLosses = Flights\Utils\Calculations\calculateResourcesLoss([
+                'unitsLost' => $DefLost,
+                'debrisRecoveryPercentages' => $debrisRecoveryPercentages,
+            ]);
+
+            $RealDebrisMetalDef = $defendersResourceLosses['realLoss']['metal'];
+            $RealDebrisCrystalDef = $defendersResourceLosses['realLoss']['crystal'];
+            $RealDebrisDeuteriumDef = $defendersResourceLosses['realLoss']['deuterium'];
+
+            if (!empty($DefLost)) {
+                foreach ($DefLost as $ID => $Count) {
                     $SimData['ship_lost_def'] += $Count;
                     $Temp['ship_lost_def'] += $Count;
                 }
-                $TotalLostMetal += $DebrisMetalDef;
-                $TotalLostCrystal += $DebrisCrystalDef;
             }
 
             $SimData['total_lost_def']['met'] += $RealDebrisMetalDef;
             $SimData['total_lost_def']['cry'] += $RealDebrisCrystalDef;
             $SimData['total_lost_def']['deu'] += $RealDebrisDeuteriumDef;
+
+            // Calculate looses - total
+            $TotalLostMetal = (
+                $attackersResourceLosses['recoverableLoss']['metal'] +
+                $defendersResourceLosses['recoverableLoss']['metal']
+            );
+            $TotalLostCrystal = (
+                $attackersResourceLosses['recoverableLoss']['crystal'] +
+                $defendersResourceLosses['recoverableLoss']['crystal']
+            );
 
             switch($Result)
             {
