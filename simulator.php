@@ -5,6 +5,8 @@ define('INSIDE', true);
 $_EnginePath = './';
 include($_EnginePath.'common.php');
 
+use UniEngine\Engine\Modules\Flights;
+
 loggedCheck();
 
 includeLang('simulator');
@@ -253,40 +255,14 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
                 }
                 $AttackersData[$ThisUser]['morale'] = $ThisMoraleLevel;
 
-                // Bonuses
-                if($ThisMoraleLevel >= MORALE_BONUS_FLEETPOWERUP1)
-                {
-                    $AttackingTechs[$ThisUser]['TotalForceFactor'] = MORALE_BONUS_FLEETPOWERUP1_FACTOR;
-                }
-                if($ThisMoraleLevel >= MORALE_BONUS_FLEETSHIELDUP1)
-                {
-                    $AttackingTechs[$ThisUser]['TotalShieldFactor'] = MORALE_BONUS_FLEETSHIELDUP1_FACTOR;
-                }
-                if($ThisMoraleLevel >= MORALE_BONUS_FLEETSDADDITION)
-                {
-                    $AttackingTechs[$ThisUser]['SDAdd'] = MORALE_BONUS_FLEETSDADDITION_VALUE;
-                }
-                // Penalties
-                if($ThisMoraleLevel <= MORALE_PENALTY_FLEETPOWERDOWN1)
-                {
-                    $AttackingTechs[$ThisUser]['TotalForceFactor'] = MORALE_PENALTY_FLEETPOWERDOWN1_FACTOR;
-                }
-                if($ThisMoraleLevel <= MORALE_PENALTY_FLEETPOWERDOWN2)
-                {
-                    $AttackingTechs[$ThisUser]['TotalForceFactor'] = MORALE_PENALTY_FLEETPOWERDOWN2_FACTOR;
-                }
-                if($ThisMoraleLevel <= MORALE_PENALTY_FLEETSHIELDDOWN1)
-                {
-                    $AttackingTechs[$ThisUser]['TotalShieldFactor'] = MORALE_PENALTY_FLEETSHIELDDOWN1_FACTOR;
-                }
-                if($ThisMoraleLevel <= MORALE_PENALTY_FLEETSHIELDDOWN2)
-                {
-                    $AttackingTechs[$ThisUser]['TotalShieldFactor'] = MORALE_PENALTY_FLEETSHIELDDOWN2_FACTOR;
-                }
-                if($ThisMoraleLevel <= MORALE_PENALTY_FLEETSDDOWN)
-                {
-                    $AttackingTechs[$ThisUser]['SDFactor'] = MORALE_PENALTY_FLEETSDDOWN_FACTOR;
-                }
+                $moraleCombatModifiers = Flights\Utils\Modifiers\calculateMoraleCombatModifiers([
+                    'moraleLevel' => $ThisMoraleLevel,
+                ]);
+
+                $AttackingTechs[$ThisUser] = array_merge(
+                    $AttackingTechs[$ThisUser],
+                    $moraleCombatModifiers
+                );
             }
         }
         if(!empty($DefendingFleets))
@@ -304,40 +280,14 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
                 }
                 $DefendersData[$ThisUser]['morale'] = $ThisMoraleLevel;
 
-                // Bonuses
-                if($ThisMoraleLevel >= MORALE_BONUS_FLEETPOWERUP1)
-                {
-                    $DefendingTechs[$ThisUser]['TotalForceFactor'] = MORALE_BONUS_FLEETPOWERUP1_FACTOR;
-                }
-                if($ThisMoraleLevel >= MORALE_BONUS_FLEETSHIELDUP1)
-                {
-                    $DefendingTechs[$ThisUser]['TotalShieldFactor'] = MORALE_BONUS_FLEETSHIELDUP1_FACTOR;
-                }
-                if($ThisMoraleLevel >= MORALE_BONUS_FLEETSDADDITION)
-                {
-                    $DefendingTechs[$ThisUser]['SDAdd'] = MORALE_BONUS_FLEETSDADDITION_VALUE;
-                }
-                // Penalties
-                if($ThisMoraleLevel <= MORALE_PENALTY_FLEETPOWERDOWN1)
-                {
-                    $DefendingTechs[$ThisUser]['TotalForceFactor'] = MORALE_PENALTY_FLEETPOWERDOWN1_FACTOR;
-                }
-                if($ThisMoraleLevel <= MORALE_PENALTY_FLEETPOWERDOWN2)
-                {
-                    $DefendingTechs[$ThisUser]['TotalForceFactor'] = MORALE_PENALTY_FLEETPOWERDOWN2_FACTOR;
-                }
-                if($ThisMoraleLevel <= MORALE_PENALTY_FLEETSHIELDDOWN1)
-                {
-                    $DefendingTechs[$ThisUser]['TotalShieldFactor'] = MORALE_PENALTY_FLEETSHIELDDOWN1_FACTOR;
-                }
-                if($ThisMoraleLevel <= MORALE_PENALTY_FLEETSHIELDDOWN2)
-                {
-                    $DefendingTechs[$ThisUser]['TotalShieldFactor'] = MORALE_PENALTY_FLEETSHIELDDOWN2_FACTOR;
-                }
-                if($ThisMoraleLevel <= MORALE_PENALTY_FLEETSDDOWN)
-                {
-                    $DefendingTechs[$ThisUser]['SDFactor'] = MORALE_PENALTY_FLEETSDDOWN_FACTOR;
-                }
+                $moraleCombatModifiers = Flights\Utils\Modifiers\calculateMoraleCombatModifiers([
+                    'moraleLevel' => $ThisMoraleLevel,
+                ]);
+
+                $DefendingTechs[$ThisUser] = array_merge(
+                    $DefendingTechs[$ThisUser],
+                    $moraleCombatModifiers
+                );
             }
         }
     }
