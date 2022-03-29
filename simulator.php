@@ -305,10 +305,7 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
         $TotalTime = 0;
         for($i = 1; $i <= $Loop; $i += 1)
         {
-            $MoonHasBeenCreated = false;
-            $MoonHasBeenDestroyed = false;
             $chance = 0;
-            $RIPDestroyedByMoon = false;
             $chance2 = 0;
             $Temp['ship_lost_atk'] = 0;
             $Temp['ship_lost_def'] = 0;
@@ -451,11 +448,11 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
             $ReportData['init']['deb_cry'] = $TotalLostCrystal;
             $ReportData['init']['moon_chance'] = $moonCreationRollResult['boundedMoonChance'];
             $ReportData['init']['total_moon_chance'] = $moonCreationRollResult['totalMoonChance'];
-            $ReportData['init']['moon_created'] = $MoonHasBeenCreated;
-            $ReportData['init']['moon_destroyed'] = $MoonHasBeenDestroyed;
-            $ReportData['init']['moon_des_chance'] = ($chance >= 0 ? (($chance == 0) ? '0' : $chance) : false);
-            $ReportData['init']['fleet_destroyed'] = $RIPDestroyedByMoon;
-            $ReportData['init']['fleet_des_chance'] = ($chance2 >= 0 ? (($chance2 == 0) ? '0' : $chance2) : false);
+            $ReportData['init']['moon_created'] = false;
+            $ReportData['init']['moon_destroyed'] = false;
+            $ReportData['init']['moon_des_chance'] = '0';
+            $ReportData['init']['fleet_destroyed'] = false;
+            $ReportData['init']['fleet_des_chance'] = '0';
             $ReportData['init']['planet_name'] = 'Planeta';
             $ReportData['init']['onMoon'] = false;
             $ReportData['init']['atk_lost'] = $RealDebrisMetalAtk + $RealDebrisCrystalAtk + $RealDebrisDeuteriumAtk;
