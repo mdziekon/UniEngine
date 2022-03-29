@@ -439,13 +439,9 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
                     break;
             }
 
-            $FleetDebris = $TotalLostCrystal + $TotalLostMetal;
-            $MoonChance = floor($FleetDebris / COMBAT_MOONPERCENT_RESOURCES);
-            $TotalMoonChance = $MoonChance;
-            if($MoonChance > 20)
-            {
-                $MoonChance = 20;
-            }
+            $moonCreationRollResult = Flights\Utils\Calculations\calculateMoonCreationRoll([
+                'totalDebris' => ($TotalLostMetal + $TotalLostCrystal),
+            ]);
 
             $ReportData = array();
 
@@ -461,8 +457,8 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
             $ReportData['init']['deu'] = 0;
             $ReportData['init']['deb_met'] = $TotalLostMetal;
             $ReportData['init']['deb_cry'] = $TotalLostCrystal;
-            $ReportData['init']['moon_chance'] = $MoonChance;
-            $ReportData['init']['total_moon_chance'] = $TotalMoonChance;
+            $ReportData['init']['moon_chance'] = $moonCreationRollResult['boundedMoonChance'];
+            $ReportData['init']['total_moon_chance'] = $moonCreationRollResult['totalMoonChance'];
             $ReportData['init']['moon_created'] = $MoonHasBeenCreated;
             $ReportData['init']['moon_destroyed'] = $MoonHasBeenDestroyed;
             $ReportData['init']['moon_des_chance'] = ($chance >= 0 ? (($chance == 0) ? '0' : $chance) : false);
