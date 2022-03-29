@@ -374,4 +374,8 @@ function String2Array($content) {
     );
 }
 
+function keepInRange($value, $min, $max) {
+    return max(min($value, $max), $min);
+}
+
 ?>
