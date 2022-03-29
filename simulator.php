@@ -238,21 +238,12 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
         $Calculate = false;
     }
 
-    if(MORALE_ENABLED)
-    {
-        if(!empty($AttackingFleets))
-        {
-            foreach($AttackingFleets as $ThisUser => $ThisData)
-            {
+    if (MORALE_ENABLED) {
+        if (!empty($AttackingFleets)) {
+            foreach ($AttackingFleets as $ThisUser => $ThisData) {
                 $ThisMoraleLevel = intval($_POST['atk_morale'][($ThisUser + 1)]);
-                if($ThisMoraleLevel > 100)
-                {
-                    $ThisMoraleLevel = 100;
-                }
-                else if($ThisMoraleLevel < -100)
-                {
-                    $ThisMoraleLevel = -100;
-                }
+                $ThisMoraleLevel = keepInRange($ThisMoraleLevel, -100, 100);
+
                 $AttackersData[$ThisUser]['morale'] = $ThisMoraleLevel;
 
                 $moraleCombatModifiers = Flights\Utils\Modifiers\calculateMoraleCombatModifiers([
@@ -265,19 +256,11 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
                 );
             }
         }
-        if(!empty($DefendingFleets))
-        {
-            foreach($DefendingFleets as $ThisUser => $ThisData)
-            {
+        if (!empty($DefendingFleets)) {
+            foreach ($DefendingFleets as $ThisUser => $ThisData) {
                 $ThisMoraleLevel = intval($_POST['def_morale'][($ThisUser + 1)]);
-                if($ThisMoraleLevel > 100)
-                {
-                    $ThisMoraleLevel = 100;
-                }
-                else if($ThisMoraleLevel < -100)
-                {
-                    $ThisMoraleLevel = -100;
-                }
+                $ThisMoraleLevel = keepInRange($ThisMoraleLevel, -100, 100);
+
                 $DefendersData[$ThisUser]['morale'] = $ThisMoraleLevel;
 
                 $moraleCombatModifiers = Flights\Utils\Modifiers\calculateMoraleCombatModifiers([
