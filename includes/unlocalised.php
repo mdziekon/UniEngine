@@ -378,4 +378,26 @@ function keepInRange($value, $min, $max) {
     return max(min($value, $max), $min);
 }
 
+function createFuncWithResultHelpers($func) {
+    return function ($arguments) use ($func) {
+        $createSuccess = function ($payload) {
+            return [
+                'isSuccess' => true,
+                'payload' => $payload,
+            ];
+        };
+        $createFailure = function ($payload) {
+            return [
+                'isSuccess' => false,
+                'error' => $payload,
+            ];
+        };
+
+        return $func($arguments, [
+            'createSuccess' => $createSuccess,
+            'createFailure' => $createFailure,
+        ]);
+    };
+}
+
 ?>
