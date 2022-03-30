@@ -33,7 +33,6 @@ function messageRed($Text, $Title)
 
 includeLang('fleet');
 
-$QuantumGateInterval = QUANTUMGATE_INTERVAL_HOURS;
 $Now = time();
 $ErrorTitle = &$_Lang['fl_error'];
 
@@ -904,86 +903,42 @@ if(MORALE_ENABLED)
 
 $Distance = getFlightDistanceBetween($_Planet, $Target);
 
-$Allow_UseQuantumGate = false;
-if($Fleet['UseQuantum'])
-{
-    $QuantumGate_Disallow = array(1, 2, 6, 9);
-    if($_Planet['quantumgate'] == 1)
-    {
-        if(!in_array($Fleet['Mission'], $QuantumGate_Disallow))
-        {
-            if($UsedPlanet)
-            {
-                if($TargetData['quantumgate'] == 1)
-                {
-                    if($YourPlanet)
-                    {
-                        $Allow_UseQuantumGate = true;
-                        $QuantumGate_UseType = 1;
-                    }
-                    else
-                    {
-                        if($OwnerFriend OR $OwnerHasMarcantilePact)
-                        {
-                            $Allow_UseQuantumGate = true;
-                            $QuantumGate_UseType = 1;
-                        }
-                        else
-                        {
-                            $Check_SpaceTimeJump = true;
-                        }
-                    }
-                }
-                else
-                {
-                    $Check_SpaceTimeJump = true;
-                }
-            }
-            else
-            {
-                $Check_SpaceTimeJump = true;
-            }
+$isUsingQuantumGate = false;
+$quantumGateUseType = 0;
 
-            if($Check_SpaceTimeJump === true)
-            {
-                if($_Planet['galaxy'] == $Target['galaxy'])
-                {
-                    if(($_Planet['quantumgate_lastuse'] + ($QuantumGateInterval * 60 * 60)) <= $Now)
-                    {
-                        $Allow_UseQuantumGate = true;
-                        $QuantumGate_UseType = 2;
-                    }
-                    else
-                    {
-                        $CannotUseTill = $_Planet['quantumgate_lastuse'] + ($QuantumGateInterval * 60 * 60);
-                        messageRed(sprintf($_Lang['CannotUseQuantumGateTill'], prettyDate('d m Y \o H:i:s', $CannotUseTill, 1)), $ErrorTitle);
-                    }
-                }
-                else
-                {
-                    messageRed($_Lang['fl3_SpaceTimeJumpGalaxy'], $ErrorTitle);
-                }
-            }
-        }
-        else
-        {
-            messageRed($_Lang['fl3_QuantumDisallowAttack'], $ErrorTitle);
-        }
-    }
-    else
-    {
-        messageRed($_Lang['fl3_NoQuantumGate'], $ErrorTitle);
+if ($Fleet['UseQuantum']) {
+    $quantumGateValidationResult = FlightControl\Utils\Validators\validateQuantumGate([
+        'fleet' => $Fleet,
+        'originPlanet' => $_Planet,
+        'targetPlanet' => $TargetData,
+        'targetData' => $Target,
+        'isTargetOccupied' => $UsedPlanet,
+        'isTargetOwnPlanet' => $YourPlanet,
+        'isTargetOwnedByFriend' => $OwnerFriend,
+        'isTargetOwnedByFriendlyMerchant' => $OwnerHasMarcantilePact,
+        'currentTimestamp' => $Now,
+    ]);
+
+    if (!$quantumGateValidationResult['isSuccess']) {
+        $errorMessage = FlightControl\Utils\Errors\mapQuantumGateValidationErrorToReadableMessage(
+            $quantumGateValidationResult['error']
+        );
+
+        messageRed($errorMessage, $ErrorTitle);
+    } else {
+        $isUsingQuantumGate = true;
+        $quantumGateUseType = $quantumGateValidationResult['payload']['useType'];
     }
 }
 
-if($Allow_UseQuantumGate)
+if($isUsingQuantumGate)
 {
-    if($QuantumGate_UseType == 1)
+    if($quantumGateUseType == 1)
     {
         $DurationTarget = $DurationBack = 1;
         $Consumption = 0;
     }
-    elseif($QuantumGate_UseType == 2)
+    elseif($quantumGateUseType == 2)
     {
         $DurationTarget = 1;
         $DurationBack = getFlightDuration([
@@ -1091,7 +1046,7 @@ if(isset($UpdateACS))
     }
 }
 
-if($Allow_UseQuantumGate AND $QuantumGate_UseType == 2)
+if($isUsingQuantumGate AND $quantumGateUseType == 2)
 {
     $Add2UpdatePlanet[] = "`quantumgate_lastuse` = {$Now}";
     $Add2UpdatePlanetPHP['quantumgate_lastuse'] = $Now;
@@ -1380,7 +1335,7 @@ if(isset($UpdateACS))
     }
 }
 
-if($Allow_UseQuantumGate)
+if($isUsingQuantumGate)
 {
     $QuantumGate_Used = '1';
 }
