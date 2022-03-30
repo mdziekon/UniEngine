@@ -931,50 +931,19 @@ if ($Fleet['UseQuantum']) {
     }
 }
 
-if($isUsingQuantumGate)
-{
-    if($quantumGateUseType == 1)
-    {
-        $DurationTarget = $DurationBack = 1;
-        $Consumption = 0;
-    }
-    elseif($quantumGateUseType == 2)
-    {
-        $DurationTarget = 1;
-        $DurationBack = getFlightDuration([
-            'speedFactor' => $GenFleetSpeed,
-            'distance' => $Distance,
-            'maxShipsSpeed' => $MaxFleetSpeed
-        ]);
+$flightParams = FlightControl\Utils\Helpers\getFleetParams([
+    'user' => $_User,
+    'fleet' => $Fleet,
+    'fleetSpeed' => $GenFleetSpeed,
+    'distance' => $Distance,
+    'maxFleetSpeed' => $MaxFleetSpeed,
+    'isUsingQuantumGate' => $isUsingQuantumGate,
+    'quantumGateUseType' => $quantumGateUseType,
+]);
 
-        $Consumption = getFlightTotalConsumption(
-            [
-                'ships' => $Fleet['array'],
-                'distance' => $Distance,
-                'duration' => $DurationBack,
-            ],
-            $_User
-        );
-        $Consumption = $Consumption / 2;
-    }
-}
-else
-{
-    $DurationTarget = $DurationBack = getFlightDuration([
-        'speedFactor' => $GenFleetSpeed,
-        'distance' => $Distance,
-        'maxShipsSpeed' => $MaxFleetSpeed
-    ]);
-
-    $Consumption = getFlightTotalConsumption(
-        [
-            'ships' => $Fleet['array'],
-            'distance' => $Distance,
-            'duration' => $DurationTarget,
-        ],
-        $_User
-    );
-}
+$DurationTarget = $flightParams['duration']['toDestination'];
+$DurationBack = $flightParams['duration']['backToOrigin'];
+$Consumption = $flightParams['consumption'];
 
 if($_Planet['deuterium'] < $Consumption)
 {
