@@ -36,7 +36,7 @@ function validateQuantumGate($validationParams) {
 
         if (
             $isTargetOccupied &&
-            $targetPlanet['quantumgate'] &&
+            $targetPlanet['quantumgate'] == 1 &&
             (
                 $isTargetOwnPlanet ||
                 $isTargetOwnedByFriend ||
