@@ -23,7 +23,7 @@ call_user_func(function () {
     include($includePath . './utils/validators/missionHold.validator.php');
     include($includePath . './utils/validators/quantumGate.validator.php');
     include($includePath . './utils/validators/smartFleetsBlockadeState.validator.php');
-    include($includePath . './utils/errors.utils.php');
+    include($includePath . './utils/errors/quantumGate.utils.php');
 
 });
 
