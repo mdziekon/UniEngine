@@ -300,25 +300,7 @@ if (
 
     if (!$fleetArrayValidationResult['isValid']) {
         $firstValidationError = $fleetArrayValidationResult['errors'][0];
-
-        $errorMessage = null;
-        switch ($firstValidationError['errorCode']) {
-            case 'INVALID_SHIP_ID':
-                $errorMessage = $_Lang['fl1_BadShipGiven'];
-                break;
-            case 'SHIP_WITH_NO_ENGINE':
-                $errorMessage = $_Lang['fl1_CantSendUnflyable'];
-                break;
-            case 'INVALID_SHIP_COUNT':
-                $errorMessage = $_Lang['fleet_generic_errors_invalidshipcount'];
-                break;
-            case 'SHIP_COUNT_EXCEEDS_AVAILABLE':
-                $errorMessage = $_Lang['fl1_NoEnoughShips'];
-                break;
-            default:
-                $errorMessage = $_Lang['fleet_generic_errors_unknown'];
-                break;
-        }
+        $errorMessage = FlightControl\Utils\Errors\mapFleetArrayValidationErrorToReadableMessage($firstValidationError);
 
         messageRed($errorMessage, $ErrorTitle);
     }
