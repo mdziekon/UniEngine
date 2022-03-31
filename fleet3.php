@@ -355,31 +355,7 @@ if ($Fleet['Mission'] == 2 AND in_array(2, $validMissionTypes)) {
 
     if (!$joinUnionValidationResult['isValid']) {
         $firstValidationError = $joinUnionValidationResult['errors'][0];
-
-        $errorMessage = null;
-        switch ($firstValidationError['errorCode']) {
-            case 'INVALID_UNION_ID':
-                $errorMessage = $_Lang['fl_acs_bad_group_id'];
-                break;
-            case 'UNION_NOT_FOUND':
-                $errorMessage = $_Lang['fl_acs_bad_group_id'];
-                break;
-            case 'USER_CANT_JOIN':
-                $errorMessage = $_Lang['fl_acs_cannot_join_this_group'];
-                break;
-            case 'INVALID_DESTINATION_COORDINATES':
-                $errorMessage = $_Lang['fl_acs_badcoordinates'];
-                break;
-            case 'UNION_JOINED_FLEETS_COUNT_EXCEEDED':
-                $errorMessage = $_Lang['fl_acs_fleetcount_extended'];
-                break;
-            case 'UNION_JOIN_TIME_EXCEEDED':
-                $errorMessage = $_Lang['fl_acs_cannot_join_time_extended'];
-                break;
-            default:
-                $errorMessage = $_Lang['fleet_generic_errors_unknown'];
-                break;
-        }
+        $errorMessage = FlightControl\Utils\Errors\mapJoinUnionValidationErrorToReadableMessage($firstValidationError);
 
         messageRed($errorMessage, $ErrorTitle);
     }
