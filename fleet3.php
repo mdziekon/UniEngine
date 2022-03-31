@@ -264,66 +264,14 @@ $smartFleetsBlockadeStateValidationResult = FlightControl\Utils\Validators\valid
 if (!$smartFleetsBlockadeStateValidationResult['isValid']) {
     $firstValidationError = $smartFleetsBlockadeStateValidationResult['errors'];
 
-    $errorMessage = null;
-    switch ($firstValidationError['blockType']) {
-        case 'GLOBAL_ENDTIME':
-            $errorMessage = $_Lang['SFB_Stop_GlobalBlockade'];
-            break;
-        case 'GLOBAL_POSTENDTIME':
-            $errorMessage = sprintf(
-                $_Lang['SFB_Stop_GlobalPostBlockade'],
-                prettyDate('d m Y, H:i:s', $firstValidationError['details']['hardEndTime'], 1)
-            );
-            break;
-        case 'USER':
-            $errorDetails = $firstValidationError['details'];
-            $reasonMessage = (
-                empty($errorDetails['reason']) ?
-                    $_Lang['SFB_Stop_ReasonNotGiven'] :
-                    "\"{$errorDetails['reason']}\""
-            );
-
-            $errorMessage = sprintf(
-                ($errorDetails['userId'] == $_User['id'] ? $_Lang['SFB_Stop_UserBlockadeOwn'] : $_Lang['SFB_Stop_UserBlockade']),
-                prettyDate('d m Y', $errorDetails['endTime'], 1),
-                date('H:i:s', $errorDetails['endTime']),
-                $reasonMessage
-            );
-
-            break;
-        case 'PLANET':
-            $errorDetails = $firstValidationError['details'];
-            $reasonMessage = (
-                empty($errorDetails['reason']) ?
-                    $_Lang['SFB_Stop_ReasonNotGiven'] :
-                    "\"{$errorDetails['reason']}\""
-            );
-            $errorMessageTemplate = (
-                $errorDetails['planetId'] == $_Planet['id'] ?
-                (
-                    $_Planet['planet_type'] == 1 ?
-                    $_Lang['SFB_Stop_PlanetBlockadeOwn_Planet'] :
-                    $_Lang['SFB_Stop_PlanetBlockadeOwn_Moon']
-                ) :
-                (
-                    $Target['type'] == 1 ?
-                    $_Lang['SFB_Stop_PlanetBlockade_Planet'] :
-                    $_Lang['SFB_Stop_PlanetBlockade_Moon']
-                )
-            );
-
-            $errorMessage = sprintf(
-                $errorMessageTemplate,
-                prettyDate('d m Y', $errorDetails['endTime'], 1),
-                date('H:i:s', $errorDetails['endTime']),
-                $reasonMessage
-            );
-
-            break;
-        default:
-            $errorMessage = $_Lang['fleet_generic_errors_unknown'];
-            break;
-    }
+    $errorMessage = FlightControl\Utils\Errors\mapSmartFleetsBlockadeValidationErrorToReadableMessage(
+        $firstValidationError,
+        [
+            'user' => $_User,
+            'originPlanet' => $_Planet,
+            'targetPlanet' => $Target,
+        ]
+    );
 
     messageRed(
         $errorMessage . $_Lang['SFB_Stop_LearnMore'],
