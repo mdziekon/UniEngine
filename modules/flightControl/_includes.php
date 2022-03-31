@@ -14,13 +14,19 @@ call_user_func(function () {
     include($includePath . './utils/helpers/getAvailableSpeeds.helper.php');
     include($includePath . './utils/helpers/getFleetsInFlightCounters.helper.php');
     include($includePath . './utils/helpers/getFleetUnionJoinData.helper.php');
+    include($includePath . './utils/helpers/getFlightParams.helper.php');
     include($includePath . './utils/helpers/getUserExpeditionSlotsCount.helper.php');
     include($includePath . './utils/helpers/getUserFleetSlotsCount.helper.php');
     include($includePath . './utils/helpers/getValidMissionTypes.helper.php');
     include($includePath . './utils/validators/fleetArray.validator.php');
     include($includePath . './utils/validators/joinUnion.validator.php');
     include($includePath . './utils/validators/missionHold.validator.php');
+    include($includePath . './utils/validators/quantumGate.validator.php');
     include($includePath . './utils/validators/smartFleetsBlockadeState.validator.php');
+    include($includePath . './utils/errors/fleetArray.utils.php');
+    include($includePath . './utils/errors/joinUnion.utils.php');
+    include($includePath . './utils/errors/quantumGate.utils.php');
+    include($includePath . './utils/errors/smartFleetsBlockade.utils.php');
 
 });
 

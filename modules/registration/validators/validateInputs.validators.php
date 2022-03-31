@@ -2,28 +2,6 @@
 
 namespace UniEngine\Engine\Modules\Registration\Validators;
 
-function _createFuncWithResultHelpers($func) {
-    return function ($arguments) use ($func) {
-        $createSuccess = function ($payload) {
-            return [
-                'isSuccess' => true,
-                'payload' => $payload,
-            ];
-        };
-        $createFailure = function ($payload) {
-            return [
-                'isSuccess' => false,
-                'error' => $payload,
-            ];
-        };
-
-        return $func($arguments, [
-            'createSuccess' => $createSuccess,
-            'createFailure' => $createFailure,
-        ]);
-    };
-}
-
 function _validateUsername($normalizedInput) {
     $validator = function ($input, $resultHelpers) {
         $value = $input['username'];
@@ -52,7 +30,7 @@ function _validateUsername($normalizedInput) {
         return $resultHelpers['createSuccess']([]);
     };
 
-    return _createFuncWithResultHelpers($validator)($normalizedInput);
+    return createFuncWithResultHelpers($validator)($normalizedInput);
 }
 
 function _validatePassword($normalizedInput) {
@@ -71,7 +49,7 @@ function _validatePassword($normalizedInput) {
         return $resultHelpers['createSuccess']([]);
     };
 
-    return _createFuncWithResultHelpers($validator)($normalizedInput);
+    return createFuncWithResultHelpers($validator)($normalizedInput);
 }
 
 function _validateEmail($normalizedInput) {
@@ -106,7 +84,7 @@ function _validateEmail($normalizedInput) {
         return $resultHelpers['createSuccess']([]);
     };
 
-    return _createFuncWithResultHelpers($validator)($normalizedInput);
+    return createFuncWithResultHelpers($validator)($normalizedInput);
 }
 
 function _validateGalaxyNo($normalizedInput) {
@@ -132,7 +110,7 @@ function _validateGalaxyNo($normalizedInput) {
         return $resultHelpers['createSuccess']([]);
     };
 
-    return _createFuncWithResultHelpers($validator)($normalizedInput);
+    return createFuncWithResultHelpers($validator)($normalizedInput);
 }
 
 function _validateLangCode($normalizedInput) {
@@ -148,7 +126,7 @@ function _validateLangCode($normalizedInput) {
         return $resultHelpers['createSuccess']([]);
     };
 
-    return _createFuncWithResultHelpers($validator)($normalizedInput);
+    return createFuncWithResultHelpers($validator)($normalizedInput);
 }
 
 function _validateHasAcceptedRules($normalizedInput) {
@@ -164,7 +142,7 @@ function _validateHasAcceptedRules($normalizedInput) {
         return $resultHelpers['createSuccess']([]);
     };
 
-    return _createFuncWithResultHelpers($validator)($normalizedInput);
+    return createFuncWithResultHelpers($validator)($normalizedInput);
 }
 
 function _validateAntiBot($normalizedInput, $params) {
@@ -189,7 +167,7 @@ function _validateAntiBot($normalizedInput, $params) {
         return $resultHelpers['createSuccess']([]);
     };
 
-    return _createFuncWithResultHelpers($validator)($normalizedInput);
+    return createFuncWithResultHelpers($validator)($normalizedInput);
 }
 
 //  Arguments

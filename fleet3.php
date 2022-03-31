@@ -33,7 +33,6 @@ function messageRed($Text, $Title)
 
 includeLang('fleet');
 
-$QuantumGateInterval = QUANTUMGATE_INTERVAL_HOURS;
 $Now = time();
 $ErrorTitle = &$_Lang['fl_error'];
 
@@ -265,66 +264,14 @@ $smartFleetsBlockadeStateValidationResult = FlightControl\Utils\Validators\valid
 if (!$smartFleetsBlockadeStateValidationResult['isValid']) {
     $firstValidationError = $smartFleetsBlockadeStateValidationResult['errors'];
 
-    $errorMessage = null;
-    switch ($firstValidationError['blockType']) {
-        case 'GLOBAL_ENDTIME':
-            $errorMessage = $_Lang['SFB_Stop_GlobalBlockade'];
-            break;
-        case 'GLOBAL_POSTENDTIME':
-            $errorMessage = sprintf(
-                $_Lang['SFB_Stop_GlobalPostBlockade'],
-                prettyDate('d m Y, H:i:s', $firstValidationError['details']['hardEndTime'], 1)
-            );
-            break;
-        case 'USER':
-            $errorDetails = $firstValidationError['details'];
-            $reasonMessage = (
-                empty($errorDetails['reason']) ?
-                    $_Lang['SFB_Stop_ReasonNotGiven'] :
-                    "\"{$errorDetails['reason']}\""
-            );
-
-            $errorMessage = sprintf(
-                ($errorDetails['userId'] == $_User['id'] ? $_Lang['SFB_Stop_UserBlockadeOwn'] : $_Lang['SFB_Stop_UserBlockade']),
-                prettyDate('d m Y', $errorDetails['endTime'], 1),
-                date('H:i:s', $errorDetails['endTime']),
-                $reasonMessage
-            );
-
-            break;
-        case 'PLANET':
-            $errorDetails = $firstValidationError['details'];
-            $reasonMessage = (
-                empty($errorDetails['reason']) ?
-                    $_Lang['SFB_Stop_ReasonNotGiven'] :
-                    "\"{$errorDetails['reason']}\""
-            );
-            $errorMessageTemplate = (
-                $errorDetails['planetId'] == $_Planet['id'] ?
-                (
-                    $_Planet['planet_type'] == 1 ?
-                    $_Lang['SFB_Stop_PlanetBlockadeOwn_Planet'] :
-                    $_Lang['SFB_Stop_PlanetBlockadeOwn_Moon']
-                ) :
-                (
-                    $Target['type'] == 1 ?
-                    $_Lang['SFB_Stop_PlanetBlockade_Planet'] :
-                    $_Lang['SFB_Stop_PlanetBlockade_Moon']
-                )
-            );
-
-            $errorMessage = sprintf(
-                $errorMessageTemplate,
-                prettyDate('d m Y', $errorDetails['endTime'], 1),
-                date('H:i:s', $errorDetails['endTime']),
-                $reasonMessage
-            );
-
-            break;
-        default:
-            $errorMessage = $_Lang['fleet_generic_errors_unknown'];
-            break;
-    }
+    $errorMessage = FlightControl\Utils\Errors\mapSmartFleetsBlockadeValidationErrorToReadableMessage(
+        $firstValidationError,
+        [
+            'user' => $_User,
+            'originPlanet' => $_Planet,
+            'targetPlanet' => $Target,
+        ]
+    );
 
     messageRed(
         $errorMessage . $_Lang['SFB_Stop_LearnMore'],
@@ -353,25 +300,7 @@ if (
 
     if (!$fleetArrayValidationResult['isValid']) {
         $firstValidationError = $fleetArrayValidationResult['errors'][0];
-
-        $errorMessage = null;
-        switch ($firstValidationError['errorCode']) {
-            case 'INVALID_SHIP_ID':
-                $errorMessage = $_Lang['fl1_BadShipGiven'];
-                break;
-            case 'SHIP_WITH_NO_ENGINE':
-                $errorMessage = $_Lang['fl1_CantSendUnflyable'];
-                break;
-            case 'INVALID_SHIP_COUNT':
-                $errorMessage = $_Lang['fleet_generic_errors_invalidshipcount'];
-                break;
-            case 'SHIP_COUNT_EXCEEDS_AVAILABLE':
-                $errorMessage = $_Lang['fl1_NoEnoughShips'];
-                break;
-            default:
-                $errorMessage = $_Lang['fleet_generic_errors_unknown'];
-                break;
-        }
+        $errorMessage = FlightControl\Utils\Errors\mapFleetArrayValidationErrorToReadableMessage($firstValidationError);
 
         messageRed($errorMessage, $ErrorTitle);
     }
@@ -426,31 +355,7 @@ if ($Fleet['Mission'] == 2 AND in_array(2, $validMissionTypes)) {
 
     if (!$joinUnionValidationResult['isValid']) {
         $firstValidationError = $joinUnionValidationResult['errors'][0];
-
-        $errorMessage = null;
-        switch ($firstValidationError['errorCode']) {
-            case 'INVALID_UNION_ID':
-                $errorMessage = $_Lang['fl_acs_bad_group_id'];
-                break;
-            case 'UNION_NOT_FOUND':
-                $errorMessage = $_Lang['fl_acs_bad_group_id'];
-                break;
-            case 'USER_CANT_JOIN':
-                $errorMessage = $_Lang['fl_acs_cannot_join_this_group'];
-                break;
-            case 'INVALID_DESTINATION_COORDINATES':
-                $errorMessage = $_Lang['fl_acs_badcoordinates'];
-                break;
-            case 'UNION_JOINED_FLEETS_COUNT_EXCEEDED':
-                $errorMessage = $_Lang['fl_acs_fleetcount_extended'];
-                break;
-            case 'UNION_JOIN_TIME_EXCEEDED':
-                $errorMessage = $_Lang['fl_acs_cannot_join_time_extended'];
-                break;
-            default:
-                $errorMessage = $_Lang['fleet_generic_errors_unknown'];
-                break;
-        }
+        $errorMessage = FlightControl\Utils\Errors\mapJoinUnionValidationErrorToReadableMessage($firstValidationError);
 
         messageRed($errorMessage, $ErrorTitle);
     }
@@ -904,122 +809,47 @@ if(MORALE_ENABLED)
 
 $Distance = getFlightDistanceBetween($_Planet, $Target);
 
-$Allow_UseQuantumGate = false;
-if($Fleet['UseQuantum'])
-{
-    $QuantumGate_Disallow = array(1, 2, 6, 9);
-    if($_Planet['quantumgate'] == 1)
-    {
-        if(!in_array($Fleet['Mission'], $QuantumGate_Disallow))
-        {
-            if($UsedPlanet)
-            {
-                if($TargetData['quantumgate'] == 1)
-                {
-                    if($YourPlanet)
-                    {
-                        $Allow_UseQuantumGate = true;
-                        $QuantumGate_UseType = 1;
-                    }
-                    else
-                    {
-                        if($OwnerFriend OR $OwnerHasMarcantilePact)
-                        {
-                            $Allow_UseQuantumGate = true;
-                            $QuantumGate_UseType = 1;
-                        }
-                        else
-                        {
-                            $Check_SpaceTimeJump = true;
-                        }
-                    }
-                }
-                else
-                {
-                    $Check_SpaceTimeJump = true;
-                }
-            }
-            else
-            {
-                $Check_SpaceTimeJump = true;
-            }
+$isUsingQuantumGate = false;
+$quantumGateUseType = 0;
 
-            if($Check_SpaceTimeJump === true)
-            {
-                if($_Planet['galaxy'] == $Target['galaxy'])
-                {
-                    if(($_Planet['quantumgate_lastuse'] + ($QuantumGateInterval * 60 * 60)) <= $Now)
-                    {
-                        $Allow_UseQuantumGate = true;
-                        $QuantumGate_UseType = 2;
-                    }
-                    else
-                    {
-                        $CannotUseTill = $_Planet['quantumgate_lastuse'] + ($QuantumGateInterval * 60 * 60);
-                        messageRed(sprintf($_Lang['CannotUseQuantumGateTill'], prettyDate('d m Y \o H:i:s', $CannotUseTill, 1)), $ErrorTitle);
-                    }
-                }
-                else
-                {
-                    messageRed($_Lang['fl3_SpaceTimeJumpGalaxy'], $ErrorTitle);
-                }
-            }
-        }
-        else
-        {
-            messageRed($_Lang['fl3_QuantumDisallowAttack'], $ErrorTitle);
-        }
-    }
-    else
-    {
-        messageRed($_Lang['fl3_NoQuantumGate'], $ErrorTitle);
-    }
-}
-
-if($Allow_UseQuantumGate)
-{
-    if($QuantumGate_UseType == 1)
-    {
-        $DurationTarget = $DurationBack = 1;
-        $Consumption = 0;
-    }
-    elseif($QuantumGate_UseType == 2)
-    {
-        $DurationTarget = 1;
-        $DurationBack = getFlightDuration([
-            'speedFactor' => $GenFleetSpeed,
-            'distance' => $Distance,
-            'maxShipsSpeed' => $MaxFleetSpeed
-        ]);
-
-        $Consumption = getFlightTotalConsumption(
-            [
-                'ships' => $Fleet['array'],
-                'distance' => $Distance,
-                'duration' => $DurationBack,
-            ],
-            $_User
-        );
-        $Consumption = $Consumption / 2;
-    }
-}
-else
-{
-    $DurationTarget = $DurationBack = getFlightDuration([
-        'speedFactor' => $GenFleetSpeed,
-        'distance' => $Distance,
-        'maxShipsSpeed' => $MaxFleetSpeed
+if ($Fleet['UseQuantum']) {
+    $quantumGateValidationResult = FlightControl\Utils\Validators\validateQuantumGate([
+        'fleet' => $Fleet,
+        'originPlanet' => $_Planet,
+        'targetPlanet' => $TargetData,
+        'targetData' => $Target,
+        'isTargetOccupied' => $UsedPlanet,
+        'isTargetOwnPlanet' => $YourPlanet,
+        'isTargetOwnedByFriend' => $OwnerFriend,
+        'isTargetOwnedByFriendlyMerchant' => $OwnerHasMarcantilePact,
+        'currentTimestamp' => $Now,
     ]);
 
-    $Consumption = getFlightTotalConsumption(
-        [
-            'ships' => $Fleet['array'],
-            'distance' => $Distance,
-            'duration' => $DurationTarget,
-        ],
-        $_User
-    );
+    if (!$quantumGateValidationResult['isSuccess']) {
+        $errorMessage = FlightControl\Utils\Errors\mapQuantumGateValidationErrorToReadableMessage(
+            $quantumGateValidationResult['error']
+        );
+
+        messageRed($errorMessage, $ErrorTitle);
+    } else {
+        $isUsingQuantumGate = true;
+        $quantumGateUseType = $quantumGateValidationResult['payload']['useType'];
+    }
 }
+
+$flightParams = FlightControl\Utils\Helpers\getFleetParams([
+    'user' => $_User,
+    'fleet' => $Fleet,
+    'fleetSpeed' => $GenFleetSpeed,
+    'distance' => $Distance,
+    'maxFleetSpeed' => $MaxFleetSpeed,
+    'isUsingQuantumGate' => $isUsingQuantumGate,
+    'quantumGateUseType' => $quantumGateUseType,
+]);
+
+$DurationTarget = $flightParams['duration']['toDestination'];
+$DurationBack = $flightParams['duration']['backToOrigin'];
+$Consumption = $flightParams['consumption'];
 
 if($_Planet['deuterium'] < $Consumption)
 {
@@ -1091,7 +921,7 @@ if(isset($UpdateACS))
     }
 }
 
-if($Allow_UseQuantumGate AND $QuantumGate_UseType == 2)
+if($isUsingQuantumGate AND $quantumGateUseType == 2)
 {
     $Add2UpdatePlanet[] = "`quantumgate_lastuse` = {$Now}";
     $Add2UpdatePlanetPHP['quantumgate_lastuse'] = $Now;
@@ -1380,7 +1210,7 @@ if(isset($UpdateACS))
     }
 }
 
-if($Allow_UseQuantumGate)
+if($isUsingQuantumGate)
 {
     $QuantumGate_Used = '1';
 }
