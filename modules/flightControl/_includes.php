@@ -9,6 +9,7 @@ call_user_func(function () {
     include($includePath . './utils/factories/createAlertFiltersSearchParams.factory.php');
     include($includePath . './utils/factories/createFleetDevLogEntry.factory.php');
     include($includePath . './utils/fetchers/fetchActiveSmartFleetsBlockadeEntries.fetcher.php');
+    include($includePath . './utils/fetchers/fetchBashValidatorFlightLogEntries.fetcher.php');
     include($includePath . './utils/fetchers/fetchPlanetOwnerDetails.fetcher.php');
     include($includePath . './utils/helpers/getAvailableHoldTimes.helper.php');
     include($includePath . './utils/helpers/getAvailableSpeeds.helper.php');
