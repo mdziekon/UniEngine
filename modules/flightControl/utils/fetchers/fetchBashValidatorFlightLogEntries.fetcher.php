@@ -23,7 +23,7 @@ function fetchBashValidatorFlightLogEntries($props) {
     $excludedDestructionReasonsStr = implode(', ', $excludedDestructionReasons);
 
     $query = (
-        "SELECT *" .
+        "SELECT * " .
         "FROM {{table}} " .
         "WHERE " .
         "(`Fleet_Time_Start` + `Fleet_Time_ACSAdd`) >= {$logsRangeStart} AND " .
@@ -36,7 +36,7 @@ function fetchBashValidatorFlightLogEntries($props) {
         ";"
     );
 
-    $result = doquery($query, 'planets', true);
+    $result = doquery($query, 'fleet_archive');
 
     return $result;
 }
