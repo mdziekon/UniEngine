@@ -50,14 +50,12 @@ function validateBashLimit($validationParams) {
 
             $verificationTimestamps[] = [
                 'type' => 'farm',
-                // 'key' => 'antifarm',
                 'stamp' => $todayStartTimestamp,
             ];
         }
         if ($isBashCheckRequired) {
             $verificationTimestamps[] = [
                 'type' => 'bash',
-                // 'key' => 'bashLimit',
                 'stamp' => ($currentTimestamp - $_GameConfig['Protection_BashLimitInterval']),
             ];
         }
@@ -106,34 +104,38 @@ function validateBashLimit($validationParams) {
 
             if ($totalLimitInstances >= $protectionLimits[$limitType]['totalCount']) {
                 return $resultHelpers['createFailure']([
-                    'code' => null,
+                    'code' => 'ATTACK_LIMIT_PERPLAYER_REACHED',
+                    'params' => [
+                        'limitType' => $limitType,
+                    ],
                 ]);
-
-                // sprintf($_Lang['fl3_Protect_AttackLimitTotal'], $_Lang['fl3_Protect_AttackLimit_'.$Values['key']]);
             }
             if (($totalLimitInstances + $fleetsInFlightToTargetOwnerCount) >= $protectionLimits[$limitType]['totalCount']) {
                 return $resultHelpers['createFailure']([
-                    'code' => null,
+                    'code' => 'ATTACK_AND_FLIGHTS_LIMIT_PERPLAYER_REACHED',
+                    'params' => [
+                        'limitType' => $limitType,
+                    ],
                 ]);
-
-                // sprintf($_Lang['fl3_Protect_AttackLimitTotalFly'], $_Lang['fl3_Protect_AttackLimit_'.$Values['key']]);
             }
 
             $targetLimitInstances = $limitCountersByType[$limitType][$targetId];
 
             if ($targetLimitInstances >= $protectionLimits[$limitType]['planetCount']) {
                 return $resultHelpers['createFailure']([
-                    'code' => null,
+                    'code' => 'ATTACK_LIMIT_PERPLANET_REACHED',
+                    'params' => [
+                        'limitType' => $limitType,
+                    ],
                 ]);
-
-                // sprintf($_Lang['fl3_Protect_AttackLimitSingle'], $_Lang['fl3_Protect_AttackLimit_'.$Values['key']]);
             }
             if (($targetLimitInstances + $fleetsInFlightToTargetCount) >= $protectionLimits[$limitType]['planetCount']) {
                 return $resultHelpers['createFailure']([
-                    'code' => null,
+                    'code' => 'ATTACK_AND_FLIGHTS_LIMIT_PERPLAYER_REACHED',
+                    'params' => [
+                        'limitType' => $limitType,
+                    ],
                 ]);
-
-                // sprintf($_Lang['fl3_Protect_AttackLimitSingleFly'], $_Lang['fl3_Protect_AttackLimit_'.$Values['key']]);
             }
         }
 
