@@ -251,6 +251,8 @@ $_Lang['fl3_Protect_AttackLimitTotal']           = 'You cannot attack this playe
 $_Lang['fl3_Protect_AttackLimitSingle']          = 'You cannot attack this planet / moon anymore today!<br/>(%s)';
 $_Lang['fl3_Protect_AttackLimitTotalFly']        = 'You cannot send more aggressive flights towards this player!<br/>(%s)';
 $_Lang['fl3_Protect_AttackLimitSingleFly']       = 'You cannot send more aggressive flights towards this player / moon!<br/>(%s)';
+$_Lang['fl3_Protect_AttackLimit_bash']           = 'Bash Block';
+$_Lang['fl3_Protect_AttackLimit_farm']           = 'Weaker players protection';
 
 $_Lang['fl_bad_mission']                         = 'Invalid mission!';
 $_Lang['fl_fleet_send']                          = 'Fleet has been sent';

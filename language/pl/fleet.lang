@@ -250,6 +250,8 @@ $_Lang['fl3_Protect_AttackLimitTotal']           = 'Nie możesz już dziś atako
 $_Lang['fl3_Protect_AttackLimitSingle']          = 'Nie możesz już dziś atakować tej planety/księżyca tego gracza!<br/>(%s)';
 $_Lang['fl3_Protect_AttackLimitTotalFly']        = 'Nie możesz wysłać większej ilości flot na tego gracza!<br/>(%s)';
 $_Lang['fl3_Protect_AttackLimitSingleFly']       = 'Nie możesz wysłać większej ilości flot tą planetę/księżyc tego gracza!<br/>(%s)';
+$_Lang['fl3_Protect_AttackLimit_bash']           = 'Blokada Bashu';
+$_Lang['fl3_Protect_AttackLimit_farm']           = 'Ochrona słabszych graczy';
 
 $_Lang['fl_bad_mission']                         = 'Błędna misja !';
 $_Lang['fl_fleet_send']                          = 'Flota została wysłana';
