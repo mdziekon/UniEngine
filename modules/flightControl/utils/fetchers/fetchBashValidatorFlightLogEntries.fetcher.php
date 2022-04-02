@@ -22,6 +22,13 @@ function fetchBashValidatorFlightLogEntries($props) {
     ];
     $excludedDestructionReasonsStr = implode(', ', $excludedDestructionReasons);
 
+    $checkFleetMissions = [
+        strval(Flights\Enums\FleetMission::Attack),
+        strval(Flights\Enums\FleetMission::UnitedAttack),
+        strval(Flights\Enums\FleetMission::DestroyMoon),
+    ];
+    $checkFleetMissionsStr = implode(', ', $checkFleetMissions);
+
     $query = (
         "SELECT * " .
         "FROM {{table}} " .
@@ -29,8 +36,7 @@ function fetchBashValidatorFlightLogEntries($props) {
         "(`Fleet_Time_Start` + `Fleet_Time_ACSAdd`) >= {$logsRangeStart} AND " .
         "`Fleet_Owner` = {$attackerUserId} AND " .
         "`Fleet_End_Owner` = {$targetUserId} AND " .
-        // TODO: Use enum for this
-        "`Fleet_Mission` IN (1, 2, 9) AND " .
+        "`Fleet_Mission` IN ({$checkFleetMissionsStr}) AND " .
         "`Fleet_ReportID` > 0 AND " .
         "`Fleet_Destroyed_Reason` NOT IN ({$excludedDestructionReasonsStr}) " .
         ";"
