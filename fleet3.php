@@ -689,91 +689,28 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
                 }
             }
 
-            if(empty($Throw) AND ($DoFarmCheck === true OR $Protections['bashLimit_enabled'] === true))
-            {
-                if($DoFarmCheck === true)
-                {
-                    $TodayIs = explode('.', date('d.m.Y'));
-                    $TodayTimestamp = mktime(0, 0, 0, $TodayIs[1], $TodayIs[0], $TodayIs[2]);
-                    if($TodayTimestamp <= 0)
-                    {
-                        $TodayTimestamp = 0;
-                    }
-                    $BashTimestamps[] = array('type' => 'farm', 'key' => 'antifarm', 'stamp' => $TodayTimestamp);
-                }
-                if($Protections['bashLimit_enabled'] === true)
-                {
-                    $BashTimestamps[] = array('type' => 'bash', 'key' => 'bashLimit', 'stamp' => $Now - $Protections['bashLimit_interval']);
-                }
-                sort($BashTimestamps, SORT_ASC);
-                $BashTimestampMinVal = $BashTimestamps[0]['stamp'];
+            if (
+                empty($Throw) &&
+                (
+                    $DoFarmCheck === true ||
+                    $Protections['bashLimit_enabled'] === true
+                )
+            ) {
+                $bashLimitValidationResult = FlightControl\Utils\Validators\validateBashLimit([
+                    'isFarmCheckRequired' => $DoFarmCheck,
+                    'isBashCheckRequired' => $Protections['bashLimit_enabled'],
+                    'attackerUserId' => $_User['id'],
+                    'targetId' => $TargetData['id'],
+                    'targetUserId' => $TargetData['owner'],
+                    'fleetsInFlightToTargetCount' => $fleetsInFlightCounters['aggressiveFleetsInFlight']['byTargetOwnerId'][$TargetData['owner']],
+                    'fleetsInFlightToTargetOwnerCount' => $fleetsInFlightCounters['aggressiveFleetsInFlight']['byTargetId'][$TargetData['id']],
+                    'currentTimestamp' => $Now,
+                ]);
 
-                $excludedDestructionReasons = [
-                    strval(Flights\Enums\FleetDestructionReason::INBATTLE_FIRSTROUND_NODAMAGE),
-                    strval(Flights\Enums\FleetDestructionReason::DRAW_NOBASH),
-                    strval(Flights\Enums\FleetDestructionReason::INBATTLE_OTHERROUND_NODAMAGE),
-                ];
-                $excludedDestructionReasonsStr = implode(', ', $excludedDestructionReasons);
-
-                $SQLResult_GetFleetArchiveRecords = doquery(
-                    "SELECT * " .
-                    "FROM {{table}} " .
-                    "WHERE " .
-                    "(`Fleet_Time_Start` + `Fleet_Time_ACSAdd`) >= {$BashTimestampMinVal} AND " .
-                    "`Fleet_Owner` = {$_User['id']} AND " .
-                    "`Fleet_End_Owner` = {$TargetData['owner']} AND " .
-                    "`Fleet_Mission` IN (1, 2, 9) AND " .
-                    "`Fleet_ReportID` > 0 AND " .
-                    "`Fleet_Destroyed_Reason` NOT IN ({$excludedDestructionReasonsStr}) " .
-                    ";",
-                    'fleet_archive'
-                );
-
-                if($SQLResult_GetFleetArchiveRecords->num_rows > 0)
-                {
-                    while($ArchiveRecord = $SQLResult_GetFleetArchiveRecords->fetch_assoc())
-                    {
-                        foreach($BashTimestamps as $Values)
-                        {
-                            if(($ArchiveRecord['Fleet_Time_Start'] + $ArchiveRecord['Fleet_Time_ACSAdd']) >= $Values['stamp'])
-                            {
-                                $GetEndID = $ArchiveRecord['Fleet_End_ID'];
-                                if($ArchiveRecord['Fleet_End_ID_Changed'] > 0)
-                                {
-                                    $GetEndID = $ArchiveRecord['Fleet_End_ID_Changed'];
-                                }
-                                $SaveArchiveData[$Values['type']][$GetEndID] += 1;
-                            }
-                        }
-                    }
-                }
-
-                foreach($BashTimestamps as $Values)
-                {
-                    if(!empty($SaveArchiveData))
-                    {
-                        $FleetArchiveRecordsCount = array_sum($SaveArchiveData[$Values['type']]);
-                    }
-                    if($FleetArchiveRecordsCount >= $Protections[$Values['key'].'_counttotal'])
-                    {
-                        $Throw = sprintf($_Lang['fl3_Protect_AttackLimitTotal'], $_Lang['fl3_Protect_AttackLimit_'.$Values['key']]);
-                        break;
-                    }
-                    elseif(($FleetArchiveRecordsCount + $fleetsInFlightCounters['aggressiveFleetsInFlight']['byTargetOwnerId'][$TargetData['owner']]) >= $Protections[$Values['key'].'_counttotal'])
-                    {
-                        $Throw = sprintf($_Lang['fl3_Protect_AttackLimitTotalFly'], $_Lang['fl3_Protect_AttackLimit_'.$Values['key']]);
-                        break;
-                    }
-                    elseif($SaveArchiveData[$Values['type']][$TargetData['id']] >= $Protections[$Values['key'].'_countplanet'])
-                    {
-                        $Throw = sprintf($_Lang['fl3_Protect_AttackLimitSingle'], $_Lang['fl3_Protect_AttackLimit_'.$Values['key']]);
-                        break;
-                    }
-                    elseif(($SaveArchiveData[$Values['type']][$TargetData['id']] + $fleetsInFlightCounters['aggressiveFleetsInFlight']['byTargetId'][$TargetData['id']]) >= $Protections[$Values['key'].'_countplanet'])
-                    {
-                        $Throw = sprintf($_Lang['fl3_Protect_AttackLimitSingleFly'], $_Lang['fl3_Protect_AttackLimit_'.$Values['key']]);
-                        break;
-                    }
+                if (!$bashLimitValidationResult['isSuccess']) {
+                    $Throw = FlightControl\Utils\Errors\mapBashLimitValidationErrorToReadableMessage(
+                        $bashLimitValidationResult['error']
+                    );
                 }
             }
 

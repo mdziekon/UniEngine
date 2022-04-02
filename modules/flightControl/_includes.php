@@ -9,6 +9,7 @@ call_user_func(function () {
     include($includePath . './utils/factories/createAlertFiltersSearchParams.factory.php');
     include($includePath . './utils/factories/createFleetDevLogEntry.factory.php');
     include($includePath . './utils/fetchers/fetchActiveSmartFleetsBlockadeEntries.fetcher.php');
+    include($includePath . './utils/fetchers/fetchBashValidatorFlightLogEntries.fetcher.php');
     include($includePath . './utils/fetchers/fetchPlanetOwnerDetails.fetcher.php');
     include($includePath . './utils/helpers/getAvailableHoldTimes.helper.php');
     include($includePath . './utils/helpers/getAvailableSpeeds.helper.php');
@@ -18,11 +19,13 @@ call_user_func(function () {
     include($includePath . './utils/helpers/getUserExpeditionSlotsCount.helper.php');
     include($includePath . './utils/helpers/getUserFleetSlotsCount.helper.php');
     include($includePath . './utils/helpers/getValidMissionTypes.helper.php');
+    include($includePath . './utils/validators/bashLimit.validator.php');
     include($includePath . './utils/validators/fleetArray.validator.php');
     include($includePath . './utils/validators/joinUnion.validator.php');
     include($includePath . './utils/validators/missionHold.validator.php');
     include($includePath . './utils/validators/quantumGate.validator.php');
     include($includePath . './utils/validators/smartFleetsBlockadeState.validator.php');
+    include($includePath . './utils/errors/bashLimit.utils.php');
     include($includePath . './utils/errors/fleetArray.utils.php');
     include($includePath . './utils/errors/joinUnion.utils.php');
     include($includePath . './utils/errors/quantumGate.utils.php');
