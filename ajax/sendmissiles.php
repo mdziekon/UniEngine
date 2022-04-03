@@ -166,36 +166,22 @@ if($PlanetData['id_owner'] > 0)
         ]);
 
         if (!$noobProtectionValidationResult['isSuccess']) {
-            switch ($noobProtectionValidationResult['error']['code']) {
-                case 'ATTACKER_STATISTICS_UNAVAILABLE':
-                    CreateReturn('663');
-                    break;
-                case 'TARGET_STATISTICS_UNAVAILABLE':
-                    CreateReturn('662');
-                    break;
-                case 'ATTACKER_NOOBPROTECTION_ENDTIME_NOT_REACHED':
-                    CreateReturn('653');
-                    break;
-                case 'TARGET_NEVER_LOGGED_IN':
-                    CreateReturn('655');
-                    break;
-                case 'TARGET_NOOBPROTECTION_ENDTIME_NOT_REACHED':
-                    CreateReturn('654');
-                    break;
-                case 'ATTACKER_NOOBPROTECTION_BASIC_LIMIT_NOT_REACHED':
-                    CreateReturn('657');
-                    break;
-                case 'TARGET_NOOBPROTECTION_BASIC_LIMIT_NOT_REACHED':
-                    // TODO: This should have a separate error message
-                    CreateReturn('656');
-                    break;
-                case 'TARGET_NOOBPROTECTION_TOO_WEAK_BY_MULTIPLIER':
-                    CreateReturn('656');
-                    break;
-                case 'ATTACKER_NOOBPROTECTION_TOO_WEAK_BY_MULTIPLIER':
-                    CreateReturn('658');
-                    break;
-            }
+            $mapNoobProtectionErrorsToAjaxErrorCodes = [
+                'ATTACKER_STATISTICS_UNAVAILABLE'                   => '663',
+                'TARGET_STATISTICS_UNAVAILABLE'                     => '662',
+                'ATTACKER_NOOBPROTECTION_ENDTIME_NOT_REACHED'       => '653',
+                'TARGET_NEVER_LOGGED_IN'                            => '655',
+                'TARGET_NOOBPROTECTION_ENDTIME_NOT_REACHED'         => '654',
+                'ATTACKER_NOOBPROTECTION_BASIC_LIMIT_NOT_REACHED'   => '657',
+                // TODO: This should have a separate error message
+                'TARGET_NOOBPROTECTION_BASIC_LIMIT_NOT_REACHED'     => '656',
+                'TARGET_NOOBPROTECTION_TOO_WEAK_BY_MULTIPLIER'      => '656',
+                'ATTACKER_NOOBPROTECTION_TOO_WEAK_BY_MULTIPLIER'    => '658',
+            ];
+
+            $errorCode = $noobProtectionValidationResult['error']['code'];
+
+            CreateReturn($mapNoobProtectionErrorsToAjaxErrorCodes[$errorCode]);
         }
     }
     if((CheckAuth('supportadmin') OR CheckAuth('supportadmin', AUTHCHECK_NORMAL, $HeDBRec)) AND $adminprotection == 1)
