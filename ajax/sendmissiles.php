@@ -156,54 +156,32 @@ if($PlanetData['id_owner'] > 0)
     }
     $HeGameLevel = $HeDBRec['total_points'];
 
-    if($protection == 1)
-    {
-        if($_User['total_rank'] < 1)
-        {
-            CreateReturn('663');
-        }
-        if($HeDBRec['total_rank'] < 1)
-        {
-            CreateReturn('662');
-        }
+    if ($protection == 1) {
+        $noobProtectionValidationResult = FlightControl\Utils\Validators\validateNoobProtection([
+            'attackerUser' => $_User,
+            'attackerStats' => $MyGameLevel,
+            'targetUser' => $HeDBRec,
+            'targetStats' => $HeGameLevel,
+            'currentTimestamp' => $Now,
+        ]);
 
-        if($_User['NoobProtection_EndTime'] > $Now)
-        {
-            CreateReturn('653');
-        }
-        else if($HeDBRec['first_login'] == 0)
-        {
-            CreateReturn('655');
-        }
-        else if($HeDBRec['NoobProtection_EndTime'] > $Now)
-        {
-            CreateReturn('654');
-        }
+        if (!$noobProtectionValidationResult['isSuccess']) {
+            $mapNoobProtectionErrorsToAjaxErrorCodes = [
+                'ATTACKER_STATISTICS_UNAVAILABLE'                   => '663',
+                'TARGET_STATISTICS_UNAVAILABLE'                     => '662',
+                'ATTACKER_NOOBPROTECTION_ENDTIME_NOT_REACHED'       => '653',
+                'TARGET_NEVER_LOGGED_IN'                            => '655',
+                'TARGET_NOOBPROTECTION_ENDTIME_NOT_REACHED'         => '654',
+                'ATTACKER_NOOBPROTECTION_BASIC_LIMIT_NOT_REACHED'   => '657',
+                // TODO: This should have a separate error message
+                'TARGET_NOOBPROTECTION_BASIC_LIMIT_NOT_REACHED'     => '656',
+                'TARGET_NOOBPROTECTION_TOO_WEAK_BY_MULTIPLIER'      => '656',
+                'ATTACKER_NOOBPROTECTION_TOO_WEAK_BY_MULTIPLIER'    => '658',
+            ];
 
-        if($HeDBRec['onlinetime'] >= ($Now - (TIME_DAY * $noIdleProtect)))
-        {
-            if($HeGameLevel < ($protectiontime * 1000))
-            {
-                CreateReturn('656');
-            }
-            else if($MyGameLevel < ($protectiontime * 1000))
-            {
-                CreateReturn('657');
-            }
-            else
-            {
-                if($MyGameLevel < ($noNoobProtect * 1000) OR $HeGameLevel < ($noNoobProtect * 1000))
-                {
-                    if(($MyGameLevel > ($HeGameLevel * $protectionmulti)))
-                    {
-                        CreateReturn('656');
-                    }
-                    else if(($MyGameLevel * $protectionmulti) < $HeGameLevel)
-                    {
-                        CreateReturn('658');
-                    }
-                }
-            }
+            $errorCode = $noobProtectionValidationResult['error']['code'];
+
+            CreateReturn($mapNoobProtectionErrorsToAjaxErrorCodes[$errorCode]);
         }
     }
     if((CheckAuth('supportadmin') OR CheckAuth('supportadmin', AUTHCHECK_NORMAL, $HeDBRec)) AND $adminprotection == 1)

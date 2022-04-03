@@ -606,74 +606,22 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
     if($Protections['enable'])
     {
         $Throw = false;
-        $DoFarmCheck = false;
-        if(in_array($Fleet['Mission'], $Protections['mtypes']))
-        {
-            if($_User['total_rank'] >= 1)
-            {
-                if($TargetData['total_rank'] >= 1)
-                {
-                    if($_User['NoobProtection_EndTime'] > $Now)
-                    {
-                        $Throw = sprintf($_Lang['fl3_ProtectNewTimeYou'], pretty_time($_User['NoobProtection_EndTime'] - $Now));
-                    }
-                    else if($TargetData['first_login'] == 0)
-                    {
-                        $Throw = $_Lang['fl3_ProtectNewTimeHe2'];
-                    }
-                    else if($TargetData['NoobProtection_EndTime'] > $Now)
-                    {
-                        $Throw = sprintf($_Lang['fl3_ProtectNewTimeHe'], pretty_time($TargetData['NoobProtection_EndTime'] - $Now));
-                    }
 
-                    if($Throw === false)
-                    {
-                        if($StatsData['mine'] >= $Protections['basicLimit'])
-                        {
-                            if($TargetData['onlinetime'] >= ($Now - $Protections['idleTime']))
-                            {
-                                if($StatsData['his'] < $Protections['basicLimit'])
-                                {
-                                    $Throw = sprintf($_Lang['fl3_ProtectHIWeak'], prettyNumber($Protections['basicLimit']));
-                                }
-                                else
-                                {
-                                    if($StatsData['his'] < $Protections['weakLimit'] OR $StatsData['mine'] < $Protections['weakLimit'])
-                                    {
-                                        if($StatsData['mine'] > ($StatsData['his'] * $Protections['weakMulti']))
-                                        {
-                                            $Throw = sprintf($_Lang['fl3_ProtectUR2Strong'], prettyNumber($Protections['weakMulti']));
-                                        }
-                                        elseif(($StatsData['mine'] * $Protections['weakMulti']) < $StatsData['his'])
-                                        {
-                                            $Throw = sprintf($_Lang['fl3_ProtectHI2Strong'], prettyNumber($Protections['weakMulti']));
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if($Protections['antifarm_enabled'] == true AND ($StatsData['mine'] / $StatsData['his']) >= $Protections['antifarm_rate'])
-                                        {
-                                            $DoFarmCheck = true;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            $Throw = sprintf($_Lang['fl3_ProtectURWeak'], prettyNumber($Protections['basicLimit']));
-                        }
-                    }
-                }
-                else
-                {
-                    $Throw = $_Lang['fl3_ProtectHIStatNotCalc'];
-                }
+        if (in_array($Fleet['Mission'], $Protections['mtypes'])) {
+            $noobProtectionValidationResult = FlightControl\Utils\Validators\validateNoobProtection([
+                'attackerUser' => $_User,
+                'attackerStats' => $StatsData['mine'],
+                'targetUser' => $TargetData,
+                'targetStats' => $StatsData['his'],
+                'currentTimestamp' => $Now,
+            ]);
+
+            if (!$noobProtectionValidationResult['isSuccess']) {
+                $Throw = FlightControl\Utils\Errors\mapNoobProtectionValidationErrorToReadableMessage(
+                    $noobProtectionValidationResult['error']
+                );
             }
-            else
-            {
-                $Throw = $_Lang['fl3_ProtectURStatNotCalc'];
-            }
+
             if($Protections['adminEnable'])
             {
                 if(CheckAuth('supportadmin') OR CheckAuth('supportadmin', AUTHCHECK_NORMAL, $TargetData))
@@ -689,15 +637,22 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
                 }
             }
 
+            $isFarmCheckRequired = (
+                $noobProtectionValidationResult['isSuccess'] &&
+                !($noobProtectionValidationResult['payload']['isTargetIdle']) &&
+                $Protections['antifarm_enabled'] == true &&
+                ($StatsData['mine'] / $StatsData['his']) >= $Protections['antifarm_rate']
+            );
+
             if (
                 empty($Throw) &&
                 (
-                    $DoFarmCheck === true ||
+                    $isFarmCheckRequired ||
                     $Protections['bashLimit_enabled'] === true
                 )
             ) {
                 $bashLimitValidationResult = FlightControl\Utils\Validators\validateBashLimit([
-                    'isFarmCheckRequired' => $DoFarmCheck,
+                    'isFarmCheckRequired' => $isFarmCheckRequired,
                     'isBashCheckRequired' => $Protections['bashLimit_enabled'],
                     'attackerUserId' => $_User['id'],
                     'targetId' => $TargetData['id'],
