@@ -55,22 +55,13 @@ $Fleet['ACS_ID'] = isset($_POST['acs_id']) ? floor(floatval($_POST['acs_id'])) :
 $Fleet['Mission'] = isset($_POST['mission']) ? intval($_POST['mission']) : 0;
 
 $Protections['enable'] = (bool) $_GameConfig['noobprotection'];
-$Protections['basicLimit'] = $_GameConfig['noobprotectiontime'] * 1000;
-$Protections['weakMulti'] = $_GameConfig['noobprotectionmulti'];
 $Protections['adminEnable'] = (bool) $_GameConfig['adminprotection'];
 $Protections['ally'] = $_GameConfig['allyprotection'];
-$Protections['weakLimit'] = $_GameConfig['no_noob_protect'] * 1000;
 $Protections['idleTime'] = $_GameConfig['no_idle_protect'] * TIME_DAY;
 $Protections['mtypes'] = array(1, 2, 6, 9);
-$Protections['newTime'] = $_GameConfig['Protection_NewPlayerTime'];
 $Protections['antifarm_enabled'] = (bool) $_GameConfig['Protection_AntiFarmEnabled'];
 $Protections['antifarm_rate'] = $_GameConfig['Protection_AntiFarmRate'];
-$Protections['antifarm_counttotal'] = $_GameConfig['Protection_AntiFarmCountTotal'];
-$Protections['antifarm_countplanet'] = $_GameConfig['Protection_AntiFarmCountPlanet'];
 $Protections['bashLimit_enabled'] = (bool) $_GameConfig['Protection_BashLimitEnabled'];
-$Protections['bashLimit_interval'] = $_GameConfig['Protection_BashLimitInterval'];
-$Protections['bashLimit_counttotal'] = $_GameConfig['Protection_BashLimitCountTotal'];
-$Protections['bashLimit_countplanet'] = $_GameConfig['Protection_BashLimitCountPlanet'];
 
 if (!isUserAccountActivated($_User)) {
     messageRed($_Lang['fl3_BlockAccNotActivated'], $ErrorTitle);
