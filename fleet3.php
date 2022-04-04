@@ -889,15 +889,9 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
     }
 }
 
-if(!isset($LockFleetSending))
-{
-    $FleetArray = array();
-    foreach($Fleet['array'] as $ShipID => $ShipCount)
-    {
-        $FleetArray[] = "{$ShipID},{$ShipCount}";
-    }
+if (!isset($LockFleetSending)) {
     $FleetArrayCopy = $Fleet['array'];
-    $Fleet['array'] = implode(';', $FleetArray);
+    $Fleet['array'] = Array2String($Fleet['array']);
 
     if(empty($TargetData['id']))
     {
