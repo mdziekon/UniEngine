@@ -224,31 +224,34 @@ if (!$smartFleetsBlockadeStateValidationResult['isValid']) {
     CreateReturn('626');
 }
 
-$CreateMIPAttack = '';
-$CreateMIPAttack .= "INSERT INTO {{table}} SET ";
-$CreateMIPAttack .= "`fleet_owner` = {$_User['id']}, ";
-$CreateMIPAttack .= "`fleet_mission` = {$Mission}, ";
-$CreateMIPAttack .= "`fleet_amount` = {$Missiles}, ";
-$CreateMIPAttack .= "`fleet_array` = '503,{$Missiles};primary_target,{$PrimTarget}', ";
-$CreateMIPAttack .= "`fleet_start_time` = (UNIX_TIMESTAMP() + {$FlightTime}), ";
-$CreateMIPAttack .= "`fleet_start_id` = {$_Planet['id']}, ";
-$CreateMIPAttack .= "`fleet_start_galaxy` = {$_Planet['galaxy']}, ";
-$CreateMIPAttack .= "`fleet_start_system` = {$_Planet['system']}, ";
-$CreateMIPAttack .= "`fleet_start_planet` = {$_Planet['planet']}, ";
-$CreateMIPAttack .= "`fleet_start_type` = 1, ";
-$CreateMIPAttack .= "`fleet_end_time` = (UNIX_TIMESTAMP() + {$FlightTime}), ";
-$CreateMIPAttack .= "`fleet_end_id` = {$PlanetData['id']}, ";
-$CreateMIPAttack .= "`fleet_end_id_galaxy` = {$PlanetData['galaxy_id']}, ";
-$CreateMIPAttack .= "`fleet_end_galaxy` = {$Galaxy}, ";
-$CreateMIPAttack .= "`fleet_end_system` = {$System}, ";
-$CreateMIPAttack .= "`fleet_end_planet` = {$Planet}, ";
-$CreateMIPAttack .= "`fleet_end_type` = 1, ";
-$CreateMIPAttack .= "`fleet_target_owner` = '{$PlanetData['id_owner']}', ";
-$CreateMIPAttack .= "`fleet_send_time` = UNIX_TIMESTAMP();";
-doquery($CreateMIPAttack, 'fleets');
-
-$LastFleetID = doquery("SELECT LAST_INSERT_ID() as `id`;", '', true);
-$LastFleetID = $LastFleetID['id'];
+$LastFleetID = FlightControl\Utils\Updaters\insertFleetEntry([
+    'ownerUser' => $_User,
+    'ownerPlanet' => $_Planet,
+    'fleetEntry' => [
+        'Mission' => $Mission,
+        'count' => $Missiles,
+        'array' => [
+            '503' => $Missiles,
+            'primary_target' => $PrimTarget,
+        ],
+        'SetCalcTime' => ($Now + $FlightTime),
+        'SetStayTime' => '0',
+        'SetBackTime' => ($Now + $FlightTime),
+        'resources' => [
+            'metal' => '0',
+            'crystal' => '0',
+            'deuterium' => '0',
+        ],
+    ],
+    'targetPlanet' => $PlanetData,
+    'targetCoords' => [
+        'galaxy' => $Galaxy,
+        'system' => $System,
+        'planet' => $Planet,
+        'type' => "1",
+    ],
+    'currentTime' => $Now,
+]);
 
 doquery("UPDATE {{table}} SET `interplanetary_missile` = `interplanetary_missile` - {$Missiles} WHERE `id` = {$_Planet['id']};", 'planets');
 
