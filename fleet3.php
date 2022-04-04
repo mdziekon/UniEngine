@@ -890,6 +890,15 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
 }
 
 if (!isset($LockFleetSending)) {
+    $LastFleetID = FlightControl\Utils\Updaters\insertFleetEntry([
+        'ownerUser' => $_User,
+        'ownerPlanet' => $_Planet,
+        'fleetEntry' => $Fleet,
+        'targetPlanet' => $TargetData,
+        'targetCoords' => $Target,
+        'currentTime' => $Now,
+    ]);
+
     $FleetArrayCopy = $Fleet['array'];
     $Fleet['array'] = Array2String($Fleet['array']);
 
@@ -905,36 +914,6 @@ if (!isset($LockFleetSending)) {
     {
         $TargetData['galaxy_id'] = '0';
     }
-
-    $Query_Insert = '';
-    $Query_Insert .= "INSERT INTO {{table}} SET ";
-    $Query_Insert .= "`fleet_owner` = {$_User['id']}, ";
-    $Query_Insert .= "`fleet_mission` = {$Fleet['Mission']}, ";
-    $Query_Insert .= "`fleet_amount` = {$Fleet['count']}, ";
-    $Query_Insert .= "`fleet_array` = '{$Fleet['array']}', ";
-    $Query_Insert .= "`fleet_start_time` = {$Fleet['SetCalcTime']}, ";
-    $Query_Insert .= "`fleet_start_id` = {$_Planet['id']}, ";
-    $Query_Insert .= "`fleet_start_galaxy` = {$_Planet['galaxy']}, ";
-    $Query_Insert .= "`fleet_start_system` = {$_Planet['system']}, ";
-    $Query_Insert .= "`fleet_start_planet` = {$_Planet['planet']}, ";
-    $Query_Insert .= "`fleet_start_type` = {$_Planet['planet_type']}, ";
-    $Query_Insert .= "`fleet_end_time` = {$Fleet['SetBackTime']}, ";
-    $Query_Insert .= "`fleet_end_id` = {$TargetData['id']}, ";
-    $Query_Insert .= "`fleet_end_id_galaxy` = {$TargetData['galaxy_id']}, ";
-    $Query_Insert .= "`fleet_end_stay` = {$Fleet['SetStayTime']}, ";
-    $Query_Insert .= "`fleet_end_galaxy` = {$Target['galaxy']}, ";
-    $Query_Insert .= "`fleet_end_system` = {$Target['system']}, ";
-    $Query_Insert .= "`fleet_end_planet` = {$Target['planet']}, ";
-    $Query_Insert .= "`fleet_end_type` = {$Target['type']}, ";
-    $Query_Insert .= "`fleet_resource_metal` = {$Fleet['resources']['metal']}, ";
-    $Query_Insert .= "`fleet_resource_crystal` = {$Fleet['resources']['crystal']}, ";
-    $Query_Insert .= "`fleet_resource_deuterium` = {$Fleet['resources']['deuterium']}, ";
-    $Query_Insert .= "`fleet_target_owner` = '{$TargetData['owner']}', ";
-    $Query_Insert .= "`fleet_send_time` = {$Now};";
-    doquery($Query_Insert, 'fleets');
-
-    $LastFleetID = doquery("SELECT LAST_INSERT_ID() as `id`;", '', true);
-    $LastFleetID = $LastFleetID['id'];
 
     // PushAlert
     if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
