@@ -62,12 +62,6 @@ $Fleet['Mission'] = isset($_POST['mission']) ? intval($_POST['mission']) : 0;
 $Protections['adminEnable'] = (bool) $_GameConfig['adminprotection'];
 $Protections['ally'] = $_GameConfig['allyprotection'];
 $Protections['idleTime'] = $_GameConfig['no_idle_protect'] * TIME_DAY;
-$Protections['mtypes'] = [
-    1,
-    2,
-    6,
-    9,
-];
 $Protections['antifarm_enabled'] = (bool) $_GameConfig['Protection_AntiFarmEnabled'];
 $Protections['antifarm_rate'] = $_GameConfig['Protection_AntiFarmRate'];
 $Protections['bashLimit_enabled'] = (bool) $_GameConfig['Protection_BashLimitEnabled'];
@@ -592,8 +586,7 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
     {
         if($_User['ally_id'] > 0 AND $_User['ally_id'] == $TargetData['ally_id'])
         {
-            if(in_array($Fleet['Mission'], $Protections['mtypes']))
-            {
+            if (FlightControl\Utils\Helpers\isMissionNoobProtectionChecked($Fleet['Mission'])) {
                 if($SaveMyTotalRank !== false)
                 {
                     $_User['total_rank'] = $SaveMyTotalRank;
@@ -606,7 +599,7 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
     if (FlightControl\Utils\Helpers\isNoobProtectionEnabled()) {
         $Throw = false;
 
-        if (in_array($Fleet['Mission'], $Protections['mtypes'])) {
+        if (FlightControl\Utils\Helpers\isMissionNoobProtectionChecked($Fleet['Mission'])) {
             $noobProtectionValidationResult = FlightControl\Utils\Validators\validateNoobProtection([
                 'attackerUser' => $_User,
                 'attackerStats' => $StatsData['mine'],
