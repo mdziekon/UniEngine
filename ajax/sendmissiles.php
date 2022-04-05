@@ -248,7 +248,7 @@ $targetCoords = [
     'type' => "1",
 ];
 
-$LastFleetID = FlightControl\Utils\Updaters\insertFleetEntry([
+$createdFleetId = FlightControl\Utils\Updaters\insertFleetEntry([
     'ownerUser' => $_User,
     'ownerPlanet' => $_Planet,
     'fleetEntry' => $fleetEntry,
@@ -260,7 +260,7 @@ $LastFleetID = FlightControl\Utils\Updaters\insertFleetEntry([
 doquery("UPDATE {{table}} SET `interplanetary_missile` = `interplanetary_missile` - {$Missiles} WHERE `id` = {$_Planet['id']};", 'planets');
 
 FlightControl\Utils\Updaters\insertFleetArchiveEntry([
-    'fleetEntryId' => $LastFleetID,
+    'fleetEntryId' => $createdFleetId,
     'ownerUser' => $_User,
     'ownerPlanet' => $_Planet,
     'fleetEntry' => $fleetEntry,
@@ -276,7 +276,7 @@ FlightControl\Utils\Updaters\insertFleetArchiveEntry([
 ]);
 
 // User Development Log
-$UserDev_Log[] = array('PlanetID' => $_Planet['id'], 'Date' => $Now, 'Place' => 11, 'Code' => '0', 'ElementID' => $LastFleetID, 'AdditionalData' => 'R,'.$Missiles);
+$UserDev_Log[] = array('PlanetID' => $_Planet['id'], 'Date' => $Now, 'Place' => 11, 'Code' => '0', 'ElementID' => $createdFleetId, 'AdditionalData' => 'R,'.$Missiles);
 // ---
 
 $FlyingFleets += 1;
