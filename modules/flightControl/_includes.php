@@ -19,6 +19,8 @@ call_user_func(function () {
     include($includePath . './utils/helpers/getUserExpeditionSlotsCount.helper.php');
     include($includePath . './utils/helpers/getUserFleetSlotsCount.helper.php');
     include($includePath . './utils/helpers/getValidMissionTypes.helper.php');
+    include($includePath . './utils/updaters/fleetArchiveACSEntries.updaters.php');
+    include($includePath . './utils/updaters/fleetArchiveEntryPersist.updaters.php');
     include($includePath . './utils/updaters/fleetPersist.updaters.php');
     include($includePath . './utils/validators/bashLimit.validator.php');
     include($includePath . './utils/validators/fleetArray.validator.php');
