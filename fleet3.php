@@ -48,7 +48,11 @@ $Target['planet'] = intval($_POST['planet']);
 $Target['type'] = intval($_POST['planettype']);
 $Fleet['Speed'] = floatval($_POST['speed']);
 $Fleet['UseQuantum'] = (isset($_POST['usequantumgate']) && $_POST['usequantumgate'] == 'on' ? true : false);
-$Fleet['resources'] = array('metal' => $_POST['resource1'], 'crystal' => $_POST['resource2'], 'deuterium' => $_POST['resource3']);
+$Fleet['resources'] = [
+    'metal' => $_POST['resource1'],
+    'crystal' => $_POST['resource2'],
+    'deuterium' => $_POST['resource3'],
+];
 $Fleet['ExpeTime'] = intval($_POST['expeditiontime']);
 $Fleet['HoldTime'] = intval($_POST['holdingtime']);
 $Fleet['ACS_ID'] = isset($_POST['acs_id']) ? floor(floatval($_POST['acs_id'])) : 0;
@@ -58,7 +62,12 @@ $Protections['enable'] = (bool) $_GameConfig['noobprotection'];
 $Protections['adminEnable'] = (bool) $_GameConfig['adminprotection'];
 $Protections['ally'] = $_GameConfig['allyprotection'];
 $Protections['idleTime'] = $_GameConfig['no_idle_protect'] * TIME_DAY;
-$Protections['mtypes'] = array(1, 2, 6, 9);
+$Protections['mtypes'] = [
+    1,
+    2,
+    6,
+    9,
+];
 $Protections['antifarm_enabled'] = (bool) $_GameConfig['Protection_AntiFarmEnabled'];
 $Protections['antifarm_rate'] = $_GameConfig['Protection_AntiFarmRate'];
 $Protections['bashLimit_enabled'] = (bool) $_GameConfig['Protection_BashLimitEnabled'];
@@ -277,7 +286,7 @@ $Fleet['FuelStorage'] = 0;
 $Fleet['TotalResStorage'] = 0;
 
 $Fleet['array'] = String2Array($_POST['FleetArray']);
-$FleetArray = array();
+$FleetArray = [];
 
 if (
     !empty($Fleet['array']) &&
@@ -818,12 +827,11 @@ $IPIntersectionNow = 'false';
 if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
 {
     include($_EnginePath.'includes/functions/AlertSystemUtilities.php');
-    $CheckIntersection = AlertUtils_IPIntersect($_User['id'], $TargetData['owner'], array
-    (
+    $CheckIntersection = AlertUtils_IPIntersect($_User['id'], $TargetData['owner'], [
         'LastTimeDiff' => (TIME_DAY * 30),
         'ThisTimeDiff' => (TIME_DAY * 30),
         'ThisTimeStamp' => ($Now - SERVER_MAINOPEN_TSTAMP)
-    ));
+    ]);
     if($CheckIntersection !== false)
     {
         $IPIntersectionFound = 'true';
@@ -947,25 +955,29 @@ if (!isset($LockFleetSending)) {
                         }
                         else if($OwnerIsAlliedUser === true)
                         {
-                            $_Alert['PushAlert']['Data']['AllyPact'] = array
-                            (
+                            $_Alert['PushAlert']['Data']['AllyPact'] = [
                                 'SenderAlly' => $_User['ally_id'],
                                 'TargetAlly' => $TargetData['ally_id'],
-                            );
+                            ];
                         }
                         if($OwnerIsBuddyFriend === true)
                         {
                             $_Alert['PushAlert']['Data']['BuddyFriends'] = true;
                         }
                         $_Alert['PushAlert']['Data']['FleetID'] = $LastFleetID;
-                        $_Alert['PushAlert']['Data']['Stats']['Sender'] = array('Points' => $StatsData['mine'], 'Position' => $_User['total_rank']);
-                        $_Alert['PushAlert']['Data']['Stats']['Target'] = array('Points' => $StatsData['his'], 'Position' => $TargetData['total_rank']);
-                        $_Alert['PushAlert']['Data']['Resources'] = array
-                        (
+                        $_Alert['PushAlert']['Data']['Stats']['Sender'] = [
+                            'Points' => $StatsData['mine'],
+                            'Position' => $_User['total_rank'],
+                        ];
+                        $_Alert['PushAlert']['Data']['Stats']['Target'] = [
+                            'Points' => $StatsData['his'],
+                            'Position' => $TargetData['total_rank'],
+                        ];
+                        $_Alert['PushAlert']['Data']['Resources'] = [
                             'Metal' => floatval($Fleet['resources']['metal']),
                             'Crystal' => floatval($Fleet['resources']['crystal']),
-                            'Deuterium' => floatval($Fleet['resources']['deuterium'])
-                        );
+                            'Deuterium' => floatval($Fleet['resources']['deuterium']),
+                        ];
 
                         Alerts_Add(1, $Now, 5, 4, 5, $_User['id'], $_Alert['PushAlert']['Data']);
                     }
@@ -986,12 +998,11 @@ if($SendAlert)
     $_Alert['MultiAlert']['Data']['TargetUserID'] = $TargetData['owner'];
     foreach($CheckIntersection['Intersect'] as $ThisIPID)
     {
-        $_Alert['MultiAlert']['Data']['Intersect'][] = array
-        (
+        $_Alert['MultiAlert']['Data']['Intersect'][] = [
             'IPID' => $ThisIPID,
             'SenderData' => $CheckIntersection['IPLogData'][$_User['id']][$ThisIPID],
-            'TargetData' => $CheckIntersection['IPLogData'][$TargetData['owner']][$ThisIPID]
-        );
+            'TargetData' => $CheckIntersection['IPLogData'][$TargetData['owner']][$ThisIPID],
+        ];
     }
     if($DeclarationID > 0)
     {
