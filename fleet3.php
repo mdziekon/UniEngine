@@ -8,6 +8,7 @@ include($_EnginePath.'common.php');
 
 include($_EnginePath . 'modules/flightControl/_includes.php');
 
+use UniEngine\Engine\Includes\Helpers\Common\Collections;
 use UniEngine\Engine\Modules\FlightControl;
 use UniEngine\Engine\Modules\Flights;
 
@@ -821,9 +822,9 @@ if($isUsingQuantumGate AND $quantumGateUseType == 2)
 
 // MultiAlert System
 $SendAlert = false;
-$IPIntersectionFound = 'false';
-$IPIntersectionFiltred = 'false';
-$IPIntersectionNow = 'false';
+$IPIntersectionFound = false;
+$IPIntersectionFiltered = false;
+$IPIntersectionNow = false;
 if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
 {
     include($_EnginePath.'includes/functions/AlertSystemUtilities.php');
@@ -834,10 +835,10 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
     ]);
     if($CheckIntersection !== false)
     {
-        $IPIntersectionFound = 'true';
+        $IPIntersectionFound = true;
         if($_User['user_lastip'] == $TargetData['lastip'])
         {
-            $IPIntersectionNow = 'true';
+            $IPIntersectionNow = true;
         }
 
         if($_User['multiIP_DeclarationID'] > 0 AND $_User['multiIP_DeclarationID'] == $TargetData['multiIP_DeclarationID'])
@@ -863,7 +864,7 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
 
         if($FilterResult['FilterUsed'])
         {
-            $IPIntersectionFiltred = 'true';
+            $IPIntersectionFiltered = true;
         }
         if(!$FilterResult['SendAlert'])
         {
@@ -888,18 +889,17 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
     }
 }
 
+$rawTargetData = $TargetData;
+
 if (!isset($LockFleetSending)) {
     $LastFleetID = FlightControl\Utils\Updaters\insertFleetEntry([
         'ownerUser' => $_User,
         'ownerPlanet' => $_Planet,
         'fleetEntry' => $Fleet,
-        'targetPlanet' => $TargetData,
+        'targetPlanet' => $rawTargetData,
         'targetCoords' => $Target,
         'currentTime' => $Now,
     ]);
-
-    $FleetArrayCopy = $Fleet['array'];
-    $Fleet['array'] = Array2String($Fleet['array']);
 
     if(empty($TargetData['id']))
     {
@@ -1077,45 +1077,42 @@ if(isset($UpdateACS))
     }
 }
 
-if($isUsingQuantumGate)
-{
-    $QuantumGate_Used = '1';
-}
-else
-{
-    $QuantumGate_Used = '0';
-}
-$QryArchive = '';
-$QryArchive .= "INSERT INTO {{table}} (`Fleet_ID`, `Fleet_Owner`, `Fleet_Mission`, `Fleet_Array`, `Fleet_Time_Send`, `Fleet_Time_Start`, `Fleet_Time_Stay`, `Fleet_Time_End`, `Fleet_Start_ID`, `Fleet_Start_Galaxy`, `Fleet_Start_System`, `Fleet_Start_Planet`, `Fleet_Start_Type`, `Fleet_Start_Res_Metal`, `Fleet_Start_Res_Crystal`, `Fleet_Start_Res_Deuterium`, `Fleet_End_ID`, `Fleet_End_ID_Galaxy`, `Fleet_End_Galaxy`, `Fleet_End_System`, `Fleet_End_Planet`, `Fleet_End_Type`, `Fleet_End_Owner`, `Fleet_ACSID`, `Fleet_Info_HadSameIP_Ever`, `Fleet_Info_HadSameIP_Ever_Filtred`, `Fleet_Info_HadSameIP_OnSend`, `Fleet_Info_UsedTeleport`) VALUES ";
-$QryArchive .= " ({$LastFleetID}, {$_User['id']}, {$Fleet['Mission']}, '{$Fleet['array']}', {$Now}, {$Fleet['SetCalcTime']}, {$Fleet['SetStayTime']}, {$Fleet['SetBackTime']}, {$_Planet['id']}, {$_Planet['galaxy']}, {$_Planet['system']}, {$_Planet['planet']}, {$_Planet['planet_type']}, {$Fleet['resources']['metal']}, {$Fleet['resources']['crystal']}, {$Fleet['resources']['deuterium']}, '{$TargetData['id']}', '{$TargetData['galaxy_id']}', {$Target['galaxy']}, {$Target['system']}, {$Target['planet']}, {$Target['type']}, '{$TargetData['owner']}', '{$Fleet['ACS_ID']}', {$IPIntersectionFound}, {$IPIntersectionFiltred}, {$IPIntersectionNow}, {$QuantumGate_Used}) ";
+FlightControl\Utils\Updaters\insertFleetArchiveEntry([
+    'fleetEntryId' => $LastFleetID,
+    'ownerUser' => $_User,
+    'ownerPlanet' => $_Planet,
+    'fleetEntry' => $Fleet,
+    'targetPlanet' => $rawTargetData,
+    'targetCoords' => $Target,
+    'flags' => [
+        'hasIpIntersection' => $IPIntersectionFound,
+        'hasIpIntersectionFiltered' => $IPIntersectionFiltered,
+        'hasIpIntersectionOnSend' => $IPIntersectionNow,
+        'hasUsedTeleportation' => $isUsingQuantumGate,
+    ],
+    'currentTime' => $Now,
+]);
 
-if(!empty($UpdateACSFleets))
-{
+if (!empty($UpdateACSFleets)) {
     $UpdateACSFleetsIDs = explode(',', str_replace('|', '', $CheckACS['fleets_id']));
     $UpdateACSFleetsIDs[] = $CheckACS['main_fleet_id'];
-    if(!empty($UpdateACSFleetsIDs))
-    {
-        $QryArchive .= ', ';
-        foreach($UpdateACSFleetsIDs as $FleetID)
-        {
-            if(!empty($FleetID))
-            {
-                $QryArchiveA[] = "({$FleetID}, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)";
-            }
-        }
-        $QryArchive .= implode(', ',$QryArchiveA);
-        $QryArchive .= " ON DUPLICATE KEY UPDATE ";
-        $QryArchive .= "`Fleet_Time_ACSAdd` = `Fleet_Time_ACSAdd` + {$Difference}";
+
+    $UpdateACSFleetsIDs = Collections\compact($UpdateACSFleetsIDs);
+
+    if (!empty($UpdateACSFleetsIDs)) {
+        FlightControl\Utils\Updaters\updateFleetArchiveACSEntries([
+            'fleetIds' => $UpdateACSFleetsIDs,
+            'flightAdditionalTime' => $Difference,
+        ]);
     }
 }
-doquery($QryArchive, 'fleet_archive');
 
 $_Planet['metal'] -= $Fleet['resources']['metal'];
 $_Planet['crystal'] -= $Fleet['resources']['crystal'];
 $_Planet['deuterium'] -= ($Fleet['resources']['deuterium'] + $Consumption);
 
 $_Lang['ShipsRows'] = '';
-foreach($FleetArrayCopy as $ShipID => $ShipCount)
+foreach($Fleet['array'] as $ShipID => $ShipCount)
 {
     $_Planet[$_Vars_GameElements[$ShipID]] -= $ShipCount;
     $_Lang['ShipsRows'] .= '<tr><th class="pad">'.$_Lang['tech'][$ShipID].'</th><th class="pad">'.prettyNumber($ShipCount).'</th></tr>';
@@ -1144,6 +1141,8 @@ $QryUpdatePlanet .= "`id` = {$_Planet['id']};";
 doquery('LOCK TABLE {{table}} WRITE', 'planets');
 doquery($QryUpdatePlanet, 'planets');
 doquery('UNLOCK TABLES', '');
+
+$Fleet['array'] = Array2String($Fleet['array']);
 
 $UserDev_Log[] = FlightControl\Utils\Factories\createFleetDevLogEntry([
     'currentPlanet' => &$_Planet,
