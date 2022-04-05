@@ -251,27 +251,44 @@ $LastFleetID = FlightControl\Utils\Updaters\insertFleetEntry([
 
 doquery("UPDATE {{table}} SET `interplanetary_missile` = `interplanetary_missile` - {$Missiles} WHERE `id` = {$_Planet['id']};", 'planets');
 
-$QryArchive = '';
-$QryArchive .= "INSERT INTO {{table}} SET ";
-$QryArchive .= "`Fleet_ID` = {$LastFleetID}, ";
-$QryArchive .= "`Fleet_Owner` = {$_User['id']}, ";
-$QryArchive .= "`Fleet_Mission` = 10, ";
-$QryArchive .= "`Fleet_Array` = '503,{$Missiles};primary_target,{$PrimTarget}', ";
-$QryArchive .= "`Fleet_Time_Send` = UNIX_TIMESTAMP(), ";
-$QryArchive .= "`Fleet_Time_Start` = (UNIX_TIMESTAMP() + {$FlightTime}), ";
-$QryArchive .= "`Fleet_Start_ID` = {$_Planet['id']}, ";
-$QryArchive .= "`Fleet_Start_Galaxy` = {$_Planet['galaxy']}, ";
-$QryArchive .= "`Fleet_Start_System` = {$_Planet['system']}, ";
-$QryArchive .= "`Fleet_Start_Planet` = {$_Planet['planet']}, ";
-$QryArchive .= "`Fleet_Start_Type` = {$_Planet['planet_type']}, ";
-$QryArchive .= "`Fleet_End_ID` = '{$PlanetData['id']}', ";
-$QryArchive .= "`Fleet_End_ID_Galaxy` = '{$PlanetData['galaxy_id']}', ";
-$QryArchive .= "`Fleet_End_Galaxy` = {$Galaxy}, ";
-$QryArchive .= "`Fleet_End_System` = {$System}, ";
-$QryArchive .= "`Fleet_End_Planet` = {$Planet}, ";
-$QryArchive .= "`Fleet_End_Type` = 1, ";
-$QryArchive .= "`Fleet_End_Owner` = '{$PlanetData['id_owner']}' ";
-doquery($QryArchive, 'fleet_archive');
+FlightControl\Utils\Updaters\insertFleetArchiveEntry([
+    'fleetEntryId' => $LastFleetID,
+    'ownerUser' => $_User,
+    'ownerPlanet' => $_Planet,
+    'fleetEntry' => [
+        'Mission' => $Mission,
+        'array' => [
+            '503' => $Missiles,
+            'primary_target' => $PrimTarget,
+        ],
+        'SetCalcTime' => ($Now + $FlightTime),
+        'SetStayTime' => '0',
+        'SetBackTime' => '0',
+        'resources' => [
+            'metal' => '0',
+            'crystal' => '0',
+            'deuterium' => '0',
+        ],
+    ],
+    'targetPlanet' => [
+        'id' => $PlanetData['id'],
+        'galaxy_id' => $PlanetData['galaxy_id'],
+        'owner' => $PlanetData['id_owner'],
+    ],
+    'targetCoords' => [
+        'galaxy' => $Galaxy,
+        'system' => $System,
+        'planet' => $Planet,
+        'type' => "1",
+    ],
+    'flags' => [
+        'hasIpIntersection' => false,
+        'hasIpIntersectionFiltered' => false,
+        'hasIpIntersectionOnSend' => false,
+        'hasUsedTeleportation' => false,
+    ],
+    'currentTime' => $Now,
+]);
 
 // User Development Log
 $UserDev_Log[] = array('PlanetID' => $_Planet['id'], 'Date' => $Now, 'Place' => 11, 'Code' => '0', 'ElementID' => $LastFleetID, 'AdditionalData' => 'R,'.$Missiles);
