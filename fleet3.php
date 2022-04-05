@@ -901,17 +901,8 @@ if (!isset($LockFleetSending)) {
         'currentTime' => $Now,
     ]);
 
-    if(empty($TargetData['id']))
-    {
-        $TargetData['id'] = '0';
-    }
-    if(empty($TargetData['owner']))
-    {
+    if (empty($TargetData['owner'])) {
         $TargetData['owner'] = '0';
-    }
-    if(empty($TargetData['galaxy_id']))
-    {
-        $TargetData['galaxy_id'] = '0';
     }
 
     // PushAlert
