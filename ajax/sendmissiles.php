@@ -220,36 +220,40 @@ if (!$smartFleetsBlockadeStateValidationResult['isValid']) {
     CreateReturn('626');
 }
 
+$fleetEntry = [
+    'Mission' => $Mission,
+    'count' => $Missiles,
+    'array' => [
+        '503' => $Missiles,
+        'primary_target' => $PrimTarget,
+    ],
+    'SetCalcTime' => ($Now + $FlightTime),
+    'SetStayTime' => '0',
+    'SetBackTime' => ($Now + $FlightTime),
+    'resources' => [
+        'metal' => '0',
+        'crystal' => '0',
+        'deuterium' => '0',
+    ],
+];
+$targetPlanet = [
+    'id' => $PlanetData['id'],
+    'galaxy_id' => $PlanetData['galaxy_id'],
+    'owner' => $PlanetData['id_owner'],
+];
+$targetCoords = [
+    'galaxy' => $Galaxy,
+    'system' => $System,
+    'planet' => $Planet,
+    'type' => "1",
+];
+
 $LastFleetID = FlightControl\Utils\Updaters\insertFleetEntry([
     'ownerUser' => $_User,
     'ownerPlanet' => $_Planet,
-    'fleetEntry' => [
-        'Mission' => $Mission,
-        'count' => $Missiles,
-        'array' => [
-            '503' => $Missiles,
-            'primary_target' => $PrimTarget,
-        ],
-        'SetCalcTime' => ($Now + $FlightTime),
-        'SetStayTime' => '0',
-        'SetBackTime' => ($Now + $FlightTime),
-        'resources' => [
-            'metal' => '0',
-            'crystal' => '0',
-            'deuterium' => '0',
-        ],
-    ],
-    'targetPlanet' => [
-        'id' => $PlanetData['id'],
-        'galaxy_id' => $PlanetData['galaxy_id'],
-        'owner' => $PlanetData['id_owner'],
-    ],
-    'targetCoords' => [
-        'galaxy' => $Galaxy,
-        'system' => $System,
-        'planet' => $Planet,
-        'type' => "1",
-    ],
+    'fleetEntry' => $fleetEntry,
+    'targetPlanet' => $targetPlanet,
+    'targetCoords' => $targetCoords,
     'currentTime' => $Now,
 ]);
 
@@ -259,32 +263,9 @@ FlightControl\Utils\Updaters\insertFleetArchiveEntry([
     'fleetEntryId' => $LastFleetID,
     'ownerUser' => $_User,
     'ownerPlanet' => $_Planet,
-    'fleetEntry' => [
-        'Mission' => $Mission,
-        'array' => [
-            '503' => $Missiles,
-            'primary_target' => $PrimTarget,
-        ],
-        'SetCalcTime' => ($Now + $FlightTime),
-        'SetStayTime' => '0',
-        'SetBackTime' => '0',
-        'resources' => [
-            'metal' => '0',
-            'crystal' => '0',
-            'deuterium' => '0',
-        ],
-    ],
-    'targetPlanet' => [
-        'id' => $PlanetData['id'],
-        'galaxy_id' => $PlanetData['galaxy_id'],
-        'owner' => $PlanetData['id_owner'],
-    ],
-    'targetCoords' => [
-        'galaxy' => $Galaxy,
-        'system' => $System,
-        'planet' => $Planet,
-        'type' => "1",
-    ],
+    'fleetEntry' => $fleetEntry,
+    'targetPlanet' => $targetPlanet,
+    'targetCoords' => $targetCoords,
     'flags' => [
         'hasIpIntersection' => false,
         'hasIpIntersectionFiltered' => false,
