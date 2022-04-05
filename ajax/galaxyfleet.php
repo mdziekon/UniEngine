@@ -197,54 +197,31 @@ switch($Mission)
                 }
             }
 
-            if($protection == 1)
-            {
-                if($_User['total_rank'] < 1)
-                {
-                    CreateReturn('631');
-                }
-                if($HeDBRec['total_rank'] < 1)
-                {
-                    CreateReturn('630');
-                }
+            if ($protection == 1) {
+                $noobProtectionValidationResult = FlightControl\Utils\Validators\validateNoobProtection([
+                    'attackerUser' => $_User,
+                    'attackerStats' => $MyGameLevel,
+                    'targetUser' => $HeDBRec,
+                    'targetStats' => $HeGameLevel,
+                    'currentTimestamp' => $Time,
+                ]);
 
-                if($_User['NoobProtection_EndTime'] > $Time)
-                {
-                    CreateReturn('632'); // You are under Newcommer protection
-                }
-                else if($HeDBRec['first_login'] == 0)
-                {
-                    CreateReturn('634'); // Newcommer protection (never logged in)
-                }
-                else if($HeDBRec['NoobProtection_EndTime'] > $Time)
-                {
-                    CreateReturn('633'); // Newcommer protection
-                }
+                if (!$noobProtectionValidationResult['isSuccess']) {
+                    $mapNoobProtectionErrorsToAjaxErrorCodes = [
+                        'ATTACKER_STATISTICS_UNAVAILABLE'                   => '631',
+                        'TARGET_STATISTICS_UNAVAILABLE'                     => '630',
+                        'ATTACKER_NOOBPROTECTION_ENDTIME_NOT_REACHED'       => '632',
+                        'TARGET_NEVER_LOGGED_IN'                            => '634',
+                        'TARGET_NOOBPROTECTION_ENDTIME_NOT_REACHED'         => '633',
+                        'ATTACKER_NOOBPROTECTION_BASIC_LIMIT_NOT_REACHED'   => '620',
+                        'TARGET_NOOBPROTECTION_BASIC_LIMIT_NOT_REACHED'     => '619',
+                        'TARGET_NOOBPROTECTION_TOO_WEAK_BY_MULTIPLIER'      => '621',
+                        'ATTACKER_NOOBPROTECTION_TOO_WEAK_BY_MULTIPLIER'    => '622',
+                    ];
 
-                if($HeDBRec['onlinetime'] >= ($Time - (TIME_DAY * $noIdleProtect)))
-                {
-                    if($HeGameLevel < ($protectiontime * 1000))
-                    {
-                        CreateReturn('619'); //Player under n00b protection time
-                    }
-                    else if($MyGameLevel < ($protectiontime * 1000))
-                    {
-                        CreateReturn('620'); //You are under n00b protection time
-                    }
-                    else
-                    {
-                        if($MyGameLevel < ($noNoobProtect * 1000) OR $HeGameLevel < ($noNoobProtect * 1000))
-                        {
-                            if(($MyGameLevel > ($HeGameLevel * $protectionmulti)))
-                            {
-                                CreateReturn('621'); //Player is too weak
-                            }
-                            else if(($MyGameLevel * $protectionmulti) < $HeGameLevel)
-                            {
-                                CreateReturn('622'); //Player is too strony
-                            }
-                        }
-                    }
+                    $errorCode = $noobProtectionValidationResult['error']['code'];
+
+                    CreateReturn($mapNoobProtectionErrorsToAjaxErrorCodes[$errorCode]);
                 }
             }
             if($SaveMyTotalRank !== false)
