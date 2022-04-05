@@ -1133,8 +1133,6 @@ doquery('LOCK TABLE {{table}} WRITE', 'planets');
 doquery($QryUpdatePlanet, 'planets');
 doquery('UNLOCK TABLES', '');
 
-$Fleet['array'] = Array2String($Fleet['array']);
-
 $UserDev_Log[] = FlightControl\Utils\Factories\createFleetDevLogEntry([
     'currentPlanet' => &$_Planet,
     'newFleetId' => $LastFleetID,
