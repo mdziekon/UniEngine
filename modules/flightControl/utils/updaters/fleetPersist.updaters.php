@@ -53,7 +53,7 @@ function insertFleetEntry ($props) {
         "`fleet_resource_metal` = {$props['fleetEntry']['resources']['metal']}, " .
         "`fleet_resource_crystal` = {$props['fleetEntry']['resources']['crystal']}, " .
         "`fleet_resource_deuterium` = {$props['fleetEntry']['resources']['deuterium']}, " .
-        "`fleet_target_owner` = '{$targetOwnerId}', " .
+        "`fleet_target_owner` = {$targetOwnerId}, " .
         "`fleet_send_time` = {$props['currentTime']} " .
         ";"
     );

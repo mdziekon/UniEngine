@@ -47,7 +47,6 @@ function insertFleetArchiveEntry ($props) {
     $query = (
         "INSERT INTO {{table}} " .
         "SET " .
-
         "`Fleet_ID` = {$props['fleetEntryId']}, " .
         "`Fleet_Owner` = {$props['ownerUser']['id']}, " .
         "`Fleet_Mission` = {$props['fleetEntry']['Mission']}, " .
@@ -70,7 +69,7 @@ function insertFleetArchiveEntry ($props) {
         "`Fleet_End_System` = {$props['targetCoords']['system']}, " .
         "`Fleet_End_Planet` = {$props['targetCoords']['planet']}, " .
         "`Fleet_End_Type` = {$props['targetCoords']['type']}, " .
-        "`Fleet_End_Owner` = '{$targetOwnerId}', " .
+        "`Fleet_End_Owner` = {$targetOwnerId}, " .
         "`Fleet_ACSID` = '{$props['fleetEntry']['ACS_ID']}', " .
         "`Fleet_Info_HadSameIP_Ever` = {$hasIpIntersectionQueryVal}, " .
         "`Fleet_Info_HadSameIP_Ever_Filtred` = {$hasIpIntersectionFilteredQueryVal}, " .
