@@ -239,7 +239,11 @@ $LastFleetID = FlightControl\Utils\Updaters\insertFleetEntry([
             'deuterium' => '0',
         ],
     ],
-    'targetPlanet' => $PlanetData,
+    'targetPlanet' => [
+        'id' => $PlanetData['id'],
+        'galaxy_id' => $PlanetData['galaxy_id'],
+        'owner' => $PlanetData['id_owner'],
+    ],
     'targetCoords' => [
         'galaxy' => $Galaxy,
         'system' => $System,
