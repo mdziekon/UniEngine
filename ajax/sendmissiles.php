@@ -276,7 +276,14 @@ FlightControl\Utils\Updaters\insertFleetArchiveEntry([
 ]);
 
 // User Development Log
-$UserDev_Log[] = array('PlanetID' => $_Planet['id'], 'Date' => $Now, 'Place' => 11, 'Code' => '0', 'ElementID' => $createdFleetId, 'AdditionalData' => 'R,'.$Missiles);
+$UserDev_Log[] = [
+    'PlanetID' => $_Planet['id'],
+    'Date' => $Now,
+    'Place' => 11,
+    'Code' => '0',
+    'ElementID' => $createdFleetId,
+    'AdditionalData' => 'R,'.$Missiles,
+];
 // ---
 
 $FlyingFleets += 1;
