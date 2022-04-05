@@ -548,12 +548,20 @@ doquery($QryUpdatePlanet, "planets");
 doquery("UNLOCK TABLES", '');
 
 // User Development Log
-if($consumption > 0)
-{
-    $FleetArray['F'] = $consumption;
+$devLogFleetArray = $FleetArray;
+
+if ($consumption > 0) {
+    $devLogFleetArray['F'] = $consumption;
 }
-$FleetArrayDevLog = Array2String($FleetArray);
-$UserDev_Log[] = array('PlanetID' => $CurrentPlanet['id'], 'Date' => $Time, 'Place' => 9, 'Code' => $Mission, 'ElementID' => $createdFleetId, 'AdditionalData' => $FleetArrayDevLog);
+
+$UserDev_Log[] = [
+    'PlanetID' => $CurrentPlanet['id'],
+    'Date' => $Time,
+    'Place' => 9,
+    'Code' => $Mission,
+    'ElementID' => $createdFleetId,
+    'AdditionalData' => Array2String($devLogFleetArray),
+];
 
 $ActualFleets += 1;
 switch($Mission)
