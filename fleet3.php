@@ -59,7 +59,6 @@ $Fleet['HoldTime'] = intval($_POST['holdingtime']);
 $Fleet['ACS_ID'] = isset($_POST['acs_id']) ? floor(floatval($_POST['acs_id'])) : 0;
 $Fleet['Mission'] = isset($_POST['mission']) ? intval($_POST['mission']) : 0;
 
-$Protections['enable'] = (bool) $_GameConfig['noobprotection'];
 $Protections['adminEnable'] = (bool) $_GameConfig['adminprotection'];
 $Protections['ally'] = $_GameConfig['allyprotection'];
 $Protections['idleTime'] = $_GameConfig['no_idle_protect'] * TIME_DAY;
@@ -604,8 +603,7 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
         }
     }
 
-    if($Protections['enable'])
-    {
+    if (FlightControl\Utils\Helpers\isNoobProtectionEnabled()) {
         $Throw = false;
 
         if (in_array($Fleet['Mission'], $Protections['mtypes'])) {

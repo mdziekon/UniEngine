@@ -45,7 +45,6 @@ if ($FlyingFleets >= $MaxFleets) {
     CreateReturn('609');
 }
 
-$protection = $_GameConfig['noobprotection'];
 $adminprotection = $_GameConfig['adminprotection'];
 $allyprotection = $_GameConfig['allyprotection'];
 $Protections['idleTime'] = $_GameConfig['no_idle_protect'] * TIME_DAY;
@@ -152,7 +151,7 @@ if($PlanetData['id_owner'] > 0)
     }
     $HeGameLevel = $HeDBRec['total_points'];
 
-    if ($protection == 1) {
+    if (FlightControl\Utils\Helpers\isNoobProtectionEnabled()) {
         $noobProtectionValidationResult = FlightControl\Utils\Validators\validateNoobProtection([
             'attackerUser' => $_User,
             'attackerStats' => $MyGameLevel,
