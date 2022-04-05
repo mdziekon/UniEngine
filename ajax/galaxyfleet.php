@@ -136,12 +136,8 @@ switch($Mission)
         }
 
         $protection = $_GameConfig['noobprotection'];
-        $protectiontime = $_GameConfig['noobprotectiontime'];
-        $protectionmulti = $_GameConfig['noobprotectionmulti'];
         $adminprotection = $_GameConfig['adminprotection'];
         $allyprotection = $_GameConfig['allyprotection'];
-        $noNoobProtect = $_GameConfig['no_noob_protect'];
-        $noIdleProtect = $_GameConfig['no_idle_protect'];
         $Protections['idleTime'] = $_GameConfig['no_idle_protect'] * TIME_DAY;
 
         if($TargetUser > 0)
