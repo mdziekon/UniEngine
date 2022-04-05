@@ -45,13 +45,8 @@ if ($FlyingFleets >= $MaxFleets) {
     CreateReturn('609');
 }
 
-$protection = $_GameConfig['noobprotection'];
-$protectiontime = $_GameConfig['noobprotectiontime'];
-$protectionmulti = $_GameConfig['noobprotectionmulti'];
 $adminprotection = $_GameConfig['adminprotection'];
 $allyprotection = $_GameConfig['allyprotection'];
-$noNoobProtect = $_GameConfig['no_noob_protect'];
-$noIdleProtect = $_GameConfig['no_idle_protect'];
 $Protections['idleTime'] = $_GameConfig['no_idle_protect'] * TIME_DAY;
 
 $Galaxy = (isset($_POST['galaxy']) ? intval($_POST['galaxy']) : 0);
@@ -156,7 +151,7 @@ if($PlanetData['id_owner'] > 0)
     }
     $HeGameLevel = $HeDBRec['total_points'];
 
-    if ($protection == 1) {
+    if (FlightControl\Utils\Helpers\isNoobProtectionEnabled()) {
         $noobProtectionValidationResult = FlightControl\Utils\Validators\validateNoobProtection([
             'attackerUser' => $_User,
             'attackerStats' => $MyGameLevel,
@@ -224,58 +219,70 @@ if (!$smartFleetsBlockadeStateValidationResult['isValid']) {
     CreateReturn('626');
 }
 
-$CreateMIPAttack = '';
-$CreateMIPAttack .= "INSERT INTO {{table}} SET ";
-$CreateMIPAttack .= "`fleet_owner` = {$_User['id']}, ";
-$CreateMIPAttack .= "`fleet_mission` = {$Mission}, ";
-$CreateMIPAttack .= "`fleet_amount` = {$Missiles}, ";
-$CreateMIPAttack .= "`fleet_array` = '503,{$Missiles};primary_target,{$PrimTarget}', ";
-$CreateMIPAttack .= "`fleet_start_time` = (UNIX_TIMESTAMP() + {$FlightTime}), ";
-$CreateMIPAttack .= "`fleet_start_id` = {$_Planet['id']}, ";
-$CreateMIPAttack .= "`fleet_start_galaxy` = {$_Planet['galaxy']}, ";
-$CreateMIPAttack .= "`fleet_start_system` = {$_Planet['system']}, ";
-$CreateMIPAttack .= "`fleet_start_planet` = {$_Planet['planet']}, ";
-$CreateMIPAttack .= "`fleet_start_type` = 1, ";
-$CreateMIPAttack .= "`fleet_end_time` = (UNIX_TIMESTAMP() + {$FlightTime}), ";
-$CreateMIPAttack .= "`fleet_end_id` = {$PlanetData['id']}, ";
-$CreateMIPAttack .= "`fleet_end_id_galaxy` = {$PlanetData['galaxy_id']}, ";
-$CreateMIPAttack .= "`fleet_end_galaxy` = {$Galaxy}, ";
-$CreateMIPAttack .= "`fleet_end_system` = {$System}, ";
-$CreateMIPAttack .= "`fleet_end_planet` = {$Planet}, ";
-$CreateMIPAttack .= "`fleet_end_type` = 1, ";
-$CreateMIPAttack .= "`fleet_target_owner` = '{$PlanetData['id_owner']}', ";
-$CreateMIPAttack .= "`fleet_send_time` = UNIX_TIMESTAMP();";
-doquery($CreateMIPAttack, 'fleets');
+$fleetEntry = [
+    'Mission' => $Mission,
+    'count' => $Missiles,
+    'array' => [
+        '503' => $Missiles,
+        'primary_target' => $PrimTarget,
+    ],
+    'SetCalcTime' => ($Now + $FlightTime),
+    'SetStayTime' => '0',
+    'SetBackTime' => ($Now + $FlightTime),
+    'resources' => [
+        'metal' => '0',
+        'crystal' => '0',
+        'deuterium' => '0',
+    ],
+];
+$targetPlanet = [
+    'id' => $PlanetData['id'],
+    'galaxy_id' => $PlanetData['galaxy_id'],
+    'owner' => $PlanetData['id_owner'],
+];
+$targetCoords = [
+    'galaxy' => $Galaxy,
+    'system' => $System,
+    'planet' => $Planet,
+    'type' => "1",
+];
 
-$LastFleetID = doquery("SELECT LAST_INSERT_ID() as `id`;", '', true);
-$LastFleetID = $LastFleetID['id'];
+$createdFleetId = FlightControl\Utils\Updaters\insertFleetEntry([
+    'ownerUser' => $_User,
+    'ownerPlanet' => $_Planet,
+    'fleetEntry' => $fleetEntry,
+    'targetPlanet' => $targetPlanet,
+    'targetCoords' => $targetCoords,
+    'currentTime' => $Now,
+]);
 
 doquery("UPDATE {{table}} SET `interplanetary_missile` = `interplanetary_missile` - {$Missiles} WHERE `id` = {$_Planet['id']};", 'planets');
 
-$QryArchive = '';
-$QryArchive .= "INSERT INTO {{table}} SET ";
-$QryArchive .= "`Fleet_ID` = {$LastFleetID}, ";
-$QryArchive .= "`Fleet_Owner` = {$_User['id']}, ";
-$QryArchive .= "`Fleet_Mission` = 10, ";
-$QryArchive .= "`Fleet_Array` = '503,{$Missiles};primary_target,{$PrimTarget}', ";
-$QryArchive .= "`Fleet_Time_Send` = UNIX_TIMESTAMP(), ";
-$QryArchive .= "`Fleet_Time_Start` = (UNIX_TIMESTAMP() + {$FlightTime}), ";
-$QryArchive .= "`Fleet_Start_ID` = {$_Planet['id']}, ";
-$QryArchive .= "`Fleet_Start_Galaxy` = {$_Planet['galaxy']}, ";
-$QryArchive .= "`Fleet_Start_System` = {$_Planet['system']}, ";
-$QryArchive .= "`Fleet_Start_Planet` = {$_Planet['planet']}, ";
-$QryArchive .= "`Fleet_Start_Type` = {$_Planet['planet_type']}, ";
-$QryArchive .= "`Fleet_End_ID` = '{$PlanetData['id']}', ";
-$QryArchive .= "`Fleet_End_ID_Galaxy` = '{$PlanetData['galaxy_id']}', ";
-$QryArchive .= "`Fleet_End_Galaxy` = {$Galaxy}, ";
-$QryArchive .= "`Fleet_End_System` = {$System}, ";
-$QryArchive .= "`Fleet_End_Planet` = {$Planet}, ";
-$QryArchive .= "`Fleet_End_Type` = 1, ";
-$QryArchive .= "`Fleet_End_Owner` = '{$PlanetData['id_owner']}' ";
-doquery($QryArchive, 'fleet_archive');
+FlightControl\Utils\Updaters\insertFleetArchiveEntry([
+    'fleetEntryId' => $createdFleetId,
+    'ownerUser' => $_User,
+    'ownerPlanet' => $_Planet,
+    'fleetEntry' => $fleetEntry,
+    'targetPlanet' => $targetPlanet,
+    'targetCoords' => $targetCoords,
+    'flags' => [
+        'hasIpIntersection' => false,
+        'hasIpIntersectionFiltered' => false,
+        'hasIpIntersectionOnSend' => false,
+        'hasUsedTeleportation' => false,
+    ],
+    'currentTime' => $Now,
+]);
 
 // User Development Log
-$UserDev_Log[] = array('PlanetID' => $_Planet['id'], 'Date' => $Now, 'Place' => 11, 'Code' => '0', 'ElementID' => $LastFleetID, 'AdditionalData' => 'R,'.$Missiles);
+$UserDev_Log[] = [
+    'PlanetID' => $_Planet['id'],
+    'Date' => $Now,
+    'Place' => 11,
+    'Code' => '0',
+    'ElementID' => $createdFleetId,
+    'AdditionalData' => 'R,'.$Missiles,
+];
 // ---
 
 $FlyingFleets += 1;

@@ -135,13 +135,8 @@ switch($Mission)
             CreateReturn('615');
         }
 
-        $protection = $_GameConfig['noobprotection'];
-        $protectiontime = $_GameConfig['noobprotectiontime'];
-        $protectionmulti = $_GameConfig['noobprotectionmulti'];
         $adminprotection = $_GameConfig['adminprotection'];
         $allyprotection = $_GameConfig['allyprotection'];
-        $noNoobProtect = $_GameConfig['no_noob_protect'];
-        $noIdleProtect = $_GameConfig['no_idle_protect'];
         $Protections['idleTime'] = $_GameConfig['no_idle_protect'] * TIME_DAY;
 
         if($TargetUser > 0)
@@ -197,54 +192,31 @@ switch($Mission)
                 }
             }
 
-            if($protection == 1)
-            {
-                if($_User['total_rank'] < 1)
-                {
-                    CreateReturn('631');
-                }
-                if($HeDBRec['total_rank'] < 1)
-                {
-                    CreateReturn('630');
-                }
+            if (FlightControl\Utils\Helpers\isNoobProtectionEnabled()) {
+                $noobProtectionValidationResult = FlightControl\Utils\Validators\validateNoobProtection([
+                    'attackerUser' => $_User,
+                    'attackerStats' => $MyGameLevel,
+                    'targetUser' => $HeDBRec,
+                    'targetStats' => $HeGameLevel,
+                    'currentTimestamp' => $Time,
+                ]);
 
-                if($_User['NoobProtection_EndTime'] > $Time)
-                {
-                    CreateReturn('632'); // You are under Newcommer protection
-                }
-                else if($HeDBRec['first_login'] == 0)
-                {
-                    CreateReturn('634'); // Newcommer protection (never logged in)
-                }
-                else if($HeDBRec['NoobProtection_EndTime'] > $Time)
-                {
-                    CreateReturn('633'); // Newcommer protection
-                }
+                if (!$noobProtectionValidationResult['isSuccess']) {
+                    $mapNoobProtectionErrorsToAjaxErrorCodes = [
+                        'ATTACKER_STATISTICS_UNAVAILABLE'                   => '631',
+                        'TARGET_STATISTICS_UNAVAILABLE'                     => '630',
+                        'ATTACKER_NOOBPROTECTION_ENDTIME_NOT_REACHED'       => '632',
+                        'TARGET_NEVER_LOGGED_IN'                            => '634',
+                        'TARGET_NOOBPROTECTION_ENDTIME_NOT_REACHED'         => '633',
+                        'ATTACKER_NOOBPROTECTION_BASIC_LIMIT_NOT_REACHED'   => '620',
+                        'TARGET_NOOBPROTECTION_BASIC_LIMIT_NOT_REACHED'     => '619',
+                        'TARGET_NOOBPROTECTION_TOO_WEAK_BY_MULTIPLIER'      => '621',
+                        'ATTACKER_NOOBPROTECTION_TOO_WEAK_BY_MULTIPLIER'    => '622',
+                    ];
 
-                if($HeDBRec['onlinetime'] >= ($Time - (TIME_DAY * $noIdleProtect)))
-                {
-                    if($HeGameLevel < ($protectiontime * 1000))
-                    {
-                        CreateReturn('619'); //Player under n00b protection time
-                    }
-                    else if($MyGameLevel < ($protectiontime * 1000))
-                    {
-                        CreateReturn('620'); //You are under n00b protection time
-                    }
-                    else
-                    {
-                        if($MyGameLevel < ($noNoobProtect * 1000) OR $HeGameLevel < ($noNoobProtect * 1000))
-                        {
-                            if(($MyGameLevel > ($HeGameLevel * $protectionmulti)))
-                            {
-                                CreateReturn('621'); //Player is too weak
-                            }
-                            else if(($MyGameLevel * $protectionmulti) < $HeGameLevel)
-                            {
-                                CreateReturn('622'); //Player is too strony
-                            }
-                        }
-                    }
+                    $errorCode = $noobProtectionValidationResult['error']['code'];
+
+                    CreateReturn($mapNoobProtectionErrorsToAjaxErrorCodes[$errorCode]);
                 }
             }
             if($SaveMyTotalRank !== false)
@@ -507,70 +479,59 @@ else
     CreateReturn('608');
 }
 
-if(!isset($TargetID) || $TargetID <= 0)
-{
-    $TargetID = '0';
-}
-if(empty($GalaxyRow['galaxy_id']))
-{
-    $GalaxyRow['galaxy_id'] = '0';
-}
+$FleetArray = [
+    $ShipID => $ShipCount
+];
 
-$FleetArray[$ShipID] = $ShipCount;
-$FleetArrayQuery = Array2String($FleetArray);
+$fleetEntry = [
+    'Mission' => $Mission,
+    'count' => $ShipCount,
+    'array' => $FleetArray,
+    'SetCalcTime' => $fleet['start_time'],
+    'SetStayTime' => '0',
+    'SetBackTime' => $fleet['end_time'],
+    'resources' => [
+        'metal' => '0',
+        'crystal' => '0',
+        'deuterium' => '0',
+    ],
+];
+$targetPlanet = [
+    'id' => $TargetID,
+    'galaxy_id' => $GalaxyRow['galaxy_id'],
+    'owner' => $TargetOwner,
+];
+$targetCoords = [
+    'galaxy' => $Galaxy,
+    'system' => $System,
+    'planet' => $Planet,
+    'type' => $Type,
+];
 
-$QryInsertFleet = '';
-$QryInsertFleet .= "INSERT INTO {{table}} SET ";
-$QryInsertFleet .= "`fleet_owner` = '{$_User['id']}', ";
-$QryInsertFleet .= "`fleet_mission` = '{$Mission}', ";
-$QryInsertFleet .= "`fleet_amount` = '{$ShipCount}', ";
-$QryInsertFleet .= "`fleet_array` = '{$FleetArrayQuery}', ";
-$QryInsertFleet .= "`fleet_start_time` = '{$fleet['start_time']}', ";
-$QryInsertFleet .= "`fleet_start_id` = {$CurrentPlanet['id']}, ";
-$QryInsertFleet .= "`fleet_start_galaxy` = '{$CurrentPlanet['galaxy']}', ";
-$QryInsertFleet .= "`fleet_start_system` = '{$CurrentPlanet['system']}', ";
-$QryInsertFleet .= "`fleet_start_planet` = '{$CurrentPlanet['planet']}', ";
-$QryInsertFleet .= "`fleet_start_type` = '{$CurrentPlanet['planet_type']}', ";
-$QryInsertFleet .= "`fleet_end_time` = '{$fleet['end_time']}', ";
-$QryInsertFleet .= "`fleet_end_id` = {$TargetID}, ";
-$QryInsertFleet .= "`fleet_end_id_galaxy` = {$GalaxyRow['galaxy_id']}, ";
-$QryInsertFleet .= "`fleet_end_stay` = '0', ";
-$QryInsertFleet .= "`fleet_end_galaxy` = '{$Galaxy}', ";
-$QryInsertFleet .= "`fleet_end_system` = '{$System}', ";
-$QryInsertFleet .= "`fleet_end_planet` = '{$Planet}', ";
-$QryInsertFleet .= "`fleet_end_type` = '{$Type}', ";
-$QryInsertFleet .= "`fleet_resource_metal` = '0', ";
-$QryInsertFleet .= "`fleet_resource_crystal` = '0', ";
-$QryInsertFleet .= "`fleet_resource_deuterium` = '0', ";
-$QryInsertFleet .= "`fleet_target_owner` = '{$TargetOwner}', ";
-$QryInsertFleet .= "`fleet_send_time` = UNIX_TIMESTAMP();";
-doquery($QryInsertFleet, 'fleets');
+$createdFleetId = FlightControl\Utils\Updaters\insertFleetEntry([
+    'ownerUser' => $_User,
+    'ownerPlanet' => $CurrentPlanet,
+    'fleetEntry' => $fleetEntry,
+    'targetPlanet' => $targetPlanet,
+    'targetCoords' => $targetCoords,
+    'currentTime' => $Time,
+]);
 
-$LastFleetID = doquery("SELECT LAST_INSERT_ID() as `id`;", '', true);
-$LastFleetID = $LastFleetID['id'];
-
-$QryArchive = '';
-$QryArchive .= "INSERT INTO {{table}} SET ";
-$QryArchive .= "`Fleet_ID` = {$LastFleetID}, ";
-$QryArchive .= "`Fleet_Owner` = {$_User['id']}, ";
-$QryArchive .= "`Fleet_Mission` = {$Mission}, ";
-$QryArchive .= "`Fleet_Array` = '{$FleetArrayQuery}', ";
-$QryArchive .= "`Fleet_Time_Send` = UNIX_TIMESTAMP(), ";
-$QryArchive .= "`Fleet_Time_Start` = {$fleet['start_time']}, ";
-$QryArchive .= "`Fleet_Time_End` = {$fleet['end_time']}, ";
-$QryArchive .= "`Fleet_Start_ID` = {$CurrentPlanet['id']}, ";
-$QryArchive .= "`Fleet_Start_Galaxy` = {$CurrentPlanet['galaxy']}, ";
-$QryArchive .= "`Fleet_Start_System` = {$CurrentPlanet['system']}, ";
-$QryArchive .= "`Fleet_Start_Planet` = {$CurrentPlanet['planet']}, ";
-$QryArchive .= "`Fleet_Start_Type` = {$CurrentPlanet['planet_type']}, ";
-$QryArchive .= "`Fleet_End_ID` = '{$TargetID}', ";
-$QryArchive .= "`Fleet_End_ID_Galaxy` = '{$GalaxyRow['galaxy_id']}', ";
-$QryArchive .= "`Fleet_End_Galaxy` = {$Galaxy}, ";
-$QryArchive .= "`Fleet_End_System` = {$System}, ";
-$QryArchive .= "`Fleet_End_Planet` = {$Planet}, ";
-$QryArchive .= "`Fleet_End_Type` = {$Type}, ";
-$QryArchive .= "`Fleet_End_Owner` = '{$TargetOwner}' ";
-doquery($QryArchive, 'fleet_archive');
+FlightControl\Utils\Updaters\insertFleetArchiveEntry([
+    'fleetEntryId' => $createdFleetId,
+    'ownerUser' => $_User,
+    'ownerPlanet' => $CurrentPlanet,
+    'fleetEntry' => $fleetEntry,
+    'targetPlanet' => $targetPlanet,
+    'targetCoords' => $targetCoords,
+    'flags' => [
+        'hasIpIntersection' => false,
+        'hasIpIntersectionFiltered' => false,
+        'hasIpIntersectionOnSend' => false,
+        'hasUsedTeleportation' => false,
+    ],
+    'currentTime' => $Time,
+]);
 
 $CurrentPlanet['deuterium'] = $CurrentPlanet['deuterium'] - $consumption;
 
@@ -586,12 +547,20 @@ doquery($QryUpdatePlanet, "planets");
 doquery("UNLOCK TABLES", '');
 
 // User Development Log
-if($consumption > 0)
-{
-    $FleetArray['F'] = $consumption;
+$devLogFleetArray = $FleetArray;
+
+if ($consumption > 0) {
+    $devLogFleetArray['F'] = $consumption;
 }
-$FleetArrayDevLog = Array2String($FleetArray);
-$UserDev_Log[] = array('PlanetID' => $CurrentPlanet['id'], 'Date' => $Time, 'Place' => 9, 'Code' => $Mission, 'ElementID' => $LastFleetID, 'AdditionalData' => $FleetArrayDevLog);
+
+$UserDev_Log[] = [
+    'PlanetID' => $CurrentPlanet['id'],
+    'Date' => $Time,
+    'Place' => 9,
+    'Code' => $Mission,
+    'ElementID' => $createdFleetId,
+    'AdditionalData' => Array2String($devLogFleetArray),
+];
 
 $ActualFleets += 1;
 switch($Mission)

@@ -18,7 +18,7 @@ function createFleetDevLogEntry ($props) {
     $fuelUsage = $props['fuelUsage'];
 
     $entryAdditionalData = [
-        rtrim($fleetData['array'], ';'),
+        Array2String($fleetData['array']),
     ];
 
     if ($fleetData['resources']['metal'] > 0) {

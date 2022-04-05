@@ -8,6 +8,7 @@ include($_EnginePath.'common.php');
 
 include($_EnginePath . 'modules/flightControl/_includes.php');
 
+use UniEngine\Engine\Includes\Helpers\Common\Collections;
 use UniEngine\Engine\Modules\FlightControl;
 use UniEngine\Engine\Modules\Flights;
 
@@ -48,29 +49,22 @@ $Target['planet'] = intval($_POST['planet']);
 $Target['type'] = intval($_POST['planettype']);
 $Fleet['Speed'] = floatval($_POST['speed']);
 $Fleet['UseQuantum'] = (isset($_POST['usequantumgate']) && $_POST['usequantumgate'] == 'on' ? true : false);
-$Fleet['resources'] = array('metal' => $_POST['resource1'], 'crystal' => $_POST['resource2'], 'deuterium' => $_POST['resource3']);
+$Fleet['resources'] = [
+    'metal' => $_POST['resource1'],
+    'crystal' => $_POST['resource2'],
+    'deuterium' => $_POST['resource3'],
+];
 $Fleet['ExpeTime'] = intval($_POST['expeditiontime']);
 $Fleet['HoldTime'] = intval($_POST['holdingtime']);
 $Fleet['ACS_ID'] = isset($_POST['acs_id']) ? floor(floatval($_POST['acs_id'])) : 0;
 $Fleet['Mission'] = isset($_POST['mission']) ? intval($_POST['mission']) : 0;
 
-$Protections['enable'] = (bool) $_GameConfig['noobprotection'];
-$Protections['basicLimit'] = $_GameConfig['noobprotectiontime'] * 1000;
-$Protections['weakMulti'] = $_GameConfig['noobprotectionmulti'];
 $Protections['adminEnable'] = (bool) $_GameConfig['adminprotection'];
 $Protections['ally'] = $_GameConfig['allyprotection'];
-$Protections['weakLimit'] = $_GameConfig['no_noob_protect'] * 1000;
 $Protections['idleTime'] = $_GameConfig['no_idle_protect'] * TIME_DAY;
-$Protections['mtypes'] = array(1, 2, 6, 9);
-$Protections['newTime'] = $_GameConfig['Protection_NewPlayerTime'];
 $Protections['antifarm_enabled'] = (bool) $_GameConfig['Protection_AntiFarmEnabled'];
 $Protections['antifarm_rate'] = $_GameConfig['Protection_AntiFarmRate'];
-$Protections['antifarm_counttotal'] = $_GameConfig['Protection_AntiFarmCountTotal'];
-$Protections['antifarm_countplanet'] = $_GameConfig['Protection_AntiFarmCountPlanet'];
 $Protections['bashLimit_enabled'] = (bool) $_GameConfig['Protection_BashLimitEnabled'];
-$Protections['bashLimit_interval'] = $_GameConfig['Protection_BashLimitInterval'];
-$Protections['bashLimit_counttotal'] = $_GameConfig['Protection_BashLimitCountTotal'];
-$Protections['bashLimit_countplanet'] = $_GameConfig['Protection_BashLimitCountPlanet'];
 
 if (!isUserAccountActivated($_User)) {
     messageRed($_Lang['fl3_BlockAccNotActivated'], $ErrorTitle);
@@ -286,7 +280,7 @@ $Fleet['FuelStorage'] = 0;
 $Fleet['TotalResStorage'] = 0;
 
 $Fleet['array'] = String2Array($_POST['FleetArray']);
-$FleetArray = array();
+$FleetArray = [];
 
 if (
     !empty($Fleet['array']) &&
@@ -592,8 +586,7 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
     {
         if($_User['ally_id'] > 0 AND $_User['ally_id'] == $TargetData['ally_id'])
         {
-            if(in_array($Fleet['Mission'], $Protections['mtypes']))
-            {
+            if (FlightControl\Utils\Helpers\isMissionNoobProtectionChecked($Fleet['Mission'])) {
                 if($SaveMyTotalRank !== false)
                 {
                     $_User['total_rank'] = $SaveMyTotalRank;
@@ -603,11 +596,10 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
         }
     }
 
-    if($Protections['enable'])
-    {
+    if (FlightControl\Utils\Helpers\isNoobProtectionEnabled()) {
         $Throw = false;
 
-        if (in_array($Fleet['Mission'], $Protections['mtypes'])) {
+        if (FlightControl\Utils\Helpers\isMissionNoobProtectionChecked($Fleet['Mission'])) {
             $noobProtectionValidationResult = FlightControl\Utils\Validators\validateNoobProtection([
                 'attackerUser' => $_User,
                 'attackerStats' => $StatsData['mine'],
@@ -821,24 +813,23 @@ if($isUsingQuantumGate AND $quantumGateUseType == 2)
 
 // MultiAlert System
 $SendAlert = false;
-$IPIntersectionFound = 'false';
-$IPIntersectionFiltred = 'false';
-$IPIntersectionNow = 'false';
+$IPIntersectionFound = false;
+$IPIntersectionFiltered = false;
+$IPIntersectionNow = false;
 if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
 {
     include($_EnginePath.'includes/functions/AlertSystemUtilities.php');
-    $CheckIntersection = AlertUtils_IPIntersect($_User['id'], $TargetData['owner'], array
-    (
+    $CheckIntersection = AlertUtils_IPIntersect($_User['id'], $TargetData['owner'], [
         'LastTimeDiff' => (TIME_DAY * 30),
         'ThisTimeDiff' => (TIME_DAY * 30),
         'ThisTimeStamp' => ($Now - SERVER_MAINOPEN_TSTAMP)
-    ));
+    ]);
     if($CheckIntersection !== false)
     {
-        $IPIntersectionFound = 'true';
+        $IPIntersectionFound = true;
         if($_User['user_lastip'] == $TargetData['lastip'])
         {
-            $IPIntersectionNow = 'true';
+            $IPIntersectionNow = true;
         }
 
         if($_User['multiIP_DeclarationID'] > 0 AND $_User['multiIP_DeclarationID'] == $TargetData['multiIP_DeclarationID'])
@@ -864,7 +855,7 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
 
         if($FilterResult['FilterUsed'])
         {
-            $IPIntersectionFiltred = 'true';
+            $IPIntersectionFiltered = true;
         }
         if(!$FilterResult['SendAlert'])
         {
@@ -889,58 +880,21 @@ if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
     }
 }
 
-if(!isset($LockFleetSending))
-{
-    $FleetArray = array();
-    foreach($Fleet['array'] as $ShipID => $ShipCount)
-    {
-        $FleetArray[] = "{$ShipID},{$ShipCount}";
-    }
-    $FleetArrayCopy = $Fleet['array'];
-    $Fleet['array'] = implode(';', $FleetArray);
+$rawTargetData = $TargetData;
 
-    if(empty($TargetData['id']))
-    {
-        $TargetData['id'] = '0';
-    }
-    if(empty($TargetData['owner']))
-    {
+if (!isset($LockFleetSending)) {
+    $LastFleetID = FlightControl\Utils\Updaters\insertFleetEntry([
+        'ownerUser' => $_User,
+        'ownerPlanet' => $_Planet,
+        'fleetEntry' => $Fleet,
+        'targetPlanet' => $rawTargetData,
+        'targetCoords' => $Target,
+        'currentTime' => $Now,
+    ]);
+
+    if (empty($TargetData['owner'])) {
         $TargetData['owner'] = '0';
     }
-    if(empty($TargetData['galaxy_id']))
-    {
-        $TargetData['galaxy_id'] = '0';
-    }
-
-    $Query_Insert = '';
-    $Query_Insert .= "INSERT INTO {{table}} SET ";
-    $Query_Insert .= "`fleet_owner` = {$_User['id']}, ";
-    $Query_Insert .= "`fleet_mission` = {$Fleet['Mission']}, ";
-    $Query_Insert .= "`fleet_amount` = {$Fleet['count']}, ";
-    $Query_Insert .= "`fleet_array` = '{$Fleet['array']}', ";
-    $Query_Insert .= "`fleet_start_time` = {$Fleet['SetCalcTime']}, ";
-    $Query_Insert .= "`fleet_start_id` = {$_Planet['id']}, ";
-    $Query_Insert .= "`fleet_start_galaxy` = {$_Planet['galaxy']}, ";
-    $Query_Insert .= "`fleet_start_system` = {$_Planet['system']}, ";
-    $Query_Insert .= "`fleet_start_planet` = {$_Planet['planet']}, ";
-    $Query_Insert .= "`fleet_start_type` = {$_Planet['planet_type']}, ";
-    $Query_Insert .= "`fleet_end_time` = {$Fleet['SetBackTime']}, ";
-    $Query_Insert .= "`fleet_end_id` = {$TargetData['id']}, ";
-    $Query_Insert .= "`fleet_end_id_galaxy` = {$TargetData['galaxy_id']}, ";
-    $Query_Insert .= "`fleet_end_stay` = {$Fleet['SetStayTime']}, ";
-    $Query_Insert .= "`fleet_end_galaxy` = {$Target['galaxy']}, ";
-    $Query_Insert .= "`fleet_end_system` = {$Target['system']}, ";
-    $Query_Insert .= "`fleet_end_planet` = {$Target['planet']}, ";
-    $Query_Insert .= "`fleet_end_type` = {$Target['type']}, ";
-    $Query_Insert .= "`fleet_resource_metal` = {$Fleet['resources']['metal']}, ";
-    $Query_Insert .= "`fleet_resource_crystal` = {$Fleet['resources']['crystal']}, ";
-    $Query_Insert .= "`fleet_resource_deuterium` = {$Fleet['resources']['deuterium']}, ";
-    $Query_Insert .= "`fleet_target_owner` = '{$TargetData['owner']}', ";
-    $Query_Insert .= "`fleet_send_time` = {$Now};";
-    doquery($Query_Insert, 'fleets');
-
-    $LastFleetID = doquery("SELECT LAST_INSERT_ID() as `id`;", '', true);
-    $LastFleetID = $LastFleetID['id'];
 
     // PushAlert
     if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
@@ -983,25 +937,29 @@ if(!isset($LockFleetSending))
                         }
                         else if($OwnerIsAlliedUser === true)
                         {
-                            $_Alert['PushAlert']['Data']['AllyPact'] = array
-                            (
+                            $_Alert['PushAlert']['Data']['AllyPact'] = [
                                 'SenderAlly' => $_User['ally_id'],
                                 'TargetAlly' => $TargetData['ally_id'],
-                            );
+                            ];
                         }
                         if($OwnerIsBuddyFriend === true)
                         {
                             $_Alert['PushAlert']['Data']['BuddyFriends'] = true;
                         }
                         $_Alert['PushAlert']['Data']['FleetID'] = $LastFleetID;
-                        $_Alert['PushAlert']['Data']['Stats']['Sender'] = array('Points' => $StatsData['mine'], 'Position' => $_User['total_rank']);
-                        $_Alert['PushAlert']['Data']['Stats']['Target'] = array('Points' => $StatsData['his'], 'Position' => $TargetData['total_rank']);
-                        $_Alert['PushAlert']['Data']['Resources'] = array
-                        (
+                        $_Alert['PushAlert']['Data']['Stats']['Sender'] = [
+                            'Points' => $StatsData['mine'],
+                            'Position' => $_User['total_rank'],
+                        ];
+                        $_Alert['PushAlert']['Data']['Stats']['Target'] = [
+                            'Points' => $StatsData['his'],
+                            'Position' => $TargetData['total_rank'],
+                        ];
+                        $_Alert['PushAlert']['Data']['Resources'] = [
                             'Metal' => floatval($Fleet['resources']['metal']),
                             'Crystal' => floatval($Fleet['resources']['crystal']),
-                            'Deuterium' => floatval($Fleet['resources']['deuterium'])
-                        );
+                            'Deuterium' => floatval($Fleet['resources']['deuterium']),
+                        ];
 
                         Alerts_Add(1, $Now, 5, 4, 5, $_User['id'], $_Alert['PushAlert']['Data']);
                     }
@@ -1022,12 +980,11 @@ if($SendAlert)
     $_Alert['MultiAlert']['Data']['TargetUserID'] = $TargetData['owner'];
     foreach($CheckIntersection['Intersect'] as $ThisIPID)
     {
-        $_Alert['MultiAlert']['Data']['Intersect'][] = array
-        (
+        $_Alert['MultiAlert']['Data']['Intersect'][] = [
             'IPID' => $ThisIPID,
             'SenderData' => $CheckIntersection['IPLogData'][$_User['id']][$ThisIPID],
-            'TargetData' => $CheckIntersection['IPLogData'][$TargetData['owner']][$ThisIPID]
-        );
+            'TargetData' => $CheckIntersection['IPLogData'][$TargetData['owner']][$ThisIPID],
+        ];
     }
     if($DeclarationID > 0)
     {
@@ -1102,45 +1059,42 @@ if(isset($UpdateACS))
     }
 }
 
-if($isUsingQuantumGate)
-{
-    $QuantumGate_Used = '1';
-}
-else
-{
-    $QuantumGate_Used = '0';
-}
-$QryArchive = '';
-$QryArchive .= "INSERT INTO {{table}} (`Fleet_ID`, `Fleet_Owner`, `Fleet_Mission`, `Fleet_Array`, `Fleet_Time_Send`, `Fleet_Time_Start`, `Fleet_Time_Stay`, `Fleet_Time_End`, `Fleet_Start_ID`, `Fleet_Start_Galaxy`, `Fleet_Start_System`, `Fleet_Start_Planet`, `Fleet_Start_Type`, `Fleet_Start_Res_Metal`, `Fleet_Start_Res_Crystal`, `Fleet_Start_Res_Deuterium`, `Fleet_End_ID`, `Fleet_End_ID_Galaxy`, `Fleet_End_Galaxy`, `Fleet_End_System`, `Fleet_End_Planet`, `Fleet_End_Type`, `Fleet_End_Owner`, `Fleet_ACSID`, `Fleet_Info_HadSameIP_Ever`, `Fleet_Info_HadSameIP_Ever_Filtred`, `Fleet_Info_HadSameIP_OnSend`, `Fleet_Info_UsedTeleport`) VALUES ";
-$QryArchive .= " ({$LastFleetID}, {$_User['id']}, {$Fleet['Mission']}, '{$Fleet['array']}', {$Now}, {$Fleet['SetCalcTime']}, {$Fleet['SetStayTime']}, {$Fleet['SetBackTime']}, {$_Planet['id']}, {$_Planet['galaxy']}, {$_Planet['system']}, {$_Planet['planet']}, {$_Planet['planet_type']}, {$Fleet['resources']['metal']}, {$Fleet['resources']['crystal']}, {$Fleet['resources']['deuterium']}, '{$TargetData['id']}', '{$TargetData['galaxy_id']}', {$Target['galaxy']}, {$Target['system']}, {$Target['planet']}, {$Target['type']}, '{$TargetData['owner']}', '{$Fleet['ACS_ID']}', {$IPIntersectionFound}, {$IPIntersectionFiltred}, {$IPIntersectionNow}, {$QuantumGate_Used}) ";
+FlightControl\Utils\Updaters\insertFleetArchiveEntry([
+    'fleetEntryId' => $LastFleetID,
+    'ownerUser' => $_User,
+    'ownerPlanet' => $_Planet,
+    'fleetEntry' => $Fleet,
+    'targetPlanet' => $rawTargetData,
+    'targetCoords' => $Target,
+    'flags' => [
+        'hasIpIntersection' => $IPIntersectionFound,
+        'hasIpIntersectionFiltered' => $IPIntersectionFiltered,
+        'hasIpIntersectionOnSend' => $IPIntersectionNow,
+        'hasUsedTeleportation' => $isUsingQuantumGate,
+    ],
+    'currentTime' => $Now,
+]);
 
-if(!empty($UpdateACSFleets))
-{
+if (!empty($UpdateACSFleets)) {
     $UpdateACSFleetsIDs = explode(',', str_replace('|', '', $CheckACS['fleets_id']));
     $UpdateACSFleetsIDs[] = $CheckACS['main_fleet_id'];
-    if(!empty($UpdateACSFleetsIDs))
-    {
-        $QryArchive .= ', ';
-        foreach($UpdateACSFleetsIDs as $FleetID)
-        {
-            if(!empty($FleetID))
-            {
-                $QryArchiveA[] = "({$FleetID}, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)";
-            }
-        }
-        $QryArchive .= implode(', ',$QryArchiveA);
-        $QryArchive .= " ON DUPLICATE KEY UPDATE ";
-        $QryArchive .= "`Fleet_Time_ACSAdd` = `Fleet_Time_ACSAdd` + {$Difference}";
+
+    $UpdateACSFleetsIDs = Collections\compact($UpdateACSFleetsIDs);
+
+    if (!empty($UpdateACSFleetsIDs)) {
+        FlightControl\Utils\Updaters\updateFleetArchiveACSEntries([
+            'fleetIds' => $UpdateACSFleetsIDs,
+            'flightAdditionalTime' => $Difference,
+        ]);
     }
 }
-doquery($QryArchive, 'fleet_archive');
 
 $_Planet['metal'] -= $Fleet['resources']['metal'];
 $_Planet['crystal'] -= $Fleet['resources']['crystal'];
 $_Planet['deuterium'] -= ($Fleet['resources']['deuterium'] + $Consumption);
 
 $_Lang['ShipsRows'] = '';
-foreach($FleetArrayCopy as $ShipID => $ShipCount)
+foreach($Fleet['array'] as $ShipID => $ShipCount)
 {
     $_Planet[$_Vars_GameElements[$ShipID]] -= $ShipCount;
     $_Lang['ShipsRows'] .= '<tr><th class="pad">'.$_Lang['tech'][$ShipID].'</th><th class="pad">'.prettyNumber($ShipCount).'</th></tr>';
