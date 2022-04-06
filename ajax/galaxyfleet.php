@@ -499,7 +499,7 @@ $fleetEntry = [
 $targetPlanet = [
     'id' => $TargetID,
     'galaxy_id' => $GalaxyRow['galaxy_id'],
-    'owner' => $TargetOwner,
+    'ownerId' => $TargetOwner,
 ];
 $targetCoords = [
     'galaxy' => $Galaxy,

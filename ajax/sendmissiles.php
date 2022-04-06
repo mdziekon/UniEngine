@@ -238,7 +238,7 @@ $fleetEntry = [
 $targetPlanet = [
     'id' => $PlanetData['id'],
     'galaxy_id' => $PlanetData['galaxy_id'],
-    'owner' => $PlanetData['id_owner'],
+    'ownerId' => $PlanetData['id_owner'],
 ];
 $targetCoords = [
     'galaxy' => $Galaxy,

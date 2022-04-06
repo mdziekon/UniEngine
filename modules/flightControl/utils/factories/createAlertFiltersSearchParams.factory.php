@@ -11,6 +11,7 @@ namespace UniEngine\Engine\Modules\FlightControl\Utils\Factories;
 function createAlertFiltersSearchParams ($props) {
     $fleetOwner = &$props['fleetOwner'];
     $targetOwner = $props['targetOwner'];
+    $targetOwnerId = $targetOwner['id'];
     $ipsIntersectionsCheckResult = (
         isset($props['ipsIntersectionsCheckResult']) ?
         $props['ipsIntersectionsCheckResult'] :
@@ -28,10 +29,10 @@ function createAlertFiltersSearchParams ($props) {
         'alertsender' => 1,
         'users' => [
             $fleetOwner['id'],
-            $targetOwner['owner'],
+            $targetOwnerId,
         ],
         'sender' => $fleetOwner['id'],
-        'target' => $targetOwner['owner'],
+        'target' => $targetOwnerId,
         'ips' => $intersectingIps,
         'logcount' => [],
     ];
@@ -39,7 +40,7 @@ function createAlertFiltersSearchParams ($props) {
     foreach ($intersectingIps as $intersectingIp) {
         $searchParams['logcount'][$intersectingIp] = [
             $fleetOwner['id'] => $ipsLogData[$fleetOwner['id']][$intersectingIp]['Count'],
-            $targetOwner['owner'] => $ipsLogData[$targetOwner['owner']][$intersectingIp]['Count'],
+            $targetOwnerId => $ipsLogData[$targetOwnerId][$intersectingIp]['Count'],
         ];
     }
 

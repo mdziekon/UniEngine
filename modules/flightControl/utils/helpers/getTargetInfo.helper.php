@@ -56,13 +56,13 @@ function getTargetInfo($props) {
     $result['galaxyId'] = $galaxyRow['galaxy_id'];
     $result['targetOwnerDetails'] = $planetOwnerDetails;
 
-    if (!($planetOwnerDetails['owner'] > 0)) {
+    if (!($planetOwnerDetails['__mig']['targetPlanet']['ownerId'] > 0)) {
         $result['isPlanetAbandoned'] = true;
 
         return $result;
     }
 
-    if ($planetOwnerDetails['owner'] == $fleetOwnerUser['id']) {
+    if ($planetOwnerDetails['__mig']['targetPlanet']['ownerId'] == $fleetOwnerUser['id']) {
         $result['isPlanetOwnedByFleetOwner'] = true;
 
         return $result;
