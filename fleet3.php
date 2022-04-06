@@ -166,72 +166,15 @@ if (!in_array($Fleet['Speed'], $availableSpeeds)) {
 }
 
 // --- Check PlanetOwner
-$YourPlanet = false;
-$UsedPlanet = false;
-$OwnerFriend = false;
-$OwnerIsBuddyFriend = false;
-$OwnerIsAlliedUser = false;
-$OwnerHasMarcantilePact = false;
-$PlanetAbandoned = false;
+$targetInfo = FlightControl\Utils\Helpers\getTargetInfo([
+    'targetCoords' => $Target,
+    'fleetEntry' => $Fleet,
+    'fleetOwnerUser' => &$_User,
+]);
 
-if($Fleet['Mission'] != 8)
-{
-    $planetOwnerDetails = FlightControl\Utils\Fetchers\fetchPlanetOwnerDetails([
-        'targetCoordinates' => $Target,
-        'user' => &$_User,
-        'isExtendedUserDetailsEnabled' => true,
-    ]);
-
-    if ($planetOwnerDetails) {
-        $CheckGalaxyRow = doquery(
-            "SELECT `galaxy_id` FROM {{table}} WHERE `galaxy` = {$Target['galaxy']} AND `system` = {$Target['system']} AND `planet` = {$Target['planet']} LIMIT 1;", 'galaxy',
-            true
-        );
-
-        $CheckPlanetOwner = $planetOwnerDetails;
-
-        $CheckPlanetOwner['galaxy_id'] = $CheckGalaxyRow['galaxy_id'];
-        $UsedPlanet = true;
-        if($CheckPlanetOwner['owner'] > 0)
-        {
-            if($CheckPlanetOwner['owner'] == $_User['id'])
-            {
-                $YourPlanet = true;
-            }
-            else
-            {
-                if((isset($CheckPlanetOwner['AllyPact1']) && $CheckPlanetOwner['AllyPact1'] >= ALLYPACT_NONAGGRESSION) || (isset($CheckPlanetOwner['AllyPact2']) && $CheckPlanetOwner['AllyPact2'] >= ALLYPACT_NONAGGRESSION))
-                {
-                    $OwnerIsAlliedUser = true;
-                }
-                if((isset($CheckPlanetOwner['AllyPact1']) && $CheckPlanetOwner['AllyPact1'] >= ALLYPACT_MERCANTILE) || (isset($CheckPlanetOwner['AllyPact2']) && $CheckPlanetOwner['AllyPact2'] >= ALLYPACT_MERCANTILE))
-                {
-                    $OwnerHasMarcantilePact = true;
-                }
-                if(($CheckPlanetOwner['active1'] == 1 OR $CheckPlanetOwner['active2'] == 1) OR ($CheckPlanetOwner['ally_id'] == $_User['ally_id'] AND $_User['ally_id'] > 0) OR ((isset($CheckPlanetOwner['AllyPact1']) && $CheckPlanetOwner['AllyPact1'] >= ALLYPACT_DEFENSIVE) || (isset($CheckPlanetOwner['AllyPact2']) && $CheckPlanetOwner['AllyPact2'] >= ALLYPACT_DEFENSIVE)))
-                {
-                    $OwnerFriend = true;
-                    if($CheckPlanetOwner['active1'] == 1 OR $CheckPlanetOwner['active2'] == 1)
-                    {
-                        $OwnerIsBuddyFriend = true;
-                    }
-                }
-            }
-        }
-        else
-        {
-            $PlanetAbandoned = true;
-        }
-    }
-    else
-    {
-        $CheckPlanetOwner = [];
-    }
-}
-else
-{
-    // This is a Recycling Mission, so check Galaxy Data
-    $CheckDebrisField = doquery("SELECT `galaxy_id`, `metal`, `crystal` FROM {{table}} WHERE galaxy = '{$Target['galaxy']}' AND system = '{$Target['system']}' AND planet = '{$Target['planet']}'", 'galaxy', true);
+// TODO: Compatibility with previous solution, get rid of this
+if ($targetInfo['galaxyId']) {
+    $targetInfo['targetOwnerDetails']['galaxy_id'] = $targetInfo['galaxyId'];
 }
 
 $smartFleetsBlockadeStateValidationResult = FlightControl\Utils\Validators\validateSmartFleetsBlockadeState([
@@ -242,11 +185,11 @@ $smartFleetsBlockadeStateValidationResult = FlightControl\Utils\Validators\valid
         'planetId' => $_Planet['id'],
     ],
     'targetOwnerDetails' => (
-        $CheckPlanetOwner['owner'] > 0 ?
+        $targetInfo['targetOwnerDetails']['owner'] > 0 ?
         [
-            'userId' => $CheckPlanetOwner['owner'],
-            'planetId' => $CheckPlanetOwner['id'],
-            'onlinetime' => $CheckPlanetOwner['onlinetime'],
+            'userId' => $targetInfo['targetOwnerDetails']['owner'],
+            'planetId' => $targetInfo['targetOwnerDetails']['id'],
+            'onlinetime' => $targetInfo['targetOwnerDetails']['onlinetime'],
         ] :
         null
     ),
@@ -331,9 +274,9 @@ $validMissionTypes = FlightControl\Utils\Helpers\getValidMissionTypes([
     'targetCoordinates' => $Target,
     'fleetShips' => $Fleet['array'],
     'fleetShipsCount' => $Fleet['count'],
-    'isPlanetOccupied' => $UsedPlanet,
-    'isPlanetOwnedByUser' => $YourPlanet,
-    'isPlanetOwnedByUsersFriend' => $OwnerFriend,
+    'isPlanetOccupied' => $targetInfo['isPlanetOccupied'],
+    'isPlanetOwnedByUser' => $targetInfo['isPlanetOwnedByFleetOwner'],
+    'isPlanetOwnedByUsersFriend' => $targetInfo['isPlanetOwnerFriendly'],
     // TODO: additional pre-validation might be needed
     'isUnionMissionAllowed' => true,
 ]);
@@ -344,7 +287,7 @@ if ($Fleet['Mission'] == 2 AND in_array(2, $validMissionTypes)) {
         'newFleet' => $Fleet,
         'timestamp' => $Now,
         'user' => &$_User,
-        'destinationEntry' => &$CheckPlanetOwner,
+        'destinationEntry' => &$targetInfo['targetOwnerDetails'],
     ]);
 
     if (!$joinUnionValidationResult['isValid']) {
@@ -371,10 +314,10 @@ if(!in_array($Fleet['Mission'], $validMissionTypes))
         if ($Target['type'] == 2) {
             messageRed($_Lang['fl3_CantAttackDebris'], $ErrorTitle);
         }
-        if (!$UsedPlanet) {
+        if (!$targetInfo['isPlanetOccupied']) {
             messageRed($_Lang['fl3_CantAttackNonUsed'], $ErrorTitle);
         }
-        if ($YourPlanet) {
+        if ($targetInfo['isPlanetOwnedByFleetOwner']) {
             messageRed($_Lang['fl3_CantAttackYourself'], $ErrorTitle);
         }
     }
@@ -382,10 +325,10 @@ if(!in_array($Fleet['Mission'], $validMissionTypes))
         if ($Target['type'] == 2) {
             messageRed($_Lang['fl3_CantACSDebris'], $ErrorTitle);
         }
-        if (!$UsedPlanet) {
+        if (!$targetInfo['isPlanetOccupied']) {
             messageRed($_Lang['fl3_CantACSNonUsed'], $ErrorTitle);
         }
-        if ($YourPlanet) {
+        if ($targetInfo['isPlanetOwnedByFleetOwner']) {
             messageRed($_Lang['fl3_CantACSYourself'], $ErrorTitle);
         }
     }
@@ -393,7 +336,7 @@ if(!in_array($Fleet['Mission'], $validMissionTypes))
         if ($Target['type'] == 2) {
             messageRed($_Lang['fl3_CantTransportDebris'], $ErrorTitle);
         }
-        if (!$UsedPlanet) {
+        if (!$targetInfo['isPlanetOccupied']) {
             messageRed($_Lang['fl3_CantTransportNonUsed'], $ErrorTitle);
         }
         // TODO: This should be checked,
@@ -404,10 +347,10 @@ if(!in_array($Fleet['Mission'], $validMissionTypes))
         if ($Target['type'] == 2) {
             messageRed($_Lang['fl3_CantStayDebris'], $ErrorTitle);
         }
-        if (!$UsedPlanet) {
+        if (!$targetInfo['isPlanetOccupied']) {
             messageRed($_Lang['fl3_CantStayNonUsed'], $ErrorTitle);
         }
-        if (!$YourPlanet) {
+        if (!$targetInfo['isPlanetOwnedByFleetOwner']) {
             messageRed($_Lang['fl3_CantStayNonYourself'], $ErrorTitle);
         }
     }
@@ -415,10 +358,10 @@ if(!in_array($Fleet['Mission'], $validMissionTypes))
         if ($Target['type'] == 2) {
             messageRed($_Lang['fl3_CantProtectDebris'], $ErrorTitle);
         }
-        if (!$UsedPlanet) {
+        if (!$targetInfo['isPlanetOccupied']) {
             messageRed($_Lang['fl3_CantProtectNonUsed'], $ErrorTitle);
         }
-        if ($YourPlanet) {
+        if ($targetInfo['isPlanetOwnedByFleetOwner']) {
             messageRed($_Lang['fl3_CantProtectYourself'], $ErrorTitle);
         }
         // TODO: This should be checked,
@@ -429,10 +372,10 @@ if(!in_array($Fleet['Mission'], $validMissionTypes))
         if ($Target['type'] == 2) {
             messageRed($_Lang['fl3_CantSpyDebris'], $ErrorTitle);
         }
-        if (!$UsedPlanet) {
+        if (!$targetInfo['isPlanetOccupied']) {
             messageRed($_Lang['fl3_CantSpyNonUsed'], $ErrorTitle);
         }
-        if ($YourPlanet) {
+        if ($targetInfo['isPlanetOwnedByFleetOwner']) {
             messageRed($_Lang['fl3_CantSpyYourself'], $ErrorTitle);
         }
         // TODO: This should be checked,
@@ -443,7 +386,7 @@ if(!in_array($Fleet['Mission'], $validMissionTypes))
         if ($Target['type'] != 1) {
             messageRed($_Lang['fl3_CantSettleNonPlanet'], $ErrorTitle);
         }
-        if ($UsedPlanet) {
+        if ($targetInfo['isPlanetOccupied']) {
             messageRed($_Lang['fl3_CantSettleOnUsed'], $ErrorTitle);
         }
         // TODO: This should be checked,
@@ -462,10 +405,10 @@ if(!in_array($Fleet['Mission'], $validMissionTypes))
         if ($Target['type'] != 3) {
             messageRed($_Lang['fl3_CantDestroyNonMoon'], $ErrorTitle);
         }
-        if (!$UsedPlanet) {
+        if (!$targetInfo['isPlanetOccupied']) {
             messageRed($_Lang['fl3_CantDestroyNonUsed'], $ErrorTitle);
         }
-        if ($YourPlanet) {
+        if ($targetInfo['isPlanetOwnedByFleetOwner']) {
             messageRed($_Lang['fl3_CantDestroyYourself'], $ErrorTitle);
         }
         // TODO: This should be checked,
@@ -484,7 +427,7 @@ if(!in_array($Fleet['Mission'], $validMissionTypes))
 // --- If Mission is Recycling and there is no Debris Field, show Error
 if($Fleet['Mission'] == 8)
 {
-    if($CheckDebrisField['metal'] <= 0 AND $CheckDebrisField['crystal'] <= 0)
+    if($targetInfo['galaxyEntry']['metal'] <= 0 AND $targetInfo['galaxyEntry']['crystal'] <= 0)
     {
         messageRed($_Lang['fl3_NoDebrisFieldHere'], $ErrorTitle);
     }
@@ -537,17 +480,14 @@ if($Throw)
 }
 
 // --- Set Variables to better usage
-if(!empty($CheckDebrisField))
-{
-    $TargetData = &$CheckDebrisField;
-}
-else
-{
-    $TargetData = &$CheckPlanetOwner;
+if (!empty($targetInfo['galaxyEntry'])) {
+    $TargetData = &$targetInfo['galaxyEntry'];
+} else {
+    $TargetData = &$targetInfo['targetOwnerDetails'];
 }
 
 // --- Check if User data are OK
-if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
+if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner'] AND !$targetInfo['isPlanetAbandoned'])
 {
     $SaveMyTotalRank = false;
 
@@ -702,10 +642,10 @@ if ($Fleet['UseQuantum']) {
         'originPlanet' => $_Planet,
         'targetPlanet' => $TargetData,
         'targetData' => $Target,
-        'isTargetOccupied' => $UsedPlanet,
-        'isTargetOwnPlanet' => $YourPlanet,
-        'isTargetOwnedByFriend' => $OwnerFriend,
-        'isTargetOwnedByFriendlyMerchant' => $OwnerHasMarcantilePact,
+        'isTargetOccupied' => $targetInfo['isPlanetOccupied'],
+        'isTargetOwnPlanet' => $targetInfo['isPlanetOwnedByFleetOwner'],
+        'isTargetOwnedByFriend' => $targetInfo['isPlanetOwnerFriendly'],
+        'isTargetOwnedByFriendlyMerchant' => $targetInfo['isPlanetOwnerFriendlyMerchant'],
         'currentTimestamp' => $Now,
     ]);
 
@@ -816,7 +756,7 @@ $SendAlert = false;
 $IPIntersectionFound = false;
 $IPIntersectionFiltered = false;
 $IPIntersectionNow = false;
-if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
+if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner'] AND !$targetInfo['isPlanetAbandoned'])
 {
     include($_EnginePath.'includes/functions/AlertSystemUtilities.php');
     $CheckIntersection = AlertUtils_IPIntersect($_User['id'], $TargetData['owner'], [
@@ -897,7 +837,7 @@ if (!isset($LockFleetSending)) {
     }
 
     // PushAlert
-    if($UsedPlanet AND !$YourPlanet AND !$PlanetAbandoned)
+    if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner'] AND !$targetInfo['isPlanetAbandoned'])
     {
         if($Fleet['Mission'] == 3)
         {
@@ -931,19 +871,15 @@ if (!isset($LockFleetSending)) {
                     if($FilterResult['SendAlert'])
                     {
                         $_Alert['PushAlert']['Data']['TargetUserID'] = $TargetData['owner'];
-                        if($_User['ally_id'] > 0 AND $_User['ally_id'] == $TargetData['ally_id'])
-                        {
+                        if ($targetInfo['isPlanetOwnerAlly']) {
                             $_Alert['PushAlert']['Data']['SameAlly'] = $TargetData['ally_id'];
-                        }
-                        else if($OwnerIsAlliedUser === true)
-                        {
+                        } else if ($targetInfo['isPlanetOwnerNonAggressiveAllianceMember']) {
                             $_Alert['PushAlert']['Data']['AllyPact'] = [
                                 'SenderAlly' => $_User['ally_id'],
                                 'TargetAlly' => $TargetData['ally_id'],
                             ];
                         }
-                        if($OwnerIsBuddyFriend === true)
-                        {
+                        if ($targetInfo['isPlanetOwnerBuddy']) {
                             $_Alert['PushAlert']['Data']['BuddyFriends'] = true;
                         }
                         $_Alert['PushAlert']['Data']['FleetID'] = $LastFleetID;
