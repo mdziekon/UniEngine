@@ -170,6 +170,7 @@ $targetInfo = FlightControl\Utils\Helpers\getTargetInfo([
     'targetCoords' => $Target,
     'fleetEntry' => $Fleet,
     'fleetOwnerUser' => &$_User,
+    'isExtendedTargetOwnerDetailsEnabled' => true,
 ]);
 
 $smartFleetsBlockadeStateValidationResult = FlightControl\Utils\Validators\validateSmartFleetsBlockadeState([

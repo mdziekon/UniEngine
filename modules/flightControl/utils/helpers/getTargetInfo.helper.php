@@ -10,11 +10,13 @@ use UniEngine\Engine\Modules\FlightControl;
  * @param array $props['targetCoords']
  * @param array $props['fleetEntry']
  * @param array $props['fleetOwnerUser']
+ * @param array $props['isExtendedTargetOwnerDetailsEnabled']
  */
 function getTargetInfo($props) {
     $targetCoords = $props['targetCoords'];
     $fleetEntry = $props['fleetEntry'];
     $fleetOwnerUser = $props['fleetOwnerUser'];
+    $isExtendedTargetOwnerDetailsEnabled = $props['isExtendedTargetOwnerDetailsEnabled'];
 
     $result = [
         'galaxyEntry' => null,
@@ -42,7 +44,7 @@ function getTargetInfo($props) {
     $planetOwnerDetails = FlightControl\Utils\Fetchers\fetchPlanetOwnerDetails([
         'targetCoordinates' => $targetCoords,
         'user' => &$fleetOwnerUser,
-        'isExtendedUserDetailsEnabled' => true,
+        'isExtendedUserDetailsEnabled' => $isExtendedTargetOwnerDetailsEnabled,
     ]);
 
     if (!$planetOwnerDetails) {
