@@ -34,6 +34,7 @@ function getTargetInfo($props) {
         $galaxyRow = FlightControl\Utils\Fetchers\fetchTargetGalaxyDetails([ 'targetCoords' => $targetCoords ]);
 
         $result['galaxyEntry'] = $galaxyRow;
+        $result['galaxyId'] = $galaxyRow['galaxy_id'];
 
         return $result;
     }

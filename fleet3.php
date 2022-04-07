@@ -172,11 +172,6 @@ $targetInfo = FlightControl\Utils\Helpers\getTargetInfo([
     'fleetOwnerUser' => &$_User,
 ]);
 
-// TODO: Compatibility with previous solution, get rid of this
-if ($targetInfo['galaxyId']) {
-    $targetInfo['targetOwnerDetails']['galaxy_id'] = $targetInfo['galaxyId'];
-}
-
 $smartFleetsBlockadeStateValidationResult = FlightControl\Utils\Validators\validateSmartFleetsBlockadeState([
     'timestamp' => $Now,
     'fleetData' => $Fleet,
@@ -837,8 +832,7 @@ if (!isset($LockFleetSending)) {
         'targetPlanet' => [
             'id' => $TargetData['__mig']['targetPlanet']['id'],
             'ownerId' => $TargetData['__mig']['targetPlanet']['ownerId'],
-            // TODO: Remove this from $targetData and take from $targetInfo
-            'galaxy_id' => $TargetData['galaxy_id'],
+            'galaxy_id' => $targetInfo['galaxyId'],
         ],
         'targetCoords' => $Target,
         'currentTime' => $Now,
@@ -1020,8 +1014,7 @@ FlightControl\Utils\Updaters\insertFleetArchiveEntry([
     'targetPlanet' => [
         'id' => $TargetData['__mig']['targetPlanet']['id'],
         'ownerId' => $TargetData['__mig']['targetPlanet']['ownerId'],
-        // TODO: Remove this from $targetData and take from $targetInfo
-        'galaxy_id' => $TargetData['galaxy_id'],
+        'galaxy_id' => $targetInfo['galaxyId'],
     ],
     'targetCoords' => $Target,
     'flags' => [
