@@ -169,13 +169,13 @@ $AllyPactWarning = false;
 if ($planetOwnerDetails) {
     $CheckPlanetOwner = $planetOwnerDetails;
 
-    if ($CheckPlanetOwner['owner'] == $_User['id']) {
+    if ($CheckPlanetOwner['__mig']['targetPlanet']['ownerId'] == $_User['id']) {
         $YourPlanet = true;
     } else {
         if(!empty($_GameConfig['TestUsersIDs']))
         {
             $TestUsersArray = explode(',', $_GameConfig['TestUsersIDs']);
-            if(in_array($CheckPlanetOwner['owner'], $TestUsersArray))
+            if(in_array($CheckPlanetOwner['__mig']['targetPlanet']['ownerId'], $TestUsersArray))
             {
                 $EnableTestAccWarning = true;
             }
@@ -275,10 +275,10 @@ $AvailableMissions = FlightControl\Utils\Helpers\getValidMissionTypes([
     'isUnionMissionAllowed' => false,
 ]);
 
-if(in_array(1, $AvailableMissions) && $CheckPlanetOwner['id'] > 0)
+if(in_array(1, $AvailableMissions) && $CheckPlanetOwner['__mig']['targetPlanet']['id'] > 0)
 {
     $SQLResult_CheckACS = doquery(
-        "SELECT * FROM {{table}} WHERE (`users` LIKE '%|{$_User['id']}|%' OR `owner_id` = {$_User['id']}) AND `end_target_id` = {$CheckPlanetOwner['id']} AND `start_time` > UNIX_TIMESTAMP();",
+        "SELECT * FROM {{table}} WHERE (`users` LIKE '%|{$_User['id']}|%' OR `owner_id` = {$_User['id']}) AND `end_target_id` = {$CheckPlanetOwner['__mig']['targetPlanet']['id']} AND `start_time` > UNIX_TIMESTAMP();",
         'acs'
     );
 
@@ -299,7 +299,7 @@ if(!empty($AvailableMissions))
 {
     if($_Planet['quantumgate'] == 1)
     {
-        if(($YourPlanet OR $OwnerFriend OR $OwnerHasMarcantilePact) AND $CheckPlanetOwner['quantumgate'] == 1 AND (in_array(3, $AvailableMissions) OR in_array(4, $AvailableMissions) OR in_array(5, $AvailableMissions)))
+        if(($YourPlanet OR $OwnerFriend OR $OwnerHasMarcantilePact) AND $CheckPlanetOwner['__mig']['targetPlanet']['quantumgate'] == 1 AND (in_array(3, $AvailableMissions) OR in_array(4, $AvailableMissions) OR in_array(5, $AvailableMissions)))
         {
             $allowUseQuantumGate = true;
             $allowGateJump = true;
@@ -443,11 +443,11 @@ else
 }
 $_Lang['SetDefaultFreeStorage'] = prettyNumber($_Lang['freeStorage']);
 $_Lang['ShowTargetPos'] = "<a href=\"galaxy.php?mode=3&galaxy={$Target['galaxy']}&system={$Target['system']}&planet={$Target['planet']}\" target=\"_blank\">[{$Target['galaxy']}:{$Target['system']}:{$Target['planet']}]</a><b class=\"".($Target['type'] == 1 ? 'planet' : ($Target['type'] == 3 ? 'moon' : 'debris'))."\"></b><br/>";
-if(!empty($CheckPlanetOwner['name']))
+if(!empty($CheckPlanetOwner['__mig']['targetPlanet']['name']))
 {
-    if($CheckPlanetOwner['owner'] > 0)
+    if($CheckPlanetOwner['__mig']['targetPlanet']['ownerId'] > 0)
     {
-        $_Lang['ShowTargetPos'] .= '<b class="orange">'.$CheckPlanetOwner['name'].'</b>';
+        $_Lang['ShowTargetPos'] .= '<b class="orange">'.$CheckPlanetOwner['__mig']['targetPlanet']['name'].'</b>';
     }
     else
     {
@@ -465,9 +465,9 @@ else
         $_Lang['ShowTargetPos'] .= $_Lang['fl2_emptyplanet'];
     }
 }
-if($CheckPlanetOwner['owner'] > 0)
+if($CheckPlanetOwner['__mig']['targetPlanet']['ownerId'] > 0)
 {
-    $_Lang['ShowTargetOwner'] = "<a ".($AllyPactWarning === true ? 'class="skyblue"' : '')." href=\"profile.php?uid={$CheckPlanetOwner['owner']}\" target=\"_blank\">{$CheckPlanetOwner['username']}</a>";
+    $_Lang['ShowTargetOwner'] = "<a ".($AllyPactWarning === true ? 'class="skyblue"' : '')." href=\"profile.php?uid={$CheckPlanetOwner['__mig']['targetPlanet']['ownerId']}\" target=\"_blank\">{$CheckPlanetOwner['username']}</a>";
 }
 else
 {
