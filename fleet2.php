@@ -183,7 +183,7 @@ $Fleet['storage'] = 0;
 $Fleet['FuelStorage'] = 0;
 
 $Fleet['array'] = String2Array($_POST['FleetArray']);
-$FleetArray = array();
+$FleetArray = [];
 
 if (
     !empty($Fleet['array']) &&
@@ -363,7 +363,7 @@ if($GetSFBData['ID'] > 0)
 {
     // Fleet Blockade is Active
     include($_EnginePath.'includes/functions/CreateSFBInfobox.php');
-    $_Lang['P_SFBInfobox'] = CreateSFBInfobox($GetSFBData, array('standAlone' => true, 'Width' => 750, 'MarginBottom' => 10));
+    $_Lang['P_SFBInfobox'] = CreateSFBInfobox($GetSFBData, ['standAlone' => true, 'Width' => 750, 'MarginBottom' => 10]);
 }
 
 $_Lang['TitlePos'] = ($_Planet['planet_type'] == 1 ? $_Lang['fl2_sendfromplanet'] : $_Lang['fl2_sendfrommoon'])." {$_Planet['name']} [{$_Planet['galaxy']}:{$_Planet['system']}:{$_Planet['planet']}]";
@@ -517,7 +517,7 @@ if(!empty($AvailableMissions))
     $MissionRowTPL = gettemplate('fleet2_missionrow');
     foreach($AvailableMissions as $MID)
     {
-        $ThisMission = array();
+        $ThisMission = [];
         $ThisMission['MID'] = $MID;
         if($PreSelectedMission == $MID)
         {
