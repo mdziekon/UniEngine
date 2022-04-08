@@ -88,6 +88,10 @@ function fetchPlanetOwnerDetails ($props) {
 
     $result = doquery($query, 'planets', true);
 
+    if (!$result) {
+        return $result;
+    }
+
     // TODO: Migration layer, remove once migration to new format is done
     $result['__mig'] = [
         'targetPlanet' => [
