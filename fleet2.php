@@ -279,7 +279,7 @@ if(!empty($AvailableMissions))
 {
     if($_Planet['quantumgate'] == 1)
     {
-        if(($targetInfo['isPlanetOwnedByFleetOwner'] OR $targetInfo['isPlanetOwnerFriendly'] OR $targetInfo['isPlanetOwnerFriendlyMerchant']) AND   $targetInfo['targetPlanetDetails']['quantumgate'] == 1 AND (in_array(3, $AvailableMissions) OR in_array(4, $AvailableMissions) OR in_array(5, $AvailableMissions)))
+        if(($targetInfo['isPlanetOwnedByFleetOwner'] OR $targetInfo['isPlanetOwnerFriendly'] OR $targetInfo['isPlanetOwnerFriendlyMerchant']) AND $targetInfo['targetPlanetDetails']['quantumgate'] == 1 AND (in_array(3, $AvailableMissions) OR in_array(4, $AvailableMissions) OR in_array(5, $AvailableMissions)))
         {
             $allowUseQuantumGate = true;
             $allowGateJump = true;
