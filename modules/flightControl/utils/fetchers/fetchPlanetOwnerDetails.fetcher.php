@@ -89,20 +89,28 @@ function fetchPlanetOwnerDetails ($props) {
     $result = doquery($query, 'planets', true);
 
     if (!$result) {
-        return $result;
+        return null;
     }
 
-    // TODO: Migration layer, remove once migration to new format is done
-    $result['__mig'] = [
-        'targetPlanet' => [
-            'id' => $result['id'],
-            'ownerId' => $result['owner'],
-            'name' => $result['name'],
-            'quantumgate' => $result['quantumgate'],
-        ],
+    $targetPlanet = [
+        'id' => $result['id'],
+        'ownerId' => $result['owner'],
+        'name' => $result['name'],
+        'quantumgate' => $result['quantumgate'],
     ];
+    $targetOwner = $result;
 
-    return $result;
+    unset($targetOwner['id']);
+    unset($targetOwner['owner']);
+    unset($targetOwner['name']);
+    unset($targetOwner['quantumgate']);
+
+    $targetOwner['id'] = $targetPlanet['ownerId'];
+
+    return [
+        'targetPlanet' => $targetPlanet,
+        'targetOwner' => $targetOwner,
+    ];
 }
 
 ?>

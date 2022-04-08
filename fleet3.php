@@ -181,10 +181,10 @@ $smartFleetsBlockadeStateValidationResult = FlightControl\Utils\Validators\valid
         'planetId' => $_Planet['id'],
     ],
     'targetOwnerDetails' => (
-        $targetInfo['targetOwnerDetails']['__mig']['targetPlanet']['ownerId'] > 0 ?
+        $targetInfo['targetOwnerDetails']['id'] > 0 ?
         [
-            'userId' => $targetInfo['targetOwnerDetails']['__mig']['targetPlanet']['ownerId'],
-            'planetId' => $targetInfo['targetOwnerDetails']['__mig']['targetPlanet']['id'],
+            'userId' => $targetInfo['targetOwnerDetails']['id'],
+            'planetId' => $targetInfo['targetPlanetDetails']['id'],
             'onlinetime' => $targetInfo['targetOwnerDetails']['onlinetime'],
         ] :
         null
@@ -284,7 +284,7 @@ if ($Fleet['Mission'] == 2 AND in_array(2, $validMissionTypes)) {
         'timestamp' => $Now,
         'user' => &$_User,
         'destinationEntry' => [
-            'id' => $targetInfo['targetOwnerDetails']['__mig']['targetPlanet']['id'],
+            'id' => $targetInfo['targetPlanetDetails']['id'],
         ],
     ]);
 
@@ -581,8 +581,8 @@ if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner']
                     $Protections['bashLimit_enabled'] === true
                 )
             ) {
-                $targetId = $TargetData['__mig']['targetPlanet']['id'];
-                $targetUserId = $TargetData['__mig']['targetPlanet']['ownerId'];
+                $targetId = $targetInfo['targetPlanetDetails']['id'];
+                $targetUserId = $TargetData['id'];
 
                 $bashLimitValidationResult = FlightControl\Utils\Validators\validateBashLimit([
                     'isFarmCheckRequired' => $isFarmCheckRequired,
@@ -642,7 +642,7 @@ if ($Fleet['UseQuantum']) {
         'fleet' => $Fleet,
         'originPlanet' => $_Planet,
         'targetPlanet' => [
-            'quantumgate' => $TargetData['__mig']['targetPlanet']['quantumgate'],
+            'quantumgate' => $targetInfo['targetPlanetDetails']['quantumgate'],
         ],
         'targetData' => $Target,
         'isTargetOccupied' => $targetInfo['isPlanetOccupied'],
@@ -762,7 +762,7 @@ $IPIntersectionNow = false;
 if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner'] AND !$targetInfo['isPlanetAbandoned'])
 {
     include($_EnginePath.'includes/functions/AlertSystemUtilities.php');
-    $CheckIntersection = AlertUtils_IPIntersect($_User['id'], $TargetData['__mig']['targetPlanet']['ownerId'], [
+    $CheckIntersection = AlertUtils_IPIntersect($_User['id'], $TargetData['id'], [
         'LastTimeDiff' => (TIME_DAY * 30),
         'ThisTimeDiff' => (TIME_DAY * 30),
         'ThisTimeStamp' => ($Now - SERVER_MAINOPEN_TSTAMP)
@@ -792,7 +792,7 @@ if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner']
         $alertFiltersSearchParams = FlightControl\Utils\Factories\createAlertFiltersSearchParams([
             'fleetOwner' => &$_User,
             'targetOwner' => [
-                'id' => $TargetData['__mig']['targetPlanet']['ownerId'],
+                'id' => $TargetData['id'],
             ],
             'ipsIntersectionsCheckResult' => $CheckIntersection,
         ]);
@@ -831,16 +831,16 @@ if (!isset($LockFleetSending)) {
         'ownerPlanet' => $_Planet,
         'fleetEntry' => $Fleet,
         'targetPlanet' => [
-            'id' => $TargetData['__mig']['targetPlanet']['id'],
-            'ownerId' => $TargetData['__mig']['targetPlanet']['ownerId'],
+            'id' => $targetInfo['targetPlanetDetails']['id'],
+            'ownerId' => $TargetData['id'],
             'galaxy_id' => $targetInfo['galaxyId'],
         ],
         'targetCoords' => $Target,
         'currentTime' => $Now,
     ]);
 
-    if (empty($TargetData['__mig']['targetPlanet']['ownerId'])) {
-        $TargetData['__mig']['targetPlanet']['ownerId'] = '0';
+    if (empty($TargetData['id'])) {
+        $TargetData['id'] = '0';
     }
 
     // PushAlert
@@ -865,7 +865,7 @@ if (!isset($LockFleetSending)) {
                     $alertFiltersSearchParams = FlightControl\Utils\Factories\createAlertFiltersSearchParams([
                         'fleetOwner' => &$_User,
                         'targetOwner' => [
-                            'id' => $TargetData['__mig']['targetPlanet']['ownerId'],
+                            'id' => $TargetData['id'],
                         ],
                         'ipsIntersectionsCheckResult' => null,
                     ]);
@@ -879,7 +879,7 @@ if (!isset($LockFleetSending)) {
 
                     if($FilterResult['SendAlert'])
                     {
-                        $_Alert['PushAlert']['Data']['TargetUserID'] = $TargetData['__mig']['targetPlanet']['ownerId'];
+                        $_Alert['PushAlert']['Data']['TargetUserID'] = $TargetData['id'];
 
                         if ($targetInfo['isPlanetOwnerAlly']) {
                             $_Alert['PushAlert']['Data']['SameAlly'] = $TargetData['ally_id'];
@@ -917,7 +917,7 @@ if (!isset($LockFleetSending)) {
 
 if($SendAlert)
 {
-    $targetOwnerId = $TargetData['__mig']['targetPlanet']['ownerId'];
+    $targetOwnerId = $TargetData['id'];
 
     $_Alert['MultiAlert']['Importance'] = 10;
     $_Alert['MultiAlert']['Data']['MissionID'] = $Fleet['Mission'];
@@ -1013,8 +1013,8 @@ FlightControl\Utils\Updaters\insertFleetArchiveEntry([
     'ownerPlanet' => $_Planet,
     'fleetEntry' => $Fleet,
     'targetPlanet' => [
-        'id' => $TargetData['__mig']['targetPlanet']['id'],
-        'ownerId' => $TargetData['__mig']['targetPlanet']['ownerId'],
+        'id' => $targetInfo['targetPlanetDetails']['id'],
+        'ownerId' => $TargetData['id'],
         'galaxy_id' => $targetInfo['galaxyId'],
     ],
     'targetCoords' => $Target,

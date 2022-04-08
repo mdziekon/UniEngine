@@ -21,6 +21,7 @@ function getTargetInfo($props) {
     $result = [
         'galaxyEntry' => null,
         'targetOwnerDetails' => null,
+        'targetPlanetDetails' => null,
         'galaxyId' => null,
         'isPlanetOccupied' => false,
         'isPlanetAbandoned' => false,
@@ -55,17 +56,20 @@ function getTargetInfo($props) {
 
     $galaxyRow = FlightControl\Utils\Fetchers\fetchTargetGalaxyDetails([ 'targetCoords' => $targetCoords ]);
 
+    $targetOwnerDetails = $planetOwnerDetails['targetOwner'];
+
     $result['isPlanetOccupied'] = true;
     $result['galaxyId'] = $galaxyRow['galaxy_id'];
-    $result['targetOwnerDetails'] = $planetOwnerDetails;
+    $result['targetOwnerDetails'] = $targetOwnerDetails;
+    $result['targetPlanetDetails'] = $planetOwnerDetails['targetPlanet'];
 
-    if (!($planetOwnerDetails['__mig']['targetPlanet']['ownerId'] > 0)) {
+    if (!($targetOwnerDetails['id'] > 0)) {
         $result['isPlanetAbandoned'] = true;
 
         return $result;
     }
 
-    if ($planetOwnerDetails['__mig']['targetPlanet']['ownerId'] == $fleetOwnerUser['id']) {
+    if ($targetOwnerDetails['id'] == $fleetOwnerUser['id']) {
         $result['isPlanetOwnedByFleetOwner'] = true;
 
         return $result;
@@ -73,32 +77,32 @@ function getTargetInfo($props) {
 
     $result['isPlanetOwnerNonAggressiveAllianceMember'] = (
         (
-            isset($planetOwnerDetails['AllyPact1']) &&
-            $planetOwnerDetails['AllyPact1'] >= ALLYPACT_NONAGGRESSION
+            isset($targetOwnerDetails['AllyPact1']) &&
+            $targetOwnerDetails['AllyPact1'] >= ALLYPACT_NONAGGRESSION
         ) ||
         (
-            isset($planetOwnerDetails['AllyPact2']) &&
-            $planetOwnerDetails['AllyPact2'] >= ALLYPACT_NONAGGRESSION
+            isset($targetOwnerDetails['AllyPact2']) &&
+            $targetOwnerDetails['AllyPact2'] >= ALLYPACT_NONAGGRESSION
         )
     );
     $result['isPlanetOwnerFriendlyMerchant'] = (
         (
-            isset($planetOwnerDetails['AllyPact1']) &&
-            $planetOwnerDetails['AllyPact1'] >= ALLYPACT_MERCANTILE
+            isset($targetOwnerDetails['AllyPact1']) &&
+            $targetOwnerDetails['AllyPact1'] >= ALLYPACT_MERCANTILE
         ) ||
         (
-            isset($planetOwnerDetails['AllyPact2']) &&
-            $planetOwnerDetails['AllyPact2'] >= ALLYPACT_MERCANTILE
+            isset($targetOwnerDetails['AllyPact2']) &&
+            $targetOwnerDetails['AllyPact2'] >= ALLYPACT_MERCANTILE
         )
     );
 
     $isPlanetOwnerBuddy = (
-        $planetOwnerDetails['active1'] == 1 ||
-        $planetOwnerDetails['active2'] == 1
+        $targetOwnerDetails['active1'] == 1 ||
+        $targetOwnerDetails['active2'] == 1
     );
     $isPlanetOwnerAlly = (
         $fleetOwnerUser['ally_id'] > 0 &&
-        $planetOwnerDetails['ally_id'] == $fleetOwnerUser['ally_id']
+        $targetOwnerDetails['ally_id'] == $fleetOwnerUser['ally_id']
     );
 
     $result['isPlanetOwnerBuddy'] = $isPlanetOwnerBuddy;
@@ -107,12 +111,12 @@ function getTargetInfo($props) {
         $isPlanetOwnerBuddy ||
         $isPlanetOwnerAlly ||
         (
-            isset($planetOwnerDetails['AllyPact1']) &&
-            $planetOwnerDetails['AllyPact1'] >= ALLYPACT_DEFENSIVE
+            isset($targetOwnerDetails['AllyPact1']) &&
+            $targetOwnerDetails['AllyPact1'] >= ALLYPACT_DEFENSIVE
         ) ||
         (
-            isset($planetOwnerDetails['AllyPact2']) &&
-            $planetOwnerDetails['AllyPact2'] >= ALLYPACT_DEFENSIVE
+            isset($targetOwnerDetails['AllyPact2']) &&
+            $targetOwnerDetails['AllyPact2'] >= ALLYPACT_DEFENSIVE
         )
     );
 
