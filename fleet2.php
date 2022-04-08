@@ -152,49 +152,29 @@ if (!in_array($_POST['speed'], $availableSpeeds)) {
     message($_Lang['fl_bad_fleet_speed'], $ErrorTitle, 'fleet.php', 3);
 }
 
-// Check PlanetOwner
-$planetOwnerDetails = FlightControl\Utils\Fetchers\fetchPlanetOwnerDetails([
-    'targetCoordinates' => $Target,
-    'user' => &$_User,
-    'isExtendedUserDetailsEnabled' => false,
+$targetInfo = FlightControl\Utils\Helpers\getTargetInfo([
+    'targetCoords' => $Target,
+    'fleetEntry' => [
+        // TODO: There should be a function to fetch just the target owner details
+        'Mission' => null,
+    ],
+    'fleetOwnerUser' => &$_User,
+    'isExtendedTargetOwnerDetailsEnabled' => false,
 ]);
 
-$isPlanetOccupied = !empty($planetOwnerDetails);
+$CheckPlanetOwner = $targetInfo['targetOwnerDetails'];
 
-$YourPlanet = false;
-$OwnerFriend = false;
-$OwnerHasMarcantilePact = false;
-$AllyPactWarning = false;
+if (
+    $targetInfo['isPlanetOccupied'] &&
+    !$targetInfo['isPlanetAbandoned'] &&
+    !$targetInfo['isPlanetOwnedByFleetOwner'] &&
+    !empty($_GameConfig['TestUsersIDs'])
+) {
+    $TestUsersArray = explode(',', $_GameConfig['TestUsersIDs']);
 
-if ($planetOwnerDetails) {
-    $CheckPlanetOwner = $planetOwnerDetails;
-
-    if ($CheckPlanetOwner['__mig']['targetPlanet']['ownerId'] == $_User['id']) {
-        $YourPlanet = true;
-    } else {
-        if(!empty($_GameConfig['TestUsersIDs']))
-        {
-            $TestUsersArray = explode(',', $_GameConfig['TestUsersIDs']);
-            if(in_array($CheckPlanetOwner['__mig']['targetPlanet']['ownerId'], $TestUsersArray))
-            {
-                $EnableTestAccWarning = true;
-            }
-        }
-        if((isset($CheckPlanetOwner['AllyPact1']) && $CheckPlanetOwner['AllyPact1'] >= ALLYPACT_NONAGGRESSION) || (isset($CheckPlanetOwner['AllyPact2']) && $CheckPlanetOwner['AllyPact2'] >= ALLYPACT_NONAGGRESSION))
-        {
-            $AllyPactWarning = true;
-        }
-        if((isset($CheckPlanetOwner['AllyPact1']) && $CheckPlanetOwner['AllyPact1'] >= ALLYPACT_MERCANTILE) || (isset($CheckPlanetOwner['AllyPact2']) && $CheckPlanetOwner['AllyPact2'] >= ALLYPACT_MERCANTILE))
-        {
-            $OwnerHasMarcantilePact = true;
-        }
-        if(($CheckPlanetOwner['active1'] == 1 OR $CheckPlanetOwner['active2'] == 1) OR ($CheckPlanetOwner['ally_id'] == $_User['ally_id'] AND $_User['ally_id'] > 0) OR ((isset($CheckPlanetOwner['AllyPact1']) && $CheckPlanetOwner['AllyPact1'] >= ALLYPACT_DEFENSIVE) || (isset($CheckPlanetOwner['AllyPact2']) && $CheckPlanetOwner['AllyPact2'] >= ALLYPACT_DEFENSIVE)))
-        {
-            $OwnerFriend = true;
-        }
+    if (in_array($CheckPlanetOwner['__mig']['targetPlanet']['ownerId'], $TestUsersArray)) {
+        $EnableTestAccWarning = true;
     }
-} else {
-    $CheckPlanetOwner = [];
 }
 
 // Parse Fleet Array
@@ -269,9 +249,9 @@ $AvailableMissions = FlightControl\Utils\Helpers\getValidMissionTypes([
     'targetCoordinates' => $Target,
     'fleetShips' => $Fleet['array'],
     'fleetShipsCount' => $Fleet['count'],
-    'isPlanetOccupied' => $isPlanetOccupied,
-    'isPlanetOwnedByUser' => $YourPlanet,
-    'isPlanetOwnedByUsersFriend' => $OwnerFriend,
+    'isPlanetOccupied' => $targetInfo['isPlanetOccupied'],
+    'isPlanetOwnedByUser' => $targetInfo['isPlanetOwnedByFleetOwner'],
+    'isPlanetOwnedByUsersFriend' => $targetInfo['isPlanetOwnerFriendly'],
     'isUnionMissionAllowed' => false,
 ]);
 
@@ -299,7 +279,7 @@ if(!empty($AvailableMissions))
 {
     if($_Planet['quantumgate'] == 1)
     {
-        if(($YourPlanet OR $OwnerFriend OR $OwnerHasMarcantilePact) AND $CheckPlanetOwner['__mig']['targetPlanet']['quantumgate'] == 1 AND (in_array(3, $AvailableMissions) OR in_array(4, $AvailableMissions) OR in_array(5, $AvailableMissions)))
+        if(($targetInfo['isPlanetOwnedByFleetOwner'] OR $targetInfo['isPlanetOwnerFriendly'] OR $targetInfo['isPlanetOwnerFriendlyMerchant']) AND $CheckPlanetOwner['__mig']['targetPlanet']['quantumgate'] == 1 AND (in_array(3, $AvailableMissions) OR in_array(4, $AvailableMissions) OR in_array(5, $AvailableMissions)))
         {
             $allowUseQuantumGate = true;
             $allowGateJump = true;
@@ -467,7 +447,7 @@ else
 }
 if($CheckPlanetOwner['__mig']['targetPlanet']['ownerId'] > 0)
 {
-    $_Lang['ShowTargetOwner'] = "<a ".($AllyPactWarning === true ? 'class="skyblue"' : '')." href=\"profile.php?uid={$CheckPlanetOwner['__mig']['targetPlanet']['ownerId']}\" target=\"_blank\">{$CheckPlanetOwner['username']}</a>";
+    $_Lang['ShowTargetOwner'] = "<a ".($targetInfo['isPlanetOwnerNonAggressiveAllianceMember'] ? 'class="skyblue"' : '')." href=\"profile.php?uid={$CheckPlanetOwner['__mig']['targetPlanet']['ownerId']}\" target=\"_blank\">{$CheckPlanetOwner['username']}</a>";
 }
 else
 {
@@ -602,7 +582,7 @@ else
 {
     $_Lang['P_HideACSJoinList'] = $Hide;
 }
-if($AllyPactWarning === true)
+if ($targetInfo['isPlanetOwnerNonAggressiveAllianceMember'])
 {
     $_Lang['Insert_AllyPact_AttackWarn'] = 'true';
 }
