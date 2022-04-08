@@ -162,7 +162,8 @@ $targetInfo = FlightControl\Utils\Helpers\getTargetInfo([
     'isExtendedTargetOwnerDetailsEnabled' => false,
 ]);
 
-$CheckPlanetOwner = $targetInfo['targetOwnerDetails'];
+$targetPlanetDetails = $targetInfo['targetPlanetDetails'];
+$targetOwnerDetails = $targetInfo['targetOwnerDetails'];
 
 if (
     $targetInfo['isPlanetOccupied'] &&
@@ -172,7 +173,7 @@ if (
 ) {
     $TestUsersArray = explode(',', $_GameConfig['TestUsersIDs']);
 
-    if (in_array($CheckPlanetOwner['id'], $TestUsersArray)) {
+    if (in_array($targetOwnerDetails['id'], $TestUsersArray)) {
         $EnableTestAccWarning = true;
     }
 }
@@ -255,10 +256,10 @@ $AvailableMissions = FlightControl\Utils\Helpers\getValidMissionTypes([
     'isUnionMissionAllowed' => false,
 ]);
 
-if(in_array(1, $AvailableMissions) && $targetInfo['targetPlanetDetails']['id'] > 0)
+if(in_array(1, $AvailableMissions) && $targetPlanetDetails['id'] > 0)
 {
     $SQLResult_CheckACS = doquery(
-        "SELECT * FROM {{table}} WHERE (`users` LIKE '%|{$_User['id']}|%' OR `owner_id` = {$_User['id']}) AND `end_target_id` = {$targetInfo['targetPlanetDetails']['id']} AND `start_time` > UNIX_TIMESTAMP();",
+        "SELECT * FROM {{table}} WHERE (`users` LIKE '%|{$_User['id']}|%' OR `owner_id` = {$_User['id']}) AND `end_target_id` = {$targetPlanetDetails['id']} AND `start_time` > UNIX_TIMESTAMP();",
         'acs'
     );
 
@@ -279,7 +280,7 @@ if(!empty($AvailableMissions))
 {
     if($_Planet['quantumgate'] == 1)
     {
-        if(($targetInfo['isPlanetOwnedByFleetOwner'] OR $targetInfo['isPlanetOwnerFriendly'] OR $targetInfo['isPlanetOwnerFriendlyMerchant']) AND $targetInfo['targetPlanetDetails']['quantumgate'] == 1 AND (in_array(3, $AvailableMissions) OR in_array(4, $AvailableMissions) OR in_array(5, $AvailableMissions)))
+        if(($targetInfo['isPlanetOwnedByFleetOwner'] OR $targetInfo['isPlanetOwnerFriendly'] OR $targetInfo['isPlanetOwnerFriendlyMerchant']) AND $targetPlanetDetails['quantumgate'] == 1 AND (in_array(3, $AvailableMissions) OR in_array(4, $AvailableMissions) OR in_array(5, $AvailableMissions)))
         {
             $allowUseQuantumGate = true;
             $allowGateJump = true;
@@ -423,11 +424,11 @@ else
 }
 $_Lang['SetDefaultFreeStorage'] = prettyNumber($_Lang['freeStorage']);
 $_Lang['ShowTargetPos'] = "<a href=\"galaxy.php?mode=3&galaxy={$Target['galaxy']}&system={$Target['system']}&planet={$Target['planet']}\" target=\"_blank\">[{$Target['galaxy']}:{$Target['system']}:{$Target['planet']}]</a><b class=\"".($Target['type'] == 1 ? 'planet' : ($Target['type'] == 3 ? 'moon' : 'debris'))."\"></b><br/>";
-if(!empty($targetInfo['targetPlanetDetails']['name']))
+if(!empty($targetPlanetDetails['name']))
 {
-    if($CheckPlanetOwner['id'] > 0)
+    if($targetOwnerDetails['id'] > 0)
     {
-        $_Lang['ShowTargetPos'] .= '<b class="orange">'.$targetInfo['targetPlanetDetails']['name'].'</b>';
+        $_Lang['ShowTargetPos'] .= '<b class="orange">'.$targetPlanetDetails['name'].'</b>';
     }
     else
     {
@@ -445,9 +446,9 @@ else
         $_Lang['ShowTargetPos'] .= $_Lang['fl2_emptyplanet'];
     }
 }
-if($CheckPlanetOwner['id'] > 0)
+if($targetOwnerDetails['id'] > 0)
 {
-    $_Lang['ShowTargetOwner'] = "<a ".($targetInfo['isPlanetOwnerNonAggressiveAllianceMember'] ? 'class="skyblue"' : '')." href=\"profile.php?uid={$CheckPlanetOwner['id']}\" target=\"_blank\">{$CheckPlanetOwner['username']}</a>";
+    $_Lang['ShowTargetOwner'] = "<a ".($targetInfo['isPlanetOwnerNonAggressiveAllianceMember'] ? 'class="skyblue"' : '')." href=\"profile.php?uid={$targetOwnerDetails['id']}\" target=\"_blank\">{$targetOwnerDetails['username']}</a>";
 }
 else
 {
