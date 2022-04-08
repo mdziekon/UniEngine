@@ -88,7 +88,29 @@ function fetchPlanetOwnerDetails ($props) {
 
     $result = doquery($query, 'planets', true);
 
-    return $result;
+    if (!$result) {
+        return null;
+    }
+
+    $targetPlanet = [
+        'id' => $result['id'],
+        'ownerId' => $result['owner'],
+        'name' => $result['name'],
+        'quantumgate' => $result['quantumgate'],
+    ];
+    $targetOwner = $result;
+
+    unset($targetOwner['id']);
+    unset($targetOwner['owner']);
+    unset($targetOwner['name']);
+    unset($targetOwner['quantumgate']);
+
+    $targetOwner['id'] = $targetPlanet['ownerId'];
+
+    return [
+        'targetPlanet' => $targetPlanet,
+        'targetOwner' => $targetOwner,
+    ];
 }
 
 ?>

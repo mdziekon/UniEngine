@@ -19,8 +19,8 @@ function insertFleetEntry ($props) {
             '0'
     );
     $targetOwnerId = (
-        !empty($props['targetPlanet']['owner']) ?
-            $props['targetPlanet']['owner'] :
+        !empty($props['targetPlanet']['ownerId']) ?
+            $props['targetPlanet']['ownerId'] :
             '0'
     );
     $targetGalaxyId = (
