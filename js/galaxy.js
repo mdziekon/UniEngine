@@ -203,6 +203,7 @@ function ShowAjaxInfo (Text, Color, HideTime) {
 
 $(document).ready(function () {
     isReady = true;
+    var $ajaxCallCover = $("#ajaxCallCover");
     var ThisGalaxy = $("[name=\"galaxy\"]");
     var ThisSystem = $("[name=\"system\"]");
     var GalRows = $("#galRows");
@@ -392,8 +393,8 @@ $(document).ready(function () {
             }
         }
 
-        $(document.body).append("<div id=\"cover\" style=\"position: absolute; background: url(./images/ajax-loader-big.gif) no-repeat center center;\"><div style=\"width: 100%; height: 100%; background: black; opacity: 0.3;\"></div></div>");
-        $("#cover").offset(GalRows.offset()).width(GalRows.outerWidth()).height(GalRows.outerHeight());
+        $ajaxCallCover.show();
+        $ajaxCallCover.offset(GalRows.offset()).width(GalRows.outerWidth()).height(GalRows.outerHeight());
 
         $.get("ajax/galaxy.php", {"galaxy": ThisGalaxy.val(), "system": ThisSystem.val()})
             .complete(function (Response, RequestStatus) {
@@ -439,7 +440,7 @@ $(document).ready(function () {
                     }
                     ShowAjaxInfo(RespCodes[ThisRespCode], "red", 1500);
                 }
-                $("#cover").remove();
+                $ajaxCallCover.hide();
 
                 LockGalaxyForm = false;
             });
@@ -449,8 +450,8 @@ $(document).ready(function () {
     });
 
     $(window).on("resize", function () {
-        if ($("#cover").is(":visible")) {
-            $("#cover").offset(GalRows.offset()).width(GalRows.outerWidth()).height(GalRows.outerHeight());
+        if ($ajaxCallCover.is(":visible")) {
+            $ajaxCallCover.offset(GalRows.offset()).width(GalRows.outerWidth()).height(GalRows.outerHeight());
         }
     });
 

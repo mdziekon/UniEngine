@@ -8,3 +8,7 @@
     </tbody>
     {Input_GalaxyFooter}
 </table>
+
+<div id="ajaxCallCover">
+    <div class="backdrop"></div>
+</div>

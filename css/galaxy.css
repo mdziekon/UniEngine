@@ -90,3 +90,16 @@
 .icoMissile, .icoSpy, .icoMsg, .icoBuddy {
     padding-left: 16px;
 }
+#ajaxCallCover {
+    /* Hide by default, controlled by JS code */
+    display: none;
+
+    position: absolute;
+    background: url(../../images/ajax-loader-big.gif) no-repeat center center;
+}
+#ajaxCallCover .backdrop {
+    width: 100%;
+    height: 100%;
+    background: black;
+    opacity: 0.3;
+}
