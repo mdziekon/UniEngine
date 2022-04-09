@@ -4,8 +4,8 @@
 
 var BlockFunction = true;
 var HideTimeout = false;
-var RespCodes = new Array();
-var Lang = new Array();
+var RespCodes = [];
+var Lang = [];
 var LockGalaxyForm = false;
 var AjaxBox = false;
 var isReady = false;
@@ -19,7 +19,9 @@ var icoTipObj = {
     position: {
         my: "top center",
         at: "bottom center",
-        adjust: {y: 10}
+        adjust: {
+            y: 10
+        }
     }
 };
 
@@ -242,7 +244,7 @@ $(document).ready(function () {
 
     BlockFunction = false;
 
-    $("#closeMF").click(function () {
+    $("#closeMF").on("click", function () {
         if (UseAjax === true) {
             CurrentMissilesPos = "0:0:0";
             MissilesForm.hide("fast");
@@ -309,19 +311,22 @@ $(document).ready(function () {
         $(this).qtip($.extend(icoTipObj, {content: iconTooltipContent[matchingIconClass]}));
         $(this).data("hasTip", true).trigger("mouseover");
     });
-    $("#MissileForm").submit(function () {
+    $("#MissileForm").on("submit", function () {
         sendShips(4, MissilesFields["galaxy"].val(), MissilesFields["system"].val(), MissilesFields["planet"].val(), 1, {"count": $("[name=\"m_count\"]").val(), "target": $("[name=\"m_target\"]").val()});
         return false;
     });
-    $("[name=\"m_count\"]").change(function () {
-        $(this).prettyInputBox();
-    }).keyup(function () {
-        $(this).change();
-    }).keydown(function () {
-        $(this).change();
-    });
+    $("[name=\"m_count\"]")
+        .on("change", function () {
+            $(this).prettyInputBox();
+        })
+        .on("keyup", function () {
+            $(this).change();
+        })
+        .on("keydown", function () {
+            $(this).change();
+        });
 
-    $("#galaxy_form").submit(function () {
+    $("#galaxy_form").on("submit", function () {
         if (!UseAjax) {
             return;
         }
@@ -443,7 +448,7 @@ $(document).ready(function () {
         return false;
     });
 
-    $(window).resize(function () {
+    $(window).on("resize", function () {
         if ($("#cover").is(":visible")) {
             $("#cover").offset(GalRows.offset()).width(GalRows.outerWidth()).height(GalRows.outerHeight());
         }
