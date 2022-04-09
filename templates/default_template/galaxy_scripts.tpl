@@ -1,4 +1,4 @@
-<script src="dist/js/galaxy.cachebuster-1546739003831.min.js"></script>
+<script src="dist/js/galaxy.cachebuster-1649514552011.min.js"></script>
 <script>
 {Insert_ReponseCodes}
 Lang['ajax_moon_sign'] = '{ajax_moon_sign}';
@@ -24,4 +24,4 @@ var UseAjax = {UseAjax};
     background: url('{SkinPath}img/r.gif') no-repeat 0px 0px;
 }
 </style>
-<link rel="stylesheet" type="text/css" href="dist/css/galaxy.cachebuster-1546564327123.min.css" />
+<link rel="stylesheet" type="text/css" href="dist/css/galaxy.cachebuster-1649514552013.min.css" />
