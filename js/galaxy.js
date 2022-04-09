@@ -55,33 +55,62 @@ function sendShips (missionType, Galaxy, System, Planet, PlanetType, Options) {
     var requestOpt;
     var Mission;
 
+    var targetCoords = {
+        galaxy: Galaxy,
+        system: System,
+        planet: Planet
+    };
+
     switch (missionType) {
-    case 1: //Spy
+    case 1:
+        // Spy
         Mission = 6;
         requestPage = "ajax/galaxyfleet.php";
-        requestOpt = {"galaxy": Galaxy, "system": System, "planet": Planet, "type": PlanetType, "mission": Mission};
+        requestOpt = {
+            type: PlanetType,
+            mission: Mission
+        };
         break;
-    case 2: //Recycling
+    case 2:
+        // Recycling
         Mission = 8;
         requestPage = "ajax/galaxyfleet.php";
-        requestOpt = {"galaxy": Galaxy, "system": System, "planet": Planet, "type": PlanetType, "mission": Mission};
+        requestOpt = {
+            type: PlanetType,
+            mission: Mission
+        };
         break;
-    case 3: //Colonization
+    case 3:
+        // Colonization
         Mission = 7;
         requestPage = "ajax/galaxyfleet.php";
-        requestOpt = {"galaxy": Galaxy, "system": System, "planet": Planet, "type": PlanetType, "mission": Mission};
+        requestOpt = {
+            type: PlanetType,
+            mission: Mission
+        };
         break;
-    case 4: //Missile Attack
+    case 4:
+        // Missile Attack
         Mission = 10;
         requestPage = "ajax/sendmissiles.php";
-        requestOpt = {"galaxy": Galaxy, "system": System, "planet": Planet, "count": Options["count"], "target": Options["target"]};
+        requestOpt = {
+            count: Options["count"],
+            target: Options["target"]
+        };
         break;
-    default://Set to Spy
+    default:
+        // Set to Spy
         Mission = 6;
         requestPage = "ajax/galaxyfleet.php";
-        requestOpt = {"galaxy": Galaxy, "system": System, "planet": Planet, "type": PlanetType, "mission": Mission};
+        requestOpt = {
+            type: PlanetType,
+            mission: Mission
+        };
         break;
     }
+
+    requestOpt = $.extend(targetCoords, requestOpt);
+
     $.post(requestPage, requestOpt)
         .complete(function (response, requestStatus) {
             if (requestStatus !== "success") {
