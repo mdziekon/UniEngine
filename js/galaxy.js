@@ -247,7 +247,7 @@ $(document).ready(function () {
     });
 
     $(document)
-        .on("click", ".icoMissile", function () {
+        .on("click", ".icoMissile, .missileAttack", function () {
             nd(); //Close ToolTipMenu
             if (UseAjax === true) {
                 var RegExp = /galaxy=([0-9]{1,3}).*?system=([0-9]{1,3}).*?planet=([0-9]{1,3})/gi;
