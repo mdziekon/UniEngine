@@ -251,65 +251,64 @@ $(document).ready(function () {
         }
     });
 
-    $(document)
-        .on("click", ".icoMissile, .missileAttack", function () {
-            nd(); //Close ToolTipMenu
+    $(document).on("click", ".icoMissile, .missileAttack", function () {
+        nd(); //Close ToolTipMenu
 
-            if (!UseAjax) {
-                return;
-            }
+        if (!UseAjax) {
+            return;
+        }
 
-            var RegExp = /galaxy=([0-9]{1,3}).*?system=([0-9]{1,3}).*?planet=([0-9]{1,3})/gi;
-            var GetPos = RegExp.exec($(this).attr("href"));
+        var RegExp = /galaxy=([0-9]{1,3}).*?system=([0-9]{1,3}).*?planet=([0-9]{1,3})/gi;
+        var GetPos = RegExp.exec($(this).attr("href"));
 
-            var ThisPos = GetPos[1] + ":" + GetPos[2] + ":" + GetPos[3];
+        var ThisPos = GetPos[1] + ":" + GetPos[2] + ":" + GetPos[3];
 
-            if (ThisPos == CurrentMissilesPos) {
-                CurrentMissilesPos = "0:0:0";
-                MissilesForm.hide("fast");
-
-                return false;
-            }
-
-            MissilesFields["galaxy"].val(GetPos[1]);
-            MissilesFields["system"].val(GetPos[2]);
-            MissilesFields["planet"].val(GetPos[3]);
-            CurrentMissilesPos = GetPos[1] + ":" + GetPos[2] + ":" + GetPos[3];
-            $("body").animate({scrollTop:0}, "fast");
-            if (MissilesForm.is(":visible")) {
-                MissilesPos.fadeOut("fast", function () {
-                    MissilesPos.html(CurrentMissilesPos); $(this).fadeIn("fast");
-                });
-            } else {
-                MissilesPos.html(CurrentMissilesPos);
-                MissilesForm.show("fast");
-            }
+        if (ThisPos == CurrentMissilesPos) {
+            CurrentMissilesPos = "0:0:0";
+            MissilesForm.hide("fast");
 
             return false;
-        })
-        .on("mouseover", ".icoTip", function () {
-            if ($(this).data("hasTip")) {
-                return;
-            }
+        }
 
-            var iconTooltipContent = {
-                icoMissile: Lang["icoTip_missile"],
-                icoSpy: Lang["icoTip_spy"],
-                icoMsg: Lang["icoTip_msg"],
-                icoBuddy: Lang["icoTip_buddy"],
-            };
-
-            const matchingIconClass = Object.keys(iconTooltipContent).find((iconClass) => {
-                return $(this).hasClass(iconClass);
+        MissilesFields["galaxy"].val(GetPos[1]);
+        MissilesFields["system"].val(GetPos[2]);
+        MissilesFields["planet"].val(GetPos[3]);
+        CurrentMissilesPos = GetPos[1] + ":" + GetPos[2] + ":" + GetPos[3];
+        $("body").animate({scrollTop:0}, "fast");
+        if (MissilesForm.is(":visible")) {
+            MissilesPos.fadeOut("fast", function () {
+                MissilesPos.html(CurrentMissilesPos); $(this).fadeIn("fast");
             });
+        } else {
+            MissilesPos.html(CurrentMissilesPos);
+            MissilesForm.show("fast");
+        }
 
-            if (!matchingIconClass) {
-                return;
-            }
+        return false;
+    });
+    $(document).on("mouseover", ".icoTip", function () {
+        if ($(this).data("hasTip")) {
+            return;
+        }
 
-            $(this).qtip($.extend(icoTipObj, {content: iconTooltipContent[matchingIconClass]}));
-            $(this).data("hasTip", true).trigger("mouseover");
+        var iconTooltipContent = {
+            icoMissile: Lang["icoTip_missile"],
+            icoSpy: Lang["icoTip_spy"],
+            icoMsg: Lang["icoTip_msg"],
+            icoBuddy: Lang["icoTip_buddy"],
+        };
+
+        const matchingIconClass = Object.keys(iconTooltipContent).find((iconClass) => {
+            return $(this).hasClass(iconClass);
         });
+
+        if (!matchingIconClass) {
+            return;
+        }
+
+        $(this).qtip($.extend(icoTipObj, {content: iconTooltipContent[matchingIconClass]}));
+        $(this).data("hasTip", true).trigger("mouseover");
+    });
     $("#MissileForm").submit(function () {
         sendShips(4, MissilesFields["galaxy"].val(), MissilesFields["system"].val(), MissilesFields["planet"].val(), 1, {"count": $("[name=\"m_count\"]").val(), "target": $("[name=\"m_target\"]").val()});
         return false;
