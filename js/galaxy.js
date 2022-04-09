@@ -292,15 +292,22 @@ $(document).ready(function () {
                 return;
             }
 
-            if ($(this).hasClass("icoMissile")) {
-                $(this).qtip($.extend(icoTipObj, {content: Lang["icoTip_missile"]}));
-            } else if ($(this).hasClass("icoSpy")) {
-                $(this).qtip($.extend(icoTipObj, {content: Lang["icoTip_spy"]}));
-            } else if ($(this).hasClass("icoMsg")) {
-                $(this).qtip($.extend(icoTipObj, {content: Lang["icoTip_msg"]}));
-            } else if ($(this).hasClass("icoBuddy")) {
-                $(this).qtip($.extend(icoTipObj, {content: Lang["icoTip_buddy"]}));
+            var iconTooltipContent = {
+                icoMissile: Lang["icoTip_missile"],
+                icoSpy: Lang["icoTip_spy"],
+                icoMsg: Lang["icoTip_msg"],
+                icoBuddy: Lang["icoTip_buddy"],
+            };
+
+            const matchingIconClass = Object.keys(iconTooltipContent).find((iconClass) => {
+                return $(this).hasClass(iconClass);
+            });
+
+            if (!matchingIconClass) {
+                return;
             }
+
+            $(this).qtip($.extend(icoTipObj, {content: iconTooltipContent[matchingIconClass]}));
             $(this).data("hasTip", true).trigger("mouseover");
         });
     $("#MissileForm").submit(function () {
