@@ -43,30 +43,36 @@ $(document).ready(function () {
 
     setInterval(createTimeCounters, 250);
 
-    $("[id^=setMax]:not(#setMaxAll)").click(function () {
+    $(".setMaxResource").click(function () {
         SetMaxNow = true;
-        var ElSelector = "[name=\"resource" + $(this).attr("id").substr(6) + "\"]";
-        $(ElSelector).val($(ElSelector).val() + 1).change();
+
+        const resourceKey = $(this).data("resourceKey");
+        const elSelector = `[name="resource${resourceKey}"]`;
+
+        $(elSelector).val($(elSelector).val() + 1).change();
+
         SetMaxNow = false;
 
         return false;
     });
-    $("[id^=setZero]:not(#setZeroAll)").click(function () {
-        var ElSelector = "[name=\"resource" + $(this).attr("id").substr(7) + "\"]";
-        $(ElSelector).val("0").change();
+    $(".setZeroResource").click(function () {
+        const resourceKey = $(this).data("resourceKey");
+        const elSelector = `[name="resource${resourceKey}"]`;
+
+        $(elSelector).val("0").change();
 
         return false;
     });
 
     $("#setMaxAll").click(function () {
-        for (var Index in ResSortArrayAll) {
-            $("#setMax" + ResSortArrayAll[Index]).click();
-        }
+        ResSortArrayAll.forEach((resourceKey) => {
+            $(`.setMaxResource[data-resource-key='${resourceKey}']`).click();
+        });
     });
     $("#setZeroAll").click(function () {
-        for (var Index in ResSortArrayAll) {
-            $("#setZero" + ResSortArrayAll[Index]).click();
-        }
+        ResSortArrayAll.forEach((resourceKey) => {
+            $(`.setZeroResource[data-resource-key='${resourceKey}']`).click();
+        });
     });
 
     $("[name^=\"resource\"]").change(function () {
