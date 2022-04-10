@@ -65,7 +65,7 @@ class CalculateEvenResourcesPillageTestCase extends TestCase {
 
         $this->assertEquals(
             [
-                'metal' => 333333,
+                'metal' => 3333330,
                 'crystal' => 333333,
                 'deuterium' => 333333,
             ],
