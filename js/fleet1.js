@@ -1,4 +1,4 @@
-/* globals libCommon, AllowCreateTimeCounters, ServerClientDifference, maxIs, JSLang */
+/* globals libCommon, AllowCreateTimeCounters, maxIs, JSLang */
 
 $(document).ready(function () {
     libCommon.init.setupJQuery();

@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $(".flShips").qtip({
-         attribute: "title",
+        attribute: "title",
         style:
         {
             classes: "tiptip_content"
