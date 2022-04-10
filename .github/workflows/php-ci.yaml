@@ -25,7 +25,8 @@ jobs:
             php-version: '7.2'
             tools: phpcs, phpunit
             coverage: none
-            fail-fast: true
+        env:
+          fail-fast: true
 
       - name: Get composer cache directory
         id: composer-cache
@@ -59,10 +60,11 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-            php-version: '7.2'
-            tools: phpcs, phpunit
-            coverage: none
-            fail-fast: true
+          php-version: '7.2'
+          tools: phpcs, phpunit
+          coverage: none
+        env:
+          fail-fast: true
 
       - name: Get composer cache directory
         id: composer-cache
