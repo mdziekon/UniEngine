@@ -1,82 +1,14 @@
-/* globals AllowPrettyInputBox, ServerClientDifference, JSLang, AllyPact_AttackWarn, SetResources, SelectQuantumGate, NeedQuantumGate, ResSortArrayAll, QuantumGateDeuteriumUse, ResSortArrayNoDeu, FlightDuration */
+/* globals libCommon, JSLang, AllyPact_AttackWarn, SetResources, SelectQuantumGate, NeedQuantumGate, ResSortArrayAll, QuantumGateDeuteriumUse, ResSortArrayNoDeu, FlightDuration */
 
 var SetMaxNow = false;
 var LastStorageLowerTh0 = false;
 var QuantumGateOptionModif = false;
 
 $(document).ready(function () {
+    libCommon.init.setupJQuery();
+
     var FlightDurationTarget = FlightDuration;
     var FlightDurationGoback = FlightDuration;
-
-    // Internal Functions
-    function addDots (Value) {
-        Value += "";
-        var rgx = /(\d+)(\d\d\d)/;
-        while (rgx.test(Value)) {
-            Value = Value.replace(rgx, "$1" + "." + "$2");
-        }
-        return Value;
-    }
-
-    function removeNonDigit (Value) {
-        Value += "";
-        Value = Value.replace(/[^0-9]/g, "");
-        return Value;
-    }
-
-    $.fn.notEmptyVal = function (canBeZero, doRemoveNonDigit) {
-        var ThisVal = $(this).val();
-        if (doRemoveNonDigit) {
-            ThisVal = removeNonDigit(ThisVal);
-        }
-        if (canBeZero) {
-            if (ThisVal != "" && ThisVal >= 0) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            if (ThisVal != "" && ThisVal > 0) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    };
-    $.fn.notEmptyData = function (key, canBeZero, doRemoveNonDigit) {
-        var ThisVal = $(this).data(key);
-        if (doRemoveNonDigit) {
-            ThisVal = removeNonDigit(ThisVal);
-        }
-        if (canBeZero) {
-            if (ThisVal != "" && ThisVal >= 0) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            if (ThisVal != "" && ThisVal > 0) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    };
-
-    $.fn.prettyInputBox = function (IgnoreUserSetting) {
-        return this.each(function () {
-            if ((AllowPrettyInputBox !== undefined && AllowPrettyInputBox === true) || (IgnoreUserSetting !== undefined && IgnoreUserSetting === true)) {
-                var Value = $(this).val();
-                if (Value.indexOf(".") !== -1) {
-                    Value = Value.replace(/\./g, "");
-                }
-                Value = addDots(Value);
-                $(this).val(Value);
-            }
-        });
-    };
-
-    // Rest of scripts...
 
     $.fn.setStorageShow = function (setVar) {
         var AddColor = "orange";
@@ -102,127 +34,52 @@ $(document).ready(function () {
     };
 
     function createTimeCounters () {
-        var CurrentTime = new Date().getTime() + ServerClientDifference;
-        var DateObj = new Date(CurrentTime);
-        var TimeCounter = new Date((DateObj.getTime() + (FlightDurationTarget * 1000)));
-        var TimeCounter2 = new Date((DateObj.getTime() + ((FlightDurationTarget + FlightDurationGoback) * 1000)));
-        var Years = ((TimeCounter.getFullYear()).toString()).substr(2, 2);
-        var Months = TimeCounter.getMonth() + 1;
-        var Days = TimeCounter.getDate();
-        var Hours = TimeCounter.getHours();
-        var Mins = TimeCounter.getMinutes();
-        var Secs = TimeCounter.getSeconds();
-        if (Years < 10) {
-            if (Years === 0) {
-                Years = "00";
-            } else {
-                Years = "0" + Years;
-            }
-        }
-        if (Months < 10) {
-            Months = "0" + Months;
-        }
-        if (Days < 10) {
-            Days = "0" + Days;
-        }
-        if (Hours < 10) {
-            if (Hours === 0) {
-                Hours = "00";
-            } else {
-                Hours = "0" + Hours;
-            }
-        }
-        if (Mins < 10) {
-            if (Mins === 0) {
-                Mins = "00";
-            } else {
-                Mins = "0" + Mins;
-            }
-        }
-        if (Secs < 10) {
-            if (Secs === 0) {
-                Secs = "00";
-            } else {
-                Secs = "0" + Secs;
-            }
-        }
-        var Years2 = ((TimeCounter2.getFullYear()).toString()).substr(2, 2);
-        var Months2 = TimeCounter2.getMonth() + 1;
-        var Days2 = TimeCounter2.getDate();
-        var Hours2 = TimeCounter2.getHours();
-        var Mins2 = TimeCounter2.getMinutes();
-        var Secs2 = TimeCounter2.getSeconds();
-        if (Years2 < 10) {
-            if (Years2 === 0) {
-                Years2 = "00";
-            } else {
-                Years2 = "0" + Years2;
-            }
-        }
-        if (Months2 < 10) {
-            Months2 = "0" + Months2;
-        }
-        if (Days2 < 10) {
-            Days2 = "0" + Days2;
-        }
-        if (Hours2 < 10) {
-            if (Hours2 === 0) {
-                Hours2 = "00";
-            } else {
-                Hours2 = "0" + Hours2;
-            }
-        }
-        if (Mins2 < 10) {
-            if (Mins2 === 0) {
-                Mins2 = "00";
-            } else {
-                Mins2 = "0" + Mins2;
-            }
-        }
-        if (Secs2 < 10) {
-            if (Secs2 === 0) {
-                Secs2 = "00";
-            } else {
-                Secs2 = "0" + Secs2;
-            }
-        }
-        $("#ReachTime").html(Hours + ":" + Mins + ":" + Secs + " - " + Days + "." + Months + "." + Years);
-        $("#BackTime").html(Hours2 + ":" + Mins2 + ":" + Secs2 + " - " + Days2 + "." + Months2 + "." + Years2);
+        const reachTimeFormatted = libCommon.format.formatDateToFlightEvent((FlightDurationTarget * 1000));
+        const backTimeFormatted = libCommon.format.formatDateToFlightEvent(((FlightDurationTarget + FlightDurationGoback) * 1000));
+
+        $("#ReachTime").html(reachTimeFormatted);
+        $("#BackTime").html(backTimeFormatted);
     }
 
     setInterval(createTimeCounters, 250);
 
-    $("[id^=setMax]:not(#setMaxAll)").click(function () {
+    $(".setMaxResource").click(function () {
         SetMaxNow = true;
-        var ElSelector = "[name=\"resource" + $(this).attr("id").substr(6) + "\"]";
-        $(ElSelector).val($(ElSelector).val() + 1).change();
+
+        const resourceKey = $(this).data("resourceKey");
+        const elSelector = `[name="resource${resourceKey}"]`;
+
+        $(elSelector).val($(elSelector).val() + 1).change();
+
         SetMaxNow = false;
 
         return false;
     });
-    $("[id^=setZero]:not(#setZeroAll)").click(function () {
-        var ElSelector = "[name=\"resource" + $(this).attr("id").substr(7) + "\"]";
-        $(ElSelector).val("0").change();
+    $(".setZeroResource").click(function () {
+        const resourceKey = $(this).data("resourceKey");
+        const elSelector = `[name="resource${resourceKey}"]`;
+
+        $(elSelector).val("0").change();
 
         return false;
     });
 
     $("#setMaxAll").click(function () {
-        for (var Index in ResSortArrayAll) {
-            $("#setMax" + ResSortArrayAll[Index]).click();
-        }
+        ResSortArrayAll.forEach((resourceKey) => {
+            $(`.setMaxResource[data-resource-key='${resourceKey}']`).click();
+        });
     });
     $("#setZeroAll").click(function () {
-        for (var Index in ResSortArrayAll) {
-            $("#setZero" + ResSortArrayAll[Index]).click();
-        }
+        ResSortArrayAll.forEach((resourceKey) => {
+            $(`.setZeroResource[data-resource-key='${resourceKey}']`).click();
+        });
     });
 
     $("[name^=\"resource\"]").change(function () {
         var ThisID          = $(this).attr("name").substr(8);
 
         var LastValue       = $(this).data("lastVal");
-        var CurrentValue    = parseInt(removeNonDigit($(this).val()), 10);
+        var CurrentValue    = parseInt(libCommon.normalize.removeNonDigit($(this).val()), 10);
         if (LastValue === undefined || isNaN(LastValue) || LastValue < 0) {
             LastValue    = 0;
         }
@@ -275,7 +132,7 @@ $(document).ready(function () {
             $(this).val(CurrentValue).prettyInputBox().data("lastVal", CurrentValue);
             $("#FreeStorage").val(FreeStorage).setStorageShow(FreeStorage);
         } else {
-            if ($(this).val() != removeNonDigit($(this).val())) {
+            if ($(this).val() != libCommon.normalize.removeNonDigit($(this).val())) {
                 $(this).val(CurrentValue).prettyInputBox();
             }
         }
@@ -283,11 +140,15 @@ $(document).ready(function () {
         .keyup(function () {
             $(this).change();
         }).focus(function () {
-            if (!$(this).notEmptyVal(false, true)) {
+            const val = libCommon.normalize.removeNonDigit($(this).val());
+
+            if (!(libCommon.tests.isNonEmptyValue(val, { isZeroAllowed: false }))) {
                 $(this).val("");
             }
         }).blur(function () {
-            if (!$(this).notEmptyVal(true, true)) {
+            const val = libCommon.normalize.removeNonDigit($(this).val());
+
+            if (!(libCommon.tests.isNonEmptyValue(val, { isZeroAllowed: true }))) {
                 $(this).val("0");
             }
         });
@@ -354,7 +215,7 @@ $(document).ready(function () {
             var ConsuptionModif_Dif = ConsuptionModif_New - ConsuptionModif_Old;
             if (ConsuptionModif_Dif !== 0) {
                 ConsuptionVar_Now -= ConsuptionModif_Dif;
-                $("#FuelUse").html(addDots(ConsuptionVar_Now));
+                $("#FuelUse").html(libCommon.format.addDots(ConsuptionVar_Now));
                 $("#FuelUse").data("ConsuptionModif_Old", ConsuptionModif_New);
                 $("#FuelUse").data("ConsuptionVar_Now", ConsuptionVar_Now);
             }

@@ -12,7 +12,8 @@ var AllyPact_AttackWarn = {Insert_AllyPact_AttackWarn};
 {QuantumGateJSArray}
 {CreateTestACCAlert}
 </script>
-<script src="dist/js/fleet2.cachebuster-1546740741336.min.js"></script>
+<script src="dist/js/_libCommon.cachebuster-1649555016585.min.js"></script>
+<script src="dist/js/fleet2.cachebuster-1649556398934.min.js"></script>
 <link rel="stylesheet" type="text/css" href="dist/css/fleet2.cachebuster-1546565145290.min.css" />
 
 <form id="thisForm" action="fleet3.php" method="post">
@@ -77,7 +78,7 @@ var AllyPact_AttackWarn = {Insert_AllyPact_AttackWarn};
                     <tr>
                         <th width="90">{Metal}</th>
                         <th width="90">
-                            <a id="setMax1" class="pointer">{fl_selmax}</a> / <a id="setZero1" class="pointer">{fl_selnone}</a>
+                            <a class="setMaxResource pointer" data-resource-key="1">{fl_selmax}</a> / <a class="setZeroResource pointer" data-resource-key="1">{fl_selnone}</a>
                         </th>
                         <th width="220">
                             <input class="resInput pad2" name="resource1" type="text" value="0" />
@@ -86,7 +87,7 @@ var AllyPact_AttackWarn = {Insert_AllyPact_AttackWarn};
                     <tr>
                         <th>{Crystal}</th>
                         <th>
-                            <a id="setMax2" class="pointer">{fl_selmax}</a> / <a id="setZero2" class="pointer">{fl_selnone}</a>
+                            <a class="setMaxResource pointer" data-resource-key="2">{fl_selmax}</a> / <a class="setZeroResource pointer" data-resource-key="2">{fl_selnone}</a>
                         </th>
                         <th>
                             <input class="resInput pad2" name="resource2" type="text" value="0" />
@@ -95,7 +96,7 @@ var AllyPact_AttackWarn = {Insert_AllyPact_AttackWarn};
                     <tr>
                         <th>{Deuterium}</th>
                         <th>
-                            <a id="setMax3" class="pointer">{fl_selmax}</a> / <a id="setZero3" class="pointer">{fl_selnone}</a>
+                            <a class="setMaxResource pointer" data-resource-key="3">{fl_selmax}</a> / <a class="setZeroResource pointer" data-resource-key="3">{fl_selnone}</a>
                         </th>
                         <th>
                             <input class="resInput pad2" name="resource3" type="text" value="0" />

@@ -1,39 +1,9 @@
-/* globals AllowCreateTimeCounters, ServerClientDifference, maxIs, JSLang */
+/* globals libCommon, AllowCreateTimeCounters, ServerClientDifference, maxIs, JSLang */
 
 $(document).ready(function () {
-    var FlightDuration;
+    libCommon.init.setupJQuery();
 
-    // Internal Functions
-    $.fn.notEmptyVal = function (canBeZero) {
-        if (canBeZero) {
-            if ($(this).val() != "" && $(this).val() >= 0) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            if ($(this).val() != "" && $(this).val() > 0) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    };
-    $.fn.notEmptyData = function (key) {
-        if ($(this).data(key) != "" && $(this).data(key) > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    };
-    function addDots (Value) {
-        Value += "";
-        var rgx = /(\d+)(\d\d\d)/;
-        while (rgx.test(Value)) {
-            Value = Value.replace(rgx, "$1" + "." + "$2");
-        }
-        return Value;
-    }
+    var FlightDuration;
 
     // Fleet Functions
     function setTarget (galaxy, system, planet, type) {
@@ -118,7 +88,7 @@ $(document).ready(function () {
     }
 
     function shortInfo () {
-        $("#distance").html(addDots(distance()));
+        $("#distance").html(libCommon.format.addDots(distance()));
         var seconds = duration();
         var hours = Math.floor(seconds / 3600);
         seconds -= hours * 3600;
@@ -147,152 +117,31 @@ $(document).ready(function () {
         var setHTMLStor = "";
         if (stor >= 0) {
             if (deuterium >= cons) {
-                setHTMLCons = "<b class=\"lime\">" + addDots(cons) + "</b>";
+                setHTMLCons = "<b class=\"lime\">" + libCommon.format.addDots(cons) + "</b>";
             } else {
-                setHTMLCons = "<b class=\"red\">" + addDots(cons) + "</b>";
+                setHTMLCons = "<b class=\"red\">" + libCommon.format.addDots(cons) + "</b>";
             }
-            setHTMLStor = "<b class=\"lime\">" + addDots(stor) + "</b>";
+            setHTMLStor = "<b class=\"lime\">" + libCommon.format.addDots(stor) + "</b>";
         } else {
             if (deuterium >= cons) {
-                setHTMLCons = "<b class=\"orange\">" + addDots(cons) + "</b>";
+                setHTMLCons = "<b class=\"orange\">" + libCommon.format.addDots(cons) + "</b>";
             } else {
-                setHTMLCons = "<b class=\"red\">" + addDots(cons) + "</b>";
+                setHTMLCons = "<b class=\"red\">" + libCommon.format.addDots(cons) + "</b>";
             }
-            setHTMLStor = "<b class=\"red\">" + addDots(stor) + "</b>";
+            setHTMLStor = "<b class=\"red\">" + libCommon.format.addDots(stor) + "</b>";
         }
         $("#consumption").html(setHTMLCons);
         $("#storageShow").html(setHTMLStor);
     }
 
     function createTimeCounters () {
-        var CurrentTime = new Date().getTime() + ServerClientDifference;
-        var DateObj = new Date(CurrentTime);
-        var CTimeCounter = new Date(DateObj.getTime());
-        var TimeCounter = new Date((DateObj.getTime() + (FlightDuration * 1000)));
-        var TimeCounter2 = new Date((DateObj.getTime() + ((FlightDuration * 2) * 1000)));
-        var CYears = ((CTimeCounter.getFullYear()).toString()).substr(2, 2);
-        var CMonths = CTimeCounter.getMonth() + 1;
-        var CDays = CTimeCounter.getDate();
-        var CHours = CTimeCounter.getHours();
-        var CMins = CTimeCounter.getMinutes();
-        var CSecs = CTimeCounter.getSeconds();
-        if (CYears < 10) {
-            if (CYears === 0) {
-                CYears = "00";
-            } else {
-                CYears = "0" + CYears;
-            }
-        }
-        if (CMonths < 10) {
-            CMonths = "0" + CMonths;
-        }
-        if (CDays < 10) {
-            CDays = "0" + CDays;
-        }
-        if (CHours < 10) {
-            if (CHours === 0) {
-                CHours = "00";
-            } else {
-                CHours = "0" + CHours;
-            }
-        }
-        if (CMins < 10) {
-            if (CMins === 0) {
-                CMins = "00";
-            } else {
-                CMins = "0" + CMins;
-            }
-        }
-        if (CSecs < 10) {
-            if (CSecs === 0) {
-                CSecs = "00";
-            } else {
-                CSecs = "0" + CSecs;
-            }
-        }
-        var Years = ((TimeCounter.getFullYear()).toString()).substr(2, 2);
-        var Months = TimeCounter.getMonth() + 1;
-        var Days = TimeCounter.getDate();
-        var Hours = TimeCounter.getHours();
-        var Mins = TimeCounter.getMinutes();
-        var Secs = TimeCounter.getSeconds();
-        if (Years < 10) {
-            if (Years === 0) {
-                Years = "00";
-            } else {
-                Years = "0" + Years;
-            }
-        }
-        if (Months < 10) {
-            Months = "0" + Months;
-        }
-        if (Days < 10) {
-            Days = "0" + Days;
-        }
-        if (Hours < 10) {
-            if (Hours === 0) {
-                Hours = "00";
-            } else {
-                Hours = "0" + Hours;
-            }
-        }
-        if (Mins < 10) {
-            if (Mins === 0) {
-                Mins = "00";
-            } else {
-                Mins = "0" + Mins;
-            }
-        }
-        if (Secs < 10) {
-            if (Secs === 0) {
-                Secs = "00";
-            } else {
-                Secs = "0" + Secs;
-            }
-        }
-        var Years2 = ((TimeCounter2.getFullYear()).toString()).substr(2, 2);
-        var Months2 = TimeCounter2.getMonth() + 1;
-        var Days2 = TimeCounter2.getDate();
-        var Hours2 = TimeCounter2.getHours();
-        var Mins2 = TimeCounter2.getMinutes();
-        var Secs2 = TimeCounter2.getSeconds();
-        if (Years2 < 10) {
-            if (Years2 === 0) {
-                Years2 = "00";
-            } else {
-                Years2 = "0" + Years2;
-            }
-        }
-        if (Months2 < 10) {
-            Months2 = "0" + Months2;
-        }
-        if (Days2 < 10) {
-            Days2 = "0" + Days2;
-        }
-        if (Hours2 < 10) {
-            if (Hours2 === 0) {
-                Hours2 = "00";
-            } else {
-                Hours2 = "0" + Hours2;
-            }
-        }
-        if (Mins2 < 10) {
-            if (Mins2 === 0) {
-                Mins2 = "00";
-            } else {
-                Mins2 = "0" + Mins2;
-            }
-        }
-        if (Secs2 < 10) {
-            if (Secs2 === 0) {
-                Secs2 = "00";
-            } else {
-                Secs2 = "0" + Secs2;
-            }
-        }
-        $("#curr_time").html(CHours + ":" + CMins + ":" + CSecs + " - " + CDays + "." + CMonths + "." + CYears);
-        $("#reach_time").html(Hours + ":" + Mins + ":" + Secs + " - " + Days + "." + Months + "." + Years);
-        $("#comeback_time").html(Hours2 + ":" + Mins2 + ":" + Secs2 + " - " + Days2 + "." + Months2 + "." + Years2);
+        const currentTimeFormatted = libCommon.format.formatDateToFlightEvent(0);
+        const reachTimeFormatted = libCommon.format.formatDateToFlightEvent((FlightDuration * 1000));
+        const backTimeFormatted = libCommon.format.formatDateToFlightEvent((FlightDuration * 2 * 1000));
+
+        $("#curr_time").html(currentTimeFormatted);
+        $("#reach_time").html(reachTimeFormatted);
+        $("#comeback_time").html(backTimeFormatted);
     }
 
     setInterval(createTimeCounters, 250);
@@ -302,7 +151,7 @@ $(document).ready(function () {
 
     $(".updateInfo:not(.fastLink, select, .setSpeed)")
         .keyup(function () {
-            if ($(this).notEmptyVal(true)) {
+            if ($(this).isNonEmptyValue({ isZeroAllowed: true })) {
                 var TName = $(this).attr("name");
                 if (TName == "galaxy" || TName == "system" || TName == "planet") {
                     if ($(this).val() < 1) {
@@ -318,14 +167,14 @@ $(document).ready(function () {
             $(this).keyup();
         })
         .focus(function () {
-            if ($(this).notEmptyVal()) {
+            if ($(this).isNonEmptyValue()) {
                 $(this).data("last_val", $(this).val());
                 $(this).val("");
             }
         })
         .blur(function () {
-            if (!$(this).notEmptyVal()) {
-                if ($(this).notEmptyData("last_val")) {
+            if (!$(this).isNonEmptyValue()) {
+                if ($(this).isNonEmptyDataSlot("last_val")) {
                     $(this).val($(this).data("last_val"));
                     $(this).data("last_val", "");
                 }
@@ -393,20 +242,20 @@ $(document).ready(function () {
     });
 
     $("#thisForm").submit(function () {
-        if (!$("#galaxy_selector").notEmptyVal()) {
-            if ($("#galaxy_selector").notEmptyData("last_val")) {
+        if (!$("#galaxy_selector").isNonEmptyValue()) {
+            if ($("#galaxy_selector").isNonEmptyDataSlot("last_val")) {
                 $("#galaxy_selector").val($("#galaxy_selector").data("last_val"));
                 $("#galaxy_selector").data("last_val", "");
             }
         }
-        if (!$("#system_selector").notEmptyVal()) {
-            if ($("#system_selector").notEmptyData("last_val")) {
+        if (!$("#system_selector").isNonEmptyValue()) {
+            if ($("#system_selector").isNonEmptyDataSlot("last_val")) {
                 $("#system_selector").val($("#system_selector").data("last_val"));
                 $("#system_selector").data("last_val", "");
             }
         }
-        if (!$("#select_planet").notEmptyVal()) {
-            if ($("#select_planet").notEmptyData("last_val")) {
+        if (!$("#select_planet").isNonEmptyValue()) {
+            if ($("#select_planet").isNonEmptyDataSlot("last_val")) {
                 $("#select_planet").val($("#select_planet").data("last_val"));
                 $("#select_planet").data("last_val", "");
             }
