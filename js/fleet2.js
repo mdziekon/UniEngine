@@ -1,4 +1,4 @@
-/* globals libCommon, ServerClientDifference, JSLang, AllyPact_AttackWarn, SetResources, SelectQuantumGate, NeedQuantumGate, ResSortArrayAll, QuantumGateDeuteriumUse, ResSortArrayNoDeu, FlightDuration */
+/* globals libCommon, JSLang, AllyPact_AttackWarn, SetResources, SelectQuantumGate, NeedQuantumGate, ResSortArrayAll, QuantumGateDeuteriumUse, ResSortArrayNoDeu, FlightDuration */
 
 var SetMaxNow = false;
 var LastStorageLowerTh0 = false;
@@ -34,92 +34,11 @@ $(document).ready(function () {
     };
 
     function createTimeCounters () {
-        var CurrentTime = new Date().getTime() + ServerClientDifference;
-        var DateObj = new Date(CurrentTime);
-        var TimeCounter = new Date((DateObj.getTime() + (FlightDurationTarget * 1000)));
-        var TimeCounter2 = new Date((DateObj.getTime() + ((FlightDurationTarget + FlightDurationGoback) * 1000)));
-        var Years = ((TimeCounter.getFullYear()).toString()).substr(2, 2);
-        var Months = TimeCounter.getMonth() + 1;
-        var Days = TimeCounter.getDate();
-        var Hours = TimeCounter.getHours();
-        var Mins = TimeCounter.getMinutes();
-        var Secs = TimeCounter.getSeconds();
-        if (Years < 10) {
-            if (Years === 0) {
-                Years = "00";
-            } else {
-                Years = "0" + Years;
-            }
-        }
-        if (Months < 10) {
-            Months = "0" + Months;
-        }
-        if (Days < 10) {
-            Days = "0" + Days;
-        }
-        if (Hours < 10) {
-            if (Hours === 0) {
-                Hours = "00";
-            } else {
-                Hours = "0" + Hours;
-            }
-        }
-        if (Mins < 10) {
-            if (Mins === 0) {
-                Mins = "00";
-            } else {
-                Mins = "0" + Mins;
-            }
-        }
-        if (Secs < 10) {
-            if (Secs === 0) {
-                Secs = "00";
-            } else {
-                Secs = "0" + Secs;
-            }
-        }
-        var Years2 = ((TimeCounter2.getFullYear()).toString()).substr(2, 2);
-        var Months2 = TimeCounter2.getMonth() + 1;
-        var Days2 = TimeCounter2.getDate();
-        var Hours2 = TimeCounter2.getHours();
-        var Mins2 = TimeCounter2.getMinutes();
-        var Secs2 = TimeCounter2.getSeconds();
-        if (Years2 < 10) {
-            if (Years2 === 0) {
-                Years2 = "00";
-            } else {
-                Years2 = "0" + Years2;
-            }
-        }
-        if (Months2 < 10) {
-            Months2 = "0" + Months2;
-        }
-        if (Days2 < 10) {
-            Days2 = "0" + Days2;
-        }
-        if (Hours2 < 10) {
-            if (Hours2 === 0) {
-                Hours2 = "00";
-            } else {
-                Hours2 = "0" + Hours2;
-            }
-        }
-        if (Mins2 < 10) {
-            if (Mins2 === 0) {
-                Mins2 = "00";
-            } else {
-                Mins2 = "0" + Mins2;
-            }
-        }
-        if (Secs2 < 10) {
-            if (Secs2 === 0) {
-                Secs2 = "00";
-            } else {
-                Secs2 = "0" + Secs2;
-            }
-        }
-        $("#ReachTime").html(Hours + ":" + Mins + ":" + Secs + " - " + Days + "." + Months + "." + Years);
-        $("#BackTime").html(Hours2 + ":" + Mins2 + ":" + Secs2 + " - " + Days2 + "." + Months2 + "." + Years2);
+        const reachTimeFormatted = libCommon.format.formatDateToFlightEvent((FlightDurationTarget * 1000));
+        const backTimeFormatted = libCommon.format.formatDateToFlightEvent(((FlightDurationTarget + FlightDurationGoback) * 1000));
+
+        $("#ReachTime").html(reachTimeFormatted);
+        $("#BackTime").html(backTimeFormatted);
     }
 
     setInterval(createTimeCounters, 250);
