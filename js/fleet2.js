@@ -1,82 +1,14 @@
-/* globals AllowPrettyInputBox, ServerClientDifference, JSLang, AllyPact_AttackWarn, SetResources, SelectQuantumGate, NeedQuantumGate, ResSortArrayAll, QuantumGateDeuteriumUse, ResSortArrayNoDeu, FlightDuration */
+/* globals libCommon, ServerClientDifference, JSLang, AllyPact_AttackWarn, SetResources, SelectQuantumGate, NeedQuantumGate, ResSortArrayAll, QuantumGateDeuteriumUse, ResSortArrayNoDeu, FlightDuration */
 
 var SetMaxNow = false;
 var LastStorageLowerTh0 = false;
 var QuantumGateOptionModif = false;
 
 $(document).ready(function () {
+    libCommon.init.setupJQuery();
+
     var FlightDurationTarget = FlightDuration;
     var FlightDurationGoback = FlightDuration;
-
-    // Internal Functions
-    function addDots (Value) {
-        Value += "";
-        var rgx = /(\d+)(\d\d\d)/;
-        while (rgx.test(Value)) {
-            Value = Value.replace(rgx, "$1" + "." + "$2");
-        }
-        return Value;
-    }
-
-    function removeNonDigit (Value) {
-        Value += "";
-        Value = Value.replace(/[^0-9]/g, "");
-        return Value;
-    }
-
-    $.fn.notEmptyVal = function (canBeZero, doRemoveNonDigit) {
-        var ThisVal = $(this).val();
-        if (doRemoveNonDigit) {
-            ThisVal = removeNonDigit(ThisVal);
-        }
-        if (canBeZero) {
-            if (ThisVal != "" && ThisVal >= 0) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            if (ThisVal != "" && ThisVal > 0) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    };
-    $.fn.notEmptyData = function (key, canBeZero, doRemoveNonDigit) {
-        var ThisVal = $(this).data(key);
-        if (doRemoveNonDigit) {
-            ThisVal = removeNonDigit(ThisVal);
-        }
-        if (canBeZero) {
-            if (ThisVal != "" && ThisVal >= 0) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            if (ThisVal != "" && ThisVal > 0) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    };
-
-    $.fn.prettyInputBox = function (IgnoreUserSetting) {
-        return this.each(function () {
-            if ((AllowPrettyInputBox !== undefined && AllowPrettyInputBox === true) || (IgnoreUserSetting !== undefined && IgnoreUserSetting === true)) {
-                var Value = $(this).val();
-                if (Value.indexOf(".") !== -1) {
-                    Value = Value.replace(/\./g, "");
-                }
-                Value = addDots(Value);
-                $(this).val(Value);
-            }
-        });
-    };
-
-    // Rest of scripts...
 
     $.fn.setStorageShow = function (setVar) {
         var AddColor = "orange";
@@ -222,7 +154,7 @@ $(document).ready(function () {
         var ThisID          = $(this).attr("name").substr(8);
 
         var LastValue       = $(this).data("lastVal");
-        var CurrentValue    = parseInt(removeNonDigit($(this).val()), 10);
+        var CurrentValue    = parseInt(libCommon.normalize.removeNonDigit($(this).val()), 10);
         if (LastValue === undefined || isNaN(LastValue) || LastValue < 0) {
             LastValue    = 0;
         }
@@ -275,7 +207,7 @@ $(document).ready(function () {
             $(this).val(CurrentValue).prettyInputBox().data("lastVal", CurrentValue);
             $("#FreeStorage").val(FreeStorage).setStorageShow(FreeStorage);
         } else {
-            if ($(this).val() != removeNonDigit($(this).val())) {
+            if ($(this).val() != libCommon.normalize.removeNonDigit($(this).val())) {
                 $(this).val(CurrentValue).prettyInputBox();
             }
         }
@@ -283,11 +215,11 @@ $(document).ready(function () {
         .keyup(function () {
             $(this).change();
         }).focus(function () {
-            if (!$(this).notEmptyVal(false, true)) {
+            if (!$(this).isNonEmptyValue({ isZeroAllowed: false })) {
                 $(this).val("");
             }
         }).blur(function () {
-            if (!$(this).notEmptyVal(true, true)) {
+            if (!$(this).isNonEmptyValue({ isZeroAllowed: true })) {
                 $(this).val("0");
             }
         });
@@ -354,7 +286,7 @@ $(document).ready(function () {
             var ConsuptionModif_Dif = ConsuptionModif_New - ConsuptionModif_Old;
             if (ConsuptionModif_Dif !== 0) {
                 ConsuptionVar_Now -= ConsuptionModif_Dif;
-                $("#FuelUse").html(addDots(ConsuptionVar_Now));
+                $("#FuelUse").html(libCommon.format.addDots(ConsuptionVar_Now));
                 $("#FuelUse").data("ConsuptionModif_Old", ConsuptionModif_New);
                 $("#FuelUse").data("ConsuptionVar_Now", ConsuptionVar_Now);
             }
