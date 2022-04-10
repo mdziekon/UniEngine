@@ -1,0 +1,55 @@
+# This workflow validates the JS code
+name: JS & CSS Verify
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  lint-js:
+    name: Lint JS code (OS "${{ matrix.operating-system }}" / Node "${{ matrix.node-version }}")
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      fail-fast: false
+      matrix:
+        operating-system: [ubuntu-20.04]
+        node-version: ['16']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install Node dependencies
+        run: npm ci
+      - name: Run eslint
+        run: npm run ci:js:eslint
+
+  lint-css:
+    name: Lint CSS code (OS "${{ matrix.operating-system }}" / Node "${{ matrix.node-version }}")
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      fail-fast: false
+      matrix:
+        operating-system: [ubuntu-20.04]
+        node-version: ['16']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install Node dependencies
+        run: npm ci
+      - name: Run stylelint
+        run: npm run ci:css:stylelint

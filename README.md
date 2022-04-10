@@ -1,7 +1,10 @@
 # UniEngine
 
-[![Build Status](https://travis-ci.org/mdziekon/UniEngine.svg?branch=master)](https://travis-ci.org/mdziekon/UniEngine)
 [![Release: Stable (latest)](https://img.shields.io/github/release/mdziekon/UniEngine.svg?label=release%3Astable&logo=github&logoColor=FFFFFF)](https://github.com/mdziekon/UniEngine/releases)
+
+![PHP CI status (master)](https://github.com/mdziekon/UniEngine/actions/workflows/php-ci.yaml/badge.svg)
+![JS & CSS CI status (master)](https://github.com/mdziekon/UniEngine/actions/workflows/js-ci.yaml/badge.svg)
+
 
 OGame-clone browser based game engine.
 

@@ -24,7 +24,8 @@
         "utils:oneoffs:run": "php ./utils/one_offs/entry.php oneoffs:run",
         "utils:oneoffs:make": "php ./utils/one_offs/entry.php oneoffs:make",
         "ci:php:lint": "find . -not \\( -path ./action_logs -prune \\) -not \\( -path ./cache -prune \\) -not \\( -path ./tmp -prune \\) -not \\( -path ./vendor -prune \\) -name '*.php' -print0 | xargs -0 -n1 php -l",
-        "ci:php:phpcs": "phpcs ./ --standard=phpcs.xml --extensions=php",
+        "ci:php:phpcs:verify": "phpcs ./ --standard=phpcs.xml --extensions=php --report-full --report-checkstyle=./tmp/phpcs-report.xml",
+        "ci:php:phpcs:report2pr": "cs2pr ./tmp/phpcs-report.xml",
         "ci:php:test": "phpunit ./ --test-suffix UETest.php"
     }
 }
