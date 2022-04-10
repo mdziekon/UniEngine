@@ -1,5 +1,5 @@
 # This workflow validates the PHP code
-name: PHP code check
+name: PHP Verify
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 
 jobs:
   lint:
-    name: PHP - Verify - Lint code (OS ${{ matrix.operating-system }} | PHP ${{ matrix.php-versions }})
+    name: Lint code (OS "${{ matrix.operating-system }}" / PHP "${{ matrix.php-versions }}")
     runs-on: ${{ matrix.operating-system }}
     strategy:
       fail-fast: false
@@ -48,7 +48,7 @@ jobs:
         run: composer run-script ci:php:phpcs
 
   test:
-    name: PHP - Verify - Test code (OS ${{ matrix.operating-system }} | PHP ${{ matrix.php-versions }})
+    name: Test code (OS "${{ matrix.operating-system }}" / PHP "${{ matrix.php-versions }}")
     runs-on: ${{ matrix.operating-system }}
     strategy:
       fail-fast: false
