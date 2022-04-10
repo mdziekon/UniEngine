@@ -134,11 +134,15 @@ $(document).ready(function () {
         .keyup(function () {
             $(this).change();
         }).focus(function () {
-            if (!$(this).isNonEmptyValue({ isZeroAllowed: false })) {
+            const val = libCommon.normalize.removeNonDigit($(this).val());
+
+            if (!(libCommon.tests.isNonEmptyValue(val, { isZeroAllowed: false }))) {
                 $(this).val("");
             }
         }).blur(function () {
-            if (!$(this).isNonEmptyValue({ isZeroAllowed: true })) {
+            const val = libCommon.normalize.removeNonDigit($(this).val());
+
+            if (!(libCommon.tests.isNonEmptyValue(val, { isZeroAllowed: true }))) {
                 $(this).val("0");
             }
         });

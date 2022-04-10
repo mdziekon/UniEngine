@@ -62,15 +62,13 @@ const prettyInputBox = (jqThis) => {
     });
 };
 
-const isNonEmptyValue = (jqThis, params) => {
+const isNonEmptyValue = (currentValue, params) => {
     const isZeroAllowed = (params || {}).isZeroAllowed || false;
     const valueComparator = (
         isZeroAllowed ?
             (value) => value >= 0 :
             (value) => value > 0
     );
-
-    const currentValue = $(jqThis).val();
 
     return (
         currentValue != "" &&
@@ -91,7 +89,7 @@ const setupJQuery = () => {
         return prettyInputBox(this);
     };
     $.fn.isNonEmptyValue = function (params) {
-        return isNonEmptyValue(this, params);
+        return isNonEmptyValue($(this).val(), params);
     };
     $.fn.isNonEmptyDataSlot = function (dataKey) {
         return isNonEmptyDataSlot(this, dataKey);
@@ -101,6 +99,9 @@ const setupJQuery = () => {
 const libCommon = {
     init: {
         setupJQuery,
+    },
+    tests: {
+        isNonEmptyValue
     },
     normalize: {
         removeNonDigit
