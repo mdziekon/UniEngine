@@ -59,7 +59,7 @@ if(!in_array($mode, array(0, 1, 2, 3)))
 
 if($mode === 0)
 {
-    	// Show CurrentPlanet Solar System
+    // Show CurrentPlanet Solar System
     $galaxy = $CurrentPlanet['galaxy'];
     $system = $CurrentPlanet['system'];
     $planet = $CurrentPlanet['planet'];
