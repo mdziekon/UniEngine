@@ -24,7 +24,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
             php-version: ${{ matrix.php-versions }}
-            tools: phpcs, phpunit
+            tools: phpcs, phpunit, cs2pr
             coverage: none
         env:
           fail-fast: true
@@ -45,7 +45,10 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-progress
       - name: Run phpcs
-        run: composer run-script ci:php:phpcs
+        continue-on-error: true
+        run: composer run-script ci:php:phpcs:verify
+      - name: Show PHPCS results in PR
+        run: composer run-script ci:php:phpcs:report2pr
 
   test:
     name: Test code (OS "${{ matrix.operating-system }}" / PHP "${{ matrix.php-versions }}")
@@ -63,7 +66,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          tools: phpcs, phpunit
+          tools: phpcs, phpunit, cs2pr
           coverage: none
         env:
           fail-fast: true
