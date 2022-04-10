@@ -7,7 +7,8 @@ var JSLang = {'fl_coordplanet': '{fl_coordplanet}', 'fl_coordmoon': '{fl_coordmo
 var ShipsData = {Insert_ShipsData};
 {InsertJSShipSet}
 </script>
-<script src="dist/js/fleet0.cachebuster-1545956361123.min.js"></script>
+<script src="dist/js/_libCommon.cachebuster-1649551157446.min.js"></script>
+<script src="dist/js/fleet0.cachebuster-1649551310128.min.js"></script>
 <link rel="stylesheet" type="text/css" href="dist/css/fleet0.cachebuster-1546565145290.min.css" />
 
 {ChronoAppletsScripts}

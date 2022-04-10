@@ -1,33 +1,7 @@
-/* globals AllowPrettyInputBox, JSLang, ShipsData, TotalPlanetResources, JSShipSet, ACSUsersMax */
+/* globals libCommon, JSLang, ShipsData, TotalPlanetResources, JSShipSet, ACSUsersMax */
 
 $(document).ready(function () {
-    // Internal Functions
-    function addDots (value) {
-        value += "";
-        var rgx = /(\d+)(\d\d\d)/;
-        while (rgx.test(value)) {
-            value = value.replace(rgx, "$1" + "." + "$2");
-        }
-        return value;
-    }
-
-    function removeNonDigit (Value) {
-        Value += "";
-        Value = Value.replace(/[^0-9]/g, "");
-        return Value;
-    }
-
-    $.fn.prettyInputBox = function () {
-        return this.each(function () {
-            if (AllowPrettyInputBox !== undefined && AllowPrettyInputBox === true) {
-                var Value = removeNonDigit($(this).val());
-                Value = addDots(Value);
-                $(this).val(Value);
-            }
-        });
-    };
-
-    // Rest of scripts...
+    libCommon.init.setupJQuery();
 
     $(".setACS_ID").click(function () {
         $("[name=getacsdata]").val($(this).val());
@@ -47,13 +21,13 @@ $(document).ready(function () {
         .keydown(function (event) {
             var ThisCount;
             if (event.which == 38) {
-                ThisCount = parseFloat(removeNonDigit($(this).val()));
+                ThisCount = parseFloat(libCommon.normalize.removeNonDigit($(this).val()));
                 if (isNaN(ThisCount)) {
                     ThisCount = 0;
                 }
                 $(this).val(ThisCount + 1).keyup();
             } else if (event.which == 40) {
-                ThisCount = parseFloat(removeNonDigit($(this).val()));
+                ThisCount = parseFloat(libCommon.normalize.removeNonDigit($(this).val()));
                 if (isNaN(ThisCount) || ThisCount <= 0) {
                     return false;
                 }
@@ -61,7 +35,7 @@ $(document).ready(function () {
             }
         })
         .keyup(function () {
-            var ThisCount = parseInt(removeNonDigit($(this).val()), 10);
+            var ThisCount = parseInt(libCommon.normalize.removeNonDigit($(this).val()), 10);
             var OldCount = $(this).data("oldCount");
             if (OldCount === undefined || isNaN(OldCount)) {
                 OldCount = 0;
@@ -71,15 +45,15 @@ $(document).ready(function () {
             }
             var Difference = ThisCount - OldCount;
             if (Difference != 0) {
-                var ThisShipID = removeNonDigit($(this).attr("name"));
-                var StorageCalced = parseInt(removeNonDigit(CalcStorage.html()), 10);
+                var ThisShipID = libCommon.normalize.removeNonDigit($(this).attr("name"));
+                var StorageCalced = parseInt(libCommon.normalize.removeNonDigit(CalcStorage.html()), 10);
                 StorageCalced += Difference * ShipsData["storage"][ThisShipID];
                 if (StorageCalced >= TotalPlanetResources) {
                     CalcStorage.removeClass("orange").addClass("lime");
                 } else {
                     CalcStorage.removeClass("lime").addClass("orange");
                 }
-                CalcStorage.html(addDots(StorageCalced));
+                CalcStorage.html(libCommon.format.addDots(StorageCalced));
                 $(this).data("oldCount", ThisCount);
 
                 if (ThisCount > ShipsData["count"][ThisShipID]) {
