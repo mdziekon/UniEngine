@@ -1,39 +1,9 @@
-/* globals AllowCreateTimeCounters, ServerClientDifference, maxIs, JSLang */
+/* globals libCommon, AllowCreateTimeCounters, ServerClientDifference, maxIs, JSLang */
 
 $(document).ready(function () {
-    var FlightDuration;
+    libCommon.init.setupJQuery();
 
-    // Internal Functions
-    $.fn.notEmptyVal = function (canBeZero) {
-        if (canBeZero) {
-            if ($(this).val() != "" && $(this).val() >= 0) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            if ($(this).val() != "" && $(this).val() > 0) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    };
-    $.fn.notEmptyData = function (key) {
-        if ($(this).data(key) != "" && $(this).data(key) > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    };
-    function addDots (Value) {
-        Value += "";
-        var rgx = /(\d+)(\d\d\d)/;
-        while (rgx.test(Value)) {
-            Value = Value.replace(rgx, "$1" + "." + "$2");
-        }
-        return Value;
-    }
+    var FlightDuration;
 
     // Fleet Functions
     function setTarget (galaxy, system, planet, type) {
@@ -118,7 +88,7 @@ $(document).ready(function () {
     }
 
     function shortInfo () {
-        $("#distance").html(addDots(distance()));
+        $("#distance").html(libCommon.format.addDots(distance()));
         var seconds = duration();
         var hours = Math.floor(seconds / 3600);
         seconds -= hours * 3600;
@@ -147,18 +117,18 @@ $(document).ready(function () {
         var setHTMLStor = "";
         if (stor >= 0) {
             if (deuterium >= cons) {
-                setHTMLCons = "<b class=\"lime\">" + addDots(cons) + "</b>";
+                setHTMLCons = "<b class=\"lime\">" + libCommon.format.addDots(cons) + "</b>";
             } else {
-                setHTMLCons = "<b class=\"red\">" + addDots(cons) + "</b>";
+                setHTMLCons = "<b class=\"red\">" + libCommon.format.addDots(cons) + "</b>";
             }
-            setHTMLStor = "<b class=\"lime\">" + addDots(stor) + "</b>";
+            setHTMLStor = "<b class=\"lime\">" + libCommon.format.addDots(stor) + "</b>";
         } else {
             if (deuterium >= cons) {
-                setHTMLCons = "<b class=\"orange\">" + addDots(cons) + "</b>";
+                setHTMLCons = "<b class=\"orange\">" + libCommon.format.addDots(cons) + "</b>";
             } else {
-                setHTMLCons = "<b class=\"red\">" + addDots(cons) + "</b>";
+                setHTMLCons = "<b class=\"red\">" + libCommon.format.addDots(cons) + "</b>";
             }
-            setHTMLStor = "<b class=\"red\">" + addDots(stor) + "</b>";
+            setHTMLStor = "<b class=\"red\">" + libCommon.format.addDots(stor) + "</b>";
         }
         $("#consumption").html(setHTMLCons);
         $("#storageShow").html(setHTMLStor);
@@ -302,7 +272,7 @@ $(document).ready(function () {
 
     $(".updateInfo:not(.fastLink, select, .setSpeed)")
         .keyup(function () {
-            if ($(this).notEmptyVal(true)) {
+            if ($(this).isNonEmptyValue({ isZeroAllowed: true })) {
                 var TName = $(this).attr("name");
                 if (TName == "galaxy" || TName == "system" || TName == "planet") {
                     if ($(this).val() < 1) {
@@ -318,14 +288,14 @@ $(document).ready(function () {
             $(this).keyup();
         })
         .focus(function () {
-            if ($(this).notEmptyVal()) {
+            if ($(this).isNonEmptyValue()) {
                 $(this).data("last_val", $(this).val());
                 $(this).val("");
             }
         })
         .blur(function () {
-            if (!$(this).notEmptyVal()) {
-                if ($(this).notEmptyData("last_val")) {
+            if (!$(this).isNonEmptyValue()) {
+                if ($(this).isNonEmptyDataSlot("last_val")) {
                     $(this).val($(this).data("last_val"));
                     $(this).data("last_val", "");
                 }
@@ -393,20 +363,20 @@ $(document).ready(function () {
     });
 
     $("#thisForm").submit(function () {
-        if (!$("#galaxy_selector").notEmptyVal()) {
-            if ($("#galaxy_selector").notEmptyData("last_val")) {
+        if (!$("#galaxy_selector").isNonEmptyValue()) {
+            if ($("#galaxy_selector").isNonEmptyDataSlot("last_val")) {
                 $("#galaxy_selector").val($("#galaxy_selector").data("last_val"));
                 $("#galaxy_selector").data("last_val", "");
             }
         }
-        if (!$("#system_selector").notEmptyVal()) {
-            if ($("#system_selector").notEmptyData("last_val")) {
+        if (!$("#system_selector").isNonEmptyValue()) {
+            if ($("#system_selector").isNonEmptyDataSlot("last_val")) {
                 $("#system_selector").val($("#system_selector").data("last_val"));
                 $("#system_selector").data("last_val", "");
             }
         }
-        if (!$("#select_planet").notEmptyVal()) {
-            if ($("#select_planet").notEmptyData("last_val")) {
+        if (!$("#select_planet").isNonEmptyValue()) {
+            if ($("#select_planet").isNonEmptyDataSlot("last_val")) {
                 $("#select_planet").val($("#select_planet").data("last_val"));
                 $("#select_planet").data("last_val", "");
             }

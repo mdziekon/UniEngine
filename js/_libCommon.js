@@ -28,9 +28,39 @@ const prettyInputBox = (jqThis) => {
     });
 };
 
+const isNonEmptyValue = (jqThis, params) => {
+    const isZeroAllowed = (params || {}).isZeroAllowed || false;
+    const valueComparator = (
+        isZeroAllowed ?
+            (value) => value >= 0 :
+            (value) => value > 0
+    );
+
+    const currentValue = $(jqThis).val();
+
+    return (
+        currentValue != "" &&
+        valueComparator(currentValue)
+    );
+};
+const isNonEmptyDataSlot = (jqThis, dataKey) => {
+    const currentValue = $(jqThis).data(dataKey);
+
+    return (
+        currentValue != "" &&
+        currentValue > 0
+    );
+};
+
 const setupJQuery = () => {
     $.fn.prettyInputBox = function () {
         return prettyInputBox(this);
+    };
+    $.fn.isNonEmptyValue = function (params) {
+        return isNonEmptyValue(this, params);
+    };
+    $.fn.isNonEmptyDataSlot = function (dataKey) {
+        return isNonEmptyDataSlot(this, dataKey);
     };
 };
 
