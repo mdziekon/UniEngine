@@ -1,4 +1,4 @@
-/* globals AllowPrettyInputBox, UseAjax, GalaxySettings */
+/* globals libCommon, UseAjax, GalaxySettings */
 /* globals nd */
 /* exported galaxy_submit, Phalanx */
 
@@ -231,6 +231,8 @@ function ShowAjaxInfo (Text, Color, HideTime) {
 }
 
 $(document).ready(function () {
+    libCommon.init.setupJQuery();
+
     isReady = true;
     var $ajaxCallCover = $("#ajaxCallCover");
     var ThisGalaxy = $("[name=\"galaxy\"]");
@@ -245,32 +247,6 @@ $(document).ready(function () {
     var MissilesPos = $("#MissilePos");
     AjaxBox = {"th": $("#fleetstatusrow"), "info": $("#ajaxInfoBox")};
     El_FlyingFleets = $("#slots");
-
-    // Internal Functions
-    function addDots (value) {
-        value += "";
-        var rgx = /(\d+)(\d\d\d)/;
-        while (rgx.test(value)) {
-            value = value.replace(rgx, "$1" + "." + "$2");
-        }
-        return value;
-    }
-
-    function removeNonDigit (Value) {
-        Value += "";
-        Value = Value.replace(/[^0-9]/g, "");
-        return Value;
-    }
-
-    $.fn.prettyInputBox = function () {
-        return this.each(function () {
-            if (AllowPrettyInputBox !== undefined && AllowPrettyInputBox === true) {
-                var Value = removeNonDigit($(this).val());
-                Value = addDots(Value);
-                $(this).val(Value);
-            }
-        });
-    };
 
     BlockFunction = false;
 

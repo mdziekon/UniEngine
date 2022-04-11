@@ -51,7 +51,8 @@
             });
     });
     </script>
-    <script src="dist/js/structures.cachebuster-1580668095015.min.js" type="text/javascript"></script>
+    <script src="dist/js/_libCommon.cachebuster-1649555016585.min.js"></script>
+    <script src="dist/js/structures.cachebuster-1649642056932.min.js" type="text/javascript"></script>
     <link rel="stylesheet" type="text/css" href="dist/css/structures.cachebuster-1546565145290.min.css" />
     <div style="height: 6px;"></div>
     <div id="structureslist_body" class="w900x">

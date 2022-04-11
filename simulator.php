@@ -305,8 +305,6 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
         $TotalTime = 0;
         for($i = 1; $i <= $Loop; $i += 1)
         {
-            $chance = 0;
-            $chance2 = 0;
             $Temp['ship_lost_atk'] = 0;
             $Temp['ship_lost_def'] = 0;
 

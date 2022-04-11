@@ -5,7 +5,8 @@ var CurrentSlot = 1;
 var PlanetOwnerTxt = '{PlanetOwner}';
 var AllowPrettyInputBox = {AllowPrettyInputBox};
 </script>
-<script src="./dist/js/simulator.cachebuster-1546740422470.min.js"></script>
+<script src="dist/js/_libCommon.cachebuster-1649555016585.min.js"></script>
+<script src="./dist/js/simulator.cachebuster-1649640805832.min.js"></script>
 <link rel="stylesheet" type="text/css" href="dist/css/simulator.cachebuster-1546564327123.min.css" />
 <br />
 <form id="simForm" action="" method="post">

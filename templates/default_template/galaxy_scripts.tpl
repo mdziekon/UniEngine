@@ -1,4 +1,5 @@
-<script src="dist/js/galaxy.cachebuster-1649514552011.min.js"></script>
+<script src="dist/js/_libCommon.cachebuster-1649555016585.min.js"></script>
+<script src="dist/js/galaxy.cachebuster-1649639850468.min.js"></script>
 <script>
 {Insert_ReponseCodes}
 Lang['ajax_moon_sign'] = '{ajax_moon_sign}';

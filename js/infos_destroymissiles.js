@@ -1,21 +1,7 @@
-/* globals AllowPrettyInputBox */
+/* globals libCommon */
 
 $(document).ready(function () {
-    // Internal Functions
-    function addDots (value) {
-        value += "";
-        var rgx = /(\d+)(\d\d\d)/;
-        while (rgx.test(value)) {
-            value = value.replace(rgx, "$1" + "." + "$2");
-        }
-        return value;
-    }
-
-    function removeNonDigit (Value) {
-        Value += "";
-        Value = Value.replace(/[^0-9]/g, "");
-        return Value;
-    }
+    libCommon.init.setupJQuery();
 
     $(".countInput")
         .focus(function () {
@@ -29,7 +15,7 @@ $(document).ready(function () {
             }
         })
         .keyup(function () {
-            var ThisValue = parseInt(removeNonDigit($(this).val()), 10);
+            var ThisValue = parseInt(libCommon.normalize.removeNonDigit($(this).val()), 10);
             if (isNaN(ThisValue)) {
                 $(this).removeClass("red");
             } else {
@@ -39,10 +25,8 @@ $(document).ready(function () {
                 } else {
                     $(this).removeClass("red");
                 }
-                if (AllowPrettyInputBox === true) {
-                    ThisValue = addDots(ThisValue);
-                }
-                $(this).val(ThisValue);
+
+                $(this).prettyInputBox();
             }
         })
         .keydown(function () {

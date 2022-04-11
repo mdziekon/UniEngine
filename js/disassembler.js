@@ -1,31 +1,7 @@
-/* globals AllowPrettyInputBox, JSLang, ShipPrices */
+/* globals libCommon, JSLang, ShipPrices */
 
 $(document).ready(function () {
-    // Internal Functions
-    function addDots (value) {
-        value += "";
-        var rgx = /(\d+)(\d\d\d)/;
-        while (rgx.test(value)) {
-            value = value.replace(rgx, "$1" + "." + "$2");
-        }
-        return value;
-    }
-
-    function removeNonDigit (Value) {
-        Value += "";
-        Value = Value.replace(/[^0-9]/g, "");
-        return Value;
-    }
-
-    $.fn.prettyInputBox = function () {
-        return this.each(function () {
-            if (AllowPrettyInputBox !== undefined && AllowPrettyInputBox === true) {
-                var Value = removeNonDigit($(this).val());
-                Value = addDots(Value);
-                $(this).val(Value);
-            }
-        });
-    };
+    libCommon.init.setupJQuery();
 
     var TotalPrice = new Object();
     TotalPrice["metal"] = 0;
@@ -87,10 +63,10 @@ $(document).ready(function () {
             }
         })
         .keyup(function () {
-            var ThisCount = parseFloat(removeNonDigit($(this).val()));
+            var ThisCount = parseFloat(libCommon.normalize.removeNonDigit($(this).val()));
             if (ClickFromSelectAll === false) {
             // Skip this if using SelectAll
-                var ThisMax = parseFloat(removeNonDigit($(".count", $(this).parent()).html()));
+                var ThisMax = parseFloat(libCommon.normalize.removeNonDigit($(".count", $(this).parent()).html()));
                 if (ThisCount > ThisMax) {
                     ThisCount = ThisMax;
                     $(this).val(ThisMax);
@@ -116,7 +92,7 @@ $(document).ready(function () {
                 // Skip this if using SelectAll
                     for (var PriceKey in TotalPrice) {
                         var ThisSelector = $("#resC_" + PriceKey);
-                        ThisSelector.html(addDots(TotalPrice[PriceKey]));
+                        ThisSelector.html(libCommon.format.addDots(TotalPrice[PriceKey]));
                     }
 
                     if (TotalCount > 0) {
@@ -143,13 +119,13 @@ $(document).ready(function () {
         }).keydown(function (event) {
             var ThisCount;
             if (event.which == 38) {
-                ThisCount = parseFloat(removeNonDigit($(this).val()));
+                ThisCount = parseFloat(libCommon.normalize.removeNonDigit($(this).val()));
                 if (isNaN(ThisCount)) {
                     ThisCount = 0;
                 }
                 $(this).val(ThisCount + 1).change();
             } else if (event.which == 40) {
-                ThisCount = parseFloat(removeNonDigit($(this).val()));
+                ThisCount = parseFloat(libCommon.normalize.removeNonDigit($(this).val()));
                 if (isNaN(ThisCount) || ThisCount <= 0) {
                     return false;
                 }
@@ -170,7 +146,7 @@ $(document).ready(function () {
 
         for (var Key in TotalPrice) {
             var ThisSelector = $("#resC_" + Key);
-            ThisSelector.html(addDots(TotalPrice[Key]));
+            ThisSelector.html(libCommon.format.addDots(TotalPrice[Key]));
         }
 
         if (TotalCount > 0) {
