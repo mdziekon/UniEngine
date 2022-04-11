@@ -3,26 +3,6 @@
 $(document).ready(function () {
     libCommon.init.setupJQuery();
 
-    $.fn.notEmptyVal = function (canBeZero, doRemoveNonDigit) {
-        var ThisVal = $(this).val();
-        if (doRemoveNonDigit) {
-            ThisVal = libCommon.normalize.removeNonDigit(ThisVal);
-        }
-        if (canBeZero) {
-            if (ThisVal != "" && ThisVal >= 0) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            if (ThisVal != "" && ThisVal > 0) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    };
-
     function Calculate (UsingMain) {
         if (UsingMain === undefined) {
             UsingMain = false;
@@ -105,11 +85,15 @@ $(document).ready(function () {
                 $(this).val(ThisCount - 1).change();
             }
         }).focus(function () {
-            if (!$(this).notEmptyVal(false, true)) {
+            const val = libCommon.normalize.removeNonDigit($(this).val());
+
+            if (!(libCommon.tests.isNonEmptyValue(val, { isZeroAllowed: false }))) {
                 $(this).val("");
             }
         }).blur(function () {
-            if (!$(this).notEmptyVal(true, true)) {
+            const val = libCommon.normalize.removeNonDigit($(this).val());
+
+            if (!(libCommon.tests.isNonEmptyValue(val, { isZeroAllowed: true }))) {
                 $(this).val("0");
             }
         });
