@@ -1,4 +1,4 @@
-/* globals MyTechs, MyFleets, AllowPrettyInputBox, PlanetOwnerTxt, CurrentSlot */
+/* globals MyTechs, MyFleets, libCommon, PlanetOwnerTxt, CurrentSlot */
 /* exported f */
 
 var local_CurrentSlot;
@@ -30,33 +30,9 @@ function cleanFleets (type) {
 }
 
 $(document).ready(function () {
+    libCommon.init.setupJQuery();
+
     local_CurrentSlot = CurrentSlot;
-
-    // Internal Functions
-    function addDots (value) {
-        value += "";
-        var rgx = /(\d+)(\d\d\d)/;
-        while (rgx.test(value)) {
-            value = value.replace(rgx, "$1" + "." + "$2");
-        }
-        return value;
-    }
-
-    function removeNonDigit (Value) {
-        Value += "";
-        Value = Value.replace(/[^0-9]/g, "");
-        return Value;
-    }
-
-    $.fn.prettyInputBox = function () {
-        return this.each(function () {
-            if (AllowPrettyInputBox !== undefined && AllowPrettyInputBox === true) {
-                var Value = removeNonDigit($(this).val());
-                Value = addDots(Value);
-                $(this).val(Value);
-            }
-        });
-    };
 
     $("#toggleView_Result").click(function () {
         $("#result").toggle(0);
