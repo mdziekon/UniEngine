@@ -1,4 +1,4 @@
-/* globals AllowPrettyInputBox, ShowElementOnStartup, JSLang, ShipPrices, ShipTimes, RunQueueHandler, Resources, QueueArray */
+/* globals libCommon, ShowElementOnStartup, JSLang, ShipPrices, ShipTimes, RunQueueHandler, Resources, QueueArray */
 /* exported createDestructionTooltipContentHTML */
 
 function createDestructionTooltipContentHTML (props) {
@@ -45,23 +45,9 @@ function createDestructionTooltipContentHTML (props) {
 }
 
 $(document).ready(function () {
+    libCommon.init.setupJQuery();
+
     var local_ShowElementOnStartup = ShowElementOnStartup;
-
-    // Internal Functions
-    function addDots (value) {
-        value += "";
-        var rgx = /(\d+)(\d\d\d)/;
-        while (rgx.test(value)) {
-            value = value.replace(rgx, "$1" + "." + "$2");
-        }
-        return value;
-    }
-
-    function removeNonDigit (Value) {
-        Value += "";
-        Value = Value.replace(/[^0-9]/g, "");
-        return Value;
-    }
 
     // PHP2JS Port
     function prettyTime (Seconds) {
@@ -73,15 +59,10 @@ $(document).ready(function () {
         var $Minutes    = Math.floor($Seconds / 60);
         $Seconds   -= $Minutes * 60;
 
-        if ($Hours < 10) {
-            $Hours = "0" + $Hours + "";
-        }
-        if ($Minutes < 10) {
-            $Minutes = "0" + $Minutes + "";
-        }
-        if ($Seconds < 10) {
-            $Seconds = "0" + $Seconds + "";
-        }
+        $Hours = libCommon.format.padStringLeft($Hours, 2, "0");
+        $Minutes = libCommon.format.padStringLeft($Minutes, 2, "0");
+        $Seconds = libCommon.format.padStringLeft($Seconds, 2, "0");
+
         var $Time = "";
         if ($Days > 0) {
             $Time = $Days + "d ";
@@ -90,16 +71,6 @@ $(document).ready(function () {
 
         return $Time;
     }
-
-    $.fn.prettyInputBox = function () {
-        return this.each(function () {
-            if (AllowPrettyInputBox !== undefined && AllowPrettyInputBox === true) {
-                var Value = removeNonDigit($(this).val());
-                Value = addDots(Value);
-                $(this).val(Value);
-            }
-        });
-    };
 
     var nfoMainElement = $("#nfoElements");
     var nfoElement0 = $("#nfoEl_0", nfoMainElement);
@@ -259,7 +230,7 @@ $(document).ready(function () {
             }
         })
         .keyup(function () {
-            var ThisCount = parseFloat(removeNonDigit($(this).val()));
+            var ThisCount = parseFloat(libCommon.normalize.removeNonDigit($(this).val()));
             var OldCount = $(this).data("oldCount");
             if (OldCount === undefined || isNaN(OldCount)) {
                 OldCount = 0;
@@ -278,7 +249,7 @@ $(document).ready(function () {
                 TotalCount += Difference;
                 for (var PriceKey in TotalPrice) {
                     var ThisSelector = $("#resC_" + PriceKey);
-                    ThisSelector.html(addDots(TotalPrice[PriceKey]));
+                    ThisSelector.html(libCommon.format.addDots(TotalPrice[PriceKey]));
                     if (TotalPrice[PriceKey] > Resources[PriceKey]) {
                         if (!ThisSelector.hasClass("red")) {
                             ThisSelector.addClass("red");
@@ -300,7 +271,7 @@ $(document).ready(function () {
                     }
                 }
 
-                if (ThisCount > removeNonDigit($("#maxConst_" + ThisElementID).html())) {
+                if (ThisCount > libCommon.normalize.removeNonDigit($("#maxConst_" + ThisElementID).html())) {
                     $(this).addClass("red");
                 } else {
                     $(this).removeClass("red");
@@ -325,13 +296,13 @@ $(document).ready(function () {
         }).keydown(function (event) {
             var ThisCount;
             if (event.which == 38) {
-                ThisCount = parseFloat(removeNonDigit($(this).val()));
+                ThisCount = parseFloat(libCommon.normalize.removeNonDigit($(this).val()));
                 if (isNaN(ThisCount)) {
                     ThisCount = 0;
                 }
                 $(this).val(ThisCount + 1).change();
             } else if (event.which == 40) {
-                ThisCount = parseFloat(removeNonDigit($(this).val()));
+                ThisCount = parseFloat(libCommon.normalize.removeNonDigit($(this).val()));
                 if (isNaN(ThisCount) || ThisCount <= 0) {
                     return false;
                 }
@@ -356,7 +327,7 @@ $(document).ready(function () {
 
             QueueArray[CurrentQueueID]["Count"] -= QueueArray[CurrentQueueID]["Remove"];
             if (QueueArray[CurrentQueueID]["Count"] > 0) {
-                QueueSelectorsCache["count"][CurrentQueueID].html(addDots(Math.ceil(QueueArray[CurrentQueueID]["Count"])));
+                QueueSelectorsCache["count"][CurrentQueueID].html(libCommon.format.addDots(Math.ceil(QueueArray[CurrentQueueID]["Count"])));
             } else {
                 QueueSelectorsCache["tr"][CurrentQueueID].remove();
                 CurrentQueueID += 1;
