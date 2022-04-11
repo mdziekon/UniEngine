@@ -435,6 +435,8 @@ else
     $parse['Insert_TraderRight'] = "({$_Lang['Trader_Uses_InStandBy']}: ".prettyNumber($CurrentUser['trader_usesCount']).")";
 }
 
+$parse['P_AllowPrettyInputBox'] = ($_User['settings_useprettyinputbox'] == 1 ? 'true' : 'false');
+
 $Page = parsetemplate($PageTPL, $parse);
 
 display($Page, $_Lang['Trader_Title']);

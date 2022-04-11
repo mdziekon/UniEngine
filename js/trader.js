@@ -1,26 +1,12 @@
-/* globals AllowPrettyInputBox, Mode, NameResM, NameResA, NameResB, Mod_ResA, Mod_ResB, MaxResM, MaxResA, MaxResB */
+/* globals libCommon, Mode, NameResM, NameResA, NameResB, Mod_ResA, Mod_ResB, MaxResM, MaxResA, MaxResB */
 
 $(document).ready(function () {
-    // Internal Functions
-    function addDots (Value) {
-        Value += "";
-        var rgx = /(\d+)(\d\d\d)/;
-        while (rgx.test(Value)) {
-            Value = Value.replace(rgx, "$1" + "." + "$2");
-        }
-        return Value;
-    }
-
-    function removeNonDigit (Value) {
-        Value += "";
-        Value = Value.replace(/[^0-9]/g, "");
-        return Value;
-    }
+    libCommon.init.setupJQuery();
 
     $.fn.notEmptyVal = function (canBeZero, doRemoveNonDigit) {
         var ThisVal = $(this).val();
         if (doRemoveNonDigit) {
-            ThisVal = removeNonDigit(ThisVal);
+            ThisVal = libCommon.normalize.removeNonDigit(ThisVal);
         }
         if (canBeZero) {
             if (ThisVal != "" && ThisVal >= 0) {
@@ -37,26 +23,13 @@ $(document).ready(function () {
         }
     };
 
-    $.fn.prettyInputBox = function (IgnoreUserSetting) {
-        return this.each(function () {
-            if ((AllowPrettyInputBox !== undefined && AllowPrettyInputBox === true) || (IgnoreUserSetting !== undefined && IgnoreUserSetting === true)) {
-                var Value = $(this).val();
-                if (Value.indexOf(".") !== -1) {
-                    Value = Value.replace(/\./g, "");
-                }
-                Value = addDots(Value);
-                $(this).val(Value);
-            }
-        });
-    };
-
     function Calculate (UsingMain) {
         if (UsingMain === undefined) {
             UsingMain = false;
         }
-        var ResM = removeNonDigit($("[name=\"" + NameResM + "\"]").val());
-        var ResA = removeNonDigit($("[name=\"" + NameResA + "\"]").val());
-        var ResB = removeNonDigit($("[name=\"" + NameResB + "\"]").val());
+        var ResM = libCommon.normalize.removeNonDigit($("[name=\"" + NameResM + "\"]").val());
+        var ResA = libCommon.normalize.removeNonDigit($("[name=\"" + NameResA + "\"]").val());
+        var ResB = libCommon.normalize.removeNonDigit($("[name=\"" + NameResB + "\"]").val());
 
         if (UsingMain === false) {
             var Needed;
@@ -65,18 +38,18 @@ $(document).ready(function () {
             } else if (Mode == 2) {
                 Needed = Math.floor((ResA * Mod_ResA) + (ResB * Mod_ResB));
             }
-            $("#MainRes").val(addDots(Needed));
+            $("#MainRes").val(libCommon.format.addDots(Needed));
         } else {
             if (Mode == 1) {
                 ResA = Math.floor((ResM * (parseInt($("[name=\"" + NameResA + "Percent\"]").val()) / 100)) / Mod_ResA);
                 ResB = Math.floor((ResM * (parseInt($("[name=\"" + NameResB + "Percent\"]").val()) / 100)) / Mod_ResB);
-                $("[name=\"" + NameResA + "\"]").val(ResA).prettyInputBox(true);
-                $("[name=\"" + NameResB + "\"]").val(ResB).prettyInputBox(true);
+                $("[name=\"" + NameResA + "\"]").val(ResA).prettyInputBox();
+                $("[name=\"" + NameResB + "\"]").val(ResB).prettyInputBox();
             } else if (Mode == 2) {
                 ResA = Math.floor((ResM * (parseInt($("[name=\"" + NameResA + "Percent\"]").val()) / 100)) / Mod_ResA);
                 ResB = Math.floor((ResM * (parseInt($("[name=\"" + NameResB + "Percent\"]").val()) / 100)) / Mod_ResB);
-                $("[name=\"" + NameResA + "\"]").val(ResA).prettyInputBox(true);
-                $("[name=\"" + NameResB + "\"]").val(ResB).prettyInputBox(true);
+                $("[name=\"" + NameResA + "\"]").val(ResA).prettyInputBox();
+                $("[name=\"" + NameResB + "\"]").val(ResB).prettyInputBox();
             }
         }
         if (Mode == 1) {
@@ -107,25 +80,25 @@ $(document).ready(function () {
 
     $("[name=\"met\"],[name=\"cry\"],[name=\"deu\"]")
         .change(function () {
-            $(this).val(removeNonDigit($(this).val()));
+            $(this).val(libCommon.normalize.removeNonDigit($(this).val()));
             if ($(this).attr("name") != NameResM) {
                 Calculate();
             } else {
                 Calculate(true);
             }
-            $(this).prettyInputBox(true);
+            $(this).prettyInputBox();
         }).keyup(function () {
             $(this).change();
         }).keydown(function (event) {
             var ThisCount;
             if (event.which == 38) {
-                ThisCount = parseFloat(removeNonDigit($(this).val()));
+                ThisCount = parseFloat(libCommon.normalize.removeNonDigit($(this).val()));
                 if (isNaN(ThisCount)) {
                     ThisCount = 0;
                 }
                 $(this).val(ThisCount + 1).change();
             } else if (event.which == 40) {
-                ThisCount = parseFloat(removeNonDigit($(this).val()));
+                ThisCount = parseFloat(libCommon.normalize.removeNonDigit($(this).val()));
                 if (isNaN(ThisCount) || ThisCount <= 0) {
                     return false;
                 }
@@ -228,7 +201,7 @@ $(document).ready(function () {
     }).keydown(function (event) {
         var ThisCount;
         if (event.which == 38) {
-            ThisCount = parseFloat(removeNonDigit($(this).val()));
+            ThisCount = parseFloat(libCommon.normalize.removeNonDigit($(this).val()));
             if (isNaN(ThisCount)) {
                 ThisCount = 0;
             } else {
@@ -238,7 +211,7 @@ $(document).ready(function () {
             }
             $(this).val(ThisCount + 1).change();
         } else if (event.which == 40) {
-            ThisCount = parseFloat(removeNonDigit($(this).val()));
+            ThisCount = parseFloat(libCommon.normalize.removeNonDigit($(this).val()));
             if (isNaN(ThisCount) || ThisCount <= 0) {
                 return false;
             }
