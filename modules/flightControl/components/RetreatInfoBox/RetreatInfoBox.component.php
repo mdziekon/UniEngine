@@ -40,10 +40,11 @@ function render ($props) {
             "lime" :
             "red"
     );
+    $isKnownErrorCode = in_array($eventCode, array_keys($eventCodeMapping));
 
     $componentTPLData = [
         'container_hideclass' => (
-            $isVisible ?
+            ($isVisible && $isKnownErrorCode) ?
                 null :
                 ' class="hide"'
         ),
