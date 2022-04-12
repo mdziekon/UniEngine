@@ -6,6 +6,8 @@ call_user_func(function () {
 
     $includePath = $_EnginePath . 'modules/flightControl/';
 
+    include($includePath . './components/RetreatInfoBox/RetreatInfoBox.component.php');
+
     include($includePath . './utils/factories/createAlertFiltersSearchParams.factory.php');
     include($includePath . './utils/factories/createFleetDevLogEntry.factory.php');
     include($includePath . './utils/fetchers/fetchActiveSmartFleetsBlockadeEntries.fetcher.php');
