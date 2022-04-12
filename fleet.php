@@ -90,7 +90,6 @@ if($GetSFBData['ID'] > 0)
 $_Lang['ComponentHTML_RetreatInfoBox'] = FlightControl\Components\RetreatInfoBox\render([
     'isVisible' => isset($_GET['ret']),
     'eventCode' => $_GET['m'],
-    'eventColor' => $_GET['c'],
 ])['componentHTML'];
 
 $fleetsInFlightCounters = FlightControl\Utils\Helpers\getFleetsInFlightCounters([

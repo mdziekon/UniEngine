@@ -12,7 +12,6 @@ loggedCheck();
 
 includeLang('fleet');
 
-$SetColor = 1;
 $SetMsg = 1;
 $FleetID = (isset($_POST['fleetid']) ? floor(floatval($_POST['fleetid'])) : 0);
 
@@ -35,18 +34,16 @@ if($FleetID > 0)
             if($Result['Types'][$FleetID] == 1)
             {
                 $SetMsg = RetreatResultType::SuccessTurnedBack;
-                $SetColor = 2;
             }
             else if($Result['Types'][$FleetID] == 2)
             {
                 $SetMsg = RetreatResultType::SuccessRetreated;
-                $SetColor = 2;
             }
         }
     }
 }
 
-header("Location: fleet.php?ret=1&m={$SetMsg}&c={$SetColor}");
+header("Location: fleet.php?ret=1&m={$SetMsg}");
 safeDie();
 
 ?>

@@ -8,7 +8,6 @@ use UniEngine\Engine\Modules\FlightControl\Enums\RetreatResultType;
 //      - $props (Object)
 //          - isVisible (Boolean)
 //          - eventCode (String)
-//          - eventColor (String)
 //
 //  Returns: Object
 //      - componentHTML (String)
@@ -21,28 +20,26 @@ function render ($props) {
     $isVisible = $props['isVisible'];
     $eventCode = (
         isset($props['eventCode']) ?
-            $props['eventCode'] :
-            'default'
-    );
-    $eventColor = (
-        isset($props['eventColor']) ?
-            $props['eventColor'] :
-            'default'
+            intval($props['eventCode'], 10) :
+            0
     );
 
     $eventCodeMapping = [
-        'default'                                       => $_Lang['fl_notback'],
+        0                                               => $_Lang['fl_notback'],
         RetreatResultType::ErrorCantRetreatAnymore      => $_Lang['fl_notback'],
         RetreatResultType::SuccessTurnedBack            => $_Lang['fl_isback'],
         RetreatResultType::SuccessRetreated             => $_Lang['fl_isback2'],
         RetreatResultType::ErrorMissileStrikeRetreat    => $_Lang['fl_missiles_cannot_go_back'],
         RetreatResultType::ErrorIsNotOwner              => $_Lang['fl_onlyyours'],
     ];
-    $eventColorMapping = [
-        'default' => "red",
-        1 => "red",
-        2 => "lime",
-    ];
+    $eventColor = (
+        (
+            $eventCode === RetreatResultType::SuccessTurnedBack ||
+            $eventCode === RetreatResultType::SuccessRetreated
+        ) ?
+            "lime" :
+            "red"
+    );
 
     $componentTPLData = [
         'container_hideclass' => (
@@ -55,11 +52,7 @@ function render ($props) {
                 $eventCodeMapping[$eventCode] :
                 $eventCodeMapping['default']
         ),
-        'message_color' => (
-            isset($eventColorMapping[$eventColor]) ?
-                $eventColorMapping[$eventColor] :
-                $eventColorMapping['default']
-        ),
+        'message_color' => $eventColor,
     ];
     $tplBodyCache = [
         'body' => $localTemplateLoader('body'),
