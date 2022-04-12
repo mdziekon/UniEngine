@@ -4,46 +4,61 @@ define('INSIDE', true);
 
 $_EnginePath = './';
 include($_EnginePath.'common.php');
+include($_EnginePath.'modules/flightControl/_includes.php');
+include($_EnginePath.'includes/functions/FleetControl_Retreat.php');
+
+use UniEngine\Engine\Modules\FlightControl\Enums\RetreatResultType;
 
 loggedCheck();
 
 includeLang('fleet');
 
-$SetColor = 1;
-$SetMsg = 1;
-$FleetID = (isset($_POST['fleetid']) ? floor(floatval($_POST['fleetid'])) : 0);
+function retreatFleet($fleetId, &$user) {
+    if ($fleetId <= 0) {
+        return RetreatResultType::ErrorCantRetreatAnymore;
+    }
 
-if($FleetID > 0)
-{
-    include($_EnginePath.'includes/functions/FleetControl_Retreat.php');
-    $Result = FleetControl_Retreat("`fleet_id` = {$FleetID} AND `fleet_owner` = {$_User['id']}");
-    if($Result['Rows'] != 0)
-    {
-        if($Result['Errors'][$FleetID] == 1)
-        {
-            $SetMsg = 4;
+    $retreatResult = FleetControl_Retreat("`fleet_id` = {$fleetId} AND `fleet_owner` = {$user['id']}");
+
+    if ($retreatResult['Rows'] == 0) {
+        return RetreatResultType::ErrorCantRetreatAnymore;
+    }
+
+    if (isset($retreatResult['Errors'][$fleetId])) {
+        if ($retreatResult['Errors'][$fleetId] == 1) {
+            return RetreatResultType::ErrorMissileStrikeRetreat;
         }
-        else if($Result['Errors'][$FleetID] == 2)
-        {
-            $SetMsg = 1;
-        }
-        else
-        {
-            if($Result['Types'][$FleetID] == 1)
-            {
-                $SetMsg = 2;
-                $SetColor = 2;
-            }
-            else if($Result['Types'][$FleetID] == 2)
-            {
-                $SetMsg = 3;
-                $SetColor = 2;
-            }
+        if ($retreatResult['Errors'][$fleetId] == 2) {
+            return RetreatResultType::ErrorCantRetreatAnymore;
         }
     }
+
+    if (isset($retreatResult['Types'][$fleetId])) {
+        if ($retreatResult['Types'][$fleetId] == 1) {
+            return RetreatResultType::SuccessTurnedBack;
+        }
+        if ($retreatResult['Types'][$fleetId] == 2) {
+            return RetreatResultType::SuccessRetreated;
+        }
+    }
+
+    return RetreatResultType::ErrorCantRetreatAnymore;
 }
 
-header("Location: fleet.php?ret=1&m={$SetMsg}&c={$SetColor}");
-safeDie();
+function handleRetreatRequest() {
+    global $_User;
+
+    $fleetId = (
+        isset($_POST['fleetid']) ?
+            floor(floatval($_POST['fleetid'])) :
+            0
+    );
+    $retreatResultCode = retreatFleet($fleetId, $_User);
+
+    header("Location: fleet.php?ret=1&m={$retreatResultCode}");
+    safeDie();
+}
+
+handleRetreatRequest();
 
 ?>

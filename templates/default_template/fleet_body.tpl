@@ -15,14 +15,7 @@ var ShipsData = {Insert_ShipsData};
 <br />
 {P_SFBInfobox}
 <table width="750">
-    <tbody{P_HideRetreatBox}>
-        <tr>
-            <th class="pad5 {RetreatBox_Color}" colspan="8">{RetreatBox_Text}</th>
-        </tr>
-        <tr>
-            <th style="visibility: hidden; font-size: 5px;">&nbsp;</th>
-        </tr>
-    </tbody>
+    {ComponentHTML_RetreatInfoBox}
     <tr>
         <td colspan="8" class="c">
             <b class="flLe">{fl_title} {P_FlyingFleetsCount} / {P_MaxFleetSlots}</b>

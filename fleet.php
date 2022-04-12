@@ -87,57 +87,10 @@ if($GetSFBData['ID'] > 0)
 }
 
 // Show RetreatBox (when fleet was retreated)
-if(isset($_GET['ret']))
-{
-    if(!isset($_GET['m']))
-    {
-        $_GET['m'] = 0;
-    }
-    switch($_GET['m'])
-    {
-        case 1:
-            $RetreatMessage = $_Lang['fl_notback'];
-            break;
-        case 2:
-            $RetreatMessage = $_Lang['fl_isback'];
-            break;
-        case 3:
-            $RetreatMessage = $_Lang['fl_isback2'];
-            break;
-        case 4:
-            $RetreatMessage = $_Lang['fl_missiles_cannot_go_back'];
-            break;
-        case 5:
-            $RetreatMessage = $_Lang['fl_onlyyours'];
-            break;
-        default:
-            $RetreatMessage = $_Lang['fl_notback'];
-            break;
-    }
-    if(!isset($_GET['c']))
-    {
-        $_GET['c'] = 0;
-    }
-    switch($_GET['c'])
-    {
-        case 1:
-            $RetreatColor = 'red';
-            break;
-        case 2:
-            $RetreatColor = 'lime';
-            break;
-        default:
-            $RetreatColor = 'red';
-            break;
-    }
-
-    $_Lang['RetreatBox_Color'] = $RetreatColor;
-    $_Lang['RetreatBox_Text'] = $RetreatMessage;
-}
-else
-{
-    $_Lang['P_HideRetreatBox'] = $Hide;
-}
+$_Lang['ComponentHTML_RetreatInfoBox'] = FlightControl\Components\RetreatInfoBox\render([
+    'isVisible' => isset($_GET['ret']),
+    'eventCode' => $_GET['m'],
+])['componentHTML'];
 
 $fleetsInFlightCounters = FlightControl\Utils\Helpers\getFleetsInFlightCounters([
     'userId' => $_User['id'],
