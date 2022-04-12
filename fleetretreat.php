@@ -4,6 +4,9 @@ define('INSIDE', true);
 
 $_EnginePath = './';
 include($_EnginePath.'common.php');
+include($_EnginePath . 'modules/flightControl/_includes.php');
+
+use UniEngine\Engine\Modules\FlightControl\Enums\RetreatResultType;
 
 loggedCheck();
 
@@ -21,22 +24,22 @@ if($FleetID > 0)
     {
         if($Result['Errors'][$FleetID] == 1)
         {
-            $SetMsg = 4;
+            $SetMsg = RetreatResultType::ErrorMissileStrikeRetreat;
         }
         else if($Result['Errors'][$FleetID] == 2)
         {
-            $SetMsg = 1;
+            $SetMsg = RetreatResultType::ErrorCantRetreatAnymore;
         }
         else
         {
             if($Result['Types'][$FleetID] == 1)
             {
-                $SetMsg = 2;
+                $SetMsg = RetreatResultType::SuccessTurnedBack;
                 $SetColor = 2;
             }
             else if($Result['Types'][$FleetID] == 2)
             {
-                $SetMsg = 3;
+                $SetMsg = RetreatResultType::SuccessRetreated;
                 $SetColor = 2;
             }
         }

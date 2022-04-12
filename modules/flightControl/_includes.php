@@ -8,6 +8,8 @@ call_user_func(function () {
 
     include($includePath . './components/RetreatInfoBox/RetreatInfoBox.component.php');
 
+    include($includePath . './enums/RetreatResultType.enum.php');
+
     include($includePath . './utils/factories/createAlertFiltersSearchParams.factory.php');
     include($includePath . './utils/factories/createFleetDevLogEntry.factory.php');
     include($includePath . './utils/fetchers/fetchActiveSmartFleetsBlockadeEntries.fetcher.php');

@@ -2,6 +2,8 @@
 
 namespace UniEngine\Engine\Modules\FlightControl\Components\RetreatInfoBox;
 
+use UniEngine\Engine\Modules\FlightControl\Enums\RetreatResultType;
+
 //  Arguments
 //      - $props (Object)
 //          - isVisible (Boolean)
@@ -29,12 +31,12 @@ function render ($props) {
     );
 
     $eventCodeMapping = [
-        'default' => $_Lang['fl_notback'],
-        1 => $_Lang['fl_notback'],
-        2 => $_Lang['fl_isback'],
-        3 => $_Lang['fl_isback2'],
-        4 => $_Lang['fl_missiles_cannot_go_back'],
-        5 => $_Lang['fl_onlyyours'],
+        'default'                                       => $_Lang['fl_notback'],
+        RetreatResultType::ErrorCantRetreatAnymore      => $_Lang['fl_notback'],
+        RetreatResultType::SuccessTurnedBack            => $_Lang['fl_isback'],
+        RetreatResultType::SuccessRetreated             => $_Lang['fl_isback2'],
+        RetreatResultType::ErrorMissileStrikeRetreat    => $_Lang['fl_missiles_cannot_go_back'],
+        RetreatResultType::ErrorIsNotOwner              => $_Lang['fl_onlyyours'],
     ];
     $eventColorMapping = [
         'default' => "red",
