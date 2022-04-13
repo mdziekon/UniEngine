@@ -8,10 +8,12 @@ $_EnginePath = './';
 include($_EnginePath.'common.php');
 include_once($_EnginePath . 'modules/session/_includes.php');
 include_once($_EnginePath . 'modules/flights/_includes.php');
+include_once($_EnginePath . 'modules/flightControl/_includes.php');
 
 use UniEngine\Engine\Includes\Helpers\Users;
 use UniEngine\Engine\Modules\Session;
 use UniEngine\Engine\Modules\Flights;
+use UniEngine\Engine\Modules\FlightControl;
 
 loggedCheck();
 
@@ -479,13 +481,7 @@ switch($mode)
         }
 
         // Fleet Blockade Info (here, only for Global Block)
-        $GetSFBData = doquery("SELECT `ID`, `EndTime`, `BlockMissions`, `DontBlockIfIdle`, `Reason` FROM {{table}} WHERE `Type` = 1 AND `StartTime` <= UNIX_TIMESTAMP() AND (`EndTime` > UNIX_TIMESTAMP() OR `PostEndTime` > UNIX_TIMESTAMP()) ORDER BY `EndTime` DESC LIMIT 1;", 'smart_fleet_blockade', true);
-        if($GetSFBData['ID'] > 0)
-        {
-            // Fleet Blockade is Active
-            include($_EnginePath.'includes/functions/CreateSFBInfobox.php');
-            $parse['P_SFBInfobox'] = CreateSFBInfobox($GetSFBData, array('standAlone' => true, 'Width' => 750, 'MarginBottom' => 10));
-        }
+        $parse['P_SFBInfobox'] = FlightControl\Components\SmartFleetBlockadeInfoBox\render()['componentHTML'];
 
         // --- Free Premium Items Info Box -----------------------------------------------------------------------
         $GetFreeItems = doquery("SELECT COUNT(`ID`) as `Count` FROM {{table}} WHERE `UserID` = {$_User['id']} AND `Used` = false;", 'premium_free', true);
