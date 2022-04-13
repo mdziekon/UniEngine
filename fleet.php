@@ -77,16 +77,8 @@ else
 $_Lang['InsertACSUsers'] = 'new Object()';
 $_Lang['InsertACSUsersMax'] = MAX_ACS_JOINED_PLAYERS;
 
-// Fleet Blockade Info (here, only for Global Block)
-$GetSFBData = doquery("SELECT `ID`, `EndTime`, `BlockMissions`, `DontBlockIfIdle`, `Reason` FROM {{table}} WHERE `Type` = 1 AND `StartTime` <= UNIX_TIMESTAMP() AND (`EndTime` > UNIX_TIMESTAMP() OR `PostEndTime` > UNIX_TIMESTAMP()) ORDER BY `EndTime` DESC LIMIT 1;", 'smart_fleet_blockade', true);
-if($GetSFBData['ID'] > 0)
-{
-    // Fleet Blockade is Active
-    include($_EnginePath.'includes/functions/CreateSFBInfobox.php');
-    $_Lang['P_SFBInfobox'] = CreateSFBInfobox($GetSFBData, array('standAlone' => true, 'Width' => 750, 'MarginBottom' => 10));
-}
-
-// Show RetreatBox (when fleet was retreated)
+// Show info boxes
+$_Lang['P_SFBInfobox'] = FlightControl\Components\SmartFleetBlockadeInfoBox\render()['componentHTML'];
 $_Lang['ComponentHTML_RetreatInfoBox'] = FlightControl\Components\RetreatInfoBox\render([
     'isVisible' => isset($_GET['ret']),
     'eventCode' => $_GET['m'],
