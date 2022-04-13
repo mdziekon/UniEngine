@@ -7,6 +7,8 @@ call_user_func(function () {
     $includePath = $_EnginePath . 'modules/flightControl/';
 
     include($includePath . './components/RetreatInfoBox/RetreatInfoBox.component.php');
+    include($includePath . './components/SmartFleetBlockadeInfoBox/SmartFleetBlockadeInfoBox.component.php');
+    include($includePath . './components/SmartFleetBlockadeInfoBox/SmartFleetBlockadeInfoBox.utils.php');
 
     include($includePath . './enums/RetreatResultType.enum.php');
 
