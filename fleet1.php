@@ -236,14 +236,8 @@ else
     $_Lang['SetTargetMission'] = 2;
 }
 
-// Fleet Blockade Info (here, only for Global Block)
-$GetSFBData = doquery("SELECT `ID`, `EndTime`, `BlockMissions`, `DontBlockIfIdle`, `Reason` FROM {{table}} WHERE `Type` = 1 AND `StartTime` <= UNIX_TIMESTAMP() AND (`EndTime` > UNIX_TIMESTAMP() OR `PostEndTime` > UNIX_TIMESTAMP()) ORDER BY `EndTime` DESC LIMIT 1;", 'smart_fleet_blockade', true);
-if($GetSFBData['ID'] > 0)
-{
-    // Fleet Blockade is Active
-    include($_EnginePath.'includes/functions/CreateSFBInfobox.php');
-    $_Lang['P_SFBInfobox'] = CreateSFBInfobox($GetSFBData, array('standAlone' => true, 'Width' => 750, 'MarginBottom' => 10));
-}
+// Show info boxes
+$_Lang['P_SFBInfobox'] = FlightControl\Components\SmartFleetBlockadeInfoBox\render()['componentHTML'];
 
 $_Lang['FleetHiddenBlock'] = $FleetHiddenBlock;
 $_Lang['speedallsmin'] = $speedallsmin;
