@@ -7,6 +7,16 @@ function array_map_withkeys(array $inputArray, callable $callback) {
     return array_map($callback, $inputArray, array_keys($inputArray));
 }
 
+function array_find(array $inputArray, callable $callback) {
+    $results = array_filter($inputArray, $callback);
+
+    if (empty($results)) {
+        return null;
+    }
+
+    return reset($results);
+}
+
 /**
  * Maps an object, allowing to access the key of each value, and change both key & value
  */
