@@ -8,6 +8,7 @@ call_user_func(function () {
 
     include($includePath . './components/FlightsList/FlightsList.component.php');
     include($includePath . './components/FlightsList/utils/dataFetchers.utils.php');
+    include($includePath . './components/FlightsList/utils/extractors.utils.php');
     include($includePath . './components/RetreatInfoBox/RetreatInfoBox.component.php');
     include($includePath . './components/SmartFleetBlockadeInfoBox/SmartFleetBlockadeInfoBox.component.php');
     include($includePath . './components/SmartFleetBlockadeInfoBox/SmartFleetBlockadeInfoBox.utils.php');
