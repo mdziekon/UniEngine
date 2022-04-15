@@ -7,12 +7,14 @@ use UniEngine\Engine\Modules\FlightControl\Components\FlightsList\Utils;
 //  Arguments
 //      - $props (Object)
 //          - userId (String)
+//          - currentTimestamp (Number)
 //
 //  Returns: Object
 //      - componentHTML (String)
 //
 function render ($props) {
     $userId = $props['userId'];
+    $currentTimestamp = $props['currentTimestamp'];
 
     $localTemplateLoader = createLocalTemplateLoader(__DIR__);
     $tplBodyCache = [
@@ -45,6 +47,39 @@ function render ($props) {
         'relatedAcsFleets' => $relatedAcsFleets,
         'fleetsBaseDetails' => $relatedAcsFleetBaseDetails,
     ]);
+
+    $acsMainFleets = [];
+
+    foreach ($relatedAcsUnionsResult as $relatedAcsUnion) {
+        $acsId = $relatedAcsUnion['id'];
+        $acsMainFleetId = $relatedAcsUnion['main_fleet_id'];
+
+        if ($relatedAcsUnion['owner_id'] == $userId) {
+            $acsMainFleets[$acsMainFleetId] = [
+                'acsId' => $acsId,
+                'hasJoinedFleets' => !empty($relatedAcsUnion['fleets_id']),
+            ];
+
+            continue;
+        }
+
+        $listElement = Utils\buildFriendlyAcsListElement([
+            'acsUnion' => $relatedAcsUnion,
+            'currentTimestamp' => $currentTimestamp,
+            'acsUnionsExtraSquads' => $relatedAcsUnionsExtraSquads,
+            'isJoiningThisUnion' => (
+                // TODO: Remove direct $_GET & $_POST access
+                (
+                    isset($_GET['joinacs']) &&
+                    $_GET['joinacs'] == $acsId
+                ) ||
+                (
+                    isset($_POST['getacsdata']) &&
+                    $_POST['getacsdata'] == $acsId
+                )
+            ),
+        ]);
+    }
 
 
     $ownFleets = Utils\fetchUserFleets([ 'userId' => $userId ]);

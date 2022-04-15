@@ -49,7 +49,7 @@ function extractAcsUnionsExtraSquads($params) {
         }
 
         $acsUnions[$mainAcsFleetId][] = [
-            'array' => $relatedAcsFleet['fleet_array'],
+            'array' => String2Array($relatedAcsFleet['fleet_array']),
             'count' => $relatedAcsFleet['fleet_amount'],
         ];
     }
