@@ -20,7 +20,7 @@ function _getFriendlyAcsFleetBehaviorDetails($params) {
     // TODO: Verify if it's actually possible, since ACS fleets shouldn't have stay time
     if (
         $acsUnion['fleet_end_stay'] > 0 &&
-        $acsUnion['fleet_end_stay'] >= $currentTimestamp
+        $acsUnion['fleet_end_stay'] > $currentTimestamp
     ) {
         $isMissionExpedition = $acsUnion['fleet_mission'] == Flights\Enums\FleetMission::Expedition;
 
@@ -38,7 +38,7 @@ function _getFriendlyAcsFleetBehaviorDetails($params) {
         ];
     }
 
-    if ($acsUnion['fleet_end_time'] >= $currentTimestamp) {
+    if ($acsUnion['fleet_end_time'] > $currentTimestamp) {
         return [
             'behavior' => $_Lang['fl_back_to_ttl'],
             'behaviorTxt' => $_Lang['fl_back_to'],
