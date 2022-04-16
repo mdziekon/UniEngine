@@ -197,7 +197,9 @@ function buildFriendlyAcsListElement($params) {
         ]),
 
         'addons'                => [
-            'chronoApplet'      => InsertJavaScriptChronoApplet('ft_', $mainFleetId, $flightTimeRemaining),
+            'chronoApplets'     => [
+                InsertJavaScriptChronoApplet('ft_', $mainFleetId, $flightTimeRemaining),
+            ],
         ],
     ];
 
