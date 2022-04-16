@@ -54,7 +54,9 @@ function _getFriendlyAcsFleetBehaviorDetails($params) {
 // TODO: this should most likely be a component
 //  Arguments
 //      - $params (Object)
+//          - elementNo (Number)
 //          - acsUnion (String)
+//          - acsMainFleets (Record<mainFleetId: string, object>)
 //          - currentTimestamp (Number)
 //          - acsUnionsExtraSquads (Record<mainFleetId: string, object>)
 //          - isJoiningThisUnion (Boolean)
@@ -62,7 +64,9 @@ function _getFriendlyAcsFleetBehaviorDetails($params) {
 function buildFriendlyAcsListElement($params) {
     global $_Lang;
 
+    $elementNo = $params['elementNo'];
     $acsUnion = $params['acsUnion'];
+    $acsMainFleets = $params['acsMainFleets'];
     $currentTimestamp = $params['currentTimestamp'];
     $acsUnionsExtraSquads = $params['acsUnionsExtraSquads'];
     $isJoiningThisUnion = $params['isJoiningThisUnion'];
@@ -106,16 +110,14 @@ function buildFriendlyAcsListElement($params) {
 
     $flightTimeRemaining = ($acsUnion['fleet_start_time'] - $currentTimestamp);
 
-    // TODO
-    $fleetNo = 0;
-    $ACSCounter = 0;
+    $thisUnionListNo = (array_search($mainFleetId, array_keys($acsMainFleets)) + 1);
 
     $listElement = [
-        'FleetNo'               => $fleetNo,
+        'FleetNo'               => $elementNo,
         'FleetMissionColor'     => 'orange',
         'FleetMission'          => (
             $_Lang['type_mission'][Flights\Enums\FleetMission::UnitedAttack] .
-            " #{$ACSCounter}"
+            " #{$thisUnionListNo}"
         ),
         'ACSOwner'              => '<br/>('.$acsUnion['username'].')',
         'FleetBehaviour'        => $behaviorDetails['behavior'],
