@@ -7,6 +7,8 @@ call_user_func(function () {
     $includePath = $_EnginePath . 'modules/flightControl/';
 
     include($includePath . './components/FlightsList/FlightsList.component.php');
+    include($includePath . './components/FlightsList/utils/buildFriendlyAcsListElement.utils.php');
+    include($includePath . './components/FlightsList/utils/buildOwnListElement.utils.php');
     include($includePath . './components/FlightsList/utils/dataFetchers.utils.php');
     include($includePath . './components/FlightsList/utils/extractors.utils.php');
     include($includePath . './components/RetreatInfoBox/RetreatInfoBox.component.php');
