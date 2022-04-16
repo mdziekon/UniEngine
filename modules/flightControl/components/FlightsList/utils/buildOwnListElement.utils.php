@@ -82,6 +82,22 @@ function buildOwnListElement($params) {
     $fleetOrdersCreateUnionTpl = gettemplate('fleet_orders_acs');
     $fleetOrdersJoinUnionTpl = gettemplate('fleet_orders_jointoacs');
 
+    $fleetResourcesRowTpl = str_replace(
+        [
+            'TitleMain',
+            'TitleMetal',
+            'TitleCrystal',
+            'TitleDeuterium',
+        ],
+        [
+            $_Lang['fl_fleetinfo_resources'],
+            $_Lang['Metal'],
+            $_Lang['Crystal'],
+            $_Lang['Deuterium'],
+        ],
+        $fleetResourcesRowTpl
+    );
+
     $fleetId = $fleetEntry['fleet_id'];
     $fleetShips = String2Array($fleetEntry['fleet_array']);
     $fleetMissionType = $fleetEntry['fleet_mission'];
