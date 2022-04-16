@@ -49,6 +49,8 @@ function render ($props) {
     ]);
 
     $acsMainFleets = [];
+    $listElements = [];
+    $nextElementNo = 1;
 
     foreach ($relatedAcsUnionsResult as $relatedAcsUnion) {
         $acsId = $relatedAcsUnion['id'];
@@ -64,6 +66,7 @@ function render ($props) {
         }
 
         $listElement = Utils\buildFriendlyAcsListElement([
+            'elementNo' => $nextElementNo,
             'acsUnion' => $relatedAcsUnion,
             'currentTimestamp' => $currentTimestamp,
             'acsUnionsExtraSquads' => $relatedAcsUnionsExtraSquads,
@@ -79,13 +82,47 @@ function render ($props) {
                 )
             ),
         ]);
+
+        $listElements[] = $listElement;
+
+        $nextElementNo += 1;
     }
 
 
     $ownFleets = Utils\fetchUserFleets([ 'userId' => $userId ]);
     $ownFleetsResult = mapQueryResults($ownFleets, function ($fleetEntry) {
-        return [];
+        return $fleetEntry;
     });
+
+    foreach ($ownFleetsResult as $fleetEntry) {
+        $fleetId = $fleetEntry['fleet_id'];
+        $acsId = (
+            !empty($acsMainFleets[$fleetId]) ?
+            $acsMainFleets[$fleetId]['acsId'] :
+            null
+        );
+
+        $listElement = Utils\buildOwnListElement([
+            'elementNo' => $nextElementNo,
+            'fleetEntry' => $fleetEntry,
+            'acsMainFleets' => $acsMainFleets,
+            'currentTimestamp' => $currentTimestamp,
+            'acsUnionsExtraSquads' => $relatedAcsUnionsExtraSquads,
+            'relatedAcsFleets' => $relatedAcsFleetBaseDetails,
+            'isJoiningThisUnion' => (
+                // TODO: Remove direct $_GET & $_POST access
+                (
+                    isset($_POST['getacsdata']) &&
+                    $acsId !== null &&
+                    $_POST['getacsdata'] == $acsId
+                )
+            ),
+        ]);
+
+        $listElements[] = $listElement;
+
+        $nextElementNo += 1;
+    }
 
     $componentHTML = parsetemplate($tplBodyCache['body'], $componentTPLData);
 
