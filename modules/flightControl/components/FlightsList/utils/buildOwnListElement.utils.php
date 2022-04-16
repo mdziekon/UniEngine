@@ -302,14 +302,14 @@ function buildOwnListElement($params) {
         ),
         'FleetOriStart'         => date('d.m.Y<\b\r/>H:i:s', $fleetEntry['fleet_send_time']),
         // Destination details
-        'FleetDesGalaxy'        => $fleetEntry['end_galaxy'],
-        'FleetDesSystem'        => $fleetEntry['end_system'],
-        'FleetDesPlanet'        => $fleetEntry['end_planet'],
+        'FleetDesGalaxy'        => $fleetEntry['fleet_end_galaxy'],
+        'FleetDesSystem'        => $fleetEntry['fleet_end_system'],
+        'FleetDesPlanet'        => $fleetEntry['fleet_end_planet'],
         'FleetDesType'          => (
-            $fleetEntry['end_type'] == 1 ?
+            $fleetEntry['fleet_end_type'] == 1 ?
             'planet' :
             (
-                $fleetEntry['end_type'] == 3 ?
+                $fleetEntry['fleet_end_type'] == 3 ?
                 'moon' :
                 'debris'
             )
