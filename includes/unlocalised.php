@@ -8,13 +8,13 @@ function array_map_withkeys(array $inputArray, callable $callback) {
 }
 
 function array_find(array $inputArray, callable $callback) {
-    $results = array_filter($inputArray, $callback);
-
-    if (empty($results)) {
-        return null;
+    foreach ($inputArray as $item) {
+        if ($callback($item)) {
+            return $item;
+        }
     }
 
-    return reset($results);
+    return null;
 }
 
 /**
