@@ -13,17 +13,34 @@ use UniEngine\Engine\Modules\FlightControl\Components\FlightsList\Utils;
 //      - componentHTML (String)
 //
 function render ($props) {
+    global $_Lang;
+
     $userId = $props['userId'];
     $currentTimestamp = $props['currentTimestamp'];
 
-    $localTemplateLoader = createLocalTemplateLoader(__DIR__);
+    // TODO: Migrate over to local templates
+    // $localTemplateLoader = createLocalTemplateLoader(__DIR__);
     $tplBodyCache = [
-        'body' => $localTemplateLoader('body'),
+        'listElement' => gettemplate('fleet_frow'),
     ];
 
-    $componentTPLData = [
-        'someVar' => null,
-    ];
+    $tplBodyCache['listElement'] = str_replace(
+        [
+            'fl_fleetinfo_ships',
+            'fl_flytargettime',
+            'fl_flygobacktime',
+            'fl_flystaytime',
+            'fl_flyretreattime',
+        ],
+        [
+            $_Lang['fl_fleetinfo_ships'],
+            $_Lang['fl_flytargettime'],
+            $_Lang['fl_flygobacktime'],
+            $_Lang['fl_flystaytime'],
+            $_Lang['fl_flyretreattime'],
+        ],
+        $tplBodyCache['listElement']
+    );
 
     $relatedAcsUnions = Utils\fetchRelatedAcsUnions([ 'userId' => $userId ]);
     $relatedAcsUnionsResult = mapQueryResults($relatedAcsUnions, function ($result) {
@@ -124,10 +141,24 @@ function render ($props) {
         $nextElementNo += 1;
     }
 
-    $componentHTML = parsetemplate($tplBodyCache['body'], $componentTPLData);
+    $elementsListHTML = implode(
+        '',
+        array_map_withkeys($listElements, function ($listElement) use (&$tplBodyCache) {
+            return parsetemplate($tplBodyCache['listElement'], $listElement);
+        })
+    );
+    $chronoAppletsHTML = implode(
+        '',
+        array_map_withkeys($listElements, function ($listElement) {
+            return join('', $listElement['addons']['chronoApplets']);
+        })
+    );
 
     return [
-        'componentHTML' => $componentHTML
+        'componentHTML' => [
+            'elementsList' => $elementsListHTML,
+            'chronoApplets' => $chronoAppletsHTML,
+        ],
     ];
 }
 
