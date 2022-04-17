@@ -250,22 +250,6 @@ function buildOwnListElement($params) {
         ),
         'FleetBehaviour'        => $behaviorDetails['behavior'],
         'FleetBehaviourTxt'     => $behaviorDetails['behaviorTxt'],
-        'FleetAddShipsInfo'     => (
-            !empty($extraShipsInUnion) ?
-            (
-                parsetemplate($fleetUnionSquadMainTpl, $_Lang) .
-                array_map_withkeys($extraShipsInUnion, function ($shipCount, $shipId) use (&$_Lang, &$fleetShipsRowTpl) {
-                    return parsetemplate(
-                        $fleetShipsRowTpl,
-                        [
-                            'Ship' => $_Lang['tech'][$shipId],
-                            'Count' => prettyNumber($shipCount),
-                        ]
-                    );
-                })
-            ) :
-            ''
-        ),
         'FleetCount'            => prettyNumber($fleetEntry['fleet_amount'] + $extraShipsInUnionCount),
         'FleetResInfo'          => parsetemplate(
             $fleetResourcesRowTpl,
@@ -374,6 +358,7 @@ function buildOwnListElement($params) {
 
         'data'                  => [
             'ships' => $fleetShips,
+            'extraShipsInUnion' => $extraShipsInUnion,
         ],
 
         'addons'                => [

@@ -103,6 +103,7 @@ class BuildOwnListElementTestCase extends TestCase {
                 '202' => '100',
                 '203' => '10',
             ],
+            'extraShipsInUnion' => [],
         ];
 
         $this->assertArraySubset($expectedParams, $result, true);
