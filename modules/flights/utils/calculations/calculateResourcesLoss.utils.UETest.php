@@ -4,7 +4,9 @@ use PHPUnit\Framework\TestCase;
 
 $_EnginePath = './';
 
-define('INSIDE', true);
+if (!defined('INSIDE')) {
+    define('INSIDE', true);
+}
 require_once $_EnginePath . 'common/_includes.php';
 require_once $_EnginePath . 'includes/vars.php';
 require_once $_EnginePath . 'includes/helpers/_includes.php';
