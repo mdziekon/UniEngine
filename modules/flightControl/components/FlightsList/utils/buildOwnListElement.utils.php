@@ -109,12 +109,12 @@ function buildOwnListElement($params) {
     $hasUnionExtraSquad = !empty($acsUnionsExtraSquads[$fleetId]);
     $isFleetMissionNotCalculated = ($fleetEntry['fleet_mess'] == 0);
     $isNotCalculatedStationMission = (
-        $fleetMissionType === Flights\Enums\FleetMission::Station &&
+        $fleetMissionType == Flights\Enums\FleetMission::Station &&
         $isFleetMissionNotCalculated
     );
     $isStillProtectingHoldMission = (
         !$isFleetMissionNotCalculated &&
-        $fleetMissionType === Flights\Enums\FleetMission::Hold &&
+        $fleetMissionType == Flights\Enums\FleetMission::Hold &&
         $flightStayRemaining > 0
     );
     $isRetreatStillAvailable = (
@@ -132,9 +132,9 @@ function buildOwnListElement($params) {
     );
 
     $thisRelatedAcsFleetEntry = (
-        $fleetMissionType === Flights\Enums\FleetMission::UnitedAttack ?
+        $fleetMissionType == Flights\Enums\FleetMission::UnitedAttack ?
             array_find($relatedAcsFleets, function ($relatedAcsFleet) use ($fleetId) {
-                return $fleetId === $relatedAcsFleet['fleetId'];
+                return $fleetId == $relatedAcsFleet['fleetId'];
             }) :
             null
     );
@@ -189,7 +189,7 @@ function buildOwnListElement($params) {
         (
             (
                 $isFleetMissionNotCalculated &&
-                $fleetMissionType === Flights\Enums\FleetMission::Attack
+                $fleetMissionType == Flights\Enums\FleetMission::Attack
             ) ?
                 parsetemplate(
                     $fleetOrdersCreateUnionTpl,
