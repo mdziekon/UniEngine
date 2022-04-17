@@ -11,6 +11,7 @@ call_user_func(function () {
     include($includePath . './components/FlightsList/utils/buildOwnListElement.utils.php');
     include($includePath . './components/FlightsList/utils/dataFetchers.utils.php');
     include($includePath . './components/FlightsList/utils/extractors.utils.php');
+    include($includePath . './components/FlightsList/utils/prerenderOwnListElement.utils.php');
     include($includePath . './components/RetreatInfoBox/RetreatInfoBox.component.php');
     include($includePath . './components/SmartFleetBlockadeInfoBox/SmartFleetBlockadeInfoBox.component.php');
     include($includePath . './components/SmartFleetBlockadeInfoBox/SmartFleetBlockadeInfoBox.utils.php');

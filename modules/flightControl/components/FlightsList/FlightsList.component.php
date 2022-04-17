@@ -135,6 +135,7 @@ function render ($props) {
                 )
             ),
         ]);
+        $listElement = Utils\prerenderOwnListElement($listElement);
 
         $listElements[] = $listElement;
 

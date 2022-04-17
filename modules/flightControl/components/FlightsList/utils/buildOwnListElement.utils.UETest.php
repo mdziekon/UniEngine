@@ -47,7 +47,7 @@ class BuildOwnListElementTestCase extends TestCase {
                 "fleet_id" => "1269",
                 "fleet_mess" => "0",
                 "fleet_mission" => "1",
-                "fleet_array" => "202,100",
+                "fleet_array" => "202,100;203,10",
                 "fleet_amount" => "100",
                 "fleet_start_time" => "1591971305",
                 "fleet_end_time" => "1591975805",
@@ -98,7 +98,14 @@ class BuildOwnListElementTestCase extends TestCase {
             'FleetHideStayTime'         => $this->hidingClassString,
             'FleetHideRetreatTime'      => '',
         ];
+        $expectedParamsData = [
+            'ships' => [
+                '202' => '100',
+                '203' => '10',
+            ],
+        ];
 
         $this->assertArraySubset($expectedParams, $result, true);
+        $this->assertArraySubset($expectedParamsData, $result['data'], true);
     }
 }

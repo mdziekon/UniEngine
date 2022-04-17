@@ -250,18 +250,6 @@ function buildOwnListElement($params) {
         ),
         'FleetBehaviour'        => $behaviorDetails['behavior'],
         'FleetBehaviourTxt'     => $behaviorDetails['behaviorTxt'],
-        'FleetDetails'          => join(
-            '',
-            array_map_withkeys($fleetShips, function ($shipCount, $shipId) use (&$_Lang, &$fleetShipsRowTpl) {
-                return parsetemplate(
-                    $fleetShipsRowTpl,
-                    [
-                        'Ship' => $_Lang['tech'][$shipId],
-                        'Count' => prettyNumber($shipCount),
-                    ]
-                );
-            })
-        ),
         'FleetAddShipsInfo'     => (
             !empty($extraShipsInUnion) ?
             (
@@ -383,6 +371,10 @@ function buildOwnListElement($params) {
         ),
 
         'FleetOrders'           => implode('', $availableFleetOrders),
+
+        'data'                  => [
+            'ships' => $fleetShips,
+        ],
 
         'addons'                => [
             'chronoApplets'     => [
