@@ -5,7 +5,7 @@ namespace UniEngine\Engine\Modules\FlightControl\Components\FlightsList\Utils;
 function extractRelatedFleetsFromAcsUnions($acsUnions) {
     $relatedFleets = [];
 
-    mapQueryResults($acsUnions, function ($acsUnion) {
+    array_walk($acsUnions, function ($acsUnion) use (&$relatedFleets) {
         if (empty($acsUnion['fleets_id'])) {
             return;
         }
@@ -35,7 +35,7 @@ function extractAcsUnionsExtraSquads($params) {
     foreach ($params['relatedAcsFleets'] as $relatedAcsFleet) {
         $fleetId = $relatedAcsFleet['fleet_id'];
         $fleetBaseDetails = array_find($params['fleetsBaseDetails'], function ($entry) use ($fleetId) {
-            return $entry['fleet_id'] == $fleetId;
+            return $entry['fleetId'] == $fleetId;
         });
 
         if (empty($fleetBaseDetails)) {
