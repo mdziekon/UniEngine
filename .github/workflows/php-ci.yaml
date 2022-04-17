@@ -90,5 +90,24 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-progress
 
+      - name: Create dummy includes/constants.php
+        uses: "finnp/create-file-action@1.0.0"
+        env:
+          FILE_NAME: "includes/constants.php"
+          FILE_DATA: |
+            <?php
+
+            if(!defined('INSIDE'))
+            {
+                die('Access Denied');
+            }
+
+            define('TIME_ONLINE', 900);
+            define('TIME_HOUR', 3600);
+            define('TIME_DAY', 86400);
+            define('TIME_YEAR', 31536000);
+
+            define('UNIENGINE_HASAPC', function_exists('apc_fetch'));
+
       - name: Run phpunit
         run: composer run-script ci:php:test
