@@ -2,56 +2,9 @@
 
 namespace UniEngine\Engine\Modules\FlightControl\Components\FlightsList\Utils;
 
+use UniEngine\Engine\Modules\FlightControl\Components\FlightsList\Utils;
 use UniEngine\Engine\Includes\Helpers\Common\Collections;
 use UniEngine\Engine\Modules\Flights;
-
-
-// TODO: Reuse, same code as in FriendlyAcsList
-function _getOwnFleetBehaviorDetails($params) {
-    global $_Lang;
-
-    $fleetEntry = $params['fleetEntry'];
-    $currentTimestamp = $params['currentTimestamp'];
-
-    if ($fleetEntry['fleet_start_time'] >= $currentTimestamp) {
-        return [
-            'behavior' => $_Lang['fl_get_to_ttl'],
-            'behaviorTxt' => $_Lang['fl_get_to'],
-        ];
-    }
-
-    if (
-        $fleetEntry['fleet_end_stay'] > 0 &&
-        $fleetEntry['fleet_end_stay'] > $currentTimestamp
-    ) {
-        $isMissionExpedition = $fleetEntry['fleet_mission'] == Flights\Enums\FleetMission::Expedition;
-
-        return [
-            'behavior' => (
-                $isMissionExpedition ?
-                    $_Lang['fl_explore_to_ttl'] :
-                    $_Lang['fl_stay_to_ttl']
-            ),
-            'behaviorTxt' => (
-                $isMissionExpedition ?
-                    $_Lang['fl_explore_to'] :
-                    $_Lang['fl_stay_to']
-            ),
-        ];
-    }
-
-    if ($fleetEntry['fleet_end_time'] > $currentTimestamp) {
-        return [
-            'behavior' => $_Lang['fl_back_to_ttl'],
-            'behaviorTxt' => $_Lang['fl_back_to'],
-        ];
-    }
-
-    return [
-        'behavior' => $_Lang['fl_cameback_ttl'],
-        'behaviorTxt' => $_Lang['fl_cameback'],
-    ];
-}
 
 // TODO: this should most likely be a component
 //  Arguments
@@ -126,7 +79,7 @@ function buildOwnListElement($params) {
             $supportingMainFleetId
     );
 
-    $behaviorDetails = _getOwnFleetBehaviorDetails($params);
+    $behaviorDetails = Utils\getFleetBehaviorDetails($params);
     $extraShipsInUnion = [];
     $extraShipsInUnionCount = 0;
 

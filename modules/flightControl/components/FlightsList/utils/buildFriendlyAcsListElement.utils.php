@@ -2,54 +2,8 @@
 
 namespace UniEngine\Engine\Modules\FlightControl\Components\FlightsList\Utils;
 
+use UniEngine\Engine\Modules\FlightControl\Components\FlightsList\Utils;
 use UniEngine\Engine\Modules\Flights;
-
-function _getFriendlyAcsFleetBehaviorDetails($params) {
-    global $_Lang;
-
-    $acsUnion = $params['acsUnion'];
-    $currentTimestamp = $params['currentTimestamp'];
-
-    if ($acsUnion['fleet_start_time'] >= $currentTimestamp) {
-        return [
-            'behavior' => $_Lang['fl_get_to_ttl'],
-            'behaviorTxt' => $_Lang['fl_get_to'],
-        ];
-    }
-
-    // TODO: Verify if it's actually possible, since ACS fleets shouldn't have stay time
-    if (
-        $acsUnion['fleet_end_stay'] > 0 &&
-        $acsUnion['fleet_end_stay'] > $currentTimestamp
-    ) {
-        $isMissionExpedition = $acsUnion['fleet_mission'] == Flights\Enums\FleetMission::Expedition;
-
-        return [
-            'behavior' => (
-                $isMissionExpedition ?
-                    $_Lang['fl_explore_to_ttl'] :
-                    $_Lang['fl_stay_to_ttl']
-            ),
-            'behaviorTxt' => (
-                $isMissionExpedition ?
-                    $_Lang['fl_explore_to'] :
-                    $_Lang['fl_stay_to']
-            ),
-        ];
-    }
-
-    if ($acsUnion['fleet_end_time'] > $currentTimestamp) {
-        return [
-            'behavior' => $_Lang['fl_back_to_ttl'],
-            'behaviorTxt' => $_Lang['fl_back_to'],
-        ];
-    }
-
-    return [
-        'behavior' => $_Lang['fl_cameback_ttl'],
-        'behaviorTxt' => $_Lang['fl_cameback'],
-    ];
-}
 
 // TODO: this should most likely be a component
 //  Arguments
@@ -76,7 +30,10 @@ function buildFriendlyAcsListElement($params) {
     $acsId = $acsUnion['id'];
     $mainFleetId = $acsUnion['main_fleet_id'];
 
-    $behaviorDetails = _getFriendlyAcsFleetBehaviorDetails($params);
+    $behaviorDetails = Utils\getFleetBehaviorDetails([
+        'fleetEntry' => $acsUnion,
+        'currentTimestamp' => $currentTimestamp,
+    ]);
     $unionShips = [];
     $unionShipsCount = 0;
 
