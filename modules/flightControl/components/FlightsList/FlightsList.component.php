@@ -73,14 +73,20 @@ function render ($props) {
         $acsId = $relatedAcsUnion['id'];
         $acsMainFleetId = $relatedAcsUnion['main_fleet_id'];
 
-        if ($relatedAcsUnion['owner_id'] == $userId) {
-            $acsMainFleets[$acsMainFleetId] = [
-                'acsId' => $acsId,
-                'hasJoinedFleets' => !empty($relatedAcsUnion['fleets_id']),
-            ];
+        $acsMainFleets[$acsMainFleetId] = [
+            'acsId' => $acsId,
+            'hasJoinedFleets' => !empty($relatedAcsUnion['fleets_id']),
+        ];
+    }
 
+    foreach ($relatedAcsUnionsResult as $relatedAcsUnion) {
+        // Own unions are being displayed later on, as "own fleets"
+        if ($relatedAcsUnion['owner_id'] == $userId) {
             continue;
         }
+
+        $acsId = $relatedAcsUnion['id'];
+        $acsMainFleetId = $relatedAcsUnion['main_fleet_id'];
 
         $listElement = Utils\buildFriendlyAcsListElement([
             'elementNo' => $nextElementNo,

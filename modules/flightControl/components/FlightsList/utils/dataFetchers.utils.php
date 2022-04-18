@@ -57,6 +57,8 @@ function fetchRelatedAcsUnions ($props) {
             "`owner_id` = {$userId} " .
         ") AND " .
         "`t`.`start_time` > UNIX_TIMESTAMP() " .
+        "ORDER BY " .
+        "`t`.`id` ASC " .
         "; "
     );
 
