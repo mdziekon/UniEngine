@@ -131,7 +131,7 @@ class BuildFriendlyAcsListElementTestCase extends TestCase {
                 $this->mockAcsUnions['joinedUnion']
             ),
             "acsMainFleets" => [
-                "1269" => [
+                "1283" => [
                     "acsId" => "113",
                     "hasJoinedFleets" => true,
                 ],
@@ -176,5 +176,53 @@ class BuildFriendlyAcsListElementTestCase extends TestCase {
         $this->assertArraySubset($this->expectedResults['baseUnion']['positionsAndTime'], $result, true);
         $this->assertArraySubset($expectedParams, $result, true);
         $this->assertArraySubset($expectedParamsData, $result['data'], true);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldDisplayCorrectUnionOrdinalNumber() {
+        $params = [
+            'elementNo' => 1,
+            'acsUnion' => array_merge(
+                $this->mockAcsUnions['baseUnion'],
+                $this->mockAcsUnions['joinedUnion']
+            ),
+            "acsMainFleets" => [
+                "1200" => [
+                    "acsId" => "110",
+                    "hasJoinedFleets" => true,
+                ],
+                "1283" => [
+                    "acsId" => "113",
+                    "hasJoinedFleets" => true,
+                ],
+                "1300" => [
+                    "acsId" => "120",
+                    "hasJoinedFleets" => true,
+                ],
+            ],
+            "currentTimestamp" => 1591968605,
+            "acsUnionsExtraSquads" => [
+                "1283" => [
+                    [
+                        "array" => [
+                            "202" => "1",
+                            "203" => "10",
+                        ],
+                        "count" => "11",
+                    ],
+                ],
+            ],
+            "isJoiningThisUnion" => false,
+        ];
+
+        $result = Utils\buildFriendlyAcsListElement($params);
+
+        $expectedParams = [
+            'FleetMission'              => "United Attack #2",
+        ];
+
+        $this->assertArraySubset($expectedParams, $result, true);
     }
 }
