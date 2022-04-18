@@ -75,24 +75,6 @@ function buildOwnListElement($params) {
     $relatedAcsFleets = $params['relatedAcsFleets'];
     $isJoiningThisUnion = $params['isJoiningThisUnion'];
 
-    $fleetResourcesRowTpl = gettemplate('fleet_fresinfo');
-
-    $fleetResourcesRowTpl = str_replace(
-        [
-            'TitleMain',
-            'TitleMetal',
-            'TitleCrystal',
-            'TitleDeuterium',
-        ],
-        [
-            $_Lang['fl_fleetinfo_resources'],
-            $_Lang['Metal'],
-            $_Lang['Crystal'],
-            $_Lang['Deuterium'],
-        ],
-        $fleetResourcesRowTpl
-    );
-
     $fleetId = $fleetEntry['fleet_id'];
     $fleetShips = String2Array($fleetEntry['fleet_array']);
     $fleetMissionType = $fleetEntry['fleet_mission'];
@@ -251,14 +233,6 @@ function buildOwnListElement($params) {
         'FleetBehaviour'        => $behaviorDetails['behavior'],
         'FleetBehaviourTxt'     => $behaviorDetails['behaviorTxt'],
         'FleetCount'            => prettyNumber($fleetEntry['fleet_amount'] + $extraShipsInUnionCount),
-        'FleetResInfo'          => parsetemplate(
-            $fleetResourcesRowTpl,
-            [
-                'FleetMetal' => prettyNumber($fleetEntry['fleet_resource_metal']),
-                'FleetCrystal' => prettyNumber($fleetEntry['fleet_resource_crystal']),
-                'FleetDeuterium' => prettyNumber($fleetEntry['fleet_resource_deuterium']),
-            ]
-        ),
         // Origin details
         'FleetOriGalaxy'        => $fleetEntry['fleet_start_galaxy'],
         'FleetOriSystem'        => $fleetEntry['fleet_start_system'],
@@ -358,6 +332,11 @@ function buildOwnListElement($params) {
             'ships' => $fleetShips,
             'extraShipsInUnion' => $extraShipsInUnion,
             'orders' => $availableFleetOrders,
+            'resources' => [
+                'metal' => $fleetEntry['fleet_resource_metal'],
+                'crystal' => $fleetEntry['fleet_resource_crystal'],
+                'deuterium' => $fleetEntry['fleet_resource_deuterium'],
+            ]
         ],
 
         'addons'                => [

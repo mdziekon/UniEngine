@@ -10,6 +10,22 @@ function prerenderOwnListElement($listElement) {
 
     $fleetShipsRowTpl = gettemplate('fleet_fdetail');
     $fleetUnionSquadMainTpl = gettemplate('fleet_faddinfo');
+    $fleetResourcesRowTpl = gettemplate('fleet_fresinfo');
+    $fleetResourcesRowTpl = str_replace(
+        [
+            'TitleMain',
+            'TitleMetal',
+            'TitleCrystal',
+            'TitleDeuterium',
+        ],
+        [
+            $_Lang['fl_fleetinfo_resources'],
+            $_Lang['Metal'],
+            $_Lang['Crystal'],
+            $_Lang['Deuterium'],
+        ],
+        $fleetResourcesRowTpl
+    );
 
     $ordersTpls = [
         'retreat' => gettemplate('fleet_orders_retreat'),
@@ -67,6 +83,14 @@ function prerenderOwnListElement($listElement) {
                     return parsetemplate($template, $orderData['params']);
                 }
             )
+        ),
+        'FleetResInfo' => parsetemplate(
+            $fleetResourcesRowTpl,
+            [
+                'FleetMetal' => prettyNumber($listElement['data']['resources']['metal']),
+                'FleetCrystal' => prettyNumber($listElement['data']['resources']['crystal']),
+                'FleetDeuterium' => prettyNumber($listElement['data']['resources']['deuterium']),
+            ]
         ),
     ];
 

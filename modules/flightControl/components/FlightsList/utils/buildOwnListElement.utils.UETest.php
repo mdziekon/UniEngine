@@ -56,9 +56,9 @@ class BuildOwnListElementTestCase extends TestCase {
             "fleet_end_system" => "5",
             "fleet_end_planet" => "10",
             "fleet_end_type" => "3",
-            "fleet_resource_metal" => "0",
-            "fleet_resource_crystal" => "0",
-            "fleet_resource_deuterium" => "0",
+            "fleet_resource_metal" => "5",
+            "fleet_resource_crystal" => "10",
+            "fleet_resource_deuterium" => "200",
         ],
     ];
 
@@ -76,6 +76,13 @@ class BuildOwnListElementTestCase extends TestCase {
                 'FleetDesType'              => 'moon',
                 'FleetDesArrive'            => '12.06.2020<br/>14:15:05',
                 'FleetEndTime'              => '12.06.2020<br/>15:30:05',
+                'data' => [
+                    'resources' => [
+                        'metal' => '5',
+                        'crystal' => '10',
+                        'deuterium' => '200',
+                    ],
+                ],
             ],
         ],
     ];
