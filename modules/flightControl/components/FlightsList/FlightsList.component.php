@@ -21,6 +21,7 @@ function render ($props) {
     $localTemplateLoader = createLocalTemplateLoader(__DIR__);
     $tplBodyCache = [
         'listElement' => $localTemplateLoader('listElement'),
+        'listElementShipRow' => $localTemplateLoader('listElementShipRow'),
     ];
 
     $tplBodyCache['listElement'] = str_replace(
@@ -105,7 +106,7 @@ function render ($props) {
                 )
             ),
         ]);
-        $listElement = Utils\prerenderFriendlyAcsListElement($listElement);
+        $listElement = Utils\prerenderFriendlyAcsListElement($listElement, [ 'tplBodyCache' => &$tplBodyCache ]);
 
         $listElements[] = $listElement;
 
@@ -142,7 +143,7 @@ function render ($props) {
                 )
             ),
         ]);
-        $listElement = Utils\prerenderOwnListElement($listElement);
+        $listElement = Utils\prerenderOwnListElement($listElement, [ 'tplBodyCache' => &$tplBodyCache ]);
 
         $listElements[] = $listElement;
 

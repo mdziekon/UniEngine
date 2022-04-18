@@ -4,11 +4,14 @@ namespace UniEngine\Engine\Modules\FlightControl\Components\FlightsList\Utils;
 
 //  Arguments
 //      - $listElement (ReturnType<typeof buildOwnListElement>)
+//      - $params (Object)
+//          - tplBodyCache (Ref)
 //
-function prerenderOwnListElement($listElement) {
+function prerenderOwnListElement($listElement, $params) {
     global $_Lang;
 
-    $fleetShipsRowTpl = gettemplate('fleet_fdetail');
+    $tplBodyCache = &$params['tplBodyCache'];
+
     $fleetUnionSquadMainTpl = gettemplate('fleet_faddinfo');
     $fleetResourcesRowTpl = gettemplate('fleet_fresinfo');
     $fleetResourcesRowTpl = str_replace(
@@ -39,9 +42,9 @@ function prerenderOwnListElement($listElement) {
             '',
             array_map_withkeys(
                 $listElement['data']['ships'],
-                function ($shipCount, $shipId) use (&$_Lang, &$fleetShipsRowTpl) {
+                function ($shipCount, $shipId) use (&$_Lang, &$tplBodyCache) {
                     return parsetemplate(
-                        $fleetShipsRowTpl,
+                        $tplBodyCache['listElementShipRow'],
                         [
                             'Ship' => $_Lang['tech'][$shipId],
                             'Count' => prettyNumber($shipCount),
@@ -58,9 +61,9 @@ function prerenderOwnListElement($listElement) {
                     '',
                     array_map_withkeys(
                         $listElement['data']['extraShipsInUnion'],
-                        function ($shipCount, $shipId) use (&$_Lang, &$fleetShipsRowTpl) {
+                        function ($shipCount, $shipId) use (&$_Lang, &$tplBodyCache) {
                             return parsetemplate(
-                                $fleetShipsRowTpl,
+                                $tplBodyCache['listElementShipRow'],
                                 [
                                     'Ship' => $_Lang['tech'][$shipId],
                                     'Count' => prettyNumber($shipCount),

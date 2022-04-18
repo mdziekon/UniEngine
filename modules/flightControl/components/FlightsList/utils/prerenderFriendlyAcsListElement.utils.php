@@ -4,11 +4,13 @@ namespace UniEngine\Engine\Modules\FlightControl\Components\FlightsList\Utils;
 
 //  Arguments
 //      - $listElement (ReturnType<typeof buildFriendlyAcsListElement>)
+//      - $params (Object)
+//          - tplBodyCache (Ref)
 //
-function prerenderFriendlyAcsListElement($listElement) {
+function prerenderFriendlyAcsListElement($listElement, $params) {
     global $_Lang;
 
-    $fleetShipsRowTpl = gettemplate('fleet_fdetail');
+    $tplBodyCache = &$params['tplBodyCache'];
 
     $ordersTpls = [
         'joinUnion' => function ($params) use (&$_Lang) {
@@ -38,9 +40,9 @@ function prerenderFriendlyAcsListElement($listElement) {
             '',
             array_map_withkeys(
                 $listElement['data']['ships'],
-                function ($shipCount, $shipId) use (&$_Lang, &$fleetShipsRowTpl) {
+                function ($shipCount, $shipId) use (&$_Lang, &$tplBodyCache) {
                     return parsetemplate(
-                        $fleetShipsRowTpl,
+                        $tplBodyCache['listElementShipRow'],
                         [
                             'Ship' => $_Lang['tech'][$shipId],
                             'Count' => prettyNumber($shipCount),
