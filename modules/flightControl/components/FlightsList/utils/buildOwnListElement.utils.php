@@ -78,9 +78,6 @@ function buildOwnListElement($params) {
     $fleetShipsRowTpl = gettemplate('fleet_fdetail');
     $fleetUnionSquadMainTpl = gettemplate('fleet_faddinfo');
     $fleetResourcesRowTpl = gettemplate('fleet_fresinfo');
-    $fleetOrdersRetreatTpl = gettemplate('fleet_orders_retreat');
-    $fleetOrdersCreateUnionTpl = gettemplate('fleet_orders_acs');
-    $fleetOrdersJoinUnionTpl = gettemplate('fleet_orders_jointoacs');
 
     $fleetResourcesRowTpl = str_replace(
         [
@@ -173,17 +170,17 @@ function buildOwnListElement($params) {
     $availableFleetOrders = Collections\compact([
         (
             $isRetreatStillAvailable ?
-                parsetemplate(
-                    $fleetOrdersRetreatTpl,
-                    [
+                [
+                    'orderType' => 'retreat',
+                    'params' => [
                         'FleetID' => $fleetEntry['fleet_id'],
                         'ButtonText' => (
                             $isFleetMissionNotCalculated ?
                                 $_Lang['fl_sback'] :
                                 $_Lang['fl_back_from_stay']
                         ),
-                    ]
-                ) :
+                    ],
+                ] :
                 null
         ),
         (
@@ -191,13 +188,13 @@ function buildOwnListElement($params) {
                 $isFleetMissionNotCalculated &&
                 $fleetMissionType == Flights\Enums\FleetMission::Attack
             ) ?
-                parsetemplate(
-                    $fleetOrdersCreateUnionTpl,
-                    [
+                [
+                    'orderType' => 'createUnion',
+                    'params' => [
                         'FleetID' => $fleetEntry['fleet_id'],
                         'ButtonText' => $_Lang['fl_associate'],
-                    ]
-                ) :
+                    ],
+                ] :
                 null
         ),
         (
@@ -205,14 +202,14 @@ function buildOwnListElement($params) {
                 $isFleetMissionNotCalculated &&
                 !empty($acsMainFleets[$fleetId])
             ) ?
-                parsetemplate(
-                    $fleetOrdersJoinUnionTpl,
-                    [
+                [
+                    'orderType' => 'joinUnion',
+                    'params' => [
                         'ACS_ID' => $acsMainFleets[$fleetId]['acsId'],
                         'checked' => $isJoiningThisUnion,
                         'Text' => $_Lang['fl_acs_joinnow'],
-                    ]
-                ) :
+                    ],
+                ] :
                 null
         ),
         (
@@ -220,7 +217,12 @@ function buildOwnListElement($params) {
                 $isFleetMissionNotCalculated &&
                 empty($acsMainFleets[$fleetId])
             ) ?
-                "{AddACSJoin_{$fleetId}}" :
+                [
+                    'orderType' => 'joinUnionOnManagement',
+                    'params' => [
+                        'Text' => "{AddACSJoin_{$fleetId}}",
+                    ],
+                ] :
                 null
         ),
     ]);
@@ -354,11 +356,10 @@ function buildOwnListElement($params) {
             ''
         ),
 
-        'FleetOrders'           => implode('', $availableFleetOrders),
-
         'data'                  => [
             'ships' => $fleetShips,
             'extraShipsInUnion' => $extraShipsInUnion,
+            'orders' => $availableFleetOrders,
         ],
 
         'addons'                => [

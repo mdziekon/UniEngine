@@ -11,6 +11,13 @@ function prerenderOwnListElement($listElement) {
     $fleetShipsRowTpl = gettemplate('fleet_fdetail');
     $fleetUnionSquadMainTpl = gettemplate('fleet_faddinfo');
 
+    $ordersTpls = [
+        'retreat' => gettemplate('fleet_orders_retreat'),
+        'createUnion' => gettemplate('fleet_orders_acs'),
+        'joinUnion' => gettemplate('fleet_orders_jointoacs'),
+        'joinUnionOnManagement' => '{Text}',
+    ];
+
     $prerenderedParams = [
         'FleetDetails' => join(
             '',
@@ -27,7 +34,7 @@ function prerenderOwnListElement($listElement) {
                 }
             )
         ),
-        'FleetAddShipsInfo'     => (
+        'FleetAddShipsInfo' => (
             !empty($listElement['data']['extraShipsInUnion']) ?
             (
                 parsetemplate($fleetUnionSquadMainTpl, $_Lang) .
@@ -48,6 +55,18 @@ function prerenderOwnListElement($listElement) {
                 )
             ) :
             ''
+        ),
+        'FleetOrders' => implode(
+            '',
+            array_map_withkeys(
+                $listElement['data']['orders'],
+                function ($orderData) use (&$ordersTpls) {
+                    $orderType = $orderData['orderType'];
+                    $template = $ordersTpls[$orderType];
+
+                    return parsetemplate($template, $orderData['params']);
+                }
+            )
         ),
     ];
 
