@@ -10,6 +10,29 @@ function prerenderFriendlyAcsListElement($listElement) {
 
     $fleetShipsRowTpl = gettemplate('fleet_fdetail');
 
+    $ordersTpls = [
+        'joinUnion' => function ($params) use (&$_Lang) {
+            return buildDOMElementHTML([
+                'tagName'           => 'input',
+                'contentHTML'       => (
+                    '<br/>' .
+                    $_Lang['fl_acs_joinnow']
+                ),
+                'attrs'             => [
+                    'type'          => 'radio',
+                    'value'         => $params['acsId'],
+                    'class'         => 'setACS_ID pad5',
+                    'name'          => 'acs_select',
+                    'checked'       => (
+                        $params['isJoiningThisUnion'] ?
+                            'checked' :
+                            null
+                    ),
+                ],
+            ]);
+        },
+    ];
+
     $prerenderedParams = [
         'FleetDetails' => join(
             '',
@@ -23,6 +46,18 @@ function prerenderFriendlyAcsListElement($listElement) {
                             'Count' => prettyNumber($shipCount),
                         ]
                     );
+                }
+            )
+        ),
+        'FleetOrders' => implode(
+            '',
+            array_map_withkeys(
+                $listElement['data']['orders'],
+                function ($orderData) use (&$ordersTpls) {
+                    $orderType = $orderData['orderType'];
+                    $templateFn = $ordersTpls[$orderType];
+
+                    return $templateFn($orderData['params']);
                 }
             )
         ),

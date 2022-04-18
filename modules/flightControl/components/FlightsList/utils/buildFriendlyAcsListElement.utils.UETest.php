@@ -113,6 +113,15 @@ class BuildFriendlyAcsListElementTestCase extends TestCase {
                 '202' => 100,
                 '204' => 10,
             ],
+            'orders' => [
+                0 => [
+                    'orderType' => 'joinUnion',
+                    'params' => [
+                        'acsId' => "119",
+                        'isJoiningThisUnion' => false,
+                    ],
+                ],
+            ],
         ];
 
         $this->assertArraySubset($this->expectedResults['baseUnion']['positionsAndTime'], $result, true);
@@ -132,7 +141,7 @@ class BuildFriendlyAcsListElementTestCase extends TestCase {
             ),
             "acsMainFleets" => [
                 "1283" => [
-                    "acsId" => "113",
+                    "acsId" => "119",
                     "hasJoinedFleets" => true,
                 ],
             ],
@@ -171,6 +180,15 @@ class BuildFriendlyAcsListElementTestCase extends TestCase {
                 '203' => 10,
                 '204' => 10,
             ],
+            'orders' => [
+                0 => [
+                    'orderType' => 'joinUnion',
+                    'params' => [
+                        'acsId' => "119",
+                        'isJoiningThisUnion' => false,
+                    ],
+                ],
+            ],
         ];
 
         $this->assertArraySubset($this->expectedResults['baseUnion']['positionsAndTime'], $result, true);
@@ -194,7 +212,7 @@ class BuildFriendlyAcsListElementTestCase extends TestCase {
                     "hasJoinedFleets" => true,
                 ],
                 "1283" => [
-                    "acsId" => "113",
+                    "acsId" => "119",
                     "hasJoinedFleets" => true,
                 ],
                 "1300" => [

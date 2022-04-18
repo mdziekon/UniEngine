@@ -120,27 +120,17 @@ function buildFriendlyAcsListElement($params) {
         'FleetHideStayTime'         => ' class="hide"',
         'FleetHideRetreatTime'      => ' class="hide"',
 
-        'FleetOrders'           => buildDOMElementHTML([
-            'tagName'           => 'input',
-            'contentHTML'       => (
-                '<br/>' .
-                $_Lang['fl_acs_joinnow']
-            ),
-            'attrs'             => [
-                'type'          => 'radio',
-                'value'         => $acsId,
-                'class'         => 'setACS_ID pad5',
-                'name'          => 'acs_select',
-                'checked'       => (
-                    $isJoiningThisUnion ?
-                        'checked' :
-                        null
-                ),
-            ],
-        ]),
-
         'data'                  => [
             'ships' => $unionShips,
+            'orders' => [
+                [
+                    'orderType' => 'joinUnion',
+                    'params' => [
+                        'acsId' => $acsId,
+                        'isJoiningThisUnion' => $isJoiningThisUnion,
+                    ],
+                ],
+            ],
         ],
 
         'addons'                => [
