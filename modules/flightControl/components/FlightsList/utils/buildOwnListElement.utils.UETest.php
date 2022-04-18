@@ -115,6 +115,28 @@ class BuildOwnListElementTestCase extends TestCase {
                 '203' => '10',
             ],
             'extraShipsInUnion' => [],
+            'orders' => [
+                0 => [
+                    'orderType' => 'retreat',
+                    'params' => [
+                        'FleetID' => "1269",
+                        'ButtonText' => "Turn back",
+                    ],
+                ],
+                1 => [
+                    'orderType' => 'createUnion',
+                    'params' => [
+                        'FleetID' => "1269",
+                        'ButtonText' => "Join fleets",
+                    ],
+                ],
+                3 => [
+                    'orderType' => 'joinUnionOnManagement',
+                    'params' => [
+                        'Text' => "{AddACSJoin_1269}",
+                    ],
+                ],
+            ],
         ];
 
         $this->assertArraySubset($this->expectedResults['commonAttack']['positionsAndTime'], $result, true);
@@ -177,6 +199,30 @@ class BuildOwnListElementTestCase extends TestCase {
             ],
             'extraShipsInUnion' => [
                 "202" => 1,
+            ],
+            'orders' => [
+                0 => [
+                    'orderType' => 'retreat',
+                    'params' => [
+                        'FleetID' => "1269",
+                        'ButtonText' => "Turn back",
+                    ],
+                ],
+                1 => [
+                    'orderType' => 'createUnion',
+                    'params' => [
+                        'FleetID' => "1269",
+                        'ButtonText' => "Join fleets",
+                    ],
+                ],
+                2 => [
+                    'orderType' => 'joinUnion',
+                    'params' => [
+                        'ACS_ID' => '113',
+                        'checked' => false,
+                        'Text' => 'Join fleet',
+                    ],
+                ],
             ],
         ];
 
@@ -263,6 +309,30 @@ class BuildOwnListElementTestCase extends TestCase {
                 "202" => 3,
                 "203" => 1,
                 "204" => 5,
+            ],
+            'orders' => [
+                0 => [
+                    'orderType' => 'retreat',
+                    'params' => [
+                        'FleetID' => "1269",
+                        'ButtonText' => "Turn back",
+                    ],
+                ],
+                1 => [
+                    'orderType' => 'createUnion',
+                    'params' => [
+                        'FleetID' => "1269",
+                        'ButtonText' => "Join fleets",
+                    ],
+                ],
+                2 => [
+                    'orderType' => 'joinUnion',
+                    'params' => [
+                        'ACS_ID' => '113',
+                        'checked' => false,
+                        'Text' => 'Join fleet',
+                    ],
+                ],
             ],
         ];
 
