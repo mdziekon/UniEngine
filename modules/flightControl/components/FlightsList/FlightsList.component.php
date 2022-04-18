@@ -85,6 +85,7 @@ function render ($props) {
         $listElement = Utils\buildFriendlyAcsListElement([
             'elementNo' => $nextElementNo,
             'acsUnion' => $relatedAcsUnion,
+            'acsMainFleets' => $acsMainFleets,
             'currentTimestamp' => $currentTimestamp,
             'acsUnionsExtraSquads' => $relatedAcsUnionsExtraSquads,
             'isJoiningThisUnion' => (
