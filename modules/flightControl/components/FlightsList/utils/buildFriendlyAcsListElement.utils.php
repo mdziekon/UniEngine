@@ -5,7 +5,7 @@ namespace UniEngine\Engine\Modules\FlightControl\Components\FlightsList\Utils;
 use UniEngine\Engine\Modules\FlightControl\Components\FlightsList\Utils;
 use UniEngine\Engine\Modules\Flights;
 
-// TODO: this should most likely be a component
+// TODO: Move more "rendering" into the prerenderer function
 //  Arguments
 //      - $params (Object)
 //          - elementNo (Number)
