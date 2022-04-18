@@ -100,6 +100,7 @@ function render ($props) {
                 )
             ),
         ]);
+        $listElement = Utils\prerenderFriendlyAcsListElement($listElement);
 
         $listElements[] = $listElement;
 

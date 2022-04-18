@@ -25,8 +25,6 @@ function buildFriendlyAcsListElement($params) {
     $acsUnionsExtraSquads = $params['acsUnionsExtraSquads'];
     $isJoiningThisUnion = $params['isJoiningThisUnion'];
 
-    $fleetShipsRowTpl = gettemplate('fleet_fdetail');
-
     $acsId = $acsUnion['id'];
     $mainFleetId = $acsUnion['main_fleet_id'];
 
@@ -79,18 +77,6 @@ function buildFriendlyAcsListElement($params) {
         'ACSOwner'              => '<br/>('.$acsUnion['username'].')',
         'FleetBehaviour'        => $behaviorDetails['behavior'],
         'FleetBehaviourTxt'     => $behaviorDetails['behaviorTxt'],
-        'FleetDetails'          => join(
-            '',
-            array_map_withkeys($unionShips, function ($shipCount, $shipId) use (&$_Lang, &$fleetShipsRowTpl) {
-                return parsetemplate(
-                    $fleetShipsRowTpl,
-                    [
-                        'Ship' => $_Lang['tech'][$shipId],
-                        'Count' => prettyNumber($shipCount),
-                    ]
-                );
-            })
-        ),
         'FleetCount'            => prettyNumber($unionShipsCount),
         // Origin details
         'FleetOriGalaxy'        => $acsUnion['fleet_start_galaxy'],
@@ -152,6 +138,10 @@ function buildFriendlyAcsListElement($params) {
                 ),
             ],
         ]),
+
+        'data'                  => [
+            'ships' => $unionShips,
+        ],
 
         'addons'                => [
             'chronoApplets'     => [
