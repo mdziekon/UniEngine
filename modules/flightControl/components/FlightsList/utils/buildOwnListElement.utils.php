@@ -305,7 +305,10 @@ function buildOwnListElement($params) {
                         ''
                 ),
                 (
-                    $flightComeBackRemaining > 0 ?
+                    (
+                        !$isNotCalculatedStationMission &&
+                        $flightComeBackRemaining > 0
+                    ) ?
                         InsertJavaScriptChronoApplet('fb_', $fleetId, $flightComeBackRemaining) :
                         ''
                 ),
