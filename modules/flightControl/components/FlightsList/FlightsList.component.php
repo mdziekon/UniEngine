@@ -18,10 +18,9 @@ function render ($props) {
     $userId = $props['userId'];
     $currentTimestamp = $props['currentTimestamp'];
 
-    // TODO: Migrate over to local templates
-    // $localTemplateLoader = createLocalTemplateLoader(__DIR__);
+    $localTemplateLoader = createLocalTemplateLoader(__DIR__);
     $tplBodyCache = [
-        'listElement' => gettemplate('fleet_frow'),
+        'listElement' => $localTemplateLoader('listElement'),
     ];
 
     $tplBodyCache['listElement'] = str_replace(
