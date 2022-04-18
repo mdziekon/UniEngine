@@ -75,8 +75,6 @@ function buildOwnListElement($params) {
     $relatedAcsFleets = $params['relatedAcsFleets'];
     $isJoiningThisUnion = $params['isJoiningThisUnion'];
 
-    $fleetShipsRowTpl = gettemplate('fleet_fdetail');
-    $fleetUnionSquadMainTpl = gettemplate('fleet_faddinfo');
     $fleetResourcesRowTpl = gettemplate('fleet_fresinfo');
 
     $fleetResourcesRowTpl = str_replace(
