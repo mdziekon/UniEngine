@@ -105,7 +105,7 @@ function buildFriendlyAcsListElement($params) {
                 'debris'
             )
         ),
-        'FleetOriStart'         => date('d.m.Y<\b\r/>H:i:s', $acsUnion['start_time']),
+        'FleetOriStart'         => date('d.m.Y<\b\r/>H:i:s', $acsUnion['fleet_send_time']),
         // Destination details
         'FleetDesGalaxy'        => $acsUnion['end_galaxy'],
         'FleetDesSystem'        => $acsUnion['end_system'],

@@ -42,7 +42,7 @@ function fetchRelatedAcsUnions ($props) {
         "`userst`.`username`, " .
         "`fleets`.`fleet_amount`, `fleets`.`fleet_array`, " .
         "`fleet_start_galaxy`, `fleet_start_system`, `fleet_start_planet`, `fleet_start_type`, " .
-        "`fleet_start_time` " .
+        "`fleet_start_time`, `fleets`.`fleet_send_time` " .
         "FROM {{table}} AS `t` " .
         "LEFT JOIN " .
         "{{prefix}}users as `userst` " .
