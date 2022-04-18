@@ -7,6 +7,12 @@
     const endCallback = {onEndCallback} || function () { };
 
     $(document).ready(function () {
+        if (!document.querySelector(elementSelector)) {
+            console.error("element count not be found", elementSelector);
+
+            return;
+        }
+
         countdownHandlerInstance.registerCountdown({
             $element: document.querySelector(elementSelector),
             endTimestamp,
