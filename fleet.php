@@ -138,26 +138,19 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
                         $ACSJustCreated = true;
 
                         $CreateACSName = substr($_User['username'].' '.date('d.m.Y H:i', $Now), 0, 50);
-                        $QryCreateACSRow = '';
-                        $QryCreateACSRow .= "INSERT INTO {{table}} SET `name` = '{$CreateACSName}', `main_fleet_id` = {$FleetID}, `owner_id` = {$_User['id']}, ";
-                        $QryCreateACSRow .= "`start_time_org` = {$Fleet4ACS['fleet_start_time']}, `start_time` = `start_time_org`, `end_target_id` = {$Fleet4ACS['fleet_end_id']}, ";
-                        $QryCreateACSRow .= "`end_galaxy` = {$Fleet4ACS['fleet_end_galaxy']}, `end_system` = {$Fleet4ACS['fleet_end_system']}, `end_planet` = {$Fleet4ACS['fleet_end_planet']}, `end_type` = {$Fleet4ACS['fleet_end_type']};";
-                        doquery($QryCreateACSRow, 'acs');
 
-                        $GetLastID = doquery("SELECT LAST_INSERT_ID() AS `ID`;", '', true);
-                        $GetLastID = $GetLastID['ID'];
-                        $GetACSRow = array
-                        (
-                            'id' => $GetLastID, 'name' => $CreateACSName, 'main_fleet_id' => $FleetID, 'owner_id' => $_User['id'],
-                            'start_time_org' => $Fleet4ACS['fleet_start_time'], 'start_time' => $Fleet4ACS['fleet_start_time'], 'end_target_id' => $Fleet4ACS['fleet_end_id'],
-                            'end_galaxy' => $Fleet4ACS['fleet_end_galaxy'], 'end_system' => $Fleet4ACS['fleet_end_system'], 'end_planet' => $Fleet4ACS['fleet_end_planet'], 'end_type' => $Fleet4ACS['fleet_end_type'],
-                        );
+                        $newUnionEntry = FlightControl\Utils\Updaters\createUnionEntry([
+                            'unionName' => $CreateACSName,
+                            'mainFleetEntry' => $Fleet4ACS,
+                        ]);
 
-                        doquery("UPDATE {{table}} SET `Fleet_ACSID` = {$GetLastID} WHERE `Fleet_ID` = {$FleetID};", 'fleet_archive');
+                        $GetACSRow = $newUnionEntry;
+
+                        doquery("UPDATE {{table}} SET `Fleet_ACSID` = {$newUnionEntry['id']} WHERE `Fleet_ID` = {$FleetID};", 'fleet_archive');
 
                         if(strstr($_Lang['FlyingFleetsRows'], 'AddACSJoin_') !== false)
                         {
-                            $_Lang['FlyingFleetsRows'] = str_replace('{AddACSJoin_'.$FleetID.'}', "<input type=\"radio\" value=\"{$GetLastID}\" class=\"setACS_ID pad5\" name=\"acs_select\"><br/>{$_Lang['fl_acs_joinnow']}", $_Lang['FlyingFleetsRows']);
+                            $_Lang['FlyingFleetsRows'] = str_replace('{AddACSJoin_'.$FleetID.'}', "<input type=\"radio\" value=\"{$newUnionEntry['id']}\" class=\"setACS_ID pad5\" name=\"acs_select\"><br/>{$_Lang['fl_acs_joinnow']}", $_Lang['FlyingFleetsRows']);
                         }
                     }
 
