@@ -12,8 +12,8 @@ function prerenderOwnListElement($listElement, $params) {
 
     $tplBodyCache = &$params['tplBodyCache'];
 
-    $fleetUnionSquadMainTpl = gettemplate('fleet_faddinfo');
-    $fleetResourcesRowTpl = gettemplate('fleet_fresinfo');
+    $fleetUnionSquadMainTpl = &$tplBodyCache['listElementUnionSquadInfo'];
+    $fleetResourcesRowTpl = &$tplBodyCache['listElementResourceRow'];
     $fleetResourcesRowTpl = str_replace(
         [
             'TitleMain',
@@ -31,9 +31,9 @@ function prerenderOwnListElement($listElement, $params) {
     );
 
     $ordersTpls = [
-        'retreat' => gettemplate('fleet_orders_retreat'),
-        'createUnion' => gettemplate('fleet_orders_acs'),
-        'joinUnion' => gettemplate('fleet_orders_jointoacs'),
+        'retreat' => &$tplBodyCache['listElementOrdersRetreat'],
+        'createUnion' => &$tplBodyCache['listElementOrdersCreateUnion'],
+        'joinUnion' => &$tplBodyCache['listElementOrdersJoinUnion'],
         'joinUnionOnManagement' => '{Text}',
     ];
 

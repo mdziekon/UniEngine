@@ -22,6 +22,11 @@ function render ($props) {
     $tplBodyCache = [
         'listElement' => $localTemplateLoader('listElement'),
         'listElementShipRow' => $localTemplateLoader('listElementShipRow'),
+        'listElementUnionSquadInfo' => $localTemplateLoader('listElementUnionSquadInfo'),
+        'listElementResourceRow' => $localTemplateLoader('listElementResourceRow'),
+        'listElementOrdersRetreat' => $localTemplateLoader('listElementOrdersRetreat'),
+        'listElementOrdersCreateUnion' => $localTemplateLoader('listElementOrdersCreateUnion'),
+        'listElementOrdersJoinUnion' => $localTemplateLoader('listElementOrdersJoinUnion'),
     ];
 
     $tplBodyCache['listElement'] = str_replace(
