@@ -163,57 +163,21 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
 
                     $JSACSUsers[$_User['id']] = array('name' => $_User['username'], 'status' => $_Lang['fl_acs_leader'], 'canmove' => false, 'place' => 1);
 
-                    if($_User['ally_id'] > 0)
-                    {
-                        $Data_GetInvitableUsers['AllyID'][] = $_User['ally_id'];
+                    $invitablePlayers = FlightControl\Utils\Fetchers\fetchUnionInvitablePlayers([
+                        'userId' => $_User['id'],
+                        'allianceId' => $_User['ally_id'],
+                    ]);
 
-                        $Query_GetAllyPacts = '';
-                        $Query_GetAllyPacts .= "SELECT IF(`AllyID_Sender` = {$_User['ally_id']}, `AllyID_Owner`, `AllyID_Sender`) AS `AllyID`, `Type` ";
-                        $Query_GetAllyPacts .= "FROM {{table}} WHERE ";
-                        $Query_GetAllyPacts .= "(`AllyID_Sender` = {$_User['ally_id']} OR `AllyID_Owner` = {$_User['ally_id']}) AND `Active` = 1 AND `Type` >= ".ALLYPACT_MILITARY;
-                        $Query_GetAllyPacts .= "; -- fleet.php|GetAllyPacts";
+                    foreach ($invitablePlayers as $invitablePlayer) {
+                        $playerId = $invitablePlayer['id'];
 
-                        $Result_GetAllyPacts = doquery($Query_GetAllyPacts, 'ally_pacts');
-
-                        if($Result_GetAllyPacts->num_rows > 0)
-                        {
-                            while($FetchData = $Result_GetAllyPacts->fetch_assoc())
-                            {
-                                $Data_GetInvitableUsers['AllyID'][] = $FetchData['AllyID'];
-                            }
-                        }
-
-                        $Data_GetInvitableUsers['AllyID'] = implode(', ', $Data_GetInvitableUsers['AllyID']);
-                        $Query_GetInvitableUsers[0] = '';
-                        $Query_GetInvitableUsers[0] .= "(";
-                        $Query_GetInvitableUsers[0] .= "SELECT `id`, `username` FROM `{{prefix}}users` ";
-                        $Query_GetInvitableUsers[0] .= "WHERE `ally_id` IN ({$Data_GetInvitableUsers['AllyID']}) AND `id` != {$_User['id']}";
-                        $Query_GetInvitableUsers[0] .= ")";
-                    }
-
-                    $Query_GetInvitableUsers[1] = '';
-                    $Query_GetInvitableUsers[1] .= "(";
-                    $Query_GetInvitableUsers[1] .= "SELECT ";
-                    $Query_GetInvitableUsers[1] .= "IF(`buddy`.`sender` = {$_User['id']}, `buddy`.`owner`, `buddy`.`sender`) AS `id`, ";
-                    $Query_GetInvitableUsers[1] .= "`user`.`username` AS `username` ";
-                    $Query_GetInvitableUsers[1] .= "FROM `{{prefix}}buddy` AS `buddy` ";
-                    $Query_GetInvitableUsers[1] .= "LEFT JOIN `{{prefix}}users` AS `user` ON ";
-                    $Query_GetInvitableUsers[1] .= "`user`.`id` = IF(`buddy`.`sender` = {$_User['id']}, `buddy`.`owner`, `buddy`.`sender`) ";
-                    $Query_GetInvitableUsers[1] .= "WHERE (`buddy`.`sender` = {$_User['id']} OR `buddy`.`owner` = {$_User['id']}) AND `active` = 1";
-                    $Query_GetInvitableUsers[1] .= ")";
-
-                    $Query_GetInvitableUsers = implode(' UNION ', $Query_GetInvitableUsers);
-                    $Query_GetInvitableUsers .= "; -- fleet.php|GetInvitableUsers";
-
-                    $SQLResult_GetInvitableUsers = doquery($Query_GetInvitableUsers, 'users');
-
-                    if($SQLResult_GetInvitableUsers->num_rows > 0)
-                    {
-                        while($InvitableUser = $SQLResult_GetInvitableUsers->fetch_assoc())
-                        {
-                            $InvitableUsers[$InvitableUser['id']] = $InvitableUser;
-                            $JSACSUsers[$InvitableUser['id']] = array('name' => $InvitableUser['username'], 'status' => '', 'canmove' => true, 'place' => 2);
-                        }
+                        $InvitableUsers[$playerId] = $invitablePlayer;
+                        $JSACSUsers[$playerId] = [
+                            'name' => $invitablePlayer['username'],
+                            'status' => '',
+                            'canmove' => true,
+                            'place' => 2,
+                        ];
                     }
 
                     if(!isset($ACSJustCreated) || $ACSJustCreated !== true)
