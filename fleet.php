@@ -121,7 +121,7 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
     $_Lang['FleetID'] = $FleetID;
     if($FleetID > 0)
     {
-        $QryGetFleet4ACSFields = '`fleet`.*, `planet`.`name`';
+        $QryGetFleet4ACSFields = '`fleet`.*, `planet`.`name` as `fleet_end_target_name`';
         $QryGetFleet4ACS = "SELECT {$QryGetFleet4ACSFields} FROM {{table}} AS `fleet` LEFT JOIN {{prefix}}planets AS `planet` ON `planet`.`id` = `fleet`.`fleet_end_id` WHERE `fleet`.`fleet_id` = {$FleetID} LIMIT 1;";
         $Fleet4ACS = doquery($QryGetFleet4ACS, 'fleets', true);
         if($Fleet4ACS['fleet_id'] == $FleetID AND $Fleet4ACS['fleet_owner'] == $_User['id'])
@@ -320,19 +320,13 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
                                         doquery("UPDATE {{table}} SET `users` = '{$NewUserList}', `invited_users` = '{$NewUserCount}' WHERE `id` = {$GetACSRow['id']};", 'acs');
                                         if(!empty($MessagesToSend))
                                         {
-                                            $Message = false;
-                                            $Message['msg_id'] = '069';
-                                            $Message['args'] = array
-                                            (
-                                                $_User['username'], (($Fleet4ACS['fleet_end_type'] == 1) ? $_Lang['to_planet'] : $_Lang['to_moon']),
-                                                $Fleet4ACS['name'], $Fleet4ACS['fleet_end_galaxy'], $Fleet4ACS['fleet_end_system'],
-                                                $Fleet4ACS['fleet_end_galaxy'], $Fleet4ACS['fleet_end_system'], $Fleet4ACS['fleet_end_planet'],
-                                                (($Fleet4ACS['fleet_end_type'] == 1) ? $_Lang['to_this_planet'] : $_Lang['to_this_moon']),
-                                                $Fleet4ACS['fleet_end_galaxy'], $Fleet4ACS['fleet_end_system'], $Fleet4ACS['fleet_end_planet'], $Fleet4ACS['fleet_end_type'],
-                                                $GetACSRow['id'], $GetACSRow['name']
-                                            );
-                                            $Message = json_encode($Message);
-                                            Cache_Message($MessagesToSend, 0, '', 1, '007', '018', $Message);
+                                            $invitationMessage = FlightControl\Utils\Factories\createUnionInvitationMessage([
+                                                'unionOwner' => $_User,
+                                                'unionEntry' => $GetACSRow,
+                                                'fleetEntry' => $Fleet4ACS,
+                                            ]);
+
+                                            Cache_Message($MessagesToSend, 0, '', 1, '007', '018', $invitationMessage);
                                         }
 
                                         $ACSMsgCol = 'lime';
