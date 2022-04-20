@@ -42,6 +42,7 @@ call_user_func(function () {
     include($includePath . './utils/updaters/fleetArchiveACSEntries.updaters.php');
     include($includePath . './utils/updaters/fleetArchiveEntryPersist.updaters.php');
     include($includePath . './utils/updaters/fleetPersist.updaters.php');
+    include($includePath . './utils/updaters/updateFleetArchiveAcsId.updaters.php');
     include($includePath . './utils/validators/bashLimit.validator.php');
     include($includePath . './utils/validators/fleetArray.validator.php');
     include($includePath . './utils/validators/joinUnion.validator.php');

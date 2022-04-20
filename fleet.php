@@ -146,7 +146,10 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
 
                         $GetACSRow = $newUnionEntry;
 
-                        doquery("UPDATE {{table}} SET `Fleet_ACSID` = {$newUnionEntry['id']} WHERE `Fleet_ID` = {$FleetID};", 'fleet_archive');
+                        FlightControl\Utils\Updaters\updateFleetArchiveAcsId([
+                            'fleetId' => $FleetID,
+                            'newAcsId' => $newUnionEntry['id'],
+                        ]);
 
                         if(strstr($_Lang['FlyingFleetsRows'], 'AddACSJoin_') !== false)
                         {
