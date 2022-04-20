@@ -206,23 +206,15 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
                             }
                         }
 
-                        if(!empty($Data_GetEmptyUsernames))
-                        {
-                            $Data_GetEmptyUsernames['count'] = count($Data_GetEmptyUsernames['ids']);
-                            $Data_GetEmptyUsernames['ids'] = implode(',', $Data_GetEmptyUsernames['ids']);
-                            $Query_GetEmptyUsernames = '';
-                            $Query_GetEmptyUsernames .= "SELECT `id`, `username` FROM {{table}} ";
-                            $Query_GetEmptyUsernames .= "WHERE `id` IN ({$Data_GetEmptyUsernames['ids']}) ";
-                            $Query_GetEmptyUsernames .= "LIMIT {$Data_GetEmptyUsernames['count']}; -- fleet.php|GetEmptyUsernames";
+                        if (!empty($Data_GetEmptyUsernames)) {
+                            $unionMissingUsersData = FlightControl\Utils\Fetchers\fetchUnionMissingUsersData([
+                                'userIds' => $Data_GetEmptyUsernames['ids'],
+                            ]);
 
-                            $Result_GetEmptyUsernames = doquery($Query_GetEmptyUsernames, 'users');
+                            foreach ($unionMissingUsersData as $userEntry) {
+                                $userId = $userEntry['id'];
 
-                            if($Result_GetEmptyUsernames->num_rows > 0)
-                            {
-                                while($FetchData = $Result_GetEmptyUsernames->fetch_assoc())
-                                {
-                                    $JSACSUsers[$FetchData['id']]['name'] = $FetchData['username'];
-                                }
+                                $JSACSUsers[$userId]['name'] = $userEntry['username'];
                             }
                         }
 

@@ -28,6 +28,7 @@ call_user_func(function () {
     include($includePath . './utils/fetchers/fetchPlanetOwnerDetails.fetcher.php');
     include($includePath . './utils/fetchers/fetchTargetGalaxyDetails.fetcher.php');
     include($includePath . './utils/fetchers/fetchUnionInvitablePlayers.fetcher.php');
+    include($includePath . './utils/fetchers/fetchUnionMissingUsersData.fetcher.php');
     include($includePath . './utils/helpers/getAvailableHoldTimes.helper.php');
     include($includePath . './utils/helpers/getAvailableSpeeds.helper.php');
     include($includePath . './utils/helpers/getFleetsInFlightCounters.helper.php');
