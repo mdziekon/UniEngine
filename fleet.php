@@ -157,7 +157,12 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
                         }
                     }
 
-                    $JSACSUsers[$_User['id']] = array('name' => $_User['username'], 'status' => $_Lang['fl_acs_leader'], 'canmove' => false, 'place' => 1);
+                    $JSACSUsers[$_User['id']] = [
+                        'name' => $_User['username'],
+                        'status' => $_Lang['fl_acs_leader'],
+                        'canmove' => false,
+                        'place' => 1,
+                    ];
 
                     $invitablePlayers = FlightControl\Utils\Fetchers\fetchUnionInvitablePlayers([
                         'userId' => $_User['id'],
@@ -245,7 +250,7 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
                         {
                             if(!empty($_POST['acs_users']))
                             {
-                                $NewUsersArray = array();
+                                $NewUsersArray = [];
                                 $ExplodeUsers = explode(',', $_POST['acs_users']);
                                 $UsersCount = 0;
                                 foreach($ExplodeUsers as $ACSUserID)
