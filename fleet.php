@@ -198,13 +198,16 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
                                     $Status = ((strstr($GetACSRow['user_joined'], "|{$UsersID}|") !== FALSE) ? $_Lang['fl_acs_joined'] : $_Lang['fl_acs_invited']);
                                     $JSACSUsers[$UsersID]['status'] = $Status;
                                     $JSACSUsers[$UsersID]['place'] = 1;
-                                    if($Status == $_Lang['fl_acs_joined'])
-                                    {
-                                        $HasToBeInNewArray[] = $UsersID;
-                                    }
                                 }
                             }
                         }
+
+                        $currentUnionJoinedMembers = array_filter($JSACSUsers, function ($unionMember) use (&$_Lang) {
+                            return $unionMember['status'] == $_Lang['fl_acs_joined'];
+                        });
+                        $currentUnionJoinedMembers = array_map_withkeys($currentUnionJoinedMembers, function ($unionMember, $unionMemberId) {
+                            return $unionMemberId;
+                        });
 
                         if (!empty($Data_GetEmptyUsernames)) {
                             $unionMissingUsersData = FlightControl\Utils\Fetchers\fetchUnionMissingUsersData([
@@ -261,18 +264,15 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
                                         }
                                     }
                                 }
-                                if(!empty($HasToBeInNewArray))
-                                {
-                                    foreach($HasToBeInNewArray as $UsersID)
-                                    {
-                                        if(!in_array($UsersID, $NewUsersArray))
-                                        {
-                                            $BreakUsersUpdate = true;
-                                            $ACSMsg = $_Lang['fl_acs_cantkick_joined'];
-                                            break;
-                                        }
+
+                                foreach ($currentUnionJoinedMembers as $UsersID) {
+                                    if (!in_array($UsersID, $NewUsersArray)) {
+                                        $BreakUsersUpdate = true;
+                                        $ACSMsg = $_Lang['fl_acs_cantkick_joined'];
+                                        break;
                                     }
                                 }
+
                                 if(!isset($BreakUsersUpdate) || $BreakUsersUpdate !== true)
                                 {
                                     foreach($JSACSUsers as $UserID => $UserData)
