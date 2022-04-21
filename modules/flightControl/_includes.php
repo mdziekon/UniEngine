@@ -17,6 +17,7 @@ call_user_func(function () {
     include($includePath . './components/RetreatInfoBox/RetreatInfoBox.component.php');
     include($includePath . './components/SmartFleetBlockadeInfoBox/SmartFleetBlockadeInfoBox.component.php');
     include($includePath . './components/SmartFleetBlockadeInfoBox/SmartFleetBlockadeInfoBox.utils.php');
+    include($includePath . './components/UnionMembersListOption/UnionMembersListOption.component.php');
 
     include($includePath . './enums/RetreatResultType.enum.php');
 

@@ -319,36 +319,19 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
                         }
                     }
 
-                    if(!empty($JSACSUsers))
-                    {
+                    if (!empty($JSACSUsers)) {
                         $_Lang['InsertACSUsers'] = json_encode($JSACSUsers);
-                        foreach($JSACSUsers as $UserID => $UserData)
-                        {
-                            if($UserData['place'] == 1)
-                            {
-                                $Pointer = &$_Lang['UsersInvited'];
+                        foreach ($JSACSUsers as $memberId => $memberDetails) {
+                            $memberListOptionComponent = FlightControl\Components\UnionMembersListOption\render([
+                                'memberId' => $memberId,
+                                'memberDetails' => $memberDetails,
+                            ]);
+                            $listOptionType = $memberListOptionComponent['listOptionType'];
+
+                            if (empty($_Lang[$listOptionType])) {
+                                $_Lang[$listOptionType] = '';
                             }
-                            else
-                            {
-                                $Pointer = &$_Lang['Users2Invite'];
-                            }
-                            if($UserData['canmove'] === false OR $UserData['status'] == $_Lang['fl_acs_joined'])
-                            {
-                                $IsDisabled = ' disabled';
-                            }
-                            else
-                            {
-                                $IsDisabled = '';
-                            }
-                            if(!empty($UserData['status']))
-                            {
-                                $Status = " ({$UserData['status']})";
-                            }
-                            else
-                            {
-                                $Status = '';
-                            }
-                            $Pointer .= "<option value=\"{$UserID}\"{$IsDisabled}>{$UserData['name']}{$Status}</option>";
+                            $_Lang[$listOptionType] .= $memberListOptionComponent['componentHTML'];
                         }
                     }
 
