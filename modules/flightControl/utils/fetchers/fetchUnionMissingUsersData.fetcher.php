@@ -8,6 +8,11 @@ namespace UniEngine\Engine\Modules\FlightControl\Utils\Fetchers;
  */
 function fetchUnionMissingUsersData($props) {
     $userIds = $props['userIds'];
+
+    if (empty($userIds)) {
+        return [];
+    }
+
     $userIdsString = implode(', ', $userIds);
     $userIdsCount = count($userIds);
 

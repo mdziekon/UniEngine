@@ -181,45 +181,27 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
                         ];
                     }
 
-                    if(!isset($ACSJustCreated) || $ACSJustCreated !== true)
-                    {
-                        if(!empty($GetACSRow['users']))
-                        {
-                            $Users = str_replace('|', '', $GetACSRow['users']);
-                            $Users = explode(',', $Users);
-                            foreach($Users as $UsersID)
-                            {
-                                if($UsersID > 0)
-                                {
-                                    if(empty($JSACSUsers[$UsersID]['name']))
-                                    {
-                                        $Data_GetEmptyUsernames['ids'][] = $UsersID;
-                                    }
-                                    $Status = ((strstr($GetACSRow['user_joined'], "|{$UsersID}|") !== FALSE) ? $_Lang['fl_acs_joined'] : $_Lang['fl_acs_invited']);
-                                    $JSACSUsers[$UsersID]['status'] = $Status;
-                                    $JSACSUsers[$UsersID]['place'] = 1;
-                                }
+                    if (!isset($ACSJustCreated) || $ACSJustCreated !== true) {
+                        $unionMembersDetails = FlightControl\Utils\Helpers\extractUnionMembersDetails([
+                            'unionData' => $GetACSRow,
+                            'invitablePlayers' => $invitablePlayers,
+                        ]);
+
+                        foreach ($unionMembersDetails as $memberId => $memberDetails) {
+                            if (empty($JSACSUsers[$memberId])) {
+                                $JSACSUsers[$memberId] = [];
                             }
+
+                            $JSACSUsers[$memberId] = array_merge(
+                                $JSACSUsers[$memberId],
+                                $memberDetails
+                            );
                         }
 
                         $currentUnionJoinedMembers = array_filter($JSACSUsers, function ($unionMember) use (&$_Lang) {
                             return $unionMember['status'] == $_Lang['fl_acs_joined'];
                         });
-                        $currentUnionJoinedMembers = array_map_withkeys($currentUnionJoinedMembers, function ($unionMember, $unionMemberId) {
-                            return $unionMemberId;
-                        });
-
-                        if (!empty($Data_GetEmptyUsernames)) {
-                            $unionMissingUsersData = FlightControl\Utils\Fetchers\fetchUnionMissingUsersData([
-                                'userIds' => $Data_GetEmptyUsernames['ids'],
-                            ]);
-
-                            foreach ($unionMissingUsersData as $userEntry) {
-                                $userId = $userEntry['id'];
-
-                                $JSACSUsers[$userId]['name'] = $userEntry['username'];
-                            }
-                        }
+                        $currentUnionJoinedMembers = array_keys($currentUnionJoinedMembers);
 
                         if(!empty($_POST['acs_name']))
                         {
