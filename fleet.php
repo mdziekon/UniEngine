@@ -119,11 +119,9 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
     $_Lang['P_HideACSBoxOnError'] = $Hide;
     $FleetID = intval($_POST['fleet_id']);
     $_Lang['FleetID'] = $FleetID;
-    if($FleetID > 0)
-    {
-        $QryGetFleet4ACSFields = '`fleet`.*, `planet`.`name` as `fleet_end_target_name`';
-        $QryGetFleet4ACS = "SELECT {$QryGetFleet4ACSFields} FROM {{table}} AS `fleet` LEFT JOIN {{prefix}}planets AS `planet` ON `planet`.`id` = `fleet`.`fleet_end_id` WHERE `fleet`.`fleet_id` = {$FleetID} LIMIT 1;";
-        $Fleet4ACS = doquery($QryGetFleet4ACS, 'fleets', true);
+    if ($FleetID > 0) {
+        $Fleet4ACS = FlightControl\Utils\Fetchers\fetchUnionFleet([ 'fleetId' => $FleetID ]);
+
         if($Fleet4ACS['fleet_id'] == $FleetID AND $Fleet4ACS['fleet_owner'] == $_User['id'])
         {
             if($Fleet4ACS['fleet_mission'] == 1 AND $Fleet4ACS['fleet_mess'] == 0)
