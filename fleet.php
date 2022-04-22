@@ -113,6 +113,8 @@ else
     }
 }
 
+$newUnionEntry = null;
+
 if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
 {
     $ACSMsgCol = 'red';
@@ -130,12 +132,8 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
                 {
                     $_Lang['P_HideACSBoxOnError'] = '';
 
-                    $hasCreatedUnionEntryNow = false;
-
                     $GetACSRow = doquery("SELECT * FROM {{table}} WHERE `main_fleet_id` = {$FleetID} LIMIT 1;", 'acs', true);
                     if ($GetACSRow['id'] <= 0) {
-                        $hasCreatedUnionEntryNow = true;
-
                         $CreateACSName = substr($_User['username'].' '.date('d.m.Y H:i', $Now), 0, 50);
 
                         $newUnionEntry = FlightControl\Utils\Updaters\createUnionEntry([
@@ -149,11 +147,6 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
                             'fleetId' => $FleetID,
                             'newAcsId' => $newUnionEntry['id'],
                         ]);
-
-                        if(strstr($_Lang['FlyingFleetsRows'], 'AddACSJoin_') !== false)
-                        {
-                            $_Lang['FlyingFleetsRows'] = str_replace('{AddACSJoin_'.$FleetID.'}', "<input type=\"radio\" value=\"{$newUnionEntry['id']}\" class=\"setACS_ID pad5\" name=\"acs_select\"><br/>{$_Lang['fl_acs_joinnow']}", $_Lang['FlyingFleetsRows']);
-                        }
                     }
 
                     $JSACSUsers[$_User['id']] = [
@@ -181,7 +174,7 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
                         ];
                     }
 
-                    if (!$hasCreatedUnionEntryNow) {
+                    if ($newUnionEntry !== null) {
                         $unionMembersDetails = FlightControl\Utils\Helpers\extractUnionMembersDetails([
                             'unionData' => $GetACSRow,
                             'invitablePlayers' => $invitablePlayers,
@@ -342,6 +335,19 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
     }
 
     $_Lang['Insert_ACSForm'] = parsetemplate(gettemplate('fleet_acsform'), $_Lang);
+}
+
+if (
+    $newUnionEntry !== null &&
+    strstr($_Lang['FlyingFleetsRows'], 'AddACSJoin_') !== false
+) {
+    $joinInputHTML = "<input type=\"radio\" value=\"{$newUnionEntry['id']}\" class=\"setACS_ID pad5\" name=\"acs_select\"><br/>{$_Lang['fl_acs_joinnow']}";
+
+    $_Lang['FlyingFleetsRows'] = str_replace(
+        '{AddACSJoin_'.$newUnionEntry['main_fleet_id'].'}',
+        $joinInputHTML,
+        $_Lang['FlyingFleetsRows']
+    );
 }
 
 $_Lang['FlyingFleetsRows'] = preg_replace('#\{AddACSJoin\_[0-9]+\}#si', '', $_Lang['FlyingFleetsRows']);
