@@ -173,7 +173,6 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
                     foreach ($invitablePlayers as $invitablePlayer) {
                         $playerId = $invitablePlayer['id'];
 
-                        $InvitableUsers[$playerId] = $invitablePlayer;
                         $JSACSUsers[$playerId] = [
                             'name' => $invitablePlayer['username'],
                             'status' => '',
