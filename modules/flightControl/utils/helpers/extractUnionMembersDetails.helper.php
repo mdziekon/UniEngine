@@ -51,6 +51,7 @@ function extractUnionMembersDetails($props) {
         $memberDetails = [
             'name' => $memberUsername,
             'status' => $memberStatus,
+            'canmove' => true,
             'place' => 1,
         ];
 
