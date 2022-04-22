@@ -94,6 +94,7 @@ function extractUnionMembersModification($props) {
         $newUnionMembersStates[$memberId] = [
             'hasChangedPlaces' => $hasChangedPlaces,
             'newMemberPlacement' => $newMemberPlacement,
+            'isStillInvitable' => isset($invitableUsers[$memberId]),
         ];
     }
 
@@ -147,6 +148,8 @@ function updateUnionMembersInMemory($props) {
     $newUnionMembersStates = $props['newUnionMembersStates'];
     $currentUnionMembers = &$props['currentUnionMembers'];
 
+    $membersToRemove = [];
+
     foreach ($currentUnionMembers as $memberId => &$memberDetails) {
         if (!isset($newUnionMembersStates[$memberId])) {
             continue;
@@ -160,6 +163,13 @@ function updateUnionMembersInMemory($props) {
 
         $isInvitedUser = $newMemberState['newMemberPlacement'] === 'INVITED_USERS';
 
+        if (
+            !$isInvitedUser &&
+            !$newMemberState['isStillInvitable']
+        ) {
+            $membersToRemove[] = $memberId;
+        }
+
         $memberDetails['place'] = (
             $isInvitedUser ?
                 1 :
@@ -170,6 +180,10 @@ function updateUnionMembersInMemory($props) {
                 $_Lang['fl_acs_invited'] :
                 ''
         );
+    }
+
+    foreach ($membersToRemove as $memberId) {
+        unset($currentUnionMembers[$memberId]);
     }
 }
 

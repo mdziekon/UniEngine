@@ -255,30 +255,10 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
                                     'newUnionMembersStates' => $newUnionMembersStates,
                                     'currentUnionMembers' => &$JSACSUsers,
                                 ]);
-
-                                $newInvitedUsersList = [];
-
-                                foreach ($newUnionMembersStates as $memberId => $newMemberState) {
-                                    if ($newMemberState['newMemberPlacement'] !== 'INVITED_USERS') {
-                                        continue;
-                                    }
-
-                                    $newInvitedUsersList[] = "|{$memberId}|";
-                                }
-
-                                $newInvitedUsersListString = implode(',', $newInvitedUsersList);
-                                $newInvitedUsersListCount = count($newInvitedUsersList);
-
-                                doquery(
-                                    "UPDATE {{table}} " .
-                                    "SET " .
-                                    "`users` = '{$newInvitedUsersListString}', " .
-                                    "`invited_users` = {$newInvitedUsersListCount} " .
-                                    "WHERE " .
-                                    "`id` = {$GetACSRow['id']} " .
-                                    ";",
-                                    'acs'
-                                );
+                                FlightControl\Utils\Updaters\updateUnionMembersInDB([
+                                    'unionId' => $GetACSRow['id'],
+                                    'newUnionMembersStates' => $newUnionMembersStates,
+                                ]);
 
                                 if (!empty($unionMembersToSendInvite)) {
                                     $invitationMessage = FlightControl\Utils\Factories\createUnionInvitationMessage([
