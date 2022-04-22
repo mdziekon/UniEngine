@@ -280,8 +280,7 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
                                         $ACSMsg = $_Lang['fl_acs_cantkick_joined'];
                                         break;
                                     case 'MOVING_UNMOVABLE_USER':
-                                        // TODO: Add error message
-                                        $ACSMsg = 'MOVING_UNMOVABLE_USER';
+                                        $ACSMsg = $_Lang['fl_acs_cant_move_user'];
                                         break;
                                 }
                             }
