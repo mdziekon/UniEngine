@@ -52,6 +52,7 @@ function extractUnionMembersDetails($props) {
             'name' => $memberUsername,
             'status' => $memberStatus,
             'canmove' => true,
+            'isIgnoredWhenUpdating' => false,
             'place' => 1,
         ];
 

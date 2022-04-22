@@ -161,6 +161,7 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
                         'name' => $_User['username'],
                         'status' => $_Lang['fl_acs_leader'],
                         'canmove' => false,
+                        'isIgnoredWhenUpdating' => true,
                         'place' => 1,
                     ];
 
@@ -177,6 +178,7 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
                             'name' => $invitablePlayer['username'],
                             'status' => '',
                             'canmove' => true,
+                            'isIgnoredWhenUpdating' => false,
                             'place' => 2,
                         ];
                     }
@@ -223,97 +225,84 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
                                 }
                             }
                         }
-                        if(isset($_POST['acsuserschanged']) && $_POST['acsuserschanged'] == '1')
-                        {
-                            if(!empty($_POST['acs_users']))
-                            {
-                                $NewUsersArray = [];
-                                $ExplodeUsers = explode(',', $_POST['acs_users']);
-                                $UsersCount = 0;
-                                foreach($ExplodeUsers as $ACSUserID)
-                                {
-                                    $ACSUserID = intval($ACSUserID);
-                                    if(isset($InvitableUsers[$ACSUserID]['id']) && $InvitableUsers[$ACSUserID]['id'] > 0)
-                                    {
-                                        if($UsersCount < MAX_ACS_JOINED_PLAYERS)
-                                        {
-                                            $NewUsersArray[$ACSUserID] = $ACSUserID;
-                                            $UsersCount += 1;
-                                        }
-                                        else
-                                        {
-                                            break;
-                                        }
+                        if (
+                            isset($_POST['acsuserschanged']) &&
+                            $_POST['acsuserschanged'] == '1' &&
+                            !empty($_POST['acs_users'])
+                        ) {
+                            $newUnionMembersStatesResult = FlightControl\Utils\Helpers\extractUnionMembersModification([
+                                'input' => [
+                                    'invitedUsersList' => $_POST['acs_users'],
+                                ],
+                                'invitableUsers' => $invitablePlayers,
+                                'currentUnionMembers' => $JSACSUsers,
+                                'currentUnionJoinedMembers' => $currentUnionJoinedMembers,
+                            ]);
+
+                            if (
+                                $newUnionMembersStatesResult['isSuccess'] &&
+                                FlightControl\Utils\Helpers\hasUnionMembersStateChanged([
+                                    'newUnionMembersStates' => $newUnionMembersStatesResult['payload']['newUnionMembersStates']
+                                ])
+                            ) {
+                                $newUnionMembersStates = $newUnionMembersStatesResult['payload']['newUnionMembersStates'];
+
+                                $unionMembersToSendInvite = FlightControl\Utils\Helpers\getUnionMembersToSendInvite([
+                                    'newUnionMembersStates' => $newUnionMembersStates,
+                                ]);
+
+                                FlightControl\Utils\Helpers\updateUnionMembersInMemory([
+                                    'newUnionMembersStates' => $newUnionMembersStates,
+                                    'currentUnionMembers' => &$JSACSUsers,
+                                ]);
+
+                                $newInvitedUsersList = [];
+
+                                foreach ($newUnionMembersStates as $memberId => $newMemberState) {
+                                    if ($newMemberState['newMemberPlacement'] !== 'INVITED_USERS') {
+                                        continue;
                                     }
+
+                                    $newInvitedUsersList[] = "|{$memberId}|";
                                 }
 
-                                foreach ($currentUnionJoinedMembers as $UsersID) {
-                                    if (!in_array($UsersID, $NewUsersArray)) {
-                                        $BreakUsersUpdate = true;
+                                $newInvitedUsersListString = implode(',', $newInvitedUsersList);
+                                $newInvitedUsersListCount = count($newInvitedUsersList);
+
+                                doquery(
+                                    "UPDATE {{table}} " .
+                                    "SET " .
+                                    "`users` = '{$newInvitedUsersListString}', " .
+                                    "`invited_users` = {$newInvitedUsersListCount} " .
+                                    "WHERE " .
+                                    "`id` = {$GetACSRow['id']} " .
+                                    ";",
+                                    'acs'
+                                );
+
+                                if (!empty($unionMembersToSendInvite)) {
+                                    $invitationMessage = FlightControl\Utils\Factories\createUnionInvitationMessage([
+                                        'unionOwner' => $_User,
+                                        'unionEntry' => $GetACSRow,
+                                        'fleetEntry' => $Fleet4ACS,
+                                    ]);
+
+                                    Cache_Message($unionMembersToSendInvite, 0, '', 1, '007', '018', $invitationMessage);
+                                }
+
+                                $ACSMsgCol = 'lime';
+                                $ACSMsg = $_Lang['fl_acs_changesSaved'];
+                            }
+
+                            if (!$newUnionMembersStatesResult['isSuccess']) {
+                                switch ($newUnionMembersStatesResult['error']['code']) {
+                                    case 'KICKING_JOINED_MEMBER':
                                         $ACSMsg = $_Lang['fl_acs_cantkick_joined'];
                                         break;
-                                    }
-                                }
-
-                                if(!isset($BreakUsersUpdate) || $BreakUsersUpdate !== true)
-                                {
-                                    foreach($JSACSUsers as $UserID => $UserData)
-                                    {
-                                        if($UserData['canmove'] === false)
-                                        {
-                                            continue;
-                                        }
-                                        if(!in_array($UserID, $NewUsersArray))
-                                        {
-                                            if($UserData['place'] != 2)
-                                            {
-                                                $ChangedInUserArray = true;
-                                                $JSACSUsers[$UserID]['place'] = 2;
-                                                $JSACSUsers[$UserID]['status'] = '';
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if($UserData['place'] == 2)
-                                            {
-                                                $ChangedInUserArray = true;
-                                                $JSACSUsers[$UserID]['place'] = 1;
-                                                $JSACSUsers[$UserID]['status'] = $_Lang['fl_acs_invited'];
-                                                $MessagesToSend[] = $UserID;
-                                            }
-                                        }
-                                    }
-                                    if($ChangedInUserArray === true)
-                                    {
-                                        foreach($NewUsersArray as $UserID)
-                                        {
-                                            $NewUserList[] = "|{$UserID}|";
-                                        }
-                                        if(!empty($NewUserList))
-                                        {
-                                            $NewUserList = implode(',', $NewUserList);
-                                            $NewUserCount = count($NewUsersArray);
-                                        }
-                                        else
-                                        {
-                                            $NewUserList = '';
-                                            $NewUserCount = '0';
-                                        }
-                                        doquery("UPDATE {{table}} SET `users` = '{$NewUserList}', `invited_users` = '{$NewUserCount}' WHERE `id` = {$GetACSRow['id']};", 'acs');
-                                        if(!empty($MessagesToSend))
-                                        {
-                                            $invitationMessage = FlightControl\Utils\Factories\createUnionInvitationMessage([
-                                                'unionOwner' => $_User,
-                                                'unionEntry' => $GetACSRow,
-                                                'fleetEntry' => $Fleet4ACS,
-                                            ]);
-
-                                            Cache_Message($MessagesToSend, 0, '', 1, '007', '018', $invitationMessage);
-                                        }
-
-                                        $ACSMsgCol = 'lime';
-                                        $ACSMsg = $_Lang['fl_acs_changesSaved'];
-                                    }
+                                    case 'MOVING_UNMOVABLE_USER':
+                                        // TODO: Add error message
+                                        $ACSMsg = 'MOVING_UNMOVABLE_USER';
+                                        break;
                                 }
                             }
                         }
