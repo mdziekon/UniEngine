@@ -132,10 +132,11 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
                 {
                     $_Lang['P_HideACSBoxOnError'] = '';
 
+                    $hasCreatedUnionEntryNow = false;
+
                     $GetACSRow = doquery("SELECT * FROM {{table}} WHERE `main_fleet_id` = {$FleetID} LIMIT 1;", 'acs', true);
-                    if($GetACSRow['id'] <= 0)
-                    {
-                        $ACSJustCreated = true;
+                    if ($GetACSRow['id'] <= 0) {
+                        $hasCreatedUnionEntryNow = true;
 
                         $CreateACSName = substr($_User['username'].' '.date('d.m.Y H:i', $Now), 0, 50);
 
@@ -182,7 +183,7 @@ if(isset($_POST['acsmanage']) && $_POST['acsmanage'] == 'open')
                         ];
                     }
 
-                    if (!isset($ACSJustCreated) || $ACSJustCreated !== true) {
+                    if (!$hasCreatedUnionEntryNow) {
                         $unionMembersDetails = FlightControl\Utils\Helpers\extractUnionMembersDetails([
                             'unionData' => $GetACSRow,
                             'invitablePlayers' => $invitablePlayers,
