@@ -2,8 +2,8 @@
 
 namespace UniEngine\Engine\Modules\FlightControl\Components\UnionManagement;
 
-use UniEngine\Engine\Modules\Flights;
 use UniEngine\Engine\Modules\FlightControl;
+use UniEngine\Engine\Modules\FlightControl\Components\UnionManagement;
 
 function _handleInput($props) {
     global $_Lang;
@@ -13,60 +13,18 @@ function _handleInput($props) {
     $currentTimestamp = $props['currentTimestamp'];
     $input = $props['input'];
 
-    $inputFleetId = (
-        isset($input['fleet_id']) ?
-            intval($input['fleet_id'], 10) :
-            0
-    );
+    $baseUnionDataResult = UnionManagement\Utils\getBaseUnionData($props);
 
-    if ($inputFleetId <= 0) {
-        return [
-            'isError' => true,
-            'error' => [
-                'code' => 'INVALID_FLEET_ID',
-            ],
-        ];
+    if (!$baseUnionDataResult['isSuccess']) {
+        return $baseUnionDataResult;
     }
 
-    $Fleet4ACS = FlightControl\Utils\Fetchers\fetchUnionFleet([
-        'fleetId' => $inputFleetId,
-    ]);
-
-    if (
-        $Fleet4ACS['fleet_id'] != $inputFleetId ||
-        $Fleet4ACS['fleet_owner'] != $userId
-    ) {
-        return [
-            'isError' => true,
-            'error' => [
-                'code' => 'FLEET_DOES_NOT_EXIST',
-            ],
-        ];
-    }
-
-    if (
-        $Fleet4ACS['fleet_mission'] != Flights\Enums\FleetMission::Attack ||
-        $Fleet4ACS['fleet_mess'] != 0
-    ) {
-        return [
-            'isError' => true,
-            'error' => [
-                'code' => 'FLEET_INCORRECT_PARAMS',
-            ],
-        ];
-    }
-
-    if ($Fleet4ACS['fleet_start_time'] <= $currentTimestamp) {
-        return [
-            'isError' => true,
-            'error' => [
-                'code' => 'FLEET_REACHED_TARGET',
-            ],
-        ];
-    }
+    $baseUnionData = $baseUnionDataResult['payload'];
+    $Fleet4ACS = $baseUnionData['unionMainFleet'];
+    $inputFleetId = $baseUnionData['unionMainFleet']['fleet_id'];
 
     $result = [
-        'isError' => false,
+        'isSuccess' => true,
         'payload' => [
             'message' => [
                 'content' => null,
@@ -273,7 +231,6 @@ function _handleInput($props) {
 //      - componentHTML (String)
 //
 function render($props) {
-    $unionOwner = $props['unionOwner'];
     $input = $props['input'];
 
     $lang = includeLang('fleet', true);
@@ -292,7 +249,7 @@ function render($props) {
 
     $inputHandlingResult = _handleInput($props);
 
-    if ($inputHandlingResult['isError']) {
+    if (!$inputHandlingResult['isSuccess']) {
         $errorMessage = '';
 
         switch ($inputHandlingResult['error']['code']) {
