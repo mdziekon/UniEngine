@@ -121,7 +121,7 @@ if (
 ) {
     $unionManagement = FlightControl\Components\UnionManagement\render([
         'unionOwner' => $_User,
-        'currentTimestamp' => $now,
+        'currentTimestamp' => $Now,
         'input' => $_POST,
     ]);
 
