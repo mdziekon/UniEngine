@@ -38,21 +38,18 @@ function _handleInput($props) {
     ];
 
     $GetACSRow = doquery("SELECT * FROM {{table}} WHERE `main_fleet_id` = {$inputFleetId} LIMIT 1;", 'acs', true);
+    $newUnionEntry = null;
+
     if ($GetACSRow['id'] <= 0) {
-        $CreateACSName = substr($unionOwner['username'].' '.date('d.m.Y H:i', $currentTimestamp), 0, 50);
-
-        $newUnionEntry = FlightControl\Utils\Updaters\createUnionEntry([
-            'unionName' => $CreateACSName,
-            'mainFleetEntry' => $Fleet4ACS,
+        $createNewUnionResult = UnionManagement\Utils\createNewUnion([
+            'mainFleet' => $Fleet4ACS,
+            'unionOwner' => $unionOwner,
+            'currentTimestamp' => $currentTimestamp,
         ]);
+        $newUnionEntry = $createNewUnionResult['newUnionEntry'];
+
         $result['payload']['newUnionEntry'] = $newUnionEntry;
-
         $GetACSRow = $newUnionEntry;
-
-        FlightControl\Utils\Updaters\updateFleetArchiveAcsId([
-            'fleetId' => $inputFleetId,
-            'newAcsId' => $newUnionEntry['id'],
-        ]);
     }
 
     $JSACSUsers = [];
