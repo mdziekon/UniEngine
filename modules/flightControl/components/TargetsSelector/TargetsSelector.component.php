@@ -32,11 +32,12 @@ function render ($props) {
                 null
         );
         $targetOriginalName = $target['name'];
-        $targetTypeMarker = (
-            $target['planet_type'] == 3 ?
-                "({$_Lang['DropdownList_Moon_sign']})" :
-                null
-        );
+        $targetTypeLabel = [
+            '1' => $_Lang['planet_sign'],
+            '2' => $_Lang['moon_sign'],
+            '3' => $_Lang['debris_sign'],
+        ][$target['planet_type']];
+        $targetTypeMarker = "({$targetTypeLabel})";
         $targetPos = "[{$target['galaxy']}:{$target['system']}:{$target['planet']}]";
 
         $elementLabelParts = Collections\compact([
