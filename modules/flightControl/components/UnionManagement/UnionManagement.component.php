@@ -192,23 +192,7 @@ function _handleInput($props) {
         }
     }
 
-    if (!empty($JSACSUsers)) {
-        $result['payload']['unionMembers'] = $JSACSUsers;
-
-        foreach ($JSACSUsers as $memberId => $memberDetails) {
-            $memberListOptionComponent = FlightControl\Components\UnionMembersListOption\render([
-                'memberId' => $memberId,
-                'memberDetails' => $memberDetails,
-            ]);
-            $listOptionType = $memberListOptionComponent['listOptionType'];
-
-            if (empty($result['payload']['membersSelectors'][$listOptionType])) {
-                $result['payload']['membersSelectors'][$listOptionType] = '';
-            }
-            $result['payload']['membersSelectors'][$listOptionType] .= $memberListOptionComponent['componentHTML'];
-        }
-    }
-
+    $result['payload']['unionMembers'] = $JSACSUsers;
     $result['payload']['unionName'] = (
         empty($GetACSRow['name']) ?
             $_Lang['fl_acs_noname'] :
@@ -277,14 +261,21 @@ function render($props) {
             $componentTPLData['P_ACSMSG'] = $resultPayload['message']['content'];
             $componentTPLData['P_ACSMSGCOL'] = $resultPayload['message']['color'];
         }
-        if ($resultPayload['unionMembers'] !== null) {
-            $componentTPLData['InsertACSUsers'] = json_encode($resultPayload['unionMembers']);
-        }
 
+        $componentTPLData['InsertACSUsers'] = json_encode($resultPayload['unionMembers']);
         $componentTPLData['ACSName'] = $resultPayload['unionName'];
 
-        foreach ($resultPayload['membersSelectors'] as $selectorTypeKey => $selectorElementsHTML) {
-            $componentTPLData[$selectorTypeKey] = $selectorElementsHTML;
+        foreach ($resultPayload['unionMembers'] as $memberId => $memberDetails) {
+            $memberListOptionComponent = FlightControl\Components\UnionMembersListOption\render([
+                'memberId' => $memberId,
+                'memberDetails' => $memberDetails,
+            ]);
+            $listOptionType = $memberListOptionComponent['listOptionType'];
+
+            if (empty($componentTPLData[$listOptionType] )) {
+                $componentTPLData[$listOptionType]  = '';
+            }
+            $componentTPLData[$listOptionType]  .= $memberListOptionComponent['componentHTML'];
         }
     }
 
