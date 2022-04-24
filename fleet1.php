@@ -8,6 +8,7 @@ include($_EnginePath.'common.php');
 
 include($_EnginePath . 'modules/flightControl/_includes.php');
 
+use UniEngine\Engine\Includes\Helpers\Common\Collections;
 use UniEngine\Engine\Modules\FlightControl;
 
 loggedCheck();
@@ -304,33 +305,24 @@ $_Lang['Insert_Speeds'] = implode('<span class="speedBreak">|</span>', $_Lang['I
 
 // Create Colony List and Shortcuts List (dropdown)
 $OtherPlanets = SortUserPlanets($_User);
+$OtherPlanetsList = mapQueryResults($OtherPlanets, function ($resultEntry) use (&$_Planet) {
+    if (
+        $resultEntry['galaxy'] == $_Planet['galaxy'] &&
+        $resultEntry['system'] == $_Planet['system'] &&
+        $resultEntry['planet'] == $_Planet['planet'] &&
+        $resultEntry['planet_type'] == $_Planet['planet_type']
+    ) {
+        return null;
+    }
+
+    return $resultEntry;
+});
+$OtherPlanetsList = Collections\compact($OtherPlanetsList);
+
 $Shortcuts = FlightControl\Utils\Fetchers\fetchSavedShortcuts([ 'userId' => $_User['id'] ]);
-
-$OtherPlanetsList = [];
-$ShortcutList = [];
-
-if($OtherPlanets->num_rows > 1)
-{
-    while($PlanetData = $OtherPlanets->fetch_assoc())
-    {
-        if($PlanetData['galaxy'] == $_Planet['galaxy'] AND $PlanetData['system'] == $_Planet['system'] AND $PlanetData['planet'] == $_Planet['planet'] AND $PlanetData['planet_type'] == $_Planet['planet_type'])
-        {
-            // Do nothing, we don't want current planet on this list
-        }
-        else
-        {
-            $OtherPlanetsList[] = $PlanetData;
-        }
-    }
-}
-
-if($Shortcuts->num_rows > 0)
-{
-    while($Data = $Shortcuts->fetch_assoc())
-    {
-        $ShortcutList[] = $Data;
-    }
-}
+$ShortcutList = mapQueryResults($Shortcuts, function ($resultEntry) {
+    return $resultEntry;
+});
 
 $_Lang['P_HideFastLinks'] = $Hide;
 $_Lang['P_HideNoFastLinks'] = $Hide;
