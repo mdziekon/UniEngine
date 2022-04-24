@@ -88,6 +88,7 @@ $_Lang['fl_acs_error_shortname']                 = 'Nazwa związku jest za krót
 
 $_Lang['fl_acs_changesSaved']                    = 'Zmiany zostały zapisane!';
 $_Lang['fl_acs_cantkick_joined']                 = 'Nie możesz wyrzucać ze związku graczy, którzy wysłali już swoje floty!';
+$_Lang['fl_acs_cant_move_user']                  = 'Jeden z graczy nie może zmienić swojego statusu zaproszenia!';
 
 $_Lang['fl_acs_leader']                          = 'Założyciel';
 $_Lang['fl_acs_joined']                          = 'Dołączył';

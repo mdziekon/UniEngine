@@ -89,6 +89,7 @@ $_Lang['fl_acs_error_shortname']                 = 'Union\'s name is too short!'
 
 $_Lang['fl_acs_changesSaved']                    = 'Changes have been saved!';
 $_Lang['fl_acs_cantkick_joined']                 = 'You cannot kick out a player who already joined the union with their fleets!';
+$_Lang['fl_acs_cant_move_user']                  = 'One of the players can\' change its invitation status!';
 
 $_Lang['fl_acs_leader']                          = 'Leader';
 $_Lang['fl_acs_joined']                          = 'Joined';
