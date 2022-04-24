@@ -141,7 +141,6 @@ $_Lang['moon_sign']                              = 'K';
 $_Lang['debris_sign']                            = 'PZ';
 $_Lang['planet_sign']                            = 'P';
 
-$_Lang['DropdownList_Moon_sign']                 = 'K';
 $_Lang['fl_dropdown_select']                     = 'Wybierz';
 
 // fleet2.php

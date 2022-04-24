@@ -8,6 +8,7 @@ include($_EnginePath.'common.php');
 
 include($_EnginePath . 'modules/flightControl/_includes.php');
 
+use UniEngine\Engine\Includes\Helpers\Common\Collections;
 use UniEngine\Engine\Modules\FlightControl;
 
 loggedCheck();
@@ -304,78 +305,52 @@ $_Lang['Insert_Speeds'] = implode('<span class="speedBreak">|</span>', $_Lang['I
 
 // Create Colony List and Shortcuts List (dropdown)
 $OtherPlanets = SortUserPlanets($_User);
-$Shortcuts = doquery("SELECT {{table}}.*, IF(`planets`.`id` > 0, `planets`.`name`, '') AS `name`, IF(`planets`.`id` > 0, `planets`.`galaxy`, {{table}}.galaxy) AS `galaxy`, IF(`planets`.`id` > 0, `planets`.`system`, {{table}}.system) AS `system`, IF(`planets`.`id` > 0, `planets`.`planet`, {{table}}.planet) AS `planet`, IF(`planets`.`id` > 0, `planets`.`planet_type`, {{table}}.type) AS `planet_type` FROM {{table}} LEFT JOIN {{prefix}}planets as `planets` ON `planets`.`id` = {{table}}.`id_planet` WHERE {{table}}.`id_owner` = {$_User['id']} ORDER BY {{table}}.id ASC;", 'fleet_shortcuts');
-
-if($OtherPlanets->num_rows > 1)
-{
-    while($PlanetData = $OtherPlanets->fetch_assoc())
-    {
-        if($PlanetData['galaxy'] == $_Planet['galaxy'] AND $PlanetData['system'] == $_Planet['system'] AND $PlanetData['planet'] == $_Planet['planet'] AND $PlanetData['planet_type'] == $_Planet['planet_type'])
-        {
-            // Do nothing, we don't want current planet on this list
-        }
-        else
-        {
-            $OtherPlanetsList[] = array
-            (
-                'txt' => $PlanetData['name'].' '.(($PlanetData['planet_type'] == 3) ? '('.$_Lang['DropdownList_Moon_sign'].') ' : '')."[{$PlanetData['galaxy']}:{$PlanetData['system']}:{$PlanetData['planet']}]",
-                'js' => "{$PlanetData['galaxy']},{$PlanetData['system']},{$PlanetData['planet']},{$PlanetData['planet_type']}"
-            );
-        }
+$OtherPlanetsList = mapQueryResults($OtherPlanets, function ($resultEntry) use (&$_Planet) {
+    if (
+        $resultEntry['galaxy'] == $_Planet['galaxy'] &&
+        $resultEntry['system'] == $_Planet['system'] &&
+        $resultEntry['planet'] == $_Planet['planet'] &&
+        $resultEntry['planet_type'] == $_Planet['planet_type']
+    ) {
+        return null;
     }
-}
 
-if($Shortcuts->num_rows > 0)
-{
-    while($Data = $Shortcuts->fetch_assoc())
-    {
-        $ShortcutList[] = array
-        (
-            'txt' => ((!empty($Data['own_name']) ? $Data['own_name'].' - ' : '')).$Data['name'].(($Data['planet_type'] == 3) ? ' ('.$_Lang['moon_sign'].')' : (($Data['planet_type'] == 2) ? ' ('.$_Lang['debris_sign'].')' : ''))." [{$Data['galaxy']}:{$Data['system']}:{$Data['planet']}]",
-            'js' => "{$Data['galaxy']},{$Data['system']},{$Data['planet']},{$Data['planet_type']}"
-        );
-    }
-}
+    return $resultEntry;
+});
+$OtherPlanetsList = Collections\compact($OtherPlanetsList);
+
+$Shortcuts = FlightControl\Utils\Fetchers\fetchSavedShortcuts([ 'userId' => $_User['id'] ]);
+$ShortcutList = mapQueryResults($Shortcuts, function ($resultEntry) {
+    return $resultEntry;
+});
 
 $_Lang['P_HideFastLinks'] = $Hide;
 $_Lang['P_HideNoFastLinks'] = $Hide;
 
-if(!empty($OtherPlanetsList) OR !empty($ShortcutList))
-{
+if (
+    !empty($OtherPlanetsList) ||
+    !empty($ShortcutList)
+) {
     $_Lang['P_HideFastLinks'] = '';
 
-    if(!empty($OtherPlanetsList))
-    {
-        $_Lang['FastLinks_Planets'] = '<select class="updateInfo fastLink" id="fl_sel1" '.(isset($_Lang['P_DisableCoordSel']) ? $_Lang['P_DisableCoordSel'] : 0).'>';
-        $_Lang['FastLinks_Planets'] .= '<option value="-">- '.$_Lang['fl_dropdown_select'].' -</option>';
-        foreach($OtherPlanetsList as $PlanetData)
-        {
-            $_Lang['FastLinks_Planets'] .= '<option value="'.$PlanetData['js'].'">'.$PlanetData['txt'].'</option>';
-        }
-        $_Lang['FastLinks_Planets'] .= '</select>';
-    }
-    else
-    {
+    $_Lang['FastLinks_Planets'] = FlightControl\Components\TargetsSelector\render([
+        'targets' => $OtherPlanetsList,
+        'selectorId' => 'fl_sel1',
+        'isDisabled' => isset($_Lang['P_DisableCoordSel']),
+    ])['componentHTML'];
+    $_Lang['FastLinks_ShortCuts'] = FlightControl\Components\TargetsSelector\render([
+        'targets' => $ShortcutList,
+        'selectorId' => 'fl_sel2',
+        'isDisabled' => isset($_Lang['P_DisableCoordSel']),
+    ])['componentHTML'];
+
+    if (empty($_Lang['FastLinks_Planets'])) {
         $_Lang['FastLinks_Planets'] = $_Lang['fl_no_planets'];
     }
-
-    if(!empty($ShortcutList))
-    {
-        $_Lang['FastLinks_ShortCuts'] = '<select class="updateInfo fastLink" id="fl_sel2" '.(isset($_Lang['P_DisableCoordSel']) ? $_Lang['P_DisableCoordSel'] : 0).'>';
-        $_Lang['FastLinks_ShortCuts'] .= '<option value="-">- '.$_Lang['fl_dropdown_select'].' -</option>';
-        foreach($ShortcutList as $PlanetData)
-        {
-            $_Lang['FastLinks_ShortCuts'] .= '<option value="'.$PlanetData['js'].'">'.$PlanetData['txt'].'</option>';
-        }
-        $_Lang['FastLinks_ShortCuts'] .= '</select>';
-    }
-    else
-    {
+    if (empty($_Lang['FastLinks_ShortCuts'])) {
         $_Lang['FastLinks_ShortCuts'] = $_Lang['fl_no_shortcuts'];
     }
-}
-else
-{
+} else {
     $_Lang['P_HideNoFastLinks'] = '';
 }
 

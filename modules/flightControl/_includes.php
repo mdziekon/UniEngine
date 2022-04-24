@@ -17,6 +17,7 @@ call_user_func(function () {
     include($includePath . './components/RetreatInfoBox/RetreatInfoBox.component.php');
     include($includePath . './components/SmartFleetBlockadeInfoBox/SmartFleetBlockadeInfoBox.component.php');
     include($includePath . './components/SmartFleetBlockadeInfoBox/SmartFleetBlockadeInfoBox.utils.php');
+    include($includePath . './components/TargetsSelector/TargetsSelector.component.php');
     include($includePath . './components/UnionManagement/utils/createNewUnion.utils.php');
     include($includePath . './components/UnionManagement/utils/getBaseUnionData.utils.php');
     include($includePath . './components/UnionManagement/utils/updateUnionName.utils.php');
@@ -31,6 +32,7 @@ call_user_func(function () {
     include($includePath . './utils/fetchers/fetchActiveSmartFleetsBlockadeEntries.fetcher.php');
     include($includePath . './utils/fetchers/fetchBashValidatorFlightLogEntries.fetcher.php');
     include($includePath . './utils/fetchers/fetchPlanetOwnerDetails.fetcher.php');
+    include($includePath . './utils/fetchers/fetchSavedShortcuts.fetcher.php');
     include($includePath . './utils/fetchers/fetchTargetGalaxyDetails.fetcher.php');
     include($includePath . './utils/fetchers/fetchUnionFleet.fetcher.php');
     include($includePath . './utils/fetchers/fetchUnionInvitablePlayers.fetcher.php');
