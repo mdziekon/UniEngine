@@ -28,7 +28,7 @@ function render ($props) {
     $listElements = array_map_withkeys($targets, function ($target) use (&$_Lang) {
         $targetCustomName = (
             !empty($target['own_name']) ?
-                "{$target['own_name']} -" :
+                "\"{$target['own_name']}\"" :
                 null
         );
         $targetOriginalName = $target['name'];
@@ -42,6 +42,11 @@ function render ($props) {
 
         $elementLabelParts = Collections\compact([
             $targetCustomName,
+            (
+                !empty($targetCustomName) && !empty($targetOriginalName) ?
+                    '-' :
+                    null
+            ),
             $targetOriginalName,
             $targetTypeMarker,
             $targetPos
