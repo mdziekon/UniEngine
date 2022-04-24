@@ -100,25 +100,28 @@ function _handleInput($props) {
         });
         $currentUnionJoinedMembers = array_keys($currentUnionJoinedMembers);
 
-        // TODO: refactor, maybe move into an util?
-        if (!empty($input['acs_name'])) {
-            $NewName = trim($input['acs_name']);
-            $NewName = preg_replace('#[^a-zA-Z'.REGEXP_POLISHSIGNS.'0-9\_\-\.\ \:]#si', '', $NewName);
-            if ($NewName != $GetACSRow['name']) {
-                if (strlen($NewName) > 3) {
-                    doquery("UPDATE {{table}} SET `name` = '{$NewName}' WHERE `id` = {$GetACSRow['id']};", 'acs');
-                    $GetACSRow['name'] = $NewName;
+        $updateNameResult = UnionManagement\Utils\updateUnionName([
+            'input' => $input,
+            'unionData' => $GetACSRow,
+        ]);
 
-                    $ACSMsgCol = 'lime';
-                    $ACSMsg = $_Lang['fl_acs_changesSaved'];
-                } else {
-                    $ACSMsgCol = 'red';
-                    $ACSMsg = $_Lang['fl_acs_error_shortname'];
-                }
+        if ($updateNameResult !== null) {
+            if ($updateNameResult['isSuccess']) {
+                $GetACSRow['name'] = $updateNameResult['payload']['unionName'];
 
                 $result['payload']['message'] = [
-                    'content' => $ACSMsg,
-                    'color' => $ACSMsgCol,
+                    'content' => $_Lang['fl_acs_changesSaved'],
+                    'color' => 'lime',
+                ];
+            }
+
+            if (
+                !$updateNameResult['isSuccess'] &&
+                $updateNameResult['error']['code'] === 'NAME_TOO_SHORT'
+            ) {
+                $result['payload']['message'] = [
+                    'content' => $_Lang['fl_acs_error_shortname'],
+                    'color' => 'red',
                 ];
             }
         }
@@ -175,17 +178,19 @@ function _handleInput($props) {
             }
 
             if (!$newUnionMembersStatesResult['isSuccess']) {
+                $updateErrorMessage = null;
+
                 switch ($newUnionMembersStatesResult['error']['code']) {
                     case 'KICKING_JOINED_MEMBER':
-                        $ACSMsg = $_Lang['fl_acs_cantkick_joined'];
+                        $updateErrorMessage = $_Lang['fl_acs_cantkick_joined'];
                         break;
                     case 'MOVING_UNMOVABLE_USER':
-                        $ACSMsg = $_Lang['fl_acs_cant_move_user'];
+                        $updateErrorMessage = $_Lang['fl_acs_cant_move_user'];
                         break;
                 }
 
                 $result['payload']['message'] = [
-                    'content' => $ACSMsg,
+                    'content' => $updateErrorMessage,
                     'color' => 'red',
                 ];
             }

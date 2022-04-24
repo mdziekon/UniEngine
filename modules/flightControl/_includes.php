@@ -19,6 +19,7 @@ call_user_func(function () {
     include($includePath . './components/SmartFleetBlockadeInfoBox/SmartFleetBlockadeInfoBox.utils.php');
     include($includePath . './components/UnionManagement/utils/createNewUnion.utils.php');
     include($includePath . './components/UnionManagement/utils/getBaseUnionData.utils.php');
+    include($includePath . './components/UnionManagement/utils/updateUnionName.utils.php');
     include($includePath . './components/UnionManagement/UnionManagement.component.php');
     include($includePath . './components/UnionMembersListOption/UnionMembersListOption.component.php');
 
