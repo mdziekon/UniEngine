@@ -34,8 +34,8 @@ function render ($props) {
         $targetOriginalName = $target['name'];
         $targetTypeLabel = [
             '1' => $_Lang['planet_sign'],
-            '2' => $_Lang['moon_sign'],
-            '3' => $_Lang['debris_sign'],
+            '2' => $_Lang['debris_sign'],
+            '3' => $_Lang['moon_sign'],
         ][$target['planet_type']];
         $targetTypeMarker = "({$targetTypeLabel})";
         $targetPos = "[{$target['galaxy']}:{$target['system']}:{$target['planet']}]";
