@@ -275,29 +275,17 @@ if(in_array(1, $AvailableMissions) && $targetPlanetDetails['id'] > 0)
     }
 }
 
-$allowUseQuantumGate = false;
-$allowGateJump = false;
-if(!empty($AvailableMissions))
-{
-    if($_Planet['quantumgate'] == 1)
-    {
-        if(($targetInfo['isPlanetOwnedByFleetOwner'] OR $targetInfo['isPlanetOwnerFriendly'] OR $targetInfo['isPlanetOwnerFriendlyMerchant']) AND $targetPlanetDetails['quantumgate'] == 1 AND (in_array(3, $AvailableMissions) OR in_array(4, $AvailableMissions) OR in_array(5, $AvailableMissions)))
-        {
-            $allowUseQuantumGate = true;
-            $allowGateJump = true;
-        }
-        else
-        {
-            if($_Planet['galaxy'] == $Target['galaxy'])
-            {
-                if(($_Planet['quantumgate_lastuse'] + ($QuantumGateInterval * 3600)) <= $Now)
-                {
-                    $allowUseQuantumGate = true;
-                }
-            }
-        }
-    }
-}
+$quantumGateStateDetails = FlightControl\Utils\Helpers\getQuantumGateStateDetails([
+    'availableMissions' => $AvailableMissions,
+    'originPlanet' => $_Planet,
+    'targetCoords' => $Target,
+    'targetInfo' => $targetInfo,
+    'targetPlanetDetails' => $targetPlanetDetails,
+    'currentTimestamp' => $Now,
+]);
+
+$allowUseQuantumGate = $quantumGateStateDetails['canUseQuantumGate'];
+$allowGateJump = $quantumGateStateDetails['canUseQuantumGateJump'];
 
 $PreSelectedMission = intval($_POST['target_mission']);
 $SpeedFactor = getUniFleetsSpeedFactor();
@@ -532,8 +520,8 @@ if (!empty($AvailableMissions)) {
 
 $quantumGateFuelJSObject = FlightControl\Utils\Factories\createQuantumGateFuelJSObject([
     'availableMissions' => $AvailableMissions,
-    'canUseQuantumGate' => $allowUseQuantumGate,
-    'canUseQuantumGateJump' => $allowGateJump,
+    'canUseQuantumGate' => $quantumGateStateDetails['canUseQuantumGate'],
+    'canUseQuantumGateJump' => $quantumGateStateDetails['canUseQuantumGateJump'],
 ]);
 $_Lang['QuantumGateJSArray'] = json_encode($quantumGateFuelJSObject);
 

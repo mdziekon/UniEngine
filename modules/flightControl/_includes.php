@@ -46,6 +46,7 @@ call_user_func(function () {
     include($includePath . './utils/helpers/getFleetsInFlightCounters.helper.php');
     include($includePath . './utils/helpers/getFleetUnionJoinData.helper.php');
     include($includePath . './utils/helpers/getFlightParams.helper.php');
+    include($includePath . './utils/helpers/getQuantumGateStateDetails.helper.php');
     include($includePath . './utils/helpers/getTargetInfo.helper.php');
     include($includePath . './utils/helpers/getUserExpeditionSlotsCount.helper.php');
     include($includePath . './utils/helpers/getUserFleetSlotsCount.helper.php');
