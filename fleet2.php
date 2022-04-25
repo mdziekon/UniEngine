@@ -7,6 +7,7 @@ include($_EnginePath.'common.php');
 
 include($_EnginePath . 'modules/flightControl/_includes.php');
 
+use UniEngine\Engine\Modules\Flights;
 use UniEngine\Engine\Modules\FlightControl;
 
 loggedCheck();
@@ -515,10 +516,10 @@ if (!empty($AvailableMissions)) {
 
     $_Lang['P_HideNoMissionInfo'] = $Hide;
 
-    if (!in_array(5, $AvailableMissions)) {
+    if (!in_array(Flights\Enums\FleetMission::Hold, $AvailableMissions)) {
         $_Lang['P_HideHoldingTimers'] = $Hide;
     }
-    if (in_array(2, $AvailableMissions)) {
+    if (in_array(Flights\Enums\FleetMission::UnitedAttack, $AvailableMissions)) {
         $_Lang['CreateACSList'] = '';
 
         foreach ($ACSList as $ID => $Name) {
