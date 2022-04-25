@@ -7,6 +7,7 @@ include($_EnginePath.'common.php');
 
 include($_EnginePath . 'modules/flightControl/_includes.php');
 
+use UniEngine\Engine\Modules\Flights;
 use UniEngine\Engine\Modules\FlightControl;
 
 loggedCheck();
@@ -274,29 +275,17 @@ if(in_array(1, $AvailableMissions) && $targetPlanetDetails['id'] > 0)
     }
 }
 
-$allowUseQuantumGate = false;
-$allowGateJump = false;
-if(!empty($AvailableMissions))
-{
-    if($_Planet['quantumgate'] == 1)
-    {
-        if(($targetInfo['isPlanetOwnedByFleetOwner'] OR $targetInfo['isPlanetOwnerFriendly'] OR $targetInfo['isPlanetOwnerFriendlyMerchant']) AND $targetPlanetDetails['quantumgate'] == 1 AND (in_array(3, $AvailableMissions) OR in_array(4, $AvailableMissions) OR in_array(5, $AvailableMissions)))
-        {
-            $allowUseQuantumGate = true;
-            $allowGateJump = true;
-        }
-        else
-        {
-            if($_Planet['galaxy'] == $Target['galaxy'])
-            {
-                if(($_Planet['quantumgate_lastuse'] + ($QuantumGateInterval * 3600)) <= $Now)
-                {
-                    $allowUseQuantumGate = true;
-                }
-            }
-        }
-    }
-}
+$quantumGateStateDetails = FlightControl\Utils\Helpers\getQuantumGateStateDetails([
+    'availableMissions' => $AvailableMissions,
+    'originPlanet' => $_Planet,
+    'targetCoords' => $Target,
+    'targetInfo' => $targetInfo,
+    'targetPlanetDetails' => $targetPlanetDetails,
+    'currentTimestamp' => $Now,
+]);
+
+$allowUseQuantumGate = $quantumGateStateDetails['canUseQuantumGate'];
+$allowGateJump = $quantumGateStateDetails['canUseQuantumGateJump'];
 
 $PreSelectedMission = intval($_POST['target_mission']);
 $SpeedFactor = getUniFleetsSpeedFactor();
@@ -507,50 +496,34 @@ else
     $_Lang['P_HideQuantumGate'] = $Hide;
 }
 
-if(!empty($AvailableMissions))
-{
-    $MissionRowTPL = gettemplate('fleet2_missionrow');
-    foreach($AvailableMissions as $MID)
-    {
-        $ThisMission = [];
-        $ThisMission['MID'] = $MID;
-        if($PreSelectedMission == $MID)
-        {
-            $ThisMission['CheckThisMission'] = ' checked';
-        }
-        $ThisMission['ThisMissionName'] = $_Lang['type_mission'][$MID];
+if (!empty($AvailableMissions)) {
+    $_Lang['MissionSelectors'] = FlightControl\Components\AvailableMissionsList\render([
+        'availableMissions' => $AvailableMissions,
+        'selectedMission' => $PreSelectedMission,
+    ])['componentHTML'];
 
-        $_Lang['MissionSelectors'] .= parsetemplate($MissionRowTPL, $ThisMission);
-        if($allowUseQuantumGate)
-        {
-            if($MID == 1 OR $MID == 2 OR $MID == 6 OR $MID == 9)
-            {
-                $SetValue = '0';
-            }
-            else
-            {
-                if($allowGateJump AND ($MID == 3 OR $MID == 4 OR $MID == 5))
-                {
-                    $SetValue = '2';
-                }
-                else
-                {
-                    $SetValue = '1';
-                }
-            }
-        }
-        else
-        {
-            $SetValue = '0';
-        }
-        $_Lang['QuantumGateJSArray'][] = $MID.': '.$SetValue;
-    }
-    if(!empty($_Lang['QuantumGateJSArray']))
-    {
-        $_Lang['QuantumGateJSArray'] = 'var QuantumGateDeuteriumUse = {'.implode(', ', $_Lang['QuantumGateJSArray']).'}';
-    }
     $_Lang['P_HideNoMissionInfo'] = $Hide;
+
+    if (!in_array(Flights\Enums\FleetMission::Hold, $AvailableMissions)) {
+        $_Lang['P_HideHoldingTimers'] = $Hide;
+    }
+    if (in_array(Flights\Enums\FleetMission::UnitedAttack, $AvailableMissions)) {
+        $_Lang['CreateACSList'] = '';
+
+        foreach ($ACSList as $ID => $Name) {
+            $_Lang['CreateACSList'] .= '<option value="'.$ID.'" '.($GetACSData == $ID ? 'selected' : '').'>'.$Name.'</option>';
+        }
+    } else {
+        $_Lang['P_HideACSJoinList'] = $Hide;
+    }
 }
+
+$quantumGateFuelJSObject = FlightControl\Utils\Factories\createQuantumGateFuelJSObject([
+    'availableMissions' => $AvailableMissions,
+    'canUseQuantumGate' => $quantumGateStateDetails['canUseQuantumGate'],
+    'canUseQuantumGateJump' => $quantumGateStateDetails['canUseQuantumGateJump'],
+]);
+$_Lang['QuantumGateJSArray'] = json_encode($quantumGateFuelJSObject);
 
 if(isset($EnableTestAccWarning))
 {
@@ -560,22 +533,6 @@ if(isset($EnableTestAccWarning))
 if($Target['planet'] != (MAX_PLANET_IN_SYSTEM + 1))
 {
     $_Lang['P_HideExpeditionTimers'] = $Hide;
-}
-if(!in_array(5, $AvailableMissions))
-{
-    $_Lang['P_HideHoldingTimers'] = $Hide;
-}
-if(in_array(2, $AvailableMissions))
-{
-    $_Lang['CreateACSList'] = '';
-    foreach($ACSList as $ID => $Name)
-    {
-        $_Lang['CreateACSList'] .= '<option value="'.$ID.'" '.($GetACSData == $ID ? 'selected' : '').'>'.$Name.'</option>';
-    }
-}
-else
-{
-    $_Lang['P_HideACSJoinList'] = $Hide;
 }
 if ($targetInfo['isPlanetOwnerNonAggressiveAllianceMember'])
 {

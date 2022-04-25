@@ -6,6 +6,7 @@ call_user_func(function () {
 
     $includePath = $_EnginePath . 'modules/flightControl/';
 
+    include($includePath . './components/AvailableMissionsList/AvailableMissionsList.component.php');
     include($includePath . './components/FlightsList/FlightsList.component.php');
     include($includePath . './components/FlightsList/utils/buildFriendlyAcsListElement.utils.php');
     include($includePath . './components/FlightsList/utils/buildOwnListElement.utils.php');
@@ -28,6 +29,7 @@ call_user_func(function () {
 
     include($includePath . './utils/factories/createAlertFiltersSearchParams.factory.php');
     include($includePath . './utils/factories/createFleetDevLogEntry.factory.php');
+    include($includePath . './utils/factories/createQuantumGateFuelJSObject.factory.php');
     include($includePath . './utils/factories/createUnionInvitationMessage.factory.php');
     include($includePath . './utils/fetchers/fetchActiveSmartFleetsBlockadeEntries.fetcher.php');
     include($includePath . './utils/fetchers/fetchBashValidatorFlightLogEntries.fetcher.php');
@@ -44,6 +46,7 @@ call_user_func(function () {
     include($includePath . './utils/helpers/getFleetsInFlightCounters.helper.php');
     include($includePath . './utils/helpers/getFleetUnionJoinData.helper.php');
     include($includePath . './utils/helpers/getFlightParams.helper.php');
+    include($includePath . './utils/helpers/getQuantumGateStateDetails.helper.php');
     include($includePath . './utils/helpers/getTargetInfo.helper.php');
     include($includePath . './utils/helpers/getUserExpeditionSlotsCount.helper.php');
     include($includePath . './utils/helpers/getUserFleetSlotsCount.helper.php');
