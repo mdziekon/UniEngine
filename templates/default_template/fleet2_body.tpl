@@ -9,7 +9,7 @@ var JSLang = {'fl2_FlyTimeInfo': '{fl2_FlyTimeInfo}', 'fl_coordplanet': '{fl_coo
 var SetResources = {SelectResources};
 var SelectQuantumGate = {SelectQuantumGate};
 var AllyPact_AttackWarn = {Insert_AllyPact_AttackWarn};
-{QuantumGateJSArray}
+var QuantumGateDeuteriumUse = {QuantumGateJSArray};
 {CreateTestACCAlert}
 </script>
 <script src="dist/js/_libCommon.cachebuster-1649555016585.min.js"></script>

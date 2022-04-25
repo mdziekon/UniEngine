@@ -29,6 +29,7 @@ call_user_func(function () {
 
     include($includePath . './utils/factories/createAlertFiltersSearchParams.factory.php');
     include($includePath . './utils/factories/createFleetDevLogEntry.factory.php');
+    include($includePath . './utils/factories/createQuantumGateFuelJSObject.factory.php');
     include($includePath . './utils/factories/createUnionInvitationMessage.factory.php');
     include($includePath . './utils/fetchers/fetchActiveSmartFleetsBlockadeEntries.fetcher.php');
     include($includePath . './utils/fetchers/fetchBashValidatorFlightLogEntries.fetcher.php');

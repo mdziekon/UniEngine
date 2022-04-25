@@ -530,34 +530,12 @@ if (!empty($AvailableMissions)) {
     }
 }
 
-if (!empty($AvailableMissions)) {
-    foreach ($AvailableMissions as $MID) {
-        if($allowUseQuantumGate) {
-            if($MID == 1 OR $MID == 2 OR $MID == 6 OR $MID == 9)
-            {
-                $SetValue = '0';
-            }
-            else
-            {
-                if($allowGateJump AND ($MID == 3 OR $MID == 4 OR $MID == 5))
-                {
-                    $SetValue = '2';
-                }
-                else
-                {
-                    $SetValue = '1';
-                }
-            }
-        } else {
-            $SetValue = '0';
-        }
-        $_Lang['QuantumGateJSArray'][] = $MID.': '.$SetValue;
-    }
-    if(!empty($_Lang['QuantumGateJSArray']))
-    {
-        $_Lang['QuantumGateJSArray'] = 'var QuantumGateDeuteriumUse = {'.implode(', ', $_Lang['QuantumGateJSArray']).'}';
-    }
-}
+$quantumGateFuelJSObject = FlightControl\Utils\Factories\createQuantumGateFuelJSObject([
+    'availableMissions' => $AvailableMissions,
+    'canUseQuantumGate' => $allowUseQuantumGate,
+    'canUseQuantumGateJump' => $allowGateJump,
+]);
+$_Lang['QuantumGateJSArray'] = json_encode($quantumGateFuelJSObject);
 
 if(isset($EnableTestAccWarning))
 {
