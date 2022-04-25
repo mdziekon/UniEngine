@@ -6,6 +6,7 @@ call_user_func(function () {
 
     $includePath = $_EnginePath . 'modules/flightControl/';
 
+    include($includePath . './components/AvailableMissionsList/AvailableMissionsList.component.php');
     include($includePath . './components/FlightsList/FlightsList.component.php');
     include($includePath . './components/FlightsList/utils/buildFriendlyAcsListElement.utils.php');
     include($includePath . './components/FlightsList/utils/buildOwnListElement.utils.php');

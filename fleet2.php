@@ -507,22 +507,31 @@ else
     $_Lang['P_HideQuantumGate'] = $Hide;
 }
 
-if(!empty($AvailableMissions))
-{
-    $MissionRowTPL = gettemplate('fleet2_missionrow');
-    foreach($AvailableMissions as $MID)
-    {
-        $ThisMission = [];
-        $ThisMission['MID'] = $MID;
-        if($PreSelectedMission == $MID)
-        {
-            $ThisMission['CheckThisMission'] = ' checked';
-        }
-        $ThisMission['ThisMissionName'] = $_Lang['type_mission'][$MID];
+if (!empty($AvailableMissions)) {
+    $_Lang['MissionSelectors'] = FlightControl\Components\AvailableMissionsList\render([
+        'availableMissions' => $AvailableMissions,
+        'selectedMission' => $PreSelectedMission,
+    ])['componentHTML'];
 
-        $_Lang['MissionSelectors'] .= parsetemplate($MissionRowTPL, $ThisMission);
-        if($allowUseQuantumGate)
-        {
+    $_Lang['P_HideNoMissionInfo'] = $Hide;
+
+    if (!in_array(5, $AvailableMissions)) {
+        $_Lang['P_HideHoldingTimers'] = $Hide;
+    }
+    if (in_array(2, $AvailableMissions)) {
+        $_Lang['CreateACSList'] = '';
+
+        foreach ($ACSList as $ID => $Name) {
+            $_Lang['CreateACSList'] .= '<option value="'.$ID.'" '.($GetACSData == $ID ? 'selected' : '').'>'.$Name.'</option>';
+        }
+    } else {
+        $_Lang['P_HideACSJoinList'] = $Hide;
+    }
+}
+
+if (!empty($AvailableMissions)) {
+    foreach ($AvailableMissions as $MID) {
+        if($allowUseQuantumGate) {
             if($MID == 1 OR $MID == 2 OR $MID == 6 OR $MID == 9)
             {
                 $SetValue = '0';
@@ -538,9 +547,7 @@ if(!empty($AvailableMissions))
                     $SetValue = '1';
                 }
             }
-        }
-        else
-        {
+        } else {
             $SetValue = '0';
         }
         $_Lang['QuantumGateJSArray'][] = $MID.': '.$SetValue;
@@ -549,7 +556,6 @@ if(!empty($AvailableMissions))
     {
         $_Lang['QuantumGateJSArray'] = 'var QuantumGateDeuteriumUse = {'.implode(', ', $_Lang['QuantumGateJSArray']).'}';
     }
-    $_Lang['P_HideNoMissionInfo'] = $Hide;
 }
 
 if(isset($EnableTestAccWarning))
@@ -560,22 +566,6 @@ if(isset($EnableTestAccWarning))
 if($Target['planet'] != (MAX_PLANET_IN_SYSTEM + 1))
 {
     $_Lang['P_HideExpeditionTimers'] = $Hide;
-}
-if(!in_array(5, $AvailableMissions))
-{
-    $_Lang['P_HideHoldingTimers'] = $Hide;
-}
-if(in_array(2, $AvailableMissions))
-{
-    $_Lang['CreateACSList'] = '';
-    foreach($ACSList as $ID => $Name)
-    {
-        $_Lang['CreateACSList'] .= '<option value="'.$ID.'" '.($GetACSData == $ID ? 'selected' : '').'>'.$Name.'</option>';
-    }
-}
-else
-{
-    $_Lang['P_HideACSJoinList'] = $Hide;
 }
 if ($targetInfo['isPlanetOwnerNonAggressiveAllianceMember'])
 {
