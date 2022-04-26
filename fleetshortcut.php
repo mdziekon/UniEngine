@@ -5,6 +5,10 @@ define('INSIDE', true);
 $_EnginePath = './';
 include($_EnginePath.'common.php');
 
+include($_EnginePath . 'modules/flightControl/_includes.php');
+
+use UniEngine\Engine\Modules\FlightControl;
+
 loggedCheck();
 
 includeLang('fleetshortcut');
@@ -13,37 +17,23 @@ $_Lang['shortcuts_list'] = '';
 $Mode = (isset($_GET['mode']) ? $_GET['mode'] : null);
 $ID = (isset($_GET['id']) ? intval($_GET['id']) : 0);
 
-if(empty($Mode))
-{
-    $Query_GetShortcuts = '';
-    $Query_GetShortcuts .= "SELECT {{table}}.*, ";
-    $Query_GetShortcuts .= "IF(`planets`.`id` > 0, `planets`.`name`, '') AS `name`, ";
-    $Query_GetShortcuts .= "IF(`planets`.`id` > 0, `planets`.`galaxy`, {{table}}.galaxy) AS `galaxy`, ";
-    $Query_GetShortcuts .= "IF(`planets`.`id` > 0, `planets`.`system`, {{table}}.system) AS `system`, ";
-    $Query_GetShortcuts .= "IF(`planets`.`id` > 0, `planets`.`planet`, {{table}}.planet) AS `planet`, ";
-    $Query_GetShortcuts .= "IF(`planets`.`id` > 0, `planets`.`planet_type`, {{table}}.type) AS `planet_type` ";
-    $Query_GetShortcuts .= "FROM {{table}} ";
-    $Query_GetShortcuts .= "LEFT JOIN {{prefix}}planets as `planets` ON `planets`.`id` = {{table}}.`id_planet` ";
-    $Query_GetShortcuts .= "WHERE {{table}}.`id_owner` = {$_User['id']} ORDER BY {{table}}.id ASC;";
+if (empty($Mode)) {
+    $fetchShortcutsResult = FlightControl\Utils\Fetchers\fetchSavedShortcuts([
+        'userId' => $_User['id'],
+    ]);
 
-    $Result_GetShortcuts = doquery($Query_GetShortcuts, 'fleet_shortcuts');
+    $shortcutsList = mapQueryResults($fetchShortcutsResult, function ($shortcutEntry) use (&$_Lang) {
+        return '<option value="'.$shortcutEntry['id'].'">'.((!empty($shortcutEntry['own_name']) ? $shortcutEntry['own_name'].' - ' : '')).$shortcutEntry['name'].(($shortcutEntry['planet_type'] == 3) ? ' ('.$_Lang['moon_sign'].')' : (($shortcutEntry['planet_type'] == 2) ? ' ('.$_Lang['debris_sign'].')' : ' ('.$_Lang['planet_sign'].')')).' ['.$shortcutEntry['galaxy'].':'.$shortcutEntry['system'].':'.$shortcutEntry['planet'].']</option>';
+    });
 
-    if($Result_GetShortcuts->num_rows > 0)
-    {
-        while($Data = $Result_GetShortcuts->fetch_assoc())
-        {
-            $_Lang['shortcuts_list'] .= '<option value="'.$Data['id'].'">'.((!empty($Data['own_name']) ? $Data['own_name'].' - ' : '')).$Data['name'].(($Data['planet_type'] == 3) ? ' ('.$_Lang['moon_sign'].')' : (($Data['planet_type'] == 2) ? ' ('.$_Lang['debris_sign'].')' : ' ('.$_Lang['planet_sign'].')')).' ['.$Data['galaxy'].':'.$Data['system'].':'.$Data['planet'].']</option>';
-        }
-    }
-    else
-    {
-        $_Lang['shortcuts_list'] = '<option>'.$_Lang['no_shortcuts'].'</option>';
-    }
+    $_Lang['shortcuts_list'] = (
+        !empty($shortcutsList) ?
+            implode('', $shortcutsList) :
+            '<option>'.$_Lang['no_shortcuts'].'</option>'
+    );
 
     $page = parsetemplate(gettemplate('fleetshortcut_overview'), $_Lang);
-}
-else
-{
+} else {
     switch($Mode)
     {
         case 'add':
