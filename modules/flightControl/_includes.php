@@ -18,6 +18,7 @@ call_user_func(function () {
     include($includePath . './components/RetreatInfoBox/RetreatInfoBox.component.php');
     include($includePath . './components/SmartFleetBlockadeInfoBox/SmartFleetBlockadeInfoBox.component.php');
     include($includePath . './components/SmartFleetBlockadeInfoBox/SmartFleetBlockadeInfoBox.utils.php');
+    include($includePath . './components/TargetOptionLabel/TargetOptionLabel.component.php');
     include($includePath . './components/TargetsSelector/TargetsSelector.component.php');
     include($includePath . './components/UnionManagement/utils/createNewUnion.utils.php');
     include($includePath . './components/UnionManagement/utils/getBaseUnionData.utils.php');

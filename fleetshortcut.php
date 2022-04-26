@@ -7,13 +7,11 @@ include($_EnginePath.'common.php');
 
 include($_EnginePath . 'modules/flightControl/_includes.php');
 
-use UniEngine\Engine\Includes\Helpers\Common\Collections;
 use UniEngine\Engine\Modules\FlightControl;
 
 loggedCheck();
 
 includeLang('fleetshortcut');
-$_Lang['shortcuts_list'] = '';
 
 $Mode = (isset($_GET['mode']) ? $_GET['mode'] : null);
 $ID = (isset($_GET['id']) ? intval($_GET['id']) : 0);
@@ -23,35 +21,13 @@ if (empty($Mode)) {
         'userId' => $_User['id'],
     ]);
 
-    $shortcutsList = mapQueryResults($fetchShortcutsResult, function ($shortcutEntry) use (&$_Lang) {
-        $targetCustomName = (
-            !empty($shortcutEntry['own_name']) ?
-                "\"{$shortcutEntry['own_name']}\"" :
-                null
-        );
-        $targetOriginalName = $shortcutEntry['name'];
-        $targetTypeLabel = [
-            '1' => $_Lang['planet_sign'],
-            '2' => $_Lang['debris_sign'],
-            '3' => $_Lang['moon_sign'],
-        ][$shortcutEntry['planet_type']];
-        $targetTypeMarker = "({$targetTypeLabel})";
-        $targetPos = "[{$shortcutEntry['galaxy']}:{$shortcutEntry['system']}:{$shortcutEntry['planet']}]";
+    $shortcutsList = mapQueryResults($fetchShortcutsResult, function ($shortcutEntry) {
+        $shortcutId = $shortcutEntry['id'];
+        $shortcutLabel = FlightControl\Components\TargetOptionLabel\render([
+            'target' => $shortcutEntry,
+        ])['componentHTML'];
 
-        $shortcutLabelParts = Collections\compact([
-            $targetCustomName,
-            (
-                !empty($targetCustomName) && !empty($targetOriginalName) ?
-                    '-' :
-                    null
-            ),
-            $targetOriginalName,
-            $targetTypeMarker,
-            $targetPos
-        ]);
-        $shortcutLabel = implode(' ', $shortcutLabelParts);
-
-        return "<option value=\"{$shortcutEntry['id']}\">{$shortcutLabel}</option>";
+        return "<option value=\"{$shortcutId}\">{$shortcutLabel}</option>";
     });
 
     $_Lang['shortcuts_list'] = (
