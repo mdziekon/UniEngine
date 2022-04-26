@@ -7,6 +7,7 @@ include($_EnginePath.'common.php');
 
 include($_EnginePath . 'modules/flightControl/_includes.php');
 
+use UniEngine\Engine\Includes\Helpers\Common\Collections;
 use UniEngine\Engine\Modules\FlightControl;
 
 loggedCheck();
@@ -23,7 +24,34 @@ if (empty($Mode)) {
     ]);
 
     $shortcutsList = mapQueryResults($fetchShortcutsResult, function ($shortcutEntry) use (&$_Lang) {
-        return '<option value="'.$shortcutEntry['id'].'">'.((!empty($shortcutEntry['own_name']) ? $shortcutEntry['own_name'].' - ' : '')).$shortcutEntry['name'].(($shortcutEntry['planet_type'] == 3) ? ' ('.$_Lang['moon_sign'].')' : (($shortcutEntry['planet_type'] == 2) ? ' ('.$_Lang['debris_sign'].')' : ' ('.$_Lang['planet_sign'].')')).' ['.$shortcutEntry['galaxy'].':'.$shortcutEntry['system'].':'.$shortcutEntry['planet'].']</option>';
+        $targetCustomName = (
+            !empty($shortcutEntry['own_name']) ?
+                "\"{$shortcutEntry['own_name']}\"" :
+                null
+        );
+        $targetOriginalName = $shortcutEntry['name'];
+        $targetTypeLabel = [
+            '1' => $_Lang['planet_sign'],
+            '2' => $_Lang['debris_sign'],
+            '3' => $_Lang['moon_sign'],
+        ][$shortcutEntry['planet_type']];
+        $targetTypeMarker = "({$targetTypeLabel})";
+        $targetPos = "[{$shortcutEntry['galaxy']}:{$shortcutEntry['system']}:{$shortcutEntry['planet']}]";
+
+        $shortcutLabelParts = Collections\compact([
+            $targetCustomName,
+            (
+                !empty($targetCustomName) && !empty($targetOriginalName) ?
+                    '-' :
+                    null
+            ),
+            $targetOriginalName,
+            $targetTypeMarker,
+            $targetPos
+        ]);
+        $shortcutLabel = implode(' ', $shortcutLabelParts);
+
+        return "<option value=\"{$shortcutEntry['id']}\">{$shortcutLabel}</option>";
     });
 
     $_Lang['shortcuts_list'] = (
