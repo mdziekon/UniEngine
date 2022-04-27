@@ -123,36 +123,10 @@ if($Target['galaxy'] == $_Planet['galaxy'] AND $Target['system'] == $_Planet['sy
 {
     messageRed($_Lang['fl2_cantsendsamecoords'], $ErrorTitle);
 }
-foreach($Target as $Type => $Value)
-{
-    if($Value < 1)
-    {
-        $TargetError = true;
-        break;
-    }
-    switch($Type)
-    {
-        case 'galaxy':
-            $CheckValue = MAX_GALAXY_IN_WORLD;
-            break;
-        case 'system':
-            $CheckValue = MAX_SYSTEM_IN_GALAXY;
-            break;
-        case 'planet':
-            $CheckValue = MAX_PLANET_IN_SYSTEM + 1;
-            break;
-        case 'type':
-            $CheckValue = 3;
-            break;
-    }
-    if($Value > $CheckValue)
-    {
-        $TargetError = true;
-        break;
-    }
-}
-if(isset($TargetError))
-{
+
+$isValidCoordinate = Flights\Utils\Checks\isValidCoordinate([ 'coordinate' => $Target ]);
+
+if (!$isValidCoordinate['isValid']) {
     messageRed($_Lang['fl2_targeterror'], $ErrorTitle);
 }
 
