@@ -19,6 +19,7 @@ call_user_func(function () {
     include($includePath . './utils/calculations/calculatePillageFactor.utils.php');
     include($includePath . './utils/calculations/calculatePillageStorage.utils.php');
     include($includePath . './utils/calculations/calculateResourcesLoss.utils.php');
+    include($includePath . './utils/calculations/calculateUnionFlightTimeDiff.utils.php');
     include($includePath . './utils/calculations/calculateUnitsRebuild.utils.php');
     include($includePath . './utils/checks/isValidCoordinate.checks.php');
     include($includePath . './utils/factories/createCombatMessages.utils.php');

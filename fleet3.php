@@ -683,39 +683,32 @@ $Fleet['SetCalcTime'] = $Now + $DurationTarget;
 $Fleet['SetStayTime'] = ($Fleet['StayTime'] > 0 ? $Fleet['SetCalcTime'] + $Fleet['StayTime'] : '0');
 $Fleet['SetBackTime'] = $Fleet['SetCalcTime'] + $Fleet['StayTime'] + $DurationBack;
 
-if(isset($UpdateACS))
-{
-    $NewEndTime = $Fleet['SetCalcTime'];
-    $OldFlightTime = $CheckACS['start_time_org'] - $CheckACS['mf_start_time'];
-    $FlightDifference = ($NewEndTime - $CheckACS['mf_start_time']) - $OldFlightTime;
+$unionFlightsAnySlowdown = 0;
 
-    if($OldFlightTime == 0)
-    {
-        $OldFlightTime = 1;
-    }
-    if($FlightDifference == 0)
-    {
-        $FlightDifference = 1;
-    }
-    if(($FlightDifference/$OldFlightTime) <= 0.3)
-    {
-        if($NewEndTime < $CheckACS['start_time'])
-        {
-            $Difference = $CheckACS['start_time'] - $NewEndTime;
-            $Fleet['SetCalcTime'] += $Difference;
-            $Fleet['SetBackTime'] += $Difference;
-        }
-        elseif($NewEndTime > $CheckACS['start_time'])
-        {
-            $Difference = $NewEndTime - $CheckACS['start_time'];
-            $UpdateACSRow[] = "`start_time` = `start_time` + {$Difference}";
-            $UpdateACSFleets[] = "`fleet_start_time` = `fleet_start_time` + {$Difference}";
-            $UpdateACSFleets[] = "`fleet_end_time` = `fleet_end_time` + {$Difference}";
-        }
-    }
-    else
-    {
+if (isset($UpdateACS)) {
+    $unionFlightTimeDiff = Flights\Utils\Calculations\calculateUnionFlightTimeDiff([
+        'fleetAtDestinationTimestamp' => $Fleet['SetCalcTime'],
+        'union' => $CheckACS,
+    ]);
+
+    if (!$unionFlightTimeDiff['isSuccess']) {
         messageRed($_Lang['fl3_ACSFleet2Slow'], $ErrorTitle);
+    }
+
+    if (isset($unionFlightTimeDiff['payload']['newFleetSlowDownBy'])) {
+        $slowdown = $unionFlightTimeDiff['payload']['newFleetSlowDownBy'];
+        $unionFlightsAnySlowdown = $slowdown;
+
+        $Fleet['SetCalcTime'] += $slowdown;
+        $Fleet['SetBackTime'] += $slowdown;
+    }
+    if (isset($unionFlightTimeDiff['payload']['unionSlowDownBy'])) {
+        $slowdown = $unionFlightTimeDiff['payload']['unionSlowDownBy'];
+        $unionFlightsAnySlowdown = $slowdown;
+
+        $UpdateACSRow[] = "`start_time` = `start_time` + {$slowdown}";
+        $UpdateACSFleets[] = "`fleet_start_time` = `fleet_start_time` + {$slowdown}";
+        $UpdateACSFleets[] = "`fleet_end_time` = `fleet_end_time` + {$slowdown}";
     }
 }
 
@@ -1007,7 +1000,7 @@ if (!empty($UpdateACSFleets)) {
     if (!empty($UpdateACSFleetsIDs)) {
         FlightControl\Utils\Updaters\updateFleetArchiveACSEntries([
             'fleetIds' => $UpdateACSFleetsIDs,
-            'flightAdditionalTime' => $Difference,
+            'flightAdditionalTime' => $unionFlightsAnySlowdown,
         ]);
     }
 }
