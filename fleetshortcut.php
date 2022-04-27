@@ -70,7 +70,7 @@ function renderPage($mode) {
             $shortcutId = (isset($_GET['id']) ? intval($_GET['id']) : 0);
 
             if ($shortcutId <= 0) {
-                message($_Lang['Bad_ID_given'], $_Lang['Deleting_shortcut'], 'fleetshortcut.php', 2);
+                message($_Lang['Bad_ID_given'], $_Lang['Editing_shortcut'], 'fleetshortcut.php', 2);
             }
 
             $SelectLink = doquery("SELECT * FROM {{table}} WHERE `id` = {$shortcutId} LIMIT 1;", 'fleet_shortcuts', true);
