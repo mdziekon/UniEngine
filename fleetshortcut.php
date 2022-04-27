@@ -3,8 +3,7 @@
 define('INSIDE', true);
 
 $_EnginePath = './';
-include($_EnginePath.'common.php');
-
+include($_EnginePath . 'common.php');
 include($_EnginePath . 'modules/flightControl/_includes.php');
 
 use UniEngine\Engine\Modules\FlightControl;
@@ -14,7 +13,6 @@ loggedCheck();
 includeLang('fleetshortcut');
 
 $Mode = (isset($_GET['mode']) ? $_GET['mode'] : null);
-$ID = (isset($_GET['id']) ? intval($_GET['id']) : 0);
 
 if (empty($Mode)) {
     $page = FlightControl\Screens\Shortcuts\render([
