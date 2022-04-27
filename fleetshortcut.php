@@ -12,6 +12,7 @@ loggedCheck();
 
 includeLang('fleetshortcut');
 
+// TODO: Move all modes into Screens\Shortcuts
 function renderPage($mode) {
     global $_Lang, $_User;
 
