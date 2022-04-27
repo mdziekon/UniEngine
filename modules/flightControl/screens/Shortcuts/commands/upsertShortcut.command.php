@@ -6,6 +6,7 @@ namespace UniEngine\Engine\Modules\FlightControl\Screens\Shortcuts\Commands;
  * @param Object $props
  * @param Object $props['input']
  * @param String $props['userId']
+ * @param String $props['shortcutId']
  *
  * @return Object $result
  * @return Boolean $result['isSuccess']
@@ -13,6 +14,11 @@ namespace UniEngine\Engine\Modules\FlightControl\Screens\Shortcuts\Commands;
 function upsertShortcut($props) {
     $input = $props['input'];
     $userId = $props['userId'];
+    $shortcutId = (
+        isset($props['shortcutId']) ?
+            $props['shortcutId'] :
+            null
+    );
 
     $normalizedInput['customName'] = trim($input['name']);
     $normalizedInput['galaxy'] = intval($input['galaxy']);
@@ -20,6 +26,47 @@ function upsertShortcut($props) {
     $normalizedInput['planet'] = intval($input['planet']);
     $normalizedInput['planetType'] = intval($input['type']);
     $normalizedInput['targetId'] = '0';
+
+    if ($shortcutId !== null) {
+        $shortcutId = intval($shortcutId, 10);
+
+        if ($shortcutId <= 0) {
+            return [
+                'isSuccess' => false,
+                'error' => [
+                    'code' => 'INVALID_ID',
+                ],
+            ];
+        }
+
+        $fetchShortcutQuery = (
+            "SELECT " .
+            "`id_owner` " .
+            "FROM {{table}} " .
+            "WHERE " .
+            "`id` = {$shortcutId} " .
+            "LIMIT 1 " .
+            ";"
+        );
+        $shortcutEntry = doquery($fetchShortcutQuery, 'fleet_shortcuts', true);
+
+        if (!$shortcutEntry) {
+            return [
+                'isSuccess' => false,
+                'error' => [
+                    'code' => 'INVALID_ID',
+                ],
+            ];
+        }
+        if ($shortcutEntry['id_owner'] != $userId) {
+            return [
+                'isSuccess' => false,
+                'error' => [
+                    'code' => 'USER_NOT_OWNER',
+                ],
+            ];
+        }
+    }
 
     if (
         !in_array(
@@ -88,7 +135,13 @@ function upsertShortcut($props) {
     );
     $shortcutByCoords = doquery($fetchShortcutByCoordsQuery, 'fleet_shortcuts', true);
 
-    if ($shortcutByCoords) {
+    if (
+        $shortcutByCoords &&
+        (
+            $shortcutId === null ||
+            $shortcutId != $shortcutByCoords['id']
+        )
+    ) {
         return [
             'isSuccess' => false,
             'error' => [
@@ -101,7 +154,11 @@ function upsertShortcut($props) {
         "INSERT INTO {{table}}  " .
         "VALUES " .
         "( " .
-        "NULL, " .
+        (
+            $shortcutId ?
+                "{$shortcutId}, " :
+                "NULL, "
+        ) .
         "{$userId}, " .
         "{$normalizedInput['targetId']}, " .
         "{$normalizedInput['galaxy']}, " .
@@ -110,6 +167,13 @@ function upsertShortcut($props) {
         "{$normalizedInput['planetType']}, " .
         "'{$normalizedInput['customName']}' " .
         ") " .
+        "ON DUPLICATE KEY UPDATE " .
+        "`id_planet` = VALUES(`id_planet`), " .
+        "`galaxy` = VALUES(`galaxy`), " .
+        "`system` = VALUES(`system`), " .
+        "`planet` = VALUES(`planet`), " .
+        "`type` = VALUES(`type`), " .
+        "`own_name` = VALUES(`own_name`) " .
         "; "
     );
     doquery($upsertShortcutQuery, 'fleet_shortcuts');
