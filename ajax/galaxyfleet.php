@@ -10,6 +10,7 @@ include($_EnginePath.'common.php');
 
 include($_EnginePath . 'modules/flightControl/_includes.php');
 
+use UniEngine\Engine\Modules\Flights;
 use UniEngine\Engine\Modules\FlightControl;
 
 function CreateReturn($ReturnCode)
@@ -61,13 +62,28 @@ if($Mission != 6 AND $Mission != 7 AND $Mission != 8)
 {
     CreateReturn('602');
 }
-if(!($Galaxy > 0 AND $System > 0 AND $Planet > 0 AND $Galaxy <= MAX_GALAXY_IN_WORLD AND $System <= MAX_SYSTEM_IN_GALAXY AND $Planet <= MAX_PLANET_IN_SYSTEM))
-{
-    CreateReturn('603');
-}
-if(!($Type == 1 OR $Type == 2 OR $Type == 3))
-{
-    CreateReturn('604');
+
+$isValidCoordinate = Flights\Utils\Checks\isValidCoordinate([
+    'coordinate' => [
+        'galaxy' => $Galaxy,
+        'system' => $System,
+        'planet' => $Planet,
+        'type' => $Type,
+    ],
+    'areExpeditionsExcluded' => true,
+]);
+
+if (!$isValidCoordinate['isValid']) {
+    $errorCode = (
+        (
+            $isValidCoordinate['error']['code'] === 'OUT_OF_BOUNDS' &&
+            $isValidCoordinate['error']['param'] === 'type'
+        ) ?
+            '604' :
+            '603'
+    );
+
+    CreateReturn($errorCode);
 }
 
 $CurrentPlanet    = &$_Planet;
