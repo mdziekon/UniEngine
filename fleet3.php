@@ -252,7 +252,10 @@ $validMissionTypes = FlightControl\Utils\Helpers\getValidMissionTypes([
 ]);
 
 // --- Check if everything is OK with ACS
-if ($Fleet['Mission'] == 2 AND in_array(2, $validMissionTypes)) {
+if (
+    $Fleet['Mission'] == Flights\Enums\FleetMission::UnitedAttack &&
+    in_array(Flights\Enums\FleetMission::UnitedAttack, $validMissionTypes)
+) {
     $joinUnionValidationResult = FlightControl\Utils\Validators\validateJoinUnion([
         'newFleet' => $Fleet,
         'timestamp' => $Now,
@@ -397,15 +400,16 @@ if(!in_array($Fleet['Mission'], $validMissionTypes))
 }
 
 // --- If Mission is Recycling and there is no Debris Field, show Error
-if($Fleet['Mission'] == 8)
-{
-    if($targetInfo['galaxyEntry']['metal'] <= 0 AND $targetInfo['galaxyEntry']['crystal'] <= 0)
-    {
+if ($Fleet['Mission'] == Flights\Enums\FleetMission::Harvest) {
+    if (
+        $targetInfo['galaxyEntry']['metal'] <= 0 &&
+        $targetInfo['galaxyEntry']['crystal'] <= 0
+    ) {
         messageRed($_Lang['fl3_NoDebrisFieldHere'], $ErrorTitle);
     }
 }
 
-if ($Fleet['Mission'] == 5) {
+if ($Fleet['Mission'] == Flights\Enums\FleetMission::Hold) {
     $missionHoldValidationResult = FlightControl\Utils\Validators\validateMissionHold([
         'newFleet' => $Fleet,
     ]);
@@ -430,24 +434,17 @@ if ($Fleet['Mission'] == 5) {
 // --- Check if Expeditions and HoldingTimes are Correct
 $Throw = false;
 $Fleet['StayTime'] = 0;
-if($Fleet['Mission'] == 15)
-{
-    if($Fleet['ExpeTime'] < 1)
-    {
+if ($Fleet['Mission'] == Flights\Enums\FleetMission::Expedition) {
+    if ($Fleet['ExpeTime'] < 1) {
         $Throw = $_Lang['fl3_Expedition_Min1H'];
-    }
-    elseif($Fleet['ExpeTime'] > 12)
-    {
+    } elseif ($Fleet['ExpeTime'] > 12) {
         $Throw = $_Lang['fl3_Expedition_Max12H'];
     }
-    $Fleet['StayTime'] = $Fleet['ExpeTime'] * 3600;
+    $Fleet['StayTime'] = $Fleet['ExpeTime'] * TIME_HOUR;
+} elseif ($Fleet['Mission'] == Flights\Enums\FleetMission::Hold) {
+    $Fleet['StayTime'] = $Fleet['HoldTime'] * TIME_HOUR;
 }
-elseif($Fleet['Mission'] == 5)
-{
-    $Fleet['StayTime'] = $Fleet['HoldTime'] * 3600;
-}
-if($Throw)
-{
+if ($Throw) {
     messageRed($Throw, $ErrorTitle);
 }
 
