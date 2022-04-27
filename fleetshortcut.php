@@ -24,35 +24,36 @@ if (empty($Mode)) {
     switch ($Mode) {
         case 'add': {
             if (
-                isset($_POST['action']) &&
-                $_POST['action'] == 'add'
+                !isset($_POST['action']) ||
+                $_POST['action'] != 'add'
             ) {
-                $upsertShortcutResult = FlightControl\Screens\Shortcuts\Commands\upsertShortcut([
+                $page = FlightControl\Screens\Shortcuts\Components\ShortcutManagementForm\render([
+                    'shortcutId' => null,
                     'userId' => $_User['id'],
-                    'input' => $_POST,
-                ]);
+                ])['componentHTML'];
 
-                if ($upsertShortcutResult['isSuccess']) {
-                    message($_Lang['Shortcut_hasbeen_added'], $_Lang['Adding_shortcut'],'fleetshortcut.php', 2);
-                }
+                break;
+            }
 
-                switch ($upsertShortcutResult['error']['code']) {
-                    case 'INVALID_COORDINATES':
-                        message($_Lang['Bad_coordinates'], $_Lang['Adding_shortcut'], 'fleetshortcut.php?mode=add', 2);
-                        break;
-                    case 'INVALID_NAME':
-                        message($_Lang['Forbidden_signs_in_name'], $_Lang['Adding_shortcut'], 'fleetshortcut.php?mode=add', 2);
-                        break;
-                    case 'ALREADY_EXISTS':
-                        message($_Lang['That_target_already_exists'], $_Lang['Adding_shortcut'], 'fleetshortcut.php?mode=add', 2);
-                        break;
-                }
-            } else {
-                $_Lang['Action_shortcut'] = $_Lang['Adding_shortcut'];
-                $_Lang['Action'] = $_Lang['Add'];
-                $_Lang['post_action'] = 'add';
+            $upsertShortcutResult = FlightControl\Screens\Shortcuts\Commands\upsertShortcut([
+                'userId' => $_User['id'],
+                'input' => $_POST,
+            ]);
 
-                $page = parsetemplate(gettemplate('fleetshortcut_add_edit'), $_Lang);
+            if ($upsertShortcutResult['isSuccess']) {
+                message($_Lang['Shortcut_hasbeen_added'], $_Lang['Adding_shortcut'],'fleetshortcut.php', 2);
+            }
+
+            switch ($upsertShortcutResult['error']['code']) {
+                case 'INVALID_COORDINATES':
+                    message($_Lang['Bad_coordinates'], $_Lang['Adding_shortcut'], 'fleetshortcut.php?mode=add', 2);
+                    break;
+                case 'INVALID_NAME':
+                    message($_Lang['Forbidden_signs_in_name'], $_Lang['Adding_shortcut'], 'fleetshortcut.php?mode=add', 2);
+                    break;
+                case 'ALREADY_EXISTS':
+                    message($_Lang['That_target_already_exists'], $_Lang['Adding_shortcut'], 'fleetshortcut.php?mode=add', 2);
+                    break;
             }
 
             break;
@@ -78,71 +79,54 @@ if (empty($Mode)) {
         }
         case 'edit': {
             if (
-                isset($_POST['action']) &&
-                $_POST['action'] == 'edit'
+                !isset($_POST['action']) ||
+                $_POST['action'] != 'edit'
             ) {
-                $upsertShortcutResult = FlightControl\Screens\Shortcuts\Commands\upsertShortcut([
-                    'userId' => $_User['id'],
-                    'input' => $_POST,
-                    'shortcutId' => $_GET['id'],
-                ]);
+                $shortcutId = (isset($_GET['id']) ? intval($_GET['id']) : 0);
 
-                if ($upsertShortcutResult['isSuccess']) {
-                    message($_Lang['Shortcut_hasbeen_saved'], $_Lang['Editing_shortcut'], 'fleetshortcut.php', 2);
+                if ($shortcutId <= 0) {
+                    message($_Lang['Bad_ID_given'], $_Lang['Deleting_shortcut'], 'fleetshortcut.php', 2);
                 }
 
-                switch ($upsertShortcutResult['error']['code']) {
-                    case 'INVALID_COORDINATES':
-                        message($_Lang['Bad_coordinates'], $_Lang['Editing_shortcut'], 'fleetshortcut.php', 2);
-                        break;
-                    case 'INVALID_NAME':
-                        message($_Lang['Forbidden_signs_in_name'], $_Lang['Editing_shortcut'], 'fleetshortcut.php', 2);
-                        break;
-                    case 'ALREADY_EXISTS':
-                        message($_Lang['That_target_already_exists'], $_Lang['Editing_shortcut'], 'fleetshortcut.php', 2);
-                        break;
-                    case 'INVALID_ID':
-                    case 'USER_NOT_OWNER':
-                        message($_Lang['Bad_ID_given'], $_Lang['Editing_shortcut'], 'fleetshortcut.php', 2);
-                        break;
+                $SelectLink = doquery("SELECT * FROM {{table}} WHERE `id` = {$shortcutId} LIMIT 1;", 'fleet_shortcuts', true);
+                if (
+                    !$SelectLink ||
+                    $SelectLink['id_owner'] != $_User['id']
+                ) {
+                    message($_Lang['Bad_ID_given'], $_Lang['Editing_shortcut'], 'fleetshortcut.php', 2);
                 }
+
+                $page = FlightControl\Screens\Shortcuts\Components\ShortcutManagementForm\render([
+                    'shortcut' => $SelectLink,
+                ])['componentHTML'];
+
+                break;
             }
 
-            $ID = (isset($_GET['id']) ? intval($_GET['id']) : 0);
+            $upsertShortcutResult = FlightControl\Screens\Shortcuts\Commands\upsertShortcut([
+                'userId' => $_User['id'],
+                'input' => $_POST,
+                'shortcutId' => $_GET['id'],
+            ]);
 
-            if ($ID <= 0) {
-                message($_Lang['Bad_ID_given'], $_Lang['Deleting_shortcut'], 'fleetshortcut.php', 2);
+            if ($upsertShortcutResult['isSuccess']) {
+                message($_Lang['Shortcut_hasbeen_saved'], $_Lang['Editing_shortcut'], 'fleetshortcut.php', 2);
             }
 
-            $SelectLink = doquery("SELECT * FROM {{table}} WHERE `id` = {$ID} LIMIT 1;", 'fleet_shortcuts', true);
-            if (
-                $SelectLink['id_owner'] > 0 &&
-                $SelectLink['id_owner'] == $_User['id']
-            ) {
-                $_Lang['Action_shortcut'] = $_Lang['Editing_shortcut'];
-                $_Lang['Action'] = $_Lang['Edit'];
-                $_Lang['post_action'] = 'edit';
-                $_Lang['edit_id'] = $ID;
-                $_Lang['set_name'] = $SelectLink['own_name'];
-                $_Lang['set_galaxy'] = $SelectLink['galaxy'];
-                $_Lang['set_system'] = $SelectLink['system'];
-                $_Lang['set_planet'] = $SelectLink['planet'];
-                switch($SelectLink['type'])
-                {
-                    case 1:
-                        $_Lang['planet_selected'] = 'selected';
-                        break;
-                    case 2:
-                        $_Lang['debris_selected'] = 'selected';
-                        break;
-                    case 3:
-                        $_Lang['moon_selected'] = 'selected';
-                        break;
-                }
-
-                $page = parsetemplate(gettemplate('fleetshortcut_add_edit'), $_Lang);
-            } else {
-                message($_Lang['Bad_ID_given'], $_Lang['Editing_shortcut'],'fleetshortcut.php', 2);
+            switch ($upsertShortcutResult['error']['code']) {
+                case 'INVALID_COORDINATES':
+                    message($_Lang['Bad_coordinates'], $_Lang['Editing_shortcut'], 'fleetshortcut.php', 2);
+                    break;
+                case 'INVALID_NAME':
+                    message($_Lang['Forbidden_signs_in_name'], $_Lang['Editing_shortcut'], 'fleetshortcut.php', 2);
+                    break;
+                case 'ALREADY_EXISTS':
+                    message($_Lang['That_target_already_exists'], $_Lang['Editing_shortcut'], 'fleetshortcut.php', 2);
+                    break;
+                case 'INVALID_ID':
+                case 'USER_NOT_OWNER':
+                    message($_Lang['Bad_ID_given'], $_Lang['Editing_shortcut'], 'fleetshortcut.php', 2);
+                    break;
             }
 
             break;

@@ -30,6 +30,7 @@ call_user_func(function () {
 
     include($includePath . './screens/Shortcuts/Shortcuts.screen.php');
     include($includePath . './screens/Shortcuts/components/ListManagement/ListManagement.component.php');
+    include($includePath . './screens/Shortcuts/components/ShortcutManagementForm/ShortcutManagementForm.component.php');
     include($includePath . './screens/Shortcuts/commands/upsertShortcut.command.php');
     include($includePath . './screens/Shortcuts/commands/deleteShortcut.command.php');
 
