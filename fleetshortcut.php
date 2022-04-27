@@ -23,70 +23,39 @@ if (empty($Mode)) {
 } else {
     switch($Mode)
     {
-        case 'add':
-        {
-            if(isset($_POST['action']) && $_POST['action'] == 'add')
-            {
-                $Name = trim($_POST['name']);
-                $Galaxy = intval($_POST['galaxy']);
-                $System = intval($_POST['system']);
-                $Planet = intval($_POST['planet']);
-                $Type = intval($_POST['type']);
-                if(in_array($Type, array(1,2,3)) && $Galaxy > 0 && $System > 0 && $Planet > 0 && $Galaxy <= MAX_GALAXY_IN_WORLD && $System <= MAX_SYSTEM_IN_GALAXY && $Planet <= (MAX_PLANET_IN_SYSTEM + 1))
-                {
-                    $TargetID = '0';
-                    if($Type == 1 || $Type == 3)
-                    {
-                        $Query_GetTarget = '';
-                        $Query_GetTarget .= "SELECT `id` FROM {{table}} WHERE ";
-                        $Query_GetTarget .= "`galaxy` = {$Galaxy} AND `system` = {$System} AND `planet` = {$Planet} AND `planet_type` = {$Type} ";
-                        $Query_GetTarget .= "LIMIT 1;";
+        case 'add': {
+            if (
+                isset($_POST['action']) &&
+                $_POST['action'] == 'add'
+            ) {
+                $upsertShortcutResult = FlightControl\Screens\Shortcuts\Commands\upsertShortcut([
+                    'userId' => $_User['id'],
+                    'input' => $_POST,
+                ]);
 
-                        $SQLResult_SelectTarget = doquery($Query_GetTarget, 'planets');
-
-                        if($SQLResult_SelectTarget->num_rows == 1)
-                        {
-                            $TargetID = ($SQLResult_SelectTarget->fetch_assoc())['id'];
-                        }
-                    }
-
-                    if(!empty($Name))
-                    {
-                        if(!preg_match('/^[a-zA-Z0-9\_\-\ ]{1,}$/D', $Name))
-                        {
-                            message($_Lang['Forbidden_signs_in_name'], $_Lang['Adding_shortcut'], 'fleetshortcut.php?mode=add', 2);
-                        }
-                    }
-
-                    $Query_CheckShortcut = '';
-                    $Query_CheckShortcut .= "SELECT `id` FROM {{table}} WHERE ";
-                    $Query_CheckShortcut .= "`galaxy` = {$Galaxy} AND `system` = {$System} AND `planet` = {$Planet} AND `type` = {$Type} ";
-                    $Query_CheckShortcut .= "AND `id_owner` = {$_User['id']} ";
-                    $Query_CheckShortcut .= "LIMIT 1;";
-
-                    $Result_CheckShortcut = doquery($Query_CheckShortcut, 'fleet_shortcuts');
-
-                    if($Result_CheckShortcut->num_rows == 1)
-                    {
-                        message($_Lang['That_target_already_exists'], $_Lang['Adding_shortcut'], 'fleetshortcut.php?mode=add', 2);
-                    }
-
-                    doquery("INSERT INTO {{table}} VALUES (NULL, {$_User['id']}, {$TargetID}, {$Galaxy}, {$System}, {$Planet}, {$Type}, '{$Name}');", 'fleet_shortcuts');
+                if ($upsertShortcutResult['isSuccess']) {
                     message($_Lang['Shortcut_hasbeen_added'], $_Lang['Adding_shortcut'],'fleetshortcut.php', 2);
                 }
-                else
-                {
-                    message($_Lang['Bad_coordinates'], $_Lang['Adding_shortcut'], 'fleetshortcut.php?mode=add', 2);
+
+                switch ($upsertShortcutResult['error']['code']) {
+                    case 'INVALID_COORDINATES':
+                        message($_Lang['Bad_coordinates'], $_Lang['Adding_shortcut'], 'fleetshortcut.php?mode=add', 2);
+                        break;
+                    case 'INVALID_NAME':
+                        message($_Lang['Forbidden_signs_in_name'], $_Lang['Adding_shortcut'], 'fleetshortcut.php?mode=add', 2);
+                        break;
+                    case 'ALREADY_EXISTS':
+                        message($_Lang['That_target_already_exists'], $_Lang['Adding_shortcut'], 'fleetshortcut.php?mode=add', 2);
+                        break;
                 }
-            }
-            else
-            {
+            } else {
                 $_Lang['Action_shortcut'] = $_Lang['Adding_shortcut'];
                 $_Lang['Action']= $_Lang['Add'];
                 $_Lang['post_action'] = 'add';
 
                 $page = parsetemplate(gettemplate('fleetshortcut_add_edit'), $_Lang);
             }
+
             break;
         }
         case 'delete':
