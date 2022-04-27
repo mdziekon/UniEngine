@@ -2,6 +2,8 @@
 
 namespace UniEngine\Engine\Modules\FlightControl\Screens\Shortcuts\Commands;
 
+use UniEngine\Engine\Modules\Flights;
+
 /**
  * @param Object $props
  * @param Object $props['input']
@@ -68,18 +70,16 @@ function upsertShortcut($props) {
         }
     }
 
-    if (
-        !in_array(
-            $normalizedInput['planetType'],
-            [ 1, 2, 3 ]
-        ) ||
-        $normalizedInput['galaxy'] <= 0 ||
-        $normalizedInput['galaxy'] > MAX_GALAXY_IN_WORLD ||
-        $normalizedInput['system'] <= 0 ||
-        $normalizedInput['system'] > MAX_SYSTEM_IN_GALAXY ||
-        $normalizedInput['planet'] <= 0 ||
-        $normalizedInput['planet'] > (MAX_PLANET_IN_SYSTEM + 1)
-    ) {
+    $isValidCoordinate = Flights\Utils\Checks\isValidCoordinate([
+        'coordinate' => [
+            'galaxy' => $normalizedInput['galaxy'],
+            'system' => $normalizedInput['system'],
+            'planet' => $normalizedInput['planet'],
+            'type' => $normalizedInput['planetType'],
+        ]
+    ]);
+
+    if (!$isValidCoordinate['isValid']) {
         return [
             'isSuccess' => false,
             'error' => [
