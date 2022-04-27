@@ -91,30 +91,22 @@ if (empty($Mode)) {
         }
         case 'delete':
         {
-            $ID = (isset($_GET['id']) ? intval($_GET['id']) : 0);
+            $deleteShortcutResult = FlightControl\Screens\Shortcuts\Commands\deleteShortcut([
+                'userId' => $_User['id'],
+                'input' => $_GET,
+            ]);
 
-            if($ID <= 0)
-            {
-                message($_Lang['Bad_ID_given'], $_Lang['Deleting_shortcut'], 'fleetshortcut.php', 2);
+            if ($deleteShortcutResult['isSuccess']) {
+                message($_Lang['Link_hasbeen_deleted'], $_Lang['Deleting_shortcut'], 'fleetshortcut.php', 2);
             }
 
-            $SelectLink = doquery("SELECT `id_owner` FROM {{table}} WHERE `id` = {$ID} LIMIT 1;", 'fleet_shortcuts', true);
-            if($SelectLink['id_owner'] > 0)
-            {
-                if($SelectLink['id_owner'] == $_User['id'])
-                {
-                    doquery("DELETE FROM {{table}} WHERE `id` = {$ID};", 'fleet_shortcuts');
-                    message($_Lang['Link_hasbeen_deleted'], $_Lang['Deleting_shortcut'], 'fleetshortcut.php', 2);
-                }
-                else
-                {
-                    message($_Lang['This_shortcut_is_not_yours'], $_Lang['Deleting_shortcut'], 'fleetshortcut.php', 2);
-                }
+            switch ($deleteShortcutResult['error']['code']) {
+                case 'INVALID_ID':
+                case 'USER_NOT_OWNER':
+                    message($_Lang['Bad_ID_given'], $_Lang['Deleting_shortcut'], 'fleetshortcut.php', 2);
+                    break;
             }
-            else
-            {
-                message($_Lang['Bad_ID_given'], $_Lang['Deleting_shortcut'], 'fleetshortcut.php', 2);
-            }
+
             break;
         }
         case 'edit':
