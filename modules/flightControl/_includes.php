@@ -18,6 +18,7 @@ call_user_func(function () {
     include($includePath . './components/RetreatInfoBox/RetreatInfoBox.component.php');
     include($includePath . './components/SmartFleetBlockadeInfoBox/SmartFleetBlockadeInfoBox.component.php');
     include($includePath . './components/SmartFleetBlockadeInfoBox/SmartFleetBlockadeInfoBox.utils.php');
+    include($includePath . './components/TargetOptionLabel/TargetOptionLabel.component.php');
     include($includePath . './components/TargetsSelector/TargetsSelector.component.php');
     include($includePath . './components/UnionManagement/utils/createNewUnion.utils.php');
     include($includePath . './components/UnionManagement/utils/getBaseUnionData.utils.php');
@@ -26,6 +27,12 @@ call_user_func(function () {
     include($includePath . './components/UnionMembersListOption/UnionMembersListOption.component.php');
 
     include($includePath . './enums/RetreatResultType.enum.php');
+
+    include($includePath . './screens/Shortcuts/Shortcuts.screen.php');
+    include($includePath . './screens/Shortcuts/components/ListManagement/ListManagement.component.php');
+    include($includePath . './screens/Shortcuts/components/ShortcutManagementForm/ShortcutManagementForm.component.php');
+    include($includePath . './screens/Shortcuts/commands/upsertShortcut.command.php');
+    include($includePath . './screens/Shortcuts/commands/deleteShortcut.command.php');
 
     include($includePath . './utils/factories/createAlertFiltersSearchParams.factory.php');
     include($includePath . './utils/factories/createFleetDevLogEntry.factory.php');

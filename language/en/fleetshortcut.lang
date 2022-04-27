@@ -31,8 +31,6 @@ $_Lang['Bad_coordinates']               = 'Invalid coordinates!';
 $_Lang['Forbidden_signs_in_name']       = 'Target\'s custom name can consist of alphanumerical characters, spaces, dashes and underscores!';
 $_Lang['That_target_already_exists']    = 'This custom target already exists!';
 $_Lang['Bad_ID_given']                  = 'Invalid target given!';
-$_Lang['This_shortcut_is_not_yours']    = 'You do not own this custom target!';
-$_Lang['NothingChanged']                = 'No changes to be saved...';
 
 $_Lang['Shortcut_hasbeen_added']        = 'Custom target has been added!';
 $_Lang['Link_hasbeen_deleted']          = 'Custom target has been removed!';

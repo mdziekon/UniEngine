@@ -2,7 +2,7 @@
 
 namespace UniEngine\Engine\Modules\FlightControl\Components\TargetsSelector;
 
-use UniEngine\Engine\Includes\Helpers\Common\Collections;
+use UniEngine\Engine\Modules\FlightControl\Components\TargetOptionLabel;
 
 //  Arguments
 //      - $props (Object)
@@ -26,31 +26,6 @@ function render ($props) {
     ];
 
     $listElements = array_map_withkeys($targets, function ($target) use (&$_Lang) {
-        $targetCustomName = (
-            !empty($target['own_name']) ?
-                "\"{$target['own_name']}\"" :
-                null
-        );
-        $targetOriginalName = $target['name'];
-        $targetTypeLabel = [
-            '1' => $_Lang['planet_sign'],
-            '2' => $_Lang['debris_sign'],
-            '3' => $_Lang['moon_sign'],
-        ][$target['planet_type']];
-        $targetTypeMarker = "({$targetTypeLabel})";
-        $targetPos = "[{$target['galaxy']}:{$target['system']}:{$target['planet']}]";
-
-        $elementLabelParts = Collections\compact([
-            $targetCustomName,
-            (
-                !empty($targetCustomName) && !empty($targetOriginalName) ?
-                    '-' :
-                    null
-            ),
-            $targetOriginalName,
-            $targetTypeMarker,
-            $targetPos
-        ]);
         $elementJSParts = [
             $target['galaxy'],
             $target['system'],
@@ -58,8 +33,12 @@ function render ($props) {
             $target['planet_type'],
         ];
 
+        $elementLabel = TargetOptionLabel\render([
+            'target' => $target,
+        ])['componentHTML'];
+
         return [
-            'txt' => implode(' ', $elementLabelParts),
+            'txt' => $elementLabel,
             'js' => implode(',', $elementJSParts),
         ];
     });
