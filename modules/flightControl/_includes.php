@@ -28,6 +28,9 @@ call_user_func(function () {
 
     include($includePath . './enums/RetreatResultType.enum.php');
 
+    include($includePath . './screens/Shortcuts/Shortcuts.screen.php');
+    include($includePath . './screens/Shortcuts/components/ListManagement/ListManagement.component.php');
+
     include($includePath . './utils/factories/createAlertFiltersSearchParams.factory.php');
     include($includePath . './utils/factories/createFleetDevLogEntry.factory.php');
     include($includePath . './utils/factories/createQuantumGateFuelJSObject.factory.php');

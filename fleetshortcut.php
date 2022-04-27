@@ -17,26 +17,9 @@ $Mode = (isset($_GET['mode']) ? $_GET['mode'] : null);
 $ID = (isset($_GET['id']) ? intval($_GET['id']) : 0);
 
 if (empty($Mode)) {
-    $fetchShortcutsResult = FlightControl\Utils\Fetchers\fetchSavedShortcuts([
+    $page = FlightControl\Screens\Shortcuts\render([
         'userId' => $_User['id'],
-    ]);
-
-    $shortcutsList = mapQueryResults($fetchShortcutsResult, function ($shortcutEntry) {
-        $shortcutId = $shortcutEntry['id'];
-        $shortcutLabel = FlightControl\Components\TargetOptionLabel\render([
-            'target' => $shortcutEntry,
-        ])['componentHTML'];
-
-        return "<option value=\"{$shortcutId}\">{$shortcutLabel}</option>";
-    });
-
-    $_Lang['shortcuts_list'] = (
-        !empty($shortcutsList) ?
-            implode('', $shortcutsList) :
-            '<option>'.$_Lang['no_shortcuts'].'</option>'
-    );
-
-    $page = parsetemplate(gettemplate('fleetshortcut_overview'), $_Lang);
+    ])['componentHTML'];
 } else {
     switch($Mode)
     {
