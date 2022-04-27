@@ -49,7 +49,7 @@ if (empty($Mode)) {
                 }
             } else {
                 $_Lang['Action_shortcut'] = $_Lang['Adding_shortcut'];
-                $_Lang['Action']= $_Lang['Add'];
+                $_Lang['Action'] = $_Lang['Add'];
                 $_Lang['post_action'] = 'add';
 
                 $page = parsetemplate(gettemplate('fleetshortcut_add_edit'), $_Lang);
@@ -115,33 +115,32 @@ if (empty($Mode)) {
             }
 
             $SelectLink = doquery("SELECT * FROM {{table}} WHERE `id` = {$ID} LIMIT 1;", 'fleet_shortcuts', true);
-            if ($SelectLink['id_owner'] > 0) {
-                if ($SelectLink['id_owner'] == $_User['id']) {
-                    $_Lang['Action_shortcut'] = $_Lang['Editing_shortcut'];
-                    $_Lang['Action'] = $_Lang['Edit'];
-                    $_Lang['post_action'] = 'edit';
-                    $_Lang['edit_id'] = $ID;
-                    $_Lang['set_name'] = $SelectLink['own_name'];
-                    $_Lang['set_galaxy'] = $SelectLink['galaxy'];
-                    $_Lang['set_system'] = $SelectLink['system'];
-                    $_Lang['set_planet'] = $SelectLink['planet'];
-                    switch($SelectLink['type'])
-                    {
-                        case 1:
-                            $_Lang['planet_selected'] = 'selected';
-                            break;
-                        case 2:
-                            $_Lang['debris_selected'] = 'selected';
-                            break;
-                        case 3:
-                            $_Lang['moon_selected'] = 'selected';
-                            break;
-                    }
-
-                    $page = parsetemplate(gettemplate('fleetshortcut_add_edit'), $_Lang);
-                } else {
-                    message($_Lang['This_shortcut_is_not_yours'], $_Lang['Editing_shortcut'],'fleetshortcut.php', 2);
+            if (
+                $SelectLink['id_owner'] > 0 &&
+                $SelectLink['id_owner'] == $_User['id']
+            ) {
+                $_Lang['Action_shortcut'] = $_Lang['Editing_shortcut'];
+                $_Lang['Action'] = $_Lang['Edit'];
+                $_Lang['post_action'] = 'edit';
+                $_Lang['edit_id'] = $ID;
+                $_Lang['set_name'] = $SelectLink['own_name'];
+                $_Lang['set_galaxy'] = $SelectLink['galaxy'];
+                $_Lang['set_system'] = $SelectLink['system'];
+                $_Lang['set_planet'] = $SelectLink['planet'];
+                switch($SelectLink['type'])
+                {
+                    case 1:
+                        $_Lang['planet_selected'] = 'selected';
+                        break;
+                    case 2:
+                        $_Lang['debris_selected'] = 'selected';
+                        break;
+                    case 3:
+                        $_Lang['moon_selected'] = 'selected';
+                        break;
                 }
+
+                $page = parsetemplate(gettemplate('fleetshortcut_add_edit'), $_Lang);
             } else {
                 message($_Lang['Bad_ID_given'], $_Lang['Editing_shortcut'],'fleetshortcut.php', 2);
             }

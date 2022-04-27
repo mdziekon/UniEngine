@@ -31,8 +31,6 @@ $_Lang['Bad_coordinates']               = 'Podano niepoprawne koordynaty!';
 $_Lang['Forbidden_signs_in_name']       = 'Nazwa celu może składać się tylko z liter, cyfr, spacji, myślników i podkreśleń!';
 $_Lang['That_target_already_exists']    = 'Zapisałeś już taki cel!';
 $_Lang['Bad_ID_given']                  = 'Podano nieprawidłowy link!';
-$_Lang['This_shortcut_is_not_yours']    = 'Ten link nie jest twój!';
-$_Lang['NothingChanged']                = 'Brak zmian do zapisania...';
 
 $_Lang['Shortcut_hasbeen_added']        = 'Link został dodany!';
 $_Lang['Link_hasbeen_deleted']          = 'Link został usunięty!';
