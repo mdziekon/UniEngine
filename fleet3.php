@@ -784,7 +784,6 @@ if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner']
             // Currently there is no indicator that user wants to get MultiAlert Messages (do disable this code)
             $LockFleetSending = true;
             $ShowMultiAlert = true;
-            $_Alert['MultiAlert']['Data']['Blocked'] = true;
         }
     }
 }
@@ -830,53 +829,26 @@ if (!isset($LockFleetSending)) {
     }
 }
 
-if($SendAlert)
-{
+if ($SendAlert) {
     $targetOwnerId = $TargetData['id'];
 
-    $_Alert['MultiAlert']['Importance'] = 10;
-    $_Alert['MultiAlert']['Data']['MissionID'] = $Fleet['Mission'];
-    if($LastFleetID > 0)
-    {
-        $_Alert['MultiAlert']['Data']['FleetID'] = $LastFleetID;
-    }
-    $_Alert['MultiAlert']['Data']['TargetUserID'] = $targetOwnerId;
-    foreach($CheckIntersection['Intersect'] as $ThisIPID)
-    {
-        $_Alert['MultiAlert']['Data']['Intersect'][] = [
-            'IPID' => $ThisIPID,
-            'SenderData' => $CheckIntersection['IPLogData'][$_User['id']][$ThisIPID],
-            'TargetData' => $CheckIntersection['IPLogData'][$targetOwnerId][$ThisIPID],
-        ];
-    }
-    if($DeclarationID > 0)
-    {
-        $_Alert['MultiAlert']['Data']['DeclarationID'] = $DeclarationID;
-        $_Alert['MultiAlert']['Type'] = 2;
-    }
-    else
-    {
-        $_Alert['MultiAlert']['Type'] = 1;
-    }
+    $alertType = (
+        !empty($DeclarationID) ?
+            2 :
+            1
+    );
 
-    $otherUsersWithMatchingIp = FlightControl\Utils\Fetchers\fetchUsersWithMatchingIp([
-        'requiredIpIds' => $CheckIntersection['Intersect'],
-        'excludedUserIds' => [
-            $_User['id'],
-            $targetOwnerId,
-        ],
+    $alertData = FlightControl\Utils\Factories\createMultiAlert([
+        'fleetId' => $LastFleetID,
+        'fleetData' => $Fleet,
+        'fleetOwner' => $_User,
+        'targetOwner' => $TargetData,
+        'foundIpIntersections' => $CheckIntersection,
+        'multiIpDeclarationId' => $DeclarationID,
+        'hasBlockedFleet' => isset($LockFleetSending),
     ]);
 
-    if (!empty($otherUsersWithMatchingIp)) {
-        $_Alert['MultiAlert']['Data']['OtherUsers'] = array_map_withkeys(
-            $otherUsersWithMatchingIp,
-            function ($entry) {
-                return $entry['User_ID'];
-            }
-        );
-    }
-
-    Alerts_Add(1, $Now, $_Alert['MultiAlert']['Type'], 1, $_Alert['MultiAlert']['Importance'], $_User['id'], $_Alert['MultiAlert']['Data']);
+    Alerts_Add(1, $Now, $alertType, 1, 10, $_User['id'], $alertData);
 }
 
 if(isset($ShowMultiAlert))
