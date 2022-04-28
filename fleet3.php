@@ -123,36 +123,10 @@ if($Target['galaxy'] == $_Planet['galaxy'] AND $Target['system'] == $_Planet['sy
 {
     messageRed($_Lang['fl2_cantsendsamecoords'], $ErrorTitle);
 }
-foreach($Target as $Type => $Value)
-{
-    if($Value < 1)
-    {
-        $TargetError = true;
-        break;
-    }
-    switch($Type)
-    {
-        case 'galaxy':
-            $CheckValue = MAX_GALAXY_IN_WORLD;
-            break;
-        case 'system':
-            $CheckValue = MAX_SYSTEM_IN_GALAXY;
-            break;
-        case 'planet':
-            $CheckValue = MAX_PLANET_IN_SYSTEM + 1;
-            break;
-        case 'type':
-            $CheckValue = 3;
-            break;
-    }
-    if($Value > $CheckValue)
-    {
-        $TargetError = true;
-        break;
-    }
-}
-if(isset($TargetError))
-{
+
+$isValidCoordinate = Flights\Utils\Checks\isValidCoordinate([ 'coordinate' => $Target ]);
+
+if (!$isValidCoordinate['isValid']) {
     messageRed($_Lang['fl2_targeterror'], $ErrorTitle);
 }
 
@@ -278,7 +252,10 @@ $validMissionTypes = FlightControl\Utils\Helpers\getValidMissionTypes([
 ]);
 
 // --- Check if everything is OK with ACS
-if ($Fleet['Mission'] == 2 AND in_array(2, $validMissionTypes)) {
+if (
+    $Fleet['Mission'] == Flights\Enums\FleetMission::UnitedAttack &&
+    in_array(Flights\Enums\FleetMission::UnitedAttack, $validMissionTypes)
+) {
     $joinUnionValidationResult = FlightControl\Utils\Validators\validateJoinUnion([
         'newFleet' => $Fleet,
         'timestamp' => $Now,
@@ -423,15 +400,16 @@ if(!in_array($Fleet['Mission'], $validMissionTypes))
 }
 
 // --- If Mission is Recycling and there is no Debris Field, show Error
-if($Fleet['Mission'] == 8)
-{
-    if($targetInfo['galaxyEntry']['metal'] <= 0 AND $targetInfo['galaxyEntry']['crystal'] <= 0)
-    {
+if ($Fleet['Mission'] == Flights\Enums\FleetMission::Harvest) {
+    if (
+        $targetInfo['galaxyEntry']['metal'] <= 0 &&
+        $targetInfo['galaxyEntry']['crystal'] <= 0
+    ) {
         messageRed($_Lang['fl3_NoDebrisFieldHere'], $ErrorTitle);
     }
 }
 
-if ($Fleet['Mission'] == 5) {
+if ($Fleet['Mission'] == Flights\Enums\FleetMission::Hold) {
     $missionHoldValidationResult = FlightControl\Utils\Validators\validateMissionHold([
         'newFleet' => $Fleet,
     ]);
@@ -456,24 +434,17 @@ if ($Fleet['Mission'] == 5) {
 // --- Check if Expeditions and HoldingTimes are Correct
 $Throw = false;
 $Fleet['StayTime'] = 0;
-if($Fleet['Mission'] == 15)
-{
-    if($Fleet['ExpeTime'] < 1)
-    {
+if ($Fleet['Mission'] == Flights\Enums\FleetMission::Expedition) {
+    if ($Fleet['ExpeTime'] < 1) {
         $Throw = $_Lang['fl3_Expedition_Min1H'];
-    }
-    elseif($Fleet['ExpeTime'] > 12)
-    {
+    } elseif ($Fleet['ExpeTime'] > 12) {
         $Throw = $_Lang['fl3_Expedition_Max12H'];
     }
-    $Fleet['StayTime'] = $Fleet['ExpeTime'] * 3600;
+    $Fleet['StayTime'] = $Fleet['ExpeTime'] * TIME_HOUR;
+} elseif ($Fleet['Mission'] == Flights\Enums\FleetMission::Hold) {
+    $Fleet['StayTime'] = $Fleet['HoldTime'] * TIME_HOUR;
 }
-elseif($Fleet['Mission'] == 5)
-{
-    $Fleet['StayTime'] = $Fleet['HoldTime'] * 3600;
-}
-if($Throw)
-{
+if ($Throw) {
     messageRed($Throw, $ErrorTitle);
 }
 
@@ -712,39 +683,32 @@ $Fleet['SetCalcTime'] = $Now + $DurationTarget;
 $Fleet['SetStayTime'] = ($Fleet['StayTime'] > 0 ? $Fleet['SetCalcTime'] + $Fleet['StayTime'] : '0');
 $Fleet['SetBackTime'] = $Fleet['SetCalcTime'] + $Fleet['StayTime'] + $DurationBack;
 
-if(isset($UpdateACS))
-{
-    $NewEndTime = $Fleet['SetCalcTime'];
-    $OldFlightTime = $CheckACS['start_time_org'] - $CheckACS['mf_start_time'];
-    $FlightDifference = ($NewEndTime - $CheckACS['mf_start_time']) - $OldFlightTime;
+$unionFlightsAnySlowdown = 0;
 
-    if($OldFlightTime == 0)
-    {
-        $OldFlightTime = 1;
-    }
-    if($FlightDifference == 0)
-    {
-        $FlightDifference = 1;
-    }
-    if(($FlightDifference/$OldFlightTime) <= 0.3)
-    {
-        if($NewEndTime < $CheckACS['start_time'])
-        {
-            $Difference = $CheckACS['start_time'] - $NewEndTime;
-            $Fleet['SetCalcTime'] += $Difference;
-            $Fleet['SetBackTime'] += $Difference;
-        }
-        elseif($NewEndTime > $CheckACS['start_time'])
-        {
-            $Difference = $NewEndTime - $CheckACS['start_time'];
-            $UpdateACSRow[] = "`start_time` = `start_time` + {$Difference}";
-            $UpdateACSFleets[] = "`fleet_start_time` = `fleet_start_time` + {$Difference}";
-            $UpdateACSFleets[] = "`fleet_end_time` = `fleet_end_time` + {$Difference}";
-        }
-    }
-    else
-    {
+if (isset($UpdateACS)) {
+    $unionFlightTimeDiff = Flights\Utils\Calculations\calculateUnionFlightTimeDiff([
+        'fleetAtDestinationTimestamp' => $Fleet['SetCalcTime'],
+        'union' => $CheckACS,
+    ]);
+
+    if (!$unionFlightTimeDiff['isSuccess']) {
         messageRed($_Lang['fl3_ACSFleet2Slow'], $ErrorTitle);
+    }
+
+    if (isset($unionFlightTimeDiff['payload']['newFleetSlowDownBy'])) {
+        $slowdown = $unionFlightTimeDiff['payload']['newFleetSlowDownBy'];
+        $unionFlightsAnySlowdown = $slowdown;
+
+        $Fleet['SetCalcTime'] += $slowdown;
+        $Fleet['SetBackTime'] += $slowdown;
+    }
+    if (isset($unionFlightTimeDiff['payload']['unionSlowDownBy'])) {
+        $slowdown = $unionFlightTimeDiff['payload']['unionSlowDownBy'];
+        $unionFlightsAnySlowdown = $slowdown;
+
+        $UpdateACSRow[] = "`start_time` = `start_time` + {$slowdown}";
+        $UpdateACSFleets[] = "`fleet_start_time` = `fleet_start_time` + {$slowdown}";
+        $UpdateACSFleets[] = "`fleet_end_time` = `fleet_end_time` + {$slowdown}";
     }
 }
 
@@ -1036,7 +1000,7 @@ if (!empty($UpdateACSFleets)) {
     if (!empty($UpdateACSFleetsIDs)) {
         FlightControl\Utils\Updaters\updateFleetArchiveACSEntries([
             'fleetIds' => $UpdateACSFleetsIDs,
-            'flightAdditionalTime' => $Difference,
+            'flightAdditionalTime' => $unionFlightsAnySlowdown,
         ]);
     }
 }

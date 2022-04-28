@@ -126,7 +126,7 @@ if (
     ]);
 
     $_Lang['Insert_ACSForm'] = $unionManagement['componentHTML'];
-    $newUnionEntry = $unionManagement['newUnionEntry'];
+    $newUnionEntry = $unionManagement['extraPayload']['newUnionEntry'];
 }
 
 if (

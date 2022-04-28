@@ -53,8 +53,13 @@ if($ThisMoon['planet_type'] == 3)
         $RangeUp = $ThisCoords['system'] + GetPhalanxRange($ThisPhalanx);
 
         $DenyScan = false;
-        if($TargetData['galaxy'] < 1 OR $TargetData['galaxy'] > MAX_GALAXY_IN_WORLD OR $TargetData['system'] < 1 OR $TargetData['system'] > MAX_SYSTEM_IN_GALAXY OR $TargetData['planet'] < 1 OR $TargetData['planet'] > MAX_PLANET_IN_SYSTEM)
-        {
+
+        $isValidCoordinate = Flights\Utils\Checks\isValidCoordinate([
+            'coordinate' => $TargetData,
+            'areExpeditionsExcluded' => true,
+        ]);
+
+        if (!$isValidCoordinate['isValid']) {
             $DenyScan = true;
             $WhyDoNotScan = $_Lang['PhalanxError_BadCoordinates'];
         }

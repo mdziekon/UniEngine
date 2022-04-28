@@ -109,39 +109,15 @@ if($Target['galaxy'] == $_Planet['galaxy'] AND $Target['system'] == $_Planet['sy
     message($_Lang['fl2_cantsendsamecoords'], $ErrorTitle, 'fleet.php', 3);
 }
 
-foreach($Target as $Type => $Value)
-{
-    if($Value < 1)
-    {
-        $TargetError = true;
-        break;
-    }
-    switch($Type)
-    {
-        case 'galaxy':
-            $CheckValue = MAX_GALAXY_IN_WORLD;
-            break;
-        case 'system':
-            $CheckValue = MAX_SYSTEM_IN_GALAXY;
-            break;
-        case 'planet':
-            $CheckValue = MAX_PLANET_IN_SYSTEM + 1;
-            break;
-        case 'type':
-            $CheckValue = 3;
-            break;
-    }
-    if($Value > $CheckValue)
-    {
-        $TargetError = true;
-        break;
-    }
+$isValidCoordinate = Flights\Utils\Checks\isValidCoordinate([ 'coordinate' => $Target ]);
+
+if (!$isValidCoordinate['isValid']) {
+    message($_Lang['fl2_targeterror'], $ErrorTitle, 'fleet.php', 3);
+}
+
+foreach ($Target as $Type => $Value) {
     // Set Positions for Inputs
     $_Lang['Target_'.$Type] = $Value;
-}
-if(isset($TargetError))
-{
-    message($_Lang['fl2_targeterror'], $ErrorTitle, 'fleet.php', 3);
 }
 
 $availableSpeeds = FlightControl\Utils\Helpers\getAvailableSpeeds([
