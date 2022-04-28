@@ -45,10 +45,28 @@ function groupInRows($collection, $rowSize) {
     });
 }
 
-function compact($collection) {
-    return array_filter($collection, function ($value) {
-        return $value;
-    });
+/**
+ * @param array $collection
+ * @param object $options
+ * @param bool $options['isStrictNullCheck'] Remove only actual `null` values, not all falsy values
+ */
+function compact($collection, $options = []) {
+    $defaultOptions = [
+        'isStrictNullCheck' => false,
+    ];
+    $thisOptions = array_merge($defaultOptions, $options);
+
+    $comparator = (
+        $thisOptions['isStrictNullCheck'] ?
+            function ($value) {
+                return $value !== null;
+            } :
+            function ($value) {
+                return $value;
+            }
+    );
+
+    return array_filter($collection, $comparator);
 }
 
 function without($collection, $excludedElement) {
