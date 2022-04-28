@@ -17,6 +17,16 @@ function array_find(array $inputArray, callable $callback) {
     return null;
 }
 
+function array_any(array $inputArray, callable $callback) {
+    foreach ($inputArray as $item) {
+        if ($callback($item)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 /**
  * Maps an object, allowing to access the key of each value, and change both key & value
  */
