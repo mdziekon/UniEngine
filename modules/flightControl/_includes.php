@@ -46,6 +46,7 @@ call_user_func(function () {
     include($includePath . './utils/fetchers/fetchUnionFleet.fetcher.php');
     include($includePath . './utils/fetchers/fetchUnionInvitablePlayers.fetcher.php');
     include($includePath . './utils/fetchers/fetchUnionMissingUsersData.fetcher.php');
+    include($includePath . './utils/fetchers/fetchUsersWithMatchingIp.fetcher.php');
     include($includePath . './utils/helpers/extractUnionMembersDetails.helper.php');
     include($includePath . './utils/helpers/extractUnionMembersModification.helper.php');
     include($includePath . './utils/helpers/getAvailableHoldTimes.helper.php');

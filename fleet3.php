@@ -908,18 +908,21 @@ if($SendAlert)
         $_Alert['MultiAlert']['Type'] = 1;
     }
 
-    $Query_AlertOtherUsers = '';
-    $Query_AlertOtherUsers .= "SELECT DISTINCT `User_ID` FROM {{table}} WHERE ";
-    $Query_AlertOtherUsers .= "`User_ID` NOT IN ({$_User['id']}, {$targetOwnerId}) AND ";
-    $Query_AlertOtherUsers .= "`IP_ID` IN (".implode(', ', $CheckIntersection['Intersect']).") AND ";
-    $Query_AlertOtherUsers .= "`Count` > `FailCount`;";
-    $Result_AlertOtherUsers = doquery($Query_AlertOtherUsers, 'user_enterlog');
-    if($Result_AlertOtherUsers->num_rows > 0)
-    {
-        while($FetchData = $Result_AlertOtherUsers->fetch_assoc())
-        {
-            $_Alert['MultiAlert']['Data']['OtherUsers'][] = $FetchData['User_ID'];
-        }
+    $otherUsersWithMatchingIp = FlightControl\Utils\Fetchers\fetchUsersWithMatchingIp([
+        'requiredIpIds' => $CheckIntersection['Intersect'],
+        'excludedUserIds' => [
+            $_User['id'],
+            $targetOwnerId,
+        ],
+    ]);
+
+    if (!empty($otherUsersWithMatchingIp)) {
+        $_Alert['MultiAlert']['Data']['OtherUsers'] = array_map_withkeys(
+            $otherUsersWithMatchingIp,
+            function ($entry) {
+                return $entry['User_ID'];
+            }
+        );
     }
 
     Alerts_Add(1, $Now, $_Alert['MultiAlert']['Type'], 1, $_Alert['MultiAlert']['Importance'], $_User['id'], $_Alert['MultiAlert']['Data']);
