@@ -807,75 +807,26 @@ if (!isset($LockFleetSending)) {
         $TargetData['id'] = '0';
     }
 
-    // PushAlert
-    if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner'] AND !$targetInfo['isPlanetAbandoned'])
-    {
-        if($Fleet['Mission'] == 3)
-        {
-            if($StatsData['mine'] < $StatsData['his'])
-            {
-                if(!empty($Fleet['resources']))
-                {
-                    foreach($Fleet['resources'] as $ThisValue)
-                    {
-                        if($ThisValue > 0)
-                        {
-                            $_Alert['PushAlert']['HasResources'] = true;
-                            break;
-                        }
-                    }
-                }
-                if ($_Alert['PushAlert']['HasResources'] === true) {
-                    $alertFiltersSearchParams = FlightControl\Utils\Factories\createAlertFiltersSearchParams([
-                        'fleetOwner' => &$_User,
-                        'targetOwner' => [
-                            'id' => $TargetData['id'],
-                        ],
-                        'ipsIntersectionsCheckResult' => null,
-                    ]);
-                    $FilterResult = AlertUtils_CheckFilters(
-                        $alertFiltersSearchParams,
-                        [
-                            'DontLoad' => true,
-                            'DontLoad_OnlyIfCacheEmpty' => true,
-                        ]
-                    );
+    // PushAlert handling
+    $hasMetPushAlertConditions = FlightControl\Utils\Checks\hasMetPushAlertConditions([
+        'fleetData' => $Fleet,
+        'fleetOwner' => $_User,
+        'targetOwner' => $TargetData,
+        'targetInfo' => $targetInfo,
+        'statsData' => $StatsData,
+    ]);
 
-                    if($FilterResult['SendAlert'])
-                    {
-                        $_Alert['PushAlert']['Data']['TargetUserID'] = $TargetData['id'];
+    if ($hasMetPushAlertConditions) {
+        $alertData = FlightControl\Utils\Factories\createPushAlert([
+            'fleetId' => $LastFleetID,
+            'fleetData' => $Fleet,
+            'fleetOwner' => $_User,
+            'targetOwner' => $TargetData,
+            'targetInfo' => $targetInfo,
+            'statsData' => $StatsData,
+        ]);
 
-                        if ($targetInfo['isPlanetOwnerAlly']) {
-                            $_Alert['PushAlert']['Data']['SameAlly'] = $TargetData['ally_id'];
-                        } else if ($targetInfo['isPlanetOwnerNonAggressiveAllianceMember']) {
-                            $_Alert['PushAlert']['Data']['AllyPact'] = [
-                                'SenderAlly' => $_User['ally_id'],
-                                'TargetAlly' => $TargetData['ally_id'],
-                            ];
-                        }
-                        if ($targetInfo['isPlanetOwnerBuddy']) {
-                            $_Alert['PushAlert']['Data']['BuddyFriends'] = true;
-                        }
-                        $_Alert['PushAlert']['Data']['FleetID'] = $LastFleetID;
-                        $_Alert['PushAlert']['Data']['Stats']['Sender'] = [
-                            'Points' => $StatsData['mine'],
-                            'Position' => $_User['total_rank'],
-                        ];
-                        $_Alert['PushAlert']['Data']['Stats']['Target'] = [
-                            'Points' => $StatsData['his'],
-                            'Position' => $TargetData['total_rank'],
-                        ];
-                        $_Alert['PushAlert']['Data']['Resources'] = [
-                            'Metal' => floatval($Fleet['resources']['metal']),
-                            'Crystal' => floatval($Fleet['resources']['crystal']),
-                            'Deuterium' => floatval($Fleet['resources']['deuterium']),
-                        ];
-
-                        Alerts_Add(1, $Now, 5, 4, 5, $_User['id'], $_Alert['PushAlert']['Data']);
-                    }
-                }
-            }
-        }
+        Alerts_Add(1, $Now, 5, 4, 5, $_User['id'], $alertData);
     }
 }
 

@@ -34,8 +34,10 @@ call_user_func(function () {
     include($includePath . './screens/Shortcuts/commands/upsertShortcut.command.php');
     include($includePath . './screens/Shortcuts/commands/deleteShortcut.command.php');
 
+    include($includePath . './utils/checks/hasMetPushAlertConditions.checks.php');
     include($includePath . './utils/factories/createAlertFiltersSearchParams.factory.php');
     include($includePath . './utils/factories/createFleetDevLogEntry.factory.php');
+    include($includePath . './utils/factories/createPushAlert.factory.php');
     include($includePath . './utils/factories/createQuantumGateFuelJSObject.factory.php');
     include($includePath . './utils/factories/createUnionInvitationMessage.factory.php');
     include($includePath . './utils/fetchers/fetchActiveSmartFleetsBlockadeEntries.fetcher.php');
