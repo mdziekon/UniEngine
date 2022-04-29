@@ -34,18 +34,23 @@ call_user_func(function () {
     include($includePath . './screens/Shortcuts/commands/upsertShortcut.command.php');
     include($includePath . './screens/Shortcuts/commands/deleteShortcut.command.php');
 
+    include($includePath . './utils/checks/hasMetPushAlertConditions.checks.php');
     include($includePath . './utils/factories/createAlertFiltersSearchParams.factory.php');
     include($includePath . './utils/factories/createFleetDevLogEntry.factory.php');
+    include($includePath . './utils/factories/createMultiAlert.factory.php');
+    include($includePath . './utils/factories/createPushAlert.factory.php');
     include($includePath . './utils/factories/createQuantumGateFuelJSObject.factory.php');
     include($includePath . './utils/factories/createUnionInvitationMessage.factory.php');
     include($includePath . './utils/fetchers/fetchActiveSmartFleetsBlockadeEntries.fetcher.php');
     include($includePath . './utils/fetchers/fetchBashValidatorFlightLogEntries.fetcher.php');
+    include($includePath . './utils/fetchers/fetchMultiDeclaration.fetcher.php');
     include($includePath . './utils/fetchers/fetchPlanetOwnerDetails.fetcher.php');
     include($includePath . './utils/fetchers/fetchSavedShortcuts.fetcher.php');
     include($includePath . './utils/fetchers/fetchTargetGalaxyDetails.fetcher.php');
     include($includePath . './utils/fetchers/fetchUnionFleet.fetcher.php');
     include($includePath . './utils/fetchers/fetchUnionInvitablePlayers.fetcher.php');
     include($includePath . './utils/fetchers/fetchUnionMissingUsersData.fetcher.php');
+    include($includePath . './utils/fetchers/fetchUsersWithMatchingIp.fetcher.php');
     include($includePath . './utils/helpers/extractUnionMembersDetails.helper.php');
     include($includePath . './utils/helpers/extractUnionMembersModification.helper.php');
     include($includePath . './utils/helpers/getAvailableHoldTimes.helper.php');

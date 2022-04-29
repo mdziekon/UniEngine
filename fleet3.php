@@ -723,6 +723,7 @@ $SendAlert = false;
 $IPIntersectionFound = false;
 $IPIntersectionFiltered = false;
 $IPIntersectionNow = false;
+$DeclarationID = null;
 if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner'] AND !$targetInfo['isPlanetAbandoned'])
 {
     include($_EnginePath.'includes/functions/AlertSystemUtilities.php');
@@ -739,18 +740,15 @@ if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner']
             $IPIntersectionNow = true;
         }
 
-        if($_User['multiIP_DeclarationID'] > 0 AND $_User['multiIP_DeclarationID'] == $TargetData['multiIP_DeclarationID'])
-        {
-            $Query_CheckDeclaration = '';
-            $Query_CheckDeclaration .= "SELECT `id` FROM {{table}} WHERE ";
-            $Query_CheckDeclaration .= "`status` = 1 AND `id` = {$_User['multiIP_DeclarationID']} ";
-            $Query_CheckDeclaration .= "LIMIT 1;";
-            $CheckDeclaration = doquery($Query_CheckDeclaration, 'declarations', true);
-            $DeclarationID = $CheckDeclaration['id'];
-        }
-        else
-        {
-            $DeclarationID = 0;
+        if (
+            $_User['multiIP_DeclarationID'] > 0 &&
+            $_User['multiIP_DeclarationID'] == $TargetData['multiIP_DeclarationID']
+        ) {
+            $multiDeclarationDetails = FlightControl\Utils\Fetchers\fetchMultiDeclaration([ 'declarationId' => $_User['multiIP_DeclarationID'] ]);
+
+            if ($multiDeclarationDetails['status'] == 1) {
+                $DeclarationID = $multiDeclarationDetails['id'];
+            }
         }
 
         $alertFiltersSearchParams = FlightControl\Utils\Factories\createAlertFiltersSearchParams([
@@ -784,7 +782,6 @@ if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner']
             // Currently there is no indicator that user wants to get MultiAlert Messages (do disable this code)
             $LockFleetSending = true;
             $ShowMultiAlert = true;
-            $_Alert['MultiAlert']['Data']['Blocked'] = true;
         }
     }
 }
@@ -807,122 +804,49 @@ if (!isset($LockFleetSending)) {
         $TargetData['id'] = '0';
     }
 
-    // PushAlert
-    if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner'] AND !$targetInfo['isPlanetAbandoned'])
-    {
-        if($Fleet['Mission'] == 3)
-        {
-            if($StatsData['mine'] < $StatsData['his'])
-            {
-                if(!empty($Fleet['resources']))
-                {
-                    foreach($Fleet['resources'] as $ThisValue)
-                    {
-                        if($ThisValue > 0)
-                        {
-                            $_Alert['PushAlert']['HasResources'] = true;
-                            break;
-                        }
-                    }
-                }
-                if ($_Alert['PushAlert']['HasResources'] === true) {
-                    $alertFiltersSearchParams = FlightControl\Utils\Factories\createAlertFiltersSearchParams([
-                        'fleetOwner' => &$_User,
-                        'targetOwner' => [
-                            'id' => $TargetData['id'],
-                        ],
-                        'ipsIntersectionsCheckResult' => null,
-                    ]);
-                    $FilterResult = AlertUtils_CheckFilters(
-                        $alertFiltersSearchParams,
-                        [
-                            'DontLoad' => true,
-                            'DontLoad_OnlyIfCacheEmpty' => true,
-                        ]
-                    );
+    // PushAlert handling
+    $hasMetPushAlertConditions = FlightControl\Utils\Checks\hasMetPushAlertConditions([
+        'fleetData' => $Fleet,
+        'fleetOwner' => $_User,
+        'targetOwner' => $TargetData,
+        'targetInfo' => $targetInfo,
+        'statsData' => $StatsData,
+    ]);
 
-                    if($FilterResult['SendAlert'])
-                    {
-                        $_Alert['PushAlert']['Data']['TargetUserID'] = $TargetData['id'];
+    if ($hasMetPushAlertConditions) {
+        $alertData = FlightControl\Utils\Factories\createPushAlert([
+            'fleetId' => $LastFleetID,
+            'fleetData' => $Fleet,
+            'fleetOwner' => $_User,
+            'targetOwner' => $TargetData,
+            'targetInfo' => $targetInfo,
+            'statsData' => $StatsData,
+        ]);
 
-                        if ($targetInfo['isPlanetOwnerAlly']) {
-                            $_Alert['PushAlert']['Data']['SameAlly'] = $TargetData['ally_id'];
-                        } else if ($targetInfo['isPlanetOwnerNonAggressiveAllianceMember']) {
-                            $_Alert['PushAlert']['Data']['AllyPact'] = [
-                                'SenderAlly' => $_User['ally_id'],
-                                'TargetAlly' => $TargetData['ally_id'],
-                            ];
-                        }
-                        if ($targetInfo['isPlanetOwnerBuddy']) {
-                            $_Alert['PushAlert']['Data']['BuddyFriends'] = true;
-                        }
-                        $_Alert['PushAlert']['Data']['FleetID'] = $LastFleetID;
-                        $_Alert['PushAlert']['Data']['Stats']['Sender'] = [
-                            'Points' => $StatsData['mine'],
-                            'Position' => $_User['total_rank'],
-                        ];
-                        $_Alert['PushAlert']['Data']['Stats']['Target'] = [
-                            'Points' => $StatsData['his'],
-                            'Position' => $TargetData['total_rank'],
-                        ];
-                        $_Alert['PushAlert']['Data']['Resources'] = [
-                            'Metal' => floatval($Fleet['resources']['metal']),
-                            'Crystal' => floatval($Fleet['resources']['crystal']),
-                            'Deuterium' => floatval($Fleet['resources']['deuterium']),
-                        ];
-
-                        Alerts_Add(1, $Now, 5, 4, 5, $_User['id'], $_Alert['PushAlert']['Data']);
-                    }
-                }
-            }
-        }
+        Alerts_Add(1, $Now, 5, 4, 5, $_User['id'], $alertData);
     }
 }
 
-if($SendAlert)
-{
+if ($SendAlert) {
     $targetOwnerId = $TargetData['id'];
 
-    $_Alert['MultiAlert']['Importance'] = 10;
-    $_Alert['MultiAlert']['Data']['MissionID'] = $Fleet['Mission'];
-    if($LastFleetID > 0)
-    {
-        $_Alert['MultiAlert']['Data']['FleetID'] = $LastFleetID;
-    }
-    $_Alert['MultiAlert']['Data']['TargetUserID'] = $targetOwnerId;
-    foreach($CheckIntersection['Intersect'] as $ThisIPID)
-    {
-        $_Alert['MultiAlert']['Data']['Intersect'][] = [
-            'IPID' => $ThisIPID,
-            'SenderData' => $CheckIntersection['IPLogData'][$_User['id']][$ThisIPID],
-            'TargetData' => $CheckIntersection['IPLogData'][$targetOwnerId][$ThisIPID],
-        ];
-    }
-    if($DeclarationID > 0)
-    {
-        $_Alert['MultiAlert']['Data']['DeclarationID'] = $DeclarationID;
-        $_Alert['MultiAlert']['Type'] = 2;
-    }
-    else
-    {
-        $_Alert['MultiAlert']['Type'] = 1;
-    }
+    $alertType = (
+        !empty($DeclarationID) ?
+            2 :
+            1
+    );
 
-    $Query_AlertOtherUsers = '';
-    $Query_AlertOtherUsers .= "SELECT DISTINCT `User_ID` FROM {{table}} WHERE ";
-    $Query_AlertOtherUsers .= "`User_ID` NOT IN ({$_User['id']}, {$targetOwnerId}) AND ";
-    $Query_AlertOtherUsers .= "`IP_ID` IN (".implode(', ', $CheckIntersection['Intersect']).") AND ";
-    $Query_AlertOtherUsers .= "`Count` > `FailCount`;";
-    $Result_AlertOtherUsers = doquery($Query_AlertOtherUsers, 'user_enterlog');
-    if($Result_AlertOtherUsers->num_rows > 0)
-    {
-        while($FetchData = $Result_AlertOtherUsers->fetch_assoc())
-        {
-            $_Alert['MultiAlert']['Data']['OtherUsers'][] = $FetchData['User_ID'];
-        }
-    }
+    $alertData = FlightControl\Utils\Factories\createMultiAlert([
+        'fleetId' => $LastFleetID,
+        'fleetData' => $Fleet,
+        'fleetOwner' => $_User,
+        'targetOwner' => $TargetData,
+        'foundIpIntersections' => $CheckIntersection,
+        'multiIpDeclarationId' => $DeclarationID,
+        'hasBlockedFleet' => isset($LockFleetSending),
+    ]);
 
-    Alerts_Add(1, $Now, $_Alert['MultiAlert']['Type'], 1, $_Alert['MultiAlert']['Importance'], $_User['id'], $_Alert['MultiAlert']['Data']);
+    Alerts_Add(1, $Now, $alertType, 1, 10, $_User['id'], $alertData);
 }
 
 if(isset($ShowMultiAlert))
