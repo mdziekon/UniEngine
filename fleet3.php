@@ -723,6 +723,7 @@ $SendAlert = false;
 $IPIntersectionFound = false;
 $IPIntersectionFiltered = false;
 $IPIntersectionNow = false;
+$DeclarationID = null;
 if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner'] AND !$targetInfo['isPlanetAbandoned'])
 {
     include($_EnginePath.'includes/functions/AlertSystemUtilities.php');
@@ -739,18 +740,15 @@ if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner']
             $IPIntersectionNow = true;
         }
 
-        if($_User['multiIP_DeclarationID'] > 0 AND $_User['multiIP_DeclarationID'] == $TargetData['multiIP_DeclarationID'])
-        {
-            $Query_CheckDeclaration = '';
-            $Query_CheckDeclaration .= "SELECT `id` FROM {{table}} WHERE ";
-            $Query_CheckDeclaration .= "`status` = 1 AND `id` = {$_User['multiIP_DeclarationID']} ";
-            $Query_CheckDeclaration .= "LIMIT 1;";
-            $CheckDeclaration = doquery($Query_CheckDeclaration, 'declarations', true);
-            $DeclarationID = $CheckDeclaration['id'];
-        }
-        else
-        {
-            $DeclarationID = 0;
+        if (
+            $_User['multiIP_DeclarationID'] > 0 &&
+            $_User['multiIP_DeclarationID'] == $TargetData['multiIP_DeclarationID']
+        ) {
+            $multiDeclarationDetails = FlightControl\Utils\Fetchers\fetchMultiDeclaration([ 'declarationId' => $_User['multiIP_DeclarationID'] ]);
+
+            if ($multiDeclarationDetails['status'] == 1) {
+                $DeclarationID = $multiDeclarationDetails['id'];
+            }
         }
 
         $alertFiltersSearchParams = FlightControl\Utils\Factories\createAlertFiltersSearchParams([
