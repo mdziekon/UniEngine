@@ -252,6 +252,8 @@ $validMissionTypes = FlightControl\Utils\Helpers\getValidMissionTypes([
 ]);
 
 // --- Check if everything is OK with ACS
+$isJoiningUnion = false;
+
 if (
     $Fleet['Mission'] == Flights\Enums\FleetMission::UnitedAttack &&
     in_array(Flights\Enums\FleetMission::UnitedAttack, $validMissionTypes)
@@ -272,12 +274,12 @@ if (
         messageRed($errorMessage, $ErrorTitle);
     }
 
-    $UpdateACS = true;
-
     // TODO: Optimize by not fetching this again
     $CheckACS = FlightControl\Utils\Helpers\getFleetUnionJoinData([
         'newFleet' => $Fleet,
     ]);
+
+    $isJoiningUnion = true;
 }
 
 $Throw = false;
@@ -686,7 +688,7 @@ $Fleet['SetBackTime'] = $Fleet['SetCalcTime'] + $Fleet['StayTime'] + $DurationBa
 $unionFlightsAnySlowdown = 0;
 $unionInFlightFleetsSlowdown = 0;
 
-if (isset($UpdateACS)) {
+if ($isJoiningUnion) {
     $unionFlightTimeDiff = Flights\Utils\Calculations\calculateUnionFlightTimeDiff([
         'fleetAtDestinationTimestamp' => $Fleet['SetCalcTime'],
         'union' => $CheckACS,
@@ -707,8 +709,6 @@ if (isset($UpdateACS)) {
         $slowdown = $unionFlightTimeDiff['payload']['unionSlowDownBy'];
         $unionFlightsAnySlowdown = $slowdown;
         $unionInFlightFleetsSlowdown = $slowdown;
-
-        $UpdateACSRow[] = "`start_time` = `start_time` + {$slowdown}";
     }
 }
 
@@ -854,35 +854,15 @@ if(isset($ShowMultiAlert))
     messageRed($_Lang['MultiAlert'], $_Lang['fl_error']);
 }
 
-if(isset($UpdateACS))
-{
-    if(!empty($CheckACS['fleets_id']))
-    {
-        $NewFleetsID[] = $CheckACS['fleets_id'];
-    }
-    $NewFleetsID[] = '|'.$LastFleetID.'|';
-    $UpdateACSRow[] = "`fleets_id` = '".implode(',', $NewFleetsID)."'";
-
-    if(!empty($CheckACS['user_joined']))
-    {
-        if(strstr($CheckACS['user_joined'], '|'.$_User['id'].'|') === FALSE)
-        {
-            $NewUsers[] = $CheckACS['user_joined'];
-            $NewUsers[] = '|'.$_User['id'].'|';
-            $UpdateACSRow[] = "`user_joined` = '".implode(',', $NewUsers)."'";
-        }
-    }
-    else
-    {
-        $UpdateACSRow[] = "`user_joined` = '|{$_User['id']}|'";
-    }
-
-    $UpdateACSRow[] = "`fleets_count` = `fleets_count` + 1";
-
-    if(!empty($UpdateACSRow))
-    {
-        doquery("UPDATE {{table}} SET ".implode(', ', $UpdateACSRow)." WHERE `id` = {$Fleet['ACS_ID']};", 'acs');
-    }
+if ($isJoiningUnion) {
+    FlightControl\Utils\Updaters\updateUnionEntry([
+        'union' => $CheckACS,
+        'updates' => [
+            'joiningFleetId' => $LastFleetID,
+            'joiningUserId' => $_User['id'],
+            'slowdown' => $unionInFlightFleetsSlowdown,
+        ],
+    ]);
 
     FlightControl\Utils\Updaters\updateUnionFleets([
         'union' => $CheckACS,
