@@ -684,6 +684,7 @@ $Fleet['SetStayTime'] = ($Fleet['StayTime'] > 0 ? $Fleet['SetCalcTime'] + $Fleet
 $Fleet['SetBackTime'] = $Fleet['SetCalcTime'] + $Fleet['StayTime'] + $DurationBack;
 
 $unionFlightsAnySlowdown = 0;
+$unionInFlightFleetsSlowdown = 0;
 
 if (isset($UpdateACS)) {
     $unionFlightTimeDiff = Flights\Utils\Calculations\calculateUnionFlightTimeDiff([
@@ -705,10 +706,9 @@ if (isset($UpdateACS)) {
     if (isset($unionFlightTimeDiff['payload']['unionSlowDownBy'])) {
         $slowdown = $unionFlightTimeDiff['payload']['unionSlowDownBy'];
         $unionFlightsAnySlowdown = $slowdown;
+        $unionInFlightFleetsSlowdown = $slowdown;
 
         $UpdateACSRow[] = "`start_time` = `start_time` + {$slowdown}";
-        $UpdateACSFleets[] = "`fleet_start_time` = `fleet_start_time` + {$slowdown}";
-        $UpdateACSFleets[] = "`fleet_end_time` = `fleet_end_time` + {$slowdown}";
     }
 }
 
@@ -884,15 +884,12 @@ if(isset($UpdateACS))
         doquery("UPDATE {{table}} SET ".implode(', ', $UpdateACSRow)." WHERE `id` = {$Fleet['ACS_ID']};", 'acs');
     }
 
-    if(!empty($UpdateACSFleets))
-    {
-        $Fleets = $CheckACS['main_fleet_id'];
-        if(!empty($CheckACS['fleets_id']))
-        {
-            $Fleets .= ','.str_replace('|', '', $CheckACS['fleets_id']);
-        }
-        doquery("UPDATE {{table}} SET ".implode(', ', $UpdateACSFleets)." WHERE `fleet_id` IN ({$Fleets});", 'fleets');
-    }
+    FlightControl\Utils\Updaters\updateUnionFleets([
+        'union' => $CheckACS,
+        'updates' => [
+            'slowdown' => $unionInFlightFleetsSlowdown,
+        ],
+    ]);
 }
 
 FlightControl\Utils\Updaters\insertFleetArchiveEntry([
