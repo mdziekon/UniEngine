@@ -3,6 +3,7 @@
 namespace UniEngine\Engine\Modules\FlightControl\Utils\Updaters;
 
 use UniEngine\Engine\Includes\Helpers\Common\Collections;
+use UniEngine\Engine\Modules\FlightControl;
 
 /**
  * @param object $props
@@ -36,14 +37,7 @@ function updateUnionFleets($props) {
         return;
     }
 
-    $fleetIds = array_merge(
-        [
-            $union['main_fleet_id'],
-        ],
-        array_map_withkeys(explode(',', $union['fleets_id']), function ($fleetEntry) {
-            return str_replace('|', '', $fleetEntry);
-        })
-    );
+    $fleetIds = FlightControl\Utils\Helpers\extractUnionFleetIds([ 'union' => $union ]);
     $fleetIdsString = implode(', ', $fleetIds);
 
     $query = (
