@@ -102,23 +102,28 @@ if (!$flightSlotsValidationResult['isSuccess']) {
     messageRed($errorMessage, $ErrorTitle);
 }
 
-// --- Check if all resources are correct (no negative numbers and enough on planet)
-foreach($Fleet['resources'] as $Key => $Data)
-{
-    $Fleet['resources'][$Key] = floor(floatval(str_replace('.', '', $Data)));
-    if($Fleet['resources'][$Key] < 0)
-    {
-        messageRed($_Lang['fl3_BadResourcesGiven'], $ErrorTitle);
-    }
-    elseif($Fleet['resources'][$Key] > $_Planet[$Key])
-    {
-        messageRed($_Lang['fl3_PlanetNoEnough'.$Key], $ErrorTitle);
+FlightControl\Utils\Inputs\normalizeFleetResourcesInputs([ 'fleetEntry' => &$Fleet ]);
+
+$fleetResourcesValidationResult = FlightControl\Utils\Validators\validateFleetResources([
+    'fleetEntry' => $Fleet,
+    'fleetOriginPlanet' => &$_Planet,
+]);
+
+if (!$fleetResourcesValidationResult['isSuccess']) {
+    $error = $fleetResourcesValidationResult['error'];
+    $errorMessage = null;
+
+    switch ($error['code']) {
+        case 'INVALID_RESOURCE_AMOUNT':
+            $errorMessage = $_Lang['fl3_BadResourcesGiven'];
+            break;
+        case 'ORIGIN_PLANET_INSUFFICIENT_RESOURCE_AMOUNT':
+            $errorMessageKey = "fl3_PlanetNoEnough{$error['payload']['resourceKey']}";
+            $errorMessage = $_Lang[$errorMessageKey];
+            break;
     }
 
-    if($Fleet['resources'][$Key] == 0)
-    {
-        $Fleet['resources'][$Key] = '0';
-    }
+    messageRed($errorMessage, $ErrorTitle);
 }
 
 // --- Check, if Target Data are correct
