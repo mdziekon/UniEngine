@@ -225,9 +225,6 @@ if (
         } else {
             $Fleet['FuelStorage'] += $ThisStorage;
         }
-
-        $planetElementKey = _getElementPlanetKey($ShipID);
-        $FleetRemover[] = "`{$planetElementKey}` = `{$planetElementKey}` - {$ShipCount}";
     }
 } else {
     messageRed($_Lang['fl2_FleetArrayPostEmpty'], $ErrorTitle);
@@ -712,12 +709,6 @@ if ($isJoiningUnion) {
     }
 }
 
-if($isUsingQuantumGate AND $quantumGateUseType == 2)
-{
-    $Add2UpdatePlanet[] = "`quantumgate_lastuse` = {$Now}";
-    $Add2UpdatePlanetPHP['quantumgate_lastuse'] = $Now;
-}
-
 // MultiAlert System
 $SendAlert = false;
 $IPIntersectionFound = false;
@@ -899,40 +890,21 @@ FlightControl\Utils\Updaters\insertFleetArchiveEntry([
     'currentTime' => $Now,
 ]);
 
-$_Planet['metal'] -= $Fleet['resources']['metal'];
-$_Planet['crystal'] -= $Fleet['resources']['crystal'];
-$_Planet['deuterium'] -= ($Fleet['resources']['deuterium'] + $Consumption);
-
 $_Lang['ShipsRows'] = '';
-foreach($Fleet['array'] as $ShipID => $ShipCount)
-{
-    $_Planet[$_Vars_GameElements[$ShipID]] -= $ShipCount;
+foreach ($Fleet['array'] as $ShipID => $ShipCount) {
     $_Lang['ShipsRows'] .= '<tr><th class="pad">'.$_Lang['tech'][$ShipID].'</th><th class="pad">'.prettyNumber($ShipCount).'</th></tr>';
 }
-if(!empty($Add2UpdatePlanetPHP))
-{
-    foreach($Add2UpdatePlanetPHP as $Key => $Value)
-    {
-        $_Planet[$Key] = $Value;
-    }
-}
 
-$QryUpdatePlanet = '';
-$QryUpdatePlanet .= "UPDATE {{table}} SET ";
-$QryUpdatePlanet .= implode(', ', $FleetRemover).', ';
-$QryUpdatePlanet .= "`metal` = '{$_Planet['metal']}', ";
-$QryUpdatePlanet .= "`crystal` = '{$_Planet['crystal']}', ";
-$QryUpdatePlanet .= "`deuterium` = '{$_Planet['deuterium']}' ";
-if(!empty($Add2UpdatePlanet))
-{
-    $QryUpdatePlanet .= ", ".implode(', ', $Add2UpdatePlanet);
-}
-$QryUpdatePlanet .= " WHERE ";
-$QryUpdatePlanet .= "`id` = {$_Planet['id']};";
-
-doquery('LOCK TABLE {{table}} WRITE', 'planets');
-doquery($QryUpdatePlanet, 'planets');
-doquery('UNLOCK TABLES', '');
+FlightControl\Utils\Updaters\updateFleetOriginPlanet([
+    'originPlanet' => &$_Planet,
+    'fleetEntry' => $Fleet,
+    'fuelConsumption' => $Consumption,
+    'quantumGateUsage' => [
+        'isUsing' => $isUsingQuantumGate,
+        'usageType' => $quantumGateUseType,
+    ],
+    'currentTimestamp' => $Now,
+]);
 
 $UserDev_Log[] = FlightControl\Utils\Factories\createFleetDevLogEntry([
     'currentPlanet' => &$_Planet,
