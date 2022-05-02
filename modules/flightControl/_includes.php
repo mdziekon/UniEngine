@@ -86,6 +86,8 @@ call_user_func(function () {
     include($includePath . './utils/validators/smartFleetsBlockadeState.validator.php');
     include($includePath . './utils/errors/bashLimit.utils.php');
     include($includePath . './utils/errors/fleetArray.utils.php');
+    include($includePath . './utils/errors/fleetResources.utils.php');
+    include($includePath . './utils/errors/flightSlots.utils.php');
     include($includePath . './utils/errors/joinUnion.utils.php');
     include($includePath . './utils/errors/noobProtection.utils.php');
     include($includePath . './utils/errors/quantumGate.utils.php');

@@ -88,16 +88,10 @@ $flightSlotsValidationResult = FlightControl\Utils\Validators\validateFlightSlot
 ]);
 
 if (!$flightSlotsValidationResult['isSuccess']) {
-    $errorMessage = null;
-
-    switch ($flightSlotsValidationResult['error']['code']) {
-        case 'MAX_FLIGHTS_LIMIT_REACHED':
-            $errorMessage = $_Lang['fl3_NoMoreFreeSlots'];
-            break;
-        case 'MAX_EXPEDITIONS_LIMIT_REACHED':
-            $errorMessage = $_Lang['fl3_NoMoreFreeExpedSlots'];
-            break;
-    }
+    $errorMessage = FlightControl\Utils\Errors\mapFlightSlotsValidationErrorToReadableMessage(
+        $flightSlotsValidationResult['error'],
+        []
+    );
 
     messageRed($errorMessage, $ErrorTitle);
 }
@@ -110,18 +104,10 @@ $fleetResourcesValidationResult = FlightControl\Utils\Validators\validateFleetRe
 ]);
 
 if (!$fleetResourcesValidationResult['isSuccess']) {
-    $error = $fleetResourcesValidationResult['error'];
-    $errorMessage = null;
-
-    switch ($error['code']) {
-        case 'INVALID_RESOURCE_AMOUNT':
-            $errorMessage = $_Lang['fl3_BadResourcesGiven'];
-            break;
-        case 'ORIGIN_PLANET_INSUFFICIENT_RESOURCE_AMOUNT':
-            $errorMessageKey = "fl3_PlanetNoEnough{$error['payload']['resourceKey']}";
-            $errorMessage = $_Lang[$errorMessageKey];
-            break;
-    }
+    $errorMessage = FlightControl\Utils\Errors\mapFleetResourcesValidationErrorToReadableMessage(
+        $fleetResourcesValidationResult['error'],
+        []
+    );
 
     messageRed($errorMessage, $ErrorTitle);
 }
