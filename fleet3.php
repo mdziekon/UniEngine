@@ -890,11 +890,6 @@ FlightControl\Utils\Updaters\insertFleetArchiveEntry([
     'currentTime' => $Now,
 ]);
 
-$_Lang['ShipsRows'] = '';
-foreach ($Fleet['array'] as $ShipID => $ShipCount) {
-    $_Lang['ShipsRows'] .= '<tr><th class="pad">'.$_Lang['tech'][$ShipID].'</th><th class="pad">'.prettyNumber($ShipCount).'</th></tr>';
-}
-
 FlightControl\Utils\Updaters\updateFleetOriginPlanet([
     'originPlanet' => &$_Planet,
     'fleetEntry' => $Fleet,
@@ -931,6 +926,14 @@ $_Lang['TargetType'] = ($Target['type'] == 1 ? 'planet' : ($Target['type'] == 3 
 $_Lang['FleetStartTime'] = prettyDate('d m Y H:i:s', $Fleet['SetCalcTime'], 1);
 $_Lang['FleetEndTime'] = prettyDate('d m Y H:i:s', $Fleet['SetBackTime'], 1);
 $_Lang['useQuickRes'] = ($_POST['useQuickRes'] == '1' ? 'true' : 'false');
+
+$_Lang['ShipsRows'] = array_map_withkeys($Fleet['array'], function ($shipCount, $shipId) use (&$_Lang) {
+    $shipName = $_Lang['tech'][$shipId];
+    $shipCountDisplay = prettyNumber($shipCount);
+
+    return "<tr><th class=\"pad\">{$shipName}</th><th class=\"pad\">{$shipCountDisplay}</th></tr>";
+});
+$_Lang['ShipsRows'] = implode('', $_Lang['ShipsRows']);
 
 display(parsetemplate(gettemplate('fleet3_body'), $_Lang), $_Lang['fl_title']);
 
