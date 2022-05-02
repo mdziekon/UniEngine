@@ -11,7 +11,7 @@ use UniEngine\Engine\Modules\FlightControl;
  * @param object $props['updates']
  * @param number $props['updates']['slowdown']
  */
-function updateFleetArchiveACSEntries($props) {
+function updateUnionFleets($props) {
     $union = $props['union'];
     $updates = $props['updates'];
     $slowdown = (
@@ -25,7 +25,8 @@ function updateFleetArchiveACSEntries($props) {
         (
             $slowdown > 0 ?
                 [
-                    "`Fleet_Time_ACSAdd` = `Fleet_Time_ACSAdd` + {$slowdown}",
+                    "`fleet_start_time` = `fleet_start_time` + {$slowdown}",
+                    "`fleet_end_time` = `fleet_end_time` + {$slowdown}",
                 ] :
                 []
         )
@@ -45,11 +46,11 @@ function updateFleetArchiveACSEntries($props) {
         implode(', ', $fieldsToUpdate) .
         " " .
         "WHERE " .
-        "`Fleet_ID` IN ({$fleetIdsString}) " .
+        "`fleet_id` IN ({$fleetIdsString}) " .
         ";"
     );
 
-    doquery($query, 'fleet_archive');
+    doquery($query, 'fleets');
 }
 
 ?>

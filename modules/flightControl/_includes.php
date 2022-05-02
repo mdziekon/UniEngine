@@ -51,6 +51,7 @@ call_user_func(function () {
     include($includePath . './utils/fetchers/fetchUnionInvitablePlayers.fetcher.php');
     include($includePath . './utils/fetchers/fetchUnionMissingUsersData.fetcher.php');
     include($includePath . './utils/fetchers/fetchUsersWithMatchingIp.fetcher.php');
+    include($includePath . './utils/helpers/extractUnionFleetIds.helper.php');
     include($includePath . './utils/helpers/extractUnionMembersDetails.helper.php');
     include($includePath . './utils/helpers/extractUnionMembersModification.helper.php');
     include($includePath . './utils/helpers/getAvailableHoldTimes.helper.php');
@@ -69,6 +70,9 @@ call_user_func(function () {
     include($includePath . './utils/updaters/fleetArchiveEntryPersist.updaters.php');
     include($includePath . './utils/updaters/fleetPersist.updaters.php');
     include($includePath . './utils/updaters/updateFleetArchiveAcsId.updaters.php');
+    include($includePath . './utils/updaters/updateFleetOriginPlanet.updaters.php');
+    include($includePath . './utils/updaters/updateUnionEntry.updaters.php');
+    include($includePath . './utils/updaters/updateUnionFleets.updaters.php');
     include($includePath . './utils/updaters/updateUnionMembers.updaters.php');
     include($includePath . './utils/validators/bashLimit.validator.php');
     include($includePath . './utils/validators/fleetArray.validator.php');

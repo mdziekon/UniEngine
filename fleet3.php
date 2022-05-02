@@ -225,9 +225,6 @@ if (
         } else {
             $Fleet['FuelStorage'] += $ThisStorage;
         }
-
-        $planetElementKey = _getElementPlanetKey($ShipID);
-        $FleetRemover[] = "`{$planetElementKey}` = `{$planetElementKey}` - {$ShipCount}";
     }
 } else {
     messageRed($_Lang['fl2_FleetArrayPostEmpty'], $ErrorTitle);
@@ -252,6 +249,8 @@ $validMissionTypes = FlightControl\Utils\Helpers\getValidMissionTypes([
 ]);
 
 // --- Check if everything is OK with ACS
+$isJoiningUnion = false;
+
 if (
     $Fleet['Mission'] == Flights\Enums\FleetMission::UnitedAttack &&
     in_array(Flights\Enums\FleetMission::UnitedAttack, $validMissionTypes)
@@ -272,12 +271,12 @@ if (
         messageRed($errorMessage, $ErrorTitle);
     }
 
-    $UpdateACS = true;
-
     // TODO: Optimize by not fetching this again
     $CheckACS = FlightControl\Utils\Helpers\getFleetUnionJoinData([
         'newFleet' => $Fleet,
     ]);
+
+    $isJoiningUnion = true;
 }
 
 $Throw = false;
@@ -684,8 +683,9 @@ $Fleet['SetStayTime'] = ($Fleet['StayTime'] > 0 ? $Fleet['SetCalcTime'] + $Fleet
 $Fleet['SetBackTime'] = $Fleet['SetCalcTime'] + $Fleet['StayTime'] + $DurationBack;
 
 $unionFlightsAnySlowdown = 0;
+$unionInFlightFleetsSlowdown = 0;
 
-if (isset($UpdateACS)) {
+if ($isJoiningUnion) {
     $unionFlightTimeDiff = Flights\Utils\Calculations\calculateUnionFlightTimeDiff([
         'fleetAtDestinationTimestamp' => $Fleet['SetCalcTime'],
         'union' => $CheckACS,
@@ -705,17 +705,8 @@ if (isset($UpdateACS)) {
     if (isset($unionFlightTimeDiff['payload']['unionSlowDownBy'])) {
         $slowdown = $unionFlightTimeDiff['payload']['unionSlowDownBy'];
         $unionFlightsAnySlowdown = $slowdown;
-
-        $UpdateACSRow[] = "`start_time` = `start_time` + {$slowdown}";
-        $UpdateACSFleets[] = "`fleet_start_time` = `fleet_start_time` + {$slowdown}";
-        $UpdateACSFleets[] = "`fleet_end_time` = `fleet_end_time` + {$slowdown}";
+        $unionInFlightFleetsSlowdown = $slowdown;
     }
-}
-
-if($isUsingQuantumGate AND $quantumGateUseType == 2)
-{
-    $Add2UpdatePlanet[] = "`quantumgate_lastuse` = {$Now}";
-    $Add2UpdatePlanetPHP['quantumgate_lastuse'] = $Now;
 }
 
 // MultiAlert System
@@ -854,45 +845,29 @@ if(isset($ShowMultiAlert))
     messageRed($_Lang['MultiAlert'], $_Lang['fl_error']);
 }
 
-if(isset($UpdateACS))
-{
-    if(!empty($CheckACS['fleets_id']))
-    {
-        $NewFleetsID[] = $CheckACS['fleets_id'];
-    }
-    $NewFleetsID[] = '|'.$LastFleetID.'|';
-    $UpdateACSRow[] = "`fleets_id` = '".implode(',', $NewFleetsID)."'";
+if ($isJoiningUnion) {
+    FlightControl\Utils\Updaters\updateUnionEntry([
+        'union' => $CheckACS,
+        'updates' => [
+            'joiningFleetId' => $LastFleetID,
+            'joiningUserId' => $_User['id'],
+            'slowdown' => $unionInFlightFleetsSlowdown,
+        ],
+    ]);
 
-    if(!empty($CheckACS['user_joined']))
-    {
-        if(strstr($CheckACS['user_joined'], '|'.$_User['id'].'|') === FALSE)
-        {
-            $NewUsers[] = $CheckACS['user_joined'];
-            $NewUsers[] = '|'.$_User['id'].'|';
-            $UpdateACSRow[] = "`user_joined` = '".implode(',', $NewUsers)."'";
-        }
-    }
-    else
-    {
-        $UpdateACSRow[] = "`user_joined` = '|{$_User['id']}|'";
-    }
+    FlightControl\Utils\Updaters\updateUnionFleets([
+        'union' => $CheckACS,
+        'updates' => [
+            'slowdown' => $unionInFlightFleetsSlowdown,
+        ],
+    ]);
 
-    $UpdateACSRow[] = "`fleets_count` = `fleets_count` + 1";
-
-    if(!empty($UpdateACSRow))
-    {
-        doquery("UPDATE {{table}} SET ".implode(', ', $UpdateACSRow)." WHERE `id` = {$Fleet['ACS_ID']};", 'acs');
-    }
-
-    if(!empty($UpdateACSFleets))
-    {
-        $Fleets = $CheckACS['main_fleet_id'];
-        if(!empty($CheckACS['fleets_id']))
-        {
-            $Fleets .= ','.str_replace('|', '', $CheckACS['fleets_id']);
-        }
-        doquery("UPDATE {{table}} SET ".implode(', ', $UpdateACSFleets)." WHERE `fleet_id` IN ({$Fleets});", 'fleets');
-    }
+    FlightControl\Utils\Updaters\updateFleetArchiveACSEntries([
+        'union' => $CheckACS,
+        'updates' => [
+            'slowdown' => $unionInFlightFleetsSlowdown,
+        ],
+    ]);
 }
 
 FlightControl\Utils\Updaters\insertFleetArchiveEntry([
@@ -915,54 +890,16 @@ FlightControl\Utils\Updaters\insertFleetArchiveEntry([
     'currentTime' => $Now,
 ]);
 
-if (!empty($UpdateACSFleets)) {
-    $UpdateACSFleetsIDs = explode(',', str_replace('|', '', $CheckACS['fleets_id']));
-    $UpdateACSFleetsIDs[] = $CheckACS['main_fleet_id'];
-
-    $UpdateACSFleetsIDs = Collections\compact($UpdateACSFleetsIDs);
-
-    if (!empty($UpdateACSFleetsIDs)) {
-        FlightControl\Utils\Updaters\updateFleetArchiveACSEntries([
-            'fleetIds' => $UpdateACSFleetsIDs,
-            'flightAdditionalTime' => $unionFlightsAnySlowdown,
-        ]);
-    }
-}
-
-$_Planet['metal'] -= $Fleet['resources']['metal'];
-$_Planet['crystal'] -= $Fleet['resources']['crystal'];
-$_Planet['deuterium'] -= ($Fleet['resources']['deuterium'] + $Consumption);
-
-$_Lang['ShipsRows'] = '';
-foreach($Fleet['array'] as $ShipID => $ShipCount)
-{
-    $_Planet[$_Vars_GameElements[$ShipID]] -= $ShipCount;
-    $_Lang['ShipsRows'] .= '<tr><th class="pad">'.$_Lang['tech'][$ShipID].'</th><th class="pad">'.prettyNumber($ShipCount).'</th></tr>';
-}
-if(!empty($Add2UpdatePlanetPHP))
-{
-    foreach($Add2UpdatePlanetPHP as $Key => $Value)
-    {
-        $_Planet[$Key] = $Value;
-    }
-}
-
-$QryUpdatePlanet = '';
-$QryUpdatePlanet .= "UPDATE {{table}} SET ";
-$QryUpdatePlanet .= implode(', ', $FleetRemover).', ';
-$QryUpdatePlanet .= "`metal` = '{$_Planet['metal']}', ";
-$QryUpdatePlanet .= "`crystal` = '{$_Planet['crystal']}', ";
-$QryUpdatePlanet .= "`deuterium` = '{$_Planet['deuterium']}' ";
-if(!empty($Add2UpdatePlanet))
-{
-    $QryUpdatePlanet .= ", ".implode(', ', $Add2UpdatePlanet);
-}
-$QryUpdatePlanet .= " WHERE ";
-$QryUpdatePlanet .= "`id` = {$_Planet['id']};";
-
-doquery('LOCK TABLE {{table}} WRITE', 'planets');
-doquery($QryUpdatePlanet, 'planets');
-doquery('UNLOCK TABLES', '');
+FlightControl\Utils\Updaters\updateFleetOriginPlanet([
+    'originPlanet' => &$_Planet,
+    'fleetEntry' => $Fleet,
+    'fuelConsumption' => $Consumption,
+    'quantumGateUsage' => [
+        'isUsing' => $isUsingQuantumGate,
+        'usageType' => $quantumGateUseType,
+    ],
+    'currentTimestamp' => $Now,
+]);
 
 $UserDev_Log[] = FlightControl\Utils\Factories\createFleetDevLogEntry([
     'currentPlanet' => &$_Planet,
@@ -989,6 +926,14 @@ $_Lang['TargetType'] = ($Target['type'] == 1 ? 'planet' : ($Target['type'] == 3 
 $_Lang['FleetStartTime'] = prettyDate('d m Y H:i:s', $Fleet['SetCalcTime'], 1);
 $_Lang['FleetEndTime'] = prettyDate('d m Y H:i:s', $Fleet['SetBackTime'], 1);
 $_Lang['useQuickRes'] = ($_POST['useQuickRes'] == '1' ? 'true' : 'false');
+
+$_Lang['ShipsRows'] = array_map_withkeys($Fleet['array'], function ($shipCount, $shipId) use (&$_Lang) {
+    $shipName = $_Lang['tech'][$shipId];
+    $shipCountDisplay = prettyNumber($shipCount);
+
+    return "<tr><th class=\"pad\">{$shipName}</th><th class=\"pad\">{$shipCountDisplay}</th></tr>";
+});
+$_Lang['ShipsRows'] = implode('', $_Lang['ShipsRows']);
 
 display(parsetemplate(gettemplate('fleet3_body'), $_Lang), $_Lang['fl_title']);
 
