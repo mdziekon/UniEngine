@@ -76,6 +76,7 @@ call_user_func(function () {
     include($includePath . './utils/updaters/updateUnionMembers.updaters.php');
     include($includePath . './utils/validators/bashLimit.validator.php');
     include($includePath . './utils/validators/fleetArray.validator.php');
+    include($includePath . './utils/validators/flightSlots.validator.php');
     include($includePath . './utils/validators/joinUnion.validator.php');
     include($includePath . './utils/validators/missionHold.validator.php');
     include($includePath . './utils/validators/noobProtection.validator.php');

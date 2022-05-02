@@ -80,23 +80,26 @@ $fleetsInFlightCounters = FlightControl\Utils\Helpers\getFleetsInFlightCounters(
     'userId' => $_User['id'],
 ]);
 
-// Get Available Slots for Expeditions (1 + floor(ExpeditionTech / 3))
-$Slots['MaxFleetSlots'] = FlightControl\Utils\Helpers\getUserFleetSlotsCount([
-    'user' => $_User,
-    'timestamp' => $Now,
+$flightSlotsValidationResult = FlightControl\Utils\Validators\validateFlightSlots([
+    'user' => &$_User,
+    'fleetEntry' => $Fleet,
+    'fleetsInFlightCounters' => $fleetsInFlightCounters,
+    'currentTimestamp' => $Now,
 ]);
-$Slots['MaxExpedSlots'] = FlightControl\Utils\Helpers\getUserExpeditionSlotsCount([
-    'user' => $_User,
-]);
-$Slots['FlyingFleetsCount'] = $fleetsInFlightCounters['allFleetsInFlight'];
-$Slots['FlyingExpeditions'] = $fleetsInFlightCounters['expeditionsInFlight'];
-if($Slots['FlyingFleetsCount'] >= $Slots['MaxFleetSlots'])
-{
-    messageRed($_Lang['fl3_NoMoreFreeSlots'], $ErrorTitle);
-}
-if($Slots['FlyingExpeditions'] >= $Slots['MaxExpedSlots'] AND $Fleet['Mission'] == 15)
-{
-    messageRed($_Lang['fl3_NoMoreFreeExpedSlots'], $ErrorTitle);
+
+if (!$flightSlotsValidationResult['isSuccess']) {
+    $errorMessage = null;
+
+    switch ($flightSlotsValidationResult['error']['code']) {
+        case 'MAX_FLIGHTS_LIMIT_REACHED':
+            $errorMessage = $_Lang['fl3_NoMoreFreeSlots'];
+            break;
+        case 'MAX_EXPEDITIONS_LIMIT_REACHED':
+            $errorMessage = $_Lang['fl3_NoMoreFreeExpedSlots'];
+            break;
+    }
+
+    messageRed($errorMessage, $ErrorTitle);
 }
 
 // --- Check if all resources are correct (no negative numbers and enough on planet)
