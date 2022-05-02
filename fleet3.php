@@ -870,6 +870,13 @@ if ($isJoiningUnion) {
             'slowdown' => $unionInFlightFleetsSlowdown,
         ],
     ]);
+
+    FlightControl\Utils\Updaters\updateFleetArchiveACSEntries([
+        'union' => $CheckACS,
+        'updates' => [
+            'slowdown' => $unionInFlightFleetsSlowdown,
+        ],
+    ]);
 }
 
 FlightControl\Utils\Updaters\insertFleetArchiveEntry([
@@ -891,20 +898,6 @@ FlightControl\Utils\Updaters\insertFleetArchiveEntry([
     ],
     'currentTime' => $Now,
 ]);
-
-if (!empty($UpdateACSFleets)) {
-    $UpdateACSFleetsIDs = explode(',', str_replace('|', '', $CheckACS['fleets_id']));
-    $UpdateACSFleetsIDs[] = $CheckACS['main_fleet_id'];
-
-    $UpdateACSFleetsIDs = Collections\compact($UpdateACSFleetsIDs);
-
-    if (!empty($UpdateACSFleetsIDs)) {
-        FlightControl\Utils\Updaters\updateFleetArchiveACSEntries([
-            'fleetIds' => $UpdateACSFleetsIDs,
-            'flightAdditionalTime' => $unionFlightsAnySlowdown,
-        ]);
-    }
-}
 
 $_Planet['metal'] -= $Fleet['resources']['metal'];
 $_Planet['crystal'] -= $Fleet['resources']['crystal'];
