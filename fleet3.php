@@ -467,6 +467,8 @@ if ($hasTargetOwner) {
         'fleetEntry' => $Fleet,
         'fleetOwner' => $_User,
         'targetOwner' => $TargetData,
+        'usersStats' => $usersStats,
+        'currentTimestamp' => $Now,
     ]);
 
     if (!$targetOwnerValidation['isSuccess']) {
@@ -482,20 +484,6 @@ if ($hasTargetOwner) {
         FlightControl\Utils\Helpers\isMissionNoobProtectionChecked($Fleet['Mission'])
     ) {
         $Throw = false;
-
-        $noobProtectionValidationResult = FlightControl\Utils\Validators\validateNoobProtection([
-            'attackerUser' => $_User,
-            'attackerStats' => $usersStats['fleetOwner'],
-            'targetUser' => $TargetData,
-            'targetStats' => $usersStats['targetOwner'],
-            'currentTimestamp' => $Now,
-        ]);
-
-        if (!$noobProtectionValidationResult['isSuccess']) {
-            $Throw = FlightControl\Utils\Errors\mapNoobProtectionValidationErrorToReadableMessage(
-                $noobProtectionValidationResult['error']
-            );
-        }
 
         if($Protections['adminEnable'])
         {

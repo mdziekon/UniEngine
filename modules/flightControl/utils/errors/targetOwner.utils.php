@@ -2,6 +2,8 @@
 
 namespace UniEngine\Engine\Modules\FlightControl\Utils\Errors;
 
+use UniEngine\Engine\Modules\FlightControl\Utils\Errors;
+
 /**
  * @param object $error As returned by FlightControl\Utils\Validators\validateTargetOwner
  */
@@ -19,6 +21,11 @@ function mapTargetOwnerValidationErrorToReadableMessage($error) {
         'TARGET_USER_BANNED' => $_Lang['fl3_CantSendBanned'],
         'TARGET_USER_ON_VACATION' => $_Lang['fl3_CantSendVacation'],
         'TARGET_ALLY_PROTECTION' => $_Lang['fl3_CantSendAlly'],
+        'NOOB_PROTECTION_VALIDATION_ERROR' => function ($params) {
+            $errorMessage = Errors\mapNoobProtectionValidationErrorToReadableMessage($params);
+
+            return $errorMessage;
+        },
     ];
 
     if (!isset($knownErrorsByCode[$errorCode])) {

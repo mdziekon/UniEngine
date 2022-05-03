@@ -9,6 +9,8 @@ use UniEngine\Engine\Modules\FlightControl;
  * @param array $props['fleetEntry']
  * @param array $props['fleetOwner']
  * @param array $props['targetOwner']
+ * @param array $props['usersStats']
+ * @param number $props['currentTimestamp']
  */
 function validateTargetOwner($validationParams) {
     global $_GameConfig;
@@ -21,6 +23,8 @@ function validateTargetOwner($validationParams) {
         $fleetEntry = $input['fleetEntry'];
         $fleetOwner = $input['fleetOwner'];
         $targetOwner = $input['targetOwner'];
+        $usersStats = $input['usersStats'];
+        $currentTimestamp = $input['currentTimestamp'];
 
         if (isOnVacation($targetOwner)) {
             return $resultHelpers['createFailure']([
@@ -43,6 +47,27 @@ function validateTargetOwner($validationParams) {
             ]);
         }
 
+        if (
+            !FlightControl\Utils\Helpers\isNoobProtectionEnabled() ||
+            !FlightControl\Utils\Helpers\isMissionNoobProtectionChecked($fleetEntry['Mission'])
+        ) {
+            return $resultHelpers['createSuccess']([]);
+        }
+
+        $noobProtectionValidationResult = FlightControl\Utils\Validators\validateNoobProtection([
+            'attackerUser' => $fleetOwner,
+            'attackerStats' => $usersStats['fleetOwner'],
+            'targetUser' => $targetOwner,
+            'targetStats' => $usersStats['targetOwner'],
+            'currentTimestamp' => $currentTimestamp,
+        ]);
+
+        if (!$noobProtectionValidationResult['isSuccess']) {
+            return $resultHelpers['createFailure']([
+                'code' => 'NOOB_PROTECTION_VALIDATION_ERROR',
+                'params' => $noobProtectionValidationResult['error'],
+            ]);
+        }
 
         return $resultHelpers['createSuccess']([]);
     };
