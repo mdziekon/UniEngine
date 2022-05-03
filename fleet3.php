@@ -477,78 +477,79 @@ if ($hasTargetOwner) {
         messageRed($errorMessage, $ErrorTitle);
     }
 
-    if (FlightControl\Utils\Helpers\isNoobProtectionEnabled()) {
+    if (
+        FlightControl\Utils\Helpers\isNoobProtectionEnabled() &&
+        FlightControl\Utils\Helpers\isMissionNoobProtectionChecked($Fleet['Mission'])
+    ) {
         $Throw = false;
 
-        if (FlightControl\Utils\Helpers\isMissionNoobProtectionChecked($Fleet['Mission'])) {
-            $noobProtectionValidationResult = FlightControl\Utils\Validators\validateNoobProtection([
-                'attackerUser' => $_User,
-                'attackerStats' => $usersStats['fleetOwner'],
-                'targetUser' => $TargetData,
-                'targetStats' => $usersStats['targetOwner'],
+        $noobProtectionValidationResult = FlightControl\Utils\Validators\validateNoobProtection([
+            'attackerUser' => $_User,
+            'attackerStats' => $usersStats['fleetOwner'],
+            'targetUser' => $TargetData,
+            'targetStats' => $usersStats['targetOwner'],
+            'currentTimestamp' => $Now,
+        ]);
+
+        if (!$noobProtectionValidationResult['isSuccess']) {
+            $Throw = FlightControl\Utils\Errors\mapNoobProtectionValidationErrorToReadableMessage(
+                $noobProtectionValidationResult['error']
+            );
+        }
+
+        if($Protections['adminEnable'])
+        {
+            if(CheckAuth('supportadmin') OR CheckAuth('supportadmin', AUTHCHECK_NORMAL, $TargetData))
+            {
+                if(CheckAuth('supportadmin'))
+                {
+                    $Throw = $_Lang['fl3_ProtectAdminCant'];
+                }
+                else
+                {
+                    $Throw = $_Lang['fl3_ProtectCantAdmin'];
+                }
+            }
+        }
+
+        $isFarmCheckRequired = (
+            $noobProtectionValidationResult['isSuccess'] &&
+            !($noobProtectionValidationResult['payload']['isTargetIdle']) &&
+            $Protections['antifarm_enabled'] == true &&
+            ($usersStats['fleetOwner']['points'] / $usersStats['targetOwner']['points']) >= $Protections['antifarm_rate']
+        );
+
+        if (
+            empty($Throw) &&
+            (
+                $isFarmCheckRequired ||
+                $Protections['bashLimit_enabled'] === true
+            )
+        ) {
+            $targetId = $targetInfo['targetPlanetDetails']['id'];
+            $targetUserId = $TargetData['id'];
+
+            $bashLimitValidationResult = FlightControl\Utils\Validators\validateBashLimit([
+                'isFarmCheckRequired' => $isFarmCheckRequired,
+                'isBashCheckRequired' => $Protections['bashLimit_enabled'],
+                'attackerUserId' => $_User['id'],
+                'targetId' => $targetId,
+                'targetUserId' => $targetUserId,
+                'fleetsInFlightToTargetCount' => $fleetsInFlightCounters['aggressiveFleetsInFlight']['byTargetOwnerId'][$targetUserId],
+                'fleetsInFlightToTargetOwnerCount' => $fleetsInFlightCounters['aggressiveFleetsInFlight']['byTargetId'][$targetId],
                 'currentTimestamp' => $Now,
             ]);
 
-            if (!$noobProtectionValidationResult['isSuccess']) {
-                $Throw = FlightControl\Utils\Errors\mapNoobProtectionValidationErrorToReadableMessage(
-                    $noobProtectionValidationResult['error']
+            if (!$bashLimitValidationResult['isSuccess']) {
+                $Throw = FlightControl\Utils\Errors\mapBashLimitValidationErrorToReadableMessage(
+                    $bashLimitValidationResult['error']
                 );
             }
+        }
 
-            if($Protections['adminEnable'])
-            {
-                if(CheckAuth('supportadmin') OR CheckAuth('supportadmin', AUTHCHECK_NORMAL, $TargetData))
-                {
-                    if(CheckAuth('supportadmin'))
-                    {
-                        $Throw = $_Lang['fl3_ProtectAdminCant'];
-                    }
-                    else
-                    {
-                        $Throw = $_Lang['fl3_ProtectCantAdmin'];
-                    }
-                }
-            }
-
-            $isFarmCheckRequired = (
-                $noobProtectionValidationResult['isSuccess'] &&
-                !($noobProtectionValidationResult['payload']['isTargetIdle']) &&
-                $Protections['antifarm_enabled'] == true &&
-                ($usersStats['fleetOwner']['points'] / $usersStats['targetOwner']['points']) >= $Protections['antifarm_rate']
-            );
-
-            if (
-                empty($Throw) &&
-                (
-                    $isFarmCheckRequired ||
-                    $Protections['bashLimit_enabled'] === true
-                )
-            ) {
-                $targetId = $targetInfo['targetPlanetDetails']['id'];
-                $targetUserId = $TargetData['id'];
-
-                $bashLimitValidationResult = FlightControl\Utils\Validators\validateBashLimit([
-                    'isFarmCheckRequired' => $isFarmCheckRequired,
-                    'isBashCheckRequired' => $Protections['bashLimit_enabled'],
-                    'attackerUserId' => $_User['id'],
-                    'targetId' => $targetId,
-                    'targetUserId' => $targetUserId,
-                    'fleetsInFlightToTargetCount' => $fleetsInFlightCounters['aggressiveFleetsInFlight']['byTargetOwnerId'][$targetUserId],
-                    'fleetsInFlightToTargetOwnerCount' => $fleetsInFlightCounters['aggressiveFleetsInFlight']['byTargetId'][$targetId],
-                    'currentTimestamp' => $Now,
-                ]);
-
-                if (!$bashLimitValidationResult['isSuccess']) {
-                    $Throw = FlightControl\Utils\Errors\mapBashLimitValidationErrorToReadableMessage(
-                        $bashLimitValidationResult['error']
-                    );
-                }
-            }
-
-            if($Throw)
-            {
-                messageRed($Throw, $ErrorTitle);
-            }
+        if($Throw)
+        {
+            messageRed($Throw, $ErrorTitle);
         }
     }
 }
