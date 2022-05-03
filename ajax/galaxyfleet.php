@@ -165,30 +165,10 @@ switch($Mission)
             $Query_GetUser .= "WHERE `id` = {$TargetUser} LIMIT 1;";
             $HeDBRec = doquery($Query_GetUser, 'users', true);
 
-            $usersStats = [
-                'fleetOwner' => [
-                    'totalRankPos' => $_User['total_rank'],
-                    'points' => (
-                        $_User['total_points'] > 0 ?
-                            $_User['total_points'] :
-                            0
-                    ),
-                ],
-                'targetOwner' => [
-                    'totalRankPos' => $HeDBRec['total_rank'],
-                    'points' => (
-                        $HeDBRec['total_points'] > 0 ?
-                            $HeDBRec['total_points'] :
-                            0
-                    ),
-                ],
-            ];
-
-            // Impersonate target user in terms of stat points & ranking pos
-            if (CheckAuth('programmer')) {
-                $usersStats['fleetOwner']['points'] = $usersStats['targetOwner']['points'];
-                $usersStats['fleetOwner']['totalRankPos'] = $usersStats['targetOwner']['totalRankPos'];
-            }
+            $usersStats = FlightControl\Utils\Factories\createFleetUsersStatsData([
+                'fleetOwner' => $_User,
+                'targetOwner' => $HeDBRec,
+            ]);
 
             if($allyprotection == 1 AND $_User['ally_id'] > 0 AND $_User['ally_id'] == $HeDBRec['ally_id'])
             {

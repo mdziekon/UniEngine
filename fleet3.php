@@ -448,44 +448,15 @@ if (!empty($targetInfo['galaxyEntry'])) {
     $TargetData = &$targetInfo['targetOwnerDetails'];
 }
 
-$usersStats = [
-    'fleetOwner' => [
-        'totalRankPos' => 0,
-        'points' => 0,
-    ],
-    'targetOwner' => [
-        'totalRankPos' => 0,
-        'points' => 0,
-    ],
-];
+$usersStats = FlightControl\Utils\Factories\createFleetUsersStatsData([]);
 
 // --- Check if User data are OK
 if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner'] AND !$targetInfo['isPlanetAbandoned'])
 {
-    $usersStats = [
-        'fleetOwner' => [
-            'totalRankPos' => $_User['total_rank'],
-            'points' => (
-                $_User['total_points'] > 0 ?
-                    $_User['total_points'] :
-                    0
-            ),
-        ],
-        'targetOwner' => [
-            'totalRankPos' => $TargetData['total_rank'],
-            'points' => (
-                $TargetData['total_points'] > 0 ?
-                    $TargetData['total_points'] :
-                    0
-            ),
-        ],
-    ];
-
-    // Impersonate target user in terms of stat points & ranking pos
-    if (CheckAuth('programmer')) {
-        $usersStats['fleetOwner']['points'] = $usersStats['targetOwner']['points'];
-        $usersStats['fleetOwner']['totalRankPos'] = $usersStats['targetOwner']['totalRankPos'];
-    }
+    $usersStats = FlightControl\Utils\Factories\createFleetUsersStatsData([
+        'fleetOwner' => $_User,
+        'targetOwner' => $TargetData,
+    ]);
 
     if(isOnVacation($TargetData))
     {
