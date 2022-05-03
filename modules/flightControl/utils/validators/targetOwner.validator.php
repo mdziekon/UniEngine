@@ -97,6 +97,10 @@ function validateTargetOwner($validationParams) {
             ]);
         }
 
+        if (!FlightControl\Utils\Helpers\isMissionAntiBashProtectionChecked($fleetEntry['Mission'])) {
+            return $resultHelpers['createSuccess']([]);
+        }
+
         $usersPointsRatio = ($usersStats['fleetOwner']['points'] / $usersStats['targetOwner']['points']);
 
         $isBashCheckRequired = $protectionConfig['isAntiBashProtectionEnabled'];
