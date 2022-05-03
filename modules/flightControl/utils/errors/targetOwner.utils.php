@@ -26,6 +26,13 @@ function mapTargetOwnerValidationErrorToReadableMessage($error) {
 
             return $errorMessage;
         },
+        'ADMIN_PROTECTION_ERROR' => function ($params) use (&$_Lang) {
+            if ($params['isFleetOwnerProtected']) {
+                return $_Lang['fl3_ProtectAdminCant'];
+            }
+
+            return $_Lang['fl3_ProtectCantAdmin'];
+        }
     ];
 
     if (!isset($knownErrorsByCode[$errorCode])) {

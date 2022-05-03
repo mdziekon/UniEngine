@@ -17,6 +17,7 @@ function validateTargetOwner($validationParams) {
 
     $protectionConfig = [
         'isAllyProtectionEnabled' => ($_GameConfig['allyprotection'] == 1),
+        'isAdminProtectionEnabled' => ($_GameConfig['adminprotection'] == 1),
     ];
 
     $validator = function ($input, $resultHelpers) use ($protectionConfig) {
@@ -66,6 +67,25 @@ function validateTargetOwner($validationParams) {
             return $resultHelpers['createFailure']([
                 'code' => 'NOOB_PROTECTION_VALIDATION_ERROR',
                 'params' => $noobProtectionValidationResult['error'],
+            ]);
+        }
+
+        $isFleetOwnerSupportAdmin = CheckAuth('supportadmin', AUTHCHECK_NORMAL, $fleetOwner);
+        $isTargetOwnerSupportAdmin = CheckAuth('supportadmin', AUTHCHECK_NORMAL, $targetOwner);
+
+        if (
+            $protectionConfig['isAdminProtectionEnabled'] &&
+            (
+                $isFleetOwnerSupportAdmin ||
+                $isTargetOwnerSupportAdmin
+            )
+        ) {
+            return $resultHelpers['createFailure']([
+                'code' => 'ADMIN_PROTECTION_ERROR',
+                'params' => [
+                    'isFleetOwnerProtected' => $isFleetOwnerSupportAdmin,
+                    'isTargetOwnerProtected' => $isTargetOwnerSupportAdmin,
+                ],
             ]);
         }
 

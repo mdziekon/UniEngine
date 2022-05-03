@@ -485,21 +485,6 @@ if ($hasTargetOwner) {
     ) {
         $Throw = false;
 
-        if($Protections['adminEnable'])
-        {
-            if(CheckAuth('supportadmin') OR CheckAuth('supportadmin', AUTHCHECK_NORMAL, $TargetData))
-            {
-                if(CheckAuth('supportadmin'))
-                {
-                    $Throw = $_Lang['fl3_ProtectAdminCant'];
-                }
-                else
-                {
-                    $Throw = $_Lang['fl3_ProtectCantAdmin'];
-                }
-            }
-        }
-
         $isFarmCheckRequired = (
             $noobProtectionValidationResult['isSuccess'] &&
             !($noobProtectionValidationResult['payload']['isTargetIdle']) &&
