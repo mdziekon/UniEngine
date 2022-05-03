@@ -448,16 +448,22 @@ if (!empty($targetInfo['galaxyEntry'])) {
     $TargetData = &$targetInfo['targetOwnerDetails'];
 }
 
-$usersStats = FlightControl\Utils\Factories\createFleetUsersStatsData([]);
+$hasTargetOwner = (
+    $targetInfo['isPlanetOccupied'] &&
+    !$targetInfo['isPlanetOwnedByFleetOwner'] &&
+    !$targetInfo['isPlanetAbandoned']
+);
+$usersStats = (
+    $hasTargetOwner ?
+        FlightControl\Utils\Factories\createFleetUsersStatsData([
+            'fleetOwner' => $_User,
+            'targetOwner' => $TargetData,
+        ]) :
+        FlightControl\Utils\Factories\createFleetUsersStatsData([])
+);
 
 // --- Check if User data are OK
-if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner'] AND !$targetInfo['isPlanetAbandoned'])
-{
-    $usersStats = FlightControl\Utils\Factories\createFleetUsersStatsData([
-        'fleetOwner' => $_User,
-        'targetOwner' => $TargetData,
-    ]);
-
+if ($hasTargetOwner) {
     if(isOnVacation($TargetData))
     {
         if($TargetData['is_banned'] == 1)
