@@ -448,32 +448,47 @@ if (!empty($targetInfo['galaxyEntry'])) {
     $TargetData = &$targetInfo['targetOwnerDetails'];
 }
 
+$usersStats = [
+    'attacker' => [
+        'totalRankPos' => 0,
+        'points' => 0,
+    ],
+    'target' => [
+        'totalRankPos' => 0,
+        'points' => 0,
+    ],
+];
+
 // --- Check if User data are OK
 if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner'] AND !$targetInfo['isPlanetAbandoned'])
 {
-    $SaveMyTotalRank = false;
+    $usersStats = [
+        'attacker' => [
+            'totalRankPos' => $_User['total_rank'],
+            'points' => (
+                $_User['total_points'] > 0 ?
+                    $_User['total_points'] :
+                    0
+            ),
+        ],
+        'target' => [
+            'totalRankPos' => $TargetData['total_rank'],
+            'points' => (
+                $TargetData['total_points'] > 0 ?
+                    $TargetData['total_points'] :
+                    0
+            ),
+        ],
+    ];
 
-    $StatsData['his'] = ($TargetData['total_points'] > 0 ? $TargetData['total_points'] : 0);
-    if(!CheckAuth('programmer'))
-    {
-        $StatsData['mine'] = ($_User['total_points'] > 0 ? $_User['total_points'] : 0);
-    }
-    else
-    {
-        $StatsData['mine'] = $StatsData['his'];
-        if($_User['total_rank'] <= 0)
-        {
-            $SaveMyTotalRank = $_User['total_rank'];
-            $_User['total_rank'] = $TargetData['total_rank'];
-        }
+    // Impersonate target user in terms of stat points & ranking pos
+    if (CheckAuth('programmer')) {
+        $usersStats['attacker']['points'] = $usersStats['target']['points'];
+        $usersStats['attacker']['totalRankPos'] = $usersStats['target']['totalRankPos'];
     }
 
     if(isOnVacation($TargetData))
     {
-        if($SaveMyTotalRank !== false)
-        {
-            $_User['total_rank'] = $SaveMyTotalRank;
-        }
         if($TargetData['is_banned'] == 1)
         {
             messageRed($_Lang['fl3_CantSendBanned'], $ErrorTitle);
@@ -489,10 +504,6 @@ if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner']
         if($_User['ally_id'] > 0 AND $_User['ally_id'] == $TargetData['ally_id'])
         {
             if (FlightControl\Utils\Helpers\isMissionNoobProtectionChecked($Fleet['Mission'])) {
-                if($SaveMyTotalRank !== false)
-                {
-                    $_User['total_rank'] = $SaveMyTotalRank;
-                }
                 messageRed($_Lang['fl3_CantSendAlly'], $ErrorTitle);
             }
         }
@@ -504,9 +515,9 @@ if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner']
         if (FlightControl\Utils\Helpers\isMissionNoobProtectionChecked($Fleet['Mission'])) {
             $noobProtectionValidationResult = FlightControl\Utils\Validators\validateNoobProtection([
                 'attackerUser' => $_User,
-                'attackerStats' => $StatsData['mine'],
+                'attackerStats' => $usersStats['attacker'],
                 'targetUser' => $TargetData,
-                'targetStats' => $StatsData['his'],
+                'targetStats' => $usersStats['target'],
                 'currentTimestamp' => $Now,
             ]);
 
@@ -535,7 +546,7 @@ if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner']
                 $noobProtectionValidationResult['isSuccess'] &&
                 !($noobProtectionValidationResult['payload']['isTargetIdle']) &&
                 $Protections['antifarm_enabled'] == true &&
-                ($StatsData['mine'] / $StatsData['his']) >= $Protections['antifarm_rate']
+                ($usersStats['attacker']['points'] / $usersStats['target']['points']) >= $Protections['antifarm_rate']
             );
 
             if (
@@ -568,18 +579,9 @@ if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner']
 
             if($Throw)
             {
-                if($SaveMyTotalRank !== false)
-                {
-                    $_User['total_rank'] = $SaveMyTotalRank;
-                }
                 messageRed($Throw, $ErrorTitle);
             }
         }
-    }
-
-    if($SaveMyTotalRank !== false)
-    {
-        $_User['total_rank'] = $SaveMyTotalRank;
     }
 }
 
@@ -795,7 +797,7 @@ if (!isset($LockFleetSending)) {
         'fleetOwner' => $_User,
         'targetOwner' => $TargetData,
         'targetInfo' => $targetInfo,
-        'statsData' => $StatsData,
+        'statsData' => $usersStats,
     ]);
 
     if ($hasMetPushAlertConditions) {
@@ -805,7 +807,7 @@ if (!isset($LockFleetSending)) {
             'fleetOwner' => $_User,
             'targetOwner' => $TargetData,
             'targetInfo' => $targetInfo,
-            'statsData' => $StatsData,
+            'statsData' => $usersStats,
         ]);
 
         Alerts_Add(1, $Now, 5, 4, 5, $_User['id'], $alertData);

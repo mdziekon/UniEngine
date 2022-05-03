@@ -25,7 +25,7 @@ function hasMetPushAlertConditions($props) {
         $targetInfo['isPlanetAbandoned'] ||
         $targetInfo['isPlanetOwnedByFleetOwner'] ||
         $fleetData['Mission'] != FleetMission::Transport ||
-        $statsData['mine'] >= $statsData['his'] ||
+        $statsData['attacker']['points'] >= $statsData['target']['points'] ||
         empty($fleetData['resources'])
     ) {
         return false;

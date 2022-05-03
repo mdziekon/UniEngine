@@ -29,12 +29,12 @@ function validateNoobProtection($validationParams) {
         $targetStats = $input['targetStats'];
         $currentTimestamp = $input['currentTimestamp'];
 
-        if ($attackerUser['total_rank'] < 1) {
+        if ($attackerStats['totalRankPos'] < 1) {
             return $resultHelpers['createFailure']([
                 'code' => 'ATTACKER_STATISTICS_UNAVAILABLE',
             ]);
         }
-        if ($targetUser['total_rank'] < 1) {
+        if ($targetStats['totalRankPos'] < 1) {
             return $resultHelpers['createFailure']([
                 'code' => 'TARGET_STATISTICS_UNAVAILABLE',
             ]);
@@ -62,7 +62,7 @@ function validateNoobProtection($validationParams) {
                 ],
             ]);
         }
-        if ($attackerStats < $protectionConfig['fixedBasicProtectionLimit']) {
+        if ($attackerStats['points'] < $protectionConfig['fixedBasicProtectionLimit']) {
             return $resultHelpers['createFailure']([
                 'code' => 'ATTACKER_NOOBPROTECTION_BASIC_LIMIT_NOT_REACHED',
                 'params' => [
@@ -77,7 +77,7 @@ function validateNoobProtection($validationParams) {
             ]);
         }
 
-        if ($targetStats < $protectionConfig['fixedBasicProtectionLimit']) {
+        if ($targetStats['points'] < $protectionConfig['fixedBasicProtectionLimit']) {
             return $resultHelpers['createFailure']([
                 'code' => 'TARGET_NOOBPROTECTION_BASIC_LIMIT_NOT_REACHED',
                 'params' => [
@@ -87,15 +87,15 @@ function validateNoobProtection($validationParams) {
         }
 
         if (
-            $targetStats >= $protectionConfig['weakProtectionFinalLimit'] &&
-            $attackerStats >= $protectionConfig['weakProtectionFinalLimit']
+            $targetStats['points'] >= $protectionConfig['weakProtectionFinalLimit'] &&
+            $attackerStats['points'] >= $protectionConfig['weakProtectionFinalLimit']
         ) {
             return $resultHelpers['createSuccess']([
                 'isTargetIdle' => false,
             ]);
         }
 
-        if ($attackerStats > ($targetStats * $protectionConfig['weakProtectionMultiplier'])) {
+        if ($attackerStats['points'] > ($targetStats['points'] * $protectionConfig['weakProtectionMultiplier'])) {
             return $resultHelpers['createFailure']([
                 'code' => 'TARGET_NOOBPROTECTION_TOO_WEAK_BY_MULTIPLIER',
                 'params' => [
@@ -103,7 +103,7 @@ function validateNoobProtection($validationParams) {
                 ],
             ]);
         }
-        if ($targetStats > ($attackerStats * $protectionConfig['weakProtectionMultiplier'])) {
+        if ($targetStats['points'] > ($attackerStats['points'] * $protectionConfig['weakProtectionMultiplier'])) {
             return $resultHelpers['createFailure']([
                 'code' => 'ATTACKER_NOOBPROTECTION_TOO_WEAK_BY_MULTIPLIER',
                 'params' => [

@@ -137,26 +137,37 @@ if($PlanetData['id_owner'] > 0)
         }
     }
 
-    if(!CheckAuth('programmer'))
-    {
-        $MyGameLevel = $_User['total_points'];
+    $usersStats = [
+        'attacker' => [
+            'totalRankPos' => $_User['total_rank'],
+            'points' => (
+                $_User['total_points'] > 0 ?
+                    $_User['total_points'] :
+                    0
+            ),
+        ],
+        'target' => [
+            'totalRankPos' => $HeDBRec['total_rank'],
+            'points' => (
+                $HeDBRec['total_points'] > 0 ?
+                    $HeDBRec['total_points'] :
+                    0
+            ),
+        ],
+    ];
+
+    // Impersonate target user in terms of stat points & ranking pos
+    if (CheckAuth('programmer')) {
+        $usersStats['attacker']['points'] = $usersStats['target']['points'];
+        $usersStats['attacker']['totalRankPos'] = $usersStats['target']['totalRankPos'];
     }
-    else
-    {
-        $MyGameLevel = $HeDBRec['total_points'];
-        if($_User['total_rank'] <= 0)
-        {
-            $_User['total_rank'] = $HeDBRec['total_rank'];
-        }
-    }
-    $HeGameLevel = $HeDBRec['total_points'];
 
     if (FlightControl\Utils\Helpers\isNoobProtectionEnabled()) {
         $noobProtectionValidationResult = FlightControl\Utils\Validators\validateNoobProtection([
             'attackerUser' => $_User,
-            'attackerStats' => $MyGameLevel,
+            'attackerStats' => $usersStats['attacker'],
             'targetUser' => $HeDBRec,
-            'targetStats' => $HeGameLevel,
+            'targetStats' => $usersStats['target'],
             'currentTimestamp' => $Now,
         ]);
 
