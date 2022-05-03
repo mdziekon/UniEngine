@@ -90,6 +90,10 @@ function isOnVacation($_User = false) {
     return ($_User['is_onvacation'] == 1);
 }
 
+function isUserBanned($user) {
+    return ($user['is_banned'] == 1);
+}
+
 // Tells whether the enabled vacation mode is the "regular one" (set by the user)
 // or a "special one" (either enabled when banning, or special "admin" mode).
 function isOnRegularVacation(&$user) {

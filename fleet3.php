@@ -8,7 +8,6 @@ include($_EnginePath.'common.php');
 
 include($_EnginePath . 'modules/flightControl/_includes.php');
 
-use UniEngine\Engine\Includes\Helpers\Common\Collections;
 use UniEngine\Engine\Modules\FlightControl;
 use UniEngine\Engine\Modules\Flights;
 
@@ -59,12 +58,7 @@ $Fleet['HoldTime'] = intval($_POST['holdingtime']);
 $Fleet['ACS_ID'] = isset($_POST['acs_id']) ? floor(floatval($_POST['acs_id'])) : 0;
 $Fleet['Mission'] = isset($_POST['mission']) ? intval($_POST['mission']) : 0;
 
-$Protections['adminEnable'] = (bool) $_GameConfig['adminprotection'];
-$Protections['ally'] = $_GameConfig['allyprotection'];
 $Protections['idleTime'] = $_GameConfig['no_idle_protect'] * TIME_DAY;
-$Protections['antifarm_enabled'] = (bool) $_GameConfig['Protection_AntiFarmEnabled'];
-$Protections['antifarm_rate'] = $_GameConfig['Protection_AntiFarmRate'];
-$Protections['bashLimit_enabled'] = (bool) $_GameConfig['Protection_BashLimitEnabled'];
 
 if (!isUserAccountActivated($_User)) {
     messageRed($_Lang['fl3_BlockAccNotActivated'], $ErrorTitle);
@@ -80,42 +74,36 @@ $fleetsInFlightCounters = FlightControl\Utils\Helpers\getFleetsInFlightCounters(
     'userId' => $_User['id'],
 ]);
 
-// Get Available Slots for Expeditions (1 + floor(ExpeditionTech / 3))
-$Slots['MaxFleetSlots'] = FlightControl\Utils\Helpers\getUserFleetSlotsCount([
-    'user' => $_User,
-    'timestamp' => $Now,
+$flightSlotsValidationResult = FlightControl\Utils\Validators\validateFlightSlots([
+    'user' => &$_User,
+    'fleetEntry' => $Fleet,
+    'fleetsInFlightCounters' => $fleetsInFlightCounters,
+    'currentTimestamp' => $Now,
 ]);
-$Slots['MaxExpedSlots'] = FlightControl\Utils\Helpers\getUserExpeditionSlotsCount([
-    'user' => $_User,
-]);
-$Slots['FlyingFleetsCount'] = $fleetsInFlightCounters['allFleetsInFlight'];
-$Slots['FlyingExpeditions'] = $fleetsInFlightCounters['expeditionsInFlight'];
-if($Slots['FlyingFleetsCount'] >= $Slots['MaxFleetSlots'])
-{
-    messageRed($_Lang['fl3_NoMoreFreeSlots'], $ErrorTitle);
-}
-if($Slots['FlyingExpeditions'] >= $Slots['MaxExpedSlots'] AND $Fleet['Mission'] == 15)
-{
-    messageRed($_Lang['fl3_NoMoreFreeExpedSlots'], $ErrorTitle);
+
+if (!$flightSlotsValidationResult['isSuccess']) {
+    $errorMessage = FlightControl\Utils\Errors\mapFlightSlotsValidationErrorToReadableMessage(
+        $flightSlotsValidationResult['error'],
+        []
+    );
+
+    messageRed($errorMessage, $ErrorTitle);
 }
 
-// --- Check if all resources are correct (no negative numbers and enough on planet)
-foreach($Fleet['resources'] as $Key => $Data)
-{
-    $Fleet['resources'][$Key] = floor(floatval(str_replace('.', '', $Data)));
-    if($Fleet['resources'][$Key] < 0)
-    {
-        messageRed($_Lang['fl3_BadResourcesGiven'], $ErrorTitle);
-    }
-    elseif($Fleet['resources'][$Key] > $_Planet[$Key])
-    {
-        messageRed($_Lang['fl3_PlanetNoEnough'.$Key], $ErrorTitle);
-    }
+FlightControl\Utils\Inputs\normalizeFleetResourcesInputs([ 'fleetEntry' => &$Fleet ]);
 
-    if($Fleet['resources'][$Key] == 0)
-    {
-        $Fleet['resources'][$Key] = '0';
-    }
+$fleetResourcesValidationResult = FlightControl\Utils\Validators\validateFleetResources([
+    'fleetEntry' => $Fleet,
+    'fleetOriginPlanet' => &$_Planet,
+]);
+
+if (!$fleetResourcesValidationResult['isSuccess']) {
+    $errorMessage = FlightControl\Utils\Errors\mapFleetResourcesValidationErrorToReadableMessage(
+        $fleetResourcesValidationResult['error'],
+        []
+    );
+
+    messageRed($errorMessage, $ErrorTitle);
 }
 
 // --- Check, if Target Data are correct
@@ -278,8 +266,6 @@ if (
 
     $isJoiningUnion = true;
 }
-
-$Throw = false;
 
 // --- If Mission is not correct, show Error
 if(!in_array($Fleet['Mission'], $validMissionTypes))
@@ -454,138 +440,37 @@ if (!empty($targetInfo['galaxyEntry'])) {
     $TargetData = &$targetInfo['targetOwnerDetails'];
 }
 
-// --- Check if User data are OK
-if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner'] AND !$targetInfo['isPlanetAbandoned'])
-{
-    $SaveMyTotalRank = false;
+$hasTargetOwner = (
+    $targetInfo['isPlanetOccupied'] &&
+    !$targetInfo['isPlanetOwnedByFleetOwner'] &&
+    !$targetInfo['isPlanetAbandoned']
+);
+$usersStats = (
+    $hasTargetOwner ?
+        FlightControl\Utils\Factories\createFleetUsersStatsData([
+            'fleetOwner' => $_User,
+            'targetOwner' => $TargetData,
+        ]) :
+        FlightControl\Utils\Factories\createFleetUsersStatsData([])
+);
 
-    $StatsData['his'] = ($TargetData['total_points'] > 0 ? $TargetData['total_points'] : 0);
-    if(!CheckAuth('programmer'))
-    {
-        $StatsData['mine'] = ($_User['total_points'] > 0 ? $_User['total_points'] : 0);
-    }
-    else
-    {
-        $StatsData['mine'] = $StatsData['his'];
-        if($_User['total_rank'] <= 0)
-        {
-            $SaveMyTotalRank = $_User['total_rank'];
-            $_User['total_rank'] = $TargetData['total_rank'];
-        }
-    }
+if ($hasTargetOwner) {
+    $targetOwnerValidation = FlightControl\Utils\Validators\validateTargetOwner([
+        'fleetEntry' => $Fleet,
+        'fleetOwner' => $_User,
+        'targetOwner' => $TargetData,
+        'targetInfo' => $targetInfo,
+        'usersStats' => $usersStats,
+        'fleetsInFlightCounters' => $fleetsInFlightCounters,
+        'currentTimestamp' => $Now,
+    ]);
 
-    if(isOnVacation($TargetData))
-    {
-        if($SaveMyTotalRank !== false)
-        {
-            $_User['total_rank'] = $SaveMyTotalRank;
-        }
-        if($TargetData['is_banned'] == 1)
-        {
-            messageRed($_Lang['fl3_CantSendBanned'], $ErrorTitle);
-        }
-        else
-        {
-            messageRed($_Lang['fl3_CantSendVacation'], $ErrorTitle);
-        }
-    }
+    if (!$targetOwnerValidation['isSuccess']) {
+        $errorMessage = FlightControl\Utils\Errors\mapTargetOwnerValidationErrorToReadableMessage(
+            $targetOwnerValidation['error']
+        );
 
-    if($Protections['ally'] == 1)
-    {
-        if($_User['ally_id'] > 0 AND $_User['ally_id'] == $TargetData['ally_id'])
-        {
-            if (FlightControl\Utils\Helpers\isMissionNoobProtectionChecked($Fleet['Mission'])) {
-                if($SaveMyTotalRank !== false)
-                {
-                    $_User['total_rank'] = $SaveMyTotalRank;
-                }
-                messageRed($_Lang['fl3_CantSendAlly'], $ErrorTitle);
-            }
-        }
-    }
-
-    if (FlightControl\Utils\Helpers\isNoobProtectionEnabled()) {
-        $Throw = false;
-
-        if (FlightControl\Utils\Helpers\isMissionNoobProtectionChecked($Fleet['Mission'])) {
-            $noobProtectionValidationResult = FlightControl\Utils\Validators\validateNoobProtection([
-                'attackerUser' => $_User,
-                'attackerStats' => $StatsData['mine'],
-                'targetUser' => $TargetData,
-                'targetStats' => $StatsData['his'],
-                'currentTimestamp' => $Now,
-            ]);
-
-            if (!$noobProtectionValidationResult['isSuccess']) {
-                $Throw = FlightControl\Utils\Errors\mapNoobProtectionValidationErrorToReadableMessage(
-                    $noobProtectionValidationResult['error']
-                );
-            }
-
-            if($Protections['adminEnable'])
-            {
-                if(CheckAuth('supportadmin') OR CheckAuth('supportadmin', AUTHCHECK_NORMAL, $TargetData))
-                {
-                    if(CheckAuth('supportadmin'))
-                    {
-                        $Throw = $_Lang['fl3_ProtectAdminCant'];
-                    }
-                    else
-                    {
-                        $Throw = $_Lang['fl3_ProtectCantAdmin'];
-                    }
-                }
-            }
-
-            $isFarmCheckRequired = (
-                $noobProtectionValidationResult['isSuccess'] &&
-                !($noobProtectionValidationResult['payload']['isTargetIdle']) &&
-                $Protections['antifarm_enabled'] == true &&
-                ($StatsData['mine'] / $StatsData['his']) >= $Protections['antifarm_rate']
-            );
-
-            if (
-                empty($Throw) &&
-                (
-                    $isFarmCheckRequired ||
-                    $Protections['bashLimit_enabled'] === true
-                )
-            ) {
-                $targetId = $targetInfo['targetPlanetDetails']['id'];
-                $targetUserId = $TargetData['id'];
-
-                $bashLimitValidationResult = FlightControl\Utils\Validators\validateBashLimit([
-                    'isFarmCheckRequired' => $isFarmCheckRequired,
-                    'isBashCheckRequired' => $Protections['bashLimit_enabled'],
-                    'attackerUserId' => $_User['id'],
-                    'targetId' => $targetId,
-                    'targetUserId' => $targetUserId,
-                    'fleetsInFlightToTargetCount' => $fleetsInFlightCounters['aggressiveFleetsInFlight']['byTargetOwnerId'][$targetUserId],
-                    'fleetsInFlightToTargetOwnerCount' => $fleetsInFlightCounters['aggressiveFleetsInFlight']['byTargetId'][$targetId],
-                    'currentTimestamp' => $Now,
-                ]);
-
-                if (!$bashLimitValidationResult['isSuccess']) {
-                    $Throw = FlightControl\Utils\Errors\mapBashLimitValidationErrorToReadableMessage(
-                        $bashLimitValidationResult['error']
-                    );
-                }
-            }
-
-            if($Throw)
-            {
-                if($SaveMyTotalRank !== false)
-                {
-                    $_User['total_rank'] = $SaveMyTotalRank;
-                }
-                messageRed($Throw, $ErrorTitle);
-            }
-        }
-    }
-
-    if($SaveMyTotalRank !== false)
-    {
-        $_User['total_rank'] = $SaveMyTotalRank;
+        messageRed($errorMessage, $ErrorTitle);
     }
 }
 
@@ -801,7 +686,7 @@ if (!isset($LockFleetSending)) {
         'fleetOwner' => $_User,
         'targetOwner' => $TargetData,
         'targetInfo' => $targetInfo,
-        'statsData' => $StatsData,
+        'statsData' => $usersStats,
     ]);
 
     if ($hasMetPushAlertConditions) {
@@ -811,7 +696,7 @@ if (!isset($LockFleetSending)) {
             'fleetOwner' => $_User,
             'targetOwner' => $TargetData,
             'targetInfo' => $targetInfo,
-            'statsData' => $StatsData,
+            'statsData' => $usersStats,
         ]);
 
         Alerts_Add(1, $Now, 5, 4, 5, $_User['id'], $alertData);

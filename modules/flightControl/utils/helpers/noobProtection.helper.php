@@ -11,14 +11,26 @@ function isNoobProtectionEnabled() {
 }
 
 function isMissionNoobProtectionChecked($missionType) {
+    if (isMissionAntiBashProtectionChecked($missionType)) {
+        return true;
+    }
+
     $noobProtectionCheckedMissionTypes = [
-        Flights\Enums\FleetMission::Attack,
-        Flights\Enums\FleetMission::UnitedAttack,
         Flights\Enums\FleetMission::Spy,
-        Flights\Enums\FleetMission::DestroyMoon,
+        Flights\Enums\FleetMission::MissileAttack,
     ];
 
     return in_array($missionType, $noobProtectionCheckedMissionTypes);
+}
+
+function isMissionAntiBashProtectionChecked($missionType) {
+    $antiBashCheckedMissionTypes = [
+        Flights\Enums\FleetMission::Attack,
+        Flights\Enums\FleetMission::UnitedAttack,
+        Flights\Enums\FleetMission::DestroyMoon,
+    ];
+
+    return in_array($missionType, $antiBashCheckedMissionTypes);
 }
 
 ?>

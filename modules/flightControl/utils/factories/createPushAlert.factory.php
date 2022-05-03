@@ -40,12 +40,12 @@ function createPushAlert($props) {
         'FleetID' => $fleetId,
         'Stats' => [
             'Sender' => [
-                'Points' => $statsData['mine'],
-                'Position' => $fleetOwner['total_rank'],
+                'Points' => $statsData['fleetOwner']['points'],
+                'Position' => $statsData['fleetOwner']['totalRankPos'],
             ],
             'Target' => [
-                'Points' => $statsData['his'],
-                'Position' => $targetOwner['total_rank'],
+                'Points' => $statsData['targetOwner']['points'],
+                'Position' => $statsData['targetOwner']['totalRankPos'],
             ],
         ],
         'Resources' => [

@@ -37,6 +37,7 @@ call_user_func(function () {
     include($includePath . './utils/checks/hasMetPushAlertConditions.checks.php');
     include($includePath . './utils/factories/createAlertFiltersSearchParams.factory.php');
     include($includePath . './utils/factories/createFleetDevLogEntry.factory.php');
+    include($includePath . './utils/factories/createFleetUsersStatsData.factory.php');
     include($includePath . './utils/factories/createMultiAlert.factory.php');
     include($includePath . './utils/factories/createPushAlert.factory.php');
     include($includePath . './utils/factories/createQuantumGateFuelJSObject.factory.php');
@@ -65,6 +66,7 @@ call_user_func(function () {
     include($includePath . './utils/helpers/getUserFleetSlotsCount.helper.php');
     include($includePath . './utils/helpers/getValidMissionTypes.helper.php');
     include($includePath . './utils/helpers/noobProtection.helper.php');
+    include($includePath . './utils/inputs/normalizeFleetResources.inputs.php');
     include($includePath . './utils/updaters/createUnionEntry.updaters.php');
     include($includePath . './utils/updaters/fleetArchiveACSEntries.updaters.php');
     include($includePath . './utils/updaters/fleetArchiveEntryPersist.updaters.php');
@@ -76,17 +78,23 @@ call_user_func(function () {
     include($includePath . './utils/updaters/updateUnionMembers.updaters.php');
     include($includePath . './utils/validators/bashLimit.validator.php');
     include($includePath . './utils/validators/fleetArray.validator.php');
+    include($includePath . './utils/validators/fleetResources.validator.php');
+    include($includePath . './utils/validators/flightSlots.validator.php');
     include($includePath . './utils/validators/joinUnion.validator.php');
     include($includePath . './utils/validators/missionHold.validator.php');
     include($includePath . './utils/validators/noobProtection.validator.php');
     include($includePath . './utils/validators/quantumGate.validator.php');
     include($includePath . './utils/validators/smartFleetsBlockadeState.validator.php');
+    include($includePath . './utils/validators/targetOwner.validator.php');
     include($includePath . './utils/errors/bashLimit.utils.php');
     include($includePath . './utils/errors/fleetArray.utils.php');
+    include($includePath . './utils/errors/fleetResources.utils.php');
+    include($includePath . './utils/errors/flightSlots.utils.php');
     include($includePath . './utils/errors/joinUnion.utils.php');
     include($includePath . './utils/errors/noobProtection.utils.php');
     include($includePath . './utils/errors/quantumGate.utils.php');
     include($includePath . './utils/errors/smartFleetsBlockade.utils.php');
+    include($includePath . './utils/errors/targetOwner.utils.php');
 
 });
 

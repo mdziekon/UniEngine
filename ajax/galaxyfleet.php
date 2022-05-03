@@ -151,8 +151,6 @@ switch($Mission)
             CreateReturn('615');
         }
 
-        $adminprotection = $_GameConfig['adminprotection'];
-        $allyprotection = $_GameConfig['allyprotection'];
         $Protections['idleTime'] = $_GameConfig['no_idle_protect'] * TIME_DAY;
 
         if($TargetUser > 0)
@@ -165,60 +163,32 @@ switch($Mission)
             $Query_GetUser .= "WHERE `id` = {$TargetUser} LIMIT 1;";
             $HeDBRec = doquery($Query_GetUser, 'users', true);
 
-            $SaveMyTotalRank = false;
-            if(!CheckAuth('programmer'))
-            {
-                $MyGameLevel = $_User['total_points'];
-            }
-            else
-            {
-                $MyGameLevel = $HeDBRec['total_points'];
-                if($_User['total_rank'] <= 0)
-                {
-                    $SaveMyTotalRank = $_User['total_rank'];
-                    $_User['total_rank'] = $HeDBRec['total_rank'];
-                }
-            }
-            $HeGameLevel = $HeDBRec['total_points'];
+            $usersStats = FlightControl\Utils\Factories\createFleetUsersStatsData([
+                'fleetOwner' => $_User,
+                'targetOwner' => $HeDBRec,
+            ]);
 
-            if($allyprotection == 1 AND $_User['ally_id'] > 0 AND $_User['ally_id'] == $HeDBRec['ally_id'])
-            {
-                CreateReturn('616');
-            }
-            if((CheckAuth('supportadmin') OR CheckAuth('supportadmin', AUTHCHECK_NORMAL, $HeDBRec)) AND $adminprotection == 1)
-            {
-                if(CheckAuth('supportadmin'))
-                {
-                    CreateReturn('623');
-                }
-                else
-                {
-                    CreateReturn('625');
-                }
-            }
-            if(isOnVacation($HeDBRec))
-            {
-                if($HeDBRec['is_banned'] == 1)
-                {
-                    CreateReturn('617');
-                }
-                else
-                {
-                    CreateReturn('618');
-                }
-            }
+            $targetOwnerValidation = FlightControl\Utils\Validators\validateTargetOwner([
+                'fleetEntry' => [
+                    'Mission' => $Mission,
+                ],
+                'fleetOwner' => $_User,
+                'targetOwner' => $HeDBRec,
+                'usersStats' => $usersStats,
+                'currentTimestamp' => $Time,
+                // Note: should be safe to NOT pass this, as Spy mission is not bash-checked
+                'targetInfo' => null,
+                'fleetsInFlightCounters' => null,
+            ]);
 
-            if (FlightControl\Utils\Helpers\isNoobProtectionEnabled()) {
-                $noobProtectionValidationResult = FlightControl\Utils\Validators\validateNoobProtection([
-                    'attackerUser' => $_User,
-                    'attackerStats' => $MyGameLevel,
-                    'targetUser' => $HeDBRec,
-                    'targetStats' => $HeGameLevel,
-                    'currentTimestamp' => $Time,
-                ]);
-
-                if (!$noobProtectionValidationResult['isSuccess']) {
-                    $mapNoobProtectionErrorsToAjaxErrorCodes = [
+            if (!$targetOwnerValidation['isSuccess']) {
+                $mapTargetOwnerValidationErrorsToAjaxErrorCodes = [
+                    'TARGET_USER_BANNED'                    => '617',
+                    'TARGET_USER_ON_VACATION'               => '618',
+                    'TARGET_ALLY_PROTECTION'                => '616',
+                    'ADMIN_CANNOT_BE_AGGRESSIVE'            => '623',
+                    'ADMIN_IS_PROTECTED_AGAINST_AGGRESSION' => '625',
+                    'NOOB_PROTECTION_VALIDATION_ERROR' => [
                         'ATTACKER_STATISTICS_UNAVAILABLE'                   => '631',
                         'TARGET_STATISTICS_UNAVAILABLE'                     => '630',
                         'ATTACKER_NOOBPROTECTION_ENDTIME_NOT_REACHED'       => '632',
@@ -228,16 +198,19 @@ switch($Mission)
                         'TARGET_NOOBPROTECTION_BASIC_LIMIT_NOT_REACHED'     => '619',
                         'TARGET_NOOBPROTECTION_TOO_WEAK_BY_MULTIPLIER'      => '621',
                         'ATTACKER_NOOBPROTECTION_TOO_WEAK_BY_MULTIPLIER'    => '622',
-                    ];
+                    ],
+                    'BASH_PROTECTION_VALIDATION_ERROR' => null,
+                ];
 
-                    $errorCode = $noobProtectionValidationResult['error']['code'];
+                $errorCode = $targetOwnerValidation['error']['code'];
+                $returnCode = $mapTargetOwnerValidationErrorsToAjaxErrorCodes[$errorCode];
 
-                    CreateReturn($mapNoobProtectionErrorsToAjaxErrorCodes[$errorCode]);
+                if (is_array($returnCode)) {
+                    $subValidatorErrorCode = $targetOwnerValidation['error']['params']['code'];
+                    $returnCode = $mapTargetOwnerValidationErrorsToAjaxErrorCodes[$errorCode][$subValidatorErrorCode];
                 }
-            }
-            if($SaveMyTotalRank !== false)
-            {
-                $_User['total_rank'] = $SaveMyTotalRank;
+
+                CreateReturn($returnCode);
             }
         }
         break;

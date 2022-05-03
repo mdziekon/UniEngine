@@ -45,8 +45,6 @@ if ($FlyingFleets >= $MaxFleets) {
     CreateReturn('609');
 }
 
-$adminprotection = $_GameConfig['adminprotection'];
-$allyprotection = $_GameConfig['allyprotection'];
 $Protections['idleTime'] = $_GameConfig['no_idle_protect'] * TIME_DAY;
 
 $Galaxy = (isset($_POST['galaxy']) ? intval($_POST['galaxy']) : 0);
@@ -118,50 +116,32 @@ if($PlanetData['id_owner'] > 0)
     $Query_GetUser .= "WHERE `usr`.`id` = {$PlanetData['id_owner']} LIMIT 1; -- SendMissiles|GetUser";
     $HeDBRec = doquery($Query_GetUser, 'users', true);
 
-    if(isOnVacation($HeDBRec))
-    {
-        if($HeDBRec['is_banned'] == 1)
-        {
-            CreateReturn('642');
-        }
-        else
-        {
-            CreateReturn('643');
-        }
-    }
-    if($allyprotection == 1)
-    {
-        if($_User['ally_id'] > 0 AND $_User['ally_id'] == $HeDBRec['ally_id'])
-        {
-            CreateReturn('644');
-        }
-    }
+    $usersStats = FlightControl\Utils\Factories\createFleetUsersStatsData([
+        'fleetOwner' => $_User,
+        'targetOwner' => $HeDBRec,
+    ]);
 
-    if(!CheckAuth('programmer'))
-    {
-        $MyGameLevel = $_User['total_points'];
-    }
-    else
-    {
-        $MyGameLevel = $HeDBRec['total_points'];
-        if($_User['total_rank'] <= 0)
-        {
-            $_User['total_rank'] = $HeDBRec['total_rank'];
-        }
-    }
-    $HeGameLevel = $HeDBRec['total_points'];
+    $targetOwnerValidation = FlightControl\Utils\Validators\validateTargetOwner([
+        'fleetEntry' => [
+            'Mission' => $Mission,
+        ],
+        'fleetOwner' => $_User,
+        'targetOwner' => $HeDBRec,
+        'usersStats' => $usersStats,
+        'currentTimestamp' => $Now,
+        // Note: should be safe to NOT pass this, as Spy mission is not bash-checked
+        'targetInfo' => null,
+        'fleetsInFlightCounters' => null,
+    ]);
 
-    if (FlightControl\Utils\Helpers\isNoobProtectionEnabled()) {
-        $noobProtectionValidationResult = FlightControl\Utils\Validators\validateNoobProtection([
-            'attackerUser' => $_User,
-            'attackerStats' => $MyGameLevel,
-            'targetUser' => $HeDBRec,
-            'targetStats' => $HeGameLevel,
-            'currentTimestamp' => $Now,
-        ]);
-
-        if (!$noobProtectionValidationResult['isSuccess']) {
-            $mapNoobProtectionErrorsToAjaxErrorCodes = [
+    if (!$targetOwnerValidation['isSuccess']) {
+        $mapTargetOwnerValidationErrorsToAjaxErrorCodes = [
+            'TARGET_USER_BANNED'                    => '642',
+            'TARGET_USER_ON_VACATION'               => '643',
+            'TARGET_ALLY_PROTECTION'                => '644',
+            'ADMIN_CANNOT_BE_AGGRESSIVE'            => '659',
+            'ADMIN_IS_PROTECTED_AGAINST_AGGRESSION' => '660',
+            'NOOB_PROTECTION_VALIDATION_ERROR' => [
                 'ATTACKER_STATISTICS_UNAVAILABLE'                   => '663',
                 'TARGET_STATISTICS_UNAVAILABLE'                     => '662',
                 'ATTACKER_NOOBPROTECTION_ENDTIME_NOT_REACHED'       => '653',
@@ -172,23 +152,19 @@ if($PlanetData['id_owner'] > 0)
                 'TARGET_NOOBPROTECTION_BASIC_LIMIT_NOT_REACHED'     => '656',
                 'TARGET_NOOBPROTECTION_TOO_WEAK_BY_MULTIPLIER'      => '656',
                 'ATTACKER_NOOBPROTECTION_TOO_WEAK_BY_MULTIPLIER'    => '658',
-            ];
+            ],
+            'BASH_PROTECTION_VALIDATION_ERROR' => null,
+        ];
 
-            $errorCode = $noobProtectionValidationResult['error']['code'];
+        $errorCode = $targetOwnerValidation['error']['code'];
+        $returnCode = $mapTargetOwnerValidationErrorsToAjaxErrorCodes[$errorCode];
 
-            CreateReturn($mapNoobProtectionErrorsToAjaxErrorCodes[$errorCode]);
+        if (is_array($returnCode)) {
+            $subValidatorErrorCode = $targetOwnerValidation['error']['params']['code'];
+            $returnCode = $mapTargetOwnerValidationErrorsToAjaxErrorCodes[$errorCode][$subValidatorErrorCode];
         }
-    }
-    if((CheckAuth('supportadmin') OR CheckAuth('supportadmin', AUTHCHECK_NORMAL, $HeDBRec)) AND $adminprotection == 1)
-    {
-        if(CheckAuth('supportadmin'))
-        {
-            CreateReturn('659');
-        }
-        else
-        {
-            CreateReturn('660');
-        }
+
+        CreateReturn($returnCode);
     }
 }
 
