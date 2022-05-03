@@ -166,7 +166,7 @@ switch($Mission)
             $HeDBRec = doquery($Query_GetUser, 'users', true);
 
             $usersStats = [
-                'attacker' => [
+                'fleetOwner' => [
                     'totalRankPos' => $_User['total_rank'],
                     'points' => (
                         $_User['total_points'] > 0 ?
@@ -174,7 +174,7 @@ switch($Mission)
                             0
                     ),
                 ],
-                'target' => [
+                'targetOwner' => [
                     'totalRankPos' => $HeDBRec['total_rank'],
                     'points' => (
                         $HeDBRec['total_points'] > 0 ?
@@ -186,8 +186,8 @@ switch($Mission)
 
             // Impersonate target user in terms of stat points & ranking pos
             if (CheckAuth('programmer')) {
-                $usersStats['attacker']['points'] = $usersStats['target']['points'];
-                $usersStats['attacker']['totalRankPos'] = $usersStats['target']['totalRankPos'];
+                $usersStats['fleetOwner']['points'] = $usersStats['targetOwner']['points'];
+                $usersStats['fleetOwner']['totalRankPos'] = $usersStats['targetOwner']['totalRankPos'];
             }
 
             if($allyprotection == 1 AND $_User['ally_id'] > 0 AND $_User['ally_id'] == $HeDBRec['ally_id'])
@@ -220,9 +220,9 @@ switch($Mission)
             if (FlightControl\Utils\Helpers\isNoobProtectionEnabled()) {
                 $noobProtectionValidationResult = FlightControl\Utils\Validators\validateNoobProtection([
                     'attackerUser' => $_User,
-                    'attackerStats' => $usersStats['attacker'],
+                    'attackerStats' => $usersStats['fleetOwner'],
                     'targetUser' => $HeDBRec,
-                    'targetStats' => $usersStats['target'],
+                    'targetStats' => $usersStats['targetOwner'],
                     'currentTimestamp' => $Time,
                 ]);
 

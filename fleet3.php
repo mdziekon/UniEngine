@@ -449,11 +449,11 @@ if (!empty($targetInfo['galaxyEntry'])) {
 }
 
 $usersStats = [
-    'attacker' => [
+    'fleetOwner' => [
         'totalRankPos' => 0,
         'points' => 0,
     ],
-    'target' => [
+    'targetOwner' => [
         'totalRankPos' => 0,
         'points' => 0,
     ],
@@ -463,7 +463,7 @@ $usersStats = [
 if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner'] AND !$targetInfo['isPlanetAbandoned'])
 {
     $usersStats = [
-        'attacker' => [
+        'fleetOwner' => [
             'totalRankPos' => $_User['total_rank'],
             'points' => (
                 $_User['total_points'] > 0 ?
@@ -471,7 +471,7 @@ if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner']
                     0
             ),
         ],
-        'target' => [
+        'targetOwner' => [
             'totalRankPos' => $TargetData['total_rank'],
             'points' => (
                 $TargetData['total_points'] > 0 ?
@@ -483,8 +483,8 @@ if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner']
 
     // Impersonate target user in terms of stat points & ranking pos
     if (CheckAuth('programmer')) {
-        $usersStats['attacker']['points'] = $usersStats['target']['points'];
-        $usersStats['attacker']['totalRankPos'] = $usersStats['target']['totalRankPos'];
+        $usersStats['fleetOwner']['points'] = $usersStats['targetOwner']['points'];
+        $usersStats['fleetOwner']['totalRankPos'] = $usersStats['targetOwner']['totalRankPos'];
     }
 
     if(isOnVacation($TargetData))
@@ -515,9 +515,9 @@ if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner']
         if (FlightControl\Utils\Helpers\isMissionNoobProtectionChecked($Fleet['Mission'])) {
             $noobProtectionValidationResult = FlightControl\Utils\Validators\validateNoobProtection([
                 'attackerUser' => $_User,
-                'attackerStats' => $usersStats['attacker'],
+                'attackerStats' => $usersStats['fleetOwner'],
                 'targetUser' => $TargetData,
-                'targetStats' => $usersStats['target'],
+                'targetStats' => $usersStats['targetOwner'],
                 'currentTimestamp' => $Now,
             ]);
 
@@ -546,7 +546,7 @@ if($targetInfo['isPlanetOccupied'] AND !$targetInfo['isPlanetOwnedByFleetOwner']
                 $noobProtectionValidationResult['isSuccess'] &&
                 !($noobProtectionValidationResult['payload']['isTargetIdle']) &&
                 $Protections['antifarm_enabled'] == true &&
-                ($usersStats['attacker']['points'] / $usersStats['target']['points']) >= $Protections['antifarm_rate']
+                ($usersStats['fleetOwner']['points'] / $usersStats['targetOwner']['points']) >= $Protections['antifarm_rate']
             );
 
             if (
