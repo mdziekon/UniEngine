@@ -464,16 +464,16 @@ $usersStats = (
 
 // --- Check if User data are OK
 if ($hasTargetOwner) {
-    if(isOnVacation($TargetData))
-    {
-        if($TargetData['is_banned'] == 1)
-        {
-            messageRed($_Lang['fl3_CantSendBanned'], $ErrorTitle);
-        }
-        else
-        {
-            messageRed($_Lang['fl3_CantSendVacation'], $ErrorTitle);
-        }
+    $targetOwnerValidation = FlightControl\Utils\Validators\validateTargetOwner([
+        'targetOwner' => $TargetData,
+    ]);
+
+    if (!$targetOwnerValidation['isSuccess']) {
+        $errorMessage = FlightControl\Utils\Errors\mapTargetOwnerValidationErrorToReadableMessage(
+            $targetOwnerValidation['error']
+        );
+
+        messageRed($errorMessage, $ErrorTitle);
     }
 
     if($Protections['ally'] == 1)
