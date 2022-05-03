@@ -483,8 +483,6 @@ if ($hasTargetOwner) {
         FlightControl\Utils\Helpers\isNoobProtectionEnabled() &&
         FlightControl\Utils\Helpers\isMissionNoobProtectionChecked($Fleet['Mission'])
     ) {
-        $Throw = false;
-
         $isFarmCheckRequired = (
             $noobProtectionValidationResult['isSuccess'] &&
             !($noobProtectionValidationResult['payload']['isTargetIdle']) &&
@@ -493,11 +491,8 @@ if ($hasTargetOwner) {
         );
 
         if (
-            empty($Throw) &&
-            (
-                $isFarmCheckRequired ||
-                $Protections['bashLimit_enabled'] === true
-            )
+            $isFarmCheckRequired ||
+            $Protections['bashLimit_enabled'] === true
         ) {
             $targetId = $targetInfo['targetPlanetDetails']['id'];
             $targetUserId = $TargetData['id'];
@@ -514,15 +509,12 @@ if ($hasTargetOwner) {
             ]);
 
             if (!$bashLimitValidationResult['isSuccess']) {
-                $Throw = FlightControl\Utils\Errors\mapBashLimitValidationErrorToReadableMessage(
+                $errorMessage = FlightControl\Utils\Errors\mapBashLimitValidationErrorToReadableMessage(
                     $bashLimitValidationResult['error']
                 );
-            }
-        }
 
-        if($Throw)
-        {
-            messageRed($Throw, $ErrorTitle);
+                messageRed($errorMessage, $ErrorTitle);
+            }
         }
     }
 }
