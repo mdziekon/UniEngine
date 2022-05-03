@@ -54,7 +54,7 @@ function createFleetUsersStatsData($props) {
     ];
 
     // Impersonate target user in terms of stat points & ranking pos
-    if (CheckAuth('programmer')) {
+    if (CheckAuth('programmer', AUTHCHECK_NORMAL, $fleetOwner)) {
         $usersStats['fleetOwner']['points'] = $usersStats['targetOwner']['points'];
         $usersStats['fleetOwner']['totalRankPos'] = $usersStats['targetOwner']['totalRankPos'];
     }
