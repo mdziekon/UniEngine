@@ -17,6 +17,7 @@ function isMissionNoobProtectionChecked($missionType) {
 
     $noobProtectionCheckedMissionTypes = [
         Flights\Enums\FleetMission::Spy,
+        Flights\Enums\FleetMission::MissileAttack,
     ];
 
     return in_array($missionType, $noobProtectionCheckedMissionTypes);
