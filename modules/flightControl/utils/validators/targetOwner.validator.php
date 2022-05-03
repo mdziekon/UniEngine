@@ -89,11 +89,11 @@ function validateTargetOwner($validationParams) {
             )
         ) {
             return $resultHelpers['createFailure']([
-                'code' => 'ADMIN_PROTECTION_ERROR',
-                'params' => [
-                    'isFleetOwnerProtected' => $isFleetOwnerSupportAdmin,
-                    'isTargetOwnerProtected' => $isTargetOwnerSupportAdmin,
-                ],
+                'code' => (
+                    $isFleetOwnerSupportAdmin ?
+                        'ADMIN_CANNOT_BE_AGGRESSIVE' :
+                        'ADMIN_IS_PROTECTED_AGAINST_AGGRESSION'
+                ),
             ]);
         }
 

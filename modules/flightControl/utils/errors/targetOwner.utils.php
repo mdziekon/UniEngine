@@ -26,13 +26,8 @@ function mapTargetOwnerValidationErrorToReadableMessage($error) {
 
             return $errorMessage;
         },
-        'ADMIN_PROTECTION_ERROR' => function ($params) use (&$_Lang) {
-            if ($params['isFleetOwnerProtected']) {
-                return $_Lang['fl3_ProtectAdminCant'];
-            }
-
-            return $_Lang['fl3_ProtectCantAdmin'];
-        },
+        'ADMIN_CANNOT_BE_AGGRESSIVE' => $_Lang['fl3_ProtectAdminCant'],
+        'ADMIN_IS_PROTECTED_AGAINST_AGGRESSION' => $_Lang['fl3_ProtectCantAdmin'],
         'BASH_PROTECTION_VALIDATION_ERROR' => function ($params) {
             $errorMessage = Errors\mapBashLimitValidationErrorToReadableMessage($params);
 
