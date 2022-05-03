@@ -9,7 +9,9 @@ use UniEngine\Engine\Modules\FlightControl;
  * @param array $props['fleetEntry']
  * @param array $props['fleetOwner']
  * @param array $props['targetOwner']
+ * @param array $props['targetInfo']
  * @param array $props['usersStats']
+ * @param array $props['fleetsInFlightCounters']
  * @param number $props['currentTimestamp']
  */
 function validateTargetOwner($validationParams) {
@@ -18,13 +20,19 @@ function validateTargetOwner($validationParams) {
     $protectionConfig = [
         'isAllyProtectionEnabled' => ($_GameConfig['allyprotection'] == 1),
         'isAdminProtectionEnabled' => ($_GameConfig['adminprotection'] == 1),
+        'isAntiBashProtectionEnabled' => ($_GameConfig['Protection_BashLimitEnabled'] == 1),
+        'isAntiFarmProtectionEnabled' => ($_GameConfig['Protection_AntiFarmEnabled'] == 1),
+
+        'antiFarmProtectionRate' => $_GameConfig['Protection_AntiFarmRate'],
     ];
 
     $validator = function ($input, $resultHelpers) use ($protectionConfig) {
         $fleetEntry = $input['fleetEntry'];
         $fleetOwner = $input['fleetOwner'];
         $targetOwner = $input['targetOwner'];
+        $targetInfo = $input['targetInfo'];
         $usersStats = $input['usersStats'];
+        $fleetsInFlightCounters = $input['fleetsInFlightCounters'];
         $currentTimestamp = $input['currentTimestamp'];
 
         if (isOnVacation($targetOwner)) {
@@ -86,6 +94,43 @@ function validateTargetOwner($validationParams) {
                     'isFleetOwnerProtected' => $isFleetOwnerSupportAdmin,
                     'isTargetOwnerProtected' => $isTargetOwnerSupportAdmin,
                 ],
+            ]);
+        }
+
+        $usersPointsRatio = ($usersStats['fleetOwner']['points'] / $usersStats['targetOwner']['points']);
+
+        $isBashCheckRequired = $protectionConfig['isAntiBashProtectionEnabled'];
+        $isFarmCheckRequired = (
+            $protectionConfig['isAntiFarmProtectionEnabled'] &&
+            !($noobProtectionValidationResult['payload']['isTargetIdle']) &&
+            $usersPointsRatio >= $protectionConfig['antifarm_rate']
+        );
+
+        if (
+            !$isBashCheckRequired &&
+            !$isFarmCheckRequired
+        ) {
+            return $resultHelpers['createSuccess']([]);
+        }
+
+        $targetId = $targetInfo['targetPlanetDetails']['id'];
+        $targetUserId = $targetOwner['id'];
+
+        $bashLimitValidationResult = FlightControl\Utils\Validators\validateBashLimit([
+            'isFarmCheckRequired' => $isFarmCheckRequired,
+            'isBashCheckRequired' => $isBashCheckRequired,
+            'attackerUserId' => $fleetOwner['id'],
+            'targetId' => $targetId,
+            'targetUserId' => $targetUserId,
+            'fleetsInFlightToTargetCount' => $fleetsInFlightCounters['aggressiveFleetsInFlight']['byTargetOwnerId'][$targetUserId],
+            'fleetsInFlightToTargetOwnerCount' => $fleetsInFlightCounters['aggressiveFleetsInFlight']['byTargetId'][$targetId],
+            'currentTimestamp' => $currentTimestamp,
+        ]);
+
+        if (!$bashLimitValidationResult['isSuccess']) {
+            return $resultHelpers['createFailure']([
+                'code' => 'BASH_PROTECTION_VALIDATION_ERROR',
+                'params' => $bashLimitValidationResult['error'],
             ]);
         }
 

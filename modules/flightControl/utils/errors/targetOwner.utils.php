@@ -32,7 +32,12 @@ function mapTargetOwnerValidationErrorToReadableMessage($error) {
             }
 
             return $_Lang['fl3_ProtectCantAdmin'];
-        }
+        },
+        'BASH_PROTECTION_VALIDATION_ERROR' => function ($params) {
+            $errorMessage = Errors\mapBashLimitValidationErrorToReadableMessage($params);
+
+            return $errorMessage;
+        },
     ];
 
     if (!isset($knownErrorsByCode[$errorCode])) {

@@ -59,11 +59,7 @@ $Fleet['HoldTime'] = intval($_POST['holdingtime']);
 $Fleet['ACS_ID'] = isset($_POST['acs_id']) ? floor(floatval($_POST['acs_id'])) : 0;
 $Fleet['Mission'] = isset($_POST['mission']) ? intval($_POST['mission']) : 0;
 
-$Protections['adminEnable'] = (bool) $_GameConfig['adminprotection'];
 $Protections['idleTime'] = $_GameConfig['no_idle_protect'] * TIME_DAY;
-$Protections['antifarm_enabled'] = (bool) $_GameConfig['Protection_AntiFarmEnabled'];
-$Protections['antifarm_rate'] = $_GameConfig['Protection_AntiFarmRate'];
-$Protections['bashLimit_enabled'] = (bool) $_GameConfig['Protection_BashLimitEnabled'];
 
 if (!isUserAccountActivated($_User)) {
     messageRed($_Lang['fl3_BlockAccNotActivated'], $ErrorTitle);
@@ -461,13 +457,14 @@ $usersStats = (
         FlightControl\Utils\Factories\createFleetUsersStatsData([])
 );
 
-// --- Check if User data are OK
 if ($hasTargetOwner) {
     $targetOwnerValidation = FlightControl\Utils\Validators\validateTargetOwner([
         'fleetEntry' => $Fleet,
         'fleetOwner' => $_User,
         'targetOwner' => $TargetData,
+        'targetInfo' => $targetInfo,
         'usersStats' => $usersStats,
+        'fleetsInFlightCounters' => $fleetsInFlightCounters,
         'currentTimestamp' => $Now,
     ]);
 
@@ -477,45 +474,6 @@ if ($hasTargetOwner) {
         );
 
         messageRed($errorMessage, $ErrorTitle);
-    }
-
-    if (
-        FlightControl\Utils\Helpers\isNoobProtectionEnabled() &&
-        FlightControl\Utils\Helpers\isMissionNoobProtectionChecked($Fleet['Mission'])
-    ) {
-        $isFarmCheckRequired = (
-            $noobProtectionValidationResult['isSuccess'] &&
-            !($noobProtectionValidationResult['payload']['isTargetIdle']) &&
-            $Protections['antifarm_enabled'] == true &&
-            ($usersStats['fleetOwner']['points'] / $usersStats['targetOwner']['points']) >= $Protections['antifarm_rate']
-        );
-
-        if (
-            $isFarmCheckRequired ||
-            $Protections['bashLimit_enabled'] === true
-        ) {
-            $targetId = $targetInfo['targetPlanetDetails']['id'];
-            $targetUserId = $TargetData['id'];
-
-            $bashLimitValidationResult = FlightControl\Utils\Validators\validateBashLimit([
-                'isFarmCheckRequired' => $isFarmCheckRequired,
-                'isBashCheckRequired' => $Protections['bashLimit_enabled'],
-                'attackerUserId' => $_User['id'],
-                'targetId' => $targetId,
-                'targetUserId' => $targetUserId,
-                'fleetsInFlightToTargetCount' => $fleetsInFlightCounters['aggressiveFleetsInFlight']['byTargetOwnerId'][$targetUserId],
-                'fleetsInFlightToTargetOwnerCount' => $fleetsInFlightCounters['aggressiveFleetsInFlight']['byTargetId'][$targetId],
-                'currentTimestamp' => $Now,
-            ]);
-
-            if (!$bashLimitValidationResult['isSuccess']) {
-                $errorMessage = FlightControl\Utils\Errors\mapBashLimitValidationErrorToReadableMessage(
-                    $bashLimitValidationResult['error']
-                );
-
-                messageRed($errorMessage, $ErrorTitle);
-            }
-        }
     }
 }
 
