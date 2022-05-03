@@ -174,11 +174,11 @@ switch($Mission)
                 ],
                 'fleetOwner' => $_User,
                 'targetOwner' => $HeDBRec,
-                'targetInfo' => $targetInfo,
                 'usersStats' => $usersStats,
                 'currentTimestamp' => $Time,
                 // Note: should be safe to NOT pass this, as Spy mission is not bash-checked
-                'fleetsInFlightCounters' => [],
+                'targetInfo' => null,
+                'fleetsInFlightCounters' => null,
             ]);
 
             if (!$targetOwnerValidation['isSuccess']) {
