@@ -18,6 +18,7 @@ function mapTargetOwnerValidationErrorToReadableMessage($error) {
     $knownErrorsByCode = [
         'TARGET_USER_BANNED' => $_Lang['fl3_CantSendBanned'],
         'TARGET_USER_ON_VACATION' => $_Lang['fl3_CantSendVacation'],
+        'TARGET_ALLY_PROTECTION' => $_Lang['fl3_CantSendAlly'],
     ];
 
     if (!isset($knownErrorsByCode[$errorCode])) {

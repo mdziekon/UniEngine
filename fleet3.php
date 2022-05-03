@@ -60,7 +60,6 @@ $Fleet['ACS_ID'] = isset($_POST['acs_id']) ? floor(floatval($_POST['acs_id'])) :
 $Fleet['Mission'] = isset($_POST['mission']) ? intval($_POST['mission']) : 0;
 
 $Protections['adminEnable'] = (bool) $_GameConfig['adminprotection'];
-$Protections['ally'] = $_GameConfig['allyprotection'];
 $Protections['idleTime'] = $_GameConfig['no_idle_protect'] * TIME_DAY;
 $Protections['antifarm_enabled'] = (bool) $_GameConfig['Protection_AntiFarmEnabled'];
 $Protections['antifarm_rate'] = $_GameConfig['Protection_AntiFarmRate'];
@@ -465,6 +464,8 @@ $usersStats = (
 // --- Check if User data are OK
 if ($hasTargetOwner) {
     $targetOwnerValidation = FlightControl\Utils\Validators\validateTargetOwner([
+        'fleetEntry' => $Fleet,
+        'fleetOwner' => $_User,
         'targetOwner' => $TargetData,
     ]);
 
@@ -474,16 +475,6 @@ if ($hasTargetOwner) {
         );
 
         messageRed($errorMessage, $ErrorTitle);
-    }
-
-    if($Protections['ally'] == 1)
-    {
-        if($_User['ally_id'] > 0 AND $_User['ally_id'] == $TargetData['ally_id'])
-        {
-            if (FlightControl\Utils\Helpers\isMissionNoobProtectionChecked($Fleet['Mission'])) {
-                messageRed($_Lang['fl3_CantSendAlly'], $ErrorTitle);
-            }
-        }
     }
 
     if (FlightControl\Utils\Helpers\isNoobProtectionEnabled()) {

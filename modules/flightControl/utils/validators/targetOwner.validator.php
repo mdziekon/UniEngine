@@ -2,21 +2,44 @@
 
 namespace UniEngine\Engine\Modules\FlightControl\Utils\Validators;
 
+use UniEngine\Engine\Modules\FlightControl;
+
 /**
  * @param array $props
- * @param array $props['targetUser']
+ * @param array $props['fleetEntry']
+ * @param array $props['fleetOwner']
+ * @param array $props['targetOwner']
  */
 function validateTargetOwner($validationParams) {
-    $validator = function ($input, $resultHelpers) {
-        $targetUser = $input['targetUser'];
+    global $_GameConfig;
 
-        if (isOnVacation($targetUser)) {
+    $protectionConfig = [
+        'isAllyProtectionEnabled' => ($_GameConfig['allyprotection'] == 1),
+    ];
+
+    $validator = function ($input, $resultHelpers) use ($protectionConfig) {
+        $fleetEntry = $input['fleetEntry'];
+        $fleetOwner = $input['fleetOwner'];
+        $targetOwner = $input['targetOwner'];
+
+        if (isOnVacation($targetOwner)) {
             return $resultHelpers['createFailure']([
                 'code' => (
-                    isUserBanned($targetUser) ?
+                    isUserBanned($targetOwner) ?
                         'TARGET_USER_BANNED' :
                         'TARGET_USER_ON_VACATION'
                 )
+            ]);
+        }
+
+        if (
+            $protectionConfig['isAllyProtectionEnabled'] &&
+            FlightControl\Utils\Helpers\isMissionNoobProtectionChecked($fleetEntry['Mission']) &&
+            $fleetOwner['ally_id'] > 0 &&
+            $fleetOwner['ally_id'] == $targetOwner['ally_id']
+        ) {
+            return $resultHelpers['createFailure']([
+                'code' => 'TARGET_ALLY_PROTECTION'
             ]);
         }
 
