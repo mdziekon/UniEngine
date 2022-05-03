@@ -268,8 +268,6 @@ if (
     $isJoiningUnion = true;
 }
 
-$Throw = false;
-
 // --- If Mission is not correct, show Error
 if(!in_array($Fleet['Mission'], $validMissionTypes))
 {
