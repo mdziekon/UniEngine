@@ -127,18 +127,7 @@ var QuantumGateDeuteriumUse = {QuantumGateJSArray};
                         <tr>
                             <th colspan="3">
                                 <select name="expeditiontime">
-                                    <option value="1" {SelectExpedition_1}>1</option>
-                                    <option value="2" {SelectExpedition_2}>2</option>
-                                    <option value="3" {SelectExpedition_3}>3</option>
-                                    <option value="4" {SelectExpedition_4}>4</option>
-                                    <option value="5" {SelectExpedition_5}>5</option>
-                                    <option value="6" {SelectExpedition_6}>6</option>
-                                    <option value="7" {SelectExpedition_7}>7</option>
-                                    <option value="8" {SelectExpedition_8}>8</option>
-                                    <option value="9" {SelectExpedition_9}>9</option>
-                                    <option value="10" {SelectExpedition_10}>10</option>
-                                    <option value="11" {SelectExpedition_11}>11</option>
-                                    <option value="12" {SelectExpedition_12}>12</option>
+                                    {P_HTMLBuilder_MissionExpedition_AvailableTimes}
                                 </select>
                                 {fl_expe_hours}
                             </th>
