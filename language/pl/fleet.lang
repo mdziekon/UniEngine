@@ -255,8 +255,9 @@ $_Lang['fl3_Protect_AttackLimit_farm']           = 'Ochrona słabszych graczy';
 
 $_Lang['fl_bad_mission']                         = 'Błędna misja !';
 $_Lang['fl_fleet_send']                          = 'Flota została wysłana';
-$_Lang['fl_expe_staytime']                       = 'Czas zatrzymania';
-$_Lang['fl_expe_hours']                          = '&nbsp;godzina(y)';
+$_Lang['fl_expe_staytime']                       = 'Czas trwania ekspedycji';
+$_Lang['fl_hold_staytime']                       = 'Czas zatrzymania';
+$_Lang['fl_stay_hours']                          = '&nbsp;godzina(y)';
 
 $_Lang['QuantumGateHead']                        = 'Brama Kwantowa';
 $_Lang['QuantumInfo']                            = 'Redukcja zużycia deuteru do <b class="lime">zera</b><br/>Redukcja czasu trwania misji do <b class="lime">1 sekundy</b><br/><br/><b class="orange">Zastosowania:</b><br/>- Nieograniczone czasowo misje Transportuj, Stacjonuj i Zatrzymaj między dwoma planetami posiadającymi Bramę<br/>- Skok Czasoprzestrzenny dla misji Transportuj, Stacjonuj i Zatrzymaj skraca o połowę czas lotu i zużycie deuteru (jeśli Planeta-Cel nie ma Bramy Kwantowej)';

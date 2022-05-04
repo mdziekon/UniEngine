@@ -256,8 +256,9 @@ $_Lang['fl3_Protect_AttackLimit_farm']           = 'Weaker players protection';
 
 $_Lang['fl_bad_mission']                         = 'Invalid mission!';
 $_Lang['fl_fleet_send']                          = 'Fleet has been sent';
-$_Lang['fl_expe_staytime']                       = 'Protection time';
-$_Lang['fl_expe_hours']                          = '&nbsp;hour(s)';
+$_Lang['fl_expe_staytime']                       = 'Expedition duration';
+$_Lang['fl_hold_staytime']                       = 'Protection duration';
+$_Lang['fl_stay_hours']                          = '&nbsp;hour(s)';
 
 $_Lang['QuantumGateHead']                        = 'Quantum Gate';
 $_Lang['QuantumInfo']                            = (

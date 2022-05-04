@@ -129,21 +129,21 @@ var QuantumGateDeuteriumUse = {QuantumGateJSArray};
                                 <select name="expeditiontime">
                                     {P_HTMLBuilder_MissionExpedition_AvailableTimes}
                                 </select>
-                                {fl_expe_hours}
+                                {fl_stay_hours}
                             </th>
                         </tr>
                     </tbody>
 
                     <tbody{P_HideHoldingTimers}>
-                           <tr>
-                            <td class="c" colspan="3">{fl_expe_staytime}</td>
+                        <tr>
+                            <td class="c" colspan="3">{fl_hold_staytime}</td>
                         </tr>
                         <tr>
                             <th colspan="3">
                             <select name="holdingtime">
                                 {P_HTMLBuilder_MissionHold_AvailableTimes}
                             </select>
-                            {fl_expe_hours}
+                            {fl_stay_hours}
                             </th>
                         </tr>
                     </tbody>
