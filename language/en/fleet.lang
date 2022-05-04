@@ -220,8 +220,7 @@ $_Lang['fl3_CantDestroyNoShip']                  = 'To destroy a moon you have t
 $_Lang['fl3_BadMissionSelected']                 = 'Invalid mission selected!';
 
 $_Lang['fl3_NoDebrisFieldHere']                  = 'There is no debris field on this position!';
-$_Lang['fl3_Expedition_Min1H']                   = 'An expedition must last for at least 1 hour!';
-$_Lang['fl3_Expedition_Max12H']                  = 'An expedition cannot last more than 12 hours!';
+$_Lang['fl3_MissionExpedition_BadTime']          = 'Invalid expedition duration!';
 $_Lang['fl3_Holding_BadTime']                    = 'Invalid stationing time!';
 $_Lang['fl3_CantSendVacation']                   = 'You cannot send a fleet to coordinates owned by a player on vacation!';
 $_Lang['fl3_CantSendBanned']                     = 'You cannot send a fleet to coordinates owned by a banned player (with vacation mode activated)!';

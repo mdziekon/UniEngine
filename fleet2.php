@@ -540,7 +540,7 @@ $missionHoldTimeOptions = array_map(
     $availableHoldTimes
 );
 
-$availableExpeditionTimes = FlightControl\Utils\Helpers\getAvailableExpeditionTimes([]);
+$availableExpeditionTimes = FlightControl\Utils\Helpers\getAvailableExpeditionTimes();
 
 $missionExpeditionTimeOptions = array_map(
     function ($optionTimeValue) use ($setFormValues) {

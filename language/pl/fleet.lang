@@ -219,8 +219,7 @@ $_Lang['fl3_CantDestroyNoShip']                  = 'Aby móc zniszczyć Księży
 $_Lang['fl3_BadMissionSelected']                 = 'Wybrano niepoprawną Misję!';
 
 $_Lang['fl3_NoDebrisFieldHere']                  = 'Na tej pozycji nie ma Pola Zniszczeń!';
-$_Lang['fl3_Expedition_Min1H']                   = 'Ekspedycja musi trwać minimum godzinę!';
-$_Lang['fl3_Expedition_Max12H']                  = 'Ekspedycja nie może trwać więcej niż 12 godzin!';
+$_Lang['fl3_MissionExpedition_BadTime']          = 'Niepoprawny czas trwania ekspedycji!';
 $_Lang['fl3_Holding_BadTime']                    = 'Niepoprawny czas zatrzymania floty!';
 $_Lang['fl3_CantSendVacation']                   = 'Nie możesz wysłać floty do gracza na urlopie!';
 $_Lang['fl3_CantSendBanned']                     = 'Nie możesz wysłać floty do Zbanowanego gracza (Ban z urlopem)!';

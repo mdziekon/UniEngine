@@ -415,22 +415,35 @@ if ($Fleet['Mission'] == Flights\Enums\FleetMission::Hold) {
         messageRed($errorMessage, $ErrorTitle);
     }
 }
+if ($Fleet['Mission'] == Flights\Enums\FleetMission::Expedition) {
+    $missionExpeditionValidationResult = FlightControl\Utils\Validators\validateMissionExpedition([
+        'fleetEntry' => $Fleet,
+    ]);
 
-// --- Check if Expeditions and HoldingTimes are Correct
-$Throw = false;
+    if (!$missionExpeditionValidationResult['isSuccess']) {
+        $error = $missionExpeditionValidationResult['error'];
+
+        $errorMessage = null;
+        switch ($error['code']) {
+            case 'INVALID_EXPEDITION_TIME':
+                $errorMessage = $_Lang['fl3_MissionExpedition_BadTime'];
+                break;
+            default:
+                $errorMessage = $_Lang['fleet_generic_errors_unknown'];
+                break;
+        }
+
+        messageRed($errorMessage, $ErrorTitle);
+    }
+}
+
+// --- Translate expedition or hold time into stay time (values already validated)
 $Fleet['StayTime'] = 0;
 if ($Fleet['Mission'] == Flights\Enums\FleetMission::Expedition) {
-    if ($Fleet['ExpeTime'] < 1) {
-        $Throw = $_Lang['fl3_Expedition_Min1H'];
-    } elseif ($Fleet['ExpeTime'] > 12) {
-        $Throw = $_Lang['fl3_Expedition_Max12H'];
-    }
     $Fleet['StayTime'] = $Fleet['ExpeTime'] * TIME_HOUR;
-} elseif ($Fleet['Mission'] == Flights\Enums\FleetMission::Hold) {
-    $Fleet['StayTime'] = $Fleet['HoldTime'] * TIME_HOUR;
 }
-if ($Throw) {
-    messageRed($Throw, $ErrorTitle);
+if ($Fleet['Mission'] == Flights\Enums\FleetMission::Hold) {
+    $Fleet['StayTime'] = $Fleet['HoldTime'] * TIME_HOUR;
 }
 
 // --- Set Variables to better usage

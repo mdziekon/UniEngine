@@ -82,6 +82,7 @@ call_user_func(function () {
     include($includePath . './utils/validators/fleetResources.validator.php');
     include($includePath . './utils/validators/flightSlots.validator.php');
     include($includePath . './utils/validators/joinUnion.validator.php');
+    include($includePath . './utils/validators/missionExpedition.validator.php');
     include($includePath . './utils/validators/missionHold.validator.php');
     include($includePath . './utils/validators/noobProtection.validator.php');
     include($includePath . './utils/validators/quantumGate.validator.php');
