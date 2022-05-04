@@ -58,8 +58,6 @@ $Fleet['HoldTime'] = intval($_POST['holdingtime']);
 $Fleet['ACS_ID'] = isset($_POST['acs_id']) ? floor(floatval($_POST['acs_id'])) : 0;
 $Fleet['Mission'] = isset($_POST['mission']) ? intval($_POST['mission']) : 0;
 
-$Protections['idleTime'] = $_GameConfig['no_idle_protect'] * TIME_DAY;
-
 if (!isUserAccountActivated($_User)) {
     messageRed($_Lang['fl3_BlockAccNotActivated'], $ErrorTitle);
 }
@@ -152,7 +150,7 @@ $smartFleetsBlockadeStateValidationResult = FlightControl\Utils\Validators\valid
         null
     ),
     'settings' => [
-        'idleTime' => $Protections['idleTime']
+        'idleTime' => getIdleProtectionTimeLimit(),
     ],
 ]);
 

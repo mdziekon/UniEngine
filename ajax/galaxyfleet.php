@@ -151,8 +151,6 @@ switch($Mission)
             CreateReturn('615');
         }
 
-        $Protections['idleTime'] = $_GameConfig['no_idle_protect'] * TIME_DAY;
-
         if($TargetUser > 0)
         {
             $Query_GetUser = '';
@@ -270,7 +268,7 @@ $smartFleetsBlockadeStateValidationResult = FlightControl\Utils\Validators\valid
         null
     ),
     'settings' => [
-        'idleTime' => $Protections['idleTime'],
+        'idleTime' => getIdleProtectionTimeLimit(),
     ],
 ]);
 

@@ -20,14 +20,14 @@ function GalaxyRowUser($GalaxyRowPlanet, $GalaxyRowUser, $MyBuddies, $SFBStatus)
         }
     }
 
+    $idleProtectionTimeLimit = getIdleProtectionTimeLimit();
+
     if(isset($GalaxyRowPlanet['id_owner']) && $GalaxyRowPlanet['id_owner'] > 0)
     {
         $NoobProt = $_GameConfig['noobprotection'];
         $NoobTime = $_GameConfig['noobprotectiontime'];
         $NoobMulti = $_GameConfig['noobprotectionmulti'];
         $noNoobProtect = $_GameConfig['no_noob_protect'];
-        $noIdleProtect = $_GameConfig['no_idle_protect'];
-        $Protections['idleTime'] = $_GameConfig['no_idle_protect'] * TIME_DAY;
 
         $UserPoints['total_points'] = $_User['total_points'];
         $UserPoints['total_rank'] = $_User['total_rank'];
@@ -71,7 +71,7 @@ function GalaxyRowUser($GalaxyRowPlanet, $GalaxyRowUser, $MyBuddies, $SFBStatus)
         {
             if($GalaxyRowUser['id'] != $_User['id'])
             {
-                if($GalaxyRowUser['onlinetime'] >= ($Time - (TIME_DAY * $noIdleProtect)))
+                if($GalaxyRowUser['onlinetime'] >= ($Time - $idleProtectionTimeLimit))
                 {
                     if($User2Points['total_points'] < ($NoobTime * 1000))
                     {
@@ -105,9 +105,9 @@ function GalaxyRowUser($GalaxyRowPlanet, $GalaxyRowUser, $MyBuddies, $SFBStatus)
 
         if($SFBStatus['ID'] > 0 AND
         (
-            ($AllMissionsBlocked !== true AND $GalaxyRowUser['onlinetime'] > ($Time - $Protections['idleTime']) AND $GalaxyRowUser['onlinetime'] < $SFBStatus['StartTime'])
+            ($AllMissionsBlocked !== true AND $GalaxyRowUser['onlinetime'] > ($Time - $idleProtectionTimeLimit) AND $GalaxyRowUser['onlinetime'] < $SFBStatus['StartTime'])
             OR
-            ($AllMissionsBlocked === true AND $GalaxyRowUser['onlinetime'] > ($Time - $Protections['idleTime']) AND $GalaxyRowUser['onlinetime'] < $SFBStatus['EndTime'])
+            ($AllMissionsBlocked === true AND $GalaxyRowUser['onlinetime'] > ($Time - $idleProtectionTimeLimit) AND $GalaxyRowUser['onlinetime'] < $SFBStatus['EndTime'])
         ))
         {
             $Status[] = array('class' => 'orange', 'sign' => $_Lang['Fleet_Blockade_Protected']);

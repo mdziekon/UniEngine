@@ -45,8 +45,6 @@ if ($FlyingFleets >= $MaxFleets) {
     CreateReturn('609');
 }
 
-$Protections['idleTime'] = $_GameConfig['no_idle_protect'] * TIME_DAY;
-
 $Galaxy = (isset($_POST['galaxy']) ? intval($_POST['galaxy']) : 0);
 $System = (isset($_POST['system']) ? intval($_POST['system']) : 0);
 $Planet = (isset($_POST['planet']) ? intval($_POST['planet']) : 0);
@@ -187,7 +185,7 @@ $smartFleetsBlockadeStateValidationResult = FlightControl\Utils\Validators\valid
         null
     ),
     'settings' => [
-        'idleTime' => $Protections['idleTime'],
+        'idleTime' => getIdleProtectionTimeLimit(),
     ],
 ]);
 
