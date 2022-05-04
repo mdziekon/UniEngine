@@ -17,7 +17,7 @@ function validateNoobProtection($validationParams) {
 
     $protectionConfig = [
         'fixedBasicProtectionLimit' => $_GameConfig['noobprotectiontime'] * 1000,
-        'noIdleProtectionTime' => $_GameConfig['no_idle_protect'] * TIME_DAY,
+        'noIdleProtectionTime' => getIdleProtectionTimeLimit(),
         'weakProtectionFinalLimit' => $_GameConfig['no_noob_protect'] * 1000,
         'weakProtectionMultiplier' => $_GameConfig['noobprotectionmulti'],
     ];

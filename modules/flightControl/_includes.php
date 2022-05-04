@@ -55,6 +55,7 @@ call_user_func(function () {
     include($includePath . './utils/helpers/extractUnionFleetIds.helper.php');
     include($includePath . './utils/helpers/extractUnionMembersDetails.helper.php');
     include($includePath . './utils/helpers/extractUnionMembersModification.helper.php');
+    include($includePath . './utils/helpers/getAvailableExpeditionTimes.helper.php');
     include($includePath . './utils/helpers/getAvailableHoldTimes.helper.php');
     include($includePath . './utils/helpers/getAvailableSpeeds.helper.php');
     include($includePath . './utils/helpers/getFleetsInFlightCounters.helper.php');
@@ -81,6 +82,7 @@ call_user_func(function () {
     include($includePath . './utils/validators/fleetResources.validator.php');
     include($includePath . './utils/validators/flightSlots.validator.php');
     include($includePath . './utils/validators/joinUnion.validator.php');
+    include($includePath . './utils/validators/missionExpedition.validator.php');
     include($includePath . './utils/validators/missionHold.validator.php');
     include($includePath . './utils/validators/noobProtection.validator.php');
     include($includePath . './utils/validators/quantumGate.validator.php');

@@ -23,6 +23,7 @@ $_Lang['SelectQuantumGate'] = 'false';
 
 $setFormValues = [
     'holdingtime' => null,
+    'expeditionTime' => null,
 ];
 
 if(!empty($_POST['gobackVars']))
@@ -46,7 +47,7 @@ if(!empty($_POST['gobackVars']))
     }
     if(isset($_POST['gobackVars']['expeditiontime']))
     {
-        $_Lang['SelectExpedition_'.$_POST['gobackVars']['expeditiontime']] = 'selected';
+        $setFormValues['expeditionTime'] = $_POST['gobackVars']['expeditiontime'];
     }
     $_Lang['SelectResources'] = json_encode(array
     (
@@ -539,7 +540,28 @@ $missionHoldTimeOptions = array_map(
     $availableHoldTimes
 );
 
+$availableExpeditionTimes = FlightControl\Utils\Helpers\getAvailableExpeditionTimes();
+
+$missionExpeditionTimeOptions = array_map(
+    function ($optionTimeValue) use ($setFormValues) {
+        return buildDOMElementHTML([
+            'tagName' => 'option',
+            'contentHTML' => $optionTimeValue,
+            'attrs' => [
+                'value' => $optionTimeValue,
+                'selected' => (
+                    $optionTimeValue == $setFormValues['expeditionTime'] ?
+                        '' :
+                        null
+                ),
+            ],
+        ]);
+    },
+    $availableExpeditionTimes
+);
+
 $_Lang['P_HTMLBuilder_MissionHold_AvailableTimes'] = implode('', $missionHoldTimeOptions);
+$_Lang['P_HTMLBuilder_MissionExpedition_AvailableTimes'] = implode('', $missionExpeditionTimeOptions);
 
 display(parsetemplate(gettemplate('fleet2_body'), $_Lang), $_Lang['fl_title']);
 

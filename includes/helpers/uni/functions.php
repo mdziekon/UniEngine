@@ -26,4 +26,13 @@ function isFeatureEnabled($featureType) {
     }
 }
 
+/**
+ * @return int Protection time limit (in seconds)
+ */
+function getIdleProtectionTimeLimit() {
+    global $_GameConfig;
+
+    return ($_GameConfig['no_idle_protect'] * TIME_DAY);
+}
+
 ?>
