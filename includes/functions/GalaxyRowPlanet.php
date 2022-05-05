@@ -2,12 +2,11 @@
 
 use UniEngine\Engine\Includes\Helpers\World\Checks;
 
-function GalaxyRowPlanet($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Galaxy, $System, $Planet, $MyBuddies, $MyAllyPacts)
-{
+function GalaxyRowPlanet($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Galaxy, $System, $Planet, $MyBuddies, $MyAllyPacts) {
     global $_Lang, $_SkinPath, $_User, $CurrentMIP, $SensonPhalanxLevel, $CurrentSystem, $CurrentGalaxy;
     static $TPL = false;
-    if($TPL === false)
-    {
+
+    if ($TPL === false) {
         $TPL = gettemplate('galaxy_row_planetimg');
     }
 
@@ -18,41 +17,35 @@ function GalaxyRowPlanet($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Galaxy, 
     $PlanetType = 1;
     $Links = [];
 
-    if($SensonPhalanxLevel > 0)
-    {
-        if($GalaxyRowUser['id'] != $_User['id'])
-        {
-            if($GalaxyRowPlanet['galaxy'] == $CurrentGalaxy)
-            {
-                $isInRange = Checks\isTargetInRange([
-                    'originPosition' => $CurrentSystem,
-                    'targetPosition' => $System,
-                    'range' => GetPhalanxRange($SensonPhalanxLevel),
-                ]);
+    if (
+        $SensonPhalanxLevel > 0 &&
+        $GalaxyRowUser['id'] != $_User['id'] &&
+        $GalaxyRowPlanet['galaxy'] == $CurrentGalaxy
+    ) {
+        $isInRange = Checks\isTargetInRange([
+            'originPosition' => $CurrentSystem,
+            'targetPosition' => $System,
+            'range' => GetPhalanxRange($SensonPhalanxLevel),
+        ]);
 
-                if ($isInRange) {
-                    $Links[] = array('prio' => 3, 'txt' => "<a href=# onclick=&#039return Phalanx({$Galaxy},{$System},{$Planet},{$PlanetType});&#039 >{$_Lang['gl_phalanx']}</a>");
-                }
-            }
+        if ($isInRange) {
+            $Links[] = array('prio' => 3, 'txt' => "<a href=# onclick=&#039return Phalanx({$Galaxy},{$System},{$Planet},{$PlanetType});&#039 >{$_Lang['gl_phalanx']}</a>");
         }
     }
 
-    if($CurrentMIP > 0)
-    {
-        if($GalaxyRowUser['id'] != $_User['id'])
-        {
-            if($GalaxyRowPlanet['galaxy'] == $CurrentGalaxy)
-            {
-                $isInRange = Checks\isTargetInRange([
-                    'originPosition' => $CurrentSystem,
-                    'targetPosition' => $System,
-                    'range' => GetMissileRange(),
-                ]);
+    if (
+        $CurrentMIP > 0 &&
+        $GalaxyRowUser['id'] != $_User['id'] &&
+        $GalaxyRowPlanet['galaxy'] == $CurrentGalaxy
+    ) {
+        $isInRange = Checks\isTargetInRange([
+            'originPosition' => $CurrentSystem,
+            'targetPosition' => $System,
+            'range' => GetMissileRange(),
+        ]);
 
-                if ($isInRange) {
-                    $Links[] = array('prio' => 9, 'txt' => "<a class=missileAttack href=galaxy.php?mode=2&galaxy={$Galaxy}&system={$System}&planet={$Planet} >{$_Lang['type_mission'][10]}</a>");
-                }
-            }
+        if ($isInRange) {
+            $Links[] = array('prio' => 9, 'txt' => "<a class=missileAttack href=galaxy.php?mode=2&galaxy={$Galaxy}&system={$System}&planet={$Planet} >{$_Lang['type_mission'][10]}</a>");
         }
     }
 
