@@ -12,6 +12,7 @@ $_EnginePath = '../';
 include($_EnginePath . 'common.php');
 include($_EnginePath . 'modules/flightControl/_includes.php');
 
+use UniEngine\Engine\Includes\Helpers\World\Checks;
 use UniEngine\Engine\Modules\FlightControl;
 
 function CreateReturn($ReturnCode, $Update = '0')
@@ -62,6 +63,11 @@ $Dist = abs($System - $_Planet['system']);
 include($_EnginePath.'includes/functions/GetMissileRange.php');
 $MissilesRange = GetMissileRange();
 $FlightTime = round(((30 + (60 * $Dist)) * 2500) / $_GameConfig['game_speed']);
+$isInRange = Checks\isTargetInRange([
+    'originPosition' => $_Planet['system'],
+    'targetPosition' => $System,
+    'range' => $MissilesRange,
+]);
 
 if($Missiles <= 0)
 {
@@ -79,8 +85,10 @@ if($MissilesRange <= 0)
 {
     CreateReturn('648');
 }
-if($Dist > $MissilesRange OR $Galaxy != $_Planet['galaxy'])
-{
+if (
+    !$isInRange ||
+    $Galaxy != $_Planet['galaxy']
+) {
     CreateReturn('647');
 }
 if($Missiles > $_Planet['interplanetary_missile'])

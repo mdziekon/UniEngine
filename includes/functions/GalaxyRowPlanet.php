@@ -43,15 +43,13 @@ function GalaxyRowPlanet($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Galaxy, 
         {
             if($GalaxyRowPlanet['galaxy'] == $CurrentGalaxy)
             {
-                $MiRange = GetMissileRange();
-                $SystemLimitMin = $CurrentSystem - $MiRange;
-                if($SystemLimitMin < 1)
-                {
-                    $SystemLimitMin = 1;
-                }
-                $SystemLimitMax = $CurrentSystem + $MiRange;
-                if($System <= $SystemLimitMax AND $System >= $SystemLimitMin)
-                {
+                $isInRange = Checks\isTargetInRange([
+                    'originPosition' => $CurrentSystem,
+                    'targetPosition' => $System,
+                    'range' => GetMissileRange(),
+                ]);
+
+                if ($isInRange) {
                     $Links[] = array('prio' => 9, 'txt' => "<a class=missileAttack href=galaxy.php?mode=2&galaxy={$Galaxy}&system={$System}&planet={$Planet} >{$_Lang['type_mission'][10]}</a>");
                 }
             }

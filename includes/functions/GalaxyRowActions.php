@@ -1,5 +1,7 @@
 <?php
 
+use UniEngine\Engine\Includes\Helpers\World\Checks;
+
 function GalaxyRowActions($GalaxyRowPlanet, $GalaxyRowPlayer, $Galaxy, $System, $Planet, $MyBuddies)
 {
     global $_User, $_SkinPath, $CurrentMIP, $CurrentSystem, $CurrentGalaxy;
@@ -39,15 +41,13 @@ function GalaxyRowActions($GalaxyRowPlanet, $GalaxyRowPlayer, $Galaxy, $System, 
         {
             if($GalaxyRowPlanet['galaxy'] == $CurrentGalaxy)
             {
-                $MiRange = GetMissileRange();
-                $SystemLimitMin = $CurrentSystem - $MiRange;
-                if($SystemLimitMin < 1)
-                {
-                    $SystemLimitMin = 1;
-                }
-                $SystemLimitMax = $CurrentSystem + $MiRange;
-                if($System <= $SystemLimitMax AND $System >= $SystemLimitMin)
-                {
+                $isInRange = Checks\isTargetInRange([
+                    'originPosition' => $CurrentSystem,
+                    'targetPosition' => $System,
+                    'range' => GetMissileRange(),
+                ]);
+
+                if ($isInRange) {
                     --$HiddenOptions;
                     $Parse['Hide_Rocket'] = '';
                 }
