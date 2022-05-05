@@ -1,5 +1,9 @@
 <?php
 
+function renderEmptyGalaxyCell() {
+    return '<th class="hiFnt">&nbsp;</th>';
+}
+
 function ShowGalaxyRows($Galaxy, $System, $HighlightPlanet = false)
 {
     global $planetcount, $_User;
