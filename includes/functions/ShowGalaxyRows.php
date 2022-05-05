@@ -1,5 +1,9 @@
 <?php
 
+function renderEmptyGalaxyCell() {
+    return '<th class="hiFnt">&nbsp;</th>';
+}
+
 function ShowGalaxyRows($Galaxy, $System, $HighlightPlanet = false)
 {
     global $planetcount, $_User;
@@ -15,7 +19,7 @@ function ShowGalaxyRows($Galaxy, $System, $HighlightPlanet = false)
     $UserNeedenFields .= "`stats`.`total_points`, `stats`.`total_rank`, ";
     $UserNeedenFields .= "`ally_stats`.`total_rank` AS `ally_total_rank`, ";
     $UserNeedenFields .= "`ally`.`ally_name`, `ally`.`ally_web`, `ally`.`ally_web_reveal`, `ally`.`ally_tag`, `ally`.`ally_members`";
-    $PlanetNeedenFields = '`pl`.`id`, `pl`.`name`, `pl`.`name`, `pl`.`id_owner`, `pl`.`galaxy`, `pl`.`last_update`, `pl`.`image`';
+    $PlanetNeedenFields = '`pl`.`id`, `pl`.`name`, `pl`.`name`, `pl`.`id_owner`, `pl`.`galaxy`, `pl`.`planet`, `pl`.`last_update`, `pl`.`image`';
 
     $Query_Galaxies        = '';
     $Query_Galaxies        .= "SELECT `planet`, `id_planet`, `metal`, `crystal`, `id_moon`, `hide_planet` FROM {{table}} ";
@@ -48,7 +52,7 @@ function ShowGalaxyRows($Galaxy, $System, $HighlightPlanet = false)
     $SFBStatus        = doquery($Query_SFB, 'smart_fleet_blockade', true);
     $MyBuddyList    = doquery($Query_Buddy, 'buddy');
 
-    $MyAllyPacts = array();
+    $MyAllyPacts = [];
     if($_User['ally_id'] > 0)
     {
         $Result_MyAllyPacts = doquery($Query_AllyPacts, 'ally_pacts');
@@ -61,7 +65,7 @@ function ShowGalaxyRows($Galaxy, $System, $HighlightPlanet = false)
         }
     }
 
-    $MyBuddies = array();
+    $MyBuddies = [];
     if($MyBuddyList->num_rows > 0)
     {
         while($MyBuddyData = $MyBuddyList->fetch_assoc())
@@ -87,86 +91,83 @@ function ShowGalaxyRows($Galaxy, $System, $HighlightPlanet = false)
     $Planet = 1;
     $RowTPL = gettemplate('galaxy_row_body');
 
-    while(($GalaxyRow = $GalaxyResult->fetch_assoc()) OR $Planet <= MAX_PLANET_IN_SYSTEM)
-    {
-        if($Planet <= MAX_PLANET_IN_SYSTEM)
-        {
-            if($GalaxyRow['planet'] > 0 AND $GalaxyRow['planet'] < $Planet)
-            {
-                $GalaxyRow = $GalaxyResult->fetch_assoc();
-            }
+    $galaxyRows = mapQueryResults($GalaxyResult, function ($entry) {
+        return $entry;
+    });
+    $galaxyRows = object_map($galaxyRows, function ($value) {
+        return [ $value, $value['planet'] ];
+    });
 
-            while($GalaxyRow['planet'] != $Planet)
-            {
-                if($Planet <= MAX_PLANET_IN_SYSTEM)
-                {
-                    $RowData = '';
-                    $RowData .= GalaxyRowPos($Galaxy, $System, $Planet);
-                    $RowData .= GalaxyRowPlanet(false, array(), array(), $Galaxy, $System, $Planet, 1, $MyBuddies, $MyAllyPacts);
-                    $RowData .= GalaxyRowPlanetName(false, array(), array(), $Galaxy, $System, $Planet, 1, $MyBuddies);
-                    $RowData .= GalaxyRowMoon(false, array(), array(), $Galaxy, $System, $Planet, 3, $MyBuddies, $MyAllyPacts);
-                    $RowData .= GalaxyRowDebris(false, $Galaxy, $System, $Planet, 2);
-                    $RowData .= GalaxyRowUser(array(), array(), $MyBuddies, $SFBStatus);
-                    $RowData .= GalaxyRowAlly(array(), $MyAllyPacts);
-                    $RowData .= GalaxyRowActions(array(), array(), $Galaxy, $System, $Planet, $MyBuddies);
+    $planetRows = mapQueryResults($PlanetsResult, function ($entry) {
+        return $entry;
+    });
+    $planetRows = object_map($planetRows, function ($value) {
+        return [ $value, $value['planet'] ];
+    });
 
-                    $Result .= parsetemplate($RowTPL, array('Data' => $RowData, 'SetHighlight' => ($Planet == $HighlightPlanet ? ' class="rowHighlight"' : '')));
+    $moonRows = mapQueryResults($MoonsResult, function ($entry) {
+        return $entry;
+    });
+    $moonRows = object_map($moonRows, function ($value) {
+        return [ $value, $value['planet'] ];
+    });
 
-                    $Planet += 1;
-                }
-                else
-                {
-                    break;
-                }
-            }
+    foreach (range(1, MAX_PLANET_IN_SYSTEM, 1) as $Planet) {
+        if (!isset($galaxyRows[$Planet])) {
+            $RowData = '';
+            $RowData .= GalaxyRowPos($Galaxy, $System, $Planet);
+            $RowData .= GalaxyRowPlanet(false, [], [], $Galaxy, $System, $Planet, 1, $MyBuddies, $MyAllyPacts);
+            $RowData .= GalaxyRowPlanetName(false, [], [], $Galaxy, $System, $Planet, 1, $MyBuddies);
+            $RowData .= GalaxyRowMoon(false, [], [], $Galaxy, $System, $Planet, 3, $MyBuddies, $MyAllyPacts);
+            $RowData .= GalaxyRowDebris(false, $Galaxy, $System, $Planet, 2);
+            $RowData .= GalaxyRowUser([], [], $MyBuddies, $SFBStatus);
+            $RowData .= GalaxyRowAlly([], $MyAllyPacts);
+            $RowData .= GalaxyRowActions([], [], $Galaxy, $System, $Planet, $MyBuddies);
 
-            if($GalaxyRow['planet'] == $Planet)
-            {
-                $RowData = '';
+            $Result .= parsetemplate($RowTPL, [
+                'Data' => $RowData,
+                'SetHighlight' => ($Planet == $HighlightPlanet ? ' class="rowHighlight"' : '')
+            ]);
 
-                $GalaxyRowMoon = array();
-                if($GalaxyRow['id_planet'] != 0)
-                {
-                    $GalaxyRowPlanet = $PlanetsResult->fetch_assoc();
-                    if($GalaxyRow['hide_planet'] == 0 OR CheckAuth('supportadmin') OR $_User['id'] == $GalaxyRowPlanet['id_owner'])
-                    {
-                        $planetcount += 1;
-                        $GalaxyRowPlayer = $GalaxyRowPlanet;
-                        $GalaxyRowPlayer['id'] = $GalaxyRowPlayer['user_id'];
-                        if($GalaxyRow['id_moon'] != 0)
-                        {
-                            $GalaxyRowMoon = $MoonsResult->fetch_assoc();
-                        }
-                    }
-                    else
-                    {
-                        unset($GalaxyRowPlanet);
-                        unset($GalaxyRow);
-                    }
-                }
-
-                $RowData .= GalaxyRowPos($Galaxy, $System, $Planet);
-                $RowData .= GalaxyRowPlanet($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowPlayer, $Galaxy, $System, $Planet, 1 , $MyBuddies, $MyAllyPacts);
-                $RowData .= GalaxyRowPlanetName($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowPlayer, $Galaxy, $System, $Planet, 1, $MyBuddies);
-                $RowData .= GalaxyRowMoon($GalaxyRow, $GalaxyRowMoon, $GalaxyRowPlayer, $Galaxy, $System, $Planet, 3, $MyBuddies, $MyAllyPacts);
-                $RowData .= GalaxyRowDebris($GalaxyRow, $Galaxy, $System, $Planet, 2);
-                $RowData .= GalaxyRowUser($GalaxyRowPlanet, $GalaxyRowPlayer, $MyBuddies, $SFBStatus);
-                $RowData .= GalaxyRowAlly($GalaxyRowPlayer, $MyAllyPacts);
-                $RowData .= GalaxyRowActions($GalaxyRowPlanet, $GalaxyRowPlayer, $Galaxy, $System, $Planet, $MyBuddies);
-
-                $Result .= parsetemplate($RowTPL, array('Data' => $RowData, 'SetHighlight' => ($Planet == $HighlightPlanet ? ' class="rowHighlight"' : '')));
-
-                unset($GalaxyRowPlanet);
-                unset($GalaxyRowMoon);
-                unset($GalaxyRowPlayer);
-            }
-
-            $Planet += 1;
+            continue;
         }
-        else
-        {
-            break;
+
+        $RowData = '';
+
+        $GalaxyRow = $galaxyRows[$Planet];
+        $GalaxyRowPlanet = [];
+        $GalaxyRowMoon = [];
+        $GalaxyRowPlayer = null;
+
+        if ($GalaxyRow['id_planet'] != 0) {
+            $GalaxyRowPlanet = $planetRows[$Planet];
+            if (
+                $GalaxyRow['hide_planet'] == 0 OR
+                CheckAuth('supportadmin') OR
+                $_User['id'] == $GalaxyRowPlanet['id_owner']
+            ) {
+                $planetcount += 1;
+                $GalaxyRowPlayer = $GalaxyRowPlanet;
+                $GalaxyRowPlayer['id'] = $GalaxyRowPlayer['user_id'];
+                if ($GalaxyRow['id_moon'] != 0) {
+                    $GalaxyRowMoon = $moonRows[$Planet];
+                }
+            }
         }
+
+        $RowData .= GalaxyRowPos($Galaxy, $System, $Planet);
+        $RowData .= GalaxyRowPlanet($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowPlayer, $Galaxy, $System, $Planet, 1 , $MyBuddies, $MyAllyPacts);
+        $RowData .= GalaxyRowPlanetName($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowPlayer, $Galaxy, $System, $Planet, 1, $MyBuddies);
+        $RowData .= GalaxyRowMoon($GalaxyRow, $GalaxyRowMoon, $GalaxyRowPlayer, $Galaxy, $System, $Planet, 3, $MyBuddies, $MyAllyPacts);
+        $RowData .= GalaxyRowDebris($GalaxyRow, $Galaxy, $System, $Planet, 2);
+        $RowData .= GalaxyRowUser($GalaxyRowPlanet, $GalaxyRowPlayer, $MyBuddies, $SFBStatus);
+        $RowData .= GalaxyRowAlly($GalaxyRowPlayer, $MyAllyPacts);
+        $RowData .= GalaxyRowActions($GalaxyRowPlanet, $GalaxyRowPlayer, $Galaxy, $System, $Planet, $MyBuddies);
+
+        $Result .= parsetemplate($RowTPL, [
+            'Data' => $RowData,
+            'SetHighlight' => ($Planet == $HighlightPlanet ? ' class="rowHighlight"' : '')
+        ]);
     }
 
     if (isFeatureEnabled(FeatureType::Expeditions)) {
