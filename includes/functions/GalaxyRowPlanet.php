@@ -1,6 +1,6 @@
 <?php
 
-function GalaxyRowPlanet($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Galaxy, $System, $Planet, $PlanetType, $MyBuddies, $MyAllyPacts)
+function GalaxyRowPlanet($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Galaxy, $System, $Planet, $MyBuddies, $MyAllyPacts)
 {
     global $_Lang, $_SkinPath, $_User, $CurrentMIP, $SensonPhalanxLevel, $CurrentSystem, $CurrentGalaxy;
     static $TPL = false;
@@ -13,6 +13,7 @@ function GalaxyRowPlanet($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Galaxy, 
         return renderEmptyGalaxyCell();
     }
 
+    $PlanetType = 1;
     $Links = [];
 
     if($SensonPhalanxLevel > 0)

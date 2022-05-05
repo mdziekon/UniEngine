@@ -1,6 +1,6 @@
 <?php
 
-function GalaxyRowMoon($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Galaxy, $System, $Planet, $PlanetType, $MyBuddies, $MyAllyPacts)
+function GalaxyRowMoon($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Galaxy, $System, $Planet, $MyBuddies, $MyAllyPacts)
 {
     global $_Lang, $_User, $_SkinPath, $CanDestroy, $MoonCount;
     static $TPL = false;
@@ -13,6 +13,7 @@ function GalaxyRowMoon($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Galaxy, $S
         return renderEmptyGalaxyCell();
     }
 
+    $PlanetType = 3;
     $Links = [];
 
     $MoonCount += 1;

@@ -116,10 +116,10 @@ function ShowGalaxyRows($Galaxy, $System, $HighlightPlanet = false)
         if (!isset($galaxyRows[$Planet])) {
             $RowData = '';
             $RowData .= GalaxyRowPos($Galaxy, $System, $Planet);
-            $RowData .= GalaxyRowPlanet(false, [], [], $Galaxy, $System, $Planet, 1, $MyBuddies, $MyAllyPacts);
-            $RowData .= GalaxyRowPlanetName(false, [], [], $Galaxy, $System, $Planet, 1, $MyBuddies);
-            $RowData .= GalaxyRowMoon(false, [], [], $Galaxy, $System, $Planet, 3, $MyBuddies, $MyAllyPacts);
-            $RowData .= GalaxyRowDebris(false, $Galaxy, $System, $Planet, 2);
+            $RowData .= GalaxyRowPlanet(false, [], [], $Galaxy, $System, $Planet, $MyBuddies, $MyAllyPacts);
+            $RowData .= GalaxyRowPlanetName(false, [], [], $Galaxy, $System, $Planet, $MyBuddies);
+            $RowData .= GalaxyRowMoon(false, [], [], $Galaxy, $System, $Planet, $MyBuddies, $MyAllyPacts);
+            $RowData .= GalaxyRowDebris(false, $Galaxy, $System, $Planet);
             $RowData .= GalaxyRowUser([], [], $MyBuddies, $SFBStatus);
             $RowData .= GalaxyRowAlly([], $MyAllyPacts);
             $RowData .= GalaxyRowActions([], [], $Galaxy, $System, $Planet, $MyBuddies);
@@ -156,10 +156,10 @@ function ShowGalaxyRows($Galaxy, $System, $HighlightPlanet = false)
         }
 
         $RowData .= GalaxyRowPos($Galaxy, $System, $Planet);
-        $RowData .= GalaxyRowPlanet($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowPlayer, $Galaxy, $System, $Planet, 1 , $MyBuddies, $MyAllyPacts);
-        $RowData .= GalaxyRowPlanetName($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowPlayer, $Galaxy, $System, $Planet, 1, $MyBuddies);
-        $RowData .= GalaxyRowMoon($GalaxyRow, $GalaxyRowMoon, $GalaxyRowPlayer, $Galaxy, $System, $Planet, 3, $MyBuddies, $MyAllyPacts);
-        $RowData .= GalaxyRowDebris($GalaxyRow, $Galaxy, $System, $Planet, 2);
+        $RowData .= GalaxyRowPlanet($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowPlayer, $Galaxy, $System, $Planet, $MyBuddies, $MyAllyPacts);
+        $RowData .= GalaxyRowPlanetName($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowPlayer, $Galaxy, $System, $Planet, $MyBuddies);
+        $RowData .= GalaxyRowMoon($GalaxyRow, $GalaxyRowMoon, $GalaxyRowPlayer, $Galaxy, $System, $Planet, $MyBuddies, $MyAllyPacts);
+        $RowData .= GalaxyRowDebris($GalaxyRow, $Galaxy, $System, $Planet);
         $RowData .= GalaxyRowUser($GalaxyRowPlanet, $GalaxyRowPlayer, $MyBuddies, $SFBStatus);
         $RowData .= GalaxyRowAlly($GalaxyRowPlayer, $MyAllyPacts);
         $RowData .= GalaxyRowActions($GalaxyRowPlanet, $GalaxyRowPlayer, $Galaxy, $System, $Planet, $MyBuddies);

@@ -1,6 +1,6 @@
 <?php
 
-function GalaxyRowPlanetName($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Galaxy, $System, $Planet, $PlanetType, $MyBuddies)
+function GalaxyRowPlanetName($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Galaxy, $System, $Planet, $MyBuddies)
 {
     global $_Lang, $_User, $SensonPhalanxLevel, $CurrentSystem, $CurrentGalaxy, $Time;
     static $TPLPlanet = false, $TPLEmpty = false;
@@ -15,6 +15,7 @@ function GalaxyRowPlanetName($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Gala
         return parsetemplate($TPLEmpty, $ParseEmpty);
     }
 
+    $PlanetType = 1;
     $Now = $Time;
     $Activity = '';
     $NameColor = '';
