@@ -13,13 +13,9 @@ function isTargetInRange($params) {
     $targetPosition = $params['targetPosition'];
     $range = $params['range'];
 
-    $rangeStart = $originPosition - $range;
-    $rangeEnd = $originPosition + $range;
+    $positionsDistance = abs($originPosition - $targetPosition);
 
-    return (
-        $targetPosition >= $rangeStart &&
-        $targetPosition <= $rangeEnd
-    );
+    return ($range >= $positionsDistance);
 }
 
 ?>
