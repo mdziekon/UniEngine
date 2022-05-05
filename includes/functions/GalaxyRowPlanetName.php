@@ -1,5 +1,7 @@
 <?php
 
+use UniEngine\Engine\Includes\Helpers\World\Checks;
+
 function GalaxyRowPlanetName($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Galaxy, $System, $Planet, $MyBuddies)
 {
     global $_Lang, $_User, $SensonPhalanxLevel, $CurrentSystem, $CurrentGalaxy, $Time;
@@ -73,15 +75,13 @@ function GalaxyRowPlanetName($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Gala
 
         if($GalaxyRowPlanet['galaxy'] == $CurrentGalaxy AND $SensonPhalanxLevel > 0)
         {
-            $PhRange = GetPhalanxRange($SensonPhalanxLevel);
-            $SystemLimitMin = $CurrentSystem - $PhRange;
-            if($SystemLimitMin < 1)
-            {
-                $SystemLimitMin = 1;
-            }
-            $SystemLimitMax = $CurrentSystem + $PhRange;
-            if($System <= $SystemLimitMax AND $System >= $SystemLimitMin)
-            {
+            $isInRange = Checks\isTargetInRange([
+                'originPosition' => $CurrentSystem,
+                'targetPosition' => $System,
+                'range' => GetPhalanxRange($SensonPhalanxLevel),
+            ]);
+
+            if ($isInRange) {
                 $Parse['AddHref'] = 'href="#"';
                 $Parse['AddOnClick'] = "onclick=\"return Phalanx({$Galaxy}, {$System}, {$Planet}, {$PlanetType});\"";
                 $Parse['AddTitle'] = "title=\"{$_Lang['gl_phalanx']}\"";

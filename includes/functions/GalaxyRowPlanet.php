@@ -1,5 +1,7 @@
 <?php
 
+use UniEngine\Engine\Includes\Helpers\World\Checks;
+
 function GalaxyRowPlanet($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Galaxy, $System, $Planet, $MyBuddies, $MyAllyPacts)
 {
     global $_Lang, $_SkinPath, $_User, $CurrentMIP, $SensonPhalanxLevel, $CurrentSystem, $CurrentGalaxy;
@@ -22,15 +24,13 @@ function GalaxyRowPlanet($GalaxyRow, $GalaxyRowPlanet, $GalaxyRowUser, $Galaxy, 
         {
             if($GalaxyRowPlanet['galaxy'] == $CurrentGalaxy)
             {
-                $PhRange = GetPhalanxRange($SensonPhalanxLevel);
-                $SystemLimitMin = $CurrentSystem - $PhRange;
-                if($SystemLimitMin < 1)
-                {
-                    $SystemLimitMin = 1;
-                }
-                $SystemLimitMax = $CurrentSystem + $PhRange;
-                if($System <= $SystemLimitMax AND $System >= $SystemLimitMin)
-                {
+                $isInRange = Checks\isTargetInRange([
+                    'originPosition' => $CurrentSystem,
+                    'targetPosition' => $System,
+                    'range' => GetPhalanxRange($SensonPhalanxLevel),
+                ]);
+
+                if ($isInRange) {
                     $Links[] = array('prio' => 3, 'txt' => "<a href=# onclick=&#039return Phalanx({$Galaxy},{$System},{$Planet},{$PlanetType});&#039 >{$_Lang['gl_phalanx']}</a>");
                 }
             }

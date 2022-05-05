@@ -11,6 +11,7 @@ $_EnginePath = './';
 include($_EnginePath.'common.php');
 include($_EnginePath . 'modules/flights/_includes.php');
 
+use UniEngine\Engine\Includes\Helpers\World\Checks;
 use UniEngine\Engine\Modules\Flights;
 
 loggedCheck();
@@ -49,8 +50,12 @@ if($ThisMoon['planet_type'] == 3)
         );
 
         include($_EnginePath.'includes/functions/GetPhalanxRange.php');
-        $RangeDown = $ThisCoords['system'] - GetPhalanxRange($ThisPhalanx);
-        $RangeUp = $ThisCoords['system'] + GetPhalanxRange($ThisPhalanx);
+
+        $isInRange = Checks\isTargetInRange([
+            'originPosition' => $ThisCoords['system'],
+            'targetPosition' => $TargetData['system'],
+            'range' => GetPhalanxRange($ThisPhalanx),
+        ]);
 
         $DenyScan = false;
 
@@ -68,8 +73,7 @@ if($ThisMoon['planet_type'] == 3)
             $DenyScan = true;
             $WhyDoNotScan = $_Lang['PhalanxError_GalaxyOutOfRange'];
         }
-        if($TargetData['system'] > $RangeUp OR $TargetData['system'] < $RangeDown)
-        {
+        if (!$isInRange) {
             $DenyScan = true;
             $WhyDoNotScan = $_Lang['PhalanxError_TargetOutOfRange'];
         }
