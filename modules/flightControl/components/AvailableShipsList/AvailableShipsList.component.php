@@ -9,7 +9,7 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 //      - $props (Object)
 //          - planet (object)
 //          - user (object)
-//          - gobackFleet (Record<shipId: string, shipCount: number>)
+//          - preselectedShips (Record<shipId: string, shipCount: number>)
 //
 //  Returns: Object
 //      - componentHTML (String)
@@ -19,7 +19,7 @@ function render ($props) {
 
     $planet = $props['planet'];
     $user = $props['user'];
-    $gobackFleet = $props['gobackFleet'];
+    $preselectedShips = $props['preselectedShips'];
 
     $localTemplateLoader = createLocalTemplateLoader(__DIR__);
     $tplBodyCache = [
@@ -40,7 +40,7 @@ function render ($props) {
         $tplBodyCache['listElement']
     );
 
-    $listElements = array_map_withkeys($_Vars_ElementCategories['fleet'], function ($shipId) use ($planet, $user, $gobackFleet, &$_Lang) {
+    $listElements = array_map_withkeys($_Vars_ElementCategories['fleet'], function ($shipId) use ($planet, $user, $preselectedShips, &$_Lang) {
         $elementCurrentCount = Elements\getElementCurrentCount($shipId, $planet, $user);
 
         if (
@@ -59,8 +59,8 @@ function render ($props) {
             'Count'             => prettyNumber($elementCurrentCount),
             'MaxCount'          => (string) $maxCountParts[0],
             'InsertShipCount'   => (
-                !empty($gobackFleet[$shipId]) ?
-                    prettyNumber($gobackFleet[$shipId]) :
+                !empty($preselectedShips[$shipId]) ?
+                    prettyNumber($preselectedShips[$shipId]) :
                 '0'
             ),
         ];

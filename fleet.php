@@ -209,7 +209,7 @@ $_Lang['Insert_ShipsData'] = json_encode($shipsJSData);
 $_Lang['ShipsRow'] = FlightControl\Components\AvailableShipsList\render([
     'planet' => $_Planet,
     'user' => $_User,
-    'gobackFleet' => (
+    'preselectedShips' => (
         !empty($gobackFleet) ?
             $gobackFleet :
             $preselectedCargoShips
