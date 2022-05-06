@@ -23,13 +23,6 @@ include($_EnginePath.'/includes/functions/InsertJavaScriptChronoApplet.php');
 $Now = time();
 includeLang('fleet');
 $BodyTPL                = gettemplate('fleet_body');
-$ShipRowTPL             = gettemplate('fleet_srow');
-
-$ShipRowTPL = str_replace(
-    array('fl_fleetspeed', 'fl_selmax', 'fl_selnone'),
-    array($_Lang['fl_fleetspeed'], $_Lang['fl_selmax'], $_Lang['fl_selnone']),
-    $ShipRowTPL
-);
 
 $_Lang['ShipsRow'] = '';
 $_Lang['FlyingFleetsRows'] = '';
@@ -217,39 +210,27 @@ if (
 
 $shipsJSData = [];
 
-foreach ($_Vars_ElementCategories['fleet'] as $ID) {
-    $elementCurrentCount = Elements\getElementCurrentCount($ID, $_Planet, $_User);
+foreach ($_Vars_ElementCategories['fleet'] as $shipId) {
+    $elementCurrentCount = Elements\getElementCurrentCount($shipId, $_Planet, $_User);
 
     if (
         $elementCurrentCount <= 0 ||
-        !hasAnyEngine($ID)
+        !hasAnyEngine($shipId)
     ) {
         continue;
     }
 
-    $maxCountParts = explode('.', sprintf('%f', floor($elementCurrentCount)));
-
-    $shipRowProps = [
-        'ID'                => $ID,
-        'Speed'             => prettyNumber(getShipsCurrentSpeed($ID, $_User)),
-        'Name'              => $_Lang['tech'][$ID],
-        'Count'             => prettyNumber($elementCurrentCount),
-        'MaxCount'          => (string) $maxCountParts[0],
-        'InsertShipCount'   => (
-            !empty($gobackFleet[$ID]) ?
-                prettyNumber($gobackFleet[$ID]) :
-            '0'
-        ),
-    ];
-
-    $shipsJSData[$ID] = [
-        'storage' => getShipsPillageStorageCapacity($ID),
+    $shipsJSData[$shipId] = [
+        'storage' => getShipsPillageStorageCapacity($shipId),
         'count' => $elementCurrentCount,
     ];
-
-    $_Lang['ShipsRow'] .= parsetemplate($ShipRowTPL, $shipRowProps);
 }
 $_Lang['Insert_ShipsData'] = json_encode($shipsJSData);
+$_Lang['ShipsRow'] = FlightControl\Components\AvailableShipsList\render([
+    'planet' => $_Planet,
+    'user' => $_User,
+    'gobackFleet' => $gobackFleet,
+])['componentHTML'];
 
 $_Lang['P_HideNoSlotsInfo'] = $Hide;
 $_Lang['P_HideSendShips'] = $Hide;
