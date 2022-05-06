@@ -265,19 +265,19 @@ $(document).ready(function()
         <th>{Box_transMissing_Stay}</th>
     </tr>
     <tr>
-        <th>{small_trans}</th>
-        <th>{small_cargo_count}</th>
-        <th>{small_cargo_miss_stay}</th>
+        <th>{transportShips__202__name}</th>
+        <th>{transportShips__202__requiredCount}</th>
+        <th>{transportShips__202__remainingCount}</th>
     </tr>
     <tr>
-        <th>{big_trans}</th>
-        <th>{big_cargo_count}</th>
-        <th>{big_cargo_miss_stay}</th>
+        <th>{transportShips__203__name}</th>
+        <th>{transportShips__203__requiredCount}</th>
+        <th>{transportShips__203__remainingCount}</th>
     </tr>
     <tr>
-        <th>{mega_trans}</th>
-        <th>{mega_cargo_count}</th>
-        <th>{mega_cargo_miss_stay}</th>
+        <th>{transportShips__217__name}</th>
+        <th>{transportShips__217__requiredCount}</th>
+        <th>{transportShips__217__remainingCount}</th>
     </tr>
     <tr{Hide_QuickResButton}>
         <th class="pad5" colspan="3">

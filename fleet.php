@@ -158,7 +158,11 @@ if (
         floor($_Planet['deuterium'])
     );
 
-    $transportShipIds = [ 217, 203, 202 ];
+    $transportShipIds = $_Vars_ElementCategories['units']['transport'];
+
+    usort($transportShipIds, function ($leftShipId, $rightShipId) {
+        return (getShipsStorageCapacity($leftShipId) < getShipsStorageCapacity($rightShipId));
+    });
 
     $JSSetShipsCount = [];
 

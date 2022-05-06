@@ -297,7 +297,7 @@ function BuildRessourcePage($CurrentUser, &$CurrentPlanet)
 
     $parse['energy_total'] = prettyColorNumber(floor(($CurrentPlanet['energy_max'] + $_GameConfig['energy_basic_income']) + $CurrentPlanet['energy_used']));
 
-    foreach ([ 202, 203, 217 ] as $shipID) {
+    foreach ($_Vars_ElementCategories['units']['transport'] as $shipID) {
         $shipCargoHelperTplData = createShipsCargoHelperTplData(
             $shipID,
             $CurrentPlanet

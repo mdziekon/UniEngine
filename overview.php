@@ -11,6 +11,7 @@ include_once($_EnginePath . 'modules/flights/_includes.php');
 include_once($_EnginePath . 'modules/flightControl/_includes.php');
 
 use UniEngine\Engine\Includes\Helpers\Users;
+use UniEngine\Engine\Includes\Helpers\World\Elements;
 use UniEngine\Engine\Modules\Session;
 use UniEngine\Engine\Modules\Flights;
 use UniEngine\Engine\Modules\FlightControl;
@@ -876,25 +877,21 @@ switch($mode)
         }
 
         // --- Transporters ----------------------------
-        $SmallRequired = ceil(($_Planet['metal'] + $_Planet['crystal'] + $_Planet['deuterium']) / $_Vars_Prices[202]['capacity']);
-        $BigRequired = ceil(($_Planet['metal'] + $_Planet['crystal'] + $_Planet['deuterium']) / $_Vars_Prices[203]['capacity']);
-        $MegaRequired = ceil(($_Planet['metal'] + $_Planet['crystal'] + $_Planet['deuterium']) / $_Vars_Prices[217]['capacity']);
+        $resourcesTransportNeededStorage = (
+            $_Planet['metal'] +
+            $_Planet['crystal'] +
+            $_Planet['deuterium']
+        );
 
-        $SmallMissStay = -($SmallRequired - $_Planet[$_Vars_GameElements[202]]);
-        $BigMissStay = -($BigRequired - $_Planet[$_Vars_GameElements[203]]);
-        $MegaMissStay = -($MegaRequired - $_Planet[$_Vars_GameElements[217]]);
+        foreach ($_Vars_ElementCategories['units']['transport'] as $shipId) {
+            $requiredShipsCount = ceil($resourcesTransportNeededStorage / getShipsStorageCapacity($shipId));
+            $currentShipsCount = Elements\getElementCurrentCount($shipId, $_Planet, $_User);
+            $remainingShipsCount = $currentShipsCount - $requiredShipsCount;
 
-        $parse['small_cargo_count'] = prettyNumber($SmallRequired);//Small cargo ship
-        $parse['big_cargo_count'] = prettyNumber($BigRequired);//Big cargo ship
-        $parse['mega_cargo_count'] = prettyNumber($MegaRequired); //Mega cargo ship
-
-        $parse['small_cargo_miss_stay'] = str_replace('-', '', prettyColorNumber($SmallMissStay, true));
-        $parse['big_cargo_miss_stay'] = str_replace('-', '', prettyColorNumber($BigMissStay, true));
-        $parse['mega_cargo_miss_stay'] = str_replace('-', '', prettyColorNumber($MegaMissStay, true));
-
-        $parse['small_trans'] = $_Lang['tech'][202];
-        $parse['big_trans'] = $_Lang['tech'][203];
-        $parse['mega_trans'] = $_Lang['tech'][217];
+            $parse["transportShips__{$shipId}__name"] = $_Lang['tech'][$shipId];
+            $parse["transportShips__{$shipId}__requiredCount"] = prettyNumber($requiredShipsCount);
+            $parse["transportShips__{$shipId}__remainingCount"] = str_replace('-', '', prettyColorNumber($remainingShipsCount, true));
+        }
 
         if(isPro() AND $_User['current_planet'] != $_User['settings_mainPlanetID'])
         {
