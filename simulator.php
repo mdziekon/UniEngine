@@ -605,8 +605,7 @@ for($i = 1; $i <= $MaxACSSlots; $i += 1)
     {
         $ThisRow_InsertValue_Def = isset($_POST['def_ships'][$i][$Ships]) ? $_POST['def_ships'][$i][$Ships] : null;
 
-        if(!empty($_Vars_Prices[$Ships]['engine']))
-        {
+        if (hasAnyEngine($Ships)) {
             $ThisRow_InsertValue_Atk = isset($_POST['atk_ships'][$i][$Ships]) ? $_POST['atk_ships'][$i][$Ships] : null;
 
             $parse['RowText'] = $_Lang['tech'][$Ships];
@@ -617,9 +616,7 @@ for($i = 1; $i <= $MaxACSSlots; $i += 1)
             $ThisSlot['txt'] .= parsetemplate($TPL_Row, $parse);
             $InsertTabIndex1 += 1;
             $InsertTabIndex2 += 1;
-        }
-        else
-        {
+        } else {
             $parse['RowText'] = '-';
             $parse['RowText2'] = $_Lang['tech'][$Ships];
             $parse['RowInput2'] = "<input type=\"text\" tabindex=\"{REP2_O{$i}_{$InsertTabIndex2}}\" name=\"def_ships[{$i}][{$Ships}]\" value=\"{$ThisRow_InsertValue_Def}\" autocomplete=\"off\" class=\"pad2 fl\" /> <span class=\"fr\">(<span class=\"clnOne point\">{$_Lang['Button_Min']}</span> / <span class=\"maxOne point\">{$_Lang['Button_Max']}</span>)</span>";

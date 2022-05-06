@@ -42,7 +42,7 @@ function validateFleetArray ($props) {
             ]);
         }
 
-        if (empty($_Vars_Prices[$shipId]['engine'])) {
+        if (!hasAnyEngine($shipId)) {
             return $isInvalid([
                 [ 'errorCode' => 'SHIP_WITH_NO_ENGINE', ],
             ]);

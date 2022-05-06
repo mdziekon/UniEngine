@@ -12,6 +12,10 @@ function getShipsEngines($shipID) {
     return $_Vars_Prices[$shipID]['engine'];
 }
 
+function hasAnyEngine($shipId) {
+    return !empty(getShipsEngines($shipId));
+}
+
 function getShipsStorageCapacity($shipID) {
     global $_Vars_Prices;
 

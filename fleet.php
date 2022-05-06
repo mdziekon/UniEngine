@@ -7,6 +7,8 @@ $_EnginePath = './';
 include($_EnginePath.'common.php');
 include($_EnginePath . 'modules/flightControl/_includes.php');
 
+use UniEngine\Engine\Includes\Helpers\Common\Collections;
+use UniEngine\Engine\Includes\Helpers\World\Elements;
 use UniEngine\Engine\Modules\FlightControl;
 
 loggedCheck();
@@ -21,13 +23,6 @@ include($_EnginePath.'/includes/functions/InsertJavaScriptChronoApplet.php');
 $Now = time();
 includeLang('fleet');
 $BodyTPL                = gettemplate('fleet_body');
-$ShipRowTPL             = gettemplate('fleet_srow');
-
-$ShipRowTPL = str_replace(
-    array('fl_fleetspeed', 'fl_selmax', 'fl_selnone'),
-    array($_Lang['fl_fleetspeed'], $_Lang['fl_selmax'], $_Lang['fl_selnone']),
-    $ShipRowTPL
-);
 
 $_Lang['ShipsRow'] = '';
 $_Lang['FlyingFleetsRows'] = '';
@@ -144,12 +139,13 @@ if (
 
 $_Lang['FlyingFleetsRows'] = preg_replace('#\{AddACSJoin\_[0-9]+\}#si', '', $_Lang['FlyingFleetsRows']);
 
-$_Lang['InsertJSShipSet'] = "var JSShipSet = false;";
 if(!isPro())
 {
     // Don't Allow to use this function to NonPro Players
     $_GET['quickres'] = 0;
 }
+
+$preselectedCargoShips = [];
 
 if (
     isset($_GET['quickres']) &&
@@ -157,104 +153,45 @@ if (
 ) {
     $_Lang['P_SetQuickRes'] = '1';
 
-    $resourcesToLoad = (
-        floor($_Planet['metal']) +
-        floor($_Planet['crystal']) +
-        floor($_Planet['deuterium'])
-    );
-
-    $transportShipIds = [ 217, 203, 202 ];
-
-    $JSSetShipsCount = [];
-
-    foreach ($transportShipIds as $shipId) {
-        $shipPlanetKey = _getElementPlanetKey($shipId);
-        $shipCapacity = getShipsStorageCapacity($shipId);
-
-        $shipsNeeded = ceil($resourcesToLoad / $shipCapacity);
-        $shipsToUse = (
-            $shipsNeeded <= $_Planet[$shipPlanetKey] ?
-            $shipsNeeded :
-            $_Planet[$shipPlanetKey]
-        );
-
-        $JSSetShipsCount[$shipId] = ((string) $shipsToUse);
-
-        $resourcesToLoad -= ($shipsToUse * $shipCapacity);
-
-        if ($resourcesToLoad <= 0) {
-            break;
-        }
-    }
-
-    if (!empty($JSSetShipsCount)) {
-        $jsShipsObject = json_encode($JSSetShipsCount);
-
-        $_Lang['InsertJSShipSet'] = "var JSShipSet = {$jsShipsObject};\n";
-    }
+    $preselectedCargoShips = FlightControl\Utils\Helpers\calculateCargoFleetArray([
+        'planet' => $_Planet,
+        'user' => $_User,
+    ]);
 } else {
     $_Lang['P_SetQuickRes'] = '0';
 }
 
-if(isset($_POST['gobackUsed']))
-{
-    if(!empty($_POST['FleetArray']))
-    {
-        $PostFleet = explode(';', $_POST['FleetArray']);
-        foreach($PostFleet as $Data)
-        {
-            if(!empty($Data))
-            {
-                $Data = explode(',', $Data);
-                if(in_array($Data[0], $_Vars_ElementCategories['fleet']))
-                {
-                    $InsertShipCount[$Data[0]] = prettyNumber($Data[1]);
-                }
-            }
+$gobackFleet = [];
+
+if (
+    isset($_POST['gobackUsed']) &&
+    !empty($_POST['FleetArray'])
+) {
+    $gobackFleet = String2Array($_POST['FleetArray']);
+    $gobackFleet = object_map($gobackFleet, function ($shipCount, $shipId) {
+        if (!Elements\isShip($shipId)) {
+            return [ null, $shipId ];
         }
-    }
+
+        return [ $shipCount, $shipId ];
+    });
+    $gobackFleet = Collections\compact($gobackFleet);
 }
 
-foreach($_Vars_ElementCategories['fleet'] as $ID)
-{
-    if($_Planet[$_Vars_GameElements[$ID]] > 0)
-    {
-        if(empty($_Vars_Prices[$ID]['engine']))
-        {
-            continue;
-        }
-        $ThisShip = array();
-
-        $ThisShip['ID'] = $ID;
-        $ThisShip['Speed'] = prettyNumber(getShipsCurrentSpeed($ID, $_User));
-        $ThisShip['Name'] = $_Lang['tech'][$ID];
-        $ThisShip['Count'] = prettyNumber($_Planet[$_Vars_GameElements[$ID]]);
-        if($ID == 210)
-        {
-            $ShipsData['storage'][$ID] = 0;
-        }
-        else
-        {
-            $ShipsData['storage'][$ID] = $_Vars_Prices[$ID]['capacity'];
-        }
-        $ShipsData['count'][$ID] = $_Planet[$_Vars_GameElements[$ID]];
-
-        $ThisShip['MaxCount'] = explode('.', sprintf('%f', floor($_Planet[$_Vars_GameElements[$ID]])));
-        $ThisShip['MaxCount'] = (string)$ThisShip['MaxCount'][0];
-
-        if(!empty($InsertShipCount[$ID]))
-        {
-            $ThisShip['InsertShipCount'] = $InsertShipCount[$ID];
-        }
-        else
-        {
-            $ThisShip['InsertShipCount'] = '0';
-        }
-
-        $_Lang['ShipsRow'] .= parsetemplate($ShipRowTPL, $ThisShip);
-    }
-}
-$_Lang['Insert_ShipsData'] = json_encode(isset($ShipsData) ? $ShipsData : null);
+$shipsJSData = FlightControl\Utils\Factories\createPlanetShipsJSObject([
+    'planet' => $_Planet,
+    'user' => $_User,
+]);
+$_Lang['Insert_ShipsData'] = json_encode($shipsJSData);
+$_Lang['ShipsRow'] = FlightControl\Components\AvailableShipsList\render([
+    'planet' => $_Planet,
+    'user' => $_User,
+    'preselectedShips' => (
+        !empty($gobackFleet) ?
+            $gobackFleet :
+            $preselectedCargoShips
+    ),
+])['componentHTML'];
 
 $_Lang['P_HideNoSlotsInfo'] = $Hide;
 $_Lang['P_HideSendShips'] = $Hide;

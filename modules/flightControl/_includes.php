@@ -7,6 +7,7 @@ call_user_func(function () {
     $includePath = $_EnginePath . 'modules/flightControl/';
 
     include($includePath . './components/AvailableMissionsList/AvailableMissionsList.component.php');
+    include($includePath . './components/AvailableShipsList/AvailableShipsList.component.php');
     include($includePath . './components/FlightsList/FlightsList.component.php');
     include($includePath . './components/FlightsList/utils/buildFriendlyAcsListElement.utils.php');
     include($includePath . './components/FlightsList/utils/buildOwnListElement.utils.php');
@@ -39,6 +40,7 @@ call_user_func(function () {
     include($includePath . './utils/factories/createFleetDevLogEntry.factory.php');
     include($includePath . './utils/factories/createFleetUsersStatsData.factory.php');
     include($includePath . './utils/factories/createMultiAlert.factory.php');
+    include($includePath . './utils/factories/createPlanetShipsJSObject.factory.php');
     include($includePath . './utils/factories/createPushAlert.factory.php');
     include($includePath . './utils/factories/createQuantumGateFuelJSObject.factory.php');
     include($includePath . './utils/factories/createUnionInvitationMessage.factory.php');
@@ -52,6 +54,7 @@ call_user_func(function () {
     include($includePath . './utils/fetchers/fetchUnionInvitablePlayers.fetcher.php');
     include($includePath . './utils/fetchers/fetchUnionMissingUsersData.fetcher.php');
     include($includePath . './utils/fetchers/fetchUsersWithMatchingIp.fetcher.php');
+    include($includePath . './utils/helpers/calculateCargoFleetArray.helper.php');
     include($includePath . './utils/helpers/extractUnionFleetIds.helper.php');
     include($includePath . './utils/helpers/extractUnionMembersDetails.helper.php');
     include($includePath . './utils/helpers/extractUnionMembersModification.helper.php');
