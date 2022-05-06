@@ -1,11 +1,12 @@
 <?php
 
-function GalaxyRowActions($GalaxyRowPlanet, $GalaxyRowPlayer, $Galaxy, $System, $Planet, $MyBuddies)
-{
+use UniEngine\Engine\Includes\Helpers\World\Checks;
+
+function GalaxyRowActions($GalaxyRowPlanet, $GalaxyRowPlayer, $Galaxy, $System, $Planet, $MyBuddies) {
     global $_User, $_SkinPath, $CurrentMIP, $CurrentSystem, $CurrentGalaxy;
     static $TPL = false;
-    if($TPL === false)
-    {
+
+    if ($TPL === false) {
         $TPL = gettemplate('galaxy_row_action');
     }
 
@@ -19,70 +20,60 @@ function GalaxyRowActions($GalaxyRowPlanet, $GalaxyRowPlayer, $Galaxy, $System, 
 
     $HiddenOptions = $OptionsCount = 4;
 
-    $Parse = array
-    (
-        'Hide_Spy'            => ' hide',
-        'Hide_Msg'            => ' hide',
-        'Hide_Buddy'        => ' hide',
-        'Hide_Rocket'        => ' hide',
-        'Galaxy'            => $Galaxy,
-        'System'            => $System,
-        'Planet'            => $Planet,
-        'SkinPath'            => $_SkinPath,
-        'UserID'            => $GalaxyRowPlayer['id'],
-        'Current'            => $_User['current_planet'],
-    );
+    $Parse = [
+        'Hide_Spy'      => ' hide',
+        'Hide_Msg'      => ' hide',
+        'Hide_Buddy'    => ' hide',
+        'Hide_Rocket'   => ' hide',
+        'Galaxy'        => $Galaxy,
+        'System'        => $System,
+        'Planet'        => $Planet,
+        'SkinPath'      => $_SkinPath,
+        'UserID'        => $GalaxyRowPlayer['id'],
+        'Current'       => $_User['current_planet'],
+    ];
 
-    if($_User['settings_mis'] == 1)
-    {
-        if($CurrentMIP > 0)
-        {
-            if($GalaxyRowPlanet['galaxy'] == $CurrentGalaxy)
-            {
-                $MiRange = GetMissileRange();
-                $SystemLimitMin = $CurrentSystem - $MiRange;
-                if($SystemLimitMin < 1)
-                {
-                    $SystemLimitMin = 1;
-                }
-                $SystemLimitMax = $CurrentSystem + $MiRange;
-                if($System <= $SystemLimitMax AND $System >= $SystemLimitMin)
-                {
-                    --$HiddenOptions;
-                    $Parse['Hide_Rocket'] = '';
-                }
-            }
+    if (
+        $_User['settings_mis'] == 1 &&
+        $CurrentMIP > 0 &&
+        $GalaxyRowPlanet['galaxy'] == $CurrentGalaxy
+    ) {
+        $isInRange = Checks\isTargetInRange([
+            'originPosition' => $CurrentSystem,
+            'targetPosition' => $System,
+            'range' => GetMissileRange(),
+        ]);
+
+        if ($isInRange) {
+            --$HiddenOptions;
+            $Parse['Hide_Rocket'] = '';
         }
     }
-    if($_User['settings_esp'] == 1)
-    {
+    if ($_User['settings_esp'] == 1) {
         --$HiddenOptions;
         $Parse['Hide_Spy'] = '';
     }
-    if($_User['settings_wri'] == 1 AND $GalaxyRowPlanet['id_owner'] > 0)
-    {
+    if (
+        $_User['settings_wri'] == 1 &&
+        $GalaxyRowPlanet['id_owner'] > 0
+    ) {
         --$HiddenOptions;
         $Parse['Hide_Msg'] = '';
     }
-    if($_User['settings_bud'] == 1 AND $GalaxyRowPlanet['id_owner'] > 0)
-    {
-        if(!in_array($GalaxyRowPlayer['id'], $MyBuddies))
-        {
-            --$HiddenOptions;
-            $Parse['Hide_Buddy'] = '';
-        }
+    if (
+        $_User['settings_bud'] == 1 &&
+        $GalaxyRowPlanet['id_owner'] > 0 &&
+        !in_array($GalaxyRowPlayer['id'], $MyBuddies)
+    ) {
+        --$HiddenOptions;
+        $Parse['Hide_Buddy'] = '';
     }
 
-    if($OptionsCount == $HiddenOptions)
-    {
-        $Result = renderEmptyGalaxyCell();
-    }
-    else
-    {
-        $Result = parsetemplate($TPL, $Parse);
+    if ($OptionsCount == $HiddenOptions) {
+        return renderEmptyGalaxyCell();
     }
 
-    return $Result;
+    return parsetemplate($TPL, $Parse);
 }
 
 ?>

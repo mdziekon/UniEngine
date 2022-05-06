@@ -1,6 +1,6 @@
 <?php
 
-function GalaxyRowDebris($GalaxyRow, $Galaxy, $System, $Planet, $PlanetType)
+function GalaxyRowDebris($GalaxyRow, $Galaxy, $System, $Planet)
 {
     global $_Lang, $_SkinPath;
 
@@ -20,6 +20,7 @@ function GalaxyRowDebris($GalaxyRow, $Galaxy, $System, $Planet, $PlanetType)
         return renderEmptyGalaxyCell();
     }
 
+    $PlanetType = 2;
     $BackgroundColor = null;
     if($TotalDebris >= 10000000)
     {
