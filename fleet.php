@@ -208,23 +208,10 @@ if (
     $gobackFleet = Collections\compact($gobackFleet);
 }
 
-$shipsJSData = [];
-
-foreach ($_Vars_ElementCategories['fleet'] as $shipId) {
-    $elementCurrentCount = Elements\getElementCurrentCount($shipId, $_Planet, $_User);
-
-    if (
-        $elementCurrentCount <= 0 ||
-        !hasAnyEngine($shipId)
-    ) {
-        continue;
-    }
-
-    $shipsJSData[$shipId] = [
-        'storage' => getShipsPillageStorageCapacity($shipId),
-        'count' => $elementCurrentCount,
-    ];
-}
+$shipsJSData = FlightControl\Utils\Factories\createPlanetShipsJSObject([
+    'planet' => $_Planet,
+    'user' => $_User,
+]);
 $_Lang['Insert_ShipsData'] = json_encode($shipsJSData);
 $_Lang['ShipsRow'] = FlightControl\Components\AvailableShipsList\render([
     'planet' => $_Planet,

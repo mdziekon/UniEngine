@@ -40,6 +40,7 @@ call_user_func(function () {
     include($includePath . './utils/factories/createFleetDevLogEntry.factory.php');
     include($includePath . './utils/factories/createFleetUsersStatsData.factory.php');
     include($includePath . './utils/factories/createMultiAlert.factory.php');
+    include($includePath . './utils/factories/createPlanetShipsJSObject.factory.php');
     include($includePath . './utils/factories/createPushAlert.factory.php');
     include($includePath . './utils/factories/createQuantumGateFuelJSObject.factory.php');
     include($includePath . './utils/factories/createUnionInvitationMessage.factory.php');
