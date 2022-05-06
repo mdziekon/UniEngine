@@ -5,10 +5,9 @@ var ACSUsersMax = {InsertACSUsersMax};
 var ACSUsers = {InsertACSUsers};
 var JSLang = {'fl_coordplanet': '{fl_coordplanet}', 'fl_coordmoon': '{fl_coordmoon}', 'fl_coorddebris': '{fl_coorddebris}'};
 var ShipsData = {Insert_ShipsData};
-{InsertJSShipSet}
 </script>
 <script src="dist/js/_libCommon.cachebuster-1649555016585.min.js"></script>
-<script src="dist/js/fleet0.cachebuster-1651853589169.min.js"></script>
+<script src="dist/js/fleet0.cachebuster-1651880134457.min.js"></script>
 <link rel="stylesheet" type="text/css" href="dist/css/fleet0.cachebuster-1546565145290.min.css" />
 
 {ChronoAppletsScripts}

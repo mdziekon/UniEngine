@@ -1,4 +1,4 @@
-/* globals libCommon, JSLang, ShipsData, TotalPlanetResources, JSShipSet, ACSUsersMax */
+/* globals libCommon, JSLang, ShipsData, TotalPlanetResources, ACSUsersMax */
 
 $(document).ready(function () {
     libCommon.init.setupJQuery();
@@ -98,12 +98,6 @@ $(document).ready(function () {
     });
 
     $(".addPad2").children(":not(.pad5)").addClass("pad2");
-
-    if (JSShipSet !== false) {
-        for (var ShipID in JSShipSet) {
-            $("#ship" + ShipID).val(JSShipSet[ShipID]).keyup();
-        }
-    }
 
     var ACSUsers_Invited = $("#ACSUser_Invited");
     var ACSUsers_2Invite = $("#ACSUser_2Invite");

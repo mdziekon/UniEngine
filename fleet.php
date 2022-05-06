@@ -139,12 +139,13 @@ if (
 
 $_Lang['FlyingFleetsRows'] = preg_replace('#\{AddACSJoin\_[0-9]+\}#si', '', $_Lang['FlyingFleetsRows']);
 
-$_Lang['InsertJSShipSet'] = "var JSShipSet = false;";
 if(!isPro())
 {
     // Don't Allow to use this function to NonPro Players
     $_GET['quickres'] = 0;
 }
+
+$preselectedCargoShips = [];
 
 if (
     isset($_GET['quickres']) &&
@@ -164,32 +165,20 @@ if (
         return (getShipsStorageCapacity($leftShipId) < getShipsStorageCapacity($rightShipId));
     });
 
-    $JSSetShipsCount = [];
-
     foreach ($transportShipIds as $shipId) {
-        $shipPlanetKey = _getElementPlanetKey($shipId);
         $shipCapacity = getShipsStorageCapacity($shipId);
 
         $shipsNeeded = ceil($resourcesToLoad / $shipCapacity);
-        $shipsToUse = (
-            $shipsNeeded <= $_Planet[$shipPlanetKey] ?
-            $shipsNeeded :
-            $_Planet[$shipPlanetKey]
-        );
+        $shipsAvailable = Elements\getElementCurrentCount($shipId, $_Planet, $_User);
+        $shipsToUse = keepInRange($shipsNeeded, 0, $shipsAvailable);
 
-        $JSSetShipsCount[$shipId] = ((string) $shipsToUse);
+        $preselectedCargoShips[$shipId] = $shipsToUse;
 
         $resourcesToLoad -= ($shipsToUse * $shipCapacity);
 
         if ($resourcesToLoad <= 0) {
             break;
         }
-    }
-
-    if (!empty($JSSetShipsCount)) {
-        $jsShipsObject = json_encode($JSSetShipsCount);
-
-        $_Lang['InsertJSShipSet'] = "var JSShipSet = {$jsShipsObject};\n";
     }
 } else {
     $_Lang['P_SetQuickRes'] = '0';
@@ -220,7 +209,11 @@ $_Lang['Insert_ShipsData'] = json_encode($shipsJSData);
 $_Lang['ShipsRow'] = FlightControl\Components\AvailableShipsList\render([
     'planet' => $_Planet,
     'user' => $_User,
-    'gobackFleet' => $gobackFleet,
+    'gobackFleet' => (
+        !empty($gobackFleet) ?
+            $gobackFleet :
+            $preselectedCargoShips
+    ),
 ])['componentHTML'];
 
 $_Lang['P_HideNoSlotsInfo'] = $Hide;
