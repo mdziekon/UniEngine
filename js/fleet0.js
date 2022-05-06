@@ -47,7 +47,7 @@ $(document).ready(function () {
             if (Difference != 0) {
                 var ThisShipID = libCommon.normalize.removeNonDigit($(this).attr("name"));
                 var StorageCalced = parseInt(libCommon.normalize.removeNonDigit(CalcStorage.html()), 10);
-                StorageCalced += Difference * ShipsData["storage"][ThisShipID];
+                StorageCalced += Difference * ShipsData[ThisShipID]["storage"];
                 if (StorageCalced >= TotalPlanetResources) {
                     CalcStorage.removeClass("orange").addClass("lime");
                 } else {
@@ -56,7 +56,7 @@ $(document).ready(function () {
                 CalcStorage.html(libCommon.format.addDots(StorageCalced));
                 $(this).data("oldCount", ThisCount);
 
-                if (ThisCount > ShipsData["count"][ThisShipID]) {
+                if (ThisCount > ShipsData[ThisShipID]["count"]) {
                     $(this).addClass("red");
                 } else {
                     $(this).removeClass("red");
@@ -82,7 +82,7 @@ $(document).ready(function () {
     $(".maxShip").click(function () {
         var GetClass = $(this).parent().attr("class");
         var GetID = GetClass.split(" ")[0].substr(2);
-        $("#ship" + GetID).val(ShipsData["count"][GetID]).keyup();
+        $("#ship" + GetID).val(ShipsData[GetID]["count"]).keyup();
     });
     $(".noShip").click(function () {
         var GetClass = $(this).parent().attr("class");

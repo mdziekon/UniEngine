@@ -216,6 +216,8 @@ if(isset($_POST['gobackUsed']))
     }
 }
 
+$shipsJSData = [];
+
 foreach ($_Vars_ElementCategories['fleet'] as $ID) {
     $elementCurrentCount = Elements\getElementCurrentCount($ID, $_Planet, $_User);
 
@@ -226,27 +228,29 @@ foreach ($_Vars_ElementCategories['fleet'] as $ID) {
         continue;
     }
 
-    $ThisShip = [];
+    $maxCountParts = explode('.', sprintf('%f', floor($elementCurrentCount)));
 
-    $ThisShip['ID'] = $ID;
-    $ThisShip['Speed'] = prettyNumber(getShipsCurrentSpeed($ID, $_User));
-    $ThisShip['Name'] = $_Lang['tech'][$ID];
-    $ThisShip['Count'] = prettyNumber($elementCurrentCount);
+    $shipRowProps = [
+        'ID'                => $ID,
+        'Speed'             => prettyNumber(getShipsCurrentSpeed($ID, $_User)),
+        'Name'              => $_Lang['tech'][$ID],
+        'Count'             => prettyNumber($elementCurrentCount),
+        'MaxCount'          => (string) $maxCountParts[0],
+        'InsertShipCount'   => (
+            !empty($InsertShipCount[$ID]) ?
+                $InsertShipCount[$ID] :
+            '0'
+        ),
+    ];
 
-    $ShipsData['storage'][$ID] = getShipsPillageStorageCapacity($ID);
-    $ShipsData['count'][$ID] = $elementCurrentCount;
+    $shipsJSData[$ID] = [
+        'storage' => getShipsPillageStorageCapacity($ID),
+        'count' => $elementCurrentCount,
+    ];
 
-    $ThisShip['MaxCount'] = explode('.', sprintf('%f', floor($elementCurrentCount)));
-    $ThisShip['MaxCount'] = (string) $ThisShip['MaxCount'][0];
-    $ThisShip['InsertShipCount'] = (
-        !empty($InsertShipCount[$ID]) ?
-            $InsertShipCount[$ID] :
-        '0'
-    );
-
-    $_Lang['ShipsRow'] .= parsetemplate($ShipRowTPL, $ThisShip);
+    $_Lang['ShipsRow'] .= parsetemplate($ShipRowTPL, $shipRowProps);
 }
-$_Lang['Insert_ShipsData'] = json_encode(isset($ShipsData) ? $ShipsData : null);
+$_Lang['Insert_ShipsData'] = json_encode($shipsJSData);
 
 $_Lang['P_HideNoSlotsInfo'] = $Hide;
 $_Lang['P_HideSendShips'] = $Hide;
