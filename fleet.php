@@ -8,6 +8,7 @@ include($_EnginePath.'common.php');
 include($_EnginePath . 'modules/flightControl/_includes.php');
 
 use UniEngine\Engine\Modules\FlightControl;
+use UniEngine\Engine\Includes\Helpers\World\Elements;
 
 loggedCheck();
 
@@ -215,10 +216,10 @@ if(isset($_POST['gobackUsed']))
     }
 }
 
-foreach($_Vars_ElementCategories['fleet'] as $ID)
-{
-    if($_Planet[$_Vars_GameElements[$ID]] > 0)
-    {
+foreach ($_Vars_ElementCategories['fleet'] as $ID) {
+    $elementCurrentCount = Elements\getElementCurrentCount($ID, $_Planet, $_User);
+
+    if ($elementCurrentCount > 0) {
         if (!hasAnyEngine($ID)) {
             continue;
         }
@@ -228,28 +229,18 @@ foreach($_Vars_ElementCategories['fleet'] as $ID)
         $ThisShip['ID'] = $ID;
         $ThisShip['Speed'] = prettyNumber(getShipsCurrentSpeed($ID, $_User));
         $ThisShip['Name'] = $_Lang['tech'][$ID];
-        $ThisShip['Count'] = prettyNumber($_Planet[$_Vars_GameElements[$ID]]);
-        if($ID == 210)
-        {
-            $ShipsData['storage'][$ID] = 0;
-        }
-        else
-        {
-            $ShipsData['storage'][$ID] = $_Vars_Prices[$ID]['capacity'];
-        }
-        $ShipsData['count'][$ID] = $_Planet[$_Vars_GameElements[$ID]];
+        $ThisShip['Count'] = prettyNumber($elementCurrentCount);
 
-        $ThisShip['MaxCount'] = explode('.', sprintf('%f', floor($_Planet[$_Vars_GameElements[$ID]])));
-        $ThisShip['MaxCount'] = (string)$ThisShip['MaxCount'][0];
+        $ShipsData['storage'][$ID] = getShipsPillageStorageCapacity($ID);
+        $ShipsData['count'][$ID] = $elementCurrentCount;
 
-        if(!empty($InsertShipCount[$ID]))
-        {
-            $ThisShip['InsertShipCount'] = $InsertShipCount[$ID];
-        }
-        else
-        {
-            $ThisShip['InsertShipCount'] = '0';
-        }
+        $ThisShip['MaxCount'] = explode('.', sprintf('%f', floor($elementCurrentCount)));
+        $ThisShip['MaxCount'] = (string) $ThisShip['MaxCount'][0];
+        $ThisShip['InsertShipCount'] = (
+            !empty($InsertShipCount[$ID]) ?
+                $InsertShipCount[$ID] :
+            '0'
+        );
 
         $_Lang['ShipsRow'] .= parsetemplate($ShipRowTPL, $ThisShip);
     }
