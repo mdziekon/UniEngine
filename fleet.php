@@ -153,33 +153,10 @@ if (
 ) {
     $_Lang['P_SetQuickRes'] = '1';
 
-    $resourcesToLoad = (
-        floor($_Planet['metal']) +
-        floor($_Planet['crystal']) +
-        floor($_Planet['deuterium'])
-    );
-
-    $transportShipIds = $_Vars_ElementCategories['units']['transport'];
-
-    usort($transportShipIds, function ($leftShipId, $rightShipId) {
-        return (getShipsStorageCapacity($leftShipId) < getShipsStorageCapacity($rightShipId));
-    });
-
-    foreach ($transportShipIds as $shipId) {
-        $shipCapacity = getShipsStorageCapacity($shipId);
-
-        $shipsNeeded = ceil($resourcesToLoad / $shipCapacity);
-        $shipsAvailable = Elements\getElementCurrentCount($shipId, $_Planet, $_User);
-        $shipsToUse = keepInRange($shipsNeeded, 0, $shipsAvailable);
-
-        $preselectedCargoShips[$shipId] = $shipsToUse;
-
-        $resourcesToLoad -= ($shipsToUse * $shipCapacity);
-
-        if ($resourcesToLoad <= 0) {
-            break;
-        }
-    }
+    $preselectedCargoShips = FlightControl\Utils\Helpers\calculateCargoFleetArray([
+        'planet' => $_Planet,
+        'user' => $_User,
+    ]);
 } else {
     $_Lang['P_SetQuickRes'] = '0';
 }
