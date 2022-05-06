@@ -219,10 +219,10 @@ foreach($_Vars_ElementCategories['fleet'] as $ID)
 {
     if($_Planet[$_Vars_GameElements[$ID]] > 0)
     {
-        if(empty($_Vars_Prices[$ID]['engine']))
-        {
+        if (!hasAnyEngine($ID)) {
             continue;
         }
+
         $ThisShip = array();
 
         $ThisShip['ID'] = $ID;
