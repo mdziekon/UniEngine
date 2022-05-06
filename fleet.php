@@ -7,8 +7,9 @@ $_EnginePath = './';
 include($_EnginePath.'common.php');
 include($_EnginePath . 'modules/flightControl/_includes.php');
 
-use UniEngine\Engine\Modules\FlightControl;
+use UniEngine\Engine\Includes\Helpers\Common\Collections;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
+use UniEngine\Engine\Modules\FlightControl;
 
 loggedCheck();
 
@@ -197,23 +198,21 @@ if (
     $_Lang['P_SetQuickRes'] = '0';
 }
 
-if(isset($_POST['gobackUsed']))
-{
-    if(!empty($_POST['FleetArray']))
-    {
-        $PostFleet = explode(';', $_POST['FleetArray']);
-        foreach($PostFleet as $Data)
-        {
-            if(!empty($Data))
-            {
-                $Data = explode(',', $Data);
-                if(in_array($Data[0], $_Vars_ElementCategories['fleet']))
-                {
-                    $InsertShipCount[$Data[0]] = prettyNumber($Data[1]);
-                }
-            }
+$gobackFleet = [];
+
+if (
+    isset($_POST['gobackUsed']) &&
+    !empty($_POST['FleetArray'])
+) {
+    $gobackFleet = String2Array($_POST['FleetArray']);
+    $gobackFleet = object_map($gobackFleet, function ($shipCount, $shipId) {
+        if (!Elements\isShip($shipId)) {
+            return [ null, $shipId ];
         }
-    }
+
+        return [ $shipCount, $shipId ];
+    });
+    $gobackFleet = Collections\compact($gobackFleet);
 }
 
 $shipsJSData = [];
@@ -237,8 +236,8 @@ foreach ($_Vars_ElementCategories['fleet'] as $ID) {
         'Count'             => prettyNumber($elementCurrentCount),
         'MaxCount'          => (string) $maxCountParts[0],
         'InsertShipCount'   => (
-            !empty($InsertShipCount[$ID]) ?
-                $InsertShipCount[$ID] :
+            !empty($gobackFleet[$ID]) ?
+                prettyNumber($gobackFleet[$ID]) :
             '0'
         ),
     ];
