@@ -220,7 +220,7 @@ foreach ($_Vars_ElementCategories['fleet'] as $ID) {
     $elementCurrentCount = Elements\getElementCurrentCount($ID, $_Planet, $_User);
 
     if (
-        $elementCurrentCount > 0 ||
+        $elementCurrentCount <= 0 ||
         !hasAnyEngine($ID)
     ) {
         continue;
