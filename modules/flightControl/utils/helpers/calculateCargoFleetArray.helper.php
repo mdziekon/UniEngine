@@ -2,7 +2,9 @@
 
 namespace UniEngine\Engine\Modules\FlightControl\Utils\Helpers;
 
+use phpDocumentor\Reflection\Types\Resource_;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
+use UniEngine\Engine\Includes\Helpers\World\Resources;
 
 /**
  * @param object $props
@@ -17,11 +19,7 @@ function calculateCargoFleetArray($props) {
 
     $cargoFleetArray = [];
 
-    $resourcesToLoad = (
-        floor($planet['metal']) +
-        floor($planet['crystal']) +
-        floor($planet['deuterium'])
-    );
+    $resourcesToLoad = Resources\sumAllPlanetTransportableResources($planet);
 
     $transportShipIds = $_Vars_ElementCategories['units']['transport'];
 

@@ -9,6 +9,7 @@ include($_EnginePath . 'modules/flightControl/_includes.php');
 
 use UniEngine\Engine\Includes\Helpers\Common\Collections;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
+use UniEngine\Engine\Includes\Helpers\World\Resources;
 use UniEngine\Engine\Modules\FlightControl;
 
 loggedCheck();
@@ -265,7 +266,9 @@ if(!isPro())
     $_Lang['P_HideQuickRes'] = 'hide';
 }
 
-$_Lang['P_TotalPlanetResources'] = (string)(floor($_Planet['metal']) + floor($_Planet['crystal']) + floor($_Planet['deuterium']) + 0);
+$resourcesToLoad = Resources\sumAllPlanetTransportableResources($_Planet);
+
+$_Lang['P_TotalPlanetResources'] = (string) $resourcesToLoad;
 if($_Lang['P_TotalPlanetResources'] == '0')
 {
     $_Lang['P_StorageColor'] = 'lime';
