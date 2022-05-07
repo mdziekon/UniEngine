@@ -80,4 +80,16 @@ function getResourceState($resourceKey, &$user, &$planet) {
     throw new Exceptions\UniEngineException("Invalid resource type");
 }
 
+function sumAllPlanetTransportableResources($planet) {
+    $resourcesSum = array_reduce(
+        getKnownPillagableResourceKeys(),
+        function ($accumulator, $resourceKey) use (&$planet) {
+            return $accumulator + floor($planet[$resourceKey]);
+        },
+        0
+    );
+
+    return $resourcesSum;
+}
+
 ?>
