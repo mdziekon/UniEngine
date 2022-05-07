@@ -269,14 +269,11 @@ if(!isPro())
 $resourcesToLoad = Resources\sumAllPlanetTransportableResources($_Planet);
 
 $_Lang['P_TotalPlanetResources'] = (string) $resourcesToLoad;
-if($_Lang['P_TotalPlanetResources'] == '0')
-{
-    $_Lang['P_StorageColor'] = 'lime';
-}
-else
-{
-    $_Lang['P_StorageColor'] = 'orange';
-}
+$_Lang['P_StorageColor'] = (
+    $resourcesToLoad == 0 ?
+        'lime' :
+        'orange'
+);
 
 $Page = parsetemplate($BodyTPL, $_Lang);
 display($Page, $_Lang['fl_title']);
