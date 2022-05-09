@@ -29,20 +29,6 @@ $_Lang['FlyingFleetsRows'] = '';
 
 $Hide = ' class="hide"';
 
-$_Lang['P_AllowPrettyInputBox'] = (
-    ($_User['settings_useprettyinputbox'] == 1) ?
-        'true' :
-        'false'
-);
-$_Lang['InsertACSUsersMax'] = MAX_ACS_JOINED_PLAYERS;
-
-// Show info boxes
-$_Lang['P_SFBInfobox'] = FlightControl\Components\SmartFleetBlockadeInfoBox\render()['componentHTML'];
-$_Lang['ComponentHTML_RetreatInfoBox'] = FlightControl\Components\RetreatInfoBox\render([
-    'isVisible' => isset($_GET['ret']),
-    'eventCode' => $_GET['m'],
-])['componentHTML'];
-
 $fleetsInFlightCounters = FlightControl\Utils\Helpers\getFleetsInFlightCounters([
     'userId' => $_User['id'],
 ]);
@@ -50,20 +36,10 @@ $fleetsInFlightCounters = FlightControl\Utils\Helpers\getFleetsInFlightCounters(
 $FlyingFleetsCount = $fleetsInFlightCounters['allFleetsInFlight'];
 $FlyingExpeditions = $fleetsInFlightCounters['expeditionsInFlight'];
 
-$_Lang['P_MaxFleetSlots'] = FlightControl\Utils\Helpers\getUserFleetSlotsCount([
+$userMaxFleetSlotsCount = FlightControl\Utils\Helpers\getUserFleetSlotsCount([
     'user' => $_User,
     'timestamp' => $Now,
 ]);
-$_Lang['P_MaxExpedSlots'] = FlightControl\Utils\Helpers\getUserExpeditionSlotsCount([
-    'user' => $_User,
-]);
-$_Lang['P_FlyingFleetsCount']    = (string)($FlyingFleetsCount);
-$_Lang['P_FlyingExpeditions']    = (string)($FlyingExpeditions);
-$_Lang['P_Expeditions_isHidden_style'] = (
-    isFeatureEnabled(FeatureType::Expeditions) ?
-    '' :
-    'display: none;'
-);
 
 // TODO: refactor and add validation (?)
 if (
@@ -91,17 +67,8 @@ $flightsList = FlightControl\Components\FlightsList\render([
 $_Lang['FlyingFleetsRows'] .= $flightsList['elementsList'];
 $_Lang['ChronoAppletsScripts'] = $flightsList['chronoApplets'];
 
-$_Lang['P_HideNoFreeSlots'] = $Hide;
-if(empty($_Lang['FlyingFleetsRows']))
-{
+if (empty($_Lang['FlyingFleetsRows'])) {
     $_Lang['FlyingFleetsRows'] = '<tr><th colspan="8">-</th></tr>';
-}
-else
-{
-    if($FlyingFleetsCount >= $_Lang['P_MaxFleetSlots'])
-    {
-        $_Lang['P_HideNoFreeSlots'] = '';
-    }
 }
 
 $newUnionEntry = null;
@@ -189,24 +156,7 @@ $_Lang['ShipsRow'] = FlightControl\Components\AvailableShipsList\render([
     ),
 ])['componentHTML'];
 
-$_Lang['P_HideNoSlotsInfo'] = $Hide;
-$_Lang['P_HideSendShips'] = $Hide;
-$_Lang['P_HideNoShipsInfo'] = $Hide;
-if(!empty($_Lang['ShipsRow']))
-{
-    if($FlyingFleetsCount >= $_Lang['P_MaxFleetSlots'])
-    {
-        $_Lang['P_HideNoSlotsInfo'] = '';
-    }
-    else
-    {
-        $_Lang['P_HideSendShips'] = '';
-    }
-}
-else
-{
-    $_Lang['P_HideNoShipsInfo'] = '';
-}
+$hasAvailableShips = !empty($_Lang['ShipsRow']);
 
 if(isset($_POST['gobackUsed']))
 {
@@ -256,21 +206,80 @@ else
     }
 }
 
-if(!isPro())
-{
-    $_Lang['P_HideQuickRes'] = 'hide';
-}
-
 $resourcesToLoad = Resources\sumAllPlanetTransportableResources($_Planet);
 
-$_Lang['P_TotalPlanetResources'] = (string) $resourcesToLoad;
-$_Lang['P_StorageColor'] = (
-    $resourcesToLoad == 0 ?
-        'lime' :
-        'orange'
-);
+$smartFleetBlockadeComponent = FlightControl\Components\SmartFleetBlockadeInfoBox\render();
+$retreatInfoBoxComponent = FlightControl\Components\RetreatInfoBox\render([
+    'isVisible' => isset($_GET['ret']),
+    'eventCode' => $_GET['m'],
+]);
 
-$Page = parsetemplate($BodyTPL, $_Lang);
+$tplProps = [
+    'P_TotalPlanetResources' => (string) $resourcesToLoad,
+    'P_StorageColor' => (
+        $resourcesToLoad == 0 ?
+            'lime' :
+            'orange'
+    ),
+    'P_HideQuickRes' => (
+        !isPro() ?
+            'hide' :
+            ''
+    ),
+    'P_AllowPrettyInputBox' => (
+        ($_User['settings_useprettyinputbox'] == 1) ?
+            'true' :
+            'false'
+    ),
+    'P_Expeditions_isHidden_style' => (
+        isFeatureEnabled(FeatureType::Expeditions) ?
+            '' :
+            'display: none;'
+    ),
+
+    'P_MaxFleetSlots' => $userMaxFleetSlotsCount,
+    'P_MaxExpedSlots' => FlightControl\Utils\Helpers\getUserExpeditionSlotsCount([
+        'user' => $_User,
+    ]),
+    'P_FlyingFleetsCount' => (string) $FlyingFleetsCount,
+    'P_FlyingExpeditions' => (string) $FlyingExpeditions,
+    'P_HideNoFreeSlots' => (
+        (
+            $FlyingFleetsCount > 0 &&
+            $FlyingFleetsCount >= $userMaxFleetSlotsCount
+        ) ?
+            '' :
+            $Hide
+    ),
+    'P_HideNoSlotsInfo' => (
+        (
+            $hasAvailableShips &&
+            $FlyingFleetsCount >= $userMaxFleetSlotsCount
+        ) ?
+            '' :
+            $Hide
+    ),
+    'P_HideSendShips' => (
+        (
+            $hasAvailableShips &&
+            $FlyingFleetsCount < $userMaxFleetSlotsCount
+        ) ?
+            '' :
+            $Hide
+    ),
+    'P_HideNoShipsInfo' => (
+        !$hasAvailableShips ?
+            '' :
+            $Hide
+    ),
+
+    'P_SFBInfobox' => $smartFleetBlockadeComponent['componentHTML'],
+    'ComponentHTML_RetreatInfoBox' => $retreatInfoBoxComponent['componentHTML'],
+
+    'InsertACSUsersMax' => MAX_ACS_JOINED_PLAYERS,
+];
+
+$Page = parsetemplate($BodyTPL, array_merge($_Lang, $tplProps));
 display($Page, $_Lang['fl_title']);
 
 ?>
