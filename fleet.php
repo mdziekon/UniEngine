@@ -11,6 +11,7 @@ include("{$_EnginePath}/includes/functions/InsertJavaScriptChronoApplet.php");
 use UniEngine\Engine\Includes\Helpers\Common\Collections;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 use UniEngine\Engine\Includes\Helpers\World\Resources;
+use UniEngine\Engine\Modules\Flights;
 use UniEngine\Engine\Modules\FlightControl;
 
 loggedCheck();
@@ -133,7 +134,7 @@ if(isset($_POST['gobackUsed']))
         $isQuickTransportOptionUsed &&
         (
             !isset($_GET['target_mission']) ||
-            $_GET['target_mission'] != 3
+            $_GET['target_mission'] != Flights\Enums\FleetMission::Transport
         )
     ) {
         if ($_User['settings_mainPlanetID'] != $_Planet['id']) {
@@ -150,7 +151,7 @@ if(isset($_POST['gobackUsed']))
         $_Lang['P_System'] = $quickTransportPlanetPosition['system'];
         $_Lang['P_Planet'] = $quickTransportPlanetPosition['planet'];
         $_Lang['P_PlType'] = 1;
-        $_Lang['P_Mission'] = 3;
+        $_Lang['P_Mission'] = Flights\Enums\FleetMission::Transport;
     }
 }
 
