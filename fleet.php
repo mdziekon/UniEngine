@@ -25,19 +25,15 @@ $Now = time();
 includeLang('fleet');
 $BodyTPL                = gettemplate('fleet_body');
 
-$_Lang['ShipsRow'] = '';
 $_Lang['FlyingFleetsRows'] = '';
 
 $Hide = ' class="hide"';
 
-if($_User['settings_useprettyinputbox'] == 1)
-{
-    $_Lang['P_AllowPrettyInputBox'] = 'true';
-}
-else
-{
-    $_Lang['P_AllowPrettyInputBox'] = 'false';
-}
+$_Lang['P_AllowPrettyInputBox'] = (
+    ($_User['settings_useprettyinputbox'] == 1) ?
+        'true' :
+        'false'
+);
 $_Lang['InsertACSUsers'] = 'new Object()';
 $_Lang['InsertACSUsersMax'] = MAX_ACS_JOINED_PLAYERS;
 
