@@ -4,8 +4,9 @@ define('INSIDE', true);
 
 $_EnginePath = './';
 
-include($_EnginePath.'common.php');
-include($_EnginePath . 'modules/flightControl/_includes.php');
+include("{$_EnginePath}/common.php");
+include("{$_EnginePath}/modules/flightControl/_includes.php");
+include("{$_EnginePath}/includes/functions/InsertJavaScriptChronoApplet.php");
 
 use UniEngine\Engine\Includes\Helpers\Common\Collections;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
@@ -14,16 +15,13 @@ use UniEngine\Engine\Modules\FlightControl;
 
 loggedCheck();
 
-if(!$_Planet)
-{
+if (!$_Planet) {
     message($_Lang['fl_noplanetrow'], $_Lang['fl_error']);
 }
 
-include($_EnginePath.'/includes/functions/InsertJavaScriptChronoApplet.php');
-
 $Now = time();
+
 includeLang('fleet');
-$BodyTPL                = gettemplate('fleet_body');
 
 // TODO: refactor and add validation (?)
 if (
@@ -253,7 +251,9 @@ $tplProps = [
     'InsertACSUsersMax' => MAX_ACS_JOINED_PLAYERS,
 ];
 
-$Page = parsetemplate($BodyTPL, array_merge($_Lang, $tplProps));
-display($Page, $_Lang['fl_title']);
+$pageBodyTpl = gettemplate('fleet_body');
+$pageHTML = parsetemplate($pageBodyTpl, array_merge($_Lang, $tplProps));
+
+display($pageHTML, $_Lang['fl_title']);
 
 ?>
