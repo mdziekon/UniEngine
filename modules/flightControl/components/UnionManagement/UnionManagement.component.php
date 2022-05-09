@@ -270,7 +270,6 @@ function render($props) {
             $componentTPLData['P_ACSMSGCOL'] = $resultPayload['message']['color'];
         }
 
-        $componentTPLData['InsertACSUsers'] = json_encode($resultPayload['unionMembers']);
         $componentTPLData['ACSName'] = $resultPayload['unionName'];
 
         foreach ($resultPayload['unionMembers'] as $memberId => $memberDetails) {

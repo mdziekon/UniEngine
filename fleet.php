@@ -34,7 +34,6 @@ $_Lang['P_AllowPrettyInputBox'] = (
         'true' :
         'false'
 );
-$_Lang['InsertACSUsers'] = 'new Object()';
 $_Lang['InsertACSUsersMax'] = MAX_ACS_JOINED_PLAYERS;
 
 // Show info boxes
