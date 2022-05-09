@@ -23,6 +23,7 @@ if (!$_Planet) {
 }
 
 $Now = time();
+$formInputs = [];
 
 // TODO: refactor and add validation (?)
 if (
@@ -35,7 +36,7 @@ if (
     )
 )
 {
-    $_Lang['SetJoiningACSID'] = (
+    $formInputs['SetJoiningACSID'] = (
         isset($_GET['joinacs']) ?
             $_GET['joinacs'] :
             $_POST['getacsdata']
@@ -73,14 +74,10 @@ $isQuickTransportOptionUsed = (
 $preselectedCargoShips = [];
 
 if ($isQuickTransportOptionUsed) {
-    $_Lang['P_SetQuickRes'] = '1';
-
     $preselectedCargoShips = FlightControl\Utils\Helpers\calculateCargoFleetArray([
         'planet' => $_Planet,
         'user' => $_User,
     ]);
-} else {
-    $_Lang['P_SetQuickRes'] = '0';
 }
 
 $gobackFleet = [];
@@ -100,35 +97,37 @@ if (
     $gobackFleet = Collections\compact($gobackFleet);
 }
 
+$formInputs['P_SetQuickRes'] = (
+    $isQuickTransportOptionUsed ? '1' : '0'
+);
+
 if(isset($_POST['gobackUsed']))
 {
-    $GoBackVars = array
-    (
+    $preserveFormData = [
         'speed' => $_POST['speed'],
-    );
-    if(!empty($_POST['gobackVars']))
-    {
-        $_Lang['P_GoBackVars'] = json_decode(base64_decode($_POST['gobackVars']), true);
-        if((array)$_Lang['P_GoBackVars'] === $_Lang['P_GoBackVars'])
-        {
-            $GoBackVars = array_merge($_Lang['P_GoBackVars'], $GoBackVars);
+    ];
+
+    if (!empty($_POST['gobackVars'])) {
+        $decodedPreservedFormData = json_decode(base64_decode($_POST['gobackVars']), true);
+        if (is_array($decodedPreservedFormData)) {
+            $preserveFormData = array_merge($decodedPreservedFormData, $preserveFormData);
         }
     }
 
-    $_Lang['SetJoiningACSID'] = (isset($_POST['getacsdata']) ? $_POST['getacsdata'] : null);
-    $_Lang['P_Galaxy'] = (isset($_POST['galaxy']) ? $_POST['galaxy'] : null);
-    $_Lang['P_System'] = (isset($_POST['system']) ? $_POST['system'] : null);
-    $_Lang['P_Planet'] = (isset($_POST['planet']) ? $_POST['planet'] : null);
-    $_Lang['P_PlType'] = (isset($_POST['planettype']) ? $_POST['planettype'] : null);
-    $_Lang['P_Mission'] = (isset($_POST['target_mission']) ? $_POST['target_mission'] : null);
-    $_Lang['P_SetQuickRes'] = (isset($_POST['quickres']) ? $_POST['quickres'] : null);
-    $_Lang['P_GoBackVars'] = base64_encode(json_encode($GoBackVars));
+    $formInputs['SetJoiningACSID'] = (isset($_POST['getacsdata']) ? $_POST['getacsdata'] : null);
+    $formInputs['P_Galaxy'] = (isset($_POST['galaxy']) ? $_POST['galaxy'] : null);
+    $formInputs['P_System'] = (isset($_POST['system']) ? $_POST['system'] : null);
+    $formInputs['P_Planet'] = (isset($_POST['planet']) ? $_POST['planet'] : null);
+    $formInputs['P_PlType'] = (isset($_POST['planettype']) ? $_POST['planettype'] : null);
+    $formInputs['P_Mission'] = (isset($_POST['target_mission']) ? $_POST['target_mission'] : null);
+    $formInputs['P_SetQuickRes'] = (isset($_POST['quickres']) ? $_POST['quickres'] : null);
+    $formInputs['P_GoBackVars'] = base64_encode(json_encode($preserveFormData));
 } else {
-    $_Lang['P_Galaxy'] = (isset($_GET['galaxy']) ? intval($_GET['galaxy']) : null);
-    $_Lang['P_System'] = (isset($_GET['system']) ? intval($_GET['system']) : null);
-    $_Lang['P_Planet'] = (isset($_GET['planet']) ? intval($_GET['planet']) : null);
-    $_Lang['P_PlType'] = (isset($_GET['planettype']) ? intval($_GET['planettype']) : null);
-    $_Lang['P_Mission'] = (isset($_GET['target_mission']) ? intval($_GET['target_mission']) : null);
+    $formInputs['P_Galaxy'] = (isset($_GET['galaxy']) ? intval($_GET['galaxy']) : null);
+    $formInputs['P_System'] = (isset($_GET['system']) ? intval($_GET['system']) : null);
+    $formInputs['P_Planet'] = (isset($_GET['planet']) ? intval($_GET['planet']) : null);
+    $formInputs['P_PlType'] = (isset($_GET['planettype']) ? intval($_GET['planettype']) : null);
+    $formInputs['P_Mission'] = (isset($_GET['target_mission']) ? intval($_GET['target_mission']) : null);
 
     if (
         $isQuickTransportOptionUsed &&
@@ -147,11 +146,11 @@ if(isset($_POST['gobackUsed']))
             ];
         }
 
-        $_Lang['P_Galaxy'] = $quickTransportPlanetPosition['galaxy'];
-        $_Lang['P_System'] = $quickTransportPlanetPosition['system'];
-        $_Lang['P_Planet'] = $quickTransportPlanetPosition['planet'];
-        $_Lang['P_PlType'] = 1;
-        $_Lang['P_Mission'] = Flights\Enums\FleetMission::Transport;
+        $formInputs['P_Galaxy'] = $quickTransportPlanetPosition['galaxy'];
+        $formInputs['P_System'] = $quickTransportPlanetPosition['system'];
+        $formInputs['P_Planet'] = $quickTransportPlanetPosition['planet'];
+        $formInputs['P_PlType'] = 1;
+        $formInputs['P_Mission'] = Flights\Enums\FleetMission::Transport;
     }
 }
 
@@ -279,7 +278,7 @@ $tplProps = [
 ];
 
 $pageBodyTpl = gettemplate('fleet_body');
-$pageHTML = parsetemplate($pageBodyTpl, array_merge($_Lang, $tplProps));
+$pageHTML = parsetemplate($pageBodyTpl, array_merge($_Lang, $tplProps, $formInputs));
 
 display($pageHTML, $_Lang['fl_title']);
 
