@@ -15,13 +15,13 @@ use UniEngine\Engine\Modules\FlightControl;
 
 loggedCheck();
 
+includeLang('fleet');
+
 if (!$_Planet) {
     message($_Lang['fl_noplanetrow'], $_Lang['fl_error']);
 }
 
 $Now = time();
-
-includeLang('fleet');
 
 // TODO: refactor and add validation (?)
 if (
