@@ -82,18 +82,15 @@ $_Lang['FlyingFleetsRows'] = (
 );
 $_Lang['ChronoAppletsScripts'] = $flightsList['chronoApplets'];
 
-if(!isPro())
-{
-    // Don't Allow to use this function to NonPro Players
-    $_GET['quickres'] = 0;
-}
+$isQuickTransportOptionUsed = (
+    isset($_GET['quickres']) &&
+    $_GET['quickres'] == 1 &&
+    isPro()
+);
 
 $preselectedCargoShips = [];
 
-if (
-    isset($_GET['quickres']) &&
-    $_GET['quickres'] == 1
-) {
+if ($isQuickTransportOptionUsed) {
     $_Lang['P_SetQuickRes'] = '1';
 
     $preselectedCargoShips = FlightControl\Utils\Helpers\calculateCargoFleetArray([
@@ -169,8 +166,7 @@ else
     $_Lang['P_Planet'] = (isset($_GET['planet']) ? intval($_GET['planet']) : null);
     $_Lang['P_PlType'] = (isset($_GET['planettype']) ? intval($_GET['planettype']) : null);
     $_Lang['P_Mission'] = (isset($_GET['target_mission']) ? intval($_GET['target_mission']) : null);
-    if(isset($_GET['quickres']) && $_GET['quickres'] == 1)
-    {
+    if ($isQuickTransportOptionUsed) {
         if(!isset($_GET['target_mission']) || $_GET['target_mission'] != 3)
         {
             if($_User['settings_mainPlanetID'] != $_Planet['id'])
