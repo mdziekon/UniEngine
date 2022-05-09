@@ -25,8 +25,6 @@ $Now = time();
 includeLang('fleet');
 $BodyTPL                = gettemplate('fleet_body');
 
-$_Lang['FlyingFleetsRows'] = '';
-
 $Hide = ' class="hide"';
 
 $fleetsInFlightCounters = FlightControl\Utils\Helpers\getFleetsInFlightCounters([
@@ -77,12 +75,12 @@ $flightsList = FlightControl\Components\FlightsList\render([
     'currentTimestamp' => $Now,
 ])['componentHTML'];
 
-$_Lang['FlyingFleetsRows'] .= $flightsList['elementsList'];
+$_Lang['FlyingFleetsRows'] = (
+    empty($flightsList['elementsList']) ?
+        '<tr><th colspan="8">-</th></tr>' :
+        $flightsList['elementsList']
+);
 $_Lang['ChronoAppletsScripts'] = $flightsList['chronoApplets'];
-
-if (empty($_Lang['FlyingFleetsRows'])) {
-    $_Lang['FlyingFleetsRows'] = '<tr><th colspan="8">-</th></tr>';
-}
 
 if(!isPro())
 {
