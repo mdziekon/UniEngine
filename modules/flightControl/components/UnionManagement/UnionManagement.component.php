@@ -33,7 +33,6 @@ function _handleInput($props) {
             'unionMembers' => null,
             'unionName' => null,
             'membersSelectors' => [],
-            'newUnionEntry' => null,
         ],
     ];
 
@@ -48,7 +47,6 @@ function _handleInput($props) {
         ]);
         $newUnionEntry = $createNewUnionResult['newUnionEntry'];
 
-        $result['payload']['newUnionEntry'] = $newUnionEntry;
         $GetACSRow = $newUnionEntry;
     }
 
@@ -239,7 +237,6 @@ function render($props) {
         )
     ];
 
-    $newUnionEntry = null;
     $inputHandlingResult = _handleInput($props);
 
     if (!$inputHandlingResult['isSuccess']) {
@@ -268,8 +265,6 @@ function render($props) {
 
         $resultPayload = $inputHandlingResult['payload'];
 
-        $newUnionEntry = $resultPayload['newUnionEntry'];
-
         if ($resultPayload['message']['content'] !== null) {
             $componentTPLData['P_HideACSMSG'] = '';
             $componentTPLData['P_ACSMSG'] = $resultPayload['message']['content'];
@@ -294,9 +289,6 @@ function render($props) {
 
     return [
         'componentHTML' => parsetemplate($tplBodyCache['body'], array_merge($lang, $componentTPLData)),
-        'extraPayload' => [
-            'newUnionEntry' => $newUnionEntry,
-        ],
     ];
 }
 

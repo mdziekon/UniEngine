@@ -59,8 +59,6 @@ if (
     );
 }
 
-$newUnionEntry = null;
-
 if (
     isset($_POST['acsmanage']) &&
     $_POST['acsmanage'] == 'open'
@@ -72,7 +70,6 @@ if (
     ]);
 
     $_Lang['Insert_ACSForm'] = $unionManagement['componentHTML'];
-    $newUnionEntry = $unionManagement['extraPayload']['newUnionEntry'];
 }
 
 $flightsList = FlightControl\Components\FlightsList\render([
