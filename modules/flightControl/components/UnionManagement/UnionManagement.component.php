@@ -231,6 +231,12 @@ function render($props) {
         'P_HideACSMSG' => ' class="hide"',
         'P_ACSMSG' => '',
         'P_ACSMSGCOL' => '',
+        'P_UnionMaxInvitedPlayers' => parsetemplate(
+            $lang['fl_acs_warning_users'],
+            [
+                'MaxInvitedPlayers' => MAX_ACS_JOINED_PLAYERS
+            ]
+        )
     ];
 
     $newUnionEntry = null;

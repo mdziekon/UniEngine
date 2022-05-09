@@ -18,7 +18,7 @@
                 </th>
             </tr>
             <tr>
-                <td colspan="5" class="c"><span class="flLe">{fl_acs_users_management}</span> <span class="flRi orange">{fl_acs_warning_users}</span></td>
+                <td colspan="5" class="c"><span class="flLe">{fl_acs_users_management}</span> <span class="flRi orange">{P_UnionMaxInvitedPlayers}</span></td>
             </tr>
             <tr>
                 <th colspan="2">{fl_acs_invited_title}</th>
