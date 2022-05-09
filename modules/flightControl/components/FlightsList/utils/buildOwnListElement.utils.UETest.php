@@ -137,12 +137,6 @@ class BuildOwnListElementTestCase extends TestCase {
                         'ButtonText' => "Join fleets",
                     ],
                 ],
-                3 => [
-                    'orderType' => 'joinUnionOnManagement',
-                    'params' => [
-                        'Text' => "{AddACSJoin_1269}",
-                    ],
-                ],
             ],
         ];
 

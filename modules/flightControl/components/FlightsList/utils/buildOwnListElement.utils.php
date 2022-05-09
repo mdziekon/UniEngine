@@ -145,19 +145,6 @@ function buildOwnListElement($params) {
                 ] :
                 null
         ),
-        (
-            (
-                $isFleetMissionNotCalculated &&
-                empty($acsMainFleets[$fleetId])
-            ) ?
-                [
-                    'orderType' => 'joinUnionOnManagement',
-                    'params' => [
-                        'Text' => "{AddACSJoin_{$fleetId}}",
-                    ],
-                ] :
-                null
-        ),
     ]);
 
     $thisUnionListNo = (

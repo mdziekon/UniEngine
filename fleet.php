@@ -59,18 +59,6 @@ if (
     );
 }
 
-$flightsList = FlightControl\Components\FlightsList\render([
-    'userId' => $_User['id'],
-    'currentTimestamp' => $Now,
-])['componentHTML'];
-
-$_Lang['FlyingFleetsRows'] .= $flightsList['elementsList'];
-$_Lang['ChronoAppletsScripts'] = $flightsList['chronoApplets'];
-
-if (empty($_Lang['FlyingFleetsRows'])) {
-    $_Lang['FlyingFleetsRows'] = '<tr><th colspan="8">-</th></tr>';
-}
-
 $newUnionEntry = null;
 
 if (
@@ -87,20 +75,17 @@ if (
     $newUnionEntry = $unionManagement['extraPayload']['newUnionEntry'];
 }
 
-if (
-    $newUnionEntry !== null &&
-    strstr($_Lang['FlyingFleetsRows'], 'AddACSJoin_') !== false
-) {
-    $joinInputHTML = "<input type=\"radio\" value=\"{$newUnionEntry['id']}\" class=\"setACS_ID pad5\" name=\"acs_select\"><br/>{$_Lang['fl_acs_joinnow']}";
+$flightsList = FlightControl\Components\FlightsList\render([
+    'userId' => $_User['id'],
+    'currentTimestamp' => $Now,
+])['componentHTML'];
 
-    $_Lang['FlyingFleetsRows'] = str_replace(
-        '{AddACSJoin_'.$newUnionEntry['main_fleet_id'].'}',
-        $joinInputHTML,
-        $_Lang['FlyingFleetsRows']
-    );
+$_Lang['FlyingFleetsRows'] .= $flightsList['elementsList'];
+$_Lang['ChronoAppletsScripts'] = $flightsList['chronoApplets'];
+
+if (empty($_Lang['FlyingFleetsRows'])) {
+    $_Lang['FlyingFleetsRows'] = '<tr><th colspan="8">-</th></tr>';
 }
-
-$_Lang['FlyingFleetsRows'] = preg_replace('#\{AddACSJoin\_[0-9]+\}#si', '', $_Lang['FlyingFleetsRows']);
 
 if(!isPro())
 {
