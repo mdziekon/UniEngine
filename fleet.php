@@ -25,20 +25,6 @@ $Now = time();
 includeLang('fleet');
 $BodyTPL                = gettemplate('fleet_body');
 
-$Hide = ' class="hide"';
-
-$fleetsInFlightCounters = FlightControl\Utils\Helpers\getFleetsInFlightCounters([
-    'userId' => $_User['id'],
-]);
-
-$FlyingFleetsCount = $fleetsInFlightCounters['allFleetsInFlight'];
-$FlyingExpeditions = $fleetsInFlightCounters['expeditionsInFlight'];
-
-$userMaxFleetSlotsCount = FlightControl\Utils\Helpers\getUserFleetSlotsCount([
-    'user' => $_User,
-    'timestamp' => $Now,
-]);
-
 // TODO: refactor and add validation (?)
 if (
     (
@@ -118,23 +104,6 @@ if (
     $gobackFleet = Collections\compact($gobackFleet);
 }
 
-$shipsJSData = FlightControl\Utils\Factories\createPlanetShipsJSObject([
-    'planet' => $_Planet,
-    'user' => $_User,
-]);
-$_Lang['Insert_ShipsData'] = json_encode($shipsJSData);
-$_Lang['ShipsRow'] = FlightControl\Components\AvailableShipsList\render([
-    'planet' => $_Planet,
-    'user' => $_User,
-    'preselectedShips' => (
-        !empty($gobackFleet) ?
-            $gobackFleet :
-            $preselectedCargoShips
-    ),
-])['componentHTML'];
-
-$hasAvailableShips = !empty($_Lang['ShipsRow']);
-
 if(isset($_POST['gobackUsed']))
 {
     $GoBackVars = array
@@ -189,8 +158,37 @@ $retreatInfoBoxComponent = FlightControl\Components\RetreatInfoBox\render([
     'isVisible' => isset($_GET['ret']),
     'eventCode' => $_GET['m'],
 ]);
+$availableShipsListComponent = FlightControl\Components\AvailableShipsList\render([
+    'planet' => $_Planet,
+    'user' => $_User,
+    'preselectedShips' => (
+        !empty($gobackFleet) ?
+            $gobackFleet :
+            $preselectedCargoShips
+    ),
+]);
+$shipsJSData = FlightControl\Utils\Factories\createPlanetShipsJSObject([
+    'planet' => $_Planet,
+    'user' => $_User,
+]);
+
+$userMaxFleetSlotsCount = FlightControl\Utils\Helpers\getUserFleetSlotsCount([
+    'user' => $_User,
+    'timestamp' => $Now,
+]);
+$fleetsInFlightCounters = FlightControl\Utils\Helpers\getFleetsInFlightCounters([
+    'userId' => $_User['id'],
+]);
+$allFleetsInFlightCount = $fleetsInFlightCounters['allFleetsInFlight'];
+$expeditionsInFlightCount = $fleetsInFlightCounters['expeditionsInFlight'];
+
+$hasAvailableShips = !empty($availableShipsListComponent['componentHTML']);
+$hideHTMLClass = ' class="hide"';
 
 $tplProps = [
+    'ShipsRow' => $availableShipsListComponent['componentHTML'],
+    'Insert_ShipsData' => json_encode($shipsJSData),
+
     'P_TotalPlanetResources' => (string) $resourcesToLoad,
     'P_StorageColor' => (
         $resourcesToLoad == 0 ?
@@ -217,36 +215,36 @@ $tplProps = [
     'P_MaxExpedSlots' => FlightControl\Utils\Helpers\getUserExpeditionSlotsCount([
         'user' => $_User,
     ]),
-    'P_FlyingFleetsCount' => (string) $FlyingFleetsCount,
-    'P_FlyingExpeditions' => (string) $FlyingExpeditions,
+    'P_FlyingFleetsCount' => (string) $allFleetsInFlightCount,
+    'P_FlyingExpeditions' => (string) $expeditionsInFlightCount,
     'P_HideNoFreeSlots' => (
         (
-            $FlyingFleetsCount > 0 &&
-            $FlyingFleetsCount >= $userMaxFleetSlotsCount
+            $allFleetsInFlightCount > 0 &&
+            $allFleetsInFlightCount >= $userMaxFleetSlotsCount
         ) ?
             '' :
-            $Hide
+            $hideHTMLClass
     ),
     'P_HideNoSlotsInfo' => (
         (
             $hasAvailableShips &&
-            $FlyingFleetsCount >= $userMaxFleetSlotsCount
+            $allFleetsInFlightCount >= $userMaxFleetSlotsCount
         ) ?
             '' :
-            $Hide
+            $hideHTMLClass
     ),
     'P_HideSendShips' => (
         (
             $hasAvailableShips &&
-            $FlyingFleetsCount < $userMaxFleetSlotsCount
+            $allFleetsInFlightCount < $userMaxFleetSlotsCount
         ) ?
             '' :
-            $Hide
+            $hideHTMLClass
     ),
     'P_HideNoShipsInfo' => (
         !$hasAvailableShips ?
             '' :
-            $Hide
+            $hideHTMLClass
     ),
 
     'P_SFBInfobox' => $smartFleetBlockadeComponent['componentHTML'],
