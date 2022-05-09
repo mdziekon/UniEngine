@@ -6,7 +6,6 @@ use UniEngine\Engine\Modules\FlightControl\Enums\RetreatResultType;
 
 //  Arguments
 //      - $props (Object)
-//          - isVisible (Boolean)
 //          - eventCode (String)
 //
 //  Returns: Object
@@ -17,7 +16,6 @@ function render ($props) {
 
     $localTemplateLoader = createLocalTemplateLoader(__DIR__);
 
-    $isVisible = $props['isVisible'];
     $eventCode = (
         isset($props['eventCode']) ?
             intval($props['eventCode'], 10) :
@@ -44,7 +42,7 @@ function render ($props) {
 
     $componentTPLData = [
         'container_hideclass' => (
-            ($isVisible && $isKnownErrorCode) ?
+            $isKnownErrorCode ?
                 null :
                 ' class="hide"'
         ),

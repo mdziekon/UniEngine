@@ -41,30 +41,27 @@ if (
     );
 }
 
+$unionManagementComponent = null;
+
 if (
     isset($_POST['acsmanage']) &&
     $_POST['acsmanage'] == 'open'
 ) {
-    $unionManagement = FlightControl\Components\UnionManagement\render([
+    $unionManagementComponent = FlightControl\Components\UnionManagement\render([
         'unionOwner' => $_User,
         'currentTimestamp' => $Now,
         'input' => $_POST,
     ]);
-
-    $_Lang['Insert_ACSForm'] = $unionManagement['componentHTML'];
 }
 
+/**
+ * Flights list is purposefully rendered after UnionManagement
+ * to allow any new Union entries to be inserted before rendering the list
+ */
 $flightsList = FlightControl\Components\FlightsList\render([
     'userId' => $_User['id'],
     'currentTimestamp' => $Now,
 ])['componentHTML'];
-
-$_Lang['FlyingFleetsRows'] = (
-    empty($flightsList['elementsList']) ?
-        '<tr><th colspan="8">-</th></tr>' :
-        $flightsList['elementsList']
-);
-$_Lang['ChronoAppletsScripts'] = $flightsList['chronoApplets'];
 
 $isQuickTransportOptionUsed = (
     isset($_GET['quickres']) &&
@@ -125,37 +122,50 @@ if(isset($_POST['gobackUsed']))
     $_Lang['P_Mission'] = (isset($_POST['target_mission']) ? $_POST['target_mission'] : null);
     $_Lang['P_SetQuickRes'] = (isset($_POST['quickres']) ? $_POST['quickres'] : null);
     $_Lang['P_GoBackVars'] = base64_encode(json_encode($GoBackVars));
-}
-else
-{
+} else {
     $_Lang['P_Galaxy'] = (isset($_GET['galaxy']) ? intval($_GET['galaxy']) : null);
     $_Lang['P_System'] = (isset($_GET['system']) ? intval($_GET['system']) : null);
     $_Lang['P_Planet'] = (isset($_GET['planet']) ? intval($_GET['planet']) : null);
     $_Lang['P_PlType'] = (isset($_GET['planettype']) ? intval($_GET['planettype']) : null);
     $_Lang['P_Mission'] = (isset($_GET['target_mission']) ? intval($_GET['target_mission']) : null);
-    if ($isQuickTransportOptionUsed) {
-        if(!isset($_GET['target_mission']) || $_GET['target_mission'] != 3)
-        {
-            if($_User['settings_mainPlanetID'] != $_Planet['id'])
-            {
-                $GetQuickResPlanet = doquery("SELECT `galaxy`, `system`, `planet` FROM {{table}} WHERE `id` = {$_User['settings_mainPlanetID']};", 'planets', true);
-            }
-            $_Lang['P_Galaxy'] = $GetQuickResPlanet['galaxy'];
-            $_Lang['P_System'] = $GetQuickResPlanet['system'];
-            $_Lang['P_Planet'] = $GetQuickResPlanet['planet'];
-            $_Lang['P_PlType'] = 1;
-            $_Lang['P_Mission'] = 3;
+
+    if (
+        $isQuickTransportOptionUsed &&
+        (
+            !isset($_GET['target_mission']) ||
+            $_GET['target_mission'] != 3
+        )
+    ) {
+        if ($_User['settings_mainPlanetID'] != $_Planet['id']) {
+            $quickTransportPlanetPosition = doquery("SELECT `galaxy`, `system`, `planet` FROM {{table}} WHERE `id` = {$_User['settings_mainPlanetID']};", 'planets', true);
+        } else {
+            $quickTransportPlanetPosition = [
+                'galaxy' => '',
+                'system' => '',
+                'planet' => '',
+            ];
         }
+
+        $_Lang['P_Galaxy'] = $quickTransportPlanetPosition['galaxy'];
+        $_Lang['P_System'] = $quickTransportPlanetPosition['system'];
+        $_Lang['P_Planet'] = $quickTransportPlanetPosition['planet'];
+        $_Lang['P_PlType'] = 1;
+        $_Lang['P_Mission'] = 3;
     }
 }
 
 $resourcesToLoad = Resources\sumAllPlanetTransportableResources($_Planet);
 
 $smartFleetBlockadeComponent = FlightControl\Components\SmartFleetBlockadeInfoBox\render();
-$retreatInfoBoxComponent = FlightControl\Components\RetreatInfoBox\render([
-    'isVisible' => isset($_GET['ret']),
-    'eventCode' => $_GET['m'],
-]);
+$retreatInfoBoxComponent = null;
+if (
+    isset($_GET['ret']) &&
+    isset($_GET['m'])
+) {
+    $retreatInfoBoxComponent = FlightControl\Components\RetreatInfoBox\render([
+        'eventCode' => $_GET['m'],
+    ]);
+}
 $availableShipsListComponent = FlightControl\Components\AvailableShipsList\render([
     'planet' => $_Planet,
     'user' => $_User,
@@ -184,6 +194,18 @@ $hasAvailableShips = !empty($availableShipsListComponent['componentHTML']);
 $hideHTMLClass = ' class="hide"';
 
 $tplProps = [
+    'Insert_ACSForm' => (
+        $unionManagementComponent ?
+            $unionManagementComponent['componentHTML'] :
+            ''
+    ),
+    'FlyingFleetsRows' => (
+        empty($flightsList['elementsList']) ?
+            '<tr><th colspan="8">-</th></tr>' :
+            $flightsList['elementsList']
+    ),
+    'ChronoAppletsScripts' => $flightsList['chronoApplets'],
+
     'ShipsRow' => $availableShipsListComponent['componentHTML'],
     'Insert_ShipsData' => json_encode($shipsJSData),
 
@@ -246,7 +268,11 @@ $tplProps = [
     ),
 
     'P_SFBInfobox' => $smartFleetBlockadeComponent['componentHTML'],
-    'ComponentHTML_RetreatInfoBox' => $retreatInfoBoxComponent['componentHTML'],
+    'ComponentHTML_RetreatInfoBox' => (
+        $retreatInfoBoxComponent ?
+            $retreatInfoBoxComponent['componentHTML'] :
+            ''
+    ),
 
     'InsertACSUsersMax' => MAX_ACS_JOINED_PLAYERS,
 ];
