@@ -7,7 +7,6 @@ call_user_func(function () {
     $includePath = $_EnginePath . 'modules/flightControl/';
 
     include($includePath . './components/AvailableMissionsList/AvailableMissionsList.component.php');
-    include($includePath . './components/AvailableShipsList/AvailableShipsList.component.php');
     include($includePath . './components/FlightsList/FlightsList.component.php');
     include($includePath . './components/FlightsList/utils/buildFriendlyAcsListElement.utils.php');
     include($includePath . './components/FlightsList/utils/buildOwnListElement.utils.php');
@@ -30,6 +29,7 @@ call_user_func(function () {
     include($includePath . './screens/SendWizardStepOne/components/UnionManagement/UnionManagement.component.php');
     include($includePath . './screens/SendWizardStepOne/components/UnionMembersListOption/UnionMembersListOption.component.php');
     include($includePath . './screens/SendWizardStepOne/components/RetreatInfoBox/RetreatInfoBox.component.php');
+    include($includePath . './screens/SendWizardStepOne/components/AvailableShipsList/AvailableShipsList.component.php');
 
     include($includePath . './screens/Shortcuts/Shortcuts.screen.php');
     include($includePath . './screens/Shortcuts/components/ListManagement/ListManagement.component.php');

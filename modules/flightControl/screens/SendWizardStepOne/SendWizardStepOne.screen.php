@@ -175,7 +175,7 @@ function render($props) {
             'eventCode' => $inputQueryParams['m'],
         ]);
     }
-    $availableShipsListComponent = FlightControl\Components\AvailableShipsList\render([
+    $availableShipsListComponent = SendWizardStepOne\Components\AvailableShipsList\render([
         'planet' => $planet,
         'user' => $user,
         'preselectedShips' => (

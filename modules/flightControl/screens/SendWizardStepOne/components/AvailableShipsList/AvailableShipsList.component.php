@@ -1,6 +1,6 @@
 <?php
 
-namespace UniEngine\Engine\Modules\FlightControl\Components\AvailableShipsList;
+namespace UniEngine\Engine\Modules\FlightControl\Screens\SendWizardStepOne\Components\AvailableShipsList;
 
 use UniEngine\Engine\Includes\Helpers\Common\Collections;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
