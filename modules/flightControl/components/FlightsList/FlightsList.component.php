@@ -8,6 +8,7 @@ use UniEngine\Engine\Modules\FlightControl\Components\FlightsList\Utils;
 //      - $props (Object)
 //          - userId (String)
 //          - currentTimestamp (Number)
+//          - unionIdToJoin (Number?)
 //
 //  Returns: Object
 //      - componentHTML (String)
@@ -17,6 +18,11 @@ function render ($props) {
 
     $userId = $props['userId'];
     $currentTimestamp = $props['currentTimestamp'];
+    $unionIdToJoin = (
+        isset($props['unionIdToJoin']) ?
+            $props['unionIdToJoin'] :
+            0
+    );
 
     $localTemplateLoader = createLocalTemplateLoader(__DIR__);
     $tplBodyCache = [
@@ -99,17 +105,7 @@ function render ($props) {
             'acsMainFleets' => $acsMainFleets,
             'currentTimestamp' => $currentTimestamp,
             'acsUnionsExtraSquads' => $relatedAcsUnionsExtraSquads,
-            'isJoiningThisUnion' => (
-                // TODO: Remove direct $_GET & $_POST access
-                (
-                    isset($_GET['joinacs']) &&
-                    $_GET['joinacs'] == $acsId
-                ) ||
-                (
-                    isset($_POST['getacsdata']) &&
-                    $_POST['getacsdata'] == $acsId
-                )
-            ),
+            'isJoiningThisUnion' => ($unionIdToJoin == $acsId),
         ]);
         $listElement = Utils\prerenderFriendlyAcsListElement($listElement, [ 'tplBodyCache' => &$tplBodyCache ]);
 
@@ -139,14 +135,7 @@ function render ($props) {
             'currentTimestamp' => $currentTimestamp,
             'acsUnionsExtraSquads' => $relatedAcsUnionsExtraSquads,
             'relatedAcsFleets' => $relatedAcsFleetBaseDetails,
-            'isJoiningThisUnion' => (
-                // TODO: Remove direct $_GET & $_POST access
-                (
-                    isset($_POST['getacsdata']) &&
-                    $acsId !== null &&
-                    $_POST['getacsdata'] == $acsId
-                )
-            ),
+            'isJoiningThisUnion' => ($unionIdToJoin == $acsId),
         ]);
         $listElement = Utils\prerenderOwnListElement($listElement, [ 'tplBodyCache' => &$tplBodyCache ]);
 

@@ -24,24 +24,7 @@ if (!$_Planet) {
 
 $Now = time();
 $formInputs = [];
-
-// TODO: refactor and add validation (?)
-if (
-    (
-        isset($_GET['joinacs'])
-    ) ||
-    (
-        isset($_POST['getacsdata']) &&
-        $_POST['getacsdata'] > 0
-    )
-)
-{
-    $formInputs['SetJoiningACSID'] = (
-        isset($_GET['joinacs']) ?
-            $_GET['joinacs'] :
-            $_POST['getacsdata']
-    );
-}
+$unionIdToJoin = null;
 
 $unionManagementComponent = null;
 
@@ -55,15 +38,6 @@ if (
         'input' => $_POST,
     ]);
 }
-
-/**
- * Flights list is purposefully rendered after UnionManagement
- * to allow any new Union entries to be inserted before rendering the list
- */
-$flightsList = FlightControl\Components\FlightsList\render([
-    'userId' => $_User['id'],
-    'currentTimestamp' => $Now,
-])['componentHTML'];
 
 $isQuickTransportOptionUsed = (
     isset($_GET['quickres']) &&
@@ -123,6 +97,18 @@ if(isset($_POST['gobackUsed']))
     $formInputs['P_SetQuickRes'] = (isset($_POST['quickres']) ? $_POST['quickres'] : null);
     $formInputs['P_GoBackVars'] = base64_encode(json_encode($preserveFormData));
 } else {
+    $joinUnionIdRaw = (
+        isset($_GET['joinacs']) ?
+            $_GET['joinacs'] :
+            (
+                isset($_POST['getacsdata']) ?
+                    $_POST['getacsdata'] :
+                    0
+            )
+    );
+    $joinUnionId = intval($joinUnionIdRaw);
+
+    $formInputs['SetJoiningACSID'] = $joinUnionId;
     $formInputs['P_Galaxy'] = (isset($_GET['galaxy']) ? intval($_GET['galaxy']) : null);
     $formInputs['P_System'] = (isset($_GET['system']) ? intval($_GET['system']) : null);
     $formInputs['P_Planet'] = (isset($_GET['planet']) ? intval($_GET['planet']) : null);
@@ -154,7 +140,19 @@ if(isset($_POST['gobackUsed']))
     }
 }
 
+$unionIdToJoin = $formInputs['SetJoiningACSID'];
+
 $resourcesToLoad = Resources\sumAllPlanetTransportableResources($_Planet);
+
+/**
+ * Flights list is purposefully rendered after UnionManagement
+ * to allow any new Union entries to be inserted before rendering the list
+ */
+$flightsList = FlightControl\Components\FlightsList\render([
+    'userId' => $_User['id'],
+    'currentTimestamp' => $Now,
+    'unionIdToJoin' => $unionIdToJoin,
+])['componentHTML'];
 
 $smartFleetBlockadeComponent = FlightControl\Components\SmartFleetBlockadeInfoBox\render();
 $retreatInfoBoxComponent = null;
