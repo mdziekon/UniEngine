@@ -220,7 +220,7 @@ class BuildOwnListElementTestCase extends TestCase {
                     'orderType' => 'joinUnion',
                     'params' => [
                         'ACS_ID' => '113',
-                        'checked' => false,
+                        'checked' => '',
                         'Text' => 'Join fleet',
                     ],
                 ],
@@ -330,7 +330,7 @@ class BuildOwnListElementTestCase extends TestCase {
                     'orderType' => 'joinUnion',
                     'params' => [
                         'ACS_ID' => '113',
-                        'checked' => false,
+                        'checked' => '',
                         'Text' => 'Join fleet',
                     ],
                 ],
