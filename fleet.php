@@ -45,15 +45,6 @@ $isQuickTransportOptionUsed = (
     isPro()
 );
 
-$preselectedCargoShips = [];
-
-if ($isQuickTransportOptionUsed) {
-    $preselectedCargoShips = FlightControl\Utils\Helpers\calculateCargoFleetArray([
-        'planet' => $_Planet,
-        'user' => $_User,
-    ]);
-}
-
 $gobackFleet = [];
 
 if (
@@ -75,8 +66,7 @@ $formInputs['P_SetQuickRes'] = (
     $isQuickTransportOptionUsed ? '1' : '0'
 );
 
-if(isset($_POST['gobackUsed']))
-{
+if (isset($_POST['gobackUsed'])) {
     $preserveFormData = [
         'speed' => $_POST['speed'],
     ];
@@ -143,6 +133,14 @@ if(isset($_POST['gobackUsed']))
 $unionIdToJoin = $formInputs['SetJoiningACSID'];
 
 $resourcesToLoad = Resources\sumAllPlanetTransportableResources($_Planet);
+$preselectedCargoShips = (
+    $isQuickTransportOptionUsed ?
+        FlightControl\Utils\Helpers\calculateCargoFleetArray([
+            'planet' => $_Planet,
+            'user' => $_User,
+        ]) :
+        []
+);
 
 /**
  * Flights list is purposefully rendered after UnionManagement
