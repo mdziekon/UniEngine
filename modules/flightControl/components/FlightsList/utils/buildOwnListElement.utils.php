@@ -139,7 +139,7 @@ function buildOwnListElement($params) {
                     'orderType' => 'joinUnion',
                     'params' => [
                         'ACS_ID' => $acsMainFleets[$fleetId]['acsId'],
-                        'checked' => $isJoiningThisUnion,
+                        'checked' => ($isJoiningThisUnion ? 'checked' : ''),
                         'Text' => $_Lang['fl_acs_joinnow'],
                     ],
                 ] :
