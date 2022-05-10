@@ -16,7 +16,6 @@ call_user_func(function () {
     include($includePath . './components/FlightsList/utils/paramGetters.utils.php');
     include($includePath . './components/FlightsList/utils/prerenderFriendlyAcsListElement.utils.php');
     include($includePath . './components/FlightsList/utils/prerenderOwnListElement.utils.php');
-    include($includePath . './components/RetreatInfoBox/RetreatInfoBox.component.php');
     include($includePath . './components/SmartFleetBlockadeInfoBox/SmartFleetBlockadeInfoBox.component.php');
     include($includePath . './components/SmartFleetBlockadeInfoBox/SmartFleetBlockadeInfoBox.utils.php');
     include($includePath . './components/TargetOptionLabel/TargetOptionLabel.component.php');
@@ -30,6 +29,7 @@ call_user_func(function () {
     include($includePath . './screens/SendWizardStepOne/components/UnionManagement/utils/updateUnionName.utils.php');
     include($includePath . './screens/SendWizardStepOne/components/UnionManagement/UnionManagement.component.php');
     include($includePath . './screens/SendWizardStepOne/components/UnionMembersListOption/UnionMembersListOption.component.php');
+    include($includePath . './screens/SendWizardStepOne/components/RetreatInfoBox/RetreatInfoBox.component.php');
 
     include($includePath . './screens/Shortcuts/Shortcuts.screen.php');
     include($includePath . './screens/Shortcuts/components/ListManagement/ListManagement.component.php');

@@ -1,6 +1,6 @@
 <?php
 
-namespace UniEngine\Engine\Modules\FlightControl\Components\RetreatInfoBox;
+namespace UniEngine\Engine\Modules\FlightControl\Screens\SendWizardStepOne\Components\RetreatInfoBox;
 
 use UniEngine\Engine\Modules\FlightControl\Enums\RetreatResultType;
 

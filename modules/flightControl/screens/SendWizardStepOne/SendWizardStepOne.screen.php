@@ -171,7 +171,7 @@ function render($props) {
         isset($inputQueryParams['ret']) &&
         isset($inputQueryParams['m'])
     ) {
-        $retreatInfoBoxComponent = FlightControl\Components\RetreatInfoBox\render([
+        $retreatInfoBoxComponent = SendWizardStepOne\Components\RetreatInfoBox\render([
             'eventCode' => $inputQueryParams['m'],
         ]);
     }
