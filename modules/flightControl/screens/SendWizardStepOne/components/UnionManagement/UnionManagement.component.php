@@ -1,9 +1,9 @@
 <?php
 
-namespace UniEngine\Engine\Modules\FlightControl\Components\UnionManagement;
+namespace UniEngine\Engine\Modules\FlightControl\Screens\SendWizardStepOne\Components\UnionManagement;
 
 use UniEngine\Engine\Modules\FlightControl;
-use UniEngine\Engine\Modules\FlightControl\Components\UnionManagement;
+use UniEngine\Engine\Modules\FlightControl\Screens\SendWizardStepOne\Components\UnionManagement;
 
 function _handleInput($props) {
     global $_Lang;

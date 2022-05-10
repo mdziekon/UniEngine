@@ -1,8 +1,8 @@
 <?php
 
-namespace UniEngine\Engine\Modules\FlightControl\Components\FlightsList;
+namespace UniEngine\Engine\Modules\FlightControl\Screens\SendWizardStepOne\Components\FlightsList;
 
-use UniEngine\Engine\Modules\FlightControl\Components\FlightsList\Utils;
+use UniEngine\Engine\Modules\FlightControl\Screens\SendWizardStepOne\Components\FlightsList\Utils;
 
 //  Arguments
 //      - $props (Object)

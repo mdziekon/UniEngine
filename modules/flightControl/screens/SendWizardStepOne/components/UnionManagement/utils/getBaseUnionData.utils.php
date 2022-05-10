@@ -1,6 +1,6 @@
 <?php
 
-namespace UniEngine\Engine\Modules\FlightControl\Components\UnionManagement\Utils;
+namespace UniEngine\Engine\Modules\FlightControl\Screens\SendWizardStepOne\Components\UnionManagement\Utils;
 
 use UniEngine\Engine\Modules\Flights;
 use UniEngine\Engine\Modules\FlightControl;
