@@ -27,7 +27,7 @@ includeLang('tech');
 includeLang('system');
 includeLang('fleet');
 
-use UniEngine\Engine\Modules\FlightControl\Components\FlightsList\Utils;
+use UniEngine\Engine\Modules\FlightControl\Screens\SendWizardStepOne\Components\FlightsList\Utils;
 
 /**
  * @group UniEngineTest

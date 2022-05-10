@@ -1,6 +1,6 @@
 <?php
 
-namespace UniEngine\Engine\Modules\FlightControl\Components\FlightsList\Utils;
+namespace UniEngine\Engine\Modules\FlightControl\Screens\SendWizardStepOne\Components\FlightsList\Utils;
 
 //  Arguments
 //      - $listElement (ReturnType<typeof buildFriendlyAcsListElement>)

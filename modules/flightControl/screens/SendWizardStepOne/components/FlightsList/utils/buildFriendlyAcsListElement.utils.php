@@ -1,8 +1,8 @@
 <?php
 
-namespace UniEngine\Engine\Modules\FlightControl\Components\FlightsList\Utils;
+namespace UniEngine\Engine\Modules\FlightControl\Screens\SendWizardStepOne\Components\FlightsList\Utils;
 
-use UniEngine\Engine\Modules\FlightControl\Components\FlightsList\Utils;
+use UniEngine\Engine\Modules\FlightControl\Screens\SendWizardStepOne\Components\FlightsList\Utils;
 use UniEngine\Engine\Modules\Flights;
 
 // TODO: Move more "rendering" into the prerenderer function

@@ -7,14 +7,6 @@ call_user_func(function () {
     $includePath = $_EnginePath . 'modules/flightControl/';
 
     include($includePath . './components/AvailableMissionsList/AvailableMissionsList.component.php');
-    include($includePath . './components/FlightsList/FlightsList.component.php');
-    include($includePath . './components/FlightsList/utils/buildFriendlyAcsListElement.utils.php');
-    include($includePath . './components/FlightsList/utils/buildOwnListElement.utils.php');
-    include($includePath . './components/FlightsList/utils/dataFetchers.utils.php');
-    include($includePath . './components/FlightsList/utils/extractors.utils.php');
-    include($includePath . './components/FlightsList/utils/paramGetters.utils.php');
-    include($includePath . './components/FlightsList/utils/prerenderFriendlyAcsListElement.utils.php');
-    include($includePath . './components/FlightsList/utils/prerenderOwnListElement.utils.php');
     include($includePath . './components/SmartFleetBlockadeInfoBox/SmartFleetBlockadeInfoBox.component.php');
     include($includePath . './components/SmartFleetBlockadeInfoBox/SmartFleetBlockadeInfoBox.utils.php');
     include($includePath . './components/TargetOptionLabel/TargetOptionLabel.component.php');
@@ -30,6 +22,14 @@ call_user_func(function () {
     include($includePath . './screens/SendWizardStepOne/components/UnionMembersListOption/UnionMembersListOption.component.php');
     include($includePath . './screens/SendWizardStepOne/components/RetreatInfoBox/RetreatInfoBox.component.php');
     include($includePath . './screens/SendWizardStepOne/components/AvailableShipsList/AvailableShipsList.component.php');
+    include($includePath . './screens/SendWizardStepOne/components/FlightsList/FlightsList.component.php');
+    include($includePath . './screens/SendWizardStepOne/components/FlightsList/utils/buildFriendlyAcsListElement.utils.php');
+    include($includePath . './screens/SendWizardStepOne/components/FlightsList/utils/buildOwnListElement.utils.php');
+    include($includePath . './screens/SendWizardStepOne/components/FlightsList/utils/dataFetchers.utils.php');
+    include($includePath . './screens/SendWizardStepOne/components/FlightsList/utils/extractors.utils.php');
+    include($includePath . './screens/SendWizardStepOne/components/FlightsList/utils/paramGetters.utils.php');
+    include($includePath . './screens/SendWizardStepOne/components/FlightsList/utils/prerenderFriendlyAcsListElement.utils.php');
+    include($includePath . './screens/SendWizardStepOne/components/FlightsList/utils/prerenderOwnListElement.utils.php');
 
     include($includePath . './screens/Shortcuts/Shortcuts.screen.php');
     include($includePath . './screens/Shortcuts/components/ListManagement/ListManagement.component.php');

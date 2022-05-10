@@ -159,7 +159,7 @@ function render($props) {
      * Flights list is purposefully rendered after UnionManagement
      * to allow any new Union entries to be inserted before rendering the list
      */
-    $flightsList = FlightControl\Components\FlightsList\render([
+    $flightsList = SendWizardStepOne\Components\FlightsList\render([
         'userId' => $user['id'],
         'currentTimestamp' => $currentTimestamp,
         'unionIdToJoin' => $unionIdToJoin,
