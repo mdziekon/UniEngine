@@ -54,8 +54,7 @@ function render($props) {
     $isQuickTransportOptionUsed = (
         isset($inputQueryParams['quickres']) &&
         $inputQueryParams['quickres'] == 1 &&
-        // TODO: should be user-specific, not global
-        isPro()
+        isPro($user)
     );
 
     $gobackFleet = [];
