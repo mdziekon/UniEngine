@@ -7,6 +7,7 @@ use UniEngine\Engine\Includes\Helpers\World\Elements;
 use UniEngine\Engine\Includes\Helpers\World\Resources;
 use UniEngine\Engine\Modules\Flights;
 use UniEngine\Engine\Modules\FlightControl;
+use UniEngine\Engine\Modules\FlightControl\Screens\SendWizardStepOne;
 
 /**
  * @param Object $props
@@ -44,7 +45,7 @@ function render($props) {
         isset($inputFormData['acsmanage']) &&
         $inputFormData['acsmanage'] == 'open'
     ) {
-        $unionManagementComponent = FlightControl\Components\UnionManagement\render([
+        $unionManagementComponent = SendWizardStepOne\Components\UnionManagement\render([
             'unionOwner' => $user,
             'currentTimestamp' => $currentTimestamp,
             'input' => $inputFormData,

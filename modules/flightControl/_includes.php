@@ -21,15 +21,15 @@ call_user_func(function () {
     include($includePath . './components/SmartFleetBlockadeInfoBox/SmartFleetBlockadeInfoBox.utils.php');
     include($includePath . './components/TargetOptionLabel/TargetOptionLabel.component.php');
     include($includePath . './components/TargetsSelector/TargetsSelector.component.php');
-    include($includePath . './components/UnionManagement/utils/createNewUnion.utils.php');
-    include($includePath . './components/UnionManagement/utils/getBaseUnionData.utils.php');
-    include($includePath . './components/UnionManagement/utils/updateUnionName.utils.php');
-    include($includePath . './components/UnionManagement/UnionManagement.component.php');
-    include($includePath . './components/UnionMembersListOption/UnionMembersListOption.component.php');
 
     include($includePath . './enums/RetreatResultType.enum.php');
 
     include($includePath . './screens/SendWizardStepOne/SendWizardStepOne.screen.php');
+    include($includePath . './screens/SendWizardStepOne/components/UnionManagement/utils/createNewUnion.utils.php');
+    include($includePath . './screens/SendWizardStepOne/components/UnionManagement/utils/getBaseUnionData.utils.php');
+    include($includePath . './screens/SendWizardStepOne/components/UnionManagement/utils/updateUnionName.utils.php');
+    include($includePath . './screens/SendWizardStepOne/components/UnionManagement/UnionManagement.component.php');
+    include($includePath . './screens/SendWizardStepOne/components/UnionMembersListOption/UnionMembersListOption.component.php');
 
     include($includePath . './screens/Shortcuts/Shortcuts.screen.php');
     include($includePath . './screens/Shortcuts/components/ListManagement/ListManagement.component.php');
