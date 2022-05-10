@@ -34,7 +34,6 @@ function prerenderOwnListElement($listElement, $params) {
         'retreat' => &$tplBodyCache['listElementOrdersRetreat'],
         'createUnion' => &$tplBodyCache['listElementOrdersCreateUnion'],
         'joinUnion' => &$tplBodyCache['listElementOrdersJoinUnion'],
-        'joinUnionOnManagement' => '{Text}',
     ];
 
     $prerenderedParams = [

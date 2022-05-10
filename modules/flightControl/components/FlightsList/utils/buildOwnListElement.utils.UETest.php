@@ -137,12 +137,6 @@ class BuildOwnListElementTestCase extends TestCase {
                         'ButtonText' => "Join fleets",
                     ],
                 ],
-                3 => [
-                    'orderType' => 'joinUnionOnManagement',
-                    'params' => [
-                        'Text' => "{AddACSJoin_1269}",
-                    ],
-                ],
             ],
         ];
 
@@ -226,7 +220,7 @@ class BuildOwnListElementTestCase extends TestCase {
                     'orderType' => 'joinUnion',
                     'params' => [
                         'ACS_ID' => '113',
-                        'checked' => false,
+                        'checked' => '',
                         'Text' => 'Join fleet',
                     ],
                 ],
@@ -336,7 +330,117 @@ class BuildOwnListElementTestCase extends TestCase {
                     'orderType' => 'joinUnion',
                     'params' => [
                         'ACS_ID' => '113',
-                        'checked' => false,
+                        'checked' => '',
+                        'Text' => 'Join fleet',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertArraySubset($this->expectedResults['commonAttack']['positionsAndTime'], $result, true);
+        $this->assertArraySubset($expectedParams, $result, true);
+        $this->assertArraySubset($expectedParamsData, $result['data'], true);
+    }
+
+    /**
+     * @test
+     */
+    public function itShouldSelectUnionToJoin() {
+        $params = [
+            "elementNo" => 1,
+            "fleetEntry" => $this->mockFleetEntries['commonAttack'],
+            "acsMainFleets" => [
+                "1269" => [
+                    "acsId" => "113",
+                    "hasJoinedFleets" => true,
+                ],
+            ],
+            "currentTimestamp" => 1591968605,
+            "acsUnionsExtraSquads" => [
+                "1269" => [
+                    [
+                        "array" => [
+                            "202" => "2",
+                        ],
+                        "count" => "2",
+                    ],
+                    [
+                        "array" => [
+                            "204" => "5",
+                        ],
+                        "count" => "5",
+                    ],
+                    [
+                        "array" => [
+                            "202" => "1",
+                            "203" => "1",
+                        ],
+                        "count" => "2",
+                    ],
+                ],
+            ],
+            "relatedAcsFleets" => [
+                [
+                    "fleetId" => "1270",
+                    "mainFleetId" => "1269",
+                ],
+                [
+                    "fleetId" => "1271",
+                    "mainFleetId" => "1269",
+                ],
+                [
+                    "fleetId" => "1272",
+                    "mainFleetId" => "1269",
+                ],
+            ],
+            "isJoiningThisUnion" => true,
+        ];
+
+        $result = Utils\buildOwnListElement($params);
+
+        $expectedParams = [
+            'FleetNo'                   => 1,
+            'FleetMissionColor'         => 'orange',
+            'FleetMission'              => "United Attack #1",
+            'FleetBehaviour'            => 'In flight to the destination point',
+            'FleetBehaviourTxt'         => '(In flight)',
+            'FleetCount'                => '119',
+            'FleetHideTargetTime'       => '',
+            'FleetHideTargetorBackTime' => '',
+            'FleetHideComeBackTime'     => '',
+            'FleetHideStayTime'         => $this->hidingClassString,
+            'FleetHideRetreatTime'      => '',
+        ];
+        $expectedParamsData = [
+            'ships' => [
+                '202' => '100',
+                '203' => '10',
+            ],
+            'extraShipsInUnion' => [
+                "202" => 3,
+                "203" => 1,
+                "204" => 5,
+            ],
+            'orders' => [
+                0 => [
+                    'orderType' => 'retreat',
+                    'params' => [
+                        'FleetID' => "1269",
+                        'ButtonText' => "Turn back",
+                    ],
+                ],
+                1 => [
+                    'orderType' => 'createUnion',
+                    'params' => [
+                        'FleetID' => "1269",
+                        'ButtonText' => "Join fleets",
+                    ],
+                ],
+                2 => [
+                    'orderType' => 'joinUnion',
+                    'params' => [
+                        'ACS_ID' => '113',
+                        'checked' => 'checked',
                         'Text' => 'Join fleet',
                     ],
                 ],

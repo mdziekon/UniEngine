@@ -33,7 +33,6 @@ function _handleInput($props) {
             'unionMembers' => null,
             'unionName' => null,
             'membersSelectors' => [],
-            'newUnionEntry' => null,
         ],
     ];
 
@@ -48,7 +47,6 @@ function _handleInput($props) {
         ]);
         $newUnionEntry = $createNewUnionResult['newUnionEntry'];
 
-        $result['payload']['newUnionEntry'] = $newUnionEntry;
         $GetACSRow = $newUnionEntry;
     }
 
@@ -231,9 +229,14 @@ function render($props) {
         'P_HideACSMSG' => ' class="hide"',
         'P_ACSMSG' => '',
         'P_ACSMSGCOL' => '',
+        'P_UnionMaxInvitedPlayers' => parsetemplate(
+            $lang['fl_acs_warning_users'],
+            [
+                'MaxInvitedPlayers' => MAX_ACS_JOINED_PLAYERS
+            ]
+        )
     ];
 
-    $newUnionEntry = null;
     $inputHandlingResult = _handleInput($props);
 
     if (!$inputHandlingResult['isSuccess']) {
@@ -262,15 +265,12 @@ function render($props) {
 
         $resultPayload = $inputHandlingResult['payload'];
 
-        $newUnionEntry = $resultPayload['newUnionEntry'];
-
         if ($resultPayload['message']['content'] !== null) {
             $componentTPLData['P_HideACSMSG'] = '';
             $componentTPLData['P_ACSMSG'] = $resultPayload['message']['content'];
             $componentTPLData['P_ACSMSGCOL'] = $resultPayload['message']['color'];
         }
 
-        $componentTPLData['InsertACSUsers'] = json_encode($resultPayload['unionMembers']);
         $componentTPLData['ACSName'] = $resultPayload['unionName'];
 
         foreach ($resultPayload['unionMembers'] as $memberId => $memberDetails) {
@@ -289,9 +289,6 @@ function render($props) {
 
     return [
         'componentHTML' => parsetemplate($tplBodyCache['body'], array_merge($lang, $componentTPLData)),
-        'extraPayload' => [
-            'newUnionEntry' => $newUnionEntry,
-        ],
     ];
 }
 

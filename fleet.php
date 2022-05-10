@@ -4,162 +4,46 @@ define('INSIDE', true);
 
 $_EnginePath = './';
 
-include($_EnginePath.'common.php');
-include($_EnginePath . 'modules/flightControl/_includes.php');
+include("{$_EnginePath}/common.php");
+include("{$_EnginePath}/modules/flightControl/_includes.php");
+include("{$_EnginePath}/includes/functions/InsertJavaScriptChronoApplet.php");
 
 use UniEngine\Engine\Includes\Helpers\Common\Collections;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
+use UniEngine\Engine\Includes\Helpers\World\Resources;
+use UniEngine\Engine\Modules\Flights;
 use UniEngine\Engine\Modules\FlightControl;
 
 loggedCheck();
 
-if(!$_Planet)
-{
+includeLang('fleet');
+
+if (!$_Planet) {
     message($_Lang['fl_noplanetrow'], $_Lang['fl_error']);
 }
 
-include($_EnginePath.'/includes/functions/InsertJavaScriptChronoApplet.php');
-
 $Now = time();
-includeLang('fleet');
-$BodyTPL                = gettemplate('fleet_body');
+$formInputs = [];
+$unionIdToJoin = null;
 
-$_Lang['ShipsRow'] = '';
-$_Lang['FlyingFleetsRows'] = '';
-
-$Hide = ' class="hide"';
-
-if($_User['settings_useprettyinputbox'] == 1)
-{
-    $_Lang['P_AllowPrettyInputBox'] = 'true';
-}
-else
-{
-    $_Lang['P_AllowPrettyInputBox'] = 'false';
-}
-$_Lang['InsertACSUsers'] = 'new Object()';
-$_Lang['InsertACSUsersMax'] = MAX_ACS_JOINED_PLAYERS;
-
-// Show info boxes
-$_Lang['P_SFBInfobox'] = FlightControl\Components\SmartFleetBlockadeInfoBox\render()['componentHTML'];
-$_Lang['ComponentHTML_RetreatInfoBox'] = FlightControl\Components\RetreatInfoBox\render([
-    'isVisible' => isset($_GET['ret']),
-    'eventCode' => $_GET['m'],
-])['componentHTML'];
-
-$fleetsInFlightCounters = FlightControl\Utils\Helpers\getFleetsInFlightCounters([
-    'userId' => $_User['id'],
-]);
-
-$FlyingFleetsCount = $fleetsInFlightCounters['allFleetsInFlight'];
-$FlyingExpeditions = $fleetsInFlightCounters['expeditionsInFlight'];
-
-$_Lang['P_MaxFleetSlots'] = FlightControl\Utils\Helpers\getUserFleetSlotsCount([
-    'user' => $_User,
-    'timestamp' => $Now,
-]);
-$_Lang['P_MaxExpedSlots'] = FlightControl\Utils\Helpers\getUserExpeditionSlotsCount([
-    'user' => $_User,
-]);
-$_Lang['P_FlyingFleetsCount']    = (string)($FlyingFleetsCount);
-$_Lang['P_FlyingExpeditions']    = (string)($FlyingExpeditions);
-$_Lang['P_Expeditions_isHidden_style'] = (
-    isFeatureEnabled(FeatureType::Expeditions) ?
-    '' :
-    'display: none;'
-);
-
-// TODO: refactor and add validation (?)
-if (
-    (
-        isset($_GET['joinacs'])
-    ) ||
-    (
-        isset($_POST['getacsdata']) &&
-        $_POST['getacsdata'] > 0
-    )
-)
-{
-    $_Lang['SetJoiningACSID'] = (
-        isset($_GET['joinacs']) ?
-            $_GET['joinacs'] :
-            $_POST['getacsdata']
-    );
-}
-
-$flightsList = FlightControl\Components\FlightsList\render([
-    'userId' => $_User['id'],
-    'currentTimestamp' => $Now,
-])['componentHTML'];
-
-$_Lang['FlyingFleetsRows'] .= $flightsList['elementsList'];
-$_Lang['ChronoAppletsScripts'] = $flightsList['chronoApplets'];
-
-$_Lang['P_HideNoFreeSlots'] = $Hide;
-if(empty($_Lang['FlyingFleetsRows']))
-{
-    $_Lang['FlyingFleetsRows'] = '<tr><th colspan="8">-</th></tr>';
-}
-else
-{
-    if($FlyingFleetsCount >= $_Lang['P_MaxFleetSlots'])
-    {
-        $_Lang['P_HideNoFreeSlots'] = '';
-    }
-}
-
-$newUnionEntry = null;
+$unionManagementComponent = null;
 
 if (
     isset($_POST['acsmanage']) &&
     $_POST['acsmanage'] == 'open'
 ) {
-    $unionManagement = FlightControl\Components\UnionManagement\render([
+    $unionManagementComponent = FlightControl\Components\UnionManagement\render([
         'unionOwner' => $_User,
         'currentTimestamp' => $Now,
         'input' => $_POST,
     ]);
-
-    $_Lang['Insert_ACSForm'] = $unionManagement['componentHTML'];
-    $newUnionEntry = $unionManagement['extraPayload']['newUnionEntry'];
 }
 
-if (
-    $newUnionEntry !== null &&
-    strstr($_Lang['FlyingFleetsRows'], 'AddACSJoin_') !== false
-) {
-    $joinInputHTML = "<input type=\"radio\" value=\"{$newUnionEntry['id']}\" class=\"setACS_ID pad5\" name=\"acs_select\"><br/>{$_Lang['fl_acs_joinnow']}";
-
-    $_Lang['FlyingFleetsRows'] = str_replace(
-        '{AddACSJoin_'.$newUnionEntry['main_fleet_id'].'}',
-        $joinInputHTML,
-        $_Lang['FlyingFleetsRows']
-    );
-}
-
-$_Lang['FlyingFleetsRows'] = preg_replace('#\{AddACSJoin\_[0-9]+\}#si', '', $_Lang['FlyingFleetsRows']);
-
-if(!isPro())
-{
-    // Don't Allow to use this function to NonPro Players
-    $_GET['quickres'] = 0;
-}
-
-$preselectedCargoShips = [];
-
-if (
+$isQuickTransportOptionUsed = (
     isset($_GET['quickres']) &&
-    $_GET['quickres'] == 1
-) {
-    $_Lang['P_SetQuickRes'] = '1';
-
-    $preselectedCargoShips = FlightControl\Utils\Helpers\calculateCargoFleetArray([
-        'planet' => $_Planet,
-        'user' => $_User,
-    ]);
-} else {
-    $_Lang['P_SetQuickRes'] = '0';
-}
+    $_GET['quickres'] == 1 &&
+    isPro()
+);
 
 $gobackFleet = [];
 
@@ -178,12 +62,107 @@ if (
     $gobackFleet = Collections\compact($gobackFleet);
 }
 
-$shipsJSData = FlightControl\Utils\Factories\createPlanetShipsJSObject([
-    'planet' => $_Planet,
-    'user' => $_User,
-]);
-$_Lang['Insert_ShipsData'] = json_encode($shipsJSData);
-$_Lang['ShipsRow'] = FlightControl\Components\AvailableShipsList\render([
+$formInputs['P_SetQuickRes'] = (
+    $isQuickTransportOptionUsed ? '1' : '0'
+);
+
+if (isset($_POST['gobackUsed'])) {
+    $preserveFormData = [
+        'speed' => $_POST['speed'],
+    ];
+
+    if (!empty($_POST['gobackVars'])) {
+        $decodedPreservedFormData = json_decode(base64_decode($_POST['gobackVars']), true);
+        if (is_array($decodedPreservedFormData)) {
+            $preserveFormData = array_merge($decodedPreservedFormData, $preserveFormData);
+        }
+    }
+
+    $formInputs['SetJoiningACSID'] = (isset($_POST['getacsdata']) ? $_POST['getacsdata'] : null);
+    $formInputs['P_Galaxy'] = (isset($_POST['galaxy']) ? $_POST['galaxy'] : null);
+    $formInputs['P_System'] = (isset($_POST['system']) ? $_POST['system'] : null);
+    $formInputs['P_Planet'] = (isset($_POST['planet']) ? $_POST['planet'] : null);
+    $formInputs['P_PlType'] = (isset($_POST['planettype']) ? $_POST['planettype'] : null);
+    $formInputs['P_Mission'] = (isset($_POST['target_mission']) ? $_POST['target_mission'] : null);
+    $formInputs['P_SetQuickRes'] = (isset($_POST['quickres']) ? $_POST['quickres'] : null);
+    $formInputs['P_GoBackVars'] = base64_encode(json_encode($preserveFormData));
+} else {
+    $joinUnionIdRaw = (
+        isset($_GET['joinacs']) ?
+            $_GET['joinacs'] :
+            (
+                isset($_POST['getacsdata']) ?
+                    $_POST['getacsdata'] :
+                    0
+            )
+    );
+    $joinUnionId = intval($joinUnionIdRaw);
+
+    $formInputs['SetJoiningACSID'] = $joinUnionId;
+    $formInputs['P_Galaxy'] = (isset($_GET['galaxy']) ? intval($_GET['galaxy']) : null);
+    $formInputs['P_System'] = (isset($_GET['system']) ? intval($_GET['system']) : null);
+    $formInputs['P_Planet'] = (isset($_GET['planet']) ? intval($_GET['planet']) : null);
+    $formInputs['P_PlType'] = (isset($_GET['planettype']) ? intval($_GET['planettype']) : null);
+    $formInputs['P_Mission'] = (isset($_GET['target_mission']) ? intval($_GET['target_mission']) : null);
+
+    if (
+        $isQuickTransportOptionUsed &&
+        (
+            !isset($_GET['target_mission']) ||
+            $_GET['target_mission'] != Flights\Enums\FleetMission::Transport
+        )
+    ) {
+        if ($_User['settings_mainPlanetID'] != $_Planet['id']) {
+            $quickTransportPlanetPosition = doquery("SELECT `galaxy`, `system`, `planet` FROM {{table}} WHERE `id` = {$_User['settings_mainPlanetID']};", 'planets', true);
+        } else {
+            $quickTransportPlanetPosition = [
+                'galaxy' => '',
+                'system' => '',
+                'planet' => '',
+            ];
+        }
+
+        $formInputs['P_Galaxy'] = $quickTransportPlanetPosition['galaxy'];
+        $formInputs['P_System'] = $quickTransportPlanetPosition['system'];
+        $formInputs['P_Planet'] = $quickTransportPlanetPosition['planet'];
+        $formInputs['P_PlType'] = 1;
+        $formInputs['P_Mission'] = Flights\Enums\FleetMission::Transport;
+    }
+}
+
+$unionIdToJoin = $formInputs['SetJoiningACSID'];
+
+$resourcesToLoad = Resources\sumAllPlanetTransportableResources($_Planet);
+$preselectedCargoShips = (
+    $isQuickTransportOptionUsed ?
+        FlightControl\Utils\Helpers\calculateCargoFleetArray([
+            'planet' => $_Planet,
+            'user' => $_User,
+        ]) :
+        []
+);
+
+/**
+ * Flights list is purposefully rendered after UnionManagement
+ * to allow any new Union entries to be inserted before rendering the list
+ */
+$flightsList = FlightControl\Components\FlightsList\render([
+    'userId' => $_User['id'],
+    'currentTimestamp' => $Now,
+    'unionIdToJoin' => $unionIdToJoin,
+])['componentHTML'];
+
+$smartFleetBlockadeComponent = FlightControl\Components\SmartFleetBlockadeInfoBox\render();
+$retreatInfoBoxComponent = null;
+if (
+    isset($_GET['ret']) &&
+    isset($_GET['m'])
+) {
+    $retreatInfoBoxComponent = FlightControl\Components\RetreatInfoBox\render([
+        'eventCode' => $_GET['m'],
+    ]);
+}
+$availableShipsListComponent = FlightControl\Components\AvailableShipsList\render([
     'planet' => $_Planet,
     'user' => $_User,
     'preselectedShips' => (
@@ -191,91 +170,112 @@ $_Lang['ShipsRow'] = FlightControl\Components\AvailableShipsList\render([
             $gobackFleet :
             $preselectedCargoShips
     ),
-])['componentHTML'];
+]);
+$shipsJSData = FlightControl\Utils\Factories\createPlanetShipsJSObject([
+    'planet' => $_Planet,
+    'user' => $_User,
+]);
 
-$_Lang['P_HideNoSlotsInfo'] = $Hide;
-$_Lang['P_HideSendShips'] = $Hide;
-$_Lang['P_HideNoShipsInfo'] = $Hide;
-if(!empty($_Lang['ShipsRow']))
-{
-    if($FlyingFleetsCount >= $_Lang['P_MaxFleetSlots'])
-    {
-        $_Lang['P_HideNoSlotsInfo'] = '';
-    }
-    else
-    {
-        $_Lang['P_HideSendShips'] = '';
-    }
-}
-else
-{
-    $_Lang['P_HideNoShipsInfo'] = '';
-}
+$userMaxFleetSlotsCount = FlightControl\Utils\Helpers\getUserFleetSlotsCount([
+    'user' => $_User,
+    'timestamp' => $Now,
+]);
+$fleetsInFlightCounters = FlightControl\Utils\Helpers\getFleetsInFlightCounters([
+    'userId' => $_User['id'],
+]);
+$allFleetsInFlightCount = $fleetsInFlightCounters['allFleetsInFlight'];
+$expeditionsInFlightCount = $fleetsInFlightCounters['expeditionsInFlight'];
 
-if(isset($_POST['gobackUsed']))
-{
-    $GoBackVars = array
-    (
-        'speed' => $_POST['speed'],
-    );
-    if(!empty($_POST['gobackVars']))
-    {
-        $_Lang['P_GoBackVars'] = json_decode(base64_decode($_POST['gobackVars']), true);
-        if((array)$_Lang['P_GoBackVars'] === $_Lang['P_GoBackVars'])
-        {
-            $GoBackVars = array_merge($_Lang['P_GoBackVars'], $GoBackVars);
-        }
-    }
+$hasAvailableShips = !empty($availableShipsListComponent['componentHTML']);
+$hideHTMLClass = ' class="hide"';
 
-    $_Lang['SetJoiningACSID'] = (isset($_POST['getacsdata']) ? $_POST['getacsdata'] : null);
-    $_Lang['P_Galaxy'] = (isset($_POST['galaxy']) ? $_POST['galaxy'] : null);
-    $_Lang['P_System'] = (isset($_POST['system']) ? $_POST['system'] : null);
-    $_Lang['P_Planet'] = (isset($_POST['planet']) ? $_POST['planet'] : null);
-    $_Lang['P_PlType'] = (isset($_POST['planettype']) ? $_POST['planettype'] : null);
-    $_Lang['P_Mission'] = (isset($_POST['target_mission']) ? $_POST['target_mission'] : null);
-    $_Lang['P_SetQuickRes'] = (isset($_POST['quickres']) ? $_POST['quickres'] : null);
-    $_Lang['P_GoBackVars'] = base64_encode(json_encode($GoBackVars));
-}
-else
-{
-    $_Lang['P_Galaxy'] = (isset($_GET['galaxy']) ? intval($_GET['galaxy']) : null);
-    $_Lang['P_System'] = (isset($_GET['system']) ? intval($_GET['system']) : null);
-    $_Lang['P_Planet'] = (isset($_GET['planet']) ? intval($_GET['planet']) : null);
-    $_Lang['P_PlType'] = (isset($_GET['planettype']) ? intval($_GET['planettype']) : null);
-    $_Lang['P_Mission'] = (isset($_GET['target_mission']) ? intval($_GET['target_mission']) : null);
-    if(isset($_GET['quickres']) && $_GET['quickres'] == 1)
-    {
-        if(!isset($_GET['target_mission']) || $_GET['target_mission'] != 3)
-        {
-            if($_User['settings_mainPlanetID'] != $_Planet['id'])
-            {
-                $GetQuickResPlanet = doquery("SELECT `galaxy`, `system`, `planet` FROM {{table}} WHERE `id` = {$_User['settings_mainPlanetID']};", 'planets', true);
-            }
-            $_Lang['P_Galaxy'] = $GetQuickResPlanet['galaxy'];
-            $_Lang['P_System'] = $GetQuickResPlanet['system'];
-            $_Lang['P_Planet'] = $GetQuickResPlanet['planet'];
-            $_Lang['P_PlType'] = 1;
-            $_Lang['P_Mission'] = 3;
-        }
-    }
-}
+$tplProps = [
+    'Insert_ACSForm' => (
+        $unionManagementComponent ?
+            $unionManagementComponent['componentHTML'] :
+            ''
+    ),
+    'FlyingFleetsRows' => (
+        empty($flightsList['elementsList']) ?
+            '<tr><th colspan="8">-</th></tr>' :
+            $flightsList['elementsList']
+    ),
+    'ChronoAppletsScripts' => $flightsList['chronoApplets'],
 
-if(!isPro())
-{
-    $_Lang['P_HideQuickRes'] = 'hide';
-}
+    'ShipsRow' => $availableShipsListComponent['componentHTML'],
+    'Insert_ShipsData' => json_encode($shipsJSData),
 
-$_Lang['P_TotalPlanetResources'] = (string)(floor($_Planet['metal']) + floor($_Planet['crystal']) + floor($_Planet['deuterium']) + 0);
-if($_Lang['P_TotalPlanetResources'] == '0')
-{
-    $_Lang['P_StorageColor'] = 'lime';
-}
-else
-{
-    $_Lang['P_StorageColor'] = 'orange';
-}
+    'P_TotalPlanetResources' => (string) $resourcesToLoad,
+    'P_StorageColor' => (
+        $resourcesToLoad == 0 ?
+            'lime' :
+            'orange'
+    ),
+    'P_HideQuickRes' => (
+        !isPro() ?
+            'hide' :
+            ''
+    ),
+    'P_AllowPrettyInputBox' => (
+        ($_User['settings_useprettyinputbox'] == 1) ?
+            'true' :
+            'false'
+    ),
+    'P_Expeditions_isHidden_style' => (
+        isFeatureEnabled(FeatureType::Expeditions) ?
+            '' :
+            'display: none;'
+    ),
 
-$Page = parsetemplate($BodyTPL, $_Lang);
-display($Page, $_Lang['fl_title']);
+    'P_MaxFleetSlots' => $userMaxFleetSlotsCount,
+    'P_MaxExpedSlots' => FlightControl\Utils\Helpers\getUserExpeditionSlotsCount([
+        'user' => $_User,
+    ]),
+    'P_FlyingFleetsCount' => (string) $allFleetsInFlightCount,
+    'P_FlyingExpeditions' => (string) $expeditionsInFlightCount,
+    'P_HideNoFreeSlots' => (
+        (
+            $allFleetsInFlightCount > 0 &&
+            $allFleetsInFlightCount >= $userMaxFleetSlotsCount
+        ) ?
+            '' :
+            $hideHTMLClass
+    ),
+    'P_HideNoSlotsInfo' => (
+        (
+            $hasAvailableShips &&
+            $allFleetsInFlightCount >= $userMaxFleetSlotsCount
+        ) ?
+            '' :
+            $hideHTMLClass
+    ),
+    'P_HideSendShips' => (
+        (
+            $hasAvailableShips &&
+            $allFleetsInFlightCount < $userMaxFleetSlotsCount
+        ) ?
+            '' :
+            $hideHTMLClass
+    ),
+    'P_HideNoShipsInfo' => (
+        !$hasAvailableShips ?
+            '' :
+            $hideHTMLClass
+    ),
+
+    'P_SFBInfobox' => $smartFleetBlockadeComponent['componentHTML'],
+    'ComponentHTML_RetreatInfoBox' => (
+        $retreatInfoBoxComponent ?
+            $retreatInfoBoxComponent['componentHTML'] :
+            ''
+    ),
+
+    'InsertACSUsersMax' => MAX_ACS_JOINED_PLAYERS,
+];
+
+$pageBodyTpl = gettemplate('fleet_body');
+$pageHTML = parsetemplate($pageBodyTpl, array_merge($_Lang, $tplProps, $formInputs));
+
+display($pageHTML, $_Lang['fl_title']);
 
 ?>

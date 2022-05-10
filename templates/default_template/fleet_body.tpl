@@ -2,7 +2,6 @@
 var AllowPrettyInputBox  = {P_AllowPrettyInputBox};
 var TotalPlanetResources = {P_TotalPlanetResources};
 var ACSUsersMax = {InsertACSUsersMax};
-var ACSUsers = {InsertACSUsers};
 var JSLang = {'fl_coordplanet': '{fl_coordplanet}', 'fl_coordmoon': '{fl_coordmoon}', 'fl_coorddebris': '{fl_coorddebris}'};
 var ShipsData = {Insert_ShipsData};
 </script>
