@@ -23,7 +23,6 @@ function render () {
     $componentHTML = CreateSFBInfobox(
         $mostRecentBlockadeEntry,
         [
-            'standAlone' => true,
             'Width' => 750,
             'MarginBottom' => 10
         ]

@@ -108,17 +108,9 @@ function CreateSFBInfobox($SFBData, $AppearanceSettings) {
 
     $_Lang = includeLang('sfbInfos', true);
 
-    if($AppearanceSettings['standAlone'] === true)
-    {
-        $TPL = gettemplate('sfb_body_standalone');
-        $_Lang['_Width'] = $AppearanceSettings['Width'];
-        $_Lang['_MarginBottom'] = $AppearanceSettings['MarginBottom'];
-    }
-    else
-    {
-        $TPL = gettemplate('sfb_body_part');
-        $_Lang['_Colspan'] = $AppearanceSettings['Colspan'] - 1;
-    }
+    $TPL = gettemplate('sfb_body_standalone');
+    $_Lang['_Width'] = $AppearanceSettings['Width'];
+    $_Lang['_MarginBottom'] = $AppearanceSettings['MarginBottom'];
     $_Lang['_AdminLink'] = $AppearanceSettings['AdminLink'];
     $_Lang['_Icon'] = (empty($AppearanceSettings['Icon']) ? 'warningIcon' : $AppearanceSettings['Icon']);
 
