@@ -1,5 +1,26 @@
 <?php
 
+function _getSmartFleetBlockadeReason($blockadeEntry, $lang) {
+    global $_EnginePath, $_GameConfig;
+
+    if (empty($blockadeEntry['Reason'])) {
+        return $lang['sfb_NoReason'];
+    }
+
+    $rawReason = $blockadeEntry['Reason'];
+    $formattedReason = null;
+
+    if ($_GameConfig['enable_bbcode'] == 1) {
+        include_once("{$_EnginePath}/includes/functions/BBcodeFunction.php");
+
+        $formattedReason = trim(nl2br(bbcode(image(strip_tags(str_replace("'", '&#39;', $rawReason), '<br><br/>')))));
+    } else {
+        $formattedReason = trim(nl2br(strip_tags($rawReason, '<br><br/>')));
+    }
+
+    return "\"{$formattedReason}\"";
+}
+
 function CreateSFBInfobox($SFBData, $AppearanceSettings) {
     $currentTimestamp = time();
 
@@ -78,26 +99,14 @@ function CreateSFBInfobox($SFBData, $AppearanceSettings) {
             }
         }
     }
-    if(!empty($SFBData['Reason']))
-    {
-        global $_GameConfig, $_EnginePath;
-        if($_GameConfig['enable_bbcode'] == 1)
-        {
-            include_once($_EnginePath.'includes/functions/BBcodeFunction.php');
-            $SFBData['Reason'] = trim(nl2br(bbcode(image(strip_tags(str_replace("'", '&#39;', $SFBData['Reason']), '<br><br/>')))));
-        }
-        else
-        {
-            $SFBData['Reason'] = trim(nl2br(strip_tags($SFBData['Reason'], '<br><br/>')));
-        }
-        $SFBData['Reason'] = "\"{$SFBData['Reason']}\"";
-    }
-    else
-    {
-        $SFBData['Reason'] = $_Lang['sfb_NoReason'];
-    }
 
-    $_Lang['_Text'] = sprintf($_Lang['sfb_GlobalText'], prettyDate('d m Y', $SFBData['EndTime'], 1), date('H:i:s', $SFBData['EndTime']), $_Lang['_MissionsInfo'], $SFBData['Reason']);
+    $_Lang['_Text'] = sprintf(
+        $_Lang['sfb_GlobalText'],
+        prettyDate('d m Y', $SFBData['EndTime'], 1),
+        date('H:i:s', $SFBData['EndTime']),
+        $_Lang['_MissionsInfo'],
+        _getSmartFleetBlockadeReason($SFBData, $_Lang)
+    );
 
     return parsetemplate($TPL, $_Lang);
 }
