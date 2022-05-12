@@ -64,7 +64,10 @@ function _getSmartFleetBlockadeMissionsInfo($blockadeEntry, $lang) {
         );
     }
 
-    if ($blockadeEntry['DontBlockIfIdle'] == 1) {
+    if (
+        $blockadeEntry['DontBlockIfIdle'] == 1 &&
+        $militaryBlockedMissionsCount > 0
+    ) {
         $infoParts[] = (
             ($civilBlockedMissionsCount > 0) ?
                 $lang['sfb_Mission_AggresiveDontBlockIdle'] :
