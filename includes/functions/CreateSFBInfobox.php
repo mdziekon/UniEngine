@@ -1,5 +1,80 @@
 <?php
 
+use UniEngine\Engine\Includes\Helpers\Common\Collections;
+
+function _getSmartFleetBlockadeMissionsInfo($blockadeEntry, $lang) {
+    global $_Vars_FleetMissions;
+
+    $infoParts = [];
+
+    if ($blockadeEntry['BlockMissions'] == '0') {
+        $infoParts[] = $lang['sfb_Mission_All'];
+
+        if ($blockadeEntry['DontBlockIfIdle'] == 1) {
+            $infoParts[] = $lang['sfb_Mission_AggresiveDontBlockIdle'];
+        }
+
+        return implode('', $infoParts);
+    }
+
+    $blockedMissions = explode(',', $blockadeEntry['BlockMissions']);
+    $blockedMissions = Collections\compact($blockedMissions);
+    $allBlockedMissionsCount = count($blockedMissions);
+    $civilBlockedMissionsCount = 0;
+    $militaryBlockedMissionsCount = 0;
+
+    $blockedMissionLabels = [];
+
+    foreach ($blockedMissions as $missionId) {
+        if (!in_array($missionId, $_Vars_FleetMissions['all'])) {
+            continue;
+        }
+
+        $blockedMissionLabels[] = $lang['sfb_Mission__'.$missionId];
+
+        if (in_array($missionId, $_Vars_FleetMissions['civil'])) {
+            $civilBlockedMissionsCount += 1;
+        } else {
+            $militaryBlockedMissionsCount += 1;
+        }
+    }
+
+    $hasOnlyAllCivil = (
+        $civilBlockedMissionsCount == count($_Vars_FleetMissions['civil']) &&
+        $civilBlockedMissionsCount == $allBlockedMissionsCount
+    );
+    $hasOnlyAllMilitary = (
+        $militaryBlockedMissionsCount == count($_Vars_FleetMissions['military']) &&
+        $militaryBlockedMissionsCount == $allBlockedMissionsCount
+    );
+
+    if ($hasOnlyAllCivil) {
+        $infoParts[] = $lang['sfb_Mission_Civil'];
+    }
+    if ($hasOnlyAllMilitary) {
+        $infoParts[] = $lang['sfb_Mission_Aggresive'];
+    }
+    if (
+        !$hasOnlyAllCivil &&
+        !$hasOnlyAllMilitary
+    ) {
+        $infoParts[] = sprintf(
+            $lang['sfb_Mission_Other'],
+            implode(', ', $blockedMissionLabels)
+        );
+    }
+
+    if ($blockadeEntry['DontBlockIfIdle'] == 1) {
+        $infoParts[] = (
+            ($civilBlockedMissionsCount > 0) ?
+                $lang['sfb_Mission_AggresiveDontBlockIdle'] :
+                $lang['sfb_Mission_DontBlockIdle']
+        );
+    }
+
+    return implode('', $infoParts);
+}
+
 function _getSmartFleetBlockadeReason($blockadeEntry, $lang) {
     global $_EnginePath, $_GameConfig;
 
@@ -28,8 +103,6 @@ function CreateSFBInfobox($SFBData, $AppearanceSettings) {
         return;
     }
 
-    global $_Vars_FleetMissions;
-
     $_Lang = includeLang('sfbInfos', true);
 
     if($AppearanceSettings['standAlone'] === true)
@@ -46,65 +119,11 @@ function CreateSFBInfobox($SFBData, $AppearanceSettings) {
     $_Lang['_AdminLink'] = $AppearanceSettings['AdminLink'];
     $_Lang['_Icon'] = (empty($AppearanceSettings['Icon']) ? 'warningIcon' : $AppearanceSettings['Icon']);
 
-    if($SFBData['BlockMissions'] == '0')
-    {
-        $_Lang['_MissionsInfo'] = $_Lang['sfb_Mission_All'];
-        if($SFBData['DontBlockIfIdle'] == 1)
-        {
-            $_Lang['_MissionsInfo'] .= $_Lang['sfb_Mission_AggresiveDontBlockIdle'];
-        }
-    }
-    else
-    {
-        $ExplodeMissions = explode(',', $SFBData['BlockMissions']);
-        $CivilCount = 0;
-        $AggresiveCount = 0;
-        foreach($ExplodeMissions as $MissionID)
-        {
-            if(!in_array($MissionID, $_Vars_FleetMissions['all']))
-            {
-                continue;
-            }
-            $SFBData['Missions'][] = $_Lang['sfb_Mission__'.$MissionID];
-            if(in_array($MissionID, $_Vars_FleetMissions['civil']))
-            {
-                $CivilCount += 1;
-            }
-            else
-            {
-                $AggresiveCount += 1;
-            }
-        }
-        if($CivilCount == count($_Vars_FleetMissions['civil']) AND $AggresiveCount == 0)
-        {
-            $_Lang['_MissionsInfo'] = $_Lang['sfb_Mission_Civil'];
-        }
-        else if($AggresiveCount == count($_Vars_FleetMissions['military']) AND $CivilCount == 0)
-        {
-            $_Lang['_MissionsInfo'] = $_Lang['sfb_Mission_Aggresive'];
-        }
-        else
-        {
-            $_Lang['_MissionsInfo'] = sprintf($_Lang['sfb_Mission_Other'], implode(', ', $SFBData['Missions']));
-        }
-        if($SFBData['DontBlockIfIdle'] == 1)
-        {
-            if($CivilCount > 0)
-            {
-                $_Lang['_MissionsInfo'] .= $_Lang['sfb_Mission_AggresiveDontBlockIdle'];
-            }
-            else
-            {
-                $_Lang['_MissionsInfo'] .= $_Lang['sfb_Mission_DontBlockIdle'];
-            }
-        }
-    }
-
     $_Lang['_Text'] = sprintf(
         $_Lang['sfb_GlobalText'],
         prettyDate('d m Y', $SFBData['EndTime'], 1),
         date('H:i:s', $SFBData['EndTime']),
-        $_Lang['_MissionsInfo'],
+        _getSmartFleetBlockadeMissionsInfo($SFBData, $_Lang),
         _getSmartFleetBlockadeReason($SFBData, $_Lang)
     );
 
