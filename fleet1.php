@@ -9,6 +9,7 @@ include($_EnginePath.'common.php');
 include($_EnginePath . 'modules/flightControl/_includes.php');
 
 use UniEngine\Engine\Includes\Helpers\Common\Collections;
+use UniEngine\Engine\Includes\Helpers\World\Elements;
 use UniEngine\Engine\Modules\FlightControl;
 
 loggedCheck();
@@ -44,21 +45,21 @@ if(isset($_POST['gobackUsed']))
     $_POST['getacsdata'] = (isset($_POST['acs_id']) ? $_POST['acs_id'] : 0);
 
     $_Set_DefaultSpeed = $_POST['speed'];
-    if(!empty($_POST['FleetArray']))
-    {
-        $PostFleet = explode(';', $_POST['FleetArray']);
-        foreach($PostFleet as $Data)
-        {
-            if(!empty($Data))
-            {
-                $Data = explode(',', $Data);
-                if(in_array($Data[0], $_Vars_ElementCategories['fleet']))
-                {
-                    $_POST['ship'][$Data[0]] = $Data[1];
-                }
+
+    if (!empty($_POST['FleetArray'])) {
+        $gobackFleet = String2Array($_POST['FleetArray']);
+        $gobackFleet = object_map($gobackFleet, function ($shipCount, $shipId) {
+            if (!Elements\isShip($shipId)) {
+                return [ null, $shipId ];
             }
-        }
+
+            return [ $shipCount, $shipId ];
+        });
+        $gobackFleet = Collections\compact($gobackFleet);
+
+        $_POST['ship'] = $gobackFleet;
     }
+
     $GoBackVars = array
     (
         'resource1' => $_POST['resource1'],
