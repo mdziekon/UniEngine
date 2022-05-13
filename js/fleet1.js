@@ -1,4 +1,4 @@
-/* globals libCommon, AllowCreateTimeCounters, maxIs, JSLang */
+/* globals libCommon, AllowCreateTimeCounters, maxIs, JSLang, shipsDetails */
 
 $(document).ready(function () {
     libCommon.init.setupJQuery();
@@ -57,22 +57,28 @@ $(document).ready(function () {
 
     function consumption () {
         var calc_consumption = 0;
-        var basicConsumption = 0;
         var i;
-        // var sp = speed();
         var dist = distance();
         var dur = duration();
         var speedfactor = speedFactor();
+
         for (i = 200; i < 300; i += 1) {
-            var ThisConsumption = $("#consumption" + i).val();
-            if (ThisConsumption !== undefined && ThisConsumption !== "") {
-                var spd = 35000 / (dur * speedfactor - 10) * Math.sqrt(dist * 10 / parseInt($("#speed" + i).val(), 10));
-                basicConsumption = parseInt(ThisConsumption, 10);
-                calc_consumption += basicConsumption * dist / 35000 * ((spd / 10) + 1) * ((spd / 10) + 1);
+            const thisShipDetails = shipsDetails[i];
+
+            if (!thisShipDetails) {
+                continue;
             }
+
+            const allShipsBaseConsumption = parseInt(thisShipDetails.totalConsumptionOfShipType, 10);
+            const shipSpeed = parseInt(thisShipDetails.speed, 10);
+
+            const finalSpeed = 35000 / (dur * speedfactor - 10) * Math.sqrt(dist * 10 / shipSpeed);
+            const allShipsConsumption = allShipsBaseConsumption * dist / 35000 * ((finalSpeed / 10) + 1) * ((finalSpeed / 10) + 1);
+
+            calc_consumption += allShipsConsumption;
         }
-        calc_consumption = Math.round(calc_consumption) + 1;
-        return calc_consumption;
+
+        return Math.round(calc_consumption) + 1;
     }
 
     function storage () {

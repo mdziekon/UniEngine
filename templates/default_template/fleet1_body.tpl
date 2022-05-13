@@ -4,13 +4,13 @@ var AllowCreateTimeCounters = true;
 var FlightDuration = 0;
 var maxIs = {'galaxy': {P_MaxGalaxy}, 'system': {P_MaxSystem}, 'planet': {P_MaxPlanet}};
 var JSLang = {'fl1_targetGalaxy': '{fl1_targetGalaxy}', 'fl1_targetSystem': '{fl1_targetSystem}', 'fl1_targetPlanet': '{fl1_targetPlanet}'};
+var shipsDetails = {P_ShipsDetailsJSON};
 </script>
 <script src="dist/js/_libCommon.cachebuster-1649555016585.min.js"></script>
-<script src="dist/js/fleet1.cachebuster-1649554451154.min.js"></script>
+<script src="dist/js/fleet1.cachebuster-1652487771435.min.js"></script>
 <link rel="stylesheet" type="text/css" href="dist/css/fleet1.cachebuster-1546564327123.min.css" />
 
 <form id="thisForm" action="fleet2.php" method="post">
-    {FleetHiddenBlock}
     <input type="hidden" name="sending_fleet" value="1" />
     <input type="hidden" name="quickres" value="{P_SetQuickRes}" />
     <input type="hidden" id="MaxSpeed" value="{speedallsmin}" />

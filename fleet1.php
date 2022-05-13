@@ -26,7 +26,7 @@ $_Lang['Now'] = $Now;
 $ErrorTitle = &$_Lang['fl_error'];
 $Hide = ' class="hide"';
 
-$FleetHiddenBlock = '';
+$shipsDetails = [];
 
 $Fleet['count'] = 0;
 $Fleet['storage'] = 0;
@@ -51,15 +51,14 @@ if(isset($_POST['gobackUsed']))
         ]);
     }
 
-    $GoBackVars = array
-    (
+    $GoBackVars = [
         'resource1' => $_POST['resource1'],
         'resource2' => $_POST['resource2'],
         'resource3' => $_POST['resource3'],
         'usequantumgate' => (isset($_POST['usequantumgate']) ? $_POST['usequantumgate'] : null),
         'expeditiontime' => (isset($_POST['expeditiontime']) ? $_POST['expeditiontime'] : null),
         'holdingtime' => (isset($_POST['holdingtime']) ? $_POST['holdingtime'] : null)
-    );
+    ];
 }
 if(!empty($_POST['gobackVars']))
 {
@@ -143,8 +142,10 @@ if (!empty($_POST['ship'])) {
         $shipConsumption = getShipsCurrentConsumption($ShipID, $_User);
         $allShipsConsumption = ($shipConsumption * $ShipCount);
 
-        $FleetHiddenBlock .= "<input type=\"hidden\" id=\"consumption{$ShipID}\" value=\"".((string) $allShipsConsumption)."\" />";
-        $FleetHiddenBlock .= "<input type=\"hidden\" id=\"speed{$ShipID}\" value=\"{$speedalls[$ShipID]}\" />";
+        $shipsDetails[$ShipID] = [
+            'speed' => $speedalls[$ShipID],
+            'totalConsumptionOfShipType' => (string) $allShipsConsumption,
+        ];
     }
 }
 
@@ -231,7 +232,7 @@ else
 // Show info boxes
 $_Lang['P_SFBInfobox'] = FlightControl\Components\SmartFleetBlockadeInfoBox\render()['componentHTML'];
 
-$_Lang['FleetHiddenBlock'] = $FleetHiddenBlock;
+$_Lang['P_ShipsDetailsJSON'] = json_encode($shipsDetails, JSON_FORCE_OBJECT);
 $_Lang['speedallsmin'] = $speedallsmin;
 $_Lang['MaxSpeedPretty'] = prettyNumber($speedallsmin);
 $_Lang['Storage'] = (string)($Fleet['storage'] + 0);
