@@ -143,8 +143,7 @@ if (!empty($_POST['ship'])) {
         $shipConsumption = getShipsCurrentConsumption($ShipID, $_User);
         $allShipsConsumption = ($shipConsumption * $ShipCount);
 
-        // TODO: Check if that "+1" is correct
-        $FleetHiddenBlock .= "<input type=\"hidden\" id=\"consumption{$ShipID}\" value=\"".((string)($allShipsConsumption + 1))."\" />";
+        $FleetHiddenBlock .= "<input type=\"hidden\" id=\"consumption{$ShipID}\" value=\"".((string) $allShipsConsumption)."\" />";
         $FleetHiddenBlock .= "<input type=\"hidden\" id=\"speed{$ShipID}\" value=\"{$speedalls[$ShipID]}\" />";
     }
 }
