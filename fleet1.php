@@ -251,19 +251,10 @@ $_Lang['PlanetEnd'] = intval($_POST['planet']);
 $_Lang['SpeedFactor'] = getUniFleetsSpeedFactor();
 $_Lang['ThisPlanetType'] = $_Planet['planet_type'];
 $_Lang['ThisResource3'] = (string)(floor($_Planet['deuterium']) + 0);
-foreach($Fleet['array'] as $ID => $Count)
-{
-    $_Lang['FleetArray'][] = $ID.','.$Count;
-}
-$_Lang['FleetArray'] = implode(';', $_Lang['FleetArray']);
-if($_POST['quickres'] == '1')
-{
-    $_Lang['P_SetQuickRes'] = '1';
-}
-else
-{
-    $_Lang['P_SetQuickRes'] = '0';
-}
+$_Lang['FleetArray'] = Array2String($Fleet['array']);
+$_Lang['P_SetQuickRes'] = (
+    ($_POST['quickres'] == '1') ? '1' : '0'
+);
 
 $_Lang['P_MaxGalaxy'] = MAX_GALAXY_IN_WORLD;
 $_Lang['P_MaxSystem'] = MAX_SYSTEM_IN_GALAXY;
