@@ -138,12 +138,12 @@ if (!empty($_POST['ship'])) {
             $Fleet['FuelStorage'] += $ThisStorage;
         }
 
-        $speedalls[$ShipID] = getShipsCurrentSpeed($ShipID, $_User);
+        $shipSpeed = getShipsCurrentSpeed($ShipID, $_User);
         $shipConsumption = getShipsCurrentConsumption($ShipID, $_User);
         $allShipsConsumption = ($shipConsumption * $ShipCount);
 
         $shipsDetails[$ShipID] = [
-            'speed' => $speedalls[$ShipID],
+            'speed' => $shipSpeed,
             'totalConsumptionOfShipType' => (string) $allShipsConsumption,
         ];
     }
@@ -153,12 +153,17 @@ if($Fleet['count'] <= 0)
 {
     message($_Lang['fl1_NoShipsGiven'], $ErrorTitle, 'fleet.php', 3);
 }
-$speedallsmin = min($speedalls);
+
+$slowestShipSpeed = min(
+    array_map_withkeys($shipsDetails, function ($shipDetails) {
+        return $shipDetails['speed'];
+    })
+);
 
 // Speed modifier
 if (MORALE_ENABLED) {
     if ($_User['morale_level'] <= MORALE_PENALTY_FLEETSLOWDOWN) {
-        $speedallsmin *= MORALE_PENALTY_FLEETSLOWDOWN_VALUE;
+        $slowestShipSpeed *= MORALE_PENALTY_FLEETSLOWDOWN_VALUE;
     }
 }
 
@@ -233,8 +238,8 @@ else
 $_Lang['P_SFBInfobox'] = FlightControl\Components\SmartFleetBlockadeInfoBox\render()['componentHTML'];
 
 $_Lang['P_ShipsDetailsJSON'] = json_encode($shipsDetails, JSON_FORCE_OBJECT);
-$_Lang['speedallsmin'] = $speedallsmin;
-$_Lang['MaxSpeedPretty'] = prettyNumber($speedallsmin);
+$_Lang['speedallsmin'] = $slowestShipSpeed;
+$_Lang['MaxSpeedPretty'] = prettyNumber($slowestShipSpeed);
 $_Lang['Storage'] = (string)($Fleet['storage'] + 0);
 $_Lang['FuelStorage'] = (string)($Fleet['FuelStorage'] + 0);
 $_Lang['ThisGalaxy'] = $_Planet['galaxy'];
