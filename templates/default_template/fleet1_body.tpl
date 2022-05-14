@@ -7,7 +7,7 @@ var JSLang = {'fl1_targetGalaxy': '{fl1_targetGalaxy}', 'fl1_targetSystem': '{fl
 var shipsDetails = {P_ShipsDetailsJSON};
 </script>
 <script src="dist/js/_libCommon.cachebuster-1649555016585.min.js"></script>
-<script src="dist/js/fleet1.cachebuster-1652487771435.min.js"></script>
+<script src="dist/js/fleet1.cachebuster-1652488459881.min.js"></script>
 <link rel="stylesheet" type="text/css" href="dist/css/fleet1.cachebuster-1546564327123.min.css" />
 
 <form id="thisForm" action="fleet2.php" method="post">

@@ -56,29 +56,26 @@ $(document).ready(function () {
     }
 
     function consumption () {
-        var calc_consumption = 0;
-        var i;
-        var dist = distance();
-        var dur = duration();
-        var speedfactor = speedFactor();
+        const flightDistance = distance();
+        const flightDuration = duration();
+        const uniSpeedFactor = speedFactor();
 
-        for (i = 200; i < 300; i += 1) {
-            const thisShipDetails = shipsDetails[i];
+        const totalConsumption = Object
+            .entries(shipsDetails)
+            .reduce(
+                (accumulator, [ _shipId, shipDetails ]) => {
+                    const allShipsBaseConsumption = parseInt(shipDetails.totalConsumptionOfShipType, 10);
+                    const shipSpeed = parseInt(shipDetails.speed, 10);
 
-            if (!thisShipDetails) {
-                continue;
-            }
+                    const finalSpeed = 35000 / (flightDuration * uniSpeedFactor - 10) * Math.sqrt(flightDistance * 10 / shipSpeed);
+                    const allShipsConsumption = allShipsBaseConsumption * flightDistance / 35000 * ((finalSpeed / 10) + 1) * ((finalSpeed / 10) + 1);
 
-            const allShipsBaseConsumption = parseInt(thisShipDetails.totalConsumptionOfShipType, 10);
-            const shipSpeed = parseInt(thisShipDetails.speed, 10);
+                    return (accumulator + allShipsConsumption);
+                },
+                0
+            );
 
-            const finalSpeed = 35000 / (dur * speedfactor - 10) * Math.sqrt(dist * 10 / shipSpeed);
-            const allShipsConsumption = allShipsBaseConsumption * dist / 35000 * ((finalSpeed / 10) + 1) * ((finalSpeed / 10) + 1);
-
-            calc_consumption += allShipsConsumption;
-        }
-
-        return Math.round(calc_consumption) + 1;
+        return Math.round(totalConsumption) + 1;
     }
 
     function storage () {
