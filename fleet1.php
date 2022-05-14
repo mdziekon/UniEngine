@@ -26,11 +26,13 @@ $_Lang['Now'] = $Now;
 $ErrorTitle = &$_Lang['fl_error'];
 $Hide = ' class="hide"';
 
-$FleetHiddenBlock = '';
+$shipsDetails = [];
 
-$Fleet['count'] = 0;
-$Fleet['storage'] = 0;
-$Fleet['FuelStorage'] = 0;
+$Fleet = [
+    'count' => 0,
+    'storage' => 0,
+    'FuelStorage' => 0,
+];
 
 if(MORALE_ENABLED)
 {
@@ -44,30 +46,21 @@ if(isset($_POST['gobackUsed']))
     $_POST['getacsdata'] = (isset($_POST['acs_id']) ? $_POST['acs_id'] : 0);
 
     $_Set_DefaultSpeed = $_POST['speed'];
-    if(!empty($_POST['FleetArray']))
-    {
-        $PostFleet = explode(';', $_POST['FleetArray']);
-        foreach($PostFleet as $Data)
-        {
-            if(!empty($Data))
-            {
-                $Data = explode(',', $Data);
-                if(in_array($Data[0], $_Vars_ElementCategories['fleet']))
-                {
-                    $_POST['ship'][$Data[0]] = $Data[1];
-                }
-            }
-        }
+
+    if (!empty($_POST['FleetArray'])) {
+        $_POST['ship'] = FlightControl\Utils\Inputs\normalizeGobackFleetArrayInput([
+            'fleetArray' => $_POST['FleetArray'],
+        ]);
     }
-    $GoBackVars = array
-    (
+
+    $GoBackVars = [
         'resource1' => $_POST['resource1'],
         'resource2' => $_POST['resource2'],
         'resource3' => $_POST['resource3'],
         'usequantumgate' => (isset($_POST['usequantumgate']) ? $_POST['usequantumgate'] : null),
         'expeditiontime' => (isset($_POST['expeditiontime']) ? $_POST['expeditiontime'] : null),
         'holdingtime' => (isset($_POST['holdingtime']) ? $_POST['holdingtime'] : null)
-    );
+    ];
 }
 if(!empty($_POST['gobackVars']))
 {
@@ -147,13 +140,14 @@ if (!empty($_POST['ship'])) {
             $Fleet['FuelStorage'] += $ThisStorage;
         }
 
-        $speedalls[$ShipID] = getShipsCurrentSpeed($ShipID, $_User);
+        $shipSpeed = getShipsCurrentSpeed($ShipID, $_User);
         $shipConsumption = getShipsCurrentConsumption($ShipID, $_User);
         $allShipsConsumption = ($shipConsumption * $ShipCount);
 
-        // TODO: Check if that "+1" is correct
-        $FleetHiddenBlock .= "<input type=\"hidden\" id=\"consumption{$ShipID}\" value=\"".((string)($allShipsConsumption + 1))."\" />";
-        $FleetHiddenBlock .= "<input type=\"hidden\" id=\"speed{$ShipID}\" value=\"{$speedalls[$ShipID]}\" />";
+        $shipsDetails[$ShipID] = [
+            'speed' => $shipSpeed,
+            'totalConsumptionOfShipType' => (string) $allShipsConsumption,
+        ];
     }
 }
 
@@ -161,12 +155,17 @@ if($Fleet['count'] <= 0)
 {
     message($_Lang['fl1_NoShipsGiven'], $ErrorTitle, 'fleet.php', 3);
 }
-$speedallsmin = min($speedalls);
+
+$slowestShipSpeed = min(
+    array_map_withkeys($shipsDetails, function ($shipDetails) {
+        return $shipDetails['speed'];
+    })
+);
 
 // Speed modifier
 if (MORALE_ENABLED) {
     if ($_User['morale_level'] <= MORALE_PENALTY_FLEETSLOWDOWN) {
-        $speedallsmin *= MORALE_PENALTY_FLEETSLOWDOWN_VALUE;
+        $slowestShipSpeed *= MORALE_PENALTY_FLEETSLOWDOWN_VALUE;
     }
 }
 
@@ -240,9 +239,9 @@ else
 // Show info boxes
 $_Lang['P_SFBInfobox'] = FlightControl\Components\SmartFleetBlockadeInfoBox\render()['componentHTML'];
 
-$_Lang['FleetHiddenBlock'] = $FleetHiddenBlock;
-$_Lang['speedallsmin'] = $speedallsmin;
-$_Lang['MaxSpeedPretty'] = prettyNumber($speedallsmin);
+$_Lang['P_ShipsDetailsJSON'] = json_encode($shipsDetails, JSON_FORCE_OBJECT);
+$_Lang['speedallsmin'] = $slowestShipSpeed;
+$_Lang['MaxSpeedPretty'] = prettyNumber($slowestShipSpeed);
 $_Lang['Storage'] = (string)($Fleet['storage'] + 0);
 $_Lang['FuelStorage'] = (string)($Fleet['FuelStorage'] + 0);
 $_Lang['ThisGalaxy'] = $_Planet['galaxy'];
@@ -254,19 +253,10 @@ $_Lang['PlanetEnd'] = intval($_POST['planet']);
 $_Lang['SpeedFactor'] = getUniFleetsSpeedFactor();
 $_Lang['ThisPlanetType'] = $_Planet['planet_type'];
 $_Lang['ThisResource3'] = (string)(floor($_Planet['deuterium']) + 0);
-foreach($Fleet['array'] as $ID => $Count)
-{
-    $_Lang['FleetArray'][] = $ID.','.$Count;
-}
-$_Lang['FleetArray'] = implode(';', $_Lang['FleetArray']);
-if($_POST['quickres'] == '1')
-{
-    $_Lang['P_SetQuickRes'] = '1';
-}
-else
-{
-    $_Lang['P_SetQuickRes'] = '0';
-}
+$_Lang['FleetArray'] = Array2String($Fleet['array']);
+$_Lang['P_SetQuickRes'] = (
+    ($_POST['quickres'] == '1') ? '1' : '0'
+);
 
 $_Lang['P_MaxGalaxy'] = MAX_GALAXY_IN_WORLD;
 $_Lang['P_MaxSystem'] = MAX_SYSTEM_IN_GALAXY;

@@ -2,8 +2,6 @@
 
 namespace UniEngine\Engine\Modules\FlightControl\Screens\SendWizardStepOne;
 
-use UniEngine\Engine\Includes\Helpers\Common\Collections;
-use UniEngine\Engine\Includes\Helpers\World\Elements;
 use UniEngine\Engine\Includes\Helpers\World\Resources;
 use UniEngine\Engine\Modules\Flights;
 use UniEngine\Engine\Modules\FlightControl;
@@ -64,15 +62,9 @@ function render($props) {
         isset($inputFormData['gobackUsed']) &&
         !empty($inputFormData['FleetArray'])
     ) {
-        $gobackFleet = String2Array($inputFormData['FleetArray']);
-        $gobackFleet = object_map($gobackFleet, function ($shipCount, $shipId) {
-            if (!Elements\isShip($shipId)) {
-                return [ null, $shipId ];
-            }
-
-            return [ $shipCount, $shipId ];
-        });
-        $gobackFleet = Collections\compact($gobackFleet);
+        $gobackFleet = FlightControl\Utils\Inputs\normalizeGobackFleetArrayInput([
+            'fleetArray' => $inputFormData['FleetArray'],
+        ]);
     }
 
     $formInputsTplData['P_SetQuickRes'] = (

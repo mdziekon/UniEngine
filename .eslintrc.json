@@ -103,6 +103,15 @@
                 "before": true,
                 "after": true
             }
+        ],
+        "no-unused-vars": [
+            "error",
+            {
+                "vars": "all",
+                "args": "after-used",
+                "argsIgnorePattern": "^_",
+                "destructuredArrayIgnorePattern": "^_"
+            }
         ]
     }
 }
