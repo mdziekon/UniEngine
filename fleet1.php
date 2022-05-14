@@ -28,9 +28,11 @@ $Hide = ' class="hide"';
 
 $shipsDetails = [];
 
-$Fleet['count'] = 0;
-$Fleet['storage'] = 0;
-$Fleet['FuelStorage'] = 0;
+$Fleet = [
+    'count' => 0,
+    'storage' => 0,
+    'FuelStorage' => 0,
+];
 
 if(MORALE_ENABLED)
 {
