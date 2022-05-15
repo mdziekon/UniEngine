@@ -19,20 +19,25 @@ $(document).ready(function () {
 
     $("[name^=\"ship\"]")
         .keydown(function (event) {
-            var ThisCount;
-            if (event.which == 38) {
-                ThisCount = parseFloat(libCommon.normalize.removeNonDigit($(this).val()));
-                if (isNaN(ThisCount)) {
-                    ThisCount = 0;
-                }
-                $(this).val(ThisCount + 1).keyup();
-            } else if (event.which == 40) {
-                ThisCount = parseFloat(libCommon.normalize.removeNonDigit($(this).val()));
-                if (isNaN(ThisCount) || ThisCount <= 0) {
-                    return false;
-                }
-                $(this).val(ThisCount - 1).keyup();
+            if (!(event.which == 38 || event.which == 40)) {
+                return;
             }
+
+            const currentCountRaw = parseFloat(libCommon.normalize.removeNonDigit($(this).val()));
+            const currentCount = (
+                Number.isNaN(currentCountRaw) ?
+                    0 :
+                    currentCountRaw
+            );
+            const incrementBy = (
+                (event.which == 38) ?
+                    1 :
+                    -1
+            );
+            const nextCount = currentCount + incrementBy;
+            const nextCountNormalized = (nextCount >= 0 ? nextCount : 0);
+
+            $(this).val(nextCountNormalized).keyup();
         })
         .keyup(function () {
             var ThisCount = parseInt(libCommon.normalize.removeNonDigit($(this).val()), 10);
