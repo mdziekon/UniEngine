@@ -17,6 +17,11 @@ $(document).ready(function () {
     // Elements Cache
     const $transportTotalStorage = $("#calcStorage");
 
+    const getCurrentTransportTotalStorage = () => {
+        const formattedValue = $transportTotalStorage.html();
+
+        return parseInt(libCommon.normalize.removeNonDigit(formattedValue), 10);
+    };
     /**
      * @param {number} newValue
      */
@@ -64,18 +69,15 @@ $(document).ready(function () {
             }
             var Difference = ThisCount - OldCount;
             if (Difference != 0) {
-                var ThisShipID = libCommon.normalize.removeNonDigit($(this).attr("name"));
-                var StorageCalced = parseInt(libCommon.normalize.removeNonDigit($transportTotalStorage.html()), 10);
-                const storageChange = Difference * ShipsData[ThisShipID].storage;
+                const thisShipId = libCommon.normalize.removeNonDigit($(this).attr("name"));
+                const transportTotalStorage = getCurrentTransportTotalStorage();
+                const storageChange = Difference * ShipsData[thisShipId].storage;
 
-                StorageCalced += storageChange;
+                updateTransportTotalStorage(transportTotalStorage + storageChange);
 
-                updateTransportTotalStorage(StorageCalced);
+                const isUsingMoreThanAvailableShips = ThisCount > ShipsData[thisShipId].count;
 
                 $(this).data("oldCount", ThisCount);
-
-                const isUsingMoreThanAvailableShips = ThisCount > ShipsData[ThisShipID].count;
-
                 $(this).toggleClass("red", isUsingMoreThanAvailableShips);
             }
 
