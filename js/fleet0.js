@@ -85,13 +85,15 @@ $(document).ready(function () {
             const nextCount = currentCount + incrementBy;
             const nextCountNormalized = (nextCount >= 0 ? nextCount : 0);
 
-            $(this).val(nextCountNormalized).keyup();
+            $(this).val(nextCountNormalized);
+
+            handleShipInputUpdate($(this));
         })
         .keyup(function () {
             handleShipInputUpdate($(this));
         })
         .change(function () {
-            $(this).keyup();
+            handleShipInputUpdate($(this));
         })
         .focus(function () {
             if ($(this).val() == "0") {
@@ -107,12 +109,21 @@ $(document).ready(function () {
     $(".maxShip").click(function () {
         var GetClass = $(this).parent().attr("class");
         var GetID = GetClass.split(" ")[0].substr(2);
-        $("#ship" + GetID).val(ShipsData[GetID]["count"]).keyup();
+        const $inputElement = $("#ship" + GetID);
+
+        $inputElement.val(ShipsData[GetID]["count"]);
+
+        handleShipInputUpdate($inputElement);
     });
     $(".noShip").click(function () {
         var GetClass = $(this).parent().attr("class");
         var GetID = GetClass.split(" ")[0].substr(2);
-        $("#ship" + GetID).val(0).keyup();
+
+        const $inputElement = $("#ship" + GetID);
+
+        $inputElement.val(0);
+
+        handleShipInputUpdate($inputElement);
     });
 
     $(".maxShipAll").click(function () {
