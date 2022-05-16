@@ -15,7 +15,21 @@ $(document).ready(function () {
     $(".debris").tipTip({delay: 0, edgeOffset: 8, content: JSLang["fl_coorddebris"]});
 
     // Elements Cache
-    var CalcStorage = $("#calcStorage");
+    const $transportTotalStorage = $("#calcStorage");
+
+    /**
+     * @param {number} newValue
+     */
+    const updateTransportTotalStorage = (newValue) => {
+        const isEnoughStorageForPlanetResources = newValue >= TotalPlanetResources;
+        const formattedNewValue = libCommon.format.addDots(newValue);
+
+        $transportTotalStorage
+            .toggleClass("orange", !isEnoughStorageForPlanetResources)
+            .toggleClass("lime", isEnoughStorageForPlanetResources);
+
+        $transportTotalStorage.html(formattedNewValue);
+    };
 
     $("[name^=\"ship\"]")
         .keydown(function (event) {
@@ -51,18 +65,12 @@ $(document).ready(function () {
             var Difference = ThisCount - OldCount;
             if (Difference != 0) {
                 var ThisShipID = libCommon.normalize.removeNonDigit($(this).attr("name"));
-                var StorageCalced = parseInt(libCommon.normalize.removeNonDigit(CalcStorage.html()), 10);
+                var StorageCalced = parseInt(libCommon.normalize.removeNonDigit($transportTotalStorage.html()), 10);
                 const storageChange = Difference * ShipsData[ThisShipID].storage;
 
                 StorageCalced += storageChange;
 
-                const hasEnoughStorageForAllPlanetResources = StorageCalced >= TotalPlanetResources;
-
-                CalcStorage
-                    .toggleClass("orange", !hasEnoughStorageForAllPlanetResources)
-                    .toggleClass("lime", hasEnoughStorageForAllPlanetResources);
-
-                CalcStorage.html(libCommon.format.addDots(StorageCalced));
+                updateTransportTotalStorage(StorageCalced);
 
                 $(this).data("oldCount", ThisCount);
 
