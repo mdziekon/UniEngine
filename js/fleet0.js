@@ -36,6 +36,35 @@ $(document).ready(function () {
         $transportTotalStorage.html(formattedNewValue);
     };
 
+    /**
+     * @param {jQueryElement} $input
+     */
+    const handleShipInputUpdate = ($input) => {
+        var ThisCount = parseInt(libCommon.normalize.removeNonDigit($input.val()), 10);
+        var OldCount = $input.data("oldCount");
+        if (OldCount === undefined || isNaN(OldCount)) {
+            OldCount = 0;
+        }
+        if (isNaN(ThisCount)) {
+            ThisCount = 0;
+        }
+        var Difference = ThisCount - OldCount;
+        if (Difference != 0) {
+            const thisShipId = libCommon.normalize.removeNonDigit($input.attr("name"));
+            const transportTotalStorage = getCurrentTransportTotalStorage();
+            const storageChange = Difference * ShipsData[thisShipId].storage;
+
+            updateTransportTotalStorage(transportTotalStorage + storageChange);
+
+            const isUsingMoreThanAvailableShips = ThisCount > ShipsData[thisShipId].count;
+
+            $input.data("oldCount", ThisCount);
+            $input.toggleClass("red", isUsingMoreThanAvailableShips);
+        }
+
+        $input.prettyInputBox();
+    };
+
     $("[name^=\"ship\"]")
         .keydown(function (event) {
             if (!(event.which == 38 || event.which == 40)) {
@@ -59,29 +88,7 @@ $(document).ready(function () {
             $(this).val(nextCountNormalized).keyup();
         })
         .keyup(function () {
-            var ThisCount = parseInt(libCommon.normalize.removeNonDigit($(this).val()), 10);
-            var OldCount = $(this).data("oldCount");
-            if (OldCount === undefined || isNaN(OldCount)) {
-                OldCount = 0;
-            }
-            if (isNaN(ThisCount)) {
-                ThisCount = 0;
-            }
-            var Difference = ThisCount - OldCount;
-            if (Difference != 0) {
-                const thisShipId = libCommon.normalize.removeNonDigit($(this).attr("name"));
-                const transportTotalStorage = getCurrentTransportTotalStorage();
-                const storageChange = Difference * ShipsData[thisShipId].storage;
-
-                updateTransportTotalStorage(transportTotalStorage + storageChange);
-
-                const isUsingMoreThanAvailableShips = ThisCount > ShipsData[thisShipId].count;
-
-                $(this).data("oldCount", ThisCount);
-                $(this).toggleClass("red", isUsingMoreThanAvailableShips);
-            }
-
-            $(this).prettyInputBox();
+            handleShipInputUpdate($(this));
         })
         .change(function () {
             $(this).keyup();
