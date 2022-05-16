@@ -52,20 +52,23 @@ $(document).ready(function () {
             if (Difference != 0) {
                 var ThisShipID = libCommon.normalize.removeNonDigit($(this).attr("name"));
                 var StorageCalced = parseInt(libCommon.normalize.removeNonDigit(CalcStorage.html()), 10);
-                StorageCalced += Difference * ShipsData[ThisShipID]["storage"];
-                if (StorageCalced >= TotalPlanetResources) {
-                    CalcStorage.removeClass("orange").addClass("lime");
-                } else {
-                    CalcStorage.removeClass("lime").addClass("orange");
-                }
+                const storageChange = Difference * ShipsData[ThisShipID].storage;
+
+                StorageCalced += storageChange;
+
+                const hasEnoughStorageForAllPlanetResources = StorageCalced >= TotalPlanetResources;
+
+                CalcStorage
+                    .toggleClass("orange", !hasEnoughStorageForAllPlanetResources)
+                    .toggleClass("lime", hasEnoughStorageForAllPlanetResources);
+
                 CalcStorage.html(libCommon.format.addDots(StorageCalced));
+
                 $(this).data("oldCount", ThisCount);
 
-                if (ThisCount > ShipsData[ThisShipID]["count"]) {
-                    $(this).addClass("red");
-                } else {
-                    $(this).removeClass("red");
-                }
+                const isUsingMoreThanAvailableShips = ThisCount > ShipsData[ThisShipID].count;
+
+                $(this).toggleClass("red", isUsingMoreThanAvailableShips);
             }
 
             $(this).prettyInputBox();
