@@ -149,8 +149,9 @@ $(document).ready(function () {
             return;
         }
 
-        ACSUsers_Invited.append($("<option></option>").attr("value", ThisSelected.val()).text(ThisSelected.text()));
-        ThisSelected.remove();
+        ThisSelected.appendTo(ACSUsers_Invited);
+        ThisSelected.prop("selected", false);
+
         ACSUsers_Changed.val("1");
     });
     $("#ACSUserRmv").click(function () {
@@ -163,8 +164,9 @@ $(document).ready(function () {
             return;
         }
 
-        ACSUsers_2Invite.append($("<option></option>").attr("value", ThisSelected.val()).text(ThisSelected.text()));
-        ThisSelected.remove();
+        ThisSelected.appendTo(ACSUsers_2Invite);
+        ThisSelected.prop("selected", false);
+
         ACSUsers_Changed.val("1");
     });
 
