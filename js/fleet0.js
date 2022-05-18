@@ -182,5 +182,8 @@ $(document).ready(function () {
         $("[name=\"acs_users\"]").val(userIdsString);
     });
 
-    $("[name^=\"ship\"]").change();
+    // Trigger ship inputs formatting & internal data setting
+    $("[name^=\"ship\"]").each(function () {
+        handleShipInputUpdate($(this));
+    });
 });
