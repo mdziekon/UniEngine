@@ -139,24 +139,33 @@ $(document).ready(function () {
     var ACSUsers_Changed = $("[name=\"acsuserschanged\"]");
 
     $("#ACSUserAdd").click(function () {
-        if ($("option", ACSUsers_Invited).length < (ACSUsersMax + 1)) {
-            var ThisSelected = ACSUsers_2Invite.children("option:selected");
-            if (ThisSelected.length > 0) {
-                ACSUsers_Invited.append($("<option></option>").attr("value", ThisSelected.val()).text(ThisSelected.text()));
-                ThisSelected.remove();
-                ACSUsers_Changed.val("1");
-            }
+        const $invitedUsersListElements = ACSUsers_Invited.find("option");
+        var ThisSelected = ACSUsers_2Invite.children("option:selected");
+
+        if (
+            $invitedUsersListElements.length >= (ACSUsersMax + 1) ||
+            !ThisSelected.length
+        ) {
+            return;
         }
+
+        ACSUsers_Invited.append($("<option></option>").attr("value", ThisSelected.val()).text(ThisSelected.text()));
+        ThisSelected.remove();
+        ACSUsers_Changed.val("1");
     });
     $("#ACSUserRmv").click(function () {
         var ThisSelected = ACSUsers_Invited.children("option:selected");
-        if (ThisSelected.length > 0) {
-            if (!ThisSelected.is(":disabled")) {
-                ACSUsers_2Invite.append($("<option></option>").attr("value", ThisSelected.val()).text(ThisSelected.text()));
-                ThisSelected.remove();
-                ACSUsers_Changed.val("1");
-            }
+
+        if (
+            !ThisSelected.length ||
+            ThisSelected.is(":disabled")
+        ) {
+            return;
         }
+
+        ACSUsers_2Invite.append($("<option></option>").attr("value", ThisSelected.val()).text(ThisSelected.text()));
+        ThisSelected.remove();
+        ACSUsers_Changed.val("1");
     });
 
     $("#ACSForm").submit(function () {
