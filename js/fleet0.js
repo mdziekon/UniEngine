@@ -111,7 +111,7 @@ $(document).ready(function () {
         const shipId = $shipRow.data("shipid");
         const $inputElement = $shipRow.find("#ship" + shipId);
 
-        $inputElement.val(ShipsData[shipId]["count"]);
+        $inputElement.val(ShipsData[shipId].count);
 
         handleShipInputUpdate($inputElement);
     });
