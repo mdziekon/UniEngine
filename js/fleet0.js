@@ -107,19 +107,18 @@ $(document).ready(function () {
         });
 
     $(".maxShip").click(function () {
-        var GetClass = $(this).parent().attr("class");
-        var GetID = GetClass.split(" ")[0].substr(2);
-        const $inputElement = $("#ship" + GetID);
+        const $shipRow = $(this).closest("[data-shipid]");
+        const shipId = $shipRow.data("shipid");
+        const $inputElement = $shipRow.find("#ship" + shipId);
 
-        $inputElement.val(ShipsData[GetID]["count"]);
+        $inputElement.val(ShipsData[shipId]["count"]);
 
         handleShipInputUpdate($inputElement);
     });
     $(".noShip").click(function () {
-        var GetClass = $(this).parent().attr("class");
-        var GetID = GetClass.split(" ")[0].substr(2);
-
-        const $inputElement = $("#ship" + GetID);
+        const $shipRow = $(this).closest("[data-shipid]");
+        const shipId = $shipRow.data("shipid");
+        const $inputElement = $shipRow.find("#ship" + shipId);
 
         $inputElement.val(0);
 
