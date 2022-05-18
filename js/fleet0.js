@@ -171,11 +171,15 @@ $(document).ready(function () {
     });
 
     $("#ACSForm").submit(function () {
-        var UsersString = "";
-        ACSUsers_Invited.children("option").each(function () {
-            UsersString += $(this).val() + ",";
-        });
-        $("[name=\"acs_users\"]").val(UsersString);
+        const userIds = ACSUsers_Invited.children("option")
+            .map(function () {
+                return $(this).val();
+            })
+            .toArray();
+
+        const userIdsString = userIds.join(",");
+
+        $("[name=\"acs_users\"]").val(userIdsString);
     });
 
     $("[name^=\"ship\"]").change();
