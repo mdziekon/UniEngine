@@ -12,6 +12,9 @@ $(document).ready(function () {
 
     // Elements Cache
     const $transportTotalStorage = $("#calcStorage");
+    const $unionInvitedUsersList = $("#ACSUser_Invited");
+    const $unionInvitableUsersList = $("#ACSUser_2Invite");
+    const $unionUsersChangedInput = $("[name=\"acsuserschanged\"]");
 
     const getCurrentTransportTotalStorage = () => {
         const formattedValue = $transportTotalStorage.html();
@@ -128,48 +131,40 @@ $(document).ready(function () {
         $(".noShip").click();
     });
 
-    $(".addPad2")
-        .children(":not(.pad5)")
-        .addClass("pad2");
-
-    var ACSUsers_Invited = $("#ACSUser_Invited");
-    var ACSUsers_2Invite = $("#ACSUser_2Invite");
-    var ACSUsers_Changed = $("[name=\"acsuserschanged\"]");
-
     $("#ACSUserAdd").on("click", function () {
-        const $invitedUsersListElements = ACSUsers_Invited.find("option");
-        var ThisSelected = ACSUsers_2Invite.children("option:selected");
+        const $invitedUsersListElements = $unionInvitedUsersList.find("option");
+        const $selectedListOption = $unionInvitableUsersList.children("option:selected");
 
         if (
             $invitedUsersListElements.length >= (ACSUsersMax + 1) ||
-            !ThisSelected.length
+            !$selectedListOption.length
         ) {
             return;
         }
 
-        ThisSelected.appendTo(ACSUsers_Invited);
-        ThisSelected.prop("selected", false);
+        $selectedListOption.appendTo($unionInvitedUsersList);
+        $selectedListOption.prop("selected", false);
 
-        ACSUsers_Changed.val("1");
+        $unionUsersChangedInput.val("1");
     });
     $("#ACSUserRmv").on("click", function () {
-        var ThisSelected = ACSUsers_Invited.children("option:selected");
+        const $selectedListOption = $unionInvitedUsersList.children("option:selected");
 
         if (
-            !ThisSelected.length ||
-            ThisSelected.is(":disabled")
+            !$selectedListOption.length ||
+            $selectedListOption.is(":disabled")
         ) {
             return;
         }
 
-        ThisSelected.appendTo(ACSUsers_2Invite);
-        ThisSelected.prop("selected", false);
+        $selectedListOption.appendTo($unionInvitableUsersList);
+        $selectedListOption.prop("selected", false);
 
-        ACSUsers_Changed.val("1");
+        $unionUsersChangedInput.val("1");
     });
 
     $("#ACSForm").on("submit", function () {
-        const userIds = ACSUsers_Invited.children("option")
+        const userIds = $unionInvitedUsersList.children("option")
             .map(function () {
                 return $(this).val();
             })
@@ -188,4 +183,9 @@ $(document).ready(function () {
     $("[name^=\"ship\"]").each(function () {
         handleShipInputUpdate($(this));
     });
+
+    // Dynamically apply styling
+    $(".addPad2")
+        .children(":not(.pad5)")
+        .addClass("pad2");
 });
