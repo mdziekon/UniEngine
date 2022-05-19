@@ -62,7 +62,7 @@ $(document).ready(function () {
     };
 
     $("[name^=\"ship\"]")
-        .keydown(function (event) {
+        .on("keydown", function (event) {
             if (!(event.which == 38 || event.which == 40)) {
                 return;
             }
@@ -85,24 +85,24 @@ $(document).ready(function () {
 
             handleShipInputUpdate($(this));
         })
-        .keyup(function () {
+        .on("keyup", function () {
             handleShipInputUpdate($(this));
         })
-        .change(function () {
+        .on("change", function () {
             handleShipInputUpdate($(this));
         })
-        .focus(function () {
+        .on("focus", function () {
             if ($(this).val() == "0") {
                 $(this).val("");
             }
         })
-        .blur(function () {
+        .on("blur", function () {
             if ($(this).val() == "") {
                 $(this).val("0");
             }
         });
 
-    $(".maxShip").click(function () {
+    $(".maxShip").on("click", function () {
         const $shipRow = $(this).closest("[data-shipid]");
         const shipId = $shipRow.data("shipid");
         const $inputElement = $shipRow.find("#ship" + shipId);
@@ -111,7 +111,7 @@ $(document).ready(function () {
 
         handleShipInputUpdate($inputElement);
     });
-    $(".noShip").click(function () {
+    $(".noShip").on("click", function () {
         const $shipRow = $(this).closest("[data-shipid]");
         const shipId = $shipRow.data("shipid");
         const $inputElement = $shipRow.find("#ship" + shipId);
@@ -121,20 +121,22 @@ $(document).ready(function () {
         handleShipInputUpdate($inputElement);
     });
 
-    $(".maxShipAll").click(function () {
+    $(".maxShipAll").on("click", function () {
         $(".maxShip").click();
     });
-    $(".noShipAll").click(function () {
+    $(".noShipAll").on("click", function () {
         $(".noShip").click();
     });
 
-    $(".addPad2").children(":not(.pad5)").addClass("pad2");
+    $(".addPad2")
+        .children(":not(.pad5)")
+        .addClass("pad2");
 
     var ACSUsers_Invited = $("#ACSUser_Invited");
     var ACSUsers_2Invite = $("#ACSUser_2Invite");
     var ACSUsers_Changed = $("[name=\"acsuserschanged\"]");
 
-    $("#ACSUserAdd").click(function () {
+    $("#ACSUserAdd").on("click", function () {
         const $invitedUsersListElements = ACSUsers_Invited.find("option");
         var ThisSelected = ACSUsers_2Invite.children("option:selected");
 
@@ -150,7 +152,7 @@ $(document).ready(function () {
 
         ACSUsers_Changed.val("1");
     });
-    $("#ACSUserRmv").click(function () {
+    $("#ACSUserRmv").on("click", function () {
         var ThisSelected = ACSUsers_Invited.children("option:selected");
 
         if (
@@ -166,7 +168,7 @@ $(document).ready(function () {
         ACSUsers_Changed.val("1");
     });
 
-    $("#ACSForm").submit(function () {
+    $("#ACSForm").on("submit", function () {
         const userIds = ACSUsers_Invited.children("option")
             .map(function () {
                 return $(this).val();
@@ -178,7 +180,7 @@ $(document).ready(function () {
         $("[name=\"acs_users\"]").val(userIdsString);
     });
 
-    $(".setACS_ID").click(function () {
+    $(".setACS_ID").on("click", function () {
         $("[name=getacsdata]").val($(this).val());
     });
 
