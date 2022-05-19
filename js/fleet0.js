@@ -39,25 +39,32 @@ $(document).ready(function () {
      * @param {jQueryElement} $input
      */
     const handleShipInputUpdate = ($input) => {
-        var ThisCount = parseInt(libCommon.normalize.removeNonDigit($input.val()), 10);
-        var OldCount = $input.data("oldCount");
-        if (OldCount === undefined || isNaN(OldCount)) {
-            OldCount = 0;
-        }
-        if (isNaN(ThisCount)) {
-            ThisCount = 0;
-        }
-        var Difference = ThisCount - OldCount;
-        if (Difference != 0) {
+        const newValueRaw = parseInt(libCommon.normalize.removeNonDigit($input.val()), 10);
+        const oldValueRaw = $input.data("oldCount");
+
+        const newValue = (
+            !Number.isNaN(newValueRaw) ?
+                newValueRaw :
+                0
+        );
+        const oldValue = (
+            !(oldValueRaw === undefined || isNaN(oldValueRaw)) ?
+                oldValueRaw :
+                0
+        );
+
+        const valueDiff = newValue - oldValue;
+
+        if (valueDiff != 0) {
             const thisShipId = libCommon.normalize.removeNonDigit($input.attr("name"));
             const transportTotalStorage = getCurrentTransportTotalStorage();
-            const storageChange = Difference * ShipsData[thisShipId].storage;
+            const storageChange = valueDiff * ShipsData[thisShipId].storage;
 
             updateTransportTotalStorage(transportTotalStorage + storageChange);
 
-            const isUsingMoreThanAvailableShips = ThisCount > ShipsData[thisShipId].count;
+            const isUsingMoreThanAvailableShips = newValue > ShipsData[thisShipId].count;
 
-            $input.data("oldCount", ThisCount);
+            $input.data("oldCount", newValue);
             $input.toggleClass("red", isUsingMoreThanAvailableShips);
         }
 
