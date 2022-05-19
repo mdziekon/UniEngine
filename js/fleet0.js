@@ -3,10 +3,6 @@
 $(document).ready(function () {
     libCommon.init.setupJQuery();
 
-    $(".setACS_ID").click(function () {
-        $("[name=getacsdata]").val($(this).val());
-    });
-
     $(".FBeh").tipTip({maxWidth: "250px", delay: 0, edgeOffset: 8, attribute: "title"});
     $(".Speed").tipTip({maxWidth: "250px", delay: 0, edgeOffset: 8, attribute: "title"});
     $(".fInfo").tipTip({maxWidth: "300px", minWidth: "200px", delay: 0, edgeOffset: 8, attribute: "title"});
@@ -180,6 +176,10 @@ $(document).ready(function () {
         const userIdsString = userIds.join(",");
 
         $("[name=\"acs_users\"]").val(userIdsString);
+    });
+
+    $(".setACS_ID").click(function () {
+        $("[name=getacsdata]").val($(this).val());
     });
 
     // Trigger ship inputs formatting & internal data setting
