@@ -264,25 +264,16 @@ $(document).ready(function () {
         $("#thisForm").attr("action", "fleet.php").prepend("<input type=\"hidden\" name=\"gobackUsed\" value=\"1\"/>").submit();
     });
 
-    $("#thisForm").submit(function () {
-        if (!$("#galaxy_selector").isNonEmptyValue()) {
-            if ($("#galaxy_selector").isNonEmptyDataSlot("last_val")) {
-                $("#galaxy_selector").val($("#galaxy_selector").data("last_val"));
-                $("#galaxy_selector").data("last_val", "");
+    $("#thisForm").on("submit", () => {
+        Object.values($targetCoordInputs).forEach(($element) => {
+            if (
+                !$element.isNonEmptyValue() &&
+                $element.isNonEmptyDataSlot("last_val")
+            ) {
+                $element.val($element.data("last_val"));
+                $element.data("last_val", "");
             }
-        }
-        if (!$("#system_selector").isNonEmptyValue()) {
-            if ($("#system_selector").isNonEmptyDataSlot("last_val")) {
-                $("#system_selector").val($("#system_selector").data("last_val"));
-                $("#system_selector").data("last_val", "");
-            }
-        }
-        if (!$("#select_planet").isNonEmptyValue()) {
-            if ($("#select_planet").isNonEmptyDataSlot("last_val")) {
-                $("#select_planet").val($("#select_planet").data("last_val"));
-                $("#select_planet").data("last_val", "");
-            }
-        }
+        });
     });
 
     updateFlightDetails();
