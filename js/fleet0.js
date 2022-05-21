@@ -3,134 +3,224 @@
 $(document).ready(function () {
     libCommon.init.setupJQuery();
 
-    $(".setACS_ID").click(function () {
-        $("[name=getacsdata]").val($(this).val());
-    });
-
-    $(".FBeh").tipTip({maxWidth: "250px", delay: 0, edgeOffset: 8, attribute: "title"});
-    $(".Speed").tipTip({maxWidth: "250px", delay: 0, edgeOffset: 8, attribute: "title"});
-    $(".fInfo").tipTip({maxWidth: "300px", minWidth: "200px", delay: 0, edgeOffset: 8, attribute: "title"});
-    $(".planet").tipTip({delay: 0, edgeOffset: 8, content: JSLang["fl_coordplanet"]});
-    $(".moon").tipTip({delay: 0, edgeOffset: 8, content: JSLang["fl_coordmoon"]});
-    $(".debris").tipTip({delay: 0, edgeOffset: 8, content: JSLang["fl_coorddebris"]});
-
     // Elements Cache
-    var CalcStorage = $("#calcStorage");
+    const $transportTotalStorage = $("#calcStorage");
+    const $unionInvitedUsersList = $("#ACSUser_Invited");
+    const $unionInvitableUsersList = $("#ACSUser_2Invite");
+    const $unionUsersChangedInput = $("[name=\"acsuserschanged\"]");
+
+    const getCurrentTransportTotalStorage = () => {
+        const formattedValue = $transportTotalStorage.html();
+
+        return parseInt(libCommon.normalize.removeNonDigit(formattedValue), 10);
+    };
+    /**
+     * @param {number} newValue
+     */
+    const updateTransportTotalStorage = (newValue) => {
+        const isEnoughStorageForPlanetResources = newValue >= TotalPlanetResources;
+        const formattedNewValue = libCommon.format.addDots(newValue);
+
+        $transportTotalStorage
+            .toggleClass("orange", !isEnoughStorageForPlanetResources)
+            .toggleClass("lime", isEnoughStorageForPlanetResources);
+
+        $transportTotalStorage.html(formattedNewValue);
+    };
+
+    /**
+     * @param {jQueryElement} $input
+     */
+    const handleShipInputUpdate = ($input) => {
+        const newValueRaw = parseInt(libCommon.normalize.removeNonDigit($input.val()), 10);
+        const oldValueRaw = $input.data("oldCount");
+
+        const newValue = (
+            !Number.isNaN(newValueRaw) ?
+                newValueRaw :
+                0
+        );
+        const oldValue = (
+            !(oldValueRaw === undefined || isNaN(oldValueRaw)) ?
+                oldValueRaw :
+                0
+        );
+
+        const valueDiff = newValue - oldValue;
+
+        if (valueDiff != 0) {
+            const thisShipId = libCommon.normalize.removeNonDigit($input.attr("name"));
+            const transportTotalStorage = getCurrentTransportTotalStorage();
+            const storageChange = valueDiff * ShipsData[thisShipId].storage;
+
+            updateTransportTotalStorage(transportTotalStorage + storageChange);
+
+            const isUsingMoreThanAvailableShips = newValue > ShipsData[thisShipId].count;
+
+            $input.data("oldCount", newValue);
+            $input.toggleClass("red", isUsingMoreThanAvailableShips);
+        }
+
+        $input.prettyInputBox();
+    };
 
     $("[name^=\"ship\"]")
-        .keydown(function (event) {
-            var ThisCount;
-            if (event.which == 38) {
-                ThisCount = parseFloat(libCommon.normalize.removeNonDigit($(this).val()));
-                if (isNaN(ThisCount)) {
-                    ThisCount = 0;
-                }
-                $(this).val(ThisCount + 1).keyup();
-            } else if (event.which == 40) {
-                ThisCount = parseFloat(libCommon.normalize.removeNonDigit($(this).val()));
-                if (isNaN(ThisCount) || ThisCount <= 0) {
-                    return false;
-                }
-                $(this).val(ThisCount - 1).keyup();
-            }
-        })
-        .keyup(function () {
-            var ThisCount = parseInt(libCommon.normalize.removeNonDigit($(this).val()), 10);
-            var OldCount = $(this).data("oldCount");
-            if (OldCount === undefined || isNaN(OldCount)) {
-                OldCount = 0;
-            }
-            if (isNaN(ThisCount)) {
-                ThisCount = 0;
-            }
-            var Difference = ThisCount - OldCount;
-            if (Difference != 0) {
-                var ThisShipID = libCommon.normalize.removeNonDigit($(this).attr("name"));
-                var StorageCalced = parseInt(libCommon.normalize.removeNonDigit(CalcStorage.html()), 10);
-                StorageCalced += Difference * ShipsData[ThisShipID]["storage"];
-                if (StorageCalced >= TotalPlanetResources) {
-                    CalcStorage.removeClass("orange").addClass("lime");
-                } else {
-                    CalcStorage.removeClass("lime").addClass("orange");
-                }
-                CalcStorage.html(libCommon.format.addDots(StorageCalced));
-                $(this).data("oldCount", ThisCount);
-
-                if (ThisCount > ShipsData[ThisShipID]["count"]) {
-                    $(this).addClass("red");
-                } else {
-                    $(this).removeClass("red");
-                }
+        .on("keydown", function (event) {
+            if (!(event.which == 38 || event.which == 40)) {
+                return;
             }
 
-            $(this).prettyInputBox();
+            const currentCountRaw = parseFloat(libCommon.normalize.removeNonDigit($(this).val()));
+            const currentCount = (
+                Number.isNaN(currentCountRaw) ?
+                    0 :
+                    currentCountRaw
+            );
+            const incrementBy = (
+                (event.which == 38) ?
+                    1 :
+                    -1
+            );
+            const nextCount = currentCount + incrementBy;
+            const nextCountNormalized = (nextCount >= 0 ? nextCount : 0);
+
+            $(this).val(nextCountNormalized);
+
+            handleShipInputUpdate($(this));
         })
-        .change(function () {
-            $(this).keyup();
+        .on("keyup", function () {
+            handleShipInputUpdate($(this));
         })
-        .focus(function () {
+        .on("change", function () {
+            handleShipInputUpdate($(this));
+        })
+        .on("focus", function () {
             if ($(this).val() == "0") {
                 $(this).val("");
             }
         })
-        .blur(function () {
+        .on("blur", function () {
             if ($(this).val() == "") {
                 $(this).val("0");
             }
         });
 
-    $(".maxShip").click(function () {
-        var GetClass = $(this).parent().attr("class");
-        var GetID = GetClass.split(" ")[0].substr(2);
-        $("#ship" + GetID).val(ShipsData[GetID]["count"]).keyup();
+    $(".maxShip").on("click", function () {
+        const $shipRow = $(this).closest("[data-shipid]");
+        const shipId = $shipRow.data("shipid");
+        const $inputElement = $shipRow.find("#ship" + shipId);
+
+        $inputElement.val(ShipsData[shipId].count);
+
+        handleShipInputUpdate($inputElement);
     });
-    $(".noShip").click(function () {
-        var GetClass = $(this).parent().attr("class");
-        var GetID = GetClass.split(" ")[0].substr(2);
-        $("#ship" + GetID).val(0).keyup();
+    $(".noShip").on("click", function () {
+        const $shipRow = $(this).closest("[data-shipid]");
+        const shipId = $shipRow.data("shipid");
+        const $inputElement = $shipRow.find("#ship" + shipId);
+
+        $inputElement.val(0);
+
+        handleShipInputUpdate($inputElement);
     });
 
-    $(".maxShipAll").click(function () {
+    $(".maxShipAll").on("click", function () {
         $(".maxShip").click();
     });
-    $(".noShipAll").click(function () {
+    $(".noShipAll").on("click", function () {
         $(".noShip").click();
     });
 
-    $(".addPad2").children(":not(.pad5)").addClass("pad2");
+    $("#ACSUserAdd").on("click", function () {
+        const $invitedUsersListElements = $unionInvitedUsersList.find("option");
+        const $selectedListOption = $unionInvitableUsersList.children("option:selected");
 
-    var ACSUsers_Invited = $("#ACSUser_Invited");
-    var ACSUsers_2Invite = $("#ACSUser_2Invite");
-    var ACSUsers_Changed = $("[name=\"acsuserschanged\"]");
-
-    $("#ACSUserAdd").click(function () {
-        if ($("option", ACSUsers_Invited).length < (ACSUsersMax + 1)) {
-            var ThisSelected = ACSUsers_2Invite.children("option:selected");
-            if (ThisSelected.length > 0) {
-                ACSUsers_Invited.append($("<option></option>").attr("value", ThisSelected.val()).text(ThisSelected.text()));
-                ThisSelected.remove();
-                ACSUsers_Changed.val("1");
-            }
+        if (
+            $invitedUsersListElements.length >= (ACSUsersMax + 1) ||
+            !$selectedListOption.length
+        ) {
+            return;
         }
+
+        $selectedListOption.appendTo($unionInvitedUsersList);
+        $selectedListOption.prop("selected", false);
+
+        $unionUsersChangedInput.val("1");
     });
-    $("#ACSUserRmv").click(function () {
-        var ThisSelected = ACSUsers_Invited.children("option:selected");
-        if (ThisSelected.length > 0) {
-            if (!ThisSelected.is(":disabled")) {
-                ACSUsers_2Invite.append($("<option></option>").attr("value", ThisSelected.val()).text(ThisSelected.text()));
-                ThisSelected.remove();
-                ACSUsers_Changed.val("1");
-            }
+    $("#ACSUserRmv").on("click", function () {
+        const $selectedListOption = $unionInvitedUsersList.children("option:selected");
+
+        if (
+            !$selectedListOption.length ||
+            $selectedListOption.is(":disabled")
+        ) {
+            return;
         }
+
+        $selectedListOption.appendTo($unionInvitableUsersList);
+        $selectedListOption.prop("selected", false);
+
+        $unionUsersChangedInput.val("1");
     });
 
-    $("#ACSForm").submit(function () {
-        var UsersString = "";
-        ACSUsers_Invited.children("option").each(function () {
-            UsersString += $(this).val() + ",";
-        });
-        $("[name=\"acs_users\"]").val(UsersString);
+    $("#ACSForm").on("submit", function () {
+        const userIds = $unionInvitedUsersList.children("option")
+            .map(function () {
+                return $(this).val();
+            })
+            .toArray();
+
+        const userIdsString = userIds.join(",");
+
+        $("[name=\"acs_users\"]").val(userIdsString);
     });
 
-    $("[name^=\"ship\"]").change();
+    $(".setACS_ID").on("click", function () {
+        $("[name=getacsdata]").val($(this).val());
+    });
+
+    // Trigger ship inputs formatting & internal data setting
+    $("[name^=\"ship\"]").each(function () {
+        handleShipInputUpdate($(this));
+    });
+
+    // Dynamically apply styling
+    $(".addPad2")
+        .children(":not(.pad5)")
+        .addClass("pad2");
+
+    $(".FBeh").tipTip({
+        maxWidth: "250px",
+        attribute: "title",
+        delay: 0,
+        edgeOffset: 8,
+    });
+    $(".Speed").tipTip({
+        maxWidth: "250px",
+        attribute: "title",
+        delay: 0,
+        edgeOffset: 8,
+    });
+    $(".fInfo").tipTip({
+        maxWidth: "300px",
+        minWidth: "200px",
+        attribute: "title",
+        delay: 0,
+        edgeOffset: 8,
+    });
+    $(".planet").tipTip({
+        content: JSLang["fl_coordplanet"],
+        delay: 0,
+        edgeOffset: 8,
+    });
+    $(".moon").tipTip({
+        content: JSLang["fl_coordmoon"],
+        delay: 0,
+        edgeOffset: 8,
+    });
+    $(".debris").tipTip({
+        content: JSLang["fl_coorddebris"],
+        delay: 0,
+        edgeOffset: 8,
+    });
 });
