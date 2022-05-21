@@ -44,7 +44,7 @@ $(document).ready(function () {
         var ret = Math.round((35000 / speed() * Math.sqrt(distance() * 10 / maxspeed()) + 10) / speedFactor());
         FlightDuration = ret;
         if (AllowCreateTimeCounters === true) {
-            createTimeCounters();
+            updateTimeCounters();
         }
         return ret;
     }
@@ -136,7 +136,7 @@ $(document).ready(function () {
         $("#consumption").html(consumptionHTML);
     }
 
-    function createTimeCounters () {
+    function updateTimeCounters () {
         const currentTimeFormatted = libCommon.format.formatDateToFlightEvent(0);
         const reachTimeFormatted = libCommon.format.formatDateToFlightEvent((FlightDuration * 1000));
         const backTimeFormatted = libCommon.format.formatDateToFlightEvent((FlightDuration * 2 * 1000));
@@ -146,13 +146,9 @@ $(document).ready(function () {
         $("#comeback_time").html(backTimeFormatted);
     }
 
-    setInterval(createTimeCounters, 250);
-
     // Rest of Scripts
-    $("th:not(.FBlock, .inv), .updateInfo").addClass("pad2");
-
     $(".updateInfo:not(.fastLink, select, .setSpeed)")
-        .keyup(function () {
+        .on("keyup", function () {
             const $element = $(this);
 
             if (!$element.isNonEmptyValue({ isZeroAllowed: true })) {
@@ -176,16 +172,16 @@ $(document).ready(function () {
             }
             updateFlightDetails();
         })
-        .change(function () {
+        .on("change", function () {
             $(this).keyup();
         })
-        .focus(function () {
+        .on("focus", function () {
             if ($(this).isNonEmptyValue()) {
                 $(this).data("last_val", $(this).val());
                 $(this).val("");
             }
         })
-        .blur(function () {
+        .on("blur", function () {
             if (!$(this).isNonEmptyValue()) {
                 if ($(this).isNonEmptyDataSlot("last_val")) {
                     $(this).val($(this).data("last_val"));
@@ -193,12 +189,13 @@ $(document).ready(function () {
                 }
             }
         });
+
     $("select.updateInfo:not(.fastLink)")
-        .keyup(function () {
+        .on("keyup", () => {
             updateFlightDetails();
         })
-        .change(function () {
-            $(this).keyup();
+        .on("change", () => {
+            updateFlightDetails();
         });
 
     $(".setSpeed")
@@ -238,7 +235,7 @@ $(document).ready(function () {
             });
 
     $(".fastLink")
-        .keyup(function () {
+        .on("keyup", function () {
             if ($(this).val() !== "-") {
                 var coordinates = $(this).val().split(",");
                 setTarget(coordinates[0], coordinates[1], coordinates[2], coordinates[3]);
@@ -252,16 +249,15 @@ $(document).ready(function () {
             }
             $("#fl_sel" + GetIDNum).val("-").attr("selected", true);
         })
-        .change(function () {
+        .on("change", function () {
             $(this).keyup();
         });
 
-    $("[name=galaxy]").tipTip({delay: 0, edgeOffset: 8, content: JSLang["fl1_targetGalaxy"]});
-    $("[name=system]").tipTip({delay: 0, edgeOffset: 8, content: JSLang["fl1_targetSystem"]});
-    $("[name=planet]").tipTip({delay: 0, edgeOffset: 8, content: JSLang["fl1_targetPlanet"]});
-
-    $("#goBack").click(function () {
-        $("#thisForm").attr("action", "fleet.php").prepend("<input type=\"hidden\" name=\"gobackUsed\" value=\"1\"/>").submit();
+    $("#goBack").on("click", () => {
+        $("#thisForm")
+            .attr("action", "fleet.php")
+            .prepend("<input type=\"hidden\" name=\"gobackUsed\" value=\"1\"/>")
+            .submit();
     });
 
     $("#thisForm").on("submit", () => {
@@ -275,6 +271,13 @@ $(document).ready(function () {
             }
         });
     });
+
+    $("th:not(.FBlock, .inv), .updateInfo").addClass("pad2");
+    $("[name=galaxy]").tipTip({delay: 0, edgeOffset: 8, content: JSLang["fl1_targetGalaxy"]});
+    $("[name=system]").tipTip({delay: 0, edgeOffset: 8, content: JSLang["fl1_targetSystem"]});
+    $("[name=planet]").tipTip({delay: 0, edgeOffset: 8, content: JSLang["fl1_targetPlanet"]});
+
+    setInterval(updateTimeCounters, 250);
 
     updateFlightDetails();
 });
