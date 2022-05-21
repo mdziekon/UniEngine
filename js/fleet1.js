@@ -1,4 +1,4 @@
-/* globals libCommon, AllowCreateTimeCounters, maxIs, JSLang, shipsDetails */
+/* globals libCommon, AllowCreateTimeCounters, maxIs, JSLang, shipsDetails, uniengine */
 
 $(document).ready(function () {
     libCommon.init.setupJQuery();
@@ -86,55 +86,48 @@ $(document).ready(function () {
         return parseInt($("#FuelStorage").val(), 10);
     }
 
-    function planetDeuterium () {
+    function getPlanetDeuterium () {
         return parseInt($("#PlanetDeuterium").val(), 10);
     }
 
-    function shortInfo () {
+    function updateFlightDetails () {
+        const durationPrettyTime = uniengine.common.prettyTime({
+            seconds: duration(),
+            isDayConversionDisabled: true,
+        });
+
+        const fleetResourcesStorage = storage();
+        const fuelConsumption = consumption();
+        const fleetFuelStorage = GetFuelStorage();
+
+        const fleetTotalStorage = fleetResourcesStorage + (
+            (fleetFuelStorage >= fuelConsumption) ?
+                fuelConsumption :
+                fleetFuelStorage
+        );
+        const availableFuel = getPlanetDeuterium();
+
+        const storageValueColor = (
+            (fleetTotalStorage >= 0) ?
+                "lime" :
+                "red"
+        );
+        const consumptionValueColor = (
+            (availableFuel < fuelConsumption) ?
+                "red" :
+                (
+                    (fleetTotalStorage >= 0) ?
+                        "lime" :
+                        "orange"
+                )
+        );
+        const storageHTML = `<b class="${storageValueColor}">${libCommon.format.addDots(fleetTotalStorage)}</b>`;
+        const consumptionHTML = `<b class="${consumptionValueColor}">${libCommon.format.addDots(fuelConsumption)}</b>`;
+
+        $("#duration").html(`${durationPrettyTime} h`);
         $("#distance").html(libCommon.format.addDots(distance()));
-        var seconds = duration();
-        var hours = Math.floor(seconds / 3600);
-        seconds -= hours * 3600;
-        var minutes = Math.floor(seconds / 60);
-        seconds -= minutes * 60;
-        if (minutes < 10) {
-            minutes = "0" + minutes;
-        }
-        if (seconds < 10) {
-            seconds = "0" + seconds;
-        }
-        if (hours < 10) {
-            hours = "0" + hours;
-        }
-        $("#duration").html(hours + ":" + minutes + ":" + seconds + " h");
-        var stor = storage();
-        var cons = consumption();
-        var FuelStorage = GetFuelStorage();
-        if (FuelStorage >= cons) {
-            stor += cons;
-        } else {
-            stor += FuelStorage;
-        }
-        var deuterium = planetDeuterium();
-        var setHTMLCons = "";
-        var setHTMLStor = "";
-        if (stor >= 0) {
-            if (deuterium >= cons) {
-                setHTMLCons = "<b class=\"lime\">" + libCommon.format.addDots(cons) + "</b>";
-            } else {
-                setHTMLCons = "<b class=\"red\">" + libCommon.format.addDots(cons) + "</b>";
-            }
-            setHTMLStor = "<b class=\"lime\">" + libCommon.format.addDots(stor) + "</b>";
-        } else {
-            if (deuterium >= cons) {
-                setHTMLCons = "<b class=\"orange\">" + libCommon.format.addDots(cons) + "</b>";
-            } else {
-                setHTMLCons = "<b class=\"red\">" + libCommon.format.addDots(cons) + "</b>";
-            }
-            setHTMLStor = "<b class=\"red\">" + libCommon.format.addDots(stor) + "</b>";
-        }
-        $("#consumption").html(setHTMLCons);
-        $("#storageShow").html(setHTMLStor);
+        $("#storageShow").html(storageHTML);
+        $("#consumption").html(consumptionHTML);
     }
 
     function createTimeCounters () {
@@ -154,17 +147,28 @@ $(document).ready(function () {
 
     $(".updateInfo:not(.fastLink, select, .setSpeed)")
         .keyup(function () {
-            if ($(this).isNonEmptyValue({ isZeroAllowed: true })) {
-                var TName = $(this).attr("name");
-                if (TName == "galaxy" || TName == "system" || TName == "planet") {
-                    if ($(this).val() < 1) {
-                        $(this).val(1);
-                    } else if ($(this).val() > maxIs[TName]) {
-                        $(this).val(maxIs[TName]);
-                    }
-                }
-                shortInfo();
+            const $element = $(this);
+
+            if (!$element.isNonEmptyValue({ isZeroAllowed: true })) {
+                return;
             }
+
+            const inputName = $element.attr("name");
+            const inputValue = $element.val();
+
+            if (
+                inputName == "galaxy" ||
+                inputName == "system" ||
+                inputName == "planet"
+            ) {
+                if (inputValue < 1) {
+                    $element.val(1);
+                }
+                if (inputValue > maxIs[inputName]) {
+                    $element.val(maxIs[inputName]);
+                }
+            }
+            updateFlightDetails();
         })
         .change(function () {
             $(this).keyup();
@@ -185,7 +189,7 @@ $(document).ready(function () {
         });
     $("select.updateInfo:not(.fastLink)")
         .keyup(function () {
-            shortInfo();
+            updateFlightDetails();
         })
         .change(function () {
             $(this).keyup();
@@ -196,7 +200,7 @@ $(document).ready(function () {
             $("input[name=\"speed\"]").val($(this).attr("data-speed"));
             $(".setSpeed_Selected").removeClass("setSpeed_Selected");
             $(this).addClass("setSpeed_Selected");
-            shortInfo();
+            updateFlightDetails();
             return false;
         })
         .hover(
@@ -206,7 +210,7 @@ $(document).ready(function () {
                 }
                 $(".setSpeed_Current").removeClass("setSpeed_Current");
                 $(this).addClass("setSpeed_Current");
-                shortInfo();
+                updateFlightDetails();
             },
             function () {
                 if ($("input[name=\"galaxy\"]").val() == "" || $("input[name=\"system\"]").val() == "" || $("input[name=\"planet\"]").val() == "") {
@@ -214,7 +218,7 @@ $(document).ready(function () {
                 }
                 $(this).removeClass("setSpeed_Current");
                 $(".setSpeed_Selected").addClass("setSpeed_Current");
-                shortInfo();
+                updateFlightDetails();
             });
 
     $(".fastLink")
@@ -222,7 +226,7 @@ $(document).ready(function () {
             if ($(this).val() !== "-") {
                 var coordinates = $(this).val().split(",");
                 setTarget(coordinates[0], coordinates[1], coordinates[2], coordinates[3]);
-                shortInfo();
+                updateFlightDetails();
             }
             var GetIDNum = $(this).attr("id").substr(6);
             if (GetIDNum == "1") {
@@ -265,5 +269,5 @@ $(document).ready(function () {
         }
     });
 
-    shortInfo();
+    updateFlightDetails();
 });
