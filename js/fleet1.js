@@ -3,6 +3,12 @@
 $(document).ready(function () {
     libCommon.init.setupJQuery();
 
+    const $targetCoordInputs = {
+        galaxy: $("input[name=\"galaxy\"]"),
+        system: $("input[name=\"system\"]"),
+        planet: $("input[name=\"planet\"]"),
+    };
+
     var FlightDuration;
 
     // Fleet Functions
@@ -205,17 +211,27 @@ $(document).ready(function () {
         })
         .hover(
             function () {
-                if ($("input[name=\"galaxy\"]").val() == "" || $("input[name=\"system\"]").val() == "" || $("input[name=\"planet\"]").val() == "") {
+                if (
+                    $targetCoordInputs.galaxy.val() == "" ||
+                    $targetCoordInputs.system.val() == "" ||
+                    $targetCoordInputs.planet.val() == ""
+                ) {
                     return;
                 }
+
                 $(".setSpeed_Current").removeClass("setSpeed_Current");
                 $(this).addClass("setSpeed_Current");
                 updateFlightDetails();
             },
             function () {
-                if ($("input[name=\"galaxy\"]").val() == "" || $("input[name=\"system\"]").val() == "" || $("input[name=\"planet\"]").val() == "") {
+                if (
+                    $targetCoordInputs.galaxy.val() == "" ||
+                    $targetCoordInputs.system.val() == "" ||
+                    $targetCoordInputs.planet.val() == ""
+                ) {
                     return;
                 }
+
                 $(this).removeClass("setSpeed_Current");
                 $(".setSpeed_Selected").addClass("setSpeed_Current");
                 updateFlightDetails();
