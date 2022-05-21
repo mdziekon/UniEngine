@@ -3,13 +3,6 @@
 $(document).ready(function () {
     libCommon.init.setupJQuery();
 
-    $(".FBeh").tipTip({maxWidth: "250px", delay: 0, edgeOffset: 8, attribute: "title"});
-    $(".Speed").tipTip({maxWidth: "250px", delay: 0, edgeOffset: 8, attribute: "title"});
-    $(".fInfo").tipTip({maxWidth: "300px", minWidth: "200px", delay: 0, edgeOffset: 8, attribute: "title"});
-    $(".planet").tipTip({delay: 0, edgeOffset: 8, content: JSLang["fl_coordplanet"]});
-    $(".moon").tipTip({delay: 0, edgeOffset: 8, content: JSLang["fl_coordmoon"]});
-    $(".debris").tipTip({delay: 0, edgeOffset: 8, content: JSLang["fl_coorddebris"]});
-
     // Elements Cache
     const $transportTotalStorage = $("#calcStorage");
     const $unionInvitedUsersList = $("#ACSUser_Invited");
@@ -195,4 +188,39 @@ $(document).ready(function () {
     $(".addPad2")
         .children(":not(.pad5)")
         .addClass("pad2");
+
+    $(".FBeh").tipTip({
+        maxWidth: "250px",
+        attribute: "title",
+        delay: 0,
+        edgeOffset: 8,
+    });
+    $(".Speed").tipTip({
+        maxWidth: "250px",
+        attribute: "title",
+        delay: 0,
+        edgeOffset: 8,
+    });
+    $(".fInfo").tipTip({
+        maxWidth: "300px",
+        minWidth: "200px",
+        attribute: "title",
+        delay: 0,
+        edgeOffset: 8,
+    });
+    $(".planet").tipTip({
+        content: JSLang["fl_coordplanet"],
+        delay: 0,
+        edgeOffset: 8,
+    });
+    $(".moon").tipTip({
+        content: JSLang["fl_coordmoon"],
+        delay: 0,
+        edgeOffset: 8,
+    });
+    $(".debris").tipTip({
+        content: JSLang["fl_coorddebris"],
+        delay: 0,
+        edgeOffset: 8,
+    });
 });
