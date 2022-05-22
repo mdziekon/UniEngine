@@ -19,7 +19,7 @@ $(document).ready(function () {
         $("#type_selector").val(type);
     }
 
-    function distance () {
+    function calculateFlightDistance () {
         var thisGalaxy = parseInt($("#ThisGalaxy").val(), 10);
         var thisSystem = parseInt($("#ThisSystem").val(), 10);
         var thisPlanet = parseInt($("#ThisPlanet").val(), 10);
@@ -40,8 +40,8 @@ $(document).ready(function () {
         return dist;
     }
 
-    function duration () {
-        var ret = Math.round((35000 / speed() * Math.sqrt(distance() * 10 / maxspeed()) + 10) / speedFactor());
+    function calculateFlightDuration () {
+        var ret = Math.round((35000 / getFlightSpeedOption() * Math.sqrt(calculateFlightDistance() * 10 / getShipsMaxSpeed()) + 10) / getUniSpeedFactor());
         FlightDuration = ret;
         if (AllowCreateTimeCounters === true) {
             updateTimeCounters();
@@ -49,22 +49,22 @@ $(document).ready(function () {
         return ret;
     }
 
-    function maxspeed () {
+    function getShipsMaxSpeed () {
         return parseInt($("#MaxSpeed").val(), 10);
     }
 
-    function speed () {
+    function getFlightSpeedOption () {
         return parseFloat($(".setSpeed_Current").attr("data-speed"));
     }
 
-    function speedFactor () {
+    function getUniSpeedFactor () {
         return parseInt($("#SpeedFactor").val(), 10);
     }
 
-    function consumption () {
-        const flightDistance = distance();
-        const flightDuration = duration();
-        const uniSpeedFactor = speedFactor();
+    function calculateFlightConsumption () {
+        const flightDistance = calculateFlightDistance();
+        const flightDuration = calculateFlightDuration();
+        const uniSpeedFactor = getUniSpeedFactor();
 
         const totalConsumption = Object
             .entries(shipsDetails)
@@ -84,11 +84,11 @@ $(document).ready(function () {
         return Math.round(totalConsumption) + 1;
     }
 
-    function storage () {
-        return (parseInt($("#Storage").val(), 10) - consumption());
+    function getResourcesStorage () {
+        return (parseInt($("#Storage").val(), 10) - calculateFlightConsumption());
     }
 
-    function GetFuelStorage () {
+    function getFuelStorage () {
         return parseInt($("#FuelStorage").val(), 10);
     }
 
@@ -98,13 +98,13 @@ $(document).ready(function () {
 
     function updateFlightDetails () {
         const durationPrettyTime = uniengine.common.prettyTime({
-            seconds: duration(),
+            seconds: calculateFlightDuration(),
             isDayConversionDisabled: true,
         });
 
-        const fleetResourcesStorage = storage();
-        const fuelConsumption = consumption();
-        const fleetFuelStorage = GetFuelStorage();
+        const fleetResourcesStorage = getResourcesStorage();
+        const fuelConsumption = calculateFlightConsumption();
+        const fleetFuelStorage = getFuelStorage();
 
         const fleetTotalStorage = fleetResourcesStorage + (
             (fleetFuelStorage >= fuelConsumption) ?
@@ -131,7 +131,7 @@ $(document).ready(function () {
         const consumptionHTML = `<b class="${consumptionValueColor}">${libCommon.format.addDots(fuelConsumption)}</b>`;
 
         $("#duration").html(`${durationPrettyTime} h`);
-        $("#distance").html(libCommon.format.addDots(distance()));
+        $("#distance").html(libCommon.format.addDots(calculateFlightDistance()));
         $("#storageShow").html(storageHTML);
         $("#consumption").html(consumptionHTML);
     }
@@ -182,11 +182,12 @@ $(document).ready(function () {
             }
         })
         .on("blur", function () {
-            if (!$(this).isNonEmptyValue()) {
-                if ($(this).isNonEmptyDataSlot("last_val")) {
-                    $(this).val($(this).data("last_val"));
-                    $(this).data("last_val", "");
-                }
+            if (
+                !$(this).isNonEmptyValue() &&
+                $(this).isNonEmptyDataSlot("last_val")
+            ) {
+                $(this).val($(this).data("last_val"));
+                $(this).data("last_val", "");
             }
         });
 
