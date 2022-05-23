@@ -40,6 +40,13 @@ $(document).ready(function () {
         $("#BackTime").html(backTimeFormatted);
     }
 
+    const isQuantumGateNeeded = () => {
+        return (NeedQuantumGate == "1");
+    };
+    const isQuantumGateUsed = () => {
+        return $("#usequantumgate").is(":checked");
+    };
+
     setInterval(createTimeCounters, 250);
 
     $(".setMaxResource").click(function () {
@@ -89,7 +96,7 @@ $(document).ready(function () {
             var MaxValue        = parseInt($("#PlanetResource" + ThisID).val(), 10);
             if (ThisID == 3) {
                 var DeleteFromVal = parseInt($("#Consumption").val(), 10);
-                if ($("#usequantumgate").is(":checked")) {
+                if (isQuantumGateUsed()) {
                     var SelectedMission = $("[name=\"mission\"]:checked").val();
                     if (SelectedMission !== undefined) {
                         if (QuantumGateDeuteriumUse[SelectedMission] == "1") {
@@ -220,7 +227,7 @@ $(document).ready(function () {
         if (ConsuptionVar_Now === undefined) {
             ConsuptionVar_Now = parseInt($("#Consumption").val(), 10);
         }
-        if (!$("#usequantumgate").is(":checked")) {
+        if (!isQuantumGateUsed()) {
             ConsuptionModif_New = 0;
         }
         var ConsuptionModif_Dif = ConsuptionModif_New - ConsuptionModif_Old;
@@ -237,7 +244,7 @@ $(document).ready(function () {
         if (StorageModif_Old === undefined) {
             StorageModif_Old = 0;
         }
-        if (!$("#usequantumgate").is(":checked")) {
+        if (!isQuantumGateUsed()) {
             StorageModif_New = 0;
         }
         var StorageModif_Dif = StorageModif_New - StorageModif_Old;
@@ -269,7 +276,7 @@ $(document).ready(function () {
             QuantumGateOptionModif = false;
         }
 
-        if (!$("#usequantumgate").is(":checked")) {
+        if (!isQuantumGateUsed()) {
             FlyTimeBackModif = 0;
             FlyTimeTargetModif = 0;
         }
@@ -311,17 +318,20 @@ $(document).ready(function () {
         $("#FlightTimeShow").html(flightTimes.join("<br/>"));
     });
     $("#usequantumgate").click(function () {
-        if (NeedQuantumGate == "1") {
-            if ($(this).is(":checked")) {
-                $("#noDeutInfo").hide();
-            } else {
-                $("#noDeutInfo").show();
-            }
+        if (isQuantumGateNeeded()) {
+            $("#noDeutInfo").toggle(!isQuantumGateUsed());
         }
+
         $(".mSelect").change();
     });
 
-    if (NeedQuantumGate != "1" || (NeedQuantumGate == "1" && $("#usequantumgate").is(":checked") == true)) {
+    if (
+        !isQuantumGateNeeded() ||
+        (
+            isQuantumGateNeeded() &&
+            isQuantumGateUsed()
+        )
+    ) {
         $("#noDeutInfo").hide();
     }
 
