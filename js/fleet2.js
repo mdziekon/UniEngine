@@ -1,4 +1,4 @@
-/* globals libCommon, JSLang, AllyPact_AttackWarn, SetResources, SelectQuantumGate, NeedQuantumGate, ResSortArrayAll, QuantumGateDeuteriumUse, ResSortArrayNoDeu, FlightDuration */
+/* globals libCommon, JSLang, AllyPact_AttackWarn, SetResources, SelectQuantumGate, NeedQuantumGate, ResSortArrayAll, QuantumGateDeuteriumUse, ResSortArrayNoDeu, FlightDuration, uniengine */
 
 var SetMaxNow = false;
 var LastStorageLowerTh0 = false;
@@ -274,44 +274,30 @@ $(document).ready(function () {
                 FlightDurationGoback = FlightDuration;
             }
 
-            var FlightTimeSecs = FlightDurationTarget;
-            var FlightTimeHour = Math.floor(FlightTimeSecs / 3600);
-            FlightTimeSecs -= FlightTimeHour * 3600;
-            var FlightTimeMins = Math.floor(FlightTimeSecs / 60);
-            FlightTimeSecs -= FlightTimeMins * 60;
-            if (FlightTimeMins < 10) {
-                FlightTimeMins = "0" + FlightTimeMins;
-            }
-            if (FlightTimeSecs < 10) {
-                FlightTimeSecs = "0" + FlightTimeSecs;
-            }
-            if (FlightTimeHour < 10) {
-                FlightTimeHour = "0" + FlightTimeHour;
-            }
-            var SetFlightTimeShow = FlightTimeHour + ":" + FlightTimeMins + ":" + FlightTimeSecs;
+            const flightTimes = [];
+
+            const flightToTargetDuration = uniengine.common.prettyTime({
+                seconds: FlightDurationTarget,
+                isDayConversionDisabled: true,
+            });
+
+            flightTimes.push(flightToTargetDuration);
+
             if (FlyTimeTargetModif == 1 && FlyTimeBackModif == 0) {
-                FlightTimeSecs = FlightDurationGoback;
-                FlightTimeHour = Math.floor(FlightTimeSecs / 3600);
-                FlightTimeSecs -= FlightTimeHour * 3600;
-                FlightTimeMins = Math.floor(FlightTimeSecs / 60);
-                FlightTimeSecs -= FlightTimeMins * 60;
-                if (FlightTimeMins < 10) {
-                    FlightTimeMins = "0" + FlightTimeMins;
-                }
-                if (FlightTimeSecs < 10) {
-                    FlightTimeSecs = "0" + FlightTimeSecs;
-                }
-                if (FlightTimeHour < 10) {
-                    FlightTimeHour = "0" + FlightTimeHour;
-                }
-                SetFlightTimeShow += " h<br/>" + FlightTimeHour + ":" + FlightTimeMins + ":" + FlightTimeSecs;
+                const flightBackToOriginDuration = uniengine.common.prettyTime({
+                    seconds: FlightDurationGoback,
+                    isDayConversionDisabled: true,
+                });
+
+                flightTimes.push(flightBackToOriginDuration);
+
                 $(".flyTimeInfo").show();
                 $(".flyTimeNoInfo").hide();
             } else {
                 $(".flyTimeInfo").hide();
                 $(".flyTimeNoInfo").show();
             }
-            $("#FlightTimeShow").html(SetFlightTimeShow);
+            $("#FlightTimeShow").html(flightTimes.join("<br/>"));
         }
     });
     $("#usequantumgate").click(function () {

@@ -170,7 +170,7 @@ var QuantumGateDeuteriumUse = {QuantumGateJSArray};
                     <tr>
                         <th class="flyTimeNoInfo">{fl2_flightTime}</th>
                         <th class="flyTimeInfo">{fl2_flightTime}</th>
-                        <th><b id="FlightTimeShow">{FlightTimeShow}</b> h</th>
+                        <th><b id="FlightTimeShow">{FlightTimeShow}</b></th>
                         <th class="inv"></th>
                         <th>{fl2_destination}</th>
                         <th>{ShowTargetPos}</th>
