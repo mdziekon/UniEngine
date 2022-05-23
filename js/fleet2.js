@@ -4,6 +4,13 @@ var SetMaxNow = false;
 var LastStorageLowerTh0 = false;
 var QuantumGateOptionModif = false;
 
+const aggressiveMissionTypes = [
+    1,
+    2,
+    9,
+    10,
+];
+
 $(document).ready(function () {
     libCommon.init.setupJQuery();
 
@@ -340,14 +347,23 @@ $(document).ready(function () {
     });
 
     $("#thisForm").submit(function () {
-        if ($("[name=\"gobackUsed\"]").length <= 0) {
-            if (AllyPact_AttackWarn === true) {
-                var ThisMission = $("[name=\"mission\"]:checked").val();
-                if (ThisMission == 1 || ThisMission == 2 || ThisMission == 9 || ThisMission == 10) {
-                    return confirm(JSLang["confirm_allypact_attack"]);
-                }
-            }
+        const hasUsedGoback = ($("[name=\"gobackUsed\"]").length > 0);
+        const isAllyPackAttackWarnEnabled = (AllyPact_AttackWarn === true);
+
+        if (
+            hasUsedGoback ||
+            !isAllyPackAttackWarnEnabled
+        ) {
+            return;
         }
+
+        const currentMissionType = parseInt($("[name=\"mission\"]:checked").val(), 10);
+
+        if (!aggressiveMissionTypes.includes(currentMissionType)) {
+            return;
+        }
+
+        return confirm(JSLang["confirm_allypact_attack"]);
     });
 
     if (SetResources === false) {
