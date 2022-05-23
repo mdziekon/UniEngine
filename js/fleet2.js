@@ -153,55 +153,64 @@ $(document).ready(function () {
             }
         });
 
+    const getQuantumGateModifiers = (modifierType) => {
+        if (modifierType == 1) {
+            const flightConsumption = parseInt($("#Consumption").val(), 10);
+            const fuelStorageReduceHalf = parseInt($("#FuelStorageReduceH").val(), 10);
+
+            const consumptionModifier = (
+                Number.isNaN(flightConsumption) ?
+                    0 :
+                    Math.ceil(flightConsumption / 2)
+            );
+
+            return {
+                storageModifier: (consumptionModifier - fuelStorageReduceHalf),
+                consumptionModifier: consumptionModifier,
+                flightTimeToTarget: 1,
+                flightTimeBackToOrigin: 0,
+            };
+        }
+
+        if (modifierType == 2) {
+            const flightConsumption = parseInt($("#Consumption").val(), 10);
+            const fuelStorageReduce = parseInt($("#FuelStorageReduce").val(), 10);
+
+            const consumptionModifier = (
+                Number.isNaN(flightConsumption) ?
+                    0 :
+                    flightConsumption
+            );
+
+            return {
+                storageModifier: (consumptionModifier - fuelStorageReduce),
+                consumptionModifier: consumptionModifier,
+                flightTimeToTarget: 1,
+                flightTimeBackToOrigin: 1,
+            };
+        }
+
+        return {
+            storageModifier: 0,
+            consumptionModifier: 0,
+            flightTimeToTarget: 0,
+            flightTimeBackToOrigin: 0,
+        };
+    };
+
     $(".mSelect").change(function () {
-        var NewStorageModifier  = QuantumGateDeuteriumUse[$(".mSelect:checked").val()];
-        var ConsuptionModif_New = 0;
-        var StorageModif_New    = 0;
+        const quantumGateMissionModifierType  = QuantumGateDeuteriumUse[$(".mSelect:checked").val()];
 
-        var FlyTimeTargetModif;
-        var FlyTimeBackModif;
-
-        if (NewStorageModifier === undefined) {
+        if (quantumGateMissionModifierType === undefined) {
             return;
         }
 
-        switch (NewStorageModifier) {
-        case 0:
-            StorageModif_New = 0;
-            ConsuptionModif_New = 0;
-            FlyTimeTargetModif = 0;
-            FlyTimeBackModif   = 0;
-            break;
-        case 1:
-            StorageModif_New = parseInt($("#Consumption").val(), 10);
-            if (isNaN(StorageModif_New)) {
-                StorageModif_New = 0;
-            } else {
-                StorageModif_New /= 2;
-                StorageModif_New = Math.ceil(StorageModif_New);
-            }
-            ConsuptionModif_New = StorageModif_New;
-            StorageModif_New    -= parseInt($("#FuelStorageReduceH").val(), 10);
-            FlyTimeTargetModif  = 1;
-            FlyTimeBackModif    = 0;
-            break;
-        case 2:
-            StorageModif_New = parseInt($("#Consumption").val(), 10);
-            if (isNaN(StorageModif_New)) {
-                StorageModif_New = 0;
-            }
-            ConsuptionModif_New = StorageModif_New;
-            StorageModif_New    -= parseInt($("#FuelStorageReduce").val(), 10);
-            FlyTimeTargetModif  = 1;
-            FlyTimeBackModif    = 1;
-            break;
-        default:
-            StorageModif_New = 0;
-            ConsuptionModif_New = 0;
-            FlyTimeTargetModif = 0;
-            FlyTimeBackModif   = 0;
-            break;
-        }
+        const quantumGateModifiers = getQuantumGateModifiers(quantumGateMissionModifierType);
+
+        let StorageModif_New = quantumGateModifiers.storageModifier;
+        let ConsuptionModif_New = quantumGateModifiers.consumptionModifier;
+        let FlyTimeTargetModif = quantumGateModifiers.flightTimeToTarget;
+        let FlyTimeBackModif = quantumGateModifiers.flightTimeBackToOrigin;
 
         // Change ConsumptionVar
         var ConsuptionModif_Old = $("#FuelUse").data("ConsuptionModif_Old");
