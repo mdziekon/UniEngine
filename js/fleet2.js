@@ -18,26 +18,18 @@ $(document).ready(function () {
     var FlightDurationGoback = FlightDuration;
 
     $.fn.setStorageShow = function (setVar) {
-        var AddColor = "orange";
-        var RemColor = "lime";
-        var RemColor2 = "red";
-        if (setVar > 0) {
-            AddColor = "lime";
-            RemColor = "orange";
-        } else if (setVar < 0) {
-            AddColor = "red";
-            RemColor2 = "orange";
-        }
-        var El = $("#FreeStorageShow");
-        $("#FreeStorageShow").val(setVar).prettyInputBox().html($("#FreeStorageShow").val());
-        if (El.hasClass(RemColor)) {
-            $("#FreeStorageShow").removeClass(RemColor);
-        } else if (El.hasClass(RemColor2)) {
-            $("#FreeStorageShow").removeClass(RemColor2);
-        }
-        if (!El.hasClass(AddColor)) {
-            $("#FreeStorageShow").addClass(AddColor);
-        }
+        const hasEnoughStorage = setVar >= 0;
+        const hasExactlyStorage = setVar == 0;
+
+        const $element = $("#FreeStorageShow");
+
+        $element
+            .val(setVar)
+            .prettyInputBox()
+            .html($element.val())
+            .toggleClass("red", !hasEnoughStorage)
+            .toggleClass("orange", hasExactlyStorage)
+            .toggleClass("lime", hasEnoughStorage);
     };
 
     function createTimeCounters () {
