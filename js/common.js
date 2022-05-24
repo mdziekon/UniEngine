@@ -18,7 +18,7 @@ function strPadLeft (value, desiredLenght, padString) {
     return `${padding}${value}`;
 }
 
-function prettyTime ({ seconds }) {
+function prettyTime ({ seconds, isDayConversionDisabled = false }) {
     const lang = getLangStorage().common;
 
     seconds = Math.floor(seconds);
@@ -45,7 +45,7 @@ function prettyTime ({ seconds }) {
 
     const timePieces = [];
 
-    if (days > 0) {
+    if (days > 0 && !isDayConversionDisabled) {
         timePieces.push(lang.prettyTime.formatters.daysFullJSFunction(days));
     }
 

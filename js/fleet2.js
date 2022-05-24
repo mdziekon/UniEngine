@@ -1,8 +1,15 @@
-/* globals libCommon, JSLang, AllyPact_AttackWarn, SetResources, SelectQuantumGate, NeedQuantumGate, ResSortArrayAll, QuantumGateDeuteriumUse, ResSortArrayNoDeu, FlightDuration */
+/* globals libCommon, JSLang, AllyPact_AttackWarn, SetResources, SelectQuantumGate, NeedQuantumGate, ResSortArrayAll, QuantumGateDeuteriumUse, ResSortArrayNoDeu, FlightDuration, uniengine */
 
 var SetMaxNow = false;
 var LastStorageLowerTh0 = false;
 var QuantumGateOptionModif = false;
+
+const aggressiveMissionTypes = [
+    1,
+    2,
+    9,
+    10,
+];
 
 $(document).ready(function () {
     libCommon.init.setupJQuery();
@@ -11,26 +18,18 @@ $(document).ready(function () {
     var FlightDurationGoback = FlightDuration;
 
     $.fn.setStorageShow = function (setVar) {
-        var AddColor = "orange";
-        var RemColor = "lime";
-        var RemColor2 = "red";
-        if (setVar > 0) {
-            AddColor = "lime";
-            RemColor = "orange";
-        } else if (setVar < 0) {
-            AddColor = "red";
-            RemColor2 = "orange";
-        }
-        var El = $("#FreeStorageShow");
-        $("#FreeStorageShow").val(setVar).prettyInputBox().html($("#FreeStorageShow").val());
-        if (El.hasClass(RemColor)) {
-            $("#FreeStorageShow").removeClass(RemColor);
-        } else if (El.hasClass(RemColor2)) {
-            $("#FreeStorageShow").removeClass(RemColor2);
-        }
-        if (!El.hasClass(AddColor)) {
-            $("#FreeStorageShow").addClass(AddColor);
-        }
+        const hasEnoughStorage = setVar >= 0;
+        const hasExactlyStorage = setVar == 0;
+
+        const $element = $("#FreeStorageShow");
+
+        $element
+            .val(setVar)
+            .prettyInputBox()
+            .html($element.val())
+            .toggleClass("red", !hasEnoughStorage)
+            .toggleClass("orange", hasExactlyStorage)
+            .toggleClass("lime", hasEnoughStorage);
     };
 
     function createTimeCounters () {
@@ -40,6 +39,13 @@ $(document).ready(function () {
         $("#ReachTime").html(reachTimeFormatted);
         $("#BackTime").html(backTimeFormatted);
     }
+
+    const isQuantumGateNeeded = () => {
+        return (NeedQuantumGate == "1");
+    };
+    const isQuantumGateUsed = () => {
+        return $("#usequantumgate").is(":checked");
+    };
 
     setInterval(createTimeCounters, 250);
 
@@ -90,7 +96,7 @@ $(document).ready(function () {
             var MaxValue        = parseInt($("#PlanetResource" + ThisID).val(), 10);
             if (ThisID == 3) {
                 var DeleteFromVal = parseInt($("#Consumption").val(), 10);
-                if ($("#usequantumgate").is(":checked")) {
+                if (isQuantumGateUsed()) {
                     var SelectedMission = $("[name=\"mission\"]:checked").val();
                     if (SelectedMission !== undefined) {
                         if (QuantumGateDeuteriumUse[SelectedMission] == "1") {
@@ -153,179 +159,179 @@ $(document).ready(function () {
             }
         });
 
+    const getQuantumGateModifiers = (modifierType) => {
+        if (modifierType == 1) {
+            const flightConsumption = parseInt($("#Consumption").val(), 10);
+            const fuelStorageReduceHalf = parseInt($("#FuelStorageReduceH").val(), 10);
+
+            const consumptionModifier = (
+                Number.isNaN(flightConsumption) ?
+                    0 :
+                    Math.ceil(flightConsumption / 2)
+            );
+
+            return {
+                storageModifier: (consumptionModifier - fuelStorageReduceHalf),
+                consumptionModifier: consumptionModifier,
+                flightTimeToTarget: 1,
+                flightTimeBackToOrigin: 0,
+            };
+        }
+
+        if (modifierType == 2) {
+            const flightConsumption = parseInt($("#Consumption").val(), 10);
+            const fuelStorageReduce = parseInt($("#FuelStorageReduce").val(), 10);
+
+            const consumptionModifier = (
+                Number.isNaN(flightConsumption) ?
+                    0 :
+                    flightConsumption
+            );
+
+            return {
+                storageModifier: (consumptionModifier - fuelStorageReduce),
+                consumptionModifier: consumptionModifier,
+                flightTimeToTarget: 1,
+                flightTimeBackToOrigin: 1,
+            };
+        }
+
+        return {
+            storageModifier: 0,
+            consumptionModifier: 0,
+            flightTimeToTarget: 0,
+            flightTimeBackToOrigin: 0,
+        };
+    };
+
     $(".mSelect").change(function () {
-        var NewStorageModifier  = QuantumGateDeuteriumUse[$(".mSelect:checked").val()];
-        var ConsuptionModif_New = 0;
-        var StorageModif_New    = 0;
+        const quantumGateMissionModifierType  = QuantumGateDeuteriumUse[$(".mSelect:checked").val()];
 
-        var FlyTimeTargetModif;
-        var FlyTimeBackModif;
+        if (quantumGateMissionModifierType === undefined) {
+            return;
+        }
 
-        if (NewStorageModifier !== undefined) {
-            switch (NewStorageModifier) {
-            case 0:
-                StorageModif_New = 0;
-                ConsuptionModif_New = 0;
-                FlyTimeTargetModif = 0;
-                FlyTimeBackModif   = 0;
-                break;
-            case 1:
-                StorageModif_New = parseInt($("#Consumption").val(), 10);
-                if (isNaN(StorageModif_New)) {
-                    StorageModif_New = 0;
-                } else {
-                    StorageModif_New /= 2;
-                    StorageModif_New = Math.ceil(StorageModif_New);
+        const quantumGateModifiers = getQuantumGateModifiers(quantumGateMissionModifierType);
+
+        let StorageModif_New = quantumGateModifiers.storageModifier;
+        let ConsuptionModif_New = quantumGateModifiers.consumptionModifier;
+        let FlyTimeTargetModif = quantumGateModifiers.flightTimeToTarget;
+        let FlyTimeBackModif = quantumGateModifiers.flightTimeBackToOrigin;
+
+        // Change ConsumptionVar
+        var ConsuptionModif_Old = $("#FuelUse").data("ConsuptionModif_Old");
+        var ConsuptionVar_Now   = $("#FuelUse").data("ConsuptionVar_Now");
+        if (ConsuptionModif_Old === undefined) {
+            ConsuptionModif_Old = 0;
+        }
+        if (ConsuptionVar_Now === undefined) {
+            ConsuptionVar_Now = parseInt($("#Consumption").val(), 10);
+        }
+        if (!isQuantumGateUsed()) {
+            ConsuptionModif_New = 0;
+        }
+        var ConsuptionModif_Dif = ConsuptionModif_New - ConsuptionModif_Old;
+        if (ConsuptionModif_Dif !== 0) {
+            ConsuptionVar_Now -= ConsuptionModif_Dif;
+            $("#FuelUse").html(libCommon.format.addDots(ConsuptionVar_Now));
+            $("#FuelUse").data("ConsuptionModif_Old", ConsuptionModif_New);
+            $("#FuelUse").data("ConsuptionVar_Now", ConsuptionVar_Now);
+        }
+
+        // Change StorageVar
+        var Changed = false;
+        var StorageModif_Old = $("#FreeStorage").data("StorageModif_Old");
+        if (StorageModif_Old === undefined) {
+            StorageModif_Old = 0;
+        }
+        if (!isQuantumGateUsed()) {
+            StorageModif_New = 0;
+        }
+        var StorageModif_Dif = StorageModif_New - StorageModif_Old;
+        if (StorageModif_Dif !== 0) {
+            var FreeStorage = parseInt($("#FreeStorage").val(), 10) + StorageModif_Dif;
+            $("#FreeStorage").data("StorageModif_Old", StorageModif_New);
+            Changed = true;
+        }
+
+        if (Changed) {
+            $("#FreeStorage").val(FreeStorage).setStorageShow(FreeStorage);
+            QuantumGateOptionModif = true;
+            $("[name=resource3]").change();
+            if (LastStorageLowerTh0) {
+                LastStorageLowerTh0 = false;
+                var ThisResID = "1";
+                var NextResID = "2";
+                if (ResSortArrayNoDeu[0] == "met") {
+                    ThisResID = "2";
+                    NextResID = "1";
                 }
-                ConsuptionModif_New = StorageModif_New;
-                StorageModif_New    -= parseInt($("#FuelStorageReduceH").val(), 10);
-                FlyTimeTargetModif  = 1;
-                FlyTimeBackModif    = 0;
-                break;
-            case 2:
-                StorageModif_New = parseInt($("#Consumption").val(), 10);
-                if (isNaN(StorageModif_New)) {
-                    StorageModif_New = 0;
-                }
-                ConsuptionModif_New = StorageModif_New;
-                StorageModif_New    -= parseInt($("#FuelStorageReduce").val(), 10);
-                FlyTimeTargetModif  = 1;
-                FlyTimeBackModif    = 1;
-                break;
-            default:
-                StorageModif_New = 0;
-                ConsuptionModif_New = 0;
-                FlyTimeTargetModif = 0;
-                FlyTimeBackModif   = 0;
-                break;
-            }
-
-            // Change ConsumptionVar
-            var ConsuptionModif_Old = $("#FuelUse").data("ConsuptionModif_Old");
-            var ConsuptionVar_Now   = $("#FuelUse").data("ConsuptionVar_Now");
-            if (ConsuptionModif_Old === undefined) {
-                ConsuptionModif_Old = 0;
-            }
-            if (ConsuptionVar_Now === undefined) {
-                ConsuptionVar_Now = parseInt($("#Consumption").val(), 10);
-            }
-            if (!$("#usequantumgate").is(":checked")) {
-                ConsuptionModif_New = 0;
-            }
-            var ConsuptionModif_Dif = ConsuptionModif_New - ConsuptionModif_Old;
-            if (ConsuptionModif_Dif !== 0) {
-                ConsuptionVar_Now -= ConsuptionModif_Dif;
-                $("#FuelUse").html(libCommon.format.addDots(ConsuptionVar_Now));
-                $("#FuelUse").data("ConsuptionModif_Old", ConsuptionModif_New);
-                $("#FuelUse").data("ConsuptionVar_Now", ConsuptionVar_Now);
-            }
-
-            // Change StorageVar
-            var Changed = false;
-            var StorageModif_Old = $("#FreeStorage").data("StorageModif_Old");
-            if (StorageModif_Old === undefined) {
-                StorageModif_Old = 0;
-            }
-            if (!$("#usequantumgate").is(":checked")) {
-                StorageModif_New = 0;
-            }
-            var StorageModif_Dif = StorageModif_New - StorageModif_Old;
-            if (StorageModif_Dif !== 0) {
-                var FreeStorage = parseInt($("#FreeStorage").val(), 10) + StorageModif_Dif;
-                $("#FreeStorage").data("StorageModif_Old", StorageModif_New);
-                Changed = true;
-            }
-
-            if (Changed) {
-                $("#FreeStorage").val(FreeStorage).setStorageShow(FreeStorage);
-                QuantumGateOptionModif = true;
-                $("[name=resource3]").change();
+                $("[name=resource" + ThisResID + "]").change();
                 if (LastStorageLowerTh0) {
                     LastStorageLowerTh0 = false;
-                    var ThisResID = "1";
-                    var NextResID = "2";
-                    if (ResSortArrayNoDeu[0] == "met") {
-                        ThisResID = "2";
-                        NextResID = "1";
-                    }
-                    $("[name=resource" + ThisResID + "]").change();
-                    if (LastStorageLowerTh0) {
-                        LastStorageLowerTh0 = false;
-                        $("[name=resource" + NextResID + "]").change();
-                        LastStorageLowerTh0 = false;
-                    }
+                    $("[name=resource" + NextResID + "]").change();
+                    LastStorageLowerTh0 = false;
                 }
-                QuantumGateOptionModif = false;
             }
-
-            if (!$("#usequantumgate").is(":checked")) {
-                FlyTimeBackModif = 0;
-                FlyTimeTargetModif = 0;
-            }
-
-            if (FlyTimeTargetModif == 1) {
-                FlightDurationTarget = 1;
-            } else {
-                FlightDurationTarget = FlightDuration;
-            }
-            if (FlyTimeBackModif == 1) {
-                FlightDurationGoback = 1;
-            } else {
-                FlightDurationGoback = FlightDuration;
-            }
-
-            var FlightTimeSecs = FlightDurationTarget;
-            var FlightTimeHour = Math.floor(FlightTimeSecs / 3600);
-            FlightTimeSecs -= FlightTimeHour * 3600;
-            var FlightTimeMins = Math.floor(FlightTimeSecs / 60);
-            FlightTimeSecs -= FlightTimeMins * 60;
-            if (FlightTimeMins < 10) {
-                FlightTimeMins = "0" + FlightTimeMins;
-            }
-            if (FlightTimeSecs < 10) {
-                FlightTimeSecs = "0" + FlightTimeSecs;
-            }
-            if (FlightTimeHour < 10) {
-                FlightTimeHour = "0" + FlightTimeHour;
-            }
-            var SetFlightTimeShow = FlightTimeHour + ":" + FlightTimeMins + ":" + FlightTimeSecs;
-            if (FlyTimeTargetModif == 1 && FlyTimeBackModif == 0) {
-                FlightTimeSecs = FlightDurationGoback;
-                FlightTimeHour = Math.floor(FlightTimeSecs / 3600);
-                FlightTimeSecs -= FlightTimeHour * 3600;
-                FlightTimeMins = Math.floor(FlightTimeSecs / 60);
-                FlightTimeSecs -= FlightTimeMins * 60;
-                if (FlightTimeMins < 10) {
-                    FlightTimeMins = "0" + FlightTimeMins;
-                }
-                if (FlightTimeSecs < 10) {
-                    FlightTimeSecs = "0" + FlightTimeSecs;
-                }
-                if (FlightTimeHour < 10) {
-                    FlightTimeHour = "0" + FlightTimeHour;
-                }
-                SetFlightTimeShow += " h<br/>" + FlightTimeHour + ":" + FlightTimeMins + ":" + FlightTimeSecs;
-                $(".flyTimeInfo").show();
-                $(".flyTimeNoInfo").hide();
-            } else {
-                $(".flyTimeInfo").hide();
-                $(".flyTimeNoInfo").show();
-            }
-            $("#FlightTimeShow").html(SetFlightTimeShow);
+            QuantumGateOptionModif = false;
         }
+
+        if (!isQuantumGateUsed()) {
+            FlyTimeBackModif = 0;
+            FlyTimeTargetModif = 0;
+        }
+
+        if (FlyTimeTargetModif == 1) {
+            FlightDurationTarget = 1;
+        } else {
+            FlightDurationTarget = FlightDuration;
+        }
+        if (FlyTimeBackModif == 1) {
+            FlightDurationGoback = 1;
+        } else {
+            FlightDurationGoback = FlightDuration;
+        }
+
+        const flightTimes = [];
+
+        const flightToTargetDuration = uniengine.common.prettyTime({
+            seconds: FlightDurationTarget,
+            isDayConversionDisabled: true,
+        });
+
+        flightTimes.push(flightToTargetDuration);
+
+        if (FlyTimeTargetModif == 1 && FlyTimeBackModif == 0) {
+            const flightBackToOriginDuration = uniengine.common.prettyTime({
+                seconds: FlightDurationGoback,
+                isDayConversionDisabled: true,
+            });
+
+            flightTimes.push(flightBackToOriginDuration);
+
+            $(".flyTimeInfo").show();
+            $(".flyTimeNoInfo").hide();
+        } else {
+            $(".flyTimeInfo").hide();
+            $(".flyTimeNoInfo").show();
+        }
+        $("#FlightTimeShow").html(flightTimes.join("<br/>"));
     });
     $("#usequantumgate").click(function () {
-        if (NeedQuantumGate == "1") {
-            if ($(this).is(":checked")) {
-                $("#noDeutInfo").hide();
-            } else {
-                $("#noDeutInfo").show();
-            }
+        if (isQuantumGateNeeded()) {
+            $("#noDeutInfo").toggle(!isQuantumGateUsed());
         }
+
         $(".mSelect").change();
     });
 
-    if (NeedQuantumGate != "1" || (NeedQuantumGate == "1" && $("#usequantumgate").is(":checked") == true)) {
+    if (
+        !isQuantumGateNeeded() ||
+        (
+            isQuantumGateNeeded() &&
+            isQuantumGateUsed()
+        )
+    ) {
         $("#noDeutInfo").hide();
     }
 
@@ -343,14 +349,23 @@ $(document).ready(function () {
     });
 
     $("#thisForm").submit(function () {
-        if ($("[name=\"gobackUsed\"]").length <= 0) {
-            if (AllyPact_AttackWarn === true) {
-                var ThisMission = $("[name=\"mission\"]:checked").val();
-                if (ThisMission == 1 || ThisMission == 2 || ThisMission == 9 || ThisMission == 10) {
-                    return confirm(JSLang["confirm_allypact_attack"]);
-                }
-            }
+        const hasUsedGoback = ($("[name=\"gobackUsed\"]").length > 0);
+        const isAllyPackAttackWarnEnabled = (AllyPact_AttackWarn === true);
+
+        if (
+            hasUsedGoback ||
+            !isAllyPackAttackWarnEnabled
+        ) {
+            return;
         }
+
+        const currentMissionType = parseInt($("[name=\"mission\"]:checked").val(), 10);
+
+        if (!aggressiveMissionTypes.includes(currentMissionType)) {
+            return;
+        }
+
+        return confirm(JSLang["confirm_allypact_attack"]);
     });
 
     if (SetResources === false) {

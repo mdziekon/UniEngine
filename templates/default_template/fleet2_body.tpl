@@ -13,7 +13,7 @@ var QuantumGateDeuteriumUse = {QuantumGateJSArray};
 {CreateTestACCAlert}
 </script>
 <script src="dist/js/_libCommon.cachebuster-1649555016585.min.js"></script>
-<script src="dist/js/fleet2.cachebuster-1649556398934.min.js"></script>
+<script src="dist/js/fleet2.cachebuster-1653350869468.min.js"></script>
 <link rel="stylesheet" type="text/css" href="dist/css/fleet2.cachebuster-1546565145290.min.css" />
 
 <form id="thisForm" action="fleet3.php" method="post">
@@ -170,7 +170,7 @@ var QuantumGateDeuteriumUse = {QuantumGateJSArray};
                     <tr>
                         <th class="flyTimeNoInfo">{fl2_flightTime}</th>
                         <th class="flyTimeInfo">{fl2_flightTime}</th>
-                        <th><b id="FlightTimeShow">{FlightTimeShow}</b> h</th>
+                        <th><b id="FlightTimeShow">{FlightTimeShow}</b></th>
                         <th class="inv"></th>
                         <th>{fl2_destination}</th>
                         <th>{ShowTargetPos}</th>
