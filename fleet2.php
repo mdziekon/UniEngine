@@ -165,56 +165,56 @@ $Fleet['array'] = String2Array($_POST['FleetArray']);
 $FleetArray = [];
 
 if (
-    !empty($Fleet['array']) &&
-    is_array($Fleet['array'])
+    empty($Fleet['array']) ||
+    !is_array($Fleet['array'])
 ) {
-    $fleetArrayValidationResult = FlightControl\Utils\Validators\validateFleetArray([
-        'fleet' => $Fleet['array'],
-        'planet' => &$_Planet,
-        'isFromDirectUserInput' => false,
-    ]);
-
-    if (!$fleetArrayValidationResult['isValid']) {
-        $firstValidationError = $fleetArrayValidationResult['errors'][0];
-
-        $errorMessage = null;
-        switch ($firstValidationError['errorCode']) {
-            case 'INVALID_SHIP_ID':
-                $errorMessage = $_Lang['fl1_BadShipGiven'];
-                break;
-            case 'SHIP_WITH_NO_ENGINE':
-                $errorMessage = $_Lang['fl1_CantSendUnflyable'];
-                break;
-            case 'INVALID_SHIP_COUNT':
-                $errorMessage = $_Lang['fleet_generic_errors_invalidshipcount'];
-                break;
-            case 'SHIP_COUNT_EXCEEDS_AVAILABLE':
-                $errorMessage = $_Lang['fl1_NoEnoughShips'];
-                break;
-            default:
-                $errorMessage = $_Lang['fleet_generic_errors_unknown'];
-                break;
-        }
-
-        message($errorMessage, $ErrorTitle, 'fleet.php', 3);
-    }
-
-    foreach ($Fleet['array'] as $ShipID => $ShipCount) {
-        $ShipID = intval($ShipID);
-        $ShipCount = floor($ShipCount);
-        $FleetArray[$ShipID] = $ShipCount;
-        $Fleet['count'] += $ShipCount;
-
-        $allShipsOfTypeStorage = getShipsStorageCapacity($ShipID) * $ShipCount;
-
-        if (canShipPillage($ShipID)) {
-            $Fleet['storage'] += $allShipsOfTypeStorage;
-        } else {
-            $Fleet['FuelStorage'] += $allShipsOfTypeStorage;
-        }
-    }
-} else {
     message($_Lang['fl2_FleetArrayPostEmpty'], $ErrorTitle, 'fleet.php', 3);
+}
+
+$fleetArrayValidationResult = FlightControl\Utils\Validators\validateFleetArray([
+    'fleet' => $Fleet['array'],
+    'planet' => &$_Planet,
+    'isFromDirectUserInput' => false,
+]);
+
+if (!$fleetArrayValidationResult['isValid']) {
+    $firstValidationError = $fleetArrayValidationResult['errors'][0];
+
+    $errorMessage = null;
+    switch ($firstValidationError['errorCode']) {
+        case 'INVALID_SHIP_ID':
+            $errorMessage = $_Lang['fl1_BadShipGiven'];
+            break;
+        case 'SHIP_WITH_NO_ENGINE':
+            $errorMessage = $_Lang['fl1_CantSendUnflyable'];
+            break;
+        case 'INVALID_SHIP_COUNT':
+            $errorMessage = $_Lang['fleet_generic_errors_invalidshipcount'];
+            break;
+        case 'SHIP_COUNT_EXCEEDS_AVAILABLE':
+            $errorMessage = $_Lang['fl1_NoEnoughShips'];
+            break;
+        default:
+            $errorMessage = $_Lang['fleet_generic_errors_unknown'];
+            break;
+    }
+
+    message($errorMessage, $ErrorTitle, 'fleet.php', 3);
+}
+
+foreach ($Fleet['array'] as $ShipID => $ShipCount) {
+    $ShipID = intval($ShipID);
+    $ShipCount = floor($ShipCount);
+    $FleetArray[$ShipID] = $ShipCount;
+    $Fleet['count'] += $ShipCount;
+
+    $allShipsOfTypeStorage = getShipsStorageCapacity($ShipID) * $ShipCount;
+
+    if (canShipPillage($ShipID)) {
+        $Fleet['storage'] += $allShipsOfTypeStorage;
+    } else {
+        $Fleet['FuelStorage'] += $allShipsOfTypeStorage;
+    }
 }
 
 if($Fleet['count'] <= 0)
