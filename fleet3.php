@@ -213,12 +213,12 @@ if (
         }
     }
 } else {
-    messageRed($_Lang['fl2_FleetArrayPostEmpty'], $ErrorTitle);
+    messageRed($_Lang['fl1_NoShipsGiven'], $ErrorTitle);
 }
 
 if($Fleet['count'] <= 0)
 {
-    messageRed($_Lang['fl2_ZeroShips'], $ErrorTitle);
+    messageRed($_Lang['fl1_NoShipsGiven'], $ErrorTitle);
 }
 $Fleet['array'] = $FleetArray;
 unset($FleetArray);

@@ -168,7 +168,7 @@ if (
     empty($Fleet['array']) ||
     !is_array($Fleet['array'])
 ) {
-    message($_Lang['fl2_FleetArrayPostEmpty'], $ErrorTitle, 'fleet.php', 3);
+    message($_Lang['fl1_NoShipsGiven'], $ErrorTitle, 'fleet.php', 3);
 }
 
 $fleetArrayValidationResult = FlightControl\Utils\Validators\validateFleetArray([
@@ -219,7 +219,7 @@ foreach ($Fleet['array'] as $ShipID => $ShipCount) {
 
 if($Fleet['count'] <= 0)
 {
-    message($_Lang['fl2_ZeroShips'], $ErrorTitle, 'fleet.php', 3);
+    message($_Lang['fl1_NoShipsGiven'], $ErrorTitle, 'fleet.php', 3);
 }
 $Fleet['array'] = $FleetArray;
 unset($FleetArray);
