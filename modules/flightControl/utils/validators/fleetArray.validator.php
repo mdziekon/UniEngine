@@ -11,7 +11,7 @@ namespace UniEngine\Engine\Modules\FlightControl\Utils\Validators;
  *  - Allows ships count to be 0
  */
 function validateFleetArray ($props) {
-    global $_Vars_ElementCategories, $_Vars_Prices;
+    global $_Vars_ElementCategories;
 
     $isValid = function () {
         return [
