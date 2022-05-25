@@ -217,8 +217,7 @@ foreach ($Fleet['array'] as $ShipID => $ShipCount) {
     }
 }
 
-if($Fleet['count'] <= 0)
-{
+if ($Fleet['count'] <= 0) {
     message($_Lang['fl1_NoShipsGiven'], $ErrorTitle, 'fleet.php', 3);
 }
 $Fleet['array'] = $FleetArray;
