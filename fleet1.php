@@ -90,14 +90,14 @@ if(!empty($_POST['gobackVars']))
 
 // Management of ShipsList
 if (!empty($_POST['ship'])) {
-    $fleetArrayValidationResult = FlightControl\Utils\Validators\validateFleetArray([
+    $fleetArrayParsingResult = FlightControl\Utils\Validators\parseFleetArray([
         'fleet' => $_POST['ship'],
         'planet' => &$_Planet,
         'isFromDirectUserInput' => true,
     ]);
 
-    if (!$fleetArrayValidationResult['isValid']) {
-        $firstValidationError = $fleetArrayValidationResult['errors'][0];
+    if (!$fleetArrayParsingResult['isValid']) {
+        $firstValidationError = $fleetArrayParsingResult['errors'][0];
 
         $errorMessage = null;
         switch ($firstValidationError['errorCode']) {

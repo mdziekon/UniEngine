@@ -3,7 +3,7 @@
 namespace UniEngine\Engine\Modules\FlightControl\Utils\Errors;
 
 /**
- * @param object $error As returned by FlightControl\Utils\Validators\validateFleetArray
+ * @param object $error As returned by FlightControl\Utils\Validators\parseFleetArray
  */
 function mapFleetArrayValidationErrorToReadableMessage($error) {
     global $_Lang;

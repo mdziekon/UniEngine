@@ -188,14 +188,14 @@ if (
     messageRed($_Lang['fl1_NoShipsGiven'], $ErrorTitle);
 }
 
-$fleetArrayValidationResult = FlightControl\Utils\Validators\validateFleetArray([
+$fleetArrayParsingResult = FlightControl\Utils\Validators\parseFleetArray([
     'fleet' => $Fleet['array'],
     'planet' => &$_Planet,
     'isFromDirectUserInput' => false,
 ]);
 
-if (!$fleetArrayValidationResult['isValid']) {
-    $firstValidationError = $fleetArrayValidationResult['errors'][0];
+if (!$fleetArrayParsingResult['isValid']) {
+    $firstValidationError = $fleetArrayParsingResult['errors'][0];
     $errorMessage = FlightControl\Utils\Errors\mapFleetArrayValidationErrorToReadableMessage($firstValidationError);
 
     messageRed($errorMessage, $ErrorTitle);

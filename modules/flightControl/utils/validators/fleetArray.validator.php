@@ -10,12 +10,13 @@ namespace UniEngine\Engine\Modules\FlightControl\Utils\Validators;
  *  - Allows ships count to be prettified
  *  - Allows ships count to be 0
  */
-function validateFleetArray ($props) {
+function parseFleetArray ($props) {
     global $_Vars_ElementCategories;
 
-    $isValid = function () {
+    $isValid = function ($payload) {
         return [
             'isValid' => true,
+            'payload' => $payload,
         ];
     };
     $isInvalid = function ($errors) {
@@ -32,6 +33,8 @@ function validateFleetArray ($props) {
             $props['isFromDirectUserInput'] :
             false
     );
+
+    $parsedFleet = [];
 
     foreach ($fleet as $inputShipId => $inputShipCount) {
         $shipId = intval($inputShipId);
@@ -75,10 +78,14 @@ function validateFleetArray ($props) {
             ]);
         }
 
+        $parsedFleet[$shipId] = $shipCount;
+
         continue;
     }
 
-    return $isValid();
+    return $isValid([
+        'parsedFleet' => $parsedFleet,
+    ]);
 }
 
 ?>
