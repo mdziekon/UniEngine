@@ -204,12 +204,12 @@ if (
         $FleetArray[$ShipID] = $ShipCount;
         $Fleet['count'] += $ShipCount;
 
-        $ThisStorage = getShipsStorageCapacity($ShipID) * $ShipCount;
+        $allShipsOfTypeStorage = getShipsStorageCapacity($ShipID) * $ShipCount;
 
-        if ($ShipID != 210) {
-            $Fleet['storage'] += $ThisStorage;
+        if (canShipPillage($ShipID)) {
+            $Fleet['storage'] += $allShipsOfTypeStorage;
         } else {
-            $Fleet['FuelStorage'] += $ThisStorage;
+            $Fleet['FuelStorage'] += $allShipsOfTypeStorage;
         }
     }
 } else {

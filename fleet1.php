@@ -132,12 +132,12 @@ if (!empty($_POST['ship'])) {
         $Fleet['array'][$ShipID] = $ShipCount;
         $Fleet['count'] += $ShipCount;
 
-        $ThisStorage = getShipsStorageCapacity($ShipID) * $ShipCount;
+        $allShipsOfTypeStorage = getShipsStorageCapacity($ShipID) * $ShipCount;
 
-        if ($ShipID != 210) {
-            $Fleet['storage'] += $ThisStorage;
+        if (canShipPillage($ShipID)) {
+            $Fleet['storage'] += $allShipsOfTypeStorage;
         } else {
-            $Fleet['FuelStorage'] += $ThisStorage;
+            $Fleet['FuelStorage'] += $allShipsOfTypeStorage;
         }
 
         $shipSpeed = getShipsCurrentSpeed($ShipID, $_User);
