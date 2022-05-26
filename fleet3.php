@@ -202,17 +202,12 @@ if (!$fleetArrayParsingResult['isValid']) {
 }
 
 $Fleet['array'] = $fleetArrayParsingResult['payload']['parsedFleet'];
+
+$shipsTotalStorage = FlightControl\Utils\Helpers\FleetArray\getShipsTotalStorage($Fleet['array']);
+
 $Fleet['count'] = FlightControl\Utils\Helpers\FleetArray\getAllShipsCount($Fleet['array']);
-
-foreach ($Fleet['array'] as $shipID => $shipCount) {
-    $allShipsOfTypeStorage = getShipsStorageCapacity($shipID) * $shipCount;
-
-    if (canShipPillage($shipID)) {
-        $Fleet['storage'] += $allShipsOfTypeStorage;
-    } else {
-        $Fleet['FuelStorage'] += $allShipsOfTypeStorage;
-    }
-}
+$Fleet['storage'] = $shipsTotalStorage['allPurpose'];
+$Fleet['FuelStorage'] = $shipsTotalStorage['fuelOnly'];
 
 $validMissionTypes = FlightControl\Utils\Helpers\getValidMissionTypes([
     'targetCoordinates' => $Target,

@@ -105,15 +105,12 @@ if (!empty($_POST['ship'])) {
 
     $Fleet['array'] = $fleetArrayParsingResult['payload']['parsedFleet'];
 
+    $shipsTotalStorage = FlightControl\Utils\Helpers\FleetArray\getShipsTotalStorage($Fleet['array']);
+
+    $Fleet['storage'] = $shipsTotalStorage['allPurpose'];
+    $Fleet['FuelStorage'] = $shipsTotalStorage['fuelOnly'];
+
     foreach ($Fleet['array'] as $shipId => $shipCount) {
-        $allShipsOfTypeStorage = getShipsStorageCapacity($shipId) * $shipCount;
-
-        if (canShipPillage($shipId)) {
-            $Fleet['storage'] += $allShipsOfTypeStorage;
-        } else {
-            $Fleet['FuelStorage'] += $allShipsOfTypeStorage;
-        }
-
         $shipSpeed = getShipsCurrentSpeed($shipId, $_User);
         $shipConsumption = getShipsCurrentConsumption($shipId, $_User);
         $allShipsConsumption = ($shipConsumption * $shipCount);
