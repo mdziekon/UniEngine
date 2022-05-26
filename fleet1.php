@@ -29,7 +29,7 @@ $Hide = ' class="hide"';
 $shipsDetails = [];
 
 $Fleet = [
-    'count' => 0,
+    'array' => [],
     'storage' => 0,
     'FuelStorage' => 0,
 ];
@@ -90,70 +90,36 @@ if(!empty($_POST['gobackVars']))
 
 // Management of ShipsList
 if (!empty($_POST['ship'])) {
-    $fleetArrayValidationResult = FlightControl\Utils\Validators\validateFleetArray([
+    $fleetArrayParsingResult = FlightControl\Utils\Validators\parseFleetArray([
         'fleet' => $_POST['ship'],
         'planet' => &$_Planet,
         'isFromDirectUserInput' => true,
     ]);
 
-    if (!$fleetArrayValidationResult['isValid']) {
-        $firstValidationError = $fleetArrayValidationResult['errors'][0];
-
-        $errorMessage = null;
-        switch ($firstValidationError['errorCode']) {
-            case 'INVALID_SHIP_ID':
-                $errorMessage = $_Lang['fl1_BadShipGiven'];
-                break;
-            case 'SHIP_WITH_NO_ENGINE':
-                $errorMessage = $_Lang['fl1_CantSendUnflyable'];
-                break;
-            case 'INVALID_SHIP_COUNT':
-                $errorMessage = $_Lang['fleet_generic_errors_invalidshipcount'];
-                break;
-            case 'SHIP_COUNT_EXCEEDS_AVAILABLE':
-                $errorMessage = $_Lang['fl1_NoEnoughShips'];
-                break;
-            default:
-                $errorMessage = $_Lang['fleet_generic_errors_unknown'];
-                break;
-        }
+    if (!$fleetArrayParsingResult['isValid']) {
+        $firstValidationError = $fleetArrayParsingResult['errors'][0];
+        $errorMessage = FlightControl\Utils\Errors\mapFleetArrayValidationErrorToReadableMessage($firstValidationError);
 
         message($errorMessage, $ErrorTitle, 'fleet.php', 3);
     }
 
-    foreach ($_POST['ship'] as $ShipID => $ShipCount) {
-        $ShipID = intval($ShipID);
-        $ShipCount = floor(str_replace('.', '', $ShipCount));
+    $Fleet['array'] = $fleetArrayParsingResult['payload']['parsedFleet'];
 
-        if ($ShipCount <= 0) {
-            continue;
-        }
+    $shipsTotalStorage = FlightControl\Utils\Helpers\FleetArray\getShipsTotalStorage($Fleet['array']);
 
-        $Fleet['array'][$ShipID] = $ShipCount;
-        $Fleet['count'] += $ShipCount;
+    $Fleet['storage'] = $shipsTotalStorage['allPurpose'];
+    $Fleet['FuelStorage'] = $shipsTotalStorage['fuelOnly'];
 
-        $ThisStorage = getShipsStorageCapacity($ShipID) * $ShipCount;
+    foreach ($Fleet['array'] as $shipId => $shipCount) {
+        $shipSpeed = getShipsCurrentSpeed($shipId, $_User);
+        $shipConsumption = getShipsCurrentConsumption($shipId, $_User);
+        $allShipsConsumption = ($shipConsumption * $shipCount);
 
-        if ($ShipID != 210) {
-            $Fleet['storage'] += $ThisStorage;
-        } else {
-            $Fleet['FuelStorage'] += $ThisStorage;
-        }
-
-        $shipSpeed = getShipsCurrentSpeed($ShipID, $_User);
-        $shipConsumption = getShipsCurrentConsumption($ShipID, $_User);
-        $allShipsConsumption = ($shipConsumption * $ShipCount);
-
-        $shipsDetails[$ShipID] = [
+        $shipsDetails[$shipId] = [
             'speed' => $shipSpeed,
             'totalConsumptionOfShipType' => (string) $allShipsConsumption,
         ];
     }
-}
-
-if($Fleet['count'] <= 0)
-{
-    message($_Lang['fl1_NoShipsGiven'], $ErrorTitle, 'fleet.php', 3);
 }
 
 $slowestShipSpeed = min(
