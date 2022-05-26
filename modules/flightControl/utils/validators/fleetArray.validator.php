@@ -78,9 +78,17 @@ function parseFleetArray ($props) {
             ]);
         }
 
-        $parsedFleet[$shipId] = $shipCount;
+        if ($shipCount == 0) {
+            continue;
+        }
 
-        continue;
+        $parsedFleet[$shipId] = $shipCount;
+    }
+
+    if (empty($parsedFleet)) {
+        return $isInvalid([
+            [ 'errorCode' => 'NO_SHIPS', ],
+        ]);
     }
 
     return $isValid([

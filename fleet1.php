@@ -113,6 +113,9 @@ if (!empty($_POST['ship'])) {
             case 'SHIP_COUNT_EXCEEDS_AVAILABLE':
                 $errorMessage = $_Lang['fl1_NoEnoughShips'];
                 break;
+            case 'NO_SHIPS':
+                $errorMessage = $_Lang['fl1_NoShipsGiven'];
+                break;
             default:
                 $errorMessage = $_Lang['fleet_generic_errors_unknown'];
                 break;
@@ -149,11 +152,6 @@ if (!empty($_POST['ship'])) {
             'totalConsumptionOfShipType' => (string) $allShipsConsumption,
         ];
     }
-}
-
-if($Fleet['count'] <= 0)
-{
-    message($_Lang['fl1_NoShipsGiven'], $ErrorTitle, 'fleet.php', 3);
 }
 
 $slowestShipSpeed = min(
