@@ -63,6 +63,7 @@ call_user_func(function () {
     include($includePath . './utils/helpers/getAvailableExpeditionTimes.helper.php');
     include($includePath . './utils/helpers/getAvailableHoldTimes.helper.php');
     include($includePath . './utils/helpers/getAvailableSpeeds.helper.php');
+    include($includePath . './utils/helpers/getFleetArrayInfo.helper.php');
     include($includePath . './utils/helpers/getFleetsInFlightCounters.helper.php');
     include($includePath . './utils/helpers/getFleetUnionJoinData.helper.php');
     include($includePath . './utils/helpers/getFlightParams.helper.php');

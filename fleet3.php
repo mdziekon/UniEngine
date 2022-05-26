@@ -202,10 +202,9 @@ if (!$fleetArrayParsingResult['isValid']) {
 }
 
 $Fleet['array'] = $fleetArrayParsingResult['payload']['parsedFleet'];
+$Fleet['count'] = FlightControl\Utils\Helpers\FleetArray\getAllShipsCount($Fleet['array']);
 
 foreach ($Fleet['array'] as $shipID => $shipCount) {
-    $Fleet['count'] += $shipCount;
-
     $allShipsOfTypeStorage = getShipsStorageCapacity($shipID) * $shipCount;
 
     if (canShipPillage($shipID)) {
