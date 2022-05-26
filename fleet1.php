@@ -29,7 +29,7 @@ $Hide = ' class="hide"';
 $shipsDetails = [];
 
 $Fleet = [
-    'count' => 0,
+    'array' => [],
     'storage' => 0,
     'FuelStorage' => 0,
 ];
@@ -103,30 +103,22 @@ if (!empty($_POST['ship'])) {
         message($errorMessage, $ErrorTitle, 'fleet.php', 3);
     }
 
-    foreach ($_POST['ship'] as $ShipID => $ShipCount) {
-        $ShipID = intval($ShipID);
-        $ShipCount = floor(str_replace('.', '', $ShipCount));
+    $Fleet['array'] = $fleetArrayParsingResult['payload']['parsedFleet'];
 
-        if ($ShipCount <= 0) {
-            continue;
-        }
+    foreach ($Fleet['array'] as $shipId => $shipCount) {
+        $allShipsOfTypeStorage = getShipsStorageCapacity($shipId) * $shipCount;
 
-        $Fleet['array'][$ShipID] = $ShipCount;
-        $Fleet['count'] += $ShipCount;
-
-        $allShipsOfTypeStorage = getShipsStorageCapacity($ShipID) * $ShipCount;
-
-        if (canShipPillage($ShipID)) {
+        if (canShipPillage($shipId)) {
             $Fleet['storage'] += $allShipsOfTypeStorage;
         } else {
             $Fleet['FuelStorage'] += $allShipsOfTypeStorage;
         }
 
-        $shipSpeed = getShipsCurrentSpeed($ShipID, $_User);
-        $shipConsumption = getShipsCurrentConsumption($ShipID, $_User);
-        $allShipsConsumption = ($shipConsumption * $ShipCount);
+        $shipSpeed = getShipsCurrentSpeed($shipId, $_User);
+        $shipConsumption = getShipsCurrentConsumption($shipId, $_User);
+        $allShipsConsumption = ($shipConsumption * $shipCount);
 
-        $shipsDetails[$ShipID] = [
+        $shipsDetails[$shipId] = [
             'speed' => $shipSpeed,
             'totalConsumptionOfShipType' => (string) $allShipsConsumption,
         ];

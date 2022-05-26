@@ -157,22 +157,24 @@ if (
 }
 
 // Parse Fleet Array
-$Fleet['count'] = 0;
-$Fleet['storage'] = 0;
-$Fleet['FuelStorage'] = 0;
+$Fleet = [
+    'array' => [],
+    'count' => 0,
+    'storage' => 0,
+    'FuelStorage' => 0,
+];
 
-$Fleet['array'] = String2Array($_POST['FleetArray']);
-$FleetArray = [];
+$inputFleetArray = String2Array($_POST['FleetArray']);
 
 if (
-    empty($Fleet['array']) ||
-    !is_array($Fleet['array'])
+    empty($inputFleetArray) ||
+    !is_array($inputFleetArray)
 ) {
     message($_Lang['fl1_NoShipsGiven'], $ErrorTitle, 'fleet.php', 3);
 }
 
 $fleetArrayParsingResult = FlightControl\Utils\Validators\parseFleetArray([
-    'fleet' => $Fleet['array'],
+    'fleet' => $inputFleetArray,
     'planet' => &$_Planet,
     'isFromDirectUserInput' => false,
 ]);
@@ -184,23 +186,19 @@ if (!$fleetArrayParsingResult['isValid']) {
     message($errorMessage, $ErrorTitle, 'fleet.php', 3);
 }
 
-foreach ($Fleet['array'] as $ShipID => $ShipCount) {
-    $ShipID = intval($ShipID);
-    $ShipCount = floor($ShipCount);
-    $FleetArray[$ShipID] = $ShipCount;
-    $Fleet['count'] += $ShipCount;
+$Fleet['array'] = $fleetArrayParsingResult['payload']['parsedFleet'];
 
-    $allShipsOfTypeStorage = getShipsStorageCapacity($ShipID) * $ShipCount;
+foreach ($Fleet['array'] as $shipID => $shipCount) {
+    $Fleet['count'] += $shipCount;
 
-    if (canShipPillage($ShipID)) {
+    $allShipsOfTypeStorage = getShipsStorageCapacity($shipID) * $shipCount;
+
+    if (canShipPillage($shipID)) {
         $Fleet['storage'] += $allShipsOfTypeStorage;
     } else {
         $Fleet['FuelStorage'] += $allShipsOfTypeStorage;
     }
 }
-
-$Fleet['array'] = $FleetArray;
-unset($FleetArray);
 
 $AvailableMissions = FlightControl\Utils\Helpers\getValidMissionTypes([
     'targetCoordinates' => $Target,
