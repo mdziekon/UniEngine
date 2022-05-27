@@ -361,6 +361,10 @@ if($CurrentPlanet[$_Vars_GameElements[$ShipID]] < $ShipCount)
     $ShipCount = $CurrentPlanet[$_Vars_GameElements[$ShipID]];
 }
 
+$FleetArray = [
+    $ShipID => $ShipCount
+];
+
 $availableSpeeds = FlightControl\Utils\Helpers\getAvailableSpeeds([
     'user' => &$_User,
     'timestamp' => $Time,
@@ -370,15 +374,11 @@ reset($availableSpeeds);
 
 $GenFleetSpeed = current($availableSpeeds);
 $SpeedFactor = getUniFleetsSpeedFactor();
-$MaxFleetSpeed = getShipsCurrentSpeed($ShipID, $_User);
 
-if(MORALE_ENABLED)
-{
-    if($_User['morale_level'] <= MORALE_PENALTY_FLEETSLOWDOWN)
-    {
-        $MaxFleetSpeed *= MORALE_PENALTY_FLEETSLOWDOWN_VALUE;
-    }
-}
+$slowestShipSpeed = FlightControl\Utils\Helpers\getSlowestShipSpeed([
+    'shipsDetails' => getFleetShipsSpeeds($FleetArray, $_User),
+    'user' => &$_User,
+]);
 
 $distance = getFlightDistanceBetween(
     $CurrentPlanet,
@@ -391,7 +391,7 @@ $distance = getFlightDistanceBetween(
 $duration = getFlightDuration([
     'speedFactor' => $GenFleetSpeed,
     'distance' => $distance,
-    'maxShipsSpeed' => $MaxFleetSpeed
+    'maxShipsSpeed' => $slowestShipSpeed
 ]);
 $consumption = getFlightTotalConsumption(
     [
@@ -423,7 +423,7 @@ if($Mission == 6)
             $duration = getFlightDuration([
                 'speedFactor' => $GenFleetSpeed,
                 'distance' => $distance,
-                'maxShipsSpeed' => $MaxFleetSpeed
+                'maxShipsSpeed' => $slowestShipSpeed
             ]);
             $consumption = getFlightTotalConsumption(
                 [
@@ -465,10 +465,6 @@ else
 {
     CreateReturn('608');
 }
-
-$FleetArray = [
-    $ShipID => $ShipCount
-];
 
 $fleetEntry = [
     'Mission' => $Mission,
