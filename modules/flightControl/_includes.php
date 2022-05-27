@@ -31,6 +31,8 @@ call_user_func(function () {
     include($includePath . './screens/SendWizardStepOne/components/FlightsList/utils/prerenderFriendlyAcsListElement.utils.php');
     include($includePath . './screens/SendWizardStepOne/components/FlightsList/utils/prerenderOwnListElement.utils.php');
 
+    include($includePath . './screens/SendWizardStepTwo/components/SpeedSelector/SpeedSelector.component.php');
+
     include($includePath . './screens/Shortcuts/Shortcuts.screen.php');
     include($includePath . './screens/Shortcuts/components/ListManagement/ListManagement.component.php');
     include($includePath . './screens/Shortcuts/components/ShortcutManagementForm/ShortcutManagementForm.component.php');

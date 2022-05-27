@@ -244,13 +244,10 @@ if (
 }
 $_Lang['Insert_SpeedInput'] = $_Set_DefaultSpeed;
 
-foreach ($SpeedsAvailable as $Selector) {
-    $Text = $Selector * 10;
-    $isSpeedSelected = ($_Set_DefaultSpeed == $Selector);
-
-    $_Lang['Insert_Speeds'][] = "<a href=\"#\" class=\"setSpeed ".($isSpeedSelected ? 'setSpeed_Selected setSpeed_Current' : '')."\" data-speed=\"{$Selector}\">{$Text}</a>";
-}
-$_Lang['Insert_Speeds'] = implode('<span class="speedBreak">|</span>', $_Lang['Insert_Speeds']);
+$_Lang['Insert_Speeds'] = FlightControl\Screens\SendWizardStepTwo\Components\SpeedSelector\render([
+    'speedOptions' => $SpeedsAvailable,
+    'selectedOption' => $_Set_DefaultSpeed,
+])['componentHTML'];
 
 // Create Colony List and Shortcuts List (dropdown)
 $OtherPlanets = SortUserPlanets($_User);
