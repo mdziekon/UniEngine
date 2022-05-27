@@ -236,22 +236,18 @@ $allowGateJump = $quantumGateStateDetails['canUseQuantumGateJump'];
 
 $PreSelectedMission = intval($_POST['target_mission']);
 $SpeedFactor = getUniFleetsSpeedFactor();
-$AllFleetSpeed = getFleetShipsSpeeds($Fleet['array'], $_User);
 $GenFleetSpeed = $_POST['speed'];
-$MaxFleetSpeed = min($AllFleetSpeed);
-if(MORALE_ENABLED)
-{
-    if($_User['morale_level'] <= MORALE_PENALTY_FLEETSLOWDOWN)
-    {
-        $MaxFleetSpeed *= MORALE_PENALTY_FLEETSLOWDOWN_VALUE;
-    }
-}
+
+$slowestShipSpeed = FlightControl\Utils\Helpers\getSlowestShipSpeed([
+    'shipsDetails' => getFleetShipsSpeeds($Fleet['array'], $_User),
+    'user' => &$_User,
+]);
 
 $distance = getFlightDistanceBetween($_Planet, $Target);
 $duration = getFlightDuration([
     'speedFactor' => $GenFleetSpeed,
     'distance' => $distance,
-    'maxShipsSpeed' => $MaxFleetSpeed
+    'maxShipsSpeed' => $slowestShipSpeed
 ]);
 
 $consumption = getFlightTotalConsumption(

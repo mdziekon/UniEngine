@@ -472,17 +472,13 @@ if ($hasTargetOwner) {
 }
 
 // --- Calculate Speed and Distance
-$AllFleetSpeed = getFleetShipsSpeeds($Fleet['array'], $_User);
 $GenFleetSpeed = $Fleet['Speed'];
 $SpeedFactor = getUniFleetsSpeedFactor();
-$MaxFleetSpeed = min($AllFleetSpeed);
-if(MORALE_ENABLED)
-{
-    if($_User['morale_level'] <= MORALE_PENALTY_FLEETSLOWDOWN)
-    {
-        $MaxFleetSpeed *= MORALE_PENALTY_FLEETSLOWDOWN_VALUE;
-    }
-}
+
+$slowestShipSpeed = FlightControl\Utils\Helpers\getSlowestShipSpeed([
+    'shipsDetails' => getFleetShipsSpeeds($Fleet['array'], $_User),
+    'user' => &$_User,
+]);
 
 $Distance = getFlightDistanceBetween($_Planet, $Target);
 
@@ -521,7 +517,7 @@ $flightParams = FlightControl\Utils\Helpers\getFleetParams([
     'fleet' => $Fleet,
     'fleetSpeed' => $GenFleetSpeed,
     'distance' => $Distance,
-    'maxFleetSpeed' => $MaxFleetSpeed,
+    'maxFleetSpeed' => $slowestShipSpeed,
     'isUsingQuantumGate' => $isUsingQuantumGate,
     'quantumGateUseType' => $quantumGateUseType,
 ]);
@@ -795,7 +791,7 @@ $UserDev_Log[] = FlightControl\Utils\Factories\createFleetDevLogEntry([
 
 $_Lang['FleetMission'] = $_Lang['type_mission'][$Fleet['Mission']];
 $_Lang['FleetDistance'] = prettyNumber($Distance);
-$_Lang['FleetSpeed'] = prettyNumber($MaxFleetSpeed);
+$_Lang['FleetSpeed'] = prettyNumber($slowestShipSpeed);
 $_Lang['FleetFuel'] = prettyNumber($Consumption);
 $_Lang['StartGalaxy'] = $_Planet['galaxy'];
 $_Lang['StartSystem'] = $_Planet['system'];

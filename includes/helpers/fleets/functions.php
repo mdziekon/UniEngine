@@ -105,14 +105,12 @@ function getShipsCurrentConsumption($shipID, $user) {
     return $usedEngine['data']['consumption'];
 }
 
-function getFleetShipsSpeeds($fleetShips, $user) {
-    $speedsPerShip = [];
-
-    foreach ($fleetShips as $shipID => $_shipsCount) {
-        $speedsPerShip[$shipID] = getShipsCurrentSpeed($shipID, $user);
-    }
-
-    return $speedsPerShip;
+function getFleetShipsSpeeds($fleetShips, &$user) {
+    return array_map_withkeys($fleetShips, function ($shipCount, $shipId) use (&$user) {
+        return [
+            'speed' => getShipsCurrentSpeed($shipId, $user),
+        ];
+    });
 }
 
 //  Arguments:
