@@ -122,19 +122,6 @@ if (!empty($_POST['ship'])) {
     }
 }
 
-$slowestShipSpeed = min(
-    array_map_withkeys($shipsDetails, function ($shipDetails) {
-        return $shipDetails['speed'];
-    })
-);
-
-// Speed modifier
-if (MORALE_ENABLED) {
-    if ($_User['morale_level'] <= MORALE_PENALTY_FLEETSLOWDOWN) {
-        $slowestShipSpeed *= MORALE_PENALTY_FLEETSLOWDOWN_VALUE;
-    }
-}
-
 $_Lang['P_HideACSJoining'] = $Hide;
 $GetACSData = intval($_POST['getacsdata']);
 $SetPosNotEmpty = false;
@@ -202,8 +189,14 @@ else
     $_Lang['SetTargetMission'] = 2;
 }
 
+$slowestShipSpeed = FlightControl\Utils\Helpers\getSlowestShipSpeed([
+    'shipsDetails' => $shipsDetails,
+    'user' => &$_User,
+]);
+
 // Show info boxes
 $_Lang['P_SFBInfobox'] = FlightControl\Components\SmartFleetBlockadeInfoBox\render()['componentHTML'];
+
 
 $_Lang['P_ShipsDetailsJSON'] = json_encode($shipsDetails, JSON_FORCE_OBJECT);
 $_Lang['speedallsmin'] = $slowestShipSpeed;
