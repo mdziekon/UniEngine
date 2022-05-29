@@ -81,28 +81,26 @@ $Target['system'] = (isset($_POST['system']) ? intval($_POST['system']) : null);
 $Target['planet'] = (isset($_POST['planet']) ? intval($_POST['planet']) : null);
 $Target['type'] = (isset($_POST['planettype']) ? intval($_POST['planettype']) : null);
 
-$GetACSData = intval($_POST['getacsdata']);
-if($GetACSData > 0)
-{
-    $ACSData = doquery("SELECT `id`, `name`, `end_galaxy`, `end_system`, `end_planet`, `end_type`, `start_time` FROM {{table}} WHERE `id` = {$GetACSData};", 'acs', true);
-    if($ACSData['id'] == $GetACSData)
-    {
-        if($ACSData['start_time'] > $Now)
-        {
-            $Target['galaxy'] = $ACSData['end_galaxy'];
-            $Target['system'] = $ACSData['end_system'];
-            $Target['planet'] = $ACSData['end_planet'];
-            $Target['type'] = $ACSData['end_type'];
-        }
-        else
-        {
-            message($_Lang['fl1_ACSTimeUp'], $ErrorTitle, 'fleet.php', 3);
-        }
+$inputJoinUnionId = intval($_POST['getacsdata']);
+
+if ($inputJoinUnionId > 0) {
+    $joinUnionResult = FlightControl\Utils\Helpers\tryJoinUnion([
+        'unionId' => $inputJoinUnionId,
+        'currentTimestamp' => $Now,
+    ]);
+
+    if (!$joinUnionResult['isSuccess']) {
+        $errorMessage = FlightControl\Utils\Errors\mapTryJoinUnionErrorToReadableMessage($joinUnionResult['error']);
+
+        message($errorMessage, $ErrorTitle, 'fleet.php', 3);
     }
-    else
-    {
-        message($_Lang['fl1_ACSNoExist'], $ErrorTitle, 'fleet.php', 3);
-    }
+
+    $unionData = $joinUnionResult['payload']['unionData'];
+
+    $Target['galaxy'] = $unionData['end_galaxy'];
+    $Target['system'] = $unionData['end_system'];
+    $Target['planet'] = $unionData['end_planet'];
+    $Target['type'] = $unionData['end_type'];
 }
 
 if($Target['galaxy'] == $_Planet['galaxy'] AND $Target['system'] == $_Planet['system'] AND $Target['planet'] == $_Planet['planet'] AND $Target['type'] == $_Planet['planet_type'])
@@ -454,7 +452,7 @@ if (!empty($AvailableMissions)) {
         $_Lang['CreateACSList'] = '';
 
         foreach ($ACSList as $ID => $Name) {
-            $_Lang['CreateACSList'] .= '<option value="'.$ID.'" '.($GetACSData == $ID ? 'selected' : '').'>'.$Name.'</option>';
+            $_Lang['CreateACSList'] .= '<option value="'.$ID.'" '.($inputJoinUnionId == $ID ? 'selected' : '').'>'.$Name.'</option>';
         }
     } else {
         $_Lang['P_HideACSJoinList'] = $Hide;
