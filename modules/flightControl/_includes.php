@@ -76,6 +76,7 @@ call_user_func(function () {
     include($includePath . './utils/helpers/getUserFleetSlotsCount.helper.php');
     include($includePath . './utils/helpers/getValidMissionTypes.helper.php');
     include($includePath . './utils/helpers/noobProtection.helper.php');
+    include($includePath . './utils/helpers/tryJoinUnion.helper.php');
     include($includePath . './utils/inputs/normalizeFleetResources.inputs.php');
     include($includePath . './utils/inputs/normalizeGobackFleetArray.inputs.php');
     include($includePath . './utils/updaters/createUnionEntry.updaters.php');
@@ -107,6 +108,7 @@ call_user_func(function () {
     include($includePath . './utils/errors/quantumGate.utils.php');
     include($includePath . './utils/errors/smartFleetsBlockade.utils.php');
     include($includePath . './utils/errors/targetOwner.utils.php');
+    include($includePath . './utils/errors/tryJoinUnion.utils.php');
 
 });
 

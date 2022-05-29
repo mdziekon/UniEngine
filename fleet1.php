@@ -122,39 +122,38 @@ if (!empty($_POST['ship'])) {
     }
 }
 
-$_Lang['P_HideACSJoining'] = $Hide;
-$GetACSData = intval($_POST['getacsdata']);
-$SetPosNotEmpty = false;
-if($GetACSData > 0)
-{
-    $ACSData = doquery("SELECT `id`, `name`, `end_galaxy`, `end_system`, `end_planet`, `end_type`, `start_time` FROM {{table}} WHERE `id` = {$GetACSData};", 'acs', true);
-    if($ACSData['id'] == $GetACSData)
-    {
-        if($ACSData['start_time'] > $Now)
-        {
-            $SetPos['g'] = $ACSData['end_galaxy'];
-            $SetPos['s'] = $ACSData['end_system'];
-            $SetPos['p'] = $ACSData['end_planet'];
-            $SetPos['t'] = $ACSData['end_type'];
+$SetPos = [];
 
-            $SetPosNotEmpty = true;
-            $_Lang['P_HideACSJoining'] = '';
-            $_Lang['fl1_ACSJoiningFleet'] = sprintf($_Lang['fl1_ACSJoiningFleet'], $ACSData['name'], $ACSData['end_galaxy'], $ACSData['end_system'], $ACSData['end_planet']);
-            $_Lang['P_DisableCoordSel'] = 'disabled';
-            $_Lang['SelectedACSID'] = $GetACSData;
-        }
-        else
-        {
-            message($_Lang['fl1_ACSTimeUp'], $ErrorTitle, 'fleet.php', 3);
-        }
+$inputJoinUnionId = intval($_POST['getacsdata']);
+
+if ($inputJoinUnionId > 0) {
+    $joinUnionResult = FlightControl\Utils\Helpers\tryJoinUnion([
+        'unionId' => $inputJoinUnionId,
+        'currentTimestamp' => $Now,
+    ]);
+
+    if (!$joinUnionResult['isSuccess']) {
+        $errorMessage = FlightControl\Utils\Errors\mapTryJoinUnionErrorToReadableMessage($joinUnionResult['error']);
+
+        message($errorMessage, $ErrorTitle, 'fleet.php', 3);
     }
-    else
-    {
-        message($_Lang['fl1_ACSNoExist'], $ErrorTitle, 'fleet.php', 3);
-    }
+
+    $unionData = $joinUnionResult['payload']['unionData'];
+
+    $SetPos['g'] = $unionData['end_galaxy'];
+    $SetPos['s'] = $unionData['end_system'];
+    $SetPos['p'] = $unionData['end_planet'];
+    $SetPos['t'] = $unionData['end_type'];
+
+    $_Lang['fl1_ACSJoiningFleet'] = sprintf(
+        $_Lang['fl1_ACSJoiningFleet'],
+        $unionData['name'], $unionData['end_galaxy'], $unionData['end_system'], $unionData['end_planet']
+    );
+    $_Lang['P_DisableCoordSel'] = 'disabled';
+    $_Lang['SelectedACSID'] = $unionData['id'];
 }
 
-if($SetPosNotEmpty !== true)
+if(empty($SetPos))
 {
     $SetPos['g'] = intval($_POST['galaxy']);
     $SetPos['s'] = intval($_POST['system']);
@@ -299,6 +298,12 @@ if (
 } else {
     $_Lang['P_HideNoFastLinks'] = '';
 }
+
+$_Lang['P_HideACSJoining'] = (
+    empty($_Lang['SelectedACSID']) ?
+        $Hide :
+        null
+);
 
 $Page = parsetemplate(gettemplate('fleet1_body'), $_Lang);
 display($Page, $_Lang['fl_title']);
