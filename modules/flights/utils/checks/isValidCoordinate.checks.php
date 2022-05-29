@@ -41,7 +41,7 @@ function isValidCoordinate($params) {
     ];
 
     foreach ($inRangeCoordinates as $paramName => $paramValue) {
-        if (!isset($originalCoordinate[$paramName])) {
+        if (!array_key_exists($paramName, $originalCoordinate)) {
             continue;
         }
         if ($originalCoordinate[$paramName] == $paramValue) {
