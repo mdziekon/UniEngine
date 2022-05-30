@@ -28,7 +28,8 @@ function array_any(array $inputArray, callable $callback) {
 }
 
 /**
- * Maps an object, allowing to access the key of each value, and change both key & value
+ * Maps an object, allowing to access the key of each value, and change both key & value.
+ * The callback should return a pair of [ $value, $key ]
  */
 function object_map(array $inputObject, callable $callback) {
     return array_column(
