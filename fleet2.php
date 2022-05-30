@@ -321,23 +321,19 @@ $_Lang['FlightTimeShow'] = pretty_time($duration, true);
 $_Lang['consumption'] = (string)($consumption + 0);
 $_Lang['ShowConsumption'] = prettyNumber($consumption);
 $_Lang['totalstorage'] = (string)($Fleet['storage'] + 0);
-if($Fleet['FuelStorage'] >= $consumption)
-{
-    $_Lang['FuelStorageReduce'] = $consumption;
-}
-else
-{
-    $_Lang['FuelStorageReduce'] = $Fleet['FuelStorage'];
-}
+
 $TempCeil = ceil($consumption / 2);
-if($Fleet['FuelStorage'] >= $TempCeil)
-{
-    $_Lang['FuelStorageReduceH'] = $TempCeil;
-}
-else
-{
-    $_Lang['FuelStorageReduceH'] = $Fleet['FuelStorage'];
-}
+
+$_Lang['FuelStorageReduce'] = (
+    ($Fleet['FuelStorage'] >= $consumption) ?
+        $consumption :
+        $Fleet['FuelStorage']
+);
+$_Lang['FuelStorageReduceH'] = (
+    ($Fleet['FuelStorage'] >= $TempCeil) ?
+        $TempCeil :
+        $Fleet['FuelStorage']
+);
 $_Lang['freeStorage'] = (string)($Fleet['storage'] - $consumption + $_Lang['FuelStorageReduce'] + 0);
 $_Lang['FuelStorageReduce'] = (string)($_Lang['FuelStorageReduce'] + 0);
 $_Lang['FuelStorageReduceH'] = (string)($_Lang['FuelStorageReduceH'] + 0);
@@ -472,14 +468,12 @@ if($Target['planet'] != (MAX_PLANET_IN_SYSTEM + 1))
 {
     $_Lang['P_HideExpeditionTimers'] = $Hide;
 }
-if ($targetInfo['isPlanetOwnerNonAggressiveAllianceMember'])
-{
-    $_Lang['Insert_AllyPact_AttackWarn'] = 'true';
-}
-else
-{
-    $_Lang['Insert_AllyPact_AttackWarn'] = 'false';
-}
+
+$_Lang['Insert_AllyPact_AttackWarn'] = (
+    $targetInfo['isPlanetOwnerNonAggressiveAllianceMember'] ?
+        'true' :
+        'false'
+);
 
 $availableHoldTimes = FlightControl\Utils\Helpers\getAvailableHoldTimes([]);
 
