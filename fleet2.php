@@ -380,14 +380,11 @@ else
 }
 $_Lang['SetSpeed'] = $_POST['speed'];
 
-if($_User['settings_useprettyinputbox'] == 1)
-{
-    $_Lang['P_AllowPrettyInputBox'] = 'true';
-}
-else
-{
-    $_Lang['P_AllowPrettyInputBox'] = 'false';
-}
+$_Lang['P_AllowPrettyInputBox'] = (
+    ($_User['settings_useprettyinputbox'] == 1) ?
+        'true' :
+        'false'
+);
 $_User['settings_resSortArray'] = explode(',', $_User['settings_resSortArray']);
 foreach($_User['settings_resSortArray'] as $ResSortData)
 {
