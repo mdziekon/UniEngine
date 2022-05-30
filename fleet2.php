@@ -202,22 +202,27 @@ $AvailableMissions = FlightControl\Utils\Helpers\getValidMissionTypes([
     'isUnionMissionAllowed' => false,
 ]);
 
+$joinableUnionsList = [];
+
 if (
     in_array(Flights\Enums\FleetMission::Attack, $AvailableMissions) &&
     $targetPlanetDetails['id'] > 0
 ) {
-    $SQLResult_CheckACS = doquery(
-        "SELECT * FROM {{table}} WHERE (`users` LIKE '%|{$_User['id']}|%' OR `owner_id` = {$_User['id']}) AND `end_target_id` = {$targetPlanetDetails['id']} AND `start_time` > UNIX_TIMESTAMP();",
-        'acs'
-    );
+    $joinableUnionFlights = FlightControl\Utils\Fetchers\fetchJoinableUnionFlights([
+        'userId' => $_User['id'],
+        'targetPlanetId' => $targetPlanetDetails['id'],
+    ]);
 
-    if($SQLResult_CheckACS->num_rows > 0)
-    {
-        while($ACSData = $SQLResult_CheckACS->fetch_assoc())
-        {
-            $ACSData['fleets_count'] += 1;
-            $ACSList[$ACSData['id']] = "{$ACSData['name']} ({$_Lang['fl_acs_fleets']}: {$ACSData['fleets_count']})";
-        }
+    $joinableUnionsList = object_map($joinableUnionFlights, function ($unionFlight) use (&$_Lang) {
+        $joinedFleetsCount = $unionFlight['fleets_count'] + 1;
+
+        return [
+            "{$unionFlight['name']} ({$_Lang['fl_acs_fleets']}: {$joinedFleetsCount})",
+            $unionFlight['id']
+        ];
+    });
+
+    if (!empty($joinableUnionsList)) {
         $AvailableMissions[] = Flights\Enums\FleetMission::UnitedAttack;
     }
 }
@@ -453,8 +458,8 @@ if (!empty($AvailableMissions)) {
     if (in_array(Flights\Enums\FleetMission::UnitedAttack, $AvailableMissions)) {
         $_Lang['CreateACSList'] = '';
 
-        foreach ($ACSList as $ID => $Name) {
-            $_Lang['CreateACSList'] .= '<option value="'.$ID.'" '.($inputJoinUnionId == $ID ? 'selected' : '').'>'.$Name.'</option>';
+        foreach ($joinableUnionsList as $unionId => $unionDisplayData) {
+            $_Lang['CreateACSList'] .= '<option value="'.$unionId.'" '.($inputJoinUnionId == $unionId ? 'selected' : '').'>'.$unionDisplayData.'</option>';
         }
     } else {
         $_Lang['P_HideACSJoinList'] = $Hide;

@@ -50,6 +50,7 @@ call_user_func(function () {
     include($includePath . './utils/factories/createUnionInvitationMessage.factory.php');
     include($includePath . './utils/fetchers/fetchActiveSmartFleetsBlockadeEntries.fetcher.php');
     include($includePath . './utils/fetchers/fetchBashValidatorFlightLogEntries.fetcher.php');
+    include($includePath . './utils/fetchers/fetchJoinableUnionFlights.fetcher.php');
     include($includePath . './utils/fetchers/fetchMultiDeclaration.fetcher.php');
     include($includePath . './utils/fetchers/fetchPlanetOwnerDetails.fetcher.php');
     include($includePath . './utils/fetchers/fetchSavedShortcuts.fetcher.php');
