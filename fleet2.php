@@ -202,8 +202,10 @@ $AvailableMissions = FlightControl\Utils\Helpers\getValidMissionTypes([
     'isUnionMissionAllowed' => false,
 ]);
 
-if(in_array(1, $AvailableMissions) && $targetPlanetDetails['id'] > 0)
-{
+if (
+    in_array(Flights\Enums\FleetMission::Attack, $AvailableMissions) &&
+    $targetPlanetDetails['id'] > 0
+) {
     $SQLResult_CheckACS = doquery(
         "SELECT * FROM {{table}} WHERE (`users` LIKE '%|{$_User['id']}|%' OR `owner_id` = {$_User['id']}) AND `end_target_id` = {$targetPlanetDetails['id']} AND `start_time` > UNIX_TIMESTAMP();",
         'acs'
@@ -216,7 +218,7 @@ if(in_array(1, $AvailableMissions) && $targetPlanetDetails['id'] > 0)
             $ACSData['fleets_count'] += 1;
             $ACSList[$ACSData['id']] = "{$ACSData['name']} ({$_Lang['fl_acs_fleets']}: {$ACSData['fleets_count']})";
         }
-        $AvailableMissions[] = 2;
+        $AvailableMissions[] = Flights\Enums\FleetMission::UnitedAttack;
     }
 }
 
