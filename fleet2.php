@@ -355,28 +355,21 @@ else
 }
 $_Lang['SetDefaultFreeStorage'] = prettyNumber($_Lang['freeStorage']);
 $_Lang['ShowTargetPos'] = "<a href=\"galaxy.php?mode=3&galaxy={$Target['galaxy']}&system={$Target['system']}&planet={$Target['planet']}\" target=\"_blank\">[{$Target['galaxy']}:{$Target['system']}:{$Target['planet']}]</a><b class=\"".($Target['type'] == 1 ? 'planet' : ($Target['type'] == 3 ? 'moon' : 'debris'))."\"></b><br/>";
-if(!empty($targetPlanetDetails['name']))
-{
-    if($targetOwnerDetails['id'] > 0)
-    {
-        $_Lang['ShowTargetPos'] .= '<b class="orange">'.$targetPlanetDetails['name'].'</b>';
-    }
-    else
-    {
-        $_Lang['ShowTargetPos'] .= '<b class="red">'.$_Lang['fl2_target_abandoned_'.$Target['type']].'</b>';
-    }
+
+if (!empty($targetPlanetDetails['name'])) {
+    $_Lang['ShowTargetPos'] .= (
+        ($targetOwnerDetails['id'] > 0) ?
+            ('<b class="orange">'.$targetPlanetDetails['name'].'</b>') :
+            ('<b class="red">'.$_Lang['fl2_target_abandoned_'.$Target['type']].'</b>')
+    );
+} else {
+    $_Lang['ShowTargetPos'] .= (
+        ($Target['type'] == 2) ?
+            $_Lang['fl2_debrisfield'] :
+            $_Lang['fl2_emptyplanet']
+    );
 }
-else
-{
-    if($Target['type'] == 2)
-    {
-        $_Lang['ShowTargetPos'] .= $_Lang['fl2_debrisfield'];
-    }
-    else
-    {
-        $_Lang['ShowTargetPos'] .= $_Lang['fl2_emptyplanet'];
-    }
-}
+
 if($targetOwnerDetails['id'] > 0)
 {
     $_Lang['ShowTargetOwner'] = "<a ".($targetInfo['isPlanetOwnerNonAggressiveAllianceMember'] ? 'class="skyblue"' : '')." href=\"profile.php?uid={$targetOwnerDetails['id']}\" target=\"_blank\">{$targetOwnerDetails['username']}</a>";
