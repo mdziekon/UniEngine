@@ -152,7 +152,7 @@ if ($inputJoinUnionId > 0) {
     );
     $_Lang['P_DisableCoordSel'] = 'disabled';
     $_Lang['SelectedACSID'] = $unionData['id'];
-    $_Lang['SetTargetMission'] = 2;
+    $_Lang['SetTargetMission'] = Flights\Enums\FleetMission::UnitedAttack;
 }
 
 if (empty($SetPos)) {
