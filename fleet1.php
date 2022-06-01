@@ -9,6 +9,7 @@ include($_EnginePath.'common.php');
 include($_EnginePath . 'modules/flightControl/_includes.php');
 
 use UniEngine\Engine\Includes\Helpers\Common\Collections;
+use UniEngine\Engine\Modules\Flights;
 use UniEngine\Engine\Modules\FlightControl;
 
 loggedCheck();
@@ -140,10 +141,10 @@ if ($inputJoinUnionId > 0) {
 
     $unionData = $joinUnionResult['payload']['unionData'];
 
-    $SetPos['g'] = $unionData['end_galaxy'];
-    $SetPos['s'] = $unionData['end_system'];
-    $SetPos['p'] = $unionData['end_planet'];
-    $SetPos['t'] = $unionData['end_type'];
+    $SetPos['galaxy'] = $unionData['end_galaxy'];
+    $SetPos['system'] = $unionData['end_system'];
+    $SetPos['planet'] = $unionData['end_planet'];
+    $SetPos['type'] = $unionData['end_type'];
 
     $_Lang['fl1_ACSJoiningFleet'] = sprintf(
         $_Lang['fl1_ACSJoiningFleet'],
@@ -151,41 +152,29 @@ if ($inputJoinUnionId > 0) {
     );
     $_Lang['P_DisableCoordSel'] = 'disabled';
     $_Lang['SelectedACSID'] = $unionData['id'];
+    $_Lang['SetTargetMission'] = 2;
 }
 
-if(empty($SetPos))
-{
-    $SetPos['g'] = intval($_POST['galaxy']);
-    $SetPos['s'] = intval($_POST['system']);
-    $SetPos['p'] = intval($_POST['planet']);
-    $SetPos['t'] = (isset($_POST['planet_type']) ? intval($_POST['planet_type']) : 0);
-    if(!in_array($SetPos['t'], array(1, 2, 3)) && isset($_POST['planettype']))
-    {
-        $SetPos['t'] = intval($_POST['planettype']);
-    }
+if (empty($SetPos)) {
+    $SetPos['galaxy'] = intval($_POST['galaxy']);
+    $SetPos['system'] = intval($_POST['system']);
+    $SetPos['planet'] = intval($_POST['planet']);
+    $SetPos['type'] = (isset($_POST['planet_type']) ? intval($_POST['planet_type']) : null);
+    $SetPos['type'] = (!isset($SetPos['type']) ? intval($_POST['planettype']) : $SetPos['type']);
+    $SetPos['type'] = (!isset($SetPos['type']) ? $_Planet['planet_type'] : $SetPos['type']);
 
-    if($SetPos['g'] < 1 OR $SetPos['g'] > MAX_GALAXY_IN_WORLD)
-    {
-        $SetPos['g'] = $_Planet['galaxy'];
-    }
-    if($SetPos['s'] < 1 OR $SetPos['s'] > MAX_SYSTEM_IN_GALAXY)
-    {
-        $SetPos['s'] = $_Planet['system'];
-    }
-    if($SetPos['p'] < 1 OR $SetPos['p'] > (MAX_PLANET_IN_SYSTEM + 1))
-    {
-        $SetPos['p'] = $_Planet['planet'];
-    }
-    if(!in_array($SetPos['t'], array(1, 2, 3)))
-    {
-        $SetPos['t'] = $_Planet['planet_type'];
+    $isValidCoordinate = Flights\Utils\Checks\isValidCoordinate([ 'coordinate' => $SetPos ]);
+
+    if (!$isValidCoordinate['isValid']) {
+        $SetPos = [
+            'galaxy' => $_Planet['galaxy'],
+            'system' => $_Planet['system'],
+            'planet' => $_Planet['planet'],
+            'type' => $_Planet['planet_type'],
+        ];
     }
 
     $_Lang['SetTargetMission'] = $_POST['target_mission'];
-}
-else
-{
-    $_Lang['SetTargetMission'] = 2;
 }
 
 $slowestShipSpeed = FlightControl\Utils\Helpers\getSlowestShipSpeed([
@@ -220,13 +209,13 @@ $_Lang['P_MaxGalaxy'] = MAX_GALAXY_IN_WORLD;
 $_Lang['P_MaxSystem'] = MAX_SYSTEM_IN_GALAXY;
 $_Lang['P_MaxPlanet'] = MAX_PLANET_IN_SYSTEM + 1;
 
-foreach($SetPos as $Key => $Value)
-{
-    if($Key == 't')
-    {
+foreach ($SetPos as $Key => $Value) {
+    if ($Key == 'type') {
         $_Lang['SetPos_Type'.$Value.'Selected'] = 'selected';
+
         continue;
     }
+
     $_Lang['SetPos_'.$Key] = $Value;
 }
 
