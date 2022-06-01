@@ -3,8 +3,7 @@
 define('INSIDE', true);
 
 $_EnginePath = './';
-include($_EnginePath.'common.php');
-
+include($_EnginePath . 'common.php');
 include($_EnginePath . 'modules/flightControl/_includes.php');
 
 use UniEngine\Engine\Modules\Flights;
@@ -12,8 +11,16 @@ use UniEngine\Engine\Modules\FlightControl;
 
 loggedCheck();
 
-if((!isset($_POST['sending_fleet']) || $_POST['sending_fleet'] != '1') && (!isset($_POST['fromEnd']) || $_POST['fromEnd'] != '1'))
-{
+if (
+    (
+        !isset($_POST['sending_fleet']) ||
+        $_POST['sending_fleet'] != '1'
+    ) &&
+    (
+        !isset($_POST['fromEnd']) ||
+        $_POST['fromEnd'] != '1'
+    )
+) {
     header('Location: fleet.php');
     safeDie();
 }
@@ -301,14 +308,11 @@ $_Lang['P_SFBInfobox'] = FlightControl\Components\SmartFleetBlockadeInfoBox\rend
 $_Lang['TitlePos'] = ($_Planet['planet_type'] == 1 ? $_Lang['fl2_sendfromplanet'] : $_Lang['fl2_sendfrommoon'])." {$_Planet['name']} [{$_Planet['galaxy']}:{$_Planet['system']}:{$_Planet['planet']}]";
 
 $_Lang['FleetArray'] = $_POST['FleetArray'];
-if($_POST['quickres'] == '1')
-{
-    $_Lang['P_SetQuickRes']= '1';
-}
-else
-{
-    $_Lang['P_SetQuickRes']= '0';
-}
+$_Lang['P_SetQuickRes'] = (
+    ($_POST['quickres'] == '1') ?
+        '1' :
+        '0'
+);
 $_Lang['Now'] = $Now;
 $_Lang['This_metal'] = explode('.', sprintf('%f', floor($_Planet['metal'])));
 $_Lang['This_metal'] = (string)$_Lang['This_metal'][0];
