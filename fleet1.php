@@ -3,9 +3,7 @@
 define('INSIDE', true);
 
 $_EnginePath = './';
-
-include($_EnginePath.'common.php');
-
+include($_EnginePath . 'common.php');
 include($_EnginePath . 'modules/flightControl/_includes.php');
 
 use UniEngine\Engine\Includes\Helpers\Common\Collections;
@@ -14,8 +12,16 @@ use UniEngine\Engine\Modules\FlightControl;
 
 loggedCheck();
 
-if((!isset($_POST['sending_fleet']) || $_POST['sending_fleet'] != '1') && (!isset($_POST['gobackUsed']) || $_POST['gobackUsed'] != '1'))
-{
+if (
+    (
+        !isset($_POST['sending_fleet']) ||
+        $_POST['sending_fleet'] != '1'
+    ) &&
+    (
+        !isset($_POST['gobackUsed']) ||
+        $_POST['gobackUsed'] != '1'
+    )
+) {
     header('Location: fleet.php');
     safeDie();
 }
