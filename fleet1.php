@@ -3,18 +3,25 @@
 define('INSIDE', true);
 
 $_EnginePath = './';
-
-include($_EnginePath.'common.php');
-
+include($_EnginePath . 'common.php');
 include($_EnginePath . 'modules/flightControl/_includes.php');
 
 use UniEngine\Engine\Includes\Helpers\Common\Collections;
+use UniEngine\Engine\Modules\Flights;
 use UniEngine\Engine\Modules\FlightControl;
 
 loggedCheck();
 
-if((!isset($_POST['sending_fleet']) || $_POST['sending_fleet'] != '1') && (!isset($_POST['gobackUsed']) || $_POST['gobackUsed'] != '1'))
-{
+if (
+    (
+        !isset($_POST['sending_fleet']) ||
+        $_POST['sending_fleet'] != '1'
+    ) &&
+    (
+        !isset($_POST['gobackUsed']) ||
+        $_POST['gobackUsed'] != '1'
+    )
+) {
     header('Location: fleet.php');
     safeDie();
 }
@@ -122,88 +129,68 @@ if (!empty($_POST['ship'])) {
     }
 }
 
-$slowestShipSpeed = min(
-    array_map_withkeys($shipsDetails, function ($shipDetails) {
-        return $shipDetails['speed'];
-    })
-);
+$SetPos = [];
 
-// Speed modifier
-if (MORALE_ENABLED) {
-    if ($_User['morale_level'] <= MORALE_PENALTY_FLEETSLOWDOWN) {
-        $slowestShipSpeed *= MORALE_PENALTY_FLEETSLOWDOWN_VALUE;
+$inputJoinUnionId = intval($_POST['getacsdata']);
+
+if ($inputJoinUnionId > 0) {
+    $joinUnionResult = FlightControl\Utils\Helpers\tryJoinUnion([
+        'unionId' => $inputJoinUnionId,
+        'currentTimestamp' => $Now,
+    ]);
+
+    if (!$joinUnionResult['isSuccess']) {
+        $errorMessage = FlightControl\Utils\Errors\mapTryJoinUnionErrorToReadableMessage($joinUnionResult['error']);
+
+        message($errorMessage, $ErrorTitle, 'fleet.php', 3);
     }
+
+    $unionData = $joinUnionResult['payload']['unionData'];
+
+    $SetPos['galaxy'] = $unionData['end_galaxy'];
+    $SetPos['system'] = $unionData['end_system'];
+    $SetPos['planet'] = $unionData['end_planet'];
+    $SetPos['type'] = $unionData['end_type'];
+
+    $_Lang['fl1_ACSJoiningFleet'] = sprintf(
+        $_Lang['fl1_ACSJoiningFleet'],
+        $unionData['name'], $unionData['end_galaxy'], $unionData['end_system'], $unionData['end_planet']
+    );
+    $_Lang['P_DisableCoordSel'] = 'disabled';
+    $_Lang['SelectedACSID'] = $unionData['id'];
+    $_Lang['SetTargetMission'] = Flights\Enums\FleetMission::UnitedAttack;
 }
 
-$_Lang['P_HideACSJoining'] = $Hide;
-$GetACSData = intval($_POST['getacsdata']);
-$SetPosNotEmpty = false;
-if($GetACSData > 0)
-{
-    $ACSData = doquery("SELECT `id`, `name`, `end_galaxy`, `end_system`, `end_planet`, `end_type`, `start_time` FROM {{table}} WHERE `id` = {$GetACSData};", 'acs', true);
-    if($ACSData['id'] == $GetACSData)
-    {
-        if($ACSData['start_time'] > $Now)
-        {
-            $SetPos['g'] = $ACSData['end_galaxy'];
-            $SetPos['s'] = $ACSData['end_system'];
-            $SetPos['p'] = $ACSData['end_planet'];
-            $SetPos['t'] = $ACSData['end_type'];
+if (empty($SetPos)) {
+    $SetPos['galaxy'] = intval($_POST['galaxy']);
+    $SetPos['system'] = intval($_POST['system']);
+    $SetPos['planet'] = intval($_POST['planet']);
+    $SetPos['type'] = (isset($_POST['planet_type']) ? intval($_POST['planet_type']) : null);
+    $SetPos['type'] = (!isset($SetPos['type']) ? intval($_POST['planettype']) : $SetPos['type']);
+    $SetPos['type'] = (!isset($SetPos['type']) ? $_Planet['planet_type'] : $SetPos['type']);
 
-            $SetPosNotEmpty = true;
-            $_Lang['P_HideACSJoining'] = '';
-            $_Lang['fl1_ACSJoiningFleet'] = sprintf($_Lang['fl1_ACSJoiningFleet'], $ACSData['name'], $ACSData['end_galaxy'], $ACSData['end_system'], $ACSData['end_planet']);
-            $_Lang['P_DisableCoordSel'] = 'disabled';
-            $_Lang['SelectedACSID'] = $GetACSData;
-        }
-        else
-        {
-            message($_Lang['fl1_ACSTimeUp'], $ErrorTitle, 'fleet.php', 3);
-        }
-    }
-    else
-    {
-        message($_Lang['fl1_ACSNoExist'], $ErrorTitle, 'fleet.php', 3);
-    }
-}
+    $isValidCoordinate = Flights\Utils\Checks\isValidCoordinate([ 'coordinate' => $SetPos ]);
 
-if($SetPosNotEmpty !== true)
-{
-    $SetPos['g'] = intval($_POST['galaxy']);
-    $SetPos['s'] = intval($_POST['system']);
-    $SetPos['p'] = intval($_POST['planet']);
-    $SetPos['t'] = (isset($_POST['planet_type']) ? intval($_POST['planet_type']) : 0);
-    if(!in_array($SetPos['t'], array(1, 2, 3)) && isset($_POST['planettype']))
-    {
-        $SetPos['t'] = intval($_POST['planettype']);
-    }
-
-    if($SetPos['g'] < 1 OR $SetPos['g'] > MAX_GALAXY_IN_WORLD)
-    {
-        $SetPos['g'] = $_Planet['galaxy'];
-    }
-    if($SetPos['s'] < 1 OR $SetPos['s'] > MAX_SYSTEM_IN_GALAXY)
-    {
-        $SetPos['s'] = $_Planet['system'];
-    }
-    if($SetPos['p'] < 1 OR $SetPos['p'] > (MAX_PLANET_IN_SYSTEM + 1))
-    {
-        $SetPos['p'] = $_Planet['planet'];
-    }
-    if(!in_array($SetPos['t'], array(1, 2, 3)))
-    {
-        $SetPos['t'] = $_Planet['planet_type'];
+    if (!$isValidCoordinate['isValid']) {
+        $SetPos = [
+            'galaxy' => $_Planet['galaxy'],
+            'system' => $_Planet['system'],
+            'planet' => $_Planet['planet'],
+            'type' => $_Planet['planet_type'],
+        ];
     }
 
     $_Lang['SetTargetMission'] = $_POST['target_mission'];
 }
-else
-{
-    $_Lang['SetTargetMission'] = 2;
-}
+
+$slowestShipSpeed = FlightControl\Utils\Helpers\getSlowestShipSpeed([
+    'shipsDetails' => $shipsDetails,
+    'user' => &$_User,
+]);
 
 // Show info boxes
 $_Lang['P_SFBInfobox'] = FlightControl\Components\SmartFleetBlockadeInfoBox\render()['componentHTML'];
+
 
 $_Lang['P_ShipsDetailsJSON'] = json_encode($shipsDetails, JSON_FORCE_OBJECT);
 $_Lang['speedallsmin'] = $slowestShipSpeed;
@@ -228,13 +215,13 @@ $_Lang['P_MaxGalaxy'] = MAX_GALAXY_IN_WORLD;
 $_Lang['P_MaxSystem'] = MAX_SYSTEM_IN_GALAXY;
 $_Lang['P_MaxPlanet'] = MAX_PLANET_IN_SYSTEM + 1;
 
-foreach($SetPos as $Key => $Value)
-{
-    if($Key == 't')
-    {
+foreach ($SetPos as $Key => $Value) {
+    if ($Key == 'type') {
         $_Lang['SetPos_Type'.$Value.'Selected'] = 'selected';
+
         continue;
     }
+
     $_Lang['SetPos_'.$Key] = $Value;
 }
 
@@ -251,13 +238,10 @@ if (
 }
 $_Lang['Insert_SpeedInput'] = $_Set_DefaultSpeed;
 
-foreach ($SpeedsAvailable as $Selector) {
-    $Text = $Selector * 10;
-    $isSpeedSelected = ($_Set_DefaultSpeed == $Selector);
-
-    $_Lang['Insert_Speeds'][] = "<a href=\"#\" class=\"setSpeed ".($isSpeedSelected ? 'setSpeed_Selected setSpeed_Current' : '')."\" data-speed=\"{$Selector}\">{$Text}</a>";
-}
-$_Lang['Insert_Speeds'] = implode('<span class="speedBreak">|</span>', $_Lang['Insert_Speeds']);
+$_Lang['Insert_Speeds'] = FlightControl\Screens\SendWizardStepTwo\Components\SpeedSelector\render([
+    'speedOptions' => $SpeedsAvailable,
+    'selectedOption' => $_Set_DefaultSpeed,
+])['componentHTML'];
 
 // Create Colony List and Shortcuts List (dropdown)
 $OtherPlanets = SortUserPlanets($_User);
@@ -309,6 +293,12 @@ if (
 } else {
     $_Lang['P_HideNoFastLinks'] = '';
 }
+
+$_Lang['P_HideACSJoining'] = (
+    empty($_Lang['SelectedACSID']) ?
+        $Hide :
+        null
+);
 
 $Page = parsetemplate(gettemplate('fleet1_body'), $_Lang);
 display($Page, $_Lang['fl_title']);

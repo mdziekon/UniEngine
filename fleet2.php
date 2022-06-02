@@ -3,8 +3,7 @@
 define('INSIDE', true);
 
 $_EnginePath = './';
-include($_EnginePath.'common.php');
-
+include($_EnginePath . 'common.php');
 include($_EnginePath . 'modules/flightControl/_includes.php');
 
 use UniEngine\Engine\Modules\Flights;
@@ -12,8 +11,16 @@ use UniEngine\Engine\Modules\FlightControl;
 
 loggedCheck();
 
-if((!isset($_POST['sending_fleet']) || $_POST['sending_fleet'] != '1') && (!isset($_POST['fromEnd']) || $_POST['fromEnd'] != '1'))
-{
+if (
+    (
+        !isset($_POST['sending_fleet']) ||
+        $_POST['sending_fleet'] != '1'
+    ) &&
+    (
+        !isset($_POST['fromEnd']) ||
+        $_POST['fromEnd'] != '1'
+    )
+) {
     header('Location: fleet.php');
     safeDie();
 }
@@ -81,28 +88,26 @@ $Target['system'] = (isset($_POST['system']) ? intval($_POST['system']) : null);
 $Target['planet'] = (isset($_POST['planet']) ? intval($_POST['planet']) : null);
 $Target['type'] = (isset($_POST['planettype']) ? intval($_POST['planettype']) : null);
 
-$GetACSData = intval($_POST['getacsdata']);
-if($GetACSData > 0)
-{
-    $ACSData = doquery("SELECT `id`, `name`, `end_galaxy`, `end_system`, `end_planet`, `end_type`, `start_time` FROM {{table}} WHERE `id` = {$GetACSData};", 'acs', true);
-    if($ACSData['id'] == $GetACSData)
-    {
-        if($ACSData['start_time'] > $Now)
-        {
-            $Target['galaxy'] = $ACSData['end_galaxy'];
-            $Target['system'] = $ACSData['end_system'];
-            $Target['planet'] = $ACSData['end_planet'];
-            $Target['type'] = $ACSData['end_type'];
-        }
-        else
-        {
-            message($_Lang['fl1_ACSTimeUp'], $ErrorTitle, 'fleet.php', 3);
-        }
+$inputJoinUnionId = intval($_POST['getacsdata']);
+
+if ($inputJoinUnionId > 0) {
+    $joinUnionResult = FlightControl\Utils\Helpers\tryJoinUnion([
+        'unionId' => $inputJoinUnionId,
+        'currentTimestamp' => $Now,
+    ]);
+
+    if (!$joinUnionResult['isSuccess']) {
+        $errorMessage = FlightControl\Utils\Errors\mapTryJoinUnionErrorToReadableMessage($joinUnionResult['error']);
+
+        message($errorMessage, $ErrorTitle, 'fleet.php', 3);
     }
-    else
-    {
-        message($_Lang['fl1_ACSNoExist'], $ErrorTitle, 'fleet.php', 3);
-    }
+
+    $unionData = $joinUnionResult['payload']['unionData'];
+
+    $Target['galaxy'] = $unionData['end_galaxy'];
+    $Target['system'] = $unionData['end_system'];
+    $Target['planet'] = $unionData['end_planet'];
+    $Target['type'] = $unionData['end_type'];
 }
 
 if($Target['galaxy'] == $_Planet['galaxy'] AND $Target['system'] == $_Planet['system'] AND $Target['planet'] == $_Planet['planet'] AND $Target['type'] == $_Planet['planet_type'])
@@ -204,21 +209,28 @@ $AvailableMissions = FlightControl\Utils\Helpers\getValidMissionTypes([
     'isUnionMissionAllowed' => false,
 ]);
 
-if(in_array(1, $AvailableMissions) && $targetPlanetDetails['id'] > 0)
-{
-    $SQLResult_CheckACS = doquery(
-        "SELECT * FROM {{table}} WHERE (`users` LIKE '%|{$_User['id']}|%' OR `owner_id` = {$_User['id']}) AND `end_target_id` = {$targetPlanetDetails['id']} AND `start_time` > UNIX_TIMESTAMP();",
-        'acs'
-    );
+$joinableUnionsList = [];
 
-    if($SQLResult_CheckACS->num_rows > 0)
-    {
-        while($ACSData = $SQLResult_CheckACS->fetch_assoc())
-        {
-            $ACSData['fleets_count'] += 1;
-            $ACSList[$ACSData['id']] = "{$ACSData['name']} ({$_Lang['fl_acs_fleets']}: {$ACSData['fleets_count']})";
-        }
-        $AvailableMissions[] = 2;
+if (
+    in_array(Flights\Enums\FleetMission::Attack, $AvailableMissions) &&
+    $targetPlanetDetails['id'] > 0
+) {
+    $joinableUnionFlights = FlightControl\Utils\Fetchers\fetchJoinableUnionFlights([
+        'userId' => $_User['id'],
+        'targetPlanetId' => $targetPlanetDetails['id'],
+    ]);
+
+    $joinableUnionsList = object_map($joinableUnionFlights, function ($unionFlight) use (&$_Lang) {
+        $joinedFleetsCount = $unionFlight['fleets_count'] + 1;
+
+        return [
+            "{$unionFlight['name']} ({$_Lang['fl_acs_fleets']}: {$joinedFleetsCount})",
+            $unionFlight['id']
+        ];
+    });
+
+    if (!empty($joinableUnionsList)) {
+        $AvailableMissions[] = Flights\Enums\FleetMission::UnitedAttack;
     }
 }
 
@@ -236,22 +248,18 @@ $allowGateJump = $quantumGateStateDetails['canUseQuantumGateJump'];
 
 $PreSelectedMission = intval($_POST['target_mission']);
 $SpeedFactor = getUniFleetsSpeedFactor();
-$AllFleetSpeed = getFleetShipsSpeeds($Fleet['array'], $_User);
 $GenFleetSpeed = $_POST['speed'];
-$MaxFleetSpeed = min($AllFleetSpeed);
-if(MORALE_ENABLED)
-{
-    if($_User['morale_level'] <= MORALE_PENALTY_FLEETSLOWDOWN)
-    {
-        $MaxFleetSpeed *= MORALE_PENALTY_FLEETSLOWDOWN_VALUE;
-    }
-}
+
+$slowestShipSpeed = FlightControl\Utils\Helpers\getSlowestShipSpeed([
+    'shipsDetails' => getFleetShipsSpeeds($Fleet['array'], $_User),
+    'user' => &$_User,
+]);
 
 $distance = getFlightDistanceBetween($_Planet, $Target);
 $duration = getFlightDuration([
     'speedFactor' => $GenFleetSpeed,
     'distance' => $distance,
-    'maxShipsSpeed' => $MaxFleetSpeed
+    'maxShipsSpeed' => $slowestShipSpeed
 ]);
 
 $consumption = getFlightTotalConsumption(
@@ -300,14 +308,11 @@ $_Lang['P_SFBInfobox'] = FlightControl\Components\SmartFleetBlockadeInfoBox\rend
 $_Lang['TitlePos'] = ($_Planet['planet_type'] == 1 ? $_Lang['fl2_sendfromplanet'] : $_Lang['fl2_sendfrommoon'])." {$_Planet['name']} [{$_Planet['galaxy']}:{$_Planet['system']}:{$_Planet['planet']}]";
 
 $_Lang['FleetArray'] = $_POST['FleetArray'];
-if($_POST['quickres'] == '1')
-{
-    $_Lang['P_SetQuickRes']= '1';
-}
-else
-{
-    $_Lang['P_SetQuickRes']= '0';
-}
+$_Lang['P_SetQuickRes'] = (
+    ($_POST['quickres'] == '1') ?
+        '1' :
+        '0'
+);
 $_Lang['Now'] = $Now;
 $_Lang['This_metal'] = explode('.', sprintf('%f', floor($_Planet['metal'])));
 $_Lang['This_metal'] = (string)$_Lang['This_metal'][0];
@@ -320,23 +325,19 @@ $_Lang['FlightTimeShow'] = pretty_time($duration, true);
 $_Lang['consumption'] = (string)($consumption + 0);
 $_Lang['ShowConsumption'] = prettyNumber($consumption);
 $_Lang['totalstorage'] = (string)($Fleet['storage'] + 0);
-if($Fleet['FuelStorage'] >= $consumption)
-{
-    $_Lang['FuelStorageReduce'] = $consumption;
-}
-else
-{
-    $_Lang['FuelStorageReduce'] = $Fleet['FuelStorage'];
-}
+
 $TempCeil = ceil($consumption / 2);
-if($Fleet['FuelStorage'] >= $TempCeil)
-{
-    $_Lang['FuelStorageReduceH'] = $TempCeil;
-}
-else
-{
-    $_Lang['FuelStorageReduceH'] = $Fleet['FuelStorage'];
-}
+
+$_Lang['FuelStorageReduce'] = (
+    ($Fleet['FuelStorage'] >= $consumption) ?
+        $consumption :
+        $Fleet['FuelStorage']
+);
+$_Lang['FuelStorageReduceH'] = (
+    ($Fleet['FuelStorage'] >= $TempCeil) ?
+        $TempCeil :
+        $Fleet['FuelStorage']
+);
 $_Lang['freeStorage'] = (string)($Fleet['storage'] - $consumption + $_Lang['FuelStorageReduce'] + 0);
 $_Lang['FuelStorageReduce'] = (string)($_Lang['FuelStorageReduce'] + 0);
 $_Lang['FuelStorageReduceH'] = (string)($_Lang['FuelStorageReduceH'] + 0);
@@ -354,28 +355,21 @@ else
 }
 $_Lang['SetDefaultFreeStorage'] = prettyNumber($_Lang['freeStorage']);
 $_Lang['ShowTargetPos'] = "<a href=\"galaxy.php?mode=3&galaxy={$Target['galaxy']}&system={$Target['system']}&planet={$Target['planet']}\" target=\"_blank\">[{$Target['galaxy']}:{$Target['system']}:{$Target['planet']}]</a><b class=\"".($Target['type'] == 1 ? 'planet' : ($Target['type'] == 3 ? 'moon' : 'debris'))."\"></b><br/>";
-if(!empty($targetPlanetDetails['name']))
-{
-    if($targetOwnerDetails['id'] > 0)
-    {
-        $_Lang['ShowTargetPos'] .= '<b class="orange">'.$targetPlanetDetails['name'].'</b>';
-    }
-    else
-    {
-        $_Lang['ShowTargetPos'] .= '<b class="red">'.$_Lang['fl2_target_abandoned_'.$Target['type']].'</b>';
-    }
+
+if (!empty($targetPlanetDetails['name'])) {
+    $_Lang['ShowTargetPos'] .= (
+        ($targetOwnerDetails['id'] > 0) ?
+            ('<b class="orange">'.$targetPlanetDetails['name'].'</b>') :
+            ('<b class="red">'.$_Lang['fl2_target_abandoned_'.$Target['type']].'</b>')
+    );
+} else {
+    $_Lang['ShowTargetPos'] .= (
+        ($Target['type'] == 2) ?
+            $_Lang['fl2_debrisfield'] :
+            $_Lang['fl2_emptyplanet']
+    );
 }
-else
-{
-    if($Target['type'] == 2)
-    {
-        $_Lang['ShowTargetPos'] .= $_Lang['fl2_debrisfield'];
-    }
-    else
-    {
-        $_Lang['ShowTargetPos'] .= $_Lang['fl2_emptyplanet'];
-    }
-}
+
 if($targetOwnerDetails['id'] > 0)
 {
     $_Lang['ShowTargetOwner'] = "<a ".($targetInfo['isPlanetOwnerNonAggressiveAllianceMember'] ? 'class="skyblue"' : '')." href=\"profile.php?uid={$targetOwnerDetails['id']}\" target=\"_blank\">{$targetOwnerDetails['username']}</a>";
@@ -386,14 +380,11 @@ else
 }
 $_Lang['SetSpeed'] = $_POST['speed'];
 
-if($_User['settings_useprettyinputbox'] == 1)
-{
-    $_Lang['P_AllowPrettyInputBox'] = 'true';
-}
-else
-{
-    $_Lang['P_AllowPrettyInputBox'] = 'false';
-}
+$_Lang['P_AllowPrettyInputBox'] = (
+    ($_User['settings_useprettyinputbox'] == 1) ?
+        'true' :
+        'false'
+);
 $_User['settings_resSortArray'] = explode(',', $_User['settings_resSortArray']);
 foreach($_User['settings_resSortArray'] as $ResSortData)
 {
@@ -457,8 +448,8 @@ if (!empty($AvailableMissions)) {
     if (in_array(Flights\Enums\FleetMission::UnitedAttack, $AvailableMissions)) {
         $_Lang['CreateACSList'] = '';
 
-        foreach ($ACSList as $ID => $Name) {
-            $_Lang['CreateACSList'] .= '<option value="'.$ID.'" '.($GetACSData == $ID ? 'selected' : '').'>'.$Name.'</option>';
+        foreach ($joinableUnionsList as $unionId => $unionDisplayData) {
+            $_Lang['CreateACSList'] .= '<option value="'.$unionId.'" '.($inputJoinUnionId == $unionId ? 'selected' : '').'>'.$unionDisplayData.'</option>';
         }
     } else {
         $_Lang['P_HideACSJoinList'] = $Hide;
@@ -481,14 +472,12 @@ if($Target['planet'] != (MAX_PLANET_IN_SYSTEM + 1))
 {
     $_Lang['P_HideExpeditionTimers'] = $Hide;
 }
-if ($targetInfo['isPlanetOwnerNonAggressiveAllianceMember'])
-{
-    $_Lang['Insert_AllyPact_AttackWarn'] = 'true';
-}
-else
-{
-    $_Lang['Insert_AllyPact_AttackWarn'] = 'false';
-}
+
+$_Lang['Insert_AllyPact_AttackWarn'] = (
+    $targetInfo['isPlanetOwnerNonAggressiveAllianceMember'] ?
+        'true' :
+        'false'
+);
 
 $availableHoldTimes = FlightControl\Utils\Helpers\getAvailableHoldTimes([]);
 

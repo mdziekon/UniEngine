@@ -39,9 +39,9 @@ var shipsDetails = {P_ShipsDetailsJSON};
         <tr>
             <th style="width: 30%;">{fl_dest}</th>
             <th>
-                <input class="updateInfo" id="galaxy_selector" name="galaxy" size="3" maxlength="2" value="{SetPos_g}" autocomplete="off" {P_DisableCoordSel} />
-                <input class="updateInfo" id="system_selector" name="system" size="3" maxlength="3" value="{SetPos_s}" autocomplete="off" {P_DisableCoordSel} />
-                <input class="updateInfo"id="select_planet" name="planet" size="3" maxlength="2" value="{SetPos_p}" autocomplete="off" {P_DisableCoordSel} />
+                <input class="updateInfo" id="galaxy_selector" name="galaxy" size="3" maxlength="2" value="{SetPos_galaxy}" autocomplete="off" {P_DisableCoordSel} />
+                <input class="updateInfo" id="system_selector" name="system" size="3" maxlength="3" value="{SetPos_system}" autocomplete="off" {P_DisableCoordSel} />
+                <input class="updateInfo" id="select_planet" name="planet" size="3" maxlength="2" value="{SetPos_planet}" autocomplete="off" {P_DisableCoordSel} />
                 <select class="updateInfo" id="type_selector" name="planettype" {P_DisableCoordSel}>
                     <option value="1" {SetPos_Type1Selected}>{fl_planet}</option>
                     <option value="2" {SetPos_Type2Selected}>{fl_ruins}</option>

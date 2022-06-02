@@ -31,6 +31,8 @@ call_user_func(function () {
     include($includePath . './screens/SendWizardStepOne/components/FlightsList/utils/prerenderFriendlyAcsListElement.utils.php');
     include($includePath . './screens/SendWizardStepOne/components/FlightsList/utils/prerenderOwnListElement.utils.php');
 
+    include($includePath . './screens/SendWizardStepTwo/components/SpeedSelector/SpeedSelector.component.php');
+
     include($includePath . './screens/Shortcuts/Shortcuts.screen.php');
     include($includePath . './screens/Shortcuts/components/ListManagement/ListManagement.component.php');
     include($includePath . './screens/Shortcuts/components/ShortcutManagementForm/ShortcutManagementForm.component.php');
@@ -48,6 +50,7 @@ call_user_func(function () {
     include($includePath . './utils/factories/createUnionInvitationMessage.factory.php');
     include($includePath . './utils/fetchers/fetchActiveSmartFleetsBlockadeEntries.fetcher.php');
     include($includePath . './utils/fetchers/fetchBashValidatorFlightLogEntries.fetcher.php');
+    include($includePath . './utils/fetchers/fetchJoinableUnionFlights.fetcher.php');
     include($includePath . './utils/fetchers/fetchMultiDeclaration.fetcher.php');
     include($includePath . './utils/fetchers/fetchPlanetOwnerDetails.fetcher.php');
     include($includePath . './utils/fetchers/fetchSavedShortcuts.fetcher.php');
@@ -68,11 +71,13 @@ call_user_func(function () {
     include($includePath . './utils/helpers/getFleetUnionJoinData.helper.php');
     include($includePath . './utils/helpers/getFlightParams.helper.php');
     include($includePath . './utils/helpers/getQuantumGateStateDetails.helper.php');
+    include($includePath . './utils/helpers/getSlowestShipSpeed.helper.php');
     include($includePath . './utils/helpers/getTargetInfo.helper.php');
     include($includePath . './utils/helpers/getUserExpeditionSlotsCount.helper.php');
     include($includePath . './utils/helpers/getUserFleetSlotsCount.helper.php');
     include($includePath . './utils/helpers/getValidMissionTypes.helper.php');
     include($includePath . './utils/helpers/noobProtection.helper.php');
+    include($includePath . './utils/helpers/tryJoinUnion.helper.php');
     include($includePath . './utils/inputs/normalizeFleetResources.inputs.php');
     include($includePath . './utils/inputs/normalizeGobackFleetArray.inputs.php');
     include($includePath . './utils/updaters/createUnionEntry.updaters.php');
@@ -104,6 +109,7 @@ call_user_func(function () {
     include($includePath . './utils/errors/quantumGate.utils.php');
     include($includePath . './utils/errors/smartFleetsBlockade.utils.php');
     include($includePath . './utils/errors/targetOwner.utils.php');
+    include($includePath . './utils/errors/tryJoinUnion.utils.php');
 
 });
 
