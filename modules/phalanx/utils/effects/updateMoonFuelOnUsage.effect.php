@@ -31,7 +31,7 @@ function updateMoonFuelOnUsage($params) {
         'Place' => 29,
         'Code' => '0',
         'ElementID' => '0',
-        'AdditionalData' => "",
+        'AdditionalData' => "D,{$scanCost}",
     ];
 }
 
