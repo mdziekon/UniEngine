@@ -11,6 +11,7 @@ $_EnginePath = './';
 include($_EnginePath.'common.php');
 include($_EnginePath.'modules/flights/_includes.php');
 include($_EnginePath.'modules/phalanx/_includes.php');
+include($_EnginePath.'includes/functions/GetPhalanxRange.php');
 
 use UniEngine\Engine\Includes\Helpers\World\Checks;
 use UniEngine\Engine\Modules\Flights;
@@ -32,37 +33,31 @@ if(CheckAuth('supportadmin'))
     $ThisMoon['sensor_phalanx'] = 50;
 }
 
-if($ThisMoon['planet_type'] == 3)
-{
-    if($ThisMoon['sensor_phalanx'] > 0)
-    {
-        $parse = $_Lang;
-        $ThisCoords = array
-        (
+if ($ThisMoon['planet_type'] == 3) {
+    if ($ThisMoon['sensor_phalanx'] > 0) {
+        $thisMoonCoords = [
             'galaxy' => $ThisMoon['galaxy'],
             'system' => $ThisMoon['system'],
-            'planet' => $ThisMoon['planet']
-        );
-        $ThisPhalanx = $ThisMoon['sensor_phalanx'];
-        $TargetData = array
-        (
+            'planet' => $ThisMoon['planet'],
+        ];
+        $thisPhalanxLevel = $ThisMoon['sensor_phalanx'];
+
+        $targetCoords = [
             'galaxy' => (isset($_GET['galaxy']) ? intval($_GET['galaxy']) : 0),
             'system' => (isset($_GET['system']) ? intval($_GET['system']) : 0),
-            'planet' => (isset($_GET['planet']) ? intval($_GET['planet']) : 0)
-        );
-
-        include($_EnginePath.'includes/functions/GetPhalanxRange.php');
+            'planet' => (isset($_GET['planet']) ? intval($_GET['planet']) : 0),
+        ];
 
         $isInRange = Checks\isTargetInRange([
-            'originPosition' => $ThisCoords['system'],
-            'targetPosition' => $TargetData['system'],
-            'range' => GetPhalanxRange($ThisPhalanx),
+            'originPosition' => $thisMoonCoords['system'],
+            'targetPosition' => $targetCoords['system'],
+            'range' => GetPhalanxRange($thisPhalanxLevel),
         ]);
 
         $DenyScan = false;
 
         $isValidCoordinate = Flights\Utils\Checks\isValidCoordinate([
-            'coordinate' => $TargetData,
+            'coordinate' => $targetCoords,
             'areExpeditionsExcluded' => true,
         ]);
 
@@ -70,7 +65,7 @@ if($ThisMoon['planet_type'] == 3)
             $DenyScan = true;
             $WhyDoNotScan = $_Lang['PhalanxError_BadCoordinates'];
         }
-        if($TargetData['galaxy'] != $ThisCoords['galaxy'])
+        if($targetCoords['galaxy'] != $thisMoonCoords['galaxy'])
         {
             $DenyScan = true;
             $WhyDoNotScan = $_Lang['PhalanxError_GalaxyOutOfRange'];
@@ -84,16 +79,14 @@ if($ThisMoon['planet_type'] == 3)
             $DenyScan = false;
         }
 
-        if($DenyScan !== true)
-        {
+        if (!$DenyScan) {
             $targetDetails = Phalanx\Utils\Queries\getTargetDetails([
-                'targetCoords' => $TargetData,
+                'targetCoords' => $targetCoords,
             ]);
 
             if ($targetDetails['id'] > 0) {
                 FlyingFleetHandler($ThisMoon, [ $targetDetails['id'] ]);
 
-                $_DontShowMenus = true;
                 if ($ThisMoon['id'] > 0) {
                     if ($ThisMoon['deuterium'] >= $ScanCost) {
                         if ($ScanCost > 0) {
@@ -103,6 +96,8 @@ if($ThisMoon['planet_type'] == 3)
                                 'currentTimestamp' => $Now,
                             ]);
                         }
+
+                        $parse = $_Lang;
 
                         if ($targetDetails['id_owner'] > 0) {
                             $parse['Insert_OwnerName'] = "({$targetDetails['username']})";
@@ -116,9 +111,9 @@ if($ThisMoon['planet_type'] == 3)
                         $parse['Insert_Coord_Galaxy'] = $targetDetails['galaxy'];
                         $parse['Insert_Coord_System'] = $targetDetails['system'];
                         $parse['Insert_Coord_Planet'] = $targetDetails['planet'];
-                        $parse['Insert_My_Galaxy'] = $ThisCoords['galaxy'];
-                        $parse['Insert_My_System'] = $ThisCoords['system'];
-                        $parse['Insert_My_Planet'] = $ThisCoords['planet'];
+                        $parse['Insert_My_Galaxy'] = $thisMoonCoords['galaxy'];
+                        $parse['Insert_My_System'] = $thisMoonCoords['system'];
+                        $parse['Insert_My_Planet'] = $thisMoonCoords['planet'];
                         $parse['Insert_MyMoonName'] = $ThisMoon['name'];
                         $parse['Insert_DeuteriumAmount'] = prettyNumber($ThisMoon['deuterium']);
                         $parse['Insert_DeuteriumColor'] = (
