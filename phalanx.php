@@ -9,10 +9,12 @@ $_BlockFleetHandler = true;
 
 $_EnginePath = './';
 include($_EnginePath.'common.php');
-include($_EnginePath . 'modules/flights/_includes.php');
+include($_EnginePath.'modules/flights/_includes.php');
+include($_EnginePath.'modules/phalanx/_includes.php');
 
 use UniEngine\Engine\Includes\Helpers\World\Checks;
 use UniEngine\Engine\Modules\Flights;
+use UniEngine\Engine\Modules\Phalanx;
 
 loggedCheck();
 
@@ -84,17 +86,9 @@ if($ThisMoon['planet_type'] == 3)
 
         if($DenyScan !== true)
         {
-            $Query_GetTarget = '';
-            $Query_GetTarget .= "SELECT `pl`.`id`, `pl`.`id_owner`, `pl`.`name`, `pl`.`galaxy`, `pl`.`system`, `pl`.`planet`, `users`.`username` ";
-            $Query_GetTarget .= "FROM {{table}} AS `pl` ";
-            $Query_GetTarget .= "LEFT JOIN {{prefix}}users AS `users` ON `users`.`id` = `pl`.`id_owner` ";
-            $Query_GetTarget .= "WHERE ";
-            $Query_GetTarget .= "`pl`.`galaxy` = {$TargetData['galaxy']} AND ";
-            $Query_GetTarget .= "`pl`.`system` = {$TargetData['system']} AND ";
-            $Query_GetTarget .= "`pl`.`planet` = {$TargetData['planet']} AND ";
-            $Query_GetTarget .= "`pl`.`planet_type` = 1 ";
-            $Query_GetTarget .= "LIMIT 1; -- Phalanx|GetTarget";
-            $Result_GetTarget = doquery($Query_GetTarget, 'planets', true);
+            $Result_GetTarget = Phalanx\Utils\Queries\getTargetDetails([
+                'targetCoords' => $TargetData,
+            ]);
 
             $TargetName = $Result_GetTarget['name'];
             $TargetID = $Result_GetTarget['id'];
