@@ -101,16 +101,12 @@ if($ThisMoon['planet_type'] == 3)
                 {
                     if($ThisMoon['deuterium'] >= $ScanCost)
                     {
-                        if($ScanCost > 0)
-                        {
-                            $ThisMoon['deuterium'] -= $ScanCost;
-
-                            Phalanx\Utils\Queries\updatePhalanxMoon([
+                        if ($ScanCost > 0) {
+                            Phalanx\Utils\Effects\updateMoonFuelOnUsage([
                                 'scanCost' => $ScanCost,
-                                'phalanxMoonId' => $ThisMoon['id'],
+                                'phalanxMoon' => &$ThisMoon,
+                                'currentTimestamp' => $Now,
                             ]);
-
-                            $UserDev_Log[] = array('PlanetID' => $ThisMoon['id'], 'Date' => $Now, 'Place' => 29, 'Code' => '0', 'ElementID' => '0', 'AdditionalData' => '');
                         }
 
                         $parse['Insert_Coord_Galaxy'] = $Result_GetTarget['galaxy'];

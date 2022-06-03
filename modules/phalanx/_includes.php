@@ -6,6 +6,8 @@ call_user_func(function () {
 
     $includePath = $_EnginePath . 'modules/phalanx/';
 
+    include($includePath . './utils/effects/updateMoonFuelOnUsage.effect.php');
+
     include($includePath . './utils/queries/getTargetDetails.query.php');
     include($includePath . './utils/queries/updatePhalanxMoon.query.php');
 
