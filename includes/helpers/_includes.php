@@ -7,6 +7,7 @@ include($includePath . './common/time.functions.php');
 include($includePath . './common/navigation.functions.php');
 include($includePath . './uni/functions.php');
 include($includePath . './views/functions.php');
+include($includePath . './world/enums/PlanetType.enum.php');
 include($includePath . './world/checks.functions.php');
 include($includePath . './world/resources.functions.php');
 include($includePath . './world/elements.common.functions.php');

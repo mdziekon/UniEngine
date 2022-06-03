@@ -13,6 +13,7 @@ include($_EnginePath.'modules/flights/_includes.php');
 include($_EnginePath.'modules/phalanx/_includes.php');
 include($_EnginePath.'includes/functions/GetPhalanxRange.php');
 
+use UniEngine\Engine\Includes\Helpers\World;
 use UniEngine\Engine\Includes\Helpers\World\Checks;
 use UniEngine\Engine\Modules\Flights;
 use UniEngine\Engine\Modules\Phalanx;
@@ -33,7 +34,7 @@ if(CheckAuth('supportadmin'))
     $ThisMoon['sensor_phalanx'] = 50;
 }
 
-if ($ThisMoon['planet_type'] == 3) {
+if ($ThisMoon['planet_type'] == World\Enums\PlanetType::Moon) {
     if ($ThisMoon['sensor_phalanx'] > 0) {
         $thisMoonCoords = [
             'galaxy' => $ThisMoon['galaxy'],
