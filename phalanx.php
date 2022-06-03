@@ -86,21 +86,16 @@ if($ThisMoon['planet_type'] == 3)
 
         if($DenyScan !== true)
         {
-            $Result_GetTarget = Phalanx\Utils\Queries\getTargetDetails([
+            $targetDetails = Phalanx\Utils\Queries\getTargetDetails([
                 'targetCoords' => $TargetData,
             ]);
 
-            $TargetName = $Result_GetTarget['name'];
-            $TargetID = $Result_GetTarget['id'];
-            if($TargetID > 0)
-            {
-                // Calculate Fleets
-                FlyingFleetHandler($ThisMoon, array($TargetID));
+            if ($targetDetails['id'] > 0) {
+                FlyingFleetHandler($ThisMoon, [ $targetDetails['id'] ]);
+
                 $_DontShowMenus = true;
-                if($ThisMoon['id'] > 0)
-                {
-                    if($ThisMoon['deuterium'] >= $ScanCost)
-                    {
+                if ($ThisMoon['id'] > 0) {
+                    if ($ThisMoon['deuterium'] >= $ScanCost) {
                         if ($ScanCost > 0) {
                             Phalanx\Utils\Effects\updateMoonFuelOnUsage([
                                 'scanCost' => $ScanCost,
@@ -109,41 +104,38 @@ if($ThisMoon['planet_type'] == 3)
                             ]);
                         }
 
-                        $parse['Insert_Coord_Galaxy'] = $Result_GetTarget['galaxy'];
-                        $parse['Insert_Coord_System'] = $Result_GetTarget['system'];
-                        $parse['Insert_Coord_Planet'] = $Result_GetTarget['planet'];
-                        if($Result_GetTarget['id_owner'] > 0)
-                        {
-                            $parse['Insert_OwnerName'] = "({$Result_GetTarget['username']})";
-                            $parse['Insert_TargetName'] = $TargetName;
-                        }
-                        else
-                        {
+                        if ($targetDetails['id_owner'] > 0) {
+                            $parse['Insert_OwnerName'] = "({$targetDetails['username']})";
+                            $parse['Insert_TargetName'] = $targetDetails['name'];
+                        } else {
                             $parse['Table_Title2'] = '';
                             $parse['Insert_TargetName'] = "<b class=\"red\">{$_Lang['Abandoned_planet']}</b>";
                         }
+
+                        $parse['skinpath'] = $_SkinPath;
+                        $parse['Insert_Coord_Galaxy'] = $targetDetails['galaxy'];
+                        $parse['Insert_Coord_System'] = $targetDetails['system'];
+                        $parse['Insert_Coord_Planet'] = $targetDetails['planet'];
                         $parse['Insert_My_Galaxy'] = $ThisCoords['galaxy'];
                         $parse['Insert_My_System'] = $ThisCoords['system'];
                         $parse['Insert_My_Planet'] = $ThisCoords['planet'];
                         $parse['Insert_MyMoonName'] = $ThisMoon['name'];
                         $parse['Insert_DeuteriumAmount'] = prettyNumber($ThisMoon['deuterium']);
-                        if($ThisMoon['deuterium'] >= $ScanCost)
-                        {
-                            $parse['Insert_DeuteriumColor'] = 'lime';
-                        }
-                        else
-                        {
-                            $parse['Insert_DeuteriumColor'] = 'red';
-                        }
-                        $parse['skinpath'] = $_SkinPath;
+                        $parse['Insert_DeuteriumColor'] = (
+                            ($ThisMoon['deuterium'] >= $ScanCost) ?
+                                'lime' :
+                                'red'
+                        );
 
-                        $Result_GetFleets = Flights\Fetchers\fetchCurrentFlights([ 'targetId' => $TargetID ]);
+                        $Result_GetFleets = Flights\Fetchers\fetchCurrentFlights([
+                            'targetId' => $targetDetails['id'],
+                        ]);
 
                         $parse['phl_fleets_table'] = Flights\Components\FlightsList\render([
                             'viewMode' => Flights\Components\FlightsList\Utils\ViewMode::Phalanx,
                             'flights' => $Result_GetFleets,
                             'viewingUserId' => $_User['id'],
-                            'targetOwnerId' => $Result_GetTarget['id_owner'],
+                            'targetOwnerId' => $targetDetails['id_owner'],
                             'currentTimestamp' => $Now,
                         ])['componentHTML'];
 
