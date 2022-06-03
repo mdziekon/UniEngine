@@ -104,7 +104,11 @@ if($ThisMoon['planet_type'] == 3)
                         if($ScanCost > 0)
                         {
                             $ThisMoon['deuterium'] -= $ScanCost;
-                            doquery("UPDATE {{table}} SET `deuterium` = `deuterium` - {$ScanCost} WHERE `id` = {$_User['current_planet']};", 'planets');
+
+                            Phalanx\Utils\Queries\updatePhalanxMoon([
+                                'scanCost' => $ScanCost,
+                                'phalanxMoonId' => $ThisMoon['id'],
+                            ]);
 
                             $UserDev_Log[] = array('PlanetID' => $ThisMoon['id'], 'Date' => $Now, 'Place' => 29, 'Code' => '0', 'ElementID' => '0', 'AdditionalData' => '');
                         }
