@@ -85,9 +85,11 @@ if ($ThisMoon['planet_type'] == 3) {
             ]);
 
             if ($targetDetails['id'] > 0) {
+                $originalThisMoonId = $ThisMoon['id'];
+
                 FlyingFleetHandler($ThisMoon, [ $targetDetails['id'] ]);
 
-                if ($ThisMoon['id'] > 0) {
+                if ($ThisMoon['id'] == $originalThisMoonId) {
                     if ($ThisMoon['deuterium'] >= $ScanCost) {
                         if ($ScanCost > 0) {
                             Phalanx\Utils\Effects\updateMoonFuelOnUsage([
