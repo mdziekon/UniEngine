@@ -22,6 +22,7 @@ function tryScanPlanet($params) {
         $currentUser = &$input['currentUser'];
         $scanCost = $input['scanCost'];
 
+        $isUserAllowedToBypassRangeChecks = CheckAuth('supportadmin', AUTHCHECK_NORMAL, $currentUser);
         $phalanxLevel = $phalanxMoon['sensor_phalanx'];
 
         if ($phalanxMoon['planet_type'] != World\Enums\PlanetType::Moon) {
@@ -29,7 +30,10 @@ function tryScanPlanet($params) {
                 'code' => 'SCAN_ATTEMPT_NOT_FROM_MOON',
             ]);
         }
-        if ($phalanxLevel <= 0) {
+        if (
+            $phalanxLevel <= 0 &&
+            !$isUserAllowedToBypassRangeChecks
+        ) {
             return $resultHelpers['createFailure']([
                 'code' => 'PHALANX_NOT_PRESENT',
             ]);
@@ -45,8 +49,6 @@ function tryScanPlanet($params) {
                 'code' => 'SCAN_TARGET_COORDS_INVALID',
             ]);
         }
-
-        $isUserAllowedToBypassRangeChecks = CheckAuth('supportadmin', AUTHCHECK_NORMAL, $currentUser);
 
         if (
             $targetCoords['galaxy'] != $phalanxMoon['galaxy'] &&

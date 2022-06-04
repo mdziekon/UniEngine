@@ -29,7 +29,6 @@ $ScanCost = PHALANX_DEUTERIUMCOST;
 
 if (CheckAuth('supportadmin')) {
     $ScanCost = 0;
-    $ThisMoon['sensor_phalanx'] = 50;
 }
 
 $targetCoords = [
