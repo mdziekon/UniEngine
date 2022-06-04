@@ -22,7 +22,7 @@ function tryScanPlanet($params) {
         $currentUser = &$input['currentUser'];
         $scanCost = $input['scanCost'];
 
-        $isUserAllowedToBypassRangeChecks = CheckAuth('supportadmin', AUTHCHECK_NORMAL, $currentUser);
+        $isUserAllowedToBypassRangeChecks = Phalanx\Utils\Helpers\canUserBypassChecks([ 'user' => &$currentUser ]);
         $phalanxLevel = $phalanxMoon['sensor_phalanx'];
 
         if ($phalanxMoon['planet_type'] != World\Enums\PlanetType::Moon) {

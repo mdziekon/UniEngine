@@ -27,7 +27,7 @@ $ThisMoon = &$_Planet;
 $Now = time();
 $ScanCost = PHALANX_DEUTERIUMCOST;
 
-if (CheckAuth('supportadmin')) {
+if (Phalanx\Utils\Helpers\canUserBypassChecks([ 'user' => &$_User ])) {
     $ScanCost = 0;
 }
 
