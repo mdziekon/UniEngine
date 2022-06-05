@@ -20,7 +20,7 @@ loggedCheck();
 
 includeLang('overview');
 includeLang('phalanx');
-$PageTPL = gettemplate('phalanx_body');
+
 $PageTitle = $_Lang['Page_Title'];
 
 $ThisMoon = &$_Planet;
@@ -60,49 +60,19 @@ if ($ScanCost > 0) {
     ]);
 }
 
-$parse = $_Lang;
-
-if ($targetDetails['id_owner'] > 0) {
-    $parse['Insert_OwnerName'] = "({$targetDetails['username']})";
-    $parse['Insert_TargetName'] = $targetDetails['name'];
-} else {
-    $parse['Table_Title2'] = '';
-    $parse['Insert_TargetName'] = "<b class=\"red\">{$_Lang['Abandoned_planet']}</b>";
-}
-
-$parse['skinpath'] = $_SkinPath;
-$parse['Insert_Coord_Galaxy'] = $targetDetails['galaxy'];
-$parse['Insert_Coord_System'] = $targetDetails['system'];
-$parse['Insert_Coord_Planet'] = $targetDetails['planet'];
-$parse['Insert_My_Galaxy'] = $ThisMoon['galaxy'];
-$parse['Insert_My_System'] = $ThisMoon['system'];
-$parse['Insert_My_Planet'] = $ThisMoon['planet'];
-$parse['Insert_MyMoonName'] = $ThisMoon['name'];
-$parse['Insert_DeuteriumAmount'] = prettyNumber($ThisMoon['deuterium']);
-$parse['Insert_DeuteriumColor'] = (
-    ($ThisMoon['deuterium'] >= $ScanCost) ?
-        'lime' :
-        'red'
-);
-
 $Result_GetFleets = Flights\Fetchers\fetchCurrentFlights([
     'targetId' => $targetDetails['id'],
 ]);
 
-$parse['phl_fleets_table'] = Flights\Components\FlightsList\render([
-    'viewMode' => Flights\Components\FlightsList\Utils\ViewMode::Phalanx,
-    'flights' => $Result_GetFleets,
+$viewScreen = Phalanx\Screens\PlanetScan\render([
+    'targetDetails' => $targetDetails,
+    'phalanxMoon' => &$ThisMoon,
     'viewingUserId' => $_User['id'],
-    'targetOwnerId' => $targetDetails['id_owner'],
     'currentTimestamp' => $Now,
-])['componentHTML'];
+    'scanCost' => $ScanCost,
+    'foundFlights' => $Result_GetFleets,
+]);
 
-if (empty($parse['phl_fleets_table'])) {
-    $parse['phl_fleets_table'] = $_Lang['PhalanxInfo_NoMovements'];
-}
-
-$page = parsetemplate($PageTPL, $parse);
-
-display($page, $PageTitle, false);
+display($viewScreen['componentHTML'], $PageTitle, false);
 
 ?>

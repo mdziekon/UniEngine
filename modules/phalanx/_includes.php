@@ -6,6 +6,8 @@ call_user_func(function () {
 
     $includePath = $_EnginePath . 'modules/phalanx/';
 
+    include($includePath . './screens/PlanetScan/PlanetScan.screen.php');
+    include($includePath . './screens/PlanetScan/components/PlanetScanResult/PlanetScanResult.component.php');
     include($includePath . './utils/effects/updateMoonFuelOnUsage.effect.php');
     include($includePath . './utils/errors/tryScanPlanet.errors.php');
     include($includePath . './utils/helpers/canUserBypassChecks.helper.php');
