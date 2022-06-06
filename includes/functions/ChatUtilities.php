@@ -3,6 +3,10 @@
 function Chat_CheckAccess($RoomID, $ThisUser) {
     global $_Vars_AllyRankLabels;
 
+    if ($RoomID == 0) {
+        return true;
+    }
+
     // Make sure, that this Room exists & User can be in this Room
     $Query_CheckRoom = "SELECT * FROM {{table}} WHERE `ID` = {$RoomID} LIMIT 1;";
     $Result_CheckRoom = doquery($Query_CheckRoom, 'chat_rooms', true);
