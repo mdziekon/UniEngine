@@ -19,16 +19,16 @@ function Chat_CheckAccess($RoomID, $ThisUser) {
         return true;
     }
 
+    // Alliance chat room
     if ($Result_CheckRoom['AccessType'] == 1) {
-        // This is Ally Room
         if (CheckAuth('supportadmin', AUTHCHECK_NORMAL, $ThisUser)) {
             // Users with SupportAdmin Access (or higher) can use all Ally ChatRooms
             return true;
         }
-        if ($ThisUser['ally_id'] <= 0) {
-            return false;
-        }
-        if ($ThisUser['ally_id'] != $Result_CheckRoom['AccessCheck']) {
+        if (
+            $ThisUser['ally_id'] <= 0 ||
+            $ThisUser['ally_id'] != $Result_CheckRoom['AccessCheck']
+        ) {
             return false;
         }
 
@@ -57,13 +57,10 @@ function Chat_CheckAccess($RoomID, $ThisUser) {
 
         return false;
     }
-    if ($Result_CheckRoom['AccessType'] == 2) {
-        // This is GameTeam Room
-        if ($ThisUser['authlevel'] < $Result_CheckRoom['AccessCheck']) {
-            return false;
-        }
 
-        return true;
+    // GameTeam chat room
+    if ($Result_CheckRoom['AccessType'] == 2) {
+        return ($ThisUser['authlevel'] >= $Result_CheckRoom['AccessCheck']);
     }
 
     return false;
