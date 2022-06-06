@@ -31,24 +31,31 @@ function Chat_CheckAccess($RoomID, $ThisUser) {
         if ($ThisUser['ally_id'] != $Result_CheckRoom['AccessCheck']) {
             return false;
         }
-        if ($ThisUser['id'] != $ThisUser['ally_owner']) {
-            // If this user is not Ally Owner, we have to check his Privileges
-            $Temp1 = json_decode($ThisUser['ally_ranks'], true);
-            foreach ($Temp1 as $RankID => $RankData) {
-                if ($RankID != $ThisUser['ally_rank_id']) {
+
+        if ($ThisUser['id'] == $ThisUser['ally_owner']) {
+            return true;
+        }
+
+        // If this user is not Ally Owner, we have to check his Privileges
+        $allianceRanks = json_decode($ThisUser['ally_ranks'], true);
+
+        foreach ($allianceRanks as $rankId => $rankParams) {
+            if ($rankId != $ThisUser['ally_rank_id']) {
+                continue;
+            }
+
+            foreach ($rankParams as $paramId => $paramValue) {
+                if ($_Vars_AllyRankLabels[$paramId] !== 'canusechat') {
                     continue;
                 }
 
-                foreach ($RankData as $DataID => $DataVal) {
-                    $Temp2[$_Vars_AllyRankLabels[$DataID]] = $DataVal;
+                if ($paramValue === true) {
+                    return true;
                 }
-            }
-            if ($Temp2['canusechat'] !== true) {
-                return false;
             }
         }
 
-        return true;
+        return false;
     }
     if ($Result_CheckRoom['AccessType'] == 2) {
         // This is GameTeam Room
