@@ -44,6 +44,7 @@ includeLang('alliance');
 // --- Ally informations - Requested by User
 
 include($_EnginePath.'includes/functions/AlliancePageFunctions.php');
+include($_EnginePath.'includes/functions/ChatUtilities.php');
 
 if($mode == 'ainfo')
 {
@@ -227,9 +228,11 @@ if($_User['ally_id'] == 0)
                 $Result_GetLastID = doquery("SELECT LAST_INSERT_ID() AS `ID`;", 'alliance', true);
                 $Result_GetLastID = $Result_GetLastID['ID'];
 
+                $chatRoomAccessType = (string) ChatRoomAccessType::AllianceRoom;
+
                 $Query_ACreate_MakeChatRoom = '';
                 $Query_ACreate_MakeChatRoom .= "INSERT INTO {{table}} SET ";
-                $Query_ACreate_MakeChatRoom .= "`AccessType` = 1, ";
+                $Query_ACreate_MakeChatRoom .= "`AccessType` = {$chatRoomAccessType}, ";
                 $Query_ACreate_MakeChatRoom .= "`AccessCheck` = {$Result_GetLastID};";
                 doquery($Query_ACreate_MakeChatRoom, 'chat_rooms');
 
