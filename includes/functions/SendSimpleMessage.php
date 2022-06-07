@@ -1,8 +1,7 @@
 <?php
 
-function SendSimpleMessage($Owner, $Sender, $Time, $Type, $From, $Subject, $Message, $GetMsgID = false) {
-    if($Sender == 0)
-    {
+function SendSimpleMessage($Owner, $Sender, $Time, $Type, $From, $Subject, $Message) {
+    if ($Sender == 0) {
         $Sender = '0';
     }
 
@@ -18,9 +17,7 @@ function SendSimpleMessage($Owner, $Sender, $Time, $Type, $From, $Subject, $Mess
         ],
     ]);
 
-    if ($GetMsgID === true) {
-        return getLastInsertId();
-    }
+    return getLastInsertId();
 }
 
 ?>

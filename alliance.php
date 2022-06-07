@@ -645,7 +645,7 @@ elseif($_User['ally_id'] > 0 AND $_User['ally_request'] == 0)
                             $UsersNicks[] = $FetchData['username'];
                         }
 
-                        $FirstMSGID = SendSimpleMessage($UsersID[0], $_User['id'], $Time, 2, "[{$Ally['ally_tag']}]", $_Lang['Ally_WR_Subject'].$_User['username'], $SendMass_Text, true);
+                        $FirstMSGID = SendSimpleMessage($UsersID[0], $_User['id'], $Time, 2, "[{$Ally['ally_tag']}]", $_Lang['Ally_WR_Subject'].$_User['username'], $SendMass_Text);
                         unset($UsersID[0]);
                         if(!empty($UsersID))
                         {
