@@ -75,17 +75,21 @@ function doquery($query, $table, $fetch = false) {
 function getDBLink() {
     global $_DBLink;
 
-    return $_DBLink;
+    if (!$_DBLink) {
+        throw new Exception("DBLink is empty");
+    }
+
+    return (object) $_DBLink;
 }
 
 function closeDBLink() {
-    global $_DBLink;
+    try {
+        $dbLink = getDBLink();
 
-    if (!$_DBLink) {
-        return;
+        $dbLink->close();
+    } catch (Exception $exception) {
+        // Do nothing
     }
-
-    $_DBLink->close();
 }
 
 function getLastInsertId () {
