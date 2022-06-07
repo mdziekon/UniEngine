@@ -24,7 +24,6 @@ if(!isset($_UseMinimalCommon) || $_UseMinimalCommon !== true)
     include($FIP.'FlyingFleetHandler.php');
 
     include($FIP.'SendSimpleMessage.php');
-    include($FIP.'SendSimpleMassMessage.php');
     include($FIP.'SendSimpleMultipleMessages.php');
     include($FIP.'Cache_Message.php');
 
