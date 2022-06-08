@@ -8,6 +8,7 @@ $_AllowInVacationMode = true;
 $_EnginePath = './';
 
 include($_EnginePath.'common.php');
+include($_EnginePath.'includes/functions/ChatUtilities.php');
 
 loggedCheck();
 
@@ -25,14 +26,20 @@ else
 {
     $_ChatTitle = $_Lang['Chat'];
     $Query_GetRoom = doquery("SELECT * FROM {{table}} WHERE `ID` = {$RoomID} LIMIT 1;", 'chat_rooms', true);
-    if($Query_GetRoom['ID'] == $RoomID)
-    {
-        if($Query_GetRoom['AccessType'] == 1 AND ($Query_GetRoom['AccessCheck'] == $_User['ally_id'] OR CheckAuth('supportadmin')))
-        {
+
+    if ($Query_GetRoom['ID'] == $RoomID) {
+        if (
+            $Query_GetRoom['AccessType'] == ChatRoomAccessType::AllianceRoom &&
+            (
+                $Query_GetRoom['AccessCheck'] == $_User['ally_id'] || CheckAuth('supportadmin')
+            )
+        ) {
             $_ChatTitle = sprintf($_Lang['ChatTitle_String'], sprintf($_Lang['ChatTitle_Ally'], $_User['ally_name']));
         }
-        else if($Query_GetRoom['AccessType'] == 2 AND $_User['authlevel'] >= $Query_GetRoom['AccessCheck'])
-        {
+        else if (
+            $Query_GetRoom['AccessType'] == ChatRoomAccessType::GameTeamRoom &&
+            $_User['authlevel'] >= $Query_GetRoom['AccessCheck']
+        ) {
             $_ChatTitle = sprintf($_Lang['ChatTitle_String'], $_Lang['ChatTitle_GameTeam']);
         }
     }

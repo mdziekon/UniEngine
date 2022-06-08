@@ -12,6 +12,7 @@ $_SetAccessLogPath = '../';
 $_EnginePath = '../';
 
 include($_EnginePath.'common.php');
+include($_EnginePath.'includes/functions/ChatUtilities.php');
 
 if(!isLogged())
 {
@@ -23,24 +24,16 @@ if(!isset($_POST['msg']) || empty($_POST['msg']))
 }
 
 $RoomID = (isset($_POST['rid']) ? intval($_POST['rid']) : 0);
-if($RoomID < 0)
-{
+if ($RoomID < 0) {
     $RoomID = 0;
 }
-else
-{
-    include($_EnginePath.'includes/functions/ChatUtilities.php');
-    $CheckAccess = Chat_CheckAccess($RoomID, $_User);
-    if($CheckAccess !== true)
-    {
-        if($CheckAccess === null)
-        {
-            safeDie('6'); // Room doesn't exist
-        }
-        else
-        {
-            safeDie('5'); // No RoomAccess
-        }
+
+$hasAccessToChatRoom = Chat_CheckAccess($RoomID, $_User);
+if ($hasAccessToChatRoom !== true) {
+    if ($hasAccessToChatRoom === null) {
+        safeDie('6'); // Room doesn't exist
+    } else {
+        safeDie('5'); // No RoomAccess
     }
 }
 

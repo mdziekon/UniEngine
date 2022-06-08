@@ -13,6 +13,7 @@ $_SetAccessLogPath = '../';
 $_EnginePath = '../';
 
 include($_EnginePath.'common.php');
+include($_EnginePath.'includes/functions/ChatUtilities.php');
 
 $PerPage = 100;
 $OnlineCheck = 30;
@@ -29,27 +30,21 @@ $LastGet = (isset($_GET['lGet']) ? intval($_GET['lGet']) + SERVER_MAINOPEN_TSTAM
 $LastCount = (isset($_GET['lCnt']) ? intval($_GET['lCnt']) : 0);
 
 $isInit = ($FirstID == 0 && $LastID == 0 ? true : false);
-if($RoomID < 0)
-{
+if ($RoomID < 0) {
     $RoomID = 0;
 }
-else
-{
-    include($_EnginePath.'includes/functions/ChatUtilities.php');
-    $CheckAccess = Chat_CheckAccess($RoomID, $_User);
-    if($CheckAccess !== true)
-    {
-        if($CheckAccess === null)
-        {
-            $ErrorCode = '001';
-        }
-        else
-        {
-            $ErrorCode = '002';
-        }
-        safeDie(json_encode(array('Err' => $ErrorCode)));
+
+$hasAccessToChatRoom = Chat_CheckAccess($RoomID, $_User);
+if ($hasAccessToChatRoom !== true) {
+    if ($hasAccessToChatRoom === null) {
+        $ErrorCode = '001';
+    } else {
+        $ErrorCode = '002';
     }
+
+    safeDie(json_encode([ 'Err' => $ErrorCode ]));
 }
+
 if($FirstID < 0)
 {
     $FirstID = 0;

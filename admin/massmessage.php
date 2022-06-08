@@ -42,7 +42,7 @@ if(CheckAuth('supportadmin'))
                 $UserList[] = $UsersData['id'];
             }
 
-            $FirstMSGID = SendSimpleMessage($UserList[0], $_User['id'], $Time, 80, '', $Subject, $Message, true);
+            $FirstMSGID = SendSimpleMessage($UserList[0], $_User['id'], $Time, 80, '', $Subject, $Message);
             unset($UserList[0]);
 
             Cache_Message($UserList, $_User['id'], $Time, 80, '', '', '{COPY_MSG_#'.$FirstMSGID.'}');
