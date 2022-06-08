@@ -2,7 +2,7 @@
 
 function HandlePlanetQueue_OnTechnologyEnd(&$ThePlanet, &$TheUser, $CurrentTime)
 {
-    global $_Vars_GameElements, $UserDev_Log, $UserTasksUpdate, $_Vars_TasksData, $HPQ_PlanetUpdatedFields, $HPQ_UserUpdatedFields, $HFUU_UsersToUpdate;
+    global $_Vars_GameElements, $UserDev_Log, $HPQ_PlanetUpdatedFields, $HPQ_UserUpdatedFields, $HFUU_UsersToUpdate;
 
     if (empty($ThePlanet['techQueue'])) {
         return false;

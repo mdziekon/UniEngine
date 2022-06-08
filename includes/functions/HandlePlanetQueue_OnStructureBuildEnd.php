@@ -2,7 +2,7 @@
 
 function HandlePlanetQueue_OnStructureBuildEnd(&$ThePlanet, &$TheUser, $CurrentTime)
 {
-    global $_Vars_GameElements, $_Vars_ElementCategories, $UserDev_Log, $UserTasksUpdate, $HPQ_PlanetUpdatedFields;
+    global $_Vars_GameElements, $_Vars_ElementCategories, $UserDev_Log, $HPQ_PlanetUpdatedFields;
 
     if (empty($ThePlanet['buildQueue'])) {
         return false;
