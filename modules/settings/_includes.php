@@ -7,8 +7,10 @@ call_user_func(function () {
     $includePath = $_EnginePath . 'modules/settings/';
 
     include($includePath . './utils/errorMappers/validatePasswordChange.errorMapper.php');
+    include($includePath . './utils/errorMappers/validateEmailChange.errorMapper.php');
 
     include($includePath . './utils/validators/validatePasswordChange.validator.php');
+    include($includePath . './utils/validators/validateEmailChange.validator.php');
 
 });
 

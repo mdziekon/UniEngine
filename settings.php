@@ -147,109 +147,82 @@ if(!isOnVacation())
                     }
                 }
 
-                if(isset($_POST['change_mail']) && $_POST['change_mail'] == 'on')
-                {
-                    if($CheckMailChange['ID'] <= 0)
-                    {
-                        $_POST['give_newemail'] = getDBLink()->escape_string(
-                            strip_tags(trim($_POST['give_newemail']))
+                if (
+                    isset($_POST['change_mail']) &&
+                    $_POST['change_mail'] == 'on'
+                ) {
+                    $inputNewEmailAddress = $_POST['give_newemail'];
+                    $inputNewEmailAddressConfirm = $_POST['give_confirmemail'];
+                    $normalizedInputNewEmailAddress = getDBLink()->escape_string(
+                        strip_tags(trim($inputNewEmailAddress))
+                    );
+
+                    $emailChangeValidationResult = Settings\Utils\Validators\validateEmailChange([
+                        'input' => [
+                            'newEmailAddress' => $normalizedInputNewEmailAddress,
+                            'newEmailAddressConfirm' => $inputNewEmailAddressConfirm,
+                        ],
+                        'currentUser' => &$_User,
+                        'isAlreadyChangingEmail' => ($CheckMailChange['ID'] > 0),
+                    ]);
+
+                    if (!$emailChangeValidationResult['isSuccess']) {
+                        $WarningMsgs[] = Settings\Utils\ErrorMappers\mapValidateEmailChangeErrorToReadableMessage(
+                            $emailChangeValidationResult['error']
+                        );
+                    } else {
+                        $RandomHash = md5($_User['id'].$_User['username'].mt_rand(0, 999999999));
+                        $RandomHashNew = md5($_User['id'].$_User['username'].mt_rand(0, 999999999));
+                        $ThisTime = $Now;
+
+                        $EmailParse = array
+                        (
+                            'EP_User' => $_User['username'],
+                            'EP_GameLink' => GAMEURL_STRICT,
+                            'EP_Link' => GAMEURL."email_change.php?hash=old&amp;key={$RandomHash}",
+                            'EP_Text' => $_Lang['Email_MailOld'],
+                            'EP_OldMail' => $_User['email'],
+                            'EP_NewMail' => $normalizedInputNewEmailAddress,
+                            'EP_Date' => date('d.m.Y - H:i:s', $ThisTime),
+                            'EP_IP' => $_User['user_lastip'],
+                            'EP_ContactLink' => GAMEURL_STRICT.'/contact.php',
+                            'EP_Text2' => $_Lang['Email_WarnOld']
+                        );
+                        $EmailParseNew = array
+                        (
+                            'EP_User' => $_User['username'],
+                            'EP_GameLink' => GAMEURL_STRICT,
+                            'EP_Link' => GAMEURL."email_change.php?hash=new&amp;key={$RandomHashNew}",
+                            'EP_Text' => $_Lang['Email_MailNew'],
+                            'EP_OldMail' => $_User['email'],
+                            'EP_NewMail' => $normalizedInputNewEmailAddress,
+                            'EP_Date' => date('d.m.Y - H:i:s', $ThisTime),
+                            'EP_IP' => $_User['user_lastip'],
+                            'EP_ContactLink' => GAMEURL_STRICT.'/contact.php',
+                            'EP_Text2' => $_Lang['Email_WarnNew']
                         );
 
-                        $CheckMail = $_POST['give_newemail'];
-                        $banned_domain_list = $_GameConfig['BannedMailDomains'];
-                        $banned_domain_list = str_replace('.', '\.', $banned_domain_list);
+                        include($_EnginePath.'includes/functions/SendMail.php');
+                        $EmailBody = parsetemplate($_Lang['Email_Body'], $EmailParse);
+                        $EmailBodyNew = parsetemplate($_Lang['Email_Body'], $EmailParseNew);
+                        $SendResult = SendMail($_User['email'], $_Lang['Email_Title'], $EmailBody, '', true);
+                        $SendResult2 = SendMail($normalizedInputNewEmailAddress, $_Lang['Email_Title'], $EmailBodyNew);
+                        CloseMailConnection();
 
-                        if(is_email($CheckMail))
-                        {
-                            if($CheckMail !== $_User['email'])
-                            {
-                                if($CheckMail === $_POST['give_confirmemail'])
-                                {
-                                    if(empty($banned_domain_list) || !preg_match('#('.$banned_domain_list.')+#si', $CheckMail))
-                                    {
-                                        $CheckMailinDB = doquery("SELECT `id` FROM {{table}} WHERE `email` = '{$CheckMail}' LIMIT 1;", 'users', true);
-                                        if($CheckMailinDB['id'] <= 0)
-                                        {
-                                            $RandomHash = md5($_User['id'].$_User['username'].mt_rand(0, 999999999));
-                                            $RandomHashNew = md5($_User['id'].$_User['username'].mt_rand(0, 999999999));
-                                            $ThisTime = $Now;
+                        if (
+                            // true
+                            $SendResult === true &&
+                            $SendResult2 === true
+                        ) {
+                            $ChangeSet['email_2'] = $normalizedInputNewEmailAddress;
+                            $ChangeSetTypes['email_2'] = 's';
 
-                                            $EmailParse = array
-                                            (
-                                                'EP_User' => $_User['username'],
-                                                'EP_GameLink' => GAMEURL_STRICT,
-                                                'EP_Link' => GAMEURL."email_change.php?hash=old&amp;key={$RandomHash}",
-                                                'EP_Text' => $_Lang['Email_MailOld'],
-                                                'EP_OldMail' => $_User['email'],
-                                                'EP_NewMail' => $CheckMail,
-                                                'EP_Date' => date('d.m.Y - H:i:s', $ThisTime),
-                                                'EP_IP' => $_User['user_lastip'],
-                                                'EP_ContactLink' => GAMEURL_STRICT.'/contact.php',
-                                                'EP_Text2' => $_Lang['Email_WarnOld']
-                                            );
-                                            $EmailParseNew = array
-                                            (
-                                                'EP_User' => $_User['username'],
-                                                'EP_GameLink' => GAMEURL_STRICT,
-                                                'EP_Link' => GAMEURL."email_change.php?hash=new&amp;key={$RandomHashNew}",
-                                                'EP_Text' => $_Lang['Email_MailNew'],
-                                                'EP_OldMail' => $_User['email'],
-                                                'EP_NewMail' => $CheckMail,
-                                                'EP_Date' => date('d.m.Y - H:i:s', $ThisTime),
-                                                'EP_IP' => $_User['user_lastip'],
-                                                'EP_ContactLink' => GAMEURL_STRICT.'/contact.php',
-                                                'EP_Text2' => $_Lang['Email_WarnNew']
-                                            );
-
-                                            include($_EnginePath.'includes/functions/SendMail.php');
-                                            $EmailBody = parsetemplate($_Lang['Email_Body'], $EmailParse);
-                                            $EmailBodyNew = parsetemplate($_Lang['Email_Body'], $EmailParseNew);
-                                            $SendResult = SendMail($_User['email'], $_Lang['Email_Title'], $EmailBody, '', true);
-                                            $SendResult2 = SendMail($CheckMail, $_Lang['Email_Title'], $EmailBodyNew);
-                                            CloseMailConnection();
-
-                                            if($SendResult === TRUE AND $SendResult2 === TRUE)
-                                            {
-                                                $ChangeSet['email_2'] = $CheckMail;
-                                                $ChangeSetTypes['email_2'] = 's';
-
-                                                doquery("INSERT INTO {{table}} VALUES (NULL, {$ThisTime}, {$_User['id']}, '{$_User['email']}', '{$CheckMail}', 0, 0, '{$RandomHash}', '{$RandomHashNew}');", 'mailchange');
-                                                $CheckMailChange = array('ID' => 1, 'Date' => $ThisTime);
-                                                $InfoMsgs[] = sprintf($_Lang['Mail_MailChange'], $_User['email']);
-                                            }
-                                            else
-                                            {
-                                                $WarningMsgs[] = sprintf($_Lang['Mail_SendMailError'], urlencode(str_pad(mt_rand(0,999), 3, 'a', STR_PAD_RIGHT).base64_encode($SendResult).'||'.base64_encode($SendResult2)));
-                                            }
-                                        }
-                                        else
-                                        {
-                                            $WarningMsgs[] = $_Lang['Mail_some1_hasemail'];
-                                        }
-                                    }
-                                    else
-                                    {
-                                        $WarningMsgs[] = $_Lang['Mail_banned_domain'];
-                                    }
-                                }
-                                else
-                                {
-                                    $WarningMsgs[] = $_Lang['Mail_Confirm_isbad'];
-                                }
-                            }
-                            else
-                            {
-                                $WarningMsgs[] = $_Lang['Mail_same_as_old'];
-                            }
+                            doquery("INSERT INTO {{table}} VALUES (NULL, {$ThisTime}, {$_User['id']}, '{$_User['email']}', '{$normalizedInputNewEmailAddress}', 0, 0, '{$RandomHash}', '{$RandomHashNew}');", 'mailchange');
+                            $CheckMailChange = array('ID' => 1, 'Date' => $ThisTime);
+                            $InfoMsgs[] = sprintf($_Lang['Mail_MailChange'], $_User['email']);
+                        } else {
+                            $WarningMsgs[] = sprintf($_Lang['Mail_SendMailError'], urlencode(str_pad(mt_rand(0,999), 3, 'a', STR_PAD_RIGHT).base64_encode($SendResult).'||'.base64_encode($SendResult2)));
                         }
-                        else
-                        {
-                            $WarningMsgs[] = $_Lang['Mail_badEmail'];
-                        }
-                    }
-                    else
-                    {
-                        $WarningMsgs[] = $_Lang['Mail_alreadyInChange'];
                     }
                 }
 
