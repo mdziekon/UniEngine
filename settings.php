@@ -9,8 +9,10 @@ $_DontForceRulesAcceptance = true;
 $_EnginePath = './';
 include($_EnginePath.'common.php');
 include_once($_EnginePath . 'modules/session/_includes.php');
+include_once($_EnginePath . 'modules/settings/_includes.php');
 
 use UniEngine\Engine\Modules\Session;
+use UniEngine\Engine\Modules\Settings;
 
 loggedCheck();
 
@@ -119,44 +121,28 @@ if(!isOnVacation())
                 {
                     $_POST['give_newpass'] = trim($_POST['give_newpass']);
 
-                    $inputOldPasswordHash = Session\Utils\LocalIdentityV1\hashPassword([
-                        'password' => $_POST['give_oldpass'],
-                    ]);
                     $inputNewPasswordHash = Session\Utils\LocalIdentityV1\hashPassword([
                         'password' => $_POST['give_newpass'],
                     ]);
 
-                    if($inputOldPasswordHash == $_User['password'])
-                    {
-                        if(strlen($_POST['give_newpass']) >= 4)
-                        {
-                            if($inputNewPasswordHash != $_User['password'])
-                            {
-                                if($_POST['give_newpass'] == $_POST['give_confirmpass'])
-                                {
-                                    $ChangeSet['password'] = $inputNewPasswordHash;
-                                    $ChangeSetTypes['password'] = 's';
-                                    $InfoMsgs[] = $_Lang['Pass_Changed_plzlogout'];
-                                    setcookie(getSessionCookieKey(), '', $Now - 3600, '/', '');
-                                }
-                                else
-                                {
-                                    $WarningMsgs[] = $_Lang['Pass_Confirm_isbad'];
-                                }
-                            }
-                            else
-                            {
-                                $WarningMsgs[] = $_Lang['Pass_same_as_old'];
-                            }
-                        }
-                        else
-                        {
-                            $WarningMsgs[] = $_Lang['Pass_is_tooshort'];
-                        }
-                    }
-                    else
-                    {
-                        $WarningMsgs[] = $_Lang['Pass_old_isbad'];
+                    $passwordChangeValidationResult = Settings\Utils\Validators\validatePasswordChange([
+                        'input' => [
+                            'oldPassword' => $_POST['give_oldpass'],
+                            'newPassword' => $_POST['give_newpass'],
+                            'newPasswordConfirm' => $_POST['give_confirmpass'],
+                        ],
+                        'currentUser' => &$_User,
+                    ]);
+
+                    if (!$passwordChangeValidationResult['isSuccess']) {
+                        $WarningMsgs[] = Settings\Utils\ErrorMappers\mapValidatePasswordChangeErrorToReadableMessage(
+                            $passwordChangeValidationResult['error']
+                        );
+                    } else {
+                        $ChangeSet['password'] = $inputNewPasswordHash;
+                        $ChangeSetTypes['password'] = 's';
+                        $InfoMsgs[] = $_Lang['Pass_Changed_plzlogout'];
+                        setcookie(getSessionCookieKey(), '', $Now - 3600, '/', '');
                     }
                 }
 
