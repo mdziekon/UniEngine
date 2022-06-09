@@ -171,57 +171,70 @@ if(!isOnVacation())
                             $emailChangeValidationResult['error']
                         );
                     } else {
-                        $RandomHash = md5($_User['id'].$_User['username'].mt_rand(0, 999999999));
-                        $RandomHashNew = md5($_User['id'].$_User['username'].mt_rand(0, 999999999));
                         $ThisTime = $Now;
 
-                        $EmailParse = array
-                        (
-                            'EP_User' => $_User['username'],
-                            'EP_GameLink' => GAMEURL_STRICT,
-                            'EP_Link' => GAMEURL."email_change.php?hash=old&amp;key={$RandomHash}",
-                            'EP_Text' => $_Lang['Email_MailOld'],
-                            'EP_OldMail' => $_User['email'],
-                            'EP_NewMail' => $normalizedInputNewEmailAddress,
-                            'EP_Date' => date('d.m.Y - H:i:s', $ThisTime),
-                            'EP_IP' => $_User['user_lastip'],
-                            'EP_ContactLink' => GAMEURL_STRICT.'/contact.php',
-                            'EP_Text2' => $_Lang['Email_WarnOld']
-                        );
-                        $EmailParseNew = array
-                        (
-                            'EP_User' => $_User['username'],
-                            'EP_GameLink' => GAMEURL_STRICT,
-                            'EP_Link' => GAMEURL."email_change.php?hash=new&amp;key={$RandomHashNew}",
-                            'EP_Text' => $_Lang['Email_MailNew'],
-                            'EP_OldMail' => $_User['email'],
-                            'EP_NewMail' => $normalizedInputNewEmailAddress,
-                            'EP_Date' => date('d.m.Y - H:i:s', $ThisTime),
-                            'EP_IP' => $_User['user_lastip'],
-                            'EP_ContactLink' => GAMEURL_STRICT.'/contact.php',
-                            'EP_Text2' => $_Lang['Email_WarnNew']
-                        );
+                        $changeTokenOldAddress = md5($_User['id'] . $_User['username'] . mt_rand(0, 999999999));
+                        $changeTokenNewAddress = md5($_User['id'] . $_User['username'] . mt_rand(0, 999999999));
+
+                        $mailContentCommonProps = [
+                            'EP_User'           => $_User['username'],
+                            'EP_GameLink'       => GAMEURL_STRICT,
+                            'EP_OldMail'        => $_User['email'],
+                            'EP_NewMail'        => $normalizedInputNewEmailAddress,
+                            'EP_Date'           => date('d.m.Y - H:i:s', $ThisTime),
+                            'EP_IP'             => $_User['user_lastip'],
+                            'EP_ContactLink'    => GAMEURL_STRICT.'/contact.php',
+                        ];
+
+                        $mailContentOldAddressProps = [
+                            'EP_Link'           => GAMEURL."email_change.php?hash=old&amp;key={$changeTokenOldAddress}",
+                            'EP_Text'           => $_Lang['Email_MailOld'],
+                            'EP_Text2'          => $_Lang['Email_WarnOld']
+                        ];
+                        $mailContentNewAddressProps = [
+                            'EP_Link'           => GAMEURL."email_change.php?hash=new&amp;key={$changeTokenNewAddress}",
+                            'EP_Text'           => $_Lang['Email_MailNew'],
+                            'EP_Text2'          => $_Lang['Email_WarnNew']
+                        ];
 
                         include($_EnginePath.'includes/functions/SendMail.php');
-                        $EmailBody = parsetemplate($_Lang['Email_Body'], $EmailParse);
-                        $EmailBodyNew = parsetemplate($_Lang['Email_Body'], $EmailParseNew);
-                        $SendResult = SendMail($_User['email'], $_Lang['Email_Title'], $EmailBody, '', true);
-                        $SendResult2 = SendMail($normalizedInputNewEmailAddress, $_Lang['Email_Title'], $EmailBodyNew);
+
+                        $mailBodyOldAddress = parsetemplate(
+                            $_Lang['Email_Body'],
+                            array_merge($mailContentCommonProps, $mailContentOldAddressProps)
+                        );
+                        $mailBodyNewAddress = parsetemplate(
+                            $_Lang['Email_Body'],
+                            array_merge($mailContentCommonProps, $mailContentNewAddressProps)
+                        );
+
+                        $sendMail2OldAddressResult = SendMail($_User['email'], $_Lang['Email_Title'], $mailBodyOldAddress, '', true);
+                        $sendMail2NewAddressResult = SendMail($normalizedInputNewEmailAddress, $_Lang['Email_Title'], $mailBodyNewAddress);
+
                         CloseMailConnection();
 
                         if (
-                            // true
-                            $SendResult === true &&
-                            $SendResult2 === true
+                            $sendMail2OldAddressResult === true &&
+                            $sendMail2NewAddressResult === true
                         ) {
                             $ChangeSet['email_2'] = $normalizedInputNewEmailAddress;
                             $ChangeSetTypes['email_2'] = 's';
 
-                            doquery("INSERT INTO {{table}} VALUES (NULL, {$ThisTime}, {$_User['id']}, '{$_User['email']}', '{$normalizedInputNewEmailAddress}', 0, 0, '{$RandomHash}', '{$RandomHashNew}');", 'mailchange');
-                            $CheckMailChange = array('ID' => 1, 'Date' => $ThisTime);
+                            doquery(
+                                "INSERT INTO {{table}} VALUES (NULL, {$ThisTime}, {$_User['id']}, '{$_User['email']}', '{$normalizedInputNewEmailAddress}', 0, 0, '{$changeTokenOldAddress}', '{$changeTokenNewAddress}');",
+                                'mailchange'
+                            );
+                            $CheckMailChange = [ 'ID' => 1, 'Date' => $ThisTime, ];
                             $InfoMsgs[] = sprintf($_Lang['Mail_MailChange'], $_User['email']);
                         } else {
-                            $WarningMsgs[] = sprintf($_Lang['Mail_SendMailError'], urlencode(str_pad(mt_rand(0,999), 3, 'a', STR_PAD_RIGHT).base64_encode($SendResult).'||'.base64_encode($SendResult2)));
+                            $sendErrorCode = urlencode(
+                                str_pad(mt_rand(0,999), 3, 'a', STR_PAD_RIGHT) .
+                                base64_encode($sendMail2OldAddressResult) .
+                                '||' .
+                                base64_encode($sendMail2NewAddressResult)
+                            );
+
+                            $WarningMsgs[] = sprintf($_Lang['Mail_SendMailError'], $sendErrorCode);
                         }
                     }
                 }
