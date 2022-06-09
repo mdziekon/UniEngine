@@ -2,6 +2,8 @@
 
 namespace UniEngine\Engine\Modules\Registration\Validators;
 
+use UniEngine\Engine\Common\Modules\Uni;
+
 function _validateUsername($normalizedInput) {
     $validator = function ($input, $resultHelpers) {
         $value = $input['username'];
@@ -54,11 +56,7 @@ function _validatePassword($normalizedInput) {
 
 function _validateEmail($normalizedInput) {
     $validator = function ($input, $resultHelpers) {
-        global $_GameConfig;
-
         $value = $input['email'];
-
-        $bannedDomains = str_replace('.', '\.', $_GameConfig['BannedMailDomains']);
 
         if (empty($value['escaped'])) {
             return $resultHelpers['createFailure']([
@@ -75,7 +73,7 @@ function _validateEmail($normalizedInput) {
                 'code' => 'EMAIL_INVALID',
             ]);
         }
-        if (!empty($bannedDomains) && preg_match('#('.$bannedDomains.')+#si', $value['escaped'])) {
+        if (Uni\Utils\isEmailDomainBanned($value['escaped'])) {
             return $resultHelpers['createFailure']([
                 'code' => 'EMAIL_ON_BANNED_DOMAIN',
             ]);

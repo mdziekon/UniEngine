@@ -2,19 +2,7 @@
 
 namespace UniEngine\Engine\Modules\Settings\Utils\Validators;
 
-// TODO: Deduplicate, registration does the same thing
-function _isOnDomainBanlist($emailAddress) {
-    global $_GameConfig;
-
-    $bannedDomains = $_GameConfig['BannedMailDomains'];
-    $bannedDomains = str_replace('.', '\.', $bannedDomains);
-
-    if (empty($bannedDomains)) {
-        return false;
-    }
-
-    return preg_match('#('.$bannedDomains.')+#si', $emailAddress) === 1;
-}
+use UniEngine\Engine\Common\Modules\Uni;
 
 /**
  * @param array $params
@@ -55,7 +43,7 @@ function validateEmailChange($params) {
                 'code' => 'NEW_EMAIL_CONFIRMATION_INVALID',
             ]);
         }
-        if (_isOnDomainBanlist($newEmailAddress)) {
+        if (Uni\Utils\isEmailDomainBanned($newEmailAddress)) {
             return $resultHelpers['createFailure']([
                 'code' => 'BANNED_DOMAIN_USED',
             ]);
