@@ -177,6 +177,7 @@ if(!isOnVacation())
                         $changeTokenNewAddress = md5($_User['id'] . $_User['username'] . mt_rand(0, 999999999));
 
                         $mailContentCommonProps = [
+                            'EP_GameName'       => $_GameConfig['game_name'],
                             'EP_User'           => $_User['username'],
                             'EP_GameLink'       => GAMEURL_STRICT,
                             'EP_OldMail'        => $_User['email'],
@@ -208,8 +209,15 @@ if(!isOnVacation())
                             array_merge($mailContentCommonProps, $mailContentNewAddressProps)
                         );
 
-                        $sendMail2OldAddressResult = SendMail($_User['email'], $_Lang['Email_Title'], $mailBodyOldAddress, '', true);
-                        $sendMail2NewAddressResult = SendMail($normalizedInputNewEmailAddress, $_Lang['Email_Title'], $mailBodyNewAddress);
+                        $mailTitle = parsetemplate(
+                            $_Lang['Email_Title'],
+                            [
+                                'gameName' => $_GameConfig['game_name']
+                            ]
+                        );
+
+                        $sendMail2OldAddressResult = SendMail($_User['email'], $mailTitle, $mailBodyOldAddress, '', true);
+                        $sendMail2NewAddressResult = SendMail($normalizedInputNewEmailAddress, $mailTitle, $mailBodyNewAddress);
 
                         CloseMailConnection();
 
