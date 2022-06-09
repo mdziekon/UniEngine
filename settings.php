@@ -142,7 +142,8 @@ if(!isOnVacation())
                         $ChangeSet['password'] = $inputNewPasswordHash;
                         $ChangeSetTypes['password'] = 's';
                         $InfoMsgs[] = $_Lang['Pass_Changed_plzlogout'];
-                        setcookie(getSessionCookieKey(), '', $Now - 3600, '/', '');
+
+                        Session\Utils\Cookie\clearSessionCookie();
                     }
                 }
 
