@@ -228,10 +228,14 @@ if(!isOnVacation())
                             $ChangeSet['email_2'] = $normalizedInputNewEmailAddress;
                             $ChangeSetTypes['email_2'] = 's';
 
-                            doquery(
-                                "INSERT INTO {{table}} VALUES (NULL, {$ThisTime}, {$_User['id']}, '{$_User['email']}', '{$normalizedInputNewEmailAddress}', 0, 0, '{$changeTokenOldAddress}', '{$changeTokenNewAddress}');",
-                                'mailchange'
-                            );
+                            Settings\Utils\Queries\createEmailChangeProcessEntry([
+                                'user' => &$_User,
+                                'newEmailAddress' => $normalizedInputNewEmailAddress,
+                                'changeTokenOldAddress' => $changeTokenOldAddress,
+                                'changeTokenNewAddress' => $changeTokenNewAddress,
+                                'currentTimestamp' => $ThisTime,
+                            ]);
+
                             $CheckMailChange = [ 'ID' => 1, 'Date' => $ThisTime, ];
                             $InfoMsgs[] = sprintf($_Lang['Mail_MailChange'], $_User['email']);
                         } else {
