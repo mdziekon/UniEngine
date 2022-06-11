@@ -176,48 +176,28 @@ if(!isOnVacation())
                         $changeTokenOldAddress = md5($_User['id'] . $_User['username'] . mt_rand(0, 999999999));
                         $changeTokenNewAddress = md5($_User['id'] . $_User['username'] . mt_rand(0, 999999999));
 
-                        $mailContentCommonProps = [
-                            'EP_GameName'       => $_GameConfig['game_name'],
-                            'EP_User'           => $_User['username'],
-                            'EP_GameLink'       => GAMEURL_STRICT,
-                            'EP_OldMail'        => $_User['email'],
-                            'EP_NewMail'        => $normalizedInputNewEmailAddress,
-                            'EP_Date'           => date('d.m.Y - H:i:s', $ThisTime),
-                            'EP_IP'             => $_User['user_lastip'],
-                            'EP_ContactLink'    => GAMEURL_STRICT.'/contact.php',
-                        ];
-
-                        $mailContentOldAddressProps = [
-                            'EP_Link'           => GAMEURL."email_change.php?hash=old&amp;key={$changeTokenOldAddress}",
-                            'EP_Text'           => $_Lang['Email_MailOld'],
-                            'EP_Text2'          => $_Lang['Email_WarnOld']
-                        ];
-                        $mailContentNewAddressProps = [
-                            'EP_Link'           => GAMEURL."email_change.php?hash=new&amp;key={$changeTokenNewAddress}",
-                            'EP_Text'           => $_Lang['Email_MailNew'],
-                            'EP_Text2'          => $_Lang['Email_WarnNew']
-                        ];
-
                         include($_EnginePath.'includes/functions/SendMail.php');
 
-                        $mailBodyOldAddress = parsetemplate(
-                            $_Lang['Email_Body'],
-                            array_merge($mailContentCommonProps, $mailContentOldAddressProps)
-                        );
-                        $mailBodyNewAddress = parsetemplate(
-                            $_Lang['Email_Body'],
-                            array_merge($mailContentCommonProps, $mailContentNewAddressProps)
-                        );
+                        $changeProcessEmails = Settings\Utils\Content\prepareChangeProcessEmails([
+                            'user' => &$_User,
+                            'newEmailAddress' => $normalizedInputNewEmailAddress,
+                            'changeTokenOldAddress' => $changeTokenOldAddress,
+                            'changeTokenNewAddress' => $changeTokenNewAddress,
+                            'currentTimestamp' => $ThisTime,
+                        ]);
 
-                        $mailTitle = parsetemplate(
-                            $_Lang['Email_Title'],
-                            [
-                                'gameName' => $_GameConfig['game_name']
-                            ]
+                        $sendMail2OldAddressResult = SendMail(
+                            $_User['email'],
+                            $changeProcessEmails['oldAddress']['title'],
+                            $changeProcessEmails['oldAddress']['content'],
+                            '',
+                            true
                         );
-
-                        $sendMail2OldAddressResult = SendMail($_User['email'], $mailTitle, $mailBodyOldAddress, '', true);
-                        $sendMail2NewAddressResult = SendMail($normalizedInputNewEmailAddress, $mailTitle, $mailBodyNewAddress);
+                        $sendMail2NewAddressResult = SendMail(
+                            $normalizedInputNewEmailAddress,
+                            $changeProcessEmails['newAddress']['title'],
+                            $changeProcessEmails['newAddress']['content']
+                        );
 
                         CloseMailConnection();
 
