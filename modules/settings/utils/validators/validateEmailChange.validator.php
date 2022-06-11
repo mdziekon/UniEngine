@@ -3,6 +3,7 @@
 namespace UniEngine\Engine\Modules\Settings\Utils\Validators;
 
 use UniEngine\Engine\Common\Modules\Uni;
+use UniEngine\Engine\Modules\Settings;
 
 /**
  * @param array $params
@@ -49,11 +50,9 @@ function validateEmailChange($params) {
             ]);
         }
 
-        $fetchExistingEmailFromDB = doquery(
-            "SELECT `id` FROM {{table}} WHERE `email` = '{$newEmailAddress}' LIMIT 1;",
-            'users',
-            true
-        );
+        $fetchExistingEmailFromDB = Settings\Utils\Queries\getUserWithEmailAddress([
+            'emailAddress' => $newEmailAddress,
+        ]);
 
         if ($fetchExistingEmailFromDB) {
             // TODO: Verify whether we should fetch email change processes as well
