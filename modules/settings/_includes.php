@@ -16,6 +16,7 @@ call_user_func(function () {
 
     include($includePath . './utils/validators/validatePasswordChange.validator.php');
     include($includePath . './utils/validators/validateEmailChange.validator.php');
+    include($includePath . './utils/validators/validateResourcesOrdering.validator.php');
 
 });
 

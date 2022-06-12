@@ -454,26 +454,26 @@ if(!isOnVacation())
                 }
 
                 $ChangeNotDone += 1;
-                if(isset($_POST['resSort_changed']) && $_POST['resSort_changed'] == '1')
-                {
-                    $_POST['resSort_array'] = (isset($_POST['resSort_array']) ? trim($_POST['resSort_array']) : null);
-                    if(preg_match('/^[a-z]{3}\,[a-z]{3}\,[a-z]{3}$/D', $_POST['resSort_array']))
-                    {
-                        $CheckData = explode(',', $_POST['resSort_array']);
-                        foreach($CheckData as $Data2Check)
-                        {
-                            if($Data2Check != 'met' AND $Data2Check != 'cry' AND $Data2Check != 'deu')
-                            {
-                                $DisAllowResSort_Change = true;
-                                break;
-                            }
-                        }
-                        if(!isset($DisAllowResSort_Change))
-                        {
-                            $ChangeSet['settings_resSortArray'] = $_POST['resSort_array'];
-                            $ChangeSetTypes['settings_resSortArray'] = 's';
-                            $ChangeNotDone -= 1;
-                        }
+                if (
+                    isset($_POST['resSort_changed']) &&
+                    $_POST['resSort_changed'] == '1'
+                ) {
+                    $normalizedResourcesSortingString = (
+                        isset($_POST['resSort_array']) ?
+                            trim($_POST['resSort_array']) :
+                            ''
+                    );
+
+                    $resourcesOrderingValidationResult = Settings\Utils\Validators\validateResourcesOrdering([
+                        'input' => [
+                            'orderedResourceTypesString' => $normalizedResourcesSortingString,
+                        ],
+                    ]);
+
+                    if ($resourcesOrderingValidationResult['isSuccess']) {
+                        $ChangeSet['settings_resSortArray'] = $normalizedResourcesSortingString;
+                        $ChangeSetTypes['settings_resSortArray'] = 's';
+                        $ChangeNotDone -= 1;
                     }
                 }
 
