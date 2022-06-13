@@ -672,57 +672,20 @@ if(!isOnVacation())
                 $_Lang['SetActiveMarker'] = '04';
                 if((isset($_POST['vacation_activate']) && $_POST['vacation_activate'] == 'on') || (isset($_POST['delete_activate']) && $_POST['delete_activate'] == 'on'))
                 {
-                    if(isset($_POST['vacation_activate']) && $_POST['vacation_activate'] == 'on')
-                    {
-                        $allowVacation = true;
-                        if(($_User['vacation_leavetime'] + TIME_DAY) >= $Now)
-                        {
-                            $allowVacation = false;
-                            $WarningMsgs[] = $_Lang['Vacation_24hNotPassed'];
-                        }
+                    if (
+                        isset($_POST['vacation_activate']) &&
+                        $_POST['vacation_activate'] == 'on'
+                    ) {
+                        $tryEnableVacationResult = Settings\Utils\Helpers\tryEnableVacation([
+                            'user' => &$_User,
+                            'currentTimestamp' => $Now,
+                        ]);
 
-                        $movingFleetsCount = Settings\Utils\Queries\getMovingFleetsCount([ 'userId' => $_User['id'] ]);
-
-                        if ($movingFleetsCount > 0) {
-                            $allowVacation = false;
-                            $WarningMsgs[] = $_Lang['Vacation_FlyingFleets'];
-                        }
-
-                        if($allowVacation === true)
-                        {
-                            // Update All Planets/Moons before VacationMode (don't do that if previous conditions are not fulfilled)
-                            $SQLResult_AllPlanets = doquery("SELECT * FROM {{table}} WHERE `id_owner` = {$_User['id']};", 'planets');
-
-                            $Results['planets'] = array();
-                            while($PlanetsData = $SQLResult_AllPlanets->fetch_assoc())
-                            {
-                                // Update Planet - Building Queue
-                                $GeneratePlanetName[$PlanetsData['id']] = "{$PlanetsData['name']} [{$PlanetsData['galaxy']}:{$PlanetsData['system']}:{$PlanetsData['planet']}]";
-
-                                if(HandlePlanetUpdate($PlanetsData, $_User, $Now, true) === true)
-                                {
-                                    $Results['planets'][] = $PlanetsData;
-                                }
-                                if($PlanetsData['buildQueue_firstEndTime'] > 0 OR $PlanetsData['shipyardQueue'] != 0)
-                                {
-                                    $FoundBlockingPlanets[$PlanetsData['id']] = $GeneratePlanetName[$PlanetsData['id']];
-                                }
-                            }
-                            HandlePlanetUpdate_MultiUpdate($Results, $_User);
-                            if($_User['techQueue_EndTime'] > 0)
-                            {
-                                $FoundBlockingPlanets[$PlanetsData['id']] = $GeneratePlanetName[$_User['techQueue_Planet']];
-                            }
-
-                            if(!empty($FoundBlockingPlanets))
-                            {
-                                $allowVacation = false;
-                                $WarningMsgs[] = sprintf($_Lang['Vacation_CannotBuildOrRes'], implode(', ', $FoundBlockingPlanets));
-                            }
-                        }
-
-                        if($allowVacation === true)
-                        {
+                        if (!$tryEnableVacationResult['isSuccess']) {
+                            $WarningMsgs[] = Settings\Utils\ErrorMappers\mapTryEnableVacationErrorToReadableMessage(
+                                $tryEnableVacationResult['error']
+                            );
+                        } else {
                             $ChangeSet['is_onvacation'] = '1';
                             $ChangeSet['vacation_starttime'] = $Now;
                             $ChangeSet['vacation_endtime'] = $Now + (MAXVACATIONS_REG * TIME_DAY);

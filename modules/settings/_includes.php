@@ -8,8 +8,11 @@ call_user_func(function () {
 
     include($includePath . './utils/content/prepareChangeProcessEmails.content.php');
 
+    include($includePath . './utils/errorMappers/tryEnableVacation.errorMapper.php');
     include($includePath . './utils/errorMappers/validatePasswordChange.errorMapper.php');
     include($includePath . './utils/errorMappers/validateEmailChange.errorMapper.php');
+
+    include($includePath . './utils/helpers/tryEnableVacation.helper.php');
 
     include($includePath . './utils/queries/createEmailChangeProcessEntry.query.php');
     include($includePath . './utils/queries/getMovingFleetsCount.query.php');
