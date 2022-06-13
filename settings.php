@@ -681,9 +681,9 @@ if(!isOnVacation())
                             $WarningMsgs[] = $_Lang['Vacation_24hNotPassed'];
                         }
 
-                        $checkFleets = doquery("SELECT COUNT(*) AS `Count` FROM {{table}} WHERE `fleet_owner` = {$_User['id']} OR `fleet_target_owner` = {$_User['id']};", 'fleets', true);
-                        if($checkFleets['Count'] > 0)
-                        {
+                        $movingFleetsCount = Settings\Utils\Queries\getMovingFleetsCount([ 'userId' => $_User['id'] ]);
+
+                        if ($movingFleetsCount > 0) {
                             $allowVacation = false;
                             $WarningMsgs[] = $_Lang['Vacation_FlyingFleets'];
                         }
