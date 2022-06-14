@@ -807,31 +807,31 @@ if(!isOnVacation())
                 if ($_POST['saveType'] == 'delignore') {
                     $entriesToDelete = Settings\Utils\Input\normalizeDeleteUserIgnoreEntries($_POST['del_ignore']);
 
-                    if (!empty($entriesToDelete)) {
-                        foreach ($entriesToDelete as $ThisID) {
-                            if (!empty($_User['IgnoredUsers'][$ThisID])) {
-                                $IgnoreSystem_Deleted[] = $ThisID;
-                            }
-                        }
+                    $tryDeleteUserIgnoreEntriesResult = Settings\Utils\Helpers\tryDeleteUserIgnoreEntries([
+                        'currentUser' => &$_User,
+                        'entriesIds' => $entriesToDelete,
+                    ]);
 
-                        if (!empty($IgnoreSystem_Deleted)) {
-                            Settings\Utils\Queries\deleteUserIgnoreEntries([
-                                'entryOwnerId' => $_User['id'],
-                                'entriesIds' => $IgnoreSystem_Deleted,
-                            ]);
-
-                            foreach ($IgnoreSystem_Deleted as $entryId) {
-                                unset($_User['IgnoredUsers'][$entryId]);
-                            }
-
-                            $IgnoreSystem_Deleted_Count = count($IgnoreSystem_Deleted);
-
-                            $InfoMsgs[] = sprintf($_Lang['Ignore_DeletedXUsers'], $IgnoreSystem_Deleted_Count);
-                        } else {
-                            $WarningMsgs[] = $_Lang['Ignore_NothingDeleted'];
-                        }
+                    if (!$tryDeleteUserIgnoreEntriesResult['isSuccess']) {
+                        $WarningMsgs[] = Settings\Utils\ErrorMappers\mapTryDeleteUserIgnoreEntriesErrorToReadableMessage(
+                            $tryDeleteUserIgnoreEntriesResult['error']
+                        );
                     } else {
-                        $WarningMsgs[] = $_Lang['Ignore_NothingSelected'];
+                        $existingEntriesToDelete = $tryDeleteUserIgnoreEntriesResult['payload']['entriesToDelete'];
+
+                        Settings\Utils\Queries\deleteUserIgnoreEntries([
+                            'entryOwnerId' => $_User['id'],
+                            'entriesIds' => $existingEntriesToDelete,
+                        ]);
+
+                        foreach ($existingEntriesToDelete as $entryId) {
+                            unset($_User['IgnoredUsers'][$entryId]);
+                        }
+
+                        $InfoMsgs[] = sprintf(
+                            $_Lang['Ignore_DeletedXUsers'],
+                            count($existingEntriesToDelete)
+                        );
                     }
                 }
                 else if(!empty($_POST['ignore_username']) OR !empty($_GET['ignoreadd']))
