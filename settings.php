@@ -852,66 +852,36 @@ if(!isOnVacation())
                 }
                 else if(!empty($_POST['ignore_username']) OR !empty($_GET['ignoreadd']))
                 {
-                    if(!empty($_GET['ignoreadd']) AND empty($_POST['ignore_username']))
-                    {
+                    if (
+                        !empty($_GET['ignoreadd']) &&
+                        empty($_POST['ignore_username'])
+                    ) {
                         $IgnoreUser = intval($_GET['ignoreadd']);
                         $InputType = 'id';
-                    }
-                    else
-                    {
+                    } else {
                         $IgnoreUser = (isset($_POST['ignore_username']) ? trim($_POST['ignore_username']) : null);
-                        $InputType = 'un';
+                        $InputType = 'username';
                     }
-                    if((strtolower($IgnoreUser) != strtolower($_User['username']) AND $InputType == 'un') OR ($IgnoreUser != $_User['id'] AND $InputType == 'id'))
-                    {
-                        if((preg_match(REGEXP_USERNAME_ABSOLUTE, $IgnoreUser) AND $InputType == 'un') OR ($IgnoreUser > 0 AND $InputType == 'id'))
-                        {
-                            $Query_CheckUser = '';
-                            $Query_CheckUser .= "SELECT `id`, `username`, `authlevel` FROM {{table}} ";
-                            $Query_CheckUser .= "WHERE ";
-                            if($InputType == 'un')
-                            {
-                                $Query_CheckUser .= "`username` = '{$IgnoreUser}'";
-                            }
-                            else
-                            {
-                                $Query_CheckUser .= "`id` = {$IgnoreUser}";
-                            }
-                            $Query_CheckUser .= " LIMIT 1; -- settings.php|IgnoreSystem|CheckUser";
-                            $Result_CheckUser = doquery($Query_CheckUser, 'users', true);
-                            if($Result_CheckUser['id'] > 0)
-                            {
-                                if(!CheckAuth('user', AUTHCHECK_HIGHER, $Result_CheckUser))
-                                {
-                                    if(empty($_User['IgnoredUsers'][$Result_CheckUser['id']]))
-                                    {
-                                        $_User['IgnoredUsers'][$Result_CheckUser['id']] = $Result_CheckUser['username'];
-                                        doquery("INSERT INTO {{table}} (`OwnerID`, `IgnoredID`) VALUES ({$_User['id']}, {$Result_CheckUser['id']}); -- settings.php|IgnoreSystem|Insert", 'ignoresystem');
-                                        $InfoMsgs[] = $_Lang['Ignore_UserAdded'];
-                                    }
-                                    else
-                                    {
-                                        $NoticeMsgs[] = $_Lang['Ignore_ThisUserAlreadyIgnored'];
-                                    }
-                                }
-                                else
-                                {
-                                    $WarningMsgs[] = $_Lang['Ignore_CannotIgnoreGameTeam'];
-                                }
-                            }
-                            else
-                            {
-                                $WarningMsgs[] = $_Lang['Ignore_UserNoExists'];
-                            }
-                        }
-                        else
-                        {
-                            $WarningMsgs[] = $_Lang['Ignore_BadSignsOrShort'];
-                        }
-                    }
-                    else
-                    {
-                        $WarningMsgs[] = $_Lang['Ignore_CannotIgnoreYourself'];
+
+                    $tryIgnoreUserResult = Settings\Utils\Helpers\tryIgnoreUser([
+                        'currentUser' => &$_User,
+                        'userToIgnore' => [
+                            'selectorType' => $InputType,
+                            'selectorValue' => $IgnoreUser,
+                        ],
+                    ]);
+
+                    if (!$tryIgnoreUserResult['isSuccess']) {
+                        $WarningMsgs[] = Settings\Utils\ErrorMappers\mapTryIgnoreUserErrorToReadableMessage(
+                            $tryIgnoreUserResult['error']
+                        );
+                    } else {
+                        $ignoreUser = $tryIgnoreUserResult['payload']['ignoreUser'];
+
+                        $_User['IgnoredUsers'][$ignoreUser['id']] = $ignoreUser['username'];
+                        doquery("INSERT INTO {{table}} (`OwnerID`, `IgnoredID`) VALUES ({$_User['id']}, {$ignoreUser['id']}); -- settings.php|IgnoreSystem|Insert", 'ignoresystem');
+
+                        $InfoMsgs[] = $_Lang['Ignore_UserAdded'];
                     }
                 }
             }
