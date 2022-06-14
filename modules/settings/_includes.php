@@ -17,6 +17,7 @@ call_user_func(function () {
     include($includePath . './utils/helpers/tryIgnoreUser.helper.php');
 
     include($includePath . './utils/queries/createEmailChangeProcessEntry.query.php');
+    include($includePath . './utils/queries/createUserIgnoreEntry.query.php');
     include($includePath . './utils/queries/getMovingFleetsCount.query.php');
     include($includePath . './utils/queries/getUserWithEmailAddress.query.php');
 

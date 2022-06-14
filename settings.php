@@ -879,7 +879,11 @@ if(!isOnVacation())
                         $ignoreUser = $tryIgnoreUserResult['payload']['ignoreUser'];
 
                         $_User['IgnoredUsers'][$ignoreUser['id']] = $ignoreUser['username'];
-                        doquery("INSERT INTO {{table}} (`OwnerID`, `IgnoredID`) VALUES ({$_User['id']}, {$ignoreUser['id']}); -- settings.php|IgnoreSystem|Insert", 'ignoresystem');
+
+                        Settings\Utils\Queries\createUserIgnoreEntry([
+                            'entryOwnerId' => $_User['id'],
+                            'ignoredUserId' => $ignoreUser['id'],
+                        ]);
 
                         $InfoMsgs[] = $_Lang['Ignore_UserAdded'];
                     }
