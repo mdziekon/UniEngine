@@ -828,20 +828,16 @@ if(!isOnVacation())
                             }
                         }
 
-                        if(!empty($IgnoreSystem_Deleted))
-                        {
-                            $IgnoreSystem_Deleted_Count = count($IgnoreSystem_Deleted);
-                            $IgnoreSystem_Deleted = implode(',', $IgnoreSystem_Deleted);
+                        if (!empty($IgnoreSystem_Deleted)) {
+                            Settings\Utils\Queries\deleteUserIgnoreEntries([
+                                'entryOwnerId' => $_User['id'],
+                                'entriesIds' => $IgnoreSystem_Deleted,
+                            ]);
 
-                            $Query_DeleteIgnores = '';
-                            $Query_DeleteIgnores .= "DELETE FROM {{table}} WHERE ";
-                            $Query_DeleteIgnores .= "`OwnerID` = {$_User['id']} AND `IgnoredID` IN ({$IgnoreSystem_Deleted}) LIMIT {$IgnoreSystem_Deleted_Count};";
-                            doquery($Query_DeleteIgnores, 'ignoresystem');
+                            $IgnoreSystem_Deleted_Count = count($IgnoreSystem_Deleted);
 
                             $InfoMsgs[] = sprintf($_Lang['Ignore_DeletedXUsers'], $IgnoreSystem_Deleted_Count);
-                        }
-                        else
-                        {
+                        } else {
                             $WarningMsgs[] = $_Lang['Ignore_NothingDeleted'];
                         }
                     }
