@@ -811,7 +811,6 @@ if(!isOnVacation())
                         foreach ($entriesToDelete as $ThisID) {
                             if (!empty($_User['IgnoredUsers'][$ThisID])) {
                                 $IgnoreSystem_Deleted[] = $ThisID;
-                                unset($_User['IgnoredUsers'][$ThisID]);
                             }
                         }
 
@@ -820,6 +819,10 @@ if(!isOnVacation())
                                 'entryOwnerId' => $_User['id'],
                                 'entriesIds' => $IgnoreSystem_Deleted,
                             ]);
+
+                            foreach ($IgnoreSystem_Deleted as $entryId) {
+                                unset($_User['IgnoredUsers'][$entryId]);
+                            }
 
                             $IgnoreSystem_Deleted_Count = count($IgnoreSystem_Deleted);
 
