@@ -804,25 +804,12 @@ if(!isOnVacation())
                     $_Lang['SetActiveMarker'] = '05';
                 }
 
-                if($_POST['saveType'] == 'delignore')
-                {
-                    if(!empty($_POST['del_ignore']) && (array)$_POST['del_ignore'] === $_POST['del_ignore'])
-                    {
-                        foreach($_POST['del_ignore'] as $Values)
-                        {
-                            $Values = intval($Values);
-                            if($Values > 0)
-                            {
-                                $ToDelete[] = $Values;
-                            }
-                        }
-                    }
-                    if(!empty($ToDelete))
-                    {
-                        foreach($ToDelete as $ThisID)
-                        {
-                            if(!empty($_User['IgnoredUsers'][$ThisID]))
-                            {
+                if ($_POST['saveType'] == 'delignore') {
+                    $entriesToDelete = Settings\Utils\Input\normalizeDeleteUserIgnoreEntries($_POST['del_ignore']);
+
+                    if (!empty($entriesToDelete)) {
+                        foreach ($entriesToDelete as $ThisID) {
+                            if (!empty($_User['IgnoredUsers'][$ThisID])) {
                                 $IgnoreSystem_Deleted[] = $ThisID;
                                 unset($_User['IgnoredUsers'][$ThisID]);
                             }
@@ -840,9 +827,7 @@ if(!isOnVacation())
                         } else {
                             $WarningMsgs[] = $_Lang['Ignore_NothingDeleted'];
                         }
-                    }
-                    else
-                    {
+                    } else {
                         $WarningMsgs[] = $_Lang['Ignore_NothingSelected'];
                     }
                 }
