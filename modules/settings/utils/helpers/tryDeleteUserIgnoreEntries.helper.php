@@ -5,11 +5,11 @@ namespace UniEngine\Engine\Modules\Settings\Utils\Helpers;
 /**
  * @param array $params
  * @param array $params['entriesIds']
- * @param arrayRef $params['currentUser']
+ * @param array $params['ignoredUsers']
  */
 function tryDeleteUserIgnoreEntries($params) {
     $executor = function ($input, $resultHelpers) {
-        $currentUser = &$input['currentUser'];
+        $ignoredUsers = $input['ignoredUsers'];
         $entriesIds = $input['entriesIds'];
 
         if (empty($entriesIds)) {
@@ -18,8 +18,8 @@ function tryDeleteUserIgnoreEntries($params) {
             ]);
         }
 
-        $existingEntriesIds = array_filter($entriesIds, function ($entryId) use (&$currentUser) {
-            return !empty($currentUser['IgnoredUsers'][$entryId]);
+        $existingEntriesIds = array_filter($entriesIds, function ($entryId) use ($ignoredUsers) {
+            return !empty($ignoredUsers[$entryId]);
         });
 
         if (empty($existingEntriesIds)) {

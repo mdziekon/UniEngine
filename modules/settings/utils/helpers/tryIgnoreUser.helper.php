@@ -8,11 +8,13 @@ namespace UniEngine\Engine\Modules\Settings\Utils\Helpers;
  * @param stringEnum $params['userToIgnore']['selectorType'] ('username' | 'id')
  * @param string $params['userToIgnore']['selectorValue']
  * @param arrayRef $params['currentUser']
+ * @param array $params['ignoredUsers']
  */
 function tryIgnoreUser($params) {
     $executor = function ($input, $resultHelpers) {
         $currentUser = &$input['currentUser'];
         $userToIgnore = $input['userToIgnore'];
+        $ignoredUsers = $input['ignoredUsers'];
 
         if ($userToIgnore['selectorType'] === 'username') {
             if (strtolower($userToIgnore['selectorValue']) == strtolower($currentUser['username'])) {
@@ -76,7 +78,7 @@ function tryIgnoreUser($params) {
 
         $ignoreUserId = $fetchUserResult['id'];
 
-        if (!empty($currentUser['IgnoredUsers'][$ignoreUserId])) {
+        if (!empty($ignoredUsers[$ignoreUserId])) {
             return $resultHelpers['createFailure']([
                 'code' => 'USER_ALREADY_IGNORED',
             ]);

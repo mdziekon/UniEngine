@@ -88,6 +88,8 @@ while($Planets = $SQLResult_SelectAllPlanets->fetch_assoc())
 
 $Mode = (isset($_GET['mode']) ? $_GET['mode'] : null);
 
+$ignoredUsers = [];
+
 if(!isOnVacation())
 {
     if(empty($Mode) OR $Mode == 'general')
@@ -96,7 +98,6 @@ if(!isOnVacation())
         $CheckMailChange = doquery("SELECT `ID`, `Date` FROM {{table}} WHERE `UserID` = {$_User['id']} AND `ConfirmType` = 0 LIMIT 1;", 'mailchange', true);
 
         $ignoredUsers = Settings\Utils\Queries\getUserIgnoreEntries([ 'userId' => $_User['id'] ]);
-        $_User['IgnoredUsers'] = $ignoredUsers;
 
         if((isset($_POST['save']) && $_POST['save'] == 'yes') || !empty($_GET['ignoreadd']))
         {
@@ -796,8 +797,8 @@ if(!isOnVacation())
                     $entriesToDelete = Settings\Utils\Input\normalizeDeleteUserIgnoreEntries($_POST['del_ignore']);
 
                     $tryDeleteUserIgnoreEntriesResult = Settings\Utils\Helpers\tryDeleteUserIgnoreEntries([
-                        'currentUser' => &$_User,
                         'entriesIds' => $entriesToDelete,
+                        'ignoredUsers' => $ignoredUsers,
                     ]);
 
                     if (!$tryDeleteUserIgnoreEntriesResult['isSuccess']) {
@@ -813,7 +814,7 @@ if(!isOnVacation())
                         ]);
 
                         foreach ($existingEntriesToDelete as $entryId) {
-                            unset($_User['IgnoredUsers'][$entryId]);
+                            unset($ignoredUsers[$entryId]);
                         }
 
                         $InfoMsgs[] = sprintf(
@@ -841,6 +842,7 @@ if(!isOnVacation())
                             'selectorType' => $InputType,
                             'selectorValue' => $IgnoreUser,
                         ],
+                        'ignoredUsers' => $ignoredUsers,
                     ]);
 
                     if (!$tryIgnoreUserResult['isSuccess']) {
@@ -850,7 +852,7 @@ if(!isOnVacation())
                     } else {
                         $ignoreUser = $tryIgnoreUserResult['payload']['ignoreUser'];
 
-                        $_User['IgnoredUsers'][$ignoreUser['id']] = $ignoreUser['username'];
+                        $ignoredUsers[$ignoreUser['id']] = $ignoreUser['username'];
 
                         Settings\Utils\Queries\createUserIgnoreEntry([
                             'entryOwnerId' => $_User['id'],
@@ -1056,14 +1058,14 @@ if(!isOnVacation())
         $_Lang['QuickRes_PlanetList'] = str_replace('{sel_planet_'.$_User['settings_mainPlanetID'].'}', 'selected', $_Lang['QuickRes_PlanetList']);
         $_Lang['QuickRes_PlanetList'] = preg_replace('#\{sel\_planet\_[0-9]{1,}\}#si', '', $_Lang['QuickRes_PlanetList']);
 
-        if(!empty($_User['IgnoredUsers']))
+        if(!empty($ignoredUsers))
         {
-            foreach($_User['IgnoredUsers'] as $IgnoredID => $IgnoredName)
+            foreach($ignoredUsers as $IgnoredID => $IgnoredName)
             {
                 $_Lang['ParseIgnoreList'][] = "<input type=\"checkbox\" name=\"del_ignore[]\" value=\"{$IgnoredID}\" id=\"ignore{$IgnoredID}\" /> <label for=\"ignore{$IgnoredID}\">{$IgnoredName}</label>";
             }
             $_Lang['ParseIgnoreList'] = implode('<br/>', $_Lang['ParseIgnoreList']);
-            if(count($_User['IgnoredUsers']) < 15)
+            if(count($ignoredUsers) < 15)
             {
                 $_Lang['IgnoreList_Hide2Del'] = 'style="display: none;"';
             }
