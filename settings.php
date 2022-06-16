@@ -1126,44 +1126,25 @@ if(!isOnVacation())
 
             array_multisort($LogonList, SORT_DESC, $LogonTimes);
             $LimitCounter = $LogonLIMIT;
-            foreach($LogonList as $LogonData)
-            {
-                if($LimitCounter <= 0)
-                {
+
+            $_Lang['ParseLogonsList'] = [];
+
+            foreach ($LogonList as $LogonData) {
+                if ($LimitCounter <= 0) {
                     break;
                 }
-                if($LogonData['IP'] == $_User['user_lastip'])
-                {
-                    $LogonData['IPColor'] = 'lime';
-                }
-                if($LogonData['State'] === false)
-                {
-                    if($LogonData['IP'] != $_User['user_lastip'])
-                    {
-                        $LogonData['DateColor'] = 'red';
-                        $LogonData['IPColor'] = 'red';
-                        $LogonData['StateColor'] = 'red';
-                    }
-                    else
-                    {
-                        $LogonData['StateColor'] = 'orange';
-                    }
-                }
 
+                $_Lang['ParseLogonsList'][] = Settings\Components\LoginHistoryEntry\render([
+                    'entryData' => $LogonData,
+                    'userLastIp' => $_User['user_lastip'],
+                    'currentTimestamp' => $Now,
+                ])['componentHTML'];
 
-                $ThisRow = '<tr class="logon">';
-                $ThisRow .= '<th'.(!empty($LogonData['DateColor']) ? ' class="'.$LogonData['DateColor'].'"' : '').'>'.prettyDate('d m Y, H:i:s', $LogonData['Time'], 1).'</th>';
-                $ThisRow .= '<th'.(!empty($LogonData['DateColor']) ? ' class="'.$LogonData['DateColor'].'"' : '').'>'.pretty_time($Now - $LogonData['Time'], true, 'D').' '.$_Lang['Logons_ago'].'</th>';
-                $ThisRow .= '<th'.(!empty($LogonData['IPColor']) ? ' class="'.$LogonData['IPColor'].'"' : '').'>'.$LogonData['IP'].'</th>';
-                $ThisRow .= '<th'.(!empty($LogonData['StateColor']) ? ' class="'.$LogonData['StateColor'].'"' : '').'>'.($LogonData['State'] === true ? $_Lang['Logons_Success'] : $_Lang['Logons_Failed']).'</th>';
-                $ThisRow .= '</tr>';
-                $_Lang['ParseLogonsList'][] = $ThisRow;
                 $LimitCounter -= 1;
             }
+
             $_Lang['ParseLogonsList'] = implode('', $_Lang['ParseLogonsList']);
-        }
-        else
-        {
+        } else {
             $_Lang['ParseLogonsList'] = '<tr><th colspan="4">'.$_Lang['Logons_ListEmpty'].'</th></tr>';
         }
 

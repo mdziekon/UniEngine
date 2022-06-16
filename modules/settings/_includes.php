@@ -6,6 +6,8 @@ call_user_func(function () {
 
     $includePath = $_EnginePath . 'modules/settings/';
 
+    include($includePath . './components/LoginHistoryEntry/LoginHistoryEntry.component.php');
+
     include($includePath . './utils/content/prepareChangeProcessEmails.content.php');
 
     include($includePath . './utils/errorMappers/tryDeleteUserIgnoreEntries.errorMapper.php');
