@@ -95,20 +95,8 @@ if(!isOnVacation())
         // General View
         $CheckMailChange = doquery("SELECT `ID`, `Date` FROM {{table}} WHERE `UserID` = {$_User['id']} AND `ConfirmType` = 0 LIMIT 1;", 'mailchange', true);
 
-        $Query_IgnoreSystem = '';
-        $Query_IgnoreSystem .= "SELECT `ignore`.`IgnoredID`, `user`.`username` FROM {{table}} AS `ignore` ";
-        $Query_IgnoreSystem .= "JOIN `{{prefix}}users` AS `user` ON `ignore`.`IgnoredID` = `user`.`id` ";
-        $Query_IgnoreSystem .= "WHERE `ignore`.`OwnerID` = {$_User['id']};";
-
-        $SQLResult_IgnoreSystem = doquery($Query_IgnoreSystem, 'ignoresystem');
-
-        if($SQLResult_IgnoreSystem->num_rows > 0)
-        {
-            while($FetchData = $SQLResult_IgnoreSystem->fetch_assoc())
-            {
-                $_User['IgnoredUsers'][$FetchData['IgnoredID']] = $FetchData['username'];
-            }
-        }
+        $ignoredUsers = Settings\Utils\Queries\getUserIgnoreEntries([ 'userId' => $_User['id'] ]);
+        $_User['IgnoredUsers'] = $ignoredUsers;
 
         if((isset($_POST['save']) && $_POST['save'] == 'yes') || !empty($_GET['ignoreadd']))
         {
