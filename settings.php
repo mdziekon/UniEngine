@@ -1101,18 +1101,13 @@ if(!isOnVacation())
         }
 
         // Logons List
-        $Query_GetLogons = '';
-        $Query_GetLogons .= "SELECT `Log`.*, `IPTable`.`Value` FROM {{table}} AS `Log` ";
-        $Query_GetLogons .= "LEFT JOIN `{{prefix}}used_ip_and_ua` AS `IPTable` ON `Log`.`IP_ID` = `IPTable`.`ID` ";
-        $Query_GetLogons .= "WHERE `Log`.`User_ID` = {$_User['id']} ";
-        $Query_GetLogons .= "ORDER BY `Log`.`LastTime` DESC LIMIT {$LogonLIMIT};";
+        $accountLoginHistory = Settings\Utils\Queries\getAccountLoginHistory([
+            'userId' => $_User['id'],
+            'historyEntriesLimit' => $LogonLIMIT,
+        ]);
 
-        $SQLResult_GetLogons = doquery($Query_GetLogons, 'user_enterlog');
-
-        if($SQLResult_GetLogons->num_rows > 0)
-        {
-            while($LogonData = $SQLResult_GetLogons->fetch_assoc())
-            {
+        if (count($accountLoginHistory) > 0) {
+            foreach ($accountLoginHistory as &$LogonData) {
                 $LogonData['Times'] = array_reverse(explode(',', $LogonData['Times']));
                 $LimitCounter = $LogonLIMIT;
                 foreach($LogonData['Times'] as $Temp)

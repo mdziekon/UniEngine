@@ -23,6 +23,7 @@ call_user_func(function () {
     include($includePath . './utils/queries/createEmailChangeProcessEntry.query.php');
     include($includePath . './utils/queries/createUserIgnoreEntry.query.php');
     include($includePath . './utils/queries/deleteUserIgnoreEntries.query.php');
+    include($includePath . './utils/queries/getAccountLoginHistory.query.php');
     include($includePath . './utils/queries/getMovingFleetsCount.query.php');
     include($includePath . './utils/queries/getUserIgnoreEntries.query.php');
     include($includePath . './utils/queries/getUserWithEmailAddress.query.php');
