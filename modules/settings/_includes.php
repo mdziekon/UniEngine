@@ -15,6 +15,7 @@ call_user_func(function () {
     include($includePath . './utils/errorMappers/tryIgnoreUser.errorMapper.php');
     include($includePath . './utils/errorMappers/validatePasswordChange.errorMapper.php');
     include($includePath . './utils/errorMappers/validateEmailChange.errorMapper.php');
+    include($includePath . './utils/errorMappers/validateUsernameChange.errorMapper.php');
 
     include($includePath . './utils/helpers/tryDeleteUserIgnoreEntries.helper.php');
     include($includePath . './utils/helpers/tryEnableVacation.helper.php');
@@ -33,6 +34,7 @@ call_user_func(function () {
     include($includePath . './utils/validators/validatePasswordChange.validator.php');
     include($includePath . './utils/validators/validateEmailChange.validator.php');
     include($includePath . './utils/validators/validateResourcesOrdering.validator.php');
+    include($includePath . './utils/validators/validateUsernameChange.validator.php');
 
 });
 

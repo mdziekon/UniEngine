@@ -1178,40 +1178,28 @@ if(!isOnVacation())
     else if($Mode == 'nickchange')
     {
         // User is trying to change his nickname
-        if(!empty($_POST['newnick']))
-        {
-            // Nickname Change in progress
-            if($_User['darkEnergy'] < 10)
-            {
-                message($_Lang['NewNick_donthave_DE'], $_Lang['NickChange_Title'], 'settings.php?mode=nickchange');
-            }
+        if (!empty($_POST['newnick'])) {
             $NewNick = trim($_POST['newnick']);
-            if($NewNick == $_User['username'])
-            {
-                message($_Lang['NewNick_is_like_old'], $_Lang['NickChange_Title'], 'settings.php?mode=nickchange');
-            }
-            if(strlen($NewNick) < 4)
-            {
-                message($_Lang['NewNick_is_tooshort'], $_Lang['NickChange_Title'], 'settings.php?mode=nickchange');
-            }
-            if(strstr($NewNick, 'http') OR strstr($NewNick, 'www.'))
-            {
-                message($_Lang['NewNick_nolinks'], $_Lang['NickChange_Title'], 'settings.php?mode=nickchange');
-            }
-            if(!preg_match(REGEXP_USERNAME_ABSOLUTE, $NewNick))
-            {
-                message($_Lang['NewNick_badSigns'], $_Lang['NickChange_Title'], 'settings.php?mode=nickchange');
-            }
-            $SelectNewNick = doquery("SELECT `id` FROM {{table}} WHERE `username` = '{$NewNick}' LIMIT 1;", 'users', true);
-            if($SelectNewNick['id'] > 0)
-            {
-                message($_Lang['NewNick_already_taken'], $_Lang['NickChange_Title'], 'settings.php?mode=nickchange');
-            }
 
-            doquery("UPDATE {{table}} SET `darkEnergy` = `darkEnergy` - 10, `username` = '{$NewNick}', `old_username` = '{$_User['username']}', `old_username_expire` = UNIX_TIMESTAMP() + (7*24*60*60) WHERE `id` = {$_User['id']} LIMIT 1;", 'users');
-            doquery("INSERT INTO {{table}} VALUES(NULL, {$_User['id']}, UNIX_TIMESTAMP(), '{$NewNick}', '{$_User['username']}');", 'nick_changelog');
-            setcookie(getSessionCookieKey(), '', $Now - 3600, '/', '');
-            message($_Lang['NewNick_saved'], $_Lang['NickChange_Title'], 'login.php');
+            $usernameChangeValidationResult = Settings\Utils\Validators\validateUsernameChange([
+                'input' => [
+                    'newUsername' => $NewNick,
+                ],
+                'currentUser' => &$_User,
+            ]);
+
+            if (!$usernameChangeValidationResult['isSuccess']) {
+                $errorMessage = Settings\Utils\ErrorMappers\mapValidateUsernameChangeErrorToReadableMessage(
+                    $usernameChangeValidationResult['error']
+                );
+
+                message($errorMessage, $_Lang['NickChange_Title'], 'settings.php?mode=nickchange');
+            } else {
+                doquery("UPDATE {{table}} SET `darkEnergy` = `darkEnergy` - 10, `username` = '{$NewNick}', `old_username` = '{$_User['username']}', `old_username_expire` = UNIX_TIMESTAMP() + (7*24*60*60) WHERE `id` = {$_User['id']} LIMIT 1;", 'users');
+                doquery("INSERT INTO {{table}} VALUES(NULL, {$_User['id']}, UNIX_TIMESTAMP(), '{$NewNick}', '{$_User['username']}');", 'nick_changelog');
+                setcookie(getSessionCookieKey(), '', $Now - 3600, '/', '');
+                message($_Lang['NewNick_saved'], $_Lang['NickChange_Title'], 'login.php');
+            }
         }
         else
         {
