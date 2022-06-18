@@ -1226,6 +1226,19 @@ if(!isOnVacation())
                 $_Lang['DarkEnergy_Color'] = 'red';
             }
 
+            $_Lang['NickChange_Info'] = parsetemplate(
+                $_Lang['NickChange_Info'],
+                [
+                    'data_changeCost' => Settings\Utils\Helpers\getUsernameChangeCost(),
+                ]
+            );
+            $_Lang['AreYouSure'] = parsetemplate(
+                $_Lang['AreYouSure'],
+                [
+                    'data_changeCost' => Settings\Utils\Helpers\getUsernameChangeCost(),
+                ]
+            );
+
             // Informations box
             display(parsetemplate(gettemplate('settings_changenick'), $_Lang), $_Lang['NickChange_Title'], false);
         }

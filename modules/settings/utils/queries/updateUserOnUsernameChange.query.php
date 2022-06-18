@@ -2,6 +2,8 @@
 
 namespace UniEngine\Engine\Modules\Settings\Utils\Queries;
 
+use UniEngine\Engine\Modules\Settings\Utils\Helpers;
+
 /**
  * @param array $params
  * @param string $params['newUsername']
@@ -11,7 +13,7 @@ function updateUserOnUsernameChange($params) {
     $newUsername = $params['newUsername'];
     $currentUser = &$params['currentUser'];
 
-    $CHANGE_COST = 10;
+    $CHANGE_COST = Helpers\getUsernameChangeCost();
 
     $query = (
         "UPDATE {{table}}  " .

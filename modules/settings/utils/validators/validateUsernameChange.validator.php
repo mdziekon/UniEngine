@@ -2,6 +2,8 @@
 
 namespace UniEngine\Engine\Modules\Settings\Utils\Validators;
 
+use UniEngine\Engine\Modules\Settings\Utils\Helpers;
+
 /**
  * @param array $params
  * @param array $params['input']
@@ -15,7 +17,7 @@ function validateUsernameChange($params) {
         $newUsername = $input['newUsername'];
         $currentUsername = $currentUser['username'];
 
-        $CHANGE_COST = 10;
+        $CHANGE_COST = Helpers\getUsernameChangeCost();
         $USERNAME_MIN_LENGTH = 4;
 
         if ($currentUser['darkEnergy'] < $CHANGE_COST) {
