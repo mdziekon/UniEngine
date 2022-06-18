@@ -31,6 +31,7 @@ call_user_func(function () {
     include($includePath . './utils/queries/getMovingFleetsCount.query.php');
     include($includePath . './utils/queries/getUserIgnoreEntries.query.php');
     include($includePath . './utils/queries/getUserWithEmailAddress.query.php');
+    include($includePath . './utils/queries/updateUserOnUsernameChange.query.php');
 
     include($includePath . './utils/validators/validatePasswordChange.validator.php');
     include($includePath . './utils/validators/validateEmailChange.validator.php');

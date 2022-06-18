@@ -1195,8 +1195,10 @@ if(!isOnVacation())
 
                 message($errorMessage, $_Lang['NickChange_Title'], 'settings.php?mode=nickchange');
             } else {
-                doquery("UPDATE {{table}} SET `darkEnergy` = `darkEnergy` - 10, `username` = '{$NewNick}', `old_username` = '{$_User['username']}', `old_username_expire` = UNIX_TIMESTAMP() + (7*24*60*60) WHERE `id` = {$_User['id']} LIMIT 1;", 'users');
-
+                Settings\Utils\Queries\updateUserOnUsernameChange([
+                    'newUsername' => $NewNick,
+                    'currentUser' => &$_User,
+                ]);
                 Settings\Utils\Queries\createUsernameChangeEntry([
                     'newUsername' => $NewNick,
                     'currentUser' => &$_User,
