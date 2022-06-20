@@ -76,6 +76,13 @@ if(!empty($SkinDir))
     }
 }
 
+function isInputKeyChecked($input, $key) {
+    return (
+        isset($input[$key]) &&
+        $input[$key] == 'on'
+    );
+}
+
 $SQLResult_SelectAllPlanets = doquery(
     "SELECT `id`, `name`, `galaxy`, `system`, `planet` FROM {{table}} WHERE `id_owner` = {$_User['id']} AND `planet_type` = 1;",
     'planets'
@@ -234,14 +241,12 @@ if(!isOnVacation())
                     }
                 }
 
-                if(isset($_POST['ipcheck_deactivate']) && $_POST['ipcheck_deactivate'] == 'on')
-                {
-                    $IPCheckDeactivate = '1';
-                }
-                else
-                {
-                    $IPCheckDeactivate = '0';
-                }
+                $IPCheckDeactivate = (
+                    isInputKeyChecked($_POST, 'ipcheck_deactivate') ?
+                        '1' :
+                        '0'
+                );
+
                 if($_User['noipcheck'] != $IPCheckDeactivate)
                 {
                     $ChangeSet['noipcheck'] = $IPCheckDeactivate;
@@ -280,14 +285,11 @@ if(!isOnVacation())
                     $ChangeNotDone += 1;
                 }
 
-                if(isset($_POST['planet_sort_moons']) && $_POST['planet_sort_moons'] == 'on')
-                {
-                    $PlanetSortMoons = '1';
-                }
-                else
-                {
-                    $PlanetSortMoons = '0';
-                }
+                $PlanetSortMoons = (
+                    isInputKeyChecked($_POST, 'planet_sort_moons') ?
+                        '1' :
+                        '0'
+                );
 
                 if($PlanetSortMoons != $_User['planet_sort_moons'])
                 {
@@ -356,14 +358,12 @@ if(!isOnVacation())
                     $ChangeNotDone += 1;
                 }
 
-                if(isset($_POST['use_skin']) && $_POST['use_skin'] == 'on')
-                {
-                    $UseSkin = '1';
-                }
-                else
-                {
-                    $UseSkin = '0';
-                }
+                $UseSkin = (
+                    isInputKeyChecked($_POST, 'use_skin') ?
+                        '1' :
+                        '0'
+                );
+
                 if($UseSkin != $_User['design'])
                 {
                     $ChangeSet['design'] = $UseSkin;
@@ -391,14 +391,12 @@ if(!isOnVacation())
                     $ChangeNotDone += 1;
                 }
 
-                if(isset($_POST['development_old']) && $_POST['development_old'] == 'on')
-                {
-                    $DevelopmentOld = '1';
-                }
-                else
-                {
-                    $DevelopmentOld = '0';
-                }
+                $DevelopmentOld = (
+                    isInputKeyChecked($_POST, 'development_old') ?
+                        '1' :
+                        '0'
+                );
+
                 if($DevelopmentOld != $_User['settings_DevelopmentOld'])
                 {
                     $ChangeSet['settings_DevelopmentOld'] = $DevelopmentOld;
@@ -408,14 +406,12 @@ if(!isOnVacation())
                     $ChangeNotDone += 1;
                 }
 
-                if(isset($_POST['build_expandedview_use']) && $_POST['build_expandedview_use'] == 'on')
-                {
-                    $BuildExpandedView = '1';
-                }
-                else
-                {
-                    $BuildExpandedView = '0';
-                }
+                $BuildExpandedView = (
+                    isInputKeyChecked($_POST, 'build_expandedview_use') ?
+                        '1' :
+                        '0'
+                );
+
                 if($BuildExpandedView != $_User['settings_ExpandedBuildView'])
                 {
                     $ChangeSet['settings_ExpandedBuildView'] = $BuildExpandedView;
@@ -425,14 +421,12 @@ if(!isOnVacation())
                     $ChangeNotDone += 1;
                 }
 
-                if(isset($_POST['pretty_fleet_use']) && $_POST['pretty_fleet_use'] == 'on')
-                {
-                    $UsePrettyFleet = '1';
-                }
-                else
-                {
-                    $UsePrettyFleet = '0';
-                }
+                $UsePrettyFleet = (
+                    isInputKeyChecked($_POST, 'pretty_fleet_use') ?
+                        '1' :
+                        '0'
+                );
+
                 if($UsePrettyFleet != $_User['settings_useprettyinputbox'])
                 {
                     $ChangeSet['settings_useprettyinputbox'] = $UsePrettyFleet;
@@ -503,14 +497,12 @@ if(!isOnVacation())
                     $ChangeNotDone += 1;
                 }
 
-                if(isset($_POST['msg_spyexpand']) && $_POST['msg_spyexpand'] == 'on')
-                {
-                    $MsgExpandSpyReports = '1';
-                }
-                else
-                {
-                    $MsgExpandSpyReports = '0';
-                }
+                $MsgExpandSpyReports = (
+                    isInputKeyChecked($_POST, 'msg_spyexpand') ?
+                        '1' :
+                        '0'
+                );
+
                 if($MsgExpandSpyReports != $_User['settings_spyexpand'])
                 {
                     $ChangeSet['settings_spyexpand'] = $MsgExpandSpyReports;
@@ -520,14 +512,12 @@ if(!isOnVacation())
                     $ChangeNotDone += 1;
                 }
 
-                if(isset($_POST['msg_usethreads']) && $_POST['msg_usethreads'] == 'on')
-                {
-                    $MsgUseMsgThreads = '1';
-                }
-                else
-                {
-                    $MsgUseMsgThreads = '0';
-                }
+                $MsgUseMsgThreads = (
+                    isInputKeyChecked($_POST, 'msg_usethreads') ?
+                        '1' :
+                        '0'
+                );
+
                 if($MsgUseMsgThreads != $_User['settings_UseMsgThreads'])
                 {
                     $ChangeSet['settings_UseMsgThreads'] = $MsgUseMsgThreads;
@@ -556,14 +546,12 @@ if(!isOnVacation())
                     $ChangeNotDone += 1;
                 }
 
-                if(isset($_POST['use_ajaxgalaxy']) && $_POST['use_ajaxgalaxy'] == 'on')
-                {
-                    $UseAJAXGalaxy = '1';
-                }
-                else
-                {
-                    $UseAJAXGalaxy = '0';
-                }
+                $UseAJAXGalaxy = (
+                    isInputKeyChecked($_POST, 'use_ajaxgalaxy') ?
+                        '1' :
+                        '0'
+                );
+
                 if($UseAJAXGalaxy != $_User['settings_UseAJAXGalaxy'])
                 {
                     $ChangeSet['settings_UseAJAXGalaxy'] = $UseAJAXGalaxy;
@@ -572,14 +560,13 @@ if(!isOnVacation())
                 {
                     $ChangeNotDone += 1;
                 }
-                if(isset($_POST['show_useravatars']) && $_POST['show_useravatars'] == 'on')
-                {
-                    $ShowUserAvatars = '1';
-                }
-                else
-                {
-                    $ShowUserAvatars = '0';
-                }
+
+                $ShowUserAvatars = (
+                    isInputKeyChecked($_POST, 'show_useravatars') ?
+                        '1' :
+                        '0'
+                );
+
                 if($ShowUserAvatars != $_User['settings_Galaxy_ShowUserAvatars'])
                 {
                     $ChangeSet['settings_Galaxy_ShowUserAvatars'] = $ShowUserAvatars;
@@ -589,14 +576,12 @@ if(!isOnVacation())
                     $ChangeNotDone += 1;
                 }
 
-                if(isset($_POST['short_spy']) && $_POST['short_spy'] == 'on')
-                {
-                    $ShortcutSpy = '1';
-                }
-                else
-                {
-                    $ShortcutSpy = '0';
-                }
+                $ShortcutSpy = (
+                    isInputKeyChecked($_POST, 'short_spy') ?
+                        '1' :
+                        '0'
+                );
+
                 if($ShortcutSpy != $_User['settings_esp'])
                 {
                     $ChangeSet['settings_esp'] = $ShortcutSpy;
@@ -606,14 +591,12 @@ if(!isOnVacation())
                     $ChangeNotDone += 1;
                 }
 
-                if(isset($_POST['short_write']) && $_POST['short_write'] == 'on')
-                {
-                    $ShortcutWrite = '1';
-                }
-                else
-                {
-                    $ShortcutWrite = '0';
-                }
+                $ShortcutWrite = (
+                    isInputKeyChecked($_POST, 'short_write') ?
+                        '1' :
+                        '0'
+                );
+
                 if($ShortcutWrite != $_User['settings_wri'])
                 {
                     $ChangeSet['settings_wri'] = $ShortcutWrite;
@@ -623,14 +606,12 @@ if(!isOnVacation())
                     $ChangeNotDone += 1;
                 }
 
-                if(isset($_POST['short_buddy']) && $_POST['short_buddy'] == 'on')
-                {
-                    $ShortcutBuddy = '1';
-                }
-                else
-                {
-                    $ShortcutBuddy = '0';
-                }
+                $ShortcutBuddy = (
+                    isInputKeyChecked($_POST, 'short_buddy') ?
+                        '1' :
+                        '0'
+                );
+
                 if($ShortcutBuddy != $_User['settings_bud'])
                 {
                     $ChangeSet['settings_bud'] = $ShortcutBuddy;
@@ -640,14 +621,12 @@ if(!isOnVacation())
                     $ChangeNotDone += 1;
                 }
 
-                if(isset($_POST['short_rocket']) && $_POST['short_rocket'] == 'on')
-                {
-                    $ShortcutRocket = '1';
-                }
-                else
-                {
-                    $ShortcutRocket = '0';
-                }
+                $ShortcutRocket = (
+                    isInputKeyChecked($_POST, 'short_rocket') ?
+                        '1' :
+                        '0'
+                );
+
                 if($ShortcutRocket != $_User['settings_mis'])
                 {
                     $ChangeSet['settings_mis'] = $ShortcutRocket;
