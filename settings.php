@@ -1107,24 +1107,11 @@ if(!isOnVacation())
         ]);
 
         if (count($accountLoginHistory) > 0) {
-            foreach ($accountLoginHistory as &$LogonData) {
-                $LogonData['Times'] = array_reverse(explode(',', $LogonData['Times']));
-                $LimitCounter = $LogonLIMIT;
-                foreach($LogonData['Times'] as $Temp)
-                {
-                    if($LimitCounter <= 0)
-                    {
-                        break;
-                    }
-                    $Temp = explode('|', $Temp);
-                    $ThisTime = SERVER_MAINOPEN_TSTAMP + $Temp[0];
-                    $LogonList[] = array('Time' => $ThisTime, 'IP' => $LogonData['Value'], 'State' => (isset($Temp[1]) && $Temp[1] == 'F' ? false : true));
-                    $LogonTimes[] = $ThisTime;
-                    $LimitCounter -= 1;
-                }
-            }
+            $LogonList = Settings\Utils\Helpers\parseLoginHistoryEntries([
+                'historyEntries' => $accountLoginHistory,
+                'historyEntriesLimit' => $LogonLIMIT,
+            ]);
 
-            array_multisort($LogonList, SORT_DESC, $LogonTimes);
             $LimitCounter = $LogonLIMIT;
 
             $_Lang['ParseLogonsList'] = [];
