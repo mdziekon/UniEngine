@@ -656,7 +656,9 @@ if(!isOnVacation())
                         } else {
                             $ChangeSet['is_onvacation'] = '1';
                             $ChangeSet['vacation_starttime'] = $Now;
-                            $ChangeSet['vacation_endtime'] = $Now + (MAXVACATIONS_REG * TIME_DAY);
+                            $ChangeSet['vacation_endtime'] = Settings\Utils\Helpers\getVacationEndTime([
+                                'currentTimestamp' => $Now,
+                            ]);
                             $ChangeSet['vacation_type']    = '0';
 
                             $ChangeSetCount += 1;
