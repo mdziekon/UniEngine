@@ -59,25 +59,24 @@ $SkinNames = [
 ];
 
 $SkinDir = scandir('./skins/');
+$SkinDir = !empty($SkinDir) ? $SkinDir : [];
 $SkinCounter = 1;
-if(!empty($SkinDir))
-{
-    foreach($SkinDir as $Element)
-    {
-        if(strstr($Element, '.') === FALSE)
-        {
-            if(is_dir('./skins/'.$Element))
-            {
-                if(empty($SkinNames[$Element]))
-                {
-                    $SkinNames[$Element] = $Element;
-                }
-                $_Lang['ServerSkins'] .= '<option value="skins/'.$Element.'/" {select_no'.$SkinCounter.'}>'.$SkinNames[$Element].'</option>';
-                $AvailableSkins[$SkinCounter] = "skins/{$Element}";
-                $SkinCounter += 1;
-            }
-        }
+
+foreach ($SkinDir as $Element) {
+    if (
+        strstr($Element, '.') !== false ||
+        !is_dir('./skins/'.$Element)
+    ) {
+        continue;
     }
+
+    if (empty($SkinNames[$Element])) {
+        $SkinNames[$Element] = $Element;
+    }
+
+    $_Lang['ServerSkins'] .= '<option value="skins/'.$Element.'/" {select_no'.$SkinCounter.'}>'.$SkinNames[$Element].'</option>';
+    $AvailableSkins[$SkinCounter] = "skins/{$Element}";
+    $SkinCounter += 1;
 }
 
 function isInputKeyChecked($input, $key) {
