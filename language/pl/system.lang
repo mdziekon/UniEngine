@@ -115,6 +115,7 @@ $_Lang['BattleReportReader_FatalError']         = 'Wystąpił błąd podczas odc
 $_Lang['sys_moon']                  = "Księżyc";
 $_Lang['sys_error']                 = "Błąd";
 $_Lang['sys_mess_attack_report']    = "Raport Wojenny";
+$_Lang['sys_unknownError']          = "Nieznany błąd";
 
 $_Lang['sys_attacker_won']          = "Agresor wygrał bitwę!";
 $_Lang['sys_defender_won']          = "Obrońca wygrał bitwę!";

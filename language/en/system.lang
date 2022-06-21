@@ -120,6 +120,7 @@ $_Lang['BattleReportReader_FatalError']         = 'A fatal error occurred while 
 $_Lang['sys_moon']                              = "Moon";
 $_Lang['sys_error']                             = "Error";
 $_Lang['sys_mess_attack_report']                = "Battle Report";
+$_Lang['sys_unknownError']                      = "Unknown error";
 
 $_Lang['sys_attacker_won']                      = "Aggressor has won the battle!";
 $_Lang['sys_defender_won']                      = "Defender has won the battle!";
