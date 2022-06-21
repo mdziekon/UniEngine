@@ -16,7 +16,7 @@ function mapTryDeleteUserIgnoreEntriesErrorToReadableMessage($error) {
     ];
 
     if (!isset($knownErrorsByCode[$errorCode])) {
-        return $_Lang['fleet_generic_errors_unknown'];
+        return $_Lang['sys_unknownError'];
     }
 
     return $knownErrorsByCode[$errorCode];

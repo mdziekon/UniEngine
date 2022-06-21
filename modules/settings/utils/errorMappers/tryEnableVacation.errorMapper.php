@@ -25,7 +25,7 @@ function mapTryEnableVacationErrorToReadableMessage($error) {
     ];
 
     if (!isset($knownErrorsByCode[$errorCode])) {
-        return $_Lang['fleet_generic_errors_unknown'];
+        return $_Lang['sys_unknownError'];
     }
 
     if (is_callable($knownErrorsByCode[$errorCode])) {
