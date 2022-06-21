@@ -198,14 +198,14 @@ $_Lang['BuyMoreDE']              = 'Dokup Ciemną Energię!';
 $_Lang['ChangeYourNick']         = 'Zmiana Nicka';
 $_Lang['GoBack']                 = 'Powrót do Ustawień Konta';
 $_Lang['NickChange_Info']        = '';
-$_Lang['NickChange_Info']       .= '&bull; Koszt zmiany Nicka: <b class="orange">10</b> jednostek Ciemnej Energii<br/>';
+$_Lang['NickChange_Info']       .= '&bull; Koszt zmiany Nicka: <b class="orange">{data_changeCost}</b> jednostek Ciemnej Energii<br/>';
 $_Lang['NickChange_Info']       .= '&bull; Informacja o twoim Starym Nicku będzie widoczna przez następne 7 dni<br/>';
 $_Lang['NickChange_Info']       .= '&bull; Nowy Nick musi być zgodny z <a class="red" href="rules.php" target="_blank">Regulaminem</a><br/>';
 $_Lang['NickChange_Info']       .= '&bull; Nowy Nick musi mieć przynajmniej 4 znaki i może składać się ze znaków alfanumerycznych, podkreśleń, spacji i myślników.<br/>';
 
 $_Lang['NewNick']                = 'Nowy nick';
 $_Lang['ChangeIt']               = 'Zmień nick';
-$_Lang['AreYouSure']             = 'Czy jesteś pewien, że chcesz zmienić swój nick za 10 jednostek Ciemnej Energii?';
+$_Lang['AreYouSure']             = 'Czy jesteś pewien, że chcesz zmienić swój nick za {data_changeCost} jednostek Ciemnej Energii?';
 $_Lang['NewNick_is_like_old']    = 'Nowy nick nie może być taki sam jak obecny!';
 $_Lang['NewNick_is_tooshort']    = 'Nowy nick musi mieć przynajmniej 4 znaki!';
 $_Lang['NewNick_nolinks']        = 'Nie można wprowadzać linków w nicku!';
@@ -222,11 +222,11 @@ $_Lang['Vacation_mode']          = 'Konto w Trybie Urlopu przynajmniej do';
 
 // Email Change
 
-$_Lang['Email_Text']              = 'Witaj, <b>{EP_User}</b>!<br/><br/>Na twoim koncie w grze <a href="{EP_GameLink}" target="_blank"><b>'.$_GameConfig['game_name'].'</b></a> został uruchomiony proces Zmiany Adresu Email!<br/><br/><b>Proces składa się z dwóch etapów aktywacji</b>, dokonywanych przez otrzymane Linki Aktywacyjne.<br/>Pierwszy, to aktywacja Nowego Adresu Email. Drugi, to potwierdzenie zmiany Adresu Email ze Starego Adresu.<br/><b>Etap pierwszy</b> jest wymagany (należy potwierdzić, że nowy Adres nie jest fałszywy i jest nadal aktywny), jednak <b>etap drugi</b> można pominąć, ale aktywacja będzie trwała <b>7 dni</b>.<br/>Jeśli oba etapy zostaną zakończone, Adres Email zostanie zmieniony natychmiastowo.';
-$_Lang['Email_Text']             .= '<br/><br/>{EP_Text}:<br/><br/><a href="{EP_Link}">{EP_Link}</a><br/>(Jeśli klikając w powyższy link nie dokonasz Aktywacji, prosimy o ręczne skopiowanie go do paska adresu)<br/><br/><b>Dane dotyczące tego procesu</b>:<br/>Stary Adres Email: <b>{EP_OldMail}</b><br/>Nowy Adres Email: <b>{EP_NewMail}</b><br/>Data aktywacji procesu: <b>{EP_Date}</b><br/>Adres IP, z którego aktywowano proces: <b>{EP_IP}</b><br/><br/>Jeśli to nie ty aktywowałeś ten proces, natychmiast <a href="{EP_ContactLink}" target="_blank">skontaktuj się z Administracją!</a><br/>{EP_Text2}<br/><br/>Pozdrawiamy, <a href="{EP_GameLink}" target="_blank"><b>Zespół '.$_GameConfig['game_name'].'</b></a>';
+$_Lang['Email_Text']              = 'Witaj, <b>{EP_User}</b>!<br/><br/>Na twoim koncie w grze <a href="{EP_GameLink}" target="_blank"><b>{EP_GameName}</b></a> został uruchomiony proces Zmiany Adresu Email!<br/><br/><b>Proces składa się z dwóch etapów aktywacji</b>, dokonywanych przez otrzymane Linki Aktywacyjne.<br/>Pierwszy, to aktywacja Nowego Adresu Email. Drugi, to potwierdzenie zmiany Adresu Email ze Starego Adresu.<br/><b>Etap pierwszy</b> jest wymagany (należy potwierdzić, że nowy Adres nie jest fałszywy i jest nadal aktywny), jednak <b>etap drugi</b> można pominąć, ale aktywacja będzie trwała <b>7 dni</b>.<br/>Jeśli oba etapy zostaną zakończone, Adres Email zostanie zmieniony natychmiastowo.';
+$_Lang['Email_Text']             .= '<br/><br/>{EP_Text}:<br/><br/><a href="{EP_Link}">{EP_Link}</a><br/>(Jeśli klikając w powyższy link nie dokonasz Aktywacji, prosimy o ręczne skopiowanie go do paska adresu)<br/><br/><b>Dane dotyczące tego procesu</b>:<br/>Stary Adres Email: <b>{EP_OldMail}</b><br/>Nowy Adres Email: <b>{EP_NewMail}</b><br/>Data aktywacji procesu: <b>{EP_Date}</b><br/>Adres IP, z którego aktywowano proces: <b>{EP_IP}</b><br/><br/>Jeśli to nie ty aktywowałeś ten proces, natychmiast <a href="{EP_ContactLink}" target="_blank">skontaktuj się z Administracją!</a><br/>{EP_Text2}<br/><br/>Pozdrawiamy, <a href="{EP_GameLink}" target="_blank"><b>Zespół {EP_GameName}</b></a>';
 $_Lang['Email_WarnOld']           = 'Jeśli nie klikniesz w ten Link Aktywacyjny, Adres Email będzie mógł być zmieniony w grze po 7 dniach od rozpoczęcia procesu (o ile nowy Adres Email zostanie wcześniej potwierdzony)!';
 $_Lang['Email_WarnNew']           = 'Jeśli nie klikniesz w ten Link Aktywacyjny, Adres przypisany do twojego konta nie zostanie zmieniony (nawet, jeśli potwierdzisz zmianę ze starego Adresu Email)!';
-$_Lang['Email_Title']             = $_GameConfig['game_name'].' - Zmiana Adresu Email';
+$_Lang['Email_Title']             = '{gameName} - Zmiana Adresu Email';
 $_Lang['Email_MailOld']           = 'Aby potwierdzić zmianę tego Adresu na nowy, kliknij w poniższy link';
 $_Lang['Email_MailNew']           = 'Aby potwierdzić aktywność nowego Adresu, kliknij w poniższy link';
 

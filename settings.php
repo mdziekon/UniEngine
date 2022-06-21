@@ -9,8 +9,10 @@ $_DontForceRulesAcceptance = true;
 $_EnginePath = './';
 include($_EnginePath.'common.php');
 include_once($_EnginePath . 'modules/session/_includes.php');
+include_once($_EnginePath . 'modules/settings/_includes.php');
 
 use UniEngine\Engine\Modules\Session;
+use UniEngine\Engine\Modules\Settings;
 
 loggedCheck();
 
@@ -50,28 +52,38 @@ $ForceGoingOnVacationMsg = false;
 $ChangeNotDone = 0;
 $ChangeSetCount = 0;
 
-$SkinNames = array('xnova' => 'XNova', 'epicblue' => 'EpicBlue Fresh', 'epicblue_old' => 'EpicBlue Standard');
+$SkinNames = [
+    'xnova' => 'XNova',
+    'epicblue' => 'EpicBlue Fresh',
+    'epicblue_old' => 'EpicBlue Standard',
+];
 
 $SkinDir = scandir('./skins/');
+$SkinDir = !empty($SkinDir) ? $SkinDir : [];
 $SkinCounter = 1;
-if(!empty($SkinDir))
-{
-    foreach($SkinDir as $Element)
-    {
-        if(strstr($Element, '.') === FALSE)
-        {
-            if(is_dir('./skins/'.$Element))
-            {
-                if(empty($SkinNames[$Element]))
-                {
-                    $SkinNames[$Element] = $Element;
-                }
-                $_Lang['ServerSkins'] .= '<option value="skins/'.$Element.'/" {select_no'.$SkinCounter.'}>'.$SkinNames[$Element].'</option>';
-                $AvailableSkins[$SkinCounter] = "skins/{$Element}";
-                $SkinCounter += 1;
-            }
-        }
+
+foreach ($SkinDir as $Element) {
+    if (
+        strstr($Element, '.') !== false ||
+        !is_dir('./skins/'.$Element)
+    ) {
+        continue;
     }
+
+    if (empty($SkinNames[$Element])) {
+        $SkinNames[$Element] = $Element;
+    }
+
+    $_Lang['ServerSkins'] .= '<option value="skins/'.$Element.'/" {select_no'.$SkinCounter.'}>'.$SkinNames[$Element].'</option>';
+    $AvailableSkins[$SkinCounter] = "skins/{$Element}";
+    $SkinCounter += 1;
+}
+
+function isInputKeyChecked($input, $key) {
+    return (
+        isset($input[$key]) &&
+        $input[$key] == 'on'
+    );
 }
 
 $SQLResult_SelectAllPlanets = doquery(
@@ -86,6 +98,8 @@ while($Planets = $SQLResult_SelectAllPlanets->fetch_assoc())
 
 $Mode = (isset($_GET['mode']) ? $_GET['mode'] : null);
 
+$ignoredUsers = [];
+
 if(!isOnVacation())
 {
     if(empty($Mode) OR $Mode == 'general')
@@ -93,20 +107,7 @@ if(!isOnVacation())
         // General View
         $CheckMailChange = doquery("SELECT `ID`, `Date` FROM {{table}} WHERE `UserID` = {$_User['id']} AND `ConfirmType` = 0 LIMIT 1;", 'mailchange', true);
 
-        $Query_IgnoreSystem = '';
-        $Query_IgnoreSystem .= "SELECT `ignore`.`IgnoredID`, `user`.`username` FROM {{table}} AS `ignore` ";
-        $Query_IgnoreSystem .= "JOIN `{{prefix}}users` AS `user` ON `ignore`.`IgnoredID` = `user`.`id` ";
-        $Query_IgnoreSystem .= "WHERE `ignore`.`OwnerID` = {$_User['id']};";
-
-        $SQLResult_IgnoreSystem = doquery($Query_IgnoreSystem, 'ignoresystem');
-
-        if($SQLResult_IgnoreSystem->num_rows > 0)
-        {
-            while($FetchData = $SQLResult_IgnoreSystem->fetch_assoc())
-            {
-                $_User['IgnoredUsers'][$FetchData['IgnoredID']] = $FetchData['username'];
-            }
-        }
+        $ignoredUsers = Settings\Utils\Queries\getUserIgnoreEntries([ 'userId' => $_User['id'] ]);
 
         if((isset($_POST['save']) && $_POST['save'] == 'yes') || !empty($_GET['ignoreadd']))
         {
@@ -119,150 +120,113 @@ if(!isOnVacation())
                 {
                     $_POST['give_newpass'] = trim($_POST['give_newpass']);
 
-                    $inputOldPasswordHash = Session\Utils\LocalIdentityV1\hashPassword([
-                        'password' => $_POST['give_oldpass'],
-                    ]);
                     $inputNewPasswordHash = Session\Utils\LocalIdentityV1\hashPassword([
                         'password' => $_POST['give_newpass'],
                     ]);
 
-                    if($inputOldPasswordHash == $_User['password'])
-                    {
-                        if(strlen($_POST['give_newpass']) >= 4)
-                        {
-                            if($inputNewPasswordHash != $_User['password'])
-                            {
-                                if($_POST['give_newpass'] == $_POST['give_confirmpass'])
-                                {
-                                    $ChangeSet['password'] = $inputNewPasswordHash;
-                                    $ChangeSetTypes['password'] = 's';
-                                    $InfoMsgs[] = $_Lang['Pass_Changed_plzlogout'];
-                                    setcookie(getSessionCookieKey(), '', $Now - 3600, '/', '');
-                                }
-                                else
-                                {
-                                    $WarningMsgs[] = $_Lang['Pass_Confirm_isbad'];
-                                }
-                            }
-                            else
-                            {
-                                $WarningMsgs[] = $_Lang['Pass_same_as_old'];
-                            }
-                        }
-                        else
-                        {
-                            $WarningMsgs[] = $_Lang['Pass_is_tooshort'];
-                        }
-                    }
-                    else
-                    {
-                        $WarningMsgs[] = $_Lang['Pass_old_isbad'];
+                    $passwordChangeValidationResult = Settings\Utils\Validators\validatePasswordChange([
+                        'input' => [
+                            'oldPassword' => $_POST['give_oldpass'],
+                            'newPassword' => $_POST['give_newpass'],
+                            'newPasswordConfirm' => $_POST['give_confirmpass'],
+                        ],
+                        'currentUser' => &$_User,
+                    ]);
+
+                    if (!$passwordChangeValidationResult['isSuccess']) {
+                        $WarningMsgs[] = Settings\Utils\ErrorMappers\mapValidatePasswordChangeErrorToReadableMessage(
+                            $passwordChangeValidationResult['error']
+                        );
+                    } else {
+                        $ChangeSet['password'] = $inputNewPasswordHash;
+                        $ChangeSetTypes['password'] = 's';
+                        $InfoMsgs[] = $_Lang['Pass_Changed_plzlogout'];
+
+                        Session\Utils\Cookie\clearSessionCookie();
                     }
                 }
 
-                if(isset($_POST['change_mail']) && $_POST['change_mail'] == 'on')
-                {
-                    if($CheckMailChange['ID'] <= 0)
-                    {
-                        $_POST['give_newemail'] = getDBLink()->escape_string(
-                            strip_tags(trim($_POST['give_newemail']))
+                if (
+                    isset($_POST['change_mail']) &&
+                    $_POST['change_mail'] == 'on'
+                ) {
+                    $inputNewEmailAddress = $_POST['give_newemail'];
+                    $inputNewEmailAddressConfirm = $_POST['give_confirmemail'];
+                    $normalizedInputNewEmailAddress = getDBLink()->escape_string(
+                        strip_tags(trim($inputNewEmailAddress))
+                    );
+
+                    $emailChangeValidationResult = Settings\Utils\Validators\validateEmailChange([
+                        'input' => [
+                            'newEmailAddress' => $normalizedInputNewEmailAddress,
+                            'newEmailAddressConfirm' => $inputNewEmailAddressConfirm,
+                        ],
+                        'currentUser' => &$_User,
+                        'isAlreadyChangingEmail' => ($CheckMailChange['ID'] > 0),
+                    ]);
+
+                    if (!$emailChangeValidationResult['isSuccess']) {
+                        $WarningMsgs[] = Settings\Utils\ErrorMappers\mapValidateEmailChangeErrorToReadableMessage(
+                            $emailChangeValidationResult['error']
+                        );
+                    } else {
+                        $ThisTime = $Now;
+
+                        $changeTokenOldAddress = md5($_User['id'] . $_User['username'] . mt_rand(0, 999999999));
+                        $changeTokenNewAddress = md5($_User['id'] . $_User['username'] . mt_rand(0, 999999999));
+
+                        include($_EnginePath.'includes/functions/SendMail.php');
+
+                        $changeProcessEmails = Settings\Utils\Content\prepareChangeProcessEmails([
+                            'user' => &$_User,
+                            'newEmailAddress' => $normalizedInputNewEmailAddress,
+                            'changeTokenOldAddress' => $changeTokenOldAddress,
+                            'changeTokenNewAddress' => $changeTokenNewAddress,
+                            'currentTimestamp' => $ThisTime,
+                        ]);
+
+                        $sendMail2OldAddressResult = SendMail(
+                            $_User['email'],
+                            $changeProcessEmails['oldAddress']['title'],
+                            $changeProcessEmails['oldAddress']['content'],
+                            '',
+                            true
+                        );
+                        $sendMail2NewAddressResult = SendMail(
+                            $normalizedInputNewEmailAddress,
+                            $changeProcessEmails['newAddress']['title'],
+                            $changeProcessEmails['newAddress']['content']
                         );
 
-                        $CheckMail = $_POST['give_newemail'];
-                        $banned_domain_list = $_GameConfig['BannedMailDomains'];
-                        $banned_domain_list = str_replace('.', '\.', $banned_domain_list);
+                        CloseMailConnection();
 
-                        if(is_email($CheckMail))
-                        {
-                            if($CheckMail !== $_User['email'])
-                            {
-                                if($CheckMail === $_POST['give_confirmemail'])
-                                {
-                                    if(empty($banned_domain_list) || !preg_match('#('.$banned_domain_list.')+#si', $CheckMail))
-                                    {
-                                        $CheckMailinDB = doquery("SELECT `id` FROM {{table}} WHERE `email` = '{$CheckMail}' LIMIT 1;", 'users', true);
-                                        if($CheckMailinDB['id'] <= 0)
-                                        {
-                                            $RandomHash = md5($_User['id'].$_User['username'].mt_rand(0, 999999999));
-                                            $RandomHashNew = md5($_User['id'].$_User['username'].mt_rand(0, 999999999));
-                                            $ThisTime = $Now;
+                        if (
+                            $sendMail2OldAddressResult === true &&
+                            $sendMail2NewAddressResult === true
+                        ) {
+                            $ChangeSet['email_2'] = $normalizedInputNewEmailAddress;
+                            $ChangeSetTypes['email_2'] = 's';
 
-                                            $EmailParse = array
-                                            (
-                                                'EP_User' => $_User['username'],
-                                                'EP_GameLink' => GAMEURL_STRICT,
-                                                'EP_Link' => GAMEURL."email_change.php?hash=old&amp;key={$RandomHash}",
-                                                'EP_Text' => $_Lang['Email_MailOld'],
-                                                'EP_OldMail' => $_User['email'],
-                                                'EP_NewMail' => $CheckMail,
-                                                'EP_Date' => date('d.m.Y - H:i:s', $ThisTime),
-                                                'EP_IP' => $_User['user_lastip'],
-                                                'EP_ContactLink' => GAMEURL_STRICT.'/contact.php',
-                                                'EP_Text2' => $_Lang['Email_WarnOld']
-                                            );
-                                            $EmailParseNew = array
-                                            (
-                                                'EP_User' => $_User['username'],
-                                                'EP_GameLink' => GAMEURL_STRICT,
-                                                'EP_Link' => GAMEURL."email_change.php?hash=new&amp;key={$RandomHashNew}",
-                                                'EP_Text' => $_Lang['Email_MailNew'],
-                                                'EP_OldMail' => $_User['email'],
-                                                'EP_NewMail' => $CheckMail,
-                                                'EP_Date' => date('d.m.Y - H:i:s', $ThisTime),
-                                                'EP_IP' => $_User['user_lastip'],
-                                                'EP_ContactLink' => GAMEURL_STRICT.'/contact.php',
-                                                'EP_Text2' => $_Lang['Email_WarnNew']
-                                            );
+                            Settings\Utils\Queries\createEmailChangeProcessEntry([
+                                'user' => &$_User,
+                                'newEmailAddress' => $normalizedInputNewEmailAddress,
+                                'changeTokenOldAddress' => $changeTokenOldAddress,
+                                'changeTokenNewAddress' => $changeTokenNewAddress,
+                                'currentTimestamp' => $ThisTime,
+                            ]);
 
-                                            include($_EnginePath.'includes/functions/SendMail.php');
-                                            $EmailBody = parsetemplate($_Lang['Email_Body'], $EmailParse);
-                                            $EmailBodyNew = parsetemplate($_Lang['Email_Body'], $EmailParseNew);
-                                            $SendResult = SendMail($_User['email'], $_Lang['Email_Title'], $EmailBody, '', true);
-                                            $SendResult2 = SendMail($CheckMail, $_Lang['Email_Title'], $EmailBodyNew);
-                                            CloseMailConnection();
+                            $CheckMailChange = [ 'ID' => 1, 'Date' => $ThisTime, ];
+                            $InfoMsgs[] = sprintf($_Lang['Mail_MailChange'], $_User['email']);
+                        } else {
+                            $sendErrorCode = urlencode(
+                                str_pad(mt_rand(0,999), 3, 'a', STR_PAD_RIGHT) .
+                                base64_encode($sendMail2OldAddressResult) .
+                                '||' .
+                                base64_encode($sendMail2NewAddressResult)
+                            );
 
-                                            if($SendResult === TRUE AND $SendResult2 === TRUE)
-                                            {
-                                                $ChangeSet['email_2'] = $CheckMail;
-                                                $ChangeSetTypes['email_2'] = 's';
-
-                                                doquery("INSERT INTO {{table}} VALUES (NULL, {$ThisTime}, {$_User['id']}, '{$_User['email']}', '{$CheckMail}', 0, 0, '{$RandomHash}', '{$RandomHashNew}');", 'mailchange');
-                                                $CheckMailChange = array('ID' => 1, 'Date' => $ThisTime);
-                                                $InfoMsgs[] = sprintf($_Lang['Mail_MailChange'], $_User['email']);
-                                            }
-                                            else
-                                            {
-                                                $WarningMsgs[] = sprintf($_Lang['Mail_SendMailError'], urlencode(str_pad(mt_rand(0,999), 3, 'a', STR_PAD_RIGHT).base64_encode($SendResult).'||'.base64_encode($SendResult2)));
-                                            }
-                                        }
-                                        else
-                                        {
-                                            $WarningMsgs[] = $_Lang['Mail_some1_hasemail'];
-                                        }
-                                    }
-                                    else
-                                    {
-                                        $WarningMsgs[] = $_Lang['Mail_banned_domain'];
-                                    }
-                                }
-                                else
-                                {
-                                    $WarningMsgs[] = $_Lang['Mail_Confirm_isbad'];
-                                }
-                            }
-                            else
-                            {
-                                $WarningMsgs[] = $_Lang['Mail_same_as_old'];
-                            }
+                            $WarningMsgs[] = sprintf($_Lang['Mail_SendMailError'], $sendErrorCode);
                         }
-                        else
-                        {
-                            $WarningMsgs[] = $_Lang['Mail_badEmail'];
-                        }
-                    }
-                    else
-                    {
-                        $WarningMsgs[] = $_Lang['Mail_alreadyInChange'];
                     }
                 }
 
@@ -280,14 +244,12 @@ if(!isOnVacation())
                     }
                 }
 
-                if(isset($_POST['ipcheck_deactivate']) && $_POST['ipcheck_deactivate'] == 'on')
-                {
-                    $IPCheckDeactivate = '1';
-                }
-                else
-                {
-                    $IPCheckDeactivate = '0';
-                }
+                $IPCheckDeactivate = (
+                    isInputKeyChecked($_POST, 'ipcheck_deactivate') ?
+                        '1' :
+                        '0'
+                );
+
                 if($_User['noipcheck'] != $IPCheckDeactivate)
                 {
                     $ChangeSet['noipcheck'] = $IPCheckDeactivate;
@@ -326,14 +288,11 @@ if(!isOnVacation())
                     $ChangeNotDone += 1;
                 }
 
-                if(isset($_POST['planet_sort_moons']) && $_POST['planet_sort_moons'] == 'on')
-                {
-                    $PlanetSortMoons = '1';
-                }
-                else
-                {
-                    $PlanetSortMoons = '0';
-                }
+                $PlanetSortMoons = (
+                    isInputKeyChecked($_POST, 'planet_sort_moons') ?
+                        '1' :
+                        '0'
+                );
 
                 if($PlanetSortMoons != $_User['planet_sort_moons'])
                 {
@@ -402,14 +361,12 @@ if(!isOnVacation())
                     $ChangeNotDone += 1;
                 }
 
-                if(isset($_POST['use_skin']) && $_POST['use_skin'] == 'on')
-                {
-                    $UseSkin = '1';
-                }
-                else
-                {
-                    $UseSkin = '0';
-                }
+                $UseSkin = (
+                    isInputKeyChecked($_POST, 'use_skin') ?
+                        '1' :
+                        '0'
+                );
+
                 if($UseSkin != $_User['design'])
                 {
                     $ChangeSet['design'] = $UseSkin;
@@ -437,14 +394,12 @@ if(!isOnVacation())
                     $ChangeNotDone += 1;
                 }
 
-                if(isset($_POST['development_old']) && $_POST['development_old'] == 'on')
-                {
-                    $DevelopmentOld = '1';
-                }
-                else
-                {
-                    $DevelopmentOld = '0';
-                }
+                $DevelopmentOld = (
+                    isInputKeyChecked($_POST, 'development_old') ?
+                        '1' :
+                        '0'
+                );
+
                 if($DevelopmentOld != $_User['settings_DevelopmentOld'])
                 {
                     $ChangeSet['settings_DevelopmentOld'] = $DevelopmentOld;
@@ -454,14 +409,12 @@ if(!isOnVacation())
                     $ChangeNotDone += 1;
                 }
 
-                if(isset($_POST['build_expandedview_use']) && $_POST['build_expandedview_use'] == 'on')
-                {
-                    $BuildExpandedView = '1';
-                }
-                else
-                {
-                    $BuildExpandedView = '0';
-                }
+                $BuildExpandedView = (
+                    isInputKeyChecked($_POST, 'build_expandedview_use') ?
+                        '1' :
+                        '0'
+                );
+
                 if($BuildExpandedView != $_User['settings_ExpandedBuildView'])
                 {
                     $ChangeSet['settings_ExpandedBuildView'] = $BuildExpandedView;
@@ -471,14 +424,12 @@ if(!isOnVacation())
                     $ChangeNotDone += 1;
                 }
 
-                if(isset($_POST['pretty_fleet_use']) && $_POST['pretty_fleet_use'] == 'on')
-                {
-                    $UsePrettyFleet = '1';
-                }
-                else
-                {
-                    $UsePrettyFleet = '0';
-                }
+                $UsePrettyFleet = (
+                    isInputKeyChecked($_POST, 'pretty_fleet_use') ?
+                        '1' :
+                        '0'
+                );
+
                 if($UsePrettyFleet != $_User['settings_useprettyinputbox'])
                 {
                     $ChangeSet['settings_useprettyinputbox'] = $UsePrettyFleet;
@@ -489,26 +440,26 @@ if(!isOnVacation())
                 }
 
                 $ChangeNotDone += 1;
-                if(isset($_POST['resSort_changed']) && $_POST['resSort_changed'] == '1')
-                {
-                    $_POST['resSort_array'] = (isset($_POST['resSort_array']) ? trim($_POST['resSort_array']) : null);
-                    if(preg_match('/^[a-z]{3}\,[a-z]{3}\,[a-z]{3}$/D', $_POST['resSort_array']))
-                    {
-                        $CheckData = explode(',', $_POST['resSort_array']);
-                        foreach($CheckData as $Data2Check)
-                        {
-                            if($Data2Check != 'met' AND $Data2Check != 'cry' AND $Data2Check != 'deu')
-                            {
-                                $DisAllowResSort_Change = true;
-                                break;
-                            }
-                        }
-                        if(!isset($DisAllowResSort_Change))
-                        {
-                            $ChangeSet['settings_resSortArray'] = $_POST['resSort_array'];
-                            $ChangeSetTypes['settings_resSortArray'] = 's';
-                            $ChangeNotDone -= 1;
-                        }
+                if (
+                    isset($_POST['resSort_changed']) &&
+                    $_POST['resSort_changed'] == '1'
+                ) {
+                    $normalizedResourcesSortingString = (
+                        isset($_POST['resSort_array']) ?
+                            trim($_POST['resSort_array']) :
+                            ''
+                    );
+
+                    $resourcesOrderingValidationResult = Settings\Utils\Validators\validateResourcesOrdering([
+                        'input' => [
+                            'orderedResourceTypesString' => $normalizedResourcesSortingString,
+                        ],
+                    ]);
+
+                    if ($resourcesOrderingValidationResult['isSuccess']) {
+                        $ChangeSet['settings_resSortArray'] = $normalizedResourcesSortingString;
+                        $ChangeSetTypes['settings_resSortArray'] = 's';
+                        $ChangeNotDone -= 1;
                     }
                 }
 
@@ -534,7 +485,20 @@ if(!isOnVacation())
                 $MsgsPerPage = intval($_POST['msg_perpage']);
                 if($MsgsPerPage != $_User['settings_msgperpage'])
                 {
-                    if(in_array($MsgsPerPage, array(5, 10, 15, 20, 25, 50, 75, 100, 150, 200)))
+                    $allowedMsgsPerPage = [
+                        5,
+                        10,
+                        15,
+                        20,
+                        25,
+                        50,
+                        75,
+                        100,
+                        150,
+                        200,
+                    ];
+
+                    if(in_array($MsgsPerPage, $allowedMsgsPerPage))
                     {
                         $ChangeSet['settings_msgperpage'] = $MsgsPerPage;
                     }
@@ -549,14 +513,12 @@ if(!isOnVacation())
                     $ChangeNotDone += 1;
                 }
 
-                if(isset($_POST['msg_spyexpand']) && $_POST['msg_spyexpand'] == 'on')
-                {
-                    $MsgExpandSpyReports = '1';
-                }
-                else
-                {
-                    $MsgExpandSpyReports = '0';
-                }
+                $MsgExpandSpyReports = (
+                    isInputKeyChecked($_POST, 'msg_spyexpand') ?
+                        '1' :
+                        '0'
+                );
+
                 if($MsgExpandSpyReports != $_User['settings_spyexpand'])
                 {
                     $ChangeSet['settings_spyexpand'] = $MsgExpandSpyReports;
@@ -566,14 +528,12 @@ if(!isOnVacation())
                     $ChangeNotDone += 1;
                 }
 
-                if(isset($_POST['msg_usethreads']) && $_POST['msg_usethreads'] == 'on')
-                {
-                    $MsgUseMsgThreads = '1';
-                }
-                else
-                {
-                    $MsgUseMsgThreads = '0';
-                }
+                $MsgUseMsgThreads = (
+                    isInputKeyChecked($_POST, 'msg_usethreads') ?
+                        '1' :
+                        '0'
+                );
+
                 if($MsgUseMsgThreads != $_User['settings_UseMsgThreads'])
                 {
                     $ChangeSet['settings_UseMsgThreads'] = $MsgUseMsgThreads;
@@ -602,14 +562,12 @@ if(!isOnVacation())
                     $ChangeNotDone += 1;
                 }
 
-                if(isset($_POST['use_ajaxgalaxy']) && $_POST['use_ajaxgalaxy'] == 'on')
-                {
-                    $UseAJAXGalaxy = '1';
-                }
-                else
-                {
-                    $UseAJAXGalaxy = '0';
-                }
+                $UseAJAXGalaxy = (
+                    isInputKeyChecked($_POST, 'use_ajaxgalaxy') ?
+                        '1' :
+                        '0'
+                );
+
                 if($UseAJAXGalaxy != $_User['settings_UseAJAXGalaxy'])
                 {
                     $ChangeSet['settings_UseAJAXGalaxy'] = $UseAJAXGalaxy;
@@ -618,14 +576,13 @@ if(!isOnVacation())
                 {
                     $ChangeNotDone += 1;
                 }
-                if(isset($_POST['show_useravatars']) && $_POST['show_useravatars'] == 'on')
-                {
-                    $ShowUserAvatars = '1';
-                }
-                else
-                {
-                    $ShowUserAvatars = '0';
-                }
+
+                $ShowUserAvatars = (
+                    isInputKeyChecked($_POST, 'show_useravatars') ?
+                        '1' :
+                        '0'
+                );
+
                 if($ShowUserAvatars != $_User['settings_Galaxy_ShowUserAvatars'])
                 {
                     $ChangeSet['settings_Galaxy_ShowUserAvatars'] = $ShowUserAvatars;
@@ -635,14 +592,12 @@ if(!isOnVacation())
                     $ChangeNotDone += 1;
                 }
 
-                if(isset($_POST['short_spy']) && $_POST['short_spy'] == 'on')
-                {
-                    $ShortcutSpy = '1';
-                }
-                else
-                {
-                    $ShortcutSpy = '0';
-                }
+                $ShortcutSpy = (
+                    isInputKeyChecked($_POST, 'short_spy') ?
+                        '1' :
+                        '0'
+                );
+
                 if($ShortcutSpy != $_User['settings_esp'])
                 {
                     $ChangeSet['settings_esp'] = $ShortcutSpy;
@@ -652,14 +607,12 @@ if(!isOnVacation())
                     $ChangeNotDone += 1;
                 }
 
-                if(isset($_POST['short_write']) && $_POST['short_write'] == 'on')
-                {
-                    $ShortcutWrite = '1';
-                }
-                else
-                {
-                    $ShortcutWrite = '0';
-                }
+                $ShortcutWrite = (
+                    isInputKeyChecked($_POST, 'short_write') ?
+                        '1' :
+                        '0'
+                );
+
                 if($ShortcutWrite != $_User['settings_wri'])
                 {
                     $ChangeSet['settings_wri'] = $ShortcutWrite;
@@ -669,14 +622,12 @@ if(!isOnVacation())
                     $ChangeNotDone += 1;
                 }
 
-                if(isset($_POST['short_buddy']) && $_POST['short_buddy'] == 'on')
-                {
-                    $ShortcutBuddy = '1';
-                }
-                else
-                {
-                    $ShortcutBuddy = '0';
-                }
+                $ShortcutBuddy = (
+                    isInputKeyChecked($_POST, 'short_buddy') ?
+                        '1' :
+                        '0'
+                );
+
                 if($ShortcutBuddy != $_User['settings_bud'])
                 {
                     $ChangeSet['settings_bud'] = $ShortcutBuddy;
@@ -686,14 +637,12 @@ if(!isOnVacation())
                     $ChangeNotDone += 1;
                 }
 
-                if(isset($_POST['short_rocket']) && $_POST['short_rocket'] == 'on')
-                {
-                    $ShortcutRocket = '1';
-                }
-                else
-                {
-                    $ShortcutRocket = '0';
-                }
+                $ShortcutRocket = (
+                    isInputKeyChecked($_POST, 'short_rocket') ?
+                        '1' :
+                        '0'
+                );
+
                 if($ShortcutRocket != $_User['settings_mis'])
                 {
                     $ChangeSet['settings_mis'] = $ShortcutRocket;
@@ -707,66 +656,33 @@ if(!isOnVacation())
                 $_Lang['SetActiveMarker'] = '04';
                 if((isset($_POST['vacation_activate']) && $_POST['vacation_activate'] == 'on') || (isset($_POST['delete_activate']) && $_POST['delete_activate'] == 'on'))
                 {
-                    if(isset($_POST['vacation_activate']) && $_POST['vacation_activate'] == 'on')
-                    {
-                        $allowVacation = true;
-                        if(($_User['vacation_leavetime'] + TIME_DAY) >= $Now)
-                        {
-                            $allowVacation = false;
-                            $WarningMsgs[] = $_Lang['Vacation_24hNotPassed'];
-                        }
+                    if (
+                        isset($_POST['vacation_activate']) &&
+                        $_POST['vacation_activate'] == 'on'
+                    ) {
+                        $tryEnableVacationResult = Settings\Utils\Helpers\tryEnableVacation([
+                            'user' => &$_User,
+                            'currentTimestamp' => $Now,
+                        ]);
 
-                        $checkFleets = doquery("SELECT COUNT(*) AS `Count` FROM {{table}} WHERE `fleet_owner` = {$_User['id']} OR `fleet_target_owner` = {$_User['id']};", 'fleets', true);
-                        if($checkFleets['Count'] > 0)
-                        {
-                            $allowVacation = false;
-                            $WarningMsgs[] = $_Lang['Vacation_FlyingFleets'];
-                        }
-
-                        if($allowVacation === true)
-                        {
-                            // Update All Planets/Moons before VacationMode (don't do that if previous conditions are not fulfilled)
-                            $SQLResult_AllPlanets = doquery("SELECT * FROM {{table}} WHERE `id_owner` = {$_User['id']};", 'planets');
-
-                            $Results['planets'] = array();
-                            while($PlanetsData = $SQLResult_AllPlanets->fetch_assoc())
-                            {
-                                // Update Planet - Building Queue
-                                $GeneratePlanetName[$PlanetsData['id']] = "{$PlanetsData['name']} [{$PlanetsData['galaxy']}:{$PlanetsData['system']}:{$PlanetsData['planet']}]";
-
-                                if(HandlePlanetUpdate($PlanetsData, $_User, $Now, true) === true)
-                                {
-                                    $Results['planets'][] = $PlanetsData;
-                                }
-                                if($PlanetsData['buildQueue_firstEndTime'] > 0 OR $PlanetsData['shipyardQueue'] != 0)
-                                {
-                                    $FoundBlockingPlanets[$PlanetsData['id']] = $GeneratePlanetName[$PlanetsData['id']];
-                                }
-                            }
-                            HandlePlanetUpdate_MultiUpdate($Results, $_User);
-                            if($_User['techQueue_EndTime'] > 0)
-                            {
-                                $FoundBlockingPlanets[$PlanetsData['id']] = $GeneratePlanetName[$_User['techQueue_Planet']];
-                            }
-
-                            if(!empty($FoundBlockingPlanets))
-                            {
-                                $allowVacation = false;
-                                $WarningMsgs[] = sprintf($_Lang['Vacation_CannotBuildOrRes'], implode(', ', $FoundBlockingPlanets));
-                            }
-                        }
-
-                        if($allowVacation === true)
-                        {
+                        if (!$tryEnableVacationResult['isSuccess']) {
+                            $WarningMsgs[] = Settings\Utils\ErrorMappers\mapTryEnableVacationErrorToReadableMessage(
+                                $tryEnableVacationResult['error']
+                            );
+                        } else {
                             $ChangeSet['is_onvacation'] = '1';
                             $ChangeSet['vacation_starttime'] = $Now;
-                            $ChangeSet['vacation_endtime'] = $Now + (MAXVACATIONS_REG * TIME_DAY);
+                            $ChangeSet['vacation_endtime'] = Settings\Utils\Helpers\getVacationEndTime([
+                                'currentTimestamp' => $Now,
+                            ]);
                             $ChangeSet['vacation_type']    = '0';
 
                             $ChangeSetCount += 1;
                             $ForceGoingOnVacationMsg = true;
 
-                            $UserDev_Log[] = array('PlanetID' => '0', 'Date' => $Now, 'Place' => 26, 'Code' => '1', 'ElementID' => '0');
+                            $UserDev_Log[] = Settings\Utils\Factories\createVacationBeginDevLogEntry([
+                                'currentTimestamp' => $Now,
+                            ]);
                         }
                     }
                     if(isset($_POST['delete_activate']) && $_POST['delete_activate'] == 'on')
@@ -876,114 +792,73 @@ if(!isOnVacation())
                     $_Lang['SetActiveMarker'] = '05';
                 }
 
-                if($_POST['saveType'] == 'delignore')
-                {
-                    if(!empty($_POST['del_ignore']) && (array)$_POST['del_ignore'] === $_POST['del_ignore'])
-                    {
-                        foreach($_POST['del_ignore'] as $Values)
-                        {
-                            $Values = intval($Values);
-                            if($Values > 0)
-                            {
-                                $ToDelete[] = $Values;
-                            }
-                        }
-                    }
-                    if(!empty($ToDelete))
-                    {
-                        foreach($ToDelete as $ThisID)
-                        {
-                            if(!empty($_User['IgnoredUsers'][$ThisID]))
-                            {
-                                $IgnoreSystem_Deleted[] = $ThisID;
-                                unset($_User['IgnoredUsers'][$ThisID]);
-                            }
+                if ($_POST['saveType'] == 'delignore') {
+                    $entriesToDelete = Settings\Utils\Input\normalizeDeleteUserIgnoreEntries($_POST['del_ignore']);
+
+                    $tryDeleteUserIgnoreEntriesResult = Settings\Utils\Helpers\tryDeleteUserIgnoreEntries([
+                        'entriesIds' => $entriesToDelete,
+                        'ignoredUsers' => $ignoredUsers,
+                    ]);
+
+                    if (!$tryDeleteUserIgnoreEntriesResult['isSuccess']) {
+                        $WarningMsgs[] = Settings\Utils\ErrorMappers\mapTryDeleteUserIgnoreEntriesErrorToReadableMessage(
+                            $tryDeleteUserIgnoreEntriesResult['error']
+                        );
+                    } else {
+                        $existingEntriesToDelete = $tryDeleteUserIgnoreEntriesResult['payload']['entriesToDelete'];
+
+                        Settings\Utils\Queries\deleteUserIgnoreEntries([
+                            'entryOwnerId' => $_User['id'],
+                            'entriesIds' => $existingEntriesToDelete,
+                        ]);
+
+                        foreach ($existingEntriesToDelete as $entryId) {
+                            unset($ignoredUsers[$entryId]);
                         }
 
-                        if(!empty($IgnoreSystem_Deleted))
-                        {
-                            $IgnoreSystem_Deleted_Count = count($IgnoreSystem_Deleted);
-                            $IgnoreSystem_Deleted = implode(',', $IgnoreSystem_Deleted);
-
-                            $Query_DeleteIgnores = '';
-                            $Query_DeleteIgnores .= "DELETE FROM {{table}} WHERE ";
-                            $Query_DeleteIgnores .= "`OwnerID` = {$_User['id']} AND `IgnoredID` IN ({$IgnoreSystem_Deleted}) LIMIT {$IgnoreSystem_Deleted_Count};";
-                            doquery($Query_DeleteIgnores, 'ignoresystem');
-
-                            $InfoMsgs[] = sprintf($_Lang['Ignore_DeletedXUsers'], $IgnoreSystem_Deleted_Count);
-                        }
-                        else
-                        {
-                            $WarningMsgs[] = $_Lang['Ignore_NothingDeleted'];
-                        }
-                    }
-                    else
-                    {
-                        $WarningMsgs[] = $_Lang['Ignore_NothingSelected'];
+                        $InfoMsgs[] = sprintf(
+                            $_Lang['Ignore_DeletedXUsers'],
+                            count($existingEntriesToDelete)
+                        );
                     }
                 }
                 else if(!empty($_POST['ignore_username']) OR !empty($_GET['ignoreadd']))
                 {
-                    if(!empty($_GET['ignoreadd']) AND empty($_POST['ignore_username']))
-                    {
+                    if (
+                        !empty($_GET['ignoreadd']) &&
+                        empty($_POST['ignore_username'])
+                    ) {
                         $IgnoreUser = intval($_GET['ignoreadd']);
                         $InputType = 'id';
-                    }
-                    else
-                    {
+                    } else {
                         $IgnoreUser = (isset($_POST['ignore_username']) ? trim($_POST['ignore_username']) : null);
-                        $InputType = 'un';
+                        $InputType = 'username';
                     }
-                    if((strtolower($IgnoreUser) != strtolower($_User['username']) AND $InputType == 'un') OR ($IgnoreUser != $_User['id'] AND $InputType == 'id'))
-                    {
-                        if((preg_match(REGEXP_USERNAME_ABSOLUTE, $IgnoreUser) AND $InputType == 'un') OR ($IgnoreUser > 0 AND $InputType == 'id'))
-                        {
-                            $Query_CheckUser = '';
-                            $Query_CheckUser .= "SELECT `id`, `username`, `authlevel` FROM {{table}} ";
-                            $Query_CheckUser .= "WHERE ";
-                            if($InputType == 'un')
-                            {
-                                $Query_CheckUser .= "`username` = '{$IgnoreUser}'";
-                            }
-                            else
-                            {
-                                $Query_CheckUser .= "`id` = {$IgnoreUser}";
-                            }
-                            $Query_CheckUser .= " LIMIT 1; -- settings.php|IgnoreSystem|CheckUser";
-                            $Result_CheckUser = doquery($Query_CheckUser, 'users', true);
-                            if($Result_CheckUser['id'] > 0)
-                            {
-                                if(!CheckAuth('user', AUTHCHECK_HIGHER, $Result_CheckUser))
-                                {
-                                    if(empty($_User['IgnoredUsers'][$Result_CheckUser['id']]))
-                                    {
-                                        $_User['IgnoredUsers'][$Result_CheckUser['id']] = $Result_CheckUser['username'];
-                                        doquery("INSERT INTO {{table}} (`OwnerID`, `IgnoredID`) VALUES ({$_User['id']}, {$Result_CheckUser['id']}); -- settings.php|IgnoreSystem|Insert", 'ignoresystem');
-                                        $InfoMsgs[] = $_Lang['Ignore_UserAdded'];
-                                    }
-                                    else
-                                    {
-                                        $NoticeMsgs[] = $_Lang['Ignore_ThisUserAlreadyIgnored'];
-                                    }
-                                }
-                                else
-                                {
-                                    $WarningMsgs[] = $_Lang['Ignore_CannotIgnoreGameTeam'];
-                                }
-                            }
-                            else
-                            {
-                                $WarningMsgs[] = $_Lang['Ignore_UserNoExists'];
-                            }
-                        }
-                        else
-                        {
-                            $WarningMsgs[] = $_Lang['Ignore_BadSignsOrShort'];
-                        }
-                    }
-                    else
-                    {
-                        $WarningMsgs[] = $_Lang['Ignore_CannotIgnoreYourself'];
+
+                    $tryIgnoreUserResult = Settings\Utils\Helpers\tryIgnoreUser([
+                        'currentUser' => &$_User,
+                        'userToIgnore' => [
+                            'selectorType' => $InputType,
+                            'selectorValue' => $IgnoreUser,
+                        ],
+                        'ignoredUsers' => $ignoredUsers,
+                    ]);
+
+                    if (!$tryIgnoreUserResult['isSuccess']) {
+                        $WarningMsgs[] = Settings\Utils\ErrorMappers\mapTryIgnoreUserErrorToReadableMessage(
+                            $tryIgnoreUserResult['error']
+                        );
+                    } else {
+                        $ignoreUser = $tryIgnoreUserResult['payload']['ignoreUser'];
+
+                        $ignoredUsers[$ignoreUser['id']] = $ignoreUser['username'];
+
+                        Settings\Utils\Queries\createUserIgnoreEntry([
+                            'entryOwnerId' => $_User['id'],
+                            'ignoredUserId' => $ignoreUser['id'],
+                        ]);
+
+                        $InfoMsgs[] = $_Lang['Ignore_UserAdded'];
                     }
                 }
             }
@@ -1182,14 +1057,14 @@ if(!isOnVacation())
         $_Lang['QuickRes_PlanetList'] = str_replace('{sel_planet_'.$_User['settings_mainPlanetID'].'}', 'selected', $_Lang['QuickRes_PlanetList']);
         $_Lang['QuickRes_PlanetList'] = preg_replace('#\{sel\_planet\_[0-9]{1,}\}#si', '', $_Lang['QuickRes_PlanetList']);
 
-        if(!empty($_User['IgnoredUsers']))
+        if(!empty($ignoredUsers))
         {
-            foreach($_User['IgnoredUsers'] as $IgnoredID => $IgnoredName)
+            foreach($ignoredUsers as $IgnoredID => $IgnoredName)
             {
                 $_Lang['ParseIgnoreList'][] = "<input type=\"checkbox\" name=\"del_ignore[]\" value=\"{$IgnoredID}\" id=\"ignore{$IgnoredID}\" /> <label for=\"ignore{$IgnoredID}\">{$IgnoredName}</label>";
             }
             $_Lang['ParseIgnoreList'] = implode('<br/>', $_Lang['ParseIgnoreList']);
-            if(count($_User['IgnoredUsers']) < 15)
+            if(count($ignoredUsers) < 15)
             {
                 $_Lang['IgnoreList_Hide2Del'] = 'style="display: none;"';
             }
@@ -1217,7 +1092,7 @@ if(!isOnVacation())
         {
             if(!empty($_GET['tab']))
             {
-                if(in_array($_GET['tab'], array(1,2,3,4,5,6)))
+                if(in_array($_GET['tab'], [1,2,3,4,5,6]))
                 {
                     $_Lang['SetActiveMarker'] = str_pad($_GET['tab'], 2, '0', STR_PAD_LEFT);
                 }
@@ -1225,74 +1100,37 @@ if(!isOnVacation())
         }
 
         // Logons List
-        $Query_GetLogons = '';
-        $Query_GetLogons .= "SELECT `Log`.*, `IPTable`.`Value` FROM {{table}} AS `Log` ";
-        $Query_GetLogons .= "LEFT JOIN `{{prefix}}used_ip_and_ua` AS `IPTable` ON `Log`.`IP_ID` = `IPTable`.`ID` ";
-        $Query_GetLogons .= "WHERE `Log`.`User_ID` = {$_User['id']} ";
-        $Query_GetLogons .= "ORDER BY `Log`.`LastTime` DESC LIMIT {$LogonLIMIT};";
+        $accountLoginHistory = Settings\Utils\Queries\getAccountLoginHistory([
+            'userId' => $_User['id'],
+            'historyEntriesLimit' => $LogonLIMIT,
+        ]);
 
-        $SQLResult_GetLogons = doquery($Query_GetLogons, 'user_enterlog');
+        if (count($accountLoginHistory) > 0) {
+            $LogonList = Settings\Utils\Helpers\parseLoginHistoryEntries([
+                'historyEntries' => $accountLoginHistory,
+                'historyEntriesLimit' => $LogonLIMIT,
+            ]);
 
-        if($SQLResult_GetLogons->num_rows > 0)
-        {
-            while($LogonData = $SQLResult_GetLogons->fetch_assoc())
-            {
-                $LogonData['Times'] = array_reverse(explode(',', $LogonData['Times']));
-                $LimitCounter = $LogonLIMIT;
-                foreach($LogonData['Times'] as $Temp)
-                {
-                    if($LimitCounter <= 0)
-                    {
-                        break;
-                    }
-                    $Temp = explode('|', $Temp);
-                    $ThisTime = SERVER_MAINOPEN_TSTAMP + $Temp[0];
-                    $LogonList[] = array('Time' => $ThisTime, 'IP' => $LogonData['Value'], 'State' => (isset($Temp[1]) && $Temp[1] == 'F' ? false : true));
-                    $LogonTimes[] = $ThisTime;
-                    $LimitCounter -= 1;
-                }
-            }
-
-            array_multisort($LogonList, SORT_DESC, $LogonTimes);
             $LimitCounter = $LogonLIMIT;
-            foreach($LogonList as $LogonData)
-            {
-                if($LimitCounter <= 0)
-                {
+
+            $_Lang['ParseLogonsList'] = [];
+
+            foreach ($LogonList as $LogonData) {
+                if ($LimitCounter <= 0) {
                     break;
                 }
-                if($LogonData['IP'] == $_User['user_lastip'])
-                {
-                    $LogonData['IPColor'] = 'lime';
-                }
-                if($LogonData['State'] === false)
-                {
-                    if($LogonData['IP'] != $_User['user_lastip'])
-                    {
-                        $LogonData['DateColor'] = 'red';
-                        $LogonData['IPColor'] = 'red';
-                        $LogonData['StateColor'] = 'red';
-                    }
-                    else
-                    {
-                        $LogonData['StateColor'] = 'orange';
-                    }
-                }
 
+                $_Lang['ParseLogonsList'][] = Settings\Components\LoginHistoryEntry\render([
+                    'entryData' => $LogonData,
+                    'userLastIp' => $_User['user_lastip'],
+                    'currentTimestamp' => $Now,
+                ])['componentHTML'];
 
-                $ThisRow = '<tr class="logon">';
-                $ThisRow .= '<th'.(!empty($LogonData['DateColor']) ? ' class="'.$LogonData['DateColor'].'"' : '').'>'.prettyDate('d m Y, H:i:s', $LogonData['Time'], 1).'</th>';
-                $ThisRow .= '<th'.(!empty($LogonData['DateColor']) ? ' class="'.$LogonData['DateColor'].'"' : '').'>'.pretty_time($Now - $LogonData['Time'], true, 'D').' '.$_Lang['Logons_ago'].'</th>';
-                $ThisRow .= '<th'.(!empty($LogonData['IPColor']) ? ' class="'.$LogonData['IPColor'].'"' : '').'>'.$LogonData['IP'].'</th>';
-                $ThisRow .= '<th'.(!empty($LogonData['StateColor']) ? ' class="'.$LogonData['StateColor'].'"' : '').'>'.($LogonData['State'] === true ? $_Lang['Logons_Success'] : $_Lang['Logons_Failed']).'</th>';
-                $ThisRow .= '</tr>';
-                $_Lang['ParseLogonsList'][] = $ThisRow;
                 $LimitCounter -= 1;
             }
+
             $_Lang['ParseLogonsList'] = implode('', $_Lang['ParseLogonsList']);
-        }
-        else
-        {
+        } else {
             $_Lang['ParseLogonsList'] = '<tr><th colspan="4">'.$_Lang['Logons_ListEmpty'].'</th></tr>';
         }
 
@@ -1308,14 +1146,13 @@ if(!isOnVacation())
         }
         foreach($_Vars_FleetMissions['all'] as $MissionID)
         {
-            $_Lang['Insert_FleetColors_Pickers'][] = parsetemplate($TPL_FleetColors_Row, array
-            (
-                'MissionName'        => $_Lang['type_mission'][$MissionID],
-                'MissionID'            => $MissionID,
-                'Value_OwnFly'        => (isset($FleetColors['ownfly'][$MissionID]) ? $FleetColors['ownfly'][$MissionID] : null),
+            $_Lang['Insert_FleetColors_Pickers'][] = parsetemplate($TPL_FleetColors_Row, [
+                'MissionName'       => $_Lang['type_mission'][$MissionID],
+                'MissionID'         => $MissionID,
+                'Value_OwnFly'      => (isset($FleetColors['ownfly'][$MissionID]) ? $FleetColors['ownfly'][$MissionID] : null),
                 'Value_OwnComeback' => (isset($FleetColors['owncb'][$MissionID]) ? $FleetColors['owncb'][$MissionID] : null),
-                'Value_NonOwn'        => (isset($FleetColors['nonown'][$MissionID]) ? $FleetColors['nonown'][$MissionID] : null)
-            ));
+                'Value_NonOwn'      => (isset($FleetColors['nonown'][$MissionID]) ? $FleetColors['nonown'][$MissionID] : null),
+            ]);
         }
         $_Lang['Insert_FleetColors_Pickers'] = implode('', $_Lang['Insert_FleetColors_Pickers']);
 
@@ -1326,40 +1163,36 @@ if(!isOnVacation())
     else if($Mode == 'nickchange')
     {
         // User is trying to change his nickname
-        if(!empty($_POST['newnick']))
-        {
-            // Nickname Change in progress
-            if($_User['darkEnergy'] < 10)
-            {
-                message($_Lang['NewNick_donthave_DE'], $_Lang['NickChange_Title'], 'settings.php?mode=nickchange');
-            }
+        if (!empty($_POST['newnick'])) {
             $NewNick = trim($_POST['newnick']);
-            if($NewNick == $_User['username'])
-            {
-                message($_Lang['NewNick_is_like_old'], $_Lang['NickChange_Title'], 'settings.php?mode=nickchange');
-            }
-            if(strlen($NewNick) < 4)
-            {
-                message($_Lang['NewNick_is_tooshort'], $_Lang['NickChange_Title'], 'settings.php?mode=nickchange');
-            }
-            if(strstr($NewNick, 'http') OR strstr($NewNick, 'www.'))
-            {
-                message($_Lang['NewNick_nolinks'], $_Lang['NickChange_Title'], 'settings.php?mode=nickchange');
-            }
-            if(!preg_match(REGEXP_USERNAME_ABSOLUTE, $NewNick))
-            {
-                message($_Lang['NewNick_badSigns'], $_Lang['NickChange_Title'], 'settings.php?mode=nickchange');
-            }
-            $SelectNewNick = doquery("SELECT `id` FROM {{table}} WHERE `username` = '{$NewNick}' LIMIT 1;", 'users', true);
-            if($SelectNewNick['id'] > 0)
-            {
-                message($_Lang['NewNick_already_taken'], $_Lang['NickChange_Title'], 'settings.php?mode=nickchange');
-            }
 
-            doquery("UPDATE {{table}} SET `darkEnergy` = `darkEnergy` - 10, `username` = '{$NewNick}', `old_username` = '{$_User['username']}', `old_username_expire` = UNIX_TIMESTAMP() + (7*24*60*60) WHERE `id` = {$_User['id']} LIMIT 1;", 'users');
-            doquery("INSERT INTO {{table}} VALUES(NULL, {$_User['id']}, UNIX_TIMESTAMP(), '{$NewNick}', '{$_User['username']}');", 'nick_changelog');
-            setcookie(getSessionCookieKey(), '', $Now - 3600, '/', '');
-            message($_Lang['NewNick_saved'], $_Lang['NickChange_Title'], 'login.php');
+            $usernameChangeValidationResult = Settings\Utils\Validators\validateUsernameChange([
+                'input' => [
+                    'newUsername' => $NewNick,
+                ],
+                'currentUser' => &$_User,
+            ]);
+
+            if (!$usernameChangeValidationResult['isSuccess']) {
+                $errorMessage = Settings\Utils\ErrorMappers\mapValidateUsernameChangeErrorToReadableMessage(
+                    $usernameChangeValidationResult['error']
+                );
+
+                message($errorMessage, $_Lang['NickChange_Title'], 'settings.php?mode=nickchange');
+            } else {
+                Settings\Utils\Queries\updateUserOnUsernameChange([
+                    'newUsername' => $NewNick,
+                    'currentUser' => &$_User,
+                ]);
+                Settings\Utils\Queries\createUsernameChangeEntry([
+                    'newUsername' => $NewNick,
+                    'currentUser' => &$_User,
+                ]);
+
+                Session\Utils\Cookie\clearSessionCookie();
+
+                message($_Lang['NewNick_saved'], $_Lang['NickChange_Title'], 'login.php');
+            }
         }
         else
         {
@@ -1378,6 +1211,19 @@ if(!isOnVacation())
                 $_Lang['DarkEnergy_Color'] = 'red';
             }
 
+            $_Lang['NickChange_Info'] = parsetemplate(
+                $_Lang['NickChange_Info'],
+                [
+                    'data_changeCost' => Settings\Utils\Helpers\getUsernameChangeCost(),
+                ]
+            );
+            $_Lang['AreYouSure'] = parsetemplate(
+                $_Lang['AreYouSure'],
+                [
+                    'data_changeCost' => Settings\Utils\Helpers\getUsernameChangeCost(),
+                ]
+            );
+
             // Informations box
             display(parsetemplate(gettemplate('settings_changenick'), $_Lang), $_Lang['NickChange_Title'], false);
         }
@@ -1395,7 +1241,9 @@ else
             doquery("UPDATE {{table}} SET `last_update` = UNIX_TIMESTAMP() WHERE `id_owner` = {$_User['id']}", 'planets');
             $_Planet['last_update'] = $Now;
 
-            $UserDev_Log[] = array('PlanetID' => '0', 'Date' => $Now, 'Place' => 26, 'Code' => '2', 'ElementID' => '0');
+            $UserDev_Log[] = Settings\Utils\Factories\createVacationFinishDevLogEntry([
+                'currentTimestamp' => $Now,
+            ]);
 
             message($_Lang['Vacation_GoOut'], $_Lang['Vacations_Title'], 'overview.php', 3);
         }

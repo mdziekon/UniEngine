@@ -197,14 +197,14 @@ $_Lang['BuyMoreDE']                 = 'Purchase more Dark Energy!';
 $_Lang['ChangeYourNick']            = 'Username Change';
 $_Lang['GoBack']                    = 'Go back to Account settings';
 $_Lang['NickChange_Info']           = '';
-$_Lang['NickChange_Info']          .= '&bull; Username change cost: <b class="orange">10</b> Dark Energy units<br/>';
+$_Lang['NickChange_Info']          .= '&bull; Username change cost: <b class="orange">{data_changeCost}</b> Dark Energy units<br/>';
 $_Lang['NickChange_Info']          .= '&bull; Old username will still be visible for the next 7 days<br/>';
 $_Lang['NickChange_Info']          .= '&bull; New username cannot violate any <a class="red" href="rules.php" target="_blank">Rules</a><br/>';
 $_Lang['NickChange_Info']          .= '&bull; New username cannot be shorter than 4 characters and can contain only alphanumerical characters, underscores, spaces and dashes.<br/>';
 
 $_Lang['NewNick']                   = 'New username';
 $_Lang['ChangeIt']                  = 'Submit';
-$_Lang['AreYouSure']                = 'Are you sure you want to change your username for 10 Dark Energy units?';
+$_Lang['AreYouSure']                = 'Are you sure you want to change your username for {data_changeCost} Dark Energy units?';
 $_Lang['NewNick_is_like_old']       = 'New username cannot be same as the current one!';
 $_Lang['NewNick_is_tooshort']       = 'New username cannot be shorter than 4 characters!';
 $_Lang['NewNick_nolinks']           = 'New username is invalid!';
@@ -222,7 +222,7 @@ $_Lang['Vacation_mode']             = 'Vacation mode at least until';
 
 $_Lang['Email_Text']              = (
     'Hello <b>{EP_User}</b>!<br/><br/>' .
-    'This email has been sent to you because you\'ve activated the Email address change process on your account in <a href="{EP_GameLink}" target="_blank"><b>'.$_GameConfig['game_name'].'</b></a>!<br/><br/>' .
+    'This email has been sent to you because you\'ve activated the Email address change process on your account in <a href="{EP_GameLink}" target="_blank"><b>{EP_GameName}</b></a>!<br/><br/>' .
     '<b>This process consists of two activation steps</b>, completed using the received Activation Links.<br/>' .
     'The first step is a confirmation of your new Email address. The second step is a confirmation of your will to change from the Old address to the New one.<br/>' .
     '<b>The first step</b> is mandatory (your have to confirm that the New address is a valid mailbox), however <b>the second step</b> can be skipped, but you\'ll have to wait <b>7 days</b> for the process to complete.<br/>' .
@@ -237,13 +237,13 @@ $_Lang['Email_Text']              = (
     'IP address used start the process: <b>{EP_IP}</b><br/><br/>' .
     'If you did not start the process yourself, please immediatelly contact with <a href="{EP_ContactLink}" target="_blank">Support!</a><br/>' .
     '{EP_Text2}<br/><br/>' .
-    'Regards, <a href="{EP_GameLink}" target="_blank"><b>the Team of '.$_GameConfig['game_name'].'</b></a>'
+    'Regards, <a href="{EP_GameLink}" target="_blank"><b>the Team of {EP_GameName}</b></a>'
 );
 
 $_Lang['Email_WarnOld']           = 'If you won\'t click on this Activation link, your account\'s email address will be changed after 7 days since the process start date (as long as you confirm your new address)!';
 $_Lang['Email_WarnNew']           = 'If you won\'t click on this Activation link, your account\'s email address won\'t be changed at all!';
 
-$_Lang['Email_Title']             = $_GameConfig['game_name'].' - Email address change';
+$_Lang['Email_Title']             = '{gameName} - Email address change';
 $_Lang['Email_MailOld']           = 'To confirm that you wish to change your email address, click on the link below';
 $_Lang['Email_MailNew']           = 'To confirm that you own the new email address, click on the link below';
 
