@@ -17,6 +17,8 @@ call_user_func(function () {
     include($includePath . './utils/errorMappers/validateEmailChange.errorMapper.php');
     include($includePath . './utils/errorMappers/validateUsernameChange.errorMapper.php');
 
+    include($includePath . './utils/factories/createDevLogEntry.factory.php');
+
     include($includePath . './utils/helpers/getUsernameChangeCost.helper.php');
     include($includePath . './utils/helpers/getVacationEndTime.helper.php');
     include($includePath . './utils/helpers/parseLoginHistoryEntries.helper.php');

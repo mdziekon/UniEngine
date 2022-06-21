@@ -664,7 +664,9 @@ if(!isOnVacation())
                             $ChangeSetCount += 1;
                             $ForceGoingOnVacationMsg = true;
 
-                            $UserDev_Log[] = array('PlanetID' => '0', 'Date' => $Now, 'Place' => 26, 'Code' => '1', 'ElementID' => '0');
+                            $UserDev_Log[] = Settings\Utils\Factories\createVacationBeginDevLogEntry([
+                                'currentTimestamp' => $Now,
+                            ]);
                         }
                     }
                     if(isset($_POST['delete_activate']) && $_POST['delete_activate'] == 'on')
@@ -1224,7 +1226,9 @@ else
             doquery("UPDATE {{table}} SET `last_update` = UNIX_TIMESTAMP() WHERE `id_owner` = {$_User['id']}", 'planets');
             $_Planet['last_update'] = $Now;
 
-            $UserDev_Log[] = array('PlanetID' => '0', 'Date' => $Now, 'Place' => 26, 'Code' => '2', 'ElementID' => '0');
+            $UserDev_Log[] = Settings\Utils\Factories\createVacationFinishDevLogEntry([
+                'currentTimestamp' => $Now,
+            ]);
 
             message($_Lang['Vacation_GoOut'], $_Lang['Vacations_Title'], 'overview.php', 3);
         }
