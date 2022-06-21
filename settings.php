@@ -52,7 +52,11 @@ $ForceGoingOnVacationMsg = false;
 $ChangeNotDone = 0;
 $ChangeSetCount = 0;
 
-$SkinNames = array('xnova' => 'XNova', 'epicblue' => 'EpicBlue Fresh', 'epicblue_old' => 'EpicBlue Standard');
+$SkinNames = [
+    'xnova' => 'XNova',
+    'epicblue' => 'EpicBlue Fresh',
+    'epicblue_old' => 'EpicBlue Standard',
+];
 
 $SkinDir = scandir('./skins/');
 $SkinCounter = 1;
@@ -482,7 +486,20 @@ if(!isOnVacation())
                 $MsgsPerPage = intval($_POST['msg_perpage']);
                 if($MsgsPerPage != $_User['settings_msgperpage'])
                 {
-                    if(in_array($MsgsPerPage, array(5, 10, 15, 20, 25, 50, 75, 100, 150, 200)))
+                    $allowedMsgsPerPage = [
+                        5,
+                        10,
+                        15,
+                        20,
+                        25,
+                        50,
+                        75,
+                        100,
+                        150,
+                        200,
+                    ];
+
+                    if(in_array($MsgsPerPage, $allowedMsgsPerPage))
                     {
                         $ChangeSet['settings_msgperpage'] = $MsgsPerPage;
                     }
@@ -1076,7 +1093,7 @@ if(!isOnVacation())
         {
             if(!empty($_GET['tab']))
             {
-                if(in_array($_GET['tab'], array(1,2,3,4,5,6)))
+                if(in_array($_GET['tab'], [1,2,3,4,5,6]))
                 {
                     $_Lang['SetActiveMarker'] = str_pad($_GET['tab'], 2, '0', STR_PAD_LEFT);
                 }
@@ -1130,14 +1147,13 @@ if(!isOnVacation())
         }
         foreach($_Vars_FleetMissions['all'] as $MissionID)
         {
-            $_Lang['Insert_FleetColors_Pickers'][] = parsetemplate($TPL_FleetColors_Row, array
-            (
-                'MissionName'        => $_Lang['type_mission'][$MissionID],
-                'MissionID'            => $MissionID,
-                'Value_OwnFly'        => (isset($FleetColors['ownfly'][$MissionID]) ? $FleetColors['ownfly'][$MissionID] : null),
+            $_Lang['Insert_FleetColors_Pickers'][] = parsetemplate($TPL_FleetColors_Row, [
+                'MissionName'       => $_Lang['type_mission'][$MissionID],
+                'MissionID'         => $MissionID,
+                'Value_OwnFly'      => (isset($FleetColors['ownfly'][$MissionID]) ? $FleetColors['ownfly'][$MissionID] : null),
                 'Value_OwnComeback' => (isset($FleetColors['owncb'][$MissionID]) ? $FleetColors['owncb'][$MissionID] : null),
-                'Value_NonOwn'        => (isset($FleetColors['nonown'][$MissionID]) ? $FleetColors['nonown'][$MissionID] : null)
-            ));
+                'Value_NonOwn'      => (isset($FleetColors['nonown'][$MissionID]) ? $FleetColors['nonown'][$MissionID] : null),
+            ]);
         }
         $_Lang['Insert_FleetColors_Pickers'] = implode('', $_Lang['Insert_FleetColors_Pickers']);
 
