@@ -37,6 +37,8 @@ call_user_func(function () {
     include($includePath . './utils/queries/getUserIgnoreEntries.query.php');
     include($includePath . './utils/queries/getUserWithEmailAddress.query.php');
     include($includePath . './utils/queries/updateUserOnUsernameChange.query.php');
+    include($includePath . './utils/queries/updateUserOnVacationFinish.query.php');
+    include($includePath . './utils/queries/updateUserPlanetsOnVacationFinish.query.php');
 
     include($includePath . './utils/validators/validatePasswordChange.validator.php');
     include($includePath . './utils/validators/validateEmailChange.validator.php');

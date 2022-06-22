@@ -1241,8 +1241,9 @@ else
             message($_Lang['Vacation_CantGoOut'], $_Lang['Vacations_Title'], 'settings.php', 3);
         }
 
-        doquery("UPDATE {{table}} SET `is_onvacation` = '0', `vacation_starttime` = '0', `vacation_endtime` = '0', `vacation_leavetime` = IF(`vacation_type` = 2, 0, UNIX_TIMESTAMP()) WHERE `id` = {$_User['id']} LIMIT 1;", 'users');
-        doquery("UPDATE {{table}} SET `last_update` = UNIX_TIMESTAMP() WHERE `id_owner` = {$_User['id']}", 'planets');
+        Settings\Utils\Queries\updateUserOnVacationFinish([ 'userId' => $_User['id'] ]);
+        Settings\Utils\Queries\updateUserPlanetsOnVacationFinish([ 'userId' => $_User['id'] ]);
+
         $_Planet['last_update'] = $Now;
 
         $UserDev_Log[] = Settings\Utils\Factories\createVacationFinishDevLogEntry([
