@@ -1232,25 +1232,24 @@ if(!isOnVacation())
 else
 {
     // User is on Vacation
-    if($Mode == 'exit')
-    {
+    if (
+        isset($_POST['exit_modus']) &&
+        $_POST['exit_modus'] == 'on'
+    ) {
         // User is trying to remove Vacation mode
-        if(isset($_POST['exit_modus']) && $_POST['exit_modus'] == 'on' && canTakeVacationOff($Now))
-        {
-            doquery("UPDATE {{table}} SET `is_onvacation` = '0', `vacation_starttime` = '0', `vacation_endtime` = '0', `vacation_leavetime` = IF(`vacation_type` = 2, 0, UNIX_TIMESTAMP()) WHERE `id` = {$_User['id']} LIMIT 1;", 'users');
-            doquery("UPDATE {{table}} SET `last_update` = UNIX_TIMESTAMP() WHERE `id_owner` = {$_User['id']}", 'planets');
-            $_Planet['last_update'] = $Now;
-
-            $UserDev_Log[] = Settings\Utils\Factories\createVacationFinishDevLogEntry([
-                'currentTimestamp' => $Now,
-            ]);
-
-            message($_Lang['Vacation_GoOut'], $_Lang['Vacations_Title'], 'overview.php', 3);
-        }
-        else
-        {
+        if (!canTakeVacationOff($Now)) {
             message($_Lang['Vacation_CantGoOut'], $_Lang['Vacations_Title'], 'settings.php', 3);
         }
+
+        doquery("UPDATE {{table}} SET `is_onvacation` = '0', `vacation_starttime` = '0', `vacation_endtime` = '0', `vacation_leavetime` = IF(`vacation_type` = 2, 0, UNIX_TIMESTAMP()) WHERE `id` = {$_User['id']} LIMIT 1;", 'users');
+        doquery("UPDATE {{table}} SET `last_update` = UNIX_TIMESTAMP() WHERE `id_owner` = {$_User['id']}", 'planets');
+        $_Planet['last_update'] = $Now;
+
+        $UserDev_Log[] = Settings\Utils\Factories\createVacationFinishDevLogEntry([
+            'currentTimestamp' => $Now,
+        ]);
+
+        message($_Lang['Vacation_GoOut'], $_Lang['Vacations_Title'], 'overview.php', 3);
     }
 
     includeLang('common_vacationmode');
