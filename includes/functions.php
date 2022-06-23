@@ -120,10 +120,8 @@ function getUserMinimalNormalVacationTime(&$user) {
     return ($vacationMinimalDuration + $user['vacation_starttime']);
 }
 
-function canTakeVacationOffAnytime() {
-    global $_User;
-
-    return (getUserMinimalVacationTime($_User) === -1);
+function canTakeVacationOffAnytime(&$user) {
+    return (getUserMinimalVacationTime($user) === -1);
 }
 
 function canTakeVacationOff($time = false) {

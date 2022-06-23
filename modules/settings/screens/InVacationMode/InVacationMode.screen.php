@@ -50,7 +50,7 @@ function render($props) {
         'body' => $localTemplateLoader('body'),
     ];
 
-    if (canTakeVacationOffAnytime()) {
+    if (canTakeVacationOffAnytime($user)) {
         $_Lang['Parse_Vacation_EndTime'] = $_Lang['VacationMode_EndTime_Anytime'];
     } else {
         $MinimalVacationTime = getUserMinimalVacationTime($user);

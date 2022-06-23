@@ -248,7 +248,7 @@ function prepareVacationModeMessageHTML (&$user, $params) {
 
     $timestamp = $params['timestamp'];
 
-    if (canTakeVacationOffAnytime()) {
+    if (canTakeVacationOffAnytime($user)) {
         $tplData['Parse_Vacation_EndTime'] = $tplData['VacationMode_EndTime_Anytime'];
         $tplData['Parse_Block_GotoSettings_isHiddenStyle'] = '';
     } else {
