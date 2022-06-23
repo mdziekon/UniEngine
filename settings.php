@@ -109,6 +109,14 @@ if (isOnVacation()) {
 
     die();
 }
+if ($Mode === 'nickchange') {
+    Settings\Screens\UsernameChange\render([
+        'input' => &$_POST,
+        'user' => &$_User,
+    ]);
+
+    die();
+}
 
 if(empty($Mode) OR $Mode == 'general')
 {
@@ -1167,13 +1175,6 @@ if(empty($Mode) OR $Mode == 'general')
     $BodyTPL = gettemplate('settings_body');
     $Page = parsetemplate($BodyTPL, $_Lang);
     display($Page, $_Lang['Page_Title'], false);
-}
-else if($Mode == 'nickchange')
-{
-    Settings\Screens\UsernameChange\render([
-        'input' => &$_POST,
-        'user' => &$_User,
-    ]);
 }
 
 ?>
