@@ -1,5 +1,5 @@
 <br/>
-<form action="?mode=exit" method="post">
+<form action="" method="post">
     <table width="500">
         <tbody>
             <tr>

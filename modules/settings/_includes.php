@@ -8,6 +8,9 @@ call_user_func(function () {
 
     include($includePath . './components/LoginHistoryEntry/LoginHistoryEntry.component.php');
 
+    include($includePath . './screens/InVacationMode/InVacationMode.screen.php');
+    include($includePath . './screens/InVacationMode/InVacationMode.utils.php');
+
     include($includePath . './utils/content/prepareChangeProcessEmails.content.php');
 
     include($includePath . './utils/errorMappers/tryDeleteUserIgnoreEntries.errorMapper.php');
@@ -37,6 +40,8 @@ call_user_func(function () {
     include($includePath . './utils/queries/getUserIgnoreEntries.query.php');
     include($includePath . './utils/queries/getUserWithEmailAddress.query.php');
     include($includePath . './utils/queries/updateUserOnUsernameChange.query.php');
+    include($includePath . './utils/queries/updateUserOnVacationFinish.query.php');
+    include($includePath . './utils/queries/updateUserPlanetsOnVacationFinish.query.php');
 
     include($includePath . './utils/validators/validatePasswordChange.validator.php');
     include($includePath . './utils/validators/validateEmailChange.validator.php');
