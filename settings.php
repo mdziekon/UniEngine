@@ -1228,51 +1228,12 @@ if(!isOnVacation())
             display(parsetemplate(gettemplate('settings_changenick'), $_Lang), $_Lang['NickChange_Title'], false);
         }
     }
-}
-else
-{
-    // User is on Vacation
-    if (
-        isset($_POST['exit_modus']) &&
-        $_POST['exit_modus'] == 'on'
-    ) {
-        // User is trying to remove Vacation mode
-        if (!canTakeVacationOff($Now)) {
-            message($_Lang['Vacation_CantGoOut'], $_Lang['Vacations_Title'], 'settings.php', 3);
-        }
-
-        Settings\Utils\Queries\updateUserOnVacationFinish([ 'userId' => $_User['id'] ]);
-        Settings\Utils\Queries\updateUserPlanetsOnVacationFinish([ 'userId' => $_User['id'] ]);
-
-        $_Planet['last_update'] = $Now;
-
-        $UserDev_Log[] = Settings\Utils\Factories\createVacationFinishDevLogEntry([
-            'currentTimestamp' => $Now,
-        ]);
-
-        message($_Lang['Vacation_GoOut'], $_Lang['Vacations_Title'], 'overview.php', 3);
-    }
-
-    includeLang('common_vacationmode');
-
-    if (canTakeVacationOffAnytime()) {
-        $_Lang['Parse_Vacation_EndTime'] = $_Lang['VacationMode_EndTime_Anytime'];
-    } else {
-        $MinimalVacationTime = getUserMinimalVacationTime($_User);
-        $MinimalVacationTimeColor = (
-            $MinimalVacationTime <= $Now ?
-            'lime' :
-            'orange'
-        );
-
-        $_Lang['Parse_Vacation_EndTime'] = sprintf(
-            $_Lang['VacationMode_EndTime_DefinedAs'],
-            $MinimalVacationTimeColor,
-            prettyDate('d m Y, H:i:s', $MinimalVacationTime, 1)
-        );
-    }
-
-    display(parsetemplate(gettemplate('settings_vacations'), $_Lang), $_Lang['VacationMode_Title'], false);
+} else {
+    Settings\Screens\InVacationMode\render([
+        'input' => &$_POST,
+        'user' => &$_User,
+        'currentTimestamp' => $Now,
+    ]);
 }
 
 ?>
