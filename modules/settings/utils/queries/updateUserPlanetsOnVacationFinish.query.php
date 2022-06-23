@@ -15,7 +15,6 @@ function updateUserPlanetsOnVacationFinish($params) {
         "`last_update` = UNIX_TIMESTAMP() " .
         "WHERE " .
         "`id_owner` = {$userId} " .
-        "LIMIT 1 " .
         "; -- UniEngine\Engine\Modules\Settings\Utils\Queries\updateUserPlanetsOnVacationFinish"
     );
 
