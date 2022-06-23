@@ -3,7 +3,7 @@
 namespace UniEngine\Engine\Modules\Settings\Utils\Helpers;
 
 function getUsernameChangeCost() {
-    return 50;
+    return 5;
 }
 
 ?>

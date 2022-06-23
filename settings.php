@@ -1170,71 +1170,10 @@ if(empty($Mode) OR $Mode == 'general')
 }
 else if($Mode == 'nickchange')
 {
-    // User is trying to change his nickname
-    if (!empty($_POST['newnick'])) {
-        $NewNick = trim($_POST['newnick']);
-
-        $usernameChangeValidationResult = Settings\Utils\Validators\validateUsernameChange([
-            'input' => [
-                'newUsername' => $NewNick,
-            ],
-            'currentUser' => &$_User,
-        ]);
-
-        if (!$usernameChangeValidationResult['isSuccess']) {
-            $errorMessage = Settings\Utils\ErrorMappers\mapValidateUsernameChangeErrorToReadableMessage(
-                $usernameChangeValidationResult['error']
-            );
-
-            message($errorMessage, $_Lang['NickChange_Title'], 'settings.php?mode=nickchange');
-        } else {
-            Settings\Utils\Queries\updateUserOnUsernameChange([
-                'newUsername' => $NewNick,
-                'currentUser' => &$_User,
-            ]);
-            Settings\Utils\Queries\createUsernameChangeEntry([
-                'newUsername' => $NewNick,
-                'currentUser' => &$_User,
-            ]);
-
-            Session\Utils\Cookie\clearSessionCookie();
-
-            message($_Lang['NewNick_saved'], $_Lang['NickChange_Title'], 'login.php');
-        }
-    }
-    else
-    {
-        $_Lang['skinpath'] = $_SkinPath;
-        $_Lang['DarkEnergy_Counter'] = $_User['darkEnergy'];
-        if($_User['darkEnergy'] >= 15)
-        {
-            $_Lang['DarkEnergy_Color'] = 'lime';
-        }
-        else if($_User['darkEnergy'] > 0)
-        {
-            $_Lang['DarkEnergy_Color'] = 'orange';
-        }
-        else
-        {
-            $_Lang['DarkEnergy_Color'] = 'red';
-        }
-
-        $_Lang['NickChange_Info'] = parsetemplate(
-            $_Lang['NickChange_Info'],
-            [
-                'data_changeCost' => Settings\Utils\Helpers\getUsernameChangeCost(),
-            ]
-        );
-        $_Lang['AreYouSure'] = parsetemplate(
-            $_Lang['AreYouSure'],
-            [
-                'data_changeCost' => Settings\Utils\Helpers\getUsernameChangeCost(),
-            ]
-        );
-
-        // Informations box
-        display(parsetemplate(gettemplate('settings_changenick'), $_Lang), $_Lang['NickChange_Title'], false);
-    }
+    Settings\Screens\UsernameChange\render([
+        'input' => &$_POST,
+        'user' => &$_User,
+    ]);
 }
 
 ?>
