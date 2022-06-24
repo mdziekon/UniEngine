@@ -34,7 +34,7 @@ $_User['skinpath'] = $_SkinPath;
 $_Lang['skinpath'] = $_User['skinpath'];
 $_Lang['PHP_Insert_VacationMinDuration'] = $vacationMinSeconds;
 $_Lang['PHP_Insert_VacationComeback'] = $Now + $vacationMinSeconds;
-$_Lang['PHP_Insert_VacationComeback'] = date('d.m.Y', $_Lang['PHP_Insert_VacationComeback'])." {$_Lang['atHour']} ".date('h:i:s', $_Lang['PHP_Insert_VacationComeback']);
+$_Lang['PHP_Insert_VacationComeback'] = date('d.m.Y', $_Lang['PHP_Insert_VacationComeback'])." {$_Lang['atHour']} ".date('H:i:s', $_Lang['PHP_Insert_VacationComeback']);
 $_Lang['PHP_Insert_LanguageOptions'] = [];
 
 foreach ($_Lang['LanguagesAvailable'] as $langKey => $langData) {
