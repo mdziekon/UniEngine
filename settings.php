@@ -22,6 +22,8 @@ $Now = time();
 $LogonLIMIT    = 20;
 $MaxEspionageProbesCount = 9999;
 
+$vacationMinSeconds = getUserMinimalNormalVacationDuration($_User, $Now);
+
 $_Lang['ServerSkins'] = '';
 $_Lang['QuickRes_PlanetList'] = '';
 $_Lang['CreateResSortList'] = '';
@@ -30,8 +32,8 @@ $_Lang['MD5OldPass'] = $_User['password'];
 $_Lang['ShowOldEmail'] = $_User['email'];
 $_User['skinpath'] = $_SkinPath;
 $_Lang['skinpath'] = $_User['skinpath'];
-$_Lang['VacationDays'] = 3;
-$_Lang['PHP_Insert_VacationComeback'] = $Now + ($_Lang['VacationDays'] * TIME_DAY);
+$_Lang['PHP_Insert_VacationMinDuration'] = $vacationMinSeconds;
+$_Lang['PHP_Insert_VacationComeback'] = $Now + $vacationMinSeconds;
 $_Lang['PHP_Insert_VacationComeback'] = date('d.m.Y', $_Lang['PHP_Insert_VacationComeback'])." {$_Lang['atHour']} ".date('h:i:s', $_Lang['PHP_Insert_VacationComeback']);
 $_Lang['PHP_Insert_LanguageOptions'] = [];
 

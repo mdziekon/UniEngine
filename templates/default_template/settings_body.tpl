@@ -1,7 +1,6 @@
 <script>
 var OldPass = '{MD5OldPass}';
-var VacationTime = {VacationDays} * 86400;
-var VacationMiliseconds = VacationTime * 1000;
+var VacationMiliseconds = {PHP_Insert_VacationMinDuration} * 1000;
 var OldResSort = '{OldResSort_ArrayString}';
 var OverrideTab = '{SetActiveMarker}';
 var TemplateData = {'SaveOnlyThis': '{SaveOnlyThis}', 'SaveAll': '{SaveAll}', 'use_skin_check': '{use_skin_check}', 'AYS_WantNoSkin': '{AYS_WantNoSkin}', 'skin_path': '{skin_path}', 'SetSkin_BadNetSkin': '{SetSkin_BadNetSkin}', 'SetSkin_BadLocSkin': '{SetSkin_BadLocSkin}', 'SetSkin_AjaxError': '{SetSkin_AjaxError}', 'IgnoreUserNow': '{IgnoreUserNow}', 'DeleteFromIgnoreList': '{DeleteFromIgnoreList}', 'atHour': '{atHour}'};
