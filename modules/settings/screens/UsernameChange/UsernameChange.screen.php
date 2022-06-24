@@ -41,10 +41,11 @@ function render($props) {
     ];
 
     $userDarkEnergy = $user['darkEnergy'];
+    $usernameChangeCost = Settings\Utils\Helpers\getUsernameChangeCost();
 
     $_Lang['skinpath'] = $_SkinPath;
     $_Lang['DarkEnergy_Counter'] = $userDarkEnergy;
-    if ($userDarkEnergy >= 15) {
+    if ($userDarkEnergy >= $usernameChangeCost) {
         $_Lang['DarkEnergy_Color'] = 'lime';
     } else if ($userDarkEnergy > 0) {
         $_Lang['DarkEnergy_Color'] = 'orange';
