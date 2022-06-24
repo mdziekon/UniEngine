@@ -56,13 +56,13 @@ function render($props) {
     $_Lang['NickChange_Info'] = parsetemplate(
         $_Lang['NickChange_Info'],
         [
-            'data_changeCost' => Settings\Utils\Helpers\getUsernameChangeCost(),
+            'data_changeCost' => $usernameChangeCost,
         ]
     );
     $_Lang['AreYouSure'] = parsetemplate(
         $_Lang['AreYouSure'],
         [
-            'data_changeCost' => Settings\Utils\Helpers\getUsernameChangeCost(),
+            'data_changeCost' => $usernameChangeCost,
         ]
     );
 
