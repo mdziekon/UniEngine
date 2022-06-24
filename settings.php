@@ -22,6 +22,8 @@ $Now = time();
 $LogonLIMIT    = 20;
 $MaxEspionageProbesCount = 9999;
 
+$vacationMinSeconds = getUserMinimalNormalVacationDuration($_User, $Now);
+
 $_Lang['ServerSkins'] = '';
 $_Lang['QuickRes_PlanetList'] = '';
 $_Lang['CreateResSortList'] = '';
@@ -30,9 +32,9 @@ $_Lang['MD5OldPass'] = $_User['password'];
 $_Lang['ShowOldEmail'] = $_User['email'];
 $_User['skinpath'] = $_SkinPath;
 $_Lang['skinpath'] = $_User['skinpath'];
-$_Lang['VacationDays'] = 3;
-$_Lang['PHP_Insert_VacationComeback'] = $Now + ($_Lang['VacationDays'] * TIME_DAY);
-$_Lang['PHP_Insert_VacationComeback'] = date('d.m.Y', $_Lang['PHP_Insert_VacationComeback'])." {$_Lang['atHour']} ".date('h:i:s', $_Lang['PHP_Insert_VacationComeback']);
+$_Lang['PHP_Insert_VacationMinDuration'] = $vacationMinSeconds;
+$_Lang['PHP_Insert_VacationComeback'] = $Now + $vacationMinSeconds;
+$_Lang['PHP_Insert_VacationComeback'] = date('d.m.Y', $_Lang['PHP_Insert_VacationComeback'])." {$_Lang['atHour']} ".date('H:i:s', $_Lang['PHP_Insert_VacationComeback']);
 $_Lang['PHP_Insert_LanguageOptions'] = [];
 
 foreach ($_Lang['LanguagesAvailable'] as $langKey => $langData) {
@@ -105,6 +107,14 @@ if (isOnVacation()) {
         'input' => &$_POST,
         'user' => &$_User,
         'currentTimestamp' => $Now,
+    ]);
+
+    die();
+}
+if ($Mode === 'nickchange') {
+    Settings\Screens\UsernameChange\render([
+        'input' => &$_POST,
+        'user' => &$_User,
     ]);
 
     die();
@@ -1167,74 +1177,6 @@ if(empty($Mode) OR $Mode == 'general')
     $BodyTPL = gettemplate('settings_body');
     $Page = parsetemplate($BodyTPL, $_Lang);
     display($Page, $_Lang['Page_Title'], false);
-}
-else if($Mode == 'nickchange')
-{
-    // User is trying to change his nickname
-    if (!empty($_POST['newnick'])) {
-        $NewNick = trim($_POST['newnick']);
-
-        $usernameChangeValidationResult = Settings\Utils\Validators\validateUsernameChange([
-            'input' => [
-                'newUsername' => $NewNick,
-            ],
-            'currentUser' => &$_User,
-        ]);
-
-        if (!$usernameChangeValidationResult['isSuccess']) {
-            $errorMessage = Settings\Utils\ErrorMappers\mapValidateUsernameChangeErrorToReadableMessage(
-                $usernameChangeValidationResult['error']
-            );
-
-            message($errorMessage, $_Lang['NickChange_Title'], 'settings.php?mode=nickchange');
-        } else {
-            Settings\Utils\Queries\updateUserOnUsernameChange([
-                'newUsername' => $NewNick,
-                'currentUser' => &$_User,
-            ]);
-            Settings\Utils\Queries\createUsernameChangeEntry([
-                'newUsername' => $NewNick,
-                'currentUser' => &$_User,
-            ]);
-
-            Session\Utils\Cookie\clearSessionCookie();
-
-            message($_Lang['NewNick_saved'], $_Lang['NickChange_Title'], 'login.php');
-        }
-    }
-    else
-    {
-        $_Lang['skinpath'] = $_SkinPath;
-        $_Lang['DarkEnergy_Counter'] = $_User['darkEnergy'];
-        if($_User['darkEnergy'] >= 15)
-        {
-            $_Lang['DarkEnergy_Color'] = 'lime';
-        }
-        else if($_User['darkEnergy'] > 0)
-        {
-            $_Lang['DarkEnergy_Color'] = 'orange';
-        }
-        else
-        {
-            $_Lang['DarkEnergy_Color'] = 'red';
-        }
-
-        $_Lang['NickChange_Info'] = parsetemplate(
-            $_Lang['NickChange_Info'],
-            [
-                'data_changeCost' => Settings\Utils\Helpers\getUsernameChangeCost(),
-            ]
-        );
-        $_Lang['AreYouSure'] = parsetemplate(
-            $_Lang['AreYouSure'],
-            [
-                'data_changeCost' => Settings\Utils\Helpers\getUsernameChangeCost(),
-            ]
-        );
-
-        // Informations box
-        display(parsetemplate(gettemplate('settings_changenick'), $_Lang), $_Lang['NickChange_Title'], false);
-    }
 }
 
 ?>

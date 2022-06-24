@@ -108,13 +108,20 @@ function getUserMinimalVacationTime(&$user) {
     return getUserMinimalNormalVacationTime($user);
 }
 
-function getUserMinimalNormalVacationTime(&$user) {
-    $hadProAccountWhenVacationStarted = ($user['pro_time'] > $user['vacation_starttime']);
+function getUserMinimalNormalVacationDuration(&$user, $atTimestamp) {
+    $hasProAccount = ($user['pro_time'] > $atTimestamp);
 
-    $vacationMinimalDuration = (
-        $hadProAccountWhenVacationStarted ?
-        MINURLOP_PRO :
-        MINURLOP_FREE
+    return (
+        $hasProAccount ?
+            MINURLOP_PRO :
+            MINURLOP_FREE
+    );
+}
+
+function getUserMinimalNormalVacationTime(&$user) {
+    $vacationMinimalDuration = getUserMinimalNormalVacationDuration(
+        $user,
+        $user['vacation_starttime']
     );
 
     return ($vacationMinimalDuration + $user['vacation_starttime']);

@@ -10,6 +10,8 @@ call_user_func(function () {
 
     include($includePath . './screens/InVacationMode/InVacationMode.screen.php');
     include($includePath . './screens/InVacationMode/InVacationMode.utils.php');
+    include($includePath . './screens/UsernameChange/UsernameChange.screen.php');
+    include($includePath . './screens/UsernameChange/UsernameChange.utils.php');
 
     include($includePath . './utils/content/prepareChangeProcessEmails.content.php');
 
