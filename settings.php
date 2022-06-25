@@ -25,7 +25,6 @@ $MaxEspionageProbesCount = 9999;
 $vacationMinSeconds = getUserMinimalNormalVacationDuration($_User, $Now);
 
 $_Lang['ServerSkins'] = '';
-$_Lang['QuickRes_PlanetList'] = '';
 $_Lang['CreateResSortList'] = '';
 
 $_Lang['MD5OldPass'] = $_User['password'];
@@ -86,16 +85,6 @@ function isInputKeyChecked($input, $key) {
         isset($input[$key]) &&
         $input[$key] == 'on'
     );
-}
-
-$SQLResult_SelectAllPlanets = doquery(
-    "SELECT `id`, `name`, `galaxy`, `system`, `planet` FROM {{table}} WHERE `id_owner` = {$_User['id']} AND `planet_type` = 1;",
-    'planets'
-);
-
-while($Planets = $SQLResult_SelectAllPlanets->fetch_assoc())
-{
-    $_Lang['QuickRes_PlanetList'] .= "<option value=\"{$Planets['id']}\" {sel_planet_{$Planets['id']}}>{$Planets['name']} [{$Planets['galaxy']}:{$Planets['system']}:{$Planets['planet']}]</option>";
 }
 
 $Mode = (isset($_GET['mode']) ? $_GET['mode'] : null);
@@ -1072,8 +1061,11 @@ if(empty($Mode) OR $Mode == 'general')
             }
         }
     }
-    $_Lang['QuickRes_PlanetList'] = str_replace('{sel_planet_'.$_User['settings_mainPlanetID'].'}', 'selected', $_Lang['QuickRes_PlanetList']);
-    $_Lang['QuickRes_PlanetList'] = preg_replace('#\{sel\_planet\_[0-9]{1,}\}#si', '', $_Lang['QuickRes_PlanetList']);
+
+    $_Lang['QuickRes_PlanetList'] = Settings\Components\QuickTransportPlanetsList\render([
+        'userId' => $_User['id'],
+        'currentMainPlanetId' => $_User['settings_mainPlanetID'],
+    ])['componentHTML'];
 
     if(!empty($ignoredUsers))
     {
