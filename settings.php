@@ -35,10 +35,6 @@ $_Lang['PHP_Insert_VacationMinDuration'] = $vacationMinSeconds;
 $_Lang['PHP_Insert_VacationComeback'] = $Now + $vacationMinSeconds;
 $_Lang['PHP_Insert_VacationComeback'] = date('d.m.Y', $_Lang['PHP_Insert_VacationComeback'])." {$_Lang['atHour']} ".date('H:i:s', $_Lang['PHP_Insert_VacationComeback']);
 
-$_Lang['PHP_Insert_LanguageOptions'] = Settings\Components\LanguageSelectorList\render([
-    'currentUserLanguage' => getCurrentLang(),
-])['componentHTML'];
-
 $ForceGoingOnVacationMsg = false;
 
 $ChangeNotDone = 0;
@@ -1053,6 +1049,9 @@ if(empty($Mode) OR $Mode == 'general')
         }
     }
 
+    $_Lang['PHP_Insert_LanguageOptions'] = Settings\Components\LanguageSelectorList\render([
+        'currentUserLanguage' => getCurrentLang(),
+    ])['componentHTML'];
     $_Lang['QuickRes_PlanetList'] = Settings\Components\QuickTransportPlanetsList\render([
         'userId' => $_User['id'],
         'currentMainPlanetId' => $_User['settings_mainPlanetID'],
