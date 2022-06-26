@@ -34,19 +34,10 @@ $_Lang['skinpath'] = $_User['skinpath'];
 $_Lang['PHP_Insert_VacationMinDuration'] = $vacationMinSeconds;
 $_Lang['PHP_Insert_VacationComeback'] = $Now + $vacationMinSeconds;
 $_Lang['PHP_Insert_VacationComeback'] = date('d.m.Y', $_Lang['PHP_Insert_VacationComeback'])." {$_Lang['atHour']} ".date('H:i:s', $_Lang['PHP_Insert_VacationComeback']);
-$_Lang['PHP_Insert_LanguageOptions'] = [];
 
-foreach ($_Lang['LanguagesAvailable'] as $langKey => $langData) {
-    $isSelectedHTMLAttr = ($langKey == getCurrentLang() ? "selected" : "");
-
-    $_Lang['PHP_Insert_LanguageOptions'][] = (
-        "<option value='{$langKey}' {$isSelectedHTMLAttr}>" .
-            "{$langData["flag_emoji"]} {$langData["name"]}" .
-        "</option>"
-    );
-}
-
-$_Lang['PHP_Insert_LanguageOptions'] = implode('', $_Lang['PHP_Insert_LanguageOptions']);
+$_Lang['PHP_Insert_LanguageOptions'] = Settings\Components\LanguageSelectorList\render([
+    'currentUserLanguage' => getCurrentLang(),
+])['componentHTML'];
 
 $ForceGoingOnVacationMsg = false;
 

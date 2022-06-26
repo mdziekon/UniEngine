@@ -6,6 +6,7 @@ call_user_func(function () {
 
     $includePath = $_EnginePath . 'modules/settings/';
 
+    include($includePath . './components/LanguageSelectorList/LanguageSelectorList.component.php');
     include($includePath . './components/LoginHistoryEntry/LoginHistoryEntry.component.php');
     include($includePath . './components/QuickTransportPlanetsList/QuickTransportPlanetsList.component.php');
 
