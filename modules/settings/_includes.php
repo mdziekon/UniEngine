@@ -26,6 +26,7 @@ call_user_func(function () {
 
     include($includePath . './utils/factories/createDevLogEntry.factory.php');
 
+    include($includePath . './utils/helpers/getAvailableSkins.helper.php');
     include($includePath . './utils/helpers/getUsernameChangeCost.helper.php');
     include($includePath . './utils/helpers/getVacationEndTime.helper.php');
     include($includePath . './utils/helpers/parseLoginHistoryEntries.helper.php');

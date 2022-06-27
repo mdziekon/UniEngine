@@ -199,7 +199,7 @@ var TemplateData = {'SaveOnlyThis': '{SaveOnlyThis}', 'SaveAll': '{SaveAll}', 'u
             <tr>
                 <th colspan="2"><b class="help highlight_skin_select highlight_box" title="{SkinSelectInfo}"><b class="dash">{SkinSelect}</b></b></th>
                 <th colspan="2">
-                    <select id="skinSelector" class="center pad2 w90p"><option value="">-</option>{ServerSkins}</select>
+                    <select id="skinSelector" name="skinSelector" class="center pad2 w90p"><option value="">-</option>{ServerSkins}</select>
                 </th>
             </tr>
             <tr>

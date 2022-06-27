@@ -40,33 +40,6 @@ $ForceGoingOnVacationMsg = false;
 $ChangeNotDone = 0;
 $ChangeSetCount = 0;
 
-$SkinNames = [
-    'xnova' => 'XNova',
-    'epicblue' => 'EpicBlue Fresh',
-    'epicblue_old' => 'EpicBlue Standard',
-];
-
-$SkinDir = scandir('./skins/');
-$SkinDir = !empty($SkinDir) ? $SkinDir : [];
-$SkinCounter = 1;
-
-foreach ($SkinDir as $Element) {
-    if (
-        strstr($Element, '.') !== false ||
-        !is_dir('./skins/'.$Element)
-    ) {
-        continue;
-    }
-
-    if (empty($SkinNames[$Element])) {
-        $SkinNames[$Element] = $Element;
-    }
-
-    $_Lang['ServerSkins'] .= '<option value="skins/'.$Element.'/" {select_no'.$SkinCounter.'}>'.$SkinNames[$Element].'</option>';
-    $AvailableSkins[$SkinCounter] = "skins/{$Element}";
-    $SkinCounter += 1;
-}
-
 function isInputKeyChecked($input, $key) {
     return (
         isset($input[$key]) &&
@@ -1034,20 +1007,16 @@ if(empty($Mode) OR $Mode == 'general')
         $_Lang['DeleteClickToRemoveShow'] = 'style="display: none;"';
         $_Lang['DeleteMsg'] = '';
     }
-    if(strstr($_User['skinpath'], 'http://') === FALSE)
-    {
-        foreach($AvailableSkins as $Key => $Skin)
-        {
-            if(strstr($_User['skinpath'], $Skin))
-            {
-                $_Lang['ServerSkins'] = str_replace('{select_no'.$Key.'}', 'selected', $_Lang['ServerSkins']);
-            }
-            else
-            {
-                $_Lang['ServerSkins'] = str_replace('{select_no'.$Key.'}', '', $_Lang['ServerSkins']);
-            }
-        }
-    }
+
+    $availableSkins = Settings\Utils\Helpers\getAvailableSkins();
+
+    $_Lang['ServerSkins'] = array_map_withkeys($availableSkins, function ($skinDetails) use (&$_User) {
+        $isCurrentSkin = $skinDetails['path'] === $_User['skinpath'];
+        $isCurrentSkinAttr = $isCurrentSkin ? "selected=\"selected\"" : "";
+
+        return "<option value=\"{$skinDetails['path']}\" {$isCurrentSkinAttr}>{$skinDetails['name']}</option>";
+    });
+    $_Lang['ServerSkins'] = implode('', $_Lang['ServerSkins']);
 
     $_Lang['PHP_Insert_LanguageOptions'] = Settings\Components\LanguageSelectorList\render([
         'currentUserLanguage' => getCurrentLang(),
