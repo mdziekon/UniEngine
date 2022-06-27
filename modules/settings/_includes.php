@@ -9,6 +9,7 @@ call_user_func(function () {
     include($includePath . './components/LanguageSelectorList/LanguageSelectorList.component.php');
     include($includePath . './components/LoginHistoryEntry/LoginHistoryEntry.component.php');
     include($includePath . './components/QuickTransportPlanetsList/QuickTransportPlanetsList.component.php');
+    include($includePath . './components/SkinSelectorList/SkinSelectorList.component.php');
 
     include($includePath . './screens/InVacationMode/InVacationMode.screen.php');
     include($includePath . './screens/InVacationMode/InVacationMode.utils.php');

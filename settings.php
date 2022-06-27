@@ -1008,16 +1008,9 @@ if(empty($Mode) OR $Mode == 'general')
         $_Lang['DeleteMsg'] = '';
     }
 
-    $availableSkins = Settings\Utils\Helpers\getAvailableSkins();
-
-    $_Lang['ServerSkins'] = array_map_withkeys($availableSkins, function ($skinDetails) use (&$_User) {
-        $isCurrentSkin = $skinDetails['path'] === $_User['skinpath'];
-        $isCurrentSkinAttr = $isCurrentSkin ? "selected=\"selected\"" : "";
-
-        return "<option value=\"{$skinDetails['path']}\" {$isCurrentSkinAttr}>{$skinDetails['name']}</option>";
-    });
-    $_Lang['ServerSkins'] = implode('', $_Lang['ServerSkins']);
-
+    $_Lang['ServerSkins'] = Settings\Components\SkinSelectorList\render([
+        'currentUserSkinPath' => $_User['skinpath'],
+    ])['componentHTML'];
     $_Lang['PHP_Insert_LanguageOptions'] = Settings\Components\LanguageSelectorList\render([
         'currentUserLanguage' => getCurrentLang(),
     ])['componentHTML'];
