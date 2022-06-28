@@ -1018,25 +1018,11 @@ if(empty($Mode) OR $Mode == 'general')
         'userId' => $_User['id'],
         'currentMainPlanetId' => $_User['settings_mainPlanetID'],
     ])['componentHTML'];
-
-    if(!empty($ignoredUsers))
-    {
-        foreach($ignoredUsers as $IgnoredID => $IgnoredName)
-        {
-            $_Lang['ParseIgnoreList'][] = "<input type=\"checkbox\" name=\"del_ignore[]\" value=\"{$IgnoredID}\" id=\"ignore{$IgnoredID}\" /> <label for=\"ignore{$IgnoredID}\">{$IgnoredName}</label>";
-        }
-        $_Lang['ParseIgnoreList'] = implode('<br/>', $_Lang['ParseIgnoreList']);
-        if(count($ignoredUsers) < 15)
-        {
-            $_Lang['IgnoreList_Hide2Del'] = 'style="display: none;"';
-        }
-    }
-    else
-    {
-        $_Lang['ParseIgnoreList'] = "<center class=\"red\">{$_Lang['IgnoreList_NoIgnored']}</center>";
-        $_Lang['IgnoreList_Hide1Del'] = 'style="display: none;"';
-        $_Lang['IgnoreList_Hide2Del'] = 'style="display: none;"';
-    }
+    $_Lang['ParseIgnoreList'] = Settings\Components\IgnoredUsersList\render([
+        'ignoredUsers' => $ignoredUsers,
+    ])['componentHTML'];
+    $_Lang['IgnoreList_Hide1Del'] = count($ignoredUsers) === 0 ? 'style="display: none;"' : '';
+    $_Lang['IgnoreList_Hide2Del'] = count($ignoredUsers) < 15 ? 'style="display: none;"' : '';
 
     if($CheckMailChange['ID'] > 0)
     {
