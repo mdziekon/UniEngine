@@ -1052,35 +1052,17 @@ if(empty($Mode) OR $Mode == 'general')
         'userId' => $_User['id'],
         'historyEntriesLimit' => $LogonLIMIT,
     ]);
+    $loginHistoryEntries = Settings\Utils\Helpers\parseLoginHistoryEntries([
+        'historyEntries' => $accountLoginHistory,
+        'historyEntriesLimit' => $LogonLIMIT,
+    ]);
 
-    if (count($accountLoginHistory) > 0) {
-        $LogonList = Settings\Utils\Helpers\parseLoginHistoryEntries([
-            'historyEntries' => $accountLoginHistory,
-            'historyEntriesLimit' => $LogonLIMIT,
-        ]);
-
-        $LimitCounter = $LogonLIMIT;
-
-        $_Lang['ParseLogonsList'] = [];
-
-        foreach ($LogonList as $LogonData) {
-            if ($LimitCounter <= 0) {
-                break;
-            }
-
-            $_Lang['ParseLogonsList'][] = Settings\Components\LoginHistoryEntry\render([
-                'entryData' => $LogonData,
-                'userLastIp' => $_User['user_lastip'],
-                'currentTimestamp' => $Now,
-            ])['componentHTML'];
-
-            $LimitCounter -= 1;
-        }
-
-        $_Lang['ParseLogonsList'] = implode('', $_Lang['ParseLogonsList']);
-    } else {
-        $_Lang['ParseLogonsList'] = '<tr><th colspan="4">'.$_Lang['Logons_ListEmpty'].'</th></tr>';
-    }
+    $_Lang['ParseLogonsList'] = Settings\Components\LoginHistory\render([
+        'loginHistoryEntries' => $loginHistoryEntries,
+        'displayItemsCount' => $LogonLIMIT,
+        'currentUserLastIp' => $_User['user_lastip'],
+        'currentTimestamp' => $Now,
+    ])['componentHTML'];
 
     // FleetColors - Pickers
     $TPL_FleetColors_Row = gettemplate('settings_fleetcolors_row');

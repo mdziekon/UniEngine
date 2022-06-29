@@ -8,6 +8,7 @@ call_user_func(function () {
 
     include($includePath . './components/IgnoredUsersList/IgnoredUsersList.component.php');
     include($includePath . './components/LanguageSelectorList/LanguageSelectorList.component.php');
+    include($includePath . './components/LoginHistory/LoginHistory.component.php');
     include($includePath . './components/LoginHistoryEntry/LoginHistoryEntry.component.php');
     include($includePath . './components/QuickTransportPlanetsList/QuickTransportPlanetsList.component.php');
     include($includePath . './components/SkinSelectorList/SkinSelectorList.component.php');
