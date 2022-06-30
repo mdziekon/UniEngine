@@ -830,42 +830,28 @@ if(empty($Mode) OR $Mode == 'general')
             }
         }
 
-        if(!empty($ChangeSet))
-        {
-            $UpdateQuery = [];
+        if (!empty($ChangeSet)) {
+            Settings\Utils\Queries\updateUserSettings([
+                'user' => &$_User,
+                'changedUserParams' => $ChangeSet,
+                'changedUserParamsTypes' => $ChangeSetTypes,
+            ]);
 
-            foreach($ChangeSet as $Key => $Value)
-            {
-                $_User[$Key] = $Value;
-
-                if(isset($ChangeSetTypes[$Key]) && $ChangeSetTypes[$Key] == 's')
-                {
-                    $Value = "'{$Value}'";
-                }
-
-                $UpdateQuery[] = "`{$Key}` = {$Value}";
-            }
-
-            doquery("UPDATE {{table}} SET ".implode(', ', $UpdateQuery)." WHERE `id` = {$_User['id']};", 'users');
-            if($ForceGoingOnVacationMsg === TRUE)
-            {
+            if ($ForceGoingOnVacationMsg === true) {
                 message((isset($ShowDeletionInfo) ? $_Lang['Vacation_GoingOnVacationsWithDeletion'] : $_Lang['Vacation_GoingOnVacations']), $_Lang['Vacations_Title'], 'settings.php', 3);
             }
 
             $ChangeSetCounted = count($ChangeSet) - $ChangeSetCount;
-            if($ChangeSetCounted > 0)
-            {
+            if ($ChangeSetCounted > 0) {
                 $InfoMsgs[] = sprintf($_Lang['Info_SaveWellDone'], $ChangeSetCounted);
-            }
-            else
-            {
+            } else {
                 $NoticeMsgs[] = $_Lang['Info_NoChanges'];
             }
-        }
-        else
-        {
-            if(!isset($DontShow_NoChanges) || $DontShow_NoChanges !== true)
-            {
+        } else {
+            if (
+                !isset($DontShow_NoChanges) ||
+                $DontShow_NoChanges !== true
+            ) {
                 $NoticeMsgs[] = $_Lang['Info_NoChanges'];
             }
         }
