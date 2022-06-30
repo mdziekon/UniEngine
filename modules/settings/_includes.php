@@ -6,6 +6,7 @@ call_user_func(function () {
 
     $includePath = $_EnginePath . 'modules/settings/';
 
+    include($includePath . './components/FleetMissionColorsForm/FleetMissionColorsForm.component.php');
     include($includePath . './components/IgnoredUsersList/IgnoredUsersList.component.php');
     include($includePath . './components/LanguageSelectorList/LanguageSelectorList.component.php');
     include($includePath . './components/LoginHistory/LoginHistory.component.php');

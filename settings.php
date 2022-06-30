@@ -1065,26 +1065,13 @@ if(empty($Mode) OR $Mode == 'general')
     ])['componentHTML'];
 
     // FleetColors - Pickers
-    $TPL_FleetColors_Row = gettemplate('settings_fleetcolors_row');
-    if(!empty($_User['settings_FleetColors']))
-    {
-        if(isset($FleetColors_NeedChange) && $FleetColors_NeedChange === true)
-        {
-            $_User['settings_FleetColors'] = stripslashes($_User['settings_FleetColors']);
-        }
-        $FleetColors = json_decode($_User['settings_FleetColors'], true);
-    }
-    foreach($_Vars_FleetMissions['all'] as $MissionID)
-    {
-        $_Lang['Insert_FleetColors_Pickers'][] = parsetemplate($TPL_FleetColors_Row, [
-            'MissionName'       => $_Lang['type_mission'][$MissionID],
-            'MissionID'         => $MissionID,
-            'Value_OwnFly'      => (isset($FleetColors['ownfly'][$MissionID]) ? $FleetColors['ownfly'][$MissionID] : null),
-            'Value_OwnComeback' => (isset($FleetColors['owncb'][$MissionID]) ? $FleetColors['owncb'][$MissionID] : null),
-            'Value_NonOwn'      => (isset($FleetColors['nonown'][$MissionID]) ? $FleetColors['nonown'][$MissionID] : null),
-        ]);
-    }
-    $_Lang['Insert_FleetColors_Pickers'] = implode('', $_Lang['Insert_FleetColors_Pickers']);
+    $_Lang['Insert_FleetColors_Pickers'] = Settings\Components\FleetMissionColorsForm\render([
+        'missionsColorSettings' => (
+            (isset($FleetColors_NeedChange) && $FleetColors_NeedChange) ?
+                stripslashes($_User['settings_FleetColors']) :
+                $_User['settings_FleetColors']
+        ),
+    ])['componentHTML'];
 
     $BodyTPL = gettemplate('settings_body');
     $Page = parsetemplate($BodyTPL, $_Lang);
