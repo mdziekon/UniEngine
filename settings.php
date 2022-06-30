@@ -1036,15 +1036,12 @@ if(empty($Mode) OR $Mode == 'general')
         $_Lang['EMChange2'] = 'style="display: none;"';
     }
 
-    if(empty($_Lang['SetActiveMarker']))
-    {
-        if(!empty($_GET['tab']))
-        {
-            if(in_array($_GET['tab'], [1,2,3,4,5,6]))
-            {
-                $_Lang['SetActiveMarker'] = str_pad($_GET['tab'], 2, '0', STR_PAD_LEFT);
-            }
-        }
+    if (
+        empty($_Lang['SetActiveMarker']) &&
+        !empty($_GET['tab']) &&
+        in_array($_GET['tab'], [1,2,3,4,5,6])
+    ) {
+        $_Lang['SetActiveMarker'] = str_pad($_GET['tab'], 2, '0', STR_PAD_LEFT);
     }
 
     // Logons List
