@@ -6,6 +6,9 @@ include_once("{$_EnginePath}modules/settings/_includes.php");
 
 use UniEngine\Engine\Modules\Settings;
 
+/**
+ * @todo Consider removing this functionality, as it might not be the safest thing to do...
+ */
 function checkNetFile($URL)
 {
     $File = @file_get_contents($URL.'formate.css');
