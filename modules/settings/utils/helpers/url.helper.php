@@ -7,8 +7,8 @@ namespace UniEngine\Engine\Modules\Settings\Utils\Helpers;
  */
 function hasHttpProtocol($url) {
     return (
-        strstr($url, 'http://') !== false ||
-        strstr($url, 'https://') !== false
+        strpos($url, 'http://') === 0 ||
+        strpos($url, 'https://') === 0
     );
 }
 
@@ -16,16 +16,33 @@ function hasHttpProtocol($url) {
  * @param string $url
  */
 function hasWWWPart($url) {
-    return (strstr($url, 'www.') !== false);
+    return (strpos($url, 'www.') === 0);
+}
+
+/**
+ * @param string $url
+ */
+function hasProtoSeparator($url) {
+    return (strpos($url, '://') !== false);
 }
 
 /**
  * @param string $url
  */
 function isExternalUrl($url) {
+    return hasProtoSeparator($url);
+}
+
+/**
+ * @param string $url
+ */
+function isValidExternalUrl($url) {
     return (
-        hasHttpProtocol($url) ||
-        hasWWWPart($url)
+        hasProtoSeparator($url) &&
+        (
+            hasHttpProtocol($url) ||
+            hasWWWPart($url)
+        )
     );
 }
 

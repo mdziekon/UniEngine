@@ -308,6 +308,10 @@ if(empty($Mode) OR $Mode == 'general')
                     $_POST['use_skin'] = '';
                 }
             } else {
+                if (!Settings\Utils\Helpers\isValidExternalUrl($SkinPath)) {
+                    $SkinPath = '';
+                }
+
                 if (
                     !Settings\Utils\Helpers\hasHttpProtocol($SkinPath) &&
                     Settings\Utils\Helpers\hasWWWPart($SkinPath)
@@ -345,6 +349,10 @@ if(empty($Mode) OR $Mode == 'general')
             $AvatarPath = getDBLink()->escape_string(
                 strip_tags(trim($_POST['avatar_path']))
             );
+
+            if (!Settings\Utils\Helpers\isValidExternalUrl($AvatarPath)) {
+                $AvatarPath = '';
+            }
 
             if (
                 !Settings\Utils\Helpers\hasHttpProtocol($AvatarPath) &&
