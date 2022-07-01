@@ -37,6 +37,7 @@ call_user_func(function () {
     include($includePath . './utils/helpers/tryDeleteUserIgnoreEntries.helper.php');
     include($includePath . './utils/helpers/tryEnableVacation.helper.php');
     include($includePath . './utils/helpers/tryIgnoreUser.helper.php');
+    include($includePath . './utils/helpers/url.helper.php');
 
     include($includePath . './utils/input/normalizeDeleteUserIgnoreEntries.input.php');
 

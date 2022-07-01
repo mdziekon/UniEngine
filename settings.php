@@ -289,8 +289,7 @@ if(empty($Mode) OR $Mode == 'general')
                 strip_tags(trim($_POST['skin_path']))
             );
 
-            if(strstr($SkinPath, 'http://') === FALSE AND strstr($SkinPath, 'www.') === FALSE)
-            {
+            if (!Settings\Utils\Helpers\isExternalUrl($SkinPath)) {
                 if($SkinPath != '')
                 {
                     $SkinPath = ltrim($SkinPath, '/');
@@ -308,12 +307,12 @@ if(empty($Mode) OR $Mode == 'general')
                 {
                     $_POST['use_skin'] = '';
                 }
-            }
-            else
-            {
-                if(strstr($SkinPath, 'http://') === FALSE AND strstr($SkinPath, 'www.') !== FALSE)
-                {
-                    $SkinPath = str_replace('www.', 'http://', $SkinPath);
+            } else {
+                if (
+                    !Settings\Utils\Helpers\hasHttpProtocol($SkinPath) &&
+                    Settings\Utils\Helpers\hasWWWPart($SkinPath)
+                ) {
+                    $SkinPath = Settings\Utils\Helpers\completeWWWUrl($SkinPath);
                 }
             }
             if($SkinPath != $_User['skinpath'])
@@ -347,9 +346,11 @@ if(empty($Mode) OR $Mode == 'general')
                 strip_tags(trim($_POST['avatar_path']))
             );
 
-            if(strstr($AvatarPath, 'http://') === FALSE AND strstr($AvatarPath, 'www.') !== FALSE)
-            {
-                $AvatarPath = str_replace('www.', 'http://', $AvatarPath);
+            if (
+                !Settings\Utils\Helpers\hasHttpProtocol($AvatarPath) &&
+                Settings\Utils\Helpers\hasWWWPart($AvatarPath)
+            ) {
+                $AvatarPath = Settings\Utils\Helpers\completeWWWUrl($AvatarPath);
             }
             if($AvatarPath != $_User['avatar'])
             {
