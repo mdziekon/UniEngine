@@ -1,5 +1,11 @@
 <?php
 
+$_EnginePath = '../';
+include_once("{$_EnginePath}includes/unlocalised.php");
+include_once("{$_EnginePath}modules/settings/_includes.php");
+
+use UniEngine\Engine\Modules\Settings;
+
 function checkNetFile($URL)
 {
     $File = @file_get_contents($URL.'formate.css');
@@ -33,33 +39,40 @@ function checkNetFile($URL)
 }
 
 $SkinPath = (isset($_POST['skin_path']) ? strip_tags(trim($_POST['skin_path'])) : null);
-if(strstr($SkinPath, 'http://') === false AND strstr($SkinPath, 'www.') === false)
-{
+if (!Settings\Utils\Helpers\isExternalUrl($SkinPath)) {
     $SkinPath = ltrim($SkinPath, '/');
     if(substr($SkinPath, strlen($SkinPath) - 1) != '/')
     {
         $SkinPath .= '/';
     }
-    if(!@file_exists('../'.$SkinPath.'index.php'))
-    {
+
+    $availableSkins = Settings\Utils\Helpers\getAvailableSkins([ 'rootDir' => $_EnginePath ]);
+    $isAvailableSkin = array_find($availableSkins, function ($skinDetails) use ($SkinPath) {
+        return $skinDetails['path'] === $SkinPath;
+    });
+
+    if (!$isAvailableSkin) {
         $Return = '1';
-    }
-    else
-    {
+    } else {
         $Return = '2';
     }
 }
 else
 {
     $Return = '0';
-    if(strstr($SkinPath, 'http://') === false AND strstr($SkinPath, 'www.') !== false)
-    {
-        $SkinPath = str_replace('www.', 'http://', $SkinPath);
-    }
-    $FileCheck = checkNetFile($SkinPath);
-    if($FileCheck)
-    {
-        $Return = '2';
+    if (Settings\Utils\Helpers\isValidExternalUrl($SkinPath)) {
+        if (
+            !Settings\Utils\Helpers\hasHttpProtocol($SkinPath) &&
+            Settings\Utils\Helpers\hasWWWPart($SkinPath)
+        ) {
+            $SkinPath = Settings\Utils\Helpers\completeWWWUrl($SkinPath);
+        }
+
+        $FileCheck = checkNetFile($SkinPath);
+        if($FileCheck)
+        {
+            $Return = '2';
+        }
     }
 }
 
