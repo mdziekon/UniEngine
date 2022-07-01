@@ -6,7 +6,13 @@ call_user_func(function () {
 
     $includePath = $_EnginePath . 'modules/settings/';
 
+    include($includePath . './components/FleetMissionColorsForm/FleetMissionColorsForm.component.php');
+    include($includePath . './components/IgnoredUsersList/IgnoredUsersList.component.php');
+    include($includePath . './components/LanguageSelectorList/LanguageSelectorList.component.php');
+    include($includePath . './components/LoginHistory/LoginHistory.component.php');
     include($includePath . './components/LoginHistoryEntry/LoginHistoryEntry.component.php');
+    include($includePath . './components/QuickTransportPlanetsList/QuickTransportPlanetsList.component.php');
+    include($includePath . './components/SkinSelectorList/SkinSelectorList.component.php');
 
     include($includePath . './screens/InVacationMode/InVacationMode.screen.php');
     include($includePath . './screens/InVacationMode/InVacationMode.utils.php');
@@ -24,12 +30,14 @@ call_user_func(function () {
 
     include($includePath . './utils/factories/createDevLogEntry.factory.php');
 
+    include($includePath . './utils/helpers/getAvailableSkins.helper.php');
     include($includePath . './utils/helpers/getUsernameChangeCost.helper.php');
     include($includePath . './utils/helpers/getVacationEndTime.helper.php');
     include($includePath . './utils/helpers/parseLoginHistoryEntries.helper.php');
     include($includePath . './utils/helpers/tryDeleteUserIgnoreEntries.helper.php');
     include($includePath . './utils/helpers/tryEnableVacation.helper.php');
     include($includePath . './utils/helpers/tryIgnoreUser.helper.php');
+    include($includePath . './utils/helpers/url.helper.php');
 
     include($includePath . './utils/input/normalizeDeleteUserIgnoreEntries.input.php');
 
@@ -44,6 +52,7 @@ call_user_func(function () {
     include($includePath . './utils/queries/updateUserOnUsernameChange.query.php');
     include($includePath . './utils/queries/updateUserOnVacationFinish.query.php');
     include($includePath . './utils/queries/updateUserPlanetsOnVacationFinish.query.php');
+    include($includePath . './utils/queries/updateUserSettings.query.php');
 
     include($includePath . './utils/validators/validatePasswordChange.validator.php');
     include($includePath . './utils/validators/validateEmailChange.validator.php');

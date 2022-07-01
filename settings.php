@@ -25,7 +25,6 @@ $MaxEspionageProbesCount = 9999;
 $vacationMinSeconds = getUserMinimalNormalVacationDuration($_User, $Now);
 
 $_Lang['ServerSkins'] = '';
-$_Lang['QuickRes_PlanetList'] = '';
 $_Lang['CreateResSortList'] = '';
 
 $_Lang['MD5OldPass'] = $_User['password'];
@@ -35,67 +34,17 @@ $_Lang['skinpath'] = $_User['skinpath'];
 $_Lang['PHP_Insert_VacationMinDuration'] = $vacationMinSeconds;
 $_Lang['PHP_Insert_VacationComeback'] = $Now + $vacationMinSeconds;
 $_Lang['PHP_Insert_VacationComeback'] = date('d.m.Y', $_Lang['PHP_Insert_VacationComeback'])." {$_Lang['atHour']} ".date('H:i:s', $_Lang['PHP_Insert_VacationComeback']);
-$_Lang['PHP_Insert_LanguageOptions'] = [];
-
-foreach ($_Lang['LanguagesAvailable'] as $langKey => $langData) {
-    $isSelectedHTMLAttr = ($langKey == getCurrentLang() ? "selected" : "");
-
-    $_Lang['PHP_Insert_LanguageOptions'][] = (
-        "<option value='{$langKey}' {$isSelectedHTMLAttr}>" .
-            "{$langData["flag_emoji"]} {$langData["name"]}" .
-        "</option>"
-    );
-}
-
-$_Lang['PHP_Insert_LanguageOptions'] = implode('', $_Lang['PHP_Insert_LanguageOptions']);
 
 $ForceGoingOnVacationMsg = false;
 
 $ChangeNotDone = 0;
 $ChangeSetCount = 0;
 
-$SkinNames = [
-    'xnova' => 'XNova',
-    'epicblue' => 'EpicBlue Fresh',
-    'epicblue_old' => 'EpicBlue Standard',
-];
-
-$SkinDir = scandir('./skins/');
-$SkinDir = !empty($SkinDir) ? $SkinDir : [];
-$SkinCounter = 1;
-
-foreach ($SkinDir as $Element) {
-    if (
-        strstr($Element, '.') !== false ||
-        !is_dir('./skins/'.$Element)
-    ) {
-        continue;
-    }
-
-    if (empty($SkinNames[$Element])) {
-        $SkinNames[$Element] = $Element;
-    }
-
-    $_Lang['ServerSkins'] .= '<option value="skins/'.$Element.'/" {select_no'.$SkinCounter.'}>'.$SkinNames[$Element].'</option>';
-    $AvailableSkins[$SkinCounter] = "skins/{$Element}";
-    $SkinCounter += 1;
-}
-
 function isInputKeyChecked($input, $key) {
     return (
         isset($input[$key]) &&
         $input[$key] == 'on'
     );
-}
-
-$SQLResult_SelectAllPlanets = doquery(
-    "SELECT `id`, `name`, `galaxy`, `system`, `planet` FROM {{table}} WHERE `id_owner` = {$_User['id']} AND `planet_type` = 1;",
-    'planets'
-);
-
-while($Planets = $SQLResult_SelectAllPlanets->fetch_assoc())
-{
-    $_Lang['QuickRes_PlanetList'] .= "<option value=\"{$Planets['id']}\" {sel_planet_{$Planets['id']}}>{$Planets['name']} [{$Planets['galaxy']}:{$Planets['system']}:{$Planets['planet']}]</option>";
 }
 
 $Mode = (isset($_GET['mode']) ? $_GET['mode'] : null);
@@ -122,6 +71,8 @@ if ($Mode === 'nickchange') {
 
 if(empty($Mode) OR $Mode == 'general')
 {
+    $availableSkins = Settings\Utils\Helpers\getAvailableSkins();
+
     // General View
     $CheckMailChange = doquery("SELECT `ID`, `Date` FROM {{table}} WHERE `UserID` = {$_User['id']} AND `ConfirmType` = 0 LIMIT 1;", 'mailchange', true);
 
@@ -340,17 +291,19 @@ if(empty($Mode) OR $Mode == 'general')
                 strip_tags(trim($_POST['skin_path']))
             );
 
-            if(strstr($SkinPath, 'http://') === FALSE AND strstr($SkinPath, 'www.') === FALSE)
-            {
+            if (!Settings\Utils\Helpers\isExternalUrl($SkinPath)) {
                 if($SkinPath != '')
                 {
                     $SkinPath = ltrim($SkinPath, '/');
-                    if(substr($SkinPath, strlen($SkinPath) - 1) != '/')
-                    {
+                    if (substr($SkinPath, strlen($SkinPath) - 1) != '/') {
                         $SkinPath .= '/';
                     }
-                    if(!file_exists('./'.$SkinPath.'formate.css'))
-                    {
+
+                    $isAvailableSkin = array_find($availableSkins, function ($skinDetails) use ($SkinPath) {
+                        return $skinDetails['path'] === $SkinPath;
+                    });
+
+                    if ($isAvailableSkin === null) {
                         $WarningMsgs[] = $_Lang['Skin_NoLocalSkin'];
                         $SkinPath = $_User['skinpath'];
                     }
@@ -359,12 +312,16 @@ if(empty($Mode) OR $Mode == 'general')
                 {
                     $_POST['use_skin'] = '';
                 }
-            }
-            else
-            {
-                if(strstr($SkinPath, 'http://') === FALSE AND strstr($SkinPath, 'www.') !== FALSE)
-                {
-                    $SkinPath = str_replace('www.', 'http://', $SkinPath);
+            } else {
+                if (!Settings\Utils\Helpers\isValidExternalUrl($SkinPath)) {
+                    $SkinPath = '';
+                }
+
+                if (
+                    !Settings\Utils\Helpers\hasHttpProtocol($SkinPath) &&
+                    Settings\Utils\Helpers\hasWWWPart($SkinPath)
+                ) {
+                    $SkinPath = Settings\Utils\Helpers\completeWWWUrl($SkinPath);
                 }
             }
             if($SkinPath != $_User['skinpath'])
@@ -398,9 +355,15 @@ if(empty($Mode) OR $Mode == 'general')
                 strip_tags(trim($_POST['avatar_path']))
             );
 
-            if(strstr($AvatarPath, 'http://') === FALSE AND strstr($AvatarPath, 'www.') !== FALSE)
-            {
-                $AvatarPath = str_replace('www.', 'http://', $AvatarPath);
+            if (!Settings\Utils\Helpers\isValidExternalUrl($AvatarPath)) {
+                $AvatarPath = '';
+            }
+
+            if (
+                !Settings\Utils\Helpers\hasHttpProtocol($AvatarPath) &&
+                Settings\Utils\Helpers\hasWWWPart($AvatarPath)
+            ) {
+                $AvatarPath = Settings\Utils\Helpers\completeWWWUrl($AvatarPath);
             }
             if($AvatarPath != $_User['avatar'])
             {
@@ -881,42 +844,28 @@ if(empty($Mode) OR $Mode == 'general')
             }
         }
 
-        if(!empty($ChangeSet))
-        {
-            $UpdateQuery = [];
+        if (!empty($ChangeSet)) {
+            Settings\Utils\Queries\updateUserSettings([
+                'user' => &$_User,
+                'changedUserParams' => $ChangeSet,
+                'changedUserParamsTypes' => $ChangeSetTypes,
+            ]);
 
-            foreach($ChangeSet as $Key => $Value)
-            {
-                $_User[$Key] = $Value;
-
-                if(isset($ChangeSetTypes[$Key]) && $ChangeSetTypes[$Key] == 's')
-                {
-                    $Value = "'{$Value}'";
-                }
-
-                $UpdateQuery[] = "`{$Key}` = {$Value}";
-            }
-
-            doquery("UPDATE {{table}} SET ".implode(', ', $UpdateQuery)." WHERE `id` = {$_User['id']};", 'users');
-            if($ForceGoingOnVacationMsg === TRUE)
-            {
+            if ($ForceGoingOnVacationMsg === true) {
                 message((isset($ShowDeletionInfo) ? $_Lang['Vacation_GoingOnVacationsWithDeletion'] : $_Lang['Vacation_GoingOnVacations']), $_Lang['Vacations_Title'], 'settings.php', 3);
             }
 
             $ChangeSetCounted = count($ChangeSet) - $ChangeSetCount;
-            if($ChangeSetCounted > 0)
-            {
+            if ($ChangeSetCounted > 0) {
                 $InfoMsgs[] = sprintf($_Lang['Info_SaveWellDone'], $ChangeSetCounted);
-            }
-            else
-            {
+            } else {
                 $NoticeMsgs[] = $_Lang['Info_NoChanges'];
             }
-        }
-        else
-        {
-            if(!isset($DontShow_NoChanges) || $DontShow_NoChanges !== true)
-            {
+        } else {
+            if (
+                !isset($DontShow_NoChanges) ||
+                $DontShow_NoChanges !== true
+            ) {
                 $NoticeMsgs[] = $_Lang['Info_NoChanges'];
             }
         }
@@ -1058,41 +1007,23 @@ if(empty($Mode) OR $Mode == 'general')
         $_Lang['DeleteClickToRemoveShow'] = 'style="display: none;"';
         $_Lang['DeleteMsg'] = '';
     }
-    if(strstr($_User['skinpath'], 'http://') === FALSE)
-    {
-        foreach($AvailableSkins as $Key => $Skin)
-        {
-            if(strstr($_User['skinpath'], $Skin))
-            {
-                $_Lang['ServerSkins'] = str_replace('{select_no'.$Key.'}', 'selected', $_Lang['ServerSkins']);
-            }
-            else
-            {
-                $_Lang['ServerSkins'] = str_replace('{select_no'.$Key.'}', '', $_Lang['ServerSkins']);
-            }
-        }
-    }
-    $_Lang['QuickRes_PlanetList'] = str_replace('{sel_planet_'.$_User['settings_mainPlanetID'].'}', 'selected', $_Lang['QuickRes_PlanetList']);
-    $_Lang['QuickRes_PlanetList'] = preg_replace('#\{sel\_planet\_[0-9]{1,}\}#si', '', $_Lang['QuickRes_PlanetList']);
 
-    if(!empty($ignoredUsers))
-    {
-        foreach($ignoredUsers as $IgnoredID => $IgnoredName)
-        {
-            $_Lang['ParseIgnoreList'][] = "<input type=\"checkbox\" name=\"del_ignore[]\" value=\"{$IgnoredID}\" id=\"ignore{$IgnoredID}\" /> <label for=\"ignore{$IgnoredID}\">{$IgnoredName}</label>";
-        }
-        $_Lang['ParseIgnoreList'] = implode('<br/>', $_Lang['ParseIgnoreList']);
-        if(count($ignoredUsers) < 15)
-        {
-            $_Lang['IgnoreList_Hide2Del'] = 'style="display: none;"';
-        }
-    }
-    else
-    {
-        $_Lang['ParseIgnoreList'] = "<center class=\"red\">{$_Lang['IgnoreList_NoIgnored']}</center>";
-        $_Lang['IgnoreList_Hide1Del'] = 'style="display: none;"';
-        $_Lang['IgnoreList_Hide2Del'] = 'style="display: none;"';
-    }
+    $_Lang['ServerSkins'] = Settings\Components\SkinSelectorList\render([
+        'currentUserSkinPath' => $_User['skinpath'],
+        'availableSkins' => $availableSkins,
+    ])['componentHTML'];
+    $_Lang['PHP_Insert_LanguageOptions'] = Settings\Components\LanguageSelectorList\render([
+        'currentUserLanguage' => getCurrentLang(),
+    ])['componentHTML'];
+    $_Lang['QuickRes_PlanetList'] = Settings\Components\QuickTransportPlanetsList\render([
+        'userId' => $_User['id'],
+        'currentMainPlanetId' => $_User['settings_mainPlanetID'],
+    ])['componentHTML'];
+    $_Lang['ParseIgnoreList'] = Settings\Components\IgnoredUsersList\render([
+        'ignoredUsers' => $ignoredUsers,
+    ])['componentHTML'];
+    $_Lang['IgnoreList_Hide1Del'] = count($ignoredUsers) === 0 ? 'style="display: none;"' : '';
+    $_Lang['IgnoreList_Hide2Del'] = count($ignoredUsers) < 15 ? 'style="display: none;"' : '';
 
     if($CheckMailChange['ID'] > 0)
     {
@@ -1106,15 +1037,12 @@ if(empty($Mode) OR $Mode == 'general')
         $_Lang['EMChange2'] = 'style="display: none;"';
     }
 
-    if(empty($_Lang['SetActiveMarker']))
-    {
-        if(!empty($_GET['tab']))
-        {
-            if(in_array($_GET['tab'], [1,2,3,4,5,6]))
-            {
-                $_Lang['SetActiveMarker'] = str_pad($_GET['tab'], 2, '0', STR_PAD_LEFT);
-            }
-        }
+    if (
+        empty($_Lang['SetActiveMarker']) &&
+        !empty($_GET['tab']) &&
+        in_array($_GET['tab'], [1,2,3,4,5,6])
+    ) {
+        $_Lang['SetActiveMarker'] = str_pad($_GET['tab'], 2, '0', STR_PAD_LEFT);
     }
 
     // Logons List
@@ -1122,57 +1050,26 @@ if(empty($Mode) OR $Mode == 'general')
         'userId' => $_User['id'],
         'historyEntriesLimit' => $LogonLIMIT,
     ]);
+    $loginHistoryEntries = Settings\Utils\Helpers\parseLoginHistoryEntries([
+        'historyEntries' => $accountLoginHistory,
+        'historyEntriesLimit' => $LogonLIMIT,
+    ]);
 
-    if (count($accountLoginHistory) > 0) {
-        $LogonList = Settings\Utils\Helpers\parseLoginHistoryEntries([
-            'historyEntries' => $accountLoginHistory,
-            'historyEntriesLimit' => $LogonLIMIT,
-        ]);
-
-        $LimitCounter = $LogonLIMIT;
-
-        $_Lang['ParseLogonsList'] = [];
-
-        foreach ($LogonList as $LogonData) {
-            if ($LimitCounter <= 0) {
-                break;
-            }
-
-            $_Lang['ParseLogonsList'][] = Settings\Components\LoginHistoryEntry\render([
-                'entryData' => $LogonData,
-                'userLastIp' => $_User['user_lastip'],
-                'currentTimestamp' => $Now,
-            ])['componentHTML'];
-
-            $LimitCounter -= 1;
-        }
-
-        $_Lang['ParseLogonsList'] = implode('', $_Lang['ParseLogonsList']);
-    } else {
-        $_Lang['ParseLogonsList'] = '<tr><th colspan="4">'.$_Lang['Logons_ListEmpty'].'</th></tr>';
-    }
+    $_Lang['ParseLogonsList'] = Settings\Components\LoginHistory\render([
+        'loginHistoryEntries' => $loginHistoryEntries,
+        'displayItemsCount' => $LogonLIMIT,
+        'currentUserLastIp' => $_User['user_lastip'],
+        'currentTimestamp' => $Now,
+    ])['componentHTML'];
 
     // FleetColors - Pickers
-    $TPL_FleetColors_Row = gettemplate('settings_fleetcolors_row');
-    if(!empty($_User['settings_FleetColors']))
-    {
-        if(isset($FleetColors_NeedChange) && $FleetColors_NeedChange === true)
-        {
-            $_User['settings_FleetColors'] = stripslashes($_User['settings_FleetColors']);
-        }
-        $FleetColors = json_decode($_User['settings_FleetColors'], true);
-    }
-    foreach($_Vars_FleetMissions['all'] as $MissionID)
-    {
-        $_Lang['Insert_FleetColors_Pickers'][] = parsetemplate($TPL_FleetColors_Row, [
-            'MissionName'       => $_Lang['type_mission'][$MissionID],
-            'MissionID'         => $MissionID,
-            'Value_OwnFly'      => (isset($FleetColors['ownfly'][$MissionID]) ? $FleetColors['ownfly'][$MissionID] : null),
-            'Value_OwnComeback' => (isset($FleetColors['owncb'][$MissionID]) ? $FleetColors['owncb'][$MissionID] : null),
-            'Value_NonOwn'      => (isset($FleetColors['nonown'][$MissionID]) ? $FleetColors['nonown'][$MissionID] : null),
-        ]);
-    }
-    $_Lang['Insert_FleetColors_Pickers'] = implode('', $_Lang['Insert_FleetColors_Pickers']);
+    $_Lang['Insert_FleetColors_Pickers'] = Settings\Components\FleetMissionColorsForm\render([
+        'missionsColorSettings' => (
+            (isset($FleetColors_NeedChange) && $FleetColors_NeedChange) ?
+                stripslashes($_User['settings_FleetColors']) :
+                $_User['settings_FleetColors']
+        ),
+    ])['componentHTML'];
 
     $BodyTPL = gettemplate('settings_body');
     $Page = parsetemplate($BodyTPL, $_Lang);
