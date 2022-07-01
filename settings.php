@@ -71,6 +71,8 @@ if ($Mode === 'nickchange') {
 
 if(empty($Mode) OR $Mode == 'general')
 {
+    $availableSkins = Settings\Utils\Helpers\getAvailableSkins();
+
     // General View
     $CheckMailChange = doquery("SELECT `ID`, `Date` FROM {{table}} WHERE `UserID` = {$_User['id']} AND `ConfirmType` = 0 LIMIT 1;", 'mailchange', true);
 
@@ -293,12 +295,15 @@ if(empty($Mode) OR $Mode == 'general')
                 if($SkinPath != '')
                 {
                     $SkinPath = ltrim($SkinPath, '/');
-                    if(substr($SkinPath, strlen($SkinPath) - 1) != '/')
-                    {
+                    if (substr($SkinPath, strlen($SkinPath) - 1) != '/') {
                         $SkinPath .= '/';
                     }
-                    if(!file_exists('./'.$SkinPath.'formate.css'))
-                    {
+
+                    $isAvailableSkin = array_find($availableSkins, function ($skinDetails) use ($SkinPath) {
+                        return $skinDetails['path'] === $SkinPath;
+                    });
+
+                    if ($isAvailableSkin === null) {
                         $WarningMsgs[] = $_Lang['Skin_NoLocalSkin'];
                         $SkinPath = $_User['skinpath'];
                     }
@@ -1005,6 +1010,7 @@ if(empty($Mode) OR $Mode == 'general')
 
     $_Lang['ServerSkins'] = Settings\Components\SkinSelectorList\render([
         'currentUserSkinPath' => $_User['skinpath'],
+        'availableSkins' => $availableSkins,
     ])['componentHTML'];
     $_Lang['PHP_Insert_LanguageOptions'] = Settings\Components\LanguageSelectorList\render([
         'currentUserLanguage' => getCurrentLang(),
