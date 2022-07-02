@@ -21,62 +21,88 @@ function handleReferralMultiAccountDetection($props) {
     $_Included_AlertSystemUtilities = true;
     include($_EnginePath.'includes/functions/AlertSystemUtilities.php');
 
-    $CheckIntersection = AlertUtils_IPIntersect($userId, $referredById, array
-    (
-        'LastTimeDiff' => (TIME_DAY * 60),
-        'ThisTimeDiff' => (TIME_DAY * 60),
-        'ThisTimeStamp' => ($currentTimestamp - SERVER_MAINOPEN_TSTAMP)
-    ));
+    $intersectionCheckResult = AlertUtils_IPIntersect(
+        $userId,
+        $referredById,
+        [
+            'LastTimeDiff' => (TIME_DAY * 60),
+            'ThisTimeDiff' => (TIME_DAY * 60),
+            'ThisTimeStamp' => ($currentTimestamp - SERVER_MAINOPEN_TSTAMP)
+        ]
+    );
 
-    if($CheckIntersection !== false)
-    {
-        $FiltersData = array();
-        $FiltersData['place'] = 4;
-        $FiltersData['alertsender'] = 4;
-        $FiltersData['users'] = array($userId, $referredById);
-        $FiltersData['ips'] = $CheckIntersection['Intersect'];
-        $FiltersData['newuser'] = $userId;
-        $FiltersData['referrer'] = $referredById;
-        foreach($CheckIntersection['Intersect'] as $IP)
-        {
-            $FiltersData['logcount'][$IP][$userId] = $CheckIntersection['IPLogData'][$userId][$IP]['Count'];
-            $FiltersData['logcount'][$IP][$referredById] = $CheckIntersection['IPLogData'][$referredById][$IP]['Count'];
-        }
-
-        $FilterResult = AlertUtils_CheckFilters($FiltersData, array('Save' => true));
-        if($FilterResult['SendAlert'])
-        {
-            $_Alert['Data']['ReferrerID'] = $referredById;
-            foreach($CheckIntersection['Intersect'] as $ThisIPID)
-            {
-                $_Alert['Data']['Intersect'][] = array
-                (
-                    'IPID' => $ThisIPID,
-                    'NewUser' => $CheckIntersection['IPLogData'][$userId][$ThisIPID],
-                    'OldUser' => $CheckIntersection['IPLogData'][$referredById][$ThisIPID]
-                );
-            }
-            if(!empty($referringUserWithTasksData['TaskData']))
-            {
-                $_Alert['Data']['Tasks'] = $referringUserWithTasksData['TaskData'];
-            }
-
-            $Query_AlertOtherUsers .= "SELECT DISTINCT `User_ID` FROM {{table}} WHERE ";
-            $Query_AlertOtherUsers .= "`User_ID` NOT IN ({$userId}, {$referredById}) AND ";
-            $Query_AlertOtherUsers .= "`IP_ID` IN (".implode(', ', $CheckIntersection['Intersect']).") AND ";
-            $Query_AlertOtherUsers .= "`Count` > `FailCount`;";
-            $Result_AlertOtherUsers = doquery($Query_AlertOtherUsers, 'user_enterlog');
-            if($Result_AlertOtherUsers->num_rows > 0)
-            {
-                while($FetchData = $Result_AlertOtherUsers->fetch_assoc())
-                {
-                    $_Alert['Data']['OtherUsers'][] = $FetchData['User_ID'];
-                }
-            }
-
-            Alerts_Add(4, $currentTimestamp, 1, 2, 8, $userId, $_Alert['Data']);
-        }
+    if ($intersectionCheckResult === false) {
+        return;
     }
+
+    $ALERT_SENDER = 4;
+
+    $alertSystemFilterParams = [];
+    $alertSystemFilterParams['place'] = 4;
+    $alertSystemFilterParams['alertsender'] = $ALERT_SENDER;
+    $alertSystemFilterParams['users'] = [
+        $userId,
+        $referredById,
+    ];
+    $alertSystemFilterParams['ips'] = $intersectionCheckResult['Intersect'];
+    $alertSystemFilterParams['newuser'] = $userId;
+    $alertSystemFilterParams['referrer'] = $referredById;
+    $alertSystemFilterParams['logcount'] = object_map(
+        $intersectionCheckResult['Intersect'],
+        function ($intersectedIpId) use ($intersectionCheckResult, $userId, $referredById) {
+            return [
+                [
+                    $userId => $intersectionCheckResult['IPLogData'][$userId][$intersectedIpId]['Count'],
+                    $referredById => $intersectionCheckResult['IPLogData'][$referredById][$intersectedIpId]['Count'],
+                ],
+                $intersectedIpId
+            ];
+        }
+    );
+
+    $alertSystemFilterResult = AlertUtils_CheckFilters(
+        $alertSystemFilterParams,
+        [
+            'Save' => true,
+        ]
+    );
+
+    if (!$alertSystemFilterResult['SendAlert']) {
+        return;
+    }
+
+    $alertParams = [
+        'Data' => [
+            'ReferrerID' => $referredById,
+            'Intersect' => array_map_withkeys(
+                $intersectionCheckResult['Intersect'],
+                function ($intersectedIpId) use ($intersectionCheckResult, $userId, $referredById) {
+                    return [
+                        'IPID' => $intersectedIpId,
+                        'NewUser' => $intersectionCheckResult['IPLogData'][$userId][$intersectedIpId],
+                        'OldUser' => $intersectionCheckResult['IPLogData'][$referredById][$intersectedIpId],
+                    ];
+                }
+            ),
+        ],
+    ];
+
+    if (!empty($referringUserWithTasksData['TaskData'])) {
+        $alertParams['Data']['Tasks'] = $referringUserWithTasksData['TaskData'];
+    }
+
+    $Query_AlertOtherUsers = '';
+    $Query_AlertOtherUsers .= "SELECT DISTINCT `User_ID` FROM {{table}} WHERE ";
+    $Query_AlertOtherUsers .= "`User_ID` NOT IN ({$userId}, {$referredById}) AND ";
+    $Query_AlertOtherUsers .= "`IP_ID` IN (".implode(', ', $intersectionCheckResult['Intersect']).") AND ";
+    $Query_AlertOtherUsers .= "`Count` > `FailCount`;";
+    $Result_AlertOtherUsers = doquery($Query_AlertOtherUsers, 'user_enterlog');
+
+    $alertParams['Data']['OtherUsers'] = mapQueryResults($Result_AlertOtherUsers, function ($otherUserEntry) {
+        return $otherUserEntry['User_ID'];
+    });
+
+    Alerts_Add($ALERT_SENDER, $currentTimestamp, 1, 2, 8, $userId, $alertParams['Data']);
 }
 
 ?>
