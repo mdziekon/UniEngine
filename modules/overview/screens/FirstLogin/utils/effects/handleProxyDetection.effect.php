@@ -19,31 +19,53 @@ function handleProxyDetection($props) {
     $IPHash = md5($usersIP);
     $Query_CheckProxy = "SELECT `ID`, `isProxy` FROM {{table}} WHERE `ValueHash` = '{$IPHash}' LIMIT 1;";
     $Result_CheckProxy = doquery($Query_CheckProxy, 'used_ip_and_ua', true);
-    if($Result_CheckProxy['ID'] > 0 AND $Result_CheckProxy['isProxy'] == 1)
-    {
-        if(!isset($_Included_AlertSystemUtilities))
-        {
-            include($_EnginePath.'includes/functions/AlertSystemUtilities.php');
-            $_Included_AlertSystemUtilities = true;
-        }
-        $FiltersData = array();
-        $FiltersData['place'] = 4;
-        $FiltersData['alertsender'] = 5;
-        $FiltersData['users'] = array($user['id']);
-        $FiltersData['ips'] = array($Result_CheckProxy['ID']);
 
-        $FilterResult = AlertUtils_CheckFilters($FiltersData, array('DontLoad' => true, 'DontLoad_OnlyIfCacheEmpty' => true));
-        if($FilterResult['SendAlert'])
-        {
-            $_Alert['Data']['IPID'] = $Result_CheckProxy['ID'];
-            if($usersIP == $user['ip_at_reg'])
-            {
-                $_Alert['Data']['RegIP'] = true;
-            }
-
-            Alerts_Add(5, $currentTimestamp, 1, 3, 8, $user['id'], $_Alert['Data']);
-        }
+    if (
+        !$Result_CheckProxy ||
+        $Result_CheckProxy['isProxy'] != 1
+    ) {
+        return;
     }
+
+    if (!isset($_Included_AlertSystemUtilities)) {
+        include($_EnginePath.'includes/functions/AlertSystemUtilities.php');
+        $_Included_AlertSystemUtilities = true;
+    }
+
+    $ALERT_SENDER = 5;
+
+    $alertSystemFilterParams = [];
+    $alertSystemFilterParams['place'] = 4;
+    $alertSystemFilterParams['alertsender'] = $ALERT_SENDER;
+    $alertSystemFilterParams['users'] = [
+        $user['id'],
+    ];
+    $alertSystemFilterParams['ips'] = [
+        $Result_CheckProxy['ID'],
+    ];
+
+    $alertSystemFilterResult = AlertUtils_CheckFilters(
+        $alertSystemFilterParams, [
+            'DontLoad' => true,
+            'DontLoad_OnlyIfCacheEmpty' => true,
+        ]
+    );
+
+    if (!$alertSystemFilterResult['SendAlert']) {
+        return;
+    }
+
+    $alertParams = [
+        'Data' => [
+            'IPID' => $Result_CheckProxy['ID'],
+        ],
+    ];
+
+    if ($usersIP == $user['ip_at_reg']) {
+        $alertParams['Data']['RegIP'] = true;
+    }
+
+    Alerts_Add($ALERT_SENDER, $currentTimestamp, 1, 3, 8, $user['id'], $alertParams['Data']);
 }
 
 ?>
