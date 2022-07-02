@@ -101,63 +101,12 @@ if($_User['first_login'] == 0)
         }
 
         // Check IP Intersection
-        $_Included_AlertSystemUtilities = true;
-        include($_EnginePath.'includes/functions/AlertSystemUtilities.php');
-        $CheckIntersection = AlertUtils_IPIntersect($_User['id'], $_User['referred'], array
-        (
-            'LastTimeDiff' => (TIME_DAY * 60),
-            'ThisTimeDiff' => (TIME_DAY * 60),
-            'ThisTimeStamp' => ($Now - SERVER_MAINOPEN_TSTAMP)
-        ));
-        if($CheckIntersection !== false)
-        {
-            $FiltersData = array();
-            $FiltersData['place'] = 4;
-            $FiltersData['alertsender'] = 4;
-            $FiltersData['users'] = array($_User['id'], $_User['referred']);
-            $FiltersData['ips'] = $CheckIntersection['Intersect'];
-            $FiltersData['newuser'] = $_User['id'];
-            $FiltersData['referrer'] = $_User['referred'];
-            foreach($CheckIntersection['Intersect'] as $IP)
-            {
-                $FiltersData['logcount'][$IP][$_User['id']] = $CheckIntersection['IPLogData'][$_User['id']][$IP]['Count'];
-                $FiltersData['logcount'][$IP][$_User['referred']] = $CheckIntersection['IPLogData'][$_User['referred']][$IP]['Count'];
-            }
-
-            $FilterResult = AlertUtils_CheckFilters($FiltersData, array('Save' => true));
-            if($FilterResult['SendAlert'])
-            {
-                $_Alert['Data']['ReferrerID'] = $_User['referred'];
-                foreach($CheckIntersection['Intersect'] as $ThisIPID)
-                {
-                    $_Alert['Data']['Intersect'][] = array
-                    (
-                        'IPID' => $ThisIPID,
-                        'NewUser' => $CheckIntersection['IPLogData'][$_User['id']][$ThisIPID],
-                        'OldUser' => $CheckIntersection['IPLogData'][$_User['referred']][$ThisIPID]
-                    );
-                }
-                if(!empty($ThisTaskUser['TaskData']))
-                {
-                    $_Alert['Data']['Tasks'] = $ThisTaskUser['TaskData'];
-                }
-
-                $Query_AlertOtherUsers .= "SELECT DISTINCT `User_ID` FROM {{table}} WHERE ";
-                $Query_AlertOtherUsers .= "`User_ID` NOT IN ({$_User['id']}, {$_User['referred']}) AND ";
-                $Query_AlertOtherUsers .= "`IP_ID` IN (".implode(', ', $CheckIntersection['Intersect']).") AND ";
-                $Query_AlertOtherUsers .= "`Count` > `FailCount`;";
-                $Result_AlertOtherUsers = doquery($Query_AlertOtherUsers, 'user_enterlog');
-                if($Result_AlertOtherUsers->num_rows > 0)
-                {
-                    while($FetchData = $Result_AlertOtherUsers->fetch_assoc())
-                    {
-                        $_Alert['Data']['OtherUsers'][] = $FetchData['User_ID'];
-                    }
-                }
-
-                Alerts_Add(4, $Now, 1, 2, 8, $_User['id'], $_Alert['Data']);
-            }
-        }
+        Overview\Screens\FirstLogin\Utils\Effects\handleReferralMultiAccountDetection([
+            'user' => &$_User,
+            'referredById' => $_User['referred'],
+            'referringUserWithTasksData' => &$ThisTaskUser,
+            'currentTimestamp' => $Now,
+        ]);
     }
 
     // Check, if this IP is Proxy
