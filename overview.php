@@ -11,7 +11,6 @@ include_once($_EnginePath . 'modules/flights/_includes.php');
 include_once($_EnginePath . 'modules/flightControl/_includes.php');
 include_once($_EnginePath . 'modules/overview/_includes.php');
 
-use UniEngine\Engine\Includes\Helpers\Users;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 use UniEngine\Engine\Modules\Session;
 use UniEngine\Engine\Modules\Flights;
