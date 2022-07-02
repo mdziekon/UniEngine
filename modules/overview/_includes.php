@@ -7,6 +7,7 @@ call_user_func(function () {
     $includePath = $_EnginePath . 'modules/overview/';
 
     include($includePath . './screens/FirstLogin/FirstLogin.screen.php');
+    include($includePath . './screens/FirstLogin/utils/effects/handleProxyDetection.effect.php');
 
 });
 

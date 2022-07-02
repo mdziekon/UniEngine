@@ -9,12 +9,14 @@ include($_EnginePath.'common.php');
 include_once($_EnginePath . 'modules/session/_includes.php');
 include_once($_EnginePath . 'modules/flights/_includes.php');
 include_once($_EnginePath . 'modules/flightControl/_includes.php');
+include_once($_EnginePath . 'modules/overview/_includes.php');
 
 use UniEngine\Engine\Includes\Helpers\Users;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 use UniEngine\Engine\Modules\Session;
 use UniEngine\Engine\Modules\Flights;
 use UniEngine\Engine\Modules\FlightControl;
+use UniEngine\Engine\Modules\Overview;
 
 loggedCheck();
 
@@ -159,35 +161,10 @@ if($_User['first_login'] == 0)
     }
 
     // Check, if this IP is Proxy
-    $usersIP = Users\Session\getCurrentIP();
-    $IPHash = md5($usersIP);
-    $Query_CheckProxy = "SELECT `ID`, `isProxy` FROM {{table}} WHERE `ValueHash` = '{$IPHash}' LIMIT 1;";
-    $Result_CheckProxy = doquery($Query_CheckProxy, 'used_ip_and_ua', true);
-    if($Result_CheckProxy['ID'] > 0 AND $Result_CheckProxy['isProxy'] == 1)
-    {
-        if(!isset($_Included_AlertSystemUtilities))
-        {
-            include($_EnginePath.'includes/functions/AlertSystemUtilities.php');
-            $_Included_AlertSystemUtilities = true;
-        }
-        $FiltersData = array();
-        $FiltersData['place'] = 4;
-        $FiltersData['alertsender'] = 5;
-        $FiltersData['users'] = array($_User['id']);
-        $FiltersData['ips'] = array($Result_CheckProxy['ID']);
-
-        $FilterResult = AlertUtils_CheckFilters($FiltersData, array('DontLoad' => true, 'DontLoad_OnlyIfCacheEmpty' => true));
-        if($FilterResult['SendAlert'])
-        {
-            $_Alert['Data']['IPID'] = $Result_CheckProxy['ID'];
-            if($usersIP == $_User['ip_at_reg'])
-            {
-                $_Alert['Data']['RegIP'] = true;
-            }
-
-            Alerts_Add(5, $Now, 1, 3, 8, $_User['id'], $_Alert['Data']);
-        }
-    }
+    Overview\Screens\FirstLogin\Utils\Effects\handleProxyDetection([
+        'user' => &$_User,
+        'currentTimestamp' => $Now,
+    ]);
 
     // Give Free ProAccount for 7 days
     //doquery("INSERT INTO {{table}} VALUES (NULL, {$_User['id']}, UNIX_TIMESTAMP(), 0, 0, 11, 0);", 'premium_free');
