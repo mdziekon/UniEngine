@@ -62,36 +62,21 @@ if($_User['first_login'] == 0)
 
     if($_User['referred'] > 0)
     {
-        // Update Referrer Tasks
-        if(empty($GlobalParsedTasks[$_User['referred']]['tasks_done_parsed']))
-        {
-            $GetUserTasksDone = doquery("SELECT `id`, `tasks_done` FROM {{table}} WHERE `id` = {$_User['referred']} LIMIT 1;", 'users', true);
-            if($GetUserTasksDone['id'] == $_User['referred'])
-            {
-                unset($GetUserTasksDone['id']);
-                Tasks_CheckUservar($GetUserTasksDone);
-                $GlobalParsedTasks[$_User['referred']] = $GetUserTasksDone;
-                $ThisTaskUser        = $GlobalParsedTasks[$_User['referred']];
-                $ThisTaskUser['id'] = $_User['referred'];
-            }
-        }
-        else
-        {
-            $ThisTaskUser        = $GlobalParsedTasks[$_User['referred']];
-            $ThisTaskUser['id'] = $_User['referred'];
-        }
+        $referringUserWithTasksData = Overview\Screens\FirstLogin\Utils\Helpers\getReferrerTasksData([
+            'referredById' => $_User['referred'],
+        ]);
 
-        if(!empty($ThisTaskUser))
+        if(!empty($referringUserWithTasksData))
         {
-            Tasks_TriggerTask($ThisTaskUser, 'NEWUSER_REGISTER', array
+            Tasks_TriggerTask($referringUserWithTasksData, 'NEWUSER_REGISTER', array
             (
-                'mainCheck' => function($JobArray, $ThisCat, $TaskID, $JobID) use (&$ThisTaskUser)
+                'mainCheck' => function($JobArray, $ThisCat, $TaskID, $JobID) use (&$referringUserWithTasksData)
                 {
-                    $Return = Tasks_TriggerTask_MainCheck_Progressive($JobArray, $ThisCat, $TaskID, $JobID, $ThisTaskUser, 1);
-                    $ThisTaskUser['TaskData'][] = array
+                    $Return = Tasks_TriggerTask_MainCheck_Progressive($JobArray, $ThisCat, $TaskID, $JobID, $referringUserWithTasksData, 1);
+                    $referringUserWithTasksData['TaskData'][] = array
                     (
                         'TaskID' => $TaskID,
-                        'TaskStatus' => $ThisTaskUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID],
+                        'TaskStatus' => $referringUserWithTasksData['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID],
                         'TaskLimit' => $JobArray[$JobArray['statusField']]
                     );
                     return $Return;
@@ -103,7 +88,7 @@ if($_User['first_login'] == 0)
         Overview\Screens\FirstLogin\Utils\Effects\handleReferralMultiAccountDetection([
             'user' => &$_User,
             'referredById' => $_User['referred'],
-            'referringUserWithTasksData' => &$ThisTaskUser,
+            'referringUserWithTasksData' => &$referringUserWithTasksData,
             'currentTimestamp' => $Now,
         ]);
     }
