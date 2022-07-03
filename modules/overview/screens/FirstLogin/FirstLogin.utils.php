@@ -34,15 +34,16 @@ function runEffects($props) {
         ]);
     }
 
-    // Check, if this IP is Proxy
     FirstLogin\Utils\Effects\handleProxyDetection([
         'user' => &$user,
         'currentTimestamp' => $currentTimestamp,
     ]);
 
-    // TODO: move this to utils
-    // Give Free ProAccount for 7 days
-    // doquery("INSERT INTO {{table}} VALUES (NULL, {$user['id']}, UNIX_TIMESTAMP(), 0, 0, 11, 0);", 'premium_free');
+    // Note: disabled by default
+    // FirstLogin\Utils\Effects\giveUserPremium([
+    //     'userId' => $user['id'],
+    //     'currentTimestamp' => $currentTimestamp,
+    // ]);
 
     FirstLogin\Utils\Effects\createUserDevLogDump([
         'userId' => $user['id'],
