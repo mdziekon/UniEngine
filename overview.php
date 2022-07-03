@@ -21,65 +21,13 @@ loggedCheck();
 
 $Now = time();
 
-if($_User['first_login'] == 0)
-{
-    // Show First Login Message
-    includeLang('firstlogin');
-    $TPL = gettemplate('firstlogin');
-    $_DontShowMenus = true;
-
-    $_Lang['LoginPage_Text'] = parsetemplate(
-        $_Lang['LoginPage_Text'],
-        [
-            'GameName' => $_GameConfig['game_name'],
-            'GameSpeed' => prettyNumber($_GameConfig['game_speed'] / 2500),
-            'ResSpeed' => prettyNumber($_GameConfig['resource_multiplier']),
-            'FleetSpeed' => prettyNumber($_GameConfig['fleet_speed'] / 2500),
-            'FleetDebris' => $_GameConfig['Fleet_Cdr'],
-            'DefFlDebris' => $_GameConfig['Defs_Cdr'],
-            'DefMiDebris' => $_GameConfig['Debris_Def_Rocket'],
-            'MotherSize' => $_GameConfig['initial_fields'],
-            'OpenTime' => prettyDate('d m Y - H:i:s', SERVER_MAINOPEN_TSTAMP, 1),
-            'Protection_NewPlayerTime' => prettyNumber($_GameConfig['Protection_NewPlayerTime'] / 3600),
-            'Protection_PointsLimit' => prettyNumber($_GameConfig['no_noob_protect'] * 1000),
-        ]
-    );
-
-    Overview\Screens\FirstLogin\Utils\Effects\updateUserOnFirstLogin([
-        'userId' => $_User['id'],
-        'currentTimestamp' => $Now,
-    ]);
-
-    if ($_User['referred'] > 0) {
-        $referringUserWithTasksData = Overview\Screens\FirstLogin\Utils\Helpers\getReferrerTasksData([
-            'referredById' => $_User['referred'],
-        ]);
-
-        Overview\Screens\FirstLogin\Utils\Effects\triggerUserReferralTask([
-            'referringUserWithTasksData' => &$referringUserWithTasksData,
-        ]);
-        Overview\Screens\FirstLogin\Utils\Effects\handleReferralMultiAccountDetection([
-            'user' => &$_User,
-            'referredById' => $_User['referred'],
-            'referringUserWithTasksData' => &$referringUserWithTasksData,
-            'currentTimestamp' => $Now,
-        ]);
-    }
-
-    // Check, if this IP is Proxy
-    Overview\Screens\FirstLogin\Utils\Effects\handleProxyDetection([
+if ($_User['first_login'] == 0) {
+    Overview\Screens\FirstLogin\render([
         'user' => &$_User,
         'currentTimestamp' => $Now,
     ]);
 
-    // Give Free ProAccount for 7 days
-    //doquery("INSERT INTO {{table}} VALUES (NULL, {$_User['id']}, UNIX_TIMESTAMP(), 0, 0, 11, 0);", 'premium_free');
-
-    Overview\Screens\FirstLogin\Utils\Effects\createUserDevLogDump([
-        'userId' => $_User['id'],
-    ]);
-
-    display(parsetemplate($TPL, $_Lang), $_Lang['FirstLogin_Title'], false);
+    die();
 }
 
 $mode = (isset($_GET['mode']) ? $_GET['mode'] : '');
