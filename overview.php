@@ -28,26 +28,22 @@ if($_User['first_login'] == 0)
     $TPL = gettemplate('firstlogin');
     $_DontShowMenus = true;
 
-    $Search = array
-    (
-        '{GameSpeed}', '{ResSpeed}', '{FleetSpeed}', '{FleetDebris}', '{DefFlDebris}', '{DefMiDebris}',
-        '{MotherSize}', '{OpenTime}', '{Protection_NewPlayerTime}', '{Protection_PointsLimit}'
+    $_Lang['LoginPage_Text'] = parsetemplate(
+        $_Lang['LoginPage_Text'],
+        [
+            'GameName' => $_GameConfig['game_name'],
+            'GameSpeed' => prettyNumber($_GameConfig['game_speed'] / 2500),
+            'ResSpeed' => prettyNumber($_GameConfig['resource_multiplier']),
+            'FleetSpeed' => prettyNumber($_GameConfig['fleet_speed'] / 2500),
+            'FleetDebris' => $_GameConfig['Fleet_Cdr'],
+            'DefFlDebris' => $_GameConfig['Defs_Cdr'],
+            'DefMiDebris' => $_GameConfig['Debris_Def_Rocket'],
+            'MotherSize' => $_GameConfig['initial_fields'],
+            'OpenTime' => prettyDate('d m Y - H:i:s', SERVER_MAINOPEN_TSTAMP, 1),
+            'Protection_NewPlayerTime' => prettyNumber($_GameConfig['Protection_NewPlayerTime'] / 3600),
+            'Protection_PointsLimit' => prettyNumber($_GameConfig['no_noob_protect'] * 1000),
+        ]
     );
-    $Replace = array
-    (
-        prettyNumber($_GameConfig['game_speed'] / 2500),
-        prettyNumber($_GameConfig['resource_multiplier']),
-        prettyNumber($_GameConfig['fleet_speed'] / 2500),
-        $_GameConfig['Fleet_Cdr'],
-        $_GameConfig['Defs_Cdr'],
-        $_GameConfig['Debris_Def_Rocket'],
-        $_GameConfig['initial_fields'],
-        prettyDate('d m Y - H:i:s', SERVER_MAINOPEN_TSTAMP, 1),
-        prettyNumber($_GameConfig['Protection_NewPlayerTime'] / 3600),
-        prettyNumber($_GameConfig['no_noob_protect'] * 1000)
-    );
-
-    $_Lang['LoginPage_Text'] = str_replace($Search, $Replace, $_Lang['LoginPage_Text']);
 
     Overview\Screens\FirstLogin\Utils\Effects\updateUserOnFirstLogin([
         'userId' => $_User['id'],

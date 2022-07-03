@@ -1,9 +1,8 @@
 <?php
 
 $_Lang['FirstLogin_Title']   = 'Bienvenue';
-$_Lang['LoginPage_Header']   = 'Bienvenue sur '.$_GameConfig['game_name'].' !';
 
-$_Lang['LoginPage_Text']     = '<center><b class="orange">Bienvenue sur '.$_GameConfig['game_name'].' !</b><br/><br/>';
+$_Lang['LoginPage_Text']     = '<center><b class="orange">Bienvenue sur {GameName} !</b><br/><br/>';
 $_Lang['LoginPage_Text']    .= '<b>Pour ta première connexion, nous aimerions te présenter les paramètres de cet univers :</b></center><br/>';
 $_Lang['LoginPage_Text']    .= '<span style="line-height: 18px;"><b class="minw">Univers :</b> <b class="lime">1</b><br/>';
 $_Lang['LoginPage_Text']    .= '<b class="minw">Vitesse du jeu :</b> <b class="lime">{GameSpeed}x</b><br/><b class="minw">Production des ressources :</b> <b class="lime">{ResSpeed}x</b><br/><b class="minw">Vitesse des flottes :</b> <b class="lime">{FleetSpeed}x</b><br/>';
