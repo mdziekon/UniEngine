@@ -2,7 +2,7 @@
 
 namespace UniEngine\Engine\Modules\Overview\Screens\FirstLogin;
 
-use UniEngine\Engine\Modules\Overview;
+use UniEngine\Engine\Modules\Overview\Screens\FirstLogin;
 
 /**
  * @param array $params
@@ -17,43 +17,11 @@ function render($props) {
 
     includeLang('firstlogin');
 
-    // Run effects
-    Overview\Screens\FirstLogin\Utils\Effects\updateUserOnFirstLogin([
-        'userId' => $user['id'],
-        'currentTimestamp' => $currentTimestamp,
-    ]);
-
-    if ($user['referred'] > 0) {
-        $referringUserWithTasksData = Overview\Screens\FirstLogin\Utils\Helpers\getReferrerTasksData([
-            'referredById' => $user['referred'],
-        ]);
-
-        Overview\Screens\FirstLogin\Utils\Effects\triggerUserReferralTask([
-            'referringUserWithTasksData' => &$referringUserWithTasksData,
-        ]);
-        Overview\Screens\FirstLogin\Utils\Effects\handleReferralMultiAccountDetection([
-            'user' => &$user,
-            'referredById' => $user['referred'],
-            'referringUserWithTasksData' => &$referringUserWithTasksData,
-            'currentTimestamp' => $currentTimestamp,
-        ]);
-    }
-
-    // Check, if this IP is Proxy
-    Overview\Screens\FirstLogin\Utils\Effects\handleProxyDetection([
+    FirstLogin\runEffects([
         'user' => &$user,
         'currentTimestamp' => $currentTimestamp,
     ]);
 
-    // TODO: move this to utils
-    // Give Free ProAccount for 7 days
-    // doquery("INSERT INTO {{table}} VALUES (NULL, {$user['id']}, UNIX_TIMESTAMP(), 0, 0, 11, 0);", 'premium_free');
-
-    Overview\Screens\FirstLogin\Utils\Effects\createUserDevLogDump([
-        'userId' => $user['id'],
-    ]);
-
-    // Render the screen
     $_DontShowMenus = true;
 
     $screenTitle = $_Lang['FirstLogin_Title'];
