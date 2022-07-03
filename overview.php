@@ -60,8 +60,7 @@ if($_User['first_login'] == 0)
     $Query_UpdateUser .= "WHERE `id` = {$_User['id']} LIMIT 1;";
     doquery($Query_UpdateUser, 'users');
 
-    if($_User['referred'] > 0)
-    {
+    if ($_User['referred'] > 0) {
         $referringUserWithTasksData = Overview\Screens\FirstLogin\Utils\Helpers\getReferrerTasksData([
             'referredById' => $_User['referred'],
         ]);
@@ -86,11 +85,9 @@ if($_User['first_login'] == 0)
     // Give Free ProAccount for 7 days
     //doquery("INSERT INTO {{table}} VALUES (NULL, {$_User['id']}, UNIX_TIMESTAMP(), 0, 0, 11, 0);", 'premium_free');
 
-    // Create DevLog Dump
-    define('IN_USERFIRSTLOGIN', true);
-    $InnerUIDSet = $_User['id'];
-    $SkipDumpMsg = true;
-    include($_EnginePath.'admin/scripts/script.createUserDevDump.php');
+    Overview\Screens\FirstLogin\Utils\Effects\createUserDevLogDump([
+        'userId' => $_User['id'],
+    ]);
 
     display(parsetemplate($TPL, $_Lang), $_Lang['FirstLogin_Title'], false);
 }
