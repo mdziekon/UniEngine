@@ -49,16 +49,10 @@ if($_User['first_login'] == 0)
 
     $_Lang['LoginPage_Text'] = str_replace($Search, $Replace, $_Lang['LoginPage_Text']);
 
-    doquery("INSERT IGNORE INTO {{table}} VALUES (0, {$_User['id']}, {$Now});", 'chat_online');
-    doquery("UPDATE {{table}} SET `last_update` = {$Now} WHERE `id_owner` = {$_User['id']} LIMIT 1;", 'planets');
-
-    $NewUserProtectionTime = $Now + $_GameConfig['Protection_NewPlayerTime'];
-    $Query_UpdateUser = '';
-    $Query_UpdateUser .= "UPDATE {{table}} SET ";
-    $Query_UpdateUser .= "`first_login` = {$Now}, ";
-    $Query_UpdateUser .= "`NoobProtection_EndTime` = {$NewUserProtectionTime} ";
-    $Query_UpdateUser .= "WHERE `id` = {$_User['id']} LIMIT 1;";
-    doquery($Query_UpdateUser, 'users');
+    Overview\Screens\FirstLogin\Utils\Effects\updateUserOnFirstLogin([
+        'userId' => $_User['id'],
+        'currentTimestamp' => $Now,
+    ]);
 
     if ($_User['referred'] > 0) {
         $referringUserWithTasksData = Overview\Screens\FirstLogin\Utils\Helpers\getReferrerTasksData([
