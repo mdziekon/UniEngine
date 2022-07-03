@@ -20,9 +20,6 @@ $(document).ready(function()
 <br />
 <table style="width: 950px;">
     <tr>
-        <td class="c"><center>{LoginPage_Header}</center></td>
-    </tr>
-    <tr>
         <td class="b pad5">
             {LoginPage_Text}
         </td>

@@ -9,196 +9,25 @@ include($_EnginePath.'common.php');
 include_once($_EnginePath . 'modules/session/_includes.php');
 include_once($_EnginePath . 'modules/flights/_includes.php');
 include_once($_EnginePath . 'modules/flightControl/_includes.php');
+include_once($_EnginePath . 'modules/overview/_includes.php');
 
-use UniEngine\Engine\Includes\Helpers\Users;
 use UniEngine\Engine\Includes\Helpers\World\Elements;
 use UniEngine\Engine\Modules\Session;
 use UniEngine\Engine\Modules\Flights;
 use UniEngine\Engine\Modules\FlightControl;
+use UniEngine\Engine\Modules\Overview;
 
 loggedCheck();
 
 $Now = time();
 
-if($_User['first_login'] == 0)
-{
-    // Show First Login Message
-    includeLang('firstlogin');
-    $TPL = gettemplate('firstlogin');
-    $_DontShowMenus = true;
+if ($_User['first_login'] == 0) {
+    Overview\Screens\FirstLogin\render([
+        'user' => &$_User,
+        'currentTimestamp' => $Now,
+    ]);
 
-    $Search = array
-    (
-        '{GameSpeed}', '{ResSpeed}', '{FleetSpeed}', '{FleetDebris}', '{DefFlDebris}', '{DefMiDebris}',
-        '{MotherSize}', '{OpenTime}', '{Protection_NewPlayerTime}', '{Protection_PointsLimit}'
-    );
-    $Replace = array
-    (
-        prettyNumber($_GameConfig['game_speed'] / 2500),
-        prettyNumber($_GameConfig['resource_multiplier']),
-        prettyNumber($_GameConfig['fleet_speed'] / 2500),
-        $_GameConfig['Fleet_Cdr'],
-        $_GameConfig['Defs_Cdr'],
-        $_GameConfig['Debris_Def_Rocket'],
-        $_GameConfig['initial_fields'],
-        prettyDate('d m Y - H:i:s', SERVER_MAINOPEN_TSTAMP, 1),
-        prettyNumber($_GameConfig['Protection_NewPlayerTime'] / 3600),
-        prettyNumber($_GameConfig['no_noob_protect'] * 1000)
-    );
-
-    $_Lang['LoginPage_Text'] = str_replace($Search, $Replace, $_Lang['LoginPage_Text']);
-
-    doquery("INSERT IGNORE INTO {{table}} VALUES (0, {$_User['id']}, {$Now});", 'chat_online');
-    doquery("UPDATE {{table}} SET `last_update` = {$Now} WHERE `id_owner` = {$_User['id']} LIMIT 1;", 'planets');
-
-    $NewUserProtectionTime = $Now + $_GameConfig['Protection_NewPlayerTime'];
-    $Query_UpdateUser = '';
-    $Query_UpdateUser .= "UPDATE {{table}} SET ";
-    $Query_UpdateUser .= "`first_login` = {$Now}, ";
-    $Query_UpdateUser .= "`NoobProtection_EndTime` = {$NewUserProtectionTime} ";
-    $Query_UpdateUser .= "WHERE `id` = {$_User['id']} LIMIT 1;";
-    doquery($Query_UpdateUser, 'users');
-
-    if($_User['referred'] > 0)
-    {
-        // Update Referrer Tasks
-        if(empty($GlobalParsedTasks[$_User['referred']]['tasks_done_parsed']))
-        {
-            $GetUserTasksDone = doquery("SELECT `id`, `tasks_done` FROM {{table}} WHERE `id` = {$_User['referred']} LIMIT 1;", 'users', true);
-            if($GetUserTasksDone['id'] == $_User['referred'])
-            {
-                unset($GetUserTasksDone['id']);
-                Tasks_CheckUservar($GetUserTasksDone);
-                $GlobalParsedTasks[$_User['referred']] = $GetUserTasksDone;
-                $ThisTaskUser        = $GlobalParsedTasks[$_User['referred']];
-                $ThisTaskUser['id'] = $_User['referred'];
-            }
-        }
-        else
-        {
-            $ThisTaskUser        = $GlobalParsedTasks[$_User['referred']];
-            $ThisTaskUser['id'] = $_User['referred'];
-        }
-
-        if(!empty($ThisTaskUser))
-        {
-            Tasks_TriggerTask($ThisTaskUser, 'NEWUSER_REGISTER', array
-            (
-                'mainCheck' => function($JobArray, $ThisCat, $TaskID, $JobID) use (&$ThisTaskUser)
-                {
-                    $Return = Tasks_TriggerTask_MainCheck_Progressive($JobArray, $ThisCat, $TaskID, $JobID, $ThisTaskUser, 1);
-                    $ThisTaskUser['TaskData'][] = array
-                    (
-                        'TaskID' => $TaskID,
-                        'TaskStatus' => $ThisTaskUser['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID],
-                        'TaskLimit' => $JobArray[$JobArray['statusField']]
-                    );
-                    return $Return;
-                }
-            ));
-        }
-
-        // Check IP Intersection
-        $_Included_AlertSystemUtilities = true;
-        include($_EnginePath.'includes/functions/AlertSystemUtilities.php');
-        $CheckIntersection = AlertUtils_IPIntersect($_User['id'], $_User['referred'], array
-        (
-            'LastTimeDiff' => (TIME_DAY * 60),
-            'ThisTimeDiff' => (TIME_DAY * 60),
-            'ThisTimeStamp' => ($Now - SERVER_MAINOPEN_TSTAMP)
-        ));
-        if($CheckIntersection !== false)
-        {
-            $FiltersData = array();
-            $FiltersData['place'] = 4;
-            $FiltersData['alertsender'] = 4;
-            $FiltersData['users'] = array($_User['id'], $_User['referred']);
-            $FiltersData['ips'] = $CheckIntersection['Intersect'];
-            $FiltersData['newuser'] = $_User['id'];
-            $FiltersData['referrer'] = $_User['referred'];
-            foreach($CheckIntersection['Intersect'] as $IP)
-            {
-                $FiltersData['logcount'][$IP][$_User['id']] = $CheckIntersection['IPLogData'][$_User['id']][$IP]['Count'];
-                $FiltersData['logcount'][$IP][$_User['referred']] = $CheckIntersection['IPLogData'][$_User['referred']][$IP]['Count'];
-            }
-
-            $FilterResult = AlertUtils_CheckFilters($FiltersData, array('Save' => true));
-            if($FilterResult['SendAlert'])
-            {
-                $_Alert['Data']['ReferrerID'] = $_User['referred'];
-                foreach($CheckIntersection['Intersect'] as $ThisIPID)
-                {
-                    $_Alert['Data']['Intersect'][] = array
-                    (
-                        'IPID' => $ThisIPID,
-                        'NewUser' => $CheckIntersection['IPLogData'][$_User['id']][$ThisIPID],
-                        'OldUser' => $CheckIntersection['IPLogData'][$_User['referred']][$ThisIPID]
-                    );
-                }
-                if(!empty($ThisTaskUser['TaskData']))
-                {
-                    $_Alert['Data']['Tasks'] = $ThisTaskUser['TaskData'];
-                }
-
-                $Query_AlertOtherUsers .= "SELECT DISTINCT `User_ID` FROM {{table}} WHERE ";
-                $Query_AlertOtherUsers .= "`User_ID` NOT IN ({$_User['id']}, {$_User['referred']}) AND ";
-                $Query_AlertOtherUsers .= "`IP_ID` IN (".implode(', ', $CheckIntersection['Intersect']).") AND ";
-                $Query_AlertOtherUsers .= "`Count` > `FailCount`;";
-                $Result_AlertOtherUsers = doquery($Query_AlertOtherUsers, 'user_enterlog');
-                if($Result_AlertOtherUsers->num_rows > 0)
-                {
-                    while($FetchData = $Result_AlertOtherUsers->fetch_assoc())
-                    {
-                        $_Alert['Data']['OtherUsers'][] = $FetchData['User_ID'];
-                    }
-                }
-
-                Alerts_Add(4, $Now, 1, 2, 8, $_User['id'], $_Alert['Data']);
-            }
-        }
-    }
-
-    // Check, if this IP is Proxy
-    $usersIP = Users\Session\getCurrentIP();
-    $IPHash = md5($usersIP);
-    $Query_CheckProxy = "SELECT `ID`, `isProxy` FROM {{table}} WHERE `ValueHash` = '{$IPHash}' LIMIT 1;";
-    $Result_CheckProxy = doquery($Query_CheckProxy, 'used_ip_and_ua', true);
-    if($Result_CheckProxy['ID'] > 0 AND $Result_CheckProxy['isProxy'] == 1)
-    {
-        if(!isset($_Included_AlertSystemUtilities))
-        {
-            include($_EnginePath.'includes/functions/AlertSystemUtilities.php');
-            $_Included_AlertSystemUtilities = true;
-        }
-        $FiltersData = array();
-        $FiltersData['place'] = 4;
-        $FiltersData['alertsender'] = 5;
-        $FiltersData['users'] = array($_User['id']);
-        $FiltersData['ips'] = array($Result_CheckProxy['ID']);
-
-        $FilterResult = AlertUtils_CheckFilters($FiltersData, array('DontLoad' => true, 'DontLoad_OnlyIfCacheEmpty' => true));
-        if($FilterResult['SendAlert'])
-        {
-            $_Alert['Data']['IPID'] = $Result_CheckProxy['ID'];
-            if($usersIP == $_User['ip_at_reg'])
-            {
-                $_Alert['Data']['RegIP'] = true;
-            }
-
-            Alerts_Add(5, $Now, 1, 3, 8, $_User['id'], $_Alert['Data']);
-        }
-    }
-
-    // Give Free ProAccount for 7 days
-    //doquery("INSERT INTO {{table}} VALUES (NULL, {$_User['id']}, UNIX_TIMESTAMP(), 0, 0, 11, 0);", 'premium_free');
-
-    // Create DevLog Dump
-    define('IN_USERFIRSTLOGIN', true);
-    $InnerUIDSet = $_User['id'];
-    $SkipDumpMsg = true;
-    include($_EnginePath.'admin/scripts/script.createUserDevDump.php');
-
-    display(parsetemplate($TPL, $_Lang), $_Lang['FirstLogin_Title'], false);
+    die();
 }
 
 $mode = (isset($_GET['mode']) ? $_GET['mode'] : '');
