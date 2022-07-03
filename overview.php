@@ -66,25 +66,9 @@ if($_User['first_login'] == 0)
             'referredById' => $_User['referred'],
         ]);
 
-        if(!empty($referringUserWithTasksData))
-        {
-            Tasks_TriggerTask($referringUserWithTasksData, 'NEWUSER_REGISTER', array
-            (
-                'mainCheck' => function($JobArray, $ThisCat, $TaskID, $JobID) use (&$referringUserWithTasksData)
-                {
-                    $Return = Tasks_TriggerTask_MainCheck_Progressive($JobArray, $ThisCat, $TaskID, $JobID, $referringUserWithTasksData, 1);
-                    $referringUserWithTasksData['TaskData'][] = array
-                    (
-                        'TaskID' => $TaskID,
-                        'TaskStatus' => $referringUserWithTasksData['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID],
-                        'TaskLimit' => $JobArray[$JobArray['statusField']]
-                    );
-                    return $Return;
-                }
-            ));
-        }
-
-        // Check IP Intersection
+        Overview\Screens\FirstLogin\Utils\Effects\triggerUserReferralTask([
+            'referringUserWithTasksData' => &$referringUserWithTasksData,
+        ]);
         Overview\Screens\FirstLogin\Utils\Effects\handleReferralMultiAccountDetection([
             'user' => &$_User,
             'referredById' => $_User['referred'],

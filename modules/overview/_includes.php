@@ -9,6 +9,7 @@ call_user_func(function () {
     include($includePath . './screens/FirstLogin/FirstLogin.screen.php');
     include($includePath . './screens/FirstLogin/utils/effects/handleProxyDetection.effect.php');
     include($includePath . './screens/FirstLogin/utils/effects/handleReferralMultiAccountDetection.effect.php');
+    include($includePath . './screens/FirstLogin/utils/effects/triggerUserReferralTask.effect.php');
     include($includePath . './screens/FirstLogin/utils/helpers/getReferrerTasksData.helper.php');
 
 });
