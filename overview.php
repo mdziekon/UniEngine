@@ -42,7 +42,7 @@ switch($mode)
         $parse = $_Lang;
 
         $parse['Rename_Ins_MsgHide'] = 'style="display: none;"';
-        $parse['Rename_Ins_MsgTxt'] = false;
+        $parse['Rename_Ins_MsgTxt'] = '';
 
         if($_Planet['planet_type'] == 1)
         {
@@ -53,57 +53,37 @@ switch($mode)
             $parse['Rename_CurrentName'] = sprintf($parse['Rename_CurrentName'], $parse['Rename_Moon']);
         }
 
-        if(isset($_POST['action']) && $_POST['action'] == 'do')
-        {
+        if (
+            isset($_POST['action']) &&
+            $_POST['action'] == 'do'
+        ) {
             // User wants to change planets name
             $NewName = trim($_POST['set_newname']);
-            if(!empty($NewName))
-            {
-                // Update only, when name is not the same as old
-                if($_Planet['name'] != $NewName)
-                {
-                    // Check if planet new name is correct
-                    $NewNameLength = strlen($NewName);
-                    if($NewNameLength < 3)
-                    {
-                        $parse['Rename_Ins_MsgColor'] = 'red';
-                        $parse['Rename_Ins_MsgTxt'] = $_Lang['RenamePlanet_TooShort'];
-                    }
-                    elseif($NewNameLength > 20)
-                    {
-                        $parse['Rename_Ins_MsgColor'] = 'red';
-                        $parse['Rename_Ins_MsgTxt'] = $_Lang['RenamePlanet_TooLong'];
-                    }
-                    elseif(!preg_match(REGEXP_PLANETNAME_ABSOLUTE, $NewName))
-                    {
-                        $parse['Rename_Ins_MsgColor'] = 'red';
-                        $parse['Rename_Ins_MsgTxt'] = $_Lang['RenamePlanet_BadSigns'];
-                    }
-                    if($parse['Rename_Ins_MsgTxt'] === false)
-                    {
-                        //Save the new name in Script Memory
-                        $_Planet['name'] = $NewName;
-                        //Now save it in DataBase
-                        doquery("UPDATE {{table}} SET `name` = '{$NewName}' WHERE `id` = {$_User['current_planet']} LIMIT 1;", 'planets');
-                        $parse['Rename_Ins_MsgColor'] = 'lime';
-                        $parse['Rename_Ins_MsgTxt'] = $_Lang['RenamePlanet_NameSaved'];
-                    }
-                }
-                else
-                {
-                    $parse['Rename_Ins_MsgColor'] = 'orange';
-                    $parse['Rename_Ins_MsgTxt'] = $_Lang['RenamePlanet_SameName'];
-                }
-            }
-            else
-            {
+
+            $nameChangeValidationResult = Overview\Screens\PlanetNameChange\Utils\Validators\validateNewName([
+                'input' => [
+                    'newName' => $NewName,
+                ],
+                'planet' => &$_Planet,
+            ]);
+
+            if (!$nameChangeValidationResult['isSuccess']) {
+                $errorMessage = Overview\Screens\PlanetNameChange\Utils\ErrorMappers\mapValidateNewNameErrorToReadableMessage(
+                    $nameChangeValidationResult['error']
+                );
+
                 $parse['Rename_Ins_MsgColor'] = 'red';
-                $parse['Rename_Ins_MsgTxt'] = $_Lang['RenamePlanet_0Lenght'];
+                $parse['Rename_Ins_MsgTxt'] = $errorMessage;
+            } else {
+                $_Planet['name'] = $NewName;
+                doquery("UPDATE {{table}} SET `name` = '{$NewName}' WHERE `id` = {$_User['current_planet']} LIMIT 1;", 'planets');
+
+                $parse['Rename_Ins_MsgColor'] = 'lime';
+                $parse['Rename_Ins_MsgTxt'] = $_Lang['RenamePlanet_NameSaved'];
             }
         }
 
-        if($parse['Rename_Ins_MsgTxt'] !== false)
-        {
+        if ($parse['Rename_Ins_MsgTxt'] !== '') {
             $parse['Rename_Ins_MsgHide'] = '';
         }
 
