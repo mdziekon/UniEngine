@@ -39,63 +39,12 @@ includeLang('overview');
 switch($mode)
 {
     case 'rename':
-        // --- Rename Planet Page ---
-        $parse = $_Lang;
-
-        $parse['Rename_Ins_MsgHide'] = 'style="display: none;"';
-        $parse['Rename_Ins_MsgTxt'] = '';
-
-        if($_Planet['planet_type'] == 1)
-        {
-            $parse['Rename_CurrentName'] = sprintf($parse['Rename_CurrentName'], $parse['Rename_Planet']);
-        }
-        else
-        {
-            $parse['Rename_CurrentName'] = sprintf($parse['Rename_CurrentName'], $parse['Rename_Moon']);
-        }
-
-        if (
-            isset($_POST['action']) &&
-            $_POST['action'] == 'do'
-        ) {
-            // User wants to change planets name
-            $NewName = trim($_POST['set_newname']);
-
-            $nameChangeValidationResult = Overview\Screens\PlanetNameChange\Utils\Validators\validateNewName([
-                'input' => [
-                    'newName' => $NewName,
-                ],
-                'planet' => &$_Planet,
-            ]);
-
-            if (!$nameChangeValidationResult['isSuccess']) {
-                $errorMessage = Overview\Screens\PlanetNameChange\Utils\ErrorMappers\mapValidateNewNameErrorToReadableMessage(
-                    $nameChangeValidationResult['error']
-                );
-
-                $parse['Rename_Ins_MsgColor'] = 'red';
-                $parse['Rename_Ins_MsgTxt'] = $errorMessage;
-            } else {
-                $_Planet['name'] = $NewName;
-                doquery("UPDATE {{table}} SET `name` = '{$NewName}' WHERE `id` = {$_User['current_planet']} LIMIT 1;", 'planets');
-
-                $parse['Rename_Ins_MsgColor'] = 'lime';
-                $parse['Rename_Ins_MsgTxt'] = $_Lang['RenamePlanet_NameSaved'];
-            }
-        }
-
-        if ($parse['Rename_Ins_MsgTxt'] !== '') {
-            $parse['Rename_Ins_MsgHide'] = '';
-        }
-
-        $galaxyPlanetLink = Common\Components\GalaxyPlanetLink\render([
-            'coords' => $_Planet,
+        Overview\Screens\PlanetNameChange\render([
+            'input' => &$_POST,
+            'user' => &$_User,
+            'planet' => &$_Planet,
         ]);
 
-        $parse['Rename_Ins_CurrentName'] = "{$_Planet['name']} {$galaxyPlanetLink}";
-
-        $page = parsetemplate(gettemplate('overview_rename'), $parse);
-        display($page, $_Lang['Rename_TitleMain']);
         break;
     case 'abandon':
         // --- Abandon Colony ---

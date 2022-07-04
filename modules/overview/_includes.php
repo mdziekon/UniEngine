@@ -16,6 +16,8 @@ call_user_func(function () {
     include($includePath . './screens/FirstLogin/utils/effects/updateUserOnFirstLogin.effect.php');
     include($includePath . './screens/FirstLogin/utils/helpers/getReferrerTasksData.helper.php');
 
+    include($includePath . './screens/PlanetNameChange/PlanetNameChange.screen.php');
+    include($includePath . './screens/PlanetNameChange/PlanetNameChange.utils.php');
     include($includePath . './screens/PlanetNameChange/utils/errorMappers/validateNewName.errorMapper.php');
     include($includePath . './screens/PlanetNameChange/utils/validators/validateNewName.validator.php');
 
