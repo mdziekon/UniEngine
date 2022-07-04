@@ -12,6 +12,7 @@ include_once($_EnginePath . 'modules/flightControl/_includes.php');
 include_once($_EnginePath . 'modules/overview/_includes.php');
 
 use UniEngine\Engine\Includes\Helpers\World\Elements;
+use UniEngine\Engine\Common;
 use UniEngine\Engine\Modules\Session;
 use UniEngine\Engine\Modules\Flights;
 use UniEngine\Engine\Modules\FlightControl;
@@ -87,7 +88,11 @@ switch($mode)
             $parse['Rename_Ins_MsgHide'] = '';
         }
 
-        $parse['Rename_Ins_CurrentName'] = "{$_Planet['name']} <a href=\"galaxy.php?mode=3&amp;galaxy={$_Planet['galaxy']}&amp;system={$_Planet['system']}&amp;planet={$_Planet['planet']}\">[{$_Planet['galaxy']}:{$_Planet['system']}:{$_Planet['planet']}]</a>";
+        $galaxyPlanetLink = Common\Components\GalaxyPlanetLink\render([
+            'coords' => $_Planet,
+        ]);
+
+        $parse['Rename_Ins_CurrentName'] = "{$_Planet['name']} {$galaxyPlanetLink}";
 
         $page = parsetemplate(gettemplate('overview_rename'), $parse);
         display($page, $_Lang['Rename_TitleMain']);
