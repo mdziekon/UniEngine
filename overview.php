@@ -12,6 +12,7 @@ include_once($_EnginePath . 'modules/flightControl/_includes.php');
 include_once($_EnginePath . 'modules/overview/_includes.php');
 
 use UniEngine\Engine\Includes\Helpers\World\Elements;
+use UniEngine\Engine\Common;
 use UniEngine\Engine\Modules\Session;
 use UniEngine\Engine\Modules\Flights;
 use UniEngine\Engine\Modules\FlightControl;
@@ -38,79 +39,12 @@ includeLang('overview');
 switch($mode)
 {
     case 'rename':
-        // --- Rename Planet Page ---
-        $parse = $_Lang;
+        Overview\Screens\PlanetNameChange\render([
+            'input' => &$_POST,
+            'user' => &$_User,
+            'planet' => &$_Planet,
+        ]);
 
-        $parse['Rename_Ins_MsgHide'] = 'style="display: none;"';
-        $parse['Rename_Ins_MsgTxt'] = false;
-
-        if($_Planet['planet_type'] == 1)
-        {
-            $parse['Rename_CurrentName'] = sprintf($parse['Rename_CurrentName'], $parse['Rename_Planet']);
-        }
-        else
-        {
-            $parse['Rename_CurrentName'] = sprintf($parse['Rename_CurrentName'], $parse['Rename_Moon']);
-        }
-
-        if(isset($_POST['action']) && $_POST['action'] == 'do')
-        {
-            // User wants to change planets name
-            $NewName = trim($_POST['set_newname']);
-            if(!empty($NewName))
-            {
-                // Update only, when name is not the same as old
-                if($_Planet['name'] != $NewName)
-                {
-                    // Check if planet new name is correct
-                    $NewNameLength = strlen($NewName);
-                    if($NewNameLength < 3)
-                    {
-                        $parse['Rename_Ins_MsgColor'] = 'red';
-                        $parse['Rename_Ins_MsgTxt'] = $_Lang['RenamePlanet_TooShort'];
-                    }
-                    elseif($NewNameLength > 20)
-                    {
-                        $parse['Rename_Ins_MsgColor'] = 'red';
-                        $parse['Rename_Ins_MsgTxt'] = $_Lang['RenamePlanet_TooLong'];
-                    }
-                    elseif(!preg_match(REGEXP_PLANETNAME_ABSOLUTE, $NewName))
-                    {
-                        $parse['Rename_Ins_MsgColor'] = 'red';
-                        $parse['Rename_Ins_MsgTxt'] = $_Lang['RenamePlanet_BadSigns'];
-                    }
-                    if($parse['Rename_Ins_MsgTxt'] === false)
-                    {
-                        //Save the new name in Script Memory
-                        $_Planet['name'] = $NewName;
-                        //Now save it in DataBase
-                        doquery("UPDATE {{table}} SET `name` = '{$NewName}' WHERE `id` = {$_User['current_planet']} LIMIT 1;", 'planets');
-                        $parse['Rename_Ins_MsgColor'] = 'lime';
-                        $parse['Rename_Ins_MsgTxt'] = $_Lang['RenamePlanet_NameSaved'];
-                    }
-                }
-                else
-                {
-                    $parse['Rename_Ins_MsgColor'] = 'orange';
-                    $parse['Rename_Ins_MsgTxt'] = $_Lang['RenamePlanet_SameName'];
-                }
-            }
-            else
-            {
-                $parse['Rename_Ins_MsgColor'] = 'red';
-                $parse['Rename_Ins_MsgTxt'] = $_Lang['RenamePlanet_0Lenght'];
-            }
-        }
-
-        if($parse['Rename_Ins_MsgTxt'] !== false)
-        {
-            $parse['Rename_Ins_MsgHide'] = '';
-        }
-
-        $parse['Rename_Ins_CurrentName'] = "{$_Planet['name']} <a href=\"galaxy.php?mode=3&amp;galaxy={$_Planet['galaxy']}&amp;system={$_Planet['system']}&amp;planet={$_Planet['planet']}\">[{$_Planet['galaxy']}:{$_Planet['system']}:{$_Planet['planet']}]</a>";
-
-        $page = parsetemplate(gettemplate('overview_rename'), $parse);
-        display($page, $_Lang['Rename_TitleMain']);
         break;
     case 'abandon':
         // --- Abandon Colony ---
