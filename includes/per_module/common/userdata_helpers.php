@@ -2,6 +2,7 @@
 
 use UniEngine\Engine\Common\Exceptions;
 use UniEngine\Engine\Includes\Helpers\Users;
+use UniEngine\Engine\Includes\Helpers\World;
 
 class UniEngineDataFetchException extends Exceptions\UniEngineException {};
 class UniEnginePlanetDataFetchException extends UniEngineDataFetchException {};
@@ -217,7 +218,7 @@ function fetchGalaxyData(&$planet) {
     $planetID = $planet['id'];
 
     $selectorKey = (
-        $planet['type'] == 1 ?
+        $planet['planet_type'] == World\Enums\PlanetType::Planet ?
         'id_planet' :
         'id_moon'
     );

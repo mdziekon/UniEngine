@@ -6,6 +6,14 @@ call_user_func(function () {
 
     $includePath = $_EnginePath . 'modules/overview/';
 
+    include($includePath . './screens/AbandonPlanet/AbandonPlanet.screen.php');
+    include($includePath . './screens/AbandonPlanet/AbandonPlanet.utils.php');
+    include($includePath . './screens/AbandonPlanet/utils/effects/triggerUserTasksUpdates.effect.php');
+    include($includePath . './screens/AbandonPlanet/utils/effects/tryAbandonPlanet.effect.php');
+    include($includePath . './screens/AbandonPlanet/utils/effects/updateUserDevLog.effect.php');
+    include($includePath . './screens/AbandonPlanet/utils/errorMappers/tryAbandonPlanet.errorMapper.php');
+    include($includePath . './screens/AbandonPlanet/utils/validators/validateAbandonPlanet.validator.php');
+
     include($includePath . './screens/FirstLogin/FirstLogin.screen.php');
     include($includePath . './screens/FirstLogin/FirstLogin.utils.php');
     include($includePath . './screens/FirstLogin/utils/effects/createUserDevLogDump.effect.php');

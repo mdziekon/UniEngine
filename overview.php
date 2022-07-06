@@ -47,116 +47,13 @@ switch($mode)
 
         break;
     case 'abandon':
-        // --- Abandon Colony ---
-        if(isOnVacation())
-        {
-            message($_Lang['Vacation_WarnMsg'], $_Lang['Vacation']);
-        }
+        Overview\Screens\AbandonPlanet\render([
+            'input' => &$_POST,
+            'user' => &$_User,
+            'planet' => &$_Planet,
+            'currentTimestamp' => $Now,
+        ]);
 
-        $parse = $_Lang;
-        $parse['Abandon_Ins_MsgHide'] = 'style="display: none;"';
-        $parse['Abandon_Ins_MsgTxt'] = false;
-
-        if(isset($_POST['action']) && $_POST['action'] == 'do')
-        {
-            $parse['Abandon_Ins_MsgColor'] = 'red';
-            // Check if given password is good
-            if(!empty($_POST['give_passwd']))
-            {
-                $inputPasswordHash = Session\Utils\LocalIdentityV1\hashPassword([
-                    'password' => $_POST['give_passwd'],
-                ]);
-
-                if($inputPasswordHash == $_User['password'])
-                {
-                    if($_User['id_planet'] != $_User['current_planet'])
-                    {
-                        if($_Planet['planet_type'] == 1 OR $_Planet['planet_type'] == 3)
-                        {
-                            include($_EnginePath.'includes/functions/DeleteSelectedPlanetorMoon.php');
-                            $DeleteResult = DeleteSelectedPlanetorMoon();
-                            if($DeleteResult['result'] === true)
-                            {
-                                // Prevent abandoning Planet to make mission faster
-                                Tasks_TriggerTask($_User, 'COLONIZE_PLANET', array
-                                (
-                                    'mainCheck' => function($JobArray, $ThisCat, $TaskID, $JobID) use ($_User)
-                                    {
-                                        global $UserTasksUpdate;
-                                        if(!empty($UserTasksUpdate[$_User['id']]['status'][$ThisCat][$TaskID][$JobID]))
-                                        {
-                                            $_User['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] = $UserTasksUpdate[$_User['id']]['status'][$ThisCat][$TaskID][$JobID];
-                                        }
-                                        if($_User['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] <= 0)
-                                        {
-                                            return true;
-                                        }
-                                        $_User['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] -= 1;
-                                        $UserTasksUpdate[$_User['id']]['status'][$ThisCat][$TaskID][$JobID] = $_User['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID];
-                                        return true;
-                                    }
-                                ));
-
-                                // User Development Log
-                                $UserDev_Log[] = array('PlanetID' => $_Planet['id'], 'Date' => $Now, 'Place' => 25, 'Code' => '0', 'ElementID' => '0');
-                                if(count($DeleteResult['ids']) > 1)
-                                {
-                                    $UserDev_Log[] = array('PlanetID' => $DeleteResult['ids'][1], 'Date' => $Now, 'Place' => 25, 'Code' => '0', 'ElementID' => '0');
-                                }
-
-                                header('Location: overview.php?showmsg=abandon');
-                                safeDie();
-                            }
-                            else
-                            {
-                                if($DeleteResult['reason'] == 'tech')
-                                {
-                                    $parse['Abandon_Ins_MsgTxt'] = $_Lang['Abandon_TechHere'];
-                                }
-                                elseif($DeleteResult['reason'] == 'sql')
-                                {
-                                    $parse['Abandon_Ins_MsgTxt'] = $_Lang['Abandon_SQLError'];
-                                }
-                                elseif($DeleteResult['reason'] == 'fleet_current')
-                                {
-                                    $parse['Abandon_Ins_MsgTxt'] = $_Lang['Abandon_FlyingFleetsHere'];
-                                }
-                                elseif($DeleteResult['reason'] == 'fleet_moon')
-                                {
-                                    $parse['Abandon_Ins_MsgTxt'] = $_Lang['Abandon_FlyingFleetsMoon'];
-                                }
-                            }
-                        }
-                        else
-                        {
-                            $parse['Abandon_Ins_MsgTxt'] = $_Lang['Abandon_BadPlanetrowData'];
-                        }
-                    }
-                    else
-                    {
-                        $parse['Abandon_Ins_MsgTxt'] = $_Lang['Abandon_CantAbandonMother'];
-                    }
-                }
-                else
-                {
-                    $parse['Abandon_Ins_MsgTxt'] = $_Lang['Abandon_BadPassword'];
-                }
-            }
-            else
-            {
-                $parse['Abandon_Ins_MsgTxt'] = $_Lang['Abandon_NoPassword'];
-            }
-        }
-
-        if($parse['Abandon_Ins_MsgTxt'] !== false)
-        {
-            $parse['Abandon_Ins_MsgHide'] = '';
-        }
-        $parse['Abandon_Desc'] = sprintf($parse['Abandon_Desc'], ($_Planet['planet_type'] == 1 ? $_Lang['Abandon_Planet'] : $_Lang['Abandon_Moon']), $_Planet['name'], "<a class=\"orange\" href=\"galaxy.php?mode=3&amp;galaxy={$_Planet['galaxy']}&amp;system={$_Planet['system']}&amp;planet={$_Planet['planet']}\">[{$_Planet['galaxy']}:{$_Planet['system']}:{$_Planet['planet']}]</a>");
-        $parse['Abandon_Ins_Pass'] = $_User['password'];
-
-        $page = parsetemplate(gettemplate('overview_deleteplanet'), $parse);
-        display($page, $_Lang['Abandon_TitleMain']);
         break;
     default:
         $parse = &$_Lang;
