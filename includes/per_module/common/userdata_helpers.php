@@ -217,7 +217,7 @@ function fetchGalaxyData(&$planet) {
     $planetID = $planet['id'];
 
     $selectorKey = (
-        $planet['type'] == 1 ?
+        $planet['planet_type'] == 1 ?
         'id_planet' :
         'id_moon'
     );
