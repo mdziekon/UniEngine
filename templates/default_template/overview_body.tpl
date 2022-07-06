@@ -290,7 +290,9 @@ $(document).ready(function()
     </tr>
     <tr {hide_other_planets}>
         <th colspan="3">
-            <table class="s" border="0" align="center">{OtherPlanets}</table>
+            <div style="display: flex; justify-content: flex-start; flex-wrap: wrap;">
+                {OtherPlanets}
+            </div>
         </th>
     </tr>
     <tr class="inv"><td></td></tr>
