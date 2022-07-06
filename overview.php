@@ -594,7 +594,7 @@ switch($mode)
         {
             $QryPlanets .= "`name` {$Order}";
         }
-        $parse['OtherPlanets'] = '';
+        $parse['OtherPlanets'] = [];
 
         $SQLResult_GetAllOtherPlanets = doquery($QryPlanets, 'planets');
 
@@ -612,31 +612,16 @@ switch($mode)
                     continue;
                 }
 
-                $parse['OtherPlanets'] .= '<div class="otherPlanetItem">'.$PlanetsData['name'].'<br/>';
-                $parse['OtherPlanets'] .= "<a href=\"?cp={$PlanetsData['id']}&re=0\" title=\"{$PlanetsData['name']}\"><img src=\"{$_SkinPath}planeten/small/s_{$PlanetsData['image']}.jpg\" height=\"90\" width=\"90\"></a><br>";
-
-                $parse['OtherPlanets'] .= '<center>';
-
-                if ($PlanetsData['buildQueue_firstEndTime'] > 0) {
-                    $buildingsQueue = Structures\parseQueueString(
-                        Structures\getQueueString($PlanetsData)
-                    );
-                    $firstQueueElement = $buildingsQueue[0];
-                    $elementId = $firstQueueElement['elementID'];
-                    $elementLevel = $firstQueueElement['level'];
-                    $elementBuildingRestTime = pretty_time($firstQueueElement['endTimestamp'] - $Now);
-
-                    $parse['OtherPlanets'] .= $_Lang['tech'][$elementId].' ('.$elementLevel.')';
-                    $parse['OtherPlanets'] .= '<br><span style="color: #7f7f7f;">('.$elementBuildingRestTime.')</span>';
-                } else {
-                    $parse['OtherPlanets'] .= $_Lang['Free'].'<br/>&nbsp;';
-                }
-
-                $parse['OtherPlanets'] .= '</center></div>';
+                $parse['OtherPlanets'][] = Overview\Screens\Overview\Components\PlanetsListElement\render([
+                    'planet' => &$PlanetsData,
+                    'currentTimestamp' => $Now,
+                ])['componentHTML'];
             }
         } else {
             $parse['hide_other_planets'] = 'style="display: none;"';
         }
+
+        $parse['OtherPlanets'] = implode('', $parse['OtherPlanets']);
 
         // Update this planet (if necessary)
         if(HandlePlanetUpdate($_Planet, $_User, $Now, true) === true)
