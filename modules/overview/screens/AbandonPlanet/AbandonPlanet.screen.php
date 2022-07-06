@@ -3,6 +3,7 @@
 namespace UniEngine\Engine\Modules\Overview\Screens\AbandonPlanet;
 
 use UniEngine\Engine\Common;
+use UniEngine\Engine\Includes\Helpers\World;
 use UniEngine\Engine\Modules\Overview\Screens\AbandonPlanet;
 
 /**
@@ -44,7 +45,7 @@ function render($props) {
         'Abandon_Desc' => sprintf(
             $_Lang['Abandon_Desc'],
             (
-                $planet['planet_type'] == 1 ?
+                $planet['planet_type'] == World\Enums\PlanetType::Planet ?
                     $_Lang['Abandon_Planet'] :
                     $_Lang['Abandon_Moon']
             ),
