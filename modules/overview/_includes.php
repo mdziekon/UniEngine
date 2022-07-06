@@ -6,6 +6,8 @@ call_user_func(function () {
 
     $includePath = $_EnginePath . 'modules/overview/';
 
+    include($includePath . './screens/AbandonPlanet/utils/effects/triggerUserTasksUpdates.effect.php');
+
     include($includePath . './screens/FirstLogin/FirstLogin.screen.php');
     include($includePath . './screens/FirstLogin/FirstLogin.utils.php');
     include($includePath . './screens/FirstLogin/utils/effects/createUserDevLogDump.effect.php');

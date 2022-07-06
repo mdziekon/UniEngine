@@ -77,25 +77,9 @@ switch($mode)
                             $DeleteResult = DeleteSelectedPlanetorMoon();
                             if($DeleteResult['result'] === true)
                             {
-                                // Prevent abandoning Planet to make mission faster
-                                Tasks_TriggerTask($_User, 'COLONIZE_PLANET', array
-                                (
-                                    'mainCheck' => function($JobArray, $ThisCat, $TaskID, $JobID) use ($_User)
-                                    {
-                                        global $UserTasksUpdate;
-                                        if(!empty($UserTasksUpdate[$_User['id']]['status'][$ThisCat][$TaskID][$JobID]))
-                                        {
-                                            $_User['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] = $UserTasksUpdate[$_User['id']]['status'][$ThisCat][$TaskID][$JobID];
-                                        }
-                                        if($_User['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] <= 0)
-                                        {
-                                            return true;
-                                        }
-                                        $_User['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID] -= 1;
-                                        $UserTasksUpdate[$_User['id']]['status'][$ThisCat][$TaskID][$JobID] = $_User['tasks_done_parsed']['status'][$ThisCat][$TaskID][$JobID];
-                                        return true;
-                                    }
-                                ));
+                                Overview\Screens\AbandonPlanet\Utils\Effects\triggerUserTasksUpdates([
+                                    'user' => &$_User,
+                                ]);
 
                                 // User Development Log
                                 $UserDev_Log[] = array('PlanetID' => $_Planet['id'], 'Date' => $Now, 'Place' => 25, 'Code' => '0', 'ElementID' => '0');
