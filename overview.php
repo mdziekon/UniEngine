@@ -81,13 +81,10 @@ switch($mode)
                                     'user' => &$_User,
                                     'planet' => &$_Planet,
                                 ]);
-
-                                // User Development Log
-                                $UserDev_Log[] = array('PlanetID' => $_Planet['id'], 'Date' => $Now, 'Place' => 25, 'Code' => '0', 'ElementID' => '0');
-                                if(count($DeleteResult['ids']) > 1)
-                                {
-                                    $UserDev_Log[] = array('PlanetID' => $DeleteResult['ids'][1], 'Date' => $Now, 'Place' => 25, 'Code' => '0', 'ElementID' => '0');
-                                }
+                                Overview\Screens\AbandonPlanet\Utils\Effects\updateUserDevLog([
+                                    'abandonedPlanetIds' => $DeleteResult['ids'],
+                                    'currentTimestamp' => $Now,
+                                ]);
 
                                 header('Location: overview.php?showmsg=abandon');
                                 safeDie();
