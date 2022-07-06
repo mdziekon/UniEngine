@@ -79,6 +79,7 @@ switch($mode)
                             {
                                 Overview\Screens\AbandonPlanet\Utils\Effects\triggerUserTasksUpdates([
                                     'user' => &$_User,
+                                    'planet' => &$_Planet,
                                 ]);
 
                                 // User Development Log

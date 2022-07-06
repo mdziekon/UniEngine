@@ -2,12 +2,20 @@
 
 namespace UniEngine\Engine\Modules\Overview\Screens\AbandonPlanet\Utils\Effects;
 
+use UniEngine\Engine\Includes\Helpers\World;
+
 /**
  * @param array $params
  * @param arrayRef $params['user']
+ * @param arrayRef $params['planet']
  */
 function triggerUserTasksUpdates($props) {
     $user = &$props['user'];
+    $planet = &$props['planet'];
+
+    if ($planet['planet_type'] != World\Enums\PlanetType::Planet) {
+        return;
+    }
 
     // Prevent abandoning Planet to make mission faster
     Tasks_TriggerTask(
