@@ -12,8 +12,6 @@ include_once($_EnginePath . 'modules/flightControl/_includes.php');
 include_once($_EnginePath . 'modules/overview/_includes.php');
 
 use UniEngine\Engine\Includes\Helpers\World\Elements;
-use UniEngine\Engine\Common;
-use UniEngine\Engine\Modules\Session;
 use UniEngine\Engine\Modules\Flights;
 use UniEngine\Engine\Modules\FlightControl;
 use UniEngine\Engine\Modules\Overview;
@@ -593,98 +591,34 @@ switch($mode)
         {
             $QryPlanets .= "`name` {$Order}";
         }
-        $parse['OtherPlanets'] = '';
+        $parse['OtherPlanets'] = [];
 
         $SQLResult_GetAllOtherPlanets = doquery($QryPlanets, 'planets');
 
-        if($SQLResult_GetAllOtherPlanets->num_rows > 0)
-        {
-            $InCurrentRow = 0;
-            $InNextRow = false;
-
-            while($PlanetsData = $SQLResult_GetAllOtherPlanets->fetch_assoc())
-            {
-                // Show Planet on List
-                if(empty($DontShowPlanet) OR !in_array($PlanetsData['id'], $DontShowPlanet))
-                {
-                    $DontShowThisPlanet = false;
-                }
-                else
-                {
-                    $DontShowThisPlanet = true;
-                }
-                if($DontShowThisPlanet === false)
-                {
-                    if($InCurrentRow == 0)
-                    {
-                        $parse['OtherPlanets'] .= '<tr>';
-                    }
-                    $parse['OtherPlanets'] .= '<th>'.$PlanetsData['name'].'<br/>';
-                    $parse['OtherPlanets'] .= "<a href=\"?cp={$PlanetsData['id']}&re=0\" title=\"{$PlanetsData['name']}\"><img src=\"{$_SkinPath}planeten/small/s_{$PlanetsData['image']}.jpg\" height=\"50\" width=\"50\"></a><br>";
-                    $parse['OtherPlanets'] .= '<center>';
-                }
+        if ($SQLResult_GetAllOtherPlanets->num_rows > 0) {
+            while ($PlanetsData = $SQLResult_GetAllOtherPlanets->fetch_assoc()) {
                 // Update Planet - Building Queue
-                if(HandlePlanetUpdate($PlanetsData, $_User, $Now, true) === true)
-                {
+                if (HandlePlanetUpdate($PlanetsData, $_User, $Now, true) === true) {
                     $Results['planets'][] = $PlanetsData;
                 }
-                if($PlanetsData['buildQueue_firstEndTime'] > 0)
-                {
-                    if($DontShowThisPlanet === false)
-                    {
-                        $BuildQueue = $PlanetsData['buildQueue'];
-                        $QueueArray = explode (';', $BuildQueue);
-                        $CurrentBuild = explode (',', $QueueArray[0]);
-                        $BuildElement = $CurrentBuild[0];
-                        $BuildLevel = $CurrentBuild[1];
-                        $BuildRestTime = pretty_time($CurrentBuild[3] - $Now);
 
-                        $parse['OtherPlanets'] .= $_Lang['tech'][$BuildElement].' ('.$BuildLevel.')';
-                        $parse['OtherPlanets'] .= '<br><span style="color: #7f7f7f;">('.$BuildRestTime.')</span>';
-                    }
-                }
-                else
-                {
-                    if($DontShowThisPlanet === false)
-                    {
-                        $parse['OtherPlanets'] .= $_Lang['Free'].'<br/>&nbsp;';
-                    }
+                if (
+                    !empty($DontShowPlanet) &&
+                    in_array($PlanetsData['id'], $DontShowPlanet)
+                ) {
+                    continue;
                 }
 
-                if($DontShowThisPlanet === false)
-                {
-                    $parse['OtherPlanets'] .= '</center></th>';
-                }
-
-                if($DontShowThisPlanet === false)
-                {
-                    $InCurrentRow += 1;
-                    if($InCurrentRow >= 5)
-                    {
-                        $InCurrentRow = 0;
-                        $InNextRow = true;
-                        if($DontShowThisPlanet == false)
-                        {
-                            $parse['OtherPlanets'] .= '</tr>';
-                        }
-                    }
-                }
+                $parse['OtherPlanets'][] = Overview\Screens\Overview\Components\PlanetsListElement\render([
+                    'planet' => &$PlanetsData,
+                    'currentTimestamp' => $Now,
+                ])['componentHTML'];
             }
-
-            if($InNextRow === true AND $InCurrentRow > 0)
-            {
-                $Difference = 5 - $InCurrentRow;
-                for($i = 0; $i < $Difference; $i += 1)
-                {
-                    $parse['OtherPlanets'] .= '<th>&nbsp;</th>';
-                }
-                $parse['OtherPlanets'] .= '</tr>';
-            }
-        }
-        else
-        {
+        } else {
             $parse['hide_other_planets'] = 'style="display: none;"';
         }
+
+        $parse['OtherPlanets'] = implode('', $parse['OtherPlanets']);
 
         // Update this planet (if necessary)
         if(HandlePlanetUpdate($_Planet, $_User, $Now, true) === true)

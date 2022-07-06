@@ -22,7 +22,7 @@ $(document).ready(function()
     });
 });
 </script>
-<link rel="stylesheet" type="text/css" href="dist/css/overview.cachebuster-1546565145290.min.css" />
+<link rel="stylesheet" type="text/css" href="dist/css/overview.cachebuster-1657148521824.min.css" />
 <br />
 {P_SFBInfobox}
 <table width="750">
@@ -290,7 +290,9 @@ $(document).ready(function()
     </tr>
     <tr {hide_other_planets}>
         <th colspan="3">
-            <table class="s" border="0" align="center">{OtherPlanets}</table>
+            <div class="otherPlanetsSection">
+                {OtherPlanets}
+            </div>
         </th>
     </tr>
     <tr class="inv"><td></td></tr>

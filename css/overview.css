@@ -59,3 +59,14 @@
     padding: 3px 15px;
     color: lime;
 }
+
+.otherPlanetsSection {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+.otherPlanetItem {
+    flex: 0 0 25%;
+    align-self: flex-start;
+    margin: 8px 0;
+}
