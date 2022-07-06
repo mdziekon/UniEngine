@@ -61,7 +61,7 @@ switch($mode)
         {
             $parse['Abandon_Ins_MsgColor'] = 'red';
 
-            $abandonPlanetValidationResult = Overview\Screens\AbandonPlanet\Utils\Validators\validateAbandonPlanet([
+            $tryAbandonPlanetResult = Overview\Screens\AbandonPlanet\Utils\Effects\tryAbandonPlanet([
                 'input' => [
                     'confirmPassword' => $_POST['give_passwd'],
                 ],
@@ -69,48 +69,24 @@ switch($mode)
                 'planet' => &$_Planet,
             ]);
 
-            if (!$abandonPlanetValidationResult['isSuccess']) {
-                $errorMessage = Overview\Screens\AbandonPlanet\Utils\ErrorMappers\mapValidateAbandonPlanetErrorToReadableMessage(
-                    $abandonPlanetValidationResult['error']
+            if (!$tryAbandonPlanetResult['isSuccess']) {
+                $errorMessage = Overview\Screens\AbandonPlanet\Utils\ErrorMappers\mapTryAbandonPlanetErrorToReadableMessage(
+                    $tryAbandonPlanetResult['error']
                 );
 
                 $parse['Abandon_Ins_MsgTxt'] = $errorMessage;
             } else {
-                include($_EnginePath.'includes/functions/DeleteSelectedPlanetorMoon.php');
-                $DeleteResult = DeleteSelectedPlanetorMoon();
-                if($DeleteResult['result'] === true)
-                {
-                    Overview\Screens\AbandonPlanet\Utils\Effects\triggerUserTasksUpdates([
-                        'user' => &$_User,
-                        'planet' => &$_Planet,
-                    ]);
-                    Overview\Screens\AbandonPlanet\Utils\Effects\updateUserDevLog([
-                        'abandonedPlanetIds' => $DeleteResult['ids'],
-                        'currentTimestamp' => $Now,
-                    ]);
+                Overview\Screens\AbandonPlanet\Utils\Effects\triggerUserTasksUpdates([
+                    'user' => &$_User,
+                    'planet' => &$_Planet,
+                ]);
+                Overview\Screens\AbandonPlanet\Utils\Effects\updateUserDevLog([
+                    'abandonedPlanetIds' => $tryAbandonPlanetResult['payload']['deleteResult']['ids'],
+                    'currentTimestamp' => $Now,
+                ]);
 
-                    header('Location: overview.php?showmsg=abandon');
-                    safeDie();
-                }
-                else
-                {
-                    if($DeleteResult['reason'] == 'tech')
-                    {
-                        $parse['Abandon_Ins_MsgTxt'] = $_Lang['Abandon_TechHere'];
-                    }
-                    elseif($DeleteResult['reason'] == 'sql')
-                    {
-                        $parse['Abandon_Ins_MsgTxt'] = $_Lang['Abandon_SQLError'];
-                    }
-                    elseif($DeleteResult['reason'] == 'fleet_current')
-                    {
-                        $parse['Abandon_Ins_MsgTxt'] = $_Lang['Abandon_FlyingFleetsHere'];
-                    }
-                    elseif($DeleteResult['reason'] == 'fleet_moon')
-                    {
-                        $parse['Abandon_Ins_MsgTxt'] = $_Lang['Abandon_FlyingFleetsMoon'];
-                    }
-                }
+                header('Location: overview.php?showmsg=abandon');
+                safeDie();
             }
         }
 
