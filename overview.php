@@ -12,6 +12,7 @@ include_once($_EnginePath . 'modules/flightControl/_includes.php');
 include_once($_EnginePath . 'modules/overview/_includes.php');
 
 use UniEngine\Engine\Includes\Helpers\World\Elements;
+use UniEngine\Engine\Includes\Helpers\Planets\Queues\Structures;
 use UniEngine\Engine\Common;
 use UniEngine\Engine\Modules\Session;
 use UniEngine\Engine\Modules\Flights;
@@ -632,15 +633,16 @@ switch($mode)
                 {
                     if($DontShowThisPlanet === false)
                     {
-                        $BuildQueue = $PlanetsData['buildQueue'];
-                        $QueueArray = explode (';', $BuildQueue);
-                        $CurrentBuild = explode (',', $QueueArray[0]);
-                        $BuildElement = $CurrentBuild[0];
-                        $BuildLevel = $CurrentBuild[1];
-                        $BuildRestTime = pretty_time($CurrentBuild[3] - $Now);
+                        $buildingsQueue = Structures\parseQueueString(
+                            Structures\getQueueString($PlanetsData)
+                        );
+                        $firstQueueElement = $buildingsQueue[0];
+                        $elementId = $firstQueueElement['elementID'];
+                        $elementLevel = $firstQueueElement['level'];
+                        $elementBuildingRestTime = pretty_time($firstQueueElement['endTimestamp'] - $Now);
 
-                        $parse['OtherPlanets'] .= $_Lang['tech'][$BuildElement].' ('.$BuildLevel.')';
-                        $parse['OtherPlanets'] .= '<br><span style="color: #7f7f7f;">('.$BuildRestTime.')</span>';
+                        $parse['OtherPlanets'] .= $_Lang['tech'][$elementId].' ('.$elementLevel.')';
+                        $parse['OtherPlanets'] .= '<br><span style="color: #7f7f7f;">('.$elementBuildingRestTime.')</span>';
                     }
                 }
                 else
