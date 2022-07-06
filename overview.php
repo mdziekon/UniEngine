@@ -603,36 +603,27 @@ switch($mode)
             $InCurrentRow = 0;
             $InNextRow = false;
 
-            while($PlanetsData = $SQLResult_GetAllOtherPlanets->fetch_assoc())
-            {
-                // Show Planet on List
-                if(empty($DontShowPlanet) OR !in_array($PlanetsData['id'], $DontShowPlanet))
-                {
-                    $DontShowThisPlanet = false;
-                }
-                else
-                {
-                    $DontShowThisPlanet = true;
-                }
-                if($DontShowThisPlanet === false)
-                {
-                    if($InCurrentRow == 0)
-                    {
-                        $parse['OtherPlanets'] .= '<tr>';
-                    }
-                    $parse['OtherPlanets'] .= '<th>'.$PlanetsData['name'].'<br/>';
-                    $parse['OtherPlanets'] .= "<a href=\"?cp={$PlanetsData['id']}&re=0\" title=\"{$PlanetsData['name']}\"><img src=\"{$_SkinPath}planeten/small/s_{$PlanetsData['image']}.jpg\" height=\"50\" width=\"50\"></a><br>";
-                    $parse['OtherPlanets'] .= '<center>';
-                }
+            while ($PlanetsData = $SQLResult_GetAllOtherPlanets->fetch_assoc()) {
                 // Update Planet - Building Queue
-                if(HandlePlanetUpdate($PlanetsData, $_User, $Now, true) === true)
-                {
+                if (HandlePlanetUpdate($PlanetsData, $_User, $Now, true) === true) {
                     $Results['planets'][] = $PlanetsData;
                 }
 
-                if ($DontShowThisPlanet) {
+                if (
+                    !empty($DontShowPlanet) &&
+                    in_array($PlanetsData['id'], $DontShowPlanet)
+                ) {
                     continue;
                 }
+
+                if ($InCurrentRow == 0) {
+                    $parse['OtherPlanets'] .= '<tr>';
+                }
+
+                $parse['OtherPlanets'] .= '<th>'.$PlanetsData['name'].'<br/>';
+                $parse['OtherPlanets'] .= "<a href=\"?cp={$PlanetsData['id']}&re=0\" title=\"{$PlanetsData['name']}\"><img src=\"{$_SkinPath}planeten/small/s_{$PlanetsData['image']}.jpg\" height=\"50\" width=\"50\"></a><br>";
+
+                $parse['OtherPlanets'] .= '<center>';
 
                 if ($PlanetsData['buildQueue_firstEndTime'] > 0) {
                     $buildingsQueue = Structures\parseQueueString(
