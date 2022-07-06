@@ -612,7 +612,7 @@ switch($mode)
                     continue;
                 }
 
-                $parse['OtherPlanets'] .= '<div style="flex: 0 0 25%; align-self: flex-start; margin: 8px 0;">'.$PlanetsData['name'].'<br/>';
+                $parse['OtherPlanets'] .= '<div class="otherPlanetItem">'.$PlanetsData['name'].'<br/>';
                 $parse['OtherPlanets'] .= "<a href=\"?cp={$PlanetsData['id']}&re=0\" title=\"{$PlanetsData['name']}\"><img src=\"{$_SkinPath}planeten/small/s_{$PlanetsData['image']}.jpg\" height=\"90\" width=\"90\"></a><br>";
 
                 $parse['OtherPlanets'] .= '<center>';
