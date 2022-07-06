@@ -629,47 +629,34 @@ switch($mode)
                 {
                     $Results['planets'][] = $PlanetsData;
                 }
-                if($PlanetsData['buildQueue_firstEndTime'] > 0)
-                {
-                    if($DontShowThisPlanet === false)
-                    {
-                        $buildingsQueue = Structures\parseQueueString(
-                            Structures\getQueueString($PlanetsData)
-                        );
-                        $firstQueueElement = $buildingsQueue[0];
-                        $elementId = $firstQueueElement['elementID'];
-                        $elementLevel = $firstQueueElement['level'];
-                        $elementBuildingRestTime = pretty_time($firstQueueElement['endTimestamp'] - $Now);
 
-                        $parse['OtherPlanets'] .= $_Lang['tech'][$elementId].' ('.$elementLevel.')';
-                        $parse['OtherPlanets'] .= '<br><span style="color: #7f7f7f;">('.$elementBuildingRestTime.')</span>';
-                    }
-                }
-                else
-                {
-                    if($DontShowThisPlanet === false)
-                    {
-                        $parse['OtherPlanets'] .= $_Lang['Free'].'<br/>&nbsp;';
-                    }
+                if ($DontShowThisPlanet) {
+                    continue;
                 }
 
-                if($DontShowThisPlanet === false)
-                {
-                    $parse['OtherPlanets'] .= '</center></th>';
+                if ($PlanetsData['buildQueue_firstEndTime'] > 0) {
+                    $buildingsQueue = Structures\parseQueueString(
+                        Structures\getQueueString($PlanetsData)
+                    );
+                    $firstQueueElement = $buildingsQueue[0];
+                    $elementId = $firstQueueElement['elementID'];
+                    $elementLevel = $firstQueueElement['level'];
+                    $elementBuildingRestTime = pretty_time($firstQueueElement['endTimestamp'] - $Now);
+
+                    $parse['OtherPlanets'] .= $_Lang['tech'][$elementId].' ('.$elementLevel.')';
+                    $parse['OtherPlanets'] .= '<br><span style="color: #7f7f7f;">('.$elementBuildingRestTime.')</span>';
+                } else {
+                    $parse['OtherPlanets'] .= $_Lang['Free'].'<br/>&nbsp;';
                 }
 
-                if($DontShowThisPlanet === false)
-                {
-                    $InCurrentRow += 1;
-                    if($InCurrentRow >= 5)
-                    {
-                        $InCurrentRow = 0;
-                        $InNextRow = true;
-                        if($DontShowThisPlanet == false)
-                        {
-                            $parse['OtherPlanets'] .= '</tr>';
-                        }
-                    }
+                $parse['OtherPlanets'] .= '</center></th>';
+
+                $InCurrentRow += 1;
+                if ($InCurrentRow >= 5) {
+                    $InCurrentRow = 0;
+                    $InNextRow = true;
+
+                    $parse['OtherPlanets'] .= '</tr>';
                 }
             }
 
