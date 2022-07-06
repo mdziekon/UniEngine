@@ -94,7 +94,17 @@ switch($mode)
         {
             $parse['Abandon_Ins_MsgHide'] = '';
         }
-        $parse['Abandon_Desc'] = sprintf($parse['Abandon_Desc'], ($_Planet['planet_type'] == 1 ? $_Lang['Abandon_Planet'] : $_Lang['Abandon_Moon']), $_Planet['name'], "<a class=\"orange\" href=\"galaxy.php?mode=3&amp;galaxy={$_Planet['galaxy']}&amp;system={$_Planet['system']}&amp;planet={$_Planet['planet']}\">[{$_Planet['galaxy']}:{$_Planet['system']}:{$_Planet['planet']}]</a>");
+        $parse['Abandon_Desc'] = sprintf(
+            $parse['Abandon_Desc'],
+            ($_Planet['planet_type'] == 1 ? $_Lang['Abandon_Planet'] : $_Lang['Abandon_Moon']),
+            $_Planet['name'],
+            Common\Components\GalaxyPlanetLink\render([
+                'coords' => $_Planet,
+                'linkAttrs' => [
+                    'class' => 'orange',
+                ],
+            ]),
+        );
         $parse['Abandon_Ins_Pass'] = $_User['password'];
 
         $page = parsetemplate(gettemplate('overview_deleteplanet'), $parse);
