@@ -8,6 +8,8 @@ call_user_func(function () {
 
     include($includePath . './screens/AbandonPlanet/utils/effects/triggerUserTasksUpdates.effect.php');
     include($includePath . './screens/AbandonPlanet/utils/effects/updateUserDevLog.effect.php');
+    include($includePath . './screens/AbandonPlanet/utils/errorMappers/validateAbandonPlanet.errorMapper.php');
+    include($includePath . './screens/AbandonPlanet/utils/validators/validateAbandonPlanet.validator.php');
 
     include($includePath . './screens/FirstLogin/FirstLogin.screen.php');
     include($includePath . './screens/FirstLogin/FirstLogin.utils.php');
