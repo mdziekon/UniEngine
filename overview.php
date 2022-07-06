@@ -47,68 +47,13 @@ switch($mode)
 
         break;
     case 'abandon':
-        // --- Abandon Colony ---
-        if(isOnVacation())
-        {
-            message($_Lang['Vacation_WarnMsg'], $_Lang['Vacation']);
-        }
+        Overview\Screens\AbandonPlanet\render([
+            'input' => &$_POST,
+            'user' => &$_User,
+            'planet' => &$_Planet,
+            'currentTimestamp' => $Now,
+        ]);
 
-        $parse = $_Lang;
-        $parse['Abandon_Ins_MsgHide'] = 'style="display: none;"';
-        $parse['Abandon_Ins_MsgTxt'] = false;
-
-        if(isset($_POST['action']) && $_POST['action'] == 'do')
-        {
-            $parse['Abandon_Ins_MsgColor'] = 'red';
-
-            $tryAbandonPlanetResult = Overview\Screens\AbandonPlanet\Utils\Effects\tryAbandonPlanet([
-                'input' => [
-                    'confirmPassword' => $_POST['give_passwd'],
-                ],
-                'user' => &$_User,
-                'planet' => &$_Planet,
-            ]);
-
-            if (!$tryAbandonPlanetResult['isSuccess']) {
-                $errorMessage = Overview\Screens\AbandonPlanet\Utils\ErrorMappers\mapTryAbandonPlanetErrorToReadableMessage(
-                    $tryAbandonPlanetResult['error']
-                );
-
-                $parse['Abandon_Ins_MsgTxt'] = $errorMessage;
-            } else {
-                Overview\Screens\AbandonPlanet\Utils\Effects\triggerUserTasksUpdates([
-                    'user' => &$_User,
-                    'planet' => &$_Planet,
-                ]);
-                Overview\Screens\AbandonPlanet\Utils\Effects\updateUserDevLog([
-                    'abandonedPlanetIds' => $tryAbandonPlanetResult['payload']['deleteResult']['ids'],
-                    'currentTimestamp' => $Now,
-                ]);
-
-                header('Location: overview.php?showmsg=abandon');
-                safeDie();
-            }
-        }
-
-        if($parse['Abandon_Ins_MsgTxt'] !== false)
-        {
-            $parse['Abandon_Ins_MsgHide'] = '';
-        }
-        $parse['Abandon_Desc'] = sprintf(
-            $parse['Abandon_Desc'],
-            ($_Planet['planet_type'] == 1 ? $_Lang['Abandon_Planet'] : $_Lang['Abandon_Moon']),
-            $_Planet['name'],
-            Common\Components\GalaxyPlanetLink\render([
-                'coords' => $_Planet,
-                'linkAttrs' => [
-                    'class' => 'orange',
-                ],
-            ]),
-        );
-        $parse['Abandon_Ins_Pass'] = $_User['password'];
-
-        $page = parsetemplate(gettemplate('overview_deleteplanet'), $parse);
-        display($page, $_Lang['Abandon_TitleMain']);
         break;
     default:
         $parse = &$_Lang;
