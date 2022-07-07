@@ -336,138 +336,12 @@ switch($mode)
         $Referred = doquery("SELECT COUNT(`id`) as `count` FROM {{table}} WHERE `referrer_id` = {$_User['id']};", 'referring_table', true);
         $parse['RefferedCounter'] = prettyNumber((($Referred['count'] > 0) ? $Referred['count'] : '0'));
 
-        // --- Get UserStats ---
+        // --- Render UserStats ---
         $StatRecord = doquery("SELECT * FROM {{table}} WHERE `stat_type` = '1' AND `id_owner` = {$_User['id']} LIMIT 1;", 'statpoints', true);
-        $parse['user_points'] = prettyNumber($StatRecord['build_points']);
-        $parse['user_fleet'] = prettyNumber($StatRecord['fleet_points']);
-        $parse['user_defs'] = prettyNumber($StatRecord['defs_points']);
-        $parse['player_points_tech'] = prettyNumber($StatRecord['tech_points']);
-        $parse['total_points'] = prettyNumber($StatRecord['total_points']);
 
-        // Total Rank changes
-        if($StatRecord['total_rank'] > 0)
-        {
-            $ile = $StatRecord['total_old_rank'] - $StatRecord['total_rank'];
-            if($ile > 0)
-            {
-                $ile = "<span class=\"lime\">(+{$ile})</span>";
-            }
-            elseif($ile < 0)
-            {
-                $ile = "<span class=\"red\">({$ile})</span>";
-            }
-            else
-            {
-                $ile = '<span class="lightblue">(*)</span>';
-            }
-            $parse['user_total_rank'] = '<a href="stats.php?range='.$StatRecord['total_rank'].'">'.$StatRecord['total_rank'].'</a> '.$ile;
-        }
-        else
-        {
-            $parse['user_total_rank'] = 0;
-            $StatRecord['total_rank'] = '0';
-        }
-        $parse['set_user_total_rank'] = $StatRecord['total_rank'];
-
-        // Build Rank changes
-        if(isset($StatRecord['build_rank']) && $StatRecord['build_rank'] > 0)
-        {
-            $ile = $StatRecord['build_old_rank'] - $StatRecord['build_rank'];
-            if($ile > 0)
-            {
-                $ile = "<span class=\"lime\">(+{$ile})</span>";
-            }
-            elseif($ile < 0)
-            {
-                $ile = "<span class=\"red\">({$ile})</span>";
-            }
-            else
-            {
-                $ile = '<span class="lightblue">(*)</span>';
-            }
-            $parse['user_br'] = '<a href="stats.php?range='.$StatRecord['build_rank'].'&amp;type=4">'.$StatRecord['build_rank'].'</a> '.$ile;
-        }
-        else
-        {
-            $parse['user_br'] = 0;
-            $StatRecord['build_rank'] = '0';
-        }
-        $parse['set_user_br'] = $StatRecord['build_rank'];
-
-        // Fleet rank changes
-        if(isset($StatRecord['fleet_rank']) && $StatRecord['fleet_rank'] > 0)
-        {
-            $ile = $StatRecord['fleet_old_rank'] - $StatRecord['fleet_rank'];
-            if($ile > 0)
-            {
-                $ile = "<span class=\"lime\">(+{$ile})</span>";
-            }
-            else if($ile < 0)
-            {
-                $ile = "<span class=\"red\">({$ile})</span>";
-            }
-            else
-            {
-                $ile = '<span class="lightblue">(*)</span>';
-            }
-            $parse['user_fr'] = '<a href="stats.php?range='.$StatRecord['fleet_rank'].'&amp;type=2">'.$StatRecord['fleet_rank'].'</a> '.$ile;
-        }
-        else
-        {
-            $parse['user_fr'] = 0;
-            $StatRecord['fleet_rank'] = '0';
-        }
-        $parse['set_user_fr'] = $StatRecord['fleet_rank'];
-
-        // Defense rank changes
-        if(isset($StatRecord['defs_rank']) && $StatRecord['defs_rank'] > 0)
-        {
-            $ile = $StatRecord['defs_old_rank'] - $StatRecord['defs_rank'];
-            if($ile > 0)
-            {
-                $ile = "<span class=\"lime\">(+{$ile})</span>";
-            }
-            else if($ile < 0)
-            {
-                $ile = "<span class=\"red\">({$ile})</span>";
-            }
-            else
-            {
-                $ile = '<span class="lightblue">(*)</span>';
-            }
-            $parse['user_dr'] = '<a href="stats.php?range='.$StatRecord['defs_rank'].'&amp;type=5">'.$StatRecord['defs_rank'].'</a> '.$ile;
-        }
-        else
-        {
-            $parse['user_dr'] = 0;
-            $StatRecord['defs_rank'] = '0';
-        }
-        $parse['set_user_dr'] = $StatRecord['defs_rank'];
-
-        // Research rank changes
-        if(isset($StatRecord['tech_rank']) && $StatRecord['tech_rank'] > 0)
-        {
-            $ile = $StatRecord['tech_old_rank'] - $StatRecord['tech_rank'];
-            if($ile > 0)
-            {
-                $ile = "<span class=\"lime\">(+{$ile})</span>";
-            }
-            else if($ile < 0)
-            {
-                $ile = "<span class=\"red\">({$ile})</span>";
-            }
-            else
-            {
-                $ile = '<span class="lightblue">(*)</span>';
-            }
-            $parse['user_tr'] = '<a href="stats.php?range='.$StatRecord['tech_rank'].'&amp;type=3">'.$StatRecord['tech_rank'].'</a> '.$ile;
-        }
-        else
-        {
-            $parse['user_tr'] = 0;
-            $StatRecord['tech_rank'] = '0';
-        }
-        $parse['set_user_tr'] = $StatRecord['tech_rank'];
+        $parse['Component_StatsList'] = Overview\Screens\Overview\Components\StatsList\render([
+            'stats' => $StatRecord,
+        ])['componentHTML'];
 
         // Get User Achievements
         $GetStats_Fields = '`ustat_raids_won`, `ustat_raids_draw`, `ustat_raids_lost`, `ustat_raids_acs_won`, `ustat_raids_inAlly`, `ustat_raids_missileAttack`';
@@ -535,31 +409,10 @@ switch($mode)
         }
 
         // --- Transporters ----------------------------
-        $resourcesTransportNeededStorage = (
-            $_Planet['metal'] +
-            $_Planet['crystal'] +
-            $_Planet['deuterium']
-        );
-
-        foreach ($_Vars_ElementCategories['units']['transport'] as $shipId) {
-            $requiredShipsCount = ceil($resourcesTransportNeededStorage / getShipsStorageCapacity($shipId));
-            $currentShipsCount = Elements\getElementCurrentCount($shipId, $_Planet, $_User);
-            $remainingShipsCount = $currentShipsCount - $requiredShipsCount;
-
-            $parse["transportShips__{$shipId}__name"] = $_Lang['tech'][$shipId];
-            $parse["transportShips__{$shipId}__requiredCount"] = prettyNumber($requiredShipsCount);
-            $parse["transportShips__{$shipId}__remainingCount"] = str_replace('-', '', prettyColorNumber($remainingShipsCount, true));
-        }
-
-        if(isPro() AND $_User['current_planet'] != $_User['settings_mainPlanetID'])
-        {
-            $GetQuickResPlanet = doquery("SELECT `name`, `galaxy`, `system`, `planet` FROM {{table}} WHERE `id` = {$_User['settings_mainPlanetID']};", 'planets', true);
-            $parse['QuickResSend_Button'] = sprintf($_Lang['QuickResSend_Button'], $GetQuickResPlanet['name'], $GetQuickResPlanet['galaxy'], $GetQuickResPlanet['system'], $GetQuickResPlanet['planet']);
-        }
-        else
-        {
-            $parse['Hide_QuickResButton'] = ' style="display: none;"';
-        }
+        $parse['Component_QuickTransport'] = Overview\Screens\Overview\Components\ResourcesTransport\render([
+            'user' => &$_User,
+            'planet' => &$_Planet,
+        ])['componentHTML'];
 
         // --- Flying Fleets Table ---
         $Result_GetFleets = Flights\Fetchers\fetchCurrentFlights([ 'userId' => $_User['id'] ]);

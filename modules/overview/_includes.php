@@ -25,6 +25,8 @@ call_user_func(function () {
     include($includePath . './screens/FirstLogin/utils/helpers/getReferrerTasksData.helper.php');
 
     include($includePath . './screens/Overview/components/PlanetsListElement/PlanetsListElement.component.php');
+    include($includePath . './screens/Overview/components/ResourcesTransport/ResourcesTransport.component.php');
+    include($includePath . './screens/Overview/components/StatsList/StatsList.component.php');
 
     include($includePath . './screens/PlanetNameChange/PlanetNameChange.screen.php');
     include($includePath . './screens/PlanetNameChange/PlanetNameChange.utils.php');

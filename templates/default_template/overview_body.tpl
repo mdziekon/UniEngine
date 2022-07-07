@@ -166,31 +166,7 @@ $(document).ready(function()
             </table>
         </th>
         <th width="215">
-            <table width="100%" align="center">
-                <tr>
-                    <td colspan="2" class="c pad3">{Statistics}</td>
-                </tr>
-                <tr>
-                    <th><a href="stats.php?range={set_user_total_rank}">{Box_statGeneral}</a></th>
-                    <th>{user_total_rank}<br/><span class="grey">{total_points} {_statUnit}</span></th>
-                </tr>
-                <tr>
-                    <th><a href="stats.php?range={set_user_br}&amp;type=4">{Box_statBuildings}</a></th>
-                    <th>{user_br}<br/><span class="grey">{user_points} {_statUnit}</span></th>
-                </tr>
-                <tr>
-                    <th><a href="stats.php?range={set_user_fr}&amp;type=2">{Box_statFleet}</a></th>
-                    <th>{user_fr}<br/><span class="grey">{user_fleet} {_statUnit}</span></th>
-                </tr>
-                <tr>
-                    <th><a href="stats.php?range={set_user_dr}&amp;type=5">{Box_statDefense}</a></th>
-                    <th>{user_dr}<br/><span class="grey">{user_defs} {_statUnit}</span></th>
-                </tr>
-                <tr>
-                    <th><a href="stats.php?range={set_user_tr}&amp;type=3">{Box_statResearch}</a></th>
-                    <th>{user_tr}<br/><span class="grey">{player_points_tech} {_statUnit}</span></th>
-                </tr>
-            </table>
+            {Component_StatsList}
             <br/>
             <table width="100%" align="center">
                 <tr>
@@ -256,34 +232,7 @@ $(document).ready(function()
         </th>
     </tr>
     <tr class="inv"><td></td></tr>
-    <tr>
-        <td colspan="3" class="c pad3">{ResourcesTransport}</td>
-    </tr>
-    <tr>
-        <th>&nbsp;</th>
-        <th>{Box_transRequired}</th>
-        <th>{Box_transMissing_Stay}</th>
-    </tr>
-    <tr>
-        <th>{transportShips__202__name}</th>
-        <th>{transportShips__202__requiredCount}</th>
-        <th>{transportShips__202__remainingCount}</th>
-    </tr>
-    <tr>
-        <th>{transportShips__203__name}</th>
-        <th>{transportShips__203__requiredCount}</th>
-        <th>{transportShips__203__remainingCount}</th>
-    </tr>
-    <tr>
-        <th>{transportShips__217__name}</th>
-        <th>{transportShips__217__requiredCount}</th>
-        <th>{transportShips__217__remainingCount}</th>
-    </tr>
-    <tr{Hide_QuickResButton}>
-        <th class="pad5" colspan="3">
-            <input type="button" value="{QuickResSend_Button}" id="quickres"/>
-        </th>
-    </tr>
+    {Component_QuickTransport}
     <tr class="inv" {hide_other_planets}><td></td></tr>
     <tr {hide_other_planets}>
         <td colspan="3" class="c">{OtherPlanets_header}</td>
