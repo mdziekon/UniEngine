@@ -535,31 +535,10 @@ switch($mode)
         }
 
         // --- Transporters ----------------------------
-        $resourcesTransportNeededStorage = (
-            $_Planet['metal'] +
-            $_Planet['crystal'] +
-            $_Planet['deuterium']
-        );
-
-        foreach ($_Vars_ElementCategories['units']['transport'] as $shipId) {
-            $requiredShipsCount = ceil($resourcesTransportNeededStorage / getShipsStorageCapacity($shipId));
-            $currentShipsCount = Elements\getElementCurrentCount($shipId, $_Planet, $_User);
-            $remainingShipsCount = $currentShipsCount - $requiredShipsCount;
-
-            $parse["transportShips__{$shipId}__name"] = $_Lang['tech'][$shipId];
-            $parse["transportShips__{$shipId}__requiredCount"] = prettyNumber($requiredShipsCount);
-            $parse["transportShips__{$shipId}__remainingCount"] = str_replace('-', '', prettyColorNumber($remainingShipsCount, true));
-        }
-
-        if(isPro() AND $_User['current_planet'] != $_User['settings_mainPlanetID'])
-        {
-            $GetQuickResPlanet = doquery("SELECT `name`, `galaxy`, `system`, `planet` FROM {{table}} WHERE `id` = {$_User['settings_mainPlanetID']};", 'planets', true);
-            $parse['QuickResSend_Button'] = sprintf($_Lang['QuickResSend_Button'], $GetQuickResPlanet['name'], $GetQuickResPlanet['galaxy'], $GetQuickResPlanet['system'], $GetQuickResPlanet['planet']);
-        }
-        else
-        {
-            $parse['Hide_QuickResButton'] = ' style="display: none;"';
-        }
+        $parse['Component_QuickTransport'] = Overview\Screens\Overview\Components\ResourcesTransport\render([
+            'user' => &$_User,
+            'planet' => &$_Planet,
+        ])['componentHTML'];
 
         // --- Flying Fleets Table ---
         $Result_GetFleets = Flights\Fetchers\fetchCurrentFlights([ 'userId' => $_User['id'] ]);

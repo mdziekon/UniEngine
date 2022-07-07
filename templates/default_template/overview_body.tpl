@@ -256,34 +256,7 @@ $(document).ready(function()
         </th>
     </tr>
     <tr class="inv"><td></td></tr>
-    <tr>
-        <td colspan="3" class="c pad3">{ResourcesTransport}</td>
-    </tr>
-    <tr>
-        <th>&nbsp;</th>
-        <th>{Box_transRequired}</th>
-        <th>{Box_transMissing_Stay}</th>
-    </tr>
-    <tr>
-        <th>{transportShips__202__name}</th>
-        <th>{transportShips__202__requiredCount}</th>
-        <th>{transportShips__202__remainingCount}</th>
-    </tr>
-    <tr>
-        <th>{transportShips__203__name}</th>
-        <th>{transportShips__203__requiredCount}</th>
-        <th>{transportShips__203__remainingCount}</th>
-    </tr>
-    <tr>
-        <th>{transportShips__217__name}</th>
-        <th>{transportShips__217__requiredCount}</th>
-        <th>{transportShips__217__remainingCount}</th>
-    </tr>
-    <tr{Hide_QuickResButton}>
-        <th class="pad5" colspan="3">
-            <input type="button" value="{QuickResSend_Button}" id="quickres"/>
-        </th>
-    </tr>
+    {Component_QuickTransport}
     <tr class="inv" {hide_other_planets}><td></td></tr>
     <tr {hide_other_planets}>
         <td colspan="3" class="c">{OtherPlanets_header}</td>
