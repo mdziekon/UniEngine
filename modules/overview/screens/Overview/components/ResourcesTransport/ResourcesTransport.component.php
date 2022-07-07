@@ -3,6 +3,7 @@
 namespace UniEngine\Engine\Modules\Overview\Screens\Overview\Components\ResourcesTransport;
 
 use UniEngine\Engine\Includes\Helpers\World\Elements;
+use UniEngine\Engine\Includes\Helpers\World\Resources;
 
 /**
  * @param array $props
@@ -21,10 +22,13 @@ function render($props) {
         'shipRow' => $localTemplateLoader('shipRow'),
     ];
 
-    $resourcesTotalSum = (
-        $planet['metal'] +
-        $planet['crystal'] +
-        $planet['deuterium']
+    $resourcesTotalSum = array_sum(
+        array_map_withkeys(
+            Resources\getKnownPillagableResourceKeys(),
+            function ($resourceKey) use (&$user, &$planet) {
+                return Resources\getResourceState($resourceKey, $user, $planet);
+            }
+        )
     );
 
     $shipRows = [];
