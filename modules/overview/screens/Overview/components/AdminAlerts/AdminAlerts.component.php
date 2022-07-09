@@ -7,6 +7,12 @@ namespace UniEngine\Engine\Modules\Overview\Screens\Overview\Components\AdminAle
  * @param arrayRef $props['user']
  */
 function render($props) {
+    $adminAlertTypes = [
+        'REPORTS' => 'reports',
+        'DECLARATIONS' => 'declarations',
+        'SYSTEM_ALERTS' => 'system_alerts',
+    ];
+
     global $_Lang;
 
     $hasAccess = CheckAuth(
@@ -27,7 +33,7 @@ function render($props) {
         (
             "SELECT " .
             "COUNT(*) AS `count`, " .
-            "'reports' AS `type` " .
+            "'{$adminAlertTypes['REPORTS']}' AS `type` " .
             "FROM `{{prefix}}reports` " .
             "WHERE " .
             "`status` = 0 "
@@ -36,7 +42,7 @@ function render($props) {
         (
             "SELECT " .
             "COUNT(*) AS `count`, " .
-            "'declarations' AS `type` " .
+            "'{$adminAlertTypes['DECLARATIONS']}' AS `type` " .
             "FROM `{{prefix}}declarations` " .
             "WHERE " .
             "`status` = 0 "
@@ -45,7 +51,7 @@ function render($props) {
         (
             "SELECT " .
             "COUNT(*) AS `count`, " .
-            "'system_alerts' AS `type` " .
+            "'{$adminAlertTypes['SYSTEM_ALERTS']}' AS `type` " .
             "FROM `{{prefix}}system_alerts` " .
             "WHERE " .
             "`status` = 0 "
@@ -73,9 +79,9 @@ function render($props) {
     $tplBodyParams = [
         'content' => sprintf(
             $_Lang['AdminAlertsBox'],
-            $alertsCounts['reports'],
-            $alertsCounts['declarations'],
-            $alertsCounts['system_alerts']
+            $alertsCounts[$adminAlertTypes['REPORTS']],
+            $alertsCounts[$adminAlertTypes['DECLARATIONS']],
+            $alertsCounts[$adminAlertTypes['SYSTEM_ALERTS']]
         ),
     ];
     $tplBodyParams = array_merge($_Lang, $tplBodyParams);
