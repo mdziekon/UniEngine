@@ -89,26 +89,9 @@ switch($mode)
         }
 
         // --- Admin Info Box ------------------------------------------------------------------------------------
-        if(CheckAuth('supportadmin'))
-        {
-            $Query_AdminBoxCheck[] = "SELECT COUNT(*) AS `Count`, 1 AS `Type` FROM `{{prefix}}reports` WHERE `status` = 0";
-            $Query_AdminBoxCheck[] = "SELECT COUNT(*) AS `Count`, 2 AS `Type` FROM `{{prefix}}declarations` WHERE `status` = 0";
-            $Query_AdminBoxCheck[] = "SELECT COUNT(*) AS `Count`, 3 AS `Type` FROM `{{prefix}}system_alerts` WHERE `status` = 0";
-            $Query_AdminBoxCheck = implode(' UNION ', $Query_AdminBoxCheck);
-            $Result_AdminBoxCheck = doquery($Query_AdminBoxCheck, '');
-
-            $AdminBoxTotalCount = 0;
-            while($AdminBoxData = $Result_AdminBoxCheck->fetch_assoc())
-            {
-                $AdminBox[$AdminBoxData['Type']] = $AdminBoxData['Count'];
-                $AdminBoxTotalCount += $AdminBoxData['Count'];
-            }
-            if($AdminBoxTotalCount > 0)
-            {
-                $AdminAlerts = sprintf($_Lang['AdminAlertsBox'], $AdminBox[1], $AdminBox[2], $AdminBox[3]);
-                $parse['AdminInfoBox'] = '<tr><th style="border-color: #FFA366; background-color: #FF8533; color: black;" class="c pad2" colspan="3">'.$AdminAlerts.'</th></tr><tr><th class="inv">&nbsp;</th></tr>';
-            }
-        }
+        $parse['AdminInfoBox'] = Overview\Screens\Overview\Components\AdminAlerts\render([
+            'user' => &$_User,
+        ])['componentHTML'];
 
         // --- MailChange Box ------------------------------------------------------------------------------------
         $parse['MailChange_Hide'] = 'display: none;';
