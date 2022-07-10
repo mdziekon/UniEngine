@@ -94,33 +94,10 @@ switch($mode)
         ])['componentHTML'];
 
         // --- MailChange Box ------------------------------------------------------------------------------------
-        $parse['MailChange_Hide'] = 'display: none;';
-        if($_User['email'] != $_User['email_2'])
-        {
-            $MailChange = doquery("SELECT * FROM {{table}} WHERE `UserID` = {$_User['id']} AND `ConfirmType` = 0 LIMIT 1;", 'mailchange', true);
-            if($MailChange['ID'] > 0)
-            {
-                $ChangeTime = $MailChange['Date'] + (TIME_DAY * 7);
-
-                $parse['MailChange_Hide'] = '';
-                $parse['MailChange_Box'] = sprintf($_Lang['MailChange_Text']);
-                if($MailChange['ConfirmHashNew'] == '')
-                {
-                    if($ChangeTime < $Now)
-                    {
-                        $parse['MailChange_Box'] .= "<br/><br/><form action=\"email_change.php?hash=none\" method=\"post\"><input type=\"submit\" style=\"font-weight: bold;\" value=\"{$_Lang['MailChange_Buto']}\" /></form>";
-                    }
-                    else
-                    {
-                        $parse['MailChange_Box'] .= "<br/><br/>".sprintf($_Lang['MailChange_Inf2'], date('d.m.Y H:i:s', $ChangeTime));
-                    }
-                }
-                else
-                {
-                    $parse['MailChange_Box'] .= "<br/><br/>{$_Lang['MailChange_Inf1']}";
-                }
-            }
-        }
+        $parse['EmailChangeInfoBox'] = Overview\Screens\Overview\Components\EmailChangeInfo\render([
+            'user' => &$_User,
+            'currentTimestamp' => $Now,
+        ])['componentHTML'];
 
         // Fleet Blockade Info (here, only for Global Block)
         $parse['P_SFBInfobox'] = FlightControl\Components\SmartFleetBlockadeInfoBox\render()['componentHTML'];

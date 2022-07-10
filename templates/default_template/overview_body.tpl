@@ -26,17 +26,7 @@ $(document).ready(function()
 <br />
 {P_SFBInfobox}
 <table width="750">
-    <tbody style="{MailChange_Hide}">
-        <tr>
-            <td colspan="3" class="c">{MailChange_Title}</td>
-        </tr>
-        <tr>
-            <th colspan="3" class="c">{MailChange_Box}</th>
-        </tr>
-        <tr>
-            <th class="inv">&nbsp;</th>
-        </tr>
-    </tbody>
+    {EmailChangeInfoBox}
     {VacationModeBox}
     {ActivationInfoBox}
     {NewUserBox}
