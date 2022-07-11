@@ -131,32 +131,9 @@ switch($mode)
         }
 
         // --- New Messages Information Box ----------------------------------------------------------------------
-        $NewMsg = doquery("SELECT COUNT(`id`) as `count` FROM {{table}} WHERE `deleted` = false AND `read` = false AND `id_owner` = {$_User['id']};", 'messages', true);
-        if($NewMsg['count'] > 0)
-        {
-            if($NewMsg['count'] == 1)
-            {
-                $MsgBox_NewSurfix = $_Lang['MsgBox_New_1'];
-                $MsgBox_UnreadenSurfix= $_Lang['MsgBox_Unreaden_1'];
-                $MsgBox_Msg_s = $_Lang['MsgBox_Msg'];
-            }
-            elseif($NewMsg['count'] > 1 AND $NewMsg['count'] < 5)
-            {
-                $MsgBox_NewSurfix = $_Lang['MsgBox_New_2_4'];
-                $MsgBox_UnreadenSurfix= $_Lang['MsgBox_Unreaden_2_4'];
-                $MsgBox_Msg_s = $_Lang['MsgBox_Msgs'];
-            }
-            else
-            {
-                $MsgBox_NewSurfix = $_Lang['MsgBox_New_5'];
-                $MsgBox_UnreadenSurfix= $_Lang['MsgBox_Unreaden_5'];
-                $MsgBox_Msg_s = $_Lang['MsgBox_Msgs'];
-            }
-            $MsgBoxText = $_Lang['MsgBox_YouHave'].' '.prettyNumber($NewMsg['count']).' '.$_Lang['MsgBox_New'].$MsgBox_NewSurfix.', '.$_Lang['MsgBox_Unreaden'].$MsgBox_UnreadenSurfix.' '.$MsgBox_Msg_s.'!';
-
-            $NewMsgBox = '<tr><th colspan="3"><a href="messages.php">'.$MsgBoxText.'</a></th></tr>';
-            $parse['NewMsgBox'] = $NewMsgBox;
-        }
+        $parse['NewMsgBox'] = Overview\Screens\Overview\Components\NewMessagesInfo\render([
+            'userId' => $_User['id'],
+        ])['componentHTML'];
 
         // --- New Polls Information Box -------------------------------------------------------------------------
         $SQLResult_GetPolls = doquery("SELECT {{table}}.`id`, `votes`.`id` AS `vote_id` FROM {{table}} LEFT JOIN {{prefix}}poll_votes AS `votes` ON `votes`.`poll_id` = {{table}}.id AND `votes`.`user_id` = {$_User['id']} WHERE {{table}}.`open` = 1 ORDER BY {{table}}.`time` DESC;", 'polls');
