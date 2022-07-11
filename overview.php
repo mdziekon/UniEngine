@@ -136,22 +136,9 @@ switch($mode)
         ])['componentHTML'];
 
         // --- New Polls Information Box -------------------------------------------------------------------------
-        $SQLResult_GetPolls = doquery("SELECT {{table}}.`id`, `votes`.`id` AS `vote_id` FROM {{table}} LEFT JOIN {{prefix}}poll_votes AS `votes` ON `votes`.`poll_id` = {{table}}.id AND `votes`.`user_id` = {$_User['id']} WHERE {{table}}.`open` = 1 ORDER BY {{table}}.`time` DESC;", 'polls');
-        if($SQLResult_GetPolls->num_rows > 0)
-        {
-            $AvailablePolls = 0;
-            while($PollData = $SQLResult_GetPolls->fetch_assoc())
-            {
-                if($PollData['vote_id'] <= 0)
-                {
-                    $AvailablePolls += 1;
-                }
-            }
-            if($AvailablePolls > 0)
-            {
-                $parse['NewPollsBox'] = '<tr><th colspan="3"><a style="color: orange;" href="polls.php">'.vsprintf($_Lang['PollBox_You_can_vote_in_new_polls'], ($AvailablePolls > 1) ? $_Lang['PollBox_More'] : $_Lang['PollBox_One']).'</a></th></tr>';
-            }
-        }
+        $parse['NewPollsBox'] = Overview\Screens\Overview\Components\NewSurveysInfo\render([
+            'userId' => $_User['id'],
+        ])['componentHTML'];
 
         // --- Get users activity informations -----------------------------------------------------------
         $TodaysStartTimeStamp = mktime(0, 0, 0);
