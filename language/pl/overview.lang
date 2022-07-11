@@ -221,7 +221,7 @@ $_Lang['ProAccBuyNext']         = 'Wznów';
 $_Lang['AdminAlertsBox']        = 'Masz <a style="color: black;" href="admin/report_list.php">%s nowych Raportów</a>, <a style="color: black;" href="admin/declare_list.php">%s nowych Deklaracji</a> i <a style="color: black;" href="admin/alerts_list.php">%s nowych Alertów Systemowych</a> do przejrzenia!';
 
 $_Lang['MailChange_Title']      = 'Proces Zmiany Adresu Email';
-$_Lang['MailChange_Text']       = '<b style="color: lime;">Na twoim koncie został aktywowany proces zmiany Adresu Email. Aby zakończyć ten proces, musisz potwierdzić aktywność Nowego Adresu Email oraz rzeczywistą chęć zmiany ze Starego Adresu Email.<br/>Jeśli nie użyjesz Linku Aktywacyjnego wysłanego na Stary Adres Email (np. przez brak dostępu do tej skrzynki), będziesz mógł zrobić to po 7 dniach od rozpoczęcią procesu w tym miejscu.</b>';
+$_Lang['MailChange_Text']       = '<b style="color: lime;">Na twoim koncie został aktywowany proces zmiany Adresu Email. Aby zakończyć ten proces, musisz potwierdzić aktywność Nowego Adresu Email oraz rzeczywistą chęć zmiany ze Starego Adresu Email.<br/>Jeśli nie użyjesz Linku Aktywacyjnego wysłanego na Stary Adres Email (np. przez brak dostępu do tej skrzynki), będziesz mógł zrobić to po 7 dniach od rozpoczęcia procesu w tym miejscu.</b>';
 $_Lang['MailChange_Inf1']       = 'Nie potwierdziłeś jeszcze aktywności Nowego Adresu Email!';
 $_Lang['MailChange_Inf2']       = 'Potwierdzenie zmiany Adresu będzie możliwe dnia %s z tego miejsca<br/>(lub wcześniej, jeśli użyjesz Linku Aktywacyjnego wysłanego na Stary Adres Email)';
 $_Lang['MailChange_Buto']       = 'Zakończ Proces Zmiany Adresu Email';

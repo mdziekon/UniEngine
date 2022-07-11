@@ -89,55 +89,15 @@ switch($mode)
         }
 
         // --- Admin Info Box ------------------------------------------------------------------------------------
-        if(CheckAuth('supportadmin'))
-        {
-            $Query_AdminBoxCheck[] = "SELECT COUNT(*) AS `Count`, 1 AS `Type` FROM `{{prefix}}reports` WHERE `status` = 0";
-            $Query_AdminBoxCheck[] = "SELECT COUNT(*) AS `Count`, 2 AS `Type` FROM `{{prefix}}declarations` WHERE `status` = 0";
-            $Query_AdminBoxCheck[] = "SELECT COUNT(*) AS `Count`, 3 AS `Type` FROM `{{prefix}}system_alerts` WHERE `status` = 0";
-            $Query_AdminBoxCheck = implode(' UNION ', $Query_AdminBoxCheck);
-            $Result_AdminBoxCheck = doquery($Query_AdminBoxCheck, '');
-
-            $AdminBoxTotalCount = 0;
-            while($AdminBoxData = $Result_AdminBoxCheck->fetch_assoc())
-            {
-                $AdminBox[$AdminBoxData['Type']] = $AdminBoxData['Count'];
-                $AdminBoxTotalCount += $AdminBoxData['Count'];
-            }
-            if($AdminBoxTotalCount > 0)
-            {
-                $AdminAlerts = sprintf($_Lang['AdminAlertsBox'], $AdminBox[1], $AdminBox[2], $AdminBox[3]);
-                $parse['AdminInfoBox'] = '<tr><th style="border-color: #FFA366; background-color: #FF8533; color: black;" class="c pad2" colspan="3">'.$AdminAlerts.'</th></tr><tr><th class="inv">&nbsp;</th></tr>';
-            }
-        }
+        $parse['AdminInfoBox'] = Overview\Screens\Overview\Components\AdminAlerts\render([
+            'user' => &$_User,
+        ])['componentHTML'];
 
         // --- MailChange Box ------------------------------------------------------------------------------------
-        $parse['MailChange_Hide'] = 'display: none;';
-        if($_User['email'] != $_User['email_2'])
-        {
-            $MailChange = doquery("SELECT * FROM {{table}} WHERE `UserID` = {$_User['id']} AND `ConfirmType` = 0 LIMIT 1;", 'mailchange', true);
-            if($MailChange['ID'] > 0)
-            {
-                $ChangeTime = $MailChange['Date'] + (TIME_DAY * 7);
-
-                $parse['MailChange_Hide'] = '';
-                $parse['MailChange_Box'] = sprintf($_Lang['MailChange_Text']);
-                if($MailChange['ConfirmHashNew'] == '')
-                {
-                    if($ChangeTime < $Now)
-                    {
-                        $parse['MailChange_Box'] .= "<br/><br/><form action=\"email_change.php?hash=none\" method=\"post\"><input type=\"submit\" style=\"font-weight: bold;\" value=\"{$_Lang['MailChange_Buto']}\" /></form>";
-                    }
-                    else
-                    {
-                        $parse['MailChange_Box'] .= "<br/><br/>".sprintf($_Lang['MailChange_Inf2'], date('d.m.Y H:i:s', $ChangeTime));
-                    }
-                }
-                else
-                {
-                    $parse['MailChange_Box'] .= "<br/><br/>{$_Lang['MailChange_Inf1']}";
-                }
-            }
-        }
+        $parse['EmailChangeInfoBox'] = Overview\Screens\Overview\Components\EmailChangeInfo\render([
+            'user' => &$_User,
+            'currentTimestamp' => $Now,
+        ])['componentHTML'];
 
         // Fleet Blockade Info (here, only for Global Block)
         $parse['P_SFBInfobox'] = FlightControl\Components\SmartFleetBlockadeInfoBox\render()['componentHTML'];
@@ -171,50 +131,14 @@ switch($mode)
         }
 
         // --- New Messages Information Box ----------------------------------------------------------------------
-        $NewMsg = doquery("SELECT COUNT(`id`) as `count` FROM {{table}} WHERE `deleted` = false AND `read` = false AND `id_owner` = {$_User['id']};", 'messages', true);
-        if($NewMsg['count'] > 0)
-        {
-            if($NewMsg['count'] == 1)
-            {
-                $MsgBox_NewSurfix = $_Lang['MsgBox_New_1'];
-                $MsgBox_UnreadenSurfix= $_Lang['MsgBox_Unreaden_1'];
-                $MsgBox_Msg_s = $_Lang['MsgBox_Msg'];
-            }
-            elseif($NewMsg['count'] > 1 AND $NewMsg['count'] < 5)
-            {
-                $MsgBox_NewSurfix = $_Lang['MsgBox_New_2_4'];
-                $MsgBox_UnreadenSurfix= $_Lang['MsgBox_Unreaden_2_4'];
-                $MsgBox_Msg_s = $_Lang['MsgBox_Msgs'];
-            }
-            else
-            {
-                $MsgBox_NewSurfix = $_Lang['MsgBox_New_5'];
-                $MsgBox_UnreadenSurfix= $_Lang['MsgBox_Unreaden_5'];
-                $MsgBox_Msg_s = $_Lang['MsgBox_Msgs'];
-            }
-            $MsgBoxText = $_Lang['MsgBox_YouHave'].' '.prettyNumber($NewMsg['count']).' '.$_Lang['MsgBox_New'].$MsgBox_NewSurfix.', '.$_Lang['MsgBox_Unreaden'].$MsgBox_UnreadenSurfix.' '.$MsgBox_Msg_s.'!';
-
-            $NewMsgBox = '<tr><th colspan="3"><a href="messages.php">'.$MsgBoxText.'</a></th></tr>';
-            $parse['NewMsgBox'] = $NewMsgBox;
-        }
+        $parse['NewMsgBox'] = Overview\Screens\Overview\Components\NewMessagesInfo\render([
+            'userId' => $_User['id'],
+        ])['componentHTML'];
 
         // --- New Polls Information Box -------------------------------------------------------------------------
-        $SQLResult_GetPolls = doquery("SELECT {{table}}.`id`, `votes`.`id` AS `vote_id` FROM {{table}} LEFT JOIN {{prefix}}poll_votes AS `votes` ON `votes`.`poll_id` = {{table}}.id AND `votes`.`user_id` = {$_User['id']} WHERE {{table}}.`open` = 1 ORDER BY {{table}}.`time` DESC;", 'polls');
-        if($SQLResult_GetPolls->num_rows > 0)
-        {
-            $AvailablePolls = 0;
-            while($PollData = $SQLResult_GetPolls->fetch_assoc())
-            {
-                if($PollData['vote_id'] <= 0)
-                {
-                    $AvailablePolls += 1;
-                }
-            }
-            if($AvailablePolls > 0)
-            {
-                $parse['NewPollsBox'] = '<tr><th colspan="3"><a style="color: orange;" href="polls.php">'.vsprintf($_Lang['PollBox_You_can_vote_in_new_polls'], ($AvailablePolls > 1) ? $_Lang['PollBox_More'] : $_Lang['PollBox_One']).'</a></th></tr>';
-            }
-        }
+        $parse['NewPollsBox'] = Overview\Screens\Overview\Components\NewSurveysInfo\render([
+            'userId' => $_User['id'],
+        ])['componentHTML'];
 
         // --- Get users activity informations -----------------------------------------------------------
         $TodaysStartTimeStamp = mktime(0, 0, 0);
