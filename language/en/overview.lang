@@ -116,7 +116,7 @@ $_Lang['MsgBox_Msgs']                = 'messages';
 
 // New Polls
 $_Lang['PollBox_You_can_vote_in_new_polls']  = 'There %s new poll%s which %s awaiting your vote%s!';
-$_Lang['PollBox_One']                        = array('is', '', 'is', '');
+$_Lang['PollBox_One']                        = array('is a', '', 'is', '');
 $_Lang['PollBox_More']                       = array('are', 's', 'are', 's');
 
 // ServerInformations
