@@ -62,7 +62,6 @@ function render($props) {
     $tplBodyParams = [
         'content' => $content,
     ];
-    $tplBodyParams = array_merge($_Lang, $tplBodyParams);
 
     $componentHTML = parsetemplate(
         $localTemplateLoader('body'),
