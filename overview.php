@@ -171,72 +171,19 @@ switch($mode)
         $parse['LastStatsRecount'] = date('d.m.Y H:i:s', $_GameConfig['last_update']);
 
         // --- MoraleSystem Box ---
-        if(MORALE_ENABLED)
-        {
+        if (MORALE_ENABLED) {
             Morale_ReCalculate($_User);
-            $UserMoraleLevel = $_User['morale_level'];
 
-            $parse['Insert_Morale_Level'] = $UserMoraleLevel;
-            if($UserMoraleLevel > 0)
-            {
-                $parse['Insert_Morale_Color'] = 'lime';
-            }
-            else if($UserMoraleLevel < 0)
-            {
-                if($UserMoraleLevel <= -50)
-                {
-                    $parse['Insert_Morale_Color'] = 'red';
-                }
-                else
-                {
-                    $parse['Insert_Morale_Color'] = 'orange';
-                }
-            }
+            $moraleComponent = Overview\Screens\Overview\Components\Morale\render([
+                'user' => &$_User,
+                'currentTimestamp' => $Now,
+            ]);
 
-            if($UserMoraleLevel == 0)
-            {
-                $parse['Insert_Morale_Status'] = $_Lang['Box_Morale_NoChanges'];
-            }
-            else
-            {
-                if($UserMoraleLevel > 0)
-                {
-                    $Temp_MoraleStatus = 'Pos';
-                }
-                else
-                {
-                    $Temp_MoraleStatus = 'Neg';
-                }
-                if($_User['morale_droptime'] > $Now)
-                {
-                    GlobalTemplate_AppendToAfterBody(InsertJavaScriptChronoApplet('morale', '', $_User['morale_droptime'], true));
-                    $parse['Insert_Morale_Status'] = sprintf($_Lang['Box_Morale_DropStartIn_'.$Temp_MoraleStatus], pretty_time($_User['morale_droptime'] - $Now, true, 'D'));
-                }
-                else
-                {
-                    if($UserMoraleLevel > 0)
-                    {
-                        $Temp_MoraleDropInterval = MORALE_DROPINTERVAL_POSITIVE;
-                    }
-                    else
-                    {
-                        $Temp_MoraleDropInterval = MORALE_DROPINTERVAL_NEGATIVE;
-                    }
-                    if($_User['morale_lastupdate'] == 0)
-                    {
-                        $Temp_MoraleNextDrop = $_User['morale_droptime'] + $Temp_MoraleDropInterval;
-                    }
-                    else
-                    {
-                        $Temp_MoraleNextDrop = $_User['morale_lastupdate'] + $Temp_MoraleDropInterval;
-                    }
-                    GlobalTemplate_AppendToAfterBody(InsertJavaScriptChronoApplet('morale', '', $Temp_MoraleNextDrop, true));
-                    $parse['Insert_Morale_Status'] = sprintf($_Lang['Box_Morale_Dropping_'.$Temp_MoraleStatus], pretty_time($Temp_MoraleNextDrop - $Now, true, 'D'));
-                }
-            }
-            $_Lang['Box_Morale_Points'] = sprintf($_Lang['Box_Morale_Points'], prettyNumber($_User['morale_points']));
+            $parse['Insert_MoraleBox'] = $moraleComponent['componentHTML'];
 
-            $parse['Insert_MoraleBox'] = parsetemplate(gettemplate('overview_body_morale'), $parse);
+            if (!empty($moraleComponent['globalJS'])) {
+                GlobalTemplate_AppendToAfterBody($moraleComponent['globalJS']);
+            }
         }
 
         // --- Get Register Date -

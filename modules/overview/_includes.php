@@ -26,6 +26,8 @@ call_user_func(function () {
 
     include($includePath . './screens/Overview/components/AdminAlerts/AdminAlerts.component.php');
     include($includePath . './screens/Overview/components/EmailChangeInfo/EmailChangeInfo.component.php');
+    include($includePath . './screens/Overview/components/Morale/Morale.component.php');
+    include($includePath . './screens/Overview/components/Morale/Morale.utils.php');
     include($includePath . './screens/Overview/components/NewMessagesInfo/NewMessagesInfo.component.php');
     include($includePath . './screens/Overview/components/NewSurveysInfo/NewSurveysInfo.component.php');
     include($includePath . './screens/Overview/components/PlanetsListElement/PlanetsListElement.component.php');
