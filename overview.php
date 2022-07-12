@@ -62,11 +62,9 @@ switch($mode)
         $parse['VacationModeBox'] = Overview\Screens\Overview\Components\VacationInfoBox\render([
             'user' => &$_User,
         ])['componentHTML'];
-
-        // --- Activation Box
-        if (!isUserAccountActivated($_User)) {
-            $parse['ActivationInfoBox'] = '<tr><th class="c pad5 orange" colspan="3">'.$_Lang['ActivationInfo_Text'].'</th></tr><tr><th style="visibility: hidden;">&nbsp;</th></tr>';
-        }
+        $parse['ActivationInfoBox'] = Overview\Screens\Overview\Components\AccountActivationInfoBox\render([
+            'user' => &$_User,
+        ])['componentHTML'];
 
         // --- New User Protection Box
         if($_User['NoobProtection_EndTime'] > $Now)

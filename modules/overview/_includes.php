@@ -24,6 +24,7 @@ call_user_func(function () {
     include($includePath . './screens/FirstLogin/utils/effects/updateUserOnFirstLogin.effect.php');
     include($includePath . './screens/FirstLogin/utils/helpers/getReferrerTasksData.helper.php');
 
+    include($includePath . './screens/Overview/components/AccountActivationInfoBox/AccountActivationInfoBox.component.php');
     include($includePath . './screens/Overview/components/AdminAlerts/AdminAlerts.component.php');
     include($includePath . './screens/Overview/components/EmailChangeInfo/EmailChangeInfo.component.php');
     include($includePath . './screens/Overview/components/Morale/Morale.component.php');
