@@ -59,11 +59,9 @@ switch($mode)
         InsertJavaScriptChronoApplet(false, false, false);
         $InsertJSChronoApplet_GlobalIncluded = true;
 
-        // --- Vacation Mode Box
-        if(isOnVacation())
-        {
-            $parse['VacationModeBox'] = '<tr><th class="c pad5 orange" colspan="3">'.$_Lang['VacationModeBox_Text'].'</th></tr><tr><th style="visibility: hidden;">&nbsp;</th></tr>';
-        }
+        $parse['VacationModeBox'] = Overview\Screens\Overview\Components\VacationInfoBox\render([
+            'user' => &$_User,
+        ])['componentHTML'];
 
         // --- Activation Box
         if (!isUserAccountActivated($_User)) {
