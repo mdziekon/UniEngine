@@ -31,6 +31,10 @@ call_user_func(function () {
     include($includePath . './screens/Overview/components/Morale/Morale.utils.php');
     include($includePath . './screens/Overview/components/NewMessagesInfo/NewMessagesInfo.component.php');
     include($includePath . './screens/Overview/components/NewSurveysInfo/NewSurveysInfo.component.php');
+    include($includePath . './screens/Overview/components/NoobProtectionInfoBox/NoobProtectionInfoBox.component.php');
+    include($includePath . './screens/Overview/components/NoobProtectionInfoBox/NoobProtectionInfoBox.utils.php');
+    include($includePath . './screens/Overview/components/NoobProtectionInfoBox/utils/helpers.utils.php');
+    include($includePath . './screens/Overview/components/NoobProtectionInfoBox/utils/effects/turnOffProtection.effect.php');
     include($includePath . './screens/Overview/components/PlanetsListElement/PlanetsListElement.component.php');
     include($includePath . './screens/Overview/components/ResourcesTransport/ResourcesTransport.component.php');
     include($includePath . './screens/Overview/components/StatsList/StatsList.component.php');

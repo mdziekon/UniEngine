@@ -66,22 +66,16 @@ switch($mode)
             'user' => &$_User,
         ])['componentHTML'];
 
-        // --- New User Protection Box
-        if($_User['NoobProtection_EndTime'] > $Now)
-        {
-            if(isset($_GET['cancelprotection']) && $_GET['cancelprotection'] == '1')
-            {
-                $_User['NoobProtection_EndTime'] = $Now;
-                $Query_UpdateUser = "UPDATE {{table}} SET `NoobProtection_EndTime` = {$Now} WHERE `id` = {$_User['id']} LIMIT 1;";
-                doquery($Query_UpdateUser, 'users');
+        $noobProtectionInfoBoxComponent = Overview\Screens\Overview\Components\NoobProtectionInfoBox\render([
+            'input' => &$_GET,
+            'user' => &$_User,
+            'currentTimestamp' => $Now,
+        ]);
 
-                $parse['NewUserBox'] = '<tr><th class="c pad5 lime" colspan="3">'.$_Lang['NewUserProtection_Canceled'].'</th></tr><tr><th style="visibility: hidden;">&nbsp;</th></tr>';
-            }
-            else
-            {
-                $ProtectTimeLeft = $_User['NoobProtection_EndTime'] - $Now;
-                $parse['NewUserBox'] = InsertJavaScriptChronoApplet('newprotect', '', $ProtectTimeLeft).'<tr><th class="c pad5 lime" colspan="3">'.sprintf($_Lang['NewUserProtection_Text'], pretty_time($ProtectTimeLeft, true, 'dhms')).'</th></tr><tr><th style="visibility: hidden;">&nbsp;</th></tr>';
-            }
+        $parse['NewUserBox'] = $noobProtectionInfoBoxComponent['componentHTML'];
+
+        if (!empty($noobProtectionInfoBoxComponent['globalJS'])) {
+            GlobalTemplate_AppendToAfterBody($noobProtectionInfoBoxComponent['globalJS']);
         }
 
         // --- Admin Info Box ------------------------------------------------------------------------------------
