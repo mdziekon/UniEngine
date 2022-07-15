@@ -98,25 +98,9 @@ switch($mode)
         ])['componentHTML'];
 
         // --- System Messages Box -------------------------------------------------------------------------------
-        if(!empty($_GET['showmsg']))
-        {
-            $SysMsgLoop = 0;
-            if($_GET['showmsg'] == 'abandon')
-            {
-                $ShowSystemMsg[$SysMsgLoop]['txt'] = $_Lang['Abandon_ColonyAbandoned'];
-                $ShowSystemMsg[$SysMsgLoop]['col'] = 'lime';
-                $SysMsgLoop += 1;
-            }
-        }
-
-        if(!empty($ShowSystemMsg))
-        {
-            $parse['SystemMsgBox'] = '';
-            foreach($ShowSystemMsg as $SystemMsg)
-            {
-                $parse['SystemMsgBox'] .= '<tr><th colspan="3" class="pad5 '.$SystemMsg['col'].'">'.$SystemMsg['txt'].'</th></tr>';
-            }
-        }
+        $parse['SystemMsgBox'] = Overview\Screens\Overview\Components\FeedbackMessagesDisplay\render([
+            'input' => &$_GET,
+        ])['componentHTML'];
 
         // --- New Messages Information Box ----------------------------------------------------------------------
         $parse['NewMsgBox'] = Overview\Screens\Overview\Components\NewMessagesInfo\render([
