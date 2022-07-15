@@ -93,11 +93,9 @@ switch($mode)
         $parse['P_SFBInfobox'] = FlightControl\Components\SmartFleetBlockadeInfoBox\render()['componentHTML'];
 
         // --- Free Premium Items Info Box -----------------------------------------------------------------------
-        $GetFreeItems = doquery("SELECT COUNT(`ID`) as `Count` FROM {{table}} WHERE `UserID` = {$_User['id']} AND `Used` = false;", 'premium_free', true);
-        if($GetFreeItems['Count'] > 0)
-        {
-            $parse['FreePremiumItemsBox'] = '<tr><th colspan="3"><a class="orange" href="galacticshop.php?show=free">'.sprintf($_Lang['FreePremItem_Text'], $GetFreeItems['Count']).'</a></th></tr>';
-        }
+        $parse['FreePremiumItemsBox'] = Overview\Screens\Overview\Components\GiftItemsInfoBox\render([
+            'userId' => $_User['id'],
+        ])['componentHTML'];
 
         // --- System Messages Box -------------------------------------------------------------------------------
         if(!empty($_GET['showmsg']))
