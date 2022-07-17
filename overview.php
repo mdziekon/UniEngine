@@ -180,10 +180,8 @@ switch($mode)
         $parse['RefferedCounter'] = prettyNumber((($Referred['count'] > 0) ? $Referred['count'] : '0'));
 
         // --- Render UserStats ---
-        $StatRecord = doquery("SELECT * FROM {{table}} WHERE `stat_type` = '1' AND `id_owner` = {$_User['id']} LIMIT 1;", 'statpoints', true);
-
         $parse['Component_StatsList'] = Overview\Screens\Overview\Components\StatsList\render([
-            'stats' => $StatRecord,
+            'userId' => $_User['id'],
         ])['componentHTML'];
         $parse['Component_CombatStatsList'] = Overview\Screens\Overview\Components\CombatStatsList\render([
             'userId' => $_User['id'],

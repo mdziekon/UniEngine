@@ -43,6 +43,7 @@ call_user_func(function () {
     include($includePath . './screens/Overview/components/PlanetsListElement/PlanetsListElement.component.php');
     include($includePath . './screens/Overview/components/ResourcesTransport/ResourcesTransport.component.php');
     include($includePath . './screens/Overview/components/StatsList/StatsList.component.php');
+    include($includePath . './screens/Overview/components/StatsList/StatsList.utils.php');
     include($includePath . './screens/Overview/components/VacationInfoBox/VacationInfoBox.component.php');
 
     include($includePath . './screens/PlanetNameChange/PlanetNameChange.screen.php');
