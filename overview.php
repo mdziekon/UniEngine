@@ -180,22 +180,17 @@ switch($mode)
         $parse['RefferedCounter'] = prettyNumber((($Referred['count'] > 0) ? $Referred['count'] : '0'));
 
         // --- Render UserStats ---
+        $GetStats_Fields = '`ustat_raids_won`, `ustat_raids_draw`, `ustat_raids_lost`, `ustat_raids_acs_won`, `ustat_raids_inAlly`, `ustat_raids_missileAttack`';
+
         $StatRecord = doquery("SELECT * FROM {{table}} WHERE `stat_type` = '1' AND `id_owner` = {$_User['id']} LIMIT 1;", 'statpoints', true);
+        $GetStats = doquery("SELECT {$GetStats_Fields} FROM {{table}} WHERE `A_UserID` = {$_User['id']} LIMIT 1;", 'achievements_stats', true);
 
         $parse['Component_StatsList'] = Overview\Screens\Overview\Components\StatsList\render([
             'stats' => $StatRecord,
         ])['componentHTML'];
-
-        // Get User Achievements
-        $GetStats_Fields = '`ustat_raids_won`, `ustat_raids_draw`, `ustat_raids_lost`, `ustat_raids_acs_won`, `ustat_raids_inAlly`, `ustat_raids_missileAttack`';
-        $GetStats = doquery("SELECT {$GetStats_Fields} FROM {{table}} WHERE `A_UserID` = {$_User['id']} LIMIT 1;", 'achievements_stats', true);
-        $parse['raids']                    = prettyNumber($GetStats['ustat_raids_won'] + $GetStats['ustat_raids_draw'] + $GetStats['ustat_raids_lost'] + $GetStats['ustat_raids_inAlly']);
-        $parse['raidswin']                = prettyNumber($GetStats['ustat_raids_won']);
-        $parse['raidsdraw']                = prettyNumber($GetStats['ustat_raids_draw']);
-        $parse['raidsloose']            = prettyNumber($GetStats['ustat_raids_lost']);
-        $parse['raidacswin']            = prettyNumber($GetStats['ustat_raids_acs_won']);
-        $parse['raidsinally']            = prettyNumber($GetStats['ustat_raids_inAlly']);
-        $parse['raidsmissileattacks']    = prettyNumber($GetStats['ustat_raids_missileAttack']);
+        $parse['Component_CombatStatsList'] = Overview\Screens\Overview\Components\CombatStatsList\render([
+            'stats' => $GetStats,
+        ])['componentHTML'];
 
         // --- Planet Data ---------
         if($_Planet['planet_type'] == 1)

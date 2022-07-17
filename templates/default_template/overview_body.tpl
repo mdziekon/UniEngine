@@ -158,45 +158,7 @@ $(document).ready(function()
         <th width="215">
             {Component_StatsList}
             <br/>
-            <table width="100%" align="center">
-                <tr>
-                    <td colspan="2" class="c pad3">{YourBattles}</td>
-                </tr>
-                <tr>
-                    <th>{Box_battlesAll}</th>
-                    <th>{raids}</th>
-                </tr>
-                <tr>
-                    <th class="invNF">&nbsp;</th>
-                </tr>
-                <tr>
-                    <th>{Box_battlesWon}</th>
-                    <th>{raidswin}</th>
-                </tr>
-                <tr>
-                    <th class="orange">{Box_battlesACSWon}</th>
-                    <th>{raidacswin}</th>
-                </tr>
-                <tr>
-                    <th>{Box_battlesDraw}</th>
-                    <th>{raidsdraw}</th>
-                </tr>
-                <tr>
-                    <th>{Box_battlesLost}</th>
-                    <th>{raidsloose}</th>
-                </tr>
-                <tr>
-                    <th>{Box_battlesInAlly}</th>
-                    <th>{raidsinally}</th>
-                </tr>
-                <tr>
-                    <th class="invNF">&nbsp;</th>
-                </tr>
-                <tr>
-                    <th>{Box_missileAttacks}</th>
-                    <th>{raidsmissileattacks}</th>
-                </tr>
-            </table>
+            {Component_CombatStatsList}
         </th>
     </tr>
     <tr style="visibility: none;"><td></td></tr>
