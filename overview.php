@@ -180,16 +180,13 @@ switch($mode)
         $parse['RefferedCounter'] = prettyNumber((($Referred['count'] > 0) ? $Referred['count'] : '0'));
 
         // --- Render UserStats ---
-        $GetStats_Fields = '`ustat_raids_won`, `ustat_raids_draw`, `ustat_raids_lost`, `ustat_raids_acs_won`, `ustat_raids_inAlly`, `ustat_raids_missileAttack`';
-
         $StatRecord = doquery("SELECT * FROM {{table}} WHERE `stat_type` = '1' AND `id_owner` = {$_User['id']} LIMIT 1;", 'statpoints', true);
-        $GetStats = doquery("SELECT {$GetStats_Fields} FROM {{table}} WHERE `A_UserID` = {$_User['id']} LIMIT 1;", 'achievements_stats', true);
 
         $parse['Component_StatsList'] = Overview\Screens\Overview\Components\StatsList\render([
             'stats' => $StatRecord,
         ])['componentHTML'];
         $parse['Component_CombatStatsList'] = Overview\Screens\Overview\Components\CombatStatsList\render([
-            'stats' => $GetStats,
+            'userId' => $_User['id'],
         ])['componentHTML'];
 
         // --- Planet Data ---------

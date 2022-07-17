@@ -27,6 +27,7 @@ call_user_func(function () {
     include($includePath . './screens/Overview/components/AccountActivationInfoBox/AccountActivationInfoBox.component.php');
     include($includePath . './screens/Overview/components/AdminAlerts/AdminAlerts.component.php');
     include($includePath . './screens/Overview/components/CombatStatsList/CombatStatsList.component.php');
+    include($includePath . './screens/Overview/components/CombatStatsList/CombatStatsList.utils.php');
     include($includePath . './screens/Overview/components/EmailChangeInfo/EmailChangeInfo.component.php');
     include($includePath . './screens/Overview/components/FeedbackMessagesDisplay/FeedbackMessagesDisplay.component.php');
     include($includePath . './screens/Overview/components/FeedbackMessagesDisplay/FeedbackMessagesDisplay.utils.php');

@@ -2,20 +2,24 @@
 
 namespace UniEngine\Engine\Modules\Overview\Screens\Overview\Components\CombatStatsList;
 
+use UniEngine\Engine\Modules\Overview\Screens\Overview\Components\CombatStatsList;
+
 /**
  * @param array $props
- * @param array $props['stats']
+ * @param number $props['userId']
  */
 function render($props) {
     global $_Lang;
-
-    $stats = $props['stats'];
 
     $localTemplateLoader = createLocalTemplateLoader(__DIR__);
     $tplBodyCache = [
         'body' => $localTemplateLoader('body'),
         'statCategoryRow' => $localTemplateLoader('statCategoryRow'),
     ];
+
+    $statsData = CombatStatsList\Utils\getUserCombatStats([
+        'userId' => $props['userId'],
+    ]);
 
     $categories = [
         'allBattles' => [
@@ -69,8 +73,8 @@ function render($props) {
     $categoriesHTML = [];
 
     foreach ($categories as $categoryKey => $category) {
-        $categorySubValues = array_map_withkeys($category['statsTableKeys'], function ($key) use ($stats) {
-            return $stats[$key];
+        $categorySubValues = array_map_withkeys($category['statsTableKeys'], function ($key) use ($statsData) {
+            return $statsData[$key];
         });
         $categoryTotalValue = array_sum($categorySubValues);
 
