@@ -2,20 +2,24 @@
 
 namespace UniEngine\Engine\Modules\Overview\Screens\Overview\Components\StatsList;
 
+use UniEngine\Engine\Modules\Overview\Screens\Overview\Components\StatsList;
+
 /**
  * @param array $props
- * @param array $props['stats']
+ * @param number $props['userId']
  */
 function render($props) {
     global $_Lang;
-
-    $stats = $props['stats'];
 
     $localTemplateLoader = createLocalTemplateLoader(__DIR__);
     $tplBodyCache = [
         'body' => $localTemplateLoader('body'),
         'statCategoryRow' => $localTemplateLoader('statCategoryRow'),
     ];
+
+    $statsData = StatsList\Utils\getUserGameStats([
+        'userId' => $props['userId'],
+    ]);
 
     $categories = [
         'general' => [
@@ -63,7 +67,7 @@ function render($props) {
             'statCategoryType' => $category['categoryType'],
             'userCategoryRankLabel' => '0',
             'userCategoryRankPosition' => '0',
-            'userCategoryPoints' => prettyNumber($stats[$category['pointsKey']]),
+            'userCategoryPoints' => prettyNumber($statsData[$category['pointsKey']]),
             'statsUnit' => $_Lang['_statUnit'],
         ];
 
@@ -71,16 +75,16 @@ function render($props) {
         $recordsOldKey = $category['recordsOldKey'];
 
         if (
-            !isset($stats[$recordsCurrentKey]) ||
-            $stats[$recordsCurrentKey] <= 0
+            !isset($statsData[$recordsCurrentKey]) ||
+            $statsData[$recordsCurrentKey] <= 0
         ) {
             $categoriesHTML[] = parsetemplate($tplBodyCache['statCategoryRow'], $categoryTplBodyParams);
 
             continue;
         }
 
-        $oldPosition = $stats[$recordsOldKey];
-        $currentPosition = $stats[$recordsCurrentKey];
+        $oldPosition = $statsData[$recordsOldKey];
+        $currentPosition = $statsData[$recordsCurrentKey];
 
         $positionDifference = $oldPosition - $currentPosition;
         $positionDifferenceLabel = null;

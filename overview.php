@@ -59,33 +59,23 @@ switch($mode)
         InsertJavaScriptChronoApplet(false, false, false);
         $InsertJSChronoApplet_GlobalIncluded = true;
 
-        // --- Vacation Mode Box
-        if(isOnVacation())
-        {
-            $parse['VacationModeBox'] = '<tr><th class="c pad5 orange" colspan="3">'.$_Lang['VacationModeBox_Text'].'</th></tr><tr><th style="visibility: hidden;">&nbsp;</th></tr>';
-        }
+        $parse['VacationModeBox'] = Overview\Screens\Overview\Components\VacationInfoBox\render([
+            'user' => &$_User,
+        ])['componentHTML'];
+        $parse['ActivationInfoBox'] = Overview\Screens\Overview\Components\AccountActivationInfoBox\render([
+            'user' => &$_User,
+        ])['componentHTML'];
 
-        // --- Activation Box
-        if (!isUserAccountActivated($_User)) {
-            $parse['ActivationInfoBox'] = '<tr><th class="c pad5 orange" colspan="3">'.$_Lang['ActivationInfo_Text'].'</th></tr><tr><th style="visibility: hidden;">&nbsp;</th></tr>';
-        }
+        $noobProtectionInfoBoxComponent = Overview\Screens\Overview\Components\NoobProtectionInfoBox\render([
+            'input' => &$_GET,
+            'user' => &$_User,
+            'currentTimestamp' => $Now,
+        ]);
 
-        // --- New User Protection Box
-        if($_User['NoobProtection_EndTime'] > $Now)
-        {
-            if(isset($_GET['cancelprotection']) && $_GET['cancelprotection'] == '1')
-            {
-                $_User['NoobProtection_EndTime'] = $Now;
-                $Query_UpdateUser = "UPDATE {{table}} SET `NoobProtection_EndTime` = {$Now} WHERE `id` = {$_User['id']} LIMIT 1;";
-                doquery($Query_UpdateUser, 'users');
+        $parse['NewUserBox'] = $noobProtectionInfoBoxComponent['componentHTML'];
 
-                $parse['NewUserBox'] = '<tr><th class="c pad5 lime" colspan="3">'.$_Lang['NewUserProtection_Canceled'].'</th></tr><tr><th style="visibility: hidden;">&nbsp;</th></tr>';
-            }
-            else
-            {
-                $ProtectTimeLeft = $_User['NoobProtection_EndTime'] - $Now;
-                $parse['NewUserBox'] = InsertJavaScriptChronoApplet('newprotect', '', $ProtectTimeLeft).'<tr><th class="c pad5 lime" colspan="3">'.sprintf($_Lang['NewUserProtection_Text'], pretty_time($ProtectTimeLeft, true, 'dhms')).'</th></tr><tr><th style="visibility: hidden;">&nbsp;</th></tr>';
-            }
+        if (!empty($noobProtectionInfoBoxComponent['globalJS'])) {
+            GlobalTemplate_AppendToAfterBody($noobProtectionInfoBoxComponent['globalJS']);
         }
 
         // --- Admin Info Box ------------------------------------------------------------------------------------
@@ -103,32 +93,14 @@ switch($mode)
         $parse['P_SFBInfobox'] = FlightControl\Components\SmartFleetBlockadeInfoBox\render()['componentHTML'];
 
         // --- Free Premium Items Info Box -----------------------------------------------------------------------
-        $GetFreeItems = doquery("SELECT COUNT(`ID`) as `Count` FROM {{table}} WHERE `UserID` = {$_User['id']} AND `Used` = false;", 'premium_free', true);
-        if($GetFreeItems['Count'] > 0)
-        {
-            $parse['FreePremiumItemsBox'] = '<tr><th colspan="3"><a class="orange" href="galacticshop.php?show=free">'.sprintf($_Lang['FreePremItem_Text'], $GetFreeItems['Count']).'</a></th></tr>';
-        }
+        $parse['FreePremiumItemsBox'] = Overview\Screens\Overview\Components\GiftItemsInfoBox\render([
+            'userId' => $_User['id'],
+        ])['componentHTML'];
 
         // --- System Messages Box -------------------------------------------------------------------------------
-        if(!empty($_GET['showmsg']))
-        {
-            $SysMsgLoop = 0;
-            if($_GET['showmsg'] == 'abandon')
-            {
-                $ShowSystemMsg[$SysMsgLoop]['txt'] = $_Lang['Abandon_ColonyAbandoned'];
-                $ShowSystemMsg[$SysMsgLoop]['col'] = 'lime';
-                $SysMsgLoop += 1;
-            }
-        }
-
-        if(!empty($ShowSystemMsg))
-        {
-            $parse['SystemMsgBox'] = '';
-            foreach($ShowSystemMsg as $SystemMsg)
-            {
-                $parse['SystemMsgBox'] .= '<tr><th colspan="3" class="pad5 '.$SystemMsg['col'].'">'.$SystemMsg['txt'].'</th></tr>';
-            }
-        }
+        $parse['SystemMsgBox'] = Overview\Screens\Overview\Components\FeedbackMessagesDisplay\render([
+            'input' => &$_GET,
+        ])['componentHTML'];
 
         // --- New Messages Information Box ----------------------------------------------------------------------
         $parse['NewMsgBox'] = Overview\Screens\Overview\Components\NewMessagesInfo\render([
@@ -171,72 +143,19 @@ switch($mode)
         $parse['LastStatsRecount'] = date('d.m.Y H:i:s', $_GameConfig['last_update']);
 
         // --- MoraleSystem Box ---
-        if(MORALE_ENABLED)
-        {
+        if (MORALE_ENABLED) {
             Morale_ReCalculate($_User);
-            $UserMoraleLevel = $_User['morale_level'];
 
-            $parse['Insert_Morale_Level'] = $UserMoraleLevel;
-            if($UserMoraleLevel > 0)
-            {
-                $parse['Insert_Morale_Color'] = 'lime';
-            }
-            else if($UserMoraleLevel < 0)
-            {
-                if($UserMoraleLevel <= -50)
-                {
-                    $parse['Insert_Morale_Color'] = 'red';
-                }
-                else
-                {
-                    $parse['Insert_Morale_Color'] = 'orange';
-                }
-            }
+            $moraleComponent = Overview\Screens\Overview\Components\Morale\render([
+                'user' => &$_User,
+                'currentTimestamp' => $Now,
+            ]);
 
-            if($UserMoraleLevel == 0)
-            {
-                $parse['Insert_Morale_Status'] = $_Lang['Box_Morale_NoChanges'];
-            }
-            else
-            {
-                if($UserMoraleLevel > 0)
-                {
-                    $Temp_MoraleStatus = 'Pos';
-                }
-                else
-                {
-                    $Temp_MoraleStatus = 'Neg';
-                }
-                if($_User['morale_droptime'] > $Now)
-                {
-                    GlobalTemplate_AppendToAfterBody(InsertJavaScriptChronoApplet('morale', '', $_User['morale_droptime'], true));
-                    $parse['Insert_Morale_Status'] = sprintf($_Lang['Box_Morale_DropStartIn_'.$Temp_MoraleStatus], pretty_time($_User['morale_droptime'] - $Now, true, 'D'));
-                }
-                else
-                {
-                    if($UserMoraleLevel > 0)
-                    {
-                        $Temp_MoraleDropInterval = MORALE_DROPINTERVAL_POSITIVE;
-                    }
-                    else
-                    {
-                        $Temp_MoraleDropInterval = MORALE_DROPINTERVAL_NEGATIVE;
-                    }
-                    if($_User['morale_lastupdate'] == 0)
-                    {
-                        $Temp_MoraleNextDrop = $_User['morale_droptime'] + $Temp_MoraleDropInterval;
-                    }
-                    else
-                    {
-                        $Temp_MoraleNextDrop = $_User['morale_lastupdate'] + $Temp_MoraleDropInterval;
-                    }
-                    GlobalTemplate_AppendToAfterBody(InsertJavaScriptChronoApplet('morale', '', $Temp_MoraleNextDrop, true));
-                    $parse['Insert_Morale_Status'] = sprintf($_Lang['Box_Morale_Dropping_'.$Temp_MoraleStatus], pretty_time($Temp_MoraleNextDrop - $Now, true, 'D'));
-                }
-            }
-            $_Lang['Box_Morale_Points'] = sprintf($_Lang['Box_Morale_Points'], prettyNumber($_User['morale_points']));
+            $parse['Insert_MoraleBox'] = $moraleComponent['componentHTML'];
 
-            $parse['Insert_MoraleBox'] = parsetemplate(gettemplate('overview_body_morale'), $parse);
+            if (!empty($moraleComponent['globalJS'])) {
+                GlobalTemplate_AppendToAfterBody($moraleComponent['globalJS']);
+            }
         }
 
         // --- Get Register Date -
@@ -261,22 +180,12 @@ switch($mode)
         $parse['RefferedCounter'] = prettyNumber((($Referred['count'] > 0) ? $Referred['count'] : '0'));
 
         // --- Render UserStats ---
-        $StatRecord = doquery("SELECT * FROM {{table}} WHERE `stat_type` = '1' AND `id_owner` = {$_User['id']} LIMIT 1;", 'statpoints', true);
-
         $parse['Component_StatsList'] = Overview\Screens\Overview\Components\StatsList\render([
-            'stats' => $StatRecord,
+            'userId' => $_User['id'],
         ])['componentHTML'];
-
-        // Get User Achievements
-        $GetStats_Fields = '`ustat_raids_won`, `ustat_raids_draw`, `ustat_raids_lost`, `ustat_raids_acs_won`, `ustat_raids_inAlly`, `ustat_raids_missileAttack`';
-        $GetStats = doquery("SELECT {$GetStats_Fields} FROM {{table}} WHERE `A_UserID` = {$_User['id']} LIMIT 1;", 'achievements_stats', true);
-        $parse['raids']                    = prettyNumber($GetStats['ustat_raids_won'] + $GetStats['ustat_raids_draw'] + $GetStats['ustat_raids_lost'] + $GetStats['ustat_raids_inAlly']);
-        $parse['raidswin']                = prettyNumber($GetStats['ustat_raids_won']);
-        $parse['raidsdraw']                = prettyNumber($GetStats['ustat_raids_draw']);
-        $parse['raidsloose']            = prettyNumber($GetStats['ustat_raids_lost']);
-        $parse['raidacswin']            = prettyNumber($GetStats['ustat_raids_acs_won']);
-        $parse['raidsinally']            = prettyNumber($GetStats['ustat_raids_inAlly']);
-        $parse['raidsmissileattacks']    = prettyNumber($GetStats['ustat_raids_missileAttack']);
+        $parse['Component_CombatStatsList'] = Overview\Screens\Overview\Components\CombatStatsList\render([
+            'userId' => $_User['id'],
+        ])['componentHTML'];
 
         // --- Planet Data ---------
         if($_Planet['planet_type'] == 1)

@@ -88,7 +88,7 @@ $_Lang['BuildJS_Complete']                       = 'Completed';
 $_Lang['BuildJS_Continue']                       = 'Continue';
 
 // Free PremiumItems Box
-$_Lang['FreePremItem_Text']             = 'You\'ve received free Premium Items [%s] as a reward from the Game or Administration!<br/>Go to the Ship to check your items list!';
+$_Lang['FreePremItem_Text']             = 'You\'ve received free Premium Items (%s) as a reward from the Game or Administration!<br/>Go to the Ship to check your items list!';
 
 // Vacation Mode Box
 $_Lang['VacationModeBox_Text']          = 'Your account is currently in <a class="orange" href="settings.php"><u>Vacation Mode</u></a>';
