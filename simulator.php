@@ -702,7 +702,7 @@ $ownFleetsAndDefenses = object_map(
 
 $_Lang['fill_with_myfleets'] = json_encode($ownFleetsAndDefenses);
 
-$_Lang['AllowPrettyInputBox'] = ($_User['settings_useprettyinputbox'] == 1 ? 'true' : 'false');
+$_Lang['AllowPrettyInputBox'] = ($UsingPrettyInputBox ? 'true' : 'false');
 
 //Display page
 $page = parsetemplate(gettemplate('simulator'), $_Lang);
