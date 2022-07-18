@@ -34,6 +34,7 @@ $MaxStringLength = 30;
 if(!empty($_POST['spyreport']))
 {
     $_POST['spyreport'] = json_decode(stripslashes($_POST['spyreport']), true);
+    // TODO: provide compat layer
     $_POST['def_techs'][1] = (isset($_POST['spyreport']['tech']) ? $_POST['spyreport']['tech'] : null);
     $_POST['def_ships'][1] = (isset($_POST['spyreport']['ships']) ? $_POST['spyreport']['ships'] : null);
     $_POST['spyreport'] = null;
@@ -48,18 +49,17 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
         foreach($_POST['atk_techs'] as $User => $Vals)
         {
             $UserTemp = $User - 1;
-            foreach($TechEquivalents as $TechID => $TechKey)
-            {
-                if(!isset($Vals[$TechID]) || $Vals[$TechID] <= 0)
-                {
-                    $Value = 0;
+
+            foreach ($Vals as $elementId => $elementValue) {
+                if (!World\Elements\isTechnology($elementId)) {
+                    continue;
                 }
-                else
-                {
-                    $Value = intval($Vals[$TechID]);
-                }
-                $AttackingTechs[$UserTemp][$TechKey] = $Value;
+
+                $safeElementValue = intval($elementValue, 10);
+
+                $AttackingTechs[$UserTemp][$elementId] = $safeElementValue;
             }
+
             $AttackersData[$UserTemp] = array
             (
                 'username' => $_Lang['Attacker_Txt'].$User,
@@ -73,18 +73,17 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
         foreach($_POST['def_techs'] as $User => $Vals)
         {
             $UserTemp = $User - 1;
-            foreach($TechEquivalents as $TechID => $TechKey)
-            {
-                if(!isset($Vals[$TechID]) || $Vals[$TechID] <= 0)
-                {
-                    $Value = 0;
+
+            foreach ($Vals as $elementId => $elementValue) {
+                if (!World\Elements\isTechnology($elementId)) {
+                    continue;
                 }
-                else
-                {
-                    $Value = intval($Vals[$TechID]);
-                }
-                $DefendingTechs[$UserTemp][$TechKey] = $Value;
+
+                $safeElementValue = intval($elementValue, 10);
+
+                $DefendingTechs[$UserTemp][$elementId] = $safeElementValue;
             }
+
             $DefendersData[$UserTemp] = array
             (
                 'username' => $_Lang['Defender_Txt'].$User,
@@ -582,15 +581,14 @@ for($i = 1; $i <= $MaxACSSlots; $i += 1)
     $parse['RowText2'] = '<a class="orange point fillTech_def">'.$_Lang['FillMyTechs'].'</a> / <a class="orange point clnTech_def">'.$_Lang['Fill_Clean'].'</a>';
     $ThisSlot['txt'] .= parsetemplate($TPL_NoBoth, $parse);
 
-    for($techs = 1; $techs <= $TechCount; $techs += 1)
-    {
-        $ThisRow_InsertValue_Atk = isset($_POST['atk_techs'][$i][$techs]) ? $_POST['atk_techs'][$i][$techs] : null;
-        $ThisRow_InsertValue_Def = isset($_POST['def_techs'][$i][$techs]) ? $_POST['def_techs'][$i][$techs] : null;
+    foreach ($TechEquivalents as $elementId) {
+        $ThisRow_InsertValue_Atk = isset($_POST['atk_techs'][$i][$elementId]) ? $_POST['atk_techs'][$i][$elementId] : null;
+        $ThisRow_InsertValue_Def = isset($_POST['def_techs'][$i][$elementId]) ? $_POST['def_techs'][$i][$elementId] : null;
 
-        $parse['RowText'] = $_Lang['Techs'][$techs];
-        $parse['RowInput'] = "<input type=\"text\" tabindex=\"{REP1_O{$i}_{$InsertTabIndex1}}\" name=\"atk_techs[{$i}][{$techs}]\" value=\"{$ThisRow_InsertValue_Atk}\" autocomplete=\"off\" />";
-        $parse['RowText2'] = $_Lang['Techs'][$techs];
-        $parse['RowInput2'] = "<input type=\"text\" tabindex=\"{REP2_O{$i}_{$InsertTabIndex2}}\" name=\"def_techs[{$i}][{$techs}]\" value=\"{$ThisRow_InsertValue_Def}\" autocomplete=\"off\" />";
+        $parse['RowText'] = $_Lang['tech'][$elementId];
+        $parse['RowInput'] = "<input type=\"text\" tabindex=\"{REP1_O{$i}_{$InsertTabIndex1}}\" name=\"atk_techs[{$i}][{$elementId}]\" value=\"{$ThisRow_InsertValue_Atk}\" autocomplete=\"off\" />";
+        $parse['RowText2'] = $_Lang['tech'][$elementId];
+        $parse['RowInput2'] = "<input type=\"text\" tabindex=\"{REP2_O{$i}_{$InsertTabIndex2}}\" name=\"def_techs[{$i}][{$elementId}]\" value=\"{$ThisRow_InsertValue_Def}\" autocomplete=\"off\" />";
 
         $ThisSlot['txt'] .= parsetemplate($TPL_Row, $parse);
         $InsertTabIndex1 += 1;
@@ -674,12 +672,12 @@ $isUsingPrettyInputs = ($_User['settings_useprettyinputbox'] == 1);
 
 $ownTechLevels = object_map(
     $TechEquivalents,
-    function ($elementId, $idx) use (&$_Planet, &$_User) {
+    function ($elementId) use (&$_Planet, &$_User) {
         $currentLevel = World\Elements\getElementCurrentLevel($elementId, $_Planet, $_User);
 
         return [
             $currentLevel,
-            $idx
+            $elementId
         ];
     }
 );
