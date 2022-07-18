@@ -34,8 +34,18 @@ $MaxStringLength = 30;
 if(!empty($_POST['spyreport']))
 {
     $_POST['spyreport'] = json_decode(stripslashes($_POST['spyreport']), true);
-    // TODO: provide compat layer
     $_POST['def_techs'][1] = (isset($_POST['spyreport']['tech']) ? $_POST['spyreport']['tech'] : null);
+    $_POST['def_techs'][1] = object_map(
+        $_POST['def_techs'][1],
+        function ($value, $key) use ($TechEquivalents) {
+            $safeKey = intval($key, 10);
+
+            return [
+                $value,
+                $TechEquivalents[$safeKey],
+            ];
+        }
+    );
     $_POST['def_ships'][1] = (isset($_POST['spyreport']['ships']) ? $_POST['spyreport']['ships'] : null);
     $_POST['spyreport'] = null;
 }
