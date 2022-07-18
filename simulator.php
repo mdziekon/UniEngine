@@ -7,6 +7,8 @@ include($_EnginePath.'common.php');
 
 use UniEngine\Engine\Modules\Flights;
 
+use UniEngine\Engine\Includes\Helpers\World;
+
 loggedCheck();
 
 includeLang('simulator');
@@ -669,30 +671,37 @@ $_Lang['rows'] = preg_replace_callback(
 );
 
 $_Lang['fill_with_mytechs'] = "var MyTechs = new Array();\nMyTechs[1] = ".(string)($_User['tech_weapons'] + 0).";\nMyTechs[3] = ".(string)($_User['tech_shielding'] + 0).";\nMyTechs[2] = ".(string)($_User['tech_armour'] + 0).";\nMyTechs[4] = ".(string)($_User['tech_laser'] + 0).";\nMyTechs[5] = ".(string)($_User['tech_ion'] + 0).";\nMyTechs[6] = ".(string)($_User['tech_plasma'] + 0).";\nMyTechs[7] = ".(string)($_User['tech_antimatter'] + 0).";\nMyTechs[8] = ".(string)($_User['tech_disintegration'] + 0).";\nMyTechs[9] = ".(string)($_User['tech_graviton'] + 0).";\n";
-$_Lang['fill_with_myfleets'] = "var MyFleets = new Array();\n";
 
 $UsingPrettyInputBox = ($_User['settings_useprettyinputbox'] == 1 ? true : false);
 
-foreach($_Vars_ElementCategories['fleet'] as $ID)
-{
-    if($_Planet[$_Vars_GameElements[$ID]] > 0)
-    {
-        $_Lang['fill_with_myfleets'] .= "MyFleets[{$ID}] = '".($UsingPrettyInputBox === true ? prettyNumber($_Planet[$_Vars_GameElements[$ID]]) : $_Planet[$_Vars_GameElements[$ID]])."';\n";
+$fleetsAndDefenses = array_filter(
+    array_merge($_Vars_ElementCategories['fleet'], $_Vars_ElementCategories['defense']),
+    function ($elementId) {
+        return (
+            World\Elements\isShip($elementId) ||
+            World\Elements\isDefenseSystem($elementId)
+        );
     }
-}
-foreach($_Vars_ElementCategories['defense'] as $ID)
-{
-    if(in_array($ID, $_Vars_ElementCategories['rockets']))
-    {
-        continue;
-    }
+);
+$ownFleetsAndDefenses = object_map(
+    $fleetsAndDefenses,
+    function ($elementId) use (&$_Planet, &$_User, $UsingPrettyInputBox) {
+        $currentCount = World\Elements\getElementCurrentCount($elementId, $_Planet, $_User);
+        $currentCountDisplay = (
+            $UsingPrettyInputBox ?
+                prettyNumber($currentCount) :
+                $currentCount
+        );
 
-    if($_Planet[$_Vars_GameElements[$ID]] > 0)
-    {
-        $_Lang['fill_with_myfleets'] .= "MyFleets[{$ID}] = '".($UsingPrettyInputBox === true ? prettyNumber($_Planet[$_Vars_GameElements[$ID]]) : $_Planet[$_Vars_GameElements[$ID]])."';\n";
+        return [
+            $currentCountDisplay,
+            $elementId
+        ];
     }
-}
-$_Lang['fill_with_myfleets'] .= "\n";
+);
+
+$_Lang['fill_with_myfleets'] = json_encode($ownFleetsAndDefenses);
+
 $_Lang['AllowPrettyInputBox'] = ($_User['settings_useprettyinputbox'] == 1 ? 'true' : 'false');
 
 //Display page
