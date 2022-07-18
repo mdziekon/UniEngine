@@ -670,7 +670,7 @@ $_Lang['rows'] = preg_replace_callback(
     $_Lang['rows']
 );
 
-$UsingPrettyInputBox = ($_User['settings_useprettyinputbox'] == 1 ? true : false);
+$isUsingPrettyInputs = ($_User['settings_useprettyinputbox'] == 1);
 
 $ownTechLevels = object_map(
     $TechEquivalents,
@@ -695,10 +695,10 @@ $fleetsAndDefenses = array_filter(
 );
 $ownFleetsAndDefenses = object_map(
     $fleetsAndDefenses,
-    function ($elementId) use (&$_Planet, &$_User, $UsingPrettyInputBox) {
+    function ($elementId) use (&$_Planet, &$_User, $isUsingPrettyInputs) {
         $currentCount = World\Elements\getElementCurrentCount($elementId, $_Planet, $_User);
         $currentCountDisplay = (
-            $UsingPrettyInputBox ?
+            $isUsingPrettyInputs ?
                 prettyNumber($currentCount) :
                 $currentCount
         );
@@ -712,7 +712,7 @@ $ownFleetsAndDefenses = object_map(
 
 $_Lang['fill_with_mytechs'] = json_encode($ownTechLevels);
 $_Lang['fill_with_myfleets'] = json_encode($ownFleetsAndDefenses);
-$_Lang['AllowPrettyInputBox'] = ($UsingPrettyInputBox ? 'true' : 'false');
+$_Lang['AllowPrettyInputBox'] = ($isUsingPrettyInputs ? 'true' : 'false');
 
 //Display page
 $page = parsetemplate(gettemplate('simulator'), $_Lang);
