@@ -1,6 +1,6 @@
 <script>
 var CurrentSlot = 1;
-{fill_with_mytechs}
+const MyTechs = {fill_with_mytechs};
 const MyFleets = {fill_with_myfleets};
 var PlanetOwnerTxt = '{PlanetOwner}';
 var AllowPrettyInputBox = {AllowPrettyInputBox};

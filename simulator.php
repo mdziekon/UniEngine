@@ -670,9 +670,19 @@ $_Lang['rows'] = preg_replace_callback(
     $_Lang['rows']
 );
 
-$_Lang['fill_with_mytechs'] = "var MyTechs = new Array();\nMyTechs[1] = ".(string)($_User['tech_weapons'] + 0).";\nMyTechs[3] = ".(string)($_User['tech_shielding'] + 0).";\nMyTechs[2] = ".(string)($_User['tech_armour'] + 0).";\nMyTechs[4] = ".(string)($_User['tech_laser'] + 0).";\nMyTechs[5] = ".(string)($_User['tech_ion'] + 0).";\nMyTechs[6] = ".(string)($_User['tech_plasma'] + 0).";\nMyTechs[7] = ".(string)($_User['tech_antimatter'] + 0).";\nMyTechs[8] = ".(string)($_User['tech_disintegration'] + 0).";\nMyTechs[9] = ".(string)($_User['tech_graviton'] + 0).";\n";
-
 $UsingPrettyInputBox = ($_User['settings_useprettyinputbox'] == 1 ? true : false);
+
+$ownTechLevels = object_map(
+    $TechEquivalents,
+    function ($elementId, $idx) use (&$_Planet, &$_User) {
+        $currentLevel = World\Elements\getElementCurrentLevel($elementId, $_Planet, $_User);
+
+        return [
+            $currentLevel,
+            $idx
+        ];
+    }
+);
 
 $fleetsAndDefenses = array_filter(
     array_merge($_Vars_ElementCategories['fleet'], $_Vars_ElementCategories['defense']),
@@ -700,8 +710,8 @@ $ownFleetsAndDefenses = object_map(
     }
 );
 
+$_Lang['fill_with_mytechs'] = json_encode($ownTechLevels);
 $_Lang['fill_with_myfleets'] = json_encode($ownFleetsAndDefenses);
-
 $_Lang['AllowPrettyInputBox'] = ($UsingPrettyInputBox ? 'true' : 'false');
 
 //Display page
