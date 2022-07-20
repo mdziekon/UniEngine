@@ -54,54 +54,55 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
 {
     $Calculate = true;
 
-    if(!empty($_POST['atk_techs']))
-    {
-        foreach($_POST['atk_techs'] as $User => $Vals)
-        {
-            $UserTemp = $User - 1;
+    $AttackingTechs = [];
+    $DefendingTechs = [];
+    $AttackersData = [];
+    $DefendersData = [];
 
-            foreach ($Vals as $elementId => $elementValue) {
+    $techMappings = [
+        [
+            'inputKey' => 'atk_techs',
+            'techsAccumulatorObject' => &$AttackingTechs,
+            'usersAccumulatorObject' => &$AttackersData,
+            'usernamePrefix' => $_Lang['Attacker_Txt'],
+        ],
+        [
+            'inputKey' => 'def_techs',
+            'techsAccumulatorObject' => &$DefendingTechs,
+            'usersAccumulatorObject' => &$DefendersData,
+            'usernamePrefix' => $_Lang['Defender_Txt'],
+        ],
+    ];
+
+    foreach ($techMappings as $techMapping) {
+        if (empty($_POST[$techMapping['inputKey']])) {
+            continue;
+        }
+
+        foreach ($_POST[$techMapping['inputKey']] as $userSlotIdx => $userSlotData) {
+            $userIdx = $userSlotIdx - 1;
+
+            foreach ($userSlotData as $elementId => $elementValue) {
                 if (!World\Elements\isTechnology($elementId)) {
                     continue;
+                }
+                if (!isset($techMapping['techsAccumulatorObject'][$userIdx])) {
+                    $techMapping['techsAccumulatorObject'][$userIdx] = [];
                 }
 
                 $safeElementValue = intval($elementValue, 10);
 
-                $AttackingTechs[$UserTemp][$elementId] = $safeElementValue;
+                $techMapping['techsAccumulatorObject'][$userIdx][$elementId] = $safeElementValue;
             }
 
-            $AttackersData[$UserTemp] = array
-            (
-                'username' => $_Lang['Attacker_Txt'].$User,
-                'techs' => Array2String($AttackingTechs[$UserTemp]),
+            $techMapping['usersAccumulatorObject'][$userIdx] = [
+                'username' => "{$techMapping['usernamePrefix']}{$userSlotIdx}",
+                'techs' => Array2String($techMapping['techsAccumulatorObject'][$userIdx]),
                 'pos' => '0:0:0'
-            );
+            ];
         }
     }
-    if(!empty($_POST['def_techs']))
-    {
-        foreach($_POST['def_techs'] as $User => $Vals)
-        {
-            $UserTemp = $User - 1;
 
-            foreach ($Vals as $elementId => $elementValue) {
-                if (!World\Elements\isTechnology($elementId)) {
-                    continue;
-                }
-
-                $safeElementValue = intval($elementValue, 10);
-
-                $DefendingTechs[$UserTemp][$elementId] = $safeElementValue;
-            }
-
-            $DefendersData[$UserTemp] = array
-            (
-                'username' => $_Lang['Defender_Txt'].$User,
-                'techs' => Array2String($DefendingTechs[$UserTemp]),
-                'pos' => '0:0:0'
-            );
-        }
-    }
     if(!empty($_POST['atk_ships']))
     {
         foreach($_POST['atk_ships'] as $User => $Vals)
