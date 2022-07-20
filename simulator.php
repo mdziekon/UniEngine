@@ -15,8 +15,7 @@ includeLang('simulator');
 $_Lang['rows'] = '';
 $_Lang['SimResult'] = '';
 
-$TechEquivalents = array
-(
+$TechEquivalents = [
     1 => 109,
     2 => 110,
     3 => 111,
@@ -26,7 +25,7 @@ $TechEquivalents = array
     7 => 125,
     8 => 126,
     9 => 199,
-);
+];
 $TechCount = count($TechEquivalents);
 $MaxACSSlots = ACS_MAX_JOINED_FLEETS + 1;
 $MaxStringLength = 30;
@@ -254,8 +253,16 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
         $SimData['max_rounds'] = 0;
         $SimData['min_rounds'] = 99;
 
-        $SimData['total_lost_atk'] = array('met' => 0, 'cry' => 0, 'deu' => 0);
-        $SimData['total_lost_def'] = array('met' => 0, 'cry' => 0, 'deu' => 0);
+        $SimData['total_lost_atk'] = [
+            'met' => 0,
+            'cry' => 0,
+            'deu' => 0,
+        ];
+        $SimData['total_lost_def'] = [
+            'met' => 0,
+            'cry' => 0,
+            'deu' => 0,
+        ];
         $SimData['ship_lost_atk'] = 0;
         $SimData['ship_lost_def'] = 0;
         $SimData['ship_lost_atk_min'] = 99999999999999999999.0;
@@ -391,7 +398,7 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
                 'totalDebris' => ($TotalLostMetal + $TotalLostCrystal),
             ]);
 
-            $ReportData = array();
+            $ReportData = [];
 
             $ReportData['init']['usr']['atk'] = $AttackersData;
             $ReportData['init']['usr']['def'] = $DefendersData;
@@ -432,7 +439,15 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
             }
             $ReportData['rounds'] = $RoundsData;
 
-            $ReportID = CreateBattleReport($ReportData, array('atk' => $_User['id'], 'def' => 0), 0, true);
+            $ReportID = CreateBattleReport(
+                $ReportData,
+                [
+                    'atk' => $_User['id'],
+                    'def' => 0,
+                ],
+                0,
+                true
+            );
 
             $parse = $_Lang;
             $parse['id'] = $ReportID;
@@ -506,7 +521,7 @@ $TPL_NoLeft = gettemplate('simulator_row_noleft');
 
 for($i = 1; $i <= $MaxACSSlots; $i += 1)
 {
-    $ThisSlot = array();
+    $ThisSlot = [];
     $ThisSlot['SlotID'] = $i;
     $ThisSlot['txt'] = '';
 
