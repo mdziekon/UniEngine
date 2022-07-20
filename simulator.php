@@ -58,158 +58,107 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
     $DefendingTechs = [];
     $AttackersData = [];
     $DefendersData = [];
+    $AttackingFleets = [];
+    $DefendingFleets = [];
 
-    $techMappings = [
+    $inputMappingGroups = [
         [
-            'inputKey' => 'atk_techs',
+            'techInputKey' => 'atk_techs',
+            'fleetInputKey' => 'atk_ships',
             'techsAccumulatorObject' => &$AttackingTechs,
+            'fleetAccumulatorObject' => &$AttackingFleets,
             'usersAccumulatorObject' => &$AttackersData,
             'usernamePrefix' => $_Lang['Attacker_Txt'],
         ],
         [
-            'inputKey' => 'def_techs',
+            'techInputKey' => 'def_techs',
+            'fleetInputKey' => 'def_ships',
             'techsAccumulatorObject' => &$DefendingTechs,
+            'fleetAccumulatorObject' => &$DefendingFleets,
             'usersAccumulatorObject' => &$DefendersData,
             'usernamePrefix' => $_Lang['Defender_Txt'],
         ],
     ];
 
-    foreach ($techMappings as $techMapping) {
-        if (empty($_POST[$techMapping['inputKey']])) {
+    foreach ($inputMappingGroups as $inputMappingGroup) {
+        if (empty($_POST[$inputMappingGroup['techInputKey']])) {
             continue;
         }
 
-        foreach ($_POST[$techMapping['inputKey']] as $userSlotIdx => $userSlotData) {
+        foreach ($_POST[$inputMappingGroup['techInputKey']] as $userSlotIdx => $userSlotData) {
             $userIdx = $userSlotIdx - 1;
 
             foreach ($userSlotData as $elementId => $elementValue) {
                 if (!World\Elements\isTechnology($elementId)) {
                     continue;
                 }
-                if (!isset($techMapping['techsAccumulatorObject'][$userIdx])) {
-                    $techMapping['techsAccumulatorObject'][$userIdx] = [];
+                if (!isset($inputMappingGroup['techsAccumulatorObject'][$userIdx])) {
+                    $inputMappingGroup['techsAccumulatorObject'][$userIdx] = [];
                 }
 
                 $safeElementValue = intval($elementValue, 10);
 
-                $techMapping['techsAccumulatorObject'][$userIdx][$elementId] = $safeElementValue;
+                $inputMappingGroup['techsAccumulatorObject'][$userIdx][$elementId] = $safeElementValue;
             }
 
-            $techMapping['usersAccumulatorObject'][$userIdx] = [
-                'username' => "{$techMapping['usernamePrefix']}{$userSlotIdx}",
-                'techs' => Array2String($techMapping['techsAccumulatorObject'][$userIdx]),
+            $inputMappingGroup['usersAccumulatorObject'][$userIdx] = [
+                'username' => "{$inputMappingGroup['usernamePrefix']}{$userSlotIdx}",
+                'techs' => Array2String($inputMappingGroup['techsAccumulatorObject'][$userIdx]),
                 'pos' => '0:0:0'
             ];
         }
     }
 
-    if(!empty($_POST['atk_ships']))
-    {
-        foreach($_POST['atk_ships'] as $User => $Vals)
-        {
-            $UserTemp = $User - 1;
-            foreach($Vals as $ID => $Count)
-            {
-                $Count = str_replace(array('.', ','), '', $Count);
-                if($Count > 0)
-                {
-                    if(strlen($Count) > $MaxStringLength)
-                    {
-                        $Count = substr($Count, 0, $MaxStringLength);
-                    }
-                    $AttackingFleets[$UserTemp][$ID] = floor($Count);
-                }
-            }
-            if(empty($AttackingFleets[$UserTemp]))
-            {
-                unset($AttackingFleets[$UserTemp]);
-                unset($AttackingTechs[$UserTemp]);
-                unset($AttackersData[$UserTemp]);
-            }
-            else
-            {
-                if(empty($AttackersData[$UserTemp]))
-                {
-                    foreach($TechEquivalents as $TechID => $TechKey)
-                    {
-                        if(!isset($Vals[$TechID]) || $Vals[$TechID] <= 0)
-                        {
-                            $Value = 0;
-                        }
-                        else
-                        {
-                            $Value = intval($Vals[$TechID]);
-                        }
-                        $AttackingTechs[$UserTemp][$TechKey] = $Value;
-                    }
-                    $AttackersData[$UserTemp] = array
+    foreach ($inputMappingGroups as $inputMappingGroup) {
+        if (empty($_POST[$inputMappingGroup['fleetInputKey']])) {
+            $Calculate = false;
+            $BreakMSG = (
+                $inputMappingGroup['fleetInputKey'] === 'atk_ships' ?
+                    $_Lang['Break_noATKShips'] :
+                    $_Lang['Break_noDEFShips']
+            );
+
+            break;
+        }
+
+        foreach ($_POST[$inputMappingGroup['fleetInputKey']] as $userSlotIdx => $userSlotData) {
+            $userIdx = $userSlotIdx - 1;
+
+            foreach ($userSlotData as $elementId => $elementValue) {
+                $elementCount = str_replace([ '.', ',' ], '', $elementValue);
+                $elementCount = substr($elementCount, 0, $MaxStringLength);
+                $safeElementCount = floor($elementCount);
+
+                if (
                     (
-                        'username' => $_Lang['Attacker_Txt'].$User,
-                        'techs' => Array2String($AttackingTechs[$UserTemp]),
-                        'pos' => '0:0:0'
-                    );
+                        !World\Elements\isShip($elementId) &&
+                        !World\Elements\isDefenseSystem($elementId)
+                    ) ||
+                    $safeElementCount <= 0
+                ) {
+                    continue;
                 }
+                if (!isset($inputMappingGroup['fleetAccumulatorObject'][$userIdx])) {
+                    $inputMappingGroup['fleetAccumulatorObject'][$userIdx] = [];
+                }
+
+                $inputMappingGroup['fleetAccumulatorObject'][$userIdx][$elementId] = $safeElementCount;
+            }
+
+            if (empty($inputMappingGroup['fleetAccumulatorObject'][$userIdx])) {
+                // Unset user's techs & details
+                unset($inputMappingGroup['techsAccumulatorObject'][$userIdx]);
+                unset($inputMappingGroup['usersAccumulatorObject'][$userIdx]);
+            } else if (empty($inputMappingGroup['techsAccumulatorObject'][$userIdx])) {
+                // Fill user techs (with zeros) & details
+                $inputMappingGroup['techsAccumulatorObject'][$userIdx] = [];
+                $inputMappingGroup['usersAccumulatorObject'][$userIdx] = [
+                    'username' => "{$inputMappingGroup['usernamePrefix']}{$userSlotIdx}",
+                    'techs' => Array2String($inputMappingGroup['techsAccumulatorObject'][$userIdx]),
+                    'pos' => '0:0:0'
+                ];
             }
         }
-    }
-    else
-    {
-        $Calculate = false;
-        $BreakMSG = $_Lang['Break_noATKShips'];
-    }
-    if(!empty($_POST['def_ships']))
-    {
-        foreach($_POST['def_ships'] as $User => $Vals)
-        {
-            $UserTemp = $User - 1;
-            foreach($Vals as $ID => $Count)
-            {
-                $Count = str_replace(array('.', ','), '', $Count);
-                if($Count > 0)
-                {
-                    if(strlen($Count) > $MaxStringLength)
-                    {
-                        $Count = substr($Count, 0, $MaxStringLength);
-                    }
-                    $DefendingFleets[$UserTemp][$ID] = floor($Count);
-                }
-            }
-            if(empty($DefendingFleets[$UserTemp]))
-            {
-                unset($DefendingFleets[$UserTemp]);
-                unset($DefendingTechs[$UserTemp]);
-                unset($DefendersData[$UserTemp]);
-            }
-            else
-            {
-                if(empty($DefendersData[$UserTemp]))
-                {
-                    foreach($TechEquivalents as $TechID => $TechKey)
-                    {
-                        if(!isset($Vals[$TechID]) || $Vals[$TechID] <= 0)
-                        {
-                            $Value = 0;
-                        }
-                        else
-                        {
-                            $Value = intval($Vals[$TechID]);
-                        }
-                        $DefendingTechs[$UserTemp][$TechKey] = $Value;
-                    }
-                    $DefendersData[$UserTemp] = array
-                    (
-                        'username' => $_Lang['Defender_Txt'].$User,
-                        'techs' => Array2String($DefendingTechs[$UserTemp]),
-                        'pos' => '0:0:0'
-                    );
-                }
-            }
-        }
-    }
-    else
-    {
-        $Calculate = false;
-        $BreakMSG = $_Lang['Break_noDEFShips'];
     }
 
     if(isset($AttackersData))
