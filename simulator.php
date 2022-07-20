@@ -504,16 +504,12 @@ $TPL_NoBoth = gettemplate('simulator_row_noboth');
 $TPL_Row = gettemplate('simulator_row');
 $TPL_NoLeft = gettemplate('simulator_row_noleft');
 
-$Offsets;
-
 for($i = 1; $i <= $MaxACSSlots; $i += 1)
 {
     $ThisSlot = array();
     $ThisSlot['SlotID'] = $i;
     $ThisSlot['txt'] = '';
 
-    $InsertTabIndex1 = 1;
-    $InsertTabIndex2 = 1;
     $parse = $_Lang;
     $parse['i'] = $i;
     if($i > 1)
@@ -526,13 +522,11 @@ for($i = 1; $i <= $MaxACSSlots; $i += 1)
         $parse['RowText'] = $_Lang['Morale'];
         $ThisSlot['txt'] .= parsetemplate($TPL_SingleRow, $parse);
         $parse['RowText'] = $_Lang['Morale_Level'];
-        $parse['RowInput'] = "<input type=\"text\" tabindex=\"{REP1_O{$i}_{$InsertTabIndex1}}\" name=\"atk_morale[{$i}]\" value=\"{$_POST['atk_morale'][$i]}\" autocomplete=\"off\" />%";
+        $parse['RowInput'] = "<input type=\"text\" tabindex=\"1\" name=\"atk_morale[{$i}]\" value=\"{$_POST['atk_morale'][$i]}\" autocomplete=\"off\" />%";
         $parse['RowText2'] = $_Lang['Morale_Level'];
-        $parse['RowInput2'] = "<input type=\"text\" tabindex=\"{REP2_O{$i}_{$InsertTabIndex2}}\" name=\"def_morale[{$i}]\" value=\"{$_POST['def_morale'][$i]}\" autocomplete=\"off\" />%";
+        $parse['RowInput2'] = "<input type=\"text\" tabindex=\"2\" name=\"def_morale[{$i}]\" value=\"{$_POST['def_morale'][$i]}\" autocomplete=\"off\" />%";
 
         $ThisSlot['txt'] .= parsetemplate($TPL_Row, $parse);
-        $InsertTabIndex1 += 1;
-        $InsertTabIndex2 += 1;
     }
 
     $parse['RowText'] = $_Lang['Technology'];
@@ -546,13 +540,11 @@ for($i = 1; $i <= $MaxACSSlots; $i += 1)
         $ThisRow_InsertValue_Def = isset($_POST['def_techs'][$i][$elementId]) ? $_POST['def_techs'][$i][$elementId] : null;
 
         $parse['RowText'] = $_Lang['tech'][$elementId];
-        $parse['RowInput'] = "<input type=\"text\" tabindex=\"{REP1_O{$i}_{$InsertTabIndex1}}\" name=\"atk_techs[{$i}][{$elementId}]\" value=\"{$ThisRow_InsertValue_Atk}\" autocomplete=\"off\" />";
+        $parse['RowInput'] = "<input type=\"text\" tabindex=\"1\" name=\"atk_techs[{$i}][{$elementId}]\" value=\"{$ThisRow_InsertValue_Atk}\" autocomplete=\"off\" />";
         $parse['RowText2'] = $_Lang['tech'][$elementId];
-        $parse['RowInput2'] = "<input type=\"text\" tabindex=\"{REP2_O{$i}_{$InsertTabIndex2}}\" name=\"def_techs[{$i}][{$elementId}]\" value=\"{$ThisRow_InsertValue_Def}\" autocomplete=\"off\" />";
+        $parse['RowInput2'] = "<input type=\"text\" tabindex=\"2\" name=\"def_techs[{$i}][{$elementId}]\" value=\"{$ThisRow_InsertValue_Def}\" autocomplete=\"off\" />";
 
         $ThisSlot['txt'] .= parsetemplate($TPL_Row, $parse);
-        $InsertTabIndex1 += 1;
-        $InsertTabIndex2 += 1;
     }
 
     $parse['RowText'] = $_Lang['Fleets'];
@@ -569,20 +561,17 @@ for($i = 1; $i <= $MaxACSSlots; $i += 1)
             $ThisRow_InsertValue_Atk = isset($_POST['atk_ships'][$i][$Ships]) ? $_POST['atk_ships'][$i][$Ships] : null;
 
             $parse['RowText'] = $_Lang['tech'][$Ships];
-            $parse['RowInput'] = "<input type=\"text\" tabindex=\"{REP1_O{$i}_{$InsertTabIndex1}}\" name=\"atk_ships[{$i}][{$Ships}]\" value=\"{$ThisRow_InsertValue_Atk}\" autocomplete=\"off\" class=\"pad2 fl\" /> <span class=\"fr\">(<span class=\"clnOne point\">{$_Lang['Button_Min']}</span> / <span class=\"maxOne point\">{$_Lang['Button_Max']}</span>)</span>";
+            $parse['RowInput'] = "<input type=\"text\" tabindex=\"1\" name=\"atk_ships[{$i}][{$Ships}]\" value=\"{$ThisRow_InsertValue_Atk}\" autocomplete=\"off\" class=\"pad2 fl\" /> <span class=\"fr\">(<span class=\"clnOne point\">{$_Lang['Button_Min']}</span> / <span class=\"maxOne point\">{$_Lang['Button_Max']}</span>)</span>";
             $parse['RowText2'] = $_Lang['tech'][$Ships];
-            $parse['RowInput2'] = "<input type=\"text\" tabindex=\"{REP2_O{$i}_{$InsertTabIndex2}}\" name=\"def_ships[{$i}][{$Ships}]\" value=\"{$ThisRow_InsertValue_Def}\" autocomplete=\"off\" class=\"pad2 fl\" /> <span class=\"fr\">(<span class=\"clnOne point\">{$_Lang['Button_Min']}</span> / <span class=\"maxOne point\">{$_Lang['Button_Max']}</span>)</span>";
+            $parse['RowInput2'] = "<input type=\"text\" tabindex=\"2\" name=\"def_ships[{$i}][{$Ships}]\" value=\"{$ThisRow_InsertValue_Def}\" autocomplete=\"off\" class=\"pad2 fl\" /> <span class=\"fr\">(<span class=\"clnOne point\">{$_Lang['Button_Min']}</span> / <span class=\"maxOne point\">{$_Lang['Button_Max']}</span>)</span>";
 
             $ThisSlot['txt'] .= parsetemplate($TPL_Row, $parse);
-            $InsertTabIndex1 += 1;
-            $InsertTabIndex2 += 1;
         } else {
             $parse['RowText'] = '-';
             $parse['RowText2'] = $_Lang['tech'][$Ships];
-            $parse['RowInput2'] = "<input type=\"text\" tabindex=\"{REP2_O{$i}_{$InsertTabIndex2}}\" name=\"def_ships[{$i}][{$Ships}]\" value=\"{$ThisRow_InsertValue_Def}\" autocomplete=\"off\" class=\"pad2 fl\" /> <span class=\"fr\">(<span class=\"clnOne point\">{$_Lang['Button_Min']}</span> / <span class=\"maxOne point\">{$_Lang['Button_Max']}</span>)</span>";
+            $parse['RowInput2'] = "<input type=\"text\" tabindex=\"2\" name=\"def_ships[{$i}][{$Ships}]\" value=\"{$ThisRow_InsertValue_Def}\" autocomplete=\"off\" class=\"pad2 fl\" /> <span class=\"fr\">(<span class=\"clnOne point\">{$_Lang['Button_Min']}</span> / <span class=\"maxOne point\">{$_Lang['Button_Max']}</span>)</span>";
 
             $ThisSlot['txt'] .= parsetemplate($TPL_NoLeft, $parse);
-            $InsertTabIndex2 += 1;
         }
     }
 
@@ -602,31 +591,14 @@ for($i = 1; $i <= $MaxACSSlots; $i += 1)
 
             $parse['RowText'] = '-';
             $parse['RowText2'] = $_Lang['tech'][$Ships];
-            $parse['RowInput2'] = "<input type=\"text\" tabindex=\"{REP2_O{$i}_{$InsertTabIndex2}}\" name=\"def_ships[{$i}][{$Ships}]\" value=\"{$ThisRow_InsertValue_Def}\" autocomplete=\"off\" class=\"pad2 fl\" /> <span class=\"fr\">(<span class=\"clnOne point\">{$_Lang['Button_Min']}</span> / <span class=\"maxOne point\">{$_Lang['Button_Max']}</span>)</span>";
+            $parse['RowInput2'] = "<input type=\"text\" tabindex=\"2\" name=\"def_ships[{$i}][{$Ships}]\" value=\"{$ThisRow_InsertValue_Def}\" autocomplete=\"off\" class=\"pad2 fl\" /> <span class=\"fr\">(<span class=\"clnOne point\">{$_Lang['Button_Min']}</span> / <span class=\"maxOne point\">{$_Lang['Button_Max']}</span>)</span>";
 
             $ThisSlot['txt'] .= parsetemplate($TPL_NoLeft, $parse);
-            $InsertTabIndex2 += 1;
         }
     }
-    $Offsets[$i] = $InsertTabIndex1 - 1;
 
     $_Lang['rows'] .= parsetemplate($TPL_Slot, $ThisSlot);
 }
-
-$_Lang['rows'] = preg_replace_callback(
-    '#\{REP1_O([0-9]{1,})_([0-9]{1,})\}#Ssi',
-    function ($matches) {
-        return ($matches[1] * 1000) + $matches[2];
-    },
-    $_Lang['rows']
-);
-$_Lang['rows'] = preg_replace_callback(
-    '#\{REP2_O([0-9]{1,})_([0-9]{1,})\}#Ssi',
-    function ($matches) use ($Offsets) {
-        return ($matches[1] * 1000) + $Offsets[$matches[1]] + $matches[2];
-    },
-    $_Lang['rows']
-);
 
 $isUsingPrettyInputs = ($_User['settings_useprettyinputbox'] == 1);
 
