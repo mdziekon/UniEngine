@@ -4,10 +4,11 @@ define('INSIDE', true);
 
 $_EnginePath = './';
 include($_EnginePath.'common.php');
+include_once($_EnginePath . 'modules/attackSimulator/_includes.php');
 
 use UniEngine\Engine\Modules\Flights;
-
 use UniEngine\Engine\Includes\Helpers\World;
+use UniEngine\Engine\Modules\AttackSimulator;
 
 loggedCheck();
 
@@ -576,15 +577,31 @@ for($i = 1; $i <= $MaxACSSlots; $i += 1)
             $ThisRow_InsertValue_Atk = isset($_POST['atk_ships'][$i][$Ships]) ? $_POST['atk_ships'][$i][$Ships] : null;
 
             $parse['RowText'] = $_Lang['tech'][$Ships];
-            $parse['RowInput'] = "<input type=\"text\" tabindex=\"1\" name=\"atk_ships[{$i}][{$Ships}]\" value=\"{$ThisRow_InsertValue_Atk}\" autocomplete=\"off\" class=\"pad2 fl\" /> <span class=\"fr\">(<span class=\"clnOne point\">{$_Lang['Button_Min']}</span> / <span class=\"maxOne point\">{$_Lang['Button_Max']}</span>)</span>";
+            $parse['RowInput'] = AttackSimulator\Components\ShipInput\render([
+                'slotIdx' => $i,
+                'elementId' => $Ships,
+                'columnType' => 'attacker',
+                'initialValue' => $ThisRow_InsertValue_Atk,
+            ])['componentHTML'];
+
             $parse['RowText2'] = $_Lang['tech'][$Ships];
-            $parse['RowInput2'] = "<input type=\"text\" tabindex=\"2\" name=\"def_ships[{$i}][{$Ships}]\" value=\"{$ThisRow_InsertValue_Def}\" autocomplete=\"off\" class=\"pad2 fl\" /> <span class=\"fr\">(<span class=\"clnOne point\">{$_Lang['Button_Min']}</span> / <span class=\"maxOne point\">{$_Lang['Button_Max']}</span>)</span>";
+            $parse['RowInput2'] = AttackSimulator\Components\ShipInput\render([
+                'slotIdx' => $i,
+                'elementId' => $Ships,
+                'columnType' => 'defender',
+                'initialValue' => $ThisRow_InsertValue_Def,
+            ])['componentHTML'];
 
             $ThisSlot['txt'] .= parsetemplate($TPL_Row, $parse);
         } else {
             $parse['RowText'] = '-';
             $parse['RowText2'] = $_Lang['tech'][$Ships];
-            $parse['RowInput2'] = "<input type=\"text\" tabindex=\"2\" name=\"def_ships[{$i}][{$Ships}]\" value=\"{$ThisRow_InsertValue_Def}\" autocomplete=\"off\" class=\"pad2 fl\" /> <span class=\"fr\">(<span class=\"clnOne point\">{$_Lang['Button_Min']}</span> / <span class=\"maxOne point\">{$_Lang['Button_Max']}</span>)</span>";
+            $parse['RowInput2'] = AttackSimulator\Components\ShipInput\render([
+                'slotIdx' => $i,
+                'elementId' => $Ships,
+                'columnType' => 'defender',
+                'initialValue' => $ThisRow_InsertValue_Def,
+            ])['componentHTML'];
 
             $ThisSlot['txt'] .= parsetemplate($TPL_NoLeft, $parse);
         }
