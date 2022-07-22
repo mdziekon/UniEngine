@@ -601,23 +601,27 @@ for($i = 1; $i <= $MaxACSSlots; $i += 1)
         }
     }
 
-    if($i == 1)
-    {
+    if ($i == 1) {
         $parse['RowText'] = $_Lang['Defense'];
         $ThisSlot['txt'] .= parsetemplate($TPL_SingleRow, $parse);
 
-        foreach($_Vars_ElementCategories['defense'] as $elementId)
-        {
-            if(in_array($elementId, $_Vars_ElementCategories['rockets']))
-            {
+        foreach ($_Vars_ElementCategories['defense'] as $elementId) {
+            if (in_array($elementId, $_Vars_ElementCategories['rockets'])) {
                 continue;
             }
 
             $ThisRow_InsertValue_Def = isset($_POST['def_ships'][$i][$elementId]) ? $_POST['def_ships'][$i][$elementId] : null;
 
             $parse['RowText'] = '-';
+            $parse['RowInput'] = '';
+
             $parse['RowText2'] = $_Lang['tech'][$elementId];
-            $parse['RowInput2'] = "<input type=\"text\" tabindex=\"2\" name=\"def_ships[{$i}][{$elementId}]\" value=\"{$ThisRow_InsertValue_Def}\" autocomplete=\"off\" class=\"pad2 fl\" /> <span class=\"fr\">(<span class=\"clnOne point\">{$_Lang['Button_Min']}</span> / <span class=\"maxOne point\">{$_Lang['Button_Max']}</span>)</span>";
+            $parse['RowInput2'] = AttackSimulator\Components\ShipInput\render([
+                'slotIdx' => $i,
+                'elementId' => $elementId,
+                'columnType' => 'defender',
+                'initialValue' => $ThisRow_InsertValue_Def,
+            ])['componentHTML'];
 
             $ThisSlot['txt'] .= parsetemplate($TPL_NoLeft, $parse);
         }
