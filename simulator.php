@@ -606,7 +606,7 @@ for($i = 1; $i <= $MaxACSSlots; $i += 1)
         $ThisSlot['txt'] .= parsetemplate($TPL_SingleRow, $parse);
 
         foreach ($_Vars_ElementCategories['defense'] as $elementId) {
-            if (in_array($elementId, $_Vars_ElementCategories['rockets'])) {
+            if (World\Elements\isMissile($elementId)) {
                 continue;
             }
 
