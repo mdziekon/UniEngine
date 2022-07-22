@@ -573,6 +573,14 @@ for($i = 1; $i <= $MaxACSSlots; $i += 1)
     {
         $ThisRow_InsertValue_Def = isset($_POST['def_ships'][$i][$Ships]) ? $_POST['def_ships'][$i][$Ships] : null;
 
+        $parse['RowText2'] = $_Lang['tech'][$Ships];
+        $parse['RowInput2'] = AttackSimulator\Components\ShipInput\render([
+            'slotIdx' => $i,
+            'elementId' => $Ships,
+            'columnType' => 'defender',
+            'initialValue' => $ThisRow_InsertValue_Def,
+        ])['componentHTML'];
+
         if (hasAnyEngine($Ships)) {
             $ThisRow_InsertValue_Atk = isset($_POST['atk_ships'][$i][$Ships]) ? $_POST['atk_ships'][$i][$Ships] : null;
 
@@ -584,24 +592,10 @@ for($i = 1; $i <= $MaxACSSlots; $i += 1)
                 'initialValue' => $ThisRow_InsertValue_Atk,
             ])['componentHTML'];
 
-            $parse['RowText2'] = $_Lang['tech'][$Ships];
-            $parse['RowInput2'] = AttackSimulator\Components\ShipInput\render([
-                'slotIdx' => $i,
-                'elementId' => $Ships,
-                'columnType' => 'defender',
-                'initialValue' => $ThisRow_InsertValue_Def,
-            ])['componentHTML'];
-
             $ThisSlot['txt'] .= parsetemplate($TPL_Row, $parse);
         } else {
             $parse['RowText'] = '-';
-            $parse['RowText2'] = $_Lang['tech'][$Ships];
-            $parse['RowInput2'] = AttackSimulator\Components\ShipInput\render([
-                'slotIdx' => $i,
-                'elementId' => $Ships,
-                'columnType' => 'defender',
-                'initialValue' => $ThisRow_InsertValue_Def,
-            ])['componentHTML'];
+            $parse['RowInput'] = '';
 
             $ThisSlot['txt'] .= parsetemplate($TPL_NoLeft, $parse);
         }
