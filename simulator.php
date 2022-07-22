@@ -569,25 +569,25 @@ for($i = 1; $i <= $MaxACSSlots; $i += 1)
     $parse['RowText2'] = '<a class="orange point fillShip_def">'.$_Lang['FillMyFleets'].'</a> / <a class="orange point clnShip_def">'.$_Lang['Fill_Clean'].'</a>';
     $ThisSlot['txt'] .= parsetemplate($TPL_NoBoth, $parse);
 
-    foreach($_Vars_ElementCategories['fleet'] as $Ships)
+    foreach($_Vars_ElementCategories['fleet'] as $elementId)
     {
-        $ThisRow_InsertValue_Def = isset($_POST['def_ships'][$i][$Ships]) ? $_POST['def_ships'][$i][$Ships] : null;
+        $ThisRow_InsertValue_Def = isset($_POST['def_ships'][$i][$elementId]) ? $_POST['def_ships'][$i][$elementId] : null;
 
-        $parse['RowText2'] = $_Lang['tech'][$Ships];
+        $parse['RowText2'] = $_Lang['tech'][$elementId];
         $parse['RowInput2'] = AttackSimulator\Components\ShipInput\render([
             'slotIdx' => $i,
-            'elementId' => $Ships,
+            'elementId' => $elementId,
             'columnType' => 'defender',
             'initialValue' => $ThisRow_InsertValue_Def,
         ])['componentHTML'];
 
-        if (hasAnyEngine($Ships)) {
-            $ThisRow_InsertValue_Atk = isset($_POST['atk_ships'][$i][$Ships]) ? $_POST['atk_ships'][$i][$Ships] : null;
+        if (hasAnyEngine($elementId)) {
+            $ThisRow_InsertValue_Atk = isset($_POST['atk_ships'][$i][$elementId]) ? $_POST['atk_ships'][$i][$elementId] : null;
 
-            $parse['RowText'] = $_Lang['tech'][$Ships];
+            $parse['RowText'] = $_Lang['tech'][$elementId];
             $parse['RowInput'] = AttackSimulator\Components\ShipInput\render([
                 'slotIdx' => $i,
-                'elementId' => $Ships,
+                'elementId' => $elementId,
                 'columnType' => 'attacker',
                 'initialValue' => $ThisRow_InsertValue_Atk,
             ])['componentHTML'];
@@ -606,18 +606,18 @@ for($i = 1; $i <= $MaxACSSlots; $i += 1)
         $parse['RowText'] = $_Lang['Defense'];
         $ThisSlot['txt'] .= parsetemplate($TPL_SingleRow, $parse);
 
-        foreach($_Vars_ElementCategories['defense'] as $Ships)
+        foreach($_Vars_ElementCategories['defense'] as $elementId)
         {
-            if(in_array($Ships, $_Vars_ElementCategories['rockets']))
+            if(in_array($elementId, $_Vars_ElementCategories['rockets']))
             {
                 continue;
             }
 
-            $ThisRow_InsertValue_Def = isset($_POST['def_ships'][$i][$Ships]) ? $_POST['def_ships'][$i][$Ships] : null;
+            $ThisRow_InsertValue_Def = isset($_POST['def_ships'][$i][$elementId]) ? $_POST['def_ships'][$i][$elementId] : null;
 
             $parse['RowText'] = '-';
-            $parse['RowText2'] = $_Lang['tech'][$Ships];
-            $parse['RowInput2'] = "<input type=\"text\" tabindex=\"2\" name=\"def_ships[{$i}][{$Ships}]\" value=\"{$ThisRow_InsertValue_Def}\" autocomplete=\"off\" class=\"pad2 fl\" /> <span class=\"fr\">(<span class=\"clnOne point\">{$_Lang['Button_Min']}</span> / <span class=\"maxOne point\">{$_Lang['Button_Max']}</span>)</span>";
+            $parse['RowText2'] = $_Lang['tech'][$elementId];
+            $parse['RowInput2'] = "<input type=\"text\" tabindex=\"2\" name=\"def_ships[{$i}][{$elementId}]\" value=\"{$ThisRow_InsertValue_Def}\" autocomplete=\"off\" class=\"pad2 fl\" /> <span class=\"fr\">(<span class=\"clnOne point\">{$_Lang['Button_Min']}</span> / <span class=\"maxOne point\">{$_Lang['Button_Max']}</span>)</span>";
 
             $ThisSlot['txt'] .= parsetemplate($TPL_NoLeft, $parse);
         }
