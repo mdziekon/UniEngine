@@ -6,6 +6,7 @@ call_user_func(function () {
 
     $includePath = $_EnginePath . 'modules/attackSimulator/';
 
+    include($includePath . './components/MoraleInput/MoraleInput.component.php');
     include($includePath . './components/ShipInput/ShipInput.component.php');
     include($includePath . './components/TechInput/TechInput.component.php');
 

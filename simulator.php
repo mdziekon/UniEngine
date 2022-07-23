@@ -537,10 +537,20 @@ for($i = 1; $i <= $MaxACSSlots; $i += 1)
     {
         $parse['RowText'] = $_Lang['Morale'];
         $ThisSlot['txt'] .= parsetemplate($TPL_SingleRow, $parse);
+
         $parse['RowText'] = $_Lang['Morale_Level'];
-        $parse['RowInput'] = "<input type=\"text\" tabindex=\"1\" name=\"atk_morale[{$i}]\" value=\"{$_POST['atk_morale'][$i]}\" autocomplete=\"off\" />%";
+        $parse['RowInput'] = AttackSimulator\Components\MoraleInput\render([
+            'slotIdx' => $i,
+            'columnType' => 'attacker',
+            'initialValue' => $_POST['atk_morale'][$i],
+        ])['componentHTML'];
+
         $parse['RowText2'] = $_Lang['Morale_Level'];
-        $parse['RowInput2'] = "<input type=\"text\" tabindex=\"2\" name=\"def_morale[{$i}]\" value=\"{$_POST['def_morale'][$i]}\" autocomplete=\"off\" />%";
+        $parse['RowInput2'] = AttackSimulator\Components\MoraleInput\render([
+            'slotIdx' => $i,
+            'columnType' => 'defender',
+            'initialValue' => $_POST['def_morale'][$i],
+        ])['componentHTML'];
 
         $ThisSlot['txt'] .= parsetemplate($TPL_Row, $parse);
     }
