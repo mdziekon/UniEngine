@@ -556,9 +556,20 @@ for($i = 1; $i <= $MaxACSSlots; $i += 1)
         $ThisRow_InsertValue_Def = isset($_POST['def_techs'][$i][$elementId]) ? $_POST['def_techs'][$i][$elementId] : null;
 
         $parse['RowText'] = $_Lang['tech'][$elementId];
-        $parse['RowInput'] = "<input type=\"text\" tabindex=\"1\" name=\"atk_techs[{$i}][{$elementId}]\" value=\"{$ThisRow_InsertValue_Atk}\" autocomplete=\"off\" />";
+        $parse['RowInput'] = AttackSimulator\Components\TechInput\render([
+            'slotIdx' => $i,
+            'elementId' => $elementId,
+            'columnType' => 'attacker',
+            'initialValue' => $ThisRow_InsertValue_Atk,
+        ])['componentHTML'];
+
         $parse['RowText2'] = $_Lang['tech'][$elementId];
-        $parse['RowInput2'] = "<input type=\"text\" tabindex=\"2\" name=\"def_techs[{$i}][{$elementId}]\" value=\"{$ThisRow_InsertValue_Def}\" autocomplete=\"off\" />";
+        $parse['RowInput2'] = AttackSimulator\Components\TechInput\render([
+            'slotIdx' => $i,
+            'elementId' => $elementId,
+            'columnType' => 'defender',
+            'initialValue' => $ThisRow_InsertValue_Def,
+        ])['componentHTML'];
 
         $ThisSlot['txt'] .= parsetemplate($TPL_Row, $parse);
     }
