@@ -87,6 +87,7 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
 
         foreach ($_POST[$inputMappingGroup['techInputKey']] as $userSlotIdx => $userSlotData) {
             $userIdx = $userSlotIdx - 1;
+            $userTechs = [];
 
             foreach ($userSlotData as $elementId => $elementValue) {
                 if (!World\Elements\isTechnology($elementId)) {
@@ -96,15 +97,27 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
                     $inputMappingGroup['techsAccumulatorObject'][$userIdx] = [];
                 }
 
+                $elementKey = World\Elements\getElementKey($elementId);
                 $safeElementValue = intval($elementValue, 10);
 
                 $inputMappingGroup['techsAccumulatorObject'][$userIdx][$elementId] = $safeElementValue;
+                $userTechs[$elementKey] = $safeElementValue;
             }
 
             $inputMappingGroup['usersAccumulatorObject'][$userIdx] = [
-                'username' => "{$inputMappingGroup['usernamePrefix']}{$userSlotIdx}",
-                'techs' => Array2String($inputMappingGroup['techsAccumulatorObject'][$userIdx]),
-                'pos' => '0:0:0'
+                'fleetRow' => [
+                    'fleet_owner' => '0',
+                    'fleet_start_galaxy' => '0',
+                    'fleet_start_system' => '0',
+                    'fleet_start_planet' => '0',
+                ],
+                'user' => array_merge(
+                    [
+                        'username' => "{$inputMappingGroup['usernamePrefix']}{$userSlotIdx}",
+                    ],
+                    $userTechs
+                ),
+                'moraleData' => null,
             ];
         }
     }
@@ -151,11 +164,23 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
                 unset($inputMappingGroup['usersAccumulatorObject'][$userIdx]);
             } else if (empty($inputMappingGroup['techsAccumulatorObject'][$userIdx])) {
                 // Fill user techs (with zeros) & details
+                $userTechs = [];
+
                 $inputMappingGroup['techsAccumulatorObject'][$userIdx] = [];
                 $inputMappingGroup['usersAccumulatorObject'][$userIdx] = [
-                    'username' => "{$inputMappingGroup['usernamePrefix']}{$userSlotIdx}",
-                    'techs' => Array2String($inputMappingGroup['techsAccumulatorObject'][$userIdx]),
-                    'pos' => '0:0:0'
+                    'fleetRow' => [
+                        'fleet_owner' => '0',
+                        'fleet_start_galaxy' => '0',
+                        'fleet_start_system' => '0',
+                        'fleet_start_planet' => '0',
+                    ],
+                    'user' => array_merge(
+                        [
+                            'username' => "{$inputMappingGroup['usernamePrefix']}{$userSlotIdx}",
+                        ],
+                        $userTechs
+                    ),
+                    'moraleData' => null,
                 ];
             }
         }
@@ -205,7 +230,10 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
                 $ThisMoraleLevel = intval($_POST['atk_morale'][($ThisUser + 1)]);
                 $ThisMoraleLevel = keepInRange($ThisMoraleLevel, -100, 100);
 
-                $AttackersData[$ThisUser]['morale'] = $ThisMoraleLevel;
+                $AttackersData[$ThisUser]['moraleData'] = [
+                    'morale_level' => $ThisMoraleLevel,
+                    'morale_points' => 0,
+                ];
 
                 $moraleCombatModifiers = Flights\Utils\Modifiers\calculateMoraleCombatModifiers([
                     'moraleLevel' => $ThisMoraleLevel,
@@ -222,7 +250,10 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
                 $ThisMoraleLevel = intval($_POST['def_morale'][($ThisUser + 1)]);
                 $ThisMoraleLevel = keepInRange($ThisMoraleLevel, -100, 100);
 
-                $DefendersData[$ThisUser]['morale'] = $ThisMoraleLevel;
+                $DefendersData[$ThisUser]['moraleData'] = [
+                    'morale_level' => $ThisMoraleLevel,
+                    'morale_points' => 0,
+                ];
 
                 $moraleCombatModifiers = Flights\Utils\Modifiers\calculateMoraleCombatModifiers([
                     'moraleLevel' => $ThisMoraleLevel,
@@ -399,49 +430,41 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
                 'totalDebris' => ($TotalLostMetal + $TotalLostCrystal),
             ]);
 
-            $ReportData = [];
-
-            $ReportData['init']['usr']['atk'] = $AttackersData;
-            $ReportData['init']['usr']['def'] = $DefendersData;
-
-            $ReportData['init']['time'] = $totaltime;
-            $ReportData['init']['date'] = time();
-
-            $ReportData['init']['result'] = $Result;
-            $ReportData['init']['met'] = 0;
-            $ReportData['init']['cry'] = 0;
-            $ReportData['init']['deu'] = 0;
-            $ReportData['init']['deb_met'] = $TotalLostMetal;
-            $ReportData['init']['deb_cry'] = $TotalLostCrystal;
-            $ReportData['init']['moon_chance'] = $moonCreationRollResult['boundedMoonChance'];
-            $ReportData['init']['total_moon_chance'] = $moonCreationRollResult['totalMoonChance'];
-            $ReportData['init']['moon_created'] = false;
-            $ReportData['init']['moon_destroyed'] = false;
-            $ReportData['init']['moon_des_chance'] = '0';
-            $ReportData['init']['fleet_destroyed'] = false;
-            $ReportData['init']['fleet_des_chance'] = '0';
-            $ReportData['init']['planet_name'] = 'Planeta';
-            $ReportData['init']['onMoon'] = false;
-            $ReportData['init']['atk_lost'] = $RealDebrisMetalAtk + $RealDebrisCrystalAtk + $RealDebrisDeuteriumAtk;
-            $ReportData['init']['def_lost'] = $RealDebrisMetalDef + $RealDebrisCrystalDef + $RealDebrisDeuteriumDef;
-
-            foreach($RoundsData as $RoundKey => $RoundData)
-            {
-                foreach($RoundData as $MainKey => $RoundData2)
-                {
-                    if(!empty($RoundData2['ships']))
-                    {
-                        foreach($RoundData2['ships'] as $UserKey => $UserData)
-                        {
-                            $RoundsData[$RoundKey][$MainKey]['ships'][$UserKey] = Array2String($UserData);
-                        }
-                    }
-                }
-            }
-            $ReportData['rounds'] = $RoundsData;
+            $combatReportData = Flights\Utils\Factories\createCombatReportData([
+                'fleetRow' => [
+                    'fleet_start_time' => time(),
+                ],
+                'targetPlanet' => [
+                    // TODO: this should be localised
+                    'name' => 'Planeta',
+                    'fleet_end_type' => 1,
+                ],
+                'usersData' => [
+                    'attackers' => $AttackersData,
+                    'defenders' => $DefendersData,
+                ],
+                'combatData' => $Combat,
+                'combatCalculationTime' => $totaltime,
+                'moraleData' => null,
+                'totalResourcesPillage' => [
+                    'metal' => 0,
+                    'crystal' => 0,
+                    'deuterium' => 0,
+                ],
+                'resourceLosses' => [
+                    'attackers' => $attackersResourceLosses,
+                    'defenders' => $defendersResourceLosses,
+                ],
+                'moonCreationData' => [
+                    'hasBeenCreated' => false,
+                    'normalizedChance' => $moonCreationRollResult['boundedMoonChance'],
+                    'totalChance' => $moonCreationRollResult['totalMoonChance'],
+                ],
+                'moonDestructionData' => null,
+            ]);
 
             $ReportID = CreateBattleReport(
-                $ReportData,
+                $combatReportData,
                 [
                     'atk' => $_User['id'],
                     'def' => 0,
