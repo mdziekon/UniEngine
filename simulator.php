@@ -186,41 +186,31 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
         }
     }
 
-    if(isset($AttackersData))
-    {
-        foreach($AttackersData as $UserTemp => $Data)
-        {
-            if(empty($AttackingFleets[$UserTemp]))
-            {
-                unset($AttackingFleets[$UserTemp]);
-                unset($AttackingTechs[$UserTemp]);
-                unset($AttackersData[$UserTemp]);
-            }
+    foreach ($AttackersData as $userSlotIdx => $userData) {
+        if (empty($AttackingFleets[$userSlotIdx])) {
+            unset($AttackingFleets[$userSlotIdx]);
+            unset($AttackingTechs[$userSlotIdx]);
+            unset($AttackersData[$userSlotIdx]);
         }
     }
-    if(isset($DefendersData))
-    {
-        foreach($DefendersData as $UserTemp => $Data)
-        {
-            if(empty($DefendingFleets[$UserTemp]))
-            {
-                unset($DefendingFleets[$UserTemp]);
-                unset($DefendingTechs[$UserTemp]);
-                unset($DefendersData[$UserTemp]);
-            }
+    foreach ($DefendersData as $userSlotIdx => $userData) {
+        if (empty($DefendingFleets[$userSlotIdx])) {
+            unset($DefendingFleets[$userSlotIdx]);
+            unset($DefendingTechs[$userSlotIdx]);
+            unset($DefendersData[$userSlotIdx]);
         }
     }
 
-    if(empty($AttackingFleets) OR (empty($DefendingFleets)))
-    {
-        if(empty($AttackingFleets))
-        {
-            $BreakMSG = $_Lang['Break_noATKShips'];
-        }
-        else if(empty($DefendingFleets))
-        {
-            $BreakMSG = $_Lang['Break_noDEFShips'];
-        }
+    if (
+        empty($AttackingFleets) ||
+        empty($DefendingFleets)
+    ) {
+        $BreakMSG = (
+            empty($AttackingFleets) ?
+                $_Lang['Break_noATKShips'] :
+                $_Lang['Break_noDEFShips']
+        );
+
         $Calculate = false;
     }
 
