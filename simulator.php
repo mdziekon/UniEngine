@@ -302,41 +302,41 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
         $SimData['ship_lost_def_min'] = 99999999999999999999.0;
         $SimData['ship_lost_def_max'] = 0;
 
-        $TotalTime = 0;
-        for($i = 1; $i <= $Loop; $i += 1)
-        {
-            $Temp['ship_lost_atk'] = 0;
-            $Temp['ship_lost_def'] = 0;
+        $allSimulationsTotalTime = 0;
 
-            $StartTime = microtime(true);
+        for (
+            $i = 1;
+            $i <= $Loop;
+            $i += 1
+        ) {
+            $Temp = [
+                'ship_lost_atk' => 0,
+                'ship_lost_def' => 0,
+            ];
 
-            // Now start Combat calculations
+            $simulationStartTimestamp = microtime(true);
+
             $Combat = Combat($AttackingFleets, $DefendingFleets, $AttackingTechs, $DefendingTechs, true);
 
-            $EndTime = microtime(true);
-            $TimeNow = $EndTime - $StartTime;
-            $TotalTime += $TimeNow;
-            $totaltime = sprintf('%0.6f', $TimeNow);
+            $simulationEndTimestamp = microtime(true);
 
-            $RoundsData = $Combat['rounds'];
+            $combatSimulationTime = $simulationEndTimestamp - $simulationStartTimestamp;
+            $combatSimulationTimeFormatted = sprintf('%0.6f', $combatSimulationTime);
+            $allSimulationsTotalTime += $combatSimulationTime;
 
-            $RoundCount = count($RoundsData) - 1;
-            if($RoundCount > $SimData['max_rounds'])
-            {
+            $RoundCount = count($Combat['rounds']) - 1;
+
+            if ($RoundCount > $SimData['max_rounds']) {
                 $SimData['max_rounds'] = $RoundCount;
             }
-            if($RoundCount < $SimData['min_rounds'])
-            {
+            if ($RoundCount < $SimData['min_rounds']) {
                 $SimData['min_rounds'] = $RoundCount;
             }
             $SimData['rounds'] += $RoundCount;
 
             $Result = $Combat['result'];
-            $AtkShips = $Combat['AttackerShips'];
-            $DefShips = $Combat['DefenderShips'];
             $AtkLost = $Combat['AtkLose'];
             $DefLost = $Combat['DefLose'];
-            $DefSysLost = $Combat['DefSysLost'];
 
             $debrisRecoveryPercentages = [
                 'ships' => ($_GameConfig['Fleet_Cdr'] / 100),
@@ -397,8 +397,7 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
                 $defendersResourceLosses['recoverableLoss']['crystal']
             );
 
-            switch($Result)
-            {
+            switch ($Result) {
                 case COMBAT_ATK:
                     $SimData['atk_win'] += 1;
                     break;
@@ -410,8 +409,7 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
                     break;
             }
 
-            switch($Result)
-            {
+            switch ($Result) {
                 case COMBAT_ATK:
                     $_Lang['Winner_Color'] = 'red';
                     $_Lang['Winner_Name'] = $_Lang['WonBy_Attacker'];
@@ -444,7 +442,7 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
                     'defenders' => $DefendersData,
                 ],
                 'combatData' => $Combat,
-                'combatCalculationTime' => $totaltime,
+                'combatCalculationTime' => $combatSimulationTimeFormatted,
                 'moraleData' => null,
                 'totalResourcesPillage' => [
                     'metal' => 0,
@@ -477,30 +475,24 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
             $parse['id'] = $ReportID;
 
             $AllReports[] = $ReportID;
-            if($i == $Loop)
-            {
-                $parse['time'] = sprintf('%0.6f', $TotalTime);
-            }
-            else
-            {
-                $parse['time'] = $totaltime;
-            }
 
-            if($Temp['ship_lost_atk'] < $SimData['ship_lost_atk_min'])
-            {
+            $parse['time'] = (
+                ($i == $Loop) ?
+                    sprintf('%0.6f', $allSimulationsTotalTime) :
+                    $combatSimulationTimeFormatted
+            );
+
+            if ($Temp['ship_lost_atk'] < $SimData['ship_lost_atk_min']) {
                 $SimData['ship_lost_atk_min'] = $Temp['ship_lost_atk'];
             }
-            if($Temp['ship_lost_atk'] > $SimData['ship_lost_atk_max'])
-            {
+            if ($Temp['ship_lost_atk'] > $SimData['ship_lost_atk_max']) {
                 $SimData['ship_lost_atk_max'] = $Temp['ship_lost_atk'];
             }
 
-            if($Temp['ship_lost_def'] < $SimData['ship_lost_def_min'])
-            {
+            if ($Temp['ship_lost_def'] < $SimData['ship_lost_def_min']) {
                 $SimData['ship_lost_def_min'] = $Temp['ship_lost_def'];
             }
-            if($Temp['ship_lost_def'] > $SimData['ship_lost_def_max'])
-            {
+            if ($Temp['ship_lost_def'] > $SimData['ship_lost_def_max']) {
                 $SimData['ship_lost_def_max'] = $Temp['ship_lost_def'];
             }
         }
