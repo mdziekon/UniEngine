@@ -435,8 +435,7 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
                     'fleet_start_time' => time(),
                 ],
                 'targetPlanet' => [
-                    // TODO: this should be localised
-                    'name' => 'Planeta',
+                    'name' => $_Lang['BR_Target_1'],
                     'fleet_end_type' => 1,
                 ],
                 'usersData' => [
