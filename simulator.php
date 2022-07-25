@@ -354,11 +354,13 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
             $RealDebrisDeuteriumAtk = $attackersResourceLosses['realLoss']['deuterium'];
 
             if (!empty($AtkLost)) {
-                foreach ($AtkLost as $ID => $Count) {
-                    if ($ID > 200 && $ID < 300) {
-                        $SimData['ship_lost_atk'] += $Count;
-                        $Temp['ship_lost_atk'] += $Count;
+                foreach ($AtkLost as $shipId => $shipCount) {
+                    if (!World\Elements\isShip($shipId)) {
+                        continue;
                     }
+
+                    $SimData['ship_lost_atk'] += $shipCount;
+                    $Temp['ship_lost_atk'] += $shipCount;
                 }
             }
 
@@ -377,9 +379,9 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
             $RealDebrisDeuteriumDef = $defendersResourceLosses['realLoss']['deuterium'];
 
             if (!empty($DefLost)) {
-                foreach ($DefLost as $ID => $Count) {
-                    $SimData['ship_lost_def'] += $Count;
-                    $Temp['ship_lost_def'] += $Count;
+                foreach ($DefLost as $shipId => $shipCount) {
+                    $SimData['ship_lost_def'] += $shipCount;
+                    $Temp['ship_lost_def'] += $shipCount;
                 }
             }
 
