@@ -215,45 +215,42 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
     }
 
     if (MORALE_ENABLED) {
-        if (!empty($AttackingFleets)) {
-            foreach ($AttackingFleets as $ThisUser => $ThisData) {
-                $ThisMoraleLevel = intval($_POST['atk_morale'][($ThisUser + 1)]);
-                $ThisMoraleLevel = keepInRange($ThisMoraleLevel, -100, 100);
+        foreach ($AttackingFleets as $ThisUser => $ThisData) {
+            $ThisMoraleLevel = intval($_POST['atk_morale'][($ThisUser + 1)]);
+            $ThisMoraleLevel = keepInRange($ThisMoraleLevel, -100, 100);
 
-                $AttackersData[$ThisUser]['moraleData'] = [
-                    'morale_level' => $ThisMoraleLevel,
-                    'morale_points' => 0,
-                ];
+            $AttackersData[$ThisUser]['moraleData'] = [
+                'morale_level' => $ThisMoraleLevel,
+                'morale_points' => 0,
+            ];
 
-                $moraleCombatModifiers = Flights\Utils\Modifiers\calculateMoraleCombatModifiers([
-                    'moraleLevel' => $ThisMoraleLevel,
-                ]);
+            $moraleCombatModifiers = Flights\Utils\Modifiers\calculateMoraleCombatModifiers([
+                'moraleLevel' => $ThisMoraleLevel,
+            ]);
 
-                $AttackingTechs[$ThisUser] = array_merge(
-                    $AttackingTechs[$ThisUser],
-                    $moraleCombatModifiers
-                );
-            }
+            $AttackingTechs[$ThisUser] = array_merge(
+                $AttackingTechs[$ThisUser],
+                $moraleCombatModifiers
+            );
         }
-        if (!empty($DefendingFleets)) {
-            foreach ($DefendingFleets as $ThisUser => $ThisData) {
-                $ThisMoraleLevel = intval($_POST['def_morale'][($ThisUser + 1)]);
-                $ThisMoraleLevel = keepInRange($ThisMoraleLevel, -100, 100);
 
-                $DefendersData[$ThisUser]['moraleData'] = [
-                    'morale_level' => $ThisMoraleLevel,
-                    'morale_points' => 0,
-                ];
+        foreach ($DefendingFleets as $ThisUser => $ThisData) {
+            $ThisMoraleLevel = intval($_POST['def_morale'][($ThisUser + 1)]);
+            $ThisMoraleLevel = keepInRange($ThisMoraleLevel, -100, 100);
 
-                $moraleCombatModifiers = Flights\Utils\Modifiers\calculateMoraleCombatModifiers([
-                    'moraleLevel' => $ThisMoraleLevel,
-                ]);
+            $DefendersData[$ThisUser]['moraleData'] = [
+                'morale_level' => $ThisMoraleLevel,
+                'morale_points' => 0,
+            ];
 
-                $DefendingTechs[$ThisUser] = array_merge(
-                    $DefendingTechs[$ThisUser],
-                    $moraleCombatModifiers
-                );
-            }
+            $moraleCombatModifiers = Flights\Utils\Modifiers\calculateMoraleCombatModifiers([
+                'moraleLevel' => $ThisMoraleLevel,
+            ]);
+
+            $DefendingTechs[$ThisUser] = array_merge(
+                $DefendingTechs[$ThisUser],
+                $moraleCombatModifiers
+            );
         }
     }
 
