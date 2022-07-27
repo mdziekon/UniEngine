@@ -225,7 +225,11 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
             $moraleInputSlots = $_POST[$inputKey];
 
             foreach ($groupFleets as $userSlotIdx => $userFleets) {
-                $userMoraleLevel = intval($moraleInputSlots[($userSlotIdx + 1)]);
+                $userMoraleLevel = (
+                    isset($moraleInputSlots[($userSlotIdx + 1)]) ?
+                        intval($moraleInputSlots[($userSlotIdx + 1)]) :
+                        0
+                );
                 $userMoraleLevel = keepInRange($userMoraleLevel, -100, 100);
 
                 $groupUsersData[$userSlotIdx]['moraleData'] = [
