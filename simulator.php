@@ -82,6 +82,30 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
         ],
     ];
 
+    /**
+     * @param array $params
+     * @param number $params['userSlotIdx']
+     * @param string $params['usernamePrefix']
+     * @param array $params['userKeyedTechs']
+     */
+    $createSimulationUserData = function ($params) {
+        return [
+            'fleetRow' => [
+                'fleet_owner' => '0',
+                'fleet_start_galaxy' => '0',
+                'fleet_start_system' => '0',
+                'fleet_start_planet' => '0',
+            ],
+            'user' => array_merge(
+                [
+                    'username' => "{$params['usernamePrefix']}{$params['userSlotIdx']}",
+                ],
+                $params['userKeyedTechs']
+            ),
+            'moraleData' => null,
+        ];
+    };
+
     foreach ($inputMappingGroups as $inputMappingGroup) {
         if (empty($_POST[$inputMappingGroup['techInputKey']])) {
             continue;
@@ -106,21 +130,11 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
                 $userTechs[$elementKey] = $safeElementValue;
             }
 
-            $inputMappingGroup['usersAccumulatorObject'][$userIdx] = [
-                'fleetRow' => [
-                    'fleet_owner' => '0',
-                    'fleet_start_galaxy' => '0',
-                    'fleet_start_system' => '0',
-                    'fleet_start_planet' => '0',
-                ],
-                'user' => array_merge(
-                    [
-                        'username' => "{$inputMappingGroup['usernamePrefix']}{$userSlotIdx}",
-                    ],
-                    $userTechs
-                ),
-                'moraleData' => null,
-            ];
+            $inputMappingGroup['usersAccumulatorObject'][$userIdx] = $createSimulationUserData([
+                'userSlotIdx' => $userSlotIdx,
+                'usernamePrefix' => $inputMappingGroup['usernamePrefix'],
+                'userKeyedTechs' => $userTechs,
+            ]);
         }
     }
 
@@ -166,24 +180,12 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
                 unset($inputMappingGroup['usersAccumulatorObject'][$userIdx]);
             } else if (empty($inputMappingGroup['techsAccumulatorObject'][$userIdx])) {
                 // Fill user techs (with zeros) & details
-                $userTechs = [];
-
                 $inputMappingGroup['techsAccumulatorObject'][$userIdx] = [];
-                $inputMappingGroup['usersAccumulatorObject'][$userIdx] = [
-                    'fleetRow' => [
-                        'fleet_owner' => '0',
-                        'fleet_start_galaxy' => '0',
-                        'fleet_start_system' => '0',
-                        'fleet_start_planet' => '0',
-                    ],
-                    'user' => array_merge(
-                        [
-                            'username' => "{$inputMappingGroup['usernamePrefix']}{$userSlotIdx}",
-                        ],
-                        $userTechs
-                    ),
-                    'moraleData' => null,
-                ];
+                $inputMappingGroup['usersAccumulatorObject'][$userIdx] = $createSimulationUserData([
+                    'userSlotIdx' => $userSlotIdx,
+                    'usernamePrefix' => $inputMappingGroup['usernamePrefix'],
+                    'userKeyedTechs' => [],
+                ]);
             }
         }
     }
