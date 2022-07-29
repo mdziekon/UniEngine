@@ -15,6 +15,7 @@ if(!CheckAuth('sgo'))
 }
 
 include($_EnginePath . 'modules/messages/_includes.php');
+include($_EnginePath . 'modules/attackSimulator/_includes.php');
 
 use UniEngine\Engine\Modules\Messages;
 
