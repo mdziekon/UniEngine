@@ -10,6 +10,8 @@ call_user_func(function () {
     include($includePath . './components/ShipInput/ShipInput.component.php');
     include($includePath . './components/TechInput/TechInput.component.php');
 
+    include($includePath . './utils/combatTechs.utils.php');
+
 });
 
 ?>

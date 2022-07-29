@@ -16,18 +16,8 @@ includeLang('simulator');
 $_Lang['rows'] = '';
 $_Lang['SimResult'] = '';
 
-$TechEquivalents = [
-    1 => 109,
-    2 => 110,
-    3 => 111,
-    4 => 120,
-    5 => 121,
-    6 => 122,
-    7 => 125,
-    8 => 126,
-    9 => 199,
-];
-$TechCount = count($TechEquivalents);
+$combatTechs = AttackSimulator\Utils\CombatTechs\getTechsList();
+
 $MaxACSSlots = ACS_MAX_JOINED_FLEETS + 1;
 $MaxStringLength = 30;
 
@@ -37,12 +27,12 @@ if(!empty($_POST['spyreport']))
     $_POST['def_techs'][1] = (isset($_POST['spyreport']['tech']) ? $_POST['spyreport']['tech'] : null);
     $_POST['def_techs'][1] = object_map(
         $_POST['def_techs'][1],
-        function ($value, $key) use ($TechEquivalents) {
+        function ($value, $key) {
             $safeKey = intval($key, 10);
 
             return [
                 $value,
-                $TechEquivalents[$safeKey],
+                AttackSimulator\Utils\CombatTechs\getTechStandardKey($safeKey),
             ];
         }
     );
@@ -561,7 +551,7 @@ for($i = 1; $i <= $MaxACSSlots; $i += 1)
     $parse['RowText2'] = '<a class="orange point fillTech_def">'.$_Lang['FillMyTechs'].'</a> / <a class="orange point clnTech_def">'.$_Lang['Fill_Clean'].'</a>';
     $ThisSlot['txt'] .= parsetemplate($TPL_NoBoth, $parse);
 
-    foreach ($TechEquivalents as $elementId) {
+    foreach ($combatTechs as $elementId) {
         $ThisRow_InsertValue_Atk = isset($_POST['atk_techs'][$i][$elementId]) ? $_POST['atk_techs'][$i][$elementId] : null;
         $ThisRow_InsertValue_Def = isset($_POST['def_techs'][$i][$elementId]) ? $_POST['def_techs'][$i][$elementId] : null;
 
@@ -654,7 +644,7 @@ for($i = 1; $i <= $MaxACSSlots; $i += 1)
 $isUsingPrettyInputs = ($_User['settings_useprettyinputbox'] == 1);
 
 $ownTechLevels = object_map(
-    $TechEquivalents,
+    $combatTechs,
     function ($elementId) use (&$_Planet, &$_User) {
         $currentLevel = World\Elements\getElementCurrentLevel($elementId, $_Planet, $_User);
 
