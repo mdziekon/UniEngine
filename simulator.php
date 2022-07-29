@@ -530,34 +530,10 @@ for($i = 1; $i <= $MaxACSSlots; $i += 1)
         ])['componentHTML'];
     }
 
-    $parse['RowText'] = $_Lang['Technology'];
-    $ThisSlot['txt'] .= parsetemplate($TPL_SingleRow, $parse);
-    $parse['RowText'] = '<a class="orange point fillTech_atk">'.$_Lang['FillMyTechs'].'</a> / <a class="orange point clnTech_atk">'.$_Lang['Fill_Clean'].'</a>';
-    $parse['RowText2'] = '<a class="orange point fillTech_def">'.$_Lang['FillMyTechs'].'</a> / <a class="orange point clnTech_def">'.$_Lang['Fill_Clean'].'</a>';
-    $ThisSlot['txt'] .= parsetemplate($TPL_NoBoth, $parse);
-
-    foreach ($combatTechs as $elementId) {
-        $ThisRow_InsertValue_Atk = isset($_POST['atk_techs'][$i][$elementId]) ? $_POST['atk_techs'][$i][$elementId] : null;
-        $ThisRow_InsertValue_Def = isset($_POST['def_techs'][$i][$elementId]) ? $_POST['def_techs'][$i][$elementId] : null;
-
-        $parse['RowText'] = $_Lang['tech'][$elementId];
-        $parse['RowInput'] = AttackSimulator\Components\TechInput\render([
-            'slotIdx' => $i,
-            'elementId' => $elementId,
-            'columnType' => 'attacker',
-            'initialValue' => $ThisRow_InsertValue_Atk,
-        ])['componentHTML'];
-
-        $parse['RowText2'] = $_Lang['tech'][$elementId];
-        $parse['RowInput2'] = AttackSimulator\Components\TechInput\render([
-            'slotIdx' => $i,
-            'elementId' => $elementId,
-            'columnType' => 'defender',
-            'initialValue' => $ThisRow_InsertValue_Def,
-        ])['componentHTML'];
-
-        $ThisSlot['txt'] .= parsetemplate($TPL_Row, $parse);
-    }
+    $ThisSlot['txt'] .= AttackSimulator\Components\TechInputsSection\render([
+        'slotIdx' => $i,
+        'input' => &$_POST,
+    ])['componentHTML'];
 
     $parse['RowText'] = $_Lang['Fleets'];
     $ThisSlot['txt'] .= parsetemplate($TPL_SingleRow, $parse);
