@@ -523,26 +523,11 @@ for($i = 1; $i <= $MaxACSSlots; $i += 1)
         $ThisSlot['SlotHidden'] = 'hide';
     }
 
-    if(MORALE_ENABLED)
-    {
-        $parse['RowText'] = $_Lang['Morale'];
-        $ThisSlot['txt'] .= parsetemplate($TPL_SingleRow, $parse);
-
-        $parse['RowText'] = $_Lang['Morale_Level'];
-        $parse['RowInput'] = AttackSimulator\Components\MoraleInput\render([
+    if (MORALE_ENABLED) {
+        $ThisSlot['txt'] .= AttackSimulator\Components\MoraleInputsSection\render([
             'slotIdx' => $i,
-            'columnType' => 'attacker',
-            'initialValue' => $_POST['atk_morale'][$i],
+            'input' => &$_POST,
         ])['componentHTML'];
-
-        $parse['RowText2'] = $_Lang['Morale_Level'];
-        $parse['RowInput2'] = AttackSimulator\Components\MoraleInput\render([
-            'slotIdx' => $i,
-            'columnType' => 'defender',
-            'initialValue' => $_POST['def_morale'][$i],
-        ])['componentHTML'];
-
-        $ThisSlot['txt'] .= parsetemplate($TPL_Row, $parse);
     }
 
     $parse['RowText'] = $_Lang['Technology'];
