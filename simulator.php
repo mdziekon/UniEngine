@@ -541,8 +541,35 @@ for($i = 1; $i <= $MaxACSSlots; $i += 1)
     $parse['RowText2'] = '<a class="orange point fillShip_def">'.$_Lang['FillMyFleets'].'</a> / <a class="orange point clnShip_def">'.$_Lang['Fill_Clean'].'</a>';
     $ThisSlot['txt'] .= parsetemplate($TPL_NoBoth, $parse);
 
-    foreach($_Vars_ElementCategories['fleet'] as $elementId)
-    {
+    $unitRows = [
+        'ships' => [],
+        'defenses' => [],
+    ];
+
+    $units = array_merge(
+        $_Vars_ElementCategories['fleet'],
+        $_Vars_ElementCategories['defense']
+    );
+    $units = array_filter($units, function ($elementId) {
+        return !World\Elements\isMissile($elementId);
+    });
+
+    foreach ($units as $elementId) {
+        $isDefenseSystem = World\Elements\isDefenseSystem($elementId);
+
+        if (
+            $i !== 1 &&
+            $isDefenseSystem
+        ) {
+            continue;
+        }
+
+        $groupElementsKey = (
+            !$isDefenseSystem ?
+                'ships' :
+                'defenses'
+        );
+
         $ThisRow_InsertValue_Def = isset($_POST['def_ships'][$i][$elementId]) ? $_POST['def_ships'][$i][$elementId] : null;
 
         $parse['RowText2'] = $_Lang['tech'][$elementId];
@@ -564,39 +591,22 @@ for($i = 1; $i <= $MaxACSSlots; $i += 1)
                 'initialValue' => $ThisRow_InsertValue_Atk,
             ])['componentHTML'];
 
-            $ThisSlot['txt'] .= parsetemplate($TPL_Row, $parse);
+            $unitRows[$groupElementsKey][] = parsetemplate($TPL_Row, $parse);
         } else {
             $parse['RowText'] = '-';
             $parse['RowInput'] = '';
 
-            $ThisSlot['txt'] .= parsetemplate($TPL_NoLeft, $parse);
+            $unitRows[$groupElementsKey][] = parsetemplate($TPL_NoLeft, $parse);
         }
     }
 
-    if ($i == 1) {
+    $ThisSlot['txt'] .= implode('', $unitRows['ships']);
+
+    if ($i === 1) {
         $parse['RowText'] = $_Lang['Defense'];
         $ThisSlot['txt'] .= parsetemplate($TPL_SingleRow, $parse);
 
-        foreach ($_Vars_ElementCategories['defense'] as $elementId) {
-            if (World\Elements\isMissile($elementId)) {
-                continue;
-            }
-
-            $ThisRow_InsertValue_Def = isset($_POST['def_ships'][$i][$elementId]) ? $_POST['def_ships'][$i][$elementId] : null;
-
-            $parse['RowText'] = '-';
-            $parse['RowInput'] = '';
-
-            $parse['RowText2'] = $_Lang['tech'][$elementId];
-            $parse['RowInput2'] = AttackSimulator\Components\ShipInput\render([
-                'slotIdx' => $i,
-                'elementId' => $elementId,
-                'columnType' => 'defender',
-                'initialValue' => $ThisRow_InsertValue_Def,
-            ])['componentHTML'];
-
-            $ThisSlot['txt'] .= parsetemplate($TPL_NoLeft, $parse);
-        }
+        $ThisSlot['txt'] .= implode('', $unitRows['defenses']);
     }
 
     $_Lang['rows'] .= parsetemplate($TPL_Slot, $ThisSlot);
