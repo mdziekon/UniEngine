@@ -535,12 +535,6 @@ for($i = 1; $i <= $MaxACSSlots; $i += 1)
         'input' => &$_POST,
     ])['componentHTML'];
 
-    $parse['RowText'] = $_Lang['Fleets'];
-    $ThisSlot['txt'] .= parsetemplate($TPL_SingleRow, $parse);
-    $parse['RowText'] = '<a class="orange point fillShip_atk">'.$_Lang['FillMyFleets'].'</a> / <a class="orange point clnShip_atk">'.$_Lang['Fill_Clean'].'</a>';
-    $parse['RowText2'] = '<a class="orange point fillShip_def">'.$_Lang['FillMyFleets'].'</a> / <a class="orange point clnShip_def">'.$_Lang['Fill_Clean'].'</a>';
-    $ThisSlot['txt'] .= parsetemplate($TPL_NoBoth, $parse);
-
     $unitRows = [
         'ships' => [],
         'defenses' => [],
@@ -599,6 +593,13 @@ for($i = 1; $i <= $MaxACSSlots; $i += 1)
             $unitRows[$groupElementsKey][] = parsetemplate($TPL_NoLeft, $parse);
         }
     }
+
+    $parse['RowText'] = $_Lang['Fleets'];
+    $ThisSlot['txt'] .= parsetemplate($TPL_SingleRow, $parse);
+
+    $parse['RowText'] = '<a class="orange point fillShip_atk">'.$_Lang['FillMyFleets'].'</a> / <a class="orange point clnShip_atk">'.$_Lang['Fill_Clean'].'</a>';
+    $parse['RowText2'] = '<a class="orange point fillShip_def">'.$_Lang['FillMyFleets'].'</a> / <a class="orange point clnShip_def">'.$_Lang['Fill_Clean'].'</a>';
+    $ThisSlot['txt'] .= parsetemplate($TPL_NoBoth, $parse);
 
     $ThisSlot['txt'] .= implode('', $unitRows['ships']);
 
