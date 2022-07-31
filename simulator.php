@@ -6,8 +6,8 @@ $_EnginePath = './';
 include($_EnginePath.'common.php');
 include_once($_EnginePath . 'modules/attackSimulator/_includes.php');
 
-use UniEngine\Engine\Modules\Flights;
 use UniEngine\Engine\Includes\Helpers\World;
+use UniEngine\Engine\Modules\Flights;
 use UniEngine\Engine\Modules\AttackSimulator;
 
 loggedCheck();
@@ -534,81 +534,10 @@ for($i = 1; $i <= $MaxACSSlots; $i += 1)
         'slotIdx' => $i,
         'input' => &$_POST,
     ])['componentHTML'];
-
-    $unitRows = [
-        'ships' => [],
-        'defenses' => [],
-    ];
-
-    $units = array_merge(
-        $_Vars_ElementCategories['fleet'],
-        $_Vars_ElementCategories['defense']
-    );
-    $units = array_filter($units, function ($elementId) {
-        return !World\Elements\isMissile($elementId);
-    });
-
-    foreach ($units as $elementId) {
-        $isDefenseSystem = World\Elements\isDefenseSystem($elementId);
-
-        if (
-            $i !== 1 &&
-            $isDefenseSystem
-        ) {
-            continue;
-        }
-
-        $groupElementsKey = (
-            !$isDefenseSystem ?
-                'ships' :
-                'defenses'
-        );
-
-        $ThisRow_InsertValue_Def = isset($_POST['def_ships'][$i][$elementId]) ? $_POST['def_ships'][$i][$elementId] : null;
-
-        $parse['RowText2'] = $_Lang['tech'][$elementId];
-        $parse['RowInput2'] = AttackSimulator\Components\ShipInput\render([
-            'slotIdx' => $i,
-            'elementId' => $elementId,
-            'columnType' => 'defender',
-            'initialValue' => $ThisRow_InsertValue_Def,
-        ])['componentHTML'];
-
-        if (hasAnyEngine($elementId)) {
-            $ThisRow_InsertValue_Atk = isset($_POST['atk_ships'][$i][$elementId]) ? $_POST['atk_ships'][$i][$elementId] : null;
-
-            $parse['RowText'] = $_Lang['tech'][$elementId];
-            $parse['RowInput'] = AttackSimulator\Components\ShipInput\render([
-                'slotIdx' => $i,
-                'elementId' => $elementId,
-                'columnType' => 'attacker',
-                'initialValue' => $ThisRow_InsertValue_Atk,
-            ])['componentHTML'];
-
-            $unitRows[$groupElementsKey][] = parsetemplate($TPL_Row, $parse);
-        } else {
-            $parse['RowText'] = '-';
-            $parse['RowInput'] = '';
-
-            $unitRows[$groupElementsKey][] = parsetemplate($TPL_NoLeft, $parse);
-        }
-    }
-
-    $parse['RowText'] = $_Lang['Fleets'];
-    $ThisSlot['txt'] .= parsetemplate($TPL_SingleRow, $parse);
-
-    $parse['RowText'] = '<a class="orange point fillShip_atk">'.$_Lang['FillMyFleets'].'</a> / <a class="orange point clnShip_atk">'.$_Lang['Fill_Clean'].'</a>';
-    $parse['RowText2'] = '<a class="orange point fillShip_def">'.$_Lang['FillMyFleets'].'</a> / <a class="orange point clnShip_def">'.$_Lang['Fill_Clean'].'</a>';
-    $ThisSlot['txt'] .= parsetemplate($TPL_NoBoth, $parse);
-
-    $ThisSlot['txt'] .= implode('', $unitRows['ships']);
-
-    if ($i === 1) {
-        $parse['RowText'] = $_Lang['Defense'];
-        $ThisSlot['txt'] .= parsetemplate($TPL_SingleRow, $parse);
-
-        $ThisSlot['txt'] .= implode('', $unitRows['defenses']);
-    }
+    $ThisSlot['txt'] .= AttackSimulator\Components\UnitInputsSection\render([
+        'slotIdx' => $i,
+        'input' => &$_POST,
+    ])['componentHTML'];
 
     $_Lang['rows'] .= parsetemplate($TPL_Slot, $ThisSlot);
 }
