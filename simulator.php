@@ -510,36 +510,42 @@ $TPL_NoBoth = gettemplate('simulator_row_noboth');
 $TPL_Row = gettemplate('simulator_row');
 $TPL_NoLeft = gettemplate('simulator_row_noleft');
 
-for($i = 1; $i <= $MaxACSSlots; $i += 1)
-{
-    $ThisSlot = [];
-    $ThisSlot['SlotID'] = $i;
-    $ThisSlot['txt'] = '';
-
-    $parse = $_Lang;
-    $parse['i'] = $i;
-    if($i > 1)
-    {
-        $ThisSlot['SlotHidden'] = 'hide';
-    }
-
-    if (MORALE_ENABLED) {
-        $ThisSlot['txt'] .= AttackSimulator\Components\MoraleInputsSection\render([
-            'slotIdx' => $i,
+for (
+    $slotIdx = 1;
+    $slotIdx <= $MaxACSSlots;
+    $slotIdx += 1
+) {
+    $thisSlotElements = [
+        (
+            MORALE_ENABLED ?
+                AttackSimulator\Components\MoraleInputsSection\render([
+                    'slotIdx' => $slotIdx,
+                    'input' => &$_POST,
+                ])['componentHTML'] :
+                ''
+        ),
+        AttackSimulator\Components\TechInputsSection\render([
+            'slotIdx' => $slotIdx,
             'input' => &$_POST,
-        ])['componentHTML'];
-    }
+        ])['componentHTML'],
+        AttackSimulator\Components\UnitInputsSection\render([
+            'slotIdx' => $slotIdx,
+            'input' => &$_POST,
+        ])['componentHTML'],
+    ];
+    $isMainFleetsSlot = ($slotIdx === 1);
 
-    $ThisSlot['txt'] .= AttackSimulator\Components\TechInputsSection\render([
-        'slotIdx' => $i,
-        'input' => &$_POST,
-    ])['componentHTML'];
-    $ThisSlot['txt'] .= AttackSimulator\Components\UnitInputsSection\render([
-        'slotIdx' => $i,
-        'input' => &$_POST,
-    ])['componentHTML'];
+    $thisSlotProps = [
+        'SlotID' => $slotIdx,
+        'SlotInitiallyHidden' => (
+            !$isMainFleetsSlot ?
+                'hide' :
+                ''
+        ),
+        'txt' => implode('', $thisSlotElements),
+    ];
 
-    $_Lang['rows'] .= parsetemplate($TPL_Slot, $ThisSlot);
+    $_Lang['rows'] .= parsetemplate($TPL_Slot, $thisSlotProps);
 }
 
 $isUsingPrettyInputs = ($_User['settings_useprettyinputbox'] == 1);
