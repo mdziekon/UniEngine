@@ -501,7 +501,6 @@ else if(in_array($BuildID, $_Vars_ElementCategories['fleet']) OR in_array($Build
 
     if($InShips OR !in_array($BuildID, $_Vars_ElementCategories['rockets']))
     {
-        $TPL_RapidFire_Row = gettemplate('infos_rapidfire_row');
         $parse['rf_info_to'] = RapidFire_Against($BuildID);
         $parse['rf_info_fr'] = RapidFire_From($BuildID);
     }
