@@ -10,6 +10,7 @@ call_user_func(function () {
     include($includePath . './components/RapidFireAgainstList/RapidFireAgainstList.component.php');
     include($includePath . './components/RapidFireFromList/RapidFireFromList.component.php');
     include($includePath . './components/ResourceProductionTable/ResourceProductionTable.component.php');
+    include($includePath . './components/ResourceStorageTable/ResourceStorageTable.component.php');
 
 });
 

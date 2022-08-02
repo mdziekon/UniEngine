@@ -88,62 +88,6 @@ function Teleport_MoonsList($CurrentUser, $CurrentPlanet)
     return false;
 }
 
-function buildStoragesCapacityTableHTML($elementID, &$planet, $rowTPL) {
-    $elementPlanetKey = _getElementPlanetKey($elementID);
-
-    $currentLevel = $planet[$elementPlanetKey];
-
-    $currentLevelCapacity = getElementStorageCapacities($elementID, $planet, []);
-
-    $tableRangeStartLevel = $currentLevel - 3;
-    $tableRangeEndLevel = $currentLevel + 6;
-
-    if ($tableRangeStartLevel < 0) {
-        $offset = $tableRangeStartLevel * (-1);
-
-        $tableRangeStartLevel += $offset;
-        $tableRangeEndLevel += $offset;
-    }
-
-    // Supports only one resource type
-    $capacityResourceKey = getElementStoredResourceKeys($elementID)[0];
-
-    $resultHTML = '';
-
-    for (
-        $iterLevel = $tableRangeStartLevel;
-        $iterLevel <= $tableRangeEndLevel;
-        $iterLevel++
-    ) {
-        $rowData = [];
-
-        if ($iterLevel == $currentLevel) {
-            $rowData['build_lvl'] = "<span class=\"red\">{$iterLevel}</span>";
-            $rowData['IsCurrent'] = ' class="thisLevel"';
-        } else {
-            $rowData['build_lvl'] = $iterLevel;
-        }
-
-        $iterLevelCapacity = getElementStorageCapacities(
-            $elementID,
-            $planet,
-            [
-                'customLevel' => $iterLevel
-            ]
-        );
-
-        $resourceCapacity = $iterLevelCapacity[$capacityResourceKey];
-        $capacityDifference = ($resourceCapacity - $currentLevelCapacity[$capacityResourceKey]);
-
-        $rowData['build_capacity'] = prettyNumber($resourceCapacity);
-        $rowData['build_capacity_diff'] = prettyColorNumber(floor($capacityDifference));
-
-        $resultHTML .= parsetemplate($rowTPL, $rowData);
-    }
-
-    return $resultHTML;
-}
-
 function ShowProductionTable($CurrentUser, $CurrentPlanet, $BuildID, $Template)
 {
     global $_Vars_GameElements, $_Vars_ElementCategories, $_GameConfig, $_EnginePath;
@@ -159,11 +103,10 @@ function ShowProductionTable($CurrentUser, $CurrentPlanet, $BuildID, $Template)
         ])['componentHTML'];
     }
     if (in_array($BuildID, $_Vars_ElementCategories['storages'])) {
-        return buildStoragesCapacityTableHTML(
-            $BuildID,
-            $CurrentPlanet,
-            $Template
-        );
+        return Info\Components\ResourceStorageTable\render([
+            'elementId' => $BuildID,
+            'planet' => &$CurrentPlanet,
+        ])['componentHTML'];
     }
 
     if(!in_array($BuildID, $_Vars_ElementCategories['tech']))
