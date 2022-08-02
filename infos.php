@@ -88,82 +88,6 @@ function Teleport_MoonsList($CurrentUser, $CurrentPlanet)
     return false;
 }
 
-function buildResourcesProductionTableHTML($elementID, &$planet, &$user, $timestamp, $rowTPL) {
-    $elementPlanetKey = _getElementPlanetKey($elementID);
-
-    $currentLevel = $planet[$elementPlanetKey];
-
-    $currentLevelProduction = getElementProduction(
-        $elementID,
-        $planet,
-        $user,
-        [
-            'useCurrentBoosters' => true,
-            'currentTimestamp' => $timestamp,
-            'customLevel' => $currentLevel,
-            'customProductionFactor' => 10
-        ]
-    );
-
-    $tableRangeStartLevel = $currentLevel - 3;
-    $tableRangeEndLevel = $currentLevel + 6;
-
-    if ($tableRangeStartLevel < 0) {
-        $offset = $tableRangeStartLevel * (-1);
-
-        $tableRangeStartLevel += $offset;
-        $tableRangeEndLevel += $offset;
-    }
-
-    // Supports only one resource type produced / consumed
-    $producedResourceKey = getElementProducedResourceKeys($elementID)[0];
-    $consumedResourceKey = getElementConsumedResourceKeys($elementID)[0];
-
-    $resultHTML = '';
-
-    for (
-        $iterLevel = $tableRangeStartLevel;
-        $iterLevel <= $tableRangeEndLevel;
-        $iterLevel++
-    ) {
-        $rowData = [];
-
-        if ($iterLevel == $currentLevel) {
-            $rowData['build_lvl'] = "<span class=\"red\">{$iterLevel}</span>";
-            $rowData['IsCurrent'] = ' class="thisLevel"';
-        } else {
-            $rowData['build_lvl'] = $iterLevel;
-        }
-
-        $iterLevelProduction = getElementProduction(
-            $elementID,
-            $planet,
-            $user,
-            [
-                'useCurrentBoosters' => true,
-                'currentTimestamp' => $timestamp,
-                'customLevel' => $iterLevel,
-                'customProductionFactor' => 10
-            ]
-        );
-
-        $resourceProduction = $iterLevelProduction[$producedResourceKey];
-        $resourceConsumption = $iterLevelProduction[$consumedResourceKey];
-
-        $productionDifference = ($resourceProduction - $currentLevelProduction[$producedResourceKey]);
-        $consumptionDifference = ($resourceConsumption - $currentLevelProduction[$consumedResourceKey]);
-
-        $rowData['build_prod'] = prettyNumber($resourceProduction);
-        $rowData['build_prod_diff'] = prettyColorNumber(floor($productionDifference));
-        $rowData['build_need'] = prettyColorNumber($resourceConsumption);
-        $rowData['build_need_diff'] = prettyColorNumber(floor($consumptionDifference));
-
-        $resultHTML .= parsetemplate($rowTPL, $rowData);
-    }
-
-    return $resultHTML;
-}
-
 function buildStoragesCapacityTableHTML($elementID, &$planet, $rowTPL) {
     $elementPlanetKey = _getElementPlanetKey($elementID);
 
@@ -227,13 +151,12 @@ function ShowProductionTable($CurrentUser, $CurrentPlanet, $BuildID, $Template)
     include($_EnginePath.'includes/functions/GetMissileRange.php');
 
     if (in_array($BuildID, $_Vars_ElementCategories['prod'])) {
-        return buildResourcesProductionTableHTML(
-            $BuildID,
-            $CurrentPlanet,
-            $CurrentUser,
-            time(),
-            $Template
-        );
+        return Info\Components\ResourceProductionTable\render([
+            'elementId' => $BuildID,
+            'planet' => &$CurrentPlanet,
+            'user' => &$CurrentUser,
+            'currentTimestamp' => time(),
+        ])['componentHTML'];
     }
     if (in_array($BuildID, $_Vars_ElementCategories['storages'])) {
         return buildStoragesCapacityTableHTML(
