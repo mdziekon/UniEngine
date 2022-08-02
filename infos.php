@@ -519,9 +519,12 @@ if(!isOnVacation($_User))
             }
             $parse['Gate_HideInfoBox'] = 'style="display: none;"';
 
-            $parse['gate_dest_moons'] = Teleport_MoonsList($_User, $_Planet);
-            if($parse['gate_dest_moons'] === false)
-            {
+            $parse['gate_dest_moons'] = Info\Components\TeleportTargetMoonsList\render([
+                'planet' => &$_Planet,
+                'user' => &$_User,
+            ])['componentHTML'];
+
+            if (empty($parse['gate_dest_moons'])) {
                 $parse['Gate_HideInfoBox'] = '';
                 $parse['Gate_HideSelector'] = 'style="display: none;"';
                 $parse['Gate_HideShips'] = 'style="display: none;"';
