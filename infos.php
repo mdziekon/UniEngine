@@ -44,50 +44,6 @@ function Teleport_FleetList($CurrentPlanet)
     return $Result;
 }
 
-function Teleport_MoonsList($CurrentUser, $CurrentPlanet)
-{
-    global $_Vars_GameElements;
-
-    $Query_GetMoons = '';
-    $Query_GetMoons .= "SELECT `id`, `galaxy`, `system`, `planet`, `name`, `{$_Vars_GameElements[43]}`, `last_jump_time` FROM {{table}} WHERE ";
-    $Query_GetMoons .= "`id_owner` = {$CurrentUser['id']} AND `id` != {$CurrentPlanet['id']} AND `planet_type` = 3;";
-
-    $SQLResult_MoonList = doquery($Query_GetMoons, 'planets');
-
-    if($SQLResult_MoonList->num_rows > 0)
-    {
-        $TPL_MoonsList = gettemplate('infos_teleport_moonslist');
-        $Combo = '';
-
-        while($CurMoon = $SQLResult_MoonList->fetch_assoc())
-        {
-            if($CurMoon[$_Vars_GameElements[43]] > 0)
-            {
-                $RestString = GetNextJumpWaitTime($CurMoon);
-                if(!empty($RestString['string']))
-                {
-                    $RestString['string'] = trim($RestString['string']);
-                    $RestString['string'] = " ({$RestString['string']})";
-                }
-                $Combo .= parsetemplate($TPL_MoonsList, array
-                (
-                    'MoonID' => $CurMoon['id'],
-                    'Galaxy' => $CurMoon['galaxy'],
-                    'System' => $CurMoon['system'],
-                    'Planet' => $CurMoon['planet'],
-                    'Name' => $CurMoon['name'],
-                    'TimeString' => $RestString['string']
-                ));
-            }
-        }
-        if(!empty($Combo))
-        {
-            return $Combo;
-        }
-    }
-    return false;
-}
-
 function ShowProductionTable($CurrentUser, $CurrentPlanet, $BuildID, $Template)
 {
     global $_Vars_GameElements, $_Vars_ElementCategories, $_GameConfig, $_EnginePath;
