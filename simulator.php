@@ -493,7 +493,7 @@ if(isset($_POST['simulate']) && $_POST['simulate'] == 'yes')
         $_Lang['SimResult'] .= parsetemplate(gettemplate('simulator_result'), $parse);
 
         // Trigger Tasks Check
-        Tasks_TriggerTask($_User, 'USE_SIMULATOR');
+        Tasks_TriggerTask($_User, TaskType::UseSimulator);
     }
     else
     {
