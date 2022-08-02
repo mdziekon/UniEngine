@@ -238,7 +238,6 @@ else if(in_array($BuildID, $_Vars_ElementCategories['storages']))
 
     $PageTPL = gettemplate('info_buildings_table');
     $TPL_Production_Header = gettemplate('infos_production_header_storages');
-    $TPL_Production_Rows = gettemplate('infos_production_rows_storages');
 }
 else if($BuildID >= 14 AND $BuildID <= 32)
 {
