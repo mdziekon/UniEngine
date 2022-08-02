@@ -293,18 +293,6 @@ function ShowProductionTable($CurrentUser, $CurrentPlanet, $BuildID, $Template)
 
     return $Table;
 }
-
-function RapidFire_Against($BuildID) {
-    return Info\Components\RapidFireAgainstList\render([
-        'elementId' => $BuildID,
-    ])['componentHTML'];
-}
-
-function RapidFire_From($BuildID) {
-    return Info\Components\RapidFireFromList\render([
-        'elementId' => $BuildID,
-    ])['componentHTML'];
-}
 // End of Internal functions
 
 $BuildID = $_GET['gid'];
@@ -501,8 +489,12 @@ else if(in_array($BuildID, $_Vars_ElementCategories['fleet']) OR in_array($Build
 
     if($InShips OR !in_array($BuildID, $_Vars_ElementCategories['rockets']))
     {
-        $parse['rf_info_to'] = RapidFire_Against($BuildID);
-        $parse['rf_info_fr'] = RapidFire_From($BuildID);
+        $parse['rf_info_to'] = Info\Components\RapidFireAgainstList\render([
+            'elementId' => $BuildID,
+        ])['componentHTML'];
+        $parse['rf_info_fr'] = Info\Components\RapidFireFromList\render([
+            'elementId' => $BuildID,
+        ])['componentHTML'];
     }
 
     $ThisElement_Hull = ($_Vars_Prices[$BuildID]['metal'] + $_Vars_Prices[$BuildID]['crystal']);
