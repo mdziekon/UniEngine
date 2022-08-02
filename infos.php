@@ -6,8 +6,10 @@ $_AllowInVacationMode = true;
 
 $_EnginePath = './';
 include($_EnginePath.'common.php');
+include_once($_EnginePath . 'modules/info/_includes.php');
 
 use UniEngine\Engine\Includes\Helpers\Users;
+use UniEngine\Engine\Modules\Info;
 
 loggedCheck();
 
@@ -292,50 +294,16 @@ function ShowProductionTable($CurrentUser, $CurrentPlanet, $BuildID, $Template)
     return $Table;
 }
 
-function RapidFire_Against($BuildID)
-{
-    global $_Lang, $_Vars_CombatData, $TPL_RapidFire_Row;
-
-    $ResultString = '';
-    foreach($_Vars_CombatData[$BuildID]['sd'] as $ElementID => $Count)
-    {
-        if($Count > 1)
-        {
-            $Count = prettyNumber($Count);
-            $ResultString .= parsetemplate($TPL_RapidFire_Row, array
-            (
-                'Title' => $_Lang['nfo_rf_again'],
-                'ElementID' => $ElementID,
-                'ElementName' => $_Lang['tech'][$ElementID],
-                'Color' => 'lime',
-                'Count' => prettyNumber($Count)
-            ));
-        }
-    }
-    return $ResultString;
+function RapidFire_Against($BuildID) {
+    return Info\Components\RapidFireAgainstList\render([
+        'elementId' => $BuildID,
+    ])['componentHTML'];
 }
 
-function RapidFire_From($BuildID)
-{
-    global $_Lang, $_Vars_CombatData, $TPL_RapidFire_Row;
-
-    $ResultString = '';
-    foreach($_Vars_CombatData as $ShipID => $Data)
-    {
-        if(isset($Data['sd'][$BuildID]) && $Data['sd'][$BuildID] > 1)
-        {
-            $Data['sd'][$BuildID] = prettyNumber($Data['sd'][$BuildID]);
-            $ResultString .= parsetemplate($TPL_RapidFire_Row, array
-            (
-                'Title' => $_Lang['nfo_rf_from'],
-                'ElementID' => $ShipID,
-                'ElementName' => $_Lang['tech'][$ShipID],
-                'Color' => 'red',
-                'Count' => prettyNumber($Data['sd'][$BuildID])
-            ));
-        }
-    }
-    return $ResultString;
+function RapidFire_From($BuildID) {
+    return Info\Components\RapidFireFromList\render([
+        'elementId' => $BuildID,
+    ])['componentHTML'];
 }
 // End of Internal functions
 
