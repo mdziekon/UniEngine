@@ -3,6 +3,7 @@
 namespace UniEngine\Engine\Modules\Messages\Utils;
 
 use UniEngine\Engine\Modules\Messages;
+use UniEngine\Engine\Modules\AttackSimulator;
 
 function _buildBasicMessageDetails($dbMessageData, $params) {
     global $_Lang;
@@ -183,28 +184,7 @@ function _buildTypedSystemMessageContent($dbMessageData, $params = []) {
 function _buildBattleSimulationDetails($simulationDataString) {
     global $_Lang;
 
-    $SimTechs = [
-        109,
-        110,
-        111,
-        120,
-        121,
-        122,
-        125,
-        126,
-        199,
-    ];
-    $SimTechsRep = [
-        109 => 1,
-        110 => 2,
-        111 => 3,
-        120 => 4,
-        121 => 5,
-        122 => 6,
-        125 => 7,
-        126 => 8,
-        199 => 9,
-    ];
+    $combatTechs = AttackSimulator\Utils\CombatTechs\getTechsList();
 
     $battleSimulationData = [
         'tech' => [],
@@ -226,8 +206,10 @@ function _buildBattleSimulationDetails($simulationDataString) {
         $elementId = $simulationElement[0];
         $elementData = $simulationElement[1];
 
-        if (in_array($elementId, $SimTechs)) {
-            $battleSimulationData['tech'][$SimTechsRep[$elementId]] = $elementData;
+        if (in_array($elementId, $combatTechs)) {
+            $elementPackedKey = AttackSimulator\Utils\CombatTechs\getTechPackedKey($elementId);
+
+            $battleSimulationData['tech'][$elementPackedKey] = $elementData;
         } else {
             $battleSimulationData['ships'][$elementId] = $elementData;
         }

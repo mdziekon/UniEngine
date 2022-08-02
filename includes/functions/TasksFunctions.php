@@ -1,5 +1,9 @@
 <?php
 
+abstract class TaskType {
+    const UseSimulator = 'USE_SIMULATOR';
+}
+
 function Tasks_CheckUservar(&$UserVar)
 {
     if(empty($UserVar['tasks_done_parsed']))

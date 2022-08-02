@@ -21,16 +21,6 @@ $_Lang['Morale_Level']           = 'Morale level';
 $_Lang['Technology']             = 'Technologies';
 $_Lang['Fleets']                 = 'Fleet';
 $_Lang['Defense']                = 'Defenses';
-// FIXME: get this from a shared lang file
-$_Lang['Techs'][1]               = 'Weapons technology';
-$_Lang['Techs'][2]               = 'Shielding technology';
-$_Lang['Techs'][3]               = 'Armour technology';
-$_Lang['Techs'][4]               = 'Laser technology';
-$_Lang['Techs'][5]               = 'Ion technology';
-$_Lang['Techs'][6]               = 'Plasma technology';
-$_Lang['Techs'][7]               = 'Anti-matter technology';
-$_Lang['Techs'][8]               = 'Disintegration stream technology';
-$_Lang['Techs'][9]               = 'Graviton technology';
 
 $_Lang['FillMyTechs']            = 'Fill with my tech levels';
 $_Lang['FillMyFleets']           = 'Fill with my fleets (and defenses)';

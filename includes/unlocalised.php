@@ -7,6 +7,13 @@ function array_map_withkeys(array $inputArray, callable $callback) {
     return array_map($callback, $inputArray, array_keys($inputArray));
 }
 
+/**
+ * Filters an array, allowing to access the key of each value
+ */
+function array_filter_withkeys(array $inputArray, callable $callback) {
+    return array_filter($inputArray, $callback, ARRAY_FILTER_USE_BOTH);
+}
+
 function array_find(array $inputArray, callable $callback) {
     foreach ($inputArray as $item) {
         if ($callback($item)) {

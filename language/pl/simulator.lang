@@ -21,15 +21,6 @@ $_Lang['Morale_Level']           = 'Poziom morali';
 $_Lang['Technology']             = 'Technologie';
 $_Lang['Fleets']                 = 'Flota';
 $_Lang['Defense']                = 'Obrona';
-$_Lang['Techs'][1]               = 'Technologia bojowa';
-$_Lang['Techs'][2]               = 'Technologia ochronna';
-$_Lang['Techs'][3]               = 'Opancerzenie';
-$_Lang['Techs'][4]               = 'Technologia laserowa';
-$_Lang['Techs'][5]               = 'Technologia jonowa';
-$_Lang['Techs'][6]               = 'Technologia plazmowa';
-$_Lang['Techs'][7]               = 'Technologia Antymaterii';
-$_Lang['Techs'][8]               = 'Strumień Dezintegracyjny';
-$_Lang['Techs'][9]               = 'Rozwój grawitonów';
 
 $_Lang['FillMyTechs']            = 'Wypełnij moim poziomem technologii';
 $_Lang['FillMyFleets']           = 'Wypełnij moją flotą';
