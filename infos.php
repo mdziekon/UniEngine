@@ -254,7 +254,6 @@ if($BuildID >= 1 AND $BuildID <= 3)
     {
         $PageTPL = gettemplate('info_buildings_table');
         $TPL_Production_Header = gettemplate('infos_production_header_mines');
-        $TPL_Production_Rows = gettemplate('infos_production_rows_mines');
     }
     else
     {
@@ -269,7 +268,6 @@ else if($BuildID == 4)
     {
         $PageTPL = gettemplate('info_buildings_table');
         $TPL_Production_Header = gettemplate('infos_production_header_solarplant');
-        $TPL_Production_Rows = gettemplate('infos_production_rows_solarplant');
     }
     else
     {
@@ -284,7 +282,6 @@ else if($BuildID == 12)
     {
         $PageTPL = gettemplate('info_buildings_table');
         $TPL_Production_Header = gettemplate('infos_production_header_fusionplant');
-        $TPL_Production_Rows = gettemplate('infos_production_rows_fusionplant');
     }
     else
     {
