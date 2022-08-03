@@ -2,19 +2,19 @@
 
 namespace UniEngine\Engine\Modules\Info\Components\TeleportTargetMoonsList;
 
+use UniEngine\Engine\Includes\Helpers\World;
+
 /**
  * @param array $props
  * @param arrayRef $props['planet']
  * @param arrayRef $props['user']
  */
 function render($props) {
-    global $_Vars_GameElements;
-
     $planet = &$props['planet'];
     $user = &$props['user'];
 
     $TELEPORT_ELEMENT_ID = 43;
-    $TELEPORT_ELEMENT_KEY = $_Vars_GameElements[$TELEPORT_ELEMENT_ID];
+    $TELEPORT_ELEMENT_KEY = _getElementPlanetKey($TELEPORT_ELEMENT_ID);
 
     $localTemplateLoader = createLocalTemplateLoader(__DIR__);
     $targetOptionTpl = $localTemplateLoader('targetOption');
@@ -34,8 +34,8 @@ function render($props) {
     $otherMoons = mapQueryResults($otherMoonsResult, function ($moonEntry) {
         return $moonEntry;
     });
-    $otherMoons = array_filter($otherMoons, function ($moonEntry) use ($TELEPORT_ELEMENT_KEY) {
-        return $moonEntry[$TELEPORT_ELEMENT_KEY] > 0;
+    $otherMoons = array_filter($otherMoons, function ($moonEntry) use ($TELEPORT_ELEMENT_ID, &$user) {
+        return World\Elements\getElementCurrentLevel($TELEPORT_ELEMENT_ID, $moonEntry, $user);
     });
 
     if (empty($otherMoons)) {

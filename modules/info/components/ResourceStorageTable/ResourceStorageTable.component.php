@@ -2,6 +2,8 @@
 
 namespace UniEngine\Engine\Modules\Info\Components\ResourceStorageTable;
 
+use UniEngine\Engine\Includes\Helpers\World;
+
 /**
  * @param array $props
  * @param string $props['elementId']
@@ -10,13 +12,12 @@ namespace UniEngine\Engine\Modules\Info\Components\ResourceStorageTable;
 function render($props) {
     $elementId = $props['elementId'];
     $planet = &$props['planet'];
+    $user = [];
 
     $localTemplateLoader = createLocalTemplateLoader(__DIR__);
     $rowTpl = $localTemplateLoader('storageRow');
 
-    $elementPlanetKey = _getElementPlanetKey($elementId);
-
-    $currentLevel = $planet[$elementPlanetKey];
+    $currentLevel = World\Elements\getElementCurrentLevel($elementId, $planet, $user);
 
     $currentLevelCapacity = getElementStorageCapacities($elementId, $planet, []);
 

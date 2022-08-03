@@ -2,20 +2,23 @@
 
 namespace UniEngine\Engine\Modules\Info\Components\TeleportFleetUnitSelectorsList;
 
+use UniEngine\Engine\Includes\Helpers\World;
+
 /**
  * @param array $props
  * @param arrayRef $props['planet']
  */
 function render($props) {
-    global $_Lang, $_Vars_ElementCategories, $_Vars_GameElements;
+    global $_Lang, $_Vars_ElementCategories;
 
     $planet = &$props['planet'];
+    $user = [];
 
     $localTemplateLoader = createLocalTemplateLoader(__DIR__);
     $unitSelectorTpl = $localTemplateLoader('unitSelector');
 
-    $availableUnits = array_filter($_Vars_ElementCategories['fleet'], function ($elementId) use (&$planet, &$_Vars_GameElements) {
-        return $planet[$_Vars_GameElements[$elementId]] > 0;
+    $availableUnits = array_filter($_Vars_ElementCategories['fleet'], function ($elementId) use (&$planet, &$user) {
+        return World\Elements\getElementCurrentCount($elementId, $planet, $user);
     });
 
     if (empty($availableUnits)) {
@@ -26,8 +29,8 @@ function render($props) {
 
     $unitSelectors = array_map_withkeys(
         $availableUnits,
-        function ($elementId) use (&$unitSelectorTpl, &$planet, &$_Vars_GameElements, &$_Lang) {
-            $elementCount = $planet[$_Vars_GameElements[$elementId]];
+        function ($elementId) use (&$unitSelectorTpl, &$planet, &$user, &$_Lang) {
+            $elementCount = World\Elements\getElementCurrentCount($elementId, $planet, $user);
 
             $tplBodyProps = [
                 'fleet_setmax' => $_Lang['fleet_setmax'],

@@ -2,6 +2,8 @@
 
 namespace UniEngine\Engine\Modules\Info\Components\ResourceProductionTable;
 
+use UniEngine\Engine\Includes\Helpers\World;
+
 /**
  * @param array $props
  * @param string $props['elementId']
@@ -25,9 +27,7 @@ function render($props) {
         $rowTpl = $localTemplateLoader('productionRenewableSourceRow');
     }
 
-    $elementPlanetKey = _getElementPlanetKey($elementId);
-
-    $currentLevel = $planet[$elementPlanetKey];
+    $currentLevel = World\Elements\getElementCurrentLevel($elementId, $planet, $user);
 
     $currentLevelProduction = getElementProduction(
         $elementId,
