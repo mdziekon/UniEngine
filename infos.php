@@ -16,34 +16,6 @@ loggedCheck();
 $ChronoAppletIncluded = false;
 
 // Inner Functions
-function Teleport_FleetList($CurrentPlanet)
-{
-    global $_Vars_GameElements, $_Lang, $_Vars_ElementCategories;
-
-    $RowsTPL = gettemplate('gate_fleet_rows');
-    $Result = '';
-    foreach($_Vars_ElementCategories['fleet'] as $ShipID)
-    {
-        if($CurrentPlanet[$_Vars_GameElements[$ShipID]] > 0)
-        {
-            $bloc = array();
-            $bloc['fleet_setmax'] = $_Lang['fleet_setmax'];
-            $bloc['fleet_setmin'] = $_Lang['fleet_setmin'];
-
-            $bloc['fleet_id'] = $ShipID;
-            $bloc['fleet_name'] = $_Lang['tech'][$ShipID];
-            $bloc['fleet_max'] = prettyNumber($CurrentPlanet[$_Vars_GameElements[$ShipID]]);
-            $bloc['fleet_countmax'] = $CurrentPlanet[$_Vars_GameElements[$ShipID]];
-            $Result .= parsetemplate($RowsTPL, $bloc);
-        }
-    }
-    if(empty($Result))
-    {
-        return false;
-    }
-    return $Result;
-}
-
 function ShowProductionTable($CurrentUser, $CurrentPlanet, $BuildID, $Template)
 {
     global $_Vars_GameElements, $_Vars_ElementCategories, $_GameConfig, $_EnginePath;
