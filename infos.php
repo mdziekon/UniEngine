@@ -6,218 +6,16 @@ $_AllowInVacationMode = true;
 
 $_EnginePath = './';
 include($_EnginePath.'common.php');
+include_once($_EnginePath . 'modules/info/_includes.php');
 
 use UniEngine\Engine\Includes\Helpers\Users;
+use UniEngine\Engine\Modules\Info;
 
 loggedCheck();
 
 $ChronoAppletIncluded = false;
 
 // Inner Functions
-function Teleport_FleetList($CurrentPlanet)
-{
-    global $_Vars_GameElements, $_Lang, $_Vars_ElementCategories;
-
-    $RowsTPL = gettemplate('gate_fleet_rows');
-    $Result = '';
-    foreach($_Vars_ElementCategories['fleet'] as $ShipID)
-    {
-        if($CurrentPlanet[$_Vars_GameElements[$ShipID]] > 0)
-        {
-            $bloc = array();
-            $bloc['fleet_setmax'] = $_Lang['fleet_setmax'];
-            $bloc['fleet_setmin'] = $_Lang['fleet_setmin'];
-
-            $bloc['fleet_id'] = $ShipID;
-            $bloc['fleet_name'] = $_Lang['tech'][$ShipID];
-            $bloc['fleet_max'] = prettyNumber($CurrentPlanet[$_Vars_GameElements[$ShipID]]);
-            $bloc['fleet_countmax'] = $CurrentPlanet[$_Vars_GameElements[$ShipID]];
-            $Result .= parsetemplate($RowsTPL, $bloc);
-        }
-    }
-    if(empty($Result))
-    {
-        return false;
-    }
-    return $Result;
-}
-
-function Teleport_MoonsList($CurrentUser, $CurrentPlanet)
-{
-    global $_Vars_GameElements;
-
-    $Query_GetMoons = '';
-    $Query_GetMoons .= "SELECT `id`, `galaxy`, `system`, `planet`, `name`, `{$_Vars_GameElements[43]}`, `last_jump_time` FROM {{table}} WHERE ";
-    $Query_GetMoons .= "`id_owner` = {$CurrentUser['id']} AND `id` != {$CurrentPlanet['id']} AND `planet_type` = 3;";
-
-    $SQLResult_MoonList = doquery($Query_GetMoons, 'planets');
-
-    if($SQLResult_MoonList->num_rows > 0)
-    {
-        $TPL_MoonsList = gettemplate('infos_teleport_moonslist');
-        $Combo = '';
-
-        while($CurMoon = $SQLResult_MoonList->fetch_assoc())
-        {
-            if($CurMoon[$_Vars_GameElements[43]] > 0)
-            {
-                $RestString = GetNextJumpWaitTime($CurMoon);
-                if(!empty($RestString['string']))
-                {
-                    $RestString['string'] = trim($RestString['string']);
-                    $RestString['string'] = " ({$RestString['string']})";
-                }
-                $Combo .= parsetemplate($TPL_MoonsList, array
-                (
-                    'MoonID' => $CurMoon['id'],
-                    'Galaxy' => $CurMoon['galaxy'],
-                    'System' => $CurMoon['system'],
-                    'Planet' => $CurMoon['planet'],
-                    'Name' => $CurMoon['name'],
-                    'TimeString' => $RestString['string']
-                ));
-            }
-        }
-        if(!empty($Combo))
-        {
-            return $Combo;
-        }
-    }
-    return false;
-}
-
-function buildResourcesProductionTableHTML($elementID, &$planet, &$user, $timestamp, $rowTPL) {
-    $elementPlanetKey = _getElementPlanetKey($elementID);
-
-    $currentLevel = $planet[$elementPlanetKey];
-
-    $currentLevelProduction = getElementProduction(
-        $elementID,
-        $planet,
-        $user,
-        [
-            'useCurrentBoosters' => true,
-            'currentTimestamp' => $timestamp,
-            'customLevel' => $currentLevel,
-            'customProductionFactor' => 10
-        ]
-    );
-
-    $tableRangeStartLevel = $currentLevel - 3;
-    $tableRangeEndLevel = $currentLevel + 6;
-
-    if ($tableRangeStartLevel < 0) {
-        $offset = $tableRangeStartLevel * (-1);
-
-        $tableRangeStartLevel += $offset;
-        $tableRangeEndLevel += $offset;
-    }
-
-    // Supports only one resource type produced / consumed
-    $producedResourceKey = getElementProducedResourceKeys($elementID)[0];
-    $consumedResourceKey = getElementConsumedResourceKeys($elementID)[0];
-
-    $resultHTML = '';
-
-    for (
-        $iterLevel = $tableRangeStartLevel;
-        $iterLevel <= $tableRangeEndLevel;
-        $iterLevel++
-    ) {
-        $rowData = [];
-
-        if ($iterLevel == $currentLevel) {
-            $rowData['build_lvl'] = "<span class=\"red\">{$iterLevel}</span>";
-            $rowData['IsCurrent'] = ' class="thisLevel"';
-        } else {
-            $rowData['build_lvl'] = $iterLevel;
-        }
-
-        $iterLevelProduction = getElementProduction(
-            $elementID,
-            $planet,
-            $user,
-            [
-                'useCurrentBoosters' => true,
-                'currentTimestamp' => $timestamp,
-                'customLevel' => $iterLevel,
-                'customProductionFactor' => 10
-            ]
-        );
-
-        $resourceProduction = $iterLevelProduction[$producedResourceKey];
-        $resourceConsumption = $iterLevelProduction[$consumedResourceKey];
-
-        $productionDifference = ($resourceProduction - $currentLevelProduction[$producedResourceKey]);
-        $consumptionDifference = ($resourceConsumption - $currentLevelProduction[$consumedResourceKey]);
-
-        $rowData['build_prod'] = prettyNumber($resourceProduction);
-        $rowData['build_prod_diff'] = prettyColorNumber(floor($productionDifference));
-        $rowData['build_need'] = prettyColorNumber($resourceConsumption);
-        $rowData['build_need_diff'] = prettyColorNumber(floor($consumptionDifference));
-
-        $resultHTML .= parsetemplate($rowTPL, $rowData);
-    }
-
-    return $resultHTML;
-}
-
-function buildStoragesCapacityTableHTML($elementID, &$planet, $rowTPL) {
-    $elementPlanetKey = _getElementPlanetKey($elementID);
-
-    $currentLevel = $planet[$elementPlanetKey];
-
-    $currentLevelCapacity = getElementStorageCapacities($elementID, $planet, []);
-
-    $tableRangeStartLevel = $currentLevel - 3;
-    $tableRangeEndLevel = $currentLevel + 6;
-
-    if ($tableRangeStartLevel < 0) {
-        $offset = $tableRangeStartLevel * (-1);
-
-        $tableRangeStartLevel += $offset;
-        $tableRangeEndLevel += $offset;
-    }
-
-    // Supports only one resource type
-    $capacityResourceKey = getElementStoredResourceKeys($elementID)[0];
-
-    $resultHTML = '';
-
-    for (
-        $iterLevel = $tableRangeStartLevel;
-        $iterLevel <= $tableRangeEndLevel;
-        $iterLevel++
-    ) {
-        $rowData = [];
-
-        if ($iterLevel == $currentLevel) {
-            $rowData['build_lvl'] = "<span class=\"red\">{$iterLevel}</span>";
-            $rowData['IsCurrent'] = ' class="thisLevel"';
-        } else {
-            $rowData['build_lvl'] = $iterLevel;
-        }
-
-        $iterLevelCapacity = getElementStorageCapacities(
-            $elementID,
-            $planet,
-            [
-                'customLevel' => $iterLevel
-            ]
-        );
-
-        $resourceCapacity = $iterLevelCapacity[$capacityResourceKey];
-        $capacityDifference = ($resourceCapacity - $currentLevelCapacity[$capacityResourceKey]);
-
-        $rowData['build_capacity'] = prettyNumber($resourceCapacity);
-        $rowData['build_capacity_diff'] = prettyColorNumber(floor($capacityDifference));
-
-        $resultHTML .= parsetemplate($rowTPL, $rowData);
-    }
-
-    return $resultHTML;
-}
-
 function ShowProductionTable($CurrentUser, $CurrentPlanet, $BuildID, $Template)
 {
     global $_Vars_GameElements, $_Vars_ElementCategories, $_GameConfig, $_EnginePath;
@@ -225,20 +23,18 @@ function ShowProductionTable($CurrentUser, $CurrentPlanet, $BuildID, $Template)
     include($_EnginePath.'includes/functions/GetMissileRange.php');
 
     if (in_array($BuildID, $_Vars_ElementCategories['prod'])) {
-        return buildResourcesProductionTableHTML(
-            $BuildID,
-            $CurrentPlanet,
-            $CurrentUser,
-            time(),
-            $Template
-        );
+        return Info\Components\ResourceProductionTable\render([
+            'elementId' => $BuildID,
+            'planet' => &$CurrentPlanet,
+            'user' => &$CurrentUser,
+            'currentTimestamp' => time(),
+        ])['componentHTML'];
     }
     if (in_array($BuildID, $_Vars_ElementCategories['storages'])) {
-        return buildStoragesCapacityTableHTML(
-            $BuildID,
-            $CurrentPlanet,
-            $Template
-        );
+        return Info\Components\ResourceStorageTable\render([
+            'elementId' => $BuildID,
+            'planet' => &$CurrentPlanet,
+        ])['componentHTML'];
     }
 
     if(!in_array($BuildID, $_Vars_ElementCategories['tech']))
@@ -291,52 +87,6 @@ function ShowProductionTable($CurrentUser, $CurrentPlanet, $BuildID, $Template)
 
     return $Table;
 }
-
-function RapidFire_Against($BuildID)
-{
-    global $_Lang, $_Vars_CombatData, $TPL_RapidFire_Row;
-
-    $ResultString = '';
-    foreach($_Vars_CombatData[$BuildID]['sd'] as $ElementID => $Count)
-    {
-        if($Count > 1)
-        {
-            $Count = prettyNumber($Count);
-            $ResultString .= parsetemplate($TPL_RapidFire_Row, array
-            (
-                'Title' => $_Lang['nfo_rf_again'],
-                'ElementID' => $ElementID,
-                'ElementName' => $_Lang['tech'][$ElementID],
-                'Color' => 'lime',
-                'Count' => prettyNumber($Count)
-            ));
-        }
-    }
-    return $ResultString;
-}
-
-function RapidFire_From($BuildID)
-{
-    global $_Lang, $_Vars_CombatData, $TPL_RapidFire_Row;
-
-    $ResultString = '';
-    foreach($_Vars_CombatData as $ShipID => $Data)
-    {
-        if(isset($Data['sd'][$BuildID]) && $Data['sd'][$BuildID] > 1)
-        {
-            $Data['sd'][$BuildID] = prettyNumber($Data['sd'][$BuildID]);
-            $ResultString .= parsetemplate($TPL_RapidFire_Row, array
-            (
-                'Title' => $_Lang['nfo_rf_from'],
-                'ElementID' => $ShipID,
-                'ElementName' => $_Lang['tech'][$ShipID],
-                'Color' => 'red',
-                'Count' => prettyNumber($Data['sd'][$BuildID])
-            ));
-        }
-    }
-    return $ResultString;
-}
 // End of Internal functions
 
 $BuildID = $_GET['gid'];
@@ -375,7 +125,6 @@ if($BuildID >= 1 AND $BuildID <= 3)
     {
         $PageTPL = gettemplate('info_buildings_table');
         $TPL_Production_Header = gettemplate('infos_production_header_mines');
-        $TPL_Production_Rows = gettemplate('infos_production_rows_mines');
     }
     else
     {
@@ -390,7 +139,6 @@ else if($BuildID == 4)
     {
         $PageTPL = gettemplate('info_buildings_table');
         $TPL_Production_Header = gettemplate('infos_production_header_solarplant');
-        $TPL_Production_Rows = gettemplate('infos_production_rows_solarplant');
     }
     else
     {
@@ -405,7 +153,6 @@ else if($BuildID == 12)
     {
         $PageTPL = gettemplate('info_buildings_table');
         $TPL_Production_Header = gettemplate('infos_production_header_fusionplant');
-        $TPL_Production_Rows = gettemplate('infos_production_rows_fusionplant');
     }
     else
     {
@@ -419,7 +166,6 @@ else if(in_array($BuildID, $_Vars_ElementCategories['storages']))
 
     $PageTPL = gettemplate('info_buildings_table');
     $TPL_Production_Header = gettemplate('infos_production_header_storages');
-    $TPL_Production_Rows = gettemplate('infos_production_rows_storages');
 }
 else if($BuildID >= 14 AND $BuildID <= 32)
 {
@@ -533,9 +279,12 @@ else if(in_array($BuildID, $_Vars_ElementCategories['fleet']) OR in_array($Build
 
     if($InShips OR !in_array($BuildID, $_Vars_ElementCategories['rockets']))
     {
-        $TPL_RapidFire_Row = gettemplate('infos_rapidfire_row');
-        $parse['rf_info_to'] = RapidFire_Against($BuildID);
-        $parse['rf_info_fr'] = RapidFire_From($BuildID);
+        $parse['rf_info_to'] = Info\Components\RapidFireAgainstList\render([
+            'elementId' => $BuildID,
+        ])['componentHTML'];
+        $parse['rf_info_fr'] = Info\Components\RapidFireFromList\render([
+            'elementId' => $BuildID,
+        ])['componentHTML'];
     }
 
     $ThisElement_Hull = ($_Vars_Prices[$BuildID]['metal'] + $_Vars_Prices[$BuildID]['crystal']);
@@ -698,18 +447,23 @@ if(!isOnVacation($_User))
             }
             $parse['Gate_HideInfoBox'] = 'style="display: none;"';
 
-            $parse['gate_dest_moons'] = Teleport_MoonsList($_User, $_Planet);
-            if($parse['gate_dest_moons'] === false)
-            {
+            $parse['gate_dest_moons'] = Info\Components\TeleportTargetMoonsList\render([
+                'planet' => &$_Planet,
+                'user' => &$_User,
+            ])['componentHTML'];
+
+            if (empty($parse['gate_dest_moons'])) {
                 $parse['Gate_HideInfoBox'] = '';
                 $parse['Gate_HideSelector'] = 'style="display: none;"';
                 $parse['Gate_HideShips'] = 'style="display: none;"';
                 $parse['gate_infobox'][] = $_Lang['gate_nomoonswithtp'];
             }
 
-            $parse['gate_fleet_rows'] = Teleport_FleetList($_Planet);
-            if($parse['gate_fleet_rows'] === false)
-            {
+            $parse['gate_fleet_rows'] = Info\Components\TeleportFleetUnitSelectorsList\render([
+                'planet' => &$_Planet,
+            ])['componentHTML'];
+
+            if (empty($parse['gate_fleet_rows'])) {
                 $parse['Gate_HideInfoBox'] = '';
                 $parse['Gate_HideShips'] = 'style="display: none;"';
                 $parse['gate_infobox'][] = $_Lang['gate_noshipstotp'];
