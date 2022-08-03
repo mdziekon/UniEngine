@@ -11,6 +11,7 @@ call_user_func(function () {
     include($includePath . './components/RapidFireFromList/RapidFireFromList.component.php');
     include($includePath . './components/ResourceProductionTable/ResourceProductionTable.component.php');
     include($includePath . './components/ResourceStorageTable/ResourceStorageTable.component.php');
+    include($includePath . './components/TeleportFleetUnitSelectorsList/TeleportFleetUnitSelectorsList.component.php');
     include($includePath . './components/TeleportTargetMoonsList/TeleportTargetMoonsList.component.php');
 
 });

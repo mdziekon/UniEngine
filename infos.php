@@ -487,9 +487,11 @@ if(!isOnVacation($_User))
                 $parse['gate_infobox'][] = $_Lang['gate_nomoonswithtp'];
             }
 
-            $parse['gate_fleet_rows'] = Teleport_FleetList($_Planet);
-            if($parse['gate_fleet_rows'] === false)
-            {
+            $parse['gate_fleet_rows'] = Info\Components\TeleportFleetUnitSelectorsList\render([
+                'planet' => &$_Planet,
+            ])['componentHTML'];
+
+            if (empty($parse['gate_fleet_rows'])) {
                 $parse['Gate_HideInfoBox'] = '';
                 $parse['Gate_HideShips'] = 'style="display: none;"';
                 $parse['gate_infobox'][] = $_Lang['gate_noshipstotp'];
