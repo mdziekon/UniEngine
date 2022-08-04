@@ -43,6 +43,13 @@ function ShowProductionTable($CurrentUser, $CurrentPlanet, $BuildID, $Template)
             'user' => &$CurrentUser,
         ])['componentHTML'];
     }
+    if ($BuildID == 42) {
+        return Info\Components\PhalanxRangeTable\render([
+            'elementId' => $BuildID,
+            'planet' => &$CurrentPlanet,
+            'user' => &$CurrentUser,
+        ])['componentHTML'];
+    }
 
     if(!in_array($BuildID, $_Vars_ElementCategories['tech']))
     {
