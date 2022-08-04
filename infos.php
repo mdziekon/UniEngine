@@ -84,10 +84,6 @@ function ShowProductionTable($CurrentUser, $CurrentPlanet, $BuildID, $Template)
                 $bloc['build_range'] = prettyNumber(($BuildLevel * $BuildLevel) - 1);
             }
         }
-        else if($BuildID == 117)
-        {
-            $bloc['build_range'] = GetMissileRange($_User, $BuildLevel);
-        }
 
         $Table .= parsetemplate($Template, $bloc);
     }
@@ -261,7 +257,6 @@ else if(in_array($BuildID, $_Vars_ElementCategories['tech']))
     {
         $PageTPL = gettemplate('info_buildings_table');
         $TPL_Production_Header = gettemplate('infos_production_header_missiles');
-        $TPL_Production_Rows = gettemplate('infos_production_rows_missiles');
     }
     else
     {
