@@ -6,6 +6,8 @@ call_user_func(function () {
 
     $includePath = $_EnginePath . 'modules/info/';
 
+    include($includePath . './components/MissileRangeTable/MissileRangeTable.component.php');
+    include($includePath . './components/PhalanxRangeTable/PhalanxRangeTable.component.php');
     include($includePath . './components/RapidFireCommonRow/RapidFireCommonRow.component.php');
     include($includePath . './components/RapidFireAgainstList/RapidFireAgainstList.component.php');
     include($includePath . './components/RapidFireFromList/RapidFireFromList.component.php');
@@ -13,6 +15,8 @@ call_user_func(function () {
     include($includePath . './components/ResourceStorageTable/ResourceStorageTable.component.php');
     include($includePath . './components/TeleportFleetUnitSelectorsList/TeleportFleetUnitSelectorsList.component.php');
     include($includePath . './components/TeleportTargetMoonsList/TeleportTargetMoonsList.component.php');
+
+    include($includePath . './utils/ranges.utils.php');
 
 });
 

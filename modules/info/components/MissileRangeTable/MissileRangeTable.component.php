@@ -1,6 +1,6 @@
 <?php
 
-namespace UniEngine\Engine\Modules\Info\Components\ResourceStorageTable;
+namespace UniEngine\Engine\Modules\Info\Components\MissileRangeTable;
 
 use UniEngine\Engine\Includes\Helpers\World;
 use UniEngine\Engine\Modules\Info;
@@ -9,18 +9,17 @@ use UniEngine\Engine\Modules\Info;
  * @param array $props
  * @param string $props['elementId']
  * @param arrayRef $props['planet']
+ * @param arrayRef $props['user']
  */
 function render($props) {
     $elementId = $props['elementId'];
     $planet = &$props['planet'];
-    $user = [];
+    $user = &$props['user'];
 
     $localTemplateLoader = createLocalTemplateLoader(__DIR__);
-    $rowTpl = $localTemplateLoader('storageRow');
+    $rowTpl = $localTemplateLoader('rangeRow');
 
     $currentLevel = World\Elements\getElementCurrentLevel($elementId, $planet, $user);
-
-    $currentLevelCapacity = getElementStorageCapacities($elementId, $planet, []);
 
     $tableRange = Info\Utils\getLevelRange([
         'currentLevel' => $currentLevel,
@@ -28,10 +27,7 @@ function render($props) {
         'rangeLengthRight' => 6,
     ]);
 
-    // Supports only one resource type
-    $capacityResourceKey = getElementStoredResourceKeys($elementId)[0];
-
-    $storageRows = [];
+    $tableRows = [];
 
     for (
         $iterLevel = $tableRange['startLevel'];
@@ -47,25 +43,15 @@ function render($props) {
             $rowData['build_lvl'] = $iterLevel;
         }
 
-        $iterLevelCapacity = getElementStorageCapacities(
-            $elementId,
-            $planet,
-            [
-                'customLevel' => $iterLevel
-            ]
-        );
+        $iterLevelRange = GetMissileRange($user, $iterLevel);
 
-        $resourceCapacity = $iterLevelCapacity[$capacityResourceKey];
-        $capacityDifference = ($resourceCapacity - $currentLevelCapacity[$capacityResourceKey]);
+        $rowData['build_range'] = $iterLevelRange;
 
-        $rowData['build_capacity'] = prettyNumber($resourceCapacity);
-        $rowData['build_capacity_diff'] = prettyColorNumber(floor($capacityDifference));
-
-        $storageRows[] = parsetemplate($rowTpl, $rowData);
+        $tableRows[] = parsetemplate($rowTpl, $rowData);
     }
 
     return [
-        'componentHTML' => implode('', $storageRows),
+        'componentHTML' => implode('', $tableRows),
     ];
 }
 

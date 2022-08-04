@@ -3,6 +3,7 @@
 namespace UniEngine\Engine\Modules\Info\Components\ResourceProductionTable;
 
 use UniEngine\Engine\Includes\Helpers\World;
+use UniEngine\Engine\Modules\Info;
 
 /**
  * @param array $props
@@ -41,15 +42,11 @@ function render($props) {
         ]
     );
 
-    $tableRangeStartLevel = $currentLevel - 3;
-    $tableRangeEndLevel = $currentLevel + 6;
-
-    if ($tableRangeStartLevel < 0) {
-        $offset = $tableRangeStartLevel * (-1);
-
-        $tableRangeStartLevel += $offset;
-        $tableRangeEndLevel += $offset;
-    }
+    $tableRange = Info\Utils\getLevelRange([
+        'currentLevel' => $currentLevel,
+        'rangeLengthLeft' => 3,
+        'rangeLengthRight' => 6,
+    ]);
 
     // Supports only one resource type produced / consumed
     $producedResourceKey = getElementProducedResourceKeys($elementId)[0];
@@ -58,8 +55,8 @@ function render($props) {
     $productionRows = [];
 
     for (
-        $iterLevel = $tableRangeStartLevel;
-        $iterLevel <= $tableRangeEndLevel;
+        $iterLevel = $tableRange['startLevel'];
+        $iterLevel <= $tableRange['endLevel'];
         $iterLevel++
     ) {
         $rowData = [];

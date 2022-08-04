@@ -5,10 +5,13 @@ define('INSIDE', true);
 $_AllowInVacationMode = true;
 
 $_EnginePath = './';
-include($_EnginePath.'common.php');
+include($_EnginePath . 'common.php');
 include_once($_EnginePath . 'modules/info/_includes.php');
+include_once($_EnginePath . 'includes/functions/GetMissileRange.php');
+include_once($_EnginePath . 'includes/functions/GetPhalanxRange.php');
 
 use UniEngine\Engine\Includes\Helpers\Users;
+use UniEngine\Engine\Includes\Helpers\World;
 use UniEngine\Engine\Modules\Info;
 
 loggedCheck();
@@ -16,76 +19,38 @@ loggedCheck();
 $ChronoAppletIncluded = false;
 
 // Inner Functions
-function ShowProductionTable($CurrentUser, $CurrentPlanet, $BuildID, $Template)
-{
-    global $_Vars_GameElements, $_Vars_ElementCategories, $_GameConfig, $_EnginePath;
+function ShowProductionTable ($CurrentUser, $CurrentPlanet, $elementId) {
+    $IMPULSE_DRIVE_ELEMENTID = 117;
+    $PHALANX_ELEMENTID = 42;
 
-    include($_EnginePath.'includes/functions/GetMissileRange.php');
-
-    if (in_array($BuildID, $_Vars_ElementCategories['prod'])) {
+    if (World\Elements\isProductionRelated($elementId)) {
         return Info\Components\ResourceProductionTable\render([
-            'elementId' => $BuildID,
+            'elementId' => $elementId,
             'planet' => &$CurrentPlanet,
             'user' => &$CurrentUser,
             'currentTimestamp' => time(),
         ])['componentHTML'];
     }
-    if (in_array($BuildID, $_Vars_ElementCategories['storages'])) {
+    if (World\Elements\isStorageStructure($elementId)) {
         return Info\Components\ResourceStorageTable\render([
-            'elementId' => $BuildID,
+            'elementId' => $elementId,
             'planet' => &$CurrentPlanet,
         ])['componentHTML'];
     }
-
-    if(!in_array($BuildID, $_Vars_ElementCategories['tech']))
-    {
-        $CurrentLevel = $CurrentPlanet[$_Vars_GameElements[$BuildID]];
+    if ($elementId == $IMPULSE_DRIVE_ELEMENTID) {
+        return Info\Components\MissileRangeTable\render([
+            'elementId' => $elementId,
+            'planet' => &$CurrentPlanet,
+            'user' => &$CurrentUser,
+        ])['componentHTML'];
     }
-    else
-    {
-        $CurrentLevel = $CurrentUser[$_Vars_GameElements[$BuildID]];
+    if ($elementId == $PHALANX_ELEMENTID) {
+        return Info\Components\PhalanxRangeTable\render([
+            'elementId' => $elementId,
+            'planet' => &$CurrentPlanet,
+            'user' => &$CurrentUser,
+        ])['componentHTML'];
     }
-
-    $BuildStartLvl = $CurrentLevel - 3;
-    if($BuildStartLvl < 0)
-    {
-        $BuildStartLvl = 0;
-    }
-    $Table = '';
-    $BuildEndLevel = $BuildStartLvl + 10;
-    for($BuildLevel = $BuildStartLvl; $BuildLevel < $BuildEndLevel; $BuildLevel += 1)
-    {
-        $bloc = array();
-        if($CurrentLevel == $BuildLevel)
-        {
-            $bloc['build_lvl'] = "<span class=\"red\">{$BuildLevel}</span>";
-            $bloc['IsCurrent'] = ' class="thisLevel"';
-        }
-        else
-        {
-            $bloc['build_lvl'] = $BuildLevel;
-        }
-
-        if($BuildID == 42)
-        {
-            if($BuildLevel == 0)
-            {
-                $bloc['build_range'] = '0';
-            }
-            else
-            {
-                $bloc['build_range'] = prettyNumber(($BuildLevel * $BuildLevel) - 1);
-            }
-        }
-        else if($BuildID == 117)
-        {
-            $bloc['build_range'] = GetMissileRange($_User, $BuildLevel);
-        }
-
-        $Table .= parsetemplate($Template, $bloc);
-    }
-
-    return $Table;
 }
 // End of Internal functions
 
@@ -203,7 +168,6 @@ else if($BuildID == 42)
     {
         $PageTPL = gettemplate('info_buildings_table');
         $TPL_Production_Header = gettemplate('infos_production_header_phalanx');
-        $TPL_Production_Rows = gettemplate('infos_production_rows_phalanx');
     }
     else
     {
@@ -254,7 +218,6 @@ else if(in_array($BuildID, $_Vars_ElementCategories['tech']))
     {
         $PageTPL = gettemplate('info_buildings_table');
         $TPL_Production_Header = gettemplate('infos_production_header_missiles');
-        $TPL_Production_Rows = gettemplate('infos_production_rows_missiles');
     }
     else
     {
@@ -391,7 +354,7 @@ else
 if($TPL_Production_Header != '')
 {
     $parse['table_head'] = parsetemplate($TPL_Production_Header, $_Lang);
-    $parse['table_data'] = ShowProductionTable($_User, $_Planet, $BuildID, $TPL_Production_Rows);
+    $parse['table_data'] = ShowProductionTable($_User, $_Planet, $BuildID);
 }
 
 $page = parsetemplate($PageTPL, $parse);
