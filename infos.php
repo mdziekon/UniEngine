@@ -10,6 +10,7 @@ include_once($_EnginePath . 'modules/info/_includes.php');
 include_once($_EnginePath . 'includes/functions/GetMissileRange.php');
 
 use UniEngine\Engine\Includes\Helpers\Users;
+use UniEngine\Engine\Includes\Helpers\World;
 use UniEngine\Engine\Modules\Info;
 
 loggedCheck();
@@ -18,9 +19,10 @@ $ChronoAppletIncluded = false;
 
 // Inner Functions
 function ShowProductionTable ($CurrentUser, $CurrentPlanet, $elementId) {
-    global $_Vars_ElementCategories;
+    $IMPULSE_DRIVE_ELEMENTID = 117;
+    $PHALANX_ELEMENTID = 42;
 
-    if (in_array($elementId, $_Vars_ElementCategories['prod'])) {
+    if (World\Elements\isProductionRelated($elementId)) {
         return Info\Components\ResourceProductionTable\render([
             'elementId' => $elementId,
             'planet' => &$CurrentPlanet,
@@ -28,20 +30,20 @@ function ShowProductionTable ($CurrentUser, $CurrentPlanet, $elementId) {
             'currentTimestamp' => time(),
         ])['componentHTML'];
     }
-    if (in_array($elementId, $_Vars_ElementCategories['storages'])) {
+    if (World\Elements\isStorageStructure($elementId)) {
         return Info\Components\ResourceStorageTable\render([
             'elementId' => $elementId,
             'planet' => &$CurrentPlanet,
         ])['componentHTML'];
     }
-    if ($elementId == 117) {
+    if ($elementId == $IMPULSE_DRIVE_ELEMENTID) {
         return Info\Components\MissileRangeTable\render([
             'elementId' => $elementId,
             'planet' => &$CurrentPlanet,
             'user' => &$CurrentUser,
         ])['componentHTML'];
     }
-    if ($elementId == 42) {
+    if ($elementId == $PHALANX_ELEMENTID) {
         return Info\Components\PhalanxRangeTable\render([
             'elementId' => $elementId,
             'planet' => &$CurrentPlanet,
