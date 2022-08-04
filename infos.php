@@ -36,6 +36,13 @@ function ShowProductionTable($CurrentUser, $CurrentPlanet, $BuildID, $Template)
             'planet' => &$CurrentPlanet,
         ])['componentHTML'];
     }
+    if ($BuildID == 117) {
+        return Info\Components\MissileRangeTable\render([
+            'elementId' => $BuildID,
+            'planet' => &$CurrentPlanet,
+            'user' => &$CurrentUser,
+        ])['componentHTML'];
+    }
 
     if(!in_array($BuildID, $_Vars_ElementCategories['tech']))
     {
