@@ -3,6 +3,7 @@
 namespace UniEngine\Engine\Modules\Info\Components\MissileRangeTable;
 
 use UniEngine\Engine\Includes\Helpers\World;
+use UniEngine\Engine\Modules\Info;
 
 /**
  * @param array $props
@@ -20,21 +21,17 @@ function render($props) {
 
     $currentLevel = World\Elements\getElementCurrentLevel($elementId, $planet, $user);
 
-    $tableRangeStartLevel = $currentLevel - 3;
-    $tableRangeEndLevel = $currentLevel + 6;
-
-    if ($tableRangeStartLevel < 0) {
-        $offset = $tableRangeStartLevel * (-1);
-
-        $tableRangeStartLevel += $offset;
-        $tableRangeEndLevel += $offset;
-    }
+    $tableRange = Info\Utils\getLevelRange([
+        'currentLevel' => $currentLevel,
+        'rangeLengthLeft' => 3,
+        'rangeLengthRight' => 6,
+    ]);
 
     $tableRows = [];
 
     for (
-        $iterLevel = $tableRangeStartLevel;
-        $iterLevel <= $tableRangeEndLevel;
+        $iterLevel = $tableRange['startLevel'];
+        $iterLevel <= $tableRange['endLevel'];
         $iterLevel++
     ) {
         $rowData = [];

@@ -3,6 +3,7 @@
 namespace UniEngine\Engine\Modules\Info\Components\ResourceStorageTable;
 
 use UniEngine\Engine\Includes\Helpers\World;
+use UniEngine\Engine\Modules\Info;
 
 /**
  * @param array $props
@@ -21,15 +22,11 @@ function render($props) {
 
     $currentLevelCapacity = getElementStorageCapacities($elementId, $planet, []);
 
-    $tableRangeStartLevel = $currentLevel - 3;
-    $tableRangeEndLevel = $currentLevel + 6;
-
-    if ($tableRangeStartLevel < 0) {
-        $offset = $tableRangeStartLevel * (-1);
-
-        $tableRangeStartLevel += $offset;
-        $tableRangeEndLevel += $offset;
-    }
+    $tableRange = Info\Utils\getLevelRange([
+        'currentLevel' => $currentLevel,
+        'rangeLengthLeft' => 3,
+        'rangeLengthRight' => 6,
+    ]);
 
     // Supports only one resource type
     $capacityResourceKey = getElementStoredResourceKeys($elementId)[0];
@@ -37,8 +34,8 @@ function render($props) {
     $storageRows = [];
 
     for (
-        $iterLevel = $tableRangeStartLevel;
-        $iterLevel <= $tableRangeEndLevel;
+        $iterLevel = $tableRange['startLevel'];
+        $iterLevel <= $tableRange['endLevel'];
         $iterLevel++
     ) {
         $rowData = [];
