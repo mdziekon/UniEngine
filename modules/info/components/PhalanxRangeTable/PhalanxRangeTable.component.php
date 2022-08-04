@@ -46,7 +46,7 @@ function render($props) {
             $rowData['build_lvl'] = $iterLevel;
         }
 
-        $iterLevelRange = prettyNumber(($iterLevel * $iterLevel) - 1);
+        $iterLevelRange = prettyNumber(GetPhalanxRange($iterLevel));
 
         $rowData['build_range'] = $iterLevelRange;
 
