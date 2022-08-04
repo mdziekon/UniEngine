@@ -5,8 +5,9 @@ define('INSIDE', true);
 $_AllowInVacationMode = true;
 
 $_EnginePath = './';
-include($_EnginePath.'common.php');
+include($_EnginePath . 'common.php');
 include_once($_EnginePath . 'modules/info/_includes.php');
+include_once($_EnginePath . 'includes/functions/GetMissileRange.php');
 
 use UniEngine\Engine\Includes\Helpers\Users;
 use UniEngine\Engine\Modules\Info;
@@ -16,35 +17,33 @@ loggedCheck();
 $ChronoAppletIncluded = false;
 
 // Inner Functions
-function ShowProductionTable ($CurrentUser, $CurrentPlanet, $BuildID) {
-    global $_Vars_ElementCategories, $_EnginePath;
+function ShowProductionTable ($CurrentUser, $CurrentPlanet, $elementId) {
+    global $_Vars_ElementCategories;
 
-    include($_EnginePath.'includes/functions/GetMissileRange.php');
-
-    if (in_array($BuildID, $_Vars_ElementCategories['prod'])) {
+    if (in_array($elementId, $_Vars_ElementCategories['prod'])) {
         return Info\Components\ResourceProductionTable\render([
-            'elementId' => $BuildID,
+            'elementId' => $elementId,
             'planet' => &$CurrentPlanet,
             'user' => &$CurrentUser,
             'currentTimestamp' => time(),
         ])['componentHTML'];
     }
-    if (in_array($BuildID, $_Vars_ElementCategories['storages'])) {
+    if (in_array($elementId, $_Vars_ElementCategories['storages'])) {
         return Info\Components\ResourceStorageTable\render([
-            'elementId' => $BuildID,
+            'elementId' => $elementId,
             'planet' => &$CurrentPlanet,
         ])['componentHTML'];
     }
-    if ($BuildID == 117) {
+    if ($elementId == 117) {
         return Info\Components\MissileRangeTable\render([
-            'elementId' => $BuildID,
+            'elementId' => $elementId,
             'planet' => &$CurrentPlanet,
             'user' => &$CurrentUser,
         ])['componentHTML'];
     }
-    if ($BuildID == 42) {
+    if ($elementId == 42) {
         return Info\Components\PhalanxRangeTable\render([
-            'elementId' => $BuildID,
+            'elementId' => $elementId,
             'planet' => &$CurrentPlanet,
             'user' => &$CurrentUser,
         ])['componentHTML'];
