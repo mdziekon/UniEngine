@@ -16,7 +16,7 @@ loggedCheck();
 $ChronoAppletIncluded = false;
 
 // Inner Functions
-function ShowProductionTable($CurrentUser, $CurrentPlanet, $BuildID, $Template)
+function ShowProductionTable($CurrentUser, $CurrentPlanet, $BuildID)
 {
     global $_Vars_GameElements, $_Vars_ElementCategories, $_GameConfig, $_EnginePath;
 
@@ -50,52 +50,6 @@ function ShowProductionTable($CurrentUser, $CurrentPlanet, $BuildID, $Template)
             'user' => &$CurrentUser,
         ])['componentHTML'];
     }
-
-    if(!in_array($BuildID, $_Vars_ElementCategories['tech']))
-    {
-        $CurrentLevel = $CurrentPlanet[$_Vars_GameElements[$BuildID]];
-    }
-    else
-    {
-        $CurrentLevel = $CurrentUser[$_Vars_GameElements[$BuildID]];
-    }
-
-    $BuildStartLvl = $CurrentLevel - 3;
-    if($BuildStartLvl < 0)
-    {
-        $BuildStartLvl = 0;
-    }
-    $Table = '';
-    $BuildEndLevel = $BuildStartLvl + 10;
-    for($BuildLevel = $BuildStartLvl; $BuildLevel < $BuildEndLevel; $BuildLevel += 1)
-    {
-        $bloc = array();
-        if($CurrentLevel == $BuildLevel)
-        {
-            $bloc['build_lvl'] = "<span class=\"red\">{$BuildLevel}</span>";
-            $bloc['IsCurrent'] = ' class="thisLevel"';
-        }
-        else
-        {
-            $bloc['build_lvl'] = $BuildLevel;
-        }
-
-        if($BuildID == 42)
-        {
-            if($BuildLevel == 0)
-            {
-                $bloc['build_range'] = '0';
-            }
-            else
-            {
-                $bloc['build_range'] = prettyNumber(($BuildLevel * $BuildLevel) - 1);
-            }
-        }
-
-        $Table .= parsetemplate($Template, $bloc);
-    }
-
-    return $Table;
 }
 // End of Internal functions
 
@@ -213,7 +167,6 @@ else if($BuildID == 42)
     {
         $PageTPL = gettemplate('info_buildings_table');
         $TPL_Production_Header = gettemplate('infos_production_header_phalanx');
-        $TPL_Production_Rows = gettemplate('infos_production_rows_phalanx');
     }
     else
     {
@@ -400,7 +353,7 @@ else
 if($TPL_Production_Header != '')
 {
     $parse['table_head'] = parsetemplate($TPL_Production_Header, $_Lang);
-    $parse['table_data'] = ShowProductionTable($_User, $_Planet, $BuildID, $TPL_Production_Rows);
+    $parse['table_data'] = ShowProductionTable($_User, $_Planet, $BuildID);
 }
 
 $page = parsetemplate($PageTPL, $parse);
