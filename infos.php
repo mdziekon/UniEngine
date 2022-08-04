@@ -16,9 +16,8 @@ loggedCheck();
 $ChronoAppletIncluded = false;
 
 // Inner Functions
-function ShowProductionTable($CurrentUser, $CurrentPlanet, $BuildID)
-{
-    global $_Vars_GameElements, $_Vars_ElementCategories, $_GameConfig, $_EnginePath;
+function ShowProductionTable ($CurrentUser, $CurrentPlanet, $BuildID) {
+    global $_Vars_ElementCategories, $_EnginePath;
 
     include($_EnginePath.'includes/functions/GetMissileRange.php');
 
