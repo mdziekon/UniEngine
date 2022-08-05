@@ -2,6 +2,8 @@
 
 namespace UniEngine\Engine\Modules\Info\Components\BuildingDestructionSection;
 
+use UniEngine\Engine\Includes\Helpers\World;
+
 /**
  * @param array $props
  * @param string $props['elementId']
@@ -15,15 +17,15 @@ function render($props) {
     $planet = &$props['planet'];
     $user = &$props['user'];
 
-    $elementLevel = $planet[$_Vars_GameElements[$elementId]];
+    if (!World\Elements\isDowngradeable($elementId)) {
+        return [
+            'componentHTML' => '',
+        ];
+    }
 
-    if (
-        $elementLevel <= 0 ||
-        (
-            isset($_Vars_IndestructibleBuildings[$elementId]) &&
-            $_Vars_IndestructibleBuildings[$elementId] == 1
-        )
-    ) {
+    $elementLevel = World\Elements\getElementCurrentLevel($elementId, $planet, $user);
+
+    if ($elementLevel <= 0) {
         return [
             'componentHTML' => '',
         ];
