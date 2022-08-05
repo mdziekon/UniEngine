@@ -60,7 +60,6 @@ includeLang('infos');
 includeLang('worldElements.detailed');
 
 $GateTPL = '';
-$DestroyTPL = '';
 $TPL_Production_Header = '';
 
 $parse = $_Lang;
@@ -85,7 +84,6 @@ $parse['element_typ'] = $_Lang['tech'][0];
 if($BuildID >= 1 AND $BuildID <= 3)
 {
     // Mines
-    $DestroyTPL = gettemplate('info_buildings_destroy');
     if($_Planet['planet_type'] == 1)
     {
         $PageTPL = gettemplate('info_buildings_table');
@@ -99,7 +97,6 @@ if($BuildID >= 1 AND $BuildID <= 3)
 else if($BuildID == 4)
 {
     // Solar Power Station
-    $DestroyTPL = gettemplate('info_buildings_destroy');
     if($_Planet['planet_type'] == 1)
     {
         $PageTPL = gettemplate('info_buildings_table');
@@ -113,7 +110,6 @@ else if($BuildID == 4)
 else if($BuildID == 12)
 {
     // Fusion Power Station
-    $DestroyTPL = gettemplate('info_buildings_destroy');
     if($_Planet['planet_type'] == 1)
     {
         $PageTPL = gettemplate('info_buildings_table');
@@ -127,8 +123,6 @@ else if($BuildID == 12)
 else if(in_array($BuildID, $_Vars_ElementCategories['storages']))
 {
     // Storages
-    $DestroyTPL = gettemplate('info_buildings_destroy');
-
     $PageTPL = gettemplate('info_buildings_table');
     $TPL_Production_Header = gettemplate('infos_production_header_storages');
 }
@@ -136,7 +130,6 @@ else if($BuildID >= 14 AND $BuildID <= 32)
 {
     // Other Buildings
     $PageTPL = gettemplate('info_buildings_general');
-    $DestroyTPL = gettemplate('info_buildings_destroy');
 }
 else if($BuildID == 33)
 {
@@ -147,14 +140,12 @@ else if($BuildID == 34)
 {
     // Ally Deposit
     $PageTPL = gettemplate('info_buildings_general');
-    $DestroyTPL = gettemplate('info_buildings_destroy');
 }
 else if($BuildID == 44)
 {
     // Rocket Silo
     $PageTPL = gettemplate('info_buildings_general');
     $Show_DestroyMissiles = true;
-    $DestroyTPL = gettemplate('info_buildings_destroy');
 }
 else if($BuildID == 41)
 {
@@ -173,14 +164,12 @@ else if($BuildID == 42)
     {
         $PageTPL = gettemplate('info_buildings_general');
     }
-    $DestroyTPL = gettemplate('info_buildings_destroy');
 }
 else if($BuildID == 43)
 {
     // Teleport
     $PageTPL = gettemplate('info_buildings_general');
     $GateTPL = gettemplate('gate_fleet_table');
-    $DestroyTPL = gettemplate('info_buildings_destroy');
 }
 else if($BuildID == 50)
 {
@@ -443,13 +432,11 @@ if(!isOnVacation($_User))
     }
 
     // Building Destroy Function
-    if ($DestroyTPL != '') {
-        $page .= Info\Components\BuildingDestructionSection\render([
-            'elementId' => $BuildID,
-            'planet' => &$_Planet,
-            'user' => &$_User,
-        ])['componentHTML'];
-    }
+    $page .= Info\Components\BuildingDestructionSection\render([
+        'elementId' => $BuildID,
+        'planet' => &$_Planet,
+        'user' => &$_User,
+    ])['componentHTML'];
 }
 
 display($page, $_Lang['nfo_page_title'], false);
