@@ -17,15 +17,12 @@ function render($props) {
     $planet = &$props['planet'];
     $user = &$props['user'];
 
-    if (!World\Elements\isDowngradeable($elementId)) {
-        return [
-            'componentHTML' => '',
-        ];
-    }
-
     $elementLevel = World\Elements\getElementCurrentLevel($elementId, $planet, $user);
 
-    if ($elementLevel <= 0) {
+    if (
+        $elementLevel <= 0 ||
+        !World\Elements\isDowngradeable($elementId)
+    ) {
         return [
             'componentHTML' => '',
         ];
