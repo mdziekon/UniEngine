@@ -11,7 +11,7 @@ use UniEngine\Engine\Includes\Helpers\World;
  * @param arrayRef $props['user']
  */
 function render($props) {
-    global $_Lang, $_Vars_GameElements;
+    global $_Lang;
 
     $elementId = $props['elementId'];
     $planet = &$props['planet'];
