@@ -6,6 +6,7 @@ call_user_func(function () {
 
     $includePath = $_EnginePath . 'modules/info/';
 
+    include($includePath . './components/BuildingDestructionSection/BuildingDestructionSection.component.php');
     include($includePath . './components/MissileRangeTable/MissileRangeTable.component.php');
     include($includePath . './components/PhalanxRangeTable/PhalanxRangeTable.component.php');
     include($includePath . './components/RapidFireCommonRow/RapidFireCommonRow.component.php');

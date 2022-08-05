@@ -443,47 +443,12 @@ if(!isOnVacation($_User))
     }
 
     // Building Destroy Function
-    if($DestroyTPL != '')
-    {
-        if($_Planet[$_Vars_GameElements[$BuildID]] > 0 && (!isset($_Vars_IndestructibleBuildings[$BuildID]) || $_Vars_IndestructibleBuildings[$BuildID] != 1))
-        {
-            $NeededRessources = GetBuildingPrice($_User, $_Planet, $BuildID, true, true);
-            $DestroyTime = GetBuildingTime($_User, $_Planet, $BuildID) / 2;
-            $parse['destroyurl'] = 'buildings.php?cmd=destroy&building='.$BuildID;
-            $parse['levelvalue'] = $_Planet[$_Vars_GameElements[$BuildID]];
-            $parse['nfo_metal'] = $_Lang['Metal'];
-            $parse['nfo_crysta'] = $_Lang['Crystal'];
-            $parse['nfo_deuter'] = $_Lang['Deuterium'];
-            $parse['metal'] = prettyNumber($NeededRessources['metal']);
-            $parse['crystal'] = prettyNumber($NeededRessources['crystal']);
-            $parse['deuterium'] = prettyNumber($NeededRessources['deuterium']);
-            if($NeededRessources['metal'] > $_Planet['metal'])
-            {
-                $parse['Met_Color'] = 'red';
-            }
-            else
-            {
-                $parse['Met_Color'] = 'lime';
-            }
-            if($NeededRessources['crystal'] > $_Planet['crystal'])
-            {
-                $parse['Cry_Color'] = 'red';
-            }
-            else
-            {
-                $parse['Cry_Color'] = 'lime';
-            }
-            if($NeededRessources['deuterium'] > $_Planet['deuterium'])
-            {
-                $parse['Deu_Color'] = 'red';
-            }
-            else
-            {
-                $parse['Deu_Color'] = 'lime';
-            }
-            $parse['destroytime'] = pretty_time($DestroyTime);
-            $page .= parsetemplate($DestroyTPL, $parse);
-        }
+    if ($DestroyTPL != '') {
+        $page .= Info\Components\BuildingDestructionSection\render([
+            'elementId' => $BuildID,
+            'planet' => &$_Planet,
+            'user' => &$_User,
+        ])['componentHTML'];
     }
 }
 
