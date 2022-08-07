@@ -351,25 +351,12 @@ $page = parsetemplate($PageTPL, $parse);
 if(!isOnVacation($_User))
 {
     // Missile Destroy Function
-    if(isset($Show_DestroyMissiles))
-    {
-        if($_Planet[$_Vars_GameElements[$BuildID]] > 0)
-        {
-            $TPL_DestroyRockets_Body = gettemplate('destroy_rockets_table');
-            $TPL_DestroyRockets_Row = gettemplate('destroy_rockets_row');
-            $parse['DestroyRockets_Insert_Rows'] = '';
-            foreach($_Vars_ElementCategories['rockets'] as $ThisID)
-            {
-                $parse['DestroyRockets_ID'] = $ThisID;
-                $parse['DestroyRockets_Name'] = $_Lang['tech'][$ThisID];
-                $parse['DestroyRockets_Count'] = $_Planet[$_Vars_GameElements[$ThisID]];
-                $parse['DestroyRockets_PrettyCount'] = prettyNumber($_Planet[$_Vars_GameElements[$ThisID]]);
-
-                $parse['DestroyRockets_Insert_Rows'] .= parsetemplate($TPL_DestroyRockets_Row, $parse);
-            }
-
-            $page .= parsetemplate($TPL_DestroyRockets_Body, $parse);
-        }
+    if (isset($Show_DestroyMissiles)) {
+        $page .= Info\Components\MissileDestructionSection\render([
+            'elementId' => $BuildID,
+            'planet' => &$_Planet,
+            'user' => &$_User,
+        ])['componentHTML'];
     }
 
     // Teleport Functions
