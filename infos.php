@@ -16,8 +16,6 @@ use UniEngine\Engine\Modules\Info;
 
 loggedCheck();
 
-$ChronoAppletIncluded = false;
-
 // Inner Functions
 function ShowProductionTable ($CurrentUser, $CurrentPlanet, $elementId) {
     $IMPULSE_DRIVE_ELEMENTID = 117;
@@ -177,11 +175,8 @@ else if($BuildID == 50)
     $PageTPL = gettemplate('info_buildings_general');
     if($_Planet['quantumgate'] > 0)
     {
-        if(!$ChronoAppletIncluded)
-        {
-            include("{$_EnginePath}/includes/functions/InsertJavaScriptChronoApplet.php");
-            $ChronoAppletIncluded = true;
-        }
+        include_once("{$_EnginePath}/includes/functions/InsertJavaScriptChronoApplet.php");
+
         $NextUseTimestamp = ($_Planet['quantumgate_lastuse'] + (QUANTUMGATE_INTERVAL_HOURS * TIME_HOUR)) - time();
         if($NextUseTimestamp < 0)
         {
@@ -368,11 +363,8 @@ if(!isOnVacation($_User))
             $parse['gate_start_link'] = "<a href=\"galaxy.php?mode=3&galaxy={$_Planet['galaxy']}&system={$_Planet['system']}&planet={$_Planet['planet']}\">[{$_Planet['galaxy']}:{$_Planet['system']}:{$_Planet['planet']}] {$_Planet['name']}</a>";
             if($RestString['value'] != 0)
             {
-                if(!$ChronoAppletIncluded)
-                {
-                    include("{$_EnginePath}/includes/functions/InsertJavaScriptChronoApplet.php");
-                    $ChronoAppletIncluded = true;
-                }
+                include_once("{$_EnginePath}/includes/functions/InsertJavaScriptChronoApplet.php");
+
                 $parse['gate_time_script'] = InsertJavaScriptChronoApplet('Gate', '1', $RestString['value']);
                 $parse['gate_wait_time'] = $_Lang['gate_nextjump_timer'].' <div id="bxxGate1">'.pretty_time($RestString['value'], true).'</div>';
                 $parse['PHP_JumpGate_SubmitColor'] = 'orange';
