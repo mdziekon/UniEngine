@@ -2,6 +2,8 @@
 
 namespace UniEngine\Engine\Modules\Info\Components\MissileDestructionSection;
 
+use UniEngine\Engine\Includes\Helpers\World;
+
 /**
  * @param array $props
  * @param string $props['elementId']
@@ -9,13 +11,13 @@ namespace UniEngine\Engine\Modules\Info\Components\MissileDestructionSection;
  * @param arrayRef $props['user']
  */
 function render($props) {
-    global $_Lang, $_Vars_GameElements, $_Vars_ElementCategories;
+    global $_Lang, $_Vars_ElementCategories;
 
     $elementId = $props['elementId'];
     $planet = &$props['planet'];
     $user = &$props['user'];
 
-    $elementLevel = $planet[$_Vars_GameElements[$elementId]];
+    $elementLevel = World\Elements\getElementCurrentLevel($elementId, $planet, $user);
 
     if ($elementLevel <= 0) {
         return [
@@ -29,9 +31,7 @@ function render($props) {
     $missileRows = array_map_withkeys(
         $_Vars_ElementCategories['rockets'],
         function ($missileId) use (&$planet, &$missileRowTpl, &$_Lang) {
-            global $_Vars_GameElements;
-
-            $missileCount = $planet[$_Vars_GameElements[$missileId]];
+            $missileCount = World\Elements\getElementCurrentCount($missileId, $planet, $user);
 
             $rowTplProps = [
                 'DestroyRockets_ID'             => $missileId,
