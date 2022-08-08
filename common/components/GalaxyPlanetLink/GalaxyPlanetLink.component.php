@@ -11,9 +11,14 @@ use UniEngine\Engine\Common\Utils\Routing;
  * @param number $props['coords']['system']
  * @param number $props['coords']['planet']
  * @param array? $props['linkAttrs']
+ * @param string? $props['name']
  */
 function render($props) {
     $linkText = "[{$props['coords']['galaxy']}:{$props['coords']['system']}:{$props['coords']['planet']}]";
+
+    if (!empty($props['name'])) {
+        $linkText = "{$linkText} {$props['name']}";
+    }
 
     return buildDOMElementHTML([
         'tagName' => 'a',
