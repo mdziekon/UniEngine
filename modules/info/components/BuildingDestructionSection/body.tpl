@@ -2,7 +2,7 @@
 <table width="600">
     <tr>
         <td class="c center pad2">
-           <a href="{destroyurl}">{nfo_destroy} {name} ({nfo_level} {levelvalue})?</a>
+            <a href="{destroyurl}">{nfo_destroy} {name} ({nfo_level} {levelvalue})?</a>
         </td>
     </tr>
     <tr>

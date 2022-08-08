@@ -16,8 +16,6 @@ use UniEngine\Engine\Modules\Info;
 
 loggedCheck();
 
-$ChronoAppletIncluded = false;
-
 // Inner Functions
 function ShowProductionTable ($CurrentUser, $CurrentPlanet, $elementId) {
     $IMPULSE_DRIVE_ELEMENTID = 117;
@@ -59,8 +57,6 @@ $BuildID = $_GET['gid'];
 includeLang('infos');
 includeLang('worldElements.detailed');
 
-$GateTPL = '';
-$DestroyTPL = '';
 $TPL_Production_Header = '';
 
 $parse = $_Lang;
@@ -85,7 +81,6 @@ $parse['element_typ'] = $_Lang['tech'][0];
 if($BuildID >= 1 AND $BuildID <= 3)
 {
     // Mines
-    $DestroyTPL = gettemplate('info_buildings_destroy');
     if($_Planet['planet_type'] == 1)
     {
         $PageTPL = gettemplate('info_buildings_table');
@@ -99,7 +94,6 @@ if($BuildID >= 1 AND $BuildID <= 3)
 else if($BuildID == 4)
 {
     // Solar Power Station
-    $DestroyTPL = gettemplate('info_buildings_destroy');
     if($_Planet['planet_type'] == 1)
     {
         $PageTPL = gettemplate('info_buildings_table');
@@ -113,7 +107,6 @@ else if($BuildID == 4)
 else if($BuildID == 12)
 {
     // Fusion Power Station
-    $DestroyTPL = gettemplate('info_buildings_destroy');
     if($_Planet['planet_type'] == 1)
     {
         $PageTPL = gettemplate('info_buildings_table');
@@ -127,8 +120,6 @@ else if($BuildID == 12)
 else if(in_array($BuildID, $_Vars_ElementCategories['storages']))
 {
     // Storages
-    $DestroyTPL = gettemplate('info_buildings_destroy');
-
     $PageTPL = gettemplate('info_buildings_table');
     $TPL_Production_Header = gettemplate('infos_production_header_storages');
 }
@@ -136,7 +127,6 @@ else if($BuildID >= 14 AND $BuildID <= 32)
 {
     // Other Buildings
     $PageTPL = gettemplate('info_buildings_general');
-    $DestroyTPL = gettemplate('info_buildings_destroy');
 }
 else if($BuildID == 33)
 {
@@ -147,14 +137,11 @@ else if($BuildID == 34)
 {
     // Ally Deposit
     $PageTPL = gettemplate('info_buildings_general');
-    $DestroyTPL = gettemplate('info_buildings_destroy');
 }
 else if($BuildID == 44)
 {
     // Rocket Silo
     $PageTPL = gettemplate('info_buildings_general');
-    $Show_DestroyMissiles = true;
-    $DestroyTPL = gettemplate('info_buildings_destroy');
 }
 else if($BuildID == 41)
 {
@@ -173,14 +160,11 @@ else if($BuildID == 42)
     {
         $PageTPL = gettemplate('info_buildings_general');
     }
-    $DestroyTPL = gettemplate('info_buildings_destroy');
 }
 else if($BuildID == 43)
 {
     // Teleport
     $PageTPL = gettemplate('info_buildings_general');
-    $GateTPL = gettemplate('gate_fleet_table');
-    $DestroyTPL = gettemplate('info_buildings_destroy');
 }
 else if($BuildID == 50)
 {
@@ -188,11 +172,8 @@ else if($BuildID == 50)
     $PageTPL = gettemplate('info_buildings_general');
     if($_Planet['quantumgate'] > 0)
     {
-        if(!$ChronoAppletIncluded)
-        {
-            include("{$_EnginePath}/includes/functions/InsertJavaScriptChronoApplet.php");
-            $ChronoAppletIncluded = true;
-        }
+        include_once("{$_EnginePath}/includes/functions/InsertJavaScriptChronoApplet.php");
+
         $NextUseTimestamp = ($_Planet['quantumgate_lastuse'] + (QUANTUMGATE_INTERVAL_HOURS * TIME_HOUR)) - time();
         if($NextUseTimestamp < 0)
         {
@@ -359,132 +340,28 @@ if($TPL_Production_Header != '')
 
 $page = parsetemplate($PageTPL, $parse);
 
-if(!isOnVacation($_User))
-{
-    // Missile Destroy Function
-    if(isset($Show_DestroyMissiles))
-    {
-        if($_Planet[$_Vars_GameElements[$BuildID]] > 0)
-        {
-            $TPL_DestroyRockets_Body = gettemplate('destroy_rockets_table');
-            $TPL_DestroyRockets_Row = gettemplate('destroy_rockets_row');
-            $parse['DestroyRockets_Insert_Rows'] = '';
-            foreach($_Vars_ElementCategories['rockets'] as $ThisID)
-            {
-                $parse['DestroyRockets_ID'] = $ThisID;
-                $parse['DestroyRockets_Name'] = $_Lang['tech'][$ThisID];
-                $parse['DestroyRockets_Count'] = $_Planet[$_Vars_GameElements[$ThisID]];
-                $parse['DestroyRockets_PrettyCount'] = prettyNumber($_Planet[$_Vars_GameElements[$ThisID]]);
-
-                $parse['DestroyRockets_Insert_Rows'] .= parsetemplate($TPL_DestroyRockets_Row, $parse);
-            }
-
-            $page .= parsetemplate($TPL_DestroyRockets_Body, $parse);
-        }
+if (!isOnVacation($_User)) {
+    if ($BuildID == 44) {
+        $page .= Info\Components\MissileDestructionSection\render([
+            'elementId' => $BuildID,
+            'planet' => &$_Planet,
+            'user' => &$_User,
+        ])['componentHTML'];
     }
 
-    // Teleport Functions
-    if($GateTPL != '')
-    {
-        if($_Planet[$_Vars_GameElements[$BuildID]] > 0)
-        {
-            $RestString = GetNextJumpWaitTime($_Planet);
-            $parse['gate_start_link'] = "<a href=\"galaxy.php?mode=3&galaxy={$_Planet['galaxy']}&system={$_Planet['system']}&planet={$_Planet['planet']}\">[{$_Planet['galaxy']}:{$_Planet['system']}:{$_Planet['planet']}] {$_Planet['name']}</a>";
-            if($RestString['value'] != 0)
-            {
-                if(!$ChronoAppletIncluded)
-                {
-                    include("{$_EnginePath}/includes/functions/InsertJavaScriptChronoApplet.php");
-                    $ChronoAppletIncluded = true;
-                }
-                $parse['gate_time_script'] = InsertJavaScriptChronoApplet('Gate', '1', $RestString['value']);
-                $parse['gate_wait_time'] = $_Lang['gate_nextjump_timer'].' <div id="bxxGate1">'.pretty_time($RestString['value'], true).'</div>';
-                $parse['PHP_JumpGate_SubmitColor'] = 'orange';
-            }
-            else
-            {
-                $parse['PHP_JumpGate_SubmitColor'] = 'lime';
-                $parse['gate_time_script'] = '';
-                $parse['gate_wait_time'] = '';
-                $parse['Gate_HideNextJumpTimer'] = 'style="display: none;"';
-            }
-            $parse['Gate_HideInfoBox'] = 'style="display: none;"';
-
-            $parse['gate_dest_moons'] = Info\Components\TeleportTargetMoonsList\render([
-                'planet' => &$_Planet,
-                'user' => &$_User,
-            ])['componentHTML'];
-
-            if (empty($parse['gate_dest_moons'])) {
-                $parse['Gate_HideInfoBox'] = '';
-                $parse['Gate_HideSelector'] = 'style="display: none;"';
-                $parse['Gate_HideShips'] = 'style="display: none;"';
-                $parse['gate_infobox'][] = $_Lang['gate_nomoonswithtp'];
-            }
-
-            $parse['gate_fleet_rows'] = Info\Components\TeleportFleetUnitSelectorsList\render([
-                'planet' => &$_Planet,
-            ])['componentHTML'];
-
-            if (empty($parse['gate_fleet_rows'])) {
-                $parse['Gate_HideInfoBox'] = '';
-                $parse['Gate_HideShips'] = 'style="display: none;"';
-                $parse['gate_infobox'][] = $_Lang['gate_noshipstotp'];
-            }
-
-            if(!empty($parse['gate_infobox']))
-            {
-                $parse['gate_infobox'] = implode('<br/>', $parse['gate_infobox']);
-                $parse['Gate_HideInfoBox'] = '';
-            }
-
-            $page .= parsetemplate($GateTPL, $parse);
-        }
+    if ($BuildID == 43) {
+        $page .= Info\Components\TeleportSection\render([
+            'elementId' => $BuildID,
+            'planet' => &$_Planet,
+            'user' => &$_User,
+        ])['componentHTML'];
     }
 
-    // Building Destroy Function
-    if($DestroyTPL != '')
-    {
-        if($_Planet[$_Vars_GameElements[$BuildID]] > 0 && (!isset($_Vars_IndestructibleBuildings[$BuildID]) || $_Vars_IndestructibleBuildings[$BuildID] != 1))
-        {
-            $NeededRessources = GetBuildingPrice($_User, $_Planet, $BuildID, true, true);
-            $DestroyTime = GetBuildingTime($_User, $_Planet, $BuildID) / 2;
-            $parse['destroyurl'] = 'buildings.php?cmd=destroy&building='.$BuildID;
-            $parse['levelvalue'] = $_Planet[$_Vars_GameElements[$BuildID]];
-            $parse['nfo_metal'] = $_Lang['Metal'];
-            $parse['nfo_crysta'] = $_Lang['Crystal'];
-            $parse['nfo_deuter'] = $_Lang['Deuterium'];
-            $parse['metal'] = prettyNumber($NeededRessources['metal']);
-            $parse['crystal'] = prettyNumber($NeededRessources['crystal']);
-            $parse['deuterium'] = prettyNumber($NeededRessources['deuterium']);
-            if($NeededRessources['metal'] > $_Planet['metal'])
-            {
-                $parse['Met_Color'] = 'red';
-            }
-            else
-            {
-                $parse['Met_Color'] = 'lime';
-            }
-            if($NeededRessources['crystal'] > $_Planet['crystal'])
-            {
-                $parse['Cry_Color'] = 'red';
-            }
-            else
-            {
-                $parse['Cry_Color'] = 'lime';
-            }
-            if($NeededRessources['deuterium'] > $_Planet['deuterium'])
-            {
-                $parse['Deu_Color'] = 'red';
-            }
-            else
-            {
-                $parse['Deu_Color'] = 'lime';
-            }
-            $parse['destroytime'] = pretty_time($DestroyTime);
-            $page .= parsetemplate($DestroyTPL, $parse);
-        }
-    }
+    $page .= Info\Components\BuildingDestructionSection\render([
+        'elementId' => $BuildID,
+        'planet' => &$_Planet,
+        'user' => &$_User,
+    ])['componentHTML'];
 }
 
 display($page, $_Lang['nfo_page_title'], false);
