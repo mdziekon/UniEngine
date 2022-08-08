@@ -61,18 +61,20 @@ function render($props) {
     ];
     $jumpWarnings = Collections\compact($jumpWarnings);
 
+    $chronoAppletLabel = 'Gate';
+
     $tplProps = [
         'gate_start_link' => "<a href=\"galaxy.php?mode=3&galaxy={$planet['galaxy']}&system={$planet['system']}&planet={$planet['planet']}\">[{$planet['galaxy']}:{$planet['system']}:{$planet['planet']}] {$planet['name']}</a>",
 
         'gate_time_script' => (
             $canJumpNow ?
                 '' :
-                InsertJavaScriptChronoApplet('Gate', '1', $nextJumpWaitTime['value'])
+                InsertJavaScriptChronoApplet($chronoAppletLabel, '', $nextJumpWaitTime['value'])
         ),
         'gate_wait_time' => (
             $canJumpNow ?
                 '' :
-                $_Lang['gate_nextjump_timer'].' <div id="bxxGate1">'.pretty_time($nextJumpWaitTime['value'], true).'</div>'
+                $_Lang['gate_nextjump_timer'].' <div id="bxx' . $chronoAppletLabel . '">'.pretty_time($nextJumpWaitTime['value'], true).'</div>'
         ),
         'PHP_JumpGate_SubmitColor' => (
             $canJumpNow ?
