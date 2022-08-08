@@ -16,6 +16,7 @@ call_user_func(function () {
     include($includePath . './components/ResourceProductionTable/ResourceProductionTable.component.php');
     include($includePath . './components/ResourceStorageTable/ResourceStorageTable.component.php');
     include($includePath . './components/TeleportFleetUnitSelectorsList/TeleportFleetUnitSelectorsList.component.php');
+    include($includePath . './components/TeleportSection/TeleportSection.component.php');
     include($includePath . './components/TeleportTargetMoonsList/TeleportTargetMoonsList.component.php');
 
     include($includePath . './utils/ranges.utils.php');

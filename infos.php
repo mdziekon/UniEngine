@@ -355,59 +355,12 @@ if(!isOnVacation($_User))
     }
 
     // Teleport Functions
-    if($GateTPL != '')
-    {
-        if($_Planet[$_Vars_GameElements[$BuildID]] > 0)
-        {
-            $RestString = GetNextJumpWaitTime($_Planet);
-            $parse['gate_start_link'] = "<a href=\"galaxy.php?mode=3&galaxy={$_Planet['galaxy']}&system={$_Planet['system']}&planet={$_Planet['planet']}\">[{$_Planet['galaxy']}:{$_Planet['system']}:{$_Planet['planet']}] {$_Planet['name']}</a>";
-            if($RestString['value'] != 0)
-            {
-                include_once("{$_EnginePath}/includes/functions/InsertJavaScriptChronoApplet.php");
-
-                $parse['gate_time_script'] = InsertJavaScriptChronoApplet('Gate', '1', $RestString['value']);
-                $parse['gate_wait_time'] = $_Lang['gate_nextjump_timer'].' <div id="bxxGate1">'.pretty_time($RestString['value'], true).'</div>';
-                $parse['PHP_JumpGate_SubmitColor'] = 'orange';
-            }
-            else
-            {
-                $parse['PHP_JumpGate_SubmitColor'] = 'lime';
-                $parse['gate_time_script'] = '';
-                $parse['gate_wait_time'] = '';
-                $parse['Gate_HideNextJumpTimer'] = 'style="display: none;"';
-            }
-            $parse['Gate_HideInfoBox'] = 'style="display: none;"';
-
-            $parse['gate_dest_moons'] = Info\Components\TeleportTargetMoonsList\render([
-                'planet' => &$_Planet,
-                'user' => &$_User,
-            ])['componentHTML'];
-
-            if (empty($parse['gate_dest_moons'])) {
-                $parse['Gate_HideInfoBox'] = '';
-                $parse['Gate_HideSelector'] = 'style="display: none;"';
-                $parse['Gate_HideShips'] = 'style="display: none;"';
-                $parse['gate_infobox'][] = $_Lang['gate_nomoonswithtp'];
-            }
-
-            $parse['gate_fleet_rows'] = Info\Components\TeleportFleetUnitSelectorsList\render([
-                'planet' => &$_Planet,
-            ])['componentHTML'];
-
-            if (empty($parse['gate_fleet_rows'])) {
-                $parse['Gate_HideInfoBox'] = '';
-                $parse['Gate_HideShips'] = 'style="display: none;"';
-                $parse['gate_infobox'][] = $_Lang['gate_noshipstotp'];
-            }
-
-            if(!empty($parse['gate_infobox']))
-            {
-                $parse['gate_infobox'] = implode('<br/>', $parse['gate_infobox']);
-                $parse['Gate_HideInfoBox'] = '';
-            }
-
-            $page .= parsetemplate($GateTPL, $parse);
-        }
+    if ($GateTPL != '') {
+        $page .= Info\Components\TeleportSection\render([
+            'elementId' => $BuildID,
+            'planet' => &$_Planet,
+            'user' => &$_User,
+        ])['componentHTML'];
     }
 
     // Building Destroy Function
