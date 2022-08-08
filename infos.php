@@ -57,7 +57,6 @@ $BuildID = $_GET['gid'];
 includeLang('infos');
 includeLang('worldElements.detailed');
 
-$GateTPL = '';
 $TPL_Production_Header = '';
 
 $parse = $_Lang;
@@ -167,7 +166,6 @@ else if($BuildID == 43)
 {
     // Teleport
     $PageTPL = gettemplate('info_buildings_general');
-    $GateTPL = gettemplate('gate_fleet_table');
 }
 else if($BuildID == 50)
 {
@@ -355,7 +353,7 @@ if(!isOnVacation($_User))
     }
 
     // Teleport Functions
-    if ($GateTPL != '') {
+    if ($BuildID == 43) {
         $page .= Info\Components\TeleportSection\render([
             'elementId' => $BuildID,
             'planet' => &$_Planet,
