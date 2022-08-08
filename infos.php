@@ -142,7 +142,6 @@ else if($BuildID == 44)
 {
     // Rocket Silo
     $PageTPL = gettemplate('info_buildings_general');
-    $Show_DestroyMissiles = true;
 }
 else if($BuildID == 41)
 {
@@ -341,10 +340,8 @@ if($TPL_Production_Header != '')
 
 $page = parsetemplate($PageTPL, $parse);
 
-if(!isOnVacation($_User))
-{
-    // Missile Destroy Function
-    if (isset($Show_DestroyMissiles)) {
+if (!isOnVacation($_User)) {
+    if ($BuildID == 44) {
         $page .= Info\Components\MissileDestructionSection\render([
             'elementId' => $BuildID,
             'planet' => &$_Planet,
@@ -352,7 +349,6 @@ if(!isOnVacation($_User))
         ])['componentHTML'];
     }
 
-    // Teleport Functions
     if ($BuildID == 43) {
         $page .= Info\Components\TeleportSection\render([
             'elementId' => $BuildID,
@@ -361,7 +357,6 @@ if(!isOnVacation($_User))
         ])['componentHTML'];
     }
 
-    // Building Destroy Function
     $page .= Info\Components\BuildingDestructionSection\render([
         'elementId' => $BuildID,
         'planet' => &$_Planet,
