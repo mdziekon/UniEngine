@@ -4,6 +4,7 @@ namespace UniEngine\Engine\Modules\Info\Components\TeleportSection;
 
 use UniEngine\Engine\Includes\Helpers\Common\Collections;
 use UniEngine\Engine\Includes\Helpers\World;
+use UniEngine\Engine\Common\Components;
 use UniEngine\Engine\Modules\Info;
 
 /**
@@ -64,7 +65,10 @@ function render($props) {
     $chronoAppletLabel = 'Gate';
 
     $tplProps = [
-        'gate_start_link' => "<a href=\"galaxy.php?mode=3&galaxy={$planet['galaxy']}&system={$planet['system']}&planet={$planet['planet']}\">[{$planet['galaxy']}:{$planet['system']}:{$planet['planet']}] {$planet['name']}</a>",
+        'gate_start_link' => Components\GalaxyPlanetLink\render([
+            'coords' => $planet,
+            'name' => $planet['name'],
+        ]),
 
         'gate_time_script' => (
             $canJumpNow ?
