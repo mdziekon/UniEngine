@@ -3,6 +3,7 @@
 namespace UniEngine\Engine\Modules\Info\Components\TeleportSection;
 
 use UniEngine\Engine\Includes\Helpers\Common\Collections;
+use UniEngine\Engine\Includes\Helpers\World;
 use UniEngine\Engine\Modules\Info;
 
 /**
@@ -12,13 +13,13 @@ use UniEngine\Engine\Modules\Info;
  * @param arrayRef $props['user']
  */
 function render($props) {
-    global $_EnginePath, $_Lang, $_Vars_GameElements;
+    global $_EnginePath, $_Lang;
 
     $elementId = $props['elementId'];
     $planet = &$props['planet'];
     $user = &$props['user'];
 
-    $elementLevel = $planet[$_Vars_GameElements[$elementId]];
+    $elementLevel = World\Elements\getElementCurrentLevel($elementId, $planet, $user);
 
     if ($elementLevel <= 0) {
         return [
@@ -29,7 +30,6 @@ function render($props) {
     $localTemplateLoader = createLocalTemplateLoader(__DIR__);
 
     $nextJumpWaitTime = GetNextJumpWaitTime($planet);
-
 
     $teleportTargetMoonsListHTML = Info\Components\TeleportTargetMoonsList\render([
         'planet' => &$planet,
