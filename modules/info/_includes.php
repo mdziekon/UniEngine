@@ -18,6 +18,7 @@ call_user_func(function () {
     include($includePath . './components/TeleportFleetUnitSelectorsList/TeleportFleetUnitSelectorsList.component.php');
     include($includePath . './components/TeleportSection/TeleportSection.component.php');
     include($includePath . './components/TeleportTargetMoonsList/TeleportTargetMoonsList.component.php');
+    include($includePath . './components/UnitWeapons/UnitWeapons.component.php');
 
     include($includePath . './utils/ranges.utils.php');
 

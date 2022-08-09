@@ -261,24 +261,9 @@ else if(in_array($BuildID, $_Vars_ElementCategories['fleet']) OR in_array($Build
     $parse['Insert_Force_Base'] = prettyNumber($ThisElement_Force);
     $parse['Insert_Force_Modified'] = prettyNumber($ThisElement_Force * (1 + $ThisElement_Modifiers_Force));
 
-    if(!empty($_Vars_Prices[$BuildID]['weapons']))
-    {
-        foreach($_Vars_Prices[$BuildID]['weapons'] as $ThisWeaponType)
-        {
-            $ThisWeaponString = $_Lang['weaponTypes'][$ThisWeaponType];
-            if(!empty($_Vars_CombatUpgrades[$BuildID][$ThisWeaponType]))
-            {
-                $ThisWeaponString = '<a href="?gid='.$ThisWeaponType.'">'.$ThisWeaponString.' ('.$_Vars_CombatUpgrades[$BuildID][$ThisWeaponType].')</a>';
-            }
-
-            $parse['Insert_WeaponType'][] = $ThisWeaponString;
-        }
-        $parse['Insert_WeaponType'] = implode(', ', $parse['Insert_WeaponType']);
-    }
-    else
-    {
-        $parse['Insert_WeaponType'] = $_Lang['weaponTypes'][0];
-    }
+    $parse['Insert_WeaponType'] = Info\Components\UnitWeapons\render([
+        'elementId' => $BuildID,
+    ])['componentHTML'];
 
     if ($InShips) {
         $thisShipsStorageCapacity = getShipsStorageCapacity($BuildID);
