@@ -20,7 +20,7 @@ function render($props) {
     $thisShipsCurrentSpeedModifier = (
         $thisShipsUsedEngine['engineIdx'] === -1 ?
             0 :
-            Users\getUsersEngineSpeedTechModifier($thisShipsUsedEngine['tech'], $user)
+            Users\getUsersEngineSpeedTechModifier($thisShipsUsedEngine['data']['tech'], $user)
     );
     $thisShipsEngines = getShipsEngines($elementId);
 
