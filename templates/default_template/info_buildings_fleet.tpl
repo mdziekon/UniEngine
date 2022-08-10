@@ -71,14 +71,5 @@
         <th>{nfo_capacity}</th>
         <th colspan="3">{Insert_Storage_Base} {nfo_units}</th>
     </tr>
-    <tr class="techDet">
-        <th>{nfo_base_speed}</th>
-        <th>{Insert_Speed_Base}</th>
-        <th>+{Insert_Speed_Modifier}%</th>
-        <th>{Insert_Speed_Modified}</th>
-    </tr>
-    <tr class="techDet">
-        <th>{nfo_consumption}</th>
-        <th colspan="3">{Insert_Fuel_Base}</th>
-    </tr>
+    {component_unitEngines}
 </table>
