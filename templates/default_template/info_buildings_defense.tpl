@@ -57,14 +57,5 @@
         <th>+{Insert_Shield_Modifier}%</th>
         <th>{Insert_Shield_Modified}</th>
     </tr>
-    <tr class="techDet">
-        <th>{nfo_attack_type}</th>
-        <th colspan="3">{Insert_WeaponType}</th>
-    </tr>
-    <tr class="techDet">
-        <th>{nfo_attack_pt}</th>
-        <th>{Insert_Force_Base}</th>
-        <th>+{Insert_Force_Modifier}%</th>
-        <th>{Insert_Force_Modified}</th>
-    </tr>
+    {component_unitForce}
 </table>

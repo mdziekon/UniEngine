@@ -233,36 +233,21 @@ else if(in_array($BuildID, $_Vars_ElementCategories['fleet']) OR in_array($Build
 
     $ThisElement_Hull = ($_Vars_Prices[$BuildID]['metal'] + $_Vars_Prices[$BuildID]['crystal']);
     $ThisElement_Sheld = $_Vars_CombatData[$BuildID]['shield'];
-    $ThisElement_Force = $_Vars_CombatData[$BuildID]['attack'];
 
     $ThisElement_Modifiers_Hull = (0.1 * $_User[$_Vars_GameElements[111]]);
     $ThisElement_Modifiers_Shield = (0.1 * $_User[$_Vars_GameElements[110]]);
-    $ThisElement_Modifiers_Force = (0.1 * $_User[$_Vars_GameElements[109]]);
-    if(!empty($_Vars_CombatUpgrades[$BuildID]))
-    {
-        foreach($_Vars_CombatUpgrades[$BuildID] as $UpTech => $ReqLevel)
-        {
-            $TechAvailable = $_User[$_Vars_GameElements[$UpTech]];
-            if($TechAvailable > $ReqLevel)
-            {
-                $ThisElement_Modifiers_Force += ($TechAvailable - $ReqLevel) * 0.05;
-            }
-        }
-    }
 
     $parse['Insert_Hull_Modifier'] = $ThisElement_Modifiers_Hull * 100;
     $parse['Insert_Shield_Modifier'] = $ThisElement_Modifiers_Shield * 100;
-    $parse['Insert_Force_Modifier'] = $ThisElement_Modifiers_Force * 100;
 
     $parse['Insert_Hull_Base'] = prettyNumber($ThisElement_Hull);
     $parse['Insert_Hull_Modified'] = prettyNumber($ThisElement_Hull * (1 + $ThisElement_Modifiers_Hull));
     $parse['Insert_Shield_Base'] = prettyNumber($ThisElement_Sheld);
     $parse['Insert_Shield_Modified'] = prettyNumber($ThisElement_Sheld * (1 + $ThisElement_Modifiers_Shield));
-    $parse['Insert_Force_Base'] = prettyNumber($ThisElement_Force);
-    $parse['Insert_Force_Modified'] = prettyNumber($ThisElement_Force * (1 + $ThisElement_Modifiers_Force));
 
-    $parse['Insert_WeaponType'] = Info\Components\UnitWeapons\render([
+    $parse['component_unitForce'] = Info\Components\UnitForce\render([
         'elementId' => $BuildID,
+        'user' => &$_User,
     ])['componentHTML'];
 
     if ($InShips) {
