@@ -45,18 +45,7 @@
         <td class="c center pad2" style="width: 15%;">{nfo_techdetails_modifier}</td>
         <td class="c center pad2" style="width: 25%;">{nfo_techdetails_modified}</td>
     </tr>
-    <tr class="techDet">
-        <th>{nfo_struct_pt}</th>
-        <th>{Insert_Hull_Base}</th>
-        <th>+{Insert_Hull_Modifier}%</th>
-        <th>{Insert_Hull_Modified}</th>
-    </tr>
-    <tr class="techDet">
-        <th>{nfo_shielf_pt}</th>
-        <th>{Insert_Shield_Base}</th>
-        <th>+{Insert_Shield_Modifier}%</th>
-        <th>{Insert_Shield_Modified}</th>
-    </tr>
+    {component_unitStructuralParams}
     {component_unitForce}
     <tr class="techDet">
         <th>{nfo_capacity}</th>

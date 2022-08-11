@@ -231,20 +231,10 @@ else if(in_array($BuildID, $_Vars_ElementCategories['fleet']) OR in_array($Build
         ])['componentHTML'];
     }
 
-    $ThisElement_Hull = ($_Vars_Prices[$BuildID]['metal'] + $_Vars_Prices[$BuildID]['crystal']);
-    $ThisElement_Sheld = $_Vars_CombatData[$BuildID]['shield'];
-
-    $ThisElement_Modifiers_Hull = (0.1 * $_User[$_Vars_GameElements[111]]);
-    $ThisElement_Modifiers_Shield = (0.1 * $_User[$_Vars_GameElements[110]]);
-
-    $parse['Insert_Hull_Modifier'] = $ThisElement_Modifiers_Hull * 100;
-    $parse['Insert_Shield_Modifier'] = $ThisElement_Modifiers_Shield * 100;
-
-    $parse['Insert_Hull_Base'] = prettyNumber($ThisElement_Hull);
-    $parse['Insert_Hull_Modified'] = prettyNumber($ThisElement_Hull * (1 + $ThisElement_Modifiers_Hull));
-    $parse['Insert_Shield_Base'] = prettyNumber($ThisElement_Sheld);
-    $parse['Insert_Shield_Modified'] = prettyNumber($ThisElement_Sheld * (1 + $ThisElement_Modifiers_Shield));
-
+    $parse['component_unitStructuralParams'] = Info\Components\UnitStructuralParams\render([
+        'elementId' => $BuildID,
+        'user' => &$_User,
+    ])['componentHTML'];
     $parse['component_unitForce'] = Info\Components\UnitForce\render([
         'elementId' => $BuildID,
         'user' => &$_User,
