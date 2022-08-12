@@ -2,6 +2,7 @@
 
 namespace UniEngine\Engine\Modules\Info\Components\UnitForce;
 
+use UniEngine\Engine\Includes\Helpers\World;
 use UniEngine\Engine\Modules\Info;
 
 /**
@@ -10,18 +11,21 @@ use UniEngine\Engine\Modules\Info;
  * @param arrayRef $props['user']
  */
 function render($props) {
-    global $_Lang, $_Vars_CombatData, $_Vars_GameElements;
+    global $_Lang, $_Vars_CombatData;
 
     $elementId = $props['elementId'];
     $user = &$props['user'];
+    $planet = [];
 
     $baseForceValue = $_Vars_CombatData[$elementId]['attack'];
 
-    $forceModifier = (0.1 * $user[$_Vars_GameElements[109]]);
+    $forceUpgradeTechnologyLevel = World\Elements\getElementCurrentLevel(109, $planet, $user);
+
+    $forceModifier = (0.1 * $forceUpgradeTechnologyLevel);
 
     if (!empty($_Vars_CombatUpgrades[$elementId])) {
         foreach ($_Vars_CombatUpgrades[$elementId] as $weaponTechId => $upgradeRequiredLevel) {
-            $currentTechLevel = $user[$_Vars_GameElements[$weaponTechId]];
+            $currentTechLevel = World\Elements\getElementCurrentLevel($weaponTechId, $planet, $user);
 
             if ($currentTechLevel > $upgradeRequiredLevel) {
                 $forceModifier += ($currentTechLevel - $upgradeRequiredLevel) * 0.05;
