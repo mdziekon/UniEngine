@@ -170,25 +170,12 @@ else if($BuildID == 50)
 {
     // Quantum Gate
     $PageTPL = gettemplate('info_buildings_general');
-    if($_Planet['quantumgate'] > 0)
-    {
-        include_once("{$_EnginePath}/includes/functions/InsertJavaScriptChronoApplet.php");
 
-        $NextUseTimestamp = ($_Planet['quantumgate_lastuse'] + (QUANTUMGATE_INTERVAL_HOURS * TIME_HOUR)) - time();
-        if($NextUseTimestamp < 0)
-        {
-            $NextUseTimestamp = 0;
-        }
-        if($NextUseTimestamp == 0)
-        {
-            $QuantumGate .= '<span class="lime">'.$_Lang['GateReadyToUse'].'</span>';
-        }
-        else
-        {
-            $QuantumGate .= InsertJavaScriptChronoApplet('quantum', '0', $NextUseTimestamp);
-            $QuantumGate .= '<span class="orange">'.$_Lang['GateReadyToUseIn'].':</span><br/><span id="bxxquantum0">'.(pretty_time($NextUseTimestamp, true)).'</span>';
-        }
-        $parse['AdditionalInfo'] = '<tr><th class="c"><br/>'.$QuantumGate.'<br/>&nbsp;</th></tr>';
+    if ($_Planet['quantumgate'] > 0) {
+        $parse['AdditionalInfo'] = Info\Components\QuantumGateState\render([
+            'planet' => &$_Planet,
+            'currentTimestamp' => time(),
+        ])['componentHTML'];
     }
 }
 else if(in_array($BuildID, $_Vars_ElementCategories['tech']))
