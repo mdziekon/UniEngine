@@ -11,7 +11,7 @@ use UniEngine\Engine\Modules\Info;
  * @param arrayRef $props['user']
  */
 function render($props) {
-    global $_Lang, $_Vars_CombatData;
+    global $_Lang, $_Vars_CombatData, $_Vars_CombatUpgrades;
 
     $elementId = $props['elementId'];
     $user = &$props['user'];
