@@ -171,7 +171,11 @@ else if($BuildID == 50)
     // Quantum Gate
     $PageTPL = gettemplate('info_buildings_general');
 
-    if ($_Planet['quantumgate'] > 0) {
+    $QUANTUMGATE_ELEMENTID = 50;
+
+    $elementLevel = World\Elements\getElementCurrentLevel($QUANTUMGATE_ELEMENTID, $_Planet, $_User);
+
+    if ($elementLevel > 0) {
         $parse['AdditionalInfo'] = Info\Components\QuantumGateState\render([
             'planet' => &$_Planet,
             'currentTimestamp' => time(),
