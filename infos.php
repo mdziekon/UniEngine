@@ -10,7 +10,6 @@ include_once($_EnginePath . 'modules/info/_includes.php');
 include_once($_EnginePath . 'includes/functions/GetMissileRange.php');
 include_once($_EnginePath . 'includes/functions/GetPhalanxRange.php');
 
-use UniEngine\Engine\Includes\Helpers\Users;
 use UniEngine\Engine\Includes\Helpers\World;
 use UniEngine\Engine\Modules\Info;
 
