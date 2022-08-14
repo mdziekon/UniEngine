@@ -31,7 +31,7 @@
                     <th style="border: 0px;" valign="top">
                         <img src="{skinpath}gebaeude/{image}.gif" height="120" width="120" style="border: 2px solid black;" />
                     </th>
-                    <th style="border: 0px; text-align: left;">
+                    <th style="border: 0px; text-align: left; width: 100%;">
                         {description}<br/><br/>
                         <span style="width: 100%;">{rf_info_to}{rf_info_fr}</span>
                     </th>
