@@ -221,25 +221,10 @@ else if(in_array($BuildID, $_Vars_ElementCategories['fleet']) OR in_array($Build
         ])['componentHTML'];
     }
 
-    $parse['component_unitStructuralParams'] = Info\Components\UnitStructuralParams\render([
+    $parse['component_UnitDetails'] = Info\Components\UnitDetailsTable\render([
         'elementId' => $BuildID,
         'user' => &$_User,
     ])['componentHTML'];
-    $parse['component_unitForce'] = Info\Components\UnitForce\render([
-        'elementId' => $BuildID,
-        'user' => &$_User,
-    ])['componentHTML'];
-
-    if ($InShips) {
-        $thisShipsStorageCapacity = getShipsStorageCapacity($BuildID);
-
-        $parse['Insert_Storage_Base'] = prettyNumber($thisShipsStorageCapacity);
-
-        $parse['component_unitEngines'] = Info\Components\UnitEngines\render([
-            'elementId' => $BuildID,
-            'user' => &$_User,
-        ])['componentHTML'];
-    }
 }
 else
 {
