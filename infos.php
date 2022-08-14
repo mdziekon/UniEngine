@@ -200,19 +200,18 @@ else if(in_array($BuildID, $_Vars_ElementCategories['fleet']) OR in_array($Build
     // Ships & Defense
     $InShips = (in_array($BuildID, $_Vars_ElementCategories['fleet']) ? true : false);
 
-    if($InShips)
-    {
-        $PageTPL = gettemplate('info_buildings_fleet');
-        $parse['element_typ'] = $_Lang['tech'][200];
-    }
-    else
-    {
-        $PageTPL = gettemplate('info_buildings_defense');
-        $parse['element_typ'] = $_Lang['tech'][400];
-    }
+    $PageTPL = gettemplate('info_buildings_unit');
 
-    if($InShips OR !in_array($BuildID, $_Vars_ElementCategories['rockets']))
-    {
+    $parse['element_typ'] = (
+        $InShips ?
+            $_Lang['tech'][200] :
+            $_Lang['tech'][400]
+    );
+
+    if (
+        $InShips ||
+        !in_array($BuildID, $_Vars_ElementCategories['rockets'])
+    ) {
         $parse['rf_info_to'] = Info\Components\RapidFireAgainstList\render([
             'elementId' => $BuildID,
         ])['componentHTML'];
