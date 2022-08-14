@@ -198,19 +198,24 @@ else if(in_array($BuildID, $_Vars_ElementCategories['tech']))
 else if(in_array($BuildID, $_Vars_ElementCategories['fleet']) OR in_array($BuildID, $_Vars_ElementCategories['defense']))
 {
     // Ships & Defense
-    $InShips = (in_array($BuildID, $_Vars_ElementCategories['fleet']) ? true : false);
-
     $PageTPL = gettemplate('info_buildings_unit');
 
+    $isShip = World\Elements\isShip($BuildID);
+    $isDefenseSystem = World\Elements\isDefenseSystem($BuildID);
+
     $parse['element_typ'] = (
-        $InShips ?
+        $isShip ?
             $_Lang['tech'][200] :
             $_Lang['tech'][400]
     );
+    $parse['component_UnitDetails'] = Info\Components\UnitDetailsTable\render([
+        'elementId' => $BuildID,
+        'user' => &$_User,
+    ])['componentHTML'];
 
     if (
-        $InShips ||
-        !in_array($BuildID, $_Vars_ElementCategories['rockets'])
+        $isShip ||
+        $isDefenseSystem
     ) {
         $parse['rf_info_to'] = Info\Components\RapidFireAgainstList\render([
             'elementId' => $BuildID,
@@ -219,11 +224,6 @@ else if(in_array($BuildID, $_Vars_ElementCategories['fleet']) OR in_array($Build
             'elementId' => $BuildID,
         ])['componentHTML'];
     }
-
-    $parse['component_UnitDetails'] = Info\Components\UnitDetailsTable\render([
-        'elementId' => $BuildID,
-        'user' => &$_User,
-    ])['componentHTML'];
 }
 else
 {
