@@ -180,9 +180,7 @@ else if($BuildID == 50)
             'currentTimestamp' => time(),
         ])['componentHTML'];
     }
-}
-else if(in_array($BuildID, $_Vars_ElementCategories['tech']))
-{
+} else if (World\Elements\isTechnology($BuildID)) {
     // Technologies
     $parse['element_typ'] = $_Lang['tech'][100];
     if($BuildID == 117)
@@ -194,9 +192,7 @@ else if(in_array($BuildID, $_Vars_ElementCategories['tech']))
     {
         $PageTPL = gettemplate('info_buildings_general');
     }
-}
-else if(in_array($BuildID, $_Vars_ElementCategories['fleet']) OR in_array($BuildID, $_Vars_ElementCategories['defense']))
-{
+} else if (World\Elements\isConstructibleInHangar($BuildID)) {
     // Ships & Defense
     $PageTPL = gettemplate('info_buildings_unit');
 
