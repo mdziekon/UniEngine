@@ -7,10 +7,10 @@
 <br />
 <table width="600">
     <tr>
-        <td class="c center" colspan="4">{element_typ}</td>
+        <td class="c center">{element_typ}</td>
     </tr>
     <tr>
-        <th class="pad2" colspan="4">{nfo_techinfoabout} - <b class="orange">{name}</b></th>
+        <th class="pad2">{nfo_techinfoabout} - <b class="orange">{name}</b></th>
     </tr>
     <tr>
         <th>
