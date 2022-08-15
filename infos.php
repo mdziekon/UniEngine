@@ -15,42 +15,6 @@ use UniEngine\Engine\Modules\Info;
 
 loggedCheck();
 
-// Inner Functions
-function ShowProductionTable ($CurrentUser, $CurrentPlanet, $elementId) {
-    $IMPULSE_DRIVE_ELEMENTID = 117;
-    $PHALANX_ELEMENTID = 42;
-
-    if (World\Elements\isProductionRelated($elementId)) {
-        return Info\Components\ResourceProductionTable\render([
-            'elementId' => $elementId,
-            'planet' => &$CurrentPlanet,
-            'user' => &$CurrentUser,
-            'currentTimestamp' => time(),
-        ])['componentHTML'];
-    }
-    if (World\Elements\isStorageStructure($elementId)) {
-        return Info\Components\ResourceStorageTable\render([
-            'elementId' => $elementId,
-            'planet' => &$CurrentPlanet,
-        ])['componentHTML'];
-    }
-    if ($elementId == $IMPULSE_DRIVE_ELEMENTID) {
-        return Info\Components\MissileRangeTable\render([
-            'elementId' => $elementId,
-            'planet' => &$CurrentPlanet,
-            'user' => &$CurrentUser,
-        ])['componentHTML'];
-    }
-    if ($elementId == $PHALANX_ELEMENTID) {
-        return Info\Components\PhalanxRangeTable\render([
-            'elementId' => $elementId,
-            'planet' => &$CurrentPlanet,
-            'user' => &$CurrentUser,
-        ])['componentHTML'];
-    }
-}
-// End of Internal functions
-
 $BuildID = $_GET['gid'];
 
 includeLang('infos');
@@ -229,7 +193,13 @@ else
 if($TPL_Production_Header != '')
 {
     $parse['table_head'] = parsetemplate($TPL_Production_Header, $_Lang);
-    $parse['table_data'] = ShowProductionTable($_User, $_Planet, $BuildID);
+
+    $parse['table_data'] = Info\Components\ProductionTable\render([
+        'elementId' => $BuildID,
+        'user' => &$_User,
+        'planet' => &$_Planet,
+        'currentTimestamp' => time(),
+    ])['componentHTML'];
 }
 
 $page = parsetemplate($PageTPL, $parse);

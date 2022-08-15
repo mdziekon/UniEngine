@@ -10,6 +10,7 @@ call_user_func(function () {
     include($includePath . './components/MissileDestructionSection/MissileDestructionSection.component.php');
     include($includePath . './components/MissileRangeTable/MissileRangeTable.component.php');
     include($includePath . './components/PhalanxRangeTable/PhalanxRangeTable.component.php');
+    include($includePath . './components/ProductionTable/ProductionTable.component.php');
     include($includePath . './components/QuantumGateState/QuantumGateState.component.php');
     include($includePath . './components/RapidFireCommonRow/RapidFireCommonRow.component.php');
     include($includePath . './components/RapidFireAgainstList/RapidFireAgainstList.component.php');
