@@ -24,12 +24,9 @@
             </table>
         </th>
     </tr>
-    <tr>
-        <th>
-            <table align="center">
-                {table_head}
-                {table_data}
-            </table>
-        </th>
-    </tr>
+</table>
+
+<table width="600">
+    {table_head}
+    {table_data}
 </table>
