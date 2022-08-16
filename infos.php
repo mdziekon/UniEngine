@@ -66,63 +66,25 @@ if (World\Elements\isStructure($BuildID)) {
 }
 
 if (
-    World\Elements\isPlanetaryMine($BuildID) &&
-    $isCurrentlyOnPlanet
+    (
+        World\Elements\isPlanetaryMine($BuildID) &&
+        $isCurrentlyOnPlanet
+    ) ||
+    (
+        $BuildID == 4 &&
+        $isCurrentlyOnPlanet
+    ) ||
+    (
+        $BuildID == 12 &&
+        $isCurrentlyOnPlanet
+    ) ||
+    (
+        $BuildID == 42 &&
+        !$isCurrentlyOnPlanet
+    ) ||
+    World\Elements\isStorageStructure($BuildID) ||
+    ($BuildID == 117)
 ) {
-    $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
-        'elementId' => $BuildID,
-        'user' => &$_User,
-        'planet' => &$_Planet,
-        'currentTimestamp' => time(),
-    ])['componentHTML'];
-}
-
-if (
-    $BuildID == 4 &&
-    $isCurrentlyOnPlanet
-) {
-    $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
-        'elementId' => $BuildID,
-        'user' => &$_User,
-        'planet' => &$_Planet,
-        'currentTimestamp' => time(),
-    ])['componentHTML'];
-}
-
-if (
-    $BuildID == 12 &&
-    $isCurrentlyOnPlanet
-) {
-    $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
-        'elementId' => $BuildID,
-        'user' => &$_User,
-        'planet' => &$_Planet,
-        'currentTimestamp' => time(),
-    ])['componentHTML'];
-}
-
-if (World\Elements\isStorageStructure($BuildID)) {
-    $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
-        'elementId' => $BuildID,
-        'user' => &$_User,
-        'planet' => &$_Planet,
-        'currentTimestamp' => time(),
-    ])['componentHTML'];
-}
-
-if (
-    $BuildID == 42 &&
-    !$isCurrentlyOnPlanet
-) {
-    $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
-        'elementId' => $BuildID,
-        'user' => &$_User,
-        'planet' => &$_Planet,
-        'currentTimestamp' => time(),
-    ])['componentHTML'];
-}
-
-if ($BuildID == 117) {
     $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
         'elementId' => $BuildID,
         'user' => &$_User,
