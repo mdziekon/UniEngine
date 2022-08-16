@@ -37,7 +37,6 @@ $parse['description'] = (
         )
     )
 );
-$parse['element_typ'] = $_Lang['tech'][0];
 
 $isValidElement = (
     World\Elements\isStructure($BuildID) ||
@@ -49,48 +48,25 @@ if (!$isValidElement) {
     message($_Lang['Infos_BadElementID'], $_Lang['nfo_page_title']);
 }
 
-if($BuildID >= 1 AND $BuildID <= 3)
-{
-    // Mines
-    if($_Planet['planet_type'] == 1)
-    {
-        $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
-            'elementId' => $BuildID,
-            'user' => &$_User,
-            'planet' => &$_Planet,
-            'currentTimestamp' => time(),
-        ])['componentHTML'];
-    }
+$isCurrentlyOnPlanet = ($_Planet['planet_type'] == 1);
+
+if (World\Elements\isStructure($BuildID)) {
+    $parse['element_typ'] = $_Lang['tech'][0];
+} else if (World\Elements\isTechnology($BuildID)) {
+    $parse['element_typ'] = $_Lang['tech'][100];
+} else if (World\Elements\isShip($BuildID)) {
+    $parse['element_typ'] = $_Lang['tech'][200];
+} else if (
+    World\Elements\isDefenseSystem($BuildID) ||
+    World\Elements\isMissile($BuildID)
+) {
+    $parse['element_typ'] = $_Lang['tech'][400];
 }
-else if($BuildID == 4)
-{
-    // Solar Power Station
-    if($_Planet['planet_type'] == 1)
-    {
-        $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
-            'elementId' => $BuildID,
-            'user' => &$_User,
-            'planet' => &$_Planet,
-            'currentTimestamp' => time(),
-        ])['componentHTML'];
-    }
-}
-else if($BuildID == 12)
-{
-    // Fusion Power Station
-    if($_Planet['planet_type'] == 1)
-    {
-        $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
-            'elementId' => $BuildID,
-            'user' => &$_User,
-            'planet' => &$_Planet,
-            'currentTimestamp' => time(),
-        ])['componentHTML'];
-    }
-}
-else if(in_array($BuildID, $_Vars_ElementCategories['storages']))
-{
-    // Storages
+
+if (
+    World\Elements\isPlanetaryMine($BuildID) &&
+    $isCurrentlyOnPlanet
+) {
     $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
         'elementId' => $BuildID,
         'user' => &$_User,
@@ -98,46 +74,53 @@ else if(in_array($BuildID, $_Vars_ElementCategories['storages']))
         'currentTimestamp' => time(),
     ])['componentHTML'];
 }
-else if($BuildID >= 14 AND $BuildID <= 32)
-{
-    // Other Buildings
+
+if (
+    $BuildID == 4 &&
+    $isCurrentlyOnPlanet
+) {
+    $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
+        'elementId' => $BuildID,
+        'user' => &$_User,
+        'planet' => &$_Planet,
+        'currentTimestamp' => time(),
+    ])['componentHTML'];
 }
-else if($BuildID == 33)
-{
-    // Terraformer
+
+if (
+    $BuildID == 12 &&
+    $isCurrentlyOnPlanet
+) {
+    $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
+        'elementId' => $BuildID,
+        'user' => &$_User,
+        'planet' => &$_Planet,
+        'currentTimestamp' => time(),
+    ])['componentHTML'];
 }
-else if($BuildID == 34)
-{
-    // Ally Deposit
+
+if (World\Elements\isStorageStructure($BuildID)) {
+    $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
+        'elementId' => $BuildID,
+        'user' => &$_User,
+        'planet' => &$_Planet,
+        'currentTimestamp' => time(),
+    ])['componentHTML'];
 }
-else if($BuildID == 44)
-{
-    // Rocket Silo
+
+if (
+    $BuildID == 42 &&
+    !$isCurrentlyOnPlanet
+) {
+    $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
+        'elementId' => $BuildID,
+        'user' => &$_User,
+        'planet' => &$_Planet,
+        'currentTimestamp' => time(),
+    ])['componentHTML'];
 }
-else if($BuildID == 41)
-{
-    // Moon Station
-}
-else if($BuildID == 42)
-{
-    // Phalanx
-    if($_Planet['planet_type'] == 3)
-    {
-        $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
-            'elementId' => $BuildID,
-            'user' => &$_User,
-            'planet' => &$_Planet,
-            'currentTimestamp' => time(),
-        ])['componentHTML'];
-    }
-}
-else if($BuildID == 43)
-{
-    // Teleport
-}
-else if($BuildID == 50)
-{
-    // Quantum Gate
+
+if ($BuildID == 50) {
     $QUANTUMGATE_ELEMENTID = 50;
 
     $elementLevel = World\Elements\getElementCurrentLevel($QUANTUMGATE_ELEMENTID, $_Planet, $_User);
@@ -148,29 +131,21 @@ else if($BuildID == 50)
             'currentTimestamp' => time(),
         ])['componentHTML'];
     }
-} else if (World\Elements\isTechnology($BuildID)) {
-    // Technologies
-    $parse['element_typ'] = $_Lang['tech'][100];
-    if($BuildID == 117)
-    {
+}
 
-        $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
-            'elementId' => $BuildID,
-            'user' => &$_User,
-            'planet' => &$_Planet,
-            'currentTimestamp' => time(),
-        ])['componentHTML'];
-    }
-} else if (World\Elements\isConstructibleInHangar($BuildID)) {
-    // Ships & Defense
+if ($BuildID == 117) {
+    $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
+        'elementId' => $BuildID,
+        'user' => &$_User,
+        'planet' => &$_Planet,
+        'currentTimestamp' => time(),
+    ])['componentHTML'];
+}
+
+if (World\Elements\isConstructibleInHangar($BuildID)) {
     $isShip = World\Elements\isShip($BuildID);
     $isDefenseSystem = World\Elements\isDefenseSystem($BuildID);
 
-    $parse['element_typ'] = (
-        $isShip ?
-            $_Lang['tech'][200] :
-            $_Lang['tech'][400]
-    );
     $parse['component_UnitDetails'] = Info\Components\UnitDetailsTable\render([
         'elementId' => $BuildID,
         'user' => &$_User,
