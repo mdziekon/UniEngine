@@ -26,7 +26,4 @@
     </tr>
 </table>
 
-<table width="600">
-    {table_head}
-    {table_data}
-</table>
+{component_ProductionTable}

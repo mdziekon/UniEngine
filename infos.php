@@ -20,8 +20,6 @@ $BuildID = $_GET['gid'];
 includeLang('infos');
 includeLang('worldElements.detailed');
 
-$TPL_Production_Header = '';
-
 $parse = $_Lang;
 $parse['Insert_AllowPrettyInputBox'] = ($_User['settings_useprettyinputbox'] == 1 ? 'true' : 'false');
 $parse['skinpath'] = $_SkinPath;
@@ -47,7 +45,13 @@ if($BuildID >= 1 AND $BuildID <= 3)
     if($_Planet['planet_type'] == 1)
     {
         $PageTPL = gettemplate('info_buildings_table');
-        $TPL_Production_Header = gettemplate('infos_production_header_mines');
+
+        $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
+            'elementId' => $BuildID,
+            'user' => &$_User,
+            'planet' => &$_Planet,
+            'currentTimestamp' => time(),
+        ])['componentHTML'];
     }
     else
     {
@@ -60,7 +64,13 @@ else if($BuildID == 4)
     if($_Planet['planet_type'] == 1)
     {
         $PageTPL = gettemplate('info_buildings_table');
-        $TPL_Production_Header = gettemplate('infos_production_header_solarplant');
+
+        $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
+            'elementId' => $BuildID,
+            'user' => &$_User,
+            'planet' => &$_Planet,
+            'currentTimestamp' => time(),
+        ])['componentHTML'];
     }
     else
     {
@@ -73,7 +83,13 @@ else if($BuildID == 12)
     if($_Planet['planet_type'] == 1)
     {
         $PageTPL = gettemplate('info_buildings_table');
-        $TPL_Production_Header = gettemplate('infos_production_header_fusionplant');
+
+        $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
+            'elementId' => $BuildID,
+            'user' => &$_User,
+            'planet' => &$_Planet,
+            'currentTimestamp' => time(),
+        ])['componentHTML'];
     }
     else
     {
@@ -84,7 +100,13 @@ else if(in_array($BuildID, $_Vars_ElementCategories['storages']))
 {
     // Storages
     $PageTPL = gettemplate('info_buildings_table');
-    $TPL_Production_Header = gettemplate('infos_production_header_storages');
+
+    $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
+        'elementId' => $BuildID,
+        'user' => &$_User,
+        'planet' => &$_Planet,
+        'currentTimestamp' => time(),
+    ])['componentHTML'];
 }
 else if($BuildID >= 14 AND $BuildID <= 32)
 {
@@ -117,7 +139,13 @@ else if($BuildID == 42)
     if($_Planet['planet_type'] == 3)
     {
         $PageTPL = gettemplate('info_buildings_table');
-        $TPL_Production_Header = gettemplate('infos_production_header_phalanx');
+
+        $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
+            'elementId' => $BuildID,
+            'user' => &$_User,
+            'planet' => &$_Planet,
+            'currentTimestamp' => time(),
+        ])['componentHTML'];
     }
     else
     {
@@ -150,7 +178,13 @@ else if($BuildID == 50)
     if($BuildID == 117)
     {
         $PageTPL = gettemplate('info_buildings_table');
-        $TPL_Production_Header = gettemplate('infos_production_header_missiles');
+
+        $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
+            'elementId' => $BuildID,
+            'user' => &$_User,
+            'planet' => &$_Planet,
+            'currentTimestamp' => time(),
+        ])['componentHTML'];
     }
     else
     {
@@ -188,18 +222,6 @@ else if($BuildID == 50)
 else
 {
     message($_Lang['Infos_BadElementID'], $_Lang['nfo_page_title']);
-}
-
-if($TPL_Production_Header != '')
-{
-    $parse['table_head'] = parsetemplate($TPL_Production_Header, $_Lang);
-
-    $parse['table_data'] = Info\Components\ProductionTable\render([
-        'elementId' => $BuildID,
-        'user' => &$_User,
-        'planet' => &$_Planet,
-        'currentTimestamp' => time(),
-    ])['componentHTML'];
 }
 
 $page = parsetemplate($PageTPL, $parse);
