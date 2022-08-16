@@ -49,30 +49,10 @@ function render($props) {
     );
     $isCurrentlyOnPlanet = ($planet['planet_type'] == 1);
 
-    $getElementTypeLabel = function () use ($elementId, &$_Lang) {
-        if (World\Elements\isStructure($elementId)) {
-            return $parse['element_typ'] = $_Lang['tech'][0];
-        }
-        if (World\Elements\isTechnology($elementId)) {
-            return $parse['element_typ'] = $_Lang['tech'][100];
-        }
-        if (World\Elements\isShip($elementId)) {
-            return $parse['element_typ'] = $_Lang['tech'][200];
-        }
-        if (
-            World\Elements\isDefenseSystem($elementId) ||
-            World\Elements\isMissile($elementId)
-        ) {
-            return $parse['element_typ'] = $_Lang['tech'][400];
-        }
-
-        return "";
-    };
-
     $tplBodyProps = [
         'skinpath' => $_SkinPath,
         'elementId' => $elementId,
-        'elementTypeLabel' => $getElementTypeLabel(),
+        'elementTypeLabel' => Info\Screens\ElementInfo\Utils\getElementtypeLabel($elementId),
         'name' => $_Lang['tech'][$elementId],
         'description' => $elementDescription,
         'Insert_AllowPrettyInputBox' => (

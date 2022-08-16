@@ -27,6 +27,7 @@ call_user_func(function () {
     include($includePath . './components/UnitWeapons/UnitWeapons.component.php');
 
     include($includePath . './screens/ElementInfo/ElementInfo.screen.php');
+    include($includePath . './screens/ElementInfo/ElementInfo.utils.php');
 
     include($includePath . './utils/ranges.utils.php');
 
