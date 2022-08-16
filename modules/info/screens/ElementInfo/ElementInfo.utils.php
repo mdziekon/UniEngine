@@ -4,7 +4,28 @@ namespace UniEngine\Engine\Modules\Info\Screens\ElementInfo\Utils;
 
 use UniEngine\Engine\Includes\Helpers\World;
 
-function getElementtypeLabel ($elementId) {
+function getElementDescription($elementId) {
+    global $_Lang;
+
+    if (!empty($_Lang['WorldElements_Detailed'][$elementId]['description_alt'])) {
+        return $_Lang['WorldElements_Detailed'][$elementId]['description_alt'];
+    }
+
+    $baseDescription = $_Lang['WorldElements_Detailed'][$elementId]['description_short'];
+    $extraDescription = (
+        !empty($_Lang['WorldElements_Detailed'][$elementId]['description_extra']) ?
+            $_Lang['WorldElements_Detailed'][$elementId]['description_extra'] :
+            null
+    );
+
+    if (!$extraDescription) {
+        return $baseDescription;
+    }
+
+    return "{$baseDescription}<br/><br/>{$extraDescription}";
+}
+
+function getElementtypeLabel($elementId) {
     global $_Lang;
 
     if (World\Elements\isStructure($elementId)) {

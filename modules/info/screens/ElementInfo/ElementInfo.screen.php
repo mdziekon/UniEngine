@@ -35,18 +35,6 @@ function render($props) {
 
     $localTemplateLoader = createLocalTemplateLoader(__DIR__);
 
-    $elementDescription = (
-        !empty($_Lang['WorldElements_Detailed'][$elementId]['description_alt']) ?
-            $_Lang['WorldElements_Detailed'][$elementId]['description_alt'] :
-            (
-                $_Lang['WorldElements_Detailed'][$elementId]['description_short'] .
-                (
-                    !empty($_Lang['WorldElements_Detailed'][$elementId]['description_extra']) ?
-                        ('<br/><br/>' . $_Lang['WorldElements_Detailed'][$elementId]['description_extra']) :
-                        ''
-                )
-            )
-    );
     $isCurrentlyOnPlanet = ($planet['planet_type'] == 1);
 
     $tplBodyProps = [
@@ -54,7 +42,7 @@ function render($props) {
         'elementId' => $elementId,
         'elementTypeLabel' => Info\Screens\ElementInfo\Utils\getElementtypeLabel($elementId),
         'name' => $_Lang['tech'][$elementId],
-        'description' => $elementDescription,
+        'description' => Info\Screens\ElementInfo\Utils\getElementDescription($elementId),
         'Insert_AllowPrettyInputBox' => (
             $user['settings_useprettyinputbox'] == 1 ?
                 'true' :
