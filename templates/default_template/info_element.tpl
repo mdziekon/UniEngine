@@ -15,8 +15,13 @@
     background-color: #455B87;
     border-color: #526EA3;
 }
+.thisLevel > th {
+    background-color: #455B87;
+    border-color: #526EA3;
+}
 </style>
-<br />
+
+<br/>
 <table width="600">
     <tr>
         <td class="c center">{element_typ}</td>
@@ -32,13 +37,18 @@
                         <img src="{skinpath}gebaeude/{image}.gif" height="120" width="120" style="border: 2px solid black;" />
                     </th>
                     <th style="border: 0px; text-align: left; width: 100%;">
-                        {description}<br/><br/>
-                        <span style="width: 100%;">{rf_info_to}{rf_info_fr}</span>
+                        {description}
+                        <br/><br/>
+                        <span style="width: 100%;">
+                            {rf_info_to}{rf_info_fr}
+                        </span>
                     </th>
                 </tr>
             </table>
         </th>
     </tr>
+    {AdditionalInfo}
 </table>
 
+{component_ProductionTable}
 {component_UnitDetails}

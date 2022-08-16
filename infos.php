@@ -44,18 +44,12 @@ if($BuildID >= 1 AND $BuildID <= 3)
     // Mines
     if($_Planet['planet_type'] == 1)
     {
-        $PageTPL = gettemplate('info_buildings_table');
-
         $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
             'elementId' => $BuildID,
             'user' => &$_User,
             'planet' => &$_Planet,
             'currentTimestamp' => time(),
         ])['componentHTML'];
-    }
-    else
-    {
-        $PageTPL = gettemplate('info_buildings_general');
     }
 }
 else if($BuildID == 4)
@@ -63,18 +57,12 @@ else if($BuildID == 4)
     // Solar Power Station
     if($_Planet['planet_type'] == 1)
     {
-        $PageTPL = gettemplate('info_buildings_table');
-
         $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
             'elementId' => $BuildID,
             'user' => &$_User,
             'planet' => &$_Planet,
             'currentTimestamp' => time(),
         ])['componentHTML'];
-    }
-    else
-    {
-        $PageTPL = gettemplate('info_buildings_general');
     }
 }
 else if($BuildID == 12)
@@ -82,8 +70,6 @@ else if($BuildID == 12)
     // Fusion Power Station
     if($_Planet['planet_type'] == 1)
     {
-        $PageTPL = gettemplate('info_buildings_table');
-
         $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
             'elementId' => $BuildID,
             'user' => &$_User,
@@ -91,16 +77,10 @@ else if($BuildID == 12)
             'currentTimestamp' => time(),
         ])['componentHTML'];
     }
-    else
-    {
-        $PageTPL = gettemplate('info_buildings_general');
-    }
 }
 else if(in_array($BuildID, $_Vars_ElementCategories['storages']))
 {
     // Storages
-    $PageTPL = gettemplate('info_buildings_table');
-
     $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
         'elementId' => $BuildID,
         'user' => &$_User,
@@ -111,35 +91,28 @@ else if(in_array($BuildID, $_Vars_ElementCategories['storages']))
 else if($BuildID >= 14 AND $BuildID <= 32)
 {
     // Other Buildings
-    $PageTPL = gettemplate('info_buildings_general');
 }
 else if($BuildID == 33)
 {
     // Terraformer
-    $PageTPL = gettemplate('info_buildings_general');
 }
 else if($BuildID == 34)
 {
     // Ally Deposit
-    $PageTPL = gettemplate('info_buildings_general');
 }
 else if($BuildID == 44)
 {
     // Rocket Silo
-    $PageTPL = gettemplate('info_buildings_general');
 }
 else if($BuildID == 41)
 {
     // Moon Station
-    $PageTPL = gettemplate('info_buildings_general');
 }
 else if($BuildID == 42)
 {
     // Phalanx
     if($_Planet['planet_type'] == 3)
     {
-        $PageTPL = gettemplate('info_buildings_table');
-
         $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
             'elementId' => $BuildID,
             'user' => &$_User,
@@ -147,21 +120,14 @@ else if($BuildID == 42)
             'currentTimestamp' => time(),
         ])['componentHTML'];
     }
-    else
-    {
-        $PageTPL = gettemplate('info_buildings_general');
-    }
 }
 else if($BuildID == 43)
 {
     // Teleport
-    $PageTPL = gettemplate('info_buildings_general');
 }
 else if($BuildID == 50)
 {
     // Quantum Gate
-    $PageTPL = gettemplate('info_buildings_general');
-
     $QUANTUMGATE_ELEMENTID = 50;
 
     $elementLevel = World\Elements\getElementCurrentLevel($QUANTUMGATE_ELEMENTID, $_Planet, $_User);
@@ -177,7 +143,6 @@ else if($BuildID == 50)
     $parse['element_typ'] = $_Lang['tech'][100];
     if($BuildID == 117)
     {
-        $PageTPL = gettemplate('info_buildings_table');
 
         $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
             'elementId' => $BuildID,
@@ -186,14 +151,8 @@ else if($BuildID == 50)
             'currentTimestamp' => time(),
         ])['componentHTML'];
     }
-    else
-    {
-        $PageTPL = gettemplate('info_buildings_general');
-    }
 } else if (World\Elements\isConstructibleInHangar($BuildID)) {
     // Ships & Defense
-    $PageTPL = gettemplate('info_buildings_unit');
-
     $isShip = World\Elements\isShip($BuildID);
     $isDefenseSystem = World\Elements\isDefenseSystem($BuildID);
 
@@ -223,6 +182,8 @@ else
 {
     message($_Lang['Infos_BadElementID'], $_Lang['nfo_page_title']);
 }
+
+$PageTPL = gettemplate('info_element');
 
 $page = parsetemplate($PageTPL, $parse);
 
