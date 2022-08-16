@@ -20,6 +20,8 @@ $BuildID = $_GET['gid'];
 includeLang('infos');
 includeLang('worldElements.detailed');
 
+$QUANTUMGATE_ELEMENTID = 50;
+
 $parse = $_Lang;
 $parse['Insert_AllowPrettyInputBox'] = ($_User['settings_useprettyinputbox'] == 1 ? 'true' : 'false');
 $parse['skinpath'] = $_SkinPath;
@@ -120,19 +122,6 @@ if (
     ])['componentHTML'];
 }
 
-if ($BuildID == 50) {
-    $QUANTUMGATE_ELEMENTID = 50;
-
-    $elementLevel = World\Elements\getElementCurrentLevel($QUANTUMGATE_ELEMENTID, $_Planet, $_User);
-
-    if ($elementLevel > 0) {
-        $parse['AdditionalInfo'] = Info\Components\QuantumGateState\render([
-            'planet' => &$_Planet,
-            'currentTimestamp' => time(),
-        ])['componentHTML'];
-    }
-}
-
 if ($BuildID == 117) {
     $parse['component_ProductionTable'] = Info\Components\ProductionTable\render([
         'elementId' => $BuildID,
@@ -164,13 +153,11 @@ if (World\Elements\isConstructibleInHangar($BuildID)) {
     }
 }
 
-$PageTPL = gettemplate('info_element');
-
-$page = parsetemplate($PageTPL, $parse);
+$additionalControls = [];
 
 if (!isOnVacation($_User)) {
     if ($BuildID == 44) {
-        $page .= Info\Components\MissileDestructionSection\render([
+        $additionalControls[] = Info\Components\MissileDestructionSection\render([
             'elementId' => $BuildID,
             'planet' => &$_Planet,
             'user' => &$_User,
@@ -178,19 +165,35 @@ if (!isOnVacation($_User)) {
     }
 
     if ($BuildID == 43) {
-        $page .= Info\Components\TeleportSection\render([
+        $additionalControls[] = Info\Components\TeleportSection\render([
             'elementId' => $BuildID,
             'planet' => &$_Planet,
             'user' => &$_User,
         ])['componentHTML'];
     }
 
-    $page .= Info\Components\BuildingDestructionSection\render([
+    if ($BuildID == $QUANTUMGATE_ELEMENTID) {
+        $elementLevel = World\Elements\getElementCurrentLevel($QUANTUMGATE_ELEMENTID, $_Planet, $_User);
+
+        if ($elementLevel > 0) {
+            $parse['AdditionalInfo'] = Info\Components\QuantumGateState\render([
+                'planet' => &$_Planet,
+                'currentTimestamp' => time(),
+            ])['componentHTML'];
+        }
+    }
+
+    $additionalControls[] = Info\Components\BuildingDestructionSection\render([
         'elementId' => $BuildID,
         'planet' => &$_Planet,
         'user' => &$_User,
     ])['componentHTML'];
 }
+
+$parse['component_AdditionalControls'] = implode('', $additionalControls);
+
+$PageTPL = gettemplate('info_element');
+$page = parsetemplate($PageTPL, $parse);
 
 display($page, $_Lang['nfo_page_title'], false);
 

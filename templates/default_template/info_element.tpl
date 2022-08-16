@@ -52,3 +52,5 @@
 
 {component_ProductionTable}
 {component_UnitDetails}
+
+{component_AdditionalControls}
