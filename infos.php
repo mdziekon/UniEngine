@@ -39,6 +39,16 @@ $parse['description'] = (
 );
 $parse['element_typ'] = $_Lang['tech'][0];
 
+$isValidElement = (
+    World\Elements\isStructure($BuildID) ||
+    World\Elements\isTechnology($BuildID) ||
+    World\Elements\isConstructibleInHangar($BuildID)
+);
+
+if (!$isValidElement) {
+    message($_Lang['Infos_BadElementID'], $_Lang['nfo_page_title']);
+}
+
 if($BuildID >= 1 AND $BuildID <= 3)
 {
     // Mines
@@ -177,10 +187,6 @@ else if($BuildID == 50)
             'elementId' => $BuildID,
         ])['componentHTML'];
     }
-}
-else
-{
-    message($_Lang['Infos_BadElementID'], $_Lang['nfo_page_title']);
 }
 
 $PageTPL = gettemplate('info_element');
