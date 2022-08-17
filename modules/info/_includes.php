@@ -10,6 +10,8 @@ call_user_func(function () {
     include($includePath . './components/MissileDestructionSection/MissileDestructionSection.component.php');
     include($includePath . './components/MissileRangeTable/MissileRangeTable.component.php');
     include($includePath . './components/PhalanxRangeTable/PhalanxRangeTable.component.php');
+    include($includePath . './components/ProductionTable/ProductionTable.component.php');
+    include($includePath . './components/QuantumGateState/QuantumGateState.component.php');
     include($includePath . './components/RapidFireCommonRow/RapidFireCommonRow.component.php');
     include($includePath . './components/RapidFireAgainstList/RapidFireAgainstList.component.php');
     include($includePath . './components/RapidFireFromList/RapidFireFromList.component.php');
@@ -18,6 +20,14 @@ call_user_func(function () {
     include($includePath . './components/TeleportFleetUnitSelectorsList/TeleportFleetUnitSelectorsList.component.php');
     include($includePath . './components/TeleportSection/TeleportSection.component.php');
     include($includePath . './components/TeleportTargetMoonsList/TeleportTargetMoonsList.component.php');
+    include($includePath . './components/UnitDetailsTable/UnitDetailsTable.component.php');
+    include($includePath . './components/UnitStructuralParams/UnitStructuralParams.component.php');
+    include($includePath . './components/UnitEngines/UnitEngines.component.php');
+    include($includePath . './components/UnitForce/UnitForce.component.php');
+    include($includePath . './components/UnitWeapons/UnitWeapons.component.php');
+
+    include($includePath . './screens/ElementInfo/ElementInfo.screen.php');
+    include($includePath . './screens/ElementInfo/ElementInfo.utils.php');
 
     include($includePath . './utils/ranges.utils.php');
 

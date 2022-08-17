@@ -77,6 +77,12 @@ function isProductionRelated($elementID) {
     return in_array($elementID, $_Vars_ElementCategories['prod']);
 }
 
+function isPlanetaryMine($elementID) {
+    global $_Vars_ElementCategories;
+
+    return in_array($elementID, $_Vars_ElementCategories['mine']);
+}
+
 function isCancellableOnceInProgress($elementID) {
     return (
         !isPremiumStructure($elementID)
