@@ -80,6 +80,11 @@ if($UID > 0)
     // --- Generate new image ---
     // Load DB Driver & Lang
 
+    /**
+     * TODO: this assumes that we need the directory to be writeable to "everyone",
+     * where writeable to owner or group might be sufficient. Fix that in the future
+     * to relax access requirements. This should also be changed to improve security.
+     */
     $UNIX_EVERYONE_WRITE_PERMISSION = 0x002;
     $isCacheDirWriteable = fileperms($CacheLangPath) & $UNIX_EVERYONE_WRITE_PERMISSION;
 
