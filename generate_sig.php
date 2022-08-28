@@ -1,21 +1,33 @@
 <?php
 
-function ReturnImage($ImagePath)
-{
-    if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && (strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) >= filemtime($ImagePath)))
-    {
+/**
+ * Note: if you wish to serve error image on lack of permission to the cache dir,
+ * set this variable to `true`.
+ */
+$FAIL_ON_UNAVAILABLE_CACHE = false;
+
+function ReturnImage($ImagePath) {
+    if (!$ImagePath) {
+        die();
+    }
+
+    if (
+        isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) &&
+        (strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) >= filemtime($ImagePath))
+    ) {
         // Use Browser Cache
         header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($ImagePath)).' GMT', true, 304);
+
+        return die();
     }
-    else
-    {
-        // Resend new version
-        header('Content-Type: image/png');
-        header('Content-Length: '.filesize($ImagePath));
-        header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($ImagePath)).' GMT', true, 200);
-        $Image = fopen($ImagePath, 'r');
-        fpassthru($Image);
-    }
+
+    // Resend new version
+    header('Content-Type: image/png');
+    header('Content-Length: '.filesize($ImagePath));
+    header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($ImagePath)).' GMT', true, 200);
+    $Image = fopen($ImagePath, 'r');
+    fpassthru($Image);
+
     die();
 }
 
@@ -24,6 +36,7 @@ $_EnginePath = './';
 define('INSIDE', true);
 
 include($_EnginePath . 'common.minimal.php');
+include($_EnginePath . 'common/_includes.php');
 include($_EnginePath . 'includes/constants.php');
 include($_EnginePath . 'includes/unlocalised.php');
 include($_EnginePath . 'includes/helpers/_includes.php');
@@ -66,7 +79,19 @@ if($UID > 0)
 
     // --- Generate new image ---
     // Load DB Driver & Lang
-    if (substr(sprintf('%o', fileperms($CacheLangPath)), -4) != '0777') {
+
+    /**
+     * TODO: this assumes that we need the directory to be writeable to "everyone",
+     * where writeable to owner or group might be sufficient. Fix that in the future
+     * to relax access requirements. This should also be changed to improve security.
+     */
+    $UNIX_EVERYONE_WRITE_PERMISSION = 0x002;
+    $isCacheDirWriteable = fileperms($CacheLangPath) & $UNIX_EVERYONE_WRITE_PERMISSION;
+
+    if (
+        !$isCacheDirWriteable &&
+        $FAIL_ON_UNAVAILABLE_CACHE
+    ) {
         ReturnImage("{$CacheStaticsPath}/signature_{$SigLang}_error4.png");
     }
 
@@ -171,9 +196,16 @@ if($UID > 0)
     imagettftext($ImageCopy, 10, 0, $CalcXPos['Position'], $CalcYPos['Position'], $Colors['white'], $FontLink, $Texts['Position']);
     imagettftext($ImageCopy, 10, 0, $CalcXPos['Uni'], $CalcYPos['Uni'], $Colors['white'], $FontLink, $Texts['Uni']);
 
-    // Save File
+    // Serve directly to the browser in case of unavailable cache directory
+    if (!$isCacheDirWriteable) {
+        header('Content-Type: image/png');
+        imagepng($ImageCopy, null);
+
+        die();
+    }
+
+    // Save file, return it with headers & die
     imagepng($ImageCopy, $UserFile);
-    // Return File & die
     ReturnImage($UserFile);
 }
 else

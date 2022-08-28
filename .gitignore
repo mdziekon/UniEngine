@@ -1,6 +1,13 @@
 # Ignore data, log & temp directories
 action_logs/
-cache/
+!cache/
+cache/**
+!cache/img
+cache/img/**
+!cache/img/signatures
+cache/img/signatures/**
+!cache/img/signatures/static
+!cache/img/signatures/static/*
 tmp/
 
 # Ignore installation-related files
