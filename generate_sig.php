@@ -24,6 +24,7 @@ $_EnginePath = './';
 define('INSIDE', true);
 
 include($_EnginePath . 'common.minimal.php');
+include($_EnginePath . 'common/_includes.php');
 include($_EnginePath . 'includes/constants.php');
 include($_EnginePath . 'includes/unlocalised.php');
 include($_EnginePath . 'includes/helpers/_includes.php');
