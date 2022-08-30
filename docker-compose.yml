@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: uniengine
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - 80:80
+    volumes:
+      - ./docker/config.php:/var/www/html/config.php
+      - ./docker/constants.php:/var/www/html/includes/constants.php
+      - /etc/localtime:/etc/localtime:ro
+
+  db:
+    image: mariadb:10
+    restart: unless-stopped
+    command:
+      - --sql-mode=
+    environment:
+      MARIADB_ROOT_PASSWORD: uniengine
+      MARIADB_DATABASE: uniengine
+    volumes:
+      - ./docker/data:/var/lib/mysql

@@ -36,6 +36,8 @@ OGame-clone browser based game engine.
 
 ## Installation
 
+### Bare Metal
+
 1. Setup a webserver capable of running PHP scripts.
     - ``php.ini`` file should have ``E_NOTICE`` reporting disabled, eg.:
         - ``error_reporting = E_ALL & ~E_NOTICE & ~E_STRICT``
@@ -52,8 +54,15 @@ OGame-clone browser based game engine.
 1. Move source files of the project to your webserver's directory.
 1. Install PHP dependencies.
     - ``composer install --no-dev``
-1. Run installation wizard: http://your_server_address:port/install
+1. Run installation wizard: ``http(s)://<your_server_address>:<port>/install``
 1. Remove ``install/`` directory
+
+### Docker
+
+1. Build docker image ``docker-compose build``
+1. Prepare config file ``mkdir docker && cp config.php docker && cp includes/constants.php docker && chown 33:33 docker/*.php``
+1. Run services ``docker-compose up -d``
+1. Run installation wizard: ``http(s)://<your_server_address>:<port>/install``
 
 ## Updating from older versions
 
