@@ -59,9 +59,8 @@ OGame-clone browser based game engine.
 
 ### Docker
 
-1. Build docker image ``docker-compose build``
 1. Prepare config file ``mkdir docker && cp config.php docker && cp includes/constants.php docker && chown 33:33 docker/*.php``
-1. Run services ``docker-compose up -d``
+1. Build and run services ``docker-compose up -d --build``
 1. Run installation wizard: ``http(s)://<your_server_address>:<port>/install``
 
 ## Updating from older versions
