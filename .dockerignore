@@ -21,9 +21,6 @@ vendor/
 config/**
 !config/.gitkeep
 
-# Custom files that should not be comitted into the base code
-language/**/rules.definitions.custom.lang
-
 # Files temporarily removed from further tracking
 # (based on https://stackoverflow.com/a/11366713/951007)
 config.php
@@ -33,3 +30,4 @@ includes/constants.php
 node_modules/
 
 docker/
+.env

@@ -9,7 +9,7 @@ services:
     depends_on:
       - php
     ports:
-      - 80:80
+      - ${WEB_PORT:-80}:80
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./docker/config.php:/var/www/html/config.php
@@ -36,8 +36,8 @@ services:
     command:
       - --sql-mode=
     environment:
-      MARIADB_ROOT_PASSWORD: uniengine
-      MARIADB_DATABASE: uniengine
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-uniengine}
+      MARIADB_DATABASE: ${MARIADB_DATABASE:-uniengine}
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ./docker/data:/var/lib/mysql

@@ -32,3 +32,4 @@ includes/constants.php
 node_modules/
 
 docker/
+.env
