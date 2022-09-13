@@ -86,6 +86,9 @@ if($UID > 0)
      * to relax access requirements. This should also be changed to improve security.
      */
     $UNIX_EVERYONE_WRITE_PERMISSION = 0x002;
+    if (!is_dir($CacheLangPath)) {
+        mkdir($CacheLangPath, 0755, true);
+    }
     $isCacheDirWriteable = fileperms($CacheLangPath) & $UNIX_EVERYONE_WRITE_PERMISSION;
 
     if (
