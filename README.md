@@ -59,7 +59,7 @@ OGame-clone browser based game engine.
 
 ### Docker
 
-1. Prepare config file ``mkdir docker && cp config.php docker && cp includes/constants.php docker && chown 33:33 docker/*.php``\
+1. Prepare config file ``mkdir docker && cp config.php docker && cp includes/constants.php docker && sudo chown 33:33 docker/*.php``\
 The user and group id 33 here is the `www-data` user from `nginx:stable` and `php:7.3-fpm`, because it may have a different name on some hosts (for example, on archlinux it is `http`), use its id here to make sure it is available
 1. Prepare and edit environment config file ``cp example.env .env && vim .env``
 1. Build and run services ``docker-compose up -d --build``

@@ -15,6 +15,7 @@ services:
       - ./docker/config.php:/var/www/html/config.php
       - ./docker/constants.php:/var/www/html/includes/constants.php
       - shared_tmp:/var/www/html/tmp
+      - shared_cache:/var/www/html/cache
 
   php:
     build:
@@ -29,6 +30,7 @@ services:
       - ./docker/config.php:/var/www/html/config.php
       - ./docker/constants.php:/var/www/html/includes/constants.php
       - shared_tmp:/var/www/html/tmp
+      - shared_cache:/var/www/html/cache
 
   db:
     image: mariadb:10
@@ -44,3 +46,4 @@ services:
 
 volumes:
   shared_tmp:
+  shared_cache:
