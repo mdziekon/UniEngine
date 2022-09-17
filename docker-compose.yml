@@ -1,0 +1,49 @@
+version: '3.8'
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx.dockerfile
+    image: uniengine/nginx
+    restart: unless-stopped
+    depends_on:
+      - php
+    ports:
+      - ${WEB_PORT:-80}:80
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./docker/config.php:/var/www/html/config.php
+      - ./docker/constants.php:/var/www/html/includes/constants.php
+      - shared_tmp:/var/www/html/tmp
+      - shared_cache:/var/www/html/cache
+
+  php:
+    build:
+      context: .
+      dockerfile: php.dockerfile
+    image: uniengine/php
+    restart: unless-stopped
+    depends_on:
+      - db
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./docker/config.php:/var/www/html/config.php
+      - ./docker/constants.php:/var/www/html/includes/constants.php
+      - shared_tmp:/var/www/html/tmp
+      - shared_cache:/var/www/html/cache
+
+  db:
+    image: mariadb:10
+    restart: unless-stopped
+    command:
+      - --sql-mode=
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-uniengine}
+      MARIADB_DATABASE: ${MARIADB_DATABASE:-uniengine}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./docker/data:/var/lib/mysql
+
+volumes:
+  shared_tmp:
+  shared_cache:
