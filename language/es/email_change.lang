@@ -1,0 +1,19 @@
+<?php
+
+$_Lang['Page_Title']                            = 'Cambio de correo electronico de la cuenta';
+
+$_Lang['Info_havetobelogged']                   = 'Debe iniciar sesion para activar una nueva direccion de correo electronico!';
+$_Lang['Info_noenoughtdata']                    = '¡El enlace parece no ser valido! ¡Comuniquese con la Administracion!';
+$_Lang['Info_baddata']                          = '¡El enlace no contiene todos los datos requeridos! ¡Comuniquese con la Administracion!';
+$_Lang['Info_badkey']                           = '¡La clave de activacion no es valida! Comuniquese con la Administracion!';
+$_Lang['Info_noactivePrc']                      = 'No se ha solicitado el cambio de correo electronico en esta cuenta!';
+$_Lang['Info_some1hasthisemail']                = '¡Esta cuenta de correo electronico ya esta en uso!<br/>Si cree que se trata de un robo de direccion de correo electronico, comuniquese con Administracion!';
+$_Lang['Info_newmail_notconfirmed']             = 'No puede completar el proceso de activacion hasta que se haya confirmado la propiedad de la nueva direccion de correo electronico mediante el enlace de activacion enviado a la nueva direccion!';
+$_Lang['Info_7daysnotpassed']                   = 'La validacion de la direccion de correo electronico anterior aun no esta disponible (debe esperar 7 dias desde el comienzo del proceso de cambio)!';
+$_Lang['Info_Hashnotcorrect']                   = '¡La clave de activacion no es valida! Comuniquese con la Administracion!';
+$_Lang['Info_HashalreadyConfirmed']             = '¡Esta clave de activacion ya ha sido confirmada!';
+$_Lang['Info_MailChangedCompletely']            = '¡El proceso de cambio de direccion de correo electronico se ha completado!<br/>¡Su cuenta ahora usa la nueva direccion!';
+$_Lang['Info_MailChangePartComplete_OldHash']   = '¡Su antigua direccion de correo electronico ha sido validada! <br/> Para completar el proceso de cambio de direccion de correo electronico, confirme su nueva direccion de correo electronico.';
+$_Lang['Info_MailChangePartComplete_NewHash']   = '¡Su nueva direccion de correo electronico ha sido validada!<br/>Para completar el proceso de cambio de direccion de correo electronico, confirme su antigua direccion de correo electronico o espere los proximos 7 dias hasta que haya una validacion manual disponible en la seccion "Descripcion general".!';
+
+?>

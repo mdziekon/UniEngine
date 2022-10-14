@@ -1,0 +1,25 @@
+<?php
+
+$_Lang['Ban_Header']                = 'Notificacion del sistema';
+$_Lang['Ban_AccBanned']             = 'Tu cuenta ha sido prohibida!';
+$_Lang['Ban_StartTime']             = 'Baneado desde';
+$_Lang['Ban_EndTime']               = 'Fecha de vencimiento del baneo';
+$_Lang['Ban_Reason']                = 'Razon';
+$_Lang['Ban_Giver']                 = 'Baneado por';
+$_Lang['Ban_AdditionalInfo']        = 'Si tiene alguna pregunta sobre esta prohibicion, comuniquese con la Administracion. (<a href="contact.php"><u>Contact</u></a>) o escriba una apelacion en el <a href="redirect.php?id=3"><u>Foro</u></a>';
+$_Lang['Ban_Logout']                = 'Logout';
+$_Lang['ban_bysys']                 = 'Sistema';
+$_Lang['Ban_WithVacation']          = '<b style="color: #87CEEB">Se ha habilitado el modo de vacaciones (la desactivacion manual es posible justo despues de la fecha de vencimiento)</b>';
+$_Lang['Ban_WithoutVacation']       = '<b class="red">No se ha habilitado el modo de vacaciones!</b>';
+$_Lang['Ban_RetreatedAll']          = 'Todas sus flotas y vuelos hacia sus coordenadas han cambiado..';
+$_Lang['Ban_RetreatedOwn']          = 'Todas sus flotas (pero ninguno de los vuelos hacia sus coordenadas) han cambiado.';
+$_Lang['Ban_RetreatedOthers']       = 'Todos los vuelos hacia sus coordenadas se han invertido. Todas tus flotas todavia estan en vuelo..';
+$_Lang['Ban_RetreatedNone']         = '<b class="red">¡No se han invertido flotas!</b>';
+$_Lang['Ban_Reason_NotSpecified']   = '<b class="orange">Comuniquese con la Administracion para conocer el motivo de la prohibicion.</b>';
+
+$_Lang['_timer']                    = 'En';
+
+$_Lang['Chrono_Day1']               = 'dia';
+$_Lang['Chrono_DayM']               = 'dias';
+
+?>

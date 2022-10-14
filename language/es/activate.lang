@@ -1,0 +1,10 @@
+<?php
+
+$_Lang['title']                 = 'Cuenta Activada';
+$_Lang['activation_completed']  = 'La activacion de la cuenta %s ha sido satisfactoria!<br/>Puedes logearte con esta cuenta!';
+$_Lang['no_code_in_db']         = 'Este codigo de activacion NO aparece en el sistema!<br/>Si estas seguro de que este codigo es correcto, <a href="contact.php">porfavor contacta con el Administrador</a>';
+$_Lang['invalid_code_format']   = 'Este codigo de activacion NO es valido!<br/>Si estas seguro de que este codigo es correcto, <a href="contact.php">porfavor contacta con el Administrador</a>';
+$_Lang['empty_code']            = 'Tienes que proporcionar el codigo de activacion!';
+$_Lang['go_back']               = '<a href="index.php">Volver</a>';
+
+?>
